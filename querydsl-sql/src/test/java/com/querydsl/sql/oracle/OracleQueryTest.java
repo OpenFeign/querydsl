@@ -42,11 +42,29 @@ public class OracleQueryTest {
   }
 
   @Test
-  public void connectBy() {
-    query.connectByPrior(survey.name.isNull());
+  public void connectByPriorNew() {
+    query.connectBy(survey.name.prior().isNull());
     assertThat(toString(query))
         .isEqualTo(
             "from SURVEY survey connect by prior survey.NAME is null order by survey.NAME asc");
+  }
+
+  @Test
+  public void connectByPriorWithSelect() {
+    query
+        .select(survey.name.prior().as("parent_name"))
+        .connectBy(survey.name.prior().isNull().and(survey.name2.isNotNull()));
+    assertThat(toString(query))
+        .isEqualTo(
+            "select prior survey.NAME parent_name from SURVEY survey connect by prior survey.NAME is"
+                + " null and survey.NAME2 is not null order by survey.NAME asc");
+  }
+
+  @Test
+  public void connectBy() {
+    query.connectBy(survey.name.isNull());
+    assertThat(toString(query))
+        .isEqualTo("from SURVEY survey connect by survey.NAME is null order by survey.NAME asc");
   }
 
   @Test
@@ -54,7 +72,8 @@ public class OracleQueryTest {
     query.connectByNocyclePrior(survey.name.isNull());
     assertThat(toString(query))
         .isEqualTo(
-            "from SURVEY survey connect by nocycle prior survey.NAME is null order by survey.NAME asc");
+            "from SURVEY survey connect by nocycle prior survey.NAME is null order by survey.NAME"
+                + " asc");
   }
 
   @Test
