@@ -16,7 +16,7 @@ package com.querydsl.apt.domain;
 import java.util.Map;
 
 import javax.jdo.annotations.PersistenceCapable;
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import org.junit.Test;
 

@@ -17,7 +17,9 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.persistence.*;
+
+import jakarta.annotation.Generated;
+import jakarta.persistence.*;
 
 import com.querydsl.apt.AbstractQuerydslProcessor;
 import com.querydsl.apt.Configuration;
@@ -35,6 +37,7 @@ public class JPAAnnotationProcessor extends AbstractQuerydslProcessor {
     @Override
     protected Configuration createConfiguration(RoundEnvironment roundEnv) {
         Class<? extends Annotation> entity = Entity.class;
+        Class<? extends Annotation> generated = Generated.class;
         Class<? extends Annotation> superType = MappedSuperclass.class;
         Class<? extends Annotation> embeddable = Embeddable.class;
         Class<? extends Annotation> embedded = Embedded.class;

@@ -21,8 +21,8 @@ import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.codegen.utils.model.Types;
 import com.querydsl.core.util.BeanUtils;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

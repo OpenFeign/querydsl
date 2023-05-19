@@ -32,7 +32,7 @@
         <include>com.querydsl:*</include>
         <include>com.querydsl.codegen.utils:*</include>
         <include>org.hibernate:hibernate-core</include>
-        <include>org.hibernate.javax.persistence:*</include>
+        <include>org.hibernate.jakarta.persistence:*</include>
       </includes>
     </dependencySet>    
   </dependencySets>

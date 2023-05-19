@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.QueryMixin;

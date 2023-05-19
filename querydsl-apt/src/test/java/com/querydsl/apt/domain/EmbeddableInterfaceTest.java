@@ -18,9 +18,9 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Collection;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
 
 import org.junit.Test;
 

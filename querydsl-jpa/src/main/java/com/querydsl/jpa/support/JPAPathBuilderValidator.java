@@ -13,11 +13,11 @@
  */
 package com.querydsl.jpa.support;
 
-import javax.persistence.EntityManager;
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.Metamodel;
-import javax.persistence.metamodel.PluralAttribute;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.Metamodel;
+import jakarta.persistence.metamodel.PluralAttribute;
 
 import com.querydsl.core.types.dsl.PathBuilderValidator;
 import com.querydsl.core.util.PrimitiveUtils;

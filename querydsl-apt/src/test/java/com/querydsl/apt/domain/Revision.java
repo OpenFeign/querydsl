@@ -1,5 +1,5 @@
 package com.querydsl.apt.domain;
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionEntity;

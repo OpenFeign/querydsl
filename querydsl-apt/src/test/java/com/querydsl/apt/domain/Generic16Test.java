@@ -6,8 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 
 import org.junit.Test;
 

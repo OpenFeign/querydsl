@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import org.joda.time.DateTime;
 import org.junit.Test;

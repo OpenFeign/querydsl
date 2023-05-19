@@ -25,6 +25,6 @@ public class QPostgreSQLDialect extends PostgreSQLDialect {
 
     public QPostgreSQLDialect() {
         SQLTemplates templates = PostgreSQLTemplates.DEFAULT;
-        getFunctions().putAll(DialectSupport.createFunctions(templates));
+//        getFunctions().putAll(DialectSupport.createFunctions(templates));
     }
 }

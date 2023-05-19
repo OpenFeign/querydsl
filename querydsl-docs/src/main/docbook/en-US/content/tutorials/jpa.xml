@@ -71,8 +71,8 @@
 ]]></programlisting>
 
     <para>
-      The JPAAnnotationProcessor finds domain types annotated with the
-      javax.persistence.Entity annotation and generates query types for them.
+        The JPAAnnotationProcessor finds domain types annotated with the
+        jakarta.persistence.Entity annotation and generates query types for them.
     </para>
 
     <para>

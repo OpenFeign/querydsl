@@ -25,7 +25,7 @@ public class QH2Dialect extends H2Dialect {
 
     public QH2Dialect() {
         SQLTemplates templates = H2Templates.DEFAULT;
-        getFunctions().putAll(DialectSupport.createFunctions(templates));
+//        getFunctions().putAll(DialectSupport.createFunctions(templates));
     }
 
 }

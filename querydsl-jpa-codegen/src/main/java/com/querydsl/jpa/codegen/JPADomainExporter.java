@@ -13,26 +13,24 @@
  */
 package com.querydsl.jpa.codegen;
 
+import com.querydsl.codegen.EntityType;
+import com.querydsl.codegen.Property;
+import com.querydsl.codegen.SerializerConfig;
+import com.querydsl.codegen.SimpleSerializerConfig;
+import com.querydsl.codegen.utils.model.SimpleType;
+import com.querydsl.codegen.utils.model.Type;
+import com.querydsl.codegen.utils.model.TypeCategory;
+import org.hibernate.MappingException;
+
+import jakarta.persistence.Temporal;
+import jakarta.persistence.metamodel.*;
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.persistence.Temporal;
-import javax.persistence.metamodel.*;
-import javax.xml.stream.XMLStreamException;
-
-import org.hibernate.MappingException;
-
-import com.querydsl.codegen.utils.model.SimpleType;
-import com.querydsl.codegen.utils.model.Type;
-import com.querydsl.codegen.utils.model.TypeCategory;
-import com.querydsl.codegen.EntityType;
-import com.querydsl.codegen.Property;
-import com.querydsl.codegen.SerializerConfig;
-import com.querydsl.codegen.SimpleSerializerConfig;
 
 /**
  * {@code JPADomainExporter} exports JPA 2 metamodels to Querydsl expression types
@@ -145,7 +143,7 @@ public class JPADomainExporter extends AbstractDomainExporter {
         for (ManagedType<?> managedType : metamodel.getManagedTypes()) {
             if (managedType instanceof MappedSuperclassType) {
                 types.put(managedType, createSuperType(managedType.getJavaType()));
-            } else if (managedType instanceof javax.persistence.metamodel.EntityType) {
+            } else if (managedType instanceof jakarta.persistence.metamodel.EntityType) {
                 types.put(managedType, createEntityType(managedType.getJavaType()));
             } else if (managedType instanceof EmbeddableType) {
                 types.put(managedType, createEmbeddableType(managedType.getJavaType()));

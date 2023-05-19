@@ -15,7 +15,7 @@ package com.querydsl.apt.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import org.junit.Ignore;
 

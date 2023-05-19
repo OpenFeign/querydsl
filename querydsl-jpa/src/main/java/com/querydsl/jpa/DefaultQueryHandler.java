@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nullable;
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.IteratorAdapter;

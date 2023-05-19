@@ -16,7 +16,7 @@ package com.querydsl.jpa.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import com.querydsl.jpa.BatooTemplates;
 import com.querydsl.jpa.DataNucleusTemplates;

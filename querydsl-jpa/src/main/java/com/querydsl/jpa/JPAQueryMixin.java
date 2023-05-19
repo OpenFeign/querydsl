@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.Nullable;
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinFlag;

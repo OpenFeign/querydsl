@@ -14,9 +14,9 @@
 package com.querydsl.jpa.impl;
 
 import org.jetbrains.annotations.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.Query;
 
 import com.querydsl.core.JoinType;
 import com.querydsl.core.dml.DeleteClause;

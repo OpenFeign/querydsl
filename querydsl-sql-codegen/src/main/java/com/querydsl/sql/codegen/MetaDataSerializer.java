@@ -29,8 +29,8 @@ import com.querydsl.sql.codegen.support.InverseForeignKeyData;
 import com.querydsl.sql.codegen.support.KeyData;
 import com.querydsl.sql.codegen.support.PrimaryKeyData;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

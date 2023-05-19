@@ -13,14 +13,13 @@
  */
 package com.querydsl.apt.hibernate;
 
-import java.lang.annotation.Annotation;
+import com.querydsl.apt.Configuration;
+import com.querydsl.apt.jpa.JPAAnnotationProcessor;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.persistence.*;
-
-import com.querydsl.apt.Configuration;
-import com.querydsl.apt.jpa.JPAAnnotationProcessor;
+import jakarta.persistence.*;
+import java.lang.annotation.Annotation;
 
 /**
  * {@code HibernateAnnotationProcessor} extends {@link JPAAnnotationProcessor} to take Hibernate-specific

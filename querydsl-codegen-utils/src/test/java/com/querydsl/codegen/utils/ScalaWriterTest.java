@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.validation.constraints.Max;
+import jakarta.validation.constraints.Max;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Parameter;

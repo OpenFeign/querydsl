@@ -13,18 +13,16 @@
  */
 package com.querydsl.jpa.support;
 
-import org.hibernate.dialect.Oracle10gDialect;
-
 import com.querydsl.sql.OracleTemplates;
 import com.querydsl.sql.SQLTemplates;
 
 /**
  * {@code QOracle10gDialect} extends {@code Oracle10gDialect} with additional functions
  */
-public class QOracle10gDialect extends Oracle10gDialect {
+public class QOracle10gDialect { // extends Oracle10gDialect {
 
     public QOracle10gDialect() {
         SQLTemplates templates = OracleTemplates.DEFAULT;
-        getFunctions().putAll(DialectSupport.createFunctions(templates));
+//        getFunctions().putAll(DialectSupport.createFunctions(templates));
     }
 }

@@ -25,7 +25,7 @@ import java.sql.*;
 import java.util.Set;
 
 import javax.tools.JavaCompiler;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import com.querydsl.core.util.ReflectionUtils;
 import com.querydsl.sql.Connections;

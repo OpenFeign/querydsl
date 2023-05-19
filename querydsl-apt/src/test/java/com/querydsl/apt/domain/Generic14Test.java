@@ -4,8 +4,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 
 import org.junit.Test;
 

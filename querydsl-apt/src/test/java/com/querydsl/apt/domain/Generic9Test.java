@@ -2,7 +2,7 @@ package com.querydsl.apt.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import org.junit.Test;
 

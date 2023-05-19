@@ -13,18 +13,17 @@
  */
 package com.querydsl.jpa.support;
 
-import org.hibernate.dialect.MySQL57InnoDBDialect;
-
 import com.querydsl.sql.MySQLTemplates;
 import com.querydsl.sql.SQLTemplates;
+import org.hibernate.dialect.MySQLDialect;
 
 /**
  * {@code QMySQL57InnoDBDialect} extends {@code MySQL57InnoDBDialect} with additional functions
  */
-public class QMySQL57InnoDBDialect extends MySQL57InnoDBDialect {
+public class QMySQL57InnoDBDialect extends MySQLDialect {
 
     public QMySQL57InnoDBDialect() {
         SQLTemplates templates = MySQLTemplates.DEFAULT;
-        getFunctions().putAll(DialectSupport.createFunctions(templates));
+//        getFunctions().putAll(DialectSupport.createFunctions(templates));
     }
 }

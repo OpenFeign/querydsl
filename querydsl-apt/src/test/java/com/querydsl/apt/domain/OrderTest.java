@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 import org.junit.Test;
 

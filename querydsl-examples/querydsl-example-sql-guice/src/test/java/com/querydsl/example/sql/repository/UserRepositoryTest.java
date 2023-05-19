@@ -4,7 +4,7 @@ import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.User;
 import org.junit.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.List;
 
 import static org.junit.Assert.*;

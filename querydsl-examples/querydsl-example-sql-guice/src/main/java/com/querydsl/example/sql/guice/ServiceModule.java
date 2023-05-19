@@ -11,8 +11,8 @@ import com.querydsl.example.sql.repository.UserRepository;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.H2Templates;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;

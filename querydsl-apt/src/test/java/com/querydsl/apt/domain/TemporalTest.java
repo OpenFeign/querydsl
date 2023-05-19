@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 import org.junit.Test;
 

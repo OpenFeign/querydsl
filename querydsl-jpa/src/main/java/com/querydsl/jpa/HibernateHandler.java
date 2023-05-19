@@ -16,8 +16,8 @@ package com.querydsl.jpa;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.Query;
 
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;

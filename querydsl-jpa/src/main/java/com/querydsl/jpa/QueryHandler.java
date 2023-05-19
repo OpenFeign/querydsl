@@ -14,7 +14,7 @@
 package com.querydsl.jpa;
 
 import org.jetbrains.annotations.Nullable;
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.types.FactoryExpression;

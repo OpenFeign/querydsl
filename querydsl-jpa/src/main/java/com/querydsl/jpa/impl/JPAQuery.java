@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa.impl;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;

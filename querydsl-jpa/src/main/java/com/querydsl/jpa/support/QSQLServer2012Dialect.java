@@ -13,21 +13,19 @@
  */
 package com.querydsl.jpa.support;
 
-import org.hibernate.dialect.SQLServer2012Dialect;
-
-import com.querydsl.core.types.Ops;
 import com.querydsl.sql.SQLServer2012Templates;
 import com.querydsl.sql.SQLTemplates;
+import org.hibernate.dialect.SQLServerDialect;
 
 /**
  * {@code QSQLServer2012Dialect} extends {@code SQLServer2012Dialect} with additional functions
  */
-public class QSQLServer2012Dialect extends SQLServer2012Dialect {
+public class QSQLServer2012Dialect extends SQLServerDialect {
 
     public QSQLServer2012Dialect() {
         SQLTemplates templates = SQLServer2012Templates.DEFAULT;
-        getFunctions().putAll(DialectSupport.createFunctions(templates));
-        registerFunction("current_date",
-                DialectSupport.createFunction(templates, Ops.DateTimeOps.CURRENT_DATE));
+//        getFunctions().putAll(DialectSupport.createFunctions(templates));
+//        registerFunction("current_date",
+//                DialectSupport.createFunction(templates, Ops.DateTimeOps.CURRENT_DATE));
     }
 }

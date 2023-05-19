@@ -79,7 +79,7 @@ A huge thanks goes out to all contributors that made this release possible in th
 * `AbstractLuceneQuery` now takes a `java.util.function.Function` instead of a `com.google.common.base.Function`.
 * `AbstractMongodbQuery` now takes a `java.util.function.Function` instead of a `com.google.common.base.Function`.
 * `com.querydsl.codegen.NamingFunction`, `EvaluatorFunction`, `DefaultVariableFunction` now extend `java.util.function.Function` instead of `com.google.common.base.Function`.
-* Any constructor that received a `javax.inject.Provider`, now takes a `java.util.function.Supplier` instead. In most cases you can replace the argument with `provider::get`.
+* Any constructor that received a `jakarta.inject.Provider`, now takes a `java.util.function.Supplier` instead. In most cases you can replace the argument with `provider::get`.
 * This release targets Hibernate 5.2 in the Hibernate integration. If you need Hibernate 4 dialect specific workarounds, use the `HQLTemplates` instead of the `Hibernate5Templates`.
 * Removal of various deprecated methods.
 * `joda-time:joda-time` is now an optional dependency. If your application relies on `joda-time:joda-time` make sure to specify it as a direct dependency rather than relying on QueryDSL to include it transitively.

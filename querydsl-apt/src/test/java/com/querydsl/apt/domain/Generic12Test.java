@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import org.junit.Test;
 

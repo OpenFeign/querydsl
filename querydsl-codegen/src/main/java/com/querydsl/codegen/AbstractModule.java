@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * {@code AbstractModule} provides a base class for annotation based dependency injection

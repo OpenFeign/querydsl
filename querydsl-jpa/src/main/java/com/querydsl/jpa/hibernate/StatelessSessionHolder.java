@@ -38,7 +38,7 @@ public class StatelessSessionHolder implements SessionHolder {
 
     @Override
     public NativeQuery<?> createSQLQuery(String queryString) {
-        return session.createSQLQuery(queryString);
+        return session.createNativeQuery(queryString);
     }
 
 }

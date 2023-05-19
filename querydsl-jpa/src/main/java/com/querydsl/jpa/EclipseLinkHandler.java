@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.Query;
 
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;

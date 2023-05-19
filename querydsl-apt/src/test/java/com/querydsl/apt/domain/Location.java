@@ -2,7 +2,7 @@ package com.querydsl.apt.domain;
 
 import java.util.Set;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Entity
 public class Location {

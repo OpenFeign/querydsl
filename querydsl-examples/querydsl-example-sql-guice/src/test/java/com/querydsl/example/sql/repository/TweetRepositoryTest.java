@@ -5,7 +5,7 @@ import com.querydsl.example.sql.model.User;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static com.querydsl.example.sql.model.QTweet.tweet;
 import static org.junit.Assert.assertEquals;

@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.model.ClassType;

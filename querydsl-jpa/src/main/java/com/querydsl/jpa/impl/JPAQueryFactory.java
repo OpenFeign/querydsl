@@ -14,7 +14,7 @@
 package com.querydsl.jpa.impl;
 
 import org.jetbrains.annotations.Nullable;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;

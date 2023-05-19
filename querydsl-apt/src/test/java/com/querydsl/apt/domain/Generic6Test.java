@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import org.junit.Test;
 

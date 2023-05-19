@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.querydsl</groupId>
   <artifactId>querydsl-root</artifactId>
-  <version>5.0.1-SNAPSHOT</version>
+  <version>5.0.0-patched</version>
     <name>Querydsl</name>
   <description>parent project for Querydsl modules</description>
   <url>https://querydsl.github.io/</url>
@@ -54,9 +54,10 @@
     <firebird.version>4.0.6.java8</firebird.version>
 
     <!-- JPA deps -->
-    <hibernate.version>5.4.8.Final</hibernate.version>
+    <hibernate.version>6.2.1.Final</hibernate.version>
     <hibernate.validator.version>7.0.4.Final</hibernate.validator.version>
     <eclipselink.version>2.7.8</eclipselink.version>
+    <jakarta.activation.version>2.1.1</jakarta.activation.version>
 
     <guava.version>31.1-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
@@ -127,7 +128,7 @@
       <dependency>
         <groupId>jakarta.persistence</groupId>
         <artifactId>jakarta.persistence-api</artifactId>
-        <version>2.2.3</version>
+        <version>3.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.datanucleus</groupId>
@@ -145,9 +146,9 @@
         <version>${h2.version}</version>
       </dependency>
       <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>2.0.1.Final</version>
+        <groupId>jakarta.validation</groupId>
+        <artifactId>jakarta.validation-api</artifactId>
+        <version>3.0.2</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -224,6 +225,13 @@
         <groupId>org.jboss.logging</groupId>
         <artifactId>jboss-logging</artifactId>
         <version>3.4.3.Final</version>
+      </dependency>
+
+      <!-- trying something -->
+      <dependency>
+        <groupId>jakarta.annotation</groupId>
+        <artifactId>jakarta.annotation-api</artifactId>
+        <version>2.1.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -377,6 +385,11 @@
             <jvmTarget>1.8</jvmTarget>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>2.15.0</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -384,7 +397,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.4.1</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>enforce-maven</id>
@@ -394,7 +407,11 @@
             </goals>
             <configuration>
               <rules>
-                <dependencyConvergence/>
+                <dependencyConvergence>
+                  <excludes>
+                    <exclude>jakarta.activation:jakarta.activation-api</exclude>
+                  </excludes>
+                </dependencyConvergence>
               </rules>
             </configuration>
           </execution>
@@ -424,7 +441,7 @@
                     <exclude>joda-time:joda-time:*:*:compile</exclude>
                     <exclude>org.joda:joda-money:*:*:compile</exclude>
                     <exclude>javax.el:javax.el-api:*:*:compile</exclude>
-                    <exclude>jakarta.persistence:jakarta.persistence-api:*:*:compile</exclude>
+<!--                    <exclude>jakarta.persistence:jakarta.persistence-api:*:*:compile</exclude>-->
                     <exclude>org.batoo.jpa:batoo-jpa:*:*:compile</exclude>
                     <!-- The following database drivers should be in test scope -->
                     <exclude>org.hsqldb:hsqldb:*:*:compile</exclude>
@@ -686,6 +703,10 @@
           <excludes>**/generated/**/*,**/jmh_generated/**/*,**/com/querydsl/codegen/utils/**/*</excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+      </plugin>
     </plugins>
   </build>
 
@@ -754,7 +775,7 @@
         <module>querydsl-sql-spring</module>
         <module>querydsl-maven-plugin</module>
         <module>querydsl-jpa</module>
-        <module>querydsl-jpa-codegen</module>
+<!--        <module>querydsl-jpa-codegen</module>-->
       </modules>
     </profile>
 

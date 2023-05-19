@@ -13,7 +13,7 @@
  */
 package com.querydsl.maven;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import com.querydsl.codegen.GenericExporter;
 import com.querydsl.codegen.PropertyHandling;

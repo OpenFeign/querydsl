@@ -16,7 +16,7 @@ package com.querydsl.jpa;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import com.querydsl.core.support.ConstantHidingExpression;
 import com.querydsl.core.support.EnumConversion;

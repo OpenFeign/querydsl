@@ -13,15 +13,15 @@
  */
 package com.querydsl.jpa.hibernate;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.*;
-
-import org.hibernate.type.*;
-
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.dsl.Param;
+import org.hibernate.type.BasicTypeReference;
+import org.hibernate.type.StandardBasicTypes;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  * {@code HibernateUtil} provides static utility methods for Hibernate
@@ -37,22 +37,22 @@ public final class HibernateUtil {
             java.util.Locale.class, java.util.TimeZone.class, java.util.Currency.class, Class.class,
             java.io.Serializable.class, java.sql.Blob.class, java.sql.Clob.class)));
 
-    private static final Map<Class<?>, Type> TYPES;
+    private static final Map<Class<?>, BasicTypeReference<?>> TYPES;
 
     static {
-        Map<Class<?>, Type> builder = new HashMap<>();
-        builder.put(Byte.class, new ByteType());
-        builder.put(Short.class, new ShortType());
-        builder.put(Integer.class, new IntegerType());
-        builder.put(Long.class, new LongType());
-        builder.put(BigInteger.class, new BigIntegerType());
-        builder.put(Double.class, new DoubleType());
-        builder.put(Float.class, new FloatType());
-        builder.put(BigDecimal.class, new BigDecimalType());
-        builder.put(String.class, new StringType());
-        builder.put(Character.class, new CharacterType());
-        builder.put(Date.class, new DateType());
-        builder.put(Boolean.class, new BooleanType());
+        Map<Class<?>, BasicTypeReference<?>> builder = new HashMap<>();
+        builder.put(Byte.class, StandardBasicTypes.BYTE);
+        builder.put(Short.class, StandardBasicTypes.SHORT);
+        builder.put(Integer.class, StandardBasicTypes.INTEGER);
+        builder.put(Long.class, StandardBasicTypes.LONG);
+        builder.put(BigInteger.class, StandardBasicTypes.BIG_INTEGER);
+        builder.put(Double.class, StandardBasicTypes.DOUBLE);
+        builder.put(Float.class, StandardBasicTypes.FLOAT);
+        builder.put(BigDecimal.class, StandardBasicTypes.BIG_DECIMAL);
+        builder.put(String.class, StandardBasicTypes.STRING);
+        builder.put(Character.class, StandardBasicTypes.CHARACTER);
+        builder.put(Date.class, StandardBasicTypes.DATE);
+        builder.put(Boolean.class, StandardBasicTypes.BOOLEAN);
         TYPES = Collections.unmodifiableMap(builder);
     }
 
@@ -85,13 +85,20 @@ public final class HibernateUtil {
         } else if (val instanceof Object[] && !BUILT_IN.contains(val.getClass())) {
             query.setParameterList(key, (Object[]) val);
         } else if (val instanceof Number && TYPES.containsKey(val.getClass())) {
-            query.setParameter(key, val, getType(val.getClass()));
+            BasicTypeReference<?> typeRef = getType(val.getClass());
+            query.setParameter(
+                key,
+                val,
+                new BasicTypeReference(
+                    typeRef.getName(),
+                    typeRef.getBindableJavaType(),
+                    typeRef.getSqlTypeCode()));
         } else {
             query.setParameter(key, val);
         }
     }
 
-    public static Type getType(Class<?> clazz) {
+    public static BasicTypeReference<?> getType(Class<?> clazz) {
         return TYPES.get(clazz);
     }
 

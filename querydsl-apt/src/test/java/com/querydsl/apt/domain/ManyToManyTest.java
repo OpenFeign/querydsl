@@ -2,8 +2,8 @@ package com.querydsl.apt.domain;
 
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 
 import org.junit.Assert;
 import org.junit.Test;

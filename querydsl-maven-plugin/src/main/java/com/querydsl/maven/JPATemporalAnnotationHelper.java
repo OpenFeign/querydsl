@@ -15,7 +15,7 @@ package com.querydsl.maven;
 
 import java.lang.annotation.Annotation;
 
-import javax.persistence.Temporal;
+import jakarta.persistence.Temporal;
 
 import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.codegen.AnnotationHelper;

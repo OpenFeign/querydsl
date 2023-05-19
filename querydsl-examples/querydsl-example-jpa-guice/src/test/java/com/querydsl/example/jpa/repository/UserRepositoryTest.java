@@ -4,7 +4,7 @@ import com.querydsl.example.jpa.model.User;
 import com.querydsl.example.jpa.repository.UserRepository;
 import org.junit.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

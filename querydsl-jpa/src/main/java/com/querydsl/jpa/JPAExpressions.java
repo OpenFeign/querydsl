@@ -26,7 +26,7 @@ import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 

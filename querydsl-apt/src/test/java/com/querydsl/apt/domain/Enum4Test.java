@@ -1,7 +1,7 @@
 package com.querydsl.apt.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 import org.junit.Ignore;
 

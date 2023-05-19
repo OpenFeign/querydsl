@@ -16,10 +16,10 @@ package com.querydsl.jpa;
 import java.util.*;
 
 import org.jetbrains.annotations.Nullable;
-import javax.persistence.*;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.*;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.Metamodel;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;

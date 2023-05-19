@@ -16,8 +16,8 @@ package com.querydsl.jpa.impl;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Parameter;
-import javax.persistence.Query;
+import jakarta.persistence.Parameter;
+import jakarta.persistence.Query;
 
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamNotSetException;

@@ -3,7 +3,7 @@ package com.querydsl.example.sql.guice;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 

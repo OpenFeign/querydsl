@@ -1,6 +1,6 @@
 package com.querydsl.example.sql.guice;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;

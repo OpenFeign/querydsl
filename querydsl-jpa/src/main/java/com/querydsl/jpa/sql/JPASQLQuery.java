@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa.sql;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.Tuple;

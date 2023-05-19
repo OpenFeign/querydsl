@@ -3,7 +3,7 @@ package com.querydsl.apt.domain;
 import java.util.AbstractSet;
 import java.util.Iterator;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 public class CustomCollection {
 

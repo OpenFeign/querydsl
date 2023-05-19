@@ -25,8 +25,8 @@ import java.nio.file.Path;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 import org.junit.Rule;
 import org.junit.Test;

@@ -16,7 +16,7 @@ package com.querydsl.maven;
 import javax.jdo.annotations.EmbeddedOnly;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.persistence.Embedded;
+import jakarta.persistence.Embedded;
 
 import com.querydsl.codegen.GenericExporter;
 import com.querydsl.codegen.PropertyHandling;

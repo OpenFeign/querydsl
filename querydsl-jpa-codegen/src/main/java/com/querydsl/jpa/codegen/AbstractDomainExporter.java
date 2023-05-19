@@ -27,8 +27,8 @@ import com.querydsl.core.util.Annotations;
 import com.querydsl.core.util.ReflectionUtils;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -76,7 +76,7 @@ public abstract class AbstractDomainExporter {
 
     @SuppressWarnings("unchecked")
     protected final TypeFactory typeFactory = new TypeFactory(Arrays.asList(Entity.class,
-            javax.persistence.MappedSuperclass.class, Embeddable.class));
+            jakarta.persistence.MappedSuperclass.class, Embeddable.class));
 
     private final QueryTypeFactory queryTypeFactory;
 

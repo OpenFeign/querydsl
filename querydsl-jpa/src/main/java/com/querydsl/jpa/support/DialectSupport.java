@@ -13,25 +13,21 @@
  */
 package com.querydsl.jpa.support;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.hibernate.dialect.function.SQLFunction;
-import org.hibernate.dialect.function.SQLFunctionTemplate;
-import org.hibernate.type.Type;
-
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Template;
-import com.querydsl.jpa.hibernate.HibernateUtil;
 import com.querydsl.sql.SQLTemplates;
+import org.hibernate.dialect.function.SqlFunction;
+
+import java.util.HashMap;
+import java.util.Map;
 
 final class DialectSupport {
 
     private DialectSupport() { }
 
-    public static Map<String, SQLFunction> createFunctions(SQLTemplates templates) {
-        Map<String, SQLFunction> functions = new HashMap<>();
+    public static Map<String, SqlFunction> createFunctions(SQLTemplates templates) {
+        Map<String, SqlFunction> functions = new HashMap<>();
         functions.put("second", createFunction(templates, Ops.DateTimeOps.SECOND));
         functions.put("minute", createFunction(templates, Ops.DateTimeOps.MINUTE));
         functions.put("hour", createFunction(templates, Ops.DateTimeOps.HOUR));
@@ -42,10 +38,19 @@ final class DialectSupport {
         return functions;
     }
 
-    public static SQLFunction createFunction(SQLTemplates templates, Operator operator) {
+    public static SqlFunction createFunction(SQLTemplates templates, Operator operator) {
         Template template = templates.getTemplate(operator);
-        Type type = HibernateUtil.getType(operator.getType());
-        return new SQLFunctionTemplate(type, convert(template));
+//        Type type = HibernateUtil.getType(operator.getType());
+//        return new PatternBasedSqmFunctionDescriptor(
+//                new PatternRenderer(convert(template)),
+//                null,
+//                null,
+//                null,
+//                type.getName(),
+//                FunctionKind.NORMAL,
+//                null
+//        );
+        return new SqlFunction();
     }
 
     public static String convert(Template template) {

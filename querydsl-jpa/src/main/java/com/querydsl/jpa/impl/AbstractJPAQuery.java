@@ -22,10 +22,10 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.Query;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.*;
@@ -324,10 +324,10 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>> exte
         try {
             Query query = createQuery(getMetadata().getModifiers(), false);
             return (T) getSingleResult(query);
-        } catch (javax.persistence.NoResultException e) {
+        } catch (jakarta.persistence.NoResultException e) {
             logger.log(Level.FINEST, e.getMessage(), e);
             return null;
-        } catch (javax.persistence.NonUniqueResultException e) {
+        } catch (jakarta.persistence.NonUniqueResultException e) {
             throw new NonUniqueResultException(e);
         } finally {
             reset();

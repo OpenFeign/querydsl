@@ -15,8 +15,8 @@ package com.querydsl.sql.codegen.support;
 
 import java.lang.annotation.Annotation;
 
-import javax.validation.Payload;
-import javax.validation.constraints.Size;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.Size;
 
 /**
  * {@code SizeImpl} is an implementation of the {@link Size} interface

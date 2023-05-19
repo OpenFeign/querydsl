@@ -22,8 +22,8 @@ import com.querydsl.codegen.utils.model.Types;
 import com.querydsl.sql.Column;
 import com.querydsl.sql.codegen.support.PrimaryKeyData;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

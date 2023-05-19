@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Configuration
 @EnableTransactionManagement

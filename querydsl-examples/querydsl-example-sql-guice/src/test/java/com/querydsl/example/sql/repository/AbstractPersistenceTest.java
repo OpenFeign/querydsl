@@ -5,7 +5,7 @@ import com.querydsl.example.sql.guice.Transactional;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

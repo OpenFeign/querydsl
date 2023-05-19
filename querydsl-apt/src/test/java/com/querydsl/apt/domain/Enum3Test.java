@@ -2,8 +2,8 @@ package com.querydsl.apt.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 
 import org.junit.Test;
 
@@ -36,7 +36,7 @@ public class Enum3Test {
     @Entity
     public static class Entity1 {
 
-        @Enumerated(javax.persistence.EnumType.STRING)
+        @Enumerated(jakarta.persistence.EnumType.STRING)
         private EnumImplementation value;
 
         public SpecificInterface getValue() {
@@ -50,7 +50,7 @@ public class Enum3Test {
 
         private EnumImplementation value;
 
-        @Enumerated(javax.persistence.EnumType.STRING)
+        @Enumerated(jakarta.persistence.EnumType.STRING)
         public SpecificInterface getValue() {
             return value;
         }
