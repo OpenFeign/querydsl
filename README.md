@@ -1,3 +1,42 @@
+## Disclaimer
+
+While upgrading our project to Spring Boot 3 we encountered [this issue](https://github.com/querydsl/querydsl/issues/3439).
+
+In this repository we patched Querydsl to be compatible with Hibernate 6 for our use case. 
+We use patched versions of the following artifacts:
+- querydsl-core
+- querydsl-jpa
+- querydsl-codegen
+- querydsl-apt
+
+Please keep in mind that, due to time constraints, we did not attempt to update the tests and cannot guarantee this patch will work for your use case.
+
+#### Example of how to use
+```
+# Build
+mvn clean package --activate-profiles=java-11,jpa
+
+# Export desired artifacts as jar
+mvn install:install-file -DlocalRepositoryPath=/path/to/local/repo -DgroupId=$GROUP_ID -Dfile=target/$ARTIFACT_ID-$VERSION.jar -Dpackaging=jar -DpomFile=pom.xml -DcreateChecksum=true
+```
+```xml
+<!-- Use in maven as a local dependency -->
+<properties>
+    ...
+    <querydsl-patch.version>5.0.0-patched</querydsl-patch.version>
+</properties>
+
+<dependencies>
+    <dependency>
+        <groupId>com.querydsl</groupId>
+        <artifactId>querydsl-jpa</artifactId>
+        <version>${querydsl-patch.version}</version>
+        <classifier>jakarta</classifier>
+    </dependency>
+    ...
+</dependencies>
+```
+
 ## Querydsl
 
 Querydsl is a framework which enables the construction of type-safe SQL-like queries for multiple backends including JPA, MongoDB and SQL in Java.
