@@ -227,7 +227,6 @@
         <version>3.4.3.Final</version>
       </dependency>
 
-      <!-- trying something -->
       <dependency>
         <groupId>jakarta.annotation</groupId>
         <artifactId>jakarta.annotation-api</artifactId>

@@ -49,7 +49,6 @@ public final class GeneratedAnnotationResolver {
     private static Class<? extends Annotation> resolveJavaDefault() {
         try {
             return (Class<? extends Annotation>) Class.forName("jakarta.annotation.Generated");
-//             return jakarta.annotation.Generated.class;
         } catch (Exception e) {
             // Try next one
         }
