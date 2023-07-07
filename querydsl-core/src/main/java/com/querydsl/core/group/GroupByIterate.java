@@ -73,8 +73,21 @@ public class GroupByIterate<K, V> extends AbstractGroupByTransformer<K, Closeabl
         }
 
         while (iter.hasNext()) {
+          // workaround from https://github.com/querydsl/querydsl/issues/3264
+          Object next = iter.next();
+          Tuple tuple;
+          if (next instanceof Tuple) {
+            tuple = (Tuple) next;
+          } else if (next instanceof Object[]) {
+            tuple = Projections.tuple(expressions).newInstance((Object[]) next);
+          } else {
+            throw new IllegalArgumentException(
+                String.format("Could not translate %s into tuple", next));
+          }
+
           @SuppressWarnings("unchecked") // This type is mandated by the key type
-          K[] row = (K[]) iter.next().toArray();
+          K[] row = (K[]) tuple.toArray();
+          // end of workaround
           if (group == null) {
             group = new GroupImpl(groupExpressions, maps);
             groupId = row[0];

@@ -51,8 +51,21 @@ public class GroupByMap<K, V> extends AbstractGroupByTransformer<K, Map<K, V>> {
     }
     try (CloseableIterator<Tuple> iter = query.select(expr).iterate()) {
       while (iter.hasNext()) {
+        // workaround from https://github.com/querydsl/querydsl/issues/3264
+        Object next = iter.next();
+        Tuple tuple;
+        if (next instanceof Tuple) {
+          tuple = (Tuple) next;
+        } else if (next instanceof Object[]) {
+          tuple = Projections.tuple(expressions).newInstance((Object[]) next);
+        } else {
+          throw new IllegalArgumentException(
+              String.format("Could not translate %s into tuple", next));
+        }
+
         @SuppressWarnings("unchecked") // This type is mandated by the key type
-        K[] row = (K[]) iter.next().toArray();
+        K[] row = (K[]) tuple.toArray();
+        // end of workaround
         K groupId = row[0];
         GroupImpl group = (GroupImpl) groups.get(groupId);
         if (group == null) {
