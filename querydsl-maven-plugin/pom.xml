@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.querydsl</groupId>
+        <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-root</artifactId>
         <version>5.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-maven-plugin</artifactId>
     <name>Querydsl - Maven plugin</name>
     <description>Querydsl Maven plugin</description>
@@ -77,7 +77,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-sql-codegen</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -110,7 +110,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-core</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

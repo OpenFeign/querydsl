@@ -8,14 +8,14 @@ The JDO module provides integration with the JDO API.
 
 ```XML
 <dependency>
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-apt</artifactId>
   <version>${querydsl.version}</version>
   <scope>provided</scope>
 </dependency>        
     
 <dependency>
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-jdo</artifactId>
   <version>${querydsl.version}</version>
 </dependency>

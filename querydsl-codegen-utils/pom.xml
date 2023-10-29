@@ -8,7 +8,7 @@
   <description>Code generation and compilation for Java</description>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
     <version>5.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
