@@ -10,7 +10,8 @@
   <url>https://querydsl.github.io/</url>
 
   <parent>
-    <groupId>io.github.openfeign.querydsl</groupId>
+    <!--FIXME remove after 5.0.1 -->
+    <groupId>com.querydsl</groupId>
     <artifactId>querydsl-parent</artifactId>
     <version>0.1.0</version>
   </parent>
