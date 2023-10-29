@@ -40,6 +40,10 @@
 
     <argLine>-Xms256m -Xmx512m</argLine>
 
+    <!-- default bytecode version for src/main -->
+    <main.java.version>1.8</main.java.version>
+    <latest.java.version>11</latest.java.version>
+
     <!-- SQL deps -->
     <db2.version>11.5.5.0</db2.version>
     <derby.version>10.15.2.0</derby.version>
@@ -64,15 +68,15 @@
     <mysema.lang.version>0.2.4</mysema.lang.version>
     <cglib.version>3.3.0</cglib.version>
     <slf4j.version>1.7.31</slf4j.version>
-    <surefire.version>2.22.2</surefire.version>
+    <surefire.version>3.1.2</surefire.version>
     <animal-sniffer.version>1.20</animal-sniffer.version>
     <jodatime.version>2.10.10</jodatime.version>
     <h2gis.version>1.5.0</h2gis.version>
     <morphia.version>1.3.2</morphia.version>
     <jmh.version>1.32</jmh.version>
     <hamcrest.veresion>2.2</hamcrest.veresion>
-    <kotlin.version>1.5.20</kotlin.version>
-    <dokka.version>1.4.32</dokka.version>
+    <kotlin.version>1.8.21</kotlin.version>
+    <dokka.version>1.9.10</dokka.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
     <osgi.import.package.root>
@@ -384,6 +388,39 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+            <configuration>
+              <toolchains>
+                <jdk>
+                  <version>${main.java.version}</version>
+                </jdk>
+              </toolchains>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+            <configuration>
+              <toolchains>
+                <jdk>
+                  <version>${latest.java.version}</version>
+                </jdk>
+              </toolchains>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>1.4.1</version>
         <executions>
@@ -585,10 +622,36 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <inherited>true</inherited>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>${main.java.version}</source>
+          <target>${main.java.version}</target>
         </configuration>
+        <executions>
+          <!-- Ensure main source tree compiles to Java ${main.java.version} bytecode. -->
+          <execution>
+            <id>default-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <source>${main.java.version}</source>
+              <target>${main.java.version}</target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <source>${latest.java.version}</source>
+              <target>${latest.java.version}</target>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -887,6 +950,9 @@
             <configuration>
               <disableXmlReport>true</disableXmlReport>
               <printSummary>false</printSummary>
+            <jdkToolchain>
+              <version>${latest.java.version}</version>
+            </jdkToolchain>
             </configuration>
           </plugin>
         </plugins>
