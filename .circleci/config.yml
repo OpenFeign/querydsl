@@ -26,7 +26,7 @@ commands:
       - run:
           name: 'Resolving Dependencies'
           command: |
-            ./mvnw -ntp dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true -B
+            ./mvnw -ntp dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true -B -Pall
   verify-formatting:
     steps:
       - run:
@@ -44,7 +44,7 @@ commands:
       - run:
           name: 'Deploy Core Modules Sonatype'
           command: |
-            ./mvnw -ntp -nsu -s .circleci/settings.xml -P release -pl -:feign-benchmark -DskipTests=true deploy
+            ./mvnw -ntp -nsu -s .circleci/settings.xml -P release -pl -:feign-benchmark -DskipTests=true deploy -B -Pall
 
 # our job defaults
 defaults: &defaults
@@ -91,7 +91,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B test
+            ./mvnw -ntp test -B -Pall
       - verify-formatting
 
   deploy:
