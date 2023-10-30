@@ -25,6 +25,9 @@
   <properties>   
     <dn.version>5.2.7</dn.version>
     <dn.plugin.version>5.2.1</dn.plugin.version>
+
+    <!-- FIXME restore tests that depend on external resources -->
+    <surefire.excludes>DB2*,Firebird*,MSSQL*,MySQL*,Oracle*,PostgreSQL*</surefire.excludes>
   </properties>
 
   <dependencies>
@@ -209,32 +212,35 @@
           </execution>    
         </executions>         
       </plugin>            
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <executions>
           <execution>
-          <id>verification</id>    
-          <goals>
-            <goal>test</goal>    
-          </goals>
-          <phase>verify</phase>
-          <configuration>
+            <id>verification</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
               <systemProperties>
-              <property>
+                <property>
                   <name>version</name>
-                <value>${project.version}</value>
-              </property>                  
-            </systemProperties>    
-            <includes>
-              <include>com/querydsl/jdo/PackageVerification.java</include>
-            </includes>
-          </configuration>
+                  <value>${project.version}</value>
+                </property>
+              </systemProperties>
+              <includes>
+                <include>com/querydsl/jdo/PackageVerification.java</include>
+              </includes>
+              <jdkToolchain>
+                <version>${latest.java.version}</version>
+              </jdkToolchain>
+            </configuration>
           </execution>
-        </executions>        
-      </plugin>      
-      
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>com.mysema.maven</groupId>
         <artifactId>apt-maven-plugin</artifactId>
