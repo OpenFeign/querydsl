@@ -21,8 +21,6 @@
       ${osgi.import.package.root}
     </osgi.import.package>
     <argLine>-Xms256m -Xmx512m -Duser.timezone=UTC</argLine>
-    <!-- FIXME restore tests that depend on external resources -->
-    <surefire.excludes>DB2*,Firebird*,MSSQL*,MySQL*,Oracle*,PostgreSQL*</surefire.excludes>
   </properties>
 
   <dependencies>

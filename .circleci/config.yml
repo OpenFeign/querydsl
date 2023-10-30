@@ -20,13 +20,36 @@ executors:
 
 # common commands
 commands:
+  resolve-docker:
+    description: 'Download and prepare docker-compose'
+    steps:
+      - run:
+          name: 'Install docker compose'
+          command: |
+            apt update -y && apt install docker-compose -y && docker-compose pull
+  start-databases:
+    description: 'Start containers with databases'
+    steps:
+      - run:
+          name: 'Start docker compose'
+          command: |
+            docker-compose up -d
+  shutdown-databases:
+    description: 'Stop containers with databases'
+    steps:
+      - run:
+          name: 'Stop docker compose'
+          command: |
+            docker-compose stop
   resolve-dependencies:
     description: 'Download and prepare all dependencies'
     steps:
+      - resolve-docker
       - run:
           name: 'Resolving Dependencies'
           command: |
             ./mvnw -ntp dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true -B -Pall
+
   verify-formatting:
     steps:
       - run:
@@ -83,15 +106,19 @@ jobs:
           keys:
             - feign-dependencies-v2-{{ checksum "pom.xml" }}
             - feign-dependencies-v2-
+      - setup_remote_docker:
+          version: 20.10.23
       - resolve-dependencies
       - save_cache:
           paths:
             - ~/.m2/repository
           key: feign-dependencies-v2-{{ checksum "pom.xml" }}
+      - start-databases
       - run:
           name: 'Test'
           command: |
             ./mvnw -ntp test -B -Pall
+      - shutdown-databases
       - verify-formatting
 
   deploy:

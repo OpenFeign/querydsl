@@ -20,8 +20,6 @@
       org.joda.time.*;version="[1.6,3)",
       ${osgi.import.package.root}
     </osgi.import.package>
-    <!-- FIXME restore tests that depend on external resources -->
-    <surefire.excludes>DB2*,Firebird*,MSSQL*,MySQL*,Oracle*,PostgreSQL*</surefire.excludes>
   </properties>
 
   <dependencies>

@@ -25,9 +25,6 @@
   <properties>   
     <dn.version>5.2.7</dn.version>
     <dn.plugin.version>5.2.1</dn.plugin.version>
-
-    <!-- FIXME restore tests that depend on external resources -->
-    <surefire.excludes>DB2*,Firebird*,MSSQL*,MySQL*,Oracle*,PostgreSQL*</surefire.excludes>
   </properties>
 
   <dependencies>
