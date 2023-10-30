@@ -941,6 +941,10 @@
 
           com.querydsl.core.testutil.Teradata
         </excludedGroups>
+        <!-- FIXME can't get DB2 working with circle CI, might need to move to something else -->
+        <surefire.excludes>
+          DB2*
+        </surefire.excludes>
       </properties>
       <build>
         <plugins>
@@ -950,10 +954,10 @@
             <configuration>
               <disableXmlReport>true</disableXmlReport>
               <printSummary>false</printSummary>
-            <jdkToolchain>
-              <version>${latest.java.version}</version>
-            </jdkToolchain>
-            </configuration>
+              <jdkToolchain>
+                <version>${latest.java.version}</version>
+              </jdkToolchain>
+           </configuration>
           </plugin>
         </plugins>
       </build>

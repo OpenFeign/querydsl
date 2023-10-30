@@ -20,31 +20,9 @@ executors:
 
 # common commands
 commands:
-  resolve-docker:
-    description: 'Download and prepare docker-compose'
-    steps:
-      - run:
-          name: 'Install docker compose'
-          command: |
-            apt update -y && apt install docker-compose -y && docker-compose pull
-  start-databases:
-    description: 'Start containers with databases'
-    steps:
-      - run:
-          name: 'Start docker compose'
-          command: |
-            docker-compose up -d
-  shutdown-databases:
-    description: 'Stop containers with databases'
-    steps:
-      - run:
-          name: 'Stop docker compose'
-          command: |
-            docker-compose stop
   resolve-dependencies:
     description: 'Download and prepare all dependencies'
     steps:
-      - resolve-docker
       - run:
           name: 'Resolving Dependencies'
           command: |
@@ -71,7 +49,6 @@ commands:
 
 # our job defaults
 defaults: &defaults
-  working_directory: ~/feign
   environment:
     # Customize the JVM maximum heap limit
     MAVEN_OPTS: -Xmx3200m
@@ -97,28 +74,68 @@ version: 2.1
 
 jobs:
   test:
-    executor:
-      name: java
     <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: mysql:5.6.38
+        environment:
+          - MYSQL_ROOT_PASSWORD=querydsl
+          - MYSQL_USER=querydsl
+          - MYSQL_PASSWORD=querydsl
+          - MYSQL_DATABASE=querydsl
+      - image: mdillon/postgis:9.3-alpine
+        environment:
+          - POSTGRES_USER=querydsl
+          - POSTGRES_PASSWORD=querydsl
+          - POSTGRES_DB=querydsl
+      - image: cubrid/cubrid:11.3
+        environment:
+          - CUBRID_DB=demodb
+      - image: gvenzl/oracle-xe:11
+        environment:
+          - ORACLE_PASSWORD=querydsl
+          - APP_USER=querydsl
+          - APP_USER_PASSWORD=querydsl
+      - image: mongo:3.6.1
+      - image: ibmcom/db2:11.5.0.0
+        environment:
+          - DB2INST1_PASSWORD=a3sd!fDj
+          - DB2INSTANCE=db2inst1
+          - DBNAME=sample
+          - LICENSE=accept
+          - ARCHIVE_LOGS=false
+          - AUTOCONFIG=false
+      - image: jacobalberty/firebird:2.5.9-ss
+        environment:
+          - ISC_PASSWORD=masterkey
+          - FIREBIRD_DATABASE=querydsl.fdb
+          - FIREBIRD_USER=querydsl
+          - FIREBIRD_PASSWORD=querydsl
+      - image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        environment:
+          - ACCEPT_EULA=Y
+          - SA_PASSWORD=Password1!
+          - MSSQL_PID=Express
+
     steps:
       - checkout
       - restore_cache:
           keys:
-            - feign-dependencies-v2-{{ checksum "pom.xml" }}
-            - feign-dependencies-v2-
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
       - setup_remote_docker:
           version: 20.10.23
+          docker_layer_caching: true
       - resolve-dependencies
       - save_cache:
           paths:
             - ~/.m2/repository
-          key: feign-dependencies-v2-{{ checksum "pom.xml" }}
-      - start-databases
+          key: querydsl-dependencies-v2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall
-      - shutdown-databases
+            ./mvnw -ntp test -B -Pall,travis
       - verify-formatting
 
   deploy:
@@ -129,8 +146,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - feign-dependencies-v2-{{ checksum "pom.xml" }}
-            - feign-dependencies-v2-
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
       - resolve-dependencies
       - configure-gpg
       - nexus-deploy
