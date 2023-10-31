@@ -24,8 +24,8 @@
     <failIfNoTests>false</failIfNoTests>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.homepage>http://www.querydsl.com</project.homepage>
-    <project.githubpage>http://github.com/querydsl/querydsl</project.githubpage>
-    <project.checkout>scm:git:git@github.com:querydsl/querydsl.git</project.checkout>
+    <project.githubpage>http://github.com/openfeign/querydsl</project.githubpage>
+    <project.checkout>scm:git:git@github.com:openfeign/querydsl.git</project.checkout>
 
     <!-- default groups to exclude from surefire plugin -->
     <excludedGroups>
