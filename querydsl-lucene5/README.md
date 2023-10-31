@@ -7,7 +7,7 @@ The Lucene module provides integration with the Lucene 5 indexing library.
  Add the following dependencies to your Maven project :
 ```XML
 <dependency>
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-lucene5</artifactId>
   <version>${querydsl.version}</version>
 </dependency>

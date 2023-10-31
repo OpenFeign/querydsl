@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>querydsl-examples</artifactId>
-        <groupId>com.querydsl</groupId>
-        <version>5.0.0</version>
+        <groupId>io.github.openfeign.querydsl</groupId>
+        <version>5.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>querydsl-example-kotlin-codegen</artifactId>
@@ -23,7 +23,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -54,12 +54,12 @@
                     </compilerPlugins>
                     <annotationProcessorPaths>
                         <annotationProcessorPath>
-                            <groupId>com.querydsl</groupId>
+                            <groupId>io.github.openfeign.querydsl</groupId>
                             <artifactId>querydsl-kotlin-codegen</artifactId>
                             <version>${project.version}</version>
                         </annotationProcessorPath>
                         <annotationProcessorPath>
-                            <groupId>com.querydsl</groupId>
+                            <groupId>io.github.openfeign.querydsl</groupId>
                             <artifactId>querydsl-apt</artifactId>
                             <version>${project.version}</version>
                             <classifier>jpa</classifier>
