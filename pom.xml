@@ -21,6 +21,7 @@
   <inceptionYear>2007</inceptionYear>
 
   <properties>
+    <gpg.skip>false</gpg.skip>
     <failIfNoTests>false</failIfNoTests>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.homepage>http://www.querydsl.com</project.homepage>
@@ -767,6 +768,38 @@
         <configuration>
           <tag>${project.version}</tag>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.13</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          <stagingProgressTimeoutMinutes>15</stagingProgressTimeoutMinutes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
