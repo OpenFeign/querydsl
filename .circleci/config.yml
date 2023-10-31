@@ -45,7 +45,7 @@ commands:
       - run:
           name: 'Deploy Core Modules Sonatype'
           command: |
-            ./mvnw -ntp -nsu -s .circleci/settings.xml -DskipTests=true deploy -B -Pall
+            ./mvnw -ntp -nsu -s .circleci/settings.xml -DskipTests=true deploy -B -Pall,docs
 
 # our job defaults
 defaults: &defaults

@@ -760,6 +760,14 @@
           </dynamicDependencies>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-plugin</artifactId>
+        <configuration>
+          <tag>${project.version}</tag>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
