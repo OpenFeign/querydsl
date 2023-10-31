@@ -56,7 +56,9 @@ defaults: &defaults
 # branch filters
 master-only: &master-only
   branches:
-    only: master
+    only:
+    - master
+    - /querydsl-.*/
 
 tags-only: &tags-only
   branches:
@@ -66,7 +68,9 @@ tags-only: &tags-only
 
 all-branches: &all-branches
   branches:
-    ignore: master
+    ignore:
+    - master
+    - /querydsl-.*/
   tags:
     ignore: /.*/
 
