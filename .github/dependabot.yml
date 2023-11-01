@@ -9,3 +9,10 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+  - package-ecosystem: "maven"
+    directory: "/querydsl-lucene3/"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-name: "lucene"
+        versions: ["3.x"]
