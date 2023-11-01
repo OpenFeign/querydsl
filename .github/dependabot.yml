@@ -15,18 +15,18 @@ updates:
       interval: "weekly"
     ignore:
       - dependency-name: "org.apache.lucene:*"
-        update-types: "version-update:semver-minor"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "maven"
     directory: "/querydsl-lucene4/"
     schedule:
       interval: "weekly"
     ignore:
       - dependency-name: "org.apache.lucene:*"
-        update-types: "version-update:semver-minor"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "maven"
     directory: "/querydsl-lucene5/"
     schedule:
       interval: "weekly"
     ignore:
       - dependency-name: "org.apache.lucene:*"
-        update-types: "version-update:semver-minor"
+        update-types: ["version-update:semver-major"]
