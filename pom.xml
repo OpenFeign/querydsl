@@ -966,10 +966,6 @@
 
           com.querydsl.core.testutil.Teradata
         </excludedGroups>
-        <!-- FIXME can't get DB2 working with circle CI, might need to move to something else -->
-        <surefire.excludes>
-          DB2*
-        </surefire.excludes>
       </properties>
     </profile>
     <profile>

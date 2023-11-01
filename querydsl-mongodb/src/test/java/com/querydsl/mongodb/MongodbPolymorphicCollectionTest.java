@@ -18,7 +18,7 @@ import com.querydsl.mongodb.domain.*;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
 
 @Category(MongoDB.class)
-public class PolymorphicCollectionTest {
+public class MongodbPolymorphicCollectionTest {
 
     private final Morphia morphia;
     private final Datastore ds;
@@ -26,7 +26,7 @@ public class PolymorphicCollectionTest {
     private final Fish f2 = new Fish("f2");
     private final Chips c1 = new Chips("c1");
 
-    public PolymorphicCollectionTest() throws UnknownHostException, MongoException {
+    public MongodbPolymorphicCollectionTest() throws UnknownHostException, MongoException {
         final MongoClient mongo = new MongoClient();
         morphia = new Morphia().map(Food.class);
         ds = morphia.createDatastore(mongo, "testdb");

@@ -20,7 +20,7 @@ import com.querydsl.mongodb.domain.User;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
 
 @Category(MongoDB.class)
-public class JoinTest {
+public class MongodbJoinTest {
 
     private final MongoClient mongo;
     private final Morphia morphia;
@@ -32,7 +32,7 @@ public class JoinTest {
     private final QUser friend2 = new QUser("friend2");
     private final QUser enemy = new QUser("enemy");
 
-    public JoinTest() throws UnknownHostException, MongoException {
+    public MongodbJoinTest() throws UnknownHostException, MongoException {
         mongo = new MongoClient();
         morphia = new Morphia().map(User.class).map(Item.class);
         ds = morphia.createDatastore(mongo, dbname);
