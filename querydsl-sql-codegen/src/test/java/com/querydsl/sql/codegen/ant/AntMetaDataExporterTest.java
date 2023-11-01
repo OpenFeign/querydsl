@@ -28,7 +28,7 @@ import org.junit.Test;
 
 public class AntMetaDataExporterTest {
 
-    private static final String url = "jdbc:h2:./target/dbs/h2_AntMetaDataExporterTest";
+    private static final String url = "jdbc:h2:./target/dbs/h2_AntMetaDataExporterTest;MODE=legacy";
 
     @BeforeClass
     public static void setUp() throws SQLException {

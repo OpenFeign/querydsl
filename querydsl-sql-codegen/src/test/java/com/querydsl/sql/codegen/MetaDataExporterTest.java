@@ -56,7 +56,7 @@ public class MetaDataExporterTest {
     @BeforeClass
     public static void setUpClass() throws ClassNotFoundException, SQLException {
         Class.forName("org.h2.Driver");
-        String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis();
+        String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy";
         connection = DriverManager.getConnection(url, "sa", "");
         createTables(connection);
     }

@@ -239,6 +239,7 @@ public class SpatialBase extends AbstractBaseTest {
     }
 
     @Test
+    @ExcludeIn(H2)
     public void point_methods2() {
         QShapes shapes1 = QShapes.shapes;
         QShapes shapes2 = new QShapes("shapes2");

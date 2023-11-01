@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TestMetadataExportMojoTest {
 
-    private final String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis();
+    private final String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy";
 
     private TestMetadataExportMojo setupMojoWith(MavenProject project) {
         TestMetadataExportMojo mojo = new TestMetadataExportMojo();
