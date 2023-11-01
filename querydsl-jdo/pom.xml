@@ -23,7 +23,7 @@
   </scm>
 
   <properties>   
-    <dn.version>5.2.7</dn.version>
+    <dn.version>5.2.9</dn.version>
     <dn.plugin.version>5.2.1</dn.plugin.version>
   </properties>
 
@@ -278,20 +278,5 @@
       </plugin>    
     </plugins>      
   </build>
-
-  <!--TODO upgrade dependencies and get rid of repositories and pluginRepositories -->
-  <repositories>
-    <repository>
-      <id>datanucleus</id>
-      <url>https://www.datanucleus.org/downloads/maven2</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>datanucleus</id>
-      <url>https://www.datanucleus.org/downloads/maven2</url>
-    </pluginRepository>
-  </pluginRepositories>
 
 </project>

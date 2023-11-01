@@ -43,7 +43,7 @@
 
     <!-- default bytecode version for src/main -->
     <main.java.version>1.8</main.java.version>
-    <latest.java.version>11</latest.java.version>
+    <latest.java.version>21</latest.java.version>
 
     <!-- SQL deps -->
     <db2.version>11.5.5.0</db2.version>
@@ -823,7 +823,8 @@
         <module>querydsl-maven-plugin</module>
         <module>querydsl-jpa</module>
         <module>querydsl-jpa-codegen</module>
-        <module>querydsl-jdo</module>
+        <!-- datanucleus core seems to be incompatible with modern java: Unsupported class file major version 65 -->
+        <!--<module>querydsl-jdo</module>-->
         <module>querydsl-bom</module>
         <module>querydsl-kotlin-codegen</module>
 
