@@ -978,7 +978,6 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <disableXmlReport>true</disableXmlReport>
-              <printSummary>false</printSummary>
            </configuration>
           </plugin>
         </plugins>
