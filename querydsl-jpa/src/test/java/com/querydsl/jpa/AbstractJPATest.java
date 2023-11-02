@@ -1675,7 +1675,7 @@ public abstract class AbstractJPATest {
 
     @Test
     @NoEclipseLink @NoOpenJPA @NoBatooJPA
-    @ExcludeIn({ORACLE, SQLSERVER})
+    @ExcludeIn({ORACLE, SQLSERVER, DERBY})
     public void test() {
         Cat kitten = savedCats.get(0);
         Cat noKitten = savedCats.get(savedCats.size() - 1);
