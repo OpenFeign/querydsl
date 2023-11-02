@@ -62,6 +62,8 @@ public class MetadataExportMojoTest {
         mojo.setJdbcUser("sa");
         mojo.setNamePrefix("Q"); // default value
         mojo.setPackageName("com.example");
+        mojo.setExportTables(true); // default value
+        mojo.setExportViews(true); // default value
     }
 
     @Test
