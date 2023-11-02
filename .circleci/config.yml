@@ -77,7 +77,39 @@ all-branches: &all-branches
 version: 2.1
 
 jobs:
+  resolve:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - resolve-dependencies
+      - save_cache:
+          paths:
+            - ~/.m2/repository
+          key: querydsl-dependencies-v2-{{ checksum "pom.xml" }}
   test:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dsurefire.excludes=*MySQL*,*PostgreSQL*,*CUBRID*,*Oracle*,*Mongodb*,*DB2*,*Firebird*,*MSSQL*
+      - verify-formatting
+  testMySQL:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
@@ -88,60 +120,131 @@ jobs:
           - MYSQL_USER=querydsl
           - MYSQL_PASSWORD=querydsl
           - MYSQL_DATABASE=querydsl
-      - image: mdillon/postgis:9.3-alpine
-        environment:
-          - POSTGRES_USER=querydsl
-          - POSTGRES_PASSWORD=querydsl
-          - POSTGRES_DB=querydsl
-      - image: cubrid/cubrid:11.3
-        environment:
-          - CUBRID_DB=demodb
-      - image: gvenzl/oracle-xe:11
-        environment:
-          - ORACLE_PASSWORD=querydsl
-          - APP_USER=querydsl
-          - APP_USER_PASSWORD=querydsl
-      - image: mongo:3.6.1
-      - image: ibmcom/db2:11.5.0.0
-        environment:
-          - DB2INST1_PASSWORD=a3sd!fDj
-          - DB2INSTANCE=db2inst1
-          - DBNAME=sample
-          - LICENSE=accept
-          - ARCHIVE_LOGS=false
-          - AUTOCONFIG=false
-      - image: jacobalberty/firebird:2.5.9-ss
-        environment:
-          - ISC_PASSWORD=masterkey
-          - FIREBIRD_DATABASE=querydsl.fdb
-          - FIREBIRD_USER=querydsl
-          - FIREBIRD_PASSWORD=querydsl
-      - image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
-        environment:
-          - ACCEPT_EULA=Y
-          - SA_PASSWORD=Password1!
-          - MSSQL_PID=Express
-
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
             - querydsl-dependencies-v2-
-      - setup_remote_docker:
-          version: 20.10.23
-          docker_layer_caching: true
-      - resolve-dependencies
-      - save_cache:
-          paths:
-            - ~/.m2/repository
-          key: querydsl-dependencies-v2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
-            JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-            ./mvnw -ntp test -B -Pall,travis
-      - verify-formatting
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*MySQL*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testPostgreSQL:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: mdillon/postgis:9.3-alpine
+        environment:
+          - POSTGRES_USER=querydsl
+          - POSTGRES_PASSWORD=querydsl
+          - POSTGRES_DB=querydsl
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*PostgreSQL*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testCUBRID:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: cubrid/cubrid:11.3
+        environment:
+          - CUBRID_DB=demodb
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*CUBRID*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testOracle:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: gvenzl/oracle-xe:11
+        environment:
+          - ORACLE_PASSWORD=querydsl
+          - APP_USER=querydsl
+          - APP_USER_PASSWORD=querydsl
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*Oracle*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testMongo:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: mongo:3.6.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*Mongodb*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testFirebird:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: jacobalberty/firebird:2.5.9-ss
+        environment:
+          - ISC_PASSWORD=masterkey
+          - FIREBIRD_DATABASE=querydsl.fdb
+          - FIREBIRD_USER=querydsl
+          - FIREBIRD_PASSWORD=querydsl
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*Firebird*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testMSSQL:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        environment:
+          - ACCEPT_EULA=Y
+          - SA_PASSWORD=Password1!
+          - MSSQL_PID=Express
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*MSSQL*Test -Dsurefire.failIfNoSpecifiedTests=false
 
   deploy:
     executor:
@@ -161,8 +264,56 @@ workflows:
   version: 2
   build:
     jobs:
+      - resolve:
+          name: 'Resolve dependencies'
+          filters:
+            <<: *all-branches
       - test:
-          name: 'pr-build'
+          name: 'Compile and Test (no external databases)'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testMySQL:
+          name: 'Test MySQL'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testPostgreSQL:
+          name: 'Test PostgreSQL'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testCUBRID:
+          name: 'Test CUBRID'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testOracle:
+          name: 'Test Oracle'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testMongo:
+          name: 'Test MongoDB'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testFirebird:
+          name: 'Test Firebird'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testMSSQL:
+          name: 'Test MSSQL'
+          requires:
+            - 'Resolve dependencies'
           filters:
             <<: *all-branches
 
