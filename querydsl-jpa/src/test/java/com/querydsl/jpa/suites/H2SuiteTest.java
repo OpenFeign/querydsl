@@ -10,10 +10,12 @@ import com.querydsl.jpa.*;
 @Category(H2.class)
 public class H2SuiteTest extends AbstractSuite {
 
+    // FIXME new h2 not compatible with old hibernate/jpa
     // public static class JPA extends JPABase { }
     public static class JPASQL extends JPASQLBase { }
     public static class JPAIntegration extends JPAIntegrationBase { }
     public static class Serialization extends SerializationBase { }
+    // FIXME new h2 not compatible with old hibernate/jpa
     // public static class Hibernate extends HibernateBase { }
     public static class HibernateSQL extends HibernateSQLBase { }
 
