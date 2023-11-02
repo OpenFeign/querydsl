@@ -44,6 +44,8 @@ public class TestMetadataExportMojoTest {
         mojo.setPackageName("com.example");
         mojo.setTargetFolder("target/export4");
         mojo.setImports(new String[] {"com.pck1", "com.pck2", "com.Q1", "com.Q2"});
+        mojo.setExportTables(true); // default value
+        mojo.setExportViews(true); // default value
         return mojo;
     }
 
