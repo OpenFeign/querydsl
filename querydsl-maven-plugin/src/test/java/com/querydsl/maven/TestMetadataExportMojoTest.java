@@ -66,7 +66,7 @@ public class TestMetadataExportMojoTest {
         TestMetadataExportMojo mojo = setupMojoWith(project);
         mojo.execute();
 
-        File sourceFile = new File("target/export4/com/example/QCatalogs.java");
+        File sourceFile = new File("target/export4/com/example/QInformationSchemaCatalogName.java");
         String sourceFileContent = FileUtils.fileRead(sourceFile);
         assertThat(sourceFileContent, containsString("@" + GeneratedAnnotationResolver.resolveDefault().getSimpleName()));
     }
@@ -79,7 +79,7 @@ public class TestMetadataExportMojoTest {
         mojo.setGeneratedAnnotationClass(annotationClass.getName());
         mojo.execute();
 
-        File sourceFile = new File("target/export4/com/example/QCatalogs.java");
+        File sourceFile = new File("target/export4/com/example/QInformationSchemaCatalogName.java");
         String sourceFileContent = FileUtils.fileRead(sourceFile);
         assertThat(sourceFileContent, containsString("@" + annotationClass.getSimpleName()));
     }
