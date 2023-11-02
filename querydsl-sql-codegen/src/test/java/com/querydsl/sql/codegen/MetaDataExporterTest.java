@@ -154,7 +154,7 @@ public class MetaDataExporterTest {
     @Test
     public void explicit_configuration() throws SQLException {
         MetaDataExporter exporter = new MetaDataExporter();
-        exporter.setCatalogPattern("%TESTDB%");
+        exporter.setCatalogPattern(connection.getCatalog());
         exporter.setSchemaPattern("PUBLIC");
         exporter.setNamePrefix("Q");
         exporter.setPackageName("test");
@@ -189,7 +189,7 @@ public class MetaDataExporterTest {
         URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] {folder.getRoot().toURI().toURL()});
         compiler.run(null, null, null, folder.getRoot().getAbsoluteFile()  + "/test/Foo.java");
         Class<?> cls = Class.forName("test.Foo", true, classLoader);
-        assertThat(ReflectionUtils.getAnnotatedElement(cls, "id", Integer.class).getAnnotation(NotNull.class), is(nullValue()));
+        assertThat(ReflectionUtils.getAnnotatedElement(cls, "id", Integer.class).getAnnotation(NotNull.class), is(notNullValue()));
         assertThat(ReflectionUtils.getAnnotatedElement(cls, "name", String.class).getAnnotation(NotNull.class), is(nullValue()));
 
         stmt.execute("DROP TABLE foo");
