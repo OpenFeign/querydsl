@@ -86,13 +86,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-v2-
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
       - resolve-dependencies
       - save_cache:
           paths:
             - ~/.m2/repository
-          key: querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+          key: querydsl-dependencies-{{ checksum "pom.xml" }}
   test:
     <<: *defaults
     working_directory: ~/querydsl
@@ -102,12 +102,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-v2-
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall,travis -Dsurefire.excludes=*MySQL*,*PostgreSQL*,*CUBRID*,*Oracle*,*Mongodb*,*DB2*,*Firebird*,*MSSQL*
+            ./mvnw -ntp test -B -Pall -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.EmbeddedDatabase
       - verify-formatting
   testMySQL:
     <<: *defaults
@@ -124,12 +124,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-v2-
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall,travis -Dtest=*MySQL*Test -Dsurefire.failIfNoSpecifiedTests=false
+            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.MySQL
   testPostgreSQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -144,12 +144,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-v2-
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall,travis -Dtest=*PostgreSQL*Test -Dsurefire.failIfNoSpecifiedTests=false
+            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.PostgreSQL
   testCUBRID:
     <<: *defaults
     working_directory: ~/querydsl
@@ -162,12 +162,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-v2-
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall,travis -Dtest=*CUBRID*Test -Dsurefire.failIfNoSpecifiedTests=false
+            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.CUBRID
   testOracle:
     <<: *defaults
     working_directory: ~/querydsl
@@ -182,12 +182,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-v2-
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall,travis -Dtest=*Oracle*Test -Dsurefire.failIfNoSpecifiedTests=false
+            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.Oracle
   testMongo:
     <<: *defaults
     working_directory: ~/querydsl
@@ -198,12 +198,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-v2-
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall,travis -Dtest=*Mongodb*Test -Dsurefire.failIfNoSpecifiedTests=false
+            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.MongoDB
   testFirebird:
     <<: *defaults
     working_directory: ~/querydsl
@@ -219,12 +219,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-v2-
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall,travis -Dtest=*Firebird*Test -Dsurefire.failIfNoSpecifiedTests=false
+            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.Firebird
   testMSSQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -239,12 +239,27 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-v2-
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall,travis -Dtest=*MSSQL*Test -Dsurefire.failIfNoSpecifiedTests=false
+            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.SQLServer
+  testEmbedded:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
 
   deploy:
     executor:
@@ -254,8 +269,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-v2-
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
       - resolve-dependencies
       - configure-gpg
       - nexus-deploy
@@ -311,7 +326,13 @@ workflows:
           filters:
             <<: *all-branches
       - testMSSQL:
-          name: 'Test MSSQL'
+          name: 'Test SQL Server'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testEmbedded:
+          name: 'Test Embedded databases'
           requires:
             - 'Resolve dependencies'
           filters:
