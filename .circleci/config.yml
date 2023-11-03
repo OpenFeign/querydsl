@@ -107,7 +107,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall
+            ./mvnw -ntp test -B -Pall -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.EmbeddedDatabase
       - verify-formatting
   testMySQL:
     <<: *defaults
@@ -245,6 +245,21 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.SQLServer
+  testEmbedded:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
 
   deploy:
     executor:
@@ -311,7 +326,13 @@ workflows:
           filters:
             <<: *all-branches
       - testMSSQL:
-          name: 'Test MSSQL'
+          name: 'Test SQL Server'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testEmbedded:
+          name: 'Test Embedded databases'
           requires:
             - 'Resolve dependencies'
           filters:
