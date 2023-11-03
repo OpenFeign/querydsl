@@ -9,13 +9,6 @@
   <description>parent project for Querydsl modules</description>
   <url>https://querydsl.github.io/</url>
 
-  <parent>
-    <!--FIXME remove after 5.0.1 -->
-    <groupId>com.querydsl</groupId>
-    <artifactId>querydsl-parent</artifactId>
-    <version>0.1.0</version>
-  </parent>
-
   <packaging>pom</packaging>
 
   <inceptionYear>2007</inceptionYear>
@@ -312,6 +305,21 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.3.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.6.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
@@ -933,7 +941,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>3.3.0</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -946,7 +953,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.6.0</version>
             <configuration>
               <source>8</source>
               <excludePackageNames>com.querydsl.examples.kotlin.*</excludePackageNames>
@@ -1026,7 +1032,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.1.0</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
