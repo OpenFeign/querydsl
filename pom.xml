@@ -616,46 +616,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.3.1</version>
-        <executions>
-          <execution>
-            <id>checkstyle</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <configLocation>src/main/resources/querydsl_checks_base.xml</configLocation>
-              <includeTestSourceDirectory>true</includeTestSourceDirectory>
-              <failOnViolation>true</failOnViolation>
-            </configuration>
-          </execution>
-          <execution>
-            <id>checkstyle-main</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <configLocation>src/main/resources/querydsl_checks_main.xml</configLocation>
-              <failOnViolation>true</failOnViolation>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>8.44</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <excludes>**/generated/**/*,**/jmh_generated/**/*,**/com/querydsl/codegen/utils/**/*</excludes>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>de.qaware.maven</groupId>
         <artifactId>go-offline-maven-plugin</artifactId>
         <version>1.2.8</version>
@@ -698,6 +658,42 @@
           <stagingProgressTimeoutMinutes>15</stagingProgressTimeoutMinutes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>io.sundr</groupId>
+        <artifactId>sundr-maven-plugin</artifactId>
+        <version>0.101.0</version>
+        <inherited>false</inherited>
+        <configuration>
+          <bomTemplateUrl>file://${project.basedir}/src/config/bom.xml</bomTemplateUrl>
+          <boms>
+            <bom>
+              <artifactId>querydsl-bom</artifactId>
+              <name>QueryDSL (Bill Of Materials)</name>
+
+              <properties>
+                <license.skip>true</license.skip>
+              </properties>
+
+              <modules>
+                <includes>
+                  <include>io.github.openfeign.querydsl:*</include>
+                </includes>
+                <excludes>
+                  <exclude>*:querydsl-example-*</exclude>
+                  <exclude>*:querydsl-benchmark</exclude>
+                </excludes>
+              </modules>
+            </bom>
+          </boms>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate-bom</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -722,7 +718,6 @@
         <module>querydsl-jpa-codegen</module>
         <!-- datanucleus core seems to be incompatible with modern java: Unsupported class file major version 65 -->
         <!--<module>querydsl-jdo</module>-->
-        <module>querydsl-bom</module>
         <module>querydsl-kotlin-codegen</module>
 
         <!-- Lucene related -->
@@ -1025,18 +1020,70 @@
         </plugins>
       </build>
     </profile>
-        <!-- Isolates eclipse build from maven build -->
-        <profile>
-            <id>m2e</id>
-            <activation>
-                <property>
-                    <name>m2e.version</name>
-                </property>
-            </activation>
-            <build>
-                <directory>${basedir}/m2e-target</directory>
-            </build>
-        </profile>
+    <!-- Isolates eclipse build from maven build -->
+    <profile>
+        <id>m2e</id>
+        <activation>
+            <property>
+                <name>m2e.version</name>
+            </property>
+        </activation>
+        <build>
+            <directory>${basedir}/m2e-target</directory>
+        </build>
+    </profile>
+    <profile>
+      <activation>
+        <property>
+          <name>packaging</name>
+          <value>jar</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>checkstyle</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <configLocation>src/main/resources/querydsl_checks_base.xml</configLocation>
+              <includeTestSourceDirectory>true</includeTestSourceDirectory>
+              <failOnViolation>true</failOnViolation>
+            </configuration>
+          </execution>
+          <execution>
+            <id>checkstyle-main</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <configLocation>src/main/resources/querydsl_checks_main.xml</configLocation>
+              <failOnViolation>true</failOnViolation>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>8.44</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <excludes>**/generated/**/*,**/jmh_generated/**/*,**/com/querydsl/codegen/utils/**/*</excludes>
+        </configuration>
+      </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
 </project>
