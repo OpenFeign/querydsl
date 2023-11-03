@@ -93,6 +93,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
     @Override
     protected void save(Object entity) {
         entityManager.persist(entity);
+        entityManager.flush();
     }
 
     @Test

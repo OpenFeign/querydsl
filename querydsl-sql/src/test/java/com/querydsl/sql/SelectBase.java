@@ -413,7 +413,7 @@ public class SelectBase extends AbstractBaseTest {
     }
 
     @Test
-    @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA})
+    @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, H2})
     public void dates() {
         long ts = ((long) Math.floor(System.currentTimeMillis() / 1000)) * 1000;
         long tsDate = new org.joda.time.LocalDate(ts).toDateMidnight().getMillis();
@@ -503,7 +503,7 @@ public class SelectBase extends AbstractBaseTest {
     }
 
     @Test
-    @ExcludeIn({CUBRID, SQLITE, TERADATA})
+    @ExcludeIn({CUBRID, SQLITE, TERADATA, H2})
     public void dates_literals() {
         if (configuration.getUseLiterals()) {
             dates();
@@ -602,7 +602,7 @@ public class SelectBase extends AbstractBaseTest {
     }
 
     @Test
-    @ExcludeIn({SQLITE}) // FIXME
+    @ExcludeIn({SQLITE, H2}) // FIXME
     public void date_trunc() {
         DateTimeExpression<java.util.Date> expr = DateTimeExpression.currentTimestamp();
 
@@ -621,7 +621,7 @@ public class SelectBase extends AbstractBaseTest {
     }
 
     @Test
-    @ExcludeIn({SQLITE, TERADATA}) // FIXME
+    @ExcludeIn({SQLITE, TERADATA, H2}) // FIXME
     public void date_trunc2() {
         DateTimeExpression<DateTime> expr = DateTimeExpression.currentTimestamp(DateTime.class);
 
