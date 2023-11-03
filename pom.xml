@@ -29,9 +29,6 @@
       com.querydsl.core.testutil.ReportingOnly
     </excludedGroups>
 
-    <!-- groups to run with surefire plugin - intended to be overridden on the command line -->
-    <includedGroups></includedGroups>
-
     <argLine>-Xms256m -Xmx512m</argLine>
 
     <!-- default bytecode version for src/main -->
@@ -104,14 +101,27 @@
 
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.8.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest</artifactId>
-        <scope>test</scope>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>5.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+       <groupId>org.hamcrest</groupId>
+       <artifactId>hamcrest</artifactId>
+       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
@@ -607,17 +617,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <excludedGroups>${excludedGroups}</excludedGroups>
-          <groups>${includedGroups}</groups>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit47</artifactId>
-            <version>${surefire.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -685,6 +684,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-plugin</artifactId>
+        <version>2.0.1</version>
         <configuration>
           <tag>${project.version}</tag>
         </configuration>
@@ -853,29 +853,6 @@
       </modules>
     </profile>
 
-    <profile>
-      <id>jenkins</id>
-      <properties>
-        <excludedGroups>
-          com.querydsl.core.testutil.Performance,
-
-          com.querydsl.core.testutil.DB2,
-          com.querydsl.core.testutil.SQLServer
-        </excludedGroups>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>travis</id>
-      <properties>
-        <excludedGroups>
-          com.querydsl.core.testutil.Performance,
-          com.querydsl.core.testutil.ReportingOnly,
-
-          com.querydsl.core.testutil.Teradata
-        </excludedGroups>
-      </properties>
-    </profile>
     <profile>
       <id>quickbuild</id>
       <properties>
@@ -1051,6 +1028,18 @@
         </plugins>
       </build>
     </profile>
+        <!-- Isolates eclipse build from maven build -->
+        <profile>
+            <id>m2e</id>
+            <activation>
+                <property>
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <build>
+                <directory>${basedir}/m2e-target</directory>
+            </build>
+        </profile>
   </profiles>
 
 </project>
