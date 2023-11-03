@@ -272,7 +272,7 @@ import com.querydsl.core.annotations.Config;
             </configuration>
             <dependencies>
               <dependency>
-                <groupId>com.querydsl</groupId>
+                <groupId>io.github.openfeign.querydsl</groupId>
                 <artifactId>querydsl-apt</artifactId>
                 <version>${querydsl.version}</version>
                 <classifier>jpa</classifier>
@@ -353,7 +353,7 @@ import com.querydsl.core.annotations.Config;
                 <version>2.3.7-01</version>
               </dependency>
               <dependency>
-                <groupId>com.querydsl</groupId>
+                <groupId>io.github.openfeign.querydsl</groupId>
                 <artifactId>querydsl-apt</artifactId>
                 <version>${querydsl.version}</version>
                 <classifier>jpa</classifier>
@@ -663,7 +663,7 @@ exporter.export(DomainClass.class.getPackage());
     <plugins>
       ...
       <plugin>
-        <groupId>com.querydsl</groupId>
+        <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
         <version>${querydsl.version}</version>
         <executions>
@@ -773,12 +773,12 @@ exporter.export(DomainClass.class.getPackage());
     <plugins>
       ...
       <plugin>
-        <groupId>com.querydsl</groupId>
+        <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
         <version>${querydsl.version}</version>
         <dependencies>
           <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-scala</artifactId>
             <version>${querydsl.version}</version>
           </dependency>

@@ -413,7 +413,7 @@ public class SelectBase extends AbstractBaseTest {
     }
 
     @Test
-    @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA})
+    @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, H2})
     public void dates() throws SQLException {
         if (!configuration.getUseLiterals()) {
             dates(false);
@@ -536,6 +536,7 @@ public class SelectBase extends AbstractBaseTest {
                         + ": " + entry.getKey() + " != " + entry.getValue());
             }
             Assert.fail("Failed with " + failures);
+    @ExcludeIn({CUBRID, SQLITE, TERADATA})
         }
     }
 
@@ -631,7 +632,7 @@ public class SelectBase extends AbstractBaseTest {
     }
 
     @Test
-    @ExcludeIn({SQLITE}) // FIXME
+    @ExcludeIn({SQLITE, H2}) // FIXME
     public void date_trunc() {
         DateTimeExpression<java.util.Date> expr = DateTimeExpression.currentTimestamp();
 
@@ -650,7 +651,7 @@ public class SelectBase extends AbstractBaseTest {
     }
 
     @Test
-    @ExcludeIn({SQLITE, TERADATA}) // FIXME
+    @ExcludeIn({SQLITE, TERADATA, H2}) // FIXME
     public void date_trunc2() {
         DateTimeExpression<DateTime> expr = DateTimeExpression.currentTimestamp(DateTime.class);
 

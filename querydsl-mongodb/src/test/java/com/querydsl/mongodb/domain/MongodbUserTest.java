@@ -19,7 +19,7 @@ import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mongodb.morphia.Morphia;
 
-public class UserTest {
+public class MongodbUserTest {
 
     private static final Morphia morphia = new Morphia().map(User.class);
 

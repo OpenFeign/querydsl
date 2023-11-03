@@ -25,7 +25,7 @@ services:
   postgresql:
     image: mdillon/postgis:9.3-alpine
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - ./db/postgresql.sql:/docker-entrypoint-initdb.d/postgresql.sql
     environment:
@@ -41,14 +41,15 @@ services:
     - "./devops/sql-snippets/oracle.sql:/docker-entrypoint-initdb.d/oracle.sql"
 
   cubrid:
-    image: lighthopper/cubrid:9.2.26.0004
-    command: "./create-start-demodb.sh"
+    image: cubrid/cubrid:11.3
     ports:
       - "33000:33000"
       - "30000:30000"
       - "8001:8001"
       - "8002:8002"
       - "1523:1523"
+    environment:
+      - CUBRID_DB=demodb
     healthcheck:
       test: csql demodb -c "SELECT 1"
       interval: 5s

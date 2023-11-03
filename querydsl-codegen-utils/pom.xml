@@ -3,14 +3,14 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>codegen-utils</artifactId>
-  <version>5.0.1-SNAPSHOT</version>
+  <version>5.0.0</version>
   <name>Querydsl - Codegen utils</name>
   <description>Code generation and compilation for Java</description>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.1-SNAPSHOT</version>
+    <version>5.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   
@@ -68,7 +68,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.2</version>
+        <version>3.3.0</version>
         <configuration>
           <archive>
             <manifestEntries>

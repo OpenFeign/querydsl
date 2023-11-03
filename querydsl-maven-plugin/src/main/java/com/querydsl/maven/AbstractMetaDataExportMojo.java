@@ -650,6 +650,14 @@ public class AbstractMetaDataExportMojo extends AbstractMojo {
         this.exportBeans = exportBeans;
     }
 
+    public void setExportTables(boolean exportTables) {
+        this.exportTables = exportTables;
+    }
+
+    public void setExportViews(boolean exportViews) {
+        this.exportViews = exportViews;
+    }
+
     public void setInnerClassesForKeys(boolean innerClassesForKeys) {
         this.innerClassesForKeys = innerClassesForKeys;
     }

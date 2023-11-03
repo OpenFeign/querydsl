@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.1-SNAPSHOT</version>
+    <version>5.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-jdo</artifactId>
   <name>Querydsl - JDO support</name>
   <description>JDO support for Querydsl</description>
@@ -23,8 +23,8 @@
   </scm>
 
   <properties>   
-    <dn.version>5.2.8</dn.version>
-    <dn.plugin.version>5.2.1</dn.plugin.version>
+    <dn.version>5.2.9</dn.version>
+    <dn.plugin.version>6.0.0-release</dn.plugin.version>
   </properties>
 
   <dependencies>
@@ -36,7 +36,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -46,20 +46,20 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-codegen</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>        
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-apt</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>        
     
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
@@ -100,7 +100,7 @@
     </dependency>    
     
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -209,32 +209,35 @@
           </execution>    
         </executions>         
       </plugin>            
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <executions>
           <execution>
-          <id>verification</id>    
-          <goals>
-            <goal>test</goal>    
-          </goals>
-          <phase>verify</phase>
-          <configuration>
+            <id>verification</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
               <systemProperties>
-              <property>
+                <property>
                   <name>version</name>
-                <value>${project.version}</value>
-              </property>                  
-            </systemProperties>    
-            <includes>
-              <include>com/querydsl/jdo/PackageVerification.java</include>
-            </includes>
-          </configuration>
+                  <value>${project.version}</value>
+                </property>
+              </systemProperties>
+              <includes>
+                <include>com/querydsl/jdo/PackageVerification.java</include>
+              </includes>
+              <jdkToolchain>
+                <version>${latest.java.version}</version>
+              </jdkToolchain>
+            </configuration>
           </execution>
-        </executions>        
-      </plugin>      
-      
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>com.mysema.maven</groupId>
         <artifactId>apt-maven-plugin</artifactId>
@@ -254,7 +257,7 @@
       </plugin>   
       
       <plugin>
-        <groupId>com.querydsl</groupId>
+        <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
         <version>${project.version}</version>
         <configuration>
@@ -275,20 +278,5 @@
       </plugin>    
     </plugins>      
   </build>
-
-  <!--TODO upgrade dependencies and get rid of repositories and pluginRepositories -->
-  <repositories>
-    <repository>
-      <id>datanucleus</id>
-      <url>https://www.datanucleus.org/downloads/maven2</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>datanucleus</id>
-      <url>https://www.datanucleus.org/downloads/maven2</url>
-    </pluginRepository>
-  </pluginRepositories>
 
 </project>

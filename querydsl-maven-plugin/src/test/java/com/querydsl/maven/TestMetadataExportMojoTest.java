@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TestMetadataExportMojoTest {
 
-    private final String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis();
+    private final String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy";
 
     private TestMetadataExportMojo setupMojoWith(MavenProject project) {
         TestMetadataExportMojo mojo = new TestMetadataExportMojo();
@@ -44,6 +44,8 @@ public class TestMetadataExportMojoTest {
         mojo.setPackageName("com.example");
         mojo.setTargetFolder("target/export4");
         mojo.setImports(new String[] {"com.pck1", "com.pck2", "com.Q1", "com.Q2"});
+        mojo.setExportTables(true); // default value
+        mojo.setExportViews(true); // default value
         return mojo;
     }
 
@@ -64,7 +66,7 @@ public class TestMetadataExportMojoTest {
         TestMetadataExportMojo mojo = setupMojoWith(project);
         mojo.execute();
 
-        File sourceFile = new File("target/export4/com/example/QCatalogs.java");
+        File sourceFile = new File("target/export4/com/example/QInformationSchemaCatalogName.java");
         String sourceFileContent = FileUtils.fileRead(sourceFile);
         assertThat(sourceFileContent, containsString("@" + GeneratedAnnotationResolver.resolveDefault().getSimpleName()));
     }
@@ -77,7 +79,7 @@ public class TestMetadataExportMojoTest {
         mojo.setGeneratedAnnotationClass(annotationClass.getName());
         mojo.execute();
 
-        File sourceFile = new File("target/export4/com/example/QCatalogs.java");
+        File sourceFile = new File("target/export4/com/example/QInformationSchemaCatalogName.java");
         String sourceFileContent = FileUtils.fileRead(sourceFile);
         assertThat(sourceFileContent, containsString("@" + annotationClass.getSimpleName()));
     }

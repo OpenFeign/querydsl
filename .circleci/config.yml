@@ -1,0 +1,340 @@
+#
+# Copyright 2012-2020 The Feign Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied. See the License for the specific language governing permissions and limitations under
+# the License.
+#
+
+# common executors
+executors:
+  java:
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+
+# common commands
+commands:
+  resolve-dependencies:
+    description: 'Download and prepare all dependencies'
+    steps:
+      - run:
+          name: 'Resolving Dependencies'
+          command: |
+            ./mvnw -ntp dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true -B -Pall
+
+  verify-formatting:
+    steps:
+      - run:
+          name: 'Verify formatting'
+          command: |
+            scripts/no-git-changes.sh
+  configure-gpg:
+    steps:
+      - run:
+          name: 'Configure GPG keys'
+          command: |
+            echo -e "$GPG_KEY" | gpg --batch --no-tty --import --yes
+  nexus-deploy:
+    steps:
+      - run:
+          name: 'Deploy Core Modules Sonatype'
+          command: |
+            ./mvnw -ntp -nsu -s .circleci/settings.xml -DskipTests=true deploy -B -Pall
+
+# our job defaults
+defaults: &defaults
+  environment:
+    # Customize the JVM maximum heap limit
+    MAVEN_OPTS: -Xmx3200m
+
+# branch filters
+master-only: &master-only
+  branches:
+    only:
+    - master
+    - /querydsl-.*/
+
+tags-only: &tags-only
+  branches:
+    ignore: /.*/
+  tags:
+    only: /.*/
+
+all-branches: &all-branches
+  branches:
+    ignore:
+    - master
+    - /querydsl-.*/
+  tags:
+    ignore: /.*/
+
+version: 2.1
+
+jobs:
+  resolve:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - resolve-dependencies
+      - save_cache:
+          paths:
+            - ~/.m2/repository
+          key: querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+  test:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dsurefire.excludes=*MySQL*,*PostgreSQL*,*CUBRID*,*Oracle*,*Mongodb*,*DB2*,*Firebird*,*MSSQL*
+      - verify-formatting
+  testMySQL:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: mysql:5.6.38
+        environment:
+          - MYSQL_ROOT_PASSWORD=querydsl
+          - MYSQL_USER=querydsl
+          - MYSQL_PASSWORD=querydsl
+          - MYSQL_DATABASE=querydsl
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*MySQL*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testPostgreSQL:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: mdillon/postgis:9.3-alpine
+        environment:
+          - POSTGRES_USER=querydsl
+          - POSTGRES_PASSWORD=querydsl
+          - POSTGRES_DB=querydsl
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*PostgreSQL*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testCUBRID:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: cubrid/cubrid:11.3
+        environment:
+          - CUBRID_DB=demodb
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*CUBRID*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testOracle:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: gvenzl/oracle-xe:11
+        environment:
+          - ORACLE_PASSWORD=querydsl
+          - APP_USER=querydsl
+          - APP_USER_PASSWORD=querydsl
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*Oracle*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testMongo:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: mongo:3.6.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*Mongodb*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testFirebird:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: jacobalberty/firebird:2.5.9-ss
+        environment:
+          - ISC_PASSWORD=masterkey
+          - FIREBIRD_DATABASE=querydsl.fdb
+          - FIREBIRD_USER=querydsl
+          - FIREBIRD_PASSWORD=querydsl
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*Firebird*Test -Dsurefire.failIfNoSpecifiedTests=false
+  testMSSQL:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+      - image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        environment:
+          - ACCEPT_EULA=Y
+          - SA_PASSWORD=Password1!
+          - MSSQL_PID=Express
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp test -B -Pall,travis -Dtest=*MSSQL*Test -Dsurefire.failIfNoSpecifiedTests=false
+
+  deploy:
+    executor:
+      name: java
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-v2-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-v2-
+      - resolve-dependencies
+      - configure-gpg
+      - nexus-deploy
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - resolve:
+          name: 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - test:
+          name: 'Compile and Test (no external databases)'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testMySQL:
+          name: 'Test MySQL'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testPostgreSQL:
+          name: 'Test PostgreSQL'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testCUBRID:
+          name: 'Test CUBRID'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testOracle:
+          name: 'Test Oracle'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testMongo:
+          name: 'Test MongoDB'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testFirebird:
+          name: 'Test Firebird'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testMSSQL:
+          name: 'Test MSSQL'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+
+  snapshot:
+    jobs:
+      - test:
+          name: 'snapshot'
+          filters:
+            <<: *master-only
+      - deploy:
+          name: 'deploy snapshot'
+          requires:
+            - 'snapshot'
+          context: Sonatype
+          filters:
+            <<: *master-only
+
+  release:
+    jobs:
+      - deploy:
+          name: 'release to maven central'
+          context: Sonatype
+          filters:
+            <<: *tags-only

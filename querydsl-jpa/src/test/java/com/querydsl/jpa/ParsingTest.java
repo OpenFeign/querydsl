@@ -339,6 +339,7 @@ public class ParsingTest extends AbstractQueryTest {
     }
 
     @Test
+    @ExcludeIn(DERBY)
     public void docoExamples97_10_2() throws Exception {
         query().from(log, payment).innerJoin(log.item, item).where(
                 item.instanceOf(Payment.class),

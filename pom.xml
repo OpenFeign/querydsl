@@ -2,14 +2,15 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-root</artifactId>
-  <version>5.0.1-SNAPSHOT</version>
+  <version>5.1-SNAPSHOT</version>
     <name>Querydsl</name>
   <description>parent project for Querydsl modules</description>
   <url>https://querydsl.github.io/</url>
 
   <parent>
+    <!--FIXME remove after 5.0.1 -->
     <groupId>com.querydsl</groupId>
     <artifactId>querydsl-parent</artifactId>
     <version>0.1.0</version>
@@ -20,11 +21,12 @@
   <inceptionYear>2007</inceptionYear>
 
   <properties>
+    <gpg.skip>false</gpg.skip>
     <failIfNoTests>false</failIfNoTests>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.homepage>http://www.querydsl.com</project.homepage>
-    <project.githubpage>http://github.com/querydsl/querydsl</project.githubpage>
-    <project.checkout>scm:git:git@github.com:querydsl/querydsl.git</project.checkout>
+    <project.githubpage>http://github.com/openfeign/querydsl</project.githubpage>
+    <project.checkout>scm:git:git@github.com:openfeign/querydsl.git</project.checkout>
 
     <!-- default groups to exclude from surefire plugin -->
     <excludedGroups>
@@ -39,11 +41,15 @@
 
     <argLine>-Xms256m -Xmx512m</argLine>
 
+    <!-- default bytecode version for src/main -->
+    <main.java.version>1.8</main.java.version>
+    <latest.java.version>21</latest.java.version>
+
     <!-- SQL deps -->
     <db2.version>11.5.7.0</db2.version>
-    <derby.version>10.15.2.0</derby.version>
+    <derby.version>10.16.1.1</derby.version>
     <hsqldb.version>2.6.0</hsqldb.version>
-    <h2.version>1.4.197</h2.version>
+    <h2.version>2.2.224</h2.version>
     <postgresql.version>42.3.4</postgresql.version>
     <oracle.version>21.7.0.0</oracle.version>
     <mysql.version>8.0.29</mysql.version>
@@ -54,24 +60,24 @@
     <firebird.version>4.0.6.java8</firebird.version>
 
     <!-- JPA deps -->
-    <hibernate.version>5.4.8.Final</hibernate.version>
+    <hibernate.version>5.6.15.Final</hibernate.version>
     <hibernate.validator.version>7.0.4.Final</hibernate.validator.version>
-    <eclipselink.version>2.7.8</eclipselink.version>
+    <eclipselink.version>2.7.13</eclipselink.version>
 
-    <guava.version>31.1-jre</guava.version>
+    <guava.version>32.0.0-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
     <mysema.lang.version>0.2.4</mysema.lang.version>
     <cglib.version>3.3.0</cglib.version>
-    <slf4j.version>1.7.35</slf4j.version>
-    <surefire.version>2.22.2</surefire.version>
+    <slf4j.version>2.0.9</slf4j.version>
+    <surefire.version>3.2.1</surefire.version>
     <animal-sniffer.version>1.20</animal-sniffer.version>
     <jodatime.version>2.10.14</jodatime.version>
-    <h2gis.version>1.5.0</h2gis.version>
+    <h2gis.version>2.0.0</h2gis.version>
     <morphia.version>1.3.2</morphia.version>
-    <jmh.version>1.35</jmh.version>
+    <jmh.version>1.37</jmh.version>
     <hamcrest.veresion>2.2</hamcrest.veresion>
-    <kotlin.version>1.7.20</kotlin.version>
-    <dokka.version>1.7.20</dokka.version>
+    <kotlin.version>1.9.10</kotlin.version>
+    <dokka.version>1.9.10</dokka.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
     <osgi.import.package.root>
@@ -79,6 +85,29 @@
     </osgi.import.package.root>
     <osgi.import.package>${osgi.import.package.root}</osgi.import.package>
   </properties>
+
+  <developers>
+    <developer>
+      <id>velo</id>
+      <name>Marvin Herman Froeder</name>
+    </developer>
+  </developers>
+
+  <distributionManagement>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <organization>
+    <name>OpenFeign</name>
+    <url>https://github.com/openfeign</url>
+  </organization>
 
   <dependencies>
     <dependency>
@@ -94,7 +123,7 @@
     <dependency>
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
-      <version>4.3</version>
+      <version>5.2.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -121,7 +150,7 @@
       <dependency>
         <groupId>org.jetbrains</groupId>
         <artifactId>annotations</artifactId>
-        <version>23.0.0</version>
+        <version>24.0.1</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -132,7 +161,7 @@
       <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>javax.jdo</artifactId>
-        <version>3.2.0-release</version>
+        <version>3.2.1</version>
       </dependency>
       <dependency>
         <groupId>com.vividsolutions</groupId>
@@ -191,7 +220,7 @@
       <dependency>
         <groupId>org.javassist</groupId>
         <artifactId>javassist</artifactId>
-        <version>3.28.0-GA</version>
+        <version>3.29.2-GA</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -223,7 +252,14 @@
       <dependency>
         <groupId>org.jboss.logging</groupId>
         <artifactId>jboss-logging</artifactId>
-        <version>3.4.3.Final</version>
+        <version>3.5.3.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-bom</artifactId>
+        <version>9.6</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -234,74 +270,42 @@
     <url>${project.githubpage}</url>
   </scm>
 
-  <developers>
-    <developer>
-      <id>timowest</id>
+  <contributors>
+    <contributor>
       <name>Timo Westkämper</name>
       <organization>Mysema Ltd</organization>
-      <roles>
-        <role>Project Manager</role>
-        <role>Architect</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>ssaarela</id>
+    </contributor>
+    <contributor>
       <name>Samppa Saarela</name>
       <organization>Mysema Ltd</organization>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>ponzao</id>
+    </contributor>
+    <contributor>
       <name>Vesa Marttila</name>
       <organization>Mysema Ltd</organization>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>mangolas</id>
+    </contributor>
+    <contributor>
       <name>Lassi Immonen</name>
       <organization>Mysema Ltd</organization>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>Shredder121</id>
+    </contributor>
+    <contributor>
       <name>Ruben Dijkstra</name>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>johnktims</id>
+    </contributor>
+    <contributor>
       <name>John Tims</name>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>robertandrewbain</id>
+    </contributor>
+    <contributor>
       <name>Robert Bain</name>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>jwgmeligmeyling</id>
+    </contributor>
+    <contributor>
       <name>Jan-Willem Gmelig Meyling</name>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-  </developers>
+    </contributor>
+  </contributors>
 
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
     </license>
   </licenses>
 
@@ -311,12 +315,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.6.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.10.1</version>
+          <version>3.11.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -332,11 +336,17 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${surefire.version}</version>
+          <configuration>
+            <jdkToolchain>
+              <version>${latest.java.version}</version>
+            </jdkToolchain>
+            <argLine>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.naming/javax.naming=ALL-UNNAMED</argLine>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <version>5.1.4</version>
+          <version>5.1.9</version>
           <executions>
             <execution>
               <id>bundle-manifest</id>
@@ -381,6 +391,39 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+            <configuration>
+              <toolchains>
+                <jdk>
+                  <version>${main.java.version}</version>
+                </jdk>
+              </toolchains>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+            <configuration>
+              <toolchains>
+                <jdk>
+                  <version>${latest.java.version}</version>
+                </jdk>
+              </toolchains>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -495,7 +538,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.8</version>
+        <version>0.8.11</version>
         <executions>
           <execution>
             <id>prepare-agent</id>
@@ -508,7 +551,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.4.0</version>
+        <version>3.6.0</version>
         <configuration>
           <source>8</source>
           <excludePackageNames>com.querydsl.examples.kotlin.*</excludePackageNames>
@@ -578,7 +621,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.15.0</version>
+        <version>3.21.2</version>
         <configuration>
           <targetJdk>1.6</targetJdk>
           <includeTests>true</includeTests>
@@ -587,15 +630,41 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <inherited>true</inherited>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>${main.java.version}</source>
+          <target>${main.java.version}</target>
         </configuration>
+        <executions>
+          <!-- Ensure main source tree compiles to Java ${main.java.version} bytecode. -->
+          <execution>
+            <id>default-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <source>${main.java.version}</source>
+              <target>${main.java.version}</target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <source>${latest.java.version}</source>
+              <target>${latest.java.version}</target>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -608,7 +677,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.2</version>
+        <version>3.3.0</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -626,30 +695,9 @@
         </dependencies>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>${animal-sniffer.version}</version>
-        <configuration>
-          <signature>
-            <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java18</artifactId>
-            <version>1.0</version>
-          </signature>
-        </configuration>
-        <executions>
-          <execution>
-            <id>ensure-java-1.6-class-library</id>
-            <phase>test</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.3.1</version>
         <executions>
           <execution>
             <id>checkstyle</id>
@@ -686,10 +734,70 @@
           <excludes>**/generated/**/*,**/jmh_generated/**/*,**/com/querydsl/codegen/utils/**/*</excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>de.qaware.maven</groupId>
+        <artifactId>go-offline-maven-plugin</artifactId>
+        <version>1.2.8</version>
+        <configuration>
+          <dynamicDependencies>
+            <DynamicDependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit47</artifactId>
+              <version>${surefire.version}</version>
+              <repositoryType>PLUGIN</repositoryType>
+            </DynamicDependency>
+            <DynamicDependency>
+              <groupId>org.codehaus.mojo.signature</groupId>
+              <artifactId>java18</artifactId>
+              <version>1.0</version>
+              <type>signature</type>
+              <repositoryType>MAIN</repositoryType>
+            </DynamicDependency>
+          </dynamicDependencies>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-plugin</artifactId>
+        <configuration>
+          <tag>${project.version}</tag>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.13</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          <stagingProgressTimeoutMinutes>15</stagingProgressTimeoutMinutes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
-
-  <pluginRepositories />
 
   <profiles>
     <profile>
@@ -710,7 +818,8 @@
         <module>querydsl-maven-plugin</module>
         <module>querydsl-jpa</module>
         <module>querydsl-jpa-codegen</module>
-        <module>querydsl-jdo</module>
+        <!-- datanucleus core seems to be incompatible with modern java: Unsupported class file major version 65 -->
+        <!--<module>querydsl-jdo</module>-->
         <module>querydsl-bom</module>
         <module>querydsl-kotlin-codegen</module>
 
@@ -861,18 +970,6 @@
           com.querydsl.core.testutil.Teradata
         </excludedGroups>
       </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <disableXmlReport>true</disableXmlReport>
-              <printSummary>false</printSummary>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
     <profile>
       <id>quickbuild</id>
@@ -931,26 +1028,5 @@
       </build>
     </profile>
   </profiles>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>junit-report-maven-plugin</artifactId>
-        <version>devel</version>
-        <configuration>
-          <testFailureIgnore>true</testFailureIgnore>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jxr-plugin</artifactId>
-        <version>3.2.0</version>
-        <configuration>
-          <aggregate>true</aggregate>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
 
 </project>

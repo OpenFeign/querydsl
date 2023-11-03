@@ -40,7 +40,7 @@ import com.querydsl.sql.types.LocalTimeType;
 
 public class MetadataExportMojoTest {
 
-    private final String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";INIT=" +
+    private final String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy;INIT=" +
             "CREATE TABLE NO_SCHEMA_TABLE (COL1 INT)        \\;" +
             "CREATE SCHEMA SCHEMA1                          \\;" +
             "CREATE TABLE SCHEMA1.SCHEMA1_TABLE (COL1 INT)  \\;" +
@@ -62,6 +62,8 @@ public class MetadataExportMojoTest {
         mojo.setJdbcUser("sa");
         mojo.setNamePrefix("Q"); // default value
         mojo.setPackageName("com.example");
+        mojo.setExportTables(true); // default value
+        mojo.setExportViews(true); // default value
     }
 
     @Test

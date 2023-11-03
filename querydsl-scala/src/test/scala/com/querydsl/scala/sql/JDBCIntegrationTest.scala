@@ -16,7 +16,7 @@ object JDBCIntegrationTest {
   @BeforeClass
   def setUpClass() {
     Class.forName("org.h2.Driver")
-    val url = "jdbc:h2:mem:testdb" + System.currentTimeMillis()
+    val url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy"
 
     connection = DriverManager.getConnection(url, "sa", "")
     statement = connection.createStatement()

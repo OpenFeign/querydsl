@@ -32,7 +32,7 @@ import com.querydsl.mongodb.domain.QGeoEntity;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
 
 @Category(MongoDB.class)
-public class GeoSpatialQueryTest {
+public class MongodbGeoSpatialQueryTest {
 
     private final String dbname = "geodb";
     private final MongoClient mongo;
@@ -40,7 +40,7 @@ public class GeoSpatialQueryTest {
     private final Datastore ds;
     private final QGeoEntity geoEntity = new QGeoEntity("geoEntity");
 
-    public GeoSpatialQueryTest() throws UnknownHostException, MongoException {
+    public MongodbGeoSpatialQueryTest() throws UnknownHostException, MongoException {
         mongo = new MongoClient();
         morphia = new Morphia().map(GeoEntity.class);
         ds = morphia.createDatastore(mongo, dbname);

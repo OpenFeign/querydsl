@@ -412,7 +412,7 @@ public class PathBuilder<T> extends EntityPathBase<T> {
     @SuppressWarnings("unchecked")
     public <A extends Number & Comparable<?>> NumberPath<A> getNumber(String property, Class<A> type) {
         Class<? extends A> vtype = validate(property, type);
-        return super.createNumber(property, (Class<? super A>) vtype);
+        return super.createNumber(property, (Class) vtype);
     }
 
     /**

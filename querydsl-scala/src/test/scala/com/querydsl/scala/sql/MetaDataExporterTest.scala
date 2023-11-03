@@ -11,7 +11,7 @@ object MetaDataExporterTest {
   @BeforeClass
   def setUp() {
     Class.forName("org.h2.Driver")
-    val url = "jdbc:h2:mem:testdb" + System.currentTimeMillis()
+    val url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy"
     connection = java.sql.DriverManager.getConnection(url, "sa", "")
 
     val stmt = connection.createStatement()
