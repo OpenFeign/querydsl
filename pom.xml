@@ -547,76 +547,6 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.6.0</version>
-        <configuration>
-          <source>8</source>
-          <excludePackageNames>com.querydsl.examples.kotlin.*</excludePackageNames>
-          <outputDirectory>${project.build.directory}/dist/apidocs</outputDirectory>
-          <reportOutputDirectory>${project.build.directory}/dist/apidocs</reportOutputDirectory>
-          <detectJavaApiLink>false</detectJavaApiLink>
-          <groups>
-            <group>
-              <title>Core</title>
-              <packages>com.querydsl.core*</packages>
-            </group>
-            <group>
-              <title>Codegen</title>
-              <packages>com.querydsl.codegen*</packages>
-            </group>
-            <group>
-              <title>APT</title>
-              <packages>com.querydsl.apt*</packages>
-            </group>
-            <group>
-              <title>Maven</title>
-              <packages>com.querydsl.maven*</packages>
-            </group>
-            <group>
-              <title>Spatial</title>
-              <packages>com.querydsl.spatial*</packages>
-            </group>
-            <group>
-              <title>Collections</title>
-              <packages>com.querydsl.collections*</packages>
-            </group>
-            <group>
-              <title>JPA</title>
-              <packages>com.querydsl.jpa*</packages>
-            </group>
-            <group>
-              <title>JDO</title>
-              <packages>com.querydsl.jdo*</packages>
-            </group>
-            <group>
-              <title>SQL</title>
-              <packages>com.querydsl.sql*</packages>
-            </group>
-            <group>
-              <title>Lucene 3</title>
-              <packages>com.querydsl.lucene3*</packages>
-            </group>
-            <group>
-              <title>Lucene 4</title>
-              <packages>com.querydsl.lucene4*</packages>
-            </group>
-            <group>
-              <title>Lucene 5</title>
-              <packages>com.querydsl.lucene5*</packages>
-            </group>
-            <group>
-              <title>Hibernate Search</title>
-              <packages>com.querydsl.hibernate.search*</packages>
-            </group>
-            <group>
-              <title>Mongodb</title>
-              <packages>com.querydsl.mongodb*</packages>
-            </group>
-          </groups>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>3.21.2</version>
         <configuration>
@@ -655,19 +585,6 @@
               <source>${latest.java.version}</source>
               <target>${latest.java.version}</target>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
@@ -772,26 +689,6 @@
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
           <stagingProgressTimeoutMinutes>15</stagingProgressTimeoutMinutes>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.1.0</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-            <phase>verify</phase>
-            <configuration>
-              <gpgArguments>
-                <arg>--pinentry-mode</arg>
-                <arg>loopback</arg>
-              </gpgArguments>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
@@ -1020,6 +917,128 @@
                 <version>2.3.2</version>
               </dependency>
             </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <!-- Creates source jar -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.3.0</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.6.0</version>
+            <configuration>
+              <source>8</source>
+              <excludePackageNames>com.querydsl.examples.kotlin.*</excludePackageNames>
+              <outputDirectory>${project.build.directory}/dist/apidocs</outputDirectory>
+              <reportOutputDirectory>${project.build.directory}/dist/apidocs</reportOutputDirectory>
+              <detectJavaApiLink>false</detectJavaApiLink>
+              <groups>
+                <group>
+                  <title>Core</title>
+                  <packages>com.querydsl.core*</packages>
+                </group>
+                <group>
+                  <title>Codegen</title>
+                  <packages>com.querydsl.codegen*</packages>
+                </group>
+                <group>
+                  <title>APT</title>
+                  <packages>com.querydsl.apt*</packages>
+                </group>
+                <group>
+                  <title>Maven</title>
+                  <packages>com.querydsl.maven*</packages>
+                </group>
+                <group>
+                  <title>Spatial</title>
+                  <packages>com.querydsl.spatial*</packages>
+                </group>
+                <group>
+                  <title>Collections</title>
+                  <packages>com.querydsl.collections*</packages>
+                </group>
+                <group>
+                  <title>JPA</title>
+                  <packages>com.querydsl.jpa*</packages>
+                </group>
+                <group>
+                  <title>JDO</title>
+                  <packages>com.querydsl.jdo*</packages>
+                </group>
+                <group>
+                  <title>SQL</title>
+                  <packages>com.querydsl.sql*</packages>
+                </group>
+                <group>
+                  <title>Lucene 3</title>
+                  <packages>com.querydsl.lucene3*</packages>
+                </group>
+                <group>
+                  <title>Lucene 4</title>
+                  <packages>com.querydsl.lucene4*</packages>
+                </group>
+                <group>
+                  <title>Lucene 5</title>
+                  <packages>com.querydsl.lucene5*</packages>
+                </group>
+                <group>
+                  <title>Hibernate Search</title>
+                  <packages>com.querydsl.hibernate.search*</packages>
+                </group>
+                <group>
+                  <title>Mongodb</title>
+                  <packages>com.querydsl.mongodb*</packages>
+                </group>
+              </groups>
+              <failOnError>false</failOnError>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <phase>verify</phase>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
