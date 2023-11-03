@@ -536,7 +536,6 @@ public class SelectBase extends AbstractBaseTest {
                         + ": " + entry.getKey() + " != " + entry.getValue());
             }
             Assert.fail("Failed with " + failures);
-    @ExcludeIn({CUBRID, SQLITE, TERADATA})
         }
     }
 
