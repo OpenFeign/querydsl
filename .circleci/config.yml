@@ -1,3 +1,4 @@
+
 #
 # Copyright 2012-2020 The Feign Authors
 #
@@ -107,7 +108,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.EmbeddedDatabase
+            ./mvnw -ntp verify -B -Pall -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.EmbeddedDatabase
       - verify-formatting
   testMySQL:
     <<: *defaults
