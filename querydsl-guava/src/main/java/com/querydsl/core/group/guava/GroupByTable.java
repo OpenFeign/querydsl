@@ -32,58 +32,57 @@ import com.querydsl.core.util.ArrayUtils;
  * Provides aggregated results as a table
  *
  * @author Jan-Willem Gmelig Meyling
- *
  * @param <R> row type
  * @param <C> column type
  * @param <V> value type
  * @param <RES> table type
  */
-public class GroupByTable<R, C, V, RES extends Table<R, C, V>> extends AbstractGroupByTransformer<R, RES> {
+public class GroupByTable<R, C, V, RES extends Table<R, C, V>>
+    extends AbstractGroupByTransformer<R, RES> {
 
-    GroupByTable(Expression<R> rowKey, Expression<C> columnKey, Expression<?>... expressions) {
-        super(rowKey, ArrayUtils.combine(Expression.class, columnKey, expressions));
+  GroupByTable(Expression<R> rowKey, Expression<C> columnKey, Expression<?>... expressions) {
+    super(rowKey, ArrayUtils.combine(Expression.class, columnKey, expressions));
+  }
+
+  @Override
+  public RES transform(FetchableQuery<?, ?> query) {
+    // TODO Table<Object, Object, Group> after support for it in
+    // https://github.com/querydsl/querydsl/issues/2644
+    Table<R, Object, Group> groups = HashBasedTable.create();
+
+    // create groups
+    FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
+    boolean hasGroups = false;
+    for (Expression<?> e : expr.getArgs()) {
+      hasGroups |= e instanceof GroupExpression;
+    }
+    if (hasGroups) {
+      expr = withoutGroupExpressions(expr);
+    }
+    CloseableIterator<Tuple> iter = query.select(expr).iterate();
+    try {
+      while (iter.hasNext()) {
+        @SuppressWarnings("unchecked") // This type is mandated by the key type
+        Object[] row = iter.next().toArray();
+        R groupId = (R) row[0];
+        Object rowId = row[1];
+        GroupImpl group = (GroupImpl) groups.get(groupId, rowId);
+        if (group == null) {
+          group = new GroupImpl(groupExpressions, maps);
+          groups.put(groupId, rowId, group);
+        }
+        group.add(row);
+      }
+    } finally {
+      iter.close();
     }
 
-    @Override
-    public RES transform(FetchableQuery<?,?> query) {
-        // TODO Table<Object, Object, Group> after support for it in https://github.com/querydsl/querydsl/issues/2644
-        Table<R, Object, Group> groups = HashBasedTable.create();
+    // transform groups
+    return transform(groups);
+  }
 
-        // create groups
-        FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-        boolean hasGroups = false;
-        for (Expression<?> e : expr.getArgs()) {
-            hasGroups |= e instanceof GroupExpression;
-        }
-        if (hasGroups) {
-            expr = withoutGroupExpressions(expr);
-        }
-        CloseableIterator<Tuple> iter = query.select(expr).iterate();
-        try {
-            while (iter.hasNext()) {
-                @SuppressWarnings("unchecked") //This type is mandated by the key type
-                Object[] row = iter.next().toArray();
-                R groupId = (R) row[0];
-                Object rowId = row[1];
-                GroupImpl group = (GroupImpl) groups.get(groupId, rowId);
-                if (group == null) {
-                    group = new GroupImpl(groupExpressions, maps);
-                    groups.put(groupId, rowId, group);
-                }
-                group.add(row);
-            }
-        } finally {
-            iter.close();
-        }
-
-        // transform groups
-        return transform(groups);
-
-    }
-
-    @SuppressWarnings("unchecked")
-    protected RES transform(Table<R, ?, Group> groups) {
-        return (RES) groups;
-    }
-
+  @SuppressWarnings("unchecked")
+  protected RES transform(Table<R, ?, Group> groups) {
+    return (RES) groups;
+  }
 }

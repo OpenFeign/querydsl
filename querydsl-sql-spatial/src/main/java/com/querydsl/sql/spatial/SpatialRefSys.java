@@ -13,50 +13,46 @@
  */
 package com.querydsl.sql.spatial;
 
-/**
- * SpatialRefSys is a Querydsl bean type
- */
+/** SpatialRefSys is a Querydsl bean type */
 public class SpatialRefSys {
 
-    private String authName;
+  private String authName;
 
-    private Integer authSrid;
+  private Integer authSrid;
 
-    private Integer srid;
+  private Integer srid;
 
-    private String srtext;
+  private String srtext;
 
-    public String getAuthName() {
-        return authName;
-    }
+  public String getAuthName() {
+    return authName;
+  }
 
-    public void setAuthName(String authName) {
-        this.authName = authName;
-    }
+  public void setAuthName(String authName) {
+    this.authName = authName;
+  }
 
-    public Integer getAuthSrid() {
-        return authSrid;
-    }
+  public Integer getAuthSrid() {
+    return authSrid;
+  }
 
-    public void setAuthSrid(Integer authSrid) {
-        this.authSrid = authSrid;
-    }
+  public void setAuthSrid(Integer authSrid) {
+    this.authSrid = authSrid;
+  }
 
-    public Integer getSrid() {
-        return srid;
-    }
+  public Integer getSrid() {
+    return srid;
+  }
 
-    public void setSrid(Integer srid) {
-        this.srid = srid;
-    }
+  public void setSrid(Integer srid) {
+    this.srid = srid;
+  }
 
-    public String getSrtext() {
-        return srtext;
-    }
+  public String getSrtext() {
+    return srtext;
+  }
 
-    public void setSrtext(String srtext) {
-        this.srtext = srtext;
-    }
-
+  public void setSrtext(String srtext) {
+    this.srtext = srtext;
+  }
 }
-

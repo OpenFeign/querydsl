@@ -15,26 +15,20 @@ package com.querydsl.jpa.domain;
 
 import javax.persistence.*;
 
-/**
- * The Class EvilType.
- */
+/** The Class EvilType. */
 @Entity
 @Table(name = "eviltype_")
 public class EvilType {
-    @ManyToOne
-    @JoinColumn(name = "_asc")
-    EvilType asc;
+  @ManyToOne
+  @JoinColumn(name = "_asc")
+  EvilType asc;
 
-    @ManyToOne
-    @JoinColumn(name = "_desc")
-    EvilType desc;
+  @ManyToOne
+  @JoinColumn(name = "_desc")
+  EvilType desc;
 
-    @Id
-    int id;
+  @Id int id;
 
-    @ManyToOne
-    EvilType isnull, isnotnull, get, getType, getMetadata;
-
-    @ManyToOne
-    EvilType toString, hashCode, getClass, notify, notifyAll, wait;
+  @ManyToOne EvilType isnull, isnotnull, get, getType, getMetadata;
+  @ManyToOne EvilType toString, hashCode, getClass, notify, notifyAll, wait;
 }

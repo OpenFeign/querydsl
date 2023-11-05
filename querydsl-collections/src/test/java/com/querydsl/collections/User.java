@@ -16,43 +16,39 @@ package com.querydsl.collections;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryProjection;
 
-
 @QueryEntity
 public class User {
 
-    private String name;
+  private String name;
 
-    private Post latestPost;
+  private Post latestPost;
 
-    public User() { }
+  public User() {}
 
-    @QueryProjection
-    public User(String name) {
-        this.name = name;
-    }
+  @QueryProjection
+  public User(String name) {
+    this.name = name;
+  }
 
-    @QueryProjection
-    public User(String name, Post latestPost) {
-        this.name = name;
-        this.latestPost = latestPost;
-    }
+  @QueryProjection
+  public User(String name, Post latestPost) {
+    this.name = name;
+    this.latestPost = latestPost;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Post getLatestPost() {
-        return latestPost;
-    }
+  public Post getLatestPost() {
+    return latestPost;
+  }
 
-    public void setLatestPost(Post latestPost) {
-        this.latestPost = latestPost;
-    }
-
-
-
+  public void setLatestPost(Post latestPost) {
+    this.latestPost = latestPost;
+  }
 }

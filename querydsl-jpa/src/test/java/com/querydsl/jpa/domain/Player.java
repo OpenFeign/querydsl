@@ -14,21 +14,16 @@
 package com.querydsl.jpa.domain;
 
 import java.util.List;
-
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * The Class Player.
- */
+/** The Class Player. */
 @Entity
 @Table(name = "player_")
 public class Player {
-    @Id
-    long id;
+  @Id long id;
 
-    @ElementCollection
-    List<Integer> scores;
+  @ElementCollection List<Integer> scores;
 }

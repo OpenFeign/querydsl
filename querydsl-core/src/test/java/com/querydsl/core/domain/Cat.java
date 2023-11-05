@@ -17,53 +17,50 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * The Class Cat.
- */
+/** The Class Cat. */
 public class Cat extends Animal {
 
-    private int breed;
+  private int breed;
 
-    private List<Cat> kittens = new ArrayList<Cat>();
+  private List<Cat> kittens = new ArrayList<Cat>();
 
-    private Set<Cat> kittensSet;
+  private Set<Cat> kittensSet;
 
-    private Cat mate;
+  private Cat mate;
 
-    public Cat() { }
+  public Cat() {}
 
-    public Cat(String name, int id) {
-        this.setId(id);
-        this.setName(name);
-    }
+  public Cat(String name, int id) {
+    this.setId(id);
+    this.setName(name);
+  }
 
-    public Cat(String name, int id, double bodyWeight) {
-        this(name, id);
-        this.setBodyWeight(bodyWeight);
-    }
+  public Cat(String name, int id, double bodyWeight) {
+    this(name, id);
+    this.setBodyWeight(bodyWeight);
+  }
 
-    public int getBreed() {
-        return breed;
-    }
+  public int getBreed() {
+    return breed;
+  }
 
-    public List<Cat> getKittens() {
-        return kittens;
-    }
+  public List<Cat> getKittens() {
+    return kittens;
+  }
 
-    public Cat getMate() {
-        return mate;
-    }
+  public Cat getMate() {
+    return mate;
+  }
 
-    public void addKitten(Cat kitten) {
-        kittens.add(kitten);
-    }
+  public void addKitten(Cat kitten) {
+    kittens.add(kitten);
+  }
 
-    public Set<Cat> getKittensSet() {
-        return kittensSet;
-    }
+  public Set<Cat> getKittensSet() {
+    return kittensSet;
+  }
 
-    public void setKittensSet(Set<Cat> kittensSet) {
-        this.kittensSet = kittensSet;
-    }
-
+  public void setKittensSet(Set<Cat> kittensSet) {
+    this.kittensSet = kittensSet;
+  }
 }

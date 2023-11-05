@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Support classes
- */
+/** Support classes */
 package com.querydsl.jpa.support;

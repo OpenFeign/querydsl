@@ -14,21 +14,19 @@
 package com.querydsl.mongodb.domain;
 
 import java.util.List;
-
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 
 @Entity
 public class Item extends AbstractEntity {
 
-    private List<ObjectId> ctds;
+  private List<ObjectId> ctds;
 
-    public List<ObjectId> getCtds() {
-        return ctds;
-    }
+  public List<ObjectId> getCtds() {
+    return ctds;
+  }
 
-    public void setCtds(List<ObjectId> ctds) {
-        this.ctds = ctds;
-    }
-
+  public void setCtds(List<ObjectId> ctds) {
+    this.ctds = ctds;
+  }
 }

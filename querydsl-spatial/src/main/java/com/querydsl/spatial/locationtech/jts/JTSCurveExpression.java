@@ -18,95 +18,89 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.spatial.SpatialOps;
+import org.jetbrains.annotations.Nullable;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
-import org.jetbrains.annotations.Nullable;
 
 /**
- * A Curve is a 1-dimensional geometric object usually stored as a sequence of Points, with the subtype of Curve
- * specifying the form of the interpolation between Points. This standard defines only one subclass of Curve,
- * LineString, which uses linear interpolation between Points.
+ * A Curve is a 1-dimensional geometric object usually stored as a sequence of Points, with the
+ * subtype of Curve specifying the form of the interpolation between Points. This standard defines
+ * only one subclass of Curve, LineString, which uses linear interpolation between Points.
  *
  * @author tiwe
- *
  * @param <T>
  */
 public abstract class JTSCurveExpression<T extends Geometry> extends JTSGeometryExpression<T> {
 
-    private static final long serialVersionUID = 6139188586728676033L;
+  private static final long serialVersionUID = 6139188586728676033L;
 
-    @Nullable
-    private transient volatile NumberExpression<Double> length;
+  @Nullable private transient volatile NumberExpression<Double> length;
 
-    @Nullable
-    private transient volatile JTSPointExpression<Point> startPoint, endPoint;
+  @Nullable private transient volatile JTSPointExpression<Point> startPoint, endPoint;
+  @Nullable private transient volatile BooleanExpression closed, ring;
 
-    @Nullable
-    private transient volatile BooleanExpression closed, ring;
+  public JTSCurveExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 
-    public JTSCurveExpression(Expression<T> mixin) {
-        super(mixin);
+  /**
+   * The length of this Curve in its associated spatial reference.
+   *
+   * @return length
+   */
+  public NumberExpression<Double> length() {
+    if (length == null) {
+      length = Expressions.numberOperation(Double.class, SpatialOps.LENGTH, mixin);
     }
+    return length;
+  }
 
-    /**
-     * The length of this Curve in its associated spatial reference.
-     *
-     * @return length
-     */
-    public NumberExpression<Double> length() {
-        if (length == null) {
-            length = Expressions.numberOperation(Double.class, SpatialOps.LENGTH, mixin);
-        }
-        return length;
+  /**
+   * The start Point of this Curve.
+   *
+   * @return start point
+   */
+  public JTSPointExpression<Point> startPoint() {
+    if (startPoint == null) {
+      startPoint = JTSGeometryExpressions.pointOperation(SpatialOps.START_POINT, mixin);
     }
+    return startPoint;
+  }
 
-    /**
-     * The start Point of this Curve.
-     *
-     * @return start point
-     */
-    public JTSPointExpression<Point> startPoint() {
-        if (startPoint == null) {
-            startPoint = JTSGeometryExpressions.pointOperation(SpatialOps.START_POINT, mixin);
-        }
-        return startPoint;
+  /**
+   * The end Point of this Curve.
+   *
+   * @return end point
+   */
+  public JTSPointExpression<Point> endPoint() {
+    if (endPoint == null) {
+      endPoint = JTSGeometryExpressions.pointOperation(SpatialOps.END_POINT, mixin);
     }
+    return endPoint;
+  }
 
-    /**
-     * The end Point of this Curve.
-     *
-     * @return end point
-     */
-    public JTSPointExpression<Point> endPoint() {
-        if (endPoint == null) {
-            endPoint = JTSGeometryExpressions.pointOperation(SpatialOps.END_POINT, mixin);
-        }
-        return endPoint;
+  /**
+   * Returns 1 (TRUE) if this Curve is closed [StartPoint ( ) = EndPoint ( )].
+   *
+   * @return closed
+   */
+  public BooleanExpression isClosed() {
+    if (closed == null) {
+      closed = Expressions.booleanOperation(SpatialOps.IS_CLOSED, mixin);
     }
+    return closed;
+  }
 
-    /**
-     * Returns 1 (TRUE) if this Curve is closed [StartPoint ( ) = EndPoint ( )].
-     *
-     * @return closed
-     */
-    public BooleanExpression isClosed() {
-        if (closed == null) {
-            closed = Expressions.booleanOperation(SpatialOps.IS_CLOSED, mixin);
-        }
-        return closed;
+  /**
+   * Returns 1 (TRUE) if this Curve is closed [StartPoint ( ) = EndPoint ( )] and this Curve is
+   * simple (does not pass through the same Point more than once).
+   *
+   * @return ring
+   */
+  public BooleanExpression isRing() {
+    if (ring == null) {
+      ring = Expressions.booleanOperation(SpatialOps.IS_RING, mixin);
     }
-
-    /**
-     * Returns 1 (TRUE) if this Curve is closed [StartPoint ( ) = EndPoint ( )] and this Curve is
-     * simple (does not pass through the same Point more than once).
-     *
-     * @return ring
-     */
-    public BooleanExpression isRing() {
-        if (ring == null) {
-            ring = Expressions.booleanOperation(SpatialOps.IS_RING, mixin);
-        }
-        return ring;
-    }
-
+    return ring;
+  }
 }

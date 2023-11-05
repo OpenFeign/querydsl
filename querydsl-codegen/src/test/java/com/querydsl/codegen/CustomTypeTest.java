@@ -15,40 +15,41 @@ package com.querydsl.codegen;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Collections;
-
-import org.junit.Test;
-
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.TypeCategory;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Collections;
+import org.junit.Test;
 
 public class CustomTypeTest {
 
-    private final QueryTypeFactory queryTypeFactory = new QueryTypeFactoryImpl("Q", "", "");
+  private final QueryTypeFactory queryTypeFactory = new QueryTypeFactoryImpl("Q", "", "");
 
-    private final TypeMappings typeMappings = new JavaTypeMappings();
+  private final TypeMappings typeMappings = new JavaTypeMappings();
 
-    private final EntitySerializer serializer = new DefaultEntitySerializer(typeMappings, Collections.<String>emptySet());
+  private final EntitySerializer serializer =
+      new DefaultEntitySerializer(typeMappings, Collections.<String>emptySet());
 
-    private final StringWriter writer = new StringWriter();
+  private final StringWriter writer = new StringWriter();
 
-    @Test
-    public void customType() throws IOException {
-        SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity",false,false);
-        EntityType entityType = new EntityType(type);
-        entityType.addProperty(new Property(entityType, "property", new ClassType(Double[].class)));
-        typeMappings.register(new ClassType(Double[].class), new ClassType(Point.class));
-        typeMappings.register(entityType, queryTypeFactory.create(entityType));
-        assertTrue(typeMappings.isRegistered(entityType.getProperties().iterator().next().getType()));
+  @Test
+  public void customType() throws IOException {
+    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    EntityType entityType = new EntityType(type);
+    entityType.addProperty(new Property(entityType, "property", new ClassType(Double[].class)));
+    typeMappings.register(new ClassType(Double[].class), new ClassType(Point.class));
+    typeMappings.register(entityType, queryTypeFactory.create(entityType));
+    assertTrue(typeMappings.isRegistered(entityType.getProperties().iterator().next().getType()));
 
-        serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-        assertTrue(writer.toString().contains(
-                "public final com.querydsl.codegen.Point property = " +
-            "new com.querydsl.codegen.Point(forProperty(\"property\"));"));
-    }
-
+    serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
+    assertTrue(
+        writer
+            .toString()
+            .contains(
+                "public final com.querydsl.codegen.Point property = "
+                    + "new com.querydsl.codegen.Point(forProperty(\"property\"));"));
+  }
 }

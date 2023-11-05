@@ -14,7 +14,6 @@
 package com.querydsl.jpa.domain4;
 
 import java.io.Serializable;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Basic;
@@ -24,28 +23,27 @@ import javax.persistence.Embeddable;
 @Access(AccessType.PROPERTY)
 public class BookMark implements Serializable {
 
-    private static final long serialVersionUID = 8027009758015834551L;
+  private static final long serialVersionUID = 8027009758015834551L;
 
-    private Long page;
+  private Long page;
 
-    private String comment;
+  private String comment;
 
-    @Basic
-    public Long getPage() {
-        return page;
-    }
+  @Basic
+  public Long getPage() {
+    return page;
+  }
 
-    public void setPage(Long page) {
-        this.page = page;
-    }
+  public void setPage(Long page) {
+    this.page = page;
+  }
 
-    @Basic
-    public String getComment() {
-        return comment;
-    }
+  @Basic
+  public String getComment() {
+    return comment;
+  }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
 }

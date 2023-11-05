@@ -13,11 +13,10 @@
  */
 package com.querydsl.apt.domain.rel;
 
-import java.util.List;
-
 import com.querydsl.core.annotations.QueryEntity;
+import java.util.List;
 
 @QueryEntity
 public class RelationType2<D extends RelationType2<D>> {
-    List<D> list;
+  List<D> list;
 }

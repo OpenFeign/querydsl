@@ -13,153 +13,152 @@
  */
 package com.querydsl.core.support;
 
+import com.querydsl.core.*;
+import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.querydsl.core.*;
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.util.CollectionUtils;
-
 /**
- * {@code ReplaceVisitor} is a deep visitor that can be customized to replace segments of
- * expression trees
+ * {@code ReplaceVisitor} is a deep visitor that can be customized to replace segments of expression
+ * trees
  *
  * @param <C> context type
  */
 public class ReplaceVisitor<C> implements Visitor<Expression<?>, C> {
 
-    @Override
-    public Expression<?> visit(Constant<?> expr, C context) {
+  @Override
+  public Expression<?> visit(Constant<?> expr, C context) {
+    return expr;
+  }
+
+  @Override
+  public Expression<?> visit(FactoryExpression<?> expr, C context) {
+    List<Expression<?>> args = visit(expr.getArgs(), context);
+    if (args.equals(expr.getArgs())) {
+      return expr;
+    } else {
+      return FactoryExpressionUtils.wrap(expr, args);
+    }
+  }
+
+  @Override
+  public Expression<?> visit(Operation<?> expr, C context) {
+    List<Expression<?>> args = visit(expr.getArgs(), context);
+    if (args.equals(expr.getArgs())) {
+      return expr;
+    } else if (expr instanceof Predicate) {
+      return ExpressionUtils.predicate(expr.getOperator(), args);
+    } else {
+      return ExpressionUtils.operation(expr.getType(), expr.getOperator(), args);
+    }
+  }
+
+  @Override
+  public Expression<?> visit(ParamExpression<?> expr, C context) {
+    return expr;
+  }
+
+  @Override
+  public Expression<?> visit(Path<?> expr, C context) {
+    if (expr.getMetadata().isRoot()) {
+      return expr;
+    } else {
+      PathMetadata metadata = expr.getMetadata();
+      Path<?> parent = (Path) metadata.getParent().accept(this, context);
+      Object element = metadata.getElement();
+      if (element instanceof Expression<?>) {
+        element = ((Expression<?>) element).accept(this, context);
+      }
+      if (parent.equals(metadata.getParent()) && Objects.equals(element, metadata.getElement())) {
         return expr;
+      } else {
+        metadata = new PathMetadata(parent, element, metadata.getPathType());
+        return ExpressionUtils.path(expr.getType(), metadata);
+      }
     }
+  }
 
-    @Override
-    public Expression<?> visit(FactoryExpression<?> expr, C context) {
-        List<Expression<?>> args = visit(expr.getArgs(), context);
-        if (args.equals(expr.getArgs())) {
-            return expr;
-        } else {
-            return FactoryExpressionUtils.wrap(expr, args);
-        }
+  @SuppressWarnings("unchecked")
+  @Override
+  public Expression<?> visit(SubQueryExpression<?> expr, C context) {
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.setValidate(false);
+    md.setDistinct(expr.getMetadata().isDistinct());
+    md.setModifiers(expr.getMetadata().getModifiers());
+    md.setUnique(expr.getMetadata().isUnique());
+    for (QueryFlag flag : expr.getMetadata().getFlags()) {
+      md.addFlag(new QueryFlag(flag.getPosition(), flag.getFlag().accept(this, context)));
     }
+    for (Expression<?> e : expr.getMetadata().getGroupBy()) {
+      md.addGroupBy(e.accept(this, context));
+    }
+    Predicate having = expr.getMetadata().getHaving();
+    if (having != null) {
+      md.addHaving((Predicate) having.accept(this, context));
+    }
+    for (JoinExpression je : expr.getMetadata().getJoins()) {
+      md.addJoin(je.getType(), je.getTarget().accept(this, context));
+      if (je.getCondition() != null) {
+        md.addJoinCondition((Predicate) je.getCondition().accept(this, context));
+      }
+      for (JoinFlag jf : je.getFlags()) {
+        md.addJoinFlag(new JoinFlag(jf.getFlag().accept(this, context), jf.getPosition()));
+      }
+    }
+    for (OrderSpecifier<?> os : expr.getMetadata().getOrderBy()) {
+      OrderSpecifier<?> os2 =
+          new OrderSpecifier(
+              os.getOrder(), os.getTarget().accept(this, context), os.getNullHandling());
+      md.addOrderBy(os2);
+    }
+    for (Map.Entry<ParamExpression<?>, Object> entry : expr.getMetadata().getParams().entrySet()) {
+      md.setParam((ParamExpression) entry.getKey().accept(this, context), entry.getValue());
+    }
+    if (expr.getMetadata().getProjection() != null) {
+      md.setProjection(expr.getMetadata().getProjection().accept(this, context));
+    }
+    Predicate where = expr.getMetadata().getWhere();
+    if (where != null) {
+      md.addWhere((Predicate) where.accept(this, context));
+    }
+    if (expr.getMetadata().equals(md)) {
+      return expr;
+    } else {
+      return new SubQueryExpressionImpl(expr.getType(), md);
+    }
+  }
 
-    @Override
-    public Expression<?> visit(Operation<?> expr, C context) {
-        List<Expression<?>> args = visit(expr.getArgs(), context);
-        if (args.equals(expr.getArgs())) {
-            return expr;
-        } else if (expr instanceof Predicate) {
-            return ExpressionUtils.predicate(expr.getOperator(), args);
-        } else {
-            return ExpressionUtils.operation(expr.getType(), expr.getOperator(), args);
-        }
+  @SuppressWarnings("unchecked")
+  @Override
+  public Expression<?> visit(TemplateExpression<?> expr, C context) {
+    ArrayList args = new ArrayList<>();
+    for (Object arg : expr.getArgs()) {
+      if (arg instanceof Expression) {
+        args.add(((Expression<?>) arg).accept(this, context));
+      } else {
+        args.add(arg);
+      }
     }
+    if (args.equals(expr.getArgs())) {
+      return expr;
+    } else {
+      if (expr instanceof Predicate) {
+        return Expressions.booleanTemplate(expr.getTemplate(), args);
+      } else {
+        return ExpressionUtils.template(expr.getType(), expr.getTemplate(), args);
+      }
+    }
+  }
 
-    @Override
-    public Expression<?> visit(ParamExpression<?> expr, C context) {
-        return expr;
+  private List<Expression<?>> visit(List<Expression<?>> args, C context) {
+    List<Expression<?>> result = new ArrayList<>();
+    for (Expression<?> arg : args) {
+      result.add(arg.accept(this, context));
     }
-
-    @Override
-    public Expression<?> visit(Path<?> expr, C context) {
-        if (expr.getMetadata().isRoot()) {
-            return expr;
-        } else {
-            PathMetadata metadata = expr.getMetadata();
-            Path<?> parent = (Path) metadata.getParent().accept(this, context);
-            Object element = metadata.getElement();
-            if (element instanceof Expression<?>) {
-                element = ((Expression<?>) element).accept(this, context);
-            }
-            if (parent.equals(metadata.getParent()) && Objects.equals(element, metadata.getElement())) {
-                return expr;
-            } else {
-                metadata = new PathMetadata(parent, element, metadata.getPathType());
-                return ExpressionUtils.path(expr.getType(), metadata);
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Expression<?> visit(SubQueryExpression<?> expr, C context) {
-        QueryMetadata md = new DefaultQueryMetadata();
-        md.setValidate(false);
-        md.setDistinct(expr.getMetadata().isDistinct());
-        md.setModifiers(expr.getMetadata().getModifiers());
-        md.setUnique(expr.getMetadata().isUnique());
-        for (QueryFlag flag : expr.getMetadata().getFlags()) {
-            md.addFlag(new QueryFlag(flag.getPosition(), flag.getFlag().accept(this, context)));
-        }
-        for (Expression<?> e : expr.getMetadata().getGroupBy()) {
-            md.addGroupBy(e.accept(this, context));
-        }
-        Predicate having = expr.getMetadata().getHaving();
-        if (having != null) {
-            md.addHaving((Predicate) having.accept(this, context));
-        }
-        for (JoinExpression je : expr.getMetadata().getJoins()) {
-            md.addJoin(je.getType(), je.getTarget().accept(this, context));
-            if (je.getCondition() != null) {
-                md.addJoinCondition((Predicate) je.getCondition().accept(this, context));
-            }
-            for (JoinFlag jf : je.getFlags()) {
-                md.addJoinFlag(new JoinFlag(jf.getFlag().accept(this, context), jf.getPosition()));
-            }
-        }
-        for (OrderSpecifier<?> os : expr.getMetadata().getOrderBy()) {
-            OrderSpecifier<?> os2 = new OrderSpecifier(os.getOrder(), os.getTarget().accept(this,
-                    context), os.getNullHandling());
-            md.addOrderBy(os2);
-        }
-        for (Map.Entry<ParamExpression<?>, Object> entry : expr.getMetadata().getParams()
-                .entrySet()) {
-            md.setParam((ParamExpression) entry.getKey().accept(this, context), entry.getValue());
-        }
-        if (expr.getMetadata().getProjection() != null) {
-            md.setProjection(expr.getMetadata().getProjection().accept(this, context));
-        }
-        Predicate where = expr.getMetadata().getWhere();
-        if (where != null) {
-           md.addWhere((Predicate) where.accept(this, context));
-        }
-        if (expr.getMetadata().equals(md)) {
-            return expr;
-        } else {
-            return new SubQueryExpressionImpl(expr.getType(), md);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Expression<?> visit(TemplateExpression<?> expr, C context) {
-        ArrayList args = new ArrayList<>();
-        for (Object arg : expr.getArgs()) {
-            if (arg instanceof Expression) {
-                args.add(((Expression<?>) arg).accept(this, context));
-            } else {
-                args.add(arg);
-            }
-        }
-        if (args.equals(expr.getArgs())) {
-            return expr;
-        } else {
-            if (expr instanceof Predicate) {
-                return Expressions.booleanTemplate(expr.getTemplate(), args);
-            } else {
-                return ExpressionUtils.template(expr.getType(), expr.getTemplate(), args);
-            }
-        }
-    }
-
-    private List<Expression<?>> visit(List<Expression<?>> args, C context) {
-        List<Expression<?>> result = new ArrayList<>();
-        for (Expression<?> arg : args) {
-            result.add(arg.accept(this, context));
-        }
-        return CollectionUtils.unmodifiableList(result);
-    }
+    return CollectionUtils.unmodifiableList(result);
+  }
 }

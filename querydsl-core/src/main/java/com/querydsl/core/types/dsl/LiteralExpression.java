@@ -13,11 +13,10 @@
  */
 package com.querydsl.core.types.dsl;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Ops;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code LiteralExpression} represents literal expressions
@@ -26,35 +25,33 @@ import com.querydsl.core.types.Ops;
  */
 public abstract class LiteralExpression<T extends Comparable> extends ComparableExpression<T> {
 
-    @Nullable
-    private transient volatile StringExpression stringCast;
+  @Nullable private transient volatile StringExpression stringCast;
 
-    public LiteralExpression(Expression<T> mixin) {
-        super(mixin);
+  public LiteralExpression(Expression<T> mixin) {
+    super(mixin);
+  }
+
+  /**
+   * Create a cast expression to the given numeric type
+   *
+   * @param <A> numeric type
+   * @param type numeric type
+   * @return cast expression
+   */
+  public <A extends Number & Comparable<? super A>> NumberExpression<A> castToNum(Class<A> type) {
+    return Expressions.numberOperation(type, Ops.NUMCAST, mixin, ConstantImpl.create(type));
+  }
+
+  /**
+   * Create a cast to String expression
+   *
+   * @see java.lang.Object#toString()
+   * @return cast expression
+   */
+  public StringExpression stringValue() {
+    if (stringCast == null) {
+      stringCast = Expressions.stringOperation(Ops.STRING_CAST, mixin);
     }
-
-    /**
-     * Create a cast expression to the given numeric type
-     *
-     * @param <A> numeric type
-     * @param type numeric type
-     * @return cast expression
-     */
-    public <A extends Number & Comparable<? super A>> NumberExpression<A> castToNum(Class<A> type) {
-        return Expressions.numberOperation(type, Ops.NUMCAST, mixin, ConstantImpl.create(type));
-    }
-
-    /**
-     * Create a cast to String expression
-     *
-     * @see java.lang.Object#toString()
-     * @return cast expression
-     */
-    public StringExpression stringValue() {
-        if (stringCast == null) {
-            stringCast = Expressions.stringOperation(Ops.STRING_CAST, mixin);
-        }
-        return stringCast;
-    }
-
+    return stringCast;
+  }
 }

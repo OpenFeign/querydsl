@@ -13,23 +13,21 @@
  */
 package com.querydsl.sql.codegen;
 
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
-
 import com.querydsl.core.testutil.Oracle;
 import com.querydsl.sql.Connections;
+import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 
 @Category(Oracle.class)
 public class ExportOracleTest extends ExportBaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        Connections.initOracle();
-    }
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    Connections.initOracle();
+  }
 
-    @Override
-    public String getSchemaPattern() {
-        return "QUERYDSL";
-    }
-
+  @Override
+  public String getSchemaPattern() {
+    return "QUERYDSL";
+  }
 }

@@ -18,6 +18,6 @@ import org.mongodb.morphia.annotations.Embedded;
 @Embedded
 public class UserAttribute {
 
-    //simple property values (String, Object or Date)
+  // simple property values (String, Object or Date)
 
 }

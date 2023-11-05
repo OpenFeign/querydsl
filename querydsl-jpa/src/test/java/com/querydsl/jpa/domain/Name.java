@@ -17,14 +17,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * The Class Name.
- */
+/** The Class Name. */
 @Entity
 @Table(name = "name_")
 public class Name {
-    String firstName, lastName, nickName;
+  String firstName, lastName, nickName;
 
-    @Id
-    long id;
+  @Id long id;
 }

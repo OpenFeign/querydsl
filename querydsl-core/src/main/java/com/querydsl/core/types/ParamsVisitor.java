@@ -13,89 +13,87 @@
  */
 package com.querydsl.core.types;
 
+import com.querydsl.core.JoinExpression;
+import com.querydsl.core.QueryMetadata;
 import java.util.List;
 import java.util.Map;
 
-import com.querydsl.core.JoinExpression;
-import com.querydsl.core.QueryMetadata;
-
 /**
- * Copies {@code ParameterExpression} bindings from subexpressions to {@link QueryMetadata} in the context
+ * Copies {@code ParameterExpression} bindings from subexpressions to {@link QueryMetadata} in the
+ * context
  *
  * @author tiwe
- *
  */
 public final class ParamsVisitor implements Visitor<Void, QueryMetadata> {
 
-    public static final ParamsVisitor DEFAULT = new ParamsVisitor();
+  public static final ParamsVisitor DEFAULT = new ParamsVisitor();
 
-    private ParamsVisitor() { }
+  private ParamsVisitor() {}
 
-    @Override
-    public Void visit(Constant<?> expr, QueryMetadata context) {
-        return null;
+  @Override
+  public Void visit(Constant<?> expr, QueryMetadata context) {
+    return null;
+  }
+
+  @Override
+  public Void visit(FactoryExpression<?> expr, QueryMetadata context) {
+    visit(expr.getArgs(), context);
+    return null;
+  }
+
+  @Override
+  public Void visit(Operation<?> expr, QueryMetadata context) {
+    visit(expr.getArgs(), context);
+    return null;
+  }
+
+  @Override
+  public Void visit(ParamExpression<?> expr, QueryMetadata context) {
+    return null;
+  }
+
+  @Override
+  public Void visit(Path<?> expr, QueryMetadata context) {
+    return null;
+  }
+
+  @Override
+  public Void visit(SubQueryExpression<?> expr, QueryMetadata context) {
+    QueryMetadata md = expr.getMetadata();
+    for (Map.Entry<ParamExpression<?>, Object> entry : md.getParams().entrySet()) {
+      context.setParam((ParamExpression) entry.getKey(), entry.getValue());
     }
-
-    @Override
-    public Void visit(FactoryExpression<?> expr, QueryMetadata context) {
-        visit(expr.getArgs(), context);
-        return null;
+    visit(md.getGroupBy(), context);
+    visit(md.getHaving(), context);
+    for (JoinExpression join : md.getJoins()) {
+      visit(join.getTarget(), context);
+      visit(join.getCondition(), context);
     }
+    visit(md.getProjection(), context);
+    visit(md.getWhere(), context);
 
-    @Override
-    public Void visit(Operation<?> expr, QueryMetadata context) {
-        visit(expr.getArgs(), context);
-        return null;
+    return null;
+  }
+
+  @Override
+  public Void visit(TemplateExpression<?> expr, QueryMetadata context) {
+    for (Object arg : expr.getArgs()) {
+      if (arg instanceof Expression<?>) {
+        ((Expression<?>) arg).accept(this, context);
+      }
     }
+    return null;
+  }
 
-    @Override
-    public Void visit(ParamExpression<?> expr, QueryMetadata context) {
-        return null;
+  private void visit(Expression<?> expr, QueryMetadata context) {
+    if (expr != null) {
+      expr.accept(this, context);
     }
+  }
 
-    @Override
-    public Void visit(Path<?> expr, QueryMetadata context) {
-        return null;
+  private void visit(List<Expression<?>> exprs, QueryMetadata context) {
+    for (Expression<?> arg : exprs) {
+      arg.accept(this, context);
     }
-
-    @Override
-    public Void visit(SubQueryExpression<?> expr, QueryMetadata context) {
-        QueryMetadata md = expr.getMetadata();
-        for (Map.Entry<ParamExpression<?>, Object> entry : md.getParams().entrySet()) {
-            context.setParam((ParamExpression) entry.getKey(), entry.getValue());
-        }
-        visit(md.getGroupBy(), context);
-        visit(md.getHaving(), context);
-        for (JoinExpression join : md.getJoins()) {
-            visit(join.getTarget(), context);
-            visit(join.getCondition(), context);
-        }
-        visit(md.getProjection(), context);
-        visit(md.getWhere(), context);
-
-        return null;
-    }
-
-    @Override
-    public Void visit(TemplateExpression<?> expr, QueryMetadata context) {
-        for (Object arg : expr.getArgs()) {
-            if (arg instanceof Expression<?>) {
-                ((Expression<?>) arg).accept(this, context);
-            }
-        }
-        return null;
-    }
-
-    private void visit(Expression<?> expr, QueryMetadata context) {
-        if (expr != null) {
-            expr.accept(this, context);
-        }
-    }
-
-    private void visit(List<Expression<?>> exprs, QueryMetadata context) {
-        for (Expression<?> arg : exprs) {
-            arg.accept(this, context);
-        }
-    }
-
+  }
 }

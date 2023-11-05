@@ -16,22 +16,20 @@ package com.querydsl.collections;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.dsl.SimplePath;
+import org.junit.Test;
 
 public class AnimalTest {
 
-    @Test
-    public void cast() {
-        QCat cat = QAnimal.animal.as(QCat.class);
-        assertEquals(QAnimal.animal, cat.getMetadata().getElement());
-        assertEquals("animal", cat.toString());
-    }
+  @Test
+  public void cast() {
+    QCat cat = QAnimal.animal.as(QCat.class);
+    assertEquals(QAnimal.animal, cat.getMetadata().getElement());
+    assertEquals("animal", cat.toString());
+  }
 
-    @Test
-    public void date_as_simple() {
-        assertTrue(QAnimal.animal.dateAsSimple.getClass().equals(SimplePath.class));
-    }
-
+  @Test
+  public void date_as_simple() {
+    assertTrue(QAnimal.animal.dateAsSimple.getClass().equals(SimplePath.class));
+  }
 }

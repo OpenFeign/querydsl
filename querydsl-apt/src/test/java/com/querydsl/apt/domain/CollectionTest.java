@@ -15,86 +15,83 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.*;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.core.types.dsl.MapPath;
 import com.querydsl.core.types.dsl.SetPath;
+import java.util.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class CollectionTest {
 
-    @QueryEntity
-    public static class Person {
+  @QueryEntity
+  public static class Person {
 
-        Map<String, ?> map1;
+    Map<String, ?> map1;
 
-        Map<?, String> map2;
+    Map<?, String> map2;
 
-        Map<?,?> map3;
+    Map<?, ?> map3;
 
-        Map map4;
+    Map map4;
 
-        List<?> list1;
+    List<?> list1;
 
-        List list2;
+    List list2;
 
-        Collection<?> collection1;
+    Collection<?> collection1;
 
-        Collection collection2;
+    Collection collection2;
 
-        Collection<Collection<Person>> collectionOfCollection;
+    Collection<Collection<Person>> collectionOfCollection;
 
-        Collection<Set<String>> collectionOfSet;
+    Collection<Set<String>> collectionOfSet;
 
-        Set<?> set1;
+    Set<?> set1;
 
-        Set set2;
-    }
+    Set set2;
+  }
 
-    @QueryEntity
-    public static class Classes {
+  @QueryEntity
+  public static class Classes {
 
-        HashMap map1;
+    HashMap map1;
 
-        HashMap<?,?> map2;
+    HashMap<?, ?> map2;
 
-        HashMap<String, String> map3;
+    HashMap<String, String> map3;
 
-        ArrayList list1;
+    ArrayList list1;
 
-        ArrayList<?> list2;
+    ArrayList<?> list2;
 
-        ArrayList<String> list3;
+    ArrayList<String> list3;
 
-        HashSet set1;
+    HashSet set1;
 
-        HashSet<?> set2;
+    HashSet<?> set2;
 
-        HashSet<String> set3;
+    HashSet<String> set3;
+  }
 
-    }
+  @Test
+  public void test() {
+    //        assertEquals(String.class,
+    // QMapWithUndefinedValueTest_Person.person.appData.getParameter(1));
+    //        assertEquals(Object.class,
+    // QMapWithUndefinedValueTest_Person.person.appData.getParameter(1));
 
-    @Test
-    public void test() {
-//        assertEquals(String.class, QMapWithUndefinedValueTest_Person.person.appData.getParameter(1));
-//        assertEquals(Object.class, QMapWithUndefinedValueTest_Person.person.appData.getParameter(1));
+    Assert.assertEquals(MapPath.class, QCollectionTest_Classes.classes.map1.getClass());
+    assertEquals(MapPath.class, QCollectionTest_Classes.classes.map2.getClass());
+    assertEquals(MapPath.class, QCollectionTest_Classes.classes.map3.getClass());
 
-        Assert.assertEquals(MapPath.class, QCollectionTest_Classes.classes.map1.getClass());
-        assertEquals(MapPath.class, QCollectionTest_Classes.classes.map2.getClass());
-        assertEquals(MapPath.class, QCollectionTest_Classes.classes.map3.getClass());
+    assertEquals(ListPath.class, QCollectionTest_Classes.classes.list1.getClass());
+    assertEquals(ListPath.class, QCollectionTest_Classes.classes.list2.getClass());
+    assertEquals(ListPath.class, QCollectionTest_Classes.classes.list3.getClass());
 
-        assertEquals(ListPath.class, QCollectionTest_Classes.classes.list1.getClass());
-        assertEquals(ListPath.class, QCollectionTest_Classes.classes.list2.getClass());
-        assertEquals(ListPath.class, QCollectionTest_Classes.classes.list3.getClass());
-
-        assertEquals(SetPath.class, QCollectionTest_Classes.classes.set1.getClass());
-        assertEquals(SetPath.class, QCollectionTest_Classes.classes.set2.getClass());
-        assertEquals(SetPath.class, QCollectionTest_Classes.classes.set3.getClass());
-
-    }
-
+    assertEquals(SetPath.class, QCollectionTest_Classes.classes.set1.getClass());
+    assertEquals(SetPath.class, QCollectionTest_Classes.classes.set2.getClass());
+    assertEquals(SetPath.class, QCollectionTest_Classes.classes.set3.getClass());
+  }
 }

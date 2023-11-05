@@ -18,10 +18,9 @@ package com.querydsl.jpa;
 import org.hibernate.Session;
 
 /**
- *
  * @author Shredder121
  */
 public interface HibernateTest {
 
-    void setSession(Session session);
+  void setSession(Session session);
 }

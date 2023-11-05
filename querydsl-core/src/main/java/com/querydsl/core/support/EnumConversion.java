@@ -13,66 +13,63 @@
  */
 package com.querydsl.core.support;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpressionBase;
 import com.querydsl.core.types.Visitor;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * {@code EnumConversion} ensures that the results of an enum projection conform to the type of the
  * projection expression
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class EnumConversion<T> extends FactoryExpressionBase<T> {
 
-    private static final long serialVersionUID = 7840412008633901748L;
+  private static final long serialVersionUID = 7840412008633901748L;
 
-    private final List<Expression<?>> exprs;
+  private final List<Expression<?>> exprs;
 
-    private final T[] values;
+  private final T[] values;
 
-    public EnumConversion(Expression<T> expr) {
-        super(expr.getType());
-        Class<? extends T> type = getType();
-        if (!type.isEnum()) {
-            throw new IllegalArgumentException(type + " is not an enum");
-        }
-        exprs = Collections.<Expression<?>>singletonList(expr);
-        values = type.getEnumConstants();
+  public EnumConversion(Expression<T> expr) {
+    super(expr.getType());
+    Class<? extends T> type = getType();
+    if (!type.isEnum()) {
+      throw new IllegalArgumentException(type + " is not an enum");
     }
+    exprs = Collections.<Expression<?>>singletonList(expr);
+    values = type.getEnumConstants();
+  }
 
-    @Override
-    public <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
+
+  @Override
+  public List<Expression<?>> getArgs() {
+    return exprs;
+  }
+
+  @Override
+  public T newInstance(Object... args) {
+    if (args[0] != null) {
+      if (args[0] instanceof String || args[0] instanceof Character) {
+        @SuppressWarnings("unchecked") // The expression type is an enum
+        T rv = (T) Enum.valueOf(getType().asSubclass(Enum.class), (String) args[0].toString());
+        return rv;
+      } else if (args[0] instanceof Number) {
+        return values[((Number) args[0]).intValue()];
+      } else {
+        @SuppressWarnings("unchecked")
+        T rv = (T) args[0];
+        return rv;
+      }
+    } else {
+      return null;
     }
-
-    @Override
-    public List<Expression<?>> getArgs() {
-        return exprs;
-    }
-
-    @Override
-    public T newInstance(Object... args) {
-        if (args[0] != null) {
-            if (args[0] instanceof String || args[0] instanceof Character) {
-                @SuppressWarnings("unchecked") //The expression type is an enum
-                T rv = (T) Enum.valueOf(getType().asSubclass(Enum.class), (String) args[0].toString());
-                return rv;
-            } else if (args[0] instanceof Number) {
-                return values[((Number) args[0]).intValue()];
-            } else {
-                @SuppressWarnings("unchecked")
-                T rv = (T) args[0];
-                return rv;
-            }
-        } else {
-            return null;
-        }
-    }
-
+  }
 }

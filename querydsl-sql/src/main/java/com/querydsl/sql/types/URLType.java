@@ -23,32 +23,29 @@ import java.sql.Types;
  * {@code URLType} maps URL to URL on the JDBC level
  *
  * @author tiwe
- *
  */
 public class URLType extends AbstractType<URL> {
 
-    public URLType() {
-        super(Types.VARCHAR);
-    }
+  public URLType() {
+    super(Types.VARCHAR);
+  }
 
-    public URLType(int type) {
-        super(type);
-    }
+  public URLType(int type) {
+    super(type);
+  }
 
-    @Override
-    public URL getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getURL(startIndex);
-    }
+  @Override
+  public URL getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getURL(startIndex);
+  }
 
-    @Override
-    public Class<URL> getReturnedClass() {
-        return URL.class;
-    }
+  @Override
+  public Class<URL> getReturnedClass() {
+    return URL.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, URL value)
-            throws SQLException {
-        st.setURL(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, URL value) throws SQLException {
+    st.setURL(startIndex, value);
+  }
 }

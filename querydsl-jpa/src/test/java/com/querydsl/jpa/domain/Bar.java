@@ -15,15 +15,12 @@ package com.querydsl.jpa.domain;
 
 import javax.persistence.*;
 
-/**
- * The Class Bar.
- */
+/** The Class Bar. */
 @Entity
 @Table(name = "bar_")
 public class Bar {
-    @Temporal(TemporalType.DATE)
-    java.util.Date date;
+  @Temporal(TemporalType.DATE)
+  java.util.Date date;
 
-    @Id
-    int id;
+  @Id int id;
 }

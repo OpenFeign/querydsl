@@ -17,14 +17,12 @@ package com.querydsl.core.types;
  * {@code ParamNotSetException} is thrown when unbound parameters are found before query execution
  *
  * @author tiwe
- *
  */
 public class ParamNotSetException extends RuntimeException {
 
-    private static final long serialVersionUID = 2019016965590576490L;
+  private static final long serialVersionUID = 2019016965590576490L;
 
-    public ParamNotSetException(ParamExpression<?> param) {
-        super(param.getNotSetMessage());
-    }
-
+  public ParamNotSetException(ParamExpression<?> param) {
+    super(param.getNotSetMessage());
+  }
 }

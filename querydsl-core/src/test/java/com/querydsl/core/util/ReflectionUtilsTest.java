@@ -16,32 +16,31 @@ package com.querydsl.core.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.junit.Test;
-
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.dsl.SimpleExpression;
 
 public class ReflectionUtilsTest {
 
-    String property;
+  String property;
 
-    @Test
-    public void getAnnotatedElement() {
-        AnnotatedElement annotatedElement = ReflectionUtils.getAnnotatedElement(ReflectionUtilsTest.class, "property", String.class);
-        assertNotNull(annotatedElement);
-    }
+  @Test
+  public void getAnnotatedElement() {
+    AnnotatedElement annotatedElement =
+        ReflectionUtils.getAnnotatedElement(ReflectionUtilsTest.class, "property", String.class);
+    assertNotNull(annotatedElement);
+  }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void getImplementedInterfaces() {
-        Set<Class<?>> ifaces = ReflectionUtils.getImplementedInterfaces(SimpleExpression.class);
-        assertEquals(new HashSet<Class<?>>(Arrays.asList(Serializable.class, Expression.class)), ifaces);
-    }
-
+  @Test
+  @SuppressWarnings("unchecked")
+  public void getImplementedInterfaces() {
+    Set<Class<?>> ifaces = ReflectionUtils.getImplementedInterfaces(SimpleExpression.class);
+    assertEquals(
+        new HashSet<Class<?>>(Arrays.asList(Serializable.class, Expression.class)), ifaces);
+  }
 }

@@ -18,6 +18,5 @@ import com.querydsl.core.annotations.QuerySupertype;
 @QuerySupertype
 public class SSupertype {
 
-    public String supertypeField;
-
+  public String supertypeField;
 }

@@ -13,44 +13,41 @@
  */
 package com.querydsl.apt.domain;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryTransient;
 import com.querydsl.core.annotations.QueryType;
+import org.junit.Test;
 
 public class BlockingTest extends AbstractTest {
 
-    @QueryEntity
-    public static class Entity {
+  @QueryEntity
+  public static class Entity {
 
-        Entity field1;
+    Entity field1;
 
-        @QueryTransient
-        @QueryType(PropertyType.ENTITY)
-        Entity field2;
+    @QueryTransient
+    @QueryType(PropertyType.ENTITY)
+    Entity field2;
 
-        @QueryTransient
-        Entity blockedField;
-    }
+    @QueryTransient Entity blockedField;
+  }
 
-    @QueryEntity
-    public abstract static class Entity2 {
+  @QueryEntity
+  public abstract static class Entity2 {
 
-        @QueryTransient
-        @QueryType(PropertyType.ENTITY)
-        public abstract Entity getField2();
+    @QueryTransient
+    @QueryType(PropertyType.ENTITY)
+    public abstract Entity getField2();
 
-        @QueryTransient
-        public abstract Entity getBlockedField();
-    }
+    @QueryTransient
+    public abstract Entity getBlockedField();
+  }
 
-    @Test
-    public void entity_fields_are_available() {
-        start(QBlockingTest_Entity.class, QBlockingTest_Entity.entity);
-        assertPresent("field1");
-        assertMissing("blockedField");
-    }
-
+  @Test
+  public void entity_fields_are_available() {
+    start(QBlockingTest_Entity.class, QBlockingTest_Entity.entity);
+    assertPresent("field1");
+    assertMissing("blockedField");
+  }
 }

@@ -21,11 +21,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for APT based Domain query type generation. Annotate Domain types with this annotation.
+ * Annotation for APT based Domain query type generation. Annotate Domain types with this
+ * annotation.
  */
 @Documented
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface QueryEntity {
-
-}
+public @interface QueryEntity {}

@@ -13,20 +13,18 @@
  */
 package com.querydsl.apt.domain.custom;
 
+import com.querydsl.core.annotations.QueryEntity;
 import java.util.List;
 import java.util.Map;
-
-import com.querydsl.core.annotations.QueryEntity;
 
 @QueryEntity
 public class Entity {
 
-    List<EmbeddedType> list;
+  List<EmbeddedType> list;
 
-    EmbeddedType2 embedded;
+  EmbeddedType2 embedded;
 
-    Map<String, EmbeddedType3> map;
+  Map<String, EmbeddedType3> map;
 
-    String stringProperty;
-
+  String stringProperty;
 }

@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Spring support
- */
+/** Spring support */
 package com.querydsl.sql.spring;

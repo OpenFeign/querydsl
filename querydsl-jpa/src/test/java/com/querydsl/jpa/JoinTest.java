@@ -16,68 +16,66 @@ package com.querydsl.jpa;
 import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 
-import java.util.List;
-
-import org.junit.Test;
-
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.hibernate.HibernateQuery;
+import java.util.List;
+import org.junit.Test;
 
 public class JoinTest {
 
-    public interface Entity {
+  public interface Entity {
 
-        List<String> getNames();
-    }
+    List<String> getNames();
+  }
 
-    private final Entity alias = Alias.alias(Entity.class);
+  private final Entity alias = Alias.alias(Entity.class);
 
-    private final StringPath path = Expressions.stringPath("path");
-    private final JPQLQuery<?> subQuery = selectOne();
-    private final HibernateQuery<?> query = new HibernateQuery<Void>(new DummySessionHolder(), HQLTemplates.DEFAULT);
+  private final StringPath path = Expressions.stringPath("path");
+  private final JPQLQuery<?> subQuery = selectOne();
+  private final HibernateQuery<?> query =
+      new HibernateQuery<Void>(new DummySessionHolder(), HQLTemplates.DEFAULT);
 
-    @Test
-    public void subQuery_innerJoin() {
-        subQuery.from($(alias));
-        subQuery.innerJoin($(alias.getNames()), path);
-        // TODO : assertions
-    }
+  @Test
+  public void subQuery_innerJoin() {
+    subQuery.from($(alias));
+    subQuery.innerJoin($(alias.getNames()), path);
+    // TODO : assertions
+  }
 
-    @Test
-    public void subQuery_join() {
-        subQuery.from($(alias));
-        subQuery.join($(alias.getNames()), path);
-        // TODO : assertions
-    }
+  @Test
+  public void subQuery_join() {
+    subQuery.from($(alias));
+    subQuery.join($(alias.getNames()), path);
+    // TODO : assertions
+  }
 
-    @Test
-    public void subQuery_leftJoin() {
-        subQuery.from($(alias));
-        subQuery.leftJoin($(alias.getNames()), path);
-        // TODO : assertions
-    }
+  @Test
+  public void subQuery_leftJoin() {
+    subQuery.from($(alias));
+    subQuery.leftJoin($(alias.getNames()), path);
+    // TODO : assertions
+  }
 
-    @Test
-    public void query_innerJoin() {
-        query.from($(alias));
-        query.innerJoin($(alias.getNames()), path);
-        // TODO : assertions
-    }
+  @Test
+  public void query_innerJoin() {
+    query.from($(alias));
+    query.innerJoin($(alias.getNames()), path);
+    // TODO : assertions
+  }
 
-    @Test
-    public void query_join() {
-        query.from($(alias));
-        query.join($(alias.getNames()), path);
-        // TODO : assertions
-    }
+  @Test
+  public void query_join() {
+    query.from($(alias));
+    query.join($(alias.getNames()), path);
+    // TODO : assertions
+  }
 
-    @Test
-    public void query_leftJoin() {
-        query.from($(alias));
-        query.leftJoin($(alias.getNames()), path);
-        // TODO : assertions
-    }
-
+  @Test
+  public void query_leftJoin() {
+    query.from($(alias));
+    query.leftJoin($(alias.getNames()), path);
+    // TODO : assertions
+  }
 }

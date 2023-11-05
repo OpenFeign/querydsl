@@ -13,17 +13,15 @@
  */
 package com.querydsl.core;
 
+import com.querydsl.core.annotations.Immutable;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.util.CollectionUtils;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
-
 import org.jetbrains.annotations.Nullable;
-import com.querydsl.core.annotations.Immutable;
-
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.util.CollectionUtils;
 
 /**
  * {@code JoinExpression} is a join element in a {@link Query} instance.
@@ -33,91 +31,88 @@ import com.querydsl.core.util.CollectionUtils;
 @Immutable
 public final class JoinExpression implements Serializable {
 
-    private static final long serialVersionUID = -1131755765747174886L;
+  private static final long serialVersionUID = -1131755765747174886L;
 
-    @Nullable
-    private final Predicate condition;
+  @Nullable private final Predicate condition;
 
-    private final Set<JoinFlag> flags;
+  private final Set<JoinFlag> flags;
 
-    private final Expression<?> target;
+  private final Expression<?> target;
 
-    private final JoinType type;
+  private final JoinType type;
 
-    /**
-     * Create a new JoinExpression instance
-     *
-     * @param type type of join
-     * @param target target of join
-     */
-    public JoinExpression(JoinType type, Expression<?> target) {
-        this(type, target, null, Collections.emptySet());
+  /**
+   * Create a new JoinExpression instance
+   *
+   * @param type type of join
+   * @param target target of join
+   */
+  public JoinExpression(JoinType type, Expression<?> target) {
+    this(type, target, null, Collections.emptySet());
+  }
+
+  /**
+   * Create a new JoinExpression instance
+   *
+   * @param type type of join
+   * @param target target of join
+   * @param condition join condition or null, if none is used
+   * @param flags join flags
+   */
+  public JoinExpression(
+      JoinType type, Expression<?> target, @Nullable Predicate condition, Set<JoinFlag> flags) {
+    this.type = type;
+    this.target = target;
+    this.condition = condition;
+    this.flags = CollectionUtils.unmodifiableSet(flags);
+  }
+
+  @Nullable
+  public Predicate getCondition() {
+    return condition;
+  }
+
+  public Expression<?> getTarget() {
+    return target;
+  }
+
+  public JoinType getType() {
+    return type;
+  }
+
+  public boolean hasFlag(JoinFlag flag) {
+    return flags.contains(flag);
+  }
+
+  public Set<JoinFlag> getFlags() {
+    return flags;
+  }
+
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append(type).append(" ").append(target);
+    if (condition != null) {
+      builder.append(" on ").append(condition);
     }
+    return builder.toString();
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(condition, target, type);
+  }
 
-    /**
-     * Create a new JoinExpression instance
-     *
-     * @param type type of join
-     * @param target target of join
-     * @param condition join condition or null, if none is used
-     * @param flags join flags
-     */
-    public JoinExpression(JoinType type, Expression<?> target, @Nullable Predicate condition,
-            Set<JoinFlag> flags) {
-        this.type = type;
-        this.target = target;
-        this.condition = condition;
-        this.flags = CollectionUtils.unmodifiableSet(flags);
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof JoinExpression) {
+      JoinExpression j = (JoinExpression) o;
+      return Objects.equals(condition, j.condition)
+          && Objects.equals(target, j.target)
+          && Objects.equals(type, j.type);
+    } else {
+      return false;
     }
-
-    @Nullable
-    public Predicate getCondition() {
-        return condition;
-    }
-
-    public Expression<?> getTarget() {
-        return target;
-    }
-
-    public JoinType getType() {
-        return type;
-    }
-
-    public boolean hasFlag(JoinFlag flag) {
-        return flags.contains(flag);
-    }
-
-    public Set<JoinFlag> getFlags() {
-        return flags;
-    }
-
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(type).append(" ").append(target);
-        if (condition != null) {
-            builder.append(" on ").append(condition);
-        }
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(condition, target, type);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof JoinExpression) {
-            JoinExpression j = (JoinExpression) o;
-            return Objects.equals(condition, j.condition) &&
-                   Objects.equals(target, j.target) &&
-                   Objects.equals(type, j.type);
-        } else {
-            return false;
-        }
-    }
-
+  }
 }

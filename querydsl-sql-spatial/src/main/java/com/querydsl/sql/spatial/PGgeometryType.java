@@ -13,52 +13,48 @@
  */
 package com.querydsl.sql.spatial;
 
+import com.querydsl.sql.types.AbstractType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
-import org.jetbrains.annotations.Nullable;
-
 import org.geolatte.geom.Geometry;
 import org.geolatte.geom.codec.Wkt;
+import org.jetbrains.annotations.Nullable;
 import org.postgis.PGgeometry;
-
-import com.querydsl.sql.types.AbstractType;
 
 class PGgeometryType extends AbstractType<Geometry> {
 
-    public static final PGgeometryType DEFAULT = new PGgeometryType();
+  public static final PGgeometryType DEFAULT = new PGgeometryType();
 
-    PGgeometryType() {
-        super(Types.STRUCT);
+  PGgeometryType() {
+    super(Types.STRUCT);
+  }
+
+  @Override
+  public Class<Geometry> getReturnedClass() {
+    return Geometry.class;
+  }
+
+  @Override
+  @Nullable
+  public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
+    PGgeometry obj = (PGgeometry) rs.getObject(startIndex);
+    if (obj == null) {
+      return null;
     }
+    return Wkt.newDecoder(Wkt.Dialect.POSTGIS_EWKT_1).decode(obj.getValue());
+  }
 
-    @Override
-    public Class<Geometry> getReturnedClass() {
-        return Geometry.class;
-    }
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
+    final String encode = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(value);
+    PGgeometry geometry = new PGgeometry(encode);
+    st.setObject(startIndex, geometry);
+  }
 
-    @Override
-    @Nullable
-    public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
-        PGgeometry obj = (PGgeometry) rs.getObject(startIndex);
-        if (obj == null) {
-            return null;
-        }
-        return Wkt.newDecoder(Wkt.Dialect.POSTGIS_EWKT_1).decode(obj.getValue());
-    }
-
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
-        final String encode = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(value);
-        PGgeometry geometry = new PGgeometry(encode);
-        st.setObject(startIndex, geometry);
-    }
-
-    @Override
-    public String getLiteral(Geometry geometry) {
-        return "'" + Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry) + "'";
-    }
-
+  @Override
+  public String getLiteral(Geometry geometry) {
+    return "'" + Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry) + "'";
+  }
 }

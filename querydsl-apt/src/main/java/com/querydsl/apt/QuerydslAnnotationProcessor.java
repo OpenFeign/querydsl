@@ -13,36 +13,39 @@
  */
 package com.querydsl.apt;
 
+import com.querydsl.core.annotations.*;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
-
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 
-import com.querydsl.core.annotations.*;
-
 /**
- * Default annotation processor for Querydsl which handles {@link QueryEntity}, {@link QuerySupertype},
- * {@link QueryEmbeddable}, {@link QueryEmbedded} and {@link QueryTransient}
+ * Default annotation processor for Querydsl which handles {@link QueryEntity}, {@link
+ * QuerySupertype}, {@link QueryEmbeddable}, {@link QueryEmbedded} and {@link QueryTransient}
  *
  * @author tiwe
- *
  */
 @SupportedAnnotationTypes({"com.querydsl.core.annotations.*"})
 public class QuerydslAnnotationProcessor extends AbstractQuerydslProcessor {
 
-    @Override
-    protected Configuration createConfiguration(RoundEnvironment roundEnv) {
-        Class<? extends Annotation> entities = QueryEntities.class;
-        Class<? extends Annotation> entity = QueryEntity.class;
-        Class<? extends Annotation> superType = QuerySupertype.class;
-        Class<? extends Annotation> embeddable = QueryEmbeddable.class;
-        Class<? extends Annotation> embedded = QueryEmbedded.class;
-        Class<? extends Annotation> skip = QueryTransient.class;
+  @Override
+  protected Configuration createConfiguration(RoundEnvironment roundEnv) {
+    Class<? extends Annotation> entities = QueryEntities.class;
+    Class<? extends Annotation> entity = QueryEntity.class;
+    Class<? extends Annotation> superType = QuerySupertype.class;
+    Class<? extends Annotation> embeddable = QueryEmbeddable.class;
+    Class<? extends Annotation> embedded = QueryEmbedded.class;
+    Class<? extends Annotation> skip = QueryTransient.class;
 
-        return new DefaultConfiguration(
-                processingEnv, roundEnv, Collections.<String>emptySet(), entities,
-                entity, superType, embeddable, embedded, skip);
-    }
-
+    return new DefaultConfiguration(
+        processingEnv,
+        roundEnv,
+        Collections.<String>emptySet(),
+        entities,
+        entity,
+        superType,
+        embeddable,
+        embedded,
+        skip);
+  }
 }

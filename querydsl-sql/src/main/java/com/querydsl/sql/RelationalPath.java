@@ -13,83 +13,78 @@
  */
 package com.querydsl.sql;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.ProjectionRole;
+import java.util.Collection;
+import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * RelationalPath extends {@link EntityPath} to provide access to relational
- * metadata
+ * RelationalPath extends {@link EntityPath} to provide access to relational metadata
  *
  * @param <T> expression type
- *
  * @author tiwe
  */
 public interface RelationalPath<T> extends EntityPath<T>, ProjectionRole<T> {
 
-    /**
-     * Get the schema and table name
-     *
-     * @return schema and table
-     */
-    SchemaAndTable getSchemaAndTable();
+  /**
+   * Get the schema and table name
+   *
+   * @return schema and table
+   */
+  SchemaAndTable getSchemaAndTable();
 
-    /**
-     * Get the schema name
-     *
-     * @return schema
-     */
-    String getSchemaName();
+  /**
+   * Get the schema name
+   *
+   * @return schema
+   */
+  String getSchemaName();
 
-    /**
-     * Get the table name
-     *
-     * @return table
-     */
-    String getTableName();
+  /**
+   * Get the table name
+   *
+   * @return table
+   */
+  String getTableName();
 
-    /**
-     * Get all columns
-     *
-     * @return columns
-     */
-    List<Path<?>> getColumns();
+  /**
+   * Get all columns
+   *
+   * @return columns
+   */
+  List<Path<?>> getColumns();
 
-    /**
-     * Get the primary key for this relation or null if none exists
-     *
-     * @return primary key
-     */
-    @Nullable
-    PrimaryKey<T> getPrimaryKey();
+  /**
+   * Get the primary key for this relation or null if none exists
+   *
+   * @return primary key
+   */
+  @Nullable
+  PrimaryKey<T> getPrimaryKey();
 
-    /**
-     * Get the foreign keys for this relation
-     *
-     * @return foreign keys
-     */
-    Collection<ForeignKey<?>> getForeignKeys();
+  /**
+   * Get the foreign keys for this relation
+   *
+   * @return foreign keys
+   */
+  Collection<ForeignKey<?>> getForeignKeys();
 
-    /**
-     * Get the inverse foreign keys for this relation
-     *
-     * @return inverse foreign keys
-     */
-    Collection<ForeignKey<?>> getInverseForeignKeys();
+  /**
+   * Get the inverse foreign keys for this relation
+   *
+   * @return inverse foreign keys
+   */
+  Collection<ForeignKey<?>> getInverseForeignKeys();
 
-    /**
-     * Returns the metadata for this path or null if none was assigned. See
-     * {@link ColumnMetadata#getColumnMetadata(Path)} for a null safe
-     * alternative
-     *
-     * @return column metadata for path
-     */
-    @Override
-    @Nullable
-    ColumnMetadata getMetadata(Path<?> column);
+  /**
+   * Returns the metadata for this path or null if none was assigned. See {@link
+   * ColumnMetadata#getColumnMetadata(Path)} for a null safe alternative
+   *
+   * @return column metadata for path
+   */
+  @Override
+  @Nullable
+  ColumnMetadata getMetadata(Path<?> column);
 }

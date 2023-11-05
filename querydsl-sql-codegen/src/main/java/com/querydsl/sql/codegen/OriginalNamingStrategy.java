@@ -19,44 +19,42 @@ import com.querydsl.codegen.EntityType;
  * {@code OriginalNamingStrategy} preserves the table and column names in the conversion
  *
  * @author tiwe
- *
  */
 public class OriginalNamingStrategy extends AbstractNamingStrategy {
 
-    @Override
-    public String getClassName(String tableName) {
-        return normalizeJavaName(tableName);
-    }
+  @Override
+  public String getClassName(String tableName) {
+    return normalizeJavaName(tableName);
+  }
 
-    @Override
-    public String getDefaultAlias(EntityType entityType) {
-        return entityType.getData().get("table").toString();
-    }
+  @Override
+  public String getDefaultAlias(EntityType entityType) {
+    return entityType.getData().get("table").toString();
+  }
 
-    @Override
-    public String getDefaultVariableName(EntityType entityType) {
-        String escaped = escape(entityType, entityType.getData().get("table").toString());
-        return normalizeJavaName(escaped);
-    }
+  @Override
+  public String getDefaultVariableName(EntityType entityType) {
+    String escaped = escape(entityType, entityType.getData().get("table").toString());
+    return normalizeJavaName(escaped);
+  }
 
-    @Override
-    public String getPropertyName(String columnName, EntityType entityType) {
-        return normalizeJavaName(columnName);
-    }
+  @Override
+  public String getPropertyName(String columnName, EntityType entityType) {
+    return normalizeJavaName(columnName);
+  }
 
-    @Override
-    public String getPropertyNameForForeignKey(String foreignKeyName, EntityType entityType) {
-        return normalizeJavaName(foreignKeyName);
-    }
+  @Override
+  public String getPropertyNameForForeignKey(String foreignKeyName, EntityType entityType) {
+    return normalizeJavaName(foreignKeyName);
+  }
 
-    @Override
-    public String getPropertyNameForInverseForeignKey(String foreignKeyName, EntityType entityType) {
-        return normalizeJavaName("_" + foreignKeyName);
-    }
+  @Override
+  public String getPropertyNameForInverseForeignKey(String foreignKeyName, EntityType entityType) {
+    return normalizeJavaName("_" + foreignKeyName);
+  }
 
-    @Override
-    public String getPropertyNameForPrimaryKey(String primaryKeyName, EntityType model) {
-        return normalizeJavaName(primaryKeyName);
-    }
-
+  @Override
+  public String getPropertyNameForPrimaryKey(String primaryKeyName, EntityType model) {
+    return normalizeJavaName(primaryKeyName);
+  }
 }

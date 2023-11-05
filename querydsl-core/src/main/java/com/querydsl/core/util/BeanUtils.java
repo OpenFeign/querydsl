@@ -20,40 +20,39 @@ import java.lang.reflect.Method;
  * BeanUtils provides JavaBean compliant property de/capitalization functionality
  *
  * @author tiwe
- *
  */
 public final class BeanUtils {
 
-    public static String capitalize(String name) {
-        if (name.length() > 1 && Character.isUpperCase(name.charAt(1))) {
-            return name;
-        } else if (name.length() > 1) {
-            return Character.toUpperCase(name.charAt(0)) + name.substring(1);
-        } else {
-            return name.toUpperCase();
-        }
+  public static String capitalize(String name) {
+    if (name.length() > 1 && Character.isUpperCase(name.charAt(1))) {
+      return name;
+    } else if (name.length() > 1) {
+      return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+    } else {
+      return name.toUpperCase();
     }
+  }
 
-    public static String uncapitalize(String name) {
-        return Introspector.decapitalize(name);
+  public static String uncapitalize(String name) {
+    return Introspector.decapitalize(name);
+  }
+
+  public static boolean isAccessorPresent(String prefix, String property, Class<?> bean) {
+    try {
+      bean.getMethod(prefix + capitalize(property));
+      return true;
+    } catch (NoSuchMethodException ex) {
+      return false;
     }
+  }
 
-    public static boolean isAccessorPresent(String prefix, String property, Class<?> bean) {
-        try {
-            bean.getMethod(prefix + capitalize(property));
-            return true;
-        } catch (NoSuchMethodException ex) {
-            return false;
-        }
+  public static Method getAccessor(String prefix, String property, Class<?> bean) {
+    try {
+      return bean.getMethod(prefix + capitalize(property));
+    } catch (NoSuchMethodException e) {
+      return null;
     }
+  }
 
-    public static Method getAccessor(String prefix, String property, Class<?> bean) {
-        try {
-            return bean.getMethod(prefix + capitalize(property));
-        } catch (NoSuchMethodException e) {
-            return null;
-        }
-    }
-
-    private BeanUtils() { }
+  private BeanUtils() {}
 }

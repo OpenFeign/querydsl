@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * ANT support
- */
+/** ANT support */
 package com.querydsl.sql.codegen.ant;

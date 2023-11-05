@@ -13,23 +13,20 @@
  */
 package com.querydsl.lucene3;
 
-import org.apache.lucene.search.Query;
-
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.BooleanOperation;
+import org.apache.lucene.search.Query;
 
 /**
  * {@code QueryElement} wraps a Lucene Query
  *
  * @author tiwe
- *
  */
 public class QueryElement extends BooleanOperation {
 
-    private static final long serialVersionUID = 470868107363840155L;
+  private static final long serialVersionUID = 470868107363840155L;
 
-    public QueryElement(Query query) {
-        super(LuceneOps.LUCENE_QUERY, ConstantImpl.create(query));
-    }
-
+  public QueryElement(Query query) {
+    super(LuceneOps.LUCENE_QUERY, ConstantImpl.create(query));
+  }
 }

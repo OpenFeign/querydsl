@@ -15,43 +15,39 @@ package com.querydsl.sql.spring;
 
 import java.sql.SQLException;
 import java.util.List;
-
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLStateSQLExceptionTranslator;
 
 /**
- * {@code SpringExceptionTranslator} is an {@link SQLExceptionTranslator} implementation which uses Spring's
- * exception translation functionality internally
+ * {@code SpringExceptionTranslator} is an {@link SQLExceptionTranslator} implementation which uses
+ * Spring's exception translation functionality internally
  *
- * <p>Usage example</p>
- * <pre>
- * {@code
+ * <p>Usage example
+ *
+ * <pre>{@code
  * Configuration configuration = new Configuration(templates);
  * configuration.setExceptionTranslator(new SpringExceptionTranslator());
- * }
- * </pre>
- *
+ * }</pre>
  */
 public class SpringExceptionTranslator implements com.querydsl.sql.SQLExceptionTranslator {
 
-    private final SQLExceptionTranslator translator;
+  private final SQLExceptionTranslator translator;
 
-    public SpringExceptionTranslator() {
-        this.translator = new SQLStateSQLExceptionTranslator();
-    }
+  public SpringExceptionTranslator() {
+    this.translator = new SQLStateSQLExceptionTranslator();
+  }
 
-    public SpringExceptionTranslator(SQLExceptionTranslator translator) {
-        this.translator = translator;
-    }
+  public SpringExceptionTranslator(SQLExceptionTranslator translator) {
+    this.translator = translator;
+  }
 
-    @Override
-    public RuntimeException translate(String sql, List<Object> bindings, SQLException e) {
-        return translator.translate(null, sql, e);
-    }
+  @Override
+  public RuntimeException translate(String sql, List<Object> bindings, SQLException e) {
+    return translator.translate(null, sql, e);
+  }
 
-    @Override
-    public RuntimeException translate(SQLException e) {
-        return translator.translate(null, null, e);
-    }
-
+  @Override
+  public RuntimeException translate(SQLException e) {
+    return translator.translate(null, null, e);
+  }
 }

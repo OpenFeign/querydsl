@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-
-/**
- * Oracle support
- */
+/** Oracle support */
 package com.querydsl.sql.oracle;

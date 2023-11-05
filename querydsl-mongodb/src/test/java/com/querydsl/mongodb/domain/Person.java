@@ -6,11 +6,10 @@ import org.mongodb.morphia.annotations.Id;
 
 @Entity
 class Person {
-   @Id
-   public ObjectId id;
+  @Id public ObjectId id;
 
-   public String name;
+  public String name;
 
-   // manual reference to an address
-   public ObjectId addressId;
+  // manual reference to an address
+  public ObjectId addressId;
 }

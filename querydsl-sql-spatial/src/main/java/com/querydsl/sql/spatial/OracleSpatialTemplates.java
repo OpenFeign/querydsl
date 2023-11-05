@@ -20,34 +20,32 @@ import com.querydsl.sql.SQLTemplates;
  * {@code OracleSpatialTemplates} is a spatial enabled SQL dialect for Oracle
  *
  * @author tiwe
- *
  */
 public class OracleSpatialTemplates extends OracleTemplates {
 
-    @SuppressWarnings("FieldNameHidesFieldInSuperclass") //Intentional
-    public static final OracleSpatialTemplates DEFAULT = new OracleSpatialTemplates();
+  @SuppressWarnings("FieldNameHidesFieldInSuperclass") // Intentional
+  public static final OracleSpatialTemplates DEFAULT = new OracleSpatialTemplates();
 
-    public static Builder builder() {
-        return new Builder() {
-            @Override
-            protected SQLTemplates build(char escape, boolean quote) {
-                return new OracleSpatialTemplates(escape, quote);
-            }
-        };
-    }
+  public static Builder builder() {
+    return new Builder() {
+      @Override
+      protected SQLTemplates build(char escape, boolean quote) {
+        return new OracleSpatialTemplates(escape, quote);
+      }
+    };
+  }
 
-    public OracleSpatialTemplates() {
-        this('\\', false);
-    }
+  public OracleSpatialTemplates() {
+    this('\\', false);
+  }
 
-    public OracleSpatialTemplates(boolean quote) {
-        this('\\', quote);
-    }
+  public OracleSpatialTemplates(boolean quote) {
+    this('\\', quote);
+  }
 
-    public OracleSpatialTemplates(char escape, boolean quote) {
-        super(escape, quote);
-        addCustomType(SDOGeometryType.DEFAULT);
-        // TODO
-    }
-
+  public OracleSpatialTemplates(char escape, boolean quote) {
+    super(escape, quote);
+    addCustomType(SDOGeometryType.DEFAULT);
+    // TODO
+  }
 }

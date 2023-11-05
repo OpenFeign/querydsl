@@ -23,35 +23,32 @@ import java.sql.Types;
  * {@code BigDecimalAsDoubleType} maps BigDecimal to Double on the JDBC level
  *
  * @author tiwe
- *
  */
 public class BigDecimalAsDoubleType extends AbstractType<BigDecimal> {
 
-    public static final BigDecimalAsDoubleType DEFAULT = new BigDecimalAsDoubleType();
+  public static final BigDecimalAsDoubleType DEFAULT = new BigDecimalAsDoubleType();
 
-    public BigDecimalAsDoubleType() {
-        super(Types.DOUBLE);
-    }
+  public BigDecimalAsDoubleType() {
+    super(Types.DOUBLE);
+  }
 
-    public BigDecimalAsDoubleType(int type) {
-        super(type);
-    }
+  public BigDecimalAsDoubleType(int type) {
+    super(type);
+  }
 
-    @Override
-    public BigDecimal getValue(ResultSet rs, int startIndex) throws SQLException {
-        double val = rs.getDouble(startIndex);
-        return rs.wasNull() ? null : BigDecimal.valueOf(val);
-    }
+  @Override
+  public BigDecimal getValue(ResultSet rs, int startIndex) throws SQLException {
+    double val = rs.getDouble(startIndex);
+    return rs.wasNull() ? null : BigDecimal.valueOf(val);
+  }
 
-    @Override
-    public Class<BigDecimal> getReturnedClass() {
-        return BigDecimal.class;
-    }
+  @Override
+  public Class<BigDecimal> getReturnedClass() {
+    return BigDecimal.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, BigDecimal value)
-            throws SQLException {
-        st.setDouble(startIndex, value.doubleValue());
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, BigDecimal value) throws SQLException {
+    st.setDouble(startIndex, value.doubleValue());
+  }
 }

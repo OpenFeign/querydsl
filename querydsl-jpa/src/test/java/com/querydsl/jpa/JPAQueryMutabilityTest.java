@@ -15,15 +15,6 @@ package com.querydsl.jpa;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
-import javax.persistence.EntityManager;
-
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.querydsl.core.QueryMutability;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.sql.SAnimal;
@@ -31,44 +22,53 @@ import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
 import com.querydsl.sql.DerbyTemplates;
 import com.querydsl.sql.SQLTemplates;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import javax.persistence.EntityManager;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @Ignore
 @RunWith(JPATestRunner.class)
 public class JPAQueryMutabilityTest implements JPATest {
 
-    private static final SQLTemplates derbyTemplates = new DerbyTemplates();
+  private static final SQLTemplates derbyTemplates = new DerbyTemplates();
 
-    private EntityManager entityManager;
+  private EntityManager entityManager;
 
-    protected JPASQLQuery<?> query() {
-        return new JPASQLQuery<Void>(entityManager, derbyTemplates);
-    }
+  protected JPASQLQuery<?> query() {
+    return new JPASQLQuery<Void>(entityManager, derbyTemplates);
+  }
 
-    @Override
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+  @Override
+  public void setEntityManager(EntityManager entityManager) {
+    this.entityManager = entityManager;
+  }
 
-    @Test
-    public void test() throws SecurityException, IllegalArgumentException,
-            NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException, IOException {
-        entityManager.persist(new Cat("Beck", 1));
-        entityManager.flush();
+  @Test
+  public void test()
+      throws SecurityException,
+          IllegalArgumentException,
+          NoSuchMethodException,
+          IllegalAccessException,
+          InvocationTargetException,
+          IOException {
+    entityManager.persist(new Cat("Beck", 1));
+    entityManager.flush();
 
-        SAnimal cat = new SAnimal("cat");
-        JPASQLQuery<?> query = query().from(cat);
-        new QueryMutability(query).test(cat.id, cat.name);
-    }
+    SAnimal cat = new SAnimal("cat");
+    JPASQLQuery<?> query = query().from(cat);
+    new QueryMutability(query).test(cat.id, cat.name);
+  }
 
-    @Test
-    public void clone_() {
-        SAnimal cat = new SAnimal("cat");
-        JPASQLQuery<?> query = query().from(cat).where(cat.name.isNotNull());
-        JPASQLQuery<?> query2 = query.clone(entityManager);
-        assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
-        assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
-        query2.select(cat.id).fetch();
-    }
-
+  @Test
+  public void clone_() {
+    SAnimal cat = new SAnimal("cat");
+    JPASQLQuery<?> query = query().from(cat).where(cat.name.isNotNull());
+    JPASQLQuery<?> query2 = query.clone(entityManager);
+    assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
+    assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
+    query2.select(cat.id).fetch();
+  }
 }

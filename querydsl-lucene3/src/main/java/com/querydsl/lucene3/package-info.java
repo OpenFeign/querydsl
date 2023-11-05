@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Lucene 3 support
- */
+/** Lucene 3 support */
 package com.querydsl.lucene3;

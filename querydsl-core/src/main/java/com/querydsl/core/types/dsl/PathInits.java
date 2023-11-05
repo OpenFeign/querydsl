@@ -13,88 +13,85 @@
  */
 package com.querydsl.core.types.dsl;
 
+import com.querydsl.core.types.PathMetadata;
 import java.io.Serializable;
 import java.util.*;
 
-import com.querydsl.core.types.PathMetadata;
-
 /**
- * {@code PathInits} defines path initializations that can be attached to
- * properties via QueryInit annotations
+ * {@code PathInits} defines path initializations that can be attached to properties via QueryInit
+ * annotations
  *
  * @author tiwe
- *
  */
 public class PathInits implements Serializable {
 
-    private static final long serialVersionUID = -2173980858324141095L;
+  private static final long serialVersionUID = -2173980858324141095L;
 
-    public static final PathInits DEFAULT = new PathInits();
+  public static final PathInits DEFAULT = new PathInits();
 
-    public static final PathInits DIRECT  = new PathInits("*");
+  public static final PathInits DIRECT = new PathInits("*");
 
-    public static final PathInits DIRECT2  = new PathInits("*.*");
+  public static final PathInits DIRECT2 = new PathInits("*.*");
 
-    private final boolean initAllProps;
+  private final boolean initAllProps;
 
-    private final PathInits defaultValue;
+  private final PathInits defaultValue;
 
-    private final Map<String,PathInits> propertyToInits = new HashMap<String,PathInits>();
+  private final Map<String, PathInits> propertyToInits = new HashMap<String, PathInits>();
 
-    public PathInits(String... initStrs) {
-        boolean initAllProps = false;
-        PathInits defaultValue = DEFAULT;
+  public PathInits(String... initStrs) {
+    boolean initAllProps = false;
+    PathInits defaultValue = DEFAULT;
 
-        Map<String, Collection<String>> properties = new HashMap<>();
-        for (String initStr : initStrs) {
-            if (initStr.equals("*")) {
-                initAllProps = true;
-            } else if (initStr.startsWith("*.")) {
-                initAllProps = true;
-                defaultValue = new PathInits(initStr.substring(2));
-            } else {
-                String key = initStr;
-                List<String> inits = Collections.emptyList();
-                if (initStr.contains(".")) {
-                    key = initStr.substring(0, initStr.indexOf('.'));
-                    inits = Collections.singletonList(initStr.substring(key.length() + 1));
-                }
-                Collection<String> values = properties.computeIfAbsent(key, k -> new ArrayList<String>());
-                values.addAll(inits);
-            }
+    Map<String, Collection<String>> properties = new HashMap<>();
+    for (String initStr : initStrs) {
+      if (initStr.equals("*")) {
+        initAllProps = true;
+      } else if (initStr.startsWith("*.")) {
+        initAllProps = true;
+        defaultValue = new PathInits(initStr.substring(2));
+      } else {
+        String key = initStr;
+        List<String> inits = Collections.emptyList();
+        if (initStr.contains(".")) {
+          key = initStr.substring(0, initStr.indexOf('.'));
+          inits = Collections.singletonList(initStr.substring(key.length() + 1));
         }
-
-        for (Map.Entry<String, Collection<String>> entry : properties.entrySet()) {
-            PathInits inits = new PathInits(entry.getValue().toArray(new String[0]));
-            propertyToInits.put(entry.getKey(), inits);
-        }
-
-        this.initAllProps = initAllProps;
-        this.defaultValue = defaultValue;
+        Collection<String> values = properties.computeIfAbsent(key, k -> new ArrayList<String>());
+        values.addAll(inits);
+      }
     }
 
-    public PathInits get(String property) {
-        if (propertyToInits.containsKey(property)) {
-            return propertyToInits.get(property);
-        } else if (initAllProps) {
-            return defaultValue;
-        } else {
-            throw new IllegalArgumentException(property + " is not initialized");
-        }
+    for (Map.Entry<String, Collection<String>> entry : properties.entrySet()) {
+      PathInits inits = new PathInits(entry.getValue().toArray(new String[0]));
+      propertyToInits.put(entry.getKey(), inits);
     }
 
-    public boolean isInitialized(String property) {
-        return initAllProps || propertyToInits.containsKey(property);
-    }
+    this.initAllProps = initAllProps;
+    this.defaultValue = defaultValue;
+  }
 
-    public static PathInits getFor(PathMetadata metadata, PathInits root) {
-        if (metadata.isRoot()) {
-            return root;
-        } else if (metadata.getParent().getMetadata().isRoot()) {
-            return DIRECT;
-        } else {
-            return DEFAULT;
-        }
+  public PathInits get(String property) {
+    if (propertyToInits.containsKey(property)) {
+      return propertyToInits.get(property);
+    } else if (initAllProps) {
+      return defaultValue;
+    } else {
+      throw new IllegalArgumentException(property + " is not initialized");
     }
+  }
 
+  public boolean isInitialized(String property) {
+    return initAllProps || propertyToInits.containsKey(property);
+  }
+
+  public static PathInits getFor(PathMetadata metadata, PathInits root) {
+    if (metadata.isRoot()) {
+      return root;
+    } else if (metadata.getParent().getMetadata().isRoot()) {
+      return DIRECT;
+    } else {
+      return DEFAULT;
+    }
+  }
 }

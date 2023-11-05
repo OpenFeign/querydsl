@@ -20,27 +20,24 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.NumberPath;
 
-/**
- * QCommonPersistence is a Querydsl query type for CommonPersistence
- */
-public class QCommonPersistence extends BeanPath<CommonPersistence> implements EntityPath<CommonPersistence> {
+/** QCommonPersistence is a Querydsl query type for CommonPersistence */
+public class QCommonPersistence extends BeanPath<CommonPersistence>
+    implements EntityPath<CommonPersistence> {
 
-    private static final long serialVersionUID = -1494672641;
+  private static final long serialVersionUID = -1494672641;
 
-    public final NumberPath<Long> version = createNumber("version", Long.class);
+  public final NumberPath<Long> version = createNumber("version", Long.class);
 
-    public QCommonPersistence(BeanPath<? extends CommonPersistence> entity) {
-        super(entity.getType(),entity.getMetadata());
-    }
+  public QCommonPersistence(BeanPath<? extends CommonPersistence> entity) {
+    super(entity.getType(), entity.getMetadata());
+  }
 
-    public QCommonPersistence(PathMetadata metadata) {
-        super(CommonPersistence.class, metadata);
-    }
+  public QCommonPersistence(PathMetadata metadata) {
+    super(CommonPersistence.class, metadata);
+  }
 
-    @Override
-    public Object getMetadata(Path<?> property) {
-        return null;
-    }
-
+  @Override
+  public Object getMetadata(Path<?> property) {
+    return null;
+  }
 }
-

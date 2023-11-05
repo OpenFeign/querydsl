@@ -21,23 +21,22 @@ import com.querydsl.core.types.Templates;
 
 class DummySerializer extends SerializerBase<DummySerializer> {
 
-    DummySerializer(Templates templates) {
-        super(templates);
-    }
+  DummySerializer(Templates templates) {
+    super(templates);
+  }
 
-    @Override
-    public Void visit(SubQueryExpression<?> query, Void context) {
-        return null;
-    }
+  @Override
+  public Void visit(SubQueryExpression<?> query, Void context) {
+    return null;
+  }
 
-    @Override
-    public Void visit(FactoryExpression<?> expr, Void context) {
-        return null;
-    }
+  @Override
+  public Void visit(FactoryExpression<?> expr, Void context) {
+    return null;
+  }
 
-    @Override
-    public Void visit(ParamExpression<?> expr, Void context) {
-        return null;
-    }
-
+  @Override
+  public Void visit(ParamExpression<?> expr, Void context) {
+    return null;
+  }
 }

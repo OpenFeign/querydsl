@@ -14,22 +14,18 @@
 package com.querydsl.jpa.domain;
 
 import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * The Class PersonId.
- */
+/** The Class PersonId. */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "personid_")
 public class PersonId implements Serializable {
-    String country;
+  String country;
 
-    @Id
-    long id;
+  @Id long id;
 
-    int medicareNumber;
+  int medicareNumber;
 }

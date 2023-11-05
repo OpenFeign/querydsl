@@ -15,39 +15,44 @@ package com.querydsl.sql.codegen;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
-import com.querydsl.codegen.EntityType;
+import org.junit.Before;
+import org.junit.Test;
 
 public class MetaDataTest {
 
-    private EntityType classModel;
+  private EntityType classModel;
 
-    @Before
-    public void setUp() {
-        NamingStrategy namingStrategy = new DefaultNamingStrategy();
-        String packageName = "com.myproject.domain";
-        String tableName = "vwServiceName";
-        String className = namingStrategy.getClassName(tableName);
+  @Before
+  public void setUp() {
+    NamingStrategy namingStrategy = new DefaultNamingStrategy();
+    String packageName = "com.myproject.domain";
+    String tableName = "vwServiceName";
+    String className = namingStrategy.getClassName(tableName);
 
-        Type classTypeModel = new SimpleType(TypeCategory.ENTITY, packageName + "." + className, packageName, className, false, false);
-        classModel = new EntityType(classTypeModel);
-//        classModel.addAnnotation(new TableImpl(namingStrategy.normalizeTableName(tableName)));
-        classModel.getData().put("table", namingStrategy.normalizeTableName(tableName));
-    }
+    Type classTypeModel =
+        new SimpleType(
+            TypeCategory.ENTITY,
+            packageName + "." + className,
+            packageName,
+            className,
+            false,
+            false);
+    classModel = new EntityType(classTypeModel);
+    //        classModel.addAnnotation(new TableImpl(namingStrategy.normalizeTableName(tableName)));
+    classModel.getData().put("table", namingStrategy.normalizeTableName(tableName));
+  }
 
-    @Test
-    public void getSimpleName() {
-        assertEquals("VwServiceName", classModel.getSimpleName());
-    }
+  @Test
+  public void getSimpleName() {
+    assertEquals("VwServiceName", classModel.getSimpleName());
+  }
 
-    @Test
-    public void getFullName() {
-        assertEquals("com.myproject.domain.VwServiceName", classModel.getFullName());
-    }
-
+  @Test
+  public void getFullName() {
+    assertEquals("com.myproject.domain.VwServiceName", classModel.getFullName());
+  }
 }

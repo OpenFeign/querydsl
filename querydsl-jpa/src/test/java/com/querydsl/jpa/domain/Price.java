@@ -18,18 +18,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * The Class Price.
- */
+/** The Class Price. */
 @Entity
 @Table(name = "price_")
 public class Price {
-    long amount;
+  long amount;
 
-    @Id
-    long id;
+  @Id long id;
 
-    @ManyToOne
-    Product product;
-
+  @ManyToOne Product product;
 }

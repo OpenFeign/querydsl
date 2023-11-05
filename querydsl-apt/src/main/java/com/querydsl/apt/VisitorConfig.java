@@ -19,63 +19,52 @@ import com.querydsl.codegen.EntityType;
  * {@code VisitorConfig} defines the {@link EntityType}-specific visiting configuration
  *
  * @author tiwe
- *
  */
 public enum VisitorConfig {
-    /**
-     * visit both fields and getters
-     */
-    ALL(true, true, true),
+  /** visit both fields and getters */
+  ALL(true, true, true),
 
-    /**
-     * visit fields only
-     */
-    FIELDS_ONLY(true, false, true),
+  /** visit fields only */
+  FIELDS_ONLY(true, false, true),
 
-    /**
-     * visit methods only
-     */
-    METHODS_ONLY(false, true, true),
+  /** visit methods only */
+  METHODS_ONLY(false, true, true),
 
-    /**
-     * visit none
-     */
-    NONE(false, false, false);
+  /** visit none */
+  NONE(false, false, false);
+  private final boolean visitFieldProperties, visitMethodProperties, visitConstructors;
 
-    private final boolean visitFieldProperties, visitMethodProperties, visitConstructors;
+  public static VisitorConfig get(boolean fields, boolean methods) {
+    return get(fields, methods, VisitorConfig.ALL);
+  }
 
-    public static VisitorConfig get(boolean fields, boolean methods) {
-        return get(fields, methods, VisitorConfig.ALL);
+  public static VisitorConfig get(boolean fields, boolean methods, VisitorConfig defaultConfig) {
+    if (fields && methods) {
+      return VisitorConfig.ALL;
+    } else if (fields) {
+      return VisitorConfig.FIELDS_ONLY;
+    } else if (methods) {
+      return VisitorConfig.METHODS_ONLY;
+    } else {
+      return defaultConfig;
     }
+  }
 
-    public static VisitorConfig get(boolean fields, boolean methods, VisitorConfig defaultConfig) {
-        if (fields && methods) {
-            return VisitorConfig.ALL;
-        } else if (fields) {
-            return VisitorConfig.FIELDS_ONLY;
-        } else if (methods) {
-            return VisitorConfig.METHODS_ONLY;
-        } else {
-            return defaultConfig;
-        }
-    }
+  VisitorConfig(boolean fields, boolean methods, boolean constructors) {
+    this.visitFieldProperties = fields;
+    this.visitMethodProperties = methods;
+    this.visitConstructors = constructors;
+  }
 
-    VisitorConfig(boolean fields, boolean methods, boolean constructors) {
-        this.visitFieldProperties = fields;
-        this.visitMethodProperties = methods;
-        this.visitConstructors = constructors;
-    }
+  public boolean visitConstructors() {
+    return visitConstructors;
+  }
 
-    public boolean visitConstructors() {
-        return visitConstructors;
-    }
+  public boolean visitFieldProperties() {
+    return visitFieldProperties;
+  }
 
-    public boolean visitFieldProperties() {
-        return visitFieldProperties;
-    }
-
-    public boolean visitMethodProperties() {
-        return visitMethodProperties;
-    }
-
+  public boolean visitMethodProperties() {
+    return visitMethodProperties;
+  }
 }

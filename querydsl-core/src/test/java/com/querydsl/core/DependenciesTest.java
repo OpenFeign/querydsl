@@ -16,32 +16,28 @@ package com.querydsl.core;
 import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
-
+import jdepend.framework.JDepend;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import jdepend.framework.JDepend;
-
 public class DependenciesTest {
 
-    @Test
-    @Ignore
-    public void test() throws IOException {
-        // FIXME
-        JDepend jdepend = new JDepend();
-        jdepend.addDirectory("target/classes/com/querydsl/alias");
-        jdepend.addDirectory("target/classes/com/querydsl/codegen");
-        jdepend.addDirectory("target/classes/com/querydsl/dml");
-        jdepend.addDirectory("target/classes/com/querydsl/support");
-        jdepend.addDirectory("target/classes/com/querydsl/types");
-        jdepend.addDirectory("target/classes/com/querydsl/types/dsl");
-        jdepend.addDirectory("target/classes/com/querydsl/types/path");
-        jdepend.addDirectory("target/classes/com/querydsl/types/querydsl");
-        jdepend.addDirectory("target/classes/com/querydsl/types/template");
+  @Test
+  @Ignore
+  public void test() throws IOException {
+    // FIXME
+    JDepend jdepend = new JDepend();
+    jdepend.addDirectory("target/classes/com/querydsl/alias");
+    jdepend.addDirectory("target/classes/com/querydsl/codegen");
+    jdepend.addDirectory("target/classes/com/querydsl/dml");
+    jdepend.addDirectory("target/classes/com/querydsl/support");
+    jdepend.addDirectory("target/classes/com/querydsl/types");
+    jdepend.addDirectory("target/classes/com/querydsl/types/dsl");
+    jdepend.addDirectory("target/classes/com/querydsl/types/path");
+    jdepend.addDirectory("target/classes/com/querydsl/types/querydsl");
+    jdepend.addDirectory("target/classes/com/querydsl/types/template");
 
-        jdepend.analyze();
-        assertFalse(jdepend.containsCycles());
-
-    }
-
+    jdepend.analyze();
+    assertFalse(jdepend.containsCycles());
+  }
 }

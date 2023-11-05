@@ -9,16 +9,14 @@ import java.util.List;
  * Common interface for ForeignKeyData and InverseForeignKeyData
  *
  * @author tiwe
- *
  */
 public interface KeyData {
 
-    String getName();
+  String getName();
 
-    String getTable();
+  String getTable();
 
-    List<String> getForeignColumns();
+  List<String> getForeignColumns();
 
-    List<String> getParentColumns();
-
+  List<String> getParentColumns();
 }

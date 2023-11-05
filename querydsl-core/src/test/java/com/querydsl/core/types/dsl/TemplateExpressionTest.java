@@ -15,25 +15,24 @@ package com.querydsl.core.types.dsl;
 
 import static org.junit.Assert.*;
 
+import com.querydsl.core.annotations.PropertyType;
+import com.querydsl.core.types.*;
 import java.sql.Time;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
 import org.junit.Test;
-
-import com.querydsl.core.annotations.PropertyType;
-import com.querydsl.core.types.*;
 
 public class TemplateExpressionTest {
 
-    @Test
-    public void constructors() {
-        Templates templates = new JavaTemplates();
-        Template template = TemplateFactory.DEFAULT.create("{0}");
-        List<Expression<?>> args = Collections.singletonList(new StringPath("a"));
-        List<TemplateExpression<?>> customs = Arrays.<TemplateExpression<?>>asList(
+  @Test
+  public void constructors() {
+    Templates templates = new JavaTemplates();
+    Template template = TemplateFactory.DEFAULT.create("{0}");
+    List<Expression<?>> args = Collections.singletonList(new StringPath("a"));
+    List<TemplateExpression<?>> customs =
+        Arrays.<TemplateExpression<?>>asList(
             new BooleanTemplate(template, args),
             new ComparableTemplate<String>(String.class, template, args),
             new DateTemplate<java.sql.Date>(java.sql.Date.class, template, args),
@@ -42,53 +41,52 @@ public class TemplateExpressionTest {
             new NumberTemplate<Integer>(Integer.class, template, args),
             new SimpleTemplate<Object>(Object.class, template, args),
             new StringTemplate(template, args),
-            new TimeTemplate<Time>(Time.class, template, args)
-        );
-        TemplateExpression<?> prev = null;
-        for (TemplateExpression<?> custom : customs) {
-            assertNotNull(custom);
-            assertNotNull(custom.getTemplate());
-            assertNotNull(custom.getType());
-            assertNotNull(custom.getArgs());
-            assertEquals(custom, custom);
-            if (prev != null) {
-                assertFalse(custom.equals(prev));
-            }
-            //assertEquals(custom.getType().hashCode(), custom.hashCode());
-            custom.accept(ToStringVisitor.DEFAULT, templates);
-            prev = custom;
-        }
+            new TimeTemplate<Time>(Time.class, template, args));
+    TemplateExpression<?> prev = null;
+    for (TemplateExpression<?> custom : customs) {
+      assertNotNull(custom);
+      assertNotNull(custom.getTemplate());
+      assertNotNull(custom.getType());
+      assertNotNull(custom.getArgs());
+      assertEquals(custom, custom);
+      if (prev != null) {
+        assertFalse(custom.equals(prev));
+      }
+      // assertEquals(custom.getType().hashCode(), custom.hashCode());
+      custom.accept(ToStringVisitor.DEFAULT, templates);
+      prev = custom;
     }
+  }
 
-    @Test
-    public void factoryMethods() {
-        String template = "";
-        Expression<Boolean> arg = ConstantImpl.create(true);
+  @Test
+  public void factoryMethods() {
+    String template = "";
+    Expression<Boolean> arg = ConstantImpl.create(true);
 
-        Expressions.booleanTemplate(template, arg);
-        Expressions.comparableTemplate(String.class, template, arg);
-        Expressions.dateTemplate(Date.class, template, arg);
-        Expressions.dateTimeTemplate(Date.class, template, arg);
-        Expressions.enumTemplate(PropertyType.class, template, arg);
-        Expressions.numberTemplate(Integer.class, template, arg);
-        Expressions.template(Object.class, template, arg);
-        Expressions.stringTemplate(template, arg);
-        Expressions.timeTemplate(Time.class, template, arg);
-    }
+    Expressions.booleanTemplate(template, arg);
+    Expressions.comparableTemplate(String.class, template, arg);
+    Expressions.dateTemplate(Date.class, template, arg);
+    Expressions.dateTimeTemplate(Date.class, template, arg);
+    Expressions.enumTemplate(PropertyType.class, template, arg);
+    Expressions.numberTemplate(Integer.class, template, arg);
+    Expressions.template(Object.class, template, arg);
+    Expressions.stringTemplate(template, arg);
+    Expressions.timeTemplate(Time.class, template, arg);
+  }
 
-    @Test
-    public void factoryMethods2() {
-        Template template = TemplateFactory.DEFAULT.create("");
-        Expression<Boolean> arg = ConstantImpl.create(true);
+  @Test
+  public void factoryMethods2() {
+    Template template = TemplateFactory.DEFAULT.create("");
+    Expression<Boolean> arg = ConstantImpl.create(true);
 
-        Expressions.booleanTemplate(template, arg);
-        Expressions.comparableTemplate(String.class, template, arg);
-        Expressions.dateTemplate(Date.class, template, arg);
-        Expressions.dateTimeTemplate(Date.class, template, arg);
-        Expressions.enumTemplate(PropertyType.class, template, arg);
-        Expressions.numberTemplate(Integer.class, template, arg);
-        Expressions.template(Object.class, template, arg);
-        Expressions.stringTemplate(template, arg);
-        Expressions.timeTemplate(Time.class, template, arg);
-    }
+    Expressions.booleanTemplate(template, arg);
+    Expressions.comparableTemplate(String.class, template, arg);
+    Expressions.dateTemplate(Date.class, template, arg);
+    Expressions.dateTimeTemplate(Date.class, template, arg);
+    Expressions.enumTemplate(PropertyType.class, template, arg);
+    Expressions.numberTemplate(Integer.class, template, arg);
+    Expressions.template(Object.class, template, arg);
+    Expressions.stringTemplate(template, arg);
+    Expressions.timeTemplate(Time.class, template, arg);
+  }
 }

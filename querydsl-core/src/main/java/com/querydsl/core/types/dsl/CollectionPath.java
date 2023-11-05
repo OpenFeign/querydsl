@@ -13,94 +13,93 @@
  */
 package com.querydsl.core.types.dsl;
 
+import com.querydsl.core.types.*;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
-
 import org.jetbrains.annotations.Nullable;
-
-import com.querydsl.core.types.*;
 
 /**
  * {@code CollectionPath} represents collection paths
  *
  * @author tiwe
- *
  * @param <E> component type
  * @param <Q> component query type
  */
-public class CollectionPath<E, Q extends SimpleExpression<? super E>> extends CollectionPathBase<Collection<E>, E, Q> {
+public class CollectionPath<E, Q extends SimpleExpression<? super E>>
+    extends CollectionPathBase<Collection<E>, E, Q> {
 
-    private static final long serialVersionUID = -4982311799113762600L;
+  private static final long serialVersionUID = -4982311799113762600L;
 
-    private final Class<E> elementType;
+  private final Class<E> elementType;
 
-    private final PathImpl<Collection<E>> pathMixin;
+  private final PathImpl<Collection<E>> pathMixin;
 
-    @Nullable
-    private transient Q any;
+  @Nullable private transient Q any;
 
-    private final Class<Q> queryType;
+  private final Class<Q> queryType;
 
-    protected CollectionPath(Class<? super E> type, Class<Q> queryType, String variable) {
-        this(type, queryType, PathMetadataFactory.forVariable(variable));
+  protected CollectionPath(Class<? super E> type, Class<Q> queryType, String variable) {
+    this(type, queryType, PathMetadataFactory.forVariable(variable));
+  }
+
+  protected CollectionPath(
+      Class<? super E> type, Class<Q> queryType, Path<?> parent, String property) {
+    this(type, queryType, PathMetadataFactory.forProperty(parent, property));
+  }
+
+  protected CollectionPath(Class<? super E> type, Class<Q> queryType, PathMetadata metadata) {
+    this(type, queryType, metadata, PathInits.DIRECT);
+  }
+
+  @SuppressWarnings("unchecked")
+  protected CollectionPath(
+      Class<? super E> type, Class<Q> queryType, PathMetadata metadata, PathInits inits) {
+    super(
+        new ParameterizedPathImpl<Collection<E>>((Class) Collection.class, metadata, type), inits);
+    this.elementType = (Class<E>) type;
+    this.queryType = queryType;
+    this.pathMixin = (PathImpl<Collection<E>>) mixin;
+  }
+
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(pathMixin, context);
+  }
+
+  @Override
+  public Q any() {
+    if (any == null) {
+      any = newInstance(queryType, PathMetadataFactory.forCollectionAny(pathMixin));
     }
+    return any;
+  }
 
-    protected CollectionPath(Class<? super E> type, Class<Q> queryType, Path<?> parent, String property) {
-        this(type, queryType, PathMetadataFactory.forProperty(parent, property));
+  @Override
+  public Class<E> getElementType() {
+    return elementType;
+  }
+
+  @Override
+  public PathMetadata getMetadata() {
+    return pathMixin.getMetadata();
+  }
+
+  @Override
+  public Path<?> getRoot() {
+    return pathMixin.getRoot();
+  }
+
+  @Override
+  public AnnotatedElement getAnnotatedElement() {
+    return pathMixin.getAnnotatedElement();
+  }
+
+  @Override
+  public Class<?> getParameter(int index) {
+    if (index == 0) {
+      return elementType;
+    } else {
+      throw new IndexOutOfBoundsException(String.valueOf(index));
     }
-
-    protected CollectionPath(Class<? super E> type, Class<Q> queryType, PathMetadata metadata) {
-        this(type, queryType, metadata, PathInits.DIRECT);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected CollectionPath(Class<? super E> type, Class<Q> queryType, PathMetadata metadata, PathInits inits) {
-        super(new ParameterizedPathImpl<Collection<E>>((Class) Collection.class, metadata, type), inits);
-        this.elementType = (Class<E>) type;
-        this.queryType = queryType;
-        this.pathMixin = (PathImpl<Collection<E>>) mixin;
-    }
-
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(pathMixin, context);
-    }
-
-    @Override
-    public Q any() {
-        if (any == null) {
-            any = newInstance(queryType, PathMetadataFactory.forCollectionAny(pathMixin));
-        }
-        return any;
-    }
-
-    @Override
-    public Class<E> getElementType() {
-        return elementType;
-    }
-
-    @Override
-    public PathMetadata getMetadata() {
-        return pathMixin.getMetadata();
-    }
-
-    @Override
-    public Path<?> getRoot() {
-        return pathMixin.getRoot();
-    }
-
-    @Override
-    public AnnotatedElement getAnnotatedElement() {
-        return pathMixin.getAnnotatedElement();
-    }
-
-    @Override
-    public Class<?> getParameter(int index) {
-        if (index == 0) {
-            return elementType;
-        } else {
-            throw new IndexOutOfBoundsException(String.valueOf(index));
-        }
-    }
-
+  }
 }

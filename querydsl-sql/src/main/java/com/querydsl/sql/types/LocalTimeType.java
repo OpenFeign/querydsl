@@ -14,46 +14,43 @@
 package com.querydsl.sql.types;
 
 import java.sql.*;
-
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalTime;
 
 /**
- * {@code LocalTimeType} maps {@linkplain org.joda.time.LocalTime}
- * to {@linkplain java.sql.Time} on the JDBC level
+ * {@code LocalTimeType} maps {@linkplain org.joda.time.LocalTime} to {@linkplain java.sql.Time} on
+ * the JDBC level
  *
  * @author tiwe
- *
  */
 public class LocalTimeType extends AbstractJodaTimeDateTimeType<LocalTime> {
 
-    public LocalTimeType() {
-        super(Types.TIME);
-    }
+  public LocalTimeType() {
+    super(Types.TIME);
+  }
 
-    public LocalTimeType(int type) {
-        super(type);
-    }
+  public LocalTimeType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getLiteral(LocalTime value) {
-        return timeFormatter.print(value);
-    }
+  @Override
+  public String getLiteral(LocalTime value) {
+    return timeFormatter.print(value);
+  }
 
-    @Override
-    public Class<LocalTime> getReturnedClass() {
-        return LocalTime.class;
-    }
+  @Override
+  public Class<LocalTime> getReturnedClass() {
+    return LocalTime.class;
+  }
 
-    @Override
-    public LocalTime getValue(ResultSet rs, int startIndex) throws SQLException {
-        Time time = rs.getTime(startIndex, utc());
-        return time != null ? new LocalTime(time.getTime(), DateTimeZone.UTC) : null;
-    }
+  @Override
+  public LocalTime getValue(ResultSet rs, int startIndex) throws SQLException {
+    Time time = rs.getTime(startIndex, utc());
+    return time != null ? new LocalTime(time.getTime(), DateTimeZone.UTC) : null;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, LocalTime value) throws SQLException {
-        st.setTime(startIndex, new Time(value.getMillisOfDay()), utc());
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, LocalTime value) throws SQLException {
+    st.setTime(startIndex, new Time(value.getMillisOfDay()), utc());
+  }
 }

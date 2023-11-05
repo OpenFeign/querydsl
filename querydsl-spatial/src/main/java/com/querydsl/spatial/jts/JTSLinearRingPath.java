@@ -13,71 +13,69 @@
  */
 package com.querydsl.spatial.jts;
 
-import java.lang.reflect.AnnotatedElement;
-
 import com.querydsl.core.types.*;
 import com.vividsolutions.jts.geom.LinearRing;
+import java.lang.reflect.AnnotatedElement;
 
 /**
- * {@code JTSLinearRingPath} extends {@link JTSLinearRingExpression} to implement the
- * {@link Path} interface
+ * {@code JTSLinearRingPath} extends {@link JTSLinearRingExpression} to implement the {@link Path}
+ * interface
  *
  * @author tiwe
- *
  * @param <T>
  */
-public class JTSLinearRingPath<T extends LinearRing> extends JTSLinearRingExpression<T> implements Path<T> {
+public class JTSLinearRingPath<T extends LinearRing> extends JTSLinearRingExpression<T>
+    implements Path<T> {
 
-    private static final long serialVersionUID = 312776751843333543L;
+  private static final long serialVersionUID = 312776751843333543L;
 
-    private final PathImpl<T> pathMixin;
+  private final PathImpl<T> pathMixin;
 
-    @SuppressWarnings("unchecked")
-    public JTSLinearRingPath(Path<?> parent, String property) {
-        this((Class<? extends T>) LinearRing.class, parent, property);
-    }
+  @SuppressWarnings("unchecked")
+  public JTSLinearRingPath(Path<?> parent, String property) {
+    this((Class<? extends T>) LinearRing.class, parent, property);
+  }
 
-    public JTSLinearRingPath(Class<? extends T> type, Path<?> parent, String property) {
-        this(type, PathMetadataFactory.forProperty(parent, property));
-    }
+  public JTSLinearRingPath(Class<? extends T> type, Path<?> parent, String property) {
+    this(type, PathMetadataFactory.forProperty(parent, property));
+  }
 
-    @SuppressWarnings("unchecked")
-    public JTSLinearRingPath(PathMetadata metadata) {
-        this((Class<? extends T>) LinearRing.class, metadata);
-    }
+  @SuppressWarnings("unchecked")
+  public JTSLinearRingPath(PathMetadata metadata) {
+    this((Class<? extends T>) LinearRing.class, metadata);
+  }
 
-    public JTSLinearRingPath(Class<? extends T> type, PathMetadata metadata) {
-        super(ExpressionUtils.path(type, metadata));
-        this.pathMixin = (PathImpl<T>) mixin;
-    }
+  public JTSLinearRingPath(Class<? extends T> type, PathMetadata metadata) {
+    super(ExpressionUtils.path(type, metadata));
+    this.pathMixin = (PathImpl<T>) mixin;
+  }
 
-    @SuppressWarnings("unchecked")
-    public JTSLinearRingPath(String var) {
-        this((Class<? extends T>) LinearRing.class, PathMetadataFactory.forVariable(var));
-    }
+  @SuppressWarnings("unchecked")
+  public JTSLinearRingPath(String var) {
+    this((Class<? extends T>) LinearRing.class, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(pathMixin, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(pathMixin, context);
+  }
 
-    public JTSLinearRingPath(Class<? extends T> type, String var) {
-        this(type, PathMetadataFactory.forVariable(var));
-    }
+  public JTSLinearRingPath(Class<? extends T> type, String var) {
+    this(type, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public PathMetadata getMetadata() {
-        return pathMixin.getMetadata();
-    }
+  @Override
+  public PathMetadata getMetadata() {
+    return pathMixin.getMetadata();
+  }
 
-    @Override
-    public Path<?> getRoot() {
-        return pathMixin.getRoot();
-    }
+  @Override
+  public Path<?> getRoot() {
+    return pathMixin.getRoot();
+  }
 
-    @Override
-    public AnnotatedElement getAnnotatedElement() {
-        return pathMixin.getAnnotatedElement();
-    }
-
+  @Override
+  public AnnotatedElement getAnnotatedElement() {
+    return pathMixin.getAnnotatedElement();
+  }
 }

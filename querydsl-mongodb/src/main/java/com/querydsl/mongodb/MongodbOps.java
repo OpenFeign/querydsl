@@ -19,23 +19,22 @@ import com.querydsl.core.types.Operator;
  * MongoDB specific operators
  *
  * @author tiwe
- *
  */
 public enum MongodbOps implements Operator {
-    NEAR(Boolean.class),
-    GEO_WITHIN_BOX(Boolean.class),
-    ELEM_MATCH(Boolean.class),
-    NO_MATCH(Boolean.class),
-    NEAR_SPHERE(Boolean.class);
+  NEAR(Boolean.class),
+  GEO_WITHIN_BOX(Boolean.class),
+  ELEM_MATCH(Boolean.class),
+  NO_MATCH(Boolean.class),
+  NEAR_SPHERE(Boolean.class);
 
-    private final Class<?> type;
+  private final Class<?> type;
 
-    MongodbOps(Class<?> type) {
-        this.type = type;
-    }
+  MongodbOps(Class<?> type) {
+    this.type = type;
+  }
 
-    @Override
-    public Class<?> getType() {
-        return type;
-    }
+  @Override
+  public Class<?> getType() {
+    return type;
+  }
 }

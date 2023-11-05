@@ -13,38 +13,36 @@
  */
 package com.querydsl.sql.support;
 
+import com.querydsl.core.QueryException;
 import java.sql.SQLException;
 
-import com.querydsl.core.QueryException;
-
 /**
- * A {@link SQLExceptionWrapper} that adds the additional
- * {@code SQLException}s as suppressed exceptions.
+ * A {@link SQLExceptionWrapper} that adds the additional {@code SQLException}s as suppressed
+ * exceptions.
  *
  * @author Shredder121
  */
 class JavaSE7SQLExceptionWrapper extends SQLExceptionWrapper {
 
-    @Override
-    public RuntimeException wrap(SQLException exception) {
-        QueryException rv = new QueryException(exception);
-        SQLException linkedException = exception.getNextException();
-        while (linkedException != null) {
-            rv.addSuppressed(linkedException);
-            linkedException = linkedException.getNextException();
-        }
-        return rv;
+  @Override
+  public RuntimeException wrap(SQLException exception) {
+    QueryException rv = new QueryException(exception);
+    SQLException linkedException = exception.getNextException();
+    while (linkedException != null) {
+      rv.addSuppressed(linkedException);
+      linkedException = linkedException.getNextException();
     }
+    return rv;
+  }
 
-    @Override
-    public RuntimeException wrap(String message, SQLException exception) {
-        QueryException rv = new QueryException(message, exception);
-        SQLException linkedException = exception.getNextException();
-        while (linkedException != null) {
-            rv.addSuppressed(linkedException);
-            linkedException = linkedException.getNextException();
-        }
-        return rv;
+  @Override
+  public RuntimeException wrap(String message, SQLException exception) {
+    QueryException rv = new QueryException(message, exception);
+    SQLException linkedException = exception.getNextException();
+    while (linkedException != null) {
+      rv.addSuppressed(linkedException);
+      linkedException = linkedException.getNextException();
     }
-
+    return rv;
+  }
 }

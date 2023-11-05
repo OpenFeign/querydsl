@@ -15,51 +15,49 @@ package com.querydsl.core.types;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.dsl.BooleanPath;
 import com.querydsl.core.types.dsl.Expressions;
-
+import org.junit.Test;
 
 public class ToStringVisitorTest {
 
-    private Templates templates = new Templates() {
+  private Templates templates =
+      new Templates() {
         {
-            add(PathType.PROPERTY, "{0}_{1}");
-            add(PathType.COLLECTION_ANY, "{0}");
+          add(PathType.PROPERTY, "{0}_{1}");
+          add(PathType.COLLECTION_ANY, "{0}");
         }
-    };
+      };
 
-    @Test
-    public void operation() {
-        assertEquals("cat_name is not null",
-                QCat.cat.name.isNotNull().accept(ToStringVisitor.DEFAULT, templates));
-    }
+  @Test
+  public void operation() {
+    assertEquals(
+        "cat_name is not null",
+        QCat.cat.name.isNotNull().accept(ToStringVisitor.DEFAULT, templates));
+  }
 
-    @Test
-    public void template() {
-        Expression<Boolean> template = ExpressionUtils.template(Boolean.class, "{0} is not null", QCat.cat.name);
-        assertEquals("cat_name is not null",
-                template.accept(ToStringVisitor.DEFAULT, templates));
-    }
+  @Test
+  public void template() {
+    Expression<Boolean> template =
+        ExpressionUtils.template(Boolean.class, "{0} is not null", QCat.cat.name);
+    assertEquals("cat_name is not null", template.accept(ToStringVisitor.DEFAULT, templates));
+  }
 
-    @Test
-    public void path() {
-        assertEquals("cat_kittens_kittens_name",
-                QCat.cat.kittens.any().kittens.any().name.accept(ToStringVisitor.DEFAULT, templates));
-    }
+  @Test
+  public void path() {
+    assertEquals(
+        "cat_kittens_kittens_name",
+        QCat.cat.kittens.any().kittens.any().name.accept(ToStringVisitor.DEFAULT, templates));
+  }
 
-    @Test
-    public void complex() {
-        BooleanPath a = Expressions.booleanPath("a");
-        BooleanPath b = Expressions.booleanPath("d");
-        BooleanPath c = Expressions.booleanPath("c");
-        BooleanPath d = Expressions.booleanPath("d");
-        Predicate complex = a.or(b).and(c.or(d));
-        assertEquals("(a || d) && (c || d)", complex.accept(ToStringVisitor.DEFAULT, templates));
-
-
-    }
-
+  @Test
+  public void complex() {
+    BooleanPath a = Expressions.booleanPath("a");
+    BooleanPath b = Expressions.booleanPath("d");
+    BooleanPath c = Expressions.booleanPath("c");
+    BooleanPath d = Expressions.booleanPath("d");
+    Predicate complex = a.or(b).and(c.or(d));
+    assertEquals("(a || d) && (c || d)", complex.accept(ToStringVisitor.DEFAULT, templates));
+  }
 }

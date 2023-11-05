@@ -13,22 +13,17 @@
  */
 package com.querydsl.apt.domain;
 
+import com.querydsl.core.domain.EmbeddableWithoutQType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-
 import org.junit.Ignore;
-
-import com.querydsl.core.domain.EmbeddableWithoutQType;
 
 @Ignore
 public class ExternalEmbeddableTest {
 
-    @Entity
-    public static class EntityWithExternalEmbeddable {
+  @Entity
+  public static class EntityWithExternalEmbeddable {
 
-        @Embedded
-        EmbeddableWithoutQType embeddable;
-
-    }
-
+    @Embedded EmbeddableWithoutQType embeddable;
+  }
 }

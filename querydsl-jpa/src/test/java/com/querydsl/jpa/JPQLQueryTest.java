@@ -15,62 +15,60 @@ package com.querydsl.jpa;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.hibernate.HibernateQuery;
 import com.querydsl.jpa.impl.JPAQuery;
+import org.junit.Before;
+import org.junit.Test;
 
 public class JPQLQueryTest {
 
-    private QCat cat = QCat.cat;
+  private QCat cat = QCat.cat;
 
-    private HibernateQuery<?> query = new HibernateQuery<Void>();
+  private HibernateQuery<?> query = new HibernateQuery<Void>();
 
-    @Before
-    public void setUp() {
-        query.from(cat);
-    }
+  @Before
+  public void setUp() {
+    query.from(cat);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void innerJoinPEntityOfPPEntityOfP() {
-        query.innerJoin(cat.mate, cat.mate);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void innerJoinPEntityOfPPEntityOfP() {
+    query.innerJoin(cat.mate, cat.mate);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void innerJoinPathOfQextendsCollectionOfPPathOfP() {
-        query.innerJoin(cat.kittens, cat.mate);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void innerJoinPathOfQextendsCollectionOfPPathOfP() {
+    query.innerJoin(cat.kittens, cat.mate);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void joinPEntityOfPPEntityOfP() {
-        query.join(cat.mate, cat.mate);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void joinPEntityOfPPEntityOfP() {
+    query.join(cat.mate, cat.mate);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void joinPathOfQextendsCollectionOfPPathOfP() {
-        query.join(cat.kittens, cat.mate);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void joinPathOfQextendsCollectionOfPPathOfP() {
+    query.join(cat.kittens, cat.mate);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void leftJoinPEntityOfPPEntityOfP() {
-        query.leftJoin(cat.mate, cat.mate);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void leftJoinPEntityOfPPEntityOfP() {
+    query.leftJoin(cat.mate, cat.mate);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void leftJoinPathOfQextendsCollectionOfPPathOfP() {
-        query.leftJoin(cat.kittens, cat.mate);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void leftJoinPathOfQextendsCollectionOfPPathOfP() {
+    query.leftJoin(cat.kittens, cat.mate);
+  }
 
-    @Test
-    public void toString_() {
-        assertEquals("", new HibernateQuery<Void>().toString());
-        assertEquals("", new JPAQuery<Void>().toString());
-        assertEquals("select cat", new HibernateQuery<Void>().select(cat).toString());
-        assertEquals("select cat", new JPAQuery<Void>().select(cat).toString());
-        assertEquals("select cat\nfrom Cat cat", new HibernateQuery<Void>().from(cat).toString());
-        assertEquals("select cat\nfrom Cat cat", new JPAQuery<Void>().from(cat).toString());
-    }
-
+  @Test
+  public void toString_() {
+    assertEquals("", new HibernateQuery<Void>().toString());
+    assertEquals("", new JPAQuery<Void>().toString());
+    assertEquals("select cat", new HibernateQuery<Void>().select(cat).toString());
+    assertEquals("select cat", new JPAQuery<Void>().select(cat).toString());
+    assertEquals("select cat\nfrom Cat cat", new HibernateQuery<Void>().from(cat).toString());
+    assertEquals("select cat\nfrom Cat cat", new JPAQuery<Void>().from(cat).toString());
+  }
 }

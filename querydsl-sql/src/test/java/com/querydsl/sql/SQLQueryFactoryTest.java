@@ -15,53 +15,50 @@ package com.querydsl.sql;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.querydsl.sql.domain.QSurvey;
 import java.sql.Connection;
 import java.util.function.Supplier;
-
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.querydsl.sql.domain.QSurvey;
-
 public class SQLQueryFactoryTest {
 
-    private SQLQueryFactory queryFactory;
+  private SQLQueryFactory queryFactory;
 
-    @Before
-    public void setUp() {
-        Supplier<Connection> provider = () -> EasyMock.<Connection> createNiceMock(Connection.class);
-        queryFactory = new SQLQueryFactory(SQLTemplates.DEFAULT, provider);
-    }
+  @Before
+  public void setUp() {
+    Supplier<Connection> provider = () -> EasyMock.<Connection>createNiceMock(Connection.class);
+    queryFactory = new SQLQueryFactory(SQLTemplates.DEFAULT, provider);
+  }
 
-    @Test
-    public void query() {
-        assertNotNull(queryFactory.query());
-    }
+  @Test
+  public void query() {
+    assertNotNull(queryFactory.query());
+  }
 
-    @Test
-    public void from() {
-        assertNotNull(queryFactory.from(QSurvey.survey));
-    }
+  @Test
+  public void from() {
+    assertNotNull(queryFactory.from(QSurvey.survey));
+  }
 
-    @Test
-    public void delete() {
-        assertNotNull(queryFactory.delete(QSurvey.survey));
-    }
+  @Test
+  public void delete() {
+    assertNotNull(queryFactory.delete(QSurvey.survey));
+  }
 
-    @Test
-    public void insert() {
-        assertNotNull(queryFactory.insert(QSurvey.survey));
-    }
+  @Test
+  public void insert() {
+    assertNotNull(queryFactory.insert(QSurvey.survey));
+  }
 
-    @Test
-    public void update() {
-        assertNotNull(queryFactory.update(QSurvey.survey));
-    }
+  @Test
+  public void update() {
+    assertNotNull(queryFactory.update(QSurvey.survey));
+  }
 
-    @Test
-    public void merge() {
-        assertNotNull(queryFactory.merge(QSurvey.survey));
-    }
-
+  @Test
+  public void merge() {
+    assertNotNull(queryFactory.merge(QSurvey.survey));
+  }
 }

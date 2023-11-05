@@ -14,21 +14,15 @@
 package com.querydsl.jpa.domain;
 
 import java.util.List;
-
 import javax.persistence.*;
 
-/**
- * The Class Store.
- */
+/** The Class Store. */
 @Entity
 @Table(name = "store_")
 public class Store {
-    @OneToMany
-    List<Customer> customers;
+  @OneToMany List<Customer> customers;
 
-    @Id
-    long id;
+  @Id long id;
 
-    @ManyToOne
-    Location location;
+  @ManyToOne Location location;
 }

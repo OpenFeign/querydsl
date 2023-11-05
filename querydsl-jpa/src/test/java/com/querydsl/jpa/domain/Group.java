@@ -20,8 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "group_")
 public class Group {
-    @Id
-    int id;
+  @Id int id;
 
-    String name;
+  String name;
 }

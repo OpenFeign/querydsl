@@ -13,18 +13,16 @@
  */
 package com.querydsl.sql.codegen;
 
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
-
 import com.querydsl.core.testutil.PostgreSQL;
 import com.querydsl.sql.Connections;
+import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 
 @Category(PostgreSQL.class)
 public class ExportPostgreSQLTest extends ExportBaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        Connections.initPostgreSQL();
-    }
-
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    Connections.initPostgreSQL();
+  }
 }

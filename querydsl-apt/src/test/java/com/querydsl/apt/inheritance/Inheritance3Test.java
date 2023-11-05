@@ -13,75 +13,74 @@
  */
 package com.querydsl.apt.inheritance;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Test;
-
 import com.querydsl.apt.domain.AbstractTest;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.core.types.dsl.StringPath;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.junit.Test;
 
 public class Inheritance3Test extends AbstractTest {
 
-    /*
-     * TODO : map type variables to BeanModels
-     */
+  /*
+   * TODO : map type variables to BeanModels
+   */
 
-    @QueryEntity
-    public class GenericSupertype<A> {
-        A field;
-        Collection<A> fieldCol;
-        Set<A> fieldSet;
-        List<A> fieldList;
-        Map<String,A> fieldMap1;
-        Map<A,String> fieldMap2;
+  @QueryEntity
+  public class GenericSupertype<A> {
+    A field;
+    Collection<A> fieldCol;
+    Set<A> fieldSet;
+    List<A> fieldList;
+    Map<String, A> fieldMap1;
+    Map<A, String> fieldMap2;
 
-        String stringField;
-    }
+    String stringField;
+  }
 
-    @QueryEntity
-    public class GenericSupertypeC<D extends Comparable<D>> extends GenericSupertype<D> {
+  @QueryEntity
+  public class GenericSupertypeC<D extends Comparable<D>> extends GenericSupertype<D> {}
 
-    }
+  @QueryEntity
+  public class GenericSupertypeS extends GenericSupertypeC<String> {}
 
-    @QueryEntity
-    public class GenericSupertypeS extends GenericSupertypeC<String> {
+  @QueryEntity
+  public class GenericSupertypeS2 extends GenericSupertype<String> {}
 
-    }
+  @Test
+  public void genericSupertype() throws IllegalAccessException, NoSuchFieldException {
+    start(
+        QInheritance3Test_GenericSupertype.class,
+        QInheritance3Test_GenericSupertype.genericSupertype);
+    match(SimplePath.class, "field");
+    matchType(Object.class, "field");
+  }
 
-    @QueryEntity
-    public class GenericSupertypeS2 extends GenericSupertype<String> {
+  @Test
+  public void genericSupertypeC() throws IllegalAccessException, NoSuchFieldException {
+    start(
+        QInheritance3Test_GenericSupertypeC.class,
+        QInheritance3Test_GenericSupertypeC.genericSupertypeC);
+    match(SimplePath.class, "field");
+    matchType(Comparable.class, "field");
+  }
 
-    }
+  @Test
+  public void genericSupertypeS() throws IllegalAccessException, NoSuchFieldException {
+    start(
+        QInheritance3Test_GenericSupertypeS.class,
+        QInheritance3Test_GenericSupertypeS.genericSupertypeS);
+    match(StringPath.class, "field");
+  }
 
-    @Test
-    public void genericSupertype() throws IllegalAccessException, NoSuchFieldException {
-        start(QInheritance3Test_GenericSupertype.class, QInheritance3Test_GenericSupertype.genericSupertype);
-        match(SimplePath.class, "field");
-        matchType(Object.class, "field");
-    }
-
-    @Test
-    public void genericSupertypeC() throws IllegalAccessException, NoSuchFieldException {
-        start(QInheritance3Test_GenericSupertypeC.class, QInheritance3Test_GenericSupertypeC.genericSupertypeC);
-        match(SimplePath.class, "field");
-        matchType(Comparable.class, "field");
-    }
-
-    @Test
-    public void genericSupertypeS() throws IllegalAccessException, NoSuchFieldException {
-        start(QInheritance3Test_GenericSupertypeS.class, QInheritance3Test_GenericSupertypeS.genericSupertypeS);
-        match(StringPath.class, "field");
-    }
-
-    @Test
-    public void genericSupertypeS2() throws IllegalAccessException, NoSuchFieldException {
-        start(QInheritance3Test_GenericSupertypeS2.class, QInheritance3Test_GenericSupertypeS2.genericSupertypeS2);
-        match(StringPath.class, "field");
-    }
-
+  @Test
+  public void genericSupertypeS2() throws IllegalAccessException, NoSuchFieldException {
+    start(
+        QInheritance3Test_GenericSupertypeS2.class,
+        QInheritance3Test_GenericSupertypeS2.genericSupertypeS2);
+    match(StringPath.class, "field");
+  }
 }

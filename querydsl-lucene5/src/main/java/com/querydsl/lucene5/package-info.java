@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Lucene 5 support
- */
+/** Lucene 5 support */
 package com.querydsl.lucene5;
-

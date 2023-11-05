@@ -16,11 +16,7 @@ package com.querydsl.jpa.domain;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-/**
- * The Class DomesticCat.
- */
+/** The Class DomesticCat. */
 @Entity
 @DiscriminatorValue("DC")
-public class DomesticCat extends Cat {
-
-}
+public class DomesticCat extends Cat {}

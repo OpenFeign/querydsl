@@ -16,32 +16,33 @@ package com.querydsl.jpa;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.QEmployee;
 import com.querydsl.jpa.domain.QUser;
 import com.querydsl.jpa.hibernate.HibernateQuery;
+import org.junit.Test;
 
 public class HibernateQueryTest {
 
-    @Test
-    public void clone_() {
-        QCat cat = QCat.cat;
-        BooleanBuilder emptyBooleanBuilder = new BooleanBuilder();
-        HibernateQuery<?> hq = new HibernateQuery<Void>().from(cat).where(cat.name.isNull().and(emptyBooleanBuilder));
-        HibernateQuery<?> hq2 = hq.clone();
-        assertNotNull(hq2);
-    }
+  @Test
+  public void clone_() {
+    QCat cat = QCat.cat;
+    BooleanBuilder emptyBooleanBuilder = new BooleanBuilder();
+    HibernateQuery<?> hq =
+        new HibernateQuery<Void>().from(cat).where(cat.name.isNull().and(emptyBooleanBuilder));
+    HibernateQuery<?> hq2 = hq.clone();
+    assertNotNull(hq2);
+  }
 
-    @Test
-    public void innerJoin() {
-        HibernateQuery<?> hqlQuery = new HibernateQuery<Void>();
-        QEmployee employee = QEmployee.employee;
-        hqlQuery.from(employee);
-        hqlQuery.innerJoin(employee.user, QUser.user);
-        assertEquals("select employee\nfrom Employee employee\n  inner join employee.user as user", hqlQuery.toString());
-    }
-
+  @Test
+  public void innerJoin() {
+    HibernateQuery<?> hqlQuery = new HibernateQuery<Void>();
+    QEmployee employee = QEmployee.employee;
+    hqlQuery.from(employee);
+    hqlQuery.innerJoin(employee.user, QUser.user);
+    assertEquals(
+        "select employee\nfrom Employee employee\n  inner join employee.user as user",
+        hqlQuery.toString());
+  }
 }

@@ -20,47 +20,46 @@ import com.querydsl.sql.types.Type;
  * {@code TypeMapping} customizes the mapping from table + column to a type.
  *
  * @author tiwe
- *
  */
 public class TypeMapping implements Mapping {
 
-    private String table, column, type;
+  private String table, column, type;
 
-    @Override
-    public void apply(Configuration configuration) {
-        try {
-            Class<?> typeClass = Class.forName(type);
-            if (Type.class.isAssignableFrom(typeClass)) {
-                configuration.register(table, column, (Type<?>) typeClass.newInstance());
-            } else {
-                configuration.register(table, column, typeClass);
-            }
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            throw new RuntimeException(e);
-        }
+  @Override
+  public void apply(Configuration configuration) {
+    try {
+      Class<?> typeClass = Class.forName(type);
+      if (Type.class.isAssignableFrom(typeClass)) {
+        configuration.register(table, column, (Type<?>) typeClass.newInstance());
+      } else {
+        configuration.register(table, column, typeClass);
+      }
+    } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    public String getTable() {
-        return table;
-    }
+  public String getTable() {
+    return table;
+  }
 
-    public void setTable(String table) {
-        this.table = table;
-    }
+  public void setTable(String table) {
+    this.table = table;
+  }
 
-    public String getColumn() {
-        return column;
-    }
+  public String getColumn() {
+    return column;
+  }
 
-    public void setColumn(String column) {
-        this.column = column;
-    }
+  public void setColumn(String column) {
+    this.column = column;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+  public void setType(String type) {
+    this.type = type;
+  }
 }

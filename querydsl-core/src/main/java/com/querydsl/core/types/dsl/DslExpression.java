@@ -19,62 +19,61 @@ import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 
 /**
- * {@code DslExpression} is the base class for DSL expressions, but {@link SimpleExpression} is the base class
- * for scalar Expressions
+ * {@code DslExpression} is the base class for DSL expressions, but {@link SimpleExpression} is the
+ * base class for scalar Expressions
  *
  * @author tiwe
  * @param <T> expression type
  */
 public abstract class DslExpression<T> implements Expression<T> {
 
-    private static final long serialVersionUID = -3383063447710753290L;
+  private static final long serialVersionUID = -3383063447710753290L;
 
-    protected final Expression<T> mixin;
+  protected final Expression<T> mixin;
 
-    protected final int hashCode;
+  protected final int hashCode;
 
-    public DslExpression(Expression<T> mixin) {
-        this.mixin = mixin;
-        this.hashCode = mixin.hashCode();
-    }
+  public DslExpression(Expression<T> mixin) {
+    this.mixin = mixin;
+    this.hashCode = mixin.hashCode();
+  }
 
-    @Override
-    public final Class<? extends T> getType() {
-        return mixin.getType();
-    }
+  @Override
+  public final Class<? extends T> getType() {
+    return mixin.getType();
+  }
 
-    /**
-     * Create an alias for the expression
-     *
-     * @return this as alias
-     */
-    @SuppressWarnings("unchecked")
-    public DslExpression<T> as(Path<T> alias) {
-        return Expressions.dslOperation(getType(),Ops.ALIAS, mixin, alias);
-    }
+  /**
+   * Create an alias for the expression
+   *
+   * @return this as alias
+   */
+  @SuppressWarnings("unchecked")
+  public DslExpression<T> as(Path<T> alias) {
+    return Expressions.dslOperation(getType(), Ops.ALIAS, mixin, alias);
+  }
 
-    /**
-     * Create an alias for the expression
-     *
-     * @return this as alias
-     */
-    public DslExpression<T> as(String alias) {
-        return as(ExpressionUtils.path(getType(), alias));
-    }
+  /**
+   * Create an alias for the expression
+   *
+   * @return this as alias
+   */
+  public DslExpression<T> as(String alias) {
+    return as(ExpressionUtils.path(getType(), alias));
+  }
 
-    @Override
-    public boolean equals(Object o) { // can be overwritten
-        return mixin.equals(o);
-    }
+  @Override
+  public boolean equals(Object o) { // can be overwritten
+    return mixin.equals(o);
+  }
 
-    @Override
-    public final int hashCode() {
-        return hashCode;
-    }
+  @Override
+  public final int hashCode() {
+    return hashCode;
+  }
 
-    @Override
-    public final String toString() {
-        return mixin.toString();
-    }
-
+  @Override
+  public final String toString() {
+    return mixin.toString();
+  }
 }

@@ -6,23 +6,23 @@ import java.util.Set;
 
 public interface Entity {
 
-    int getNum();
+  int getNum();
 
-    String getStr();
+  String getStr();
 
-    boolean isBool();
+  boolean isBool();
 
-    List<String> getList();
+  List<String> getList();
 
-    Set<String> getSet();
+  Set<String> getSet();
 
-    Map<String, String> getMap();
+  Map<String, String> getMap();
 
-    java.util.Date getDateTime();
+  java.util.Date getDateTime();
 
-    java.sql.Date getDate();
+  java.sql.Date getDate();
 
-    java.sql.Time getTime();
+  java.sql.Time getTime();
 
-    String[] getArray();
+  String[] getArray();
 }

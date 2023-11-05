@@ -19,73 +19,71 @@ import org.jetbrains.annotations.Nullable;
  * {@code Visitor} defines a visitor signature for {@link Expression} instances.
  *
  * @author tiwe
- *
  * @param <R> Return type
  * @param <C> Context type
  */
 public interface Visitor<R, C> {
 
-    /**
-     * Visit a Constant instance with the given context
-     *
-     * @param expr expression to visit
-     * @param context context of the visit or null, if not used
-     * @return visit result
-     */
-    R visit(Constant<?> expr, @Nullable C context);
+  /**
+   * Visit a Constant instance with the given context
+   *
+   * @param expr expression to visit
+   * @param context context of the visit or null, if not used
+   * @return visit result
+   */
+  R visit(Constant<?> expr, @Nullable C context);
 
-    /**
-     * Visit a FactoryExpression instance with the given context
-     *
-     * @param expr expression to visit
-     * @param context context of the visit or null, if not used
-     * @return visit result
-     */
-    R visit(FactoryExpression<?> expr, @Nullable C context);
+  /**
+   * Visit a FactoryExpression instance with the given context
+   *
+   * @param expr expression to visit
+   * @param context context of the visit or null, if not used
+   * @return visit result
+   */
+  R visit(FactoryExpression<?> expr, @Nullable C context);
 
-    /**
-     * Visit an Operation instance with the given context
-     *
-     * @param expr expression to visit
-     * @param context context of the visit or null, if not used
-     * @return visit result
-     */
-    R visit(Operation<?> expr, @Nullable C context);
+  /**
+   * Visit an Operation instance with the given context
+   *
+   * @param expr expression to visit
+   * @param context context of the visit or null, if not used
+   * @return visit result
+   */
+  R visit(Operation<?> expr, @Nullable C context);
 
-    /**
-     * Visit a ParamExpression instance with the given context
-     *
-     * @param expr expression to visit
-     * @param context context of the visit or null, if not used
-     * @return visit result
-     */
-    R visit(ParamExpression<?> expr, @Nullable C context);
+  /**
+   * Visit a ParamExpression instance with the given context
+   *
+   * @param expr expression to visit
+   * @param context context of the visit or null, if not used
+   * @return visit result
+   */
+  R visit(ParamExpression<?> expr, @Nullable C context);
 
-    /**
-     * Visit a Path instance with the given context
-     *
-     * @param expr expression to visit
-     * @param context context of the visit or null, if not used
-     * @return visit result
-     */
-    R visit(Path<?> expr, @Nullable C context);
+  /**
+   * Visit a Path instance with the given context
+   *
+   * @param expr expression to visit
+   * @param context context of the visit or null, if not used
+   * @return visit result
+   */
+  R visit(Path<?> expr, @Nullable C context);
 
-    /**
-     * Visit a SubQueryExpression instance with the given context
-     *
-     * @param expr expression to visit
-     * @param context context of the visit or null, if not used
-     * @return visit result
-     */
-    R visit(SubQueryExpression<?> expr, @Nullable C context);
+  /**
+   * Visit a SubQueryExpression instance with the given context
+   *
+   * @param expr expression to visit
+   * @param context context of the visit or null, if not used
+   * @return visit result
+   */
+  R visit(SubQueryExpression<?> expr, @Nullable C context);
 
-    /**
-     * Visit a TemplateExpression instance with the given context
-     *
-     * @param expr expression to visit
-     * @param context context of the visit or null, if not used
-     * @return visit result
-     */
-    R visit(TemplateExpression<?> expr, @Nullable C context);
-
+  /**
+   * Visit a TemplateExpression instance with the given context
+   *
+   * @param expr expression to visit
+   * @param context context of the visit or null, if not used
+   * @return visit result
+   */
+  R visit(TemplateExpression<?> expr, @Nullable C context);
 }

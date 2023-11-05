@@ -15,30 +15,28 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
 
-import org.junit.Test;
-
 import com.querydsl.jpa.domain.Cat;
+import org.junit.Test;
 
 public class CollectionTest extends AbstractQueryTest {
 
-    @Test
-    public void constant_inElements_set() {
-        assertToString("?1 member of cat.kittensSet", cat.kittensSet.contains(new Cat()));
-    }
+  @Test
+  public void constant_inElements_set() {
+    assertToString("?1 member of cat.kittensSet", cat.kittensSet.contains(new Cat()));
+  }
 
-    @Test
-    public void constant_inElements_list() {
-        assertToString("?1 member of cat.kittens", cat.kittens.contains(new Cat()));
-    }
+  @Test
+  public void constant_inElements_list() {
+    assertToString("?1 member of cat.kittens", cat.kittens.contains(new Cat()));
+  }
 
-    @Test
-    public void path_inElements_list() {
-        assertToString("cat member of cat1.kittens", cat.in(cat1.kittens));
-    }
+  @Test
+  public void path_inElements_list() {
+    assertToString("cat member of cat1.kittens", cat.in(cat1.kittens));
+  }
 
-    @Test
-    public void path_inElements_set() {
-        assertToString("cat member of cat1.kittensSet", cat.in(cat1.kittensSet));
-    }
-
+  @Test
+  public void path_inElements_set() {
+    assertToString("cat member of cat1.kittensSet", cat.in(cat1.kittensSet));
+  }
 }

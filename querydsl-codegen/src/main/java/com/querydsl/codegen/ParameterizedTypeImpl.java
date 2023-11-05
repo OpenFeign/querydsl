@@ -18,53 +18,51 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 
 /**
- * {@code ParameterizedTypeImpl} provides an implementation of the {@link ParameterizedType} interface
+ * {@code ParameterizedTypeImpl} provides an implementation of the {@link ParameterizedType}
+ * interface
  *
  * @author tiwe
- *
  */
 public class ParameterizedTypeImpl implements ParameterizedType {
 
-    private final Type rawType;
+  private final Type rawType;
 
-    private final Type[] arguments;
+  private final Type[] arguments;
 
-    public ParameterizedTypeImpl(Type rawType, Type[] arguments) {
-        this.rawType = rawType;
-        this.arguments = arguments;
+  public ParameterizedTypeImpl(Type rawType, Type[] arguments) {
+    this.rawType = rawType;
+    this.arguments = arguments;
+  }
+
+  @Override
+  public Type[] getActualTypeArguments() {
+    return arguments;
+  }
+
+  @Override
+  public Type getRawType() {
+    return rawType;
+  }
+
+  @Override
+  public Type getOwnerType() {
+    return rawType;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof ParameterizedTypeImpl) {
+      ParameterizedTypeImpl other = (ParameterizedTypeImpl) o;
+      return other.rawType.equals(rawType) && Arrays.equals(other.arguments, arguments);
+    } else {
+      return false;
     }
+  }
 
-    @Override
-    public Type[] getActualTypeArguments() {
-        return arguments;
-    }
-
-    @Override
-    public Type getRawType() {
-        return rawType;
-    }
-
-    @Override
-    public Type getOwnerType() {
-        return rawType;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof ParameterizedTypeImpl) {
-            ParameterizedTypeImpl other = (ParameterizedTypeImpl) o;
-            return other.rawType.equals(rawType)
-                    && Arrays.equals(other.arguments, arguments);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return rawType.hashCode();
-    }
-
+  @Override
+  public int hashCode() {
+    return rawType.hashCode();
+  }
 }

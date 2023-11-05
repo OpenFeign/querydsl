@@ -16,48 +16,51 @@ package com.querydsl.jpa;
 import static com.querydsl.sql.SQLExpressions.select;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.*;
+import org.junit.Test;
 
 public class RelationalFunctionCallTest {
 
-//    @Schema("PUBLIC")
-//    @Table("SURVEY")
-    public class QSurvey extends RelationalPathBase<QSurvey> {
+  //    @Schema("PUBLIC")
+  //    @Table("SURVEY")
+  public class QSurvey extends RelationalPathBase<QSurvey> {
 
-        private static final long serialVersionUID = -7427577079709192842L;
+    private static final long serialVersionUID = -7427577079709192842L;
 
-        public final StringPath name = createString("NAME");
+    public final StringPath name = createString("NAME");
 
-        public QSurvey(String path) {
-            super(QSurvey.class, PathMetadataFactory.forVariable(path), "PUBLIC", "SURVEY");
-        }
-
+    public QSurvey(String path) {
+      super(QSurvey.class, PathMetadataFactory.forVariable(path), "PUBLIC", "SURVEY");
     }
+  }
 
-    @Test
-    public void functionCall() {
-        //select tab.col from Table tab join TableValuedFunction('parameter') func on tab.col not like func.col
+  @Test
+  public void functionCall() {
+    // select tab.col from Table tab join TableValuedFunction('parameter') func on tab.col not like
+    // func.col
 
-        QSurvey table = new QSurvey("SURVEY");
-        RelationalFunctionCall<String> func = SQLExpressions.relationalFunctionCall(String.class, "TableValuedFunction", "parameter");
-        PathBuilder<String> funcAlias = new PathBuilder<String>(String.class, "tokFunc");
-        SubQueryExpression<?> expr = select(table.name).from(table)
-            .join(func, funcAlias).on(table.name.like(funcAlias.getString("prop")).not());
+    QSurvey table = new QSurvey("SURVEY");
+    RelationalFunctionCall<String> func =
+        SQLExpressions.relationalFunctionCall(String.class, "TableValuedFunction", "parameter");
+    PathBuilder<String> funcAlias = new PathBuilder<String>(String.class, "tokFunc");
+    SubQueryExpression<?> expr =
+        select(table.name)
+            .from(table)
+            .join(func, funcAlias)
+            .on(table.name.like(funcAlias.getString("prop")).not());
 
-        Configuration conf = new Configuration(new SQLServerTemplates());
-        SQLSerializer serializer = new NativeSQLSerializer(conf, true);
-        serializer.serialize(expr.getMetadata(), false);
-        assertEquals("select SURVEY.NAME\n" +
-                "from SURVEY SURVEY\n" +
-                "join TableValuedFunction(?1) as tokFunc\n" +
-                "on not (SURVEY.NAME like tokFunc.prop escape '\\')", serializer.toString());
-
-    }
-
+    Configuration conf = new Configuration(new SQLServerTemplates());
+    SQLSerializer serializer = new NativeSQLSerializer(conf, true);
+    serializer.serialize(expr.getMetadata(), false);
+    assertEquals(
+        "select SURVEY.NAME\n"
+            + "from SURVEY SURVEY\n"
+            + "join TableValuedFunction(?1) as tokFunc\n"
+            + "on not (SURVEY.NAME like tokFunc.prop escape '\\')",
+        serializer.toString());
+  }
 }

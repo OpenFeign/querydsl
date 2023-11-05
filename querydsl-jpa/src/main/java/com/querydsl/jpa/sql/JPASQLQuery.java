@@ -13,71 +13,73 @@
  */
 package com.querydsl.jpa.sql;
 
-import javax.persistence.EntityManager;
-
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.QueryHandler;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
+import javax.persistence.EntityManager;
 
 /**
- * {@code JPASQLQuery} is an SQLQuery implementation that uses JPA Native SQL functionality
- * to execute queries
+ * {@code JPASQLQuery} is an SQLQuery implementation that uses JPA Native SQL functionality to
+ * execute queries
  *
  * @param <T> result type
- *
  * @author tiwe
- *
  */
 public class JPASQLQuery<T> extends AbstractJPASQLQuery<T, JPASQLQuery<T>> {
 
-    public JPASQLQuery(EntityManager entityManager, SQLTemplates sqlTemplates) {
-        super(entityManager, new Configuration(sqlTemplates));
-    }
+  public JPASQLQuery(EntityManager entityManager, SQLTemplates sqlTemplates) {
+    super(entityManager, new Configuration(sqlTemplates));
+  }
 
-    public JPASQLQuery(EntityManager entityManager, Configuration conf) {
-        super(entityManager, conf);
-    }
+  public JPASQLQuery(EntityManager entityManager, Configuration conf) {
+    super(entityManager, conf);
+  }
 
-    public JPASQLQuery(EntityManager entityManager, Configuration conf, QueryHandler queryHandler) {
-        super(entityManager, conf, queryHandler);
-    }
+  public JPASQLQuery(EntityManager entityManager, Configuration conf, QueryHandler queryHandler) {
+    super(entityManager, conf, queryHandler);
+  }
 
-    public JPASQLQuery(EntityManager entityManager, SQLTemplates sqlTemplates, QueryMetadata metadata) {
-        super(entityManager, new Configuration(sqlTemplates), metadata);
-    }
+  public JPASQLQuery(
+      EntityManager entityManager, SQLTemplates sqlTemplates, QueryMetadata metadata) {
+    super(entityManager, new Configuration(sqlTemplates), metadata);
+  }
 
-    public JPASQLQuery(EntityManager entityManager, Configuration conf, QueryMetadata metadata) {
-        super(entityManager, conf, metadata);
-    }
+  public JPASQLQuery(EntityManager entityManager, Configuration conf, QueryMetadata metadata) {
+    super(entityManager, conf, metadata);
+  }
 
-    public JPASQLQuery(EntityManager entityManager, Configuration conf, QueryHandler queryHandler, QueryMetadata metadata) {
-        super(entityManager, conf, queryHandler, metadata);
-    }
+  public JPASQLQuery(
+      EntityManager entityManager,
+      Configuration conf,
+      QueryHandler queryHandler,
+      QueryMetadata metadata) {
+    super(entityManager, conf, queryHandler, metadata);
+  }
 
-    @Override
-    public JPASQLQuery<T> clone(EntityManager entityManager) {
-        JPASQLQuery<T> q = new JPASQLQuery<T>(entityManager, configuration, queryHandler, getMetadata().clone());
-        q.clone(this);
-        return q;
-    }
+  @Override
+  public JPASQLQuery<T> clone(EntityManager entityManager) {
+    JPASQLQuery<T> q =
+        new JPASQLQuery<T>(entityManager, configuration, queryHandler, getMetadata().clone());
+    q.clone(this);
+    return q;
+  }
 
-    @Override
-    public <U> JPASQLQuery<U> select(Expression<U> expr) {
-        queryMixin.setProjection(expr);
-        @SuppressWarnings("unchecked") // This is the new type
-        JPASQLQuery<U> newType = (JPASQLQuery<U>) this;
-        return newType;
-    }
+  @Override
+  public <U> JPASQLQuery<U> select(Expression<U> expr) {
+    queryMixin.setProjection(expr);
+    @SuppressWarnings("unchecked") // This is the new type
+    JPASQLQuery<U> newType = (JPASQLQuery<U>) this;
+    return newType;
+  }
 
-    @Override
-    public JPASQLQuery<Tuple> select(Expression<?>... exprs) {
-        queryMixin.setProjection(exprs);
-        @SuppressWarnings("unchecked") // This is the new type
-        JPASQLQuery<Tuple> newType = (JPASQLQuery<Tuple>) this;
-        return newType;
-    }
-
+  @Override
+  public JPASQLQuery<Tuple> select(Expression<?>... exprs) {
+    queryMixin.setProjection(exprs);
+    @SuppressWarnings("unchecked") // This is the new type
+    JPASQLQuery<Tuple> newType = (JPASQLQuery<Tuple>) this;
+    return newType;
+  }
 }

@@ -21,11 +21,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for APT based Domain query type generation. Annotate embedded properties with this annotation.
+ * Annotation for APT based Domain query type generation. Annotate embedded properties with this
+ * annotation.
  */
 @Documented
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RUNTIME)
-public @interface QueryEmbedded {
-
-}
+public @interface QueryEmbedded {}

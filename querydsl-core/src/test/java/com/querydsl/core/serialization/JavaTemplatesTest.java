@@ -16,25 +16,23 @@ package com.querydsl.core.serialization;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.JavaTemplates;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Templates;
+import org.junit.Test;
 
 public class JavaTemplatesTest {
 
-    @Test
-    public void mappings() {
-        Templates templates = new JavaTemplates();
-        int matched = 0;
-        for (Operator operator : Ops.values()) {
-            ++matched;
-            assertNotNull(templates.getTemplate(operator));
-        }
-
-        assertTrue(matched > 0);
+  @Test
+  public void mappings() {
+    Templates templates = new JavaTemplates();
+    int matched = 0;
+    for (Operator operator : Ops.values()) {
+      ++matched;
+      assertNotNull(templates.getTemplate(operator));
     }
 
+    assertTrue(matched > 0);
+  }
 }

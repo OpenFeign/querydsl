@@ -13,10 +13,10 @@
  */
 package com.querydsl.core.types;
 
+import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.MathUtils;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -25,382 +25,363 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import com.querydsl.core.annotations.Immutable;
-
 /**
- * {@code Template} provides serialization templates for {@link Operation},
- * {@link TemplateExpression} and {@link Path} serialization
+ * {@code Template} provides serialization templates for {@link Operation}, {@link
+ * TemplateExpression} and {@link Path} serialization
  *
  * @author tiwe
- *
  */
 @Immutable
 public final class Template implements Serializable {
 
-    private static final long serialVersionUID = -1697705745769542204L;
+  private static final long serialVersionUID = -1697705745769542204L;
 
-    private static final Set<? extends Operator> CONVERTIBLES = Collections.unmodifiableSet(EnumSet.of(Ops.ADD, Ops.SUB));
+  private static final Set<? extends Operator> CONVERTIBLES =
+      Collections.unmodifiableSet(EnumSet.of(Ops.ADD, Ops.SUB));
 
-    /**
-     * General template element
-     */
-    @Immutable
-    public abstract static class Element implements Serializable {
+  /** General template element */
+  @Immutable
+  public abstract static class Element implements Serializable {
 
-        private static final long serialVersionUID = 3396877288101929387L;
+    private static final long serialVersionUID = 3396877288101929387L;
 
-        public abstract Object convert(List<?> args);
+    public abstract Object convert(List<?> args);
 
-        public abstract boolean isString();
+    public abstract boolean isString();
+  }
 
+  /** Expression as string */
+  public static final class AsString extends Element {
+
+    private static final long serialVersionUID = -655362047873616197L;
+
+    private final int index;
+
+    private final String toString;
+
+    public AsString(int index) {
+      this.index = index;
+      this.toString = index + "s";
     }
 
-    /**
-     * Expression as string
-     */
-    public static final class AsString extends Element {
-
-        private static final long serialVersionUID = -655362047873616197L;
-
-        private final int index;
-
-        private final String toString;
-
-        public AsString(int index) {
-            this.index = index;
-            this.toString = index + "s";
-        }
-
-        @Override
-        public Object convert(final List<?> args) {
-            final Object arg = args.get(index);
-            return arg instanceof Constant<?> ? arg.toString() : arg;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-
-        @Override
-        public boolean isString() {
-            return true;
-        }
-
-        @Override
-        public String toString() {
-            return toString;
-        }
-
+    @Override
+    public Object convert(final List<?> args) {
+      final Object arg = args.get(index);
+      return arg instanceof Constant<?> ? arg.toString() : arg;
     }
 
-    /**
-     * Static text element
-     */
-    public static final class StaticText extends Element {
-
-        private static final long serialVersionUID = -2791869625053368023L;
-
-        private final String text;
-
-        private final String toString;
-
-        public StaticText(String text) {
-            this.text = text;
-            this.toString = "'" + text + "'";
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        @Override
-        public boolean isString() {
-            return true;
-        }
-
-        @Override
-        public Object convert(List<?> args) {
-            return text;
-        }
-
-        @Override
-        public String toString() {
-            return toString;
-        }
-
+    public int getIndex() {
+      return index;
     }
 
-    /**
-     * Transformed expression
-     */
-    public static final class Transformed extends Element {
-
-        private static final long serialVersionUID = 702677732175745567L;
-
-        private final int index;
-
-        private final transient Function<Object, Object> transformer;
-
-        private final String toString;
-
-        public Transformed(int index, Function<Object, Object> transformer) {
-            this.index = index;
-            this.transformer = transformer;
-            this.toString = String.valueOf(index);
-        }
-
-        public int getIndex() {
-            return index;
-        }
-
-        @Override
-        public Object convert(final List<?> args) {
-            return transformer.apply(args.get(index));
-        }
-
-        @Override
-        public boolean isString() {
-            return false;
-        }
-
-        @Override
-        public String toString() {
-            return toString;
-        }
-
-    }
-
-    /**
-     * Argument by index
-     */
-    public static final class ByIndex extends Element {
-
-        private static final long serialVersionUID = 4711323946026029998L;
-
-        private final int index;
-
-        private final String toString;
-
-        public ByIndex(int index) {
-            this.index = index;
-            this.toString = String.valueOf(index);
-        }
-
-        @Override
-        public Object convert(final List<?> args) {
-            final Object arg = args.get(index);
-            if (arg instanceof Expression) {
-                return ExpressionUtils.extract((Expression<?>) arg);
-            } else {
-                return arg;
-            }
-        }
-
-        public int getIndex() {
-            return index;
-        }
-
-        @Override
-        public boolean isString() {
-            return false;
-        }
-
-        @Override
-        public String toString() {
-            return toString;
-        }
-
-    }
-
-    /**
-     * Math operation
-     */
-    public static final class Operation extends Element {
-
-        private static final long serialVersionUID = 1400801176778801584L;
-
-        private final int index1, index2;
-
-        private final Operator operator;
-
-        private final boolean asString;
-
-        public Operation(int index1, int index2, Operator operator, boolean asString) {
-            this.index1 = index1;
-            this.index2 = index2;
-            this.operator = operator;
-            this.asString = asString;
-        }
-
-        @Override
-        public Object convert(List<?> args) {
-            Object arg1 = args.get(index1);
-            Object arg2 = args.get(index2);
-            if (isNumber(arg1) && isNumber(arg2)) {
-                return MathUtils.result(asNumber(arg1), asNumber(arg2), operator);
-            } else {
-                Expression<?> expr1 = asExpression(arg1);
-                Expression<?> expr2 = asExpression(arg2);
-
-                if (arg2 instanceof Number) {
-                    if (CONVERTIBLES.contains(operator) && expr1 instanceof com.querydsl.core.types.Operation) {
-                        com.querydsl.core.types.Operation operation = (com.querydsl.core.types.Operation) expr1;
-                        if (CONVERTIBLES.contains(operation.getOperator()) && operation.getArg(1) instanceof Constant) {
-                            Number num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
-                            Number num2;
-                            if (operator == operation.getOperator()) {
-                                num2 = MathUtils.result(num1, (Number) arg2, Ops.ADD);
-                            } else if (operator == Ops.ADD) {
-                                num2 = MathUtils.result((Number) arg2, num1, Ops.SUB);
-                            } else {
-                                num2 = MathUtils.result(num1, (Number) arg2, Ops.SUB);
-                            }
-                            return ExpressionUtils.operation(expr1.getType(), operator,
-                                    operation.getArg(0), Expressions.constant(num2));
-                        }
-                    }
-                }
-
-                return ExpressionUtils.operation(expr1.getType(), operator, expr1, expr2);
-            }
-        }
-
-        @Override
-        public boolean isString() {
-            return asString;
-        }
-
-        @Override
-        public String toString() {
-            return index1 + " " + operator + " " + index2;
-        }
-    }
-
-    /**
-     * Math operation with constant
-     */
-    public static final class OperationConst extends Element {
-
-        private static final long serialVersionUID = 1400801176778801584L;
-
-        private final int index1;
-
-        private final Number arg2;
-
-        private final Expression<Number> expr2;
-
-        private final Operator operator;
-
-        private final boolean asString;
-
-        @Deprecated
-        public OperationConst(int index1, BigDecimal arg2, Operator operator, boolean asString) {
-            this(index1, (Number) arg2, operator, asString);
-        }
-
-        public OperationConst(int index1, Number arg2, Operator operator, boolean asString) {
-            this.index1 = index1;
-            this.arg2 = arg2;
-            this.expr2 = Expressions.constant(arg2);
-            this.operator = operator;
-            this.asString = asString;
-        }
-
-        @Override
-        public Object convert(List<?> args) {
-            Object arg1 = args.get(index1);
-            if (isNumber(arg1)) {
-                return MathUtils.result(asNumber(arg1), arg2, operator);
-            } else {
-                Expression<?> expr1 = asExpression(arg1);
-
-                if (CONVERTIBLES.contains(operator) && expr1 instanceof com.querydsl.core.types.Operation) {
-                    com.querydsl.core.types.Operation operation = (com.querydsl.core.types.Operation) expr1;
-                    if (CONVERTIBLES.contains(operation.getOperator()) && operation.getArg(1) instanceof Constant) {
-                        Number num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
-                        Number num2;
-                        if (operator == operation.getOperator()) {
-                            num2 = MathUtils.result(num1, arg2, Ops.ADD);
-                        } else if (operator == Ops.ADD) {
-                            num2 = MathUtils.result(arg2, num1, Ops.SUB);
-                        } else {
-                            num2 = MathUtils.result(num1, arg2, Ops.SUB);
-                        }
-                        return ExpressionUtils.operation(expr1.getType(), operator,
-                                operation.getArg(0), Expressions.constant(num2));
-                    }
-                }
-
-                return ExpressionUtils.operation(expr1.getType(), operator, expr1, expr2);
-            }
-        }
-
-        @Override
-        public boolean isString() {
-            return asString;
-        }
-
-        @Override
-        public String toString() {
-            return index1 + " " + operator + " " + arg2;
-        }
-    }
-
-    private final List<Element> elements;
-
-    private final String template;
-
-    Template(String template, List<Element> elements) {
-        this.template = template;
-        this.elements = CollectionUtils.unmodifiableList(elements);
-    }
-
-    public List<Element> getElements() {
-        return elements;
+    @Override
+    public boolean isString() {
+      return true;
     }
 
     @Override
     public String toString() {
-        return template;
+      return toString;
+    }
+  }
+
+  /** Static text element */
+  public static final class StaticText extends Element {
+
+    private static final long serialVersionUID = -2791869625053368023L;
+
+    private final String text;
+
+    private final String toString;
+
+    public StaticText(String text) {
+      this.text = text;
+      this.toString = "'" + text + "'";
+    }
+
+    public String getText() {
+      return text;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof Template) {
-            return ((Template) o).template.equals(template);
-        } else {
-            return false;
-        }
+    public boolean isString() {
+      return true;
     }
 
     @Override
-    public int hashCode() {
-        return template.hashCode();
+    public Object convert(List<?> args) {
+      return text;
     }
 
-    private static Number asNumber(Object arg) {
-        if (arg instanceof Number) {
-            return (Number) arg;
-        } else if (arg instanceof Constant) {
-            return (Number) ((Constant) arg).getConstant();
-        } else {
-            throw new IllegalArgumentException(arg.toString());
+    @Override
+    public String toString() {
+      return toString;
+    }
+  }
+
+  /** Transformed expression */
+  public static final class Transformed extends Element {
+
+    private static final long serialVersionUID = 702677732175745567L;
+
+    private final int index;
+
+    private final transient Function<Object, Object> transformer;
+
+    private final String toString;
+
+    public Transformed(int index, Function<Object, Object> transformer) {
+      this.index = index;
+      this.transformer = transformer;
+      this.toString = String.valueOf(index);
+    }
+
+    public int getIndex() {
+      return index;
+    }
+
+    @Override
+    public Object convert(final List<?> args) {
+      return transformer.apply(args.get(index));
+    }
+
+    @Override
+    public boolean isString() {
+      return false;
+    }
+
+    @Override
+    public String toString() {
+      return toString;
+    }
+  }
+
+  /** Argument by index */
+  public static final class ByIndex extends Element {
+
+    private static final long serialVersionUID = 4711323946026029998L;
+
+    private final int index;
+
+    private final String toString;
+
+    public ByIndex(int index) {
+      this.index = index;
+      this.toString = String.valueOf(index);
+    }
+
+    @Override
+    public Object convert(final List<?> args) {
+      final Object arg = args.get(index);
+      if (arg instanceof Expression) {
+        return ExpressionUtils.extract((Expression<?>) arg);
+      } else {
+        return arg;
+      }
+    }
+
+    public int getIndex() {
+      return index;
+    }
+
+    @Override
+    public boolean isString() {
+      return false;
+    }
+
+    @Override
+    public String toString() {
+      return toString;
+    }
+  }
+
+  /** Math operation */
+  public static final class Operation extends Element {
+
+    private static final long serialVersionUID = 1400801176778801584L;
+
+    private final int index1, index2;
+
+    private final Operator operator;
+
+    private final boolean asString;
+
+    public Operation(int index1, int index2, Operator operator, boolean asString) {
+      this.index1 = index1;
+      this.index2 = index2;
+      this.operator = operator;
+      this.asString = asString;
+    }
+
+    @Override
+    public Object convert(List<?> args) {
+      Object arg1 = args.get(index1);
+      Object arg2 = args.get(index2);
+      if (isNumber(arg1) && isNumber(arg2)) {
+        return MathUtils.result(asNumber(arg1), asNumber(arg2), operator);
+      } else {
+        Expression<?> expr1 = asExpression(arg1);
+        Expression<?> expr2 = asExpression(arg2);
+
+        if (arg2 instanceof Number) {
+          if (CONVERTIBLES.contains(operator)
+              && expr1 instanceof com.querydsl.core.types.Operation) {
+            com.querydsl.core.types.Operation operation = (com.querydsl.core.types.Operation) expr1;
+            if (CONVERTIBLES.contains(operation.getOperator())
+                && operation.getArg(1) instanceof Constant) {
+              Number num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
+              Number num2;
+              if (operator == operation.getOperator()) {
+                num2 = MathUtils.result(num1, (Number) arg2, Ops.ADD);
+              } else if (operator == Ops.ADD) {
+                num2 = MathUtils.result((Number) arg2, num1, Ops.SUB);
+              } else {
+                num2 = MathUtils.result(num1, (Number) arg2, Ops.SUB);
+              }
+              return ExpressionUtils.operation(
+                  expr1.getType(), operator, operation.getArg(0), Expressions.constant(num2));
+            }
+          }
         }
+
+        return ExpressionUtils.operation(expr1.getType(), operator, expr1, expr2);
+      }
     }
 
-    private static boolean isNumber(Object o) {
-        return o instanceof Number || o instanceof Constant
-                && ((Constant<?>) o).getConstant() instanceof Number;
+    @Override
+    public boolean isString() {
+      return asString;
     }
 
-    private static Expression<?> asExpression(Object arg) {
-        if (arg instanceof Expression) {
-            return ExpressionUtils.extract((Expression<?>) arg);
-        } else {
-            return Expressions.constant(arg);
+    @Override
+    public String toString() {
+      return index1 + " " + operator + " " + index2;
+    }
+  }
+
+  /** Math operation with constant */
+  public static final class OperationConst extends Element {
+
+    private static final long serialVersionUID = 1400801176778801584L;
+
+    private final int index1;
+
+    private final Number arg2;
+
+    private final Expression<Number> expr2;
+
+    private final Operator operator;
+
+    private final boolean asString;
+
+    @Deprecated
+    public OperationConst(int index1, BigDecimal arg2, Operator operator, boolean asString) {
+      this(index1, (Number) arg2, operator, asString);
+    }
+
+    public OperationConst(int index1, Number arg2, Operator operator, boolean asString) {
+      this.index1 = index1;
+      this.arg2 = arg2;
+      this.expr2 = Expressions.constant(arg2);
+      this.operator = operator;
+      this.asString = asString;
+    }
+
+    @Override
+    public Object convert(List<?> args) {
+      Object arg1 = args.get(index1);
+      if (isNumber(arg1)) {
+        return MathUtils.result(asNumber(arg1), arg2, operator);
+      } else {
+        Expression<?> expr1 = asExpression(arg1);
+
+        if (CONVERTIBLES.contains(operator) && expr1 instanceof com.querydsl.core.types.Operation) {
+          com.querydsl.core.types.Operation operation = (com.querydsl.core.types.Operation) expr1;
+          if (CONVERTIBLES.contains(operation.getOperator())
+              && operation.getArg(1) instanceof Constant) {
+            Number num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
+            Number num2;
+            if (operator == operation.getOperator()) {
+              num2 = MathUtils.result(num1, arg2, Ops.ADD);
+            } else if (operator == Ops.ADD) {
+              num2 = MathUtils.result(arg2, num1, Ops.SUB);
+            } else {
+              num2 = MathUtils.result(num1, arg2, Ops.SUB);
+            }
+            return ExpressionUtils.operation(
+                expr1.getType(), operator, operation.getArg(0), Expressions.constant(num2));
+          }
         }
+
+        return ExpressionUtils.operation(expr1.getType(), operator, expr1, expr2);
+      }
     }
 
+    @Override
+    public boolean isString() {
+      return asString;
+    }
+
+    @Override
+    public String toString() {
+      return index1 + " " + operator + " " + arg2;
+    }
+  }
+
+  private final List<Element> elements;
+
+  private final String template;
+
+  Template(String template, List<Element> elements) {
+    this.template = template;
+    this.elements = CollectionUtils.unmodifiableList(elements);
+  }
+
+  public List<Element> getElements() {
+    return elements;
+  }
+
+  @Override
+  public String toString() {
+    return template;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof Template) {
+      return ((Template) o).template.equals(template);
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return template.hashCode();
+  }
+
+  private static Number asNumber(Object arg) {
+    if (arg instanceof Number) {
+      return (Number) arg;
+    } else if (arg instanceof Constant) {
+      return (Number) ((Constant) arg).getConstant();
+    } else {
+      throw new IllegalArgumentException(arg.toString());
+    }
+  }
+
+  private static boolean isNumber(Object o) {
+    return o instanceof Number
+        || o instanceof Constant && ((Constant<?>) o).getConstant() instanceof Number;
+  }
+
+  private static Expression<?> asExpression(Object arg) {
+    if (arg instanceof Expression) {
+      return ExpressionUtils.extract((Expression<?>) arg);
+    } else {
+      return Expressions.constant(arg);
+    }
+  }
 }

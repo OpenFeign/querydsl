@@ -22,15 +22,14 @@ import java.util.Map;
  */
 public class Beans {
 
-    private final Map<? extends RelationalPath<?>, ?> beans;
+  private final Map<? extends RelationalPath<?>, ?> beans;
 
-    public Beans(Map<? extends RelationalPath<?>, ?> beans) {
-        this.beans = beans;
-    }
+  public Beans(Map<? extends RelationalPath<?>, ?> beans) {
+    this.beans = beans;
+  }
 
-    @SuppressWarnings("unchecked")
-    public <T> T get(RelationalPath<T> path) {
-        return (T) beans.get(path);
-    }
-
+  @SuppressWarnings("unchecked")
+  public <T> T get(RelationalPath<T> path) {
+    return (T) beans.get(path);
+  }
 }

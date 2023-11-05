@@ -13,24 +13,22 @@
  */
 package com.querydsl.jpa.domain;
 
-import javax.persistence.MappedSuperclass;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
+import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class Superclass {
-    String superclassProperty;
+  String superclassProperty;
 
-    @QueryType(PropertyType.SIMPLE)
-    private String stringAsSimple;
+  @QueryType(PropertyType.SIMPLE)
+  private String stringAsSimple;
 
-    public String getStringAsSimple() {
-        return stringAsSimple;
-    }
+  public String getStringAsSimple() {
+    return stringAsSimple;
+  }
 
-    public void setStringAsSimple(String stringAsSimple) {
-        this.stringAsSimple = stringAsSimple;
-    }
-
+  public void setStringAsSimple(String stringAsSimple) {
+    this.stringAsSimple = stringAsSimple;
+  }
 }

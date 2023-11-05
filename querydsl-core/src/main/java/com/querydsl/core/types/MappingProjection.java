@@ -13,17 +13,15 @@
  */
 package com.querydsl.core.types;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-import com.querydsl.core.annotations.Immutable;
-
 import com.querydsl.core.Tuple;
+import com.querydsl.core.annotations.Immutable;
+import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Projection template that allows implementing arbitrary mapping of rows to result objects.
  *
- * <p>Example</p>
+ * <p>Example
  *
  * <pre><code>
  * {@code MappingProjection<Pair<String, String>>} mapping = new {@code MappingProjection<Pair<String, String>>}(Pair.class, str1, str2) {
@@ -39,55 +37,54 @@ import com.querydsl.core.Tuple;
 @Immutable
 public abstract class MappingProjection<T> extends FactoryExpressionBase<T> {
 
-    private static final long serialVersionUID = -948494350919774466L;
+  private static final long serialVersionUID = -948494350919774466L;
 
-    private final QTuple qTuple;
+  private final QTuple qTuple;
 
-    /**
-     * Create a new MappingProjection instance
-     *
-     * @param type
-     * @param args
-     */
-    @SuppressWarnings("unchecked")
-    public MappingProjection(Class<? super T> type, Expression<?>... args) {
-        super((Class) type);
-        qTuple = new QTuple(ExpressionUtils.distinctList(args));
-    }
+  /**
+   * Create a new MappingProjection instance
+   *
+   * @param type
+   * @param args
+   */
+  @SuppressWarnings("unchecked")
+  public MappingProjection(Class<? super T> type, Expression<?>... args) {
+    super((Class) type);
+    qTuple = new QTuple(ExpressionUtils.distinctList(args));
+  }
 
-    /**
-     * Create a new MappingProjection instance
-     *
-     * @param type
-     * @param args
-     */
-    @SuppressWarnings("unchecked")
-    public MappingProjection(Class<? super T> type, Expression<?>[]... args) {
-        super((Class) type);
-        qTuple = new QTuple(ExpressionUtils.distinctList(args));
-    }
+  /**
+   * Create a new MappingProjection instance
+   *
+   * @param type
+   * @param args
+   */
+  @SuppressWarnings("unchecked")
+  public MappingProjection(Class<? super T> type, Expression<?>[]... args) {
+    super((Class) type);
+    qTuple = new QTuple(ExpressionUtils.distinctList(args));
+  }
 
-    @Override
-    public T newInstance(Object... values) {
-        return map(qTuple.newInstance(values));
-    }
+  @Override
+  public T newInstance(Object... values) {
+    return map(qTuple.newInstance(values));
+  }
 
-    /**
-     * Creates a result object from the given row.
-     *
-     * @param row The row to map
-     * @return The result object
-     */
-    protected abstract T map(Tuple row);
+  /**
+   * Creates a result object from the given row.
+   *
+   * @param row The row to map
+   * @return The result object
+   */
+  protected abstract T map(Tuple row);
 
-    @Override
-    public List<Expression<?>> getArgs() {
-        return qTuple.getArgs();
-    }
+  @Override
+  public List<Expression<?>> getArgs() {
+    return qTuple.getArgs();
+  }
 
-    @Override
-    public <R, C> R accept(Visitor<R, C> v, @Nullable C context) {
-        return v.visit(this, context);
-    }
-
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, @Nullable C context) {
+    return v.visit(this, context);
+  }
 }

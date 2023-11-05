@@ -21,36 +21,34 @@ import com.querydsl.sql.SQLTemplates;
  * {@code PostGISTemplates} is a spatial enabled SQL dialect for PostGIS
  *
  * @author tiwe
- *
  */
 public class PostGISTemplates extends PostgreSQLTemplates {
 
-    @SuppressWarnings("FieldNameHidesFieldInSuperclass") //Intentional
-    public static final PostGISTemplates DEFAULT = new PostGISTemplates();
+  @SuppressWarnings("FieldNameHidesFieldInSuperclass") // Intentional
+  public static final PostGISTemplates DEFAULT = new PostGISTemplates();
 
-    public static Builder builder() {
-        return new Builder() {
-            @Override
-            protected SQLTemplates build(char escape, boolean quote) {
-                return new PostGISTemplates(escape, quote);
-            }
-        };
-    }
+  public static Builder builder() {
+    return new Builder() {
+      @Override
+      protected SQLTemplates build(char escape, boolean quote) {
+        return new PostGISTemplates(escape, quote);
+      }
+    };
+  }
 
-    public PostGISTemplates() {
-        this('\\', false);
-    }
+  public PostGISTemplates() {
+    this('\\', false);
+  }
 
-    public PostGISTemplates(boolean quote) {
-        this('\\', quote);
-    }
+  public PostGISTemplates(boolean quote) {
+    this('\\', quote);
+  }
 
-    public PostGISTemplates(char escape, boolean quote) {
-        super(escape, quote);
-        addCustomType(PGgeometryType.DEFAULT);
-        add(SpatialTemplatesSupport.getSpatialOps(true));
-        add(SpatialOps.DISTANCE_SPHERE, "ST_Distance_Sphere({0}, {1})");
-        add(SpatialOps.DISTANCE_SPHEROID, "ST_Distance_Spheroid({0}, {1})");
-    }
-
+  public PostGISTemplates(char escape, boolean quote) {
+    super(escape, quote);
+    addCustomType(PGgeometryType.DEFAULT);
+    add(SpatialTemplatesSupport.getSpatialOps(true));
+    add(SpatialOps.DISTANCE_SPHERE, "ST_Distance_Sphere({0}, {1})");
+    add(SpatialOps.DISTANCE_SPHEROID, "ST_Distance_Spheroid({0}, {1})");
+  }
 }

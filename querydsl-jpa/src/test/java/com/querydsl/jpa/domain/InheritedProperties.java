@@ -20,8 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "inheritedproperties_")
 public class InheritedProperties extends Superclass {
-    @Id
-    long id;
+  @Id long id;
 
-    String classProperty;
+  String classProperty;
 }

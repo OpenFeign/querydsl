@@ -15,39 +15,38 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.Config;
 import com.querydsl.core.annotations.QueryEntity;
+import java.util.List;
+import java.util.Map;
+import org.junit.Test;
 
 public class QuerydslConfigTest {
 
-    @Config(entityAccessors = true)
-    @QueryEntity
-    public static class Superclass {
+  @Config(entityAccessors = true)
+  @QueryEntity
+  public static class Superclass {
 
-        Entity prop3;
-    }
+    Entity prop3;
+  }
 
-    @Config(entityAccessors = true, listAccessors = true, mapAccessors = true)
-    @QueryEntity
-    public static class Entity extends Superclass {
+  @Config(entityAccessors = true, listAccessors = true, mapAccessors = true)
+  @QueryEntity
+  public static class Entity extends Superclass {
 
-        Entity prop1;
+    Entity prop1;
 
-        Entity prop2;
+    Entity prop2;
 
-        List<Entity> entityList;
+    List<Entity> entityList;
 
-        Map<String,Entity> entityMap;
-    }
+    Map<String, Entity> entityMap;
+  }
 
-    @Test
-    public void long_path() {
-        assertEquals("entity.prop1.prop2.prop1", QQuerydslConfigTest_Entity.entity.prop1().prop2().prop1().toString());
-    }
-
+  @Test
+  public void long_path() {
+    assertEquals(
+        "entity.prop1.prop2.prop1",
+        QQuerydslConfigTest_Entity.entity.prop1().prop2().prop1().toString());
+  }
 }

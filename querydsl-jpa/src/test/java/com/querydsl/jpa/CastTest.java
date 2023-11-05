@@ -15,47 +15,46 @@ package com.querydsl.jpa;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import org.junit.Test;
 
 public class CastTest extends AbstractQueryTest {
 
-    private static NumberExpression<Integer> expr = Expressions.numberPath(Integer.class, "int");
+  private static NumberExpression<Integer> expr = Expressions.numberPath(Integer.class, "int");
 
-    @Test
-    public void bytes() {
-        assertEquals(Byte.class, expr.byteValue().getType());
-    }
+  @Test
+  public void bytes() {
+    assertEquals(Byte.class, expr.byteValue().getType());
+  }
 
-    @Test
-    public void doubles() {
-        assertEquals(Double.class, expr.doubleValue().getType());
-    }
+  @Test
+  public void doubles() {
+    assertEquals(Double.class, expr.doubleValue().getType());
+  }
 
-    @Test
-    public void floats() {
-        assertEquals(Float.class, expr.floatValue().getType());
-    }
+  @Test
+  public void floats() {
+    assertEquals(Float.class, expr.floatValue().getType());
+  }
 
-    @Test
-    public void integers() {
-        assertEquals(Integer.class, expr.intValue().getType());
-    }
+  @Test
+  public void integers() {
+    assertEquals(Integer.class, expr.intValue().getType());
+  }
 
-    @Test
-    public void longs() {
-        assertEquals(Long.class, expr.longValue().getType());
-    }
+  @Test
+  public void longs() {
+    assertEquals(Long.class, expr.longValue().getType());
+  }
 
-    @Test
-    public void shorts() {
-        assertEquals(Short.class, expr.shortValue().getType());
-    }
+  @Test
+  public void shorts() {
+    assertEquals(Short.class, expr.shortValue().getType());
+  }
 
-    @Test
-    public void stringCast() {
-        assertEquals(String.class, expr.stringValue().getType());
-    }
+  @Test
+  public void stringCast() {
+    assertEquals(String.class, expr.stringValue().getType());
+  }
 }

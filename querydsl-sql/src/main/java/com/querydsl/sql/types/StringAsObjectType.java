@@ -19,45 +19,41 @@ import java.sql.*;
  * {@code StringAsObjectType} maps String to String on the JDBC level
  *
  * @author tiwe
- *
  */
 public class StringAsObjectType extends AbstractType<String> {
 
-    public static final StringAsObjectType DEFAULT = new StringAsObjectType();
+  public static final StringAsObjectType DEFAULT = new StringAsObjectType();
 
-    public StringAsObjectType() {
-        super(Types.VARCHAR);
+  public StringAsObjectType() {
+    super(Types.VARCHAR);
+  }
+
+  public StringAsObjectType(int type) {
+    super(type);
+  }
+
+  @Override
+  public String getValue(ResultSet rs, int startIndex) throws SQLException {
+    Object o = rs.getObject(startIndex);
+    if (o instanceof String) {
+      return (String) o;
+    } else if (o instanceof Clob) {
+      Clob clob = (Clob) o;
+      return clob.getSubString(1, (int) clob.length());
+    } else if (o != null) {
+      return o.toString();
+    } else {
+      return null;
     }
+  }
 
-    public StringAsObjectType(int type) {
-        super(type);
-    }
+  @Override
+  public Class<String> getReturnedClass() {
+    return String.class;
+  }
 
-    @Override
-    public String getValue(ResultSet rs, int startIndex) throws SQLException {
-        Object o = rs.getObject(startIndex);
-        if (o instanceof String) {
-            return (String) o;
-        } else if (o instanceof Clob) {
-            Clob clob = (Clob) o;
-            return clob.getSubString(1, (int) clob.length());
-        } else if (o != null) {
-            return o.toString();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public Class<String> getReturnedClass() {
-        return String.class;
-    }
-
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, String value)
-            throws SQLException {
-        st.setString(startIndex, value);
-
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, String value) throws SQLException {
+    st.setString(startIndex, value);
+  }
 }

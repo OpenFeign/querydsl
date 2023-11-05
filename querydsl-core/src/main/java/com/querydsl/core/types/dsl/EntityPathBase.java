@@ -13,38 +13,35 @@
  */
 package com.querydsl.core.types.dsl;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code EntityPathBase} provides a base class for {@link EntityPath} implementations
  *
  * @author tiwe
- *
  * @param <T> entity type
  */
 public class EntityPathBase<T> extends BeanPath<T> implements EntityPath<T> {
 
-    private static final long serialVersionUID = -8610055828414880996L;
+  private static final long serialVersionUID = -8610055828414880996L;
 
-    public EntityPathBase(Class<? extends T> type, String variable) {
-        super(type, variable);
-    }
+  public EntityPathBase(Class<? extends T> type, String variable) {
+    super(type, variable);
+  }
 
-    public EntityPathBase(Class<? extends T> type, PathMetadata metadata) {
-        super(type, metadata);
-    }
+  public EntityPathBase(Class<? extends T> type, PathMetadata metadata) {
+    super(type, metadata);
+  }
 
-    public EntityPathBase(Class<? extends T> type, PathMetadata metadata, @Nullable PathInits inits) {
-        super(type, metadata, inits);
-    }
+  public EntityPathBase(Class<? extends T> type, PathMetadata metadata, @Nullable PathInits inits) {
+    super(type, metadata, inits);
+  }
 
-    @Override
-    public Object getMetadata(Path<?> property) {
-        return null;
-    }
-
+  @Override
+  public Object getMetadata(Path<?> property) {
+    return null;
+  }
 }

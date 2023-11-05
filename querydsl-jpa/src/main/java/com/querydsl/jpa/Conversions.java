@@ -13,11 +13,6 @@
  */
 package com.querydsl.jpa;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Entity;
-
 import com.querydsl.core.support.ConstantHidingExpression;
 import com.querydsl.core.support.EnumConversion;
 import com.querydsl.core.support.NumberConversion;
@@ -26,100 +21,105 @@ import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLOps;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Entity;
 
 /**
  * {@code Conversions} provides module specific projection conversion functionality
  *
  * @author tiwe
- *
  */
 public final class Conversions {
 
-    public static <RT> Expression<RT> convert(Expression<RT> expr) {
-        if (expr instanceof FactoryExpression) {
-            FactoryExpression<RT> factoryExpr = (FactoryExpression<RT>) expr;
-            for (Expression<?> e: factoryExpr.getArgs()) {
-                if (needsConstantRemoval(e)) {
-                    return convert(new ConstantHidingExpression<RT>(factoryExpr));
-                }
-            }
-            for (Expression<?> e : factoryExpr.getArgs()) {
-                if (needsNumberConversion(e)) {
-                    return new NumberConversions<RT>(factoryExpr);
-                }
-            }
-        } else if (needsNumberConversion(expr)) {
-            return new NumberConversion<RT>(expr);
+  public static <RT> Expression<RT> convert(Expression<RT> expr) {
+    if (expr instanceof FactoryExpression) {
+      FactoryExpression<RT> factoryExpr = (FactoryExpression<RT>) expr;
+      for (Expression<?> e : factoryExpr.getArgs()) {
+        if (needsConstantRemoval(e)) {
+          return convert(new ConstantHidingExpression<RT>(factoryExpr));
         }
-        return expr;
-    }
-
-    private static boolean needsConstantRemoval(Expression<?> expr) {
-        expr = ExpressionUtils.extract(expr);
-        return expr instanceof Constant || expr.equals(Expressions.TRUE) || expr.equals(Expressions.FALSE) ||
-              (expr instanceof Operation && ((Operation<?>) expr).getOperator() == Ops.ALIAS
-                  && needsConstantRemoval(((Operation<?>) expr).getArg(0)));
-    }
-
-    private static boolean needsNumberConversion(Expression<?> expr) {
-        expr = ExpressionUtils.extract(expr);
-        return Number.class.isAssignableFrom(expr.getType()) && !Path.class.isInstance(expr);
-    }
-
-    private static boolean isEntityPathAndNeedsWrapping(Expression<?> expr) {
-        if ((expr instanceof Path && expr.getType().isAnnotationPresent(Entity.class)) ||
-            (expr instanceof EntityPath && !RelationalPath.class.isInstance(expr))) {
-            Path<?> path = (Path<?>) expr;
-            if (path.getMetadata().getParent() == null) {
-                return true;
-            }
+      }
+      for (Expression<?> e : factoryExpr.getArgs()) {
+        if (needsNumberConversion(e)) {
+          return new NumberConversions<RT>(factoryExpr);
         }
-        return false;
+      }
+    } else if (needsNumberConversion(expr)) {
+      return new NumberConversion<RT>(expr);
     }
+    return expr;
+  }
 
-    private static <RT> FactoryExpression<RT> createEntityPathConversions(FactoryExpression<RT> factoryExpr) {
-        List<Expression<?>> conversions = new ArrayList<>();
-        for (Expression<?> e : factoryExpr.getArgs()) {
-            if (isEntityPathAndNeedsWrapping(e)) {
-                conversions.add(ExpressionUtils.operation(e.getType(), SQLOps.ALL, e));
-            } else {
-                conversions.add(e);
-            }
+  private static boolean needsConstantRemoval(Expression<?> expr) {
+    expr = ExpressionUtils.extract(expr);
+    return expr instanceof Constant
+        || expr.equals(Expressions.TRUE)
+        || expr.equals(Expressions.FALSE)
+        || (expr instanceof Operation
+            && ((Operation<?>) expr).getOperator() == Ops.ALIAS
+            && needsConstantRemoval(((Operation<?>) expr).getArg(0)));
+  }
+
+  private static boolean needsNumberConversion(Expression<?> expr) {
+    expr = ExpressionUtils.extract(expr);
+    return Number.class.isAssignableFrom(expr.getType()) && !Path.class.isInstance(expr);
+  }
+
+  private static boolean isEntityPathAndNeedsWrapping(Expression<?> expr) {
+    if ((expr instanceof Path && expr.getType().isAnnotationPresent(Entity.class))
+        || (expr instanceof EntityPath && !RelationalPath.class.isInstance(expr))) {
+      Path<?> path = (Path<?>) expr;
+      if (path.getMetadata().getParent() == null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static <RT> FactoryExpression<RT> createEntityPathConversions(
+      FactoryExpression<RT> factoryExpr) {
+    List<Expression<?>> conversions = new ArrayList<>();
+    for (Expression<?> e : factoryExpr.getArgs()) {
+      if (isEntityPathAndNeedsWrapping(e)) {
+        conversions.add(ExpressionUtils.operation(e.getType(), SQLOps.ALL, e));
+      } else {
+        conversions.add(e);
+      }
+    }
+    return FactoryExpressionUtils.wrap(factoryExpr, conversions);
+  }
+
+  public static <RT> Expression<RT> convertForNativeQuery(Expression<RT> expr) {
+    if (isEntityPathAndNeedsWrapping(expr)) {
+      return ExpressionUtils.operation(expr.getType(), SQLOps.ALL, expr);
+    } else if (Number.class.isAssignableFrom(expr.getType())) {
+      return new NumberConversion<RT>(expr);
+    } else if (Enum.class.isAssignableFrom(expr.getType())) {
+      return new EnumConversion<RT>(expr);
+    } else if (expr instanceof FactoryExpression) {
+      FactoryExpression<RT> factoryExpr = (FactoryExpression<RT>) expr;
+      boolean numberConversions = false;
+      boolean hasEntityPath = false;
+      for (Expression<?> e : factoryExpr.getArgs()) {
+        if (isEntityPathAndNeedsWrapping(e)) {
+          hasEntityPath = true;
+        } else if (Number.class.isAssignableFrom(e.getType())) {
+          numberConversions = true;
+        } else if (Enum.class.isAssignableFrom(e.getType())) {
+          numberConversions = true;
         }
-        return FactoryExpressionUtils.wrap(factoryExpr, conversions);
+      }
+      if (hasEntityPath) {
+        factoryExpr = createEntityPathConversions(factoryExpr);
+      }
+      if (numberConversions) {
+        factoryExpr = new NumberConversions<RT>(factoryExpr);
+      }
+      return factoryExpr;
     }
+    return expr;
+  }
 
-    public static <RT> Expression<RT> convertForNativeQuery(Expression<RT> expr) {
-        if (isEntityPathAndNeedsWrapping(expr)) {
-            return ExpressionUtils.operation(expr.getType(), SQLOps.ALL, expr);
-        } else if (Number.class.isAssignableFrom(expr.getType())) {
-            return new NumberConversion<RT>(expr);
-        } else if (Enum.class.isAssignableFrom(expr.getType())) {
-            return new EnumConversion<RT>(expr);
-        } else if (expr instanceof FactoryExpression) {
-            FactoryExpression<RT> factoryExpr = (FactoryExpression<RT>) expr;
-            boolean numberConversions = false;
-            boolean hasEntityPath = false;
-            for (Expression<?> e : factoryExpr.getArgs()) {
-                if (isEntityPathAndNeedsWrapping(e)) {
-                    hasEntityPath = true;
-                } else if (Number.class.isAssignableFrom(e.getType())) {
-                    numberConversions = true;
-                } else if (Enum.class.isAssignableFrom(e.getType())) {
-                    numberConversions = true;
-                }
-            }
-            if (hasEntityPath) {
-                factoryExpr = createEntityPathConversions(factoryExpr);
-            }
-            if (numberConversions) {
-                factoryExpr = new NumberConversions<RT>(factoryExpr);
-            }
-            return factoryExpr;
-        }
-        return expr;
-    }
-
-    private Conversions() { }
-
+  private Conversions() {}
 }

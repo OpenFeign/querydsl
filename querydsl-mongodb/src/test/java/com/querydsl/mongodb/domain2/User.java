@@ -14,14 +14,11 @@
 package com.querydsl.mongodb.domain2;
 
 import java.util.Map;
-
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 
 @Entity(value = "USER", noClassnameStored = true)
 public class User {
 
-    @Embedded
-    Map<String, UserAttribute> properties;
-
+  @Embedded Map<String, UserAttribute> properties;
 }

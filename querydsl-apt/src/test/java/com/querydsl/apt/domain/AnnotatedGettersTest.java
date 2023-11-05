@@ -15,20 +15,18 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
+import org.junit.Test;
 
 public class AnnotatedGettersTest {
 
-    @QueryEntity
-    public interface Entity {
-        String getName();
-    }
+  @QueryEntity
+  public interface Entity {
+    String getName();
+  }
 
-    @Test
-    public void annotated_getter_is_supported() {
-        assertNotNull(QAnnotatedGettersTest_Entity.entity.name);
-    }
-
+  @Test
+  public void annotated_getter_is_supported() {
+    assertNotNull(QAnnotatedGettersTest_Entity.entity.name);
+  }
 }

@@ -13,35 +13,31 @@
  */
 package com.querydsl.core.types;
 
-import org.jetbrains.annotations.Nullable;
 import com.querydsl.core.annotations.Immutable;
-
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code PredicateOperation} provides a Boolean typed {@link Operation} implementation
  *
  * @author tiwe
- *
  */
 @Immutable
 public final class PredicateOperation extends OperationImpl<Boolean> implements Predicate {
 
-    private static final long serialVersionUID = -5371430939203772072L;
+  private static final long serialVersionUID = -5371430939203772072L;
 
-    @Nullable
-    private transient volatile Predicate not;
+  @Nullable private transient volatile Predicate not;
 
-    protected PredicateOperation(Operator operator, List<Expression<?>> args) {
-        super(Boolean.class, operator, args);
+  protected PredicateOperation(Operator operator, List<Expression<?>> args) {
+    super(Boolean.class, operator, args);
+  }
+
+  @Override
+  public Predicate not() {
+    if (not == null) {
+      not = ExpressionUtils.predicate(Ops.NOT, this);
     }
-
-    @Override
-    public Predicate not() {
-        if (not == null) {
-            not = ExpressionUtils.predicate(Ops.NOT, this);
-        }
-        return not;
-    }
-
+    return not;
+  }
 }

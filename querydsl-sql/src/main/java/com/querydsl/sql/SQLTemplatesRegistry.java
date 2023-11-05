@@ -16,80 +16,77 @@ package com.querydsl.sql;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-/**
- * {@code SQLTemplatesRegistry} is a registry for SQLTemplates instances
- */
+/** {@code SQLTemplatesRegistry} is a registry for SQLTemplates instances */
 public class SQLTemplatesRegistry {
 
-    /**
-     * Get the SQLTemplates instance that matches best the SQL engine of the
-     * given database metadata
-     *
-     * @param md database metadata
-     * @return templates
-     * @throws SQLException
-     */
-    public SQLTemplates getTemplates(DatabaseMetaData md) throws SQLException {
-        return getBuilder(md).build();
+  /**
+   * Get the SQLTemplates instance that matches best the SQL engine of the given database metadata
+   *
+   * @param md database metadata
+   * @return templates
+   * @throws SQLException
+   */
+  public SQLTemplates getTemplates(DatabaseMetaData md) throws SQLException {
+    return getBuilder(md).build();
+  }
+
+  /**
+   * Get a SQLTemplates.Builder instance that matches best the SQL engine of the given database
+   * metadata
+   *
+   * @param md database metadata
+   * @return templates
+   * @throws SQLException
+   */
+  public SQLTemplates.Builder getBuilder(DatabaseMetaData md) throws SQLException {
+    String name = md.getDatabaseProductName().toLowerCase();
+    if (name.equals("cubrid")) {
+      return CUBRIDTemplates.builder();
+    } else if (name.equals("apache derby")) {
+      return DerbyTemplates.builder();
+    } else if (name.startsWith("firebird")) {
+      return FirebirdTemplates.builder();
+    } else if (name.equals("h2")) {
+      return H2Templates.builder();
+    } else if (name.equals("hsql")) {
+      return HSQLDBTemplates.builder();
+    } else if (name.equals("mysql")) {
+      return MySQLTemplates.builder();
+    } else if (name.equals("oracle")) {
+      return OracleTemplates.builder();
+    } else if (name.equals("postgresql")) {
+      return PostgreSQLTemplates.builder();
+    } else if (name.equals("sqlite")) {
+      return SQLiteTemplates.builder();
+    } else if (name.startsWith("teradata")) {
+      return TeradataTemplates.builder();
+    } else if (name.equals("microsoft sql server")) {
+      return getMssqlSqlTemplates(md);
+    } else {
+      return new SQLTemplates.Builder() {
+        @Override
+        protected SQLTemplates build(char escape, boolean quote) {
+          return new SQLTemplates(Keywords.DEFAULT, "\"", escape, quote, false);
+        }
+      };
+    }
+  }
+
+  private SQLTemplates.Builder getMssqlSqlTemplates(DatabaseMetaData md) throws SQLException {
+    int databaseMajorVersion = md.getDatabaseMajorVersion();
+
+    if (databaseMajorVersion < 9) {
+      return SQLServerTemplates.builder();
     }
 
-    /**
-     * Get a SQLTemplates.Builder instance that matches best the SQL engine of the
-     * given database metadata
-     *
-     * @param md database metadata
-     * @return templates
-     * @throws SQLException
-     */
-    public SQLTemplates.Builder getBuilder(DatabaseMetaData md) throws SQLException {
-        String name = md.getDatabaseProductName().toLowerCase();
-        if (name.equals("cubrid")) {
-            return CUBRIDTemplates.builder();
-        } else if (name.equals("apache derby")) {
-            return DerbyTemplates.builder();
-        } else if (name.startsWith("firebird")) {
-            return FirebirdTemplates.builder();
-        } else if (name.equals("h2")) {
-            return H2Templates.builder();
-        } else if (name.equals("hsql")) {
-            return HSQLDBTemplates.builder();
-        } else if (name.equals("mysql")) {
-            return MySQLTemplates.builder();
-        } else if (name.equals("oracle")) {
-            return OracleTemplates.builder();
-        } else if (name.equals("postgresql")) {
-            return PostgreSQLTemplates.builder();
-        } else if (name.equals("sqlite")) {
-            return SQLiteTemplates.builder();
-        } else if (name.startsWith("teradata")) {
-            return TeradataTemplates.builder();
-        } else if (name.equals("microsoft sql server")) {
-            return getMssqlSqlTemplates(md);
-        } else {
-            return new SQLTemplates.Builder() {
-                @Override
-                protected SQLTemplates build(char escape, boolean quote) {
-                    return new SQLTemplates(Keywords.DEFAULT, "\"", escape, quote, false);
-                }
-            };
-        }
+    if (databaseMajorVersion == 9) {
+      return SQLServer2005Templates.builder();
     }
 
-    private SQLTemplates.Builder getMssqlSqlTemplates(DatabaseMetaData md) throws SQLException {
-        int databaseMajorVersion = md.getDatabaseMajorVersion();
-
-        if (databaseMajorVersion < 9) {
-            return SQLServerTemplates.builder();
-        }
-
-        if (databaseMajorVersion == 9) {
-            return SQLServer2005Templates.builder();
-        }
-
-        if (databaseMajorVersion == 10) {
-            return SQLServer2008Templates.builder();
-        }
-
-        return SQLServer2012Templates.builder();
+    if (databaseMajorVersion == 10) {
+      return SQLServer2008Templates.builder();
     }
+
+    return SQLServer2012Templates.builder();
+  }
 }

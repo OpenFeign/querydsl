@@ -13,73 +13,69 @@
  */
 package com.querydsl.sql.teradata;
 
-import java.sql.Connection;
-import java.util.function.Supplier;
-
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.*;
+import java.sql.Connection;
+import java.util.function.Supplier;
 
 /**
  * Teradata specific implementation of SQLQueryFactory
  *
  * @author tiwe
- *
  */
 public class TeradataQueryFactory extends AbstractSQLQueryFactory<TeradataQuery<?>> {
 
-    public TeradataQueryFactory(Configuration configuration, Supplier<Connection> connection) {
-        super(configuration, connection);
-    }
+  public TeradataQueryFactory(Configuration configuration, Supplier<Connection> connection) {
+    super(configuration, connection);
+  }
 
-    public TeradataQueryFactory(Supplier<Connection> connection) {
-        this(new Configuration(new TeradataTemplates()), connection);
-    }
+  public TeradataQueryFactory(Supplier<Connection> connection) {
+    this(new Configuration(new TeradataTemplates()), connection);
+  }
 
-    public TeradataQueryFactory(SQLTemplates templates, Supplier<Connection> connection) {
-        this(new Configuration(templates), connection);
-    }
+  public TeradataQueryFactory(SQLTemplates templates, Supplier<Connection> connection) {
+    this(new Configuration(templates), connection);
+  }
 
-    @Override
-    public TeradataQuery<?> query() {
-        return new TeradataQuery<Void>(connection, configuration);
-    }
+  @Override
+  public TeradataQuery<?> query() {
+    return new TeradataQuery<Void>(connection, configuration);
+  }
 
-    @Override
-    public <T> TeradataQuery<T> select(Expression<T> expr) {
-        return query().select(expr);
-    }
+  @Override
+  public <T> TeradataQuery<T> select(Expression<T> expr) {
+    return query().select(expr);
+  }
 
-    @Override
-    public TeradataQuery<Tuple> select(Expression<?>... exprs) {
-        return query().select(exprs);
-    }
+  @Override
+  public TeradataQuery<Tuple> select(Expression<?>... exprs) {
+    return query().select(exprs);
+  }
 
-    @Override
-    public <T> TeradataQuery<T> selectDistinct(Expression<T> expr) {
-        return query().select(expr).distinct();
-    }
+  @Override
+  public <T> TeradataQuery<T> selectDistinct(Expression<T> expr) {
+    return query().select(expr).distinct();
+  }
 
-    @Override
-    public TeradataQuery<Tuple> selectDistinct(Expression<?>... exprs) {
-        return query().select(exprs).distinct();
-    }
+  @Override
+  public TeradataQuery<Tuple> selectDistinct(Expression<?>... exprs) {
+    return query().select(exprs).distinct();
+  }
 
-    @Override
-    public TeradataQuery<Integer> selectZero() {
-        return select(Expressions.ZERO);
-    }
+  @Override
+  public TeradataQuery<Integer> selectZero() {
+    return select(Expressions.ZERO);
+  }
 
-    @Override
-    public TeradataQuery<Integer> selectOne() {
-        return select(Expressions.ONE);
-    }
+  @Override
+  public TeradataQuery<Integer> selectOne() {
+    return select(Expressions.ONE);
+  }
 
-    @Override
-    public <T> TeradataQuery<T> selectFrom(RelationalPath<T> expr) {
-        return select(expr).from(expr);
-    }
-
-
+  @Override
+  public <T> TeradataQuery<T> selectFrom(RelationalPath<T> expr) {
+    return select(expr).from(expr);
+  }
 }

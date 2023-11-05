@@ -15,58 +15,50 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
+import java.util.List;
+import java.util.Map;
+import org.junit.Test;
 
 public class QueryEmbeddedTest {
 
-    @QueryEntity
-    public static class Parent {
+  @QueryEntity
+  public static class Parent {
 
-        String parentProperty;
+    String parentProperty;
 
-        @QueryEmbedded
-        Child child;
+    @QueryEmbedded Child child;
+  }
 
-    }
+  @QueryEntity
+  public static class Parent2 {
 
-    @QueryEntity
-    public static class Parent2 {
+    String parentProperty;
 
-        String parentProperty;
+    @QueryEmbedded List<Child> children;
 
-        @QueryEmbedded
-        List<Child> children;
+    @QueryEmbedded Map<String, Child> children2;
+  }
 
-        @QueryEmbedded
-        Map<String,Child> children2;
+  public static class Child {
 
-    }
+    String childProperty;
+  }
 
-    public static class Child {
+  @Test
+  public void parent_child_childProperty() {
+    assertNotNull(QQueryEmbeddedTest_Parent.parent.child.childProperty);
+  }
 
-        String childProperty;
+  @Test
+  public void parent_children_any_childProperty() {
+    assertNotNull(QQueryEmbeddedTest_Parent2.parent2.children.any().childProperty);
+  }
 
-    }
-
-    @Test
-    public void parent_child_childProperty() {
-        assertNotNull(QQueryEmbeddedTest_Parent.parent.child.childProperty);
-    }
-
-    @Test
-    public void parent_children_any_childProperty() {
-        assertNotNull(QQueryEmbeddedTest_Parent2.parent2.children.any().childProperty);
-    }
-
-    @Test
-    public void parent_children2_mapAccess() {
-        assertNotNull(QQueryEmbeddedTest_Parent2.parent2.children2.containsKey("XXX"));
-        assertNotNull(QQueryEmbeddedTest_Parent2.parent2.children2.get("XXX").childProperty);
-    }
+  @Test
+  public void parent_children2_mapAccess() {
+    assertNotNull(QQueryEmbeddedTest_Parent2.parent2.children2.containsKey("XXX"));
+    assertNotNull(QQueryEmbeddedTest_Parent2.parent2.children2.get("XXX").childProperty);
+  }
 }

@@ -15,63 +15,65 @@ package com.querydsl.core.group;
 
 public class Comment {
 
-    private Integer id;
+  private Integer id;
 
-    private String text;
+  private String text;
 
-    private Double score;
+  private Double score;
 
-    public Comment() { }
+  public Comment() {}
 
-    public Comment(Integer id, String text, Double score) {
-        this.id = id;
-        this.text = text;
-        this.score = score;
+  public Comment(Integer id, String text, Double score) {
+    this.id = id;
+    this.text = text;
+    this.score = score;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public Double getScore() {
+    return score;
+  }
+
+  public void setScore(Double score) {
+    this.score = score;
+  }
+
+  @Override
+  public int hashCode() {
+    return 31 * id.hashCode() + text.hashCode() + score.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof Comment) {
+      Comment other = (Comment) o;
+      return this.id.equals(other.id)
+          && this.text.equals(other.text)
+          && this.score.equals(other.score);
+    } else {
+      return false;
     }
+  }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Double getScore() {
-        return score;
-    }
-
-    public void setScore(Double score) {
-        this.score = score;
-    }
-
-    @Override
-    public int hashCode() {
-        return 31 * id.hashCode() + text.hashCode() + score.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof Comment) {
-            Comment other = (Comment) o;
-            return this.id.equals(other.id) && this.text.equals(other.text) && this.score.equals(other.score);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return id + ": " + text + "(score: " + score + ")";
-    }
+  @Override
+  public String toString() {
+    return id + ": " + text + "(score: " + score + ")";
+  }
 }

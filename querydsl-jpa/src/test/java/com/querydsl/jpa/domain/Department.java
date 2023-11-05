@@ -14,26 +14,20 @@
 package com.querydsl.jpa.domain;
 
 import java.util.List;
-
 import javax.persistence.*;
-
 import org.batoo.jpa.annotations.Index;
 
-/**
- * The Class Department.
- */
+/** The Class Department. */
 @Entity
 @Table(name = "department_")
 public class Department {
-    @ManyToOne
-    Company company;
+  @ManyToOne Company company;
 
-    @OneToMany
-    @Index(name = "_index")
-    List<Employee> employees;
+  @OneToMany
+  @Index(name = "_index")
+  List<Employee> employees;
 
-    @Id
-    int id;
+  @Id int id;
 
-    String name;
+  String name;
 }

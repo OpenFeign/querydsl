@@ -13,49 +13,46 @@
  */
 package com.querydsl.core.group;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.util.MathUtils;
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 @SuppressWarnings("unchecked")
 class GAvg<T extends Number> extends AbstractGroupExpression<T, T> {
 
-    private static final long serialVersionUID = 3518868612387641383L;
+  private static final long serialVersionUID = 3518868612387641383L;
 
-    private final MathContext mathContext;
+  private final MathContext mathContext;
 
-    GAvg(Expression<T> expr) {
-        this(expr, MathContext.DECIMAL128);
-    }
+  GAvg(Expression<T> expr) {
+    this(expr, MathContext.DECIMAL128);
+  }
 
-    GAvg(Expression<T> expr, MathContext mathContext) {
-        super((Class) expr.getType(), expr);
-        this.mathContext = mathContext;
-    }
+  GAvg(Expression<T> expr, MathContext mathContext) {
+    super((Class) expr.getType(), expr);
+    this.mathContext = mathContext;
+  }
 
-    @Override
-    public GroupCollector<T, T> createGroupCollector() {
-        return new GroupCollector<T, T>() {
-            private int count = 0;
-            private BigDecimal sum = BigDecimal.ZERO;
+  @Override
+  public GroupCollector<T, T> createGroupCollector() {
+    return new GroupCollector<T, T>() {
+      private int count = 0;
+      private BigDecimal sum = BigDecimal.ZERO;
 
-            @Override
-            public void add(T t) {
-                count++;
-                if (t != null) {
-                    sum = sum.add(new BigDecimal(t.toString()));
-                }
-            }
+      @Override
+      public void add(T t) {
+        count++;
+        if (t != null) {
+          sum = sum.add(new BigDecimal(t.toString()));
+        }
+      }
 
-            @Override
-            public T get() {
-                BigDecimal avg = sum.divide(BigDecimal.valueOf(count), mathContext);
-                return MathUtils.cast(avg, getType());
-            }
-
-        };
-    }
-
+      @Override
+      public T get() {
+        BigDecimal avg = sum.divide(BigDecimal.valueOf(count), mathContext);
+        return MathUtils.cast(avg, getType());
+      }
+    };
+  }
 }

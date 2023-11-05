@@ -18,32 +18,32 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 
 /**
- * {@code ComparableEntityPath} extends the {@link ComparablePath} class to implement the EntityPath interface
+ * {@code ComparableEntityPath} extends the {@link ComparablePath} class to implement the EntityPath
+ * interface
  *
  * @author tiwe
- *
  * @param <T>
  */
 @SuppressWarnings("unchecked")
-public class ComparableEntityPath<T extends Comparable> extends ComparablePath<T> implements EntityPath<T> {
+public class ComparableEntityPath<T extends Comparable> extends ComparablePath<T>
+    implements EntityPath<T> {
 
-    private static final long serialVersionUID = -7115848171352092315L;
+  private static final long serialVersionUID = -7115848171352092315L;
 
-    protected ComparableEntityPath(Class<? extends T> type, Path<?> parent, String property) {
-        super(type, parent, property);
-    }
+  protected ComparableEntityPath(Class<? extends T> type, Path<?> parent, String property) {
+    super(type, parent, property);
+  }
 
-    protected ComparableEntityPath(Class<? extends T> type, PathMetadata metadata) {
-        super(type, metadata);
-    }
+  protected ComparableEntityPath(Class<? extends T> type, PathMetadata metadata) {
+    super(type, metadata);
+  }
 
-    protected ComparableEntityPath(Class<? extends T> type, String var) {
-        super(type, var);
-    }
+  protected ComparableEntityPath(Class<? extends T> type, String var) {
+    super(type, var);
+  }
 
-    @Override
-    public Object getMetadata(Path<?> property) {
-        return null;
-    }
-
+  @Override
+  public Object getMetadata(Path<?> property) {
+    return null;
+  }
 }

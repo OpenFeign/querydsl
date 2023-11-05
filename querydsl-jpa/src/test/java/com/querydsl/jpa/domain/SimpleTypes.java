@@ -16,54 +16,52 @@ package com.querydsl.jpa.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Locale;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "simpletypes_")
 public class SimpleTypes {
-    transient int test;
-    @Id
-    long id;
+  transient int test;
+  @Id long id;
 
-    BigDecimal bigDecimal;
+  BigDecimal bigDecimal;
 
-    Byte bbyte;
+  Byte bbyte;
 
-    byte bbyte2;
+  byte bbyte2;
 
-    Character cchar;
+  Character cchar;
 
-    char cchar2;
+  char cchar2;
 
-    Double ddouble;
+  Double ddouble;
 
-    double ddouble2;
+  double ddouble2;
 
-    Float ffloat;
+  Float ffloat;
 
-    float ffloat2;
+  float ffloat2;
 
-    Integer iint;
+  Integer iint;
 
-    int iint2;
+  int iint2;
 
-    Locale llocale;
+  Locale llocale;
 
-    Long llong;
+  Long llong;
 
-    long llong2;
+  long llong2;
 
-    String sstring;
+  String sstring;
 
-    @Temporal(TemporalType.DATE)
-    Date date;
+  @Temporal(TemporalType.DATE)
+  Date date;
 
-//    @Temporal(TemporalType.TIME)
-    java.sql.Time time;
+  //    @Temporal(TemporalType.TIME)
+  java.sql.Time time;
 
-//    @Temporal(TemporalType.TIMESTAMP)
-    java.sql.Timestamp timestamp;
+  //    @Temporal(TemporalType.TIMESTAMP)
+  java.sql.Timestamp timestamp;
 
-    byte[] byteArray;
+  byte[] byteArray;
 }

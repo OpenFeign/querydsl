@@ -1,5 +1,3 @@
 package com.querydsl.apt.domain;
 
-public class PathMetadata {
-
-}
+public class PathMetadata {}

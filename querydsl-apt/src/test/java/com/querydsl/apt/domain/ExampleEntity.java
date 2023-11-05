@@ -18,6 +18,5 @@ import com.querydsl.core.annotations.QueryEntity;
 @QueryEntity
 public class ExampleEntity {
 
-    String name;
-
+  String name;
 }

@@ -15,12 +15,7 @@
  */
 package com.querydsl.sql;
 
-
 import static org.junit.Assert.assertEquals;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
@@ -28,58 +23,61 @@ import com.querydsl.core.types.dsl.BooleanPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ddl.CreateTableClause;
 import com.querydsl.sql.ddl.DropTableClause;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class KeywordQuotingBase extends AbstractBaseTest {
 
-    private static class Quoting extends RelationalPathBase<Quoting> {
+  private static class Quoting extends RelationalPathBase<Quoting> {
 
-        public static final Quoting quoting = new Quoting("quoting");
+    public static final Quoting quoting = new Quoting("quoting");
 
-        public final StringPath from = createString("from");
-        public final BooleanPath all = createBoolean("all");
+    public final StringPath from = createString("from");
+    public final BooleanPath all = createBoolean("all");
 
-        private Quoting(String path) {
-            super(Quoting.class, PathMetadataFactory.forVariable(path), "PUBLIC", "quoting");
-            addMetadata();
-        }
-
-        Quoting(PathMetadata metadata) {
-            super(Quoting.class, metadata, "PUBLIC", "quoting");
-            addMetadata();
-        }
-
-        protected void addMetadata() {
-            addMetadata(from, ColumnMetadata.named("from"));
-            addMetadata(all, ColumnMetadata.named("all"));
-        }
+    private Quoting(String path) {
+      super(Quoting.class, PathMetadataFactory.forVariable(path), "PUBLIC", "quoting");
+      addMetadata();
     }
 
-    private final Quoting quoting = Quoting.quoting;
-
-    @Before
-    public void setUp() throws Exception {
-        new CreateTableClause(connection, configuration, "quoting")
-                .column("from", String.class).size(30)
-                .column("all", Boolean.class)
-                .execute();
-        execute(insert(quoting)
-                .columns(quoting.from, quoting.all)
-                .values("from", true));
+    Quoting(PathMetadata metadata) {
+      super(Quoting.class, metadata, "PUBLIC", "quoting");
+      addMetadata();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        new DropTableClause(connection, configuration, "quoting")
-                .execute();
+    protected void addMetadata() {
+      addMetadata(from, ColumnMetadata.named("from"));
+      addMetadata(all, ColumnMetadata.named("all"));
     }
+  }
 
-    @Test
-    public void keywords() {
-        Quoting from = new Quoting("from");
-        assertEquals("from", query().from(quoting.as(from))
-                .where(from.from.eq("from")
-                        .and(from.all.isNotNull()))
-                .select(from.from).fetchFirst());
-    }
+  private final Quoting quoting = Quoting.quoting;
 
+  @Before
+  public void setUp() throws Exception {
+    new CreateTableClause(connection, configuration, "quoting")
+        .column("from", String.class)
+        .size(30)
+        .column("all", Boolean.class)
+        .execute();
+    execute(insert(quoting).columns(quoting.from, quoting.all).values("from", true));
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    new DropTableClause(connection, configuration, "quoting").execute();
+  }
+
+  @Test
+  public void keywords() {
+    Quoting from = new Quoting("from");
+    assertEquals(
+        "from",
+        query()
+            .from(quoting.as(from))
+            .where(from.from.eq("from").and(from.all.isNotNull()))
+            .select(from.from)
+            .fetchFirst());
+  }
 }

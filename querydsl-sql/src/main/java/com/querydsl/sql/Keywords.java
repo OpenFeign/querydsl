@@ -20,37 +20,37 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Defines reserved keywords for the supported dialects
- */
+/** Defines reserved keywords for the supported dialects */
 final class Keywords {
 
-    private Keywords() { }
+  private Keywords() {}
 
-    private static Set<String> readLines(String path) {
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(Keywords.class.getResourceAsStream("/keywords/" + path)));) {
-            return bufferedReader.lines()
-                    .filter(line -> !line.isEmpty() && !line.startsWith("#"))
-                    .collect(Collectors.toCollection(LinkedHashSet::new));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+  private static Set<String> readLines(String path) {
+    try (BufferedReader bufferedReader =
+        new BufferedReader(
+            new InputStreamReader(Keywords.class.getResourceAsStream("/keywords/" + path))); ) {
+      return bufferedReader
+          .lines()
+          .filter(line -> !line.isEmpty() && !line.startsWith("#"))
+          .collect(Collectors.toCollection(LinkedHashSet::new));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    public static final Set<String> DEFAULT = readLines("default");
+  public static final Set<String> DEFAULT = readLines("default");
 
-    public static final Set<String> CUBRID = readLines("cubrid");
-    public static final Set<String> DB2 = readLines("db2");
-    public static final Set<String> DERBY = readLines("derby");
-    public static final Set<String> FIREBIRD = readLines("firebird");
-    public static final Set<String> H2 = readLines("h2");
-    public static final Set<String> HSQLDB = readLines("hsqldb");
-    public static final Set<String> MYSQL = readLines("mysql");
-    public static final Set<String> ORACLE = readLines("oracle");
-    public static final Set<String> POSTGRESQL = readLines("postgresql");
-    public static final Set<String> SQLITE = readLines("sqlite");
-    public static final Set<String> SQLSERVER2005 = readLines("sqlserver2005");
-    public static final Set<String> SQLSERVER2008 = readLines("sqlserver2008");
-    public static final Set<String> SQLSERVER2012 = readLines("sqlserver2012");
-
+  public static final Set<String> CUBRID = readLines("cubrid");
+  public static final Set<String> DB2 = readLines("db2");
+  public static final Set<String> DERBY = readLines("derby");
+  public static final Set<String> FIREBIRD = readLines("firebird");
+  public static final Set<String> H2 = readLines("h2");
+  public static final Set<String> HSQLDB = readLines("hsqldb");
+  public static final Set<String> MYSQL = readLines("mysql");
+  public static final Set<String> ORACLE = readLines("oracle");
+  public static final Set<String> POSTGRESQL = readLines("postgresql");
+  public static final Set<String> SQLITE = readLines("sqlite");
+  public static final Set<String> SQLSERVER2005 = readLines("sqlserver2005");
+  public static final Set<String> SQLSERVER2008 = readLines("sqlserver2008");
+  public static final Set<String> SQLSERVER2012 = readLines("sqlserver2012");
 }

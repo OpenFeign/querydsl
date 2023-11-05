@@ -19,12 +19,11 @@ import org.junit.Test;
 
 public class SearchSerializerTest {
 
-    @Test
-    public void toField() {
-        SearchSerializer serializer = SearchSerializer.DEFAULT;
-        QUser user = new QUser("user");
-        assertEquals("email", serializer.toField(user.emailAddress));
-        assertEquals("firstName", serializer.toField(user.firstName));
-    }
-
+  @Test
+  public void toField() {
+    SearchSerializer serializer = SearchSerializer.DEFAULT;
+    QUser user = new QUser("user");
+    assertEquals("email", serializer.toField(user.emailAddress));
+    assertEquals("firstName", serializer.toField(user.firstName));
+  }
 }

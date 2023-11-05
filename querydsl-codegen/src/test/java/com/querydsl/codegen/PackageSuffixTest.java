@@ -15,35 +15,34 @@ package com.querydsl.codegen;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Collections;
-
-import org.junit.Test;
-
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.TypeCategory;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Collections;
+import org.junit.Test;
 
 public class PackageSuffixTest {
 
-    private final QueryTypeFactory queryTypeFactory = new QueryTypeFactoryImpl("Q", "", ".query");
+  private final QueryTypeFactory queryTypeFactory = new QueryTypeFactoryImpl("Q", "", ".query");
 
-    private final TypeMappings typeMappings = new JavaTypeMappings();
+  private final TypeMappings typeMappings = new JavaTypeMappings();
 
-    private final EntitySerializer serializer = new DefaultEntitySerializer(typeMappings, Collections.<String>emptySet());
+  private final EntitySerializer serializer =
+      new DefaultEntitySerializer(typeMappings, Collections.<String>emptySet());
 
-    private final StringWriter writer = new StringWriter();
+  private final StringWriter writer = new StringWriter();
 
-    @Test
-    public void correct_imports() throws IOException {
-        SimpleType type = new SimpleType(TypeCategory.ENTITY, "test.Entity", "test", "Entity",false,false);
-        EntityType entityType = new EntityType(type);
-        typeMappings.register(entityType, queryTypeFactory.create(entityType));
+  @Test
+  public void correct_imports() throws IOException {
+    SimpleType type =
+        new SimpleType(TypeCategory.ENTITY, "test.Entity", "test", "Entity", false, false);
+    EntityType entityType = new EntityType(type);
+    typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
-        serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-        assertTrue(writer.toString().contains("import test.Entity;"));
-        assertTrue(writer.toString().contains("public class QEntity extends EntityPathBase<Entity> {"));
-    }
-
+    serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
+    assertTrue(writer.toString().contains("import test.Entity;"));
+    assertTrue(writer.toString().contains("public class QEntity extends EntityPathBase<Entity> {"));
+  }
 }

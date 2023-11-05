@@ -20,21 +20,19 @@ import com.querydsl.core.types.PathType;
  * {@code OpenJPATemplates} extends {@link JPQLTemplates} with OpenJPA specific extensions
  *
  * @author tiwe
- *
  */
 public class OpenJPATemplates extends JPQLTemplates {
 
-    public static final OpenJPATemplates DEFAULT = new OpenJPATemplates();
+  public static final OpenJPATemplates DEFAULT = new OpenJPATemplates();
 
-    public OpenJPATemplates() {
-        this(DEFAULT_ESCAPE);
-        add(PathType.VARIABLE, "{0s}_");
-        add(Ops.ALIAS, "{0} {1}");
-        add(Ops.NEGATE, "-1 * {0}", 7);
-    }
+  public OpenJPATemplates() {
+    this(DEFAULT_ESCAPE);
+    add(PathType.VARIABLE, "{0s}_");
+    add(Ops.ALIAS, "{0} {1}");
+    add(Ops.NEGATE, "-1 * {0}", 7);
+  }
 
-    public OpenJPATemplates(char escape) {
-        super(escape);
-    }
-
+  public OpenJPATemplates(char escape) {
+    super(escape);
+  }
 }

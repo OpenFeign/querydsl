@@ -18,24 +18,19 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * The Class Formula.
- */
+/** The Class Formula. */
 @Entity
 @Table(name = "formula_")
 public class Formula {
-    @Id
-    int id;
+  @Id int id;
 
-    @ManyToOne
-    Parameter parameter;
+  @ManyToOne Parameter parameter;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public Parameter getParameter() {
-        return parameter;
-    }
-
+  public Parameter getParameter() {
+    return parameter;
+  }
 }

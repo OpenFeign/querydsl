@@ -16,44 +16,41 @@ package com.querydsl.sql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.querydsl.sql.types.*;
 import java.io.FileInputStream;
 import java.io.InputStream;
-
 import org.junit.Test;
-
-import com.querydsl.sql.types.*;
 
 public class JavaTypeMappingTest {
 
-    private JavaTypeMapping typeMapping = new JavaTypeMapping();
+  private JavaTypeMapping typeMapping = new JavaTypeMapping();
 
-    @Test
-    public void getType_with_subtypes() {
-        typeMapping.register(new InputStreamType());
-        assertNotNull(typeMapping.getType(InputStream.class));
-        assertNotNull(typeMapping.getType(FileInputStream.class));
-    }
+  @Test
+  public void getType_with_subtypes() {
+    typeMapping.register(new InputStreamType());
+    assertNotNull(typeMapping.getType(InputStream.class));
+    assertNotNull(typeMapping.getType(FileInputStream.class));
+  }
 
-    @Test
-    public void getType_with_interfaces() {
-        assertEquals(BlobType.class, typeMapping.getType(DummyBlob.class).getClass());
-    }
+  @Test
+  public void getType_with_interfaces() {
+    assertEquals(BlobType.class, typeMapping.getType(DummyBlob.class).getClass());
+  }
 
-    @Test
-    public void getType_for_object() {
-        assertEquals(ObjectType.class, typeMapping.getType(Object.class).getClass());
-    }
+  @Test
+  public void getType_for_object() {
+    assertEquals(ObjectType.class, typeMapping.getType(Object.class).getClass());
+  }
 
-    @Test
-    public void getType_for_primitive() {
-        assertEquals(ByteType.class, typeMapping.getType(byte.class).getClass());
-        assertEquals(ShortType.class, typeMapping.getType(short.class).getClass());
-        assertEquals(IntegerType.class, typeMapping.getType(int.class).getClass());
-        assertEquals(LongType.class, typeMapping.getType(long.class).getClass());
-        assertEquals(FloatType.class, typeMapping.getType(float.class).getClass());
-        assertEquals(DoubleType.class, typeMapping.getType(double.class).getClass());
-        assertEquals(BooleanType.class, typeMapping.getType(boolean.class).getClass());
-        assertEquals(CharacterType.class, typeMapping.getType(char.class).getClass());
-    }
-
+  @Test
+  public void getType_for_primitive() {
+    assertEquals(ByteType.class, typeMapping.getType(byte.class).getClass());
+    assertEquals(ShortType.class, typeMapping.getType(short.class).getClass());
+    assertEquals(IntegerType.class, typeMapping.getType(int.class).getClass());
+    assertEquals(LongType.class, typeMapping.getType(long.class).getClass());
+    assertEquals(FloatType.class, typeMapping.getType(float.class).getClass());
+    assertEquals(DoubleType.class, typeMapping.getType(double.class).getClass());
+    assertEquals(BooleanType.class, typeMapping.getType(boolean.class).getClass());
+    assertEquals(CharacterType.class, typeMapping.getType(char.class).getClass());
+  }
 }

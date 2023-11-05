@@ -13,36 +13,33 @@
  */
 package com.querydsl.sql;
 
+import com.querydsl.core.util.CollectionUtils;
 import java.util.List;
 import java.util.logging.Logger;
-
-import com.querydsl.core.util.CollectionUtils;
 
 /**
  * {@code SQLBindings} provides the SQL query string and bindings
  *
  * @author tiwe
- *
  */
 public class SQLBindings {
 
-    private static final Logger log = Logger.getLogger(SQLBindings.class.getName());
+  private static final Logger log = Logger.getLogger(SQLBindings.class.getName());
 
-    private final String sql;
+  private final String sql;
 
-    private final List<Object> bindings;
+  private final List<Object> bindings;
 
-    public SQLBindings(String sql, List<Object> bindings) {
-        this.sql = sql;
-        this.bindings = CollectionUtils.unmodifiableList(bindings);
-    }
+  public SQLBindings(String sql, List<Object> bindings) {
+    this.sql = sql;
+    this.bindings = CollectionUtils.unmodifiableList(bindings);
+  }
 
-    public String getSQL() {
-        return sql;
-    }
+  public String getSQL() {
+    return sql;
+  }
 
-    public List<Object> getNullFriendlyBindings() {
-        return bindings;
-    }
-
+  public List<Object> getNullFriendlyBindings() {
+    return bindings;
+  }
 }

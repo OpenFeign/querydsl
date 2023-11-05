@@ -22,36 +22,34 @@ import java.sql.Types;
  * {@code EnumByNameType} maps Enum types to their String names on the JDBC level
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class EnumByNameType<T extends Enum<T>> extends AbstractType<T> {
 
-    private final Class<T> type;
+  private final Class<T> type;
 
-    public EnumByNameType(Class<T> type) {
-        this(Types.VARCHAR, type);
-    }
+  public EnumByNameType(Class<T> type) {
+    this(Types.VARCHAR, type);
+  }
 
-    public EnumByNameType(int jdbcType, Class<T> type) {
-        super(jdbcType);
-        this.type = type;
-    }
+  public EnumByNameType(int jdbcType, Class<T> type) {
+    super(jdbcType);
+    this.type = type;
+  }
 
-    @Override
-    public Class<T> getReturnedClass() {
-        return type;
-    }
+  @Override
+  public Class<T> getReturnedClass() {
+    return type;
+  }
 
-    @Override
-    public T getValue(ResultSet rs, int startIndex) throws SQLException {
-        String name = rs.getString(startIndex);
-        return name != null ? Enum.valueOf(type, name) : null;
-    }
+  @Override
+  public T getValue(ResultSet rs, int startIndex) throws SQLException {
+    String name = rs.getString(startIndex);
+    return name != null ? Enum.valueOf(type, name) : null;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, T value) throws SQLException {
-        st.setString(startIndex, value.name());
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, T value) throws SQLException {
+    st.setString(startIndex, value.name());
+  }
 }

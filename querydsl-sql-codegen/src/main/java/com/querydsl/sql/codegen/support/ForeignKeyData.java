@@ -13,76 +13,71 @@
  */
 package com.querydsl.sql.codegen.support;
 
+import com.querydsl.codegen.utils.model.Type;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.jetbrains.annotations.Nullable;
-
-import com.querydsl.codegen.utils.model.Type;
 
 /**
  * {@code ForeignKeyData} defines foreign key data
  *
  * @author tiwe
- *
  */
 public class ForeignKeyData implements KeyData {
 
-    private final String name;
+  private final String name;
 
-    @Nullable
-    private final String schema;
+  @Nullable private final String schema;
 
-    private final String table;
+  private final String table;
 
-    @Nullable
-    private final Type type;
+  @Nullable private final Type type;
 
-    private final List<String> foreignColumns = new ArrayList<String>();
+  private final List<String> foreignColumns = new ArrayList<String>();
 
-    private final List<String> parentColumns = new ArrayList<String>();
+  private final List<String> parentColumns = new ArrayList<String>();
 
-    public ForeignKeyData(String name, @Nullable String schema, String parentTable, @Nullable Type type) {
-        this.name = name;
-        this.schema = schema;
-        this.table = parentTable;
-        this.type = type;
-    }
+  public ForeignKeyData(
+      String name, @Nullable String schema, String parentTable, @Nullable Type type) {
+    this.name = name;
+    this.schema = schema;
+    this.table = parentTable;
+    this.type = type;
+  }
 
-    public void add(String foreignColumn, String parentColumn) {
-        foreignColumns.add(foreignColumn);
-        parentColumns.add(parentColumn);
-    }
+  public void add(String foreignColumn, String parentColumn) {
+    foreignColumns.add(foreignColumn);
+    parentColumns.add(parentColumn);
+  }
 
-    @Override
-    public String getName() {
-        return name;
-    }
+  @Override
+  public String getName() {
+    return name;
+  }
 
-    @Nullable
-    public String getSchema() {
-        return schema;
-    }
+  @Nullable
+  public String getSchema() {
+    return schema;
+  }
 
-    @Override
-    public String getTable() {
-        return table;
-    }
+  @Override
+  public String getTable() {
+    return table;
+  }
 
-    @Override
-    public List<String> getForeignColumns() {
-        return foreignColumns;
-    }
+  @Override
+  public List<String> getForeignColumns() {
+    return foreignColumns;
+  }
 
-    @Override
-    public List<String> getParentColumns() {
-        return parentColumns;
-    }
+  @Override
+  public List<String> getParentColumns() {
+    return parentColumns;
+  }
 
-    @Nullable
-    @Override
-    public Type getType() {
-        return type;
-    }
-
+  @Nullable
+  @Override
+  public Type getType() {
+    return type;
+  }
 }

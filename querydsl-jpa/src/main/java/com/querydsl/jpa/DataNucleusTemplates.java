@@ -20,26 +20,23 @@ import com.querydsl.core.types.Ops;
  */
 public class DataNucleusTemplates extends JPQLTemplates {
 
-    public static final DataNucleusTemplates DEFAULT = new DataNucleusTemplates();
+  public static final DataNucleusTemplates DEFAULT = new DataNucleusTemplates();
 
-    public DataNucleusTemplates() {
-        this(DEFAULT_ESCAPE);
-    }
+  public DataNucleusTemplates() {
+    this(DEFAULT_ESCAPE);
+  }
 
-    public DataNucleusTemplates(char escape) {
-        super(escape);
-        add(Ops.LIKE, "{0} like {1}",1);
-        add(Ops.MATCHES, "{0} like {1}", 27); // TODO : support real regexes
-        add(Ops.MATCHES_IC, "{0} like {1}", 27); // TODO : support real regexes
+  public DataNucleusTemplates(char escape) {
+    super(escape);
+    add(Ops.LIKE, "{0} like {1}", 1);
+    add(Ops.MATCHES, "{0} like {1}", 27); // TODO : support real regexes
+    add(Ops.MATCHES_IC, "{0} like {1}", 27); // TODO : support real regexes
 
-        add(Ops.STRING_CONTAINS, "{0} like {%1%}");
-        add(Ops.STRING_CONTAINS_IC, "{0l} like {%%1%%}");
-        add(Ops.ENDS_WITH, "{0} like {%1}");
-        add(Ops.ENDS_WITH_IC, "{0l} like {%%1}");
-        add(Ops.STARTS_WITH, "{0} like {1%}");
-        add(Ops.STARTS_WITH_IC, "{0l} like {1%%}");
-
-
-    }
-
+    add(Ops.STRING_CONTAINS, "{0} like {%1%}");
+    add(Ops.STRING_CONTAINS_IC, "{0l} like {%%1%%}");
+    add(Ops.ENDS_WITH, "{0} like {%1}");
+    add(Ops.ENDS_WITH_IC, "{0l} like {%%1}");
+    add(Ops.STARTS_WITH, "{0} like {1%}");
+    add(Ops.STARTS_WITH_IC, "{0l} like {1%%}");
+  }
 }

@@ -14,8 +14,5 @@
 
 package com.querydsl.core.testutil;
 
-/**
- * {@code Database} is a category for tests that require a connection to a database.
- */
-public interface Database {
-}
+/** {@code Database} is a category for tests that require a connection to a database. */
+public interface Database {}

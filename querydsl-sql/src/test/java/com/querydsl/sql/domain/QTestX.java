@@ -18,19 +18,18 @@ import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.StringPath;
 
-//@Table("TEST")
+// @Table("TEST")
 public class QTestX extends EntityPathBase<Object> {
 
-    private static final long serialVersionUID = -8421112749591552595L;
+  private static final long serialVersionUID = -8421112749591552595L;
 
-    public final StringPath name = createString("NAME");
+  public final StringPath name = createString("NAME");
 
-    public QTestX(String path) {
-        super(Object.class, PathMetadataFactory.forVariable(path));
-    }
+  public QTestX(String path) {
+    super(Object.class, PathMetadataFactory.forVariable(path));
+  }
 
-    public QTestX(PathMetadata metadata) {
-        super(Object.class, metadata);
-    }
-
+  public QTestX(PathMetadata metadata) {
+    super(Object.class, metadata);
+  }
 }

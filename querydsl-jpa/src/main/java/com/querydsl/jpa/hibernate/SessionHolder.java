@@ -13,31 +13,29 @@
  */
 package com.querydsl.jpa.hibernate;
 
-import org.hibernate.query.Query;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 /**
  * Abstraction for different Hibernate Session signatures
  *
  * @author tiwe
- *
  */
 public interface SessionHolder {
 
-    /**
-     * Create a JPQL query for the given query string
-     *
-     * @param queryString JPQL query string
-     * @return query
-     */
-    Query<?> createQuery(String queryString);
+  /**
+   * Create a JPQL query for the given query string
+   *
+   * @param queryString JPQL query string
+   * @return query
+   */
+  Query<?> createQuery(String queryString);
 
-    /**
-     * Create an SQL query for the given query string
-     *
-     * @param queryString JPQL query string
-     * @return query
-     */
-    NativeQuery<?> createSQLQuery(String queryString);
-
+  /**
+   * Create an SQL query for the given query string
+   *
+   * @param queryString JPQL query string
+   * @return query
+   */
+  NativeQuery<?> createSQLQuery(String queryString);
 }

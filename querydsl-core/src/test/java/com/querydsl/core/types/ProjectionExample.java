@@ -15,37 +15,37 @@ package com.querydsl.core.types;
 
 public class ProjectionExample {
 
-    public Long id;
+  public Long id;
 
-    public String text;
+  public String text;
 
-    public ProjectionExample() {
+  public ProjectionExample() {}
 
-    }
+  public ProjectionExample(Long id) {
+    this.id = id;
+  }
 
-    public ProjectionExample(Long id) {
-        this.id = id;
-    }
+  public ProjectionExample(long id, String text) {
+    this.id = id;
+    this.text = text;
+  }
 
-    public ProjectionExample(long id, String text) {
-        this.id = id;
-        this.text = text;
-    }
+  public ProjectionExample(CharSequence text) {
+    this.text = text.toString();
+  }
 
-    public ProjectionExample(CharSequence text) {
-        this.text = text.toString();
-    }
+  public ProjectionExample(
+      boolean booleanArg,
+      byte byteArg,
+      char charArg,
+      short shortArg,
+      int intArg,
+      long longArg,
+      float floatArg,
+      double doubleArg) {}
 
-    public ProjectionExample(boolean booleanArg, byte byteArg,
-            char charArg, short shortArg,
-            int intArg, long longArg,
-            float floatArg, double doubleArg) {
-
-    }
-
-    public ProjectionExample(long id, char... characters) {
-        this.id = id;
-        this.text = String.valueOf(characters);
-    }
-
+  public ProjectionExample(long id, char... characters) {
+    this.id = id;
+    this.text = String.valueOf(characters);
+  }
 }

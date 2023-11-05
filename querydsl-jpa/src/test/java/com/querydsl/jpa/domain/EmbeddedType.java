@@ -14,13 +14,11 @@
 package com.querydsl.jpa.domain;
 
 import java.io.Serializable;
-
 import javax.persistence.Embeddable;
 
 @SuppressWarnings("serial")
 @Embeddable
 public class EmbeddedType implements Serializable {
 
-    String someData;
-
+  String someData;
 }

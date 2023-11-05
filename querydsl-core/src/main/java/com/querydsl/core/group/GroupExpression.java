@@ -16,32 +16,28 @@ package com.querydsl.core.group;
 import com.querydsl.core.types.Expression;
 
 /**
- * Defines the way results of a given expression are grouped. GroupExpressions are also used
- * to access values of a given GroupExpression within a Group.
- * GroupExpressions are stateless wrappers for Expressions that know how to
- * collect row values into a group.
+ * Defines the way results of a given expression are grouped. GroupExpressions are also used to
+ * access values of a given GroupExpression within a Group. GroupExpressions are stateless wrappers
+ * for Expressions that know how to collect row values into a group.
  *
  * @param <T> Element type
  * @param <R> Target type (e.g. List, Set)
- *
  * @author sasa
  * @author tiwe
  */
 public interface GroupExpression<T, R> extends Expression<R> {
 
-    /**
-     * Get the expression wrapped by this group definition
-     *
-     * @return wrapped expression
-     */
-    Expression<T> getExpression();
+  /**
+   * Get the expression wrapped by this group definition
+   *
+   * @return wrapped expression
+   */
+  Expression<T> getExpression();
 
-    /**
-     * Create a new GroupCollector to collect values belonging to this group.
-     *
-     * @return new GroupCollector
-     */
-    GroupCollector<T, R> createGroupCollector();
-
-
+  /**
+   * Create a new GroupCollector to collect values belonging to this group.
+   *
+   * @return new GroupCollector
+   */
+  GroupCollector<T, R> createGroupCollector();
 }

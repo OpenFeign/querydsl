@@ -20,19 +20,18 @@ import com.querydsl.core.types.Expression;
 
 public abstract class AbstractQueryTest {
 
-    protected QueryHelper<?> query() {
-        return new QueryHelper<Void>(HQLTemplates.DEFAULT);
-    }
+  protected QueryHelper<?> query() {
+    return new QueryHelper<Void>(HQLTemplates.DEFAULT);
+  }
 
-    protected static void assertToString(String expected, Expression<?> expr) {
-        JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
-        assertEquals(expected, serializer.handle(expr).toString().replace("\n", " "));
-    }
+  protected static void assertToString(String expected, Expression<?> expr) {
+    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
+    assertEquals(expected, serializer.handle(expr).toString().replace("\n", " "));
+  }
 
-    protected static void assertMatches(String expected, Expression<?> expr) {
-        JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
-        String str = serializer.handle(expr).toString().replace("\n", " ");
-        assertTrue(expected + "\n!=\n" + str, str.matches(expected));
-    }
-
+  protected static void assertMatches(String expected, Expression<?> expr) {
+    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
+    String str = serializer.handle(expr).toString().replace("\n", " ");
+    assertTrue(expected + "\n!=\n" + str, str.matches(expected));
+  }
 }

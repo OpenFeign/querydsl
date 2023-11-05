@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-
-/**
- * Types for de/serialization to ResultSet and PreparedStatement
- */
+/** Types for de/serialization to ResultSet and PreparedStatement */
 package com.querydsl.sql.types;

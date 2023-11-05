@@ -1,5 +1,3 @@
 package com.querydsl.apt.domain;
 
-public class PathInits {
-
-}
+public class PathInits {}

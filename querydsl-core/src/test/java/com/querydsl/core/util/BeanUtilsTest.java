@@ -19,23 +19,21 @@ import org.junit.Test;
 
 public class BeanUtilsTest {
 
-    @Test
-    public void capitalize() {
-        assertEquals("X", BeanUtils.capitalize("x"));
-        assertEquals("Prop", BeanUtils.capitalize("prop"));
-        assertEquals("URL",  BeanUtils.capitalize("URL"));
-        assertEquals("cId",  BeanUtils.capitalize("cId"));
-        assertEquals("sEPOrder",  BeanUtils.capitalize("sEPOrder"));
-    }
+  @Test
+  public void capitalize() {
+    assertEquals("X", BeanUtils.capitalize("x"));
+    assertEquals("Prop", BeanUtils.capitalize("prop"));
+    assertEquals("URL", BeanUtils.capitalize("URL"));
+    assertEquals("cId", BeanUtils.capitalize("cId"));
+    assertEquals("sEPOrder", BeanUtils.capitalize("sEPOrder"));
+  }
 
-    @Test
-    public void uncapitalize() {
-        assertEquals("x",    BeanUtils.uncapitalize("X"));
-        assertEquals("prop", BeanUtils.uncapitalize("Prop"));
-        assertEquals("URL",  BeanUtils.uncapitalize("URL"));
-        assertEquals("cId",  BeanUtils.uncapitalize("cId"));
-        assertEquals("sEPOrder",  BeanUtils.capitalize("sEPOrder"));
-    }
-
-
+  @Test
+  public void uncapitalize() {
+    assertEquals("x", BeanUtils.uncapitalize("X"));
+    assertEquals("prop", BeanUtils.uncapitalize("Prop"));
+    assertEquals("URL", BeanUtils.uncapitalize("URL"));
+    assertEquals("cId", BeanUtils.uncapitalize("cId"));
+    assertEquals("sEPOrder", BeanUtils.capitalize("sEPOrder"));
+  }
 }

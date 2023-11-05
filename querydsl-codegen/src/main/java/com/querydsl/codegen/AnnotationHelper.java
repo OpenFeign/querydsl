@@ -13,37 +13,39 @@
  */
 package com.querydsl.codegen;
 
+import com.querydsl.codegen.utils.model.TypeCategory;
 import java.lang.annotation.Annotation;
 
-import com.querydsl.codegen.utils.model.TypeCategory;
-
 /**
- * {@code AnnotationHelper} defines a interface to provide custom annotation processing
- * for {@link TypeFactory}.
+ * {@code AnnotationHelper} defines a interface to provide custom annotation processing for {@link
+ * TypeFactory}.
  *
  * @author dyorgio
  */
 public interface AnnotationHelper {
 
-    /**
-     * Verify if AnnotationHelper instance can handle the annotation.
-     * @param annotationClass Annotation class.
-     * @return {@code true} if this AnnotationHelper can handle the annotation.
-     */
-    boolean isSupported(Class<? extends Annotation> annotationClass);
+  /**
+   * Verify if AnnotationHelper instance can handle the annotation.
+   *
+   * @param annotationClass Annotation class.
+   * @return {@code true} if this AnnotationHelper can handle the annotation.
+   */
+  boolean isSupported(Class<? extends Annotation> annotationClass);
 
-    /**
-     * Get specific object that will be used as part of type cache key.
-     * @param annotation Annotation instance.
-     * @return Any object, normally a annotation param. Can be {@code null}.
-     */
-    Object getCustomKey(Annotation annotation);
+  /**
+   * Get specific object that will be used as part of type cache key.
+   *
+   * @param annotation Annotation instance.
+   * @return Any object, normally a annotation param. Can be {@code null}.
+   */
+  Object getCustomKey(Annotation annotation);
 
-    /**
-     * Get the {@link TypeCategory} according with object Class and Annotation.
-     * @param cl Class of type.
-     * @param annotation Annotation found on element.
-     * @return Custom {@link TypeCategory}.
-     */
-    TypeCategory getTypeByAnnotation(Class<?> cl, Annotation annotation);
+  /**
+   * Get the {@link TypeCategory} according with object Class and Annotation.
+   *
+   * @param cl Class of type.
+   * @param annotation Annotation found on element.
+   * @return Custom {@link TypeCategory}.
+   */
+  TypeCategory getTypeByAnnotation(Class<?> cl, Annotation annotation);
 }

@@ -13,35 +13,28 @@
  */
 package com.querydsl.jpa.domain;
 
+import com.querydsl.core.annotations.QueryProjection;
 import java.util.List;
-
 import javax.persistence.ElementCollection;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.querydsl.core.annotations.QueryProjection;
-
 public class FooDTO {
-    String bar;
+  String bar;
 
-    @Id
-    int id;
+  @Id int id;
 
-    @ElementCollection
-    List<String> names;
+  @ElementCollection List<String> names;
 
-    @Temporal(TemporalType.DATE)
-    java.util.Date startDate;
+  @Temporal(TemporalType.DATE)
+  java.util.Date startDate;
 
-    public FooDTO() {
-    }
+  public FooDTO() {}
 
-    @QueryProjection
-    public FooDTO(long l) {
-    }
+  @QueryProjection
+  public FooDTO(long l) {}
 
-    @QueryProjection
-    public FooDTO(long l, long r) {
-    }
+  @QueryProjection
+  public FooDTO(long l, long r) {}
 }

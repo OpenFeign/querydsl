@@ -13,26 +13,24 @@
  */
 package com.querydsl.apt.domain;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryType;
+import org.junit.Ignore;
+import org.junit.Test;
 
 @Ignore
 public class PropertyTypeTest {
 
-    @QueryEntity
-    public static class Entity {
+  @QueryEntity
+  public static class Entity {
 
-        @QueryType(PropertyType.STRING)
-        Integer numberAsString;
+    @QueryType(PropertyType.STRING)
+    Integer numberAsString;
+  }
 
-    }
-
-    @Test
-    public void numberAsString_like() {
-        QPropertyTypeTest_Entity.entity.numberAsString.like("a");
-    }
+  @Test
+  public void numberAsString_like() {
+    QPropertyTypeTest_Entity.entity.numberAsString.like("a");
+  }
 }

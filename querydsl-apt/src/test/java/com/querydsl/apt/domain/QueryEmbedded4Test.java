@@ -15,72 +15,66 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
+import org.junit.Test;
 
 public class QueryEmbedded4Test {
 
-    @QueryEntity
-    public static class User {
+  @QueryEntity
+  public static class User {
 
-        @QueryEmbedded
-        @QueryInit("city.name")
-        Address address;
+    @QueryEmbedded
+    @QueryInit("city.name")
+    Address address;
 
-        @QueryEmbedded
-        Complex<String> complex;
+    @QueryEmbedded Complex<String> complex;
+  }
+
+  public static class Address {
+
+    @QueryEmbedded City city;
+
+    String name;
+  }
+
+  public static class City {
+
+    String name;
+  }
+
+  public static class Complex<T extends Comparable<T>> implements Comparable<Complex<T>> {
+
+    T a;
+
+    @Override
+    public int compareTo(Complex<T> arg0) {
+      return 0;
     }
 
-    public static class Address {
-
-        @QueryEmbedded
-        City city;
-
-        String name;
+    public boolean equals(Object o) {
+      return o == this;
     }
+  }
 
-    public static class City {
+  @Test
+  public void user_address_city() {
+    assertNotNull(QQueryEmbedded4Test_User.user.address.city);
+  }
 
-        String name;
+  @Test
+  public void user_address_name() {
+    assertNotNull(QQueryEmbedded4Test_User.user.address.name);
+  }
 
-    }
+  @Test
+  public void user_address_city_name() {
+    assertNotNull(QQueryEmbedded4Test_User.user.address.city.name);
+  }
 
-    public static class Complex<T extends Comparable<T>> implements Comparable<Complex<T>> {
-
-        T a;
-
-        @Override
-        public int compareTo(Complex<T> arg0) {
-            return 0;
-        }
-
-        public boolean equals(Object o) {
-            return o == this;
-        }
-
-    }
-
-    @Test
-    public void user_address_city() {
-        assertNotNull(QQueryEmbedded4Test_User.user.address.city);
-    }
-
-    @Test
-    public void user_address_name() {
-        assertNotNull(QQueryEmbedded4Test_User.user.address.name);
-    }
-
-    @Test
-    public void user_address_city_name() {
-        assertNotNull(QQueryEmbedded4Test_User.user.address.city.name);
-    }
-
-    @Test
-    public void user_complex_a() {
-        assertNotNull(QQueryEmbedded4Test_User.user.complex.a);
-    }
-
+  @Test
+  public void user_complex_a() {
+    assertNotNull(QQueryEmbedded4Test_User.user.complex.a);
+  }
 }

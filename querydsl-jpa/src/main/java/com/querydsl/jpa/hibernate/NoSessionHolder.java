@@ -13,29 +13,27 @@
  */
 package com.querydsl.jpa.hibernate;
 
-import org.hibernate.query.Query;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 /**
  * {@code NoSessionHolder} is a session holder for detached {@link HibernateQuery} usage
  *
  * @author tiwe
- *
  */
 public final class NoSessionHolder implements SessionHolder {
 
-    public static final SessionHolder DEFAULT = new NoSessionHolder();
+  public static final SessionHolder DEFAULT = new NoSessionHolder();
 
-    private NoSessionHolder() { }
+  private NoSessionHolder() {}
 
-    @Override
-    public Query<?> createQuery(String queryString) {
-        throw new UnsupportedOperationException("No session in detached Query available");
-    }
+  @Override
+  public Query<?> createQuery(String queryString) {
+    throw new UnsupportedOperationException("No session in detached Query available");
+  }
 
-    @Override
-    public NativeQuery<?> createSQLQuery(String queryString) {
-        throw new UnsupportedOperationException("No session in detached Query available");
-    }
-
+  @Override
+  public NativeQuery<?> createSQLQuery(String queryString) {
+    throw new UnsupportedOperationException("No session in detached Query available");
+  }
 }

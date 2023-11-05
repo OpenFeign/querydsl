@@ -13,26 +13,23 @@
  */
 package com.querydsl.sql.codegen.support;
 
-import java.util.List;
-
 import com.querydsl.codegen.utils.model.Type;
+import java.util.List;
 
 /**
  * Common interface for {@link ForeignKeyData} and {@link InverseForeignKeyData}
  *
  * @author tiwe
- *
  */
 public interface KeyData {
 
-    String getName();
+  String getName();
 
-    String getTable();
+  String getTable();
 
-    Type getType();
+  Type getType();
 
-    List<String> getForeignColumns();
+  List<String> getForeignColumns();
 
-    List<String> getParentColumns();
-
+  List<String> getParentColumns();
 }

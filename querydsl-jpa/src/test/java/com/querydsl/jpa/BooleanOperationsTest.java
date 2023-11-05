@@ -13,92 +13,91 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.querydsl.jpa.Constants.*;
+import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.BooleanBuilder;
+import org.junit.Test;
 
 public class BooleanOperationsTest extends AbstractQueryTest {
 
-    @Test
-    public void booleanOperations_or() {
-        assertToString("cust is null or cat is null", cust.isNull().or(cat.isNull()));
-    }
+  @Test
+  public void booleanOperations_or() {
+    assertToString("cust is null or cat is null", cust.isNull().or(cat.isNull()));
+  }
 
-    @Test
-    public void booleanOperations_and() {
-        assertToString("cust is null and cat is null", cust.isNull().and(cat.isNull()));
-    }
+  @Test
+  public void booleanOperations_and() {
+    assertToString("cust is null and cat is null", cust.isNull().and(cat.isNull()));
+  }
 
+  @Test
+  public void booleanOperations_not() {
+    assertToString("not cust is null", cust.isNull().not());
+  }
 
-    @Test
-    public void booleanOperations_not() {
-        assertToString("not cust is null", cust.isNull().not());
-    }
+  @Test
+  public void booleanOperations2_and() {
+    cat.name.eq(cust.name.firstName).and(cat.bodyWeight.eq(kitten.bodyWeight));
+  }
 
+  @Test
+  public void booleanOperations2_or() {
+    cat.name.eq(cust.name.firstName).or(cat.bodyWeight.eq(kitten.bodyWeight));
+  }
 
-    @Test
-    public void booleanOperations2_and() {
-        cat.name.eq(cust.name.firstName).and(cat.bodyWeight.eq(kitten.bodyWeight));
-    }
+  @Test
+  public void logicalOperations_or() {
+    assertToString("cat = kitten or kitten = cat", cat.eq(kitten).or(kitten.eq(cat)));
+  }
 
-    @Test
-    public void booleanOperations2_or() {
-        cat.name.eq(cust.name.firstName).or(cat.bodyWeight.eq(kitten.bodyWeight));
-    }
+  @Test
+  public void logicalOperations_and() {
+    assertToString("cat = kitten and kitten = cat", cat.eq(kitten).and(kitten.eq(cat)));
+  }
 
-    @Test
-    public void logicalOperations_or() {
-        assertToString("cat = kitten or kitten = cat", cat.eq(kitten).or(kitten.eq(cat)));
-    }
+  @Test
+  public void logicalOperations_and2() {
+    assertToString(
+        "cat is null and (kitten is null or kitten.bodyWeight > ?1)",
+        cat.isNull().and(kitten.isNull().or(kitten.bodyWeight.gt(10))));
+  }
 
-    @Test
-    public void logicalOperations_and() {
-        assertToString("cat = kitten and kitten = cat", cat.eq(kitten).and(kitten.eq(cat)));
-    }
+  @Test
+  public void booleanBuilder1() {
+    BooleanBuilder bb1 = new BooleanBuilder();
+    bb1.and(cat.eq(cat));
 
-    @Test
-    public void logicalOperations_and2() {
-        assertToString("cat is null and (kitten is null or kitten.bodyWeight > ?1)",
-                cat.isNull().and(kitten.isNull().or(kitten.bodyWeight.gt(10))));
-    }
+    BooleanBuilder bb2 = new BooleanBuilder();
+    bb2.or(cat.eq(cat));
+    bb2.or(cat.eq(cat));
 
-    @Test
-    public void booleanBuilder1() {
-        BooleanBuilder bb1 = new BooleanBuilder();
-        bb1.and(cat.eq(cat));
+    assertToString("cat = cat and (cat = cat or cat = cat)", bb1.and(bb2));
+  }
 
-        BooleanBuilder bb2 = new BooleanBuilder();
-        bb2.or(cat.eq(cat));
-        bb2.or(cat.eq(cat));
+  @Test
+  public void booleanBuilder2() {
+    BooleanBuilder bb1 = new BooleanBuilder();
+    bb1.and(cat.eq(cat));
 
-        assertToString("cat = cat and (cat = cat or cat = cat)", bb1.and(bb2));
-    }
+    BooleanBuilder bb2 = new BooleanBuilder();
+    bb2.or(cat.eq(cat));
+    bb2.or(cat.eq(cat));
 
-    @Test
-    public void booleanBuilder2() {
-        BooleanBuilder bb1 = new BooleanBuilder();
-        bb1.and(cat.eq(cat));
+    assertToString("cat = cat and (cat = cat or cat = cat)", bb1.and(bb2.getValue()));
+  }
 
-        BooleanBuilder bb2 = new BooleanBuilder();
-        bb2.or(cat.eq(cat));
-        bb2.or(cat.eq(cat));
+  @Test
+  public void booleanBuilder_with_null_in_where() {
+    assertEquals(
+        "select cat\nfrom Cat cat", selectFrom(cat).where(new BooleanBuilder()).toString());
+  }
 
-        assertToString("cat = cat and (cat = cat or cat = cat)", bb1.and(bb2.getValue()));
-    }
-
-    @Test
-    public void booleanBuilder_with_null_in_where() {
-        assertEquals("select cat\nfrom Cat cat", selectFrom(cat).where(new BooleanBuilder()).toString());
-    }
-
-    @Test
-    public void booleanBuilder_with_null_in_having() {
-        assertEquals("select cat\nfrom Cat cat\ngroup by cat.name",
-                selectFrom(cat).groupBy(cat.name).having(new BooleanBuilder()).toString());
-    }
-
+  @Test
+  public void booleanBuilder_with_null_in_having() {
+    assertEquals(
+        "select cat\nfrom Cat cat\ngroup by cat.name",
+        selectFrom(cat).groupBy(cat.name).having(new BooleanBuilder()).toString());
+  }
 }

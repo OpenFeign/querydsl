@@ -15,28 +15,27 @@ package com.querydsl.collections;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collections;
-
-import org.junit.Test;
-
 import com.querydsl.codegen.utils.Evaluator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
+import java.util.Collections;
+import org.junit.Test;
 
 public class EvaluatorTransformerTest {
 
-    private QueryMetadata metadata = new DefaultQueryMetadata();
+  private QueryMetadata metadata = new DefaultQueryMetadata();
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void test() {
-        DefaultEvaluatorFactory evaluatorFactory = new DefaultEvaluatorFactory(CollQueryTemplates.DEFAULT);
-        QCat cat = QCat.cat;
-        Evaluator projectionEvaluator = evaluatorFactory.create(metadata, Collections.singletonList(cat), cat.name);
-        EvaluatorFunction transformer = new EvaluatorFunction(projectionEvaluator);
+  @SuppressWarnings("unchecked")
+  @Test
+  public void test() {
+    DefaultEvaluatorFactory evaluatorFactory =
+        new DefaultEvaluatorFactory(CollQueryTemplates.DEFAULT);
+    QCat cat = QCat.cat;
+    Evaluator projectionEvaluator =
+        evaluatorFactory.create(metadata, Collections.singletonList(cat), cat.name);
+    EvaluatorFunction transformer = new EvaluatorFunction(projectionEvaluator);
 
-        Cat c = new Cat("Kitty");
-        assertEquals("Kitty", transformer.apply(c));
-    }
-
+    Cat c = new Cat("Kitty");
+    assertEquals("Kitty", transformer.apply(c));
+  }
 }

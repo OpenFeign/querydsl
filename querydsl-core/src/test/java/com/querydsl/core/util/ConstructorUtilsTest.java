@@ -17,55 +17,55 @@ import static com.querydsl.core.util.ArrayUtils.isEmpty;
 import static com.querydsl.core.util.ConstructorUtils.getConstructorParameters;
 import static org.junit.Assert.*;
 
+import com.querydsl.core.types.ProjectionExample;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
-
 import org.junit.Test;
 
-import com.querydsl.core.types.ProjectionExample;
-
 /**
- *
  * @author Shredder121
  */
 public class ConstructorUtilsTest {
 
-    @Test
-    public void getDefaultConstructor() {
-        Class<?>[] args = {};
-        Constructor<?> emptyDefaultConstructor = getConstructor(ProjectionExample.class, args);
-        Constructor<?> nullDefaultConstructor = getConstructor(ProjectionExample.class, null);
-        assertNotNull(emptyDefaultConstructor);
-        assertNotNull(nullDefaultConstructor);
-        assertTrue(isEmpty(emptyDefaultConstructor.getParameterTypes())
-                && isEmpty(nullDefaultConstructor.getParameterTypes()));
-    }
+  @Test
+  public void getDefaultConstructor() {
+    Class<?>[] args = {};
+    Constructor<?> emptyDefaultConstructor = getConstructor(ProjectionExample.class, args);
+    Constructor<?> nullDefaultConstructor = getConstructor(ProjectionExample.class, null);
+    assertNotNull(emptyDefaultConstructor);
+    assertNotNull(nullDefaultConstructor);
+    assertTrue(
+        isEmpty(emptyDefaultConstructor.getParameterTypes())
+            && isEmpty(nullDefaultConstructor.getParameterTypes()));
+  }
 
-    @Test
-    public void getSimpleConstructor() {
-        Class<?>[] args = {Long.class};
-        Constructor<?> constructor = getConstructor(ProjectionExample.class, args);
-        assertNotNull(constructor);
-        assertArrayEquals(args, constructor.getParameterTypes());
-    }
+  @Test
+  public void getSimpleConstructor() {
+    Class<?>[] args = {Long.class};
+    Constructor<?> constructor = getConstructor(ProjectionExample.class, args);
+    assertNotNull(constructor);
+    assertArrayEquals(args, constructor.getParameterTypes());
+  }
 
-    @Test
-    public void getDefaultConstructorParameters() {
-        Class<?>[] args = {Long.class, String.class};
-        Class<?>[] expected = {Long.TYPE, String.class};
-        Class<?>[] constructorParameters = getConstructorParameters(ProjectionExample.class, args);
-        assertArrayEquals("Constructorparameters not equal", expected, constructorParameters);
-    }
+  @Test
+  public void getDefaultConstructorParameters() {
+    Class<?>[] args = {Long.class, String.class};
+    Class<?>[] expected = {Long.TYPE, String.class};
+    Class<?>[] constructorParameters = getConstructorParameters(ProjectionExample.class, args);
+    assertArrayEquals("Constructorparameters not equal", expected, constructorParameters);
+  }
 
-    private <C> Constructor<C> getConstructor(Class<C> type, Class<?>[] givenTypes) {
-        Constructor<C> rv = null;
-        try {
-            rv = ConstructorUtils.getConstructor(type, givenTypes);
-        } catch (NoSuchMethodException ex) {
-            fail("No constructor found for " + type.toString()
-                    + " with parameters: " + Arrays.toString(givenTypes));
-        }
-        return rv;
+  private <C> Constructor<C> getConstructor(Class<C> type, Class<?>[] givenTypes) {
+    Constructor<C> rv = null;
+    try {
+      rv = ConstructorUtils.getConstructor(type, givenTypes);
+    } catch (NoSuchMethodException ex) {
+      fail(
+          "No constructor found for "
+              + type.toString()
+              + " with parameters: "
+              + Arrays.toString(givenTypes));
     }
-
+    return rv;
+  }
 }

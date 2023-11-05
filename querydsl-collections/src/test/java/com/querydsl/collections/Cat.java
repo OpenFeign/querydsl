@@ -13,151 +13,149 @@
  */
 package com.querydsl.collections;
 
-import java.util.*;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.core.annotations.QueryType;
+import java.util.*;
 
 @QueryEntity
 public class Cat extends Animal {
 
-    private int breed;
+  private int breed;
 
-    private java.sql.Date dateField;
+  private java.sql.Date dateField;
 
-    private Color eyecolor;
+  private Color eyecolor;
 
-    private List<Cat> kittens = new ArrayList<>();
+  private List<Cat> kittens = new ArrayList<>();
 
-    private Cat[] kittenArray;
+  private Cat[] kittenArray;
 
-    private Map<String, Cat> kittensByName = new HashMap<>();
+  private Map<String, Cat> kittensByName = new HashMap<>();
 
-    private Cat mate;
+  private Cat mate;
 
-    @QueryType(PropertyType.NONE)
-    private String skippedField;
+  @QueryType(PropertyType.NONE)
+  private String skippedField;
 
-    @QueryType(PropertyType.SIMPLE)
-    private String stringAsSimple;
+  @QueryType(PropertyType.SIMPLE)
+  private String stringAsSimple;
 
-    private java.sql.Time timeField;
+  private java.sql.Time timeField;
 
-    public Cat() {
-        this.kittensByName = Collections.emptyMap();
-    }
+  public Cat() {
+    this.kittensByName = Collections.emptyMap();
+  }
 
-    public Cat(String name) {
-        Cat kitten = new Cat();
-        this.kittens = Collections.singletonList(kitten);
-        this.kittenArray = new Cat[]{kitten};
-        this.kittensByName = Collections.singletonMap("Kitty", kitten);
-        this.name = name;
-    }
+  public Cat(String name) {
+    Cat kitten = new Cat();
+    this.kittens = Collections.singletonList(kitten);
+    this.kittenArray = new Cat[] {kitten};
+    this.kittensByName = Collections.singletonMap("Kitty", kitten);
+    this.name = name;
+  }
 
-    public Cat(String name, String kittenName) {
-        this(name);
-        kittens.get(0).setName(kittenName);
-    }
+  public Cat(String name, String kittenName) {
+    this(name);
+    kittens.get(0).setName(kittenName);
+  }
 
-    @QueryProjection
-    public Cat(String name, int id) {
-        this(name);
-        this.id = id;
-    }
+  @QueryProjection
+  public Cat(String name, int id) {
+    this(name);
+    this.id = id;
+  }
 
-    public Cat(String name, int id, Date birthdate) {
-        this(name, id);
-        this.birthdate = new Date(birthdate.getTime());
-        this.dateField = new java.sql.Date(birthdate.getTime());
-        this.timeField = new java.sql.Time(birthdate.getTime());
-    }
+  public Cat(String name, int id, Date birthdate) {
+    this(name, id);
+    this.birthdate = new Date(birthdate.getTime());
+    this.dateField = new java.sql.Date(birthdate.getTime());
+    this.timeField = new java.sql.Time(birthdate.getTime());
+  }
 
-    public int getBreed() {
-        return breed;
-    }
+  public int getBreed() {
+    return breed;
+  }
 
-    public java.sql.Date getDateField() {
-        return dateField;
-    }
+  public java.sql.Date getDateField() {
+    return dateField;
+  }
 
-    public Color getEyecolor() {
-        return eyecolor;
-    }
+  public Color getEyecolor() {
+    return eyecolor;
+  }
 
-    public List<Cat> getKittens() {
-        return kittens;
-    }
+  public List<Cat> getKittens() {
+    return kittens;
+  }
 
-    public Map<String, Cat> getKittensByName() {
-        return kittensByName;
-    }
+  public Map<String, Cat> getKittensByName() {
+    return kittensByName;
+  }
 
-    public Cat getMate() {
-        return mate;
-    }
+  public Cat getMate() {
+    return mate;
+  }
 
-    public String getSkippedField() {
-        return skippedField;
-    }
+  public String getSkippedField() {
+    return skippedField;
+  }
 
-    public String getStringAsSimple() {
-        return stringAsSimple;
-    }
+  public String getStringAsSimple() {
+    return stringAsSimple;
+  }
 
-    public java.sql.Time getTimeField() {
-        return timeField;
-    }
+  public java.sql.Time getTimeField() {
+    return timeField;
+  }
 
-    public void setBreed(int breed) {
-        this.breed = breed;
-    }
+  public void setBreed(int breed) {
+    this.breed = breed;
+  }
 
-    public void setDateField(java.sql.Date dateField) {
-        this.dateField = new java.sql.Date(dateField.getTime());
-    }
+  public void setDateField(java.sql.Date dateField) {
+    this.dateField = new java.sql.Date(dateField.getTime());
+  }
 
-    public void setEyecolor(Color eyecolor) {
-        this.eyecolor = eyecolor;
-    }
+  public void setEyecolor(Color eyecolor) {
+    this.eyecolor = eyecolor;
+  }
 
-    public void setKittens(List<Cat> kittens) {
-        this.kittens = kittens;
-    }
+  public void setKittens(List<Cat> kittens) {
+    this.kittens = kittens;
+  }
 
-    public void setKittensByName(Map<String, Cat> kittensByName) {
-        this.kittensByName = kittensByName;
-    }
+  public void setKittensByName(Map<String, Cat> kittensByName) {
+    this.kittensByName = kittensByName;
+  }
 
-    public void setMate(Cat mate) {
-        this.mate = mate;
-    }
+  public void setMate(Cat mate) {
+    this.mate = mate;
+  }
 
-    public void setSkippedField(String skippedField) {
-        this.skippedField = skippedField;
-    }
+  public void setSkippedField(String skippedField) {
+    this.skippedField = skippedField;
+  }
 
-    public void setStringAsSimple(String stringAsSimple) {
-        this.stringAsSimple = stringAsSimple;
-    }
+  public void setStringAsSimple(String stringAsSimple) {
+    this.stringAsSimple = stringAsSimple;
+  }
 
-    public void setTimeField(java.sql.Time timeField) {
-        this.timeField = timeField;
-    }
+  public void setTimeField(java.sql.Time timeField) {
+    this.timeField = timeField;
+  }
 
-    public Cat[] getKittenArray() {
-        return kittenArray;
-    }
+  public Cat[] getKittenArray() {
+    return kittenArray;
+  }
 
-    public void setKittenArray(Cat[] kittenArray) {
-        this.kittenArray = kittenArray.clone();
-    }
+  public void setKittenArray(Cat[] kittenArray) {
+    this.kittenArray = kittenArray.clone();
+  }
 
-    @Override
-    public String toString() {
-        return name;
-    }
-
+  @Override
+  public String toString() {
+    return name;
+  }
 }

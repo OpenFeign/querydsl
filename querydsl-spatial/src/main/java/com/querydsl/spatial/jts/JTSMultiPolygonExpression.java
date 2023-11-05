@@ -20,15 +20,14 @@ import com.vividsolutions.jts.geom.MultiPolygon;
  * A MultiPolygon is a MultiSurface whose elements are Polygons.
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class JTSMultiPolygonExpression<T extends MultiPolygon> extends JTSMultiSurfaceExpression<T> {
+public abstract class JTSMultiPolygonExpression<T extends MultiPolygon>
+    extends JTSMultiSurfaceExpression<T> {
 
-    private static final long serialVersionUID = -2285946852207189655L;
+  private static final long serialVersionUID = -2285946852207189655L;
 
-    public JTSMultiPolygonExpression(Expression<T> mixin) {
-        super(mixin);
-    }
-
+  public JTSMultiPolygonExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 }

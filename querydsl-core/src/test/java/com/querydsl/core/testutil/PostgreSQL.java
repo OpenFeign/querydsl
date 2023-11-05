@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface PostgreSQL extends ExternalDatabase {
-}
+public interface PostgreSQL extends ExternalDatabase {}

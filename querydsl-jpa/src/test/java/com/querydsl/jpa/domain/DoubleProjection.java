@@ -4,11 +4,10 @@ import com.querydsl.core.annotations.QueryProjection;
 
 public class DoubleProjection {
 
-    public double val;
+  public double val;
 
-    @QueryProjection
-    public DoubleProjection(double val) {
-        this.val = val;
-    }
-
+  @QueryProjection
+  public DoubleProjection(double val) {
+    this.val = val;
+  }
 }

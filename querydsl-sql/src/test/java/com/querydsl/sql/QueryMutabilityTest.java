@@ -15,55 +15,56 @@ package com.querydsl.sql;
 
 import static org.junit.Assert.assertEquals;
 
+import com.querydsl.core.QueryMutability;
+import com.querydsl.core.testutil.Derby;
+import com.querydsl.sql.domain.QSurvey;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import com.querydsl.core.QueryMutability;
-import com.querydsl.core.testutil.Derby;
-import com.querydsl.sql.domain.QSurvey;
-
 @Category(Derby.class)
 public class QueryMutabilityTest {
 
-    private static final QSurvey survey = new QSurvey("survey");
+  private static final QSurvey survey = new QSurvey("survey");
 
-    private Connection connection;
+  private Connection connection;
 
-    @Before
-    public void setUp() throws Exception {
-        Connections.initDerby();
-        connection = Connections.getConnection();
-    }
+  @Before
+  public void setUp() throws Exception {
+    Connections.initDerby();
+    connection = Connections.getConnection();
+  }
 
-    @After
-    public void tearDown() throws SQLException {
-        Connections.close();
-    }
+  @After
+  public void tearDown() throws SQLException {
+    Connections.close();
+  }
 
-    @Test
-    public void test() throws IOException, SecurityException,
-            IllegalArgumentException, NoSuchMethodException,
-            IllegalAccessException, InvocationTargetException {
-        SQLQuery<?> query = new SQLQuery<Void>(connection, DerbyTemplates.DEFAULT);
-        query.from(survey);
-        query.addListener(new TestLoggingListener());
-        new QueryMutability(query).test(survey.id, survey.name);
-    }
+  @Test
+  public void test()
+      throws IOException,
+          SecurityException,
+          IllegalArgumentException,
+          NoSuchMethodException,
+          IllegalAccessException,
+          InvocationTargetException {
+    SQLQuery<?> query = new SQLQuery<Void>(connection, DerbyTemplates.DEFAULT);
+    query.from(survey);
+    query.addListener(new TestLoggingListener());
+    new QueryMutability(query).test(survey.id, survey.name);
+  }
 
-    @Test
-    public void clone_() {
-        SQLQuery<?> query = new SQLQuery<Void>(DerbyTemplates.DEFAULT).from(survey);
-        SQLQuery<?> query2 = query.clone(connection);
-        assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
-        assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
-        query2.select(survey.id).fetch();
-    }
-
+  @Test
+  public void clone_() {
+    SQLQuery<?> query = new SQLQuery<Void>(DerbyTemplates.DEFAULT).from(survey);
+    SQLQuery<?> query2 = query.clone(connection);
+    assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
+    assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
+    query2.select(survey.id).fetch();
+  }
 }

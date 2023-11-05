@@ -13,70 +13,66 @@
  */
 package com.querydsl.collections;
 
-import java.util.Set;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryProjection;
+import java.util.Set;
 
 @QueryEntity
 public class Post {
 
-    private int id;
+  private int id;
 
-    private String name;
+  private String name;
 
-    private User user;
+  private User user;
 
-    private Set<Comment> comments;
+  private Set<Comment> comments;
 
-    public Post() { }
+  public Post() {}
 
-    @QueryProjection
-    public Post(int id, String name, User user) {
-        this.id = id;
-        this.name = name;
-        this.user = user;
-    }
+  @QueryProjection
+  public Post(int id, String name, User user) {
+    this.id = id;
+    this.name = name;
+    this.user = user;
+  }
 
-    @QueryProjection
-    public Post(int id, String name, Set<Comment> comments) {
-        this.id = id;
-        this.name = name;
-        this.comments = comments;
-    }
+  @QueryProjection
+  public Post(int id, String name, Set<Comment> comments) {
+    this.id = id;
+    this.name = name;
+    this.comments = comments;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public User getUser() {
-        return user;
-    }
+  public User getUser() {
+    return user;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-    public Set<Comment> getComments() {
-        return comments;
-    }
+  public Set<Comment> getComments() {
+    return comments;
+  }
 
-    public void setComments(Set<Comment> comments) {
-        this.comments = comments;
-    }
-
-
-
+  public void setComments(Set<Comment> comments) {
+    this.comments = comments;
+  }
 }

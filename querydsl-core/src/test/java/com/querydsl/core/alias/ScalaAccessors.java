@@ -15,7 +15,7 @@ package com.querydsl.core.alias;
 
 public interface ScalaAccessors {
 
-    String firstName();
+  String firstName();
 
-    String lastName();
+  String lastName();
 }

@@ -20,34 +20,33 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.RelationalPathBase;
 
-//@Schema("PUBLIC")
-//@Table("SURVEY")
+// @Schema("PUBLIC")
+// @Table("SURVEY")
 public class QSurveyNoPK extends RelationalPathBase<QSurveyNoPK> {
 
-    private static final long serialVersionUID = -7427577079709192842L;
+  private static final long serialVersionUID = -7427577079709192842L;
 
-    public static final QSurveyNoPK survey = new QSurveyNoPK("SURVEY");
+  public static final QSurveyNoPK survey = new QSurveyNoPK("SURVEY");
 
-    public final StringPath name = createString("name");
+  public final StringPath name = createString("name");
 
-    public final StringPath name2 = createString("name2");
+  public final StringPath name2 = createString("name2");
 
-    public final NumberPath<Integer> id = createNumber("id", Integer.class);
+  public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
-    public QSurveyNoPK(String path) {
-        super(QSurveyNoPK.class, PathMetadataFactory.forVariable(path), "PUBLIC", "SURVEY");
-        addMetadata();
-    }
+  public QSurveyNoPK(String path) {
+    super(QSurveyNoPK.class, PathMetadataFactory.forVariable(path), "PUBLIC", "SURVEY");
+    addMetadata();
+  }
 
-    public QSurveyNoPK(PathMetadata metadata) {
-        super(QSurveyNoPK.class, metadata, "PUBLIC", "SURVEY");
-        addMetadata();
-    }
+  public QSurveyNoPK(PathMetadata metadata) {
+    super(QSurveyNoPK.class, metadata, "PUBLIC", "SURVEY");
+    addMetadata();
+  }
 
-    protected void addMetadata() {
-        addMetadata(name, ColumnMetadata.named("NAME"));
-        addMetadata(name2, ColumnMetadata.named("NAME2"));
-        addMetadata(id, ColumnMetadata.named("ID"));
-    }
-
+  protected void addMetadata() {
+    addMetadata(name, ColumnMetadata.named("NAME"));
+    addMetadata(name2, ColumnMetadata.named("NAME2"));
+    addMetadata(id, ColumnMetadata.named("ID"));
+  }
 }

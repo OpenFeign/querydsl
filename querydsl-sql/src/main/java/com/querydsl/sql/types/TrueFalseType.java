@@ -17,41 +17,37 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
 import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code TrueFalseType} maps Boolean to 'T'/'F' on the JDBC level
  *
  * @author tiwe
- *
  */
 public class TrueFalseType extends AbstractType<Boolean> {
 
-    public TrueFalseType() {
-        super(Types.VARCHAR);
-    }
+  public TrueFalseType() {
+    super(Types.VARCHAR);
+  }
 
-    public TrueFalseType(int type) {
-        super(type);
-    }
+  public TrueFalseType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Boolean> getReturnedClass() {
-        return Boolean.class;
-    }
+  @Override
+  public Class<Boolean> getReturnedClass() {
+    return Boolean.class;
+  }
 
-    @Override
-    @Nullable
-    public Boolean getValue(ResultSet rs, int startIndex) throws SQLException {
-        String str = rs.getString(startIndex);
-        return str != null ? str.equalsIgnoreCase("T") : null;
-    }
+  @Override
+  @Nullable
+  public Boolean getValue(ResultSet rs, int startIndex) throws SQLException {
+    String str = rs.getString(startIndex);
+    return str != null ? str.equalsIgnoreCase("T") : null;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Boolean value) throws SQLException {
-        st.setString(startIndex, value ? "T" : "F");
-
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Boolean value) throws SQLException {
+    st.setString(startIndex, value ? "T" : "F");
+  }
 }
