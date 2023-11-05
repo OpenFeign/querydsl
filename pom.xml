@@ -39,6 +39,11 @@
 
     <argLine>-Xms256m -Xmx512m</argLine>
 
+    <!-- default bytecode version for src/main -->
+    <main.java.version>1.8</main.java.version>
+    <latest.java.version>21</latest.java.version>
+    
+    <git-code-format-maven-plugin.version>5.1</git-code-format-maven-plugin.version>
     <!-- SQL deps -->
     <db2.version>11.5.7.0</db2.version>
     <derby.version>10.15.2.0</derby.version>
@@ -703,13 +708,37 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>versions-maven-plugin</artifactId>
+        <groupId>com.cosium.code</groupId>
+        <artifactId>git-code-format-maven-plugin</artifactId>
+        <version>${git-code-format-maven-plugin.version}</version>
+        <executions>
+          <!-- On commit, format the modified files -->
+          <execution>
+            <id>install-formatter-hook</id>
+            <goals>
+              <goal>install-hooks</goal>
+            </goals>
+          </execution>
+          <!-- On Maven verify phase, fail if any file (including unmodified) is 
+            badly formatted -->
+          <execution>
+            <id>validate-code-format</id>
+            <goals>
+              <goal>validate-code-format</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <!-- Enable https://github.com/google/google-java-format -->
+          <dependency>
+            <groupId>com.cosium.code</groupId>
+            <artifactId>google-java-format</artifactId>
+            <version>${git-code-format-maven-plugin.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
-
-  <pluginRepositories />
 
   <profiles>
     <profile>
@@ -898,7 +927,6 @@
       <id>quickbuild</id>
       <properties>
         <skipTests>true</skipTests>
-        <checkstyle.skip>true</checkstyle.skip>
         <enforcer.skip>true</enforcer.skip>
         <animal.sniffer.skip>true</animal.sniffer.skip>
         <japicmp.skip>true</japicmp.skip>
@@ -951,26 +979,4 @@
       </build>
     </profile>
   </profiles>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>junit-report-maven-plugin</artifactId>
-        <version>devel</version>
-        <configuration>
-          <testFailureIgnore>true</testFailureIgnore>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jxr-plugin</artifactId>
-        <version>3.2.0</version>
-        <configuration>
-          <aggregate>true</aggregate>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
-
 </project>
