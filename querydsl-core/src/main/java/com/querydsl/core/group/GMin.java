@@ -17,30 +17,31 @@ import com.querydsl.core.types.Expression;
 
 class GMin<T extends Comparable<? super T>> extends AbstractGroupExpression<T, T> {
 
-    private static final long serialVersionUID = 8312168556148122576L;
+  private static final long serialVersionUID = 8312168556148122576L;
 
-    @SuppressWarnings("unchecked")
-    GMin(Expression<T> expr) {
-        super((Class) expr.getType(), expr);
-    }
+  @SuppressWarnings("unchecked")
+  GMin(Expression<T> expr) {
+    super((Class) expr.getType(), expr);
+  }
 
-    @Override
-    public GroupCollector<T,T> createGroupCollector() {
-        return new GroupCollector<T,T>() {
-            private T min;
+  @Override
+  public GroupCollector<T, T> createGroupCollector() {
+    return new GroupCollector<T, T>() {
+      private T min;
 
-            @Override
-            public void add(T o) {
-                if (min != null) {
-                    min = o.compareTo(min) < 0 ? o : min;
-                } else {
-                    min = o;
-                }
-            }
-            @Override
-            public T get() {
-                return min;
-            }
-        };
-    }
+      @Override
+      public void add(T o) {
+        if (min != null) {
+          min = o.compareTo(min) < 0 ? o : min;
+        } else {
+          min = o;
+        }
+      }
+
+      @Override
+      public T get() {
+        return min;
+      }
+    };
+  }
 }

@@ -13,262 +13,253 @@
  */
 package com.querydsl.core;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.Predicate;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 /**
- * {@code QueryMetadata} defines query metadata such as query sources, filtering
- * conditions and the projection
+ * {@code QueryMetadata} defines query metadata such as query sources, filtering conditions and the
+ * projection
  *
  * @author tiwe
  */
 public interface QueryMetadata extends Serializable {
 
-    /**
-     * Add the given group by expressions
-     *
-     * @param o group by expressions
-     */
-    void addGroupBy(Expression<?> o);
+  /**
+   * Add the given group by expressions
+   *
+   * @param o group by expressions
+   */
+  void addGroupBy(Expression<?> o);
 
-    /**
-     * Add the given having expressions
-     *
-     * @param o having conditions
-     */
-    void addHaving(Predicate o);
+  /**
+   * Add the given having expressions
+   *
+   * @param o having conditions
+   */
+  void addHaving(Predicate o);
 
-    /**
-     * Add the given query join
-     *
-     * @param joinType type of join
-     * @param expr join target
-     */
-    void addJoin(JoinType joinType, Expression<?> expr);
+  /**
+   * Add the given query join
+   *
+   * @param joinType type of join
+   * @param expr join target
+   */
+  void addJoin(JoinType joinType, Expression<?> expr);
 
-    /**
-     * Add the given join flag to the last given join
-     *
-     * @param flag join flag
-     */
-    void addJoinFlag(JoinFlag flag);
+  /**
+   * Add the given join flag to the last given join
+   *
+   * @param flag join flag
+   */
+  void addJoinFlag(JoinFlag flag);
 
-    /**
-     * Add the given join condition to the last given join
-     *
-     * @param o join condition
-     */
-    void addJoinCondition(Predicate o);
+  /**
+   * Add the given join condition to the last given join
+   *
+   * @param o join condition
+   */
+  void addJoinCondition(Predicate o);
 
-    /**
-     * Add the given order specifiers
-     *
-     * @param o order
-     */
-    void addOrderBy(OrderSpecifier<?> o);
+  /**
+   * Add the given order specifiers
+   *
+   * @param o order
+   */
+  void addOrderBy(OrderSpecifier<?> o);
 
-    /**
-     * Add the given where expressions
-     *
-     * @param o where condition
-     */
-    void addWhere(Predicate o);
+  /**
+   * Add the given where expressions
+   *
+   * @param o where condition
+   */
+  void addWhere(Predicate o);
 
-    /**
-     * Clear the order expressions
-     */
-    void clearOrderBy();
+  /** Clear the order expressions */
+  void clearOrderBy();
 
-    /**
-     * Clear the where expressions
-     */
-    void clearWhere();
+  /** Clear the where expressions */
+  void clearWhere();
 
-    /**
-     * Clone this QueryMetadata instance
-     *
-     * @return new QueryMetadata instance with cloned state
-     */
-    QueryMetadata clone();
+  /**
+   * Clone this QueryMetadata instance
+   *
+   * @return new QueryMetadata instance with cloned state
+   */
+  QueryMetadata clone();
 
-    /**
-     * Get the group by expressions
-     *
-     * @return group by
-     */
-    @Unmodifiable
-    List<Expression<?>> getGroupBy();
+  /**
+   * Get the group by expressions
+   *
+   * @return group by
+   */
+  @Unmodifiable
+  List<Expression<?>> getGroupBy();
 
-    /**
-     * Get the having expressions
-     *
-     * @return having condition, or null if none set
-     */
-    @Nullable
-    Predicate getHaving();
+  /**
+   * Get the having expressions
+   *
+   * @return having condition, or null if none set
+   */
+  @Nullable
+  Predicate getHaving();
 
-    /**
-     * Get the query joins
-     *
-     * @return joins
-     */
-    @Unmodifiable
-    List<JoinExpression> getJoins();
+  /**
+   * Get the query joins
+   *
+   * @return joins
+   */
+  @Unmodifiable
+  List<JoinExpression> getJoins();
 
-    /**
-     * Get the QueryModifiers
-     *
-     * @return modifiers
-     */
-    QueryModifiers getModifiers();
+  /**
+   * Get the QueryModifiers
+   *
+   * @return modifiers
+   */
+  QueryModifiers getModifiers();
 
-    /**
-     * Get the OrderSpecifiers
-     *
-     * @return order by
-     */
-    @Unmodifiable
-    List<OrderSpecifier<?>> getOrderBy();
+  /**
+   * Get the OrderSpecifiers
+   *
+   * @return order by
+   */
+  @Unmodifiable
+  List<OrderSpecifier<?>> getOrderBy();
 
-    /**
-     * Get the projection
-     *
-     * @return projection
-     */
-    @Nullable
-    Expression<?> getProjection();
+  /**
+   * Get the projection
+   *
+   * @return projection
+   */
+  @Nullable
+  Expression<?> getProjection();
 
-    /**
-     * Get the parameter bindings
-     *
-     * @return parameter bindings
-     */
-    @Unmodifiable
-    Map<ParamExpression<?>,Object> getParams();
+  /**
+   * Get the parameter bindings
+   *
+   * @return parameter bindings
+   */
+  @Unmodifiable
+  Map<ParamExpression<?>, Object> getParams();
 
-    /**
-     * Get the expressions aggregated into a single boolean expression or null,
-     * if none where defined
-     *
-     * @return where condition or null, if none set
-     */
-    @Nullable
-    Predicate getWhere();
+  /**
+   * Get the expressions aggregated into a single boolean expression or null, if none where defined
+   *
+   * @return where condition or null, if none set
+   */
+  @Nullable
+  Predicate getWhere();
 
-    /**
-     * Get whether the projection is distinct
-     *
-     * @return distinct
-     */
-    boolean isDistinct();
+  /**
+   * Get whether the projection is distinct
+   *
+   * @return distinct
+   */
+  boolean isDistinct();
 
-    /**
-     * Get whether the projection is unique
-     *
-     * @return unique
-     */
-    boolean isUnique();
+  /**
+   * Get whether the projection is unique
+   *
+   * @return unique
+   */
+  boolean isUnique();
 
-    /**
-     * Reset the projection
-     */
-    void reset();
+  /** Reset the projection */
+  void reset();
 
-    /**
-     * Set the distinct flag
-     *
-     * @param distinct distinct
-     */
-    void setDistinct(boolean distinct);
+  /**
+   * Set the distinct flag
+   *
+   * @param distinct distinct
+   */
+  void setDistinct(boolean distinct);
 
-    /**
-     * Set the maximum number of rows
-     *
-     * @param limit limit
-     */
-    void setLimit(@Nullable Long limit);
+  /**
+   * Set the maximum number of rows
+   *
+   * @param limit limit
+   */
+  void setLimit(@Nullable Long limit);
 
-    /**
-     * Set the query modifiers limit and offset
-     *
-     * @param restriction restriction
-     */
-    void setModifiers(QueryModifiers restriction);
+  /**
+   * Set the query modifiers limit and offset
+   *
+   * @param restriction restriction
+   */
+  void setModifiers(QueryModifiers restriction);
 
-    /**
-     * Set the number of skipped rows
-     *
-     * @param offset offset
-     */
-    void setOffset(@Nullable Long offset);
+  /**
+   * Set the number of skipped rows
+   *
+   * @param offset offset
+   */
+  void setOffset(@Nullable Long offset);
 
-    /**
-     * Set the unique flag
-     *
-     * @param unique unique
-     */
-    void setUnique(boolean unique);
+  /**
+   * Set the unique flag
+   *
+   * @param unique unique
+   */
+  void setUnique(boolean unique);
 
-    /**
-     * Bind the value for the given parameter expression
-     *
-     * @param <T> binding type
-     * @param param parameter
-     * @param value binding
-     */
-    <T> void setParam(ParamExpression<T> param, T value);
+  /**
+   * Bind the value for the given parameter expression
+   *
+   * @param <T> binding type
+   * @param param parameter
+   * @param value binding
+   */
+  <T> void setParam(ParamExpression<T> param, T value);
 
-    /**
-     * Set the projection
-     *
-     * @param o projection
-     */
-    void setProjection(Expression<?> o);
+  /**
+   * Set the projection
+   *
+   * @param o projection
+   */
+  void setProjection(Expression<?> o);
 
-    /**
-     * Add the given query flag
-     *
-     * @param flag query flag
-     */
-    void addFlag(QueryFlag flag);
+  /**
+   * Add the given query flag
+   *
+   * @param flag query flag
+   */
+  void addFlag(QueryFlag flag);
 
-    /**
-     * Return whether the given query flag is applied
-     *
-     * @param flag query flag
-     * @return true, if present, false, if not
-     */
-    boolean hasFlag(QueryFlag flag);
+  /**
+   * Return whether the given query flag is applied
+   *
+   * @param flag query flag
+   * @return true, if present, false, if not
+   */
+  boolean hasFlag(QueryFlag flag);
 
-    /**
-     * Remove the given query flag
-     *
-     * @param flag query flag
-     */
-    void removeFlag(QueryFlag flag);
+  /**
+   * Remove the given query flag
+   *
+   * @param flag query flag
+   */
+  void removeFlag(QueryFlag flag);
 
-    /**
-     * Get all query flags
-     *
-     * @return all used query flags
-     */
-    @Unmodifiable
-    Set<QueryFlag> getFlags();
+  /**
+   * Get all query flags
+   *
+   * @return all used query flags
+   */
+  @Unmodifiable
+  Set<QueryFlag> getFlags();
 
-    /**
-     * Set the validate flag
-     *
-     * @param v validate
-     */
-    void setValidate(boolean v);
+  /**
+   * Set the validate flag
+   *
+   * @param v validate
+   */
+  void setValidate(boolean v);
 }

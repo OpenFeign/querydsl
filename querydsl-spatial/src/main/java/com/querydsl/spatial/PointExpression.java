@@ -13,79 +13,75 @@
  */
 package com.querydsl.spatial;
 
-import org.jetbrains.annotations.Nullable;
-
-import org.geolatte.geom.Point;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import org.geolatte.geom.Point;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * A Point is a 0-dimensional geometric object and represents a single location in coordinate space. A Point has an
- * x-coordinate value, a y-coordinate value. If called for by the associated Spatial Reference System, it may also
- * have coordinate values for z and m.
+ * A Point is a 0-dimensional geometric object and represents a single location in coordinate space.
+ * A Point has an x-coordinate value, a y-coordinate value. If called for by the associated Spatial
+ * Reference System, it may also have coordinate values for z and m.
  *
  * @author tiwe
- *
  * @param <T>
  */
 public abstract class PointExpression<T extends Point> extends GeometryExpression<T> {
 
-    private static final long serialVersionUID = -3549448861390349654L;
+  private static final long serialVersionUID = -3549448861390349654L;
 
-    @Nullable
-    private transient volatile NumberExpression<Double> x, y, z, m;
+  @Nullable private transient volatile NumberExpression<Double> x, y, z, m;
 
-    public PointExpression(Expression<T> mixin) {
-        super(mixin);
+  public PointExpression(Expression<T> mixin) {
+    super(mixin);
+  }
+
+  /**
+   * The x-coordinate value for this Point.
+   *
+   * @return x-coordinate
+   */
+  public NumberExpression<Double> x() {
+    if (x == null) {
+      x = Expressions.numberOperation(Double.class, SpatialOps.X, mixin);
     }
+    return x;
+  }
 
-    /**
-     * The x-coordinate value for this Point.
-     *
-     * @return x-coordinate
-     */
-    public NumberExpression<Double> x() {
-        if (x == null) {
-            x = Expressions.numberOperation(Double.class, SpatialOps.X, mixin);
-        }
-        return x;
+  /**
+   * The y-coordinate value for this Point.
+   *
+   * @return y-coordinate
+   */
+  public NumberExpression<Double> y() {
+    if (y == null) {
+      y = Expressions.numberOperation(Double.class, SpatialOps.Y, mixin);
     }
+    return y;
+  }
 
-    /**
-     * The y-coordinate value for this Point.
-     *
-     * @return y-coordinate
-     */
-    public NumberExpression<Double> y() {
-        if (y == null) {
-            y = Expressions.numberOperation(Double.class, SpatialOps.Y, mixin);
-        }
-        return y;
+  /**
+   * The z-coordinate value for this Point, if it has one. Returns NIL otherwise.
+   *
+   * @return z-coordinate
+   */
+  public NumberExpression<Double> z() {
+    if (z == null) {
+      z = Expressions.numberOperation(Double.class, SpatialOps.Z, mixin);
     }
+    return z;
+  }
 
-    /**
-     * The z-coordinate value for this Point, if it has one. Returns NIL otherwise.
-     *
-     * @return z-coordinate
-     */
-    public NumberExpression<Double> z() {
-        if (z == null) {
-            z = Expressions.numberOperation(Double.class, SpatialOps.Z, mixin);
-        }
-        return z;
+  /**
+   * The m-coordinate value for this Point, if it has one. Returns NIL otherwise.
+   *
+   * @return m-coordinate
+   */
+  public NumberExpression<Double> m() {
+    if (m == null) {
+      m = Expressions.numberOperation(Double.class, SpatialOps.M, mixin);
     }
-
-    /**
-     * The m-coordinate value for this Point, if it has one. Returns NIL otherwise.
-     *
-     * @return m-coordinate
-     */
-    public NumberExpression<Double> m() {
-        if (m == null) {
-            m = Expressions.numberOperation(Double.class, SpatialOps.M, mixin);
-        }
-        return m;
-    }
+    return m;
+  }
 }

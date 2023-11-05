@@ -13,85 +13,80 @@
  */
 package com.querydsl.sql;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-import com.querydsl.core.annotations.Immutable;
-
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code ForeignKey} defines a foreign key on a table to another table
  *
  * @author tiwe
- *
  * @param <E>
  */
 @Immutable
 public final class ForeignKey<E> implements Serializable, ProjectionRole<Tuple> {
 
-    private static final long serialVersionUID = 2260578033772289023L;
+  private static final long serialVersionUID = 2260578033772289023L;
 
-    private final RelationalPath<?> entity;
+  private final RelationalPath<?> entity;
 
-    private final List<? extends Path<?>> localColumns;
+  private final List<? extends Path<?>> localColumns;
 
-    private final List<String> foreignColumns;
+  private final List<String> foreignColumns;
 
-    @Nullable
-    private transient volatile Expression<Tuple> mixin;
+  @Nullable private transient volatile Expression<Tuple> mixin;
 
-    public ForeignKey(RelationalPath<?> entity, Path<?> localColumn, String foreignColumn) {
-        this(entity, Collections.singletonList(localColumn), Collections.singletonList(foreignColumn));
+  public ForeignKey(RelationalPath<?> entity, Path<?> localColumn, String foreignColumn) {
+    this(entity, Collections.singletonList(localColumn), Collections.singletonList(foreignColumn));
+  }
+
+  public ForeignKey(
+      RelationalPath<?> entity, List<? extends Path<?>> localColumns, List<String> foreignColumns) {
+    this.entity = entity;
+    this.localColumns = CollectionUtils.unmodifiableList(localColumns);
+    this.foreignColumns = CollectionUtils.unmodifiableList(foreignColumns);
+  }
+
+  public RelationalPath<?> getEntity() {
+    return entity;
+  }
+
+  public List<? extends Path<?>> getLocalColumns() {
+    return localColumns;
+  }
+
+  public List<String> getForeignColumns() {
+    return foreignColumns;
+  }
+
+  @SuppressWarnings("unchecked")
+  public Predicate on(RelationalPath<E> entity) {
+    BooleanBuilder builder = new BooleanBuilder();
+    for (int i = 0; i < localColumns.size(); i++) {
+      Expression<Object> local = (Expression<Object>) localColumns.get(i);
+      Expression<?> foreign = ExpressionUtils.path(local.getType(), entity, foreignColumns.get(i));
+      builder.and(ExpressionUtils.eq(local, foreign));
     }
+    return builder.getValue();
+  }
 
-    public ForeignKey(RelationalPath<?> entity, List<? extends Path<?>> localColumns,
-            List<String> foreignColumns) {
-        this.entity = entity;
-        this.localColumns = CollectionUtils.unmodifiableList(localColumns);
-        this.foreignColumns = CollectionUtils.unmodifiableList(foreignColumns);
+  public BooleanExpression in(SubQueryExpression<Tuple> coll) {
+    return Expressions.booleanOperation(Ops.IN, getProjection(), coll);
+  }
+
+  @Override
+  public Expression<Tuple> getProjection() {
+    if (mixin == null) {
+      mixin = ExpressionUtils.list(Tuple.class, localColumns);
     }
-
-    public RelationalPath<?> getEntity() {
-        return entity;
-    }
-
-    public List<? extends Path<?>> getLocalColumns() {
-        return localColumns;
-    }
-
-    public List<String> getForeignColumns() {
-        return foreignColumns;
-    }
-
-    @SuppressWarnings("unchecked")
-    public Predicate on(RelationalPath<E> entity) {
-        BooleanBuilder builder = new BooleanBuilder();
-        for (int i = 0; i < localColumns.size(); i++) {
-            Expression<Object> local = (Expression<Object>) localColumns.get(i);
-            Expression<?> foreign = ExpressionUtils.path(local.getType(), entity, foreignColumns.get(i));
-            builder.and(ExpressionUtils.eq(local,foreign));
-        }
-        return builder.getValue();
-    }
-
-    public BooleanExpression in(SubQueryExpression<Tuple> coll) {
-        return Expressions.booleanOperation(Ops.IN, getProjection(), coll);
-    }
-
-    @Override
-    public Expression<Tuple> getProjection() {
-        if (mixin == null) {
-            mixin = ExpressionUtils.list(Tuple.class, localColumns);
-        }
-        return mixin;
-    }
-
+    return mixin;
+  }
 }

@@ -13,18 +13,15 @@
  */
 package com.querydsl.jpa.support;
 
-import org.hibernate.dialect.MySQL5Dialect;
-
 import com.querydsl.sql.MySQLTemplates;
 import com.querydsl.sql.SQLTemplates;
+import org.hibernate.dialect.MySQL5Dialect;
 
-/**
- * {@code QMySQL5Dialect} extends {@code MySQL5Dialect} with additional functions
- */
+/** {@code QMySQL5Dialect} extends {@code MySQL5Dialect} with additional functions */
 public class QMySQL5Dialect extends MySQL5Dialect {
 
-    public QMySQL5Dialect() {
-        SQLTemplates templates = MySQLTemplates.DEFAULT;
-        getFunctions().putAll(DialectSupport.createFunctions(templates));
-    }
+  public QMySQL5Dialect() {
+    SQLTemplates templates = MySQLTemplates.DEFAULT;
+    getFunctions().putAll(DialectSupport.createFunctions(templates));
+  }
 }

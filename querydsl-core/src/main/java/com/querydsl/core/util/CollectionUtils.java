@@ -30,224 +30,232 @@ import java.util.stream.IntStream;
  * for single item collections and after that mutable instances
  *
  * @author tiwe
- *
  */
 public final class CollectionUtils {
 
-    private static final Set<Class<?>> UNMODIFIABLE_TYPES;
+  private static final Set<Class<?>> UNMODIFIABLE_TYPES;
 
-    static {
-        Set<Class<?>> unmodifiableTypes = new HashSet<>();
-        unmodifiableTypes.add(Collections.emptyList().getClass());
-        unmodifiableTypes.add(Collections.emptySet().getClass());
-        unmodifiableTypes.add(Collections.emptyNavigableSet().getClass());
-        unmodifiableTypes.add(Collections.emptySortedSet().getClass());
-        unmodifiableTypes.add(Collections.emptyMap().getClass());
-        unmodifiableTypes.add(Collections.emptySortedMap().getClass());
-        unmodifiableTypes.add(Collections.emptyNavigableMap().getClass());
-        unmodifiableTypes.add(Collections.singleton(1).getClass());
-        unmodifiableTypes.add(Collections.singletonList(1).getClass());
-        unmodifiableTypes.add(Collections.singletonMap(1, 1).getClass());
-        unmodifiableTypes.add(Collections.unmodifiableList(Collections.emptyList()).getClass());
-        unmodifiableTypes.add(Collections.unmodifiableCollection(Collections.emptyList()).getClass());
-        unmodifiableTypes.add(Collections.unmodifiableSet(Collections.emptySet()).getClass());
-        unmodifiableTypes.add(Collections.unmodifiableNavigableSet(Collections.emptyNavigableSet()).getClass());
-        unmodifiableTypes.add(Collections.unmodifiableSortedSet(Collections.emptySortedSet()).getClass());
-        unmodifiableTypes.add(Collections.unmodifiableMap(Collections.emptyMap()).getClass());
-        unmodifiableTypes.add(Collections.unmodifiableSortedMap(Collections.emptySortedMap()).getClass());
-        unmodifiableTypes.add(Collections.unmodifiableNavigableMap(Collections.emptyNavigableMap()).getClass());
+  static {
+    Set<Class<?>> unmodifiableTypes = new HashSet<>();
+    unmodifiableTypes.add(Collections.emptyList().getClass());
+    unmodifiableTypes.add(Collections.emptySet().getClass());
+    unmodifiableTypes.add(Collections.emptyNavigableSet().getClass());
+    unmodifiableTypes.add(Collections.emptySortedSet().getClass());
+    unmodifiableTypes.add(Collections.emptyMap().getClass());
+    unmodifiableTypes.add(Collections.emptySortedMap().getClass());
+    unmodifiableTypes.add(Collections.emptyNavigableMap().getClass());
+    unmodifiableTypes.add(Collections.singleton(1).getClass());
+    unmodifiableTypes.add(Collections.singletonList(1).getClass());
+    unmodifiableTypes.add(Collections.singletonMap(1, 1).getClass());
+    unmodifiableTypes.add(Collections.unmodifiableList(Collections.emptyList()).getClass());
+    unmodifiableTypes.add(Collections.unmodifiableCollection(Collections.emptyList()).getClass());
+    unmodifiableTypes.add(Collections.unmodifiableSet(Collections.emptySet()).getClass());
+    unmodifiableTypes.add(
+        Collections.unmodifiableNavigableSet(Collections.emptyNavigableSet()).getClass());
+    unmodifiableTypes.add(
+        Collections.unmodifiableSortedSet(Collections.emptySortedSet()).getClass());
+    unmodifiableTypes.add(Collections.unmodifiableMap(Collections.emptyMap()).getClass());
+    unmodifiableTypes.add(
+        Collections.unmodifiableSortedMap(Collections.emptySortedMap()).getClass());
+    unmodifiableTypes.add(
+        Collections.unmodifiableNavigableMap(Collections.emptyNavigableMap()).getClass());
 
-        try {
-            unmodifiableTypes.add(Class.forName("com.google.common.collect.ImmutableSet"));
-            unmodifiableTypes.add(Class.forName("com.google.common.collect.ImmutableList"));
-            unmodifiableTypes.add(Class.forName("com.google.common.collect.ImmutableMap"));
-        } catch (ClassNotFoundException e) {
-            // Nothing happens
-        }
-
-        try {
-            unmodifiableTypes.add(Class.forName("java.util.ImmutableCollections$AbstractImmutableCollection"));
-            unmodifiableTypes.add(Class.forName("java.util.ImmutableCollections$AbstractImmutableMap"));
-        } catch (ClassNotFoundException e) {
-            // Nothing happens
-        }
-
-        UNMODIFIABLE_TYPES = Collections.unmodifiableSet(unmodifiableTypes);
+    try {
+      unmodifiableTypes.add(Class.forName("com.google.common.collect.ImmutableSet"));
+      unmodifiableTypes.add(Class.forName("com.google.common.collect.ImmutableList"));
+      unmodifiableTypes.add(Class.forName("com.google.common.collect.ImmutableMap"));
+    } catch (ClassNotFoundException e) {
+      // Nothing happens
     }
 
-    /**
-     * Returns true if the type is a known unmodifiable type.
-     *
-     * @param clazz the type
-     * @return true if the type is a known unmodifiable type
-     */
-    public static boolean isUnmodifiableType(Class<?> clazz) {
-        for (; clazz != null; clazz = clazz.getSuperclass()) {
-            if (UNMODIFIABLE_TYPES.contains(clazz)) {
-                return true;
-            }
-        }
-        return false;
+    try {
+      unmodifiableTypes.add(
+          Class.forName("java.util.ImmutableCollections$AbstractImmutableCollection"));
+      unmodifiableTypes.add(Class.forName("java.util.ImmutableCollections$AbstractImmutableMap"));
+    } catch (ClassNotFoundException e) {
+      // Nothing happens
     }
 
-    /**
-     * Return an unmodifiable copy of a list, or the same list if its already an unmodifiable type.
-     *
-     * @param list the list
-     * @param <T> element type
-     * @return unmodifiable copy of a list, or the same list if its already an unmodifiable type
-     */
-    public static <T> List<T> unmodifiableList(List<T> list) {
-        if (isUnmodifiableType(list.getClass())) {
-            return list;
-        }
-        switch (list.size()) {
-            case 0:
-                return Collections.emptyList();
-            case 1:
-                return Collections.singletonList(list.get(0));
-            default:
-                return Collections.unmodifiableList(new ArrayList<>(list));
-        }
+    UNMODIFIABLE_TYPES = Collections.unmodifiableSet(unmodifiableTypes);
+  }
+
+  /**
+   * Returns true if the type is a known unmodifiable type.
+   *
+   * @param clazz the type
+   * @return true if the type is a known unmodifiable type
+   */
+  public static boolean isUnmodifiableType(Class<?> clazz) {
+    for (; clazz != null; clazz = clazz.getSuperclass()) {
+      if (UNMODIFIABLE_TYPES.contains(clazz)) {
+        return true;
+      }
     }
+    return false;
+  }
 
-    /**
-     * Return an unmodifiable copy of a set, or the same set if its already an unmodifiable type.
-     *
-     * @param set the set
-     * @param <T> element type
-     * @return unmodifiable copy of a set, or the same set if its already an unmodifiable type
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> Set<T> unmodifiableSet(Set<T> set) {
-        if (isUnmodifiableType(set.getClass())) {
-            return set;
-        }
-        switch (set.size()) {
-            case 0:
-                return Collections.emptySet();
-            case 1:
-                return Collections.singleton(set.iterator().next());
-            default:
-                return Collections.unmodifiableSet((Set<T>) (
-                        set instanceof LinkedHashSet ? ((LinkedHashSet<T>) set).clone() :
-                        set instanceof TreeSet ? ((TreeSet<T>) set).clone() :
-                        set instanceof HashSet ? ((HashSet<T>) set).clone() :
-                        new LinkedHashSet<>(set)));
-        }
+  /**
+   * Return an unmodifiable copy of a list, or the same list if its already an unmodifiable type.
+   *
+   * @param list the list
+   * @param <T> element type
+   * @return unmodifiable copy of a list, or the same list if its already an unmodifiable type
+   */
+  public static <T> List<T> unmodifiableList(List<T> list) {
+    if (isUnmodifiableType(list.getClass())) {
+      return list;
     }
-
-    public static <T> List<List<T>> partition(List<T> list, int batchSize) {
-        return IntStream.range(0, list.size() / batchSize + 1)
-                .mapToObj(i -> list.subList(i * batchSize,
-                        Math.min(i * batchSize + batchSize, list.size())))
-                .filter(s -> !s.isEmpty()).collect(Collectors.toList());
+    switch (list.size()) {
+      case 0:
+        return Collections.emptyList();
+      case 1:
+        return Collections.singletonList(list.get(0));
+      default:
+        return Collections.unmodifiableList(new ArrayList<>(list));
     }
+  }
 
-    public static <T> List<T> add(List<T> list, T element) {
-        final int size = list.size();
-        if (size == 0) {
-            return Collections.singletonList(element);
-        } else if (isUnmodifiableType(list.getClass())) {
-            if (size == 1) {
-                final T val = list.get(0);
-                list = new ArrayList<>();
-                list.add(val);
-            } else {
-                list = new ArrayList<>(list);
-            }
-        }
-        list.add(element);
-        return list;
+  /**
+   * Return an unmodifiable copy of a set, or the same set if its already an unmodifiable type.
+   *
+   * @param set the set
+   * @param <T> element type
+   * @return unmodifiable copy of a set, or the same set if its already an unmodifiable type
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> Set<T> unmodifiableSet(Set<T> set) {
+    if (isUnmodifiableType(set.getClass())) {
+      return set;
     }
-
-    public static <T> List<T> copyOf(List<T> list) {
-        if (isUnmodifiableType(list.getClass())) {
-            return list;
-        } else {
-            return new ArrayList<>(list);
-        }
+    switch (set.size()) {
+      case 0:
+        return Collections.emptySet();
+      case 1:
+        return Collections.singleton(set.iterator().next());
+      default:
+        return Collections.unmodifiableSet(
+            (Set<T>)
+                (set instanceof LinkedHashSet
+                    ? ((LinkedHashSet<T>) set).clone()
+                    : set instanceof TreeSet
+                        ? ((TreeSet<T>) set).clone()
+                        : set instanceof HashSet
+                            ? ((HashSet<T>) set).clone()
+                            : new LinkedHashSet<>(set)));
     }
+  }
 
-    public static <T> Set<T> add(Set<T> set, T element) {
-        final int size = set.size();
-        if (size == 0) {
-            return Collections.singleton(element);
-        } else if (isUnmodifiableType(set.getClass())) {
-            if (size == 1) {
-                final T val = set.iterator().next();
-                set = new HashSet<>();
-                set.add(val);
-            } else {
-                set = new HashSet<>(set);
-            }
-        }
-        set.add(element);
-        return set;
+  public static <T> List<List<T>> partition(List<T> list, int batchSize) {
+    return IntStream.range(0, list.size() / batchSize + 1)
+        .mapToObj(
+            i -> list.subList(i * batchSize, Math.min(i * batchSize + batchSize, list.size())))
+        .filter(s -> !s.isEmpty())
+        .collect(Collectors.toList());
+  }
+
+  public static <T> List<T> add(List<T> list, T element) {
+    final int size = list.size();
+    if (size == 0) {
+      return Collections.singletonList(element);
+    } else if (isUnmodifiableType(list.getClass())) {
+      if (size == 1) {
+        final T val = list.get(0);
+        list = new ArrayList<>();
+        list.add(val);
+      } else {
+        list = new ArrayList<>(list);
+      }
     }
+    list.add(element);
+    return list;
+  }
 
-    public static <T> Set<T> copyOf(Set<T> set) {
-        if (isUnmodifiableType(set.getClass())) {
-            return set;
-        } else {
-            return new HashSet<>(set);
-        }
+  public static <T> List<T> copyOf(List<T> list) {
+    if (isUnmodifiableType(list.getClass())) {
+      return list;
+    } else {
+      return new ArrayList<>(list);
     }
+  }
 
-    public static <T> Set<T> addSorted(Set<T> set, T element) {
-        final int size = set.size();
-        if (size == 0) {
-            return Collections.singleton(element);
-        } else if (isUnmodifiableType(set.getClass())) {
-            if (size == 1) {
-                final T val = set.iterator().next();
-                set = new LinkedHashSet<>();
-                set.add(val);
-            } else {
-                set = new LinkedHashSet<>(set);
-            }
-        }
-        set.add(element);
-        return set;
+  public static <T> Set<T> add(Set<T> set, T element) {
+    final int size = set.size();
+    if (size == 0) {
+      return Collections.singleton(element);
+    } else if (isUnmodifiableType(set.getClass())) {
+      if (size == 1) {
+        final T val = set.iterator().next();
+        set = new HashSet<>();
+        set.add(val);
+      } else {
+        set = new HashSet<>(set);
+      }
     }
+    set.add(element);
+    return set;
+  }
 
-    public static <T> Set<T> removeSorted(Set<T> set, T element) {
-        final int size = set.size();
-        if (size == 0 || (size == 1 && set.contains(element))) {
-            return Collections.emptySet();
-        } else {
-            set.remove(element);
-        }
-        return set;
+  public static <T> Set<T> copyOf(Set<T> set) {
+    if (isUnmodifiableType(set.getClass())) {
+      return set;
+    } else {
+      return new HashSet<>(set);
     }
+  }
 
-    public static <T> Set<T> copyOfSorted(Set<T> set) {
-        if (isUnmodifiableType(set.getClass())) {
-            return set;
-        } else {
-            return new LinkedHashSet<>(set);
-        }
+  public static <T> Set<T> addSorted(Set<T> set, T element) {
+    final int size = set.size();
+    if (size == 0) {
+      return Collections.singleton(element);
+    } else if (isUnmodifiableType(set.getClass())) {
+      if (size == 1) {
+        final T val = set.iterator().next();
+        set = new LinkedHashSet<>();
+        set.add(val);
+      } else {
+        set = new LinkedHashSet<>(set);
+      }
     }
+    set.add(element);
+    return set;
+  }
 
-    public static <K,V> Map<K,V> put(Map<K,V> map, K key, V value) {
-        final int size = map.size();
-        if (size == 0) {
-            return Collections.singletonMap(key, value);
-        } else if (isUnmodifiableType(map.getClass())) {
-            map = new HashMap<>(map);
-        }
-        map.put(key, value);
-        return map;
+  public static <T> Set<T> removeSorted(Set<T> set, T element) {
+    final int size = set.size();
+    if (size == 0 || (size == 1 && set.contains(element))) {
+      return Collections.emptySet();
+    } else {
+      set.remove(element);
     }
+    return set;
+  }
 
-    public static <K,V> Map<K,V> copyOf(Map<K,V> map) {
-        if (isUnmodifiableType(map.getClass())) {
-            return map;
-        } else {
-            return new HashMap<>(map);
-        }
+  public static <T> Set<T> copyOfSorted(Set<T> set) {
+    if (isUnmodifiableType(set.getClass())) {
+      return set;
+    } else {
+      return new LinkedHashSet<>(set);
     }
+  }
 
-    private CollectionUtils() { }
+  public static <K, V> Map<K, V> put(Map<K, V> map, K key, V value) {
+    final int size = map.size();
+    if (size == 0) {
+      return Collections.singletonMap(key, value);
+    } else if (isUnmodifiableType(map.getClass())) {
+      map = new HashMap<>(map);
+    }
+    map.put(key, value);
+    return map;
+  }
 
+  public static <K, V> Map<K, V> copyOf(Map<K, V> map) {
+    if (isUnmodifiableType(map.getClass())) {
+      return map;
+    } else {
+      return new HashMap<>(map);
+    }
+  }
+
+  private CollectionUtils() {}
 }

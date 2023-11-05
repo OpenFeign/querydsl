@@ -13,121 +13,117 @@
  */
 package com.querydsl.sql;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.Query;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.*;
+import java.util.List;
+import java.util.stream.Stream;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Default implementation of the Union interface
  *
  * @param <T> result type
  * @param <Q> concrete query type
- *
  * @author tiwe
  */
-public class UnionImpl<T, Q extends ProjectableSQLQuery<T, Q> & Query<Q>>  implements Union<T> {
+public class UnionImpl<T, Q extends ProjectableSQLQuery<T, Q> & Query<Q>> implements Union<T> {
 
-    private final Q query;
+  private final Q query;
 
-    public UnionImpl(Q query) {
-        this.query = query;
-    }
+  public UnionImpl(Q query) {
+    this.query = query;
+  }
 
-    @Override
-    public List<T> list() {
-        return query.fetch();
-    }
+  @Override
+  public List<T> list() {
+    return query.fetch();
+  }
 
-    @Override
-    public List<T> fetch() {
-        return query.fetch();
-    }
+  @Override
+  public List<T> fetch() {
+    return query.fetch();
+  }
 
-    @Override
-    public T fetchFirst() {
-        return query.fetchFirst();
-    }
+  @Override
+  public T fetchFirst() {
+    return query.fetchFirst();
+  }
 
-    @Override
-    public T fetchOne() throws NonUniqueResultException {
-        return query.fetchOne();
-    }
+  @Override
+  public T fetchOne() throws NonUniqueResultException {
+    return query.fetchOne();
+  }
 
-    @Override
-    public CloseableIterator<T> iterate() {
-        return query.iterate();
-    }
+  @Override
+  public CloseableIterator<T> iterate() {
+    return query.iterate();
+  }
 
-    @Override
-    public Stream<T> stream() {
-        return query.stream();
-    }
+  @Override
+  public Stream<T> stream() {
+    return query.stream();
+  }
 
-    @Override
-    public QueryResults<T> fetchResults() {
-        return query.fetchResults();
-    }
+  @Override
+  public QueryResults<T> fetchResults() {
+    return query.fetchResults();
+  }
 
-    @Override
-    public long fetchCount() {
-        return query.fetchCount();
-    }
+  @Override
+  public long fetchCount() {
+    return query.fetchCount();
+  }
 
-    @Override
-    public Union<T> groupBy(Expression<?>... o) {
-        query.groupBy(o);
-        return this;
-    }
+  @Override
+  public Union<T> groupBy(Expression<?>... o) {
+    query.groupBy(o);
+    return this;
+  }
 
-    @Override
-    public Union<T> having(Predicate... o) {
-        query.having(o);
-        return this;
-    }
+  @Override
+  public Union<T> having(Predicate... o) {
+    query.having(o);
+    return this;
+  }
 
-    @Override
-    public Union<T> orderBy(OrderSpecifier<?>... o) {
-        query.orderBy(o);
-        return this;
-    }
+  @Override
+  public Union<T> orderBy(OrderSpecifier<?>... o) {
+    query.orderBy(o);
+    return this;
+  }
 
-    @Override
-    public Expression<T> as(String alias) {
-        return ExpressionUtils.as(this, alias);
-    }
+  @Override
+  public Expression<T> as(String alias) {
+    return ExpressionUtils.as(this, alias);
+  }
 
-    @Override
-    public Expression<T> as(Path<T> alias) {
-        return ExpressionUtils.as(this, alias);
-    }
+  @Override
+  public Expression<T> as(Path<T> alias) {
+    return ExpressionUtils.as(this, alias);
+  }
 
-    @Override
-    public String toString() {
-        return query.toString();
-    }
+  @Override
+  public String toString() {
+    return query.toString();
+  }
 
-    @Nullable
-    @Override
-    public <R, C> R accept(Visitor<R, C> v, @Nullable C context) {
-        return query.accept(v, context);
-    }
+  @Nullable
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, @Nullable C context) {
+    return query.accept(v, context);
+  }
 
-    @Override
-    public Class<? extends T> getType() {
-        return query.getType();
-    }
+  @Override
+  public Class<? extends T> getType() {
+    return query.getType();
+  }
 
-    @Override
-    public QueryMetadata getMetadata() {
-        return query.getMetadata();
-    }
-
+  @Override
+  public QueryMetadata getMetadata() {
+    return query.getMetadata();
+  }
 }

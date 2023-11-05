@@ -18,17 +18,16 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.mongodb.AbstractMongodbQuery;
+import java.util.function.Function;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
 import org.mongodb.morphia.mapping.cache.EntityCache;
 
-import java.util.function.Function;
-
 /**
  * {@code MorphiaQuery} extends {@link AbstractMongodbQuery} with Morphia specific transformations
  *
- * <p>Example</p>
+ * <p>Example
  *
  * <pre>{@code
  * QUser user = QUser.user;
@@ -39,52 +38,54 @@ import java.util.function.Function;
  * }</pre>
  *
  * @param <K> result type
- *
  * @author laimw
  * @author tiwe
- *
  */
 public class MorphiaQuery<K> extends AbstractMongodbQuery<K, MorphiaQuery<K>> {
 
-    private final EntityCache cache;
+  private final EntityCache cache;
 
-    private final Datastore datastore;
+  private final Datastore datastore;
 
-    public MorphiaQuery(Morphia morphia, Datastore datastore, EntityPath<K> entityPath) {
-        this(morphia, datastore, new DefaultEntityCache(), entityPath);
-    }
+  public MorphiaQuery(Morphia morphia, Datastore datastore, EntityPath<K> entityPath) {
+    this(morphia, datastore, new DefaultEntityCache(), entityPath);
+  }
 
-    public MorphiaQuery(Morphia morphia, Datastore datastore, Class<? extends K> entityType) {
-        this(morphia, datastore, new DefaultEntityCache(), entityType);
-    }
+  public MorphiaQuery(Morphia morphia, Datastore datastore, Class<? extends K> entityType) {
+    this(morphia, datastore, new DefaultEntityCache(), entityType);
+  }
 
-    public MorphiaQuery(Morphia morphia, Datastore datastore,
-            EntityCache cache, EntityPath<K> entityPath) {
-        this(morphia, datastore, cache, entityPath.getType());
-    }
+  public MorphiaQuery(
+      Morphia morphia, Datastore datastore, EntityCache cache, EntityPath<K> entityPath) {
+    this(morphia, datastore, cache, entityPath.getType());
+  }
 
-    public MorphiaQuery(final Morphia morphia, final Datastore datastore,
-                        final EntityCache cache, final Class<? extends K> entityType) {
-        super(datastore.getCollection(entityType), new Function<DBObject, K>() {
-            @Override
-            public K apply(DBObject dbObject) {
-                return morphia.fromDBObject(datastore, entityType, dbObject, cache);
-            }
-        }, new MorphiaSerializer(morphia));
-        this.datastore = datastore;
-        this.cache = cache;
-    }
+  public MorphiaQuery(
+      final Morphia morphia,
+      final Datastore datastore,
+      final EntityCache cache,
+      final Class<? extends K> entityType) {
+    super(
+        datastore.getCollection(entityType),
+        new Function<DBObject, K>() {
+          @Override
+          public K apply(DBObject dbObject) {
+            return morphia.fromDBObject(datastore, entityType, dbObject, cache);
+          }
+        },
+        new MorphiaSerializer(morphia));
+    this.datastore = datastore;
+    this.cache = cache;
+  }
 
+  @Override
+  protected DBCursor createCursor() {
+    cache.flush();
+    return super.createCursor();
+  }
 
-    @Override
-    protected DBCursor createCursor() {
-        cache.flush();
-        return super.createCursor();
-    }
-
-    @Override
-    protected DBCollection getCollection(Class<?> type) {
-        return datastore.getCollection(type);
-    }
-
+  @Override
+  protected DBCollection getCollection(Class<?> type) {
+    return datastore.getCollection(type);
+  }
 }

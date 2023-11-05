@@ -14,23 +14,17 @@
 package com.querydsl.jpa.domain;
 
 import java.util.Collection;
-
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-/**
- * The Class Payment.
- */
+/** The Class Payment. */
 @Entity
 public class Payment extends Item {
-    @ManyToOne
-    Status currentStatus, status;
+  @ManyToOne Status currentStatus, status;
 
-    @Enumerated
-    PaymentStatus paymentStatus;
+  @Enumerated PaymentStatus paymentStatus;
 
-    @OneToMany
-    Collection<StatusChange> statusChanges;
+  @OneToMany Collection<StatusChange> statusChanges;
 }

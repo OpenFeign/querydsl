@@ -16,30 +16,26 @@ package com.querydsl.sql;
 import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
-
+import jdepend.framework.JDepend;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import jdepend.framework.JDepend;
-
 public class DependenciesTest {
 
-    @Test
-    @Ignore
-    public void test() throws IOException {
-        JDepend jdepend = new JDepend();
-        jdepend.addDirectory("target/classes/com/querydsl/sql");
-        jdepend.addDirectory("target/classes/com/querydsl/sql/ddl");
-        jdepend.addDirectory("target/classes/com/querydsl/sql/dml");
-        jdepend.addDirectory("target/classes/com/querydsl/sql/mssql");
-        jdepend.addDirectory("target/classes/com/querydsl/sql/mysql");
-        jdepend.addDirectory("target/classes/com/querydsl/sql/oracle");
-        jdepend.addDirectory("target/classes/com/querydsl/sql/support");
-        jdepend.addDirectory("target/classes/com/querydsl/sql/types");
+  @Test
+  @Ignore
+  public void test() throws IOException {
+    JDepend jdepend = new JDepend();
+    jdepend.addDirectory("target/classes/com/querydsl/sql");
+    jdepend.addDirectory("target/classes/com/querydsl/sql/ddl");
+    jdepend.addDirectory("target/classes/com/querydsl/sql/dml");
+    jdepend.addDirectory("target/classes/com/querydsl/sql/mssql");
+    jdepend.addDirectory("target/classes/com/querydsl/sql/mysql");
+    jdepend.addDirectory("target/classes/com/querydsl/sql/oracle");
+    jdepend.addDirectory("target/classes/com/querydsl/sql/support");
+    jdepend.addDirectory("target/classes/com/querydsl/sql/types");
 
-        jdepend.analyze();
-        assertFalse(jdepend.containsCycles());
-
-    }
-
+    jdepend.analyze();
+    assertFalse(jdepend.containsCycles());
+  }
 }

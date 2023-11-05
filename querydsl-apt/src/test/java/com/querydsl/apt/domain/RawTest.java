@@ -1,29 +1,24 @@
 package com.querydsl.apt.domain;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
+import org.junit.Test;
 
 public class RawTest {
 
-    @QuerySupertype
-    public static class SuperClass<T extends Comparable<T>> {
+  @QuerySupertype
+  public static class SuperClass<T extends Comparable<T>> {
 
-        public String property;
+    public String property;
+  }
 
-    }
+  @SuppressWarnings("rawtypes")
+  @QueryEntity
+  public static class Entity extends SuperClass {
 
-    @SuppressWarnings("rawtypes")
-    @QueryEntity
-    public static class Entity extends SuperClass {
+    public String property2;
+  }
 
-        public String property2;
-    }
-
-    @Test
-    public void test() {
-
-    }
-
+  @Test
+  public void test() {}
 }

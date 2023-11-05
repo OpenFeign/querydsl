@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * JDBC schema inspection based code generation
- */
+/** JDBC schema inspection based code generation */
 package com.querydsl.sql.codegen;

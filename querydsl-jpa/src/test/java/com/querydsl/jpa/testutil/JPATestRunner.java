@@ -13,14 +13,14 @@
  */
 package com.querydsl.jpa.testutil;
 
+import com.querydsl.jpa.JPATest;
+import com.querydsl.jpa.Mode;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
 import org.junit.Assert;
 import org.junit.rules.MethodRule;
 import org.junit.runner.Description;
@@ -31,106 +31,106 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
-import com.querydsl.jpa.JPATest;
-import com.querydsl.jpa.Mode;
-
 /**
  * @author tiwe
- *
  */
 public class JPATestRunner extends BlockJUnit4ClassRunner {
 
-    private EntityManagerFactory entityManagerFactory;
+  private EntityManagerFactory entityManagerFactory;
 
-    private EntityManager entityManager;
+  private EntityManager entityManager;
 
-    private boolean isDerby;
+  private boolean isDerby;
 
-    public JPATestRunner(Class<?> klass) throws InitializationError {
-        super(klass);
-    }
+  public JPATestRunner(Class<?> klass) throws InitializationError {
+    super(klass);
+  }
 
-    @Override
-    protected List<MethodRule> rules(Object test) {
-        Assert.assertTrue(String.format("In order to use the %s for %s, it should (directly or indirectly) implement %s",
-                JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class), test instanceof JPATest);
+  @Override
+  protected List<MethodRule> rules(Object test) {
+    Assert.assertTrue(
+        String.format(
+            "In order to use the %s for %s, it should (directly or indirectly) implement %s",
+            JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class),
+        test instanceof JPATest);
 
-        List<MethodRule> rules = super.rules(test);
-        rules.add(new MethodRule() {
-            @Override
-            public Statement apply(final Statement base, FrameworkMethod method, final Object target) {
-                return new Statement() {
-                    @Override
-                    public void evaluate() throws Throwable {
-                        ((JPATest) target).setEntityManager(entityManager);
-                        base.evaluate();
-                    }
-                };
-            }
-
+    List<MethodRule> rules = super.rules(test);
+    rules.add(
+        new MethodRule() {
+          @Override
+          public Statement apply(
+              final Statement base, FrameworkMethod method, final Object target) {
+            return new Statement() {
+              @Override
+              public void evaluate() throws Throwable {
+                ((JPATest) target).setEntityManager(entityManager);
+                base.evaluate();
+              }
+            };
+          }
         });
-        return rules;
+    return rules;
+  }
+
+  @Override
+  public void run(final RunNotifier notifier) {
+    try {
+      start();
+      super.run(notifier);
+    } catch (Exception e) {
+      e.printStackTrace();
+      Failure failure =
+          new Failure(Description.createSuiteDescription(getTestClass().getJavaClass()), e);
+      notifier.fireTestFailure(failure);
+    } finally {
+      shutdown();
+    }
+  }
+
+  private void start() throws Exception {
+    String mode = Mode.mode.get();
+    if (mode == null) {
+      mode = "h2perf";
+    }
+    System.out.println(mode);
+    isDerby = mode.contains("derby");
+    if (isDerby) {
+      Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+    }
+    entityManagerFactory = Persistence.createEntityManagerFactory(mode);
+    entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+  }
+
+  private void shutdown() {
+    if (entityManager != null) {
+      try {
+        if (entityManager.getTransaction().isActive()) {
+          entityManager.getTransaction().rollback();
+        }
+      } finally {
+        entityManager.close();
+        entityManager = null;
+      }
     }
 
-    @Override
-    public void run(final RunNotifier notifier) {
-        try {
-            start();
-            super.run(notifier);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Failure failure = new Failure(Description.createSuiteDescription(getTestClass().getJavaClass()), e);
-            notifier.fireTestFailure(failure);
-        } finally {
-            shutdown();
-        }
-
+    if (entityManagerFactory != null) {
+      if (entityManagerFactory.getCache() != null) {
+        entityManagerFactory.getCache().evictAll();
+      }
+      entityManagerFactory.close();
+      entityManagerFactory = null;
     }
 
-    private void start() throws Exception {
-        String mode = Mode.mode.get();
-        if (mode == null) {
-            mode = "h2perf";
+    // clean shutdown of derby
+    if (isDerby) {
+      try {
+        DriverManager.getConnection("jdbc:derby:;shutdown=true");
+      } catch (SQLException e) {
+        if (!e.getMessage().equals("Derby system shutdown.")) {
+          throw new RuntimeException(e);
         }
-        System.out.println(mode);
-        isDerby = mode.contains("derby");
-        if (isDerby) {
-            Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
-        }
-        entityManagerFactory = Persistence.createEntityManagerFactory(mode);
-        entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
+      }
     }
-
-    private void shutdown() {
-        if (entityManager != null) {
-            try {
-                if (entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().rollback();
-                }
-            } finally {
-                entityManager.close();
-                entityManager = null;
-            }
-        }
-
-        if (entityManagerFactory != null) {
-            if (entityManagerFactory.getCache() != null) {
-                entityManagerFactory.getCache().evictAll();
-            }
-            entityManagerFactory.close();
-            entityManagerFactory = null;
-        }
-
-        // clean shutdown of derby
-        if (isDerby) {
-            try {
-                DriverManager.getConnection("jdbc:derby:;shutdown=true");
-            } catch (SQLException e) {
-                if (!e.getMessage().equals("Derby system shutdown.")) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
+  }
 }

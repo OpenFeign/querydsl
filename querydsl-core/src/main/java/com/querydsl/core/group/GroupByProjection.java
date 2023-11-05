@@ -13,39 +13,37 @@
  */
 package com.querydsl.core.group;
 
+import com.querydsl.core.types.Expression;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import com.querydsl.core.types.Expression;
 
 /**
  * GroupByProjection provides projection of the Group results via the transform template method
  *
  * @author tiwe
- *
  * @param <K>
  * @param <V>
  */
-public abstract class GroupByProjection<K,V> extends GroupByMap<K,V> {
+public abstract class GroupByProjection<K, V> extends GroupByMap<K, V> {
 
-    public GroupByProjection(Expression<K> key, Expression<?>... expressions) {
-        super(key, expressions);
+  public GroupByProjection(Expression<K> key, Expression<?>... expressions) {
+    super(key, expressions);
+  }
+
+  @Override
+  protected Map<K, V> transform(Map<K, Group> groups) {
+    Map<K, V> results = new LinkedHashMap<K, V>((int) Math.ceil(groups.size() / 0.75), 0.75f);
+    for (Map.Entry<K, Group> entry : groups.entrySet()) {
+      results.put(entry.getKey(), transform(entry.getValue()));
     }
+    return results;
+  }
 
-    @Override
-    protected Map<K, V> transform(Map<K, Group> groups) {
-        Map<K, V> results = new LinkedHashMap<K, V>((int) Math.ceil(groups.size() / 0.75), 0.75f);
-        for (Map.Entry<K, Group> entry : groups.entrySet()) {
-            results.put(entry.getKey(), transform(entry.getValue()));
-        }
-        return results;
-    }
-
-    /**
-     * Creates a result object from the given group
-     *
-     * @param group group instance to transform
-     * @return transformed group
-     */
-    protected abstract V transform(Group group);
+  /**
+   * Creates a result object from the given group
+   *
+   * @param group group instance to transform
+   * @return transformed group
+   */
+  protected abstract V transform(Group group);
 }

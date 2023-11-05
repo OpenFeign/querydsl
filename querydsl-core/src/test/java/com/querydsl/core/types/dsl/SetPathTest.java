@@ -15,31 +15,29 @@ package com.querydsl.core.types.dsl;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.PathMetadataFactory;
+import org.junit.Test;
 
 public class SetPathTest {
 
-    private SetPath<String,StringPath> stringPath = new SetPath<String,StringPath>(
-            String.class, StringPath.class,
-            PathMetadataFactory.forVariable("stringPath"));
+  private SetPath<String, StringPath> stringPath =
+      new SetPath<String, StringPath>(
+          String.class, StringPath.class, PathMetadataFactory.forVariable("stringPath"));
 
-    @Test
-    public void toString_() {
-        assertEquals("stringPath", stringPath.toString());
-        assertEquals("any(stringPath)", stringPath.any().toString());
-        assertEquals("eqIc(any(stringPath),X)", stringPath.any().equalsIgnoreCase("X").toString());
-    }
+  @Test
+  public void toString_() {
+    assertEquals("stringPath", stringPath.toString());
+    assertEquals("any(stringPath)", stringPath.any().toString());
+    assertEquals("eqIc(any(stringPath),X)", stringPath.any().equalsIgnoreCase("X").toString());
+  }
 
-    @Test
-    public void getElementType() {
-        assertEquals(String.class, stringPath.getElementType());
-    }
+  @Test
+  public void getElementType() {
+    assertEquals(String.class, stringPath.getElementType());
+  }
 
-    @Test
-    public void getParameter() {
-        assertEquals(String.class, stringPath.getParameter(0));
-    }
-
+  @Test
+  public void getParameter() {
+    assertEquals(String.class, stringPath.getParameter(0));
+  }
 }

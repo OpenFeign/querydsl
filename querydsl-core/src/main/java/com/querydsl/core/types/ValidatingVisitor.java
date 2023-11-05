@@ -15,118 +15,116 @@ package com.querydsl.core.types;
 
 import static com.querydsl.core.util.CollectionUtils.add;
 
-import java.io.Serializable;
-import java.util.Set;
-
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.QueryMetadata;
+import java.io.Serializable;
+import java.util.Set;
 
 /**
  * {@code ValidatingVisitor} visits expressions and ensures that only known path instances are used
  *
  * @author tiwe
- *
  */
-public final class ValidatingVisitor implements Visitor<Set<Expression<?>>, Set<Expression<?>>>, Serializable {
+public final class ValidatingVisitor
+    implements Visitor<Set<Expression<?>>, Set<Expression<?>>>, Serializable {
 
-    private static final long serialVersionUID = 691350069621050872L;
+  private static final long serialVersionUID = 691350069621050872L;
 
-    public static final ValidatingVisitor DEFAULT = new ValidatingVisitor();
+  public static final ValidatingVisitor DEFAULT = new ValidatingVisitor();
 
-    private final String errorTemplate;
+  private final String errorTemplate;
 
-    public ValidatingVisitor() {
-        this.errorTemplate = "Undeclared path '%s'. Add this path as a source to the query to be able to reference it.";
+  public ValidatingVisitor() {
+    this.errorTemplate =
+        "Undeclared path '%s'. Add this path as a source to the query to be able to reference it.";
+  }
+
+  public ValidatingVisitor(String errorTemplate) {
+    this.errorTemplate = errorTemplate;
+  }
+
+  @Override
+  public Set<Expression<?>> visit(Constant<?> expr, Set<Expression<?>> known) {
+    return known;
+  }
+
+  @Override
+  public Set<Expression<?>> visit(FactoryExpression<?> expr, Set<Expression<?>> known) {
+    for (Expression<?> arg : expr.getArgs()) {
+      known = arg.accept(this, known);
     }
+    return known;
+  }
 
-    public ValidatingVisitor(String errorTemplate) {
-        this.errorTemplate = errorTemplate;
+  @Override
+  public Set<Expression<?>> visit(Operation<?> expr, Set<Expression<?>> known) {
+    if (expr.getOperator() == Ops.ALIAS) {
+      known = add(known, expr.getArg(1));
     }
-
-    @Override
-    public Set<Expression<?>> visit(Constant<?> expr, Set<Expression<?>> known) {
-        return known;
+    for (Expression<?> arg : expr.getArgs()) {
+      known = arg.accept(this, known);
     }
+    return known;
+  }
 
-    @Override
-    public Set<Expression<?>> visit(FactoryExpression<?> expr, Set<Expression<?>> known) {
-        for (Expression<?> arg : expr.getArgs()) {
-            known = arg.accept(this, known);
-        }
-        return known;
+  @Override
+  public Set<Expression<?>> visit(ParamExpression<?> expr, Set<Expression<?>> known) {
+    return known;
+  }
+
+  @Override
+  public Set<Expression<?>> visit(Path<?> expr, Set<Expression<?>> known) {
+    if (!known.contains(expr.getRoot())) {
+      throw new IllegalArgumentException(String.format(errorTemplate, expr.getRoot()));
     }
+    return known;
+  }
 
-    @Override
-    public Set<Expression<?>> visit(Operation<?> expr, Set<Expression<?>> known) {
-        if (expr.getOperator() == Ops.ALIAS) {
-            known = add(known, expr.getArg(1));
-        }
-        for (Expression<?> arg : expr.getArgs()) {
-            known = arg.accept(this, known);
-        }
-        return known;
+  @Override
+  public Set<Expression<?>> visit(SubQueryExpression<?> expr, Set<Expression<?>> known) {
+    Set<Expression<?>> old = known;
+    final QueryMetadata md = expr.getMetadata();
+    known = visitJoins(md.getJoins(), known);
+    if (md.getProjection() != null) {
+      known = md.getProjection().accept(this, known);
     }
-
-    @Override
-    public Set<Expression<?>> visit(ParamExpression<?> expr, Set<Expression<?>> known) {
-        return known;
+    for (OrderSpecifier<?> o : md.getOrderBy()) {
+      known = o.getTarget().accept(this, known);
     }
-
-    @Override
-    public Set<Expression<?>> visit(Path<?> expr, Set<Expression<?>> known) {
-        if (!known.contains(expr.getRoot())) {
-            throw new IllegalArgumentException(String.format(errorTemplate,  expr.getRoot()));
-        }
-        return known;
+    for (Expression<?> g : md.getGroupBy()) {
+      known = g.accept(this, known);
     }
-
-    @Override
-    public Set<Expression<?>> visit(SubQueryExpression<?> expr, Set<Expression<?>> known) {
-        Set<Expression<?>> old = known;
-        final QueryMetadata md = expr.getMetadata();
-        known = visitJoins(md.getJoins(), known);
-        if (md.getProjection() != null) {
-            known = md.getProjection().accept(this, known);
-        }
-        for (OrderSpecifier<?> o : md.getOrderBy()) {
-            known = o.getTarget().accept(this, known);
-        }
-        for (Expression<?> g : md.getGroupBy()) {
-            known = g.accept(this, known);
-        }
-        if (md.getHaving() != null) {
-            known = md.getHaving().accept(this, known);
-        }
-        if (md.getWhere() != null) {
-            known = md.getWhere().accept(this, known);
-        }
-        return old;
+    if (md.getHaving() != null) {
+      known = md.getHaving().accept(this, known);
     }
-
-
-    @Override
-    public Set<Expression<?>> visit(TemplateExpression<?> expr, Set<Expression<?>> known) {
-        for (Object arg : expr.getArgs()) {
-            if (arg instanceof Expression<?>) {
-                known = ((Expression<?>) arg).accept(this, known);
-            }
-        }
-        return known;
+    if (md.getWhere() != null) {
+      known = md.getWhere().accept(this, known);
     }
+    return old;
+  }
 
-    private Set<Expression<?>> visitJoins(Iterable<JoinExpression> joins, Set<Expression<?>> known) {
-        for (JoinExpression j : joins) {
-            final Expression<?> expr = j.getTarget();
-            if (expr instanceof Path && ((Path) expr).getMetadata().isRoot()) {
-                known = add(known, expr);
-            } else {
-                known = expr.accept(this, known);
-            }
-            if (j.getCondition() != null) {
-                known = j.getCondition().accept(this, known);
-            }
-        }
-        return known;
+  @Override
+  public Set<Expression<?>> visit(TemplateExpression<?> expr, Set<Expression<?>> known) {
+    for (Object arg : expr.getArgs()) {
+      if (arg instanceof Expression<?>) {
+        known = ((Expression<?>) arg).accept(this, known);
+      }
     }
+    return known;
+  }
 
+  private Set<Expression<?>> visitJoins(Iterable<JoinExpression> joins, Set<Expression<?>> known) {
+    for (JoinExpression j : joins) {
+      final Expression<?> expr = j.getTarget();
+      if (expr instanceof Path && ((Path) expr).getMetadata().isRoot()) {
+        known = add(known, expr);
+      } else {
+        known = expr.accept(this, known);
+      }
+      if (j.getCondition() != null) {
+        known = j.getCondition().accept(this, known);
+      }
+    }
+    return known;
+  }
 }

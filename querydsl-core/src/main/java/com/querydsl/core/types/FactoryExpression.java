@@ -14,33 +14,30 @@
 package com.querydsl.core.types;
 
 import java.util.List;
-
 import org.jetbrains.annotations.Nullable;
 
 /**
- * {@code FactoryExpression} represents factory expressions such as JavaBean or
- * Constructor projections
+ * {@code FactoryExpression} represents factory expressions such as JavaBean or Constructor
+ * projections
  *
  * @author tiwe
- *
  * @param <T> type of projection
  */
 public interface FactoryExpression<T> extends Expression<T> {
 
-    /**
-     * Get the invocation arguments
-     *
-     * @return argument expressions
-     */
-    List<Expression<?>> getArgs();
+  /**
+   * Get the invocation arguments
+   *
+   * @return argument expressions
+   */
+  List<Expression<?>> getArgs();
 
-    /**
-     * Create a projection with the given arguments
-     *
-     * @param args row arguments
-     * @return constructed value
-     */
-    @Nullable
-    T newInstance(Object... args);
-
+  /**
+   * Create a projection with the given arguments
+   *
+   * @param args row arguments
+   * @return constructed value
+   */
+  @Nullable
+  T newInstance(Object... args);
 }

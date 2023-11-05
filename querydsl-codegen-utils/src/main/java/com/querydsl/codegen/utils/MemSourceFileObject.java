@@ -1,6 +1,6 @@
 /*
  * Copyright 2010, Mysema Ltd
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,60 +16,56 @@ package com.querydsl.codegen.utils;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
-
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 
 /**
  * MemSourceFileObject defines a in-memory Java source file object
- * 
+ *
  * @author tiwe
- * 
  */
 public class MemSourceFileObject extends SimpleJavaFileObject {
 
-    private static URI toUri(String fqname) {
-        return URI.create("file:///" + fqname.replace(".", "/") + ".java");
-    }
+  private static URI toUri(String fqname) {
+    return URI.create("file:///" + fqname.replace(".", "/") + ".java");
+  }
 
-    private final StringBuilder contents;
+  private final StringBuilder contents;
 
-    public MemSourceFileObject(String fullName) {
-        super(toUri(fullName), JavaFileObject.Kind.SOURCE);
-        contents = new StringBuilder(1000);
-    }
+  public MemSourceFileObject(String fullName) {
+    super(toUri(fullName), JavaFileObject.Kind.SOURCE);
+    contents = new StringBuilder(1000);
+  }
 
-    public MemSourceFileObject(String fullName, String content) {
-        this(fullName);
-        contents.append(content);
-    }
+  public MemSourceFileObject(String fullName, String content) {
+    this(fullName);
+    contents.append(content);
+  }
 
-    @Override
-    public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-        return contents;
-    }
+  @Override
+  public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+    return contents;
+  }
 
-    @Override
-    public Writer openWriter() {
-        return new Writer() {
-            @Override
-            public Writer append(CharSequence csq) throws IOException {
-                contents.append(csq);
-                return this;
-            }
+  @Override
+  public Writer openWriter() {
+    return new Writer() {
+      @Override
+      public Writer append(CharSequence csq) throws IOException {
+        contents.append(csq);
+        return this;
+      }
 
-            @Override
-            public void close() {
-            }
+      @Override
+      public void close() {}
 
-            @Override
-            public void flush() {
-            }
+      @Override
+      public void flush() {}
 
-            @Override
-            public void write(char[] cbuf, int off, int len) throws IOException {
-                contents.append(cbuf, off, len);
-            }
-        };
-    }
+      @Override
+      public void write(char[] cbuf, int off, int len) throws IOException {
+        contents.append(cbuf, off, len);
+      }
+    };
+  }
 }

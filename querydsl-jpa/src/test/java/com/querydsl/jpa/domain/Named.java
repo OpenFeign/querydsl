@@ -17,14 +17,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * The Class Named.
- */
+/** The Class Named. */
 @Entity
 @Table(name = "named_")
 public class Named {
-    @Id
-    long id;
+  @Id long id;
 
-    String name;
+  String name;
 }

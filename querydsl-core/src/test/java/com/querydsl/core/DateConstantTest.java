@@ -15,29 +15,26 @@ package com.querydsl.core;
 
 import static org.junit.Assert.assertEquals;
 
+import com.querydsl.core.types.dsl.DateExpression;
 import java.sql.Date;
 import java.util.Calendar;
-
 import org.junit.Test;
-
-import com.querydsl.core.types.dsl.DateExpression;
 
 public class DateConstantTest {
 
-    @Test
-    public void test() {
-        // 1.1.2000
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        cal.set(Calendar.MONTH, 0);
-        cal.set(Calendar.YEAR,  2000);
+  @Test
+  public void test() {
+    // 1.1.2000
+    Calendar cal = Calendar.getInstance();
+    cal.set(Calendar.DAY_OF_MONTH, 1);
+    cal.set(Calendar.MONTH, 0);
+    cal.set(Calendar.YEAR, 2000);
 
-        DateExpression<Date> date = DateConstant.create(new Date(cal.getTimeInMillis()));
-        assertEquals("1",   date.dayOfMonth().toString());
-        assertEquals("1",   date.month().toString());
-        assertEquals("2000",date.year().toString());
-        assertEquals("7", date.dayOfWeek().toString());
-        assertEquals("1", date.dayOfYear().toString());
-    }
-
+    DateExpression<Date> date = DateConstant.create(new Date(cal.getTimeInMillis()));
+    assertEquals("1", date.dayOfMonth().toString());
+    assertEquals("1", date.month().toString());
+    assertEquals("2000", date.year().toString());
+    assertEquals("7", date.dayOfWeek().toString());
+    assertEquals("1", date.dayOfYear().toString());
+  }
 }

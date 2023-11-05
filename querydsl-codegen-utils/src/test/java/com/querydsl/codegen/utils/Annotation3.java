@@ -12,10 +12,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ TYPE })
+@Target({TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Annotation3 {
 
-    ElementType type();
-
+  ElementType type();
 }

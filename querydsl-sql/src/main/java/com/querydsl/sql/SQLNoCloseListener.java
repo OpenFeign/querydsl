@@ -14,23 +14,22 @@
 package com.querydsl.sql;
 
 /**
- *  SQLNoCloseListener can be used to block {@link SQLCloseListener} from closing the connection, useful for
- *  helper query executions
+ * SQLNoCloseListener can be used to block {@link SQLCloseListener} from closing the connection,
+ * useful for helper query executions
  */
 public final class SQLNoCloseListener extends SQLBaseListener {
 
-    public static final SQLNoCloseListener DEFAULT = new SQLNoCloseListener();
+  public static final SQLNoCloseListener DEFAULT = new SQLNoCloseListener();
 
-    private SQLNoCloseListener() { }
+  private SQLNoCloseListener() {}
 
-    @Override
-    public void start(SQLListenerContext context) {
-        context.setData(AbstractSQLQuery.PARENT_CONTEXT, context);
-    }
+  @Override
+  public void start(SQLListenerContext context) {
+    context.setData(AbstractSQLQuery.PARENT_CONTEXT, context);
+  }
 
-    @Override
-    public void end(SQLListenerContext context) {
-        context.setData(AbstractSQLQuery.PARENT_CONTEXT, null);
-    }
-
+  @Override
+  public void end(SQLListenerContext context) {
+    context.setData(AbstractSQLQuery.PARENT_CONTEXT, null);
+  }
 }

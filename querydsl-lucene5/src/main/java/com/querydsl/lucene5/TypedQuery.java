@@ -13,51 +13,40 @@
  */
 package com.querydsl.lucene5;
 
+import java.util.function.Function;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.IndexSearcher;
-
-import java.util.function.Function;
 
 /**
  * {@code TypedQuery} is a typed query implementation for Lucene queries.
  *
- * <p>
- * Converts Lucene documents to typed results via a constructor supplied
- * transformer
- * </p>
+ * <p>Converts Lucene documents to typed results via a constructor supplied transformer
  *
  * @param <T> result type
- *
  * @author laim
  * @author tiwe
  */
 public class TypedQuery<T> extends AbstractLuceneQuery<T, TypedQuery<T>> {
 
-    /**
-     * Create a new TypedQuery instance
-     *
-     * @param searcher
-     *            index searcher
-     * @param transformer
-     *            transformer to transform Lucene documents to result objects
-     */
-    public TypedQuery(IndexSearcher searcher, Function<Document, T> transformer) {
-        super(searcher, transformer);
-    }
+  /**
+   * Create a new TypedQuery instance
+   *
+   * @param searcher index searcher
+   * @param transformer transformer to transform Lucene documents to result objects
+   */
+  public TypedQuery(IndexSearcher searcher, Function<Document, T> transformer) {
+    super(searcher, transformer);
+  }
 
-    /**
-     * Create a new TypedQuery instance
-     *
-     * @param serializer
-     *            serializer
-     * @param searcher
-     *            index searcher
-     * @param transformer
-     *            transformer to transform Lucene documents to result objects
-     */
-    public TypedQuery(LuceneSerializer serializer, IndexSearcher searcher,
-            Function<Document, T> transformer) {
-        super(serializer, searcher, transformer);
-    }
-
+  /**
+   * Create a new TypedQuery instance
+   *
+   * @param serializer serializer
+   * @param searcher index searcher
+   * @param transformer transformer to transform Lucene documents to result objects
+   */
+  public TypedQuery(
+      LuceneSerializer serializer, IndexSearcher searcher, Function<Document, T> transformer) {
+    super(serializer, searcher, transformer);
+  }
 }

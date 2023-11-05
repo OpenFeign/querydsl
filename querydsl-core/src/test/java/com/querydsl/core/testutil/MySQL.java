@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface MySQL extends ExternalDatabase {
-}
+public interface MySQL extends ExternalDatabase {}

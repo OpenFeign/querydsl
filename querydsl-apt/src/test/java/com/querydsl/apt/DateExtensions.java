@@ -13,20 +13,18 @@
  */
 package com.querydsl.apt;
 
-import java.sql.Date;
-
 import com.querydsl.core.annotations.QueryDelegate;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.DateExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import java.sql.Date;
 
 public final class DateExtensions {
 
-    private DateExtensions() { }
+  private DateExtensions() {}
 
-    @QueryDelegate(Date.class)
-    public static Predicate extension(DateExpression<Date> date) {
-        return Expressions.booleanPath("b");
-    }
-
+  @QueryDelegate(Date.class)
+  public static Predicate extension(DateExpression<Date> date) {
+    return Expressions.booleanPath("b");
+  }
 }

@@ -15,11 +15,9 @@ package com.querydsl.jpa.domain;
 
 import javax.persistence.Entity;
 
-/**
- * The Class Product.
- */
+/** The Class Product. */
 @Entity
 public class Product extends Item {
-    // @Id long id;
-    String name;
+  // @Id long id;
+  String name;
 }

@@ -1,4 +1,3 @@
 package com.suntanning;
 
-public class ShouldBeLoaded {
-}
+public class ShouldBeLoaded {}

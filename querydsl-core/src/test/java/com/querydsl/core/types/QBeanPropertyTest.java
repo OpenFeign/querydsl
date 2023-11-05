@@ -15,58 +15,60 @@ package com.querydsl.core.types;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.dsl.PathBuilder;
+import org.junit.Test;
 
 public class QBeanPropertyTest {
 
-    public static class Entity {
+  public static class Entity {
 
-        private Integer cId;
+    private Integer cId;
 
-        private Integer eId;
+    private Integer eId;
 
-        public Integer getcId() {
-            return cId;
-        }
-
-        public void setcId(Integer cId) {
-            this.cId = cId;
-        }
-
-        public Integer geteId() {
-            return eId;
-        }
-
-        public void seteId(Integer eId) {
-            this.eId = eId;
-        }
-
+    public Integer getcId() {
+      return cId;
     }
 
-    @Test
-    public void field_access() {
-        PathBuilder<Entity> entity = new PathBuilder<Entity>(Entity.class, "entity");
-        QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true,
-                entity.getNumber("cId",Integer.class),
-                entity.getNumber("eId", Integer.class));
-
-        Entity bean = beanProjection.newInstance(1,2);
-        assertEquals(Integer.valueOf(1), bean.getcId());
-        assertEquals(Integer.valueOf(2), bean.geteId());
+    public void setcId(Integer cId) {
+      this.cId = cId;
     }
 
-    @Test
-    public void property_access() {
-        PathBuilder<Entity> entity = new PathBuilder<Entity>(Entity.class, "entity");
-        QBean<Entity> beanProjection = new QBean<Entity>(Entity.class,
-                entity.getNumber("cId",Integer.class),
-                entity.getNumber("eId", Integer.class));
-
-        Entity bean = beanProjection.newInstance(1,2);
-        assertEquals(Integer.valueOf(1), bean.getcId());
-        assertEquals(Integer.valueOf(2), bean.geteId());
+    public Integer geteId() {
+      return eId;
     }
 
+    public void seteId(Integer eId) {
+      this.eId = eId;
+    }
+  }
+
+  @Test
+  public void field_access() {
+    PathBuilder<Entity> entity = new PathBuilder<Entity>(Entity.class, "entity");
+    QBean<Entity> beanProjection =
+        new QBean<Entity>(
+            Entity.class,
+            true,
+            entity.getNumber("cId", Integer.class),
+            entity.getNumber("eId", Integer.class));
+
+    Entity bean = beanProjection.newInstance(1, 2);
+    assertEquals(Integer.valueOf(1), bean.getcId());
+    assertEquals(Integer.valueOf(2), bean.geteId());
+  }
+
+  @Test
+  public void property_access() {
+    PathBuilder<Entity> entity = new PathBuilder<Entity>(Entity.class, "entity");
+    QBean<Entity> beanProjection =
+        new QBean<Entity>(
+            Entity.class,
+            entity.getNumber("cId", Integer.class),
+            entity.getNumber("eId", Integer.class));
+
+    Entity bean = beanProjection.newInstance(1, 2);
+    assertEquals(Integer.valueOf(1), bean.getcId());
+    assertEquals(Integer.valueOf(2), bean.geteId());
+  }
 }

@@ -19,44 +19,40 @@ import org.jetbrains.annotations.Nullable;
  * {@code ExpressionBase} is the base class for immutable {@link Expression} implementations
  *
  * @author tiwe
- *
  * @param <T> expression type
  */
 public abstract class ExpressionBase<T> implements Expression<T> {
 
-    private static final long serialVersionUID = -8862014178653364345L;
+  private static final long serialVersionUID = -8862014178653364345L;
 
-    private final Class<? extends T> type;
+  private final Class<? extends T> type;
 
-    @Nullable
-    private transient volatile String toString;
+  @Nullable private transient volatile String toString;
 
-    @Nullable
-    private transient volatile Integer hashCode;
+  @Nullable private transient volatile Integer hashCode;
 
-    public ExpressionBase(Class<? extends T> type) {
-        this.type = type;
+  public ExpressionBase(Class<? extends T> type) {
+    this.type = type;
+  }
+
+  @Override
+  public final Class<? extends T> getType() {
+    return type;
+  }
+
+  @Override
+  public final int hashCode() {
+    if (hashCode == null) {
+      hashCode = accept(HashCodeVisitor.DEFAULT, null);
     }
+    return hashCode;
+  }
 
-    @Override
-    public final Class<? extends T> getType() {
-        return type;
+  @Override
+  public final String toString() {
+    if (toString == null) {
+      toString = accept(ToStringVisitor.DEFAULT, Templates.DEFAULT);
     }
-
-    @Override
-    public final int hashCode() {
-        if (hashCode == null) {
-            hashCode = accept(HashCodeVisitor.DEFAULT, null);
-        }
-        return hashCode;
-    }
-
-    @Override
-    public final String toString() {
-        if (toString == null) {
-            toString = accept(ToStringVisitor.DEFAULT, Templates.DEFAULT);
-        }
-        return toString;
-    }
-
+    return toString;
+  }
 }

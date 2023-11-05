@@ -14,72 +14,59 @@
 package com.querydsl.apt.domain;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
-
 import org.junit.Test;
 
 public class Embedded2Test {
 
-    @MappedSuperclass
-    public static class EntityCode {
+  @MappedSuperclass
+  public static class EntityCode {
 
-        @Column(name = "code", unique = true)
-        String code;
+    @Column(name = "code", unique = true)
+    String code;
+  }
 
-    }
+  @MappedSuperclass
+  public abstract static class AbstractEntity<C extends EntityCode> {
 
-    @MappedSuperclass
-    public abstract static class AbstractEntity<C extends EntityCode> {
+    @Embedded
+    @Column(name = "code", nullable = false, unique = true)
+    C code;
+  }
 
-        @Embedded
-        @Column(name = "code", nullable = false, unique = true)
-        C code;
+  @MappedSuperclass
+  public static class AbstractMultilingualEntity<C extends EntityCode> extends AbstractEntity<C> {}
 
-    }
+  @MappedSuperclass
+  public abstract static class AbstractNamedEntity<C extends EntityCode>
+      extends AbstractMultilingualEntity<C> {
 
-    @MappedSuperclass
-    public static class AbstractMultilingualEntity<C extends EntityCode> extends AbstractEntity<C> {
+    @Column(name = "name_en", nullable = false)
+    String nameEn;
 
-    }
+    @Column(name = "name_nl")
+    String nameNl;
+  }
 
-    @MappedSuperclass
-    public abstract static class AbstractNamedEntity<C extends EntityCode> extends AbstractMultilingualEntity<C> {
+  @javax.persistence.Entity
+  public static class Brand extends AbstractNamedEntity<BrandCode> {
 
-        @Column(name = "name_en", nullable = false)
-        String nameEn;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "brand_id")
+    Long id;
+  }
 
-        @Column(name = "name_nl")
-        String nameNl;
+  public interface Entity<T> extends Serializable {
 
-    }
+    boolean sameIdentityAs(T other);
+  }
 
-    @javax.persistence.Entity
-    public static class Brand extends AbstractNamedEntity<BrandCode> {
+  @Embeddable
+  public static class BrandCode extends EntityCode {}
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        @Column(name = "brand_id")
-        Long id;
-
-    }
-
-    public interface Entity<T> extends Serializable {
-
-        boolean sameIdentityAs(T other);
-
-    }
-
-    @Embeddable
-    public static class BrandCode extends EntityCode {
-
-    }
-
-    @Test
-    public void test() {
-        // TODO
-    }
-
-
-
+  @Test
+  public void test() {
+    // TODO
+  }
 }

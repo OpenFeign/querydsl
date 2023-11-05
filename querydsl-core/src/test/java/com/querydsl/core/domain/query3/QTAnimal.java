@@ -15,51 +15,45 @@ package com.querydsl.core.domain.query3;
 
 import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
-import java.util.Date;
-
 import com.querydsl.core.domain.Animal;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.*;
+import java.util.Date;
 
-
-/**
- * QAnimal is a Querydsl query type for Animal
- */
+/** QAnimal is a Querydsl query type for Animal */
 public class QTAnimal extends EntityPathBase<Animal> {
 
-    private static final long serialVersionUID = 781156670;
+  private static final long serialVersionUID = 781156670;
 
-    public static final QTAnimal animal = new QTAnimal("animal");
+  public static final QTAnimal animal = new QTAnimal("animal");
 
-    public final BooleanPath alive = createBoolean("alive");
+  public final BooleanPath alive = createBoolean("alive");
 
-    public final DateTimePath<Date> birthdate = createDateTime("birthdate", java.util.Date.class);
+  public final DateTimePath<Date> birthdate = createDateTime("birthdate", java.util.Date.class);
 
-    public final NumberPath<Double> bodyWeight = createNumber("bodyWeight", Double.class);
+  public final NumberPath<Double> bodyWeight = createNumber("bodyWeight", Double.class);
 
-    public final DatePath<java.sql.Date> dateField = createDate("dateField", java.sql.Date.class);
+  public final DatePath<java.sql.Date> dateField = createDate("dateField", java.sql.Date.class);
 
-    public final NumberPath<Integer> id = createNumber("id", Integer.class);
+  public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
-    public final StringPath name = createString("name");
+  public final StringPath name = createString("name");
 
-    public final TimePath<java.sql.Time> timeField = createTime("timeField", java.sql.Time.class);
+  public final TimePath<java.sql.Time> timeField = createTime("timeField", java.sql.Time.class);
 
-    public final NumberPath<Integer> toes = createNumber("toes", Integer.class);
+  public final NumberPath<Integer> toes = createNumber("toes", Integer.class);
 
-    public final NumberPath<Integer> weight = createNumber("weight", Integer.class);
+  public final NumberPath<Integer> weight = createNumber("weight", Integer.class);
 
-    public QTAnimal(String variable) {
-        super(Animal.class, forVariable(variable));
-    }
+  public QTAnimal(String variable) {
+    super(Animal.class, forVariable(variable));
+  }
 
-    public QTAnimal(BeanPath<? extends Animal> entity) {
-        super(entity.getType(), entity.getMetadata());
-    }
+  public QTAnimal(BeanPath<? extends Animal> entity) {
+    super(entity.getType(), entity.getMetadata());
+  }
 
-    public QTAnimal(PathMetadata metadata) {
-        super(Animal.class, metadata);
-    }
-
+  public QTAnimal(PathMetadata metadata) {
+    super(Animal.class, metadata);
+  }
 }
-

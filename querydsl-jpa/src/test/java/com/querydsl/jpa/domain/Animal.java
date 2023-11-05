@@ -14,135 +14,129 @@
 package com.querydsl.jpa.domain;
 
 import java.util.Date;
-
 import javax.persistence.*;
-
 import org.hibernate.annotations.Type;
 
-/**
- * The Class Animal.
- */
+/** The Class Animal. */
 @Entity
 @Table(name = "animal_")
 @DiscriminatorValue("A")
 public class Animal {
-    private boolean alive;
+  private boolean alive;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date birthdate;
+  @Temporal(TemporalType.TIMESTAMP)
+  private java.util.Date birthdate;
 
-    private int weight, toes;
+  private int weight, toes;
 
-    // needed for JPA tests
-    @Type(type = "com.querydsl.jpa.ExtDoubleType")
-    private double bodyWeight;
+  // needed for JPA tests
+  @Type(type = "com.querydsl.jpa.ExtDoubleType")
+  private double bodyWeight;
 
-    private float floatProperty;
+  private float floatProperty;
 
-    private Color color;
+  private Color color;
 
-//    @Temporal(TemporalType.DATE)
-    private java.sql.Date dateField;
+  //    @Temporal(TemporalType.DATE)
+  private java.sql.Date dateField;
 
-    @Id
-    private int id;
+  @Id private int id;
 
-    private String name;
+  private String name;
 
-    private java.sql.Time timeField;
+  private java.sql.Time timeField;
 
-    public Animal() { }
+  public Animal() {}
 
-    public Animal(int id) {
-        setId(id);
-    }
+  public Animal(int id) {
+    setId(id);
+  }
 
-    public java.util.Date getBirthdate() {
-        return new Date(birthdate.getTime());
-    }
+  public java.util.Date getBirthdate() {
+    return new Date(birthdate.getTime());
+  }
 
-    public double getBodyWeight() {
-        return bodyWeight;
-    }
+  public double getBodyWeight() {
+    return bodyWeight;
+  }
 
-    public Color getColor() {
-        return color;
-    }
+  public Color getColor() {
+    return color;
+  }
 
-    public java.sql.Date getDateField() {
-        return new java.sql.Date(dateField.getTime());
-    }
+  public java.sql.Date getDateField() {
+    return new java.sql.Date(dateField.getTime());
+  }
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public java.sql.Time getTimeField() {
-        return timeField;
-    }
+  public java.sql.Time getTimeField() {
+    return timeField;
+  }
 
-    public int getToes() {
-        return toes;
-    }
+  public int getToes() {
+    return toes;
+  }
 
-    public int getWeight() {
-        return weight;
-    }
+  public int getWeight() {
+    return weight;
+  }
 
-    public boolean isAlive() {
-        return alive;
-    }
+  public boolean isAlive() {
+    return alive;
+  }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
+  public void setAlive(boolean alive) {
+    this.alive = alive;
+  }
 
-    public void setBirthdate(java.util.Date birthdate) {
-        this.birthdate = new java.util.Date(birthdate.getTime());
-    }
+  public void setBirthdate(java.util.Date birthdate) {
+    this.birthdate = new java.util.Date(birthdate.getTime());
+  }
 
-    public void setBodyWeight(double bodyWeight) {
-        this.bodyWeight = bodyWeight;
-    }
+  public void setBodyWeight(double bodyWeight) {
+    this.bodyWeight = bodyWeight;
+  }
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
+  public void setColor(Color color) {
+    this.color = color;
+  }
 
-    public void setDateField(java.sql.Date dateField) {
-        this.dateField = new java.sql.Date(dateField.getTime());
-    }
+  public void setDateField(java.sql.Date dateField) {
+    this.dateField = new java.sql.Date(dateField.getTime());
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setTimeField(java.sql.Time timeField) {
-        this.timeField = timeField;
-    }
+  public void setTimeField(java.sql.Time timeField) {
+    this.timeField = timeField;
+  }
 
-    public void setToes(int toes) {
-        this.toes = toes;
-    }
+  public void setToes(int toes) {
+    this.toes = toes;
+  }
 
-    public void setWeight(int weight) {
-        this.weight = weight;
-    }
+  public void setWeight(int weight) {
+    this.weight = weight;
+  }
 
-    public float getFloatProperty() {
-        return floatProperty;
-    }
+  public float getFloatProperty() {
+    return floatProperty;
+  }
 
-    public void setFloatProperty(float floatProperty) {
-        this.floatProperty = floatProperty;
-    }
-
+  public void setFloatProperty(float floatProperty) {
+    this.floatProperty = floatProperty;
+  }
 }

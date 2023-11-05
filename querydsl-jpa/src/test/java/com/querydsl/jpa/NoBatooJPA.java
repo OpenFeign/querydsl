@@ -7,5 +7,5 @@ import java.lang.annotation.*;
 @Inherited
 public @interface NoBatooJPA {
 
-    com.querydsl.core.Target[] value() default {};
+  com.querydsl.core.Target[] value() default {};
 }

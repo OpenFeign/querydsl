@@ -15,103 +15,101 @@ package com.querydsl.apt;
 
 import com.querydsl.codegen.*;
 import com.querydsl.core.util.Annotations;
-
-import org.jetbrains.annotations.Nullable;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code Configuration} defines the configuration options for APT-based Querydsl code generation
  *
  * @author tiwe
- *
  */
 public interface Configuration {
 
-    boolean isUnknownAsEmbedded();
+  boolean isUnknownAsEmbedded();
 
-    TypeMappings getTypeMappings();
+  TypeMappings getTypeMappings();
 
-    VisitorConfig getConfig(TypeElement e, List<? extends Element> elements);
+  VisitorConfig getConfig(TypeElement e, List<? extends Element> elements);
 
-    Serializer getDTOSerializer();
+  Serializer getDTOSerializer();
 
-    @Nullable
-    Class<? extends Annotation> getEntitiesAnnotation();
+  @Nullable
+  Class<? extends Annotation> getEntitiesAnnotation();
 
-    @Nullable
-    Class<? extends Annotation> getEmbeddedAnnotation();
+  @Nullable
+  Class<? extends Annotation> getEmbeddedAnnotation();
 
-    @Nullable
-    Class<? extends Annotation> getEmbeddableAnnotation();
+  @Nullable
+  Class<? extends Annotation> getEmbeddableAnnotation();
 
-    Serializer getEmbeddableSerializer();
+  Serializer getEmbeddableSerializer();
 
-    Class<? extends Annotation> getEntityAnnotation();
+  Class<? extends Annotation> getEntityAnnotation();
 
-    Class<? extends Annotation> getAlternativeEntityAnnotation();
+  Class<? extends Annotation> getAlternativeEntityAnnotation();
 
-    Set<Class<? extends Annotation>> getEntityAnnotations();
+  Set<Class<? extends Annotation>> getEntityAnnotations();
 
-    Serializer getEntitySerializer();
+  Serializer getEntitySerializer();
 
-    String getNamePrefix();
+  String getNamePrefix();
 
-    String getNameSuffix();
+  String getNameSuffix();
 
-    SerializerConfig getSerializerConfig(EntityType entityType);
+  SerializerConfig getSerializerConfig(EntityType entityType);
 
-    @Nullable
-    Class<? extends Annotation> getSkipAnnotation();
+  @Nullable
+  Class<? extends Annotation> getSkipAnnotation();
 
-    @Nullable
-    Class<? extends Annotation> getSuperTypeAnnotation();
+  @Nullable
+  Class<? extends Annotation> getSuperTypeAnnotation();
 
-    Serializer getSupertypeSerializer();
+  Serializer getSupertypeSerializer();
 
-    boolean isBlockedField(VariableElement field);
+  boolean isBlockedField(VariableElement field);
 
-    boolean isBlockedGetter(ExecutableElement getter);
+  boolean isBlockedGetter(ExecutableElement getter);
 
-    boolean isUseFields();
+  boolean isUseFields();
 
-    boolean isUseGetters();
+  boolean isUseGetters();
 
-    boolean isValidConstructor(ExecutableElement constructor);
+  boolean isValidConstructor(ExecutableElement constructor);
 
-    boolean isValidField(VariableElement field);
+  boolean isValidField(VariableElement field);
 
-    boolean isValidGetter(ExecutableElement getter);
+  boolean isValidGetter(ExecutableElement getter);
 
-    Collection<String> getKeywords();
+  Collection<String> getKeywords();
 
-    QueryTypeFactory getQueryTypeFactory();
+  QueryTypeFactory getQueryTypeFactory();
 
-    void addExcludedPackage(String packageName);
+  void addExcludedPackage(String packageName);
 
-    void addExcludedClass(String className);
+  void addExcludedClass(String className);
 
-    TypeMirror getRealType(ExecutableElement method);
+  TypeMirror getRealType(ExecutableElement method);
 
-    TypeMirror getRealType(VariableElement field);
+  TypeMirror getRealType(VariableElement field);
 
-    boolean isExcludedPackage(String packageName);
+  boolean isExcludedPackage(String packageName);
 
-    boolean isExcludedClass(String className);
+  boolean isExcludedClass(String className);
 
-    void inspect(Element element, Annotations annotations);
+  void inspect(Element element, Annotations annotations);
 
-    boolean isStrictMode();
+  boolean isStrictMode();
 
-    Function<EntityType, String> getVariableNameFunction();
+  Function<EntityType, String> getVariableNameFunction();
 
-    Filer getFiler();
+  Filer getFiler();
 }

@@ -13,74 +13,71 @@
  */
 package com.querydsl.sql;
 
-import java.util.List;
-
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.types.*;
+import java.util.List;
 
 /**
  * {@code Union} defines an interface for Union queries
  *
  * @author tiwe
- *
  * @param <RT> return type of projection
  */
 public interface Union<RT> extends SubQueryExpression<RT>, Fetchable<RT> {
 
-    /**
-     * Get the projection as a typed List
-     *
-     * @deprecated Use {@link Union#fetch()}
-     */
-    @Deprecated
-    List<RT> list();
+  /**
+   * Get the projection as a typed List
+   *
+   * @deprecated Use {@link Union#fetch()}
+   */
+  @Deprecated
+  List<RT> list();
 
-    /**
-     * Get the projection as a typed Iterator
-     *
-     * @return result iterator
-     */
-    CloseableIterator<RT> iterate();
+  /**
+   * Get the projection as a typed Iterator
+   *
+   * @return result iterator
+   */
+  CloseableIterator<RT> iterate();
 
-    /**
-     * Defines the grouping/aggregation expressions
-     *
-     * @param o group by
-     * @return the current object
-     */
-    Union<RT> groupBy(Expression<?>... o);
+  /**
+   * Defines the grouping/aggregation expressions
+   *
+   * @param o group by
+   * @return the current object
+   */
+  Union<RT> groupBy(Expression<?>... o);
 
-    /**
-     * Defines the filters for aggregation
-     *
-     * @param o having conditions
-     * @return the current object
-     */
-    Union<RT> having(Predicate... o);
+  /**
+   * Defines the filters for aggregation
+   *
+   * @param o having conditions
+   * @return the current object
+   */
+  Union<RT> having(Predicate... o);
 
+  /**
+   * Define the ordering of the query results
+   *
+   * @param o order
+   * @return the current object
+   */
+  Union<RT> orderBy(OrderSpecifier<?>... o);
 
-    /**
-     * Define the ordering of the query results
-     *
-     * @param o order
-     * @return the current object
-     */
-    Union<RT> orderBy(OrderSpecifier<?>... o);
+  /**
+   * Create an alias for the expression
+   *
+   * @param alias alias
+   * @return this as alias
+   */
+  Expression<RT> as(String alias);
 
-    /**
-     * Create an alias for the expression
-     *
-     * @param alias alias
-     * @return this as alias
-     */
-    Expression<RT> as(String alias);
-
-    /**
-     * Create an alias for the expression
-     *
-     * @param alias alias
-     * @return this as alias
-     */
-    Expression<RT> as(Path<RT> alias);
+  /**
+   * Create an alias for the expression
+   *
+   * @param alias alias
+   * @return this as alias
+   */
+  Expression<RT> as(Path<RT> alias);
 }

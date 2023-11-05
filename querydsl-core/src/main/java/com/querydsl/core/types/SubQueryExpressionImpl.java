@@ -13,12 +13,12 @@
  */
 package com.querydsl.core.types;
 
+import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.annotations.Immutable;
 
-import com.querydsl.core.QueryMetadata;
-
 /**
- * {@code SubQueryExpressionImpl} is the default implementation of the {@link SubQueryExpression} interface
+ * {@code SubQueryExpressionImpl} is the default implementation of the {@link SubQueryExpression}
+ * interface
  *
  * @author tiwe
  * @param <T> Result type
@@ -26,35 +26,34 @@ import com.querydsl.core.QueryMetadata;
 @Immutable
 public class SubQueryExpressionImpl<T> extends ExpressionBase<T> implements SubQueryExpression<T> {
 
-    private static final long serialVersionUID = 6775967804458163L;
+  private static final long serialVersionUID = 6775967804458163L;
 
-    private final QueryMetadata metadata;
+  private final QueryMetadata metadata;
 
-    public SubQueryExpressionImpl(Class<? extends T> type, QueryMetadata metadata) {
-        super(type);
-        this.metadata = metadata;
+  public SubQueryExpressionImpl(Class<? extends T> type, QueryMetadata metadata) {
+    super(type);
+    this.metadata = metadata;
+  }
+
+  @SuppressWarnings("unchecked")
+  public final boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof SubQueryExpression) {
+      SubQueryExpression<T> s = (SubQueryExpression<T>) o;
+      return s.getMetadata().equals(metadata);
+    } else {
+      return false;
     }
+  }
 
-    @SuppressWarnings("unchecked")
-    public final boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof SubQueryExpression) {
-            SubQueryExpression<T> s = (SubQueryExpression<T>) o;
-            return s.getMetadata().equals(metadata);
-        } else {
-            return false;
-        }
-    }
+  @Override
+  public final QueryMetadata getMetadata() {
+    return metadata;
+  }
 
-    @Override
-    public final QueryMetadata getMetadata() {
-        return metadata;
-    }
-
-    @Override
-    public final <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
-    }
-
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
 }

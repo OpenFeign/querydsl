@@ -13,29 +13,25 @@
  */
 package com.querydsl.apt.domain;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryExclude;
+import org.junit.Test;
 
 @QueryExclude
 @QueryEntity
 public class ExcludedClassTest {
 
-    @QueryExclude
-    @QueryEntity
-    public static class InnerClass {
+  @QueryExclude
+  @QueryEntity
+  public static class InnerClass {}
 
-    }
+  @Test(expected = ClassNotFoundException.class)
+  public void outerClass() throws ClassNotFoundException {
+    Class.forName(getClass().getPackage().getName() + ".Q" + getClass().getSimpleName());
+  }
 
-    @Test(expected = ClassNotFoundException.class)
-    public void outerClass() throws ClassNotFoundException {
-        Class.forName(getClass().getPackage().getName() + ".Q" + getClass().getSimpleName());
-    }
-
-    @Test(expected = ClassNotFoundException.class)
-    public void innerClass() throws ClassNotFoundException {
-        Class.forName(getClass().getPackage().getName() + ".QExcludedClassTest_InnerClass");
-    }
-
+  @Test(expected = ClassNotFoundException.class)
+  public void innerClass() throws ClassNotFoundException {
+    Class.forName(getClass().getPackage().getName() + ".QExcludedClassTest_InnerClass");
+  }
 }

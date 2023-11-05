@@ -21,45 +21,43 @@ import javax.persistence.Table;
 @Table(name = "categoryprop_")
 public class CategoryProp {
 
-    @Id
-    private long id;
+  @Id private long id;
 
-    private long categoryId;
+  private long categoryId;
 
-    private String propName;
+  private String propName;
 
-    private String propValue;
+  private String propValue;
 
-    public long getId() {
-        return id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public long getCategoryId() {
-        return categoryId;
-    }
+  public long getCategoryId() {
+    return categoryId;
+  }
 
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
-    }
+  public void setCategoryId(long categoryId) {
+    this.categoryId = categoryId;
+  }
 
-    public String getPropName() {
-        return propName;
-    }
+  public String getPropName() {
+    return propName;
+  }
 
-    public void setPropName(String propName) {
-        this.propName = propName;
-    }
+  public void setPropName(String propName) {
+    this.propName = propName;
+  }
 
-    public String getPropValue() {
-        return propValue;
-    }
+  public String getPropValue() {
+    return propValue;
+  }
 
-    public void setPropValue(String propValue) {
-        this.propValue = propValue;
-    }
-
+  public void setPropValue(String propValue) {
+    this.propValue = propValue;
+  }
 }

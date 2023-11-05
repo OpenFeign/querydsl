@@ -16,41 +16,43 @@ package com.querydsl.mongodb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.querydsl.apt.morphia.MorphiaAnnotationProcessor;
+import com.querydsl.codegen.CodegenModule;
+import com.querydsl.codegen.utils.CodeWriter;
+import com.querydsl.core.Entity;
+import com.querydsl.core.types.Expression;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import org.junit.Test;
-
-import com.querydsl.codegen.utils.CodeWriter;
-import com.querydsl.apt.morphia.MorphiaAnnotationProcessor;
-import com.querydsl.codegen.CodegenModule;
-import com.querydsl.core.Entity;
-import com.querydsl.core.types.Expression;
 
 public class PackageVerification {
 
-    @Test
-    public void verify_package() throws Exception {
-        String version = System.getProperty("version");
-        verify(new File("target/querydsl-mongodb-" + version + "-apt-one-jar.jar"));
-    }
+  @Test
+  public void verify_package() throws Exception {
+    String version = System.getProperty("version");
+    verify(new File("target/querydsl-mongodb-" + version + "-apt-one-jar.jar"));
+  }
 
-    private void verify(File oneJar) throws Exception {
-        assertTrue(oneJar.getPath() + " doesn't exist", oneJar.exists());
-        // verify classLoader
-        URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[]{oneJar.toURI().toURL()});
-        oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core
-        oneJarClassLoader.loadClass(CodeWriter.class.getName()); // codegen
-        oneJarClassLoader.loadClass(CodegenModule.class.getName()).newInstance();
-        oneJarClassLoader.loadClass(Entity.class.getName()); // morphia
-        Class cl = oneJarClassLoader.loadClass(MorphiaAnnotationProcessor.class.getName()); // querydsl-apt
-        cl.newInstance();
-        String resourceKey = "META-INF/services/javax.annotation.processing.Processor";
-        assertEquals(MorphiaAnnotationProcessor.class.getName(), new String(Files.readAllBytes(Paths.get(oneJarClassLoader.findResource(resourceKey).toURI())), StandardCharsets.UTF_8));
-    }
-
+  private void verify(File oneJar) throws Exception {
+    assertTrue(oneJar.getPath() + " doesn't exist", oneJar.exists());
+    // verify classLoader
+    URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
+    oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core
+    oneJarClassLoader.loadClass(CodeWriter.class.getName()); // codegen
+    oneJarClassLoader.loadClass(CodegenModule.class.getName()).newInstance();
+    oneJarClassLoader.loadClass(Entity.class.getName()); // morphia
+    Class cl =
+        oneJarClassLoader.loadClass(MorphiaAnnotationProcessor.class.getName()); // querydsl-apt
+    cl.newInstance();
+    String resourceKey = "META-INF/services/javax.annotation.processing.Processor";
+    assertEquals(
+        MorphiaAnnotationProcessor.class.getName(),
+        new String(
+            Files.readAllBytes(Paths.get(oneJarClassLoader.findResource(resourceKey).toURI())),
+            StandardCharsets.UTF_8));
+  }
 }

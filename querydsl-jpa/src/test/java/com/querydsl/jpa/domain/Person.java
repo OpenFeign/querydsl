@@ -13,31 +13,25 @@
  */
 package com.querydsl.jpa.domain;
 
+import com.querydsl.core.annotations.QueryInit;
 import java.io.Serializable;
-
 import javax.persistence.*;
 
-import com.querydsl.core.annotations.QueryInit;
-
-/**
- * The Class Person.
- */
+/** The Class Person. */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "person_")
 public class Person implements Serializable {
-    @Temporal(TemporalType.DATE)
-    java.util.Date birthDay;
+  @Temporal(TemporalType.DATE)
+  java.util.Date birthDay;
 
-    @Id
-    long i;
+  @Id long i;
 
-    @ManyToOne
-    PersonId pid;
+  @ManyToOne PersonId pid;
 
-    String name;
+  String name;
 
-    @ManyToOne
-    @QueryInit("calendar")
-    Nationality nationality;
+  @ManyToOne
+  @QueryInit("calendar")
+  Nationality nationality;
 }

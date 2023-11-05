@@ -13,12 +13,11 @@
  */
 package com.querydsl.collections;
 
+import com.querydsl.core.alias.Alias;
+import com.querydsl.core.types.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-
-import com.querydsl.core.alias.Alias;
-import com.querydsl.core.types.Path;
 
 /**
  * {@code CollQueryFactory} provides static convenience methods for query construction
@@ -27,62 +26,63 @@ import com.querydsl.core.types.Path;
  */
 public final class CollQueryFactory {
 
-    /**
-     * Create a new delete clause
-     *
-     * @param path source expression
-     * @param col source collection
-     * @return delete clause
-     */
-    public static <A> CollDeleteClause<A> delete(Path<A> path, Collection<A> col) {
-        return new CollDeleteClause<A>(path, col);
-    }
+  /**
+   * Create a new delete clause
+   *
+   * @param path source expression
+   * @param col source collection
+   * @return delete clause
+   */
+  public static <A> CollDeleteClause<A> delete(Path<A> path, Collection<A> col) {
+    return new CollDeleteClause<A>(path, col);
+  }
 
-    /**
-     * Create a new query
-     *
-     * @param alias source alias
-     * @param col source collection
-     * @return query
-     */
-    public static <A> CollQuery<A> from(A alias, Iterable<A> col) {
-        Path<A> expr = Alias.$(alias);
-        return new CollQuery<Void>().from(expr, col).select(expr);
-    }
+  /**
+   * Create a new query
+   *
+   * @param alias source alias
+   * @param col source collection
+   * @return query
+   */
+  public static <A> CollQuery<A> from(A alias, Iterable<A> col) {
+    Path<A> expr = Alias.$(alias);
+    return new CollQuery<Void>().from(expr, col).select(expr);
+  }
 
-    /**
-     * Create a new query
-     *
-     * @param path source expression
-     * @param arr source array
-     * @return query
-     */
-    public static <A> CollQuery<A> from(Path<A> path, A... arr) {
-        return new CollQuery<Void>().from(path, Collections.unmodifiableList(Arrays.asList(arr))).select(path);
-    }
+  /**
+   * Create a new query
+   *
+   * @param path source expression
+   * @param arr source array
+   * @return query
+   */
+  public static <A> CollQuery<A> from(Path<A> path, A... arr) {
+    return new CollQuery<Void>()
+        .from(path, Collections.unmodifiableList(Arrays.asList(arr)))
+        .select(path);
+  }
 
-    /**
-     * Create a new query
-     *
-     * @param path source expression
-     * @param col source collection
-     * @return query
-     */
-    public static <A> CollQuery<A> from(Path<A> path, Iterable<A> col) {
-        return new CollQuery<Void>().from(path, col).select(path);
-    }
+  /**
+   * Create a new query
+   *
+   * @param path source expression
+   * @param col source collection
+   * @return query
+   */
+  public static <A> CollQuery<A> from(Path<A> path, Iterable<A> col) {
+    return new CollQuery<Void>().from(path, col).select(path);
+  }
 
-    /**
-     * Create a new update clause
-     *
-     * @param path source expression
-     * @param col source collection
-     * @return query
-     */
-    public static <A> CollUpdateClause<A> update(Path<A> path, Iterable<A> col) {
-        return new CollUpdateClause<A>(path, col);
-    }
+  /**
+   * Create a new update clause
+   *
+   * @param path source expression
+   * @param col source collection
+   * @return query
+   */
+  public static <A> CollUpdateClause<A> update(Path<A> path, Iterable<A> col) {
+    return new CollUpdateClause<A>(path, col);
+  }
 
-    private CollQueryFactory() { }
-
+  private CollQueryFactory() {}
 }

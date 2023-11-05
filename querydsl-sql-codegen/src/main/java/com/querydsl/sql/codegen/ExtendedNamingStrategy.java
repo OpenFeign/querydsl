@@ -13,42 +13,39 @@
  */
 package com.querydsl.sql.codegen;
 
+import com.querydsl.codegen.EntityType;
 import java.util.regex.Pattern;
 
-import com.querydsl.codegen.EntityType;
-
 /**
- * {@code ExtendedNamingStrategy} works like the {@link DefaultNamingStrategy}, but tries to create foreign key
- * property names in a different way.
+ * {@code ExtendedNamingStrategy} works like the {@link DefaultNamingStrategy}, but tries to create
+ * foreign key property names in a different way.
  *
- * <p>It looks for patterns like this {@literal .*_<forward>_<inverse>} and uses the forward part for
- * the foreign key name and inverse for the inverse foreign key name.</p>
+ * <p>It looks for patterns like this {@literal .*_<forward>_<inverse>} and uses the forward part
+ * for the foreign key name and inverse for the inverse foreign key name.
  *
  * @author tiwe
- *
  */
 public class ExtendedNamingStrategy extends DefaultNamingStrategy {
 
-    private static final Pattern SPLIT = Pattern.compile("_");
+  private static final Pattern SPLIT = Pattern.compile("_");
 
-    @Override
-    public String getPropertyNameForForeignKey(String fkName, EntityType entityType) {
-        String[] split = SPLIT.split(fkName);
-        if (split.length > 2) {
-            return getPropertyName(split[split.length - 2], entityType);
-        } else {
-            return super.getPropertyNameForForeignKey(fkName, entityType);
-        }
+  @Override
+  public String getPropertyNameForForeignKey(String fkName, EntityType entityType) {
+    String[] split = SPLIT.split(fkName);
+    if (split.length > 2) {
+      return getPropertyName(split[split.length - 2], entityType);
+    } else {
+      return super.getPropertyNameForForeignKey(fkName, entityType);
     }
+  }
 
-    @Override
-    public String getPropertyNameForInverseForeignKey(String fkName, EntityType entityType) {
-        String[] split = SPLIT.split(fkName);
-        if (split.length > 2) {
-            return getPropertyName(split[split.length - 1], entityType);
-        } else {
-            return super.getPropertyNameForInverseForeignKey(fkName, entityType);
-        }
+  @Override
+  public String getPropertyNameForInverseForeignKey(String fkName, EntityType entityType) {
+    String[] split = SPLIT.split(fkName);
+    if (split.length > 2) {
+      return getPropertyName(split[split.length - 1], entityType);
+    } else {
+      return super.getPropertyNameForInverseForeignKey(fkName, entityType);
     }
-
+  }
 }

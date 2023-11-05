@@ -5,10 +5,9 @@ import com.querydsl.core.annotations.QueryEntity;
 @QueryEntity
 public class StateHistoryOwner {
 
-    private StateHistory stateHistory;
+  private StateHistory stateHistory;
 
-    protected final StateHistory getStateHistory() {
-        return stateHistory;
-    }
-
+  protected final StateHistory getStateHistory() {
+    return stateHistory;
+  }
 }

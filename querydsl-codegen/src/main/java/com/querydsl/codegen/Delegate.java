@@ -13,79 +13,76 @@
  */
 package com.querydsl.codegen;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.querydsl.codegen.utils.model.Parameter;
 import com.querydsl.codegen.utils.model.Type;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * {@code Delegate} defines a delegate method which dispatches to an external static method
  *
  * @author tiwe
- *
  */
 public class Delegate {
 
-    private final Type declaringType;
+  private final Type declaringType;
 
-    private final Type delegateType;
+  private final Type delegateType;
 
-    private final String name;
+  private final String name;
 
-    private final List<Parameter> parameters;
+  private final List<Parameter> parameters;
 
-    private final Type returnType;
+  private final Type returnType;
 
-    public Delegate(Type declaringType, Type delegateType, String name, List<Parameter> params,
-            Type returnType) {
-        this.declaringType = declaringType;
-        this.delegateType = delegateType;
-        this.name = name;
-        this.parameters = params;
-        this.returnType = returnType;
+  public Delegate(
+      Type declaringType, Type delegateType, String name, List<Parameter> params, Type returnType) {
+    this.declaringType = declaringType;
+    this.delegateType = delegateType;
+    this.name = name;
+    this.parameters = params;
+    this.returnType = returnType;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof Delegate) {
+      Delegate m = (Delegate) o;
+      return m.name.equals(name) && m.parameters.equals(parameters);
+    } else {
+      return false;
     }
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof Delegate) {
-            Delegate m = (Delegate) o;
-            return m.name.equals(name) && m.parameters.equals(parameters);
-        } else {
-            return false;
-        }
-    }
+  public Type getDeclaringType() {
+    return declaringType;
+  }
 
-    public Type getDeclaringType() {
-        return declaringType;
-    }
+  public Type getDelegateType() {
+    return delegateType;
+  }
 
-    public Type getDelegateType() {
-        return delegateType;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public List<Parameter> getParameters() {
+    return parameters;
+  }
 
-    public List<Parameter> getParameters() {
-        return parameters;
-    }
+  public Type getReturnType() {
+    return returnType;
+  }
 
-    public Type getReturnType() {
-        return returnType;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, parameters);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, parameters);
-    }
-
-    @Override
-    public String toString() {
-        return delegateType.getFullName() + "." + name + " " + parameters;
-    }
-
+  @Override
+  public String toString() {
+    return delegateType.getFullName() + "." + name + " " + parameters;
+  }
 }

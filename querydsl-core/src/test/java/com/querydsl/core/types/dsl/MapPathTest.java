@@ -16,35 +16,33 @@ package com.querydsl.core.types.dsl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.ConstantImpl;
+import org.junit.Test;
 
 public class MapPathTest {
 
-    private MapPath<String,String,StringPath> mapPath = new MapPath<String,String,StringPath>(
-            String.class, String.class, StringPath.class, "p");
+  private MapPath<String, String, StringPath> mapPath =
+      new MapPath<String, String, StringPath>(String.class, String.class, StringPath.class, "p");
 
-    @Test
-    public void get() {
-        assertNotNull(mapPath.get("X"));
-        assertNotNull(mapPath.get(ConstantImpl.create("X")));
-    }
+  @Test
+  public void get() {
+    assertNotNull(mapPath.get("X"));
+    assertNotNull(mapPath.get(ConstantImpl.create("X")));
+  }
 
-    @Test
-    public void getKeyType() {
-        assertEquals(String.class, mapPath.getKeyType());
-    }
+  @Test
+  public void getKeyType() {
+    assertEquals(String.class, mapPath.getKeyType());
+  }
 
-    @Test
-    public void getValueType() {
-        assertEquals(String.class, mapPath.getValueType());
-    }
+  @Test
+  public void getValueType() {
+    assertEquals(String.class, mapPath.getValueType());
+  }
 
-    @Test
-    public void getParameter() {
-        assertEquals(String.class, mapPath.getParameter(0));
-        assertEquals(String.class, mapPath.getParameter(1));
-    }
-
+  @Test
+  public void getParameter() {
+    assertEquals(String.class, mapPath.getParameter(0));
+    assertEquals(String.class, mapPath.getParameter(1));
+  }
 }

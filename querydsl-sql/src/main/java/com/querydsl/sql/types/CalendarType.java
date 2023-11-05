@@ -22,43 +22,41 @@ import java.util.Calendar;
  * {@code CalendarType} maps Calendar to Timestamp on the JDBC level
  *
  * @author tiwe
- *
  */
 public class CalendarType extends AbstractDateTimeType<Calendar> {
 
-    public CalendarType() {
-        super(Types.TIMESTAMP);
-    }
+  public CalendarType() {
+    super(Types.TIMESTAMP);
+  }
 
-    public CalendarType(int type) {
-        super(type);
-    }
+  public CalendarType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getLiteral(Calendar value) {
-        return dateTimeFormatter.format(LocalDateTime.ofInstant(value.toInstant(), ZoneOffset.UTC));
-    }
+  @Override
+  public String getLiteral(Calendar value) {
+    return dateTimeFormatter.format(LocalDateTime.ofInstant(value.toInstant(), ZoneOffset.UTC));
+  }
 
-    @Override
-    public Calendar getValue(ResultSet rs, int startIndex) throws SQLException {
-        Timestamp ts = rs.getTimestamp(startIndex);
-        if (ts != null) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(ts.getTime());
-            return cal;
-        } else {
-            return null;
-        }
+  @Override
+  public Calendar getValue(ResultSet rs, int startIndex) throws SQLException {
+    Timestamp ts = rs.getTimestamp(startIndex);
+    if (ts != null) {
+      Calendar cal = Calendar.getInstance();
+      cal.setTimeInMillis(ts.getTime());
+      return cal;
+    } else {
+      return null;
     }
+  }
 
-    @Override
-    public Class<Calendar> getReturnedClass() {
-        return Calendar.class;
-    }
+  @Override
+  public Class<Calendar> getReturnedClass() {
+    return Calendar.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Calendar value) throws SQLException {
-        st.setTimestamp(startIndex, new Timestamp(value.getTimeInMillis()));
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Calendar value) throws SQLException {
+    st.setTimestamp(startIndex, new Timestamp(value.getTimeInMillis()));
+  }
 }

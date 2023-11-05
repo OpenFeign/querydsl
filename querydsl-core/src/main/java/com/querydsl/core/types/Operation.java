@@ -13,9 +13,8 @@
  */
 package com.querydsl.core.types;
 
-import org.jetbrains.annotations.Unmodifiable;
-
 import java.util.List;
+import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * {@code Operation} represents an operation with operator and arguments
@@ -25,27 +24,26 @@ import java.util.List;
  */
 public interface Operation<T> extends Expression<T> {
 
-    /**
-     * Get the argument with the given index
-     *
-     * @param index zero based index of expression
-     * @return expression at index
-     */
-    Expression<?> getArg(int index);
+  /**
+   * Get the argument with the given index
+   *
+   * @param index zero based index of expression
+   * @return expression at index
+   */
+  Expression<?> getArg(int index);
 
-    /**
-     * Get the arguments of this operation
-     *
-     * @return arguments
-     */
-    @Unmodifiable
-    List<Expression<?>> getArgs();
+  /**
+   * Get the arguments of this operation
+   *
+   * @return arguments
+   */
+  @Unmodifiable
+  List<Expression<?>> getArgs();
 
-    /**
-     * Get the operator symbol for this operation
-     *
-     * @return operator
-     */
-    Operator getOperator();
-
+  /**
+   * Get the operator symbol for this operation
+   *
+   * @return operator
+   */
+  Operator getOperator();
 }

@@ -18,9 +18,9 @@ import org.hibernate.type.DoubleType;
 @SuppressWarnings("serial")
 public class ExtDoubleType extends DoubleType {
 
-//    @Override
-//    public void set(PreparedStatement st, Object value, int index) throws SQLException {
-//        st.setDouble( index, ( (Number) value ).doubleValue() );
-//    }
+  //    @Override
+  //    public void set(PreparedStatement st, Object value, int index) throws SQLException {
+  //        st.setDouble( index, ( (Number) value ).doubleValue() );
+  //    }
 
 }

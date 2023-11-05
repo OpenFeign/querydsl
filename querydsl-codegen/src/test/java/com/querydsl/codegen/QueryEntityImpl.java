@@ -13,16 +13,14 @@
  */
 package com.querydsl.codegen;
 
-import java.lang.annotation.Annotation;
-
 import com.querydsl.core.annotations.QueryEntity;
+import java.lang.annotation.Annotation;
 
 @SuppressWarnings("all")
 public class QueryEntityImpl implements QueryEntity {
 
-    @Override
-    public Class<? extends Annotation> annotationType() {
-        return QueryEntity.class;
-    }
-
+  @Override
+  public Class<? extends Annotation> annotationType() {
+    return QueryEntity.class;
+  }
 }

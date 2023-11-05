@@ -13,21 +13,19 @@
  */
 package com.querydsl.jpa;
 
-import org.hibernate.query.Query;
-import org.hibernate.query.NativeQuery;
-
 import com.querydsl.jpa.hibernate.SessionHolder;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 public class DummySessionHolder implements SessionHolder {
 
-    @Override
-    public Query<?> createQuery(String queryString) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public Query<?> createQuery(String queryString) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public NativeQuery<?> createSQLQuery(String queryString) {
-        throw new UnsupportedOperationException();
-    }
-
+  @Override
+  public NativeQuery<?> createSQLQuery(String queryString) {
+    throw new UnsupportedOperationException();
+  }
 }

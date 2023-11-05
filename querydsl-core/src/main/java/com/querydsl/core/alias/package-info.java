@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Alias functionality
- */
+/** Alias functionality */
 package com.querydsl.core.alias;
-

@@ -13,11 +13,10 @@
  */
 package com.querydsl.core.types;
 
+import com.querydsl.core.annotations.Immutable;
 import java.io.Serializable;
 import java.util.Objects;
-
 import org.jetbrains.annotations.Nullable;
-import com.querydsl.core.annotations.Immutable;
 
 /**
  * {@code PathMetadata} provides metadata for {@link Path} expressions.
@@ -27,74 +26,73 @@ import com.querydsl.core.annotations.Immutable;
 @Immutable
 public final class PathMetadata implements Serializable {
 
-    private static final long serialVersionUID = -1055994185028970065L;
+  private static final long serialVersionUID = -1055994185028970065L;
 
-    private final Object element;
+  private final Object element;
 
-    private final int hashCode;
+  private final int hashCode;
 
-    @Nullable
-    private final Path<?> parent, rootPath;
+  @Nullable private final Path<?> parent, rootPath;
 
-    private final PathType pathType;
+  private final PathType pathType;
 
-    public PathMetadata(@Nullable Path<?> parent, Object element, PathType type) {
-        this.parent = parent;
-        this.element = element;
-        this.pathType = type;
-        this.rootPath = parent != null ? parent.getRoot() : null;
-        this.hashCode = 31 * element.hashCode() + pathType.name().hashCode();
+  public PathMetadata(@Nullable Path<?> parent, Object element, PathType type) {
+    this.parent = parent;
+    this.element = element;
+    this.pathType = type;
+    this.rootPath = parent != null ? parent.getRoot() : null;
+    this.hashCode = 31 * element.hashCode() + pathType.name().hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    } else if (obj instanceof PathMetadata) {
+      PathMetadata p = (PathMetadata) obj;
+      return element.equals(p.element)
+          && pathType == p.pathType
+          && Objects.equals(parent, p.parent);
+    } else {
+      return false;
     }
+  }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof PathMetadata) {
-            PathMetadata p = (PathMetadata) obj;
-            return element.equals(p.element) &&
-                    pathType == p.pathType &&
-                    Objects.equals(parent, p.parent);
-        } else {
-            return false;
-        }
+  public Object getElement() {
+    return element;
+  }
 
+  public String getName() {
+    if (pathType == PathType.VARIABLE || pathType == PathType.PROPERTY) {
+      return (String) element;
+    } else {
+      throw new IllegalStateException(
+          "name property not available for path of type "
+              + pathType
+              + ". Use getElement() to access the generic path element.");
     }
+  }
 
-    public Object getElement() {
-        return element;
-    }
+  @Nullable
+  public Path<?> getParent() {
+    return parent;
+  }
 
-    public String getName() {
-        if (pathType == PathType.VARIABLE || pathType == PathType.PROPERTY) {
-            return (String) element;
-        } else {
-            throw new IllegalStateException("name property not available for path of type " + pathType +
-                    ". Use getElement() to access the generic path element.");
-        }
-    }
+  public PathType getPathType() {
+    return pathType;
+  }
 
-    @Nullable
-    public Path<?> getParent() {
-        return parent;
-    }
+  @Nullable
+  public Path<?> getRootPath() {
+    return rootPath;
+  }
 
-    public PathType getPathType() {
-        return pathType;
-    }
+  @Override
+  public int hashCode() {
+    return hashCode;
+  }
 
-    @Nullable
-    public Path<?> getRootPath() {
-        return rootPath;
-    }
-
-    @Override
-    public int hashCode() {
-        return hashCode;
-    }
-
-    public boolean isRoot() {
-        return parent == null || (pathType == PathType.DELEGATE && parent.getMetadata().isRoot());
-    }
-
+  public boolean isRoot() {
+    return parent == null || (pathType == PathType.DELEGATE && parent.getMetadata().isRoot());
+  }
 }

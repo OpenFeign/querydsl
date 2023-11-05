@@ -13,47 +13,44 @@
  */
 package com.querydsl.core.types.dsl;
 
-import org.jetbrains.annotations.Range;
-
 import com.querydsl.core.types.Expression;
+import org.jetbrains.annotations.Range;
 
 /**
  * {@code ArrayExpression} defines an interface for array typed expression
  *
  * @author tiwe
- *
  * @param <A> array type
  * @param <T> array element type
  */
 public interface ArrayExpression<A, T> extends Expression<A> {
 
-    /**
-     * Create a {@code this.size()} expression
-     *
-     * <p>Returns the size of the array as an expression</p>
-     *
-     * @return size of array
-     */
-    NumberExpression<Integer> size();
+  /**
+   * Create a {@code this.size()} expression
+   *
+   * <p>Returns the size of the array as an expression
+   *
+   * @return size of array
+   */
+  NumberExpression<Integer> size();
 
-    /**
-     * Create a {@code this[index]} expression
-     *
-     * <p>Returns the element at the given index</p>
-     *
-     * @param index zero based index
-     * @return element at index
-     */
-    SimpleExpression<T> get(Expression<Integer> index);
+  /**
+   * Create a {@code this[index]} expression
+   *
+   * <p>Returns the element at the given index
+   *
+   * @param index zero based index
+   * @return element at index
+   */
+  SimpleExpression<T> get(Expression<Integer> index);
 
-    /**
-     * Create a {@code this[index]} expression
-     *
-     * <p>Returns the element at the given index</p>
-     *
-     * @param index zero based index
-     * @return element at index
-     */
-    SimpleExpression<T> get(@Range(from = 0, to = Integer.MAX_VALUE) int index);
-
+  /**
+   * Create a {@code this[index]} expression
+   *
+   * <p>Returns the element at the given index
+   *
+   * @param index zero based index
+   * @return element at index
+   */
+  SimpleExpression<T> get(@Range(from = 0, to = Integer.MAX_VALUE) int index);
 }

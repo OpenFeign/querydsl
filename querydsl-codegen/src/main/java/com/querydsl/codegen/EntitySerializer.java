@@ -18,5 +18,4 @@ package com.querydsl.codegen;
  *
  * @author f43nd1r
  */
-public interface EntitySerializer extends Serializer {
-}
+public interface EntitySerializer extends Serializer {}

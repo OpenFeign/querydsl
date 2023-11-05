@@ -14,17 +14,15 @@
 package com.querydsl.sql.namemapping;
 
 import com.querydsl.sql.SchemaAndTable;
-
 import java.util.Optional;
 
 /**
- * By implementing this interface, it is possible to programmatically override
- * schema, table and column names.
+ * By implementing this interface, it is possible to programmatically override schema, table and
+ * column names.
  */
 public interface NameMapping {
 
-    Optional<String> getColumnOverride(SchemaAndTable key, String column);
+  Optional<String> getColumnOverride(SchemaAndTable key, String column);
 
-    Optional<SchemaAndTable> getOverride(SchemaAndTable key);
-
+  Optional<SchemaAndTable> getOverride(SchemaAndTable key);
 }

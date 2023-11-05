@@ -14,7 +14,6 @@
 package com.querydsl.collections;
 
 import com.querydsl.codegen.utils.Evaluator;
-
 import java.util.function.Function;
 
 /**
@@ -22,23 +21,22 @@ import java.util.function.Function;
  *
  * @param <S> source type
  * @param <T> target type
- *
  * @author tiwe
  */
 public class EvaluatorFunction<S, T> implements Function<S, T> {
 
-    private final Evaluator<T> ev;
+  private final Evaluator<T> ev;
 
-    public EvaluatorFunction(Evaluator<T> ev) {
-        this.ev = ev;
-    }
+  public EvaluatorFunction(Evaluator<T> ev) {
+    this.ev = ev;
+  }
 
-    @Override
-    public T apply(S input) {
-        if (input.getClass().isArray()) {
-            return ev.evaluate((Object[]) input);
-        } else {
-            return ev.evaluate(input);
-        }
+  @Override
+  public T apply(S input) {
+    if (input.getClass().isArray()) {
+      return ev.evaluate((Object[]) input);
+    } else {
+      return ev.evaluate(input);
     }
+  }
 }

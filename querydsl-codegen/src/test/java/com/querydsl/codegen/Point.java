@@ -17,21 +17,19 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.ArrayPath;
 
-
 public class Point extends ArrayPath<Double[], Double> {
 
-    private static final long serialVersionUID = 1776628530121566388L;
+  private static final long serialVersionUID = 1776628530121566388L;
 
-    public Point(String variable) {
-        super(Double[].class, variable);
-    }
+  public Point(String variable) {
+    super(Double[].class, variable);
+  }
 
-    public Point(Path<?> parent, String property) {
-        super(Double[].class, parent, property);
-    }
+  public Point(Path<?> parent, String property) {
+    super(Double[].class, parent, property);
+  }
 
-    public Point(PathMetadata metadata) {
-        super(Double[].class, metadata);
-    }
-
+  public Point(PathMetadata metadata) {
+    super(Double[].class, metadata);
+  }
 }

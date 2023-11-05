@@ -15,38 +15,28 @@ package com.querydsl.apt.inheritance;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
+import org.junit.Test;
 
 public class Inheritance11Test {
 
-    @QueryEntity
-    public class Foo extends FooBase<Foo> {
+  @QueryEntity
+  public class Foo extends FooBase<Foo> {}
 
-    }
+  @QueryEntity
+  public class FooBase<T> {}
 
-    @QueryEntity
-    public class FooBase<T> {
+  @QueryEntity
+  public class BarBase<T> {}
 
-    }
+  @QueryEntity
+  public class Bar extends BarBase<Foo> {}
 
-    @QueryEntity
-    public class BarBase<T> {
-
-    }
-
-    @QueryEntity
-    public class Bar extends BarBase<Foo> {
-
-    }
-
-    @Test
-    public void test() {
-        assertNotNull(QInheritance11Test_Foo.foo);
-        assertNotNull(QInheritance11Test_FooBase.fooBase);
-        assertNotNull(QInheritance11Test_Bar.bar);
-        assertNotNull(QInheritance11Test_BarBase.barBase);
-    }
-
+  @Test
+  public void test() {
+    assertNotNull(QInheritance11Test_Foo.foo);
+    assertNotNull(QInheritance11Test_FooBase.fooBase);
+    assertNotNull(QInheritance11Test_Bar.bar);
+    assertNotNull(QInheritance11Test_BarBase.barBase);
+  }
 }

@@ -7,36 +7,33 @@ package com.querydsl.sql.ddl;
 
 /**
  * @author tiwe
- *
  */
 public class IndexData {
 
-    private final String name;
+  private final String name;
 
-    private final String[] columns;
+  private final String[] columns;
 
-    private boolean unique;
+  private boolean unique;
 
-    public IndexData(String name, String[] columns) {
-        this.name = name;
-        this.columns = columns.clone();
-    }
+  public IndexData(String name, String[] columns) {
+    this.name = name;
+    this.columns = columns.clone();
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String[] getColumns() {
-        return columns.clone();
-    }
+  public String[] getColumns() {
+    return columns.clone();
+  }
 
-    public boolean isUnique() {
-        return unique;
-    }
+  public boolean isUnique() {
+    return unique;
+  }
 
-    public void setUnique(boolean unique) {
-        this.unique = unique;
-    }
-
-
+  public void setUnique(boolean unique) {
+    this.unique = unique;
+  }
 }

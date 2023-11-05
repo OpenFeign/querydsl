@@ -19,6 +19,5 @@ import com.querydsl.core.annotations.QueryEntity;
 @QueryEntity
 public class SEntity2 extends SSupertype {
 
-    String entity2Field;
-
+  String entity2Field;
 }

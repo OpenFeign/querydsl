@@ -13,33 +13,30 @@
  */
 package com.querydsl.core.serialization;
 
-import java.util.Map;
-
-import org.junit.Test;
-
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.JavaTemplates;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
+import java.util.Map;
+import org.junit.Test;
 
 public class SerializerBaseTest {
 
-    @Test
-    public void test() {
-        DummySerializer serializer = new DummySerializer(new JavaTemplates());
-        StringPath strPath = Expressions.stringPath("str");
-        // path
-        serializer.handle(strPath);
-        // operation
-        serializer.handle(strPath.isNotNull());
-        // long path
-        serializer.handle(new PathBuilder<Object>(Object.class,"p").getList("l",Map.class).get(0));
-        // constant
-        serializer.handle(ConstantImpl.create(""));
-        //  custom
-        serializer.handle(ExpressionUtils.template(Object.class, "xxx", ConstantImpl.create("")));
-    }
-
+  @Test
+  public void test() {
+    DummySerializer serializer = new DummySerializer(new JavaTemplates());
+    StringPath strPath = Expressions.stringPath("str");
+    // path
+    serializer.handle(strPath);
+    // operation
+    serializer.handle(strPath.isNotNull());
+    // long path
+    serializer.handle(new PathBuilder<Object>(Object.class, "p").getList("l", Map.class).get(0));
+    // constant
+    serializer.handle(ConstantImpl.create(""));
+    //  custom
+    serializer.handle(ExpressionUtils.template(Object.class, "xxx", ConstantImpl.create("")));
+  }
 }

@@ -13,32 +13,29 @@
  */
 package com.querydsl.sql.dml;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.querydsl.core.types.Path;
 import com.querydsl.sql.RelationalPath;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Abstract base class for Mapper implementations
  *
  * @author tiwe
- *
  * @param <T>
  */
 public abstract class AbstractMapper<T> implements Mapper<T> {
 
-    protected Map<String, Path<?>> getColumns(RelationalPath<?> path) {
-        Map<String, Path<?>> columns = new LinkedHashMap<>();
-        for (Path<?> column : path.getColumns()) {
-            columns.put(column.getMetadata().getName(), column);
-        }
-        return columns;
+  protected Map<String, Path<?>> getColumns(RelationalPath<?> path) {
+    Map<String, Path<?>> columns = new LinkedHashMap<>();
+    for (Path<?> column : path.getColumns()) {
+      columns.put(column.getMetadata().getName(), column);
     }
+    return columns;
+  }
 
-    protected boolean isPrimaryKeyColumn(RelationalPath<?> parent, Path<?> property) {
-        return parent.getPrimaryKey() != null
-            && parent.getPrimaryKey().getLocalColumns().contains(property);
-    }
-
+  protected boolean isPrimaryKeyColumn(RelationalPath<?> parent, Path<?> property) {
+    return parent.getPrimaryKey() != null
+        && parent.getPrimaryKey().getLocalColumns().contains(property);
+  }
 }

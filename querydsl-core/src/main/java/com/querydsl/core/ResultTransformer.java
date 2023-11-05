@@ -13,24 +13,21 @@
  */
 package com.querydsl.core;
 
-
 /**
- * Executes query on a {@link FetchableQuery} and transforms results into T. This can be used for example
- * to group projected columns or to filter out duplicate results.
+ * Executes query on a {@link FetchableQuery} and transforms results into T. This can be used for
+ * example to group projected columns or to filter out duplicate results.
  *
  * @see com.querydsl.core.group.GroupBy
  * @author sasa
- *
  * @param <T> Transformations target type
  */
 public interface ResultTransformer<T> {
 
-    /**
-     * Execute the given query and transform the results
-     *
-     * @param query query to be used for execution
-     * @return transformed results
-     */
-    T transform(FetchableQuery<?, ?> query);
-
+  /**
+   * Execute the given query and transform the results
+   *
+   * @param query query to be used for execution
+   * @return transformed results
+   */
+  T transform(FetchableQuery<?, ?> query);
 }

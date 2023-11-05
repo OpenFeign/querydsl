@@ -15,48 +15,46 @@ package com.querydsl.jpa.domain4;
 
 import java.io.Serializable;
 import java.util.List;
-
 import javax.persistence.*;
 
 @Embeddable
 @Access(AccessType.PROPERTY)
 public class BookDefinition implements Serializable {
 
-    private static final long serialVersionUID = 3570098308959717614L;
+  private static final long serialVersionUID = 3570098308959717614L;
 
-    private String name;
+  private String name;
 
-    private String description;
+  private String description;
 
-    private List<BookMark> bookMarks;
+  private List<BookMark> bookMarks;
 
-    @Basic
-    public String getName() {
-        return name;
-    }
+  @Basic
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    @Basic
-    public String getDescription() {
-        return description;
-    }
+  @Basic
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    @ElementCollection()
-    @CollectionTable(name = "book_bookmarks")
-    @OrderColumn()
-    public List<BookMark> getBookMarks() {
-        return bookMarks;
-    }
+  @ElementCollection()
+  @CollectionTable(name = "book_bookmarks")
+  @OrderColumn()
+  public List<BookMark> getBookMarks() {
+    return bookMarks;
+  }
 
-    public void setBookMarks(List<BookMark> bookMarks) {
-        this.bookMarks = bookMarks;
-    }
-
+  public void setBookMarks(List<BookMark> bookMarks) {
+    this.bookMarks = bookMarks;
+  }
 }

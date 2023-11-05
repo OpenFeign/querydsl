@@ -16,48 +16,40 @@ package com.querydsl.apt.domain;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
-
 import org.junit.Test;
 
 public class Superclass2Test {
 
-    @MappedSuperclass
-    public static class CommonPersistence {
+  @MappedSuperclass
+  public static class CommonPersistence {
 
-        @Column(name = "created_on")
-        private Date createdOn;
+    @Column(name = "created_on")
+    private Date createdOn;
 
-        @PrePersist
-        protected void onCreate() {
-            createdOn = new Date();
-        }
-
-        public Date getCreatedOn() {
-            return new Date(createdOn.getTime());
-        }
-
+    @PrePersist
+    protected void onCreate() {
+      createdOn = new Date();
     }
 
-    @Entity
-    public static class Subtype extends CommonPersistence {
-
+    public Date getCreatedOn() {
+      return new Date(createdOn.getTime());
     }
+  }
 
-    @Test
-    public void defaultInstance() {
-        assertNotNull(QSuperclass2Test_CommonPersistence.commonPersistence);
-    }
+  @Entity
+  public static class Subtype extends CommonPersistence {}
 
-    @Test
-    public void test() {
-        assertNotNull(QSuperclass2Test_Subtype.subtype.createdOn);
-    }
+  @Test
+  public void defaultInstance() {
+    assertNotNull(QSuperclass2Test_CommonPersistence.commonPersistence);
+  }
 
-
-
+  @Test
+  public void test() {
+    assertNotNull(QSuperclass2Test_Subtype.subtype.createdOn);
+  }
 }

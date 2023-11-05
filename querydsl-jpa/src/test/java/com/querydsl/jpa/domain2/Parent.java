@@ -22,36 +22,33 @@ import javax.persistence.Table;
 @Table(name = "parent_")
 public class Parent {
 
-    @Id
-    private long id;
+  @Id private long id;
 
-    private String name;
+  private String name;
 
-    @Embedded
-    private Child child;
+  @Embedded private Child child;
 
-    public long getId() {
-        return id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Child getChild() {
-        return child;
-    }
+  public Child getChild() {
+    return child;
+  }
 
-    public void setChild(Child child) {
-        this.child = child;
-    }
-
+  public void setChild(Child child) {
+    this.child = child;
+  }
 }

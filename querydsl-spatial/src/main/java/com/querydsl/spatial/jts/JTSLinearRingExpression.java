@@ -20,15 +20,14 @@ import com.vividsolutions.jts.geom.LineString;
  * A LinearRing is a LineString that is both closed and simple.
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class JTSLinearRingExpression<T extends LineString> extends JTSLineStringExpression<T> {
+public abstract class JTSLinearRingExpression<T extends LineString>
+    extends JTSLineStringExpression<T> {
 
-    private static final long serialVersionUID = -759466658721392938L;
+  private static final long serialVersionUID = -759466658721392938L;
 
-    public JTSLinearRingExpression(Expression<T> mixin) {
-        super(mixin);
-    }
-
+  public JTSLinearRingExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 }

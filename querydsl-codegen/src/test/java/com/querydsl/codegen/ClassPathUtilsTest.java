@@ -15,39 +15,36 @@ package com.querydsl.codegen;
 
 import static org.junit.Assert.*;
 
+import com.SomeClass;
 import java.io.IOException;
 import java.util.Set;
-
 import org.junit.Test;
-
-import com.SomeClass;
 
 public class ClassPathUtilsTest {
 
-    @Test
-    public void scanPackage() throws IOException {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Set<Class<?>> classes = ClassPathUtils.scanPackage(classLoader, SomeClass.class.getPackage());
-        assertFalse(classes.isEmpty());
-    }
+  @Test
+  public void scanPackage() throws IOException {
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    Set<Class<?>> classes = ClassPathUtils.scanPackage(classLoader, SomeClass.class.getPackage());
+    assertFalse(classes.isEmpty());
+  }
 
-    @Test
-    public void scanPackage_check_initialized() throws IOException {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Set<Class<?>> classes = ClassPathUtils.scanPackage(classLoader, getClass().getPackage());
-        assertFalse(classes.isEmpty());
-        assertEquals("XXX", SomeOtherClass2.property);
-    }
+  @Test
+  public void scanPackage_check_initialized() throws IOException {
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    Set<Class<?>> classes = ClassPathUtils.scanPackage(classLoader, getClass().getPackage());
+    assertFalse(classes.isEmpty());
+    assertEquals("XXX", SomeOtherClass2.property);
+  }
 
-    @Test
-    public void safeClassForName() {
-        assertNull(safeForName("com.sun.nio.file.ExtendedOpenOption"));
-        assertNotNull(safeForName("com.suntanning.ShouldBeLoaded"));
-        assertNotNull(safeForName("com.applejuice.ShouldBeLoaded"));
-    }
+  @Test
+  public void safeClassForName() {
+    assertNull(safeForName("com.sun.nio.file.ExtendedOpenOption"));
+    assertNotNull(safeForName("com.suntanning.ShouldBeLoaded"));
+    assertNotNull(safeForName("com.applejuice.ShouldBeLoaded"));
+  }
 
-    private Class<?> safeForName(String className) {
-        return ClassPathUtils.safeClassForName(ClassPathUtilsTest.class.getClassLoader(), className);
-    }
-
+  private Class<?> safeForName(String className) {
+    return ClassPathUtils.safeClassForName(ClassPathUtilsTest.class.getClassLoader(), className);
+  }
 }

@@ -14,30 +14,24 @@
 package com.querydsl.jpa.domain;
 
 import java.util.Map;
-
 import javax.persistence.*;
 
-/**
- * The Class Show.
- */
+/** The Class Show. */
 @Entity
 @Table(name = "show_")
 public class Show {
 
-    @Id
-    long id;
+  @Id long id;
 
-    @ElementCollection
-    @MapKeyColumn(name = "acts_key")
-    public Map<String, String> acts;
+  @ElementCollection
+  @MapKeyColumn(name = "acts_key")
+  public Map<String, String> acts;
 
-    @ManyToOne
-    public Show parent;
+  @ManyToOne public Show parent;
 
-    public Show() { }
+  public Show() {}
 
-    public Show(int id) {
-        this.id = id;
-    }
-
+  public Show(int id) {
+    this.id = id;
+  }
 }

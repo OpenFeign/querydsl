@@ -15,34 +15,30 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
+import org.junit.Test;
 
 public class Superclass4Test {
 
-    public static class SuperClass {
+  public static class SuperClass {
 
-        String superClassProperty;
+    String superClassProperty;
+  }
 
-    }
+  @QueryEntity
+  public static class Entity extends SuperClass {
 
-    @QueryEntity
-    public static class Entity extends SuperClass {
+    String entityProperty;
+  }
 
-        String entityProperty;
+  @Test
+  public void superClass_properties() {
+    assertNotNull(QSuperclass4Test_SuperClass.superClass.superClassProperty);
+  }
 
-    }
-
-    @Test
-    public void superClass_properties() {
-        assertNotNull(QSuperclass4Test_SuperClass.superClass.superClassProperty);
-    }
-
-    @Test
-    public void entity_properties() {
-        assertNotNull(QSuperclass4Test_Entity.entity.entityProperty);
-        assertNotNull(QSuperclass4Test_Entity.entity.superClassProperty);
-    }
-
+  @Test
+  public void entity_properties() {
+    assertNotNull(QSuperclass4Test_Entity.entity.entityProperty);
+    assertNotNull(QSuperclass4Test_Entity.entity.superClassProperty);
+  }
 }

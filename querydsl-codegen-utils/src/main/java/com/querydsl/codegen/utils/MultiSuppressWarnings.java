@@ -21,20 +21,20 @@ import java.util.Arrays;
 @SuppressWarnings("AnnotationAsSuperInterface") // Internal helper class
 class MultiSuppressWarnings implements SuppressWarnings {
 
-    private final String[] values;
+  private final String[] values;
 
-    MultiSuppressWarnings(String... values) {
-        this.values = Arrays.copyOf(values, values.length);
-    }
+  MultiSuppressWarnings(String... values) {
+    this.values = Arrays.copyOf(values, values.length);
+  }
 
-    @Override
-    @SuppressWarnings("ReturnOfCollectionOrArrayField")
-    public String[] value() {
-        return values;
-    }
+  @Override
+  @SuppressWarnings("ReturnOfCollectionOrArrayField")
+  public String[] value() {
+    return values;
+  }
 
-    @Override
-    public Class<? extends Annotation> annotationType() {
-        return SuppressWarnings.class;
-    }
+  @Override
+  public Class<? extends Annotation> annotationType() {
+    return SuppressWarnings.class;
+  }
 }

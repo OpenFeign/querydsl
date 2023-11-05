@@ -15,29 +15,22 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryExclude;
 import com.querydsl.core.types.dsl.EntityPathBase;
+import org.junit.Test;
 
 public class QueryExcludeTest {
 
-    @QueryExclude
-    @QueryEntity
-    public static class Entity {
+  @QueryExclude
+  @QueryEntity
+  public static class Entity {}
 
-    }
+  @QueryEntity
+  public static class SubEntity extends Entity {}
 
-    @QueryEntity
-    public static class SubEntity extends Entity {
-
-    }
-
-    @Test
-    public void subEntity() {
-        assertEquals(EntityPathBase.class, QQueryExcludeTest_SubEntity.class.getSuperclass());
-    }
-
-
+  @Test
+  public void subEntity() {
+    assertEquals(EntityPathBase.class, QQueryExcludeTest_SubEntity.class.getSuperclass());
+  }
 }

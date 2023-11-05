@@ -16,86 +16,78 @@ package com.querydsl.apt.domain;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryDelegate;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.StringPath;
+import org.junit.Test;
 
 public class DelegateTest {
 
-    @QuerySupertype
-    public static class Identifiable {
+  @QuerySupertype
+  public static class Identifiable {
 
-        long id;
+    long id;
+  }
 
-    }
+  @QueryEntity
+  public static class User extends Identifiable {
 
-    @QueryEntity
-    public static class User extends Identifiable {
+    String name;
 
-        String name;
+    User managedBy;
+  }
 
-        User managedBy;
+  @QueryEntity
+  public static class SimpleUser extends User {}
 
-    }
+  @QueryEntity
+  public static class SimpleUser2 extends SimpleUser {}
 
-    @QueryEntity
-    public static class SimpleUser extends User {
+  @QueryDelegate(User.class)
+  public static Expression<Boolean> isManagedBy(QDelegateTest_User user, User other) {
+    return ConstantImpl.create(true);
+  }
 
-    }
+  @QueryDelegate(User.class)
+  public static Expression<Boolean> isManagedBy(QDelegateTest_User user, QDelegateTest_User other) {
+    return ConstantImpl.create(true);
+  }
 
-    @QueryEntity
-    public static class SimpleUser2 extends SimpleUser {
+  @QueryDelegate(User.class)
+  public static Expression<Boolean> simpleMethod(QDelegateTest_User user) {
+    return ConstantImpl.create(true);
+  }
 
-    }
+  @QueryDelegate(DelegateTest.User.class)
+  public static StringPath getName(QDelegateTest_User user) {
+    return user.name;
+  }
 
-    @QueryDelegate(User.class)
-    public static Expression<Boolean> isManagedBy(QDelegateTest_User user, User other) {
-        return ConstantImpl.create(true);
-    }
+  @Test
+  public void user() {
+    QDelegateTest_User user = QDelegateTest_User.user;
+    assertNotNull(user.isManagedBy(new User()));
+    assertNotNull(user.isManagedBy(user));
+    assertNotNull(user.simpleMethod());
+    assertEquals(user.name, user.getName());
+  }
 
-    @QueryDelegate(User.class)
-    public static Expression<Boolean> isManagedBy(QDelegateTest_User user, QDelegateTest_User other) {
-        return ConstantImpl.create(true);
-    }
+  @Test
+  public void simpleUser() {
+    QDelegateTest_SimpleUser user = QDelegateTest_SimpleUser.simpleUser;
+    assertNotNull(user.isManagedBy(new User()));
+    assertNotNull(user.isManagedBy(user._super));
+    assertEquals(user.name, user.getName());
+  }
 
-    @QueryDelegate(User.class)
-    public static Expression<Boolean> simpleMethod(QDelegateTest_User user) {
-        return ConstantImpl.create(true);
-    }
-
-    @QueryDelegate(DelegateTest.User.class)
-    public static StringPath getName(QDelegateTest_User user) {
-        return user.name;
-    }
-
-    @Test
-    public void user() {
-        QDelegateTest_User user = QDelegateTest_User.user;
-        assertNotNull(user.isManagedBy(new User()));
-        assertNotNull(user.isManagedBy(user));
-        assertNotNull(user.simpleMethod());
-        assertEquals(user.name, user.getName());
-    }
-
-    @Test
-    public void simpleUser() {
-        QDelegateTest_SimpleUser user = QDelegateTest_SimpleUser.simpleUser;
-        assertNotNull(user.isManagedBy(new User()));
-        assertNotNull(user.isManagedBy(user._super));
-        assertEquals(user.name, user.getName());
-    }
-
-    @Test
-    public void simpleUser2() {
-        QDelegateTest_SimpleUser2 user = QDelegateTest_SimpleUser2.simpleUser2;
-        assertNotNull(user.isManagedBy(new User()));
-        assertNotNull(user.isManagedBy(user._super._super));
-        assertEquals(user.name, user.getName());
-    }
-
+  @Test
+  public void simpleUser2() {
+    QDelegateTest_SimpleUser2 user = QDelegateTest_SimpleUser2.simpleUser2;
+    assertNotNull(user.isManagedBy(new User()));
+    assertNotNull(user.isManagedBy(user._super._super));
+    assertEquals(user.name, user.getName());
+  }
 }

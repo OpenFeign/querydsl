@@ -13,59 +13,56 @@
  */
 package com.querydsl.spatial;
 
+import com.querydsl.core.types.*;
 import java.util.Arrays;
 import java.util.List;
-
 import org.geolatte.geom.Geometry;
 
-import com.querydsl.core.types.*;
-
 /**
- * {@code GeometryOperation} extends {@link GeometryCollectionExpression} to implement the
- * {@link Operation} interface
+ * {@code GeometryOperation} extends {@link GeometryCollectionExpression} to implement the {@link
+ * Operation} interface
  *
  * @author tiwe
- *
  * @param <T>
  */
-public class GeometryOperation<T extends Geometry> extends GeometryExpression<T> implements Operation<T> {
+public class GeometryOperation<T extends Geometry> extends GeometryExpression<T>
+    implements Operation<T> {
 
-    private static final long serialVersionUID = 3433471874808633698L;
+  private static final long serialVersionUID = 3433471874808633698L;
 
-    private final OperationImpl<T> opMixin;
+  private final OperationImpl<T> opMixin;
 
-    protected GeometryOperation(OperationImpl<T> mixin) {
-        super(mixin);
-        this.opMixin = mixin;
-    }
+  protected GeometryOperation(OperationImpl<T> mixin) {
+    super(mixin);
+    this.opMixin = mixin;
+  }
 
-    protected GeometryOperation(Class<? extends T> type, Operator op, Expression<?>... args) {
-        this(type, op, Arrays.asList(args));
-    }
+  protected GeometryOperation(Class<? extends T> type, Operator op, Expression<?>... args) {
+    this(type, op, Arrays.asList(args));
+  }
 
-    protected GeometryOperation(Class<? extends T> type, Operator op, List<Expression<?>> args) {
-        super(ExpressionUtils.operation(type, op, args));
-        this.opMixin = (OperationImpl<T>) mixin;
-    }
+  protected GeometryOperation(Class<? extends T> type, Operator op, List<Expression<?>> args) {
+    super(ExpressionUtils.operation(type, op, args));
+    this.opMixin = (OperationImpl<T>) mixin;
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(opMixin, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(opMixin, context);
+  }
 
-    @Override
-    public Expression<?> getArg(int index) {
-        return opMixin.getArg(index);
-    }
+  @Override
+  public Expression<?> getArg(int index) {
+    return opMixin.getArg(index);
+  }
 
-    @Override
-    public List<Expression<?>> getArgs() {
-        return opMixin.getArgs();
-    }
+  @Override
+  public List<Expression<?>> getArgs() {
+    return opMixin.getArgs();
+  }
 
-    @Override
-    public Operator getOperator() {
-        return opMixin.getOperator();
-    }
-
+  @Override
+  public Operator getOperator() {
+    return opMixin.getOperator();
+  }
 }

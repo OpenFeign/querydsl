@@ -14,21 +14,16 @@
 package com.querydsl.jpa.domain;
 
 import java.util.Collection;
-
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * The Class NameList.
- */
+/** The Class NameList. */
 @Entity
 @Table(name = "namelist_")
 public class NameList {
-    @Id
-    long id;
+  @Id long id;
 
-    @ElementCollection
-    Collection<String> names;
+  @ElementCollection Collection<String> names;
 }

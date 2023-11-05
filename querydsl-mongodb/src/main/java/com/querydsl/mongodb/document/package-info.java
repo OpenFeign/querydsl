@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-/**
- * MongoDB Document API support.
- */
+/** MongoDB Document API support. */
 package com.querydsl.mongodb.document;

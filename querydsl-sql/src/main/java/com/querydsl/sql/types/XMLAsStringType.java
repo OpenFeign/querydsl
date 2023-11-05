@@ -19,36 +19,32 @@ import java.sql.*;
  * {@code XMLAsStringType} maps String to SQLXML on the JDBC level
  *
  * @author tiwe
- *
  */
 public class XMLAsStringType extends AbstractType<String> {
 
-    public XMLAsStringType() {
-        super(Types.SQLXML);
-    }
+  public XMLAsStringType() {
+    super(Types.SQLXML);
+  }
 
-    public XMLAsStringType(int type) {
-        super(type);
-    }
+  public XMLAsStringType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getValue(ResultSet rs, int startIndex) throws SQLException {
-        SQLXML value = rs.getSQLXML(startIndex);
-        return value != null ? value.getString() : null;
-    }
+  @Override
+  public String getValue(ResultSet rs, int startIndex) throws SQLException {
+    SQLXML value = rs.getSQLXML(startIndex);
+    return value != null ? value.getString() : null;
+  }
 
-    @Override
-    public Class<String> getReturnedClass() {
-        return String.class;
-    }
+  @Override
+  public Class<String> getReturnedClass() {
+    return String.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, String value)
-            throws SQLException {
-        SQLXML xml = st.getConnection().createSQLXML();
-        xml.setString(value);
-        st.setSQLXML(startIndex, xml);
-
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, String value) throws SQLException {
+    SQLXML xml = st.getConnection().createSQLXML();
+    xml.setString(value);
+    st.setSQLXML(startIndex, xml);
+  }
 }

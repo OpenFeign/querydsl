@@ -25,36 +25,24 @@ import java.lang.annotation.Target;
  * {@code Config} defines serialization flags for annotated domain types and packages
  *
  * @author tiwe
- *
  */
 @Documented
-@Target({PACKAGE,TYPE})
+@Target({PACKAGE, TYPE})
 @Retention(RUNTIME)
 public @interface Config {
 
-    /**
-     * Create entity field initialization accessors     *
-     */
-    boolean entityAccessors() default false;
+  /** Create entity field initialization accessors * */
+  boolean entityAccessors() default false;
 
-    /**
-     * Create accessors for indexed list access
-     */
-    boolean listAccessors() default false;
+  /** Create accessors for indexed list access */
+  boolean listAccessors() default false;
 
-    /**
-     * Create accessors for keyed map access
-     */
-    boolean mapAccessors() default false;
+  /** Create accessors for keyed map access */
+  boolean mapAccessors() default false;
 
-    /**
-     * Create default variable in query type
-     */
-    boolean createDefaultVariable() default true;
+  /** Create default variable in query type */
+  boolean createDefaultVariable() default true;
 
-    /**
-     * The name of the default variable in query type
-     */
-    String defaultVariableName() default "";
-
+  /** The name of the default variable in query type */
+  String defaultVariableName() default "";
 }

@@ -13,15 +13,14 @@
  */
 package com.querydsl.sql.oracle;
 
-import java.sql.Connection;
-import java.util.function.Supplier;
-
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.sql.AbstractSQLQuery;
 import com.querydsl.sql.Configuration;
+import java.sql.Connection;
+import java.util.function.Supplier;
 
 /**
  * {@code OracleQuery} provides Oracle specific extensions to the base SQL query type
@@ -30,84 +29,84 @@ import com.querydsl.sql.Configuration;
  * @param <T> result type
  * @param <C> the concrete subtype
  */
-public abstract class AbstractOracleQuery<T, C extends AbstractOracleQuery<T, C>> extends AbstractSQLQuery<T, C> {
+public abstract class AbstractOracleQuery<T, C extends AbstractOracleQuery<T, C>>
+    extends AbstractSQLQuery<T, C> {
 
-    protected static final String CONNECT_BY = "\nconnect by ";
+  protected static final String CONNECT_BY = "\nconnect by ";
 
-    protected static final String CONNECT_BY_NOCYCLE_PRIOR = "\nconnect by nocycle prior ";
+  protected static final String CONNECT_BY_NOCYCLE_PRIOR = "\nconnect by nocycle prior ";
 
-    protected static final String CONNECT_BY_PRIOR = "\nconnect by prior ";
+  protected static final String CONNECT_BY_PRIOR = "\nconnect by prior ";
 
-    protected static final String ORDER_SIBLINGS_BY = "\norder siblings by ";
+  protected static final String ORDER_SIBLINGS_BY = "\norder siblings by ";
 
-    protected static final String START_WITH = "\nstart with ";
+  protected static final String START_WITH = "\nstart with ";
 
-    public AbstractOracleQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
-        super(conn, configuration, metadata);
-    }
+  public AbstractOracleQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
+    super(conn, configuration, metadata);
+  }
 
-    public AbstractOracleQuery(Supplier<Connection> connProvider, Configuration configuration, QueryMetadata metadata) {
-        super(connProvider, configuration, metadata);
-    }
+  public AbstractOracleQuery(
+      Supplier<Connection> connProvider, Configuration configuration, QueryMetadata metadata) {
+    super(connProvider, configuration, metadata);
+  }
 
-    /**
-     * CONNECT BY specifies the relationship between parent rows and child rows of the hierarchy.
-     *
-     * @param cond condition
-     * @return the current object
-     */
-    public C connectByPrior(Predicate cond) {
-        return addFlag(Position.BEFORE_ORDER, CONNECT_BY_PRIOR, cond);
-    }
+  /**
+   * CONNECT BY specifies the relationship between parent rows and child rows of the hierarchy.
+   *
+   * @param cond condition
+   * @return the current object
+   */
+  public C connectByPrior(Predicate cond) {
+    return addFlag(Position.BEFORE_ORDER, CONNECT_BY_PRIOR, cond);
+  }
 
-    /**
-     * CONNECT BY specifies the relationship between parent rows and child rows of the hierarchy.
-     *
-     * @param cond condition
-     * @return the current object
-     */
-    public C connectBy(Predicate cond) {
-        return addFlag(Position.BEFORE_ORDER, CONNECT_BY, cond);
-    }
+  /**
+   * CONNECT BY specifies the relationship between parent rows and child rows of the hierarchy.
+   *
+   * @param cond condition
+   * @return the current object
+   */
+  public C connectBy(Predicate cond) {
+    return addFlag(Position.BEFORE_ORDER, CONNECT_BY, cond);
+  }
 
-    /**
-     * CONNECT BY specifies the relationship between parent rows and child rows of the hierarchy.
-     *
-     * @param cond condition
-     * @return the current object
-     */
-    public C connectByNocyclePrior(Predicate cond) {
-        return addFlag(Position.BEFORE_ORDER, CONNECT_BY_NOCYCLE_PRIOR, cond);
-    }
+  /**
+   * CONNECT BY specifies the relationship between parent rows and child rows of the hierarchy.
+   *
+   * @param cond condition
+   * @return the current object
+   */
+  public C connectByNocyclePrior(Predicate cond) {
+    return addFlag(Position.BEFORE_ORDER, CONNECT_BY_NOCYCLE_PRIOR, cond);
+  }
 
-    /**
-     * START WITH specifies the root row(s) of the hierarchy.
-     *
-     * @param cond condition
-     * @return the current object
-     */
-    public <A> C startWith(Predicate cond) {
-        return addFlag(Position.BEFORE_ORDER, START_WITH, cond);
-    }
+  /**
+   * START WITH specifies the root row(s) of the hierarchy.
+   *
+   * @param cond condition
+   * @return the current object
+   */
+  public <A> C startWith(Predicate cond) {
+    return addFlag(Position.BEFORE_ORDER, START_WITH, cond);
+  }
 
-    /**
-     * ORDER SIBLINGS BY preserves any ordering specified in the hierarchical query clause and then
-     * applies the order_by_clause to the siblings of the hierarchy.
-     *
-     * @param path path
-     * @return the current object
-     */
-    public C orderSiblingsBy(Expression<?> path) {
-        return addFlag(Position.BEFORE_ORDER, ORDER_SIBLINGS_BY, path);
-    }
+  /**
+   * ORDER SIBLINGS BY preserves any ordering specified in the hierarchical query clause and then
+   * applies the order_by_clause to the siblings of the hierarchy.
+   *
+   * @param path path
+   * @return the current object
+   */
+  public C orderSiblingsBy(Expression<?> path) {
+    return addFlag(Position.BEFORE_ORDER, ORDER_SIBLINGS_BY, path);
+  }
 
-    // TODO : connect by root
+  // TODO : connect by root
 
-    // TODO : connect by iscycle
+  // TODO : connect by iscycle
 
-    // TODO : connect by isleaf (pseudocolumn)
+  // TODO : connect by isleaf (pseudocolumn)
 
-    // TODO : sys connect path
+  // TODO : sys connect path
 }
-
-

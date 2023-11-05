@@ -8,55 +8,53 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.Test;
 
 public class NoteTest extends AbstractProcessorTest {
 
-    private Collection<String> aptOptions;
+  private Collection<String> aptOptions;
 
-    private ByteArrayOutputStream err = new ByteArrayOutputStream();
+  private ByteArrayOutputStream err = new ByteArrayOutputStream();
 
-    private static final String packagePath = "src/test/java/com/querydsl/apt/";
+  private static final String packagePath = "src/test/java/com/querydsl/apt/";
 
-    public void process() throws IOException {
-        List<String> classes = getFiles(packagePath);
-        process(QuerydslAnnotationProcessor.class, classes, "includedClasses");
-    }
+  public void process() throws IOException {
+    List<String> classes = getFiles(packagePath);
+    process(QuerydslAnnotationProcessor.class, classes, "includedClasses");
+  }
 
-    @Override
-    protected Collection<String> getAPTOptions() {
-        return aptOptions;
-    }
+  @Override
+  protected Collection<String> getAPTOptions() {
+    return aptOptions;
+  }
 
-    @Override
-    protected ByteArrayOutputStream getStdErr() {
-        return err;
-    }
+  @Override
+  protected ByteArrayOutputStream getStdErr() {
+    return err;
+  }
 
-    protected boolean isStdErrEmpty() {
-        return getStdErr().toByteArray().length == 0;
-    }
+  protected boolean isStdErrEmpty() {
+    return getStdErr().toByteArray().length == 0;
+  }
 
-    @Test
-    public void processDefault() throws IOException {
-        aptOptions = Collections.emptyList();
-        process();
-        assertTrue(isStdErrEmpty());
-    }
+  @Test
+  public void processDefault() throws IOException {
+    aptOptions = Collections.emptyList();
+    process();
+    assertTrue(isStdErrEmpty());
+  }
 
-    @Test
-    public void processEnabled() throws IOException {
-        aptOptions = Collections.singletonList("-Aquerydsl.logInfo=true");
-        process();
-        assertFalse(isStdErrEmpty());
-    }
+  @Test
+  public void processEnabled() throws IOException {
+    aptOptions = Collections.singletonList("-Aquerydsl.logInfo=true");
+    process();
+    assertFalse(isStdErrEmpty());
+  }
 
-    @Test
-    public void processDisabled() throws IOException {
-        aptOptions = Collections.singletonList("-Aquerydsl.logInfo=false");
-        process();
-        assertTrue(isStdErrEmpty());
-    }
-
+  @Test
+  public void processDisabled() throws IOException {
+    aptOptions = Collections.singletonList("-Aquerydsl.logInfo=false");
+    process();
+    assertTrue(isStdErrEmpty());
+  }
 }

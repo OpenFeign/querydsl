@@ -13,45 +13,42 @@
  */
 package com.querydsl.collections;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.Test;
-
-import com.querydsl.core.types.dsl.BooleanExpression;
 
 public class CompilationOverheadTest {
 
-    private static final QCat cat = QCat.cat;
+  private static final QCat cat = QCat.cat;
 
-    @Test
-    public void test() {
-        List<BooleanExpression> conditions = Arrays.asList(
+  @Test
+  public void test() {
+    List<BooleanExpression> conditions =
+        Arrays.asList(
             cat.mate.isNull(),
             cat.mate.isNotNull(),
             cat.mate.name.eq("Kitty"),
             cat.mate.name.ne("Kitty"),
             cat.mate.isNotNull().and(cat.mate.name.eq("Kitty")),
-            cat.mate.isNotNull().and(cat.mate.name.eq("Kitty")).and(cat.kittens.isEmpty())
-        );
+            cat.mate.isNotNull().and(cat.mate.name.eq("Kitty")).and(cat.kittens.isEmpty()));
 
-        // 1st
-        for (BooleanExpression condition : conditions) {
-            query(condition);
-        }
-
-        // 2nd
-        for (BooleanExpression condition : conditions) {
-            query(condition);
-        }
+    // 1st
+    for (BooleanExpression condition : conditions) {
+      query(condition);
     }
 
-    private void query(BooleanExpression condition) {
-        long start = System.currentTimeMillis();
-        CollQueryFactory.from(cat, Collections.<Cat>emptyList()).where(condition).fetch();
-        long duration = System.currentTimeMillis() - start;
-        System.out.println(condition + " : " + duration + "ms");
+    // 2nd
+    for (BooleanExpression condition : conditions) {
+      query(condition);
     }
+  }
 
+  private void query(BooleanExpression condition) {
+    long start = System.currentTimeMillis();
+    CollQueryFactory.from(cat, Collections.<Cat>emptyList()).where(condition).fetch();
+    long duration = System.currentTimeMillis() - start;
+    System.out.println(condition + " : " + duration + "ms");
+  }
 }

@@ -18,18 +18,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * The Class Customer.
- */
+/** The Class Customer. */
 @Entity
 @Table(name = "customer_")
 public class Customer {
-    @ManyToOne
-    Order currentOrder;
+  @ManyToOne Order currentOrder;
 
-    @Id
-    int id;
+  @Id int id;
 
-    @ManyToOne
-    Name name;
+  @ManyToOne Name name;
 }

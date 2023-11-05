@@ -23,35 +23,32 @@ import java.sql.Types;
  * {@code BigIntegerType} maps BigInteger to Long on the JDBC level
  *
  * @author tiwe
- *
  */
 public class BigIntegerAsLongType extends AbstractType<BigInteger> {
 
-    public static final BigIntegerAsLongType DEFAULT = new BigIntegerAsLongType();
+  public static final BigIntegerAsLongType DEFAULT = new BigIntegerAsLongType();
 
-    public BigIntegerAsLongType() {
-        super(Types.NUMERIC);
-    }
+  public BigIntegerAsLongType() {
+    super(Types.NUMERIC);
+  }
 
-    public BigIntegerAsLongType(int type) {
-        super(type);
-    }
+  public BigIntegerAsLongType(int type) {
+    super(type);
+  }
 
-    @Override
-    public BigInteger getValue(ResultSet rs, int startIndex) throws SQLException {
-        long val = rs.getLong(startIndex);
-        return rs.wasNull() ? null : BigInteger.valueOf(val);
-    }
+  @Override
+  public BigInteger getValue(ResultSet rs, int startIndex) throws SQLException {
+    long val = rs.getLong(startIndex);
+    return rs.wasNull() ? null : BigInteger.valueOf(val);
+  }
 
-    @Override
-    public Class<BigInteger> getReturnedClass() {
-        return BigInteger.class;
-    }
+  @Override
+  public Class<BigInteger> getReturnedClass() {
+    return BigInteger.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, BigInteger value)
-            throws SQLException {
-        st.setLong(startIndex, value.longValue());
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, BigInteger value) throws SQLException {
+    st.setLong(startIndex, value.longValue());
+  }
 }

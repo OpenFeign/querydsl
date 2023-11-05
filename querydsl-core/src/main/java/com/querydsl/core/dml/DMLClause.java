@@ -17,15 +17,14 @@ package com.querydsl.core.dml;
  * Parent interface for DML clauses
  *
  * @author tiwe
- *
  * @param <C> concrete subtype
  */
 public interface DMLClause<C extends DMLClause<C>> {
 
-    /**
-     * Execute the clause and return the amount of affected rows
-     *
-     * @return amount of affected rows
-     */
-    long execute();
+  /**
+   * Execute the clause and return the amount of affected rows
+   *
+   * @return amount of affected rows
+   */
+  long execute();
 }

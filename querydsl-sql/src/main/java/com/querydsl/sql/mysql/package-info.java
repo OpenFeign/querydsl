@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-
-/**
- * MySQL support
- */
+/** MySQL support */
 package com.querydsl.sql.mysql;

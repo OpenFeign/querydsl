@@ -17,69 +17,68 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 
 public class QueryModifiersTest {
 
-    @Test
-    public void limit() {
-        QueryModifiers modifiers = QueryModifiers.limit(12L);
-        assertEquals(Long.valueOf(12), modifiers.getLimit());
-        assertNull(modifiers.getOffset());
-        assertTrue(modifiers.isRestricting());
-    }
+  @Test
+  public void limit() {
+    QueryModifiers modifiers = QueryModifiers.limit(12L);
+    assertEquals(Long.valueOf(12), modifiers.getLimit());
+    assertNull(modifiers.getOffset());
+    assertTrue(modifiers.isRestricting());
+  }
 
-    @Test
-    public void offset() {
-        QueryModifiers modifiers = QueryModifiers.offset(12L);
-        assertEquals(Long.valueOf(12), modifiers.getOffset());
-        assertNull(modifiers.getLimit());
-        assertTrue(modifiers.isRestricting());
-    }
+  @Test
+  public void offset() {
+    QueryModifiers modifiers = QueryModifiers.offset(12L);
+    assertEquals(Long.valueOf(12), modifiers.getOffset());
+    assertNull(modifiers.getLimit());
+    assertTrue(modifiers.isRestricting());
+  }
 
-    @Test
-    public void both() {
-        QueryModifiers modifiers = new QueryModifiers(1L,2L);
-        assertEquals(Long.valueOf(1), modifiers.getLimit());
-        assertEquals(Long.valueOf(2), modifiers.getOffset());
-        assertTrue(modifiers.isRestricting());
-    }
+  @Test
+  public void both() {
+    QueryModifiers modifiers = new QueryModifiers(1L, 2L);
+    assertEquals(Long.valueOf(1), modifiers.getLimit());
+    assertEquals(Long.valueOf(2), modifiers.getOffset());
+    assertTrue(modifiers.isRestricting());
+  }
 
-    @Test
-    public void empty() {
-        QueryModifiers modifiers = new QueryModifiers(null, null);
-        assertNull(modifiers.getLimit());
-        assertNull(modifiers.getOffset());
-        assertFalse(modifiers.isRestricting());
-    }
+  @Test
+  public void empty() {
+    QueryModifiers modifiers = new QueryModifiers(null, null);
+    assertNull(modifiers.getLimit());
+    assertNull(modifiers.getOffset());
+    assertFalse(modifiers.isRestricting());
+  }
 
-    @Test
-    public void hashCode_() {
-        QueryModifiers modifiers1 = new QueryModifiers(null, null);
-        QueryModifiers modifiers2 = new QueryModifiers(1L, null);
-        QueryModifiers modifiers3 = new QueryModifiers(null, 1L);
+  @Test
+  public void hashCode_() {
+    QueryModifiers modifiers1 = new QueryModifiers(null, null);
+    QueryModifiers modifiers2 = new QueryModifiers(1L, null);
+    QueryModifiers modifiers3 = new QueryModifiers(null, 1L);
 
-        assertEquals(modifiers1.hashCode(), QueryModifiers.EMPTY.hashCode());
-        assertEquals(modifiers2.hashCode(), QueryModifiers.limit(1L).hashCode());
-        assertEquals(modifiers3.hashCode(), QueryModifiers.offset(1L).hashCode());
-    }
+    assertEquals(modifiers1.hashCode(), QueryModifiers.EMPTY.hashCode());
+    assertEquals(modifiers2.hashCode(), QueryModifiers.limit(1L).hashCode());
+    assertEquals(modifiers3.hashCode(), QueryModifiers.offset(1L).hashCode());
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalLimit() {
-        QueryModifiers.limit(-1);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void illegalLimit() {
+    QueryModifiers.limit(-1);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalOffset() {
-        QueryModifiers.offset(-1);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void illegalOffset() {
+    QueryModifiers.offset(-1);
+  }
 
-    @Test
-    public void subList() {
-        List<Integer> ints = Arrays.asList(1,2,3,4,5);
-        assertEquals(Arrays.asList(3,4,5), QueryModifiers.offset(2).subList(ints));
-        assertEquals(Arrays.asList(1,2,3), QueryModifiers.limit(3).subList(ints));
-        assertEquals(Arrays.asList(2,3,4), new QueryModifiers(3L, 1L).subList(ints));
-    }
+  @Test
+  public void subList() {
+    List<Integer> ints = Arrays.asList(1, 2, 3, 4, 5);
+    assertEquals(Arrays.asList(3, 4, 5), QueryModifiers.offset(2).subList(ints));
+    assertEquals(Arrays.asList(1, 2, 3), QueryModifiers.limit(3).subList(ints));
+    assertEquals(Arrays.asList(2, 3, 4), new QueryModifiers(3L, 1L).subList(ints));
+  }
 }

@@ -19,56 +19,54 @@ import com.querydsl.core.types.Expression;
  * {@code TemporalExpression} is a supertype for Date/Time related types
  *
  * @author tiwe
- *
  * @param <T> expression type
  */
 @SuppressWarnings({"unchecked"})
 public abstract class TemporalExpression<T extends Comparable> extends LiteralExpression<T> {
 
-    private static final long serialVersionUID = 1137918766051524298L;
+  private static final long serialVersionUID = 1137918766051524298L;
 
-    public TemporalExpression(Expression<T> mixin) {
-        super(mixin);
-    }
+  public TemporalExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 
-    /**
-     * Create a {@code this > right} expression
-     *
-     * @param right rhs of the comparison
-     * @return this &gt; right
-     */
-    public BooleanExpression after(T right) {
-        return gt(right);
-    }
+  /**
+   * Create a {@code this > right} expression
+   *
+   * @param right rhs of the comparison
+   * @return this &gt; right
+   */
+  public BooleanExpression after(T right) {
+    return gt(right);
+  }
 
-    /**
-     * Create a {@code this > right} expression
-     *
-     * @param right rhs of the comparison
-     * @return this &gt; right
-     */
-    public BooleanExpression after(Expression<T> right) {
-        return gt(right);
-    }
+  /**
+   * Create a {@code this > right} expression
+   *
+   * @param right rhs of the comparison
+   * @return this &gt; right
+   */
+  public BooleanExpression after(Expression<T> right) {
+    return gt(right);
+  }
 
-    /**
-     * Create a {@code this < right} expression
-     *
-     * @param right rhs of the comparison
-     * @return this &lt; right
-     */
-    public BooleanExpression before(T right) {
-        return lt(right);
-    }
+  /**
+   * Create a {@code this < right} expression
+   *
+   * @param right rhs of the comparison
+   * @return this &lt; right
+   */
+  public BooleanExpression before(T right) {
+    return lt(right);
+  }
 
-    /**
-     * Create a {@code this < right} expression
-     *
-     * @param right rhs of the comparison
-     * @return this &lt; right
-     */
-    public BooleanExpression before(Expression<T> right) {
-        return lt(right);
-    }
-
+  /**
+   * Create a {@code this < right} expression
+   *
+   * @param right rhs of the comparison
+   * @return this &lt; right
+   */
+  public BooleanExpression before(Expression<T> right) {
+    return lt(right);
+  }
 }

@@ -19,31 +19,29 @@ import java.sql.*;
  * {@code BlobType} maps Blob to Blob on the JDBC level
  *
  * @author tiwe
- *
  */
 public class BlobType extends AbstractType<Blob> {
 
-    public BlobType() {
-        super(Types.BLOB);
-    }
+  public BlobType() {
+    super(Types.BLOB);
+  }
 
-    public BlobType(int type) {
-        super(type);
-    }
+  public BlobType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Blob getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getBlob(startIndex);
-    }
+  @Override
+  public Blob getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getBlob(startIndex);
+  }
 
-    @Override
-    public Class<Blob> getReturnedClass() {
-        return Blob.class;
-    }
+  @Override
+  public Class<Blob> getReturnedClass() {
+    return Blob.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Blob value) throws SQLException {
-        st.setBlob(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Blob value) throws SQLException {
+    st.setBlob(startIndex, value);
+  }
 }

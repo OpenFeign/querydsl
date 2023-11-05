@@ -15,21 +15,16 @@ package com.querydsl.jpa.domain;
 
 import java.util.Date;
 import java.util.Set;
-
 import javax.persistence.*;
 
-/**
- * The Class Catalog.
- */
+/** The Class Catalog. */
 @Entity
 @Table(name = "catalog_")
 public class Catalog {
-    @Temporal(TemporalType.DATE)
-    Date effectiveDate;
+  @Temporal(TemporalType.DATE)
+  Date effectiveDate;
 
-    @Id
-    int id;
+  @Id int id;
 
-    @OneToMany
-    Set<Price> prices;
+  @OneToMany Set<Price> prices;
 }

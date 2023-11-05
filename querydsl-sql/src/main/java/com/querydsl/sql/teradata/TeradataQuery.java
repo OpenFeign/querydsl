@@ -13,9 +13,6 @@
  */
 package com.querydsl.sql.teradata;
 
-import java.sql.Connection;
-import java.util.function.Supplier;
-
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryMetadata;
@@ -27,74 +24,75 @@ import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLOps;
 import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.TeradataTemplates;
+import java.sql.Connection;
+import java.util.function.Supplier;
 
 /**
  * {@code TeradataQuery} provides Teradata related extensions to SQLQuery
  *
- * If you need to subtype this, use the base class instead.
+ * <p>If you need to subtype this, use the base class instead.
  *
  * @param <T> result type
- *
  * @author tiwe
  */
 public class TeradataQuery<T> extends AbstractTeradataQuery<T, TeradataQuery<T>> {
 
-    public TeradataQuery(Connection conn) {
-        this(conn, new Configuration(TeradataTemplates.DEFAULT), new DefaultQueryMetadata());
-    }
+  public TeradataQuery(Connection conn) {
+    this(conn, new Configuration(TeradataTemplates.DEFAULT), new DefaultQueryMetadata());
+  }
 
-    public TeradataQuery(Connection conn, SQLTemplates templates) {
-        this(conn, new Configuration(templates), new DefaultQueryMetadata());
-    }
+  public TeradataQuery(Connection conn, SQLTemplates templates) {
+    this(conn, new Configuration(templates), new DefaultQueryMetadata());
+  }
 
-    public TeradataQuery(Connection conn, Configuration configuration) {
-        this(conn, configuration, new DefaultQueryMetadata());
-    }
+  public TeradataQuery(Connection conn, Configuration configuration) {
+    this(conn, configuration, new DefaultQueryMetadata());
+  }
 
-    public TeradataQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
-        super(conn, configuration, metadata);
-    }
+  public TeradataQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
+    super(conn, configuration, metadata);
+  }
 
-    public TeradataQuery(Supplier<Connection> connProvider, Configuration configuration, QueryMetadata metadata) {
-        super(connProvider, configuration, metadata);
-    }
+  public TeradataQuery(
+      Supplier<Connection> connProvider, Configuration configuration, QueryMetadata metadata) {
+    super(connProvider, configuration, metadata);
+  }
 
-    public TeradataQuery(Supplier<Connection> connProvider, Configuration configuration) {
-        super(connProvider, configuration);
-    }
+  public TeradataQuery(Supplier<Connection> connProvider, Configuration configuration) {
+    super(connProvider, configuration);
+  }
 
-    /**
-     * Adds a qualify expression
-     *
-     * @param predicate qualify expression
-     * @return the current object
-     */
-    public TeradataQuery<T> qualify(Predicate predicate) {
-        predicate = ExpressionUtils.predicate(SQLOps.QUALIFY, predicate);
-        return queryMixin.addFlag(new QueryFlag(QueryFlag.Position.BEFORE_ORDER, predicate));
-    }
+  /**
+   * Adds a qualify expression
+   *
+   * @param predicate qualify expression
+   * @return the current object
+   */
+  public TeradataQuery<T> qualify(Predicate predicate) {
+    predicate = ExpressionUtils.predicate(SQLOps.QUALIFY, predicate);
+    return queryMixin.addFlag(new QueryFlag(QueryFlag.Position.BEFORE_ORDER, predicate));
+  }
 
-    @Override
-    public TeradataQuery<T> clone(Connection conn) {
-        TeradataQuery<T> q = new TeradataQuery<T>(conn, getConfiguration(), getMetadata().clone());
-        q.clone(this);
-        return q;
-    }
+  @Override
+  public TeradataQuery<T> clone(Connection conn) {
+    TeradataQuery<T> q = new TeradataQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    q.clone(this);
+    return q;
+  }
 
-    @Override
-    public <U> TeradataQuery<U> select(Expression<U> expr) {
-        queryMixin.setProjection(expr);
-        @SuppressWarnings("unchecked") // This is the new type
-        TeradataQuery<U> newType = (TeradataQuery<U>) this;
-        return newType;
-    }
+  @Override
+  public <U> TeradataQuery<U> select(Expression<U> expr) {
+    queryMixin.setProjection(expr);
+    @SuppressWarnings("unchecked") // This is the new type
+    TeradataQuery<U> newType = (TeradataQuery<U>) this;
+    return newType;
+  }
 
-    @Override
-    public TeradataQuery<Tuple> select(Expression<?>... exprs) {
-        queryMixin.setProjection(exprs);
-        @SuppressWarnings("unchecked") // This is the new type
-        TeradataQuery<Tuple> newType = (TeradataQuery<Tuple>) this;
-        return newType;
-    }
-
+  @Override
+  public TeradataQuery<Tuple> select(Expression<?>... exprs) {
+    queryMixin.setProjection(exprs);
+    @SuppressWarnings("unchecked") // This is the new type
+    TeradataQuery<Tuple> newType = (TeradataQuery<Tuple>) this;
+    return newType;
+  }
 }

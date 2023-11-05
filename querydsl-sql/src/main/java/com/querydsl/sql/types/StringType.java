@@ -22,33 +22,29 @@ import java.sql.Types;
  * {@code StringType} maps String to String on the JDBC level
  *
  * @author tiwe
- *
  */
 public class StringType extends AbstractType<String> {
 
-    public StringType() {
-        super(Types.VARCHAR);
-    }
+  public StringType() {
+    super(Types.VARCHAR);
+  }
 
-    public StringType(int type) {
-        super(type);
-    }
+  public StringType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getString(startIndex);
-    }
+  @Override
+  public String getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getString(startIndex);
+  }
 
-    @Override
-    public Class<String> getReturnedClass() {
-        return String.class;
-    }
+  @Override
+  public Class<String> getReturnedClass() {
+    return String.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, String value)
-            throws SQLException {
-        st.setString(startIndex, value);
-
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, String value) throws SQLException {
+    st.setString(startIndex, value);
+  }
 }

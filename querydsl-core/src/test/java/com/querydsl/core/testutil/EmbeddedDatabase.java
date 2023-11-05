@@ -15,8 +15,7 @@
 package com.querydsl.core.testutil;
 
 /**
- * {@code EmbeddedDatabase} is a category for tests that require access to embeddable
- * databases such as H2 and HSQL.
+ * {@code EmbeddedDatabase} is a category for tests that require access to embeddable databases such
+ * as H2 and HSQL.
  */
-public interface EmbeddedDatabase extends Database {
-}
+public interface EmbeddedDatabase extends Database {}

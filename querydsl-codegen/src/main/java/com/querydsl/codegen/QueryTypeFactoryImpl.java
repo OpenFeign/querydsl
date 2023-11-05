@@ -13,59 +13,55 @@
  */
 package com.querydsl.codegen;
 
+import com.querydsl.codegen.utils.model.SimpleType;
+import com.querydsl.codegen.utils.model.Type;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.querydsl.codegen.utils.model.SimpleType;
-import com.querydsl.codegen.utils.model.Type;
-
 /**
- * {@code QueryTypeFactoryImpl} is the default implementation of the {@link QueryTypeFactory} interface
+ * {@code QueryTypeFactoryImpl} is the default implementation of the {@link QueryTypeFactory}
+ * interface
  *
  * @author tiwe
- *
  */
 public class QueryTypeFactoryImpl implements QueryTypeFactory {
 
-    private final String prefix, suffix, packageSuffix;
+  private final String prefix, suffix, packageSuffix;
 
-    @Inject
-    public QueryTypeFactoryImpl(
-            @Named(CodegenModule.PREFIX) String prefix,
-            @Named(CodegenModule.SUFFIX) String suffix,
-            @Named(CodegenModule.PACKAGE_SUFFIX) String packageSuffix) {
-        this.prefix = prefix;
-        this.suffix = suffix;
-        this.packageSuffix = packageSuffix;
+  @Inject
+  public QueryTypeFactoryImpl(
+      @Named(CodegenModule.PREFIX) String prefix,
+      @Named(CodegenModule.SUFFIX) String suffix,
+      @Named(CodegenModule.PACKAGE_SUFFIX) String packageSuffix) {
+    this.prefix = prefix;
+    this.suffix = suffix;
+    this.packageSuffix = packageSuffix;
+  }
+
+  @Override
+  public Type create(Type type) {
+    if (type.getPackageName().isEmpty()) {
+      return createWithoutPackage(type);
+    } else {
+      return createWithPackage(type);
     }
+  }
 
-    @Override
-    public Type create(Type type) {
-        if (type.getPackageName().isEmpty()) {
-            return createWithoutPackage(type);
-        } else {
-            return createWithPackage(type);
-        }
-    }
+  private Type createWithPackage(Type type) {
+    String packageName = type.getPackageName();
+    String simpleName =
+        prefix + normalizeName(type.getFullName().substring(packageName.length() + 1)) + suffix;
+    packageName = (packageName.startsWith("java") ? "ext." : "") + packageName + packageSuffix;
+    return new SimpleType(
+        type.getCategory(), packageName + "." + simpleName, packageName, simpleName, false, false);
+  }
 
-    private Type createWithPackage(Type type) {
-        String packageName = type.getPackageName();
-        String simpleName = prefix + normalizeName(type.getFullName()
-                .substring(packageName.length() + 1)) + suffix;
-        packageName = (packageName.startsWith("java") ? "ext." : "")
-                + packageName + packageSuffix;
-        return new SimpleType(type.getCategory(), packageName + "." + simpleName,
-                packageName, simpleName, false, false);
-    }
+  private Type createWithoutPackage(Type type) {
+    String simpleName = prefix + normalizeName(type.getFullName()) + suffix;
+    return new SimpleType(type.getCategory(), simpleName, "", simpleName, false, false);
+  }
 
-    private Type createWithoutPackage(Type type) {
-        String simpleName = prefix + normalizeName(type.getFullName()) + suffix;
-        return new SimpleType(type.getCategory(), simpleName, "", simpleName, false, false);
-    }
-
-    private String normalizeName(String name) {
-        return name.replace('.', '_').replace('$', '_');
-    }
-
-
+  private String normalizeName(String name) {
+    return name.replace('.', '_').replace('$', '_');
+  }
 }

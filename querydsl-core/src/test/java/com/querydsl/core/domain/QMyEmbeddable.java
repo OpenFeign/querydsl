@@ -15,35 +15,30 @@ package com.querydsl.core.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
-import javax.annotation.Generated;
-
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.NumberPath;
+import javax.annotation.Generated;
 
-
-/**
- * QMyEmbeddable is a Querydsl query type for MyEmbeddable
- */
+/** QMyEmbeddable is a Querydsl query type for MyEmbeddable */
 @Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QMyEmbeddable extends BeanPath<MyEmbeddable> {
 
-    private static final long serialVersionUID = -968265626;
+  private static final long serialVersionUID = -968265626;
 
-    public static final QMyEmbeddable myEmbeddable = new QMyEmbeddable("myEmbeddable");
+  public static final QMyEmbeddable myEmbeddable = new QMyEmbeddable("myEmbeddable");
 
-    public final NumberPath<Integer> foo = createNumber("foo", Integer.class);
+  public final NumberPath<Integer> foo = createNumber("foo", Integer.class);
 
-    public QMyEmbeddable(String variable) {
-        super(MyEmbeddable.class, forVariable(variable));
-    }
+  public QMyEmbeddable(String variable) {
+    super(MyEmbeddable.class, forVariable(variable));
+  }
 
-    public QMyEmbeddable(BeanPath<? extends MyEmbeddable> entity) {
-        super(entity.getType(), entity.getMetadata());
-    }
+  public QMyEmbeddable(BeanPath<? extends MyEmbeddable> entity) {
+    super(entity.getType(), entity.getMetadata());
+  }
 
-    public QMyEmbeddable(PathMetadata metadata) {
-        super(MyEmbeddable.class, metadata);
-    }
-
+  public QMyEmbeddable(PathMetadata metadata) {
+    super(MyEmbeddable.class, metadata);
+  }
 }

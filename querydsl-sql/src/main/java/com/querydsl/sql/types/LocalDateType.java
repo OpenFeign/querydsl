@@ -14,46 +14,44 @@
 package com.querydsl.sql.types;
 
 import java.sql.*;
-
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
 /**
- * {@code LocalDateType} maps {@linkplain org.joda.time.LocalDate}
- * to {@linkplain java.sql.Date} on the JDBC level
+ * {@code LocalDateType} maps {@linkplain org.joda.time.LocalDate} to {@linkplain java.sql.Date} on
+ * the JDBC level
  *
  * @author tiwe
- *
  */
 public class LocalDateType extends AbstractJodaTimeDateTimeType<LocalDate> {
 
-    public LocalDateType() {
-        super(Types.DATE);
-    }
+  public LocalDateType() {
+    super(Types.DATE);
+  }
 
-    public LocalDateType(int type) {
-        super(type);
-    }
+  public LocalDateType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getLiteral(LocalDate value) {
-        return dateFormatter.print(value);
-    }
+  @Override
+  public String getLiteral(LocalDate value) {
+    return dateFormatter.print(value);
+  }
 
-    @Override
-    public Class<LocalDate> getReturnedClass() {
-        return LocalDate.class;
-    }
+  @Override
+  public Class<LocalDate> getReturnedClass() {
+    return LocalDate.class;
+  }
 
-    @Override
-    public LocalDate getValue(ResultSet rs, int startIndex) throws SQLException {
-        Date date = rs.getDate(startIndex, utc());
-        return date != null ? new LocalDate(date.getTime(), DateTimeZone.UTC) : null;
-    }
+  @Override
+  public LocalDate getValue(ResultSet rs, int startIndex) throws SQLException {
+    Date date = rs.getDate(startIndex, utc());
+    return date != null ? new LocalDate(date.getTime(), DateTimeZone.UTC) : null;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, LocalDate value) throws SQLException {
-        st.setDate(startIndex, new Date(value.toDateTimeAtStartOfDay(DateTimeZone.UTC).getMillis()), utc());
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, LocalDate value) throws SQLException {
+    st.setDate(
+        startIndex, new Date(value.toDateTimeAtStartOfDay(DateTimeZone.UTC).getMillis()), utc());
+  }
 }

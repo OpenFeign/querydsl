@@ -15,18 +15,16 @@ package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.selectFrom;
 
+import com.querydsl.sql.domain.QSurvey;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.querydsl.sql.domain.QSurvey;
-
 public class JoinUsageTest {
 
-    @Test(expected = IllegalStateException.class)
-    @Ignore
-    public void join_already_declared() {
-        QSurvey survey = QSurvey.survey;
-        selectFrom(survey).fullJoin(survey);
-    }
-
+  @Test(expected = IllegalStateException.class)
+  @Ignore
+  public void join_already_declared() {
+    QSurvey survey = QSurvey.survey;
+    selectFrom(survey).fullJoin(survey);
+  }
 }

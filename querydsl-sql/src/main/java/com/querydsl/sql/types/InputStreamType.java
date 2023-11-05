@@ -23,31 +23,29 @@ import java.sql.Types;
  * {@code InputStreamType} maps InputStream to InputStream on the JDBC level
  *
  * @author tiwe
- *
  */
 public class InputStreamType extends AbstractType<InputStream> {
 
-    public InputStreamType() {
-        super(Types.BLOB);
-    }
+  public InputStreamType() {
+    super(Types.BLOB);
+  }
 
-    public InputStreamType(int type) {
-        super(type);
-    }
+  public InputStreamType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<InputStream> getReturnedClass() {
-        return InputStream.class;
-    }
+  @Override
+  public Class<InputStream> getReturnedClass() {
+    return InputStream.class;
+  }
 
-    @Override
-    public InputStream getValue(ResultSet rs, int column) throws SQLException {
-        return rs.getBinaryStream(column);
-    }
+  @Override
+  public InputStream getValue(ResultSet rs, int column) throws SQLException {
+    return rs.getBinaryStream(column);
+  }
 
-    @Override
-    public void setValue(PreparedStatement ps, int column, InputStream value) throws SQLException {
-        ps.setBinaryStream(column, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement ps, int column, InputStream value) throws SQLException {
+    ps.setBinaryStream(column, value);
+  }
 }

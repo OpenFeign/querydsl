@@ -23,41 +23,41 @@ import com.querydsl.sql.types.StringAsObjectType;
  * {@code TeradataSpatialTemplates} is a spatial enabled SQL dialect for Teradata
  *
  * @author tiwe
- *
  */
 public class TeradataSpatialTemplates extends TeradataTemplates {
 
-    @SuppressWarnings("FieldNameHidesFieldInSuperclass") //Intentional
-    public static final TeradataSpatialTemplates DEFAULT = new TeradataSpatialTemplates();
+  @SuppressWarnings("FieldNameHidesFieldInSuperclass") // Intentional
+  public static final TeradataSpatialTemplates DEFAULT = new TeradataSpatialTemplates();
 
-    public static Builder builder() {
-        return new Builder() {
-            @Override
-            protected SQLTemplates build(char escape, boolean quote) {
-                return new TeradataSpatialTemplates(escape, quote);
-            }
-        };
-    }
+  public static Builder builder() {
+    return new Builder() {
+      @Override
+      protected SQLTemplates build(char escape, boolean quote) {
+        return new TeradataSpatialTemplates(escape, quote);
+      }
+    };
+  }
 
-    public TeradataSpatialTemplates() {
-        this('\\', false);
-    }
+  public TeradataSpatialTemplates() {
+    this('\\', false);
+  }
 
-    public TeradataSpatialTemplates(boolean quote) {
-        this('\\', quote);
-    }
+  public TeradataSpatialTemplates(boolean quote) {
+    this('\\', quote);
+  }
 
-    public TeradataSpatialTemplates(char escape, boolean quote) {
-        super(escape, quote);
-        addCustomType(GeometryWktClobType.DEFAULT);
-        addCustomType(StringAsObjectType.DEFAULT);
-        addTableOverride(new SchemaAndTable("public", "geometry_columns"),
-                new SchemaAndTable("sysspatial", "geometry_columns"));
-        addTableOverride(new SchemaAndTable("public", "spatial_ref_sys"),
-                new SchemaAndTable("sysspatial", "spatial_ref_sys"));
-        add(SpatialTemplatesSupport.getSpatialOps(false));
-        add(SpatialOps.DISTANCE_SPHERE, "{0}.ST_SPHERICALDISTANCE({1})");
-        add(SpatialOps.DISTANCE_SPHEROID, "{0}.ST_SPHEROIDALDISTANCE({1})");
-    }
-
+  public TeradataSpatialTemplates(char escape, boolean quote) {
+    super(escape, quote);
+    addCustomType(GeometryWktClobType.DEFAULT);
+    addCustomType(StringAsObjectType.DEFAULT);
+    addTableOverride(
+        new SchemaAndTable("public", "geometry_columns"),
+        new SchemaAndTable("sysspatial", "geometry_columns"));
+    addTableOverride(
+        new SchemaAndTable("public", "spatial_ref_sys"),
+        new SchemaAndTable("sysspatial", "spatial_ref_sys"));
+    add(SpatialTemplatesSupport.getSpatialOps(false));
+    add(SpatialOps.DISTANCE_SPHERE, "{0}.ST_SPHERICALDISTANCE({1})");
+    add(SpatialOps.DISTANCE_SPHEROID, "{0}.ST_SPHEROIDALDISTANCE({1})");
+  }
 }

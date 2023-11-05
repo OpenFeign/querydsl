@@ -16,49 +16,47 @@ package com.querydsl.jpa;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.querydsl.apt.hibernate.HibernateAnnotationProcessor;
+import com.querydsl.apt.jpa.JPAAnnotationProcessor;
+import com.querydsl.codegen.CodegenModule;
+import com.querydsl.codegen.utils.CodeWriter;
+import com.querydsl.core.types.Expression;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Scanner;
-
 import javax.persistence.Entity;
-
 import org.junit.Test;
-
-import com.querydsl.codegen.utils.CodeWriter;
-import com.querydsl.apt.hibernate.HibernateAnnotationProcessor;
-import com.querydsl.apt.jpa.JPAAnnotationProcessor;
-import com.querydsl.codegen.CodegenModule;
-import com.querydsl.core.types.Expression;
 
 public class PackageVerification {
 
-    @Test
-    public void verify_package() throws Exception {
-        String version = System.getProperty("version");
-        verify(new File("target/querydsl-jpa-" + version + "-apt-hibernate-one-jar.jar"), true);
-        verify(new File("target/querydsl-jpa-" + version + "-apt-one-jar.jar"), false);
-    }
+  @Test
+  public void verify_package() throws Exception {
+    String version = System.getProperty("version");
+    verify(new File("target/querydsl-jpa-" + version + "-apt-hibernate-one-jar.jar"), true);
+    verify(new File("target/querydsl-jpa-" + version + "-apt-one-jar.jar"), false);
+  }
 
-    private void verify(File oneJar, boolean hibernateDeps) throws Exception {
-        assertTrue(oneJar.getPath() + " doesn't exist", oneJar.exists());
-        // verify classLoader
-        URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[]{oneJar.toURI().toURL()});
-        oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core
-        oneJarClassLoader.loadClass(CodeWriter.class.getName()); // codegen
-        oneJarClassLoader.loadClass(CodegenModule.class.getName()).newInstance();
-        oneJarClassLoader.loadClass(Entity.class.getName()); // jpa
-        Class<?> processor;
-        if (hibernateDeps) {
-            oneJarClassLoader.loadClass(org.hibernate.annotations.Type.class.getName()); // hibernate
-            processor = HibernateAnnotationProcessor.class;
-        } else {
-            processor = JPAAnnotationProcessor.class;
-        }
-        Class cl = oneJarClassLoader.loadClass(processor.getName()); // querydsl-apt
-        cl.newInstance();
-        String resourceKey = "META-INF/services/javax.annotation.processing.Processor";
-        assertEquals(processor.getName(), new Scanner(oneJarClassLoader.findResource(resourceKey).openStream()).nextLine());
+  private void verify(File oneJar, boolean hibernateDeps) throws Exception {
+    assertTrue(oneJar.getPath() + " doesn't exist", oneJar.exists());
+    // verify classLoader
+    URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
+    oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core
+    oneJarClassLoader.loadClass(CodeWriter.class.getName()); // codegen
+    oneJarClassLoader.loadClass(CodegenModule.class.getName()).newInstance();
+    oneJarClassLoader.loadClass(Entity.class.getName()); // jpa
+    Class<?> processor;
+    if (hibernateDeps) {
+      oneJarClassLoader.loadClass(org.hibernate.annotations.Type.class.getName()); // hibernate
+      processor = HibernateAnnotationProcessor.class;
+    } else {
+      processor = JPAAnnotationProcessor.class;
     }
-
+    Class cl = oneJarClassLoader.loadClass(processor.getName()); // querydsl-apt
+    cl.newInstance();
+    String resourceKey = "META-INF/services/javax.annotation.processing.Processor";
+    assertEquals(
+        processor.getName(),
+        new Scanner(oneJarClassLoader.findResource(resourceKey).openStream()).nextLine());
+  }
 }

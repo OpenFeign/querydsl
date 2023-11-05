@@ -21,25 +21,28 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.Test;
 
 public class IncludedClassesTest extends AbstractProcessorTest {
 
-    private static final String packagePath = "src/test/java/com/querydsl/";
+  private static final String packagePath = "src/test/java/com/querydsl/";
 
-    @Test
-    public void process() throws IOException {
-        List<String> classes = getFiles(packagePath);
-        process(QuerydslAnnotationProcessor.class, classes, "includedClasses");
+  @Test
+  public void process() throws IOException {
+    List<String> classes = getFiles(packagePath);
+    process(QuerydslAnnotationProcessor.class, classes, "includedClasses");
 
-        assertTrue(new File("target/includedClasses/com/querydsl/apt/domain/QArrayTest_ArrayTestEntity.java").exists());
-        assertFalse(new File("target/includedClasses/com/querydsl/apt/domain/QArray2Test_Example.java").exists());
-    }
+    assertTrue(
+        new File("target/includedClasses/com/querydsl/apt/domain/QArrayTest_ArrayTestEntity.java")
+            .exists());
+    assertFalse(
+        new File("target/includedClasses/com/querydsl/apt/domain/QArray2Test_Example.java")
+            .exists());
+  }
 
-    @Override
-    protected Collection<String> getAPTOptions() {
-        return Collections.singletonList("-Aquerydsl.includedClasses=com.querydsl.apt.domain.ArrayTest.ArrayTestEntity");
-    }
-
+  @Override
+  protected Collection<String> getAPTOptions() {
+    return Collections.singletonList(
+        "-Aquerydsl.includedClasses=com.querydsl.apt.domain.ArrayTest.ArrayTestEntity");
+  }
 }

@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Spatial types using JTS
- */
+/** Spatial types using JTS */
 package com.querydsl.spatial.jts;

@@ -17,14 +17,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * The Class Status.
- */
+/** The Class Status. */
 @Entity
 @Table(name = "status_")
 public class Status {
-    @Id
-    long id;
+  @Id long id;
 
-    String name;
+  String name;
 }

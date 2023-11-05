@@ -21,7 +21,10 @@ import com.querydsl.codegen.Keywords;
 import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.annotations.QueryTransient;
 import com.querydsl.core.annotations.QueryType;
-
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.jdo.annotations.Cacheable;
@@ -45,10 +48,6 @@ import javax.jdo.annotations.Value;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Configuration for {@link JDOAnnotationProcessor}
@@ -58,46 +57,72 @@ import java.util.List;
  */
 public class JDOConfiguration extends DefaultConfiguration {
 
-    @SuppressWarnings("unchecked")
-    private static final Iterable<Class<? extends Annotation>> relevantAnnotations
-            = Collections.unmodifiableList(Arrays.asList(
-                    Cacheable.class, Column.class, Columns.class,
-                    javax.jdo.annotations.Element.class, Embedded.class,
-                    Extension.class, Extensions.class, ForeignKey.class,
-                    Index.class, Join.class, Key.class, NotPersistent.class,
-                    Order.class, Persistent.class, PrimaryKey.class, QueryType.class, QueryInit.class,
-                    QueryTransient.class, Serialized.class, Transactional.class, Unique.class, Value.class));
+  @SuppressWarnings("unchecked")
+  private static final Iterable<Class<? extends Annotation>> relevantAnnotations =
+      Collections.unmodifiableList(
+          Arrays.asList(
+              Cacheable.class,
+              Column.class,
+              Columns.class,
+              javax.jdo.annotations.Element.class,
+              Embedded.class,
+              Extension.class,
+              Extensions.class,
+              ForeignKey.class,
+              Index.class,
+              Join.class,
+              Key.class,
+              NotPersistent.class,
+              Order.class,
+              Persistent.class,
+              PrimaryKey.class,
+              QueryType.class,
+              QueryInit.class,
+              QueryTransient.class,
+              Serialized.class,
+              Transactional.class,
+              Unique.class,
+              Value.class));
 
-    public JDOConfiguration(ProcessingEnvironment processingEnvironment,
-            RoundEnvironment roundEnv,
-            Class<? extends Annotation> entitiesAnn,
-            Class<? extends Annotation> entityAnn,
-            Class<? extends Annotation> superTypeAnn,
-            Class<? extends Annotation> embeddableAnn,
-            Class<? extends Annotation> embeddedAnn, Class<? extends Annotation> skipAnn) {
-        super(processingEnvironment, roundEnv, Keywords.JDO, entitiesAnn, entityAnn, superTypeAnn,
-                embeddableAnn, embeddedAnn, skipAnn);
+  public JDOConfiguration(
+      ProcessingEnvironment processingEnvironment,
+      RoundEnvironment roundEnv,
+      Class<? extends Annotation> entitiesAnn,
+      Class<? extends Annotation> entityAnn,
+      Class<? extends Annotation> superTypeAnn,
+      Class<? extends Annotation> embeddableAnn,
+      Class<? extends Annotation> embeddedAnn,
+      Class<? extends Annotation> skipAnn) {
+    super(
+        processingEnvironment,
+        roundEnv,
+        Keywords.JDO,
+        entitiesAnn,
+        entityAnn,
+        superTypeAnn,
+        embeddableAnn,
+        embeddedAnn,
+        skipAnn);
+  }
+
+  @Override
+  public VisitorConfig getConfig(TypeElement e, List<? extends Element> elements) {
+    boolean fields = false, methods = false;
+    for (Element element : elements) {
+      if (hasRelevantAnnotation(element)) {
+        fields |= element.getKind().equals(ElementKind.FIELD);
+        methods |= element.getKind().equals(ElementKind.METHOD);
+      }
     }
+    return VisitorConfig.get(fields, methods, VisitorConfig.FIELDS_ONLY);
+  }
 
-    @Override
-    public VisitorConfig getConfig(TypeElement e, List<? extends Element> elements) {
-        boolean fields = false, methods = false;
-        for (Element element : elements) {
-            if (hasRelevantAnnotation(element)) {
-                fields |= element.getKind().equals(ElementKind.FIELD);
-                methods |= element.getKind().equals(ElementKind.METHOD);
-            }
-        }
-        return VisitorConfig.get(fields, methods, VisitorConfig.FIELDS_ONLY);
+  private boolean hasRelevantAnnotation(Element element) {
+    for (Class<? extends Annotation> relevantAnnotation : relevantAnnotations) {
+      if (element.getAnnotation(relevantAnnotation) != null) {
+        return true;
+      }
     }
-
-    private boolean hasRelevantAnnotation(Element element) {
-        for (Class<? extends Annotation> relevantAnnotation : relevantAnnotations) {
-            if (element.getAnnotation(relevantAnnotation) != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    return false;
+  }
 }

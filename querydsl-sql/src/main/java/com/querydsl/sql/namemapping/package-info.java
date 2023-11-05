@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Changing database identifier names in serialized SQL queries.
- */
+/** Changing database identifier names in serialized SQL queries. */
 package com.querydsl.sql.namemapping;

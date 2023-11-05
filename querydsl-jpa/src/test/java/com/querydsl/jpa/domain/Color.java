@@ -13,9 +13,8 @@
  */
 package com.querydsl.jpa.domain;
 
-/**
- * The Enum Color.
- */
+/** The Enum Color. */
 public enum Color {
-    BLACK, TABBY
+  BLACK,
+  TABBY
 }

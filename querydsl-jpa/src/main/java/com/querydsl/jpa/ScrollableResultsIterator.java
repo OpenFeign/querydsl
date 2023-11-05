@@ -13,70 +13,64 @@
  */
 package com.querydsl.jpa;
 
-import java.util.NoSuchElementException;
-
-import org.jetbrains.annotations.Nullable;
-
-import org.hibernate.ScrollableResults;
-
 import com.mysema.commons.lang.CloseableIterator;
+import java.util.NoSuchElementException;
+import org.hibernate.ScrollableResults;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code ScrollableResultsIterator} is a {@link CloseableIterator} adapter for ScrollableResults
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class ScrollableResultsIterator<T> implements CloseableIterator<T> {
 
-    private final ScrollableResults results;
+  private final ScrollableResults results;
 
-    private final boolean asArray;
+  private final boolean asArray;
 
-    @Nullable
-    private Boolean hasNext;
+  @Nullable private Boolean hasNext;
 
-    public ScrollableResultsIterator(ScrollableResults results) {
-        this(results, false);
+  public ScrollableResultsIterator(ScrollableResults results) {
+    this(results, false);
+  }
+
+  public ScrollableResultsIterator(ScrollableResults results, boolean asArray) {
+    this.results = results;
+    this.asArray = asArray;
+  }
+
+  @Override
+  public void close() {
+    results.close();
+  }
+
+  @Override
+  public boolean hasNext() {
+    if (hasNext == null) {
+      hasNext = results.next();
     }
+    return hasNext;
+  }
 
-    public ScrollableResultsIterator(ScrollableResults results, boolean asArray) {
-        this.results = results;
-        this.asArray = asArray;
+  @Override
+  @SuppressWarnings("unchecked")
+  public T next() {
+    if (hasNext()) {
+      hasNext = null;
+      if (asArray) {
+        return (T) results.get();
+      } else {
+        return (T) results.get(0);
+      }
+    } else {
+      throw new NoSuchElementException();
     }
+  }
 
-    @Override
-    public void close() {
-        results.close();
-    }
-
-    @Override
-    public boolean hasNext() {
-        if (hasNext == null) {
-            hasNext = results.next();
-        }
-        return hasNext;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public T next() {
-        if (hasNext()) {
-            hasNext = null;
-            if (asArray) {
-                return (T) results.get();
-            } else {
-                return (T) results.get(0);
-            }
-        } else {
-            throw new NoSuchElementException();
-        }
-    }
-
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
+  @Override
+  public void remove() {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -16,12 +16,10 @@ package com.querydsl.maven;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -35,211 +33,210 @@ import org.sonatype.plexus.build.incremental.BuildContext;
  *
  * @goal compile
  * @requiresDependencyResolution test
- *
  */
 public class CompileMojo extends AbstractMojo {
 
-    private static final String JAVA_FILE_FILTER = "/*.java";
-    private static final String[] ALL_JAVA_FILES_FILTER = new String[] {"**" + JAVA_FILE_FILTER};
+  private static final String JAVA_FILE_FILTER = "/*.java";
+  private static final String[] ALL_JAVA_FILES_FILTER = new String[] {"**" + JAVA_FILE_FILTER};
 
-    /**
-     * maven project
-     *
-     * @parameter default-value="${project}"
-     * @readonly
-     */
-    private MavenProject project;
+  /**
+   * maven project
+   *
+   * @parameter default-value="${project}"
+   * @readonly
+   */
+  private MavenProject project;
 
-    /**
-     * source folder
-     *
-     * @parameter
-     * @required
-     */
-    private File sourceFolder;
+  /**
+   * source folder
+   *
+   * @parameter
+   * @required
+   */
+  private File sourceFolder;
 
-    /**
-     * source encoding
-     *
-     * @parameter
-     */
-    private String sourceEncoding;
+  /**
+   * source encoding
+   *
+   * @parameter
+   */
+  private String sourceEncoding;
 
-    /**
-     * source option
-     *
-     * @parameter
-     */
-    private String source;
+  /**
+   * source option
+   *
+   * @parameter
+   */
+  private String source;
 
-    /**
-     * target option
-     *
-     * @parameter
-     */
-    private String target;
+  /**
+   * target option
+   *
+   * @parameter
+   */
+  private String target;
 
-    /**
-     * test classpath
-     *
-     * @parameter default-value=false
-     */
-    private boolean testClasspath;
+  /**
+   * test classpath
+   *
+   * @parameter default-value=false
+   */
+  private boolean testClasspath;
 
-    /**
-     * compiler options
-     *
-     * @parameter
-     */
-    private Map<String, String> compilerOptions;
+  /**
+   * compiler options
+   *
+   * @parameter
+   */
+  private Map<String, String> compilerOptions;
 
-    /**
-     * build context
-     *
-     * @component
-     */
-    private BuildContext buildContext;
+  /**
+   * build context
+   *
+   * @component
+   */
+  private BuildContext buildContext;
 
-    @SuppressWarnings("unchecked")
-    private String buildCompileClasspath() {
-        List<String> pathElements = null;
-        try {
-            if (testClasspath) {
-                pathElements = project.getTestClasspathElements();
-            } else {
-                pathElements = project.getCompileClasspathElements();
-            }
-        } catch (DependencyResolutionRequiredException e) {
-            getLog().warn("exception calling getCompileClasspathElements", e);
-            return null;
-        }
-
-        if (pathElements.isEmpty()) {
-            return null;
-        }
-
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < pathElements.size(); i++) {
-            if (i > 0) {
-                result.append(File.pathSeparatorChar);
-            }
-            result.append(pathElements.get(i));
-        }
-        return result.toString();
+  @SuppressWarnings("unchecked")
+  private String buildCompileClasspath() {
+    List<String> pathElements = null;
+    try {
+      if (testClasspath) {
+        pathElements = project.getTestClasspathElements();
+      } else {
+        pathElements = project.getCompileClasspathElements();
+      }
+    } catch (DependencyResolutionRequiredException e) {
+      getLog().warn("exception calling getCompileClasspathElements", e);
+      return null;
     }
 
-    private List<String> getCompilerOptions() {
-        Map<String, String> compilerOpts = new LinkedHashMap<String, String>();
-
-        // classpath
-        String cp = buildCompileClasspath();
-        if (cp != null) {
-            compilerOpts.put("cp", cp);
-        }
-
-        // No APT processing
-        compilerOpts.put("proc:none", null);
-
-        if (source != null) {
-            compilerOpts.put("-source", source);
-        }
-
-        if (target != null) {
-            compilerOpts.put("-target", target);
-        }
-
-        if (sourceEncoding != null) {
-            compilerOpts.put("encoding", sourceEncoding);
-        }
-
-        if (testClasspath) {
-            compilerOpts.put("d", project.getBuild().getTestOutputDirectory());
-        } else {
-            compilerOpts.put("d", project.getBuild().getOutputDirectory());
-        }
-
-        if (compilerOptions != null) {
-            compilerOpts.putAll(compilerOptions);
-        }
-
-        List<String> opts = new ArrayList<String>(compilerOpts.size() * 2);
-
-        for (Map.Entry<String, String> compilerOption : compilerOpts.entrySet()) {
-            opts.add("-" + compilerOption.getKey());
-            String value = compilerOption.getValue();
-            if (value != null) {
-                opts.add(value);
-            }
-        }
-        return opts;
+    if (pathElements.isEmpty()) {
+      return null;
     }
 
-    private Set<File> getJavaFiles(File directory) {
-        String[] filters = ALL_JAVA_FILES_FILTER;
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < pathElements.size(); i++) {
+      if (i > 0) {
+        result.append(File.pathSeparatorChar);
+      }
+      result.append(pathElements.get(i));
+    }
+    return result.toString();
+  }
 
-        Set<File> files = new HashSet<File>();
-        // support for incremental build in m2e context
-        Scanner scanner = buildContext.newScanner(directory);
-        scanner.setIncludes(filters);
-        scanner.scan();
+  private List<String> getCompilerOptions() {
+    Map<String, String> compilerOpts = new LinkedHashMap<String, String>();
 
-        String[] includedFiles = scanner.getIncludedFiles();
-        if (includedFiles != null) {
-            for (String includedFile : includedFiles) {
-                files.add(new File(scanner.getBasedir(), includedFile));
-            }
-        }
-        return files;
+    // classpath
+    String cp = buildCompileClasspath();
+    if (cp != null) {
+      compilerOpts.put("cp", cp);
     }
 
-    @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
-        StandardJavaFileManager sjfm = jc.getStandardFileManager(null, null, null);
-        try {
-            Set<File> generatedFiles = getJavaFiles(sourceFolder);
-            Iterable<? extends JavaFileObject> fileObjects = sjfm.getJavaFileObjectsFromFiles(generatedFiles);
-            List<String> opts = getCompilerOptions();
-            jc.getTask(null, null, null, opts, null, fileObjects).call();
-        } finally {
-            try {
-                sjfm.close();
-            } catch (IOException e) {
-                throw new MojoFailureException(e.getMessage(), e);
-            }
-        }
+    // No APT processing
+    compilerOpts.put("proc:none", null);
+
+    if (source != null) {
+      compilerOpts.put("-source", source);
     }
 
-    public void setProject(MavenProject project) {
-        this.project = project;
+    if (target != null) {
+      compilerOpts.put("-target", target);
     }
 
-    public void setSourceFolder(File sourceFolder) {
-        this.sourceFolder = sourceFolder;
+    if (sourceEncoding != null) {
+      compilerOpts.put("encoding", sourceEncoding);
     }
 
-    public void setSourceEncoding(String sourceEncoding) {
-        this.sourceEncoding = sourceEncoding;
+    if (testClasspath) {
+      compilerOpts.put("d", project.getBuild().getTestOutputDirectory());
+    } else {
+      compilerOpts.put("d", project.getBuild().getOutputDirectory());
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    if (compilerOptions != null) {
+      compilerOpts.putAll(compilerOptions);
     }
 
-    public void setTarget(String target) {
-        this.target = target;
-    }
+    List<String> opts = new ArrayList<String>(compilerOpts.size() * 2);
 
-    public void setTestClasspath(boolean testClasspath) {
-        this.testClasspath = testClasspath;
+    for (Map.Entry<String, String> compilerOption : compilerOpts.entrySet()) {
+      opts.add("-" + compilerOption.getKey());
+      String value = compilerOption.getValue();
+      if (value != null) {
+        opts.add(value);
+      }
     }
+    return opts;
+  }
 
-    public void setCompilerOptions(Map<String, String> compilerOptions) {
-        this.compilerOptions = compilerOptions;
+  private Set<File> getJavaFiles(File directory) {
+    String[] filters = ALL_JAVA_FILES_FILTER;
+
+    Set<File> files = new HashSet<File>();
+    // support for incremental build in m2e context
+    Scanner scanner = buildContext.newScanner(directory);
+    scanner.setIncludes(filters);
+    scanner.scan();
+
+    String[] includedFiles = scanner.getIncludedFiles();
+    if (includedFiles != null) {
+      for (String includedFile : includedFiles) {
+        files.add(new File(scanner.getBasedir(), includedFile));
+      }
     }
+    return files;
+  }
 
-    public void setBuildContext(BuildContext buildContext) {
-        this.buildContext = buildContext;
+  @Override
+  public void execute() throws MojoExecutionException, MojoFailureException {
+    JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
+    StandardJavaFileManager sjfm = jc.getStandardFileManager(null, null, null);
+    try {
+      Set<File> generatedFiles = getJavaFiles(sourceFolder);
+      Iterable<? extends JavaFileObject> fileObjects =
+          sjfm.getJavaFileObjectsFromFiles(generatedFiles);
+      List<String> opts = getCompilerOptions();
+      jc.getTask(null, null, null, opts, null, fileObjects).call();
+    } finally {
+      try {
+        sjfm.close();
+      } catch (IOException e) {
+        throw new MojoFailureException(e.getMessage(), e);
+      }
     }
+  }
 
+  public void setProject(MavenProject project) {
+    this.project = project;
+  }
+
+  public void setSourceFolder(File sourceFolder) {
+    this.sourceFolder = sourceFolder;
+  }
+
+  public void setSourceEncoding(String sourceEncoding) {
+    this.sourceEncoding = sourceEncoding;
+  }
+
+  public void setSource(String source) {
+    this.source = source;
+  }
+
+  public void setTarget(String target) {
+    this.target = target;
+  }
+
+  public void setTestClasspath(boolean testClasspath) {
+    this.testClasspath = testClasspath;
+  }
+
+  public void setCompilerOptions(Map<String, String> compilerOptions) {
+    this.compilerOptions = compilerOptions;
+  }
+
+  public void setBuildContext(BuildContext buildContext) {
+    this.buildContext = buildContext;
+  }
 }

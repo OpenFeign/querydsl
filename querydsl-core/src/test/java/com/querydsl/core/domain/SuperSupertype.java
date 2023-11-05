@@ -18,24 +18,23 @@ import com.querydsl.core.annotations.QueryEntity;
 @QueryEntity
 public class SuperSupertype {
 
-    private Long id;
+  private Long id;
 
-    private Long version;
+  private Long version;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Long getVersion() {
-        return version;
-    }
+  public Long getVersion() {
+    return version;
+  }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
+  public void setVersion(Long version) {
+    this.version = version;
+  }
 }

@@ -15,33 +15,29 @@ package com.querydsl.apt.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 public class EntityInheritanceTest {
 
-    @MappedSuperclass
-    public static class TreeEntity<T extends TreeEntity<T>> {
+  @MappedSuperclass
+  public static class TreeEntity<T extends TreeEntity<T>> {
 
-        Integer id;
+    Integer id;
 
-        T parent;
+    T parent;
+  }
 
-    }
+  @Entity
+  public static class TestEntity extends TreeEntity<TestEntity> {
 
-    @Entity
-    public static class TestEntity extends TreeEntity<TestEntity> {
+    String name;
+  }
 
-        String name;
-
-    }
-
-    @Test
-    public void test() {
-        Assert.assertEquals(
-                QEntityInheritanceTest_TestEntity.class,
-                QEntityInheritanceTest_TestEntity.testEntity.parent.getClass());
-    }
-
+  @Test
+  public void test() {
+    Assert.assertEquals(
+        QEntityInheritanceTest_TestEntity.class,
+        QEntityInheritanceTest_TestEntity.testEntity.parent.getClass());
+  }
 }

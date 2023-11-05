@@ -13,9 +13,6 @@
  */
 package com.querydsl.core.group;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Tuple;
@@ -23,56 +20,55 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.Projections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Provides aggregated results as a map
  *
  * @author tiwe
- *
  * @param <K>
  * @param <V>
  */
-public class GroupByMap<K,V> extends AbstractGroupByTransformer<K, Map<K,V>> {
+public class GroupByMap<K, V> extends AbstractGroupByTransformer<K, Map<K, V>> {
 
-    GroupByMap(Expression<K> key, Expression<?>... expressions) {
-        super(key, expressions);
+  GroupByMap(Expression<K> key, Expression<?>... expressions) {
+    super(key, expressions);
+  }
+
+  @Override
+  public Map<K, V> transform(FetchableQuery<?, ?> query) {
+    Map<K, Group> groups = new LinkedHashMap<K, Group>();
+
+    // create groups
+    FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
+    boolean hasGroups = false;
+    for (Expression<?> e : expr.getArgs()) {
+      hasGroups |= e instanceof GroupExpression;
+    }
+    if (hasGroups) {
+      expr = withoutGroupExpressions(expr);
+    }
+    try (CloseableIterator<Tuple> iter = query.select(expr).iterate()) {
+      while (iter.hasNext()) {
+        @SuppressWarnings("unchecked") // This type is mandated by the key type
+        K[] row = (K[]) iter.next().toArray();
+        K groupId = row[0];
+        GroupImpl group = (GroupImpl) groups.get(groupId);
+        if (group == null) {
+          group = new GroupImpl(groupExpressions, maps);
+          groups.put(groupId, group);
+        }
+        group.add(row);
+      }
     }
 
-    @Override
-    public Map<K, V> transform(FetchableQuery<?,?> query) {
-        Map<K, Group> groups = new LinkedHashMap<K, Group>();
+    // transform groups
+    return transform(groups);
+  }
 
-        // create groups
-        FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-        boolean hasGroups = false;
-        for (Expression<?> e : expr.getArgs()) {
-            hasGroups |= e instanceof GroupExpression;
-        }
-        if (hasGroups) {
-            expr = withoutGroupExpressions(expr);
-        }
-        try (CloseableIterator<Tuple> iter = query.select(expr).iterate()) {
-            while (iter.hasNext()) {
-                @SuppressWarnings("unchecked") //This type is mandated by the key type
-                K[] row = (K[]) iter.next().toArray();
-                K groupId = row[0];
-                GroupImpl group = (GroupImpl) groups.get(groupId);
-                if (group == null) {
-                    group = new GroupImpl(groupExpressions, maps);
-                    groups.put(groupId, group);
-                }
-                group.add(row);
-            }
-        }
-
-        // transform groups
-        return transform(groups);
-
-    }
-
-    @SuppressWarnings("unchecked")
-    protected Map<K, V> transform(Map<K, Group> groups) {
-        return (Map<K,V>) groups;
-    }
-
+  @SuppressWarnings("unchecked")
+  protected Map<K, V> transform(Map<K, Group> groups) {
+    return (Map<K, V>) groups;
+  }
 }

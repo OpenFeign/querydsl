@@ -13,53 +13,51 @@
  */
 package com.querydsl.collections;
 
-import java.util.Collection;
-
 import com.querydsl.core.dml.DeleteClause;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
+import java.util.Collection;
 
 /**
- * {@code CollDeleteClause} is an implementation of the {@link DeleteClause} interface for the Querydsl
- * Collections module
+ * {@code CollDeleteClause} is an implementation of the {@link DeleteClause} interface for the
+ * Querydsl Collections module
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class CollDeleteClause<T> implements DeleteClause<CollDeleteClause<T>> {
 
-    private final Collection<? extends T> col;
+  private final Collection<? extends T> col;
 
-    private final CollQuery<T> query;
+  private final CollQuery<T> query;
 
-    public CollDeleteClause(QueryEngine qe, Path<T> expr, Collection<? extends T> col) {
-        this.query = new CollQuery<Void>(qe).from(expr, col).select(expr);
-        this.col = col;
+  public CollDeleteClause(QueryEngine qe, Path<T> expr, Collection<? extends T> col) {
+    this.query = new CollQuery<Void>(qe).from(expr, col).select(expr);
+    this.col = col;
+  }
+
+  public CollDeleteClause(Path<T> expr, Collection<? extends T> col) {
+    this(DefaultQueryEngine.getDefault(), expr, col);
+  }
+
+  @Override
+  public long execute() {
+    int rv = 0;
+    for (T match : query.fetch()) {
+      col.remove(match);
+      rv++;
     }
+    return rv;
+  }
 
-    public CollDeleteClause(Path<T> expr, Collection<? extends T> col) {
-        this(DefaultQueryEngine.getDefault(), expr, col);
-    }
+  @Override
+  public CollDeleteClause<T> where(Predicate... o) {
+    query.where(o);
+    return this;
+  }
 
-    @Override
-    public long execute() {
-        int rv = 0;
-        for (T match : query.fetch()) {
-            col.remove(match);
-            rv++;
-        }
-        return rv;
-    }
-
-    @Override
-    public CollDeleteClause<T> where(Predicate... o) {
-        query.where(o);
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return "delete " + query.toString();
-    }
+  @Override
+  public String toString() {
+    return "delete " + query.toString();
+  }
 }

@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * APT Morphia support
- */
+/** APT Morphia support */
 package com.querydsl.apt.morphia;

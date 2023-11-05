@@ -15,37 +15,35 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.types.PathMetadataFactory;
+import org.junit.Test;
 
 public class Superclass5Test {
 
-    public static class SuperClass {
+  public static class SuperClass {
 
-        String superClassProperty;
+    String superClassProperty;
+  }
 
-    }
+  @QueryEmbeddable
+  public static class Embeddable extends SuperClass {
 
-    @QueryEmbeddable
-    public static class Embeddable extends SuperClass {
+    String embeddableProperty;
+  }
 
-        String embeddableProperty;
+  @Test
+  public void superClass_properties() {
+    QSuperclass5Test_SuperClass qtype =
+        new QSuperclass5Test_SuperClass(PathMetadataFactory.forVariable("var"));
+    assertNotNull(qtype.superClassProperty);
+  }
 
-    }
-
-    @Test
-    public void superClass_properties() {
-        QSuperclass5Test_SuperClass qtype = new QSuperclass5Test_SuperClass(PathMetadataFactory.forVariable("var"));
-        assertNotNull(qtype.superClassProperty);
-    }
-
-    @Test
-    public void entity_properties() {
-        QSuperclass5Test_Embeddable qtype = new QSuperclass5Test_Embeddable(PathMetadataFactory.forVariable("var"));
-        assertNotNull(qtype.superClassProperty);
-        assertNotNull(qtype.embeddableProperty);
-    }
-
+  @Test
+  public void entity_properties() {
+    QSuperclass5Test_Embeddable qtype =
+        new QSuperclass5Test_Embeddable(PathMetadataFactory.forVariable("var"));
+    assertNotNull(qtype.superClassProperty);
+    assertNotNull(qtype.embeddableProperty);
+  }
 }

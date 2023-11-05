@@ -15,17 +15,16 @@ package com.querydsl.core.alias;
 
 public class ComparableEntity implements Comparable<ComparableEntity> {
 
-    @Override
-    public int compareTo(ComparableEntity o) {
-        return 0;
-    }
+  @Override
+  public int compareTo(ComparableEntity o) {
+    return 0;
+  }
 
-    public boolean equals(Object o) {
-        return o == this;
-    }
+  public boolean equals(Object o) {
+    return o == this;
+  }
 
-    public String getProperty() {
-        return "";
-    }
-
+  public String getProperty() {
+    return "";
+  }
 }

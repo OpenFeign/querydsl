@@ -13,18 +13,17 @@
  */
 package com.querydsl.core.alias;
 
-import static org.junit.Assert.assertEquals;
 import static com.querydsl.core.alias.Alias.$;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 public class ScalaAccessorsTest {
 
-    @Test
-    public void scalaAccessors() {
-        ScalaAccessors scalaAccessors = Alias.alias(ScalaAccessors.class);
-        assertEquals("scalaAccessors.firstName", $(scalaAccessors.firstName()).toString());
-        assertEquals("scalaAccessors.lastName",  $(scalaAccessors.lastName()).toString());
-    }
-
+  @Test
+  public void scalaAccessors() {
+    ScalaAccessors scalaAccessors = Alias.alias(ScalaAccessors.class);
+    assertEquals("scalaAccessors.firstName", $(scalaAccessors.firstName()).toString());
+    assertEquals("scalaAccessors.lastName", $(scalaAccessors.lastName()).toString());
+  }
 }

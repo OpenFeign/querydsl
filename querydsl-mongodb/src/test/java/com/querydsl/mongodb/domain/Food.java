@@ -17,13 +17,13 @@ import org.mongodb.morphia.annotations.Entity;
 
 @Entity("food")
 public class Food extends AbstractEntity {
-    private final String name;
+  private final String name;
 
-    public Food(final String name) {
-        this.name = name;
-    }
+  public Food(final String name) {
+    this.name = name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 }

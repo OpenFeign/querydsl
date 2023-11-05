@@ -18,10 +18,9 @@ import com.querydsl.core.types.Expression;
 
 public class QIdName extends ConstructorExpression<IdName> {
 
-    private static final long serialVersionUID = 5770565824515003611L;
+  private static final long serialVersionUID = 5770565824515003611L;
 
-    public QIdName(Expression<java.lang.Integer> id, Expression<java.lang.String> name) {
-        super(IdName.class, new Class<?>[]{int.class, String.class}, id, name);
-    }
-
+  public QIdName(Expression<java.lang.Integer> id, Expression<java.lang.String> name) {
+    super(IdName.class, new Class<?>[] {int.class, String.class}, id, name);
+  }
 }

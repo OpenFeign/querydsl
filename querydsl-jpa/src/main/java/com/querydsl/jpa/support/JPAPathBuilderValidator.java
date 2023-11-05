@@ -13,42 +13,39 @@
  */
 package com.querydsl.jpa.support;
 
+import com.querydsl.core.types.dsl.PathBuilderValidator;
+import com.querydsl.core.util.PrimitiveUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.PluralAttribute;
 
-import com.querydsl.core.types.dsl.PathBuilderValidator;
-import com.querydsl.core.util.PrimitiveUtils;
-
-/**
- * JPAPathBuilderValidator implements PathBuilderValidator using a JPA Metamodel instance
- */
+/** JPAPathBuilderValidator implements PathBuilderValidator using a JPA Metamodel instance */
 public class JPAPathBuilderValidator implements PathBuilderValidator {
 
-    private final Metamodel metamodel;
+  private final Metamodel metamodel;
 
-    public JPAPathBuilderValidator(EntityManager entityManager) {
-        this.metamodel = entityManager.getMetamodel();
-    }
+  public JPAPathBuilderValidator(EntityManager entityManager) {
+    this.metamodel = entityManager.getMetamodel();
+  }
 
-    public JPAPathBuilderValidator(Metamodel metamodel) {
-        this.metamodel = metamodel;
-    }
+  public JPAPathBuilderValidator(Metamodel metamodel) {
+    this.metamodel = metamodel;
+  }
 
-    @Override
-    public Class<?> validate(Class<?> parent, String property, Class<?> propertyType) {
-        try {
-            ManagedType managedType = metamodel.managedType(parent);
-            Attribute attribute = managedType.getAttribute(property);
-            if (attribute instanceof PluralAttribute) {
-                return ((PluralAttribute) attribute).getElementType().getJavaType();
-            } else {
-                return PrimitiveUtils.wrap(attribute.getJavaType());
-            }
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+  @Override
+  public Class<?> validate(Class<?> parent, String property, Class<?> propertyType) {
+    try {
+      ManagedType managedType = metamodel.managedType(parent);
+      Attribute attribute = managedType.getAttribute(property);
+      if (attribute instanceof PluralAttribute) {
+        return ((PluralAttribute) attribute).getElementType().getJavaType();
+      } else {
+        return PrimitiveUtils.wrap(attribute.getJavaType());
+      }
+    } catch (IllegalArgumentException e) {
+      return null;
     }
+  }
 }

@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation for APT based query type generation. Annotate constructors with this annotation.
  *
- * <p>Example</p>
+ * <p>Example
  *
  * <pre>
  * class UserInfo {
@@ -40,21 +40,17 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  *
- * <p>The projection can then be used like this</p>
+ * <p>The projection can then be used like this
  *
- * <pre>
- * {@code
+ * <pre>{@code
  * QUser user = QUser.user;
  * List <UserInfo> result = querydsl.from(user)
  *     .where(user.valid.eq(true))
  *     .select(new QUserInfo(user.firstName, user.lastName))
  *     .fetch();
- * }
- * </pre>
+ * }</pre>
  */
 @Documented
 @Target(ElementType.CONSTRUCTOR)
 @Retention(RUNTIME)
-public @interface QueryProjection {
-
-}
+public @interface QueryProjection {}

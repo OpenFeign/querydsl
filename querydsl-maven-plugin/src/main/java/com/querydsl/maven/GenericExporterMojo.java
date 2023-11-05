@@ -21,6 +21,4 @@ import com.querydsl.codegen.GenericExporter;
  * @goal generic-export
  * @requiresDependencyResolution test
  */
-public class GenericExporterMojo extends AbstractExporterMojo {
-
-}
+public class GenericExporterMojo extends AbstractExporterMojo {}

@@ -19,26 +19,23 @@ import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.utils.IndexType;
 
-
 @Entity
 @Indexes({@Index(fields = @Field(value = "location", type = IndexType.GEO2D))})
 public class GeoEntity extends AbstractEntity {
 
-    private Double[] location;
+  private Double[] location;
 
-    public GeoEntity(double l1, double l2) {
-        location = new Double[]{l1, l2};
-    }
+  public GeoEntity(double l1, double l2) {
+    location = new Double[] {l1, l2};
+  }
 
-    public GeoEntity() { }
+  public GeoEntity() {}
 
-    public Double[] getLocation() {
-        return location;
-    }
+  public Double[] getLocation() {
+    return location;
+  }
 
-    public void setLocation(Double[] location) {
-        this.location = location;
-    }
-
-
+  public void setLocation(Double[] location) {
+    this.location = location;
+  }
 }

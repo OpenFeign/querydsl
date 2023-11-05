@@ -17,15 +17,13 @@ package com.querydsl.core.types;
  * {@code Predicate} is the common interface for Boolean typed expressions
  *
  * @author tiwe
- *
  */
 public interface Predicate extends Expression<Boolean> {
 
-    /**
-     * Get the negation of the expression
-     *
-     * @return negation
-     */
-    Predicate not();
-
+  /**
+   * Get the negation of the expression
+   *
+   * @return negation
+   */
+  Predicate not();
 }

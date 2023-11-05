@@ -13,22 +13,21 @@
  */
 package com.querydsl.sql.codegen;
 
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
-
 import com.querydsl.core.testutil.SQLServer;
 import com.querydsl.sql.Connections;
+import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 
 @Category(SQLServer.class)
 public class ExportMSSQLTest extends ExportBaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        Connections.initSQLServer();
-    }
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    Connections.initSQLServer();
+  }
 
-    @Override
-    protected String getSchemaPattern() {
-        return "sys";
-    }
+  @Override
+  protected String getSchemaPattern() {
+    return "sys";
+  }
 }

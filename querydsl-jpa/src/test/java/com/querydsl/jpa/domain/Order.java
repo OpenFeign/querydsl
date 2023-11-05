@@ -15,38 +15,33 @@ package com.querydsl.jpa.domain;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.*;
 
-/**
- * The Class Order.
- */
+/** The Class Order. */
 @Entity
 @Table(name = "order_")
 public class Order {
-    @ManyToOne
-    Customer customer;
+  @ManyToOne Customer customer;
 
-    @ElementCollection
-    @OrderColumn(name = "_index")
-    List<Integer> deliveredItemIndices;
+  @ElementCollection
+  @OrderColumn(name = "_index")
+  List<Integer> deliveredItemIndices;
 
-    @Id
-    long id;
+  @Id long id;
 
-    @OneToMany
-    @OrderColumn(name = "_index")
-    List<Item> items;
+  @OneToMany
+  @OrderColumn(name = "_index")
+  List<Item> items;
 
-    @OneToMany
-    @JoinTable(name = "LineItems")
-    @OrderColumn(name = "_index")
-    List<Item> lineItems;
+  @OneToMany
+  @JoinTable(name = "LineItems")
+  @OrderColumn(name = "_index")
+  List<Item> lineItems;
 
-    @OneToMany
-    @JoinTable(name = "LineItems2")
-    @MapKey(name = "id")
-    Map<Integer, Item> lineItemsMap;
+  @OneToMany
+  @JoinTable(name = "LineItems2")
+  @MapKey(name = "id")
+  Map<Integer, Item> lineItemsMap;
 
-    boolean paid;
+  boolean paid;
 }

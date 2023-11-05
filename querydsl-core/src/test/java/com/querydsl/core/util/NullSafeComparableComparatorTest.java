@@ -20,31 +20,31 @@ import org.junit.Test;
 
 public class NullSafeComparableComparatorTest {
 
-    private final NullSafeComparableComparator<String> comparator = new NullSafeComparableComparator<String>();
+  private final NullSafeComparableComparator<String> comparator =
+      new NullSafeComparableComparator<String>();
 
-    @Test
-    public void null_before_object() {
-        assertTrue(comparator.compare(null, "X") < 0);
-    }
+  @Test
+  public void null_before_object() {
+    assertTrue(comparator.compare(null, "X") < 0);
+  }
 
-    @Test
-    public void object_after_null() {
-        assertTrue(comparator.compare("X", null) > 0);
-    }
+  @Test
+  public void object_after_null() {
+    assertTrue(comparator.compare("X", null) > 0);
+  }
 
-    @Test
-    public void object_eq_object() {
-        assertEquals(0, comparator.compare("X", "X"));
-    }
+  @Test
+  public void object_eq_object() {
+    assertEquals(0, comparator.compare("X", "X"));
+  }
 
-    @Test
-    public void object_lt_object() {
-        assertTrue(comparator.compare("X", "Y") < 0);
-    }
+  @Test
+  public void object_lt_object() {
+    assertTrue(comparator.compare("X", "Y") < 0);
+  }
 
-    @Test
-    public void object_gt_object() {
-        assertTrue(comparator.compare("Z", "Y") > 0);
-    }
-
+  @Test
+  public void object_gt_object() {
+    assertTrue(comparator.compare("Z", "Y") > 0);
+  }
 }

@@ -18,23 +18,21 @@ package com.querydsl.core.group;
  *
  * @param <T> Element type
  * @param <R> Target type (e.g. List, Set)
- *
  * @author sasa
  */
 public interface GroupCollector<T, R> {
 
-    /**
-     * Add given value to this group
-     *
-     * @param o value to add
-     */
-    void add(T o);
+  /**
+   * Add given value to this group
+   *
+   * @param o value to add
+   */
+  void add(T o);
 
-    /**
-     * Get the value for this group
-     *
-     * @return value of this group.
-     */
-    R get();
-
+  /**
+   * Get the value for this group
+   *
+   * @return value of this group.
+   */
+  R get();
 }

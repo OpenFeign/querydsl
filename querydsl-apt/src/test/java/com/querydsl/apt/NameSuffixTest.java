@@ -20,27 +20,27 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
 import org.junit.Test;
 
 public class NameSuffixTest extends AbstractProcessorTest {
 
-    private static final String packagePath = "src/test/java/com/querydsl/apt/domain/";
+  private static final String packagePath = "src/test/java/com/querydsl/apt/domain/";
 
-    @Test
-    public void process_all() throws IOException {
-        // works only in Eclipse for the moment
-        List<String> classes = getFiles(packagePath);
+  @Test
+  public void process_all() throws IOException {
+    // works only in Eclipse for the moment
+    List<String> classes = getFiles(packagePath);
 
-        // default Processor
-        process(QuerydslAnnotationProcessor.class, classes,"suffix");
+    // default Processor
+    process(QuerydslAnnotationProcessor.class, classes, "suffix");
 
-        assertTrue(new File("target/suffix/com/querydsl/apt/domain/query2/QAnimalTest_AnimalType.java").exists());
-    }
+    assertTrue(
+        new File("target/suffix/com/querydsl/apt/domain/query2/QAnimalTest_AnimalType.java")
+            .exists());
+  }
 
-    @Override
-    protected Collection<String> getAPTOptions() {
-        return Arrays.asList("-Aquerydsl.packageSuffix=.query2", "-Aquerydsl.suffix=Type");
-    }
-
+  @Override
+  protected Collection<String> getAPTOptions() {
+    return Arrays.asList("-Aquerydsl.packageSuffix=.query2", "-Aquerydsl.suffix=Type");
+  }
 }

@@ -1,28 +1,26 @@
 package com.querydsl.spatial;
 
-import org.geolatte.geom.*;
-
 import com.querydsl.core.annotations.QueryEntity;
+import org.geolatte.geom.*;
 
 @QueryEntity
 public class GeometryEntity {
 
-    Geometry geometry;
+  Geometry geometry;
 
-    GeometryCollection geometryCollection;
+  GeometryCollection geometryCollection;
 
-    LinearRing linearRing;
+  LinearRing linearRing;
 
-    LineString lineString;
+  LineString lineString;
 
-    MultiLineString multiLineString;
+  MultiLineString multiLineString;
 
-    MultiPoint multiPoint;
+  MultiPoint multiPoint;
 
-    MultiPolygon multiPolygon;
+  MultiPolygon multiPolygon;
 
-    Point point;
+  Point point;
 
-    Polygon polygon;
-
+  Polygon polygon;
 }

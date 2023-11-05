@@ -20,14 +20,12 @@ import com.querydsl.core.types.dsl.StringOperation;
  * {@code PhraseElement} represents the embedded String as a phrase
  *
  * @author tiwe
- *
  */
 public class PhraseElement extends StringOperation {
 
-    private static final long serialVersionUID = 2350215644019186076L;
+  private static final long serialVersionUID = 2350215644019186076L;
 
-    public PhraseElement(String str) {
-        super(LuceneOps.PHRASE, ConstantImpl.create(str));
-    }
-
+  public PhraseElement(String str) {
+    super(LuceneOps.PHRASE, ConstantImpl.create(str));
+  }
 }

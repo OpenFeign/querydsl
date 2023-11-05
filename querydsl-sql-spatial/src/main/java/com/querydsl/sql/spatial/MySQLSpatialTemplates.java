@@ -21,35 +21,33 @@ import com.querydsl.sql.SQLTemplates;
  * {@code MySQLSpatialTemplates} is a spatial enabled SQL dialect for MySQL
  *
  * @author tiwe
- *
  */
 public class MySQLSpatialTemplates extends MySQLTemplates {
 
-    @SuppressWarnings("FieldNameHidesFieldInSuperclass") //Intentional
-    public static final MySQLSpatialTemplates DEFAULT = new MySQLSpatialTemplates();
+  @SuppressWarnings("FieldNameHidesFieldInSuperclass") // Intentional
+  public static final MySQLSpatialTemplates DEFAULT = new MySQLSpatialTemplates();
 
-    public static Builder builder() {
-        return new Builder() {
-            @Override
-            protected SQLTemplates build(char escape, boolean quote) {
-                return new MySQLSpatialTemplates(escape, quote);
-            }
-        };
-    }
+  public static Builder builder() {
+    return new Builder() {
+      @Override
+      protected SQLTemplates build(char escape, boolean quote) {
+        return new MySQLSpatialTemplates(escape, quote);
+      }
+    };
+  }
 
-    public MySQLSpatialTemplates() {
-        this('\\', false);
-    }
+  public MySQLSpatialTemplates() {
+    this('\\', false);
+  }
 
-    public MySQLSpatialTemplates(boolean quote) {
-        this('\\', quote);
-    }
+  public MySQLSpatialTemplates(boolean quote) {
+    this('\\', quote);
+  }
 
-    public MySQLSpatialTemplates(char escape, boolean quote) {
-        super(escape, quote);
-        addCustomType(MySQLWkbType.DEFAULT);
-        add(SpatialTemplatesSupport.getSpatialOps("", true));
-        add(SpatialOps.NUM_INTERIOR_RING, "NumInteriorRings({0})");
-    }
-
+  public MySQLSpatialTemplates(char escape, boolean quote) {
+    super(escape, quote);
+    addCustomType(MySQLWkbType.DEFAULT);
+    add(SpatialTemplatesSupport.getSpatialOps("", true));
+    add(SpatialOps.NUM_INTERIOR_RING, "NumInteriorRings({0})");
+  }
 }

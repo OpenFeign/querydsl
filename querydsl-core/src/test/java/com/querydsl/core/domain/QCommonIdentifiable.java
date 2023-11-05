@@ -15,44 +15,41 @@ package com.querydsl.core.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
-import java.io.Serializable;
-
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.SimplePath;
+import java.io.Serializable;
 
+/** QCommonIdentifiable is a Querydsl query type for CommonIdentifiable */
+public class QCommonIdentifiable
+    extends EntityPathBase<CommonIdentifiable<? extends Serializable>> {
 
-/**
- * QCommonIdentifiable is a Querydsl query type for CommonIdentifiable
- */
-public class QCommonIdentifiable extends EntityPathBase<CommonIdentifiable<? extends Serializable>> {
+  private static final long serialVersionUID = 1818647030;
 
-    private static final long serialVersionUID = 1818647030;
+  public static final QCommonIdentifiable commonIdentifiable =
+      new QCommonIdentifiable("commonIdentifiable");
 
-    public static final QCommonIdentifiable commonIdentifiable = new QCommonIdentifiable("commonIdentifiable");
+  public final QCommonPersistence _super = new QCommonPersistence(this);
 
-    public final QCommonPersistence _super = new QCommonPersistence(this);
+  public final SimplePath<Serializable> id = createSimple("id", java.io.Serializable.class);
 
-    public final SimplePath<Serializable> id = createSimple("id", java.io.Serializable.class);
+  // inherited
+  public final NumberPath<Long> version = _super.version;
 
-    //inherited
-    public final NumberPath<Long> version = _super.version;
+  @SuppressWarnings("unchecked")
+  public QCommonIdentifiable(String variable) {
+    super((Class) CommonIdentifiable.class, forVariable(variable));
+  }
 
-    @SuppressWarnings("unchecked")
-    public QCommonIdentifiable(String variable) {
-        super((Class) CommonIdentifiable.class, forVariable(variable));
-    }
+  public QCommonIdentifiable(
+      BeanPath<? extends CommonIdentifiable<? extends Serializable>> entity) {
+    super(entity.getType(), entity.getMetadata());
+  }
 
-    public QCommonIdentifiable(BeanPath<? extends CommonIdentifiable<? extends Serializable>> entity) {
-        super(entity.getType(), entity.getMetadata());
-    }
-
-    @SuppressWarnings("unchecked")
-    public QCommonIdentifiable(PathMetadata metadata) {
-        super((Class) CommonIdentifiable.class, metadata);
-    }
-
+  @SuppressWarnings("unchecked")
+  public QCommonIdentifiable(PathMetadata metadata) {
+    super((Class) CommonIdentifiable.class, metadata);
+  }
 }
-

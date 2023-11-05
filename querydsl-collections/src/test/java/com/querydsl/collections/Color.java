@@ -14,5 +14,6 @@
 package com.querydsl.collections;
 
 public enum Color {
-    BLACK, TABBY
+  BLACK,
+  TABBY
 }

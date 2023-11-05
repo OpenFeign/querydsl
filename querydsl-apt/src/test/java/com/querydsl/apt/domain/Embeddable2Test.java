@@ -15,50 +15,45 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.domain.MyEmbeddable;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.PathInits;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class Embeddable2Test {
 
-    @QuerySupertype
-    public abstract static class SomeMappedSuperClassHavingMyEmbeddable {
+  @QuerySupertype
+  public abstract static class SomeMappedSuperClassHavingMyEmbeddable {
 
-        @QueryEmbedded
-        MyEmbeddable embeddable;
-    }
+    @QueryEmbedded MyEmbeddable embeddable;
+  }
 
-    @QueryEntity
-    public abstract static class SomeEntityClassHavingMyEmbeddable {
+  @QueryEntity
+  public abstract static class SomeEntityClassHavingMyEmbeddable {
 
-        @QueryEmbedded
-        MyEmbeddable embeddable;
+    @QueryEmbedded MyEmbeddable embeddable;
+  }
 
-    }
+  @QueryEntity
+  public static class SomeEntity extends SomeMappedSuperClassHavingMyEmbeddable {}
 
-    @QueryEntity
-    public static class SomeEntity extends SomeMappedSuperClassHavingMyEmbeddable {
+  @Test
+  @Ignore
+  public void mapped_superClass_constructors() throws SecurityException, NoSuchMethodException {
+    assertNotNull(
+        QEmbeddable2Test_SomeMappedSuperClassHavingMyEmbeddable.class.getConstructor(
+            Class.class, PathMetadata.class, PathInits.class));
+  }
 
-    }
-
-    @Test
-    @Ignore
-    public void mapped_superClass_constructors() throws SecurityException, NoSuchMethodException {
-        assertNotNull(QEmbeddable2Test_SomeMappedSuperClassHavingMyEmbeddable.class.getConstructor(
-                Class.class, PathMetadata.class, PathInits.class));
-    }
-
-    @Test
-    @Ignore
-    public void entity_constructors() throws SecurityException, NoSuchMethodException {
-        assertNotNull(QEmbeddable2Test_SomeEntityClassHavingMyEmbeddable.class.getConstructor(
-                Class.class, PathMetadata.class, PathInits.class));
-    }
-
+  @Test
+  @Ignore
+  public void entity_constructors() throws SecurityException, NoSuchMethodException {
+    assertNotNull(
+        QEmbeddable2Test_SomeEntityClassHavingMyEmbeddable.class.getConstructor(
+            Class.class, PathMetadata.class, PathInits.class));
+  }
 }

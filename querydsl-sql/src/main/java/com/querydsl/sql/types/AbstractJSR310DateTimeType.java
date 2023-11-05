@@ -7,10 +7,10 @@ import java.time.temporal.Temporal;
  *
  * @param <T>
  */
-public abstract class AbstractJSR310DateTimeType<T extends Temporal> extends AbstractDateTimeType<T> {
+public abstract class AbstractJSR310DateTimeType<T extends Temporal>
+    extends AbstractDateTimeType<T> {
 
-    public AbstractJSR310DateTimeType(int type) {
-        super(type);
-    }
-
+  public AbstractJSR310DateTimeType(int type) {
+    super(type);
+  }
 }

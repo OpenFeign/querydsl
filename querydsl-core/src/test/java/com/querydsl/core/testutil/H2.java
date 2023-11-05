@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface H2 extends EmbeddedDatabase {
-}
+public interface H2 extends EmbeddedDatabase {}

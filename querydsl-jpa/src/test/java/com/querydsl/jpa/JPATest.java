@@ -18,10 +18,9 @@ package com.querydsl.jpa;
 import javax.persistence.EntityManager;
 
 /**
- *
  * @author Shredder121
  */
 public interface JPATest {
 
-    void setEntityManager(EntityManager entityManager);
+  void setEntityManager(EntityManager entityManager);
 }

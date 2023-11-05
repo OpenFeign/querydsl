@@ -22,37 +22,35 @@ import java.sql.Types;
  * {@code BooleanType} maps Boolean to Boolean on the JDBC level
  *
  * @author tiwe
- *
  */
 public class BooleanType extends AbstractType<Boolean> {
 
-    public BooleanType() {
-        super(Types.BOOLEAN);
-    }
+  public BooleanType() {
+    super(Types.BOOLEAN);
+  }
 
-    public BooleanType(int type) {
-        super(type);
-    }
+  public BooleanType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Boolean getValue(ResultSet rs, int startIndex) throws SQLException {
-        boolean val = rs.getBoolean(startIndex);
-        return rs.wasNull() ? null : val;
-    }
+  @Override
+  public Boolean getValue(ResultSet rs, int startIndex) throws SQLException {
+    boolean val = rs.getBoolean(startIndex);
+    return rs.wasNull() ? null : val;
+  }
 
-    @Override
-    public Class<Boolean> getReturnedClass() {
-        return Boolean.class;
-    }
+  @Override
+  public Class<Boolean> getReturnedClass() {
+    return Boolean.class;
+  }
 
-    @Override
-    public String getLiteral(Boolean value) {
-        return value ? "1" : "0";
-    }
+  @Override
+  public String getLiteral(Boolean value) {
+    return value ? "1" : "0";
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Boolean value) throws SQLException {
-        st.setBoolean(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Boolean value) throws SQLException {
+    st.setBoolean(startIndex, value);
+  }
 }

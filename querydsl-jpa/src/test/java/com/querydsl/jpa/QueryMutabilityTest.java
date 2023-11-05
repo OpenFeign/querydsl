@@ -15,51 +15,52 @@ package com.querydsl.jpa;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
-import org.hibernate.Session;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.querydsl.core.QueryMutability;
 import com.querydsl.jpa.domain.sql.SAnimal;
 import com.querydsl.jpa.hibernate.sql.HibernateSQLQuery;
 import com.querydsl.sql.DerbyTemplates;
 import com.querydsl.sql.SQLTemplates;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import org.hibernate.Session;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class QueryMutabilityTest {
 
-    private static final SQLTemplates derbyTemplates = new DerbyTemplates();
+  private static final SQLTemplates derbyTemplates = new DerbyTemplates();
 
-    private Session session;
+  private Session session;
 
-    protected HibernateSQLQuery<?> query() {
-        return new HibernateSQLQuery<Void>(session, derbyTemplates);
-    }
+  protected HibernateSQLQuery<?> query() {
+    return new HibernateSQLQuery<Void>(session, derbyTemplates);
+  }
 
-    public void setSession(Session session) {
-        this.session = session;
-    }
+  public void setSession(Session session) {
+    this.session = session;
+  }
 
-    @Test
-    @Ignore
-    public void queryMutability() throws SecurityException, IllegalArgumentException,
-            NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException, IOException {
-        SAnimal cat = new SAnimal("cat");
-        HibernateSQLQuery<?> query = query().from(cat);
-        new QueryMutability(query).test(cat.id, cat.name);
-    }
+  @Test
+  @Ignore
+  public void queryMutability()
+      throws SecurityException,
+          IllegalArgumentException,
+          NoSuchMethodException,
+          IllegalAccessException,
+          InvocationTargetException,
+          IOException {
+    SAnimal cat = new SAnimal("cat");
+    HibernateSQLQuery<?> query = query().from(cat);
+    new QueryMutability(query).test(cat.id, cat.name);
+  }
 
-    @Test
-    public void clone_() {
-        SAnimal cat = new SAnimal("cat");
-        HibernateSQLQuery<?> query = query().from(cat).where(cat.name.isNotNull());
-        HibernateSQLQuery<?> query2 = query.clone(session);
-        assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
-        assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
-        //query2.fetch(cat.id);
-    }
-
+  @Test
+  public void clone_() {
+    SAnimal cat = new SAnimal("cat");
+    HibernateSQLQuery<?> query = query().from(cat).where(cat.name.isNotNull());
+    HibernateSQLQuery<?> query2 = query.clone(session);
+    assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
+    assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
+    // query2.fetch(cat.id);
+  }
 }

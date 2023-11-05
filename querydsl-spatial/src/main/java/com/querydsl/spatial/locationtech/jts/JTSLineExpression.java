@@ -20,15 +20,13 @@ import org.locationtech.jts.geom.LineString;
  * A Line is a LineString with exactly 2 Points.
  *
  * @author tiwe
- *
  * @param <T>
  */
 public abstract class JTSLineExpression<T extends LineString> extends JTSLineStringExpression<T> {
 
-    private static final long serialVersionUID = -4849454664355502296L;
+  private static final long serialVersionUID = -4849454664355502296L;
 
-    public JTSLineExpression(Expression<T> mixin) {
-        super(mixin);
-    }
-
+  public JTSLineExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 }

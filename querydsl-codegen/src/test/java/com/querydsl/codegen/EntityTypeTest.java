@@ -15,41 +15,39 @@ package com.querydsl.codegen;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collections;
-
-import org.junit.Test;
-
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.TypeCategory;
+import java.util.Collections;
+import org.junit.Test;
 
 public class EntityTypeTest {
 
-    @Test
-    public void uncapSimpleName_escaped() {
-        ClassType typeModel = new ClassType(TypeCategory.ENTITY, Object.class);
-        EntityType entityModel = new EntityType(typeModel);
-        assertEquals("object", entityModel.getModifiedSimpleName());
+  @Test
+  public void uncapSimpleName_escaped() {
+    ClassType typeModel = new ClassType(TypeCategory.ENTITY, Object.class);
+    EntityType entityModel = new EntityType(typeModel);
+    assertEquals("object", entityModel.getModifiedSimpleName());
 
-        entityModel.addProperty(new Property(entityModel, "object", typeModel));
-        assertEquals("object1", entityModel.getModifiedSimpleName());
-    }
+    entityModel.addProperty(new Property(entityModel, "object", typeModel));
+    assertEquals("object1", entityModel.getModifiedSimpleName());
+  }
 
-    @Test
-    public void uncapSimpleName_escaped2() {
-        ClassType typeModel = new ClassType(TypeCategory.ENTITY, Object.class);
-        EntityType entityModel = new EntityType(typeModel);
-        assertEquals("object", entityModel.getModifiedSimpleName());
+  @Test
+  public void uncapSimpleName_escaped2() {
+    ClassType typeModel = new ClassType(TypeCategory.ENTITY, Object.class);
+    EntityType entityModel = new EntityType(typeModel);
+    assertEquals("object", entityModel.getModifiedSimpleName());
 
-        entityModel.addProperty(new Property(entityModel, "OBJECT", "object", typeModel,
-                Collections.<String> emptyList(), false));
-        assertEquals("object1", entityModel.getModifiedSimpleName());
-    }
+    entityModel.addProperty(
+        new Property(
+            entityModel, "OBJECT", "object", typeModel, Collections.<String>emptyList(), false));
+    assertEquals("object1", entityModel.getModifiedSimpleName());
+  }
 
-    @Test
-    public void uncapSimpleName_escaped3() {
-        ClassType typeModel = new ClassType(TypeCategory.ENTITY, Void.class);
-        EntityType entityModel = new EntityType(typeModel);
-        assertEquals("void$", entityModel.getModifiedSimpleName());
-    }
-
+  @Test
+  public void uncapSimpleName_escaped3() {
+    ClassType typeModel = new ClassType(TypeCategory.ENTITY, Void.class);
+    EntityType entityModel = new EntityType(typeModel);
+    assertEquals("void$", entityModel.getModifiedSimpleName());
+  }
 }

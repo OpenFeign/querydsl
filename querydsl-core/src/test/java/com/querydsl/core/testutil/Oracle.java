@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface Oracle extends ExternalDatabase {
-}
+public interface Oracle extends ExternalDatabase {}

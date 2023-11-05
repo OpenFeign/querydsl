@@ -22,32 +22,30 @@ import java.sql.Types;
  * {@code DoubleType} maps Double to Double on the JDBC level
  *
  * @author tiwe
- *
  */
 public class DoubleType extends AbstractType<Double> {
 
-    public DoubleType() {
-        super(Types.DOUBLE);
-    }
+  public DoubleType() {
+    super(Types.DOUBLE);
+  }
 
-    public DoubleType(int type) {
-        super(type);
-    }
+  public DoubleType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Double> getReturnedClass() {
-        return Double.class;
-    }
+  @Override
+  public Class<Double> getReturnedClass() {
+    return Double.class;
+  }
 
-    @Override
-    public Double getValue(ResultSet rs, int startIndex) throws SQLException {
-        double val = rs.getDouble(startIndex);
-        return rs.wasNull() ? null : val;
-    }
+  @Override
+  public Double getValue(ResultSet rs, int startIndex) throws SQLException {
+    double val = rs.getDouble(startIndex);
+    return rs.wasNull() ? null : val;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Double value) throws SQLException {
-        st.setDouble(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Double value) throws SQLException {
+    st.setDouble(startIndex, value);
+  }
 }
