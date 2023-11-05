@@ -14,7 +14,6 @@
   <inceptionYear>2007</inceptionYear>
 
   <properties>
-    <gpg.skip>false</gpg.skip>
     <failIfNoTests>false</failIfNoTests>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.homepage>http://www.querydsl.com</project.homepage>
@@ -34,6 +33,8 @@
     <!-- default bytecode version for src/main -->
     <main.java.version>1.8</main.java.version>
     <latest.java.version>21</latest.java.version>
+    
+    <git-code-format-maven-plugin.version>5.1</git-code-format-maven-plugin.version>
 
     <!-- SQL deps -->
     <db2.version>11.5.5.0</db2.version>
@@ -694,6 +695,36 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>com.cosium.code</groupId>
+        <artifactId>git-code-format-maven-plugin</artifactId>
+        <version>${git-code-format-maven-plugin.version}</version>
+        <executions>
+          <!-- On commit, format the modified files -->
+          <execution>
+            <id>install-formatter-hook</id>
+            <goals>
+              <goal>install-hooks</goal>
+            </goals>
+          </execution>
+          <!-- On Maven verify phase, fail if any file (including unmodified) is 
+            badly formatted -->
+          <execution>
+            <id>validate-code-format</id>
+            <goals>
+              <goal>validate-code-format</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <!-- Enable https://github.com/google/google-java-format -->
+          <dependency>
+            <groupId>com.cosium.code</groupId>
+            <artifactId>google-java-format</artifactId>
+            <version>${git-code-format-maven-plugin.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
   </build>
 
@@ -849,7 +880,6 @@
       <id>quickbuild</id>
       <properties>
         <skipTests>true</skipTests>
-        <checkstyle.skip>true</checkstyle.skip>
         <enforcer.skip>true</enforcer.skip>
         <animal.sniffer.skip>true</animal.sniffer.skip>
         <!--<japicmp.skip>true</japicmp.skip>-->
@@ -1031,58 +1061,6 @@
         <build>
             <directory>${basedir}/m2e-target</directory>
         </build>
-    </profile>
-    <profile>
-      <activation>
-        <property>
-          <name>packaging</name>
-          <value>jar</value>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.3.1</version>
-        <executions>
-          <execution>
-            <id>checkstyle</id>
-            <phase>process-test-classes</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <configLocation>src/main/resources/querydsl_checks_base.xml</configLocation>
-              <includeTestSourceDirectory>true</includeTestSourceDirectory>
-              <failOnViolation>true</failOnViolation>
-            </configuration>
-          </execution>
-          <execution>
-            <id>checkstyle-main</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <configLocation>src/main/resources/querydsl_checks_main.xml</configLocation>
-              <failOnViolation>true</failOnViolation>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>8.44</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <excludes>**/generated/**/*,**/jmh_generated/**/*,**/com/querydsl/codegen/utils/**/*</excludes>
-        </configuration>
-      </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 
