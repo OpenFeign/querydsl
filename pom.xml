@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-root</artifactId>
   <version>5.1-SNAPSHOT</version>
-    <name>Querydsl</name>
-  <description>parent project for Querydsl modules</description>
-  <url>https://querydsl.github.io/</url>
 
   <packaging>pom</packaging>
-
-  <inceptionYear>2007</inceptionYear>
+  <name>Querydsl</name>
+  <description>parent project for Querydsl modules</description>
 
   <properties>
     <failIfNoTests>false</failIfNoTests>
@@ -21,19 +18,17 @@
     <project.checkout>scm:git:git@github.com:openfeign/querydsl.git</project.checkout>
 
     <!-- default groups to exclude from surefire plugin -->
-    <excludedGroups>
-      com.querydsl.core.testutil.ExternalDatabase,
+    <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
       com.querydsl.core.testutil.SlowTest,
       com.querydsl.core.testutil.Performance,
-      com.querydsl.core.testutil.ReportingOnly
-    </excludedGroups>
+      com.querydsl.core.testutil.ReportingOnly</excludedGroups>
 
     <argLine>-Xms256m -Xmx512m</argLine>
 
     <!-- default bytecode version for src/main -->
     <main.java.version>1.8</main.java.version>
     <latest.java.version>21</latest.java.version>
-    
+
     <git-code-format-maven-plugin.version>5.1</git-code-format-maven-plugin.version>
 
     <!-- SQL deps -->
@@ -71,11 +66,31 @@
     <dokka.version>1.9.10</dokka.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
-    <osgi.import.package.root>
-      *
-    </osgi.import.package.root>
+    <osgi.import.package.root>*</osgi.import.package.root>
     <osgi.import.package>${osgi.import.package.root}</osgi.import.package>
   </properties>
+  <url>https://querydsl.github.io/</url>
+
+  <inceptionYear>2007</inceptionYear>
+
+  <organization>
+    <name>OpenFeign</name>
+    <url>https://github.com/openfeign</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>${project.githubpage}</url>
+    <connection>${project.checkout}</connection>
+    <developerConnection>${project.checkout}</developerConnection>
+  </scm>
 
   <developers>
     <developer>
@@ -94,60 +109,6 @@
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
-
-  <organization>
-    <name>OpenFeign</name>
-    <url>https://github.com/openfeign</url>
-  </organization>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>5.8.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <version>5.8.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
-      <version>2.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-       <groupId>org.hamcrest</groupId>
-       <artifactId>hamcrest</artifactId>
-       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <version>5.2.0</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>cglib</groupId>
-          <artifactId>cglib-nodep</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>animal-sniffer-annotations</artifactId>
-      <version>${animal-sniffer.version}</version>
-      <optional>true</optional>
-    </dependency>
-  </dependencies>
 
   <dependencyManagement>
     <dependencies>
@@ -268,50 +229,54 @@
     </dependencies>
   </dependencyManagement>
 
-  <scm>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
-  </scm>
-
-  <contributors>
-    <contributor>
-      <name>Timo Westkämper</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Samppa Saarela</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Vesa Marttila</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Lassi Immonen</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Ruben Dijkstra</name>
-    </contributor>
-    <contributor>
-      <name>John Tims</name>
-    </contributor>
-    <contributor>
-      <name>Robert Bain</name>
-    </contributor>
-    <contributor>
-      <name>Jan-Willem Gmelig Meyling</name>
-    </contributor>
-  </contributors>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>5.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>5.2.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>cglib</groupId>
+          <artifactId>cglib-nodep</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>animal-sniffer-annotations</artifactId>
+      <version>${animal-sniffer.version}</version>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
 
   <build>
     <pluginManagement>
@@ -376,9 +341,7 @@
               <inherited>true</inherited>
               <configuration>
                 <instructions>
-                  <Import-Package>
-                    ${osgi.import.package}
-                  </Import-Package>
+                  <Import-Package>${osgi.import.package}</Import-Package>
                   <Export-Package>com.querydsl.*</Export-Package>
                 </instructions>
               </configuration>
@@ -456,7 +419,7 @@
             </goals>
             <configuration>
               <rules>
-                <dependencyConvergence/>
+                <dependencyConvergence></dependencyConvergence>
               </rules>
             </configuration>
           </execution>
@@ -751,7 +714,9 @@
   <profiles>
     <profile>
       <id>all</id>
-      <activation><activeByDefault>true</activeByDefault></activation>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <modules>
         <module>querydsl-core</module>
         <module>querydsl-codegen</module>
@@ -1072,16 +1037,47 @@
     </profile>
     <!-- Isolates eclipse build from maven build -->
     <profile>
-        <id>m2e</id>
-        <activation>
-            <property>
-                <name>m2e.version</name>
-            </property>
-        </activation>
-        <build>
-            <directory>${basedir}/m2e-target</directory>
-        </build>
+      <id>m2e</id>
+      <activation>
+        <property>
+          <name>m2e.version</name>
+        </property>
+      </activation>
+      <build>
+        <directory>${basedir}/m2e-target</directory>
+      </build>
     </profile>
   </profiles>
+
+  <contributors>
+    <contributor>
+      <name>Timo Westkämper</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Samppa Saarela</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Vesa Marttila</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Lassi Immonen</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Ruben Dijkstra</name>
+    </contributor>
+    <contributor>
+      <name>John Tims</name>
+    </contributor>
+    <contributor>
+      <name>Robert Bain</name>
+    </contributor>
+    <contributor>
+      <name>Jan-Willem Gmelig Meyling</name>
+    </contributor>
+  </contributors>
 
 </project>

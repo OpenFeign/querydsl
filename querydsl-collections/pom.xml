@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -11,15 +11,15 @@
 
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-collections</artifactId>
+  <packaging>jar</packaging>
   <name>Querydsl - Collections support</name>
   <description>Collections support for Querydsl</description>
   <url>${project.homepage}</url>
-  <packaging>jar</packaging>
 
   <scm>
+    <url>${project.githubpage}</url>
     <connection>${project.checkout}</connection>
     <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
   </scm>
 
   <dependencies>
@@ -39,22 +39,22 @@
       <version>${project.version}</version>
     </dependency>
     <!-- alias dependencies -->
-    
+
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest</artifactId>
       <scope>compile</scope>
       <optional>true</optional>
-    </dependency>    
-    
+    </dependency>
+
     <!-- test -->
 
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
       <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -90,13 +90,13 @@
       <version>${jmh.version}</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
       <version>${jodatime.version}</version>
       <scope>test</scope>
-    </dependency>    
+    </dependency>
 
   </dependencies>
 
@@ -116,7 +116,7 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-      </plugin>    
+      </plugin>
       <plugin>
         <groupId>com.mysema.maven</groupId>
         <artifactId>apt-maven-plugin</artifactId>
@@ -124,13 +124,13 @@
           <execution>
             <goals>
               <goal>test-process</goal>
-              <goal>add-test-sources</goal>              
-            </goals>            
+              <goal>add-test-sources</goal>
+            </goals>
             <configuration>
               <outputDirectory>target/generated-test-sources/java</outputDirectory>
               <processor>com.querydsl.apt.QuerydslAnnotationProcessor</processor>
               <showWarnings>true</showWarnings>
-            </configuration>        
+            </configuration>
           </execution>
         </executions>
       </plugin>

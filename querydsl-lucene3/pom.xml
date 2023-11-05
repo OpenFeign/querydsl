@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -11,25 +11,23 @@
 
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-lucene3</artifactId>
+  <packaging>jar</packaging>
   <name>Querydsl - Lucene 3 support</name>
   <description>Lucene support for Querydsl</description>
-  <url>${project.homepage}</url>
-  <packaging>jar</packaging>
-  
-  <scm>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
-  </scm>
-  
+
   <properties>
     <lucene.version>3.6.2</lucene.version>
-    <osgi.import.package>
-      org.apache.lucene.*;version="[3.6,4)",
-      ${osgi.import.package.root}
-    </osgi.import.package>
+    <osgi.import.package>org.apache.lucene.*;version="[3.6,4)",
+      ${osgi.import.package.root}</osgi.import.package>
   </properties>
-  
+  <url>${project.homepage}</url>
+
+  <scm>
+    <url>${project.githubpage}</url>
+    <connection>${project.checkout}</connection>
+    <developerConnection>${project.checkout}</developerConnection>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.jetbrains</groupId>
@@ -47,13 +45,13 @@
       <artifactId>lucene-queries</artifactId>
       <version>${lucene.version}</version>
       <scope>provided</scope>
-    </dependency>            
+    </dependency>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
+
     <!-- test -->
     <dependency>
       <groupId>cglib</groupId>
@@ -65,21 +63,21 @@
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
       <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
       <version>${jodatime.version}</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
-     <artifactId>querydsl-apt</artifactId>
-     <version>${project.version}</version>
+      <artifactId>querydsl-apt</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
@@ -100,8 +98,8 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-      </plugin>   
-    
+      </plugin>
+
       <plugin>
         <groupId>com.mysema.maven</groupId>
         <artifactId>apt-maven-plugin</artifactId>
