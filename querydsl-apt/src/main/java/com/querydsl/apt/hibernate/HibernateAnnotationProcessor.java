@@ -13,38 +13,40 @@
  */
 package com.querydsl.apt.hibernate;
 
+import com.querydsl.apt.Configuration;
+import com.querydsl.apt.jpa.JPAAnnotationProcessor;
 import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.persistence.*;
 
-import com.querydsl.apt.Configuration;
-import com.querydsl.apt.jpa.JPAAnnotationProcessor;
-
 /**
- * {@code HibernateAnnotationProcessor} extends {@link JPAAnnotationProcessor} to take Hibernate-specific
- * annotations into account
+ * {@code HibernateAnnotationProcessor} extends {@link JPAAnnotationProcessor} to take
+ * Hibernate-specific annotations into account
  *
  * @author tiwe
  * @see JPAAnnotationProcessor
  */
-@SupportedAnnotationTypes({"com.querydsl.core.annotations.*", "javax.persistence.*", "jakarta.persistence.*", "org.hibernate.annotations.*"})
+@SupportedAnnotationTypes({
+  "com.querydsl.core.annotations.*",
+  "javax.persistence.*",
+  "jakarta.persistence.*",
+  "org.hibernate.annotations.*"
+})
 public class HibernateAnnotationProcessor extends JPAAnnotationProcessor {
 
-    @Override
-    protected Configuration createConfiguration(RoundEnvironment roundEnv) {
-        try {
-            Class<? extends Annotation> entity = Entity.class;
-            Class<? extends Annotation> superType = MappedSuperclass.class;
-            Class<? extends Annotation> embeddable = Embeddable.class;
-            Class<? extends Annotation> embedded = Embedded.class;
-            Class<? extends Annotation> skip = Transient.class;
-            return new HibernateConfiguration(roundEnv, processingEnv, entity, superType,
-                    embeddable, embedded, skip);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+  @Override
+  protected Configuration createConfiguration(RoundEnvironment roundEnv) {
+    try {
+      Class<? extends Annotation> entity = Entity.class;
+      Class<? extends Annotation> superType = MappedSuperclass.class;
+      Class<? extends Annotation> embeddable = Embeddable.class;
+      Class<? extends Annotation> embedded = Embedded.class;
+      Class<? extends Annotation> skip = Transient.class;
+      return new HibernateConfiguration(
+          roundEnv, processingEnv, entity, superType, embeddable, embedded, skip);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
     }
-
+  }
 }

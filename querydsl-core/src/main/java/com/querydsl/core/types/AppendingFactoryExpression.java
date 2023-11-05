@@ -16,44 +16,42 @@ package com.querydsl.core.types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 class AppendingFactoryExpression<T> extends FactoryExpressionBase<T> {
 
-    private static final long serialVersionUID = -1337452521648394353L;
+  private static final long serialVersionUID = -1337452521648394353L;
 
-    private final Expression<T> base;
+  private final Expression<T> base;
 
-    @Unmodifiable
-    private final List<Expression<?>> args;
+  @Unmodifiable private final List<Expression<?>> args;
 
-    protected AppendingFactoryExpression(Expression<T> base, Expression<?>... rest) {
-        super(base.getType());
-        this.base = base;
-        List<Expression<?>> builder = new ArrayList<>();
-        builder.add(base);
-        Collections.addAll(builder, rest);
-        this.args = Collections.unmodifiableList(builder);
-    }
+  protected AppendingFactoryExpression(Expression<T> base, Expression<?>... rest) {
+    super(base.getType());
+    this.base = base;
+    List<Expression<?>> builder = new ArrayList<>();
+    builder.add(base);
+    Collections.addAll(builder, rest);
+    this.args = Collections.unmodifiableList(builder);
+  }
 
-    @Override
-    @Unmodifiable
-    public List<Expression<?>> getArgs() {
-        return args;
-    }
+  @Override
+  @Unmodifiable
+  public List<Expression<?>> getArgs() {
+    return args;
+  }
 
-    @SuppressWarnings("unchecked")
-    @Nullable
-    @Override
-    public T newInstance(Object... args) {
-        return (T) args[0];
-    }
+  @SuppressWarnings("unchecked")
+  @Nullable
+  @Override
+  public T newInstance(Object... args) {
+    return (T) args[0];
+  }
 
-    @Nullable
-    @Override
-    public <R, C> R accept(Visitor<R, C> v, @Nullable C context) {
-        return base.accept(v, context);
-    }
+  @Nullable
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, @Nullable C context) {
+    return base.accept(v, context);
+  }
 }

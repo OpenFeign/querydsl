@@ -15,48 +15,40 @@ package com.querydsl.jpa.domain;
 
 import static org.junit.Assert.fail;
 
+import com.querydsl.core.annotations.QueryInit;
 import java.io.Serializable;
-
 import javax.persistence.*;
-
 import org.junit.Test;
 
-import com.querydsl.core.annotations.QueryInit;
-
-/**
- * The Class Account.
- */
+/** The Class Account. */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "account_")
 public class Account implements Serializable {
 
-    @Transient
-    public int transientField;
+  @Transient public int transientField;
 
-    @Id
-    long id;
+  @Id long id;
 
-    @ManyToOne
-    @QueryInit("pid")
-    Person owner;
+  @ManyToOne
+  @QueryInit("pid")
+  Person owner;
 
-    @Embedded
-    EmbeddedType embeddedData;
+  @Embedded EmbeddedType embeddedData;
 
-    @Test
-    public void test() {
-        try {
-            QAccount.class.getField("serialVersionUID");
-            fail("Got serialVersionUID");
-        } catch (Exception e) {
-            // expected
-        }
-        try {
-            QAccount.class.getField("transientField");
-            fail("Got transientField");
-        } catch (Exception e) {
-            // expected
-        }
+  @Test
+  public void test() {
+    try {
+      QAccount.class.getField("serialVersionUID");
+      fail("Got serialVersionUID");
+    } catch (Exception e) {
+      // expected
     }
+    try {
+      QAccount.class.getField("transientField");
+      fail("Got transientField");
+    } catch (Exception e) {
+      // expected
+    }
+  }
 }

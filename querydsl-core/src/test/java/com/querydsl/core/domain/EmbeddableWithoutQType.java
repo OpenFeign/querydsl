@@ -13,6 +13,4 @@
  */
 package com.querydsl.core.domain;
 
-public class EmbeddableWithoutQType {
-
-}
+public class EmbeddableWithoutQType {}

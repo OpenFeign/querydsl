@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Expression types
- */
+/** Expression types */
 package com.querydsl.core.types;

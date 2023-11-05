@@ -15,73 +15,73 @@ package com.querydsl.core.support;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
-
+import org.junit.Test;
 
 public class CollectionAnyVisitorTest {
 
-    private QCat cat = QCat.cat;
+  private QCat cat = QCat.cat;
 
-    @Test
-    public void path() {
-        assertEquals("cat_kittens_0", serialize(cat.kittens.any()));
-    }
+  @Test
+  public void path() {
+    assertEquals("cat_kittens_0", serialize(cat.kittens.any()));
+  }
 
-    @Test
-    public void longer_path() {
-        assertEquals("cat_kittens_0.name", serialize(cat.kittens.any().name));
-    }
+  @Test
+  public void longer_path() {
+    assertEquals("cat_kittens_0.name", serialize(cat.kittens.any().name));
+  }
 
-    @Test
-    public void longer_path2() {
-        CollectionAnyVisitor visitor = new CollectionAnyVisitor();
-        assertEquals("cat_kittens_0.name", serialize(cat.kittens.any().name, visitor));
-        assertEquals("cat_kittens_1.name", serialize(cat.kittens.any().name, visitor));
-    }
+  @Test
+  public void longer_path2() {
+    CollectionAnyVisitor visitor = new CollectionAnyVisitor();
+    assertEquals("cat_kittens_0.name", serialize(cat.kittens.any().name, visitor));
+    assertEquals("cat_kittens_1.name", serialize(cat.kittens.any().name, visitor));
+  }
 
-    @Test
-    public void very_long_path() {
-        assertEquals("cat_kittens_0_kittens_1.name", serialize(cat.kittens.any().kittens.any().name));
-    }
+  @Test
+  public void very_long_path() {
+    assertEquals("cat_kittens_0_kittens_1.name", serialize(cat.kittens.any().kittens.any().name));
+  }
 
-    @Test
-    public void simple_booleanOperation() {
-        Predicate predicate = cat.kittens.any().name.eq("Ruth123");
-        assertEquals("cat_kittens_0.name = Ruth123", serialize(predicate));
-    }
+  @Test
+  public void simple_booleanOperation() {
+    Predicate predicate = cat.kittens.any().name.eq("Ruth123");
+    assertEquals("cat_kittens_0.name = Ruth123", serialize(predicate));
+  }
 
-    @Test
-    public void simple_stringOperation() {
-        Predicate predicate = cat.kittens.any().name.substring(1).eq("uth123");
-        assertEquals("substring(cat_kittens_0.name,1) = uth123", serialize(predicate));
-    }
+  @Test
+  public void simple_stringOperation() {
+    Predicate predicate = cat.kittens.any().name.substring(1).eq("uth123");
+    assertEquals("substring(cat_kittens_0.name,1) = uth123", serialize(predicate));
+  }
 
-    @Test
-    public void and_operation() {
-        Predicate predicate = cat.kittens.any().name.eq("Ruth123").and(cat.kittens.any().bodyWeight.gt(10.0));
-        assertEquals("cat_kittens_0.name = Ruth123 && cat_kittens_1.bodyWeight > 10.0", serialize(predicate));
-    }
+  @Test
+  public void and_operation() {
+    Predicate predicate =
+        cat.kittens.any().name.eq("Ruth123").and(cat.kittens.any().bodyWeight.gt(10.0));
+    assertEquals(
+        "cat_kittens_0.name = Ruth123 && cat_kittens_1.bodyWeight > 10.0", serialize(predicate));
+  }
 
-    @Test
-    public void template() {
-        Expression<Boolean> templateExpr = ExpressionUtils.template(Boolean.class, "{0} = {1}",
-                cat.kittens.any().name, ConstantImpl.create("Ruth123"));
-        assertEquals("cat_kittens_0.name = Ruth123", serialize(templateExpr));
-    }
+  @Test
+  public void template() {
+    Expression<Boolean> templateExpr =
+        ExpressionUtils.template(
+            Boolean.class, "{0} = {1}", cat.kittens.any().name, ConstantImpl.create("Ruth123"));
+    assertEquals("cat_kittens_0.name = Ruth123", serialize(templateExpr));
+  }
 
-    private String serialize(Expression<?> expression) {
-        return serialize(expression, new CollectionAnyVisitor());
-    }
+  private String serialize(Expression<?> expression) {
+    return serialize(expression, new CollectionAnyVisitor());
+  }
 
-    private String serialize(Expression<?> expression, CollectionAnyVisitor visitor) {
-        Expression<?> transformed = expression.accept(visitor, new Context());
-        return transformed.toString();
-    }
-
+  private String serialize(Expression<?> expression, CollectionAnyVisitor visitor) {
+    Expression<?> transformed = expression.accept(visitor, new Context());
+    return transformed.toString();
+  }
 }

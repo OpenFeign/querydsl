@@ -13,54 +13,51 @@
  */
 package com.querydsl.core.support;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpressionBase;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.util.MathUtils;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * {@code NumberConversion} ensures that the results of a numeric projection conform to the type of the
- * projection expression
+ * {@code NumberConversion} ensures that the results of a numeric projection conform to the type of
+ * the projection expression
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class NumberConversion<T> extends FactoryExpressionBase<T> {
 
-    private static final long serialVersionUID = 7840412008633901748L;
+  private static final long serialVersionUID = 7840412008633901748L;
 
-    private final List<Expression<?>> exprs;
+  private final List<Expression<?>> exprs;
 
-    public NumberConversion(Expression<T> expr) {
-        super(expr.getType());
-        exprs = Collections.<Expression<?>>singletonList(expr);
+  public NumberConversion(Expression<T> expr) {
+    super(expr.getType());
+    exprs = Collections.<Expression<?>>singletonList(expr);
+  }
+
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
+
+  @Override
+  public List<Expression<?>> getArgs() {
+    return exprs;
+  }
+
+  @Override
+  public T newInstance(Object... args) {
+    if (args[0] != null) {
+      if (getType().equals(Boolean.class)) {
+        return (T) Boolean.valueOf(((Number) args[0]).intValue() > 0);
+      } else {
+        return (T) MathUtils.cast((Number) args[0], (Class) getType());
+      }
+    } else {
+      return null;
     }
-
-    @Override
-    public <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
-    }
-
-    @Override
-    public List<Expression<?>> getArgs() {
-        return exprs;
-    }
-
-    @Override
-    public T newInstance(Object... args) {
-        if (args[0] != null) {
-            if (getType().equals(Boolean.class)) {
-                return (T) Boolean.valueOf(((Number) args[0]).intValue() > 0);
-            } else {
-                return (T) MathUtils.cast((Number) args[0], (Class) getType());
-            }
-        } else {
-            return null;
-        }
-    }
-
+  }
 }

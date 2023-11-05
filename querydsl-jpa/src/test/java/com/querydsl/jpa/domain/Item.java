@@ -18,15 +18,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * The Class Item.
- */
+/** The Class Item. */
 @Entity
 @Table(name = "item_")
 public class Item {
-    @Id
-    long id;
+  @Id long id;
 
-    @ManyToOne
-    Product product;
+  @ManyToOne Product product;
 }

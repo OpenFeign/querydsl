@@ -18,7 +18,7 @@ import org.mongodb.morphia.annotations.Entity;
 @Entity("food")
 public class Chips extends Food {
 
-    public Chips(final String name) {
-        super(name);
-    }
+  public Chips(final String name) {
+    super(name);
+  }
 }

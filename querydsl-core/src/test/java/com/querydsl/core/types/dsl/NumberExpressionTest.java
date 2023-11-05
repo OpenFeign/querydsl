@@ -19,16 +19,15 @@ import org.junit.Test;
 
 public class NumberExpressionTest {
 
-    private NumberPath<Integer> intPath = new NumberPath<Integer>(Integer.class, "int");
+  private NumberPath<Integer> intPath = new NumberPath<Integer>(Integer.class, "int");
 
-    @Test
-    public void between_start_given() {
-        assertEquals(intPath.goe(1L), intPath.between(1L, null));
-    }
+  @Test
+  public void between_start_given() {
+    assertEquals(intPath.goe(1L), intPath.between(1L, null));
+  }
 
-    @Test
-    public void between_end_given() {
-        assertEquals(intPath.loe(3L), intPath.between(null, 3L));
-    }
-
+  @Test
+  public void between_end_given() {
+    assertEquals(intPath.loe(3L), intPath.between(null, 3L));
+  }
 }

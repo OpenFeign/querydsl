@@ -13,23 +13,21 @@
  */
 package com.querydsl.spatial;
 
-import org.geolatte.geom.MultiPolygon;
-
 import com.querydsl.core.types.Expression;
+import org.geolatte.geom.MultiPolygon;
 
 /**
  * A MultiPolygon is a MultiSurface whose elements are Polygons.
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class MultiPolygonExpression<T extends MultiPolygon> extends MultiSurfaceExpression<T> {
+public abstract class MultiPolygonExpression<T extends MultiPolygon>
+    extends MultiSurfaceExpression<T> {
 
-    private static final long serialVersionUID = -2285946852207189655L;
+  private static final long serialVersionUID = -2285946852207189655L;
 
-    public MultiPolygonExpression(Expression<T> mixin) {
-        super(mixin);
-    }
-
+  public MultiPolygonExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 }

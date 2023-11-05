@@ -13,85 +13,83 @@
  */
 package com.querydsl.core.types;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Common superclass for {@link FactoryExpression} implementations
  *
  * @param <T>
  */
-public abstract class FactoryExpressionBase<T> extends ExpressionBase<T> implements FactoryExpression<T> {
+public abstract class FactoryExpressionBase<T> extends ExpressionBase<T>
+    implements FactoryExpression<T> {
 
-    private static class FactoryExpressionWrapper<T> extends ExpressionBase<T> implements FactoryExpression<T> {
-        private final FactoryExpression<T> expr;
+  private static class FactoryExpressionWrapper<T> extends ExpressionBase<T>
+      implements FactoryExpression<T> {
+    private final FactoryExpression<T> expr;
 
-        FactoryExpressionWrapper(FactoryExpression<T> expr) {
-            super(expr.getType());
-            this.expr = expr;
-        }
-
-        @Override
-        public List<Expression<?>> getArgs() {
-            return expr.getArgs();
-        }
-
-        @Nullable
-        @Override
-        public T newInstance(Object... args) {
-            if (args != null) {
-                for (Object arg : args) {
-                    if (arg != null) {
-                        return expr.newInstance(args);
-                    }
-                }
-            }
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public <R, C> R accept(Visitor<R, C> v, @Nullable C context) {
-            return expr.accept(v, context);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == this) {
-                return true;
-            } else if (o instanceof FactoryExpressionWrapper) {
-                return expr.equals(((FactoryExpressionWrapper) o).expr);
-            } else {
-                return false;
-            }
-        }
-
+    FactoryExpressionWrapper(FactoryExpression<T> expr) {
+      super(expr.getType());
+      this.expr = expr;
     }
 
-    public FactoryExpressionBase(Class<? extends T> type) {
-        super(type);
+    @Override
+    public List<Expression<?>> getArgs() {
+      return expr.getArgs();
     }
 
-    /**
-     * Returns a wrapper expression which returns null if all arguments to newInstance are null
-     *
-     * @return new factory expression with {@code skip nulls} applied
-     */
-    public FactoryExpression<T> skipNulls() {
-        return new FactoryExpressionWrapper<T>(this);
+    @Nullable
+    @Override
+    public T newInstance(Object... args) {
+      if (args != null) {
+        for (Object arg : args) {
+          if (arg != null) {
+            return expr.newInstance(args);
+          }
+        }
+      }
+      return null;
+    }
+
+    @Nullable
+    @Override
+    public <R, C> R accept(Visitor<R, C> v, @Nullable C context) {
+      return expr.accept(v, context);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof FactoryExpression) {
-            return getClass().equals(o.getClass())
-                    && getArgs().equals(((FactoryExpression) o).getArgs());
-        } else {
-            return false;
-        }
+      if (o == this) {
+        return true;
+      } else if (o instanceof FactoryExpressionWrapper) {
+        return expr.equals(((FactoryExpressionWrapper) o).expr);
+      } else {
+        return false;
+      }
     }
+  }
 
+  public FactoryExpressionBase(Class<? extends T> type) {
+    super(type);
+  }
+
+  /**
+   * Returns a wrapper expression which returns null if all arguments to newInstance are null
+   *
+   * @return new factory expression with {@code skip nulls} applied
+   */
+  public FactoryExpression<T> skipNulls() {
+    return new FactoryExpressionWrapper<T>(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof FactoryExpression) {
+      return getClass().equals(o.getClass()) && getArgs().equals(((FactoryExpression) o).getArgs());
+    } else {
+      return false;
+    }
+  }
 }

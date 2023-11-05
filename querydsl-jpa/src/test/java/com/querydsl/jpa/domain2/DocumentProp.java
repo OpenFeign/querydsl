@@ -21,51 +21,49 @@ import javax.persistence.Table;
 @Table(name = "documentprop_")
 public class DocumentProp {
 
-    @Id
-    private long id;
+  @Id private long id;
 
-    private double documentId;
+  private double documentId;
 
-    private String propName, propValue, propValueDetails;
+  private String propName, propValue, propValueDetails;
 
-    public long getId() {
-        return id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public double getDocumentId() {
-        return documentId;
-    }
+  public double getDocumentId() {
+    return documentId;
+  }
 
-    public void setDocumentId(double documentId) {
-        this.documentId = documentId;
-    }
+  public void setDocumentId(double documentId) {
+    this.documentId = documentId;
+  }
 
-    public String getPropName() {
-        return propName;
-    }
+  public String getPropName() {
+    return propName;
+  }
 
-    public void setPropName(String propName) {
-        this.propName = propName;
-    }
+  public void setPropName(String propName) {
+    this.propName = propName;
+  }
 
-    public String getPropValue() {
-        return propValue;
-    }
+  public String getPropValue() {
+    return propValue;
+  }
 
-    public void setPropValue(String propValue) {
-        this.propValue = propValue;
-    }
+  public void setPropValue(String propValue) {
+    this.propValue = propValue;
+  }
 
-    public String getPropValueDetails() {
-        return propValueDetails;
-    }
+  public String getPropValueDetails() {
+    return propValueDetails;
+  }
 
-    public void setPropValueDetails(String propValueDetails) {
-        this.propValueDetails = propValueDetails;
-    }
-
+  public void setPropValueDetails(String propValueDetails) {
+    this.propValueDetails = propValueDetails;
+  }
 }

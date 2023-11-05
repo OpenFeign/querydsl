@@ -15,36 +15,33 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryDelegate;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import org.junit.Test;
 
 public class Delegate2Test {
 
-    @QueryEntity
-    public static class Entity {
+  @QueryEntity
+  public static class Entity {
 
-        Point point;
-    }
+    Point point;
+  }
 
-    public static class Point {
+  public static class Point {}
 
-    }
+  @QueryDelegate(Point.class)
+  public static NumberExpression<Integer> geoDistance(Path<Point> point, Point other) {
+    return Expressions.numberTemplate(
+        Integer.class, "geo_distance({0},{1})", point, ConstantImpl.create(other));
+  }
 
-    @QueryDelegate(Point.class)
-    public static NumberExpression<Integer> geoDistance(Path<Point> point, Point other) {
-        return Expressions.numberTemplate(Integer.class, "geo_distance({0},{1})", point, ConstantImpl.create(other));
-    }
-
-    @Test
-    public void test() {
-        QDelegate2Test_Entity entity = QDelegate2Test_Entity.entity;
-        assertNotNull(entity.point.geoDistance(new Point()));
-    }
-
+  @Test
+  public void test() {
+    QDelegate2Test_Entity entity = QDelegate2Test_Entity.entity;
+    assertNotNull(entity.point.geoDistance(new Point()));
+  }
 }

@@ -22,14 +22,14 @@ import org.junit.Test;
 
 public class QueryElementTest {
 
-    @Test
-    @Ignore
-    public void test() {
-        QueryElement element = new QueryElement(new TermQuery(new Term("str","text")));
-        assertEquals("str:text",element.toString());
-        //assertEquals(element.getQuery().hashCode(), element.hashCode());
+  @Test
+  @Ignore
+  public void test() {
+    QueryElement element = new QueryElement(new TermQuery(new Term("str", "text")));
+    assertEquals("str:text", element.toString());
+    // assertEquals(element.getQuery().hashCode(), element.hashCode());
 
-        QueryElement element2 = new QueryElement(new TermQuery(new Term("str","text")));
-        assertEquals(element2, element);
-    }
+    QueryElement element2 = new QueryElement(new TermQuery(new Term("str", "text")));
+    assertEquals(element2, element);
+  }
 }

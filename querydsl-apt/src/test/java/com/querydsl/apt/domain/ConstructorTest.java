@@ -16,43 +16,39 @@ package com.querydsl.apt.domain;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
+import org.junit.Test;
 
 public class ConstructorTest {
 
-    @QuerySupertype
-    public static class CategorySuperclass {
+  @QuerySupertype
+  public static class CategorySuperclass {}
 
-    }
+  @QueryEntity
+  public static class Category<T extends Category<T>> extends CategorySuperclass {
 
-    @QueryEntity
-    public static class Category<T extends Category<T>> extends CategorySuperclass {
+    public Category(int i) {}
+  }
 
-        public Category(int i) { }
+  @QueryEntity
+  public static class ClassWithConstructor {
 
-    }
+    public ClassWithConstructor() {}
+  }
 
-    @QueryEntity
-    public static class ClassWithConstructor {
+  @Test
+  public void classes_are_available() {
+    assertNotNull(QConstructorTest_CategorySuperclass.class);
+    assertNotNull(QConstructorTest_Category.class);
+    assertNotNull(QConstructorTest_ClassWithConstructor.class);
+  }
 
-        public ClassWithConstructor() { }
-
-    }
-
-    @Test
-    public void classes_are_available() {
-        assertNotNull(QConstructorTest_CategorySuperclass.class);
-        assertNotNull(QConstructorTest_Category.class);
-        assertNotNull(QConstructorTest_ClassWithConstructor.class);
-    }
-
-    @Test
-    public void category_super_reference_is_correct() {
-        assertEquals(QConstructorTest_CategorySuperclass.class, QConstructorTest_Category.category._super.getClass());
-        assertEquals(Category.class, QConstructorTest_Category.category._super.getType());
-    }
-
+  @Test
+  public void category_super_reference_is_correct() {
+    assertEquals(
+        QConstructorTest_CategorySuperclass.class,
+        QConstructorTest_Category.category._super.getClass());
+    assertEquals(Category.class, QConstructorTest_Category.category._super.getType());
+  }
 }

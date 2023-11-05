@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * APT JPA support
- */
+/** APT JPA support */
 package com.querydsl.apt.jpa;

@@ -13,20 +13,17 @@
  */
 package com.querydsl.core;
 
-
 /**
  * Common interface for QueryFactory implementations
  *
  * @author tiwe
- *
  * @param <Q> Query type
  */
 public interface QueryFactory<Q extends Query<?>> {
-    /**
-     * Create a new Query
-     *
-     * @return new query
-     */
-    Q query();
-
+  /**
+   * Create a new Query
+   *
+   * @return new query
+   */
+  Q query();
 }

@@ -13,8 +13,12 @@
  */
 package com.querydsl.mongodb.morphia;
 
+import com.mongodb.DBRef;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.mongodb.MongodbSerializer;
 import java.lang.reflect.AnnotatedElement;
-
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.annotations.Id;
@@ -22,82 +26,76 @@ import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.mapping.Mapper;
 
-import com.mongodb.DBRef;
-import com.querydsl.core.types.Constant;
-import com.querydsl.core.types.Path;
-import com.querydsl.core.types.PathMetadata;
-import com.querydsl.mongodb.MongodbSerializer;
-
 /**
- * {@code MorphiaSerializer} extends {@link MongodbSerializer} with Morphia specific annotation handling
+ * {@code MorphiaSerializer} extends {@link MongodbSerializer} with Morphia specific annotation
+ * handling
  *
  * @author tiwe
- *
  */
 public class MorphiaSerializer extends MongodbSerializer {
 
-    private final Morphia morphia;
+  private final Morphia morphia;
 
-    public MorphiaSerializer(Morphia morphia) {
-        this.morphia = morphia;
-    }
+  public MorphiaSerializer(Morphia morphia) {
+    this.morphia = morphia;
+  }
 
-    @Override
-    public Object visit(Constant<?> expr, Void context) {
-        Object value = super.visit(expr, context);
-        return morphia.getMapper().toMongoObject(null, null, value);
-    }
+  @Override
+  public Object visit(Constant<?> expr, Void context) {
+    Object value = super.visit(expr, context);
+    return morphia.getMapper().toMongoObject(null, null, value);
+  }
 
-    @Override
-    protected String getKeyForPath(Path<?> expr, PathMetadata metadata) {
-        AnnotatedElement annotations = expr.getAnnotatedElement();
-        if (annotations.isAnnotationPresent(Id.class)) {
-            Path<?> parent = expr.getMetadata().getParent();
-            if (parent.getAnnotatedElement().isAnnotationPresent(Reference.class)) {
-                return null; // go to parent
-            } else {
-                return "_id";
-            }
-        } else if (annotations.isAnnotationPresent(Property.class)) {
-            Property property = annotations.getAnnotation(Property.class);
-            if (!property.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return property.value();
-            }
-        } else if (annotations.isAnnotationPresent(Reference.class)) {
-            Reference reference = annotations.getAnnotation(Reference.class);
-            if (!reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
-                return reference.value();
-            }
-        }
-        return super.getKeyForPath(expr, metadata);
+  @Override
+  protected String getKeyForPath(Path<?> expr, PathMetadata metadata) {
+    AnnotatedElement annotations = expr.getAnnotatedElement();
+    if (annotations.isAnnotationPresent(Id.class)) {
+      Path<?> parent = expr.getMetadata().getParent();
+      if (parent.getAnnotatedElement().isAnnotationPresent(Reference.class)) {
+        return null; // go to parent
+      } else {
+        return "_id";
+      }
+    } else if (annotations.isAnnotationPresent(Property.class)) {
+      Property property = annotations.getAnnotation(Property.class);
+      if (!property.value().equals(Mapper.IGNORED_FIELDNAME)) {
+        return property.value();
+      }
+    } else if (annotations.isAnnotationPresent(Reference.class)) {
+      Reference reference = annotations.getAnnotation(Reference.class);
+      if (!reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
+        return reference.value();
+      }
     }
+    return super.getKeyForPath(expr, metadata);
+  }
 
-    @Override
-    protected boolean isReference(Path<?> arg) {
-        return arg.getAnnotatedElement().isAnnotationPresent(Reference.class);
-    }
+  @Override
+  protected boolean isReference(Path<?> arg) {
+    return arg.getAnnotatedElement().isAnnotationPresent(Reference.class);
+  }
 
-    @Override
-    protected boolean isImplicitObjectIdConversion() {
-        // see https://github.com/mongodb/morphia/wiki/FrequentlyAskedQuestions
-        return false;
-    }
+  @Override
+  protected boolean isImplicitObjectIdConversion() {
+    // see https://github.com/mongodb/morphia/wiki/FrequentlyAskedQuestions
+    return false;
+  }
 
-    @Override
-    protected boolean isId(Path<?> arg) {
-        return arg.getAnnotatedElement().isAnnotationPresent(Id.class);
-    }
+  @Override
+  protected boolean isId(Path<?> arg) {
+    return arg.getAnnotatedElement().isAnnotationPresent(Id.class);
+  }
 
-    @Override
-    protected DBRef asReference(Object constant) {
-        Key<?> key = morphia.getMapper().getKey(constant);
-        return morphia.getMapper().keyToDBRef(key);
-    }
+  @Override
+  protected DBRef asReference(Object constant) {
+    Key<?> key = morphia.getMapper().getKey(constant);
+    return morphia.getMapper().keyToDBRef(key);
+  }
 
-    @Override
-    protected DBRef asReferenceKey(Class<?> entity, Object id) {
-        String collection = morphia.getMapper().getCollectionName(entity);
-        Key<?> key = new Key<Object>(entity, collection, id);
-        return morphia.getMapper().keyToDBRef(key);
-    }
+  @Override
+  protected DBRef asReferenceKey(Class<?> entity, Object id) {
+    String collection = morphia.getMapper().getCollectionName(entity);
+    Key<?> key = new Key<Object>(entity, collection, id);
+    return morphia.getMapper().keyToDBRef(key);
+  }
 }

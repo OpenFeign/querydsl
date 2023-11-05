@@ -16,7 +16,6 @@ package com.querydsl.sql;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.dsl.SimpleOperation;
-
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -24,35 +23,33 @@ import java.util.Collections;
  * {@code WindowOver} is the first part of a WindowFunction construction
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class WindowOver<T> extends SimpleOperation<T> {
 
-    private static final long serialVersionUID = 464583892898579544L;
+  private static final long serialVersionUID = 464583892898579544L;
 
-    public WindowOver(Class<? extends T> type, Operator op) {
-        super(type, op, Collections.emptyList());
-    }
+  public WindowOver(Class<? extends T> type, Operator op) {
+    super(type, op, Collections.emptyList());
+  }
 
-    public WindowOver(Class<? extends T> type, Operator op, Expression<?> arg) {
-        super(type, op, Collections.singletonList(arg));
-    }
+  public WindowOver(Class<? extends T> type, Operator op, Expression<?> arg) {
+    super(type, op, Collections.singletonList(arg));
+  }
 
-    public WindowOver(Class<? extends T> type, Operator op, Expression<?> arg1, Expression<?> arg2) {
-        super(type, op, Arrays.asList(arg1, arg2));
-    }
+  public WindowOver(Class<? extends T> type, Operator op, Expression<?> arg1, Expression<?> arg2) {
+    super(type, op, Arrays.asList(arg1, arg2));
+  }
 
-    public WindowFirstLast<T> keepFirst() {
-        return new WindowFirstLast<T>(this, true);
-    }
+  public WindowFirstLast<T> keepFirst() {
+    return new WindowFirstLast<T>(this, true);
+  }
 
-    public WindowFirstLast<T> keepLast() {
-        return new WindowFirstLast<T>(this, false);
-    }
+  public WindowFirstLast<T> keepLast() {
+    return new WindowFirstLast<T>(this, false);
+  }
 
-    public WindowFunction<T> over() {
-        return new WindowFunction<T>(this);
-    }
-
+  public WindowFunction<T> over() {
+    return new WindowFunction<T>(this);
+  }
 }

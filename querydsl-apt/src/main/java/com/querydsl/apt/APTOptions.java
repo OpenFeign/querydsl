@@ -17,97 +17,69 @@ package com.querydsl.apt;
  * APT options supported by Querydsl
  *
  * @author tiwe
- *
  */
 public final class APTOptions {
 
-    /**
-     * set whether default variables are created (default: true)
-     */
-    public static final String QUERYDSL_CREATE_DEFAULT_VARIABLE = "querydsl.createDefaultVariable";
+  /** set whether default variables are created (default: true) */
+  public static final String QUERYDSL_CREATE_DEFAULT_VARIABLE = "querydsl.createDefaultVariable";
 
-    /**
-     * set the prefix for query types (default: Q)
-     */
-    public static final String QUERYDSL_PREFIX = "querydsl.prefix";
+  /** set the prefix for query types (default: Q) */
+  public static final String QUERYDSL_PREFIX = "querydsl.prefix";
 
-    /**
-     * set a suffix for query types (default: empty)
-     */
-    public static final String QUERYDSL_SUFFIX = "querydsl.suffix";
+  /** set a suffix for query types (default: empty) */
+  public static final String QUERYDSL_SUFFIX = "querydsl.suffix";
 
-    /**
-     * set a suffix for query type packages (default: empty)
-     */
-    public static final String QUERYDSL_PACKAGE_SUFFIX = "querydsl.packageSuffix";
+  /** set a suffix for query type packages (default: empty) */
+  public static final String QUERYDSL_PACKAGE_SUFFIX = "querydsl.packageSuffix";
 
-    /**
-     * enable accessors for direct key based map access (default: false)
-     */
-    public static final String QUERYDSL_MAP_ACCESSORS = "querydsl.mapAccessors";
+  /** enable accessors for direct key based map access (default: false) */
+  public static final String QUERYDSL_MAP_ACCESSORS = "querydsl.mapAccessors";
 
-    /**
-     * enable accessors for direct indexed list access (default: false)
-     */
-    public static final String QUERYDSL_LIST_ACCESSORS = "querydsl.listAccessors";
+  /** enable accessors for direct indexed list access (default: false) */
+  public static final String QUERYDSL_LIST_ACCESSORS = "querydsl.listAccessors";
 
-    /**
-     * enable reference field accessors (default: false)
-     */
-    public static final String QUERYDSL_ENTITY_ACCESSORS = "querydsl.entityAccessors";
+  /** enable reference field accessors (default: false) */
+  public static final String QUERYDSL_ENTITY_ACCESSORS = "querydsl.entityAccessors";
 
-    /**
-     * Set whether fields are used as metadata source (default: true)
-     */
-    public static final String QUERYDSL_USE_FIELDS = "querydsl.useFields";
+  /** Set whether fields are used as metadata source (default: true) */
+  public static final String QUERYDSL_USE_FIELDS = "querydsl.useFields";
 
-    /**
-     * Set whether accessors are used as metadata source (default: true)
-     */
-    public static final String QUERYDSL_USE_GETTERS = "querydsl.useGetters";
+  /** Set whether accessors are used as metadata source (default: true) */
+  public static final String QUERYDSL_USE_GETTERS = "querydsl.useGetters";
 
-    /**
-     * comma separated list of packages to be excluded from code generation (default: none)
-     */
-    public static final String QUERYDSL_EXCLUDED_PACKAGES = "querydsl.excludedPackages";
+  /** comma separated list of packages to be excluded from code generation (default: none) */
+  public static final String QUERYDSL_EXCLUDED_PACKAGES = "querydsl.excludedPackages";
 
-    /**
-     * comma separated list of class names to be excluded from code generation (default: none)
-     */
-    public static final String QUERYDSL_EXCLUDED_CLASSES = "querydsl.excludedClasses";
+  /** comma separated list of class names to be excluded from code generation (default: none) */
+  public static final String QUERYDSL_EXCLUDED_CLASSES = "querydsl.excludedClasses";
 
-    /**
-     * comma separated list of packages to be included into code generation (default: all)
-     */
-    public static final String QUERYDSL_INCLUDED_PACKAGES = "querydsl.includedPackages";
+  /** comma separated list of packages to be included into code generation (default: all) */
+  public static final String QUERYDSL_INCLUDED_PACKAGES = "querydsl.includedPackages";
 
-    /**
-     * comma separated list of class names to be included into code generation (default: all)
-     */
-    public static final String QUERYDSL_INCLUDED_CLASSES = "querydsl.includedClasses";
+  /** comma separated list of class names to be included into code generation (default: all) */
+  public static final String QUERYDSL_INCLUDED_CLASSES = "querydsl.includedClasses";
 
-    /**
-     * set whether unknown non-annotated classes should be treated as embeddable (default: false)
-     */
-    public static final String QUERYDSL_UNKNOWN_AS_EMBEDDABLE = "querydsl.unknownAsEmbeddable";
+  /** set whether unknown non-annotated classes should be treated as embeddable (default: false) */
+  public static final String QUERYDSL_UNKNOWN_AS_EMBEDDABLE = "querydsl.unknownAsEmbeddable";
 
-    /**
-     * set the variable name function class
-     */
-    public static final String QUERYDSL_VARIABLE_NAME_FUNCTION_CLASS = "querydsl.variableNameFunctionClass";
+  /** set the variable name function class */
+  public static final String QUERYDSL_VARIABLE_NAME_FUNCTION_CLASS =
+      "querydsl.variableNameFunctionClass";
 
-    /**
-     * set whether info level messages should be written to stdout (default: false)
-     */
-    public static final String QUERYDSL_LOG_INFO = "querydsl.logInfo";
+  /** set whether info level messages should be written to stdout (default: false) */
+  public static final String QUERYDSL_LOG_INFO = "querydsl.logInfo";
 
-    /**
-     * the class instance of the <em>Single-Element Annotation</em> (with {@code String} element) to be used on the generated classes.
-     * (default: depending on java version: javax.annotation.Generated or javax.annotation.processing.Generated)
-     *  @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.7.3">Single-Element Annotation</a>
-     */
-    public static final String QUERYDSL_GENERATED_ANNOTATION_CLASS = "querydsl.generatedAnnotationClass";
+  /**
+   * the class instance of the <em>Single-Element Annotation</em> (with {@code String} element) to
+   * be used on the generated classes. (default: depending on java version:
+   * javax.annotation.Generated or javax.annotation.processing.Generated)
+   *
+   * @see <a
+   *     href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.7.3">Single-Element
+   *     Annotation</a>
+   */
+  public static final String QUERYDSL_GENERATED_ANNOTATION_CLASS =
+      "querydsl.generatedAnnotationClass";
 
-    private APTOptions() { }
-
+  private APTOptions() {}
 }

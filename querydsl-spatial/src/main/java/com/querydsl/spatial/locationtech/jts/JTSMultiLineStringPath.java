@@ -19,70 +19,68 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
-import org.locationtech.jts.geom.MultiLineString;
-
 import java.lang.reflect.AnnotatedElement;
+import org.locationtech.jts.geom.MultiLineString;
 
 /**
  * {@code JTSMultiLineStringPath} extends {@link JTSMultiLineStringExpression} to implement the
  * {@link Path} interface
  *
  * @author tiwe
- *
  * @param <T>
  */
-public class JTSMultiLineStringPath<T extends MultiLineString> extends JTSMultiLineStringExpression<T> implements Path<T> {
+public class JTSMultiLineStringPath<T extends MultiLineString>
+    extends JTSMultiLineStringExpression<T> implements Path<T> {
 
-    private static final long serialVersionUID = 312776751843333543L;
+  private static final long serialVersionUID = 312776751843333543L;
 
-    private final PathImpl<T> pathMixin;
+  private final PathImpl<T> pathMixin;
 
-    @SuppressWarnings("unchecked")
-    public JTSMultiLineStringPath(Path<?> parent, String property) {
-        this((Class<? extends T>) MultiLineString.class, parent, property);
-    }
+  @SuppressWarnings("unchecked")
+  public JTSMultiLineStringPath(Path<?> parent, String property) {
+    this((Class<? extends T>) MultiLineString.class, parent, property);
+  }
 
-    public JTSMultiLineStringPath(Class<? extends T> type, Path<?> parent, String property) {
-        this(type, PathMetadataFactory.forProperty(parent, property));
-    }
+  public JTSMultiLineStringPath(Class<? extends T> type, Path<?> parent, String property) {
+    this(type, PathMetadataFactory.forProperty(parent, property));
+  }
 
-    @SuppressWarnings("unchecked")
-    public JTSMultiLineStringPath(PathMetadata metadata) {
-        this((Class<? extends T>) MultiLineString.class, metadata);
-    }
+  @SuppressWarnings("unchecked")
+  public JTSMultiLineStringPath(PathMetadata metadata) {
+    this((Class<? extends T>) MultiLineString.class, metadata);
+  }
 
-    public JTSMultiLineStringPath(Class<? extends T> type, PathMetadata metadata) {
-        super(ExpressionUtils.path(type, metadata));
-        this.pathMixin = (PathImpl<T>) mixin;
-    }
+  public JTSMultiLineStringPath(Class<? extends T> type, PathMetadata metadata) {
+    super(ExpressionUtils.path(type, metadata));
+    this.pathMixin = (PathImpl<T>) mixin;
+  }
 
-    @SuppressWarnings("unchecked")
-    public JTSMultiLineStringPath(String var) {
-        this((Class<? extends T>) MultiLineString.class, PathMetadataFactory.forVariable(var));
-    }
+  @SuppressWarnings("unchecked")
+  public JTSMultiLineStringPath(String var) {
+    this((Class<? extends T>) MultiLineString.class, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(pathMixin, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(pathMixin, context);
+  }
 
-    public JTSMultiLineStringPath(Class<? extends T> type, String var) {
-        this(type, PathMetadataFactory.forVariable(var));
-    }
+  public JTSMultiLineStringPath(Class<? extends T> type, String var) {
+    this(type, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public PathMetadata getMetadata() {
-        return pathMixin.getMetadata();
-    }
+  @Override
+  public PathMetadata getMetadata() {
+    return pathMixin.getMetadata();
+  }
 
-    @Override
-    public Path<?> getRoot() {
-        return pathMixin.getRoot();
-    }
+  @Override
+  public Path<?> getRoot() {
+    return pathMixin.getRoot();
+  }
 
-    @Override
-    public AnnotatedElement getAnnotatedElement() {
-        return pathMixin.getAnnotatedElement();
-    }
-
+  @Override
+  public AnnotatedElement getAnnotatedElement() {
+    return pathMixin.getAnnotatedElement();
+  }
 }

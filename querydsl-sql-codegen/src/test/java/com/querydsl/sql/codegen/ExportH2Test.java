@@ -13,18 +13,16 @@
  */
 package com.querydsl.sql.codegen;
 
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
-
 import com.querydsl.core.testutil.H2;
 import com.querydsl.sql.Connections;
+import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 
 @Category(H2.class)
 public class ExportH2Test extends ExportBaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        Connections.initH2();
-    }
-
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    Connections.initH2();
+  }
 }

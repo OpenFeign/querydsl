@@ -19,31 +19,29 @@ import java.sql.*;
  * {@code ClobType} maps Clob to Clob on the JDBC level
  *
  * @author tiwe
- *
  */
 public class ClobType extends AbstractType<Clob> {
 
-    public ClobType() {
-        super(Types.CLOB);
-    }
+  public ClobType() {
+    super(Types.CLOB);
+  }
 
-    public ClobType(int type) {
-        super(type);
-    }
+  public ClobType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Clob getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getClob(startIndex);
-    }
+  @Override
+  public Clob getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getClob(startIndex);
+  }
 
-    @Override
-    public Class<Clob> getReturnedClass() {
-        return Clob.class;
-    }
+  @Override
+  public Class<Clob> getReturnedClass() {
+    return Clob.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Clob value) throws SQLException {
-        st.setClob(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Clob value) throws SQLException {
+    st.setClob(startIndex, value);
+  }
 }

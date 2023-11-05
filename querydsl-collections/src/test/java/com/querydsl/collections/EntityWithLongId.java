@@ -6,18 +6,18 @@ import com.querydsl.core.annotations.QueryProjection;
 @QueryEntity
 public class EntityWithLongId {
 
-    private Long id;
+  private Long id;
 
-    @QueryProjection
-    public EntityWithLongId(Long id) {
-        this.id = id;
-    }
+  @QueryProjection
+  public EntityWithLongId(Long id) {
+    this.id = id;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 }

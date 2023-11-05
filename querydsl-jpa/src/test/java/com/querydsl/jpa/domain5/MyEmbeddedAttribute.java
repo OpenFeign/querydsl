@@ -4,6 +4,5 @@ import javax.persistence.*;
 
 @Embeddable
 public class MyEmbeddedAttribute {
-    @ManyToOne
-    private MyOtherEntity attributeWithInitProblem;
+  @ManyToOne private MyOtherEntity attributeWithInitProblem;
 }

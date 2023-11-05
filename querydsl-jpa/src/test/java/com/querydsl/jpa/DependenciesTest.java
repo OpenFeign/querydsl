@@ -16,25 +16,21 @@ package com.querydsl.jpa;
 import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
-
-import org.junit.Test;
-
 import jdepend.framework.JDepend;
+import org.junit.Test;
 
 public class DependenciesTest {
 
-    @Test
-    public void test() throws IOException {
-        JDepend jdepend = new JDepend();
-        jdepend.addDirectory("target/classes/com/querydsl/jpa");
-        jdepend.addDirectory("target/classes/com/querydsl/jpa/hibernate");
-        jdepend.addDirectory("target/classes/com/querydsl/jpa/hibernate/sql");
-        jdepend.addDirectory("target/classes/com/querydsl/jpa/impl");
-        jdepend.addDirectory("target/classes/com/querydsl/jpa/sql");
+  @Test
+  public void test() throws IOException {
+    JDepend jdepend = new JDepend();
+    jdepend.addDirectory("target/classes/com/querydsl/jpa");
+    jdepend.addDirectory("target/classes/com/querydsl/jpa/hibernate");
+    jdepend.addDirectory("target/classes/com/querydsl/jpa/hibernate/sql");
+    jdepend.addDirectory("target/classes/com/querydsl/jpa/impl");
+    jdepend.addDirectory("target/classes/com/querydsl/jpa/sql");
 
-        jdepend.analyze();
-        assertFalse(jdepend.containsCycles());
-
-    }
-
+    jdepend.analyze();
+    assertFalse(jdepend.containsCycles());
+  }
 }

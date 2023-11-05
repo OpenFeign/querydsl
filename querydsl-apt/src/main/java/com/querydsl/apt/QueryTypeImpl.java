@@ -13,34 +13,31 @@
  */
 package com.querydsl.apt;
 
-import java.lang.annotation.Annotation;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
+import java.lang.annotation.Annotation;
 
 /**
  * Implementation of the {@link QueryType} annotation
  *
  * @author tiwe
- *
  */
 @SuppressWarnings("all")
 public class QueryTypeImpl implements QueryType {
 
-    private final PropertyType value;
+  private final PropertyType value;
 
-    public QueryTypeImpl(PropertyType value) {
-        this.value = value;
-    }
+  public QueryTypeImpl(PropertyType value) {
+    this.value = value;
+  }
 
-    @Override
-    public Class<? extends Annotation> annotationType() {
-        return QueryType.class;
-    }
+  @Override
+  public Class<? extends Annotation> annotationType() {
+    return QueryType.class;
+  }
 
-    @Override
-    public PropertyType value() {
-        return value;
-    }
-
+  @Override
+  public PropertyType value() {
+    return value;
+  }
 }

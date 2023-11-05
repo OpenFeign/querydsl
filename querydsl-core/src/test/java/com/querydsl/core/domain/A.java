@@ -5,6 +5,5 @@ import com.querydsl.core.annotations.QueryEntity;
 @QueryEntity
 public class A {
 
-    public Tenant tenant;
-
+  public Tenant tenant;
 }

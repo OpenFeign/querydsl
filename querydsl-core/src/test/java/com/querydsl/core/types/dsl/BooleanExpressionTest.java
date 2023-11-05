@@ -19,56 +19,56 @@ import org.junit.Test;
 
 public class BooleanExpressionTest {
 
-    private final BooleanExpression a = new BooleanPath("a");
-    private final BooleanExpression b = new BooleanPath("b");
-    private final BooleanExpression c = new BooleanPath("c");
+  private final BooleanExpression a = new BooleanPath("a");
+  private final BooleanExpression b = new BooleanPath("b");
+  private final BooleanExpression c = new BooleanPath("c");
 
-    @Test
-    public void anyOf() {
-        assertEquals(a.or(b).or(c), Expressions.anyOf(a, b, c));
-    }
+  @Test
+  public void anyOf() {
+    assertEquals(a.or(b).or(c), Expressions.anyOf(a, b, c));
+  }
 
-    @Test
-    public void allOf() {
-        assertEquals(a.and(b).and(c), Expressions.allOf(a, b, c));
-    }
+  @Test
+  public void allOf() {
+    assertEquals(a.and(b).and(c), Expressions.allOf(a, b, c));
+  }
 
-    @Test
-    public void allOf_with_nulls() {
-        assertEquals("a && b", Expressions.allOf(a, b, null).toString());
-        assertEquals("a", Expressions.allOf(a, null).toString());
-        assertEquals("a", Expressions.allOf(null, a).toString());
-    }
+  @Test
+  public void allOf_with_nulls() {
+    assertEquals("a && b", Expressions.allOf(a, b, null).toString());
+    assertEquals("a", Expressions.allOf(a, null).toString());
+    assertEquals("a", Expressions.allOf(null, a).toString());
+  }
 
-    @Test
-    public void anyOf_with_nulls() {
-        assertEquals("a || b", Expressions.anyOf(a, b, null).toString());
-        assertEquals("a", Expressions.anyOf(a, null).toString());
-        assertEquals("a", Expressions.anyOf(null, a).toString());
-    }
+  @Test
+  public void anyOf_with_nulls() {
+    assertEquals("a || b", Expressions.anyOf(a, b, null).toString());
+    assertEquals("a", Expressions.anyOf(a, null).toString());
+    assertEquals("a", Expressions.anyOf(null, a).toString());
+  }
 
-    @Test
-    public void andAnyOf() {
-        assertEquals(a.and(b.or(c)), a.andAnyOf(b, c));
-    }
+  @Test
+  public void andAnyOf() {
+    assertEquals(a.and(b.or(c)), a.andAnyOf(b, c));
+  }
 
-    @Test
-    public void orAllOf() {
-        assertEquals(a.or(b.and(c)), a.orAllOf(b, c));
-    }
+  @Test
+  public void orAllOf() {
+    assertEquals(a.or(b.and(c)), a.orAllOf(b, c));
+  }
 
-    @Test
-    public void not() {
-        assertEquals(a, a.not().not());
-    }
+  @Test
+  public void not() {
+    assertEquals(a, a.not().not());
+  }
 
-    @Test
-    public void isTrue() {
-        assertEquals(a.eq(true), a.isTrue());
-    }
+  @Test
+  public void isTrue() {
+    assertEquals(a.eq(true), a.isTrue());
+  }
 
-    @Test
-    public void isFalse() {
-        assertEquals(a.eq(false), a.isFalse());
-    }
+  @Test
+  public void isFalse() {
+    assertEquals(a.eq(false), a.isFalse());
+  }
 }

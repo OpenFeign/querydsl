@@ -20,27 +20,33 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.Test;
 
 public class UnknownAsEmbeddableTest extends AbstractProcessorTest {
 
-    private static final String packagePath = "src/test/java/com/querydsl/apt/domain";
+  private static final String packagePath = "src/test/java/com/querydsl/apt/domain";
 
-    @Test
-    public void process() throws IOException {
-        List<String> classes = getFiles(packagePath);
-        process(QuerydslAnnotationProcessor.class, classes,"unknownAsEmbeddable");
+  @Test
+  public void process() throws IOException {
+    List<String> classes = getFiles(packagePath);
+    process(QuerydslAnnotationProcessor.class, classes, "unknownAsEmbeddable");
 
-        assertTrue(new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEntity.java").exists());
-        assertTrue(new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType.java").exists());
-        assertTrue(new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType2.java").exists());
-        assertTrue(new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType3.java").exists());
-    }
+    assertTrue(
+        new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEntity.java")
+            .exists());
+    assertTrue(
+        new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType.java")
+            .exists());
+    assertTrue(
+        new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType2.java")
+            .exists());
+    assertTrue(
+        new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType3.java")
+            .exists());
+  }
 
-    @Override
-    protected Collection<String> getAPTOptions() {
-        return Collections.singletonList("-Aquerydsl.unknownAsEmbeddable=true");
-    }
-
+  @Override
+  protected Collection<String> getAPTOptions() {
+    return Collections.singletonList("-Aquerydsl.unknownAsEmbeddable=true");
+  }
 }

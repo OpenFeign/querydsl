@@ -19,13 +19,12 @@ import org.junit.Test;
 
 public class PredicateOperationTest {
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void not() {
-        Path<?> o1 = ExpressionUtils.path(Object.class, "o1");
-        Path<?> o2 = ExpressionUtils.path(Object.class, "o2");
-        PredicateOperation template = ExpressionUtils.predicate(Ops.EQ, o1, o2);
-        assertEquals("!(o1 = o2)", template.not().toString());
-    }
-
+  @SuppressWarnings("unchecked")
+  @Test
+  public void not() {
+    Path<?> o1 = ExpressionUtils.path(Object.class, "o1");
+    Path<?> o2 = ExpressionUtils.path(Object.class, "o2");
+    PredicateOperation template = ExpressionUtils.predicate(Ops.EQ, o1, o2);
+    assertEquals("!(o1 = o2)", template.not().toString());
+  }
 }

@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * General utility classes
- */
+/** General utility classes */
 package com.querydsl.core.util;

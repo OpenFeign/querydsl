@@ -13,16 +13,15 @@
  */
 package com.querydsl.sql;
 
+import com.querydsl.core.types.*;
+import com.querydsl.core.util.ArrayUtils;
+import com.querydsl.core.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.querydsl.core.types.*;
-import com.querydsl.core.util.ArrayUtils;
-import com.querydsl.core.util.CollectionUtils;
 
 /**
  * Expression used to project a list of beans
@@ -31,56 +30,55 @@ import com.querydsl.core.util.CollectionUtils;
  */
 public class QBeans extends FactoryExpressionBase<Beans> {
 
-    private static final long serialVersionUID = -4411839816134215923L;
+  private static final long serialVersionUID = -4411839816134215923L;
 
-    private final Map<RelationalPath<?>, QBean<?>> qBeans;
+  private final Map<RelationalPath<?>, QBean<?>> qBeans;
 
-    private final List<Expression<?>> expressions;
+  private final List<Expression<?>> expressions;
 
-    @SuppressWarnings("unchecked")
-    public QBeans(RelationalPath<?>... beanPaths) {
-        super(Beans.class);
-        try {
-            final List<Expression<?>> listBuilder = new ArrayList<>();
-            final Map<RelationalPath<?>, QBean<?>> mapBuilder = new HashMap<>();
-            for (RelationalPath<?> path : beanPaths) {
-                Map<String, Expression<?>> bindings = new LinkedHashMap<String, Expression<?>>();
-                for (Path<?> column : path.getColumns()) {
-                    bindings.put(column.getMetadata().getName(), column);
-                    listBuilder.add(column);
-                }
-                mapBuilder.put(path, Projections.bean((Class) path.getType(), bindings));
-            }
-            expressions = CollectionUtils.unmodifiableList(listBuilder);
-            qBeans = Collections.unmodifiableMap(mapBuilder);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+  @SuppressWarnings("unchecked")
+  public QBeans(RelationalPath<?>... beanPaths) {
+    super(Beans.class);
+    try {
+      final List<Expression<?>> listBuilder = new ArrayList<>();
+      final Map<RelationalPath<?>, QBean<?>> mapBuilder = new HashMap<>();
+      for (RelationalPath<?> path : beanPaths) {
+        Map<String, Expression<?>> bindings = new LinkedHashMap<String, Expression<?>>();
+        for (Path<?> column : path.getColumns()) {
+          bindings.put(column.getMetadata().getName(), column);
+          listBuilder.add(column);
         }
+        mapBuilder.put(path, Projections.bean((Class) path.getType(), bindings));
+      }
+      expressions = CollectionUtils.unmodifiableList(listBuilder);
+      qBeans = Collections.unmodifiableMap(mapBuilder);
+    } catch (Exception e) {
+      throw new IllegalStateException(e);
     }
+  }
 
-    @Override
-    public <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
+
+  @Override
+  public List<Expression<?>> getArgs() {
+    return expressions;
+  }
+
+  @Override
+  public Beans newInstance(Object... args) {
+    int offset = 0;
+    Map<RelationalPath<?>, Object> beans = new HashMap<RelationalPath<?>, Object>();
+    for (Map.Entry<RelationalPath<?>, QBean<?>> entry : qBeans.entrySet()) {
+      RelationalPath<?> path = entry.getKey();
+      QBean<?> qBean = entry.getValue();
+      int argsSize = qBean.getArgs().size();
+      Object[] subArgs = ArrayUtils.subarray(args, offset, offset + argsSize);
+      beans.put(path, qBean.newInstance(subArgs));
+      offset += argsSize;
     }
-
-    @Override
-    public List<Expression<?>> getArgs() {
-        return expressions;
-    }
-
-    @Override
-    public Beans newInstance(Object... args) {
-        int offset = 0;
-        Map<RelationalPath<?>, Object> beans = new HashMap<RelationalPath<?>, Object>();
-        for (Map.Entry<RelationalPath<?>, QBean<?>> entry : qBeans.entrySet()) {
-            RelationalPath<?> path = entry.getKey();
-            QBean<?> qBean = entry.getValue();
-            int argsSize = qBean.getArgs().size();
-            Object[] subArgs = ArrayUtils.subarray(args, offset, offset + argsSize);
-            beans.put(path, qBean.newInstance(subArgs));
-            offset += argsSize;
-        }
-        return new Beans(beans);
-    }
-
+    return new Beans(beans);
+  }
 }

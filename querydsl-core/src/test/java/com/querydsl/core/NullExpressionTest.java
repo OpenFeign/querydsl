@@ -15,28 +15,37 @@ package com.querydsl.core;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.time.LocalDate;
-
-import org.junit.Test;
-
 import com.querydsl.core.domain.Cat;
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.ExpressionException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
+import java.time.LocalDate;
+import org.junit.Test;
 
 public class NullExpressionTest {
 
-    @Test
-    public void withConstructor() {
-        Cat cat = Projections.constructor(Cat.class, Expressions.nullExpression(String.class), QCat.cat.id, QCat.cat.bodyWeight).newInstance(null, 1, 2.5);
-        assertNotNull(cat);
-    }
+  @Test
+  public void withConstructor() {
+    Cat cat =
+        Projections.constructor(
+                Cat.class,
+                Expressions.nullExpression(String.class),
+                QCat.cat.id,
+                QCat.cat.bodyWeight)
+            .newInstance(null, 1, 2.5);
+    assertNotNull(cat);
+  }
 
-
-    @Test(expected = ExpressionException.class)
-    public void withoutConstructor() {
-        Cat cat = Projections.constructor(Cat.class, Expressions.nullExpression(String.class), QCat.cat.id, QCat.cat.birthdate).newInstance(null, 1, LocalDate.now());
-        assertNotNull(cat);
-    }
+  @Test(expected = ExpressionException.class)
+  public void withoutConstructor() {
+    Cat cat =
+        Projections.constructor(
+                Cat.class,
+                Expressions.nullExpression(String.class),
+                QCat.cat.id,
+                QCat.cat.birthdate)
+            .newInstance(null, 1, LocalDate.now());
+    assertNotNull(cat);
+  }
 }

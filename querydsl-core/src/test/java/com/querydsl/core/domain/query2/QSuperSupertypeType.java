@@ -21,31 +21,27 @@ import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
 
-
-/**
- * QSuperSupertype is a Querydsl query type for SuperSupertype
- */
+/** QSuperSupertype is a Querydsl query type for SuperSupertype */
 public class QSuperSupertypeType extends EntityPathBase<SuperSupertype> {
 
-    private static final long serialVersionUID = 518341775;
+  private static final long serialVersionUID = 518341775;
 
-    public static final QSuperSupertypeType superSupertype = new QSuperSupertypeType("superSupertype");
+  public static final QSuperSupertypeType superSupertype =
+      new QSuperSupertypeType("superSupertype");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+  public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final NumberPath<Long> version = createNumber("version", Long.class);
+  public final NumberPath<Long> version = createNumber("version", Long.class);
 
-    public QSuperSupertypeType(String variable) {
-        super(SuperSupertype.class, forVariable(variable));
-    }
+  public QSuperSupertypeType(String variable) {
+    super(SuperSupertype.class, forVariable(variable));
+  }
 
-    public QSuperSupertypeType(BeanPath<? extends SuperSupertype> entity) {
-        super(entity.getType(), entity.getMetadata());
-    }
+  public QSuperSupertypeType(BeanPath<? extends SuperSupertype> entity) {
+    super(entity.getType(), entity.getMetadata());
+  }
 
-    public QSuperSupertypeType(PathMetadata metadata) {
-        super(SuperSupertype.class, metadata);
-    }
-
+  public QSuperSupertypeType(PathMetadata metadata) {
+    super(SuperSupertype.class, metadata);
+  }
 }
-

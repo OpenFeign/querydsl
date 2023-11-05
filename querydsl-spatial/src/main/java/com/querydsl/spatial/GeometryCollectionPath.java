@@ -13,72 +13,69 @@
  */
 package com.querydsl.spatial;
 
-import java.lang.reflect.AnnotatedElement;
-
-import org.geolatte.geom.GeometryCollection;
-
 import com.querydsl.core.types.*;
+import java.lang.reflect.AnnotatedElement;
+import org.geolatte.geom.GeometryCollection;
 
 /**
  * {@code GeometryCollectionPath} extends {@link GeometryCollectionExpression} to implement the
  * {@link Path} interface
  *
  * @author tiwe
- *
  * @param <T>
  */
-public class GeometryCollectionPath<T extends GeometryCollection> extends GeometryCollectionExpression<T> implements Path<T> {
+public class GeometryCollectionPath<T extends GeometryCollection>
+    extends GeometryCollectionExpression<T> implements Path<T> {
 
-    private static final long serialVersionUID = 312776751843333543L;
+  private static final long serialVersionUID = 312776751843333543L;
 
-    private final PathImpl<T> pathMixin;
+  private final PathImpl<T> pathMixin;
 
-    @SuppressWarnings("unchecked")
-    public GeometryCollectionPath(Path<?> parent, String property) {
-        this((Class<? extends T>) GeometryCollection.class, parent, property);
-    }
+  @SuppressWarnings("unchecked")
+  public GeometryCollectionPath(Path<?> parent, String property) {
+    this((Class<? extends T>) GeometryCollection.class, parent, property);
+  }
 
-    public GeometryCollectionPath(Class<? extends T> type, Path<?> parent, String property) {
-        this(type, PathMetadataFactory.forProperty(parent, property));
-    }
+  public GeometryCollectionPath(Class<? extends T> type, Path<?> parent, String property) {
+    this(type, PathMetadataFactory.forProperty(parent, property));
+  }
 
-    @SuppressWarnings("unchecked")
-    public GeometryCollectionPath(PathMetadata metadata) {
-        this((Class<? extends T>) GeometryCollection.class, metadata);
-    }
+  @SuppressWarnings("unchecked")
+  public GeometryCollectionPath(PathMetadata metadata) {
+    this((Class<? extends T>) GeometryCollection.class, metadata);
+  }
 
-    public GeometryCollectionPath(Class<? extends T> type, PathMetadata metadata) {
-        super(ExpressionUtils.path(type, metadata));
-        this.pathMixin = (PathImpl<T>) mixin;
-    }
+  public GeometryCollectionPath(Class<? extends T> type, PathMetadata metadata) {
+    super(ExpressionUtils.path(type, metadata));
+    this.pathMixin = (PathImpl<T>) mixin;
+  }
 
-    @SuppressWarnings("unchecked")
-    public GeometryCollectionPath(String var) {
-        this((Class<? extends T>) GeometryCollection.class, PathMetadataFactory.forVariable(var));
-    }
+  @SuppressWarnings("unchecked")
+  public GeometryCollectionPath(String var) {
+    this((Class<? extends T>) GeometryCollection.class, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(pathMixin, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(pathMixin, context);
+  }
 
-    public GeometryCollectionPath(Class<? extends T> type, String var) {
-        this(type, PathMetadataFactory.forVariable(var));
-    }
+  public GeometryCollectionPath(Class<? extends T> type, String var) {
+    this(type, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public PathMetadata getMetadata() {
-        return pathMixin.getMetadata();
-    }
+  @Override
+  public PathMetadata getMetadata() {
+    return pathMixin.getMetadata();
+  }
 
-    @Override
-    public Path<?> getRoot() {
-        return pathMixin.getRoot();
-    }
+  @Override
+  public Path<?> getRoot() {
+    return pathMixin.getRoot();
+  }
 
-    @Override
-    public AnnotatedElement getAnnotatedElement() {
-        return pathMixin.getAnnotatedElement();
-    }
-
+  @Override
+  public AnnotatedElement getAnnotatedElement() {
+    return pathMixin.getAnnotatedElement();
+  }
 }

@@ -14,7 +14,6 @@
 package com.querydsl.jpa.domain4;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
 
 @Entity
@@ -22,52 +21,51 @@ import javax.persistence.*;
 @Access(AccessType.PROPERTY)
 public class BookVersion implements Serializable {
 
-    private static final long serialVersionUID = -1697470794339057030L;
+  private static final long serialVersionUID = -1697470794339057030L;
 
-    private BookID bookID;
+  private BookID bookID;
 
-    private BookVersionPK pk = new BookVersionPK();
+  private BookVersionPK pk = new BookVersionPK();
 
-    private Library library;
+  private Library library;
 
-    private BookDefinition definition;
+  private BookDefinition definition;
 
-    @EmbeddedId
-    public BookVersionPK getPk() {
-        return pk;
-    }
+  @EmbeddedId
+  public BookVersionPK getPk() {
+    return pk;
+  }
 
-    public void setPk(BookVersionPK pk) {
-        this.pk = pk;
-    }
+  public void setPk(BookVersionPK pk) {
+    this.pk = pk;
+  }
 
-    @MapsId("bookID")
-    @ManyToOne(cascade = CascadeType.ALL)
-    public BookID getBookID() {
-        return bookID;
-    }
+  @MapsId("bookID")
+  @ManyToOne(cascade = CascadeType.ALL)
+  public BookID getBookID() {
+    return bookID;
+  }
 
-    public void setBookID(BookID bookID) {
-        this.bookID = bookID;
-    }
+  public void setBookID(BookID bookID) {
+    this.bookID = bookID;
+  }
 
-    @MapsId("library")
-    @ManyToOne(cascade = CascadeType.ALL)
-    public Library getLibrary() {
-        return library;
-    }
+  @MapsId("library")
+  @ManyToOne(cascade = CascadeType.ALL)
+  public Library getLibrary() {
+    return library;
+  }
 
-    public void setLibrary(Library library) {
-        this.library = library;
-    }
+  public void setLibrary(Library library) {
+    this.library = library;
+  }
 
-    @Embedded
-    public BookDefinition getDefinition() {
-        return definition;
-    }
+  @Embedded
+  public BookDefinition getDefinition() {
+    return definition;
+  }
 
-    public void setDefinition(BookDefinition definition) {
-        this.definition = definition;
-    }
-
+  public void setDefinition(BookDefinition definition) {
+    this.definition = definition;
+  }
 }

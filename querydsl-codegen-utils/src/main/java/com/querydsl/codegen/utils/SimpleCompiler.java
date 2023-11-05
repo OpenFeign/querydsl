@@ -14,9 +14,6 @@
 package com.querydsl.codegen.utils;
 
 import io.github.classgraph.ClassGraph;
-
-import javax.lang.model.SourceVersion;
-import javax.tools.*;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
@@ -27,94 +24,98 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import javax.lang.model.SourceVersion;
+import javax.tools.*;
 
 /**
- * SimpleCompiler provides a convenience wrapper of the JavaCompiler interface
- * with automatic classpath generation
+ * SimpleCompiler provides a convenience wrapper of the JavaCompiler interface with automatic
+ * classpath generation
  *
  * @author tiwe
- *
  */
 public class SimpleCompiler implements JavaCompiler {
 
-    protected static boolean isSureFireBooter(URLClassLoader cl) {
-        for (URL url : cl.getURLs()) {
-            if (url.getPath().contains("surefirebooter")) {
-                return true;
-            }
-        }
-
-        return false;
+  protected static boolean isSureFireBooter(URLClassLoader cl) {
+    for (URL url : cl.getURLs()) {
+      if (url.getPath().contains("surefirebooter")) {
+        return true;
+      }
     }
 
-    public static String getClassPath(ClassLoader cl) {
-        return new ClassGraph().overrideClassLoaders(cl).getClasspath();
+    return false;
+  }
+
+  public static String getClassPath(ClassLoader cl) {
+    return new ClassGraph().overrideClassLoaders(cl).getClasspath();
+  }
+
+  private final ClassLoader classLoader;
+
+  private String classPath;
+
+  private final JavaCompiler compiler;
+
+  public SimpleCompiler() {
+    this(ToolProvider.getSystemJavaCompiler(), Thread.currentThread().getContextClassLoader());
+  }
+
+  public SimpleCompiler(JavaCompiler compiler, ClassLoader classLoader) {
+    this.compiler = compiler;
+    this.classLoader = classLoader;
+  }
+
+  private String getClasspath() {
+    if (classPath == null) {
+      classPath = getClassPath(classLoader);
+    }
+    return classPath;
+  }
+
+  @Override
+  public Set<SourceVersion> getSourceVersions() {
+    return compiler.getSourceVersions();
+  }
+
+  @Override
+  public StandardJavaFileManager getStandardFileManager(
+      DiagnosticListener<? super JavaFileObject> diagnosticListener,
+      Locale locale,
+      Charset charset) {
+    return compiler.getStandardFileManager(diagnosticListener, locale, charset);
+  }
+
+  @Override
+  public CompilationTask getTask(
+      Writer out,
+      JavaFileManager fileManager,
+      DiagnosticListener<? super JavaFileObject> diagnosticListener,
+      Iterable<String> options,
+      Iterable<String> classes,
+      Iterable<? extends JavaFileObject> compilationUnits) {
+    return compiler.getTask(
+        out, fileManager, diagnosticListener, options, classes, compilationUnits);
+  }
+
+  @Override
+  public int isSupportedOption(String option) {
+    return compiler.isSupportedOption(option);
+  }
+
+  @Override
+  public int run(InputStream in, OutputStream out, OutputStream err, String... arguments) {
+    for (String a : arguments) {
+      if (a.equals("-classpath")) {
+        return compiler.run(in, out, err, arguments);
+      }
     }
 
-    private final ClassLoader classLoader;
-
-    private String classPath;
-
-    private final JavaCompiler compiler;
-
-    public SimpleCompiler() {
-        this(ToolProvider.getSystemJavaCompiler(), Thread.currentThread().getContextClassLoader());
+    // no classpath given
+    List<String> args = new ArrayList<String>(arguments.length + 2);
+    args.add("-classpath");
+    args.add(getClasspath());
+    for (String arg : arguments) {
+      args.add(arg);
     }
-
-    public SimpleCompiler(JavaCompiler compiler, ClassLoader classLoader) {
-        this.compiler = compiler;
-        this.classLoader = classLoader;
-    }
-
-    private String getClasspath() {
-        if (classPath == null) {
-            classPath = getClassPath(classLoader);
-        }
-        return classPath;
-    }
-
-    @Override
-    public Set<SourceVersion> getSourceVersions() {
-        return compiler.getSourceVersions();
-    }
-
-    @Override
-    public StandardJavaFileManager getStandardFileManager(
-            DiagnosticListener<? super JavaFileObject> diagnosticListener, Locale locale,
-            Charset charset) {
-        return compiler.getStandardFileManager(diagnosticListener, locale, charset);
-    }
-
-    @Override
-    public CompilationTask getTask(Writer out, JavaFileManager fileManager,
-            DiagnosticListener<? super JavaFileObject> diagnosticListener,
-            Iterable<String> options, Iterable<String> classes,
-            Iterable<? extends JavaFileObject> compilationUnits) {
-        return compiler.getTask(out, fileManager, diagnosticListener, options, classes,
-                compilationUnits);
-    }
-
-    @Override
-    public int isSupportedOption(String option) {
-        return compiler.isSupportedOption(option);
-    }
-
-    @Override
-    public int run(InputStream in, OutputStream out, OutputStream err, String... arguments) {
-        for (String a : arguments) {
-            if (a.equals("-classpath")) {
-                return compiler.run(in, out, err, arguments);
-            }
-        }
-
-        // no classpath given
-        List<String> args = new ArrayList<String>(arguments.length + 2);
-        args.add("-classpath");
-        args.add(getClasspath());
-        for (String arg : arguments) {
-            args.add(arg);
-        }
-        return compiler.run(in, out, err, args.toArray(new String[args.size()]));
-    }
-
+    return compiler.run(in, out, err, args.toArray(new String[args.size()]));
+  }
 }

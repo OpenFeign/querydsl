@@ -13,17 +13,15 @@
  */
 package com.querydsl.core.domain;
 
-import java.io.Serializable;
-
 import com.querydsl.core.annotations.QuerySupertype;
+import java.io.Serializable;
 
 @QuerySupertype
 public class CommonIdentifiable<ID extends Serializable> extends CommonPersistence {
 
-    private ID id;
+  private ID id;
 
-    public ID getId() {
-        return id;
-    }
-
+  public ID getId() {
+    return id;
+  }
 }

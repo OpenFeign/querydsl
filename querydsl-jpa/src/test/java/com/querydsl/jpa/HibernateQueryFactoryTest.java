@@ -15,49 +15,46 @@ package com.querydsl.jpa;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.querydsl.jpa.domain.QAnimal;
+import com.querydsl.jpa.hibernate.HibernateQueryFactory;
+import java.util.function.Supplier;
 import org.easymock.EasyMock;
 import org.hibernate.Session;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.querydsl.jpa.domain.QAnimal;
-import com.querydsl.jpa.hibernate.HibernateQueryFactory;
-
-import java.util.function.Supplier;
-
 public class HibernateQueryFactoryTest {
 
-    private HibernateQueryFactory queryFactory;
+  private HibernateQueryFactory queryFactory;
 
-    @Before
-    public void setUp() {
-        Supplier<Session> provider = () -> EasyMock.<Session> createNiceMock(Session.class);
-        queryFactory = new HibernateQueryFactory(JPQLTemplates.DEFAULT, provider);
-    }
+  @Before
+  public void setUp() {
+    Supplier<Session> provider = () -> EasyMock.<Session>createNiceMock(Session.class);
+    queryFactory = new HibernateQueryFactory(JPQLTemplates.DEFAULT, provider);
+  }
 
-    @Test
-    public void query() {
-        assertNotNull(queryFactory.query());
-    }
+  @Test
+  public void query() {
+    assertNotNull(queryFactory.query());
+  }
 
-    @Test
-    public void from() {
-        assertNotNull(queryFactory.from(QAnimal.animal));
-    }
+  @Test
+  public void from() {
+    assertNotNull(queryFactory.from(QAnimal.animal));
+  }
 
-    @Test
-    public void delete() {
-        assertNotNull(queryFactory.delete(QAnimal.animal));
-    }
+  @Test
+  public void delete() {
+    assertNotNull(queryFactory.delete(QAnimal.animal));
+  }
 
-    @Test
-    public void update() {
-        assertNotNull(queryFactory.update(QAnimal.animal));
-    }
+  @Test
+  public void update() {
+    assertNotNull(queryFactory.update(QAnimal.animal));
+  }
 
-    @Test
-    public void insert() {
-        assertNotNull(queryFactory.insert(QAnimal.animal));
-    }
-
+  @Test
+  public void insert() {
+    assertNotNull(queryFactory.insert(QAnimal.animal));
+  }
 }

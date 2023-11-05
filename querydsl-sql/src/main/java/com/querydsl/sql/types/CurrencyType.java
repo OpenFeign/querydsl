@@ -18,40 +18,37 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Currency;
-
 import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code CurrencyType} maps Currency to String on the JDBC level
  *
  * @author tiwe
- *
  */
 public class CurrencyType extends AbstractType<Currency> {
 
-    public CurrencyType() {
-        super(Types.VARCHAR);
-    }
+  public CurrencyType() {
+    super(Types.VARCHAR);
+  }
 
-    public CurrencyType(int type) {
-        super(type);
-    }
+  public CurrencyType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Currency> getReturnedClass() {
-        return Currency.class;
-    }
+  @Override
+  public Class<Currency> getReturnedClass() {
+    return Currency.class;
+  }
 
-    @Override
-    @Nullable
-    public Currency getValue(ResultSet rs, int startIndex) throws SQLException {
-        String val = rs.getString(startIndex);
-        return val != null ? Currency.getInstance(val) : null;
-    }
+  @Override
+  @Nullable
+  public Currency getValue(ResultSet rs, int startIndex) throws SQLException {
+    String val = rs.getString(startIndex);
+    return val != null ? Currency.getInstance(val) : null;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Currency value) throws SQLException {
-        st.setString(startIndex, value.getCurrencyCode());
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Currency value) throws SQLException {
+    st.setString(startIndex, value.getCurrencyCode());
+  }
 }

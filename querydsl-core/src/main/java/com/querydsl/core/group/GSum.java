@@ -13,38 +13,35 @@
  */
 package com.querydsl.core.group;
 
-import java.math.BigDecimal;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.util.MathUtils;
+import java.math.BigDecimal;
 
 class GSum<T extends Number> extends AbstractGroupExpression<T, T> {
 
-    private static final long serialVersionUID = 3518868612387641383L;
+  private static final long serialVersionUID = 3518868612387641383L;
 
-    @SuppressWarnings("unchecked")
-    GSum(Expression<T> expr) {
-        super((Class) expr.getType(), expr);
-    }
+  @SuppressWarnings("unchecked")
+  GSum(Expression<T> expr) {
+    super((Class) expr.getType(), expr);
+  }
 
-    @Override
-    public GroupCollector<T, T> createGroupCollector() {
-        return new GroupCollector<T, T>() {
-            private BigDecimal sum = BigDecimal.ZERO;
+  @Override
+  public GroupCollector<T, T> createGroupCollector() {
+    return new GroupCollector<T, T>() {
+      private BigDecimal sum = BigDecimal.ZERO;
 
-            @Override
-            public void add(T t) {
-                if (t != null) {
-                    sum = sum.add(new BigDecimal(t.toString()));
-                }
-            }
+      @Override
+      public void add(T t) {
+        if (t != null) {
+          sum = sum.add(new BigDecimal(t.toString()));
+        }
+      }
 
-            @Override
-            public T get() {
-                return MathUtils.cast(sum, getType());
-            }
-
-        };
-    }
-
+      @Override
+      public T get() {
+        return MathUtils.cast(sum, getType());
+      }
+    };
+  }
 }

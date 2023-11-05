@@ -18,15 +18,13 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Child {
 
-    private String childName;
+  private String childName;
 
-    public String getChildName() {
-        return childName;
-    }
+  public String getChildName() {
+    return childName;
+  }
 
-    public void setChildName(String childName) {
-        this.childName = childName;
-    }
-
-
+  public void setChildName(String childName) {
+    this.childName = childName;
+  }
 }

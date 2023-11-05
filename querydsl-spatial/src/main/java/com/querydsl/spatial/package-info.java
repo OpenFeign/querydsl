@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Spatial types using Geolatte
- */
+/** Spatial types using Geolatte */
 package com.querydsl.spatial;

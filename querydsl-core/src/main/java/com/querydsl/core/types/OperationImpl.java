@@ -13,79 +13,74 @@
  */
 package com.querydsl.core.types;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.querydsl.core.annotations.Immutable;
-
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.PrimitiveUtils;
+import java.util.Arrays;
+import java.util.List;
 import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * {@code OperationImpl} is the default implementation of the {@link Operation} interface
  *
  * @author tiwe
- *
  * @param <T> expression type
  */
 @Immutable
 public class OperationImpl<T> extends ExpressionBase<T> implements Operation<T> {
 
-    private static final long serialVersionUID = 4796432056083507588L;
+  private static final long serialVersionUID = 4796432056083507588L;
 
-    @Unmodifiable
-    private final List<Expression<?>> args;
+  @Unmodifiable private final List<Expression<?>> args;
 
-    private final Operator operator;
+  private final Operator operator;
 
-    protected OperationImpl(Class<? extends T> type, Operator operator, Expression<?>... args) {
-        this(type, operator, Arrays.asList(args));
+  protected OperationImpl(Class<? extends T> type, Operator operator, Expression<?>... args) {
+    this(type, operator, Arrays.asList(args));
+  }
+
+  protected OperationImpl(Class<? extends T> type, Operator operator, List<Expression<?>> args) {
+    super(type);
+    Class<?> wrapped = PrimitiveUtils.wrap(type);
+    if (!operator.getType().isAssignableFrom(wrapped)) {
+      throw new IllegalArgumentException(operator.name());
     }
+    this.operator = operator;
+    this.args = CollectionUtils.unmodifiableList(args);
+  }
 
-    protected OperationImpl(Class<? extends T> type, Operator operator, List<Expression<?>> args) {
-        super(type);
-        Class<?> wrapped = PrimitiveUtils.wrap(type);
-        if (!operator.getType().isAssignableFrom(wrapped)) {
-            throw new IllegalArgumentException(operator.name());
-        }
-        this.operator = operator;
-        this.args = CollectionUtils.unmodifiableList(args);
+  @Override
+  public final Expression<?> getArg(int i) {
+    return args.get(i);
+  }
+
+  @Override
+  @Unmodifiable
+  public final List<Expression<?>> getArgs() {
+    return args;
+  }
+
+  @Override
+  public final Operator getOperator() {
+    return operator;
+  }
+
+  @Override
+  public final boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof Operation<?>) {
+      Operation<?> op = (Operation<?>) o;
+      return op.getOperator() == operator
+          && op.getArgs().equals(args)
+          && op.getType().equals(getType());
+    } else {
+      return false;
     }
+  }
 
-    @Override
-    public final Expression<?> getArg(int i) {
-        return args.get(i);
-    }
-
-    @Override
-    @Unmodifiable
-    public final List<Expression<?>> getArgs() {
-        return args;
-    }
-
-    @Override
-    public final Operator getOperator() {
-        return operator;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof Operation<?>) {
-            Operation<?> op = (Operation<?>) o;
-            return op.getOperator() == operator
-                && op.getArgs().equals(args)
-                && op.getType().equals(getType());
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public final <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
-    }
-
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
 }

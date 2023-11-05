@@ -27,26 +27,30 @@ import org.locationtech.jts.geom.Polygon;
  * {@code JTSGeometryPaths} provides factory methods for {@link JTSGeometryExpression} creation
  *
  * @author tiwe
- *
  */
 public interface JTSGeometryPaths {
 
-    <A extends GeometryCollection> JTSGeometryCollectionPath<A> createGeometryCollection(String property, Class<? extends A> type);
+  <A extends GeometryCollection> JTSGeometryCollectionPath<A> createGeometryCollection(
+      String property, Class<? extends A> type);
 
-    <A extends Geometry> JTSGeometryPath<A> createGeometry(String property, Class<? extends A> type);
+  <A extends Geometry> JTSGeometryPath<A> createGeometry(String property, Class<? extends A> type);
 
-    <A extends LinearRing> JTSLinearRingPath<A> createLinearRing(String property, Class<? extends A> type);
+  <A extends LinearRing> JTSLinearRingPath<A> createLinearRing(
+      String property, Class<? extends A> type);
 
-    <A extends LineString> JTSLineStringPath<A> createLineString(String property, Class<? extends A> type);
+  <A extends LineString> JTSLineStringPath<A> createLineString(
+      String property, Class<? extends A> type);
 
-    <A extends MultiLineString> JTSMultiLineStringPath<A> createMultiLineString(String property, Class<? extends A> type);
+  <A extends MultiLineString> JTSMultiLineStringPath<A> createMultiLineString(
+      String property, Class<? extends A> type);
 
-    <A extends MultiPoint> JTSMultiPointPath<A> createMultiPoint(String property, Class<? extends A> type);
+  <A extends MultiPoint> JTSMultiPointPath<A> createMultiPoint(
+      String property, Class<? extends A> type);
 
-    <A extends MultiPolygon> JTSMultiPolygonPath<A> createMultiPolygon(String property, Class<? extends A> type);
+  <A extends MultiPolygon> JTSMultiPolygonPath<A> createMultiPolygon(
+      String property, Class<? extends A> type);
 
-    <A extends Point> JTSPointPath<A> createPoint(String property, Class<? extends A> type);
+  <A extends Point> JTSPointPath<A> createPoint(String property, Class<? extends A> type);
 
-    <A extends Polygon> JTSPolygonPath<A> createPolygon(String property, Class<? extends A> type);
-
+  <A extends Polygon> JTSPolygonPath<A> createPolygon(String property, Class<? extends A> type);
 }

@@ -5,4 +5,3 @@
  */
 
 package com.querydsl.codegen.utils.support;
-

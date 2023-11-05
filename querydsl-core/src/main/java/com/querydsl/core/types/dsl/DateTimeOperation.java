@@ -13,56 +13,54 @@
  */
 package com.querydsl.core.types.dsl;
 
+import com.querydsl.core.types.*;
 import java.util.Arrays;
 import java.util.List;
-
-import com.querydsl.core.types.*;
 
 /**
  * {@code DateTimeOperation} represents DateTime operations
  *
  * @author tiwe
- *
  * @param <T> expression type
  */
-public class DateTimeOperation<T extends Comparable<?>> extends DateTimeExpression<T> implements Operation<T> {
+public class DateTimeOperation<T extends Comparable<?>> extends DateTimeExpression<T>
+    implements Operation<T> {
 
-    private static final long serialVersionUID = 6523293814317168556L;
+  private static final long serialVersionUID = 6523293814317168556L;
 
-    private final OperationImpl<T> opMixin;
+  private final OperationImpl<T> opMixin;
 
-    protected DateTimeOperation(OperationImpl<T> mixin) {
-        super(mixin);
-        this.opMixin = mixin;
-    }
+  protected DateTimeOperation(OperationImpl<T> mixin) {
+    super(mixin);
+    this.opMixin = mixin;
+  }
 
-    protected DateTimeOperation(Class<? extends T> type, Operator op, Expression<?>... args) {
-        this(type, op, Arrays.asList(args));
-    }
+  protected DateTimeOperation(Class<? extends T> type, Operator op, Expression<?>... args) {
+    this(type, op, Arrays.asList(args));
+  }
 
-    protected DateTimeOperation(Class<? extends T> type, Operator op, List<Expression<?>> args) {
-        super(ExpressionUtils.operation(type, op, args));
-        this.opMixin = (OperationImpl<T>) mixin;
-    }
+  protected DateTimeOperation(Class<? extends T> type, Operator op, List<Expression<?>> args) {
+    super(ExpressionUtils.operation(type, op, args));
+    this.opMixin = (OperationImpl<T>) mixin;
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(opMixin, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(opMixin, context);
+  }
 
-    @Override
-    public Expression<?> getArg(int index) {
-        return opMixin.getArg(index);
-    }
+  @Override
+  public Expression<?> getArg(int index) {
+    return opMixin.getArg(index);
+  }
 
-    @Override
-    public List<Expression<?>> getArgs() {
-        return opMixin.getArgs();
-    }
+  @Override
+  public List<Expression<?>> getArgs() {
+    return opMixin.getArgs();
+  }
 
-    @Override
-    public Operator getOperator() {
-        return opMixin.getOperator();
-    }
-
+  @Override
+  public Operator getOperator() {
+    return opMixin.getOperator();
+  }
 }

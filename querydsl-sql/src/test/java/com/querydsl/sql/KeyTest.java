@@ -15,97 +15,93 @@ package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.selectOne;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.dsl.NumberPath;
+import org.junit.Test;
 
 @SuppressWarnings("serial")
 public class KeyTest {
 
-//    @Table("USER")
-    public static class QUser extends RelationalPathBase<QUser> {
+  //    @Table("USER")
+  public static class QUser extends RelationalPathBase<QUser> {
 
-        public final NumberPath<Integer> id = createNumber("id", Integer.class);
+    public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
-        public final NumberPath<Integer> department = createNumber("department", Integer.class);
+    public final NumberPath<Integer> department = createNumber("department", Integer.class);
 
-        public final NumberPath<Integer> superiorId = createNumber("superiorId", Integer.class);
+    public final NumberPath<Integer> superiorId = createNumber("superiorId", Integer.class);
 
-        public final PrimaryKey<QUser> idKey = createPrimaryKey(id);
+    public final PrimaryKey<QUser> idKey = createPrimaryKey(id);
 
-        public final ForeignKey<QDepartment> departmentKey = createForeignKey(department, "ID");
+    public final ForeignKey<QDepartment> departmentKey = createForeignKey(department, "ID");
 
-        public final ForeignKey<QUser> superiorIdKey = createForeignKey(superiorId, "ID");
+    public final ForeignKey<QUser> superiorIdKey = createForeignKey(superiorId, "ID");
 
-        public QUser(String path) {
-            super(QUser.class, PathMetadataFactory.forVariable(path), "", "USER");
-            addMetadata();
-        }
-
-        protected void addMetadata() {
-            addMetadata(id, ColumnMetadata.named("ID"));
-            addMetadata(department, ColumnMetadata.named("DEPARTMENT"));
-            addMetadata(superiorId, ColumnMetadata.named("SUPERIOR_ID"));
-        }
-
+    public QUser(String path) {
+      super(QUser.class, PathMetadataFactory.forVariable(path), "", "USER");
+      addMetadata();
     }
 
-//    @Table("DEPARTMENT")
-    public static class QDepartment extends RelationalPathBase<QDepartment> {
+    protected void addMetadata() {
+      addMetadata(id, ColumnMetadata.named("ID"));
+      addMetadata(department, ColumnMetadata.named("DEPARTMENT"));
+      addMetadata(superiorId, ColumnMetadata.named("SUPERIOR_ID"));
+    }
+  }
 
-        public final NumberPath<Integer> id = createNumber("id", Integer.class);
+  //    @Table("DEPARTMENT")
+  public static class QDepartment extends RelationalPathBase<QDepartment> {
 
-        public final NumberPath<Integer> company = createNumber("company", Integer.class);
+    public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
-        public final PrimaryKey<QDepartment> idKey = createPrimaryKey(id);
+    public final NumberPath<Integer> company = createNumber("company", Integer.class);
 
-        public final ForeignKey<QCompany> companyKey = createForeignKey(company, "ID");
+    public final PrimaryKey<QDepartment> idKey = createPrimaryKey(id);
 
-        public QDepartment(String path) {
-            super(QDepartment.class, PathMetadataFactory.forVariable(path), "", "DEPARTMENT");
-            addMetadata();
-        }
+    public final ForeignKey<QCompany> companyKey = createForeignKey(company, "ID");
 
-        protected void addMetadata() {
-            addMetadata(id, ColumnMetadata.named("ID"));
-            addMetadata(company, ColumnMetadata.named("COMPANY"));
-        }
-
+    public QDepartment(String path) {
+      super(QDepartment.class, PathMetadataFactory.forVariable(path), "", "DEPARTMENT");
+      addMetadata();
     }
 
-//    @Table("COMPANY")
-    public static class QCompany extends RelationalPathBase<QCompany> {
+    protected void addMetadata() {
+      addMetadata(id, ColumnMetadata.named("ID"));
+      addMetadata(company, ColumnMetadata.named("COMPANY"));
+    }
+  }
 
-        public final NumberPath<Integer> id = createNumber("id", Integer.class);
+  //    @Table("COMPANY")
+  public static class QCompany extends RelationalPathBase<QCompany> {
 
-        public final PrimaryKey<QCompany> idKey = createPrimaryKey(id);
+    public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
-        public QCompany(String path) {
-            super(QCompany.class, PathMetadataFactory.forVariable(path), "", "COMPANY");
-            addMetadata();
-        }
+    public final PrimaryKey<QCompany> idKey = createPrimaryKey(id);
 
-        protected void addMetadata() {
-            addMetadata(id, ColumnMetadata.named("ID"));
-        }
-
+    public QCompany(String path) {
+      super(QCompany.class, PathMetadataFactory.forVariable(path), "", "COMPANY");
+      addMetadata();
     }
 
-    @Test
-    public void test() {
-        QUser user = new QUser("user");
-        QUser user2 = new QUser("user2");
-        QDepartment department = new QDepartment("department");
-        QCompany company = new QCompany("company");
-
-        // superiorId -> id
-        selectOne().from(user).innerJoin(user.superiorIdKey, user2);
-
-        // department -> id / company -> id
-        selectOne().from(user)
-            .innerJoin(user.departmentKey, department)
-            .innerJoin(department.companyKey, company);
+    protected void addMetadata() {
+      addMetadata(id, ColumnMetadata.named("ID"));
     }
+  }
 
+  @Test
+  public void test() {
+    QUser user = new QUser("user");
+    QUser user2 = new QUser("user2");
+    QDepartment department = new QDepartment("department");
+    QCompany company = new QCompany("company");
+
+    // superiorId -> id
+    selectOne().from(user).innerJoin(user.superiorIdKey, user2);
+
+    // department -> id / company -> id
+    selectOne()
+        .from(user)
+        .innerJoin(user.departmentKey, department)
+        .innerJoin(department.companyKey, company);
+  }
 }

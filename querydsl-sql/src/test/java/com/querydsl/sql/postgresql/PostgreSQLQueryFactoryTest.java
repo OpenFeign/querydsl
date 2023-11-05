@@ -15,54 +15,51 @@ package com.querydsl.sql.postgresql;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.querydsl.sql.SQLTemplates;
+import com.querydsl.sql.domain.QSurvey;
 import java.sql.Connection;
 import java.util.function.Supplier;
-
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.querydsl.sql.SQLTemplates;
-import com.querydsl.sql.domain.QSurvey;
-
 public class PostgreSQLQueryFactoryTest {
 
-    private PostgreSQLQueryFactory queryFactory;
+  private PostgreSQLQueryFactory queryFactory;
 
-    @Before
-    public void setUp() {
-        Supplier<Connection> provider = () -> EasyMock.<Connection> createNiceMock(Connection.class);
-        queryFactory = new PostgreSQLQueryFactory(SQLTemplates.DEFAULT, provider);
-    }
+  @Before
+  public void setUp() {
+    Supplier<Connection> provider = () -> EasyMock.<Connection>createNiceMock(Connection.class);
+    queryFactory = new PostgreSQLQueryFactory(SQLTemplates.DEFAULT, provider);
+  }
 
-    @Test
-    public void query() {
-        assertNotNull(queryFactory.query());
-    }
+  @Test
+  public void query() {
+    assertNotNull(queryFactory.query());
+  }
 
-    @Test
-    public void from() {
-        assertNotNull(queryFactory.from(QSurvey.survey));
-    }
+  @Test
+  public void from() {
+    assertNotNull(queryFactory.from(QSurvey.survey));
+  }
 
-    @Test
-    public void delete() {
-        assertNotNull(queryFactory.delete(QSurvey.survey));
-    }
+  @Test
+  public void delete() {
+    assertNotNull(queryFactory.delete(QSurvey.survey));
+  }
 
-    @Test
-    public void insert() {
-        assertNotNull(queryFactory.insert(QSurvey.survey));
-    }
+  @Test
+  public void insert() {
+    assertNotNull(queryFactory.insert(QSurvey.survey));
+  }
 
-    @Test
-    public void update() {
-        assertNotNull(queryFactory.update(QSurvey.survey));
-    }
+  @Test
+  public void update() {
+    assertNotNull(queryFactory.update(QSurvey.survey));
+  }
 
-    @Test
-    public void merge() {
-        assertNotNull(queryFactory.merge(QSurvey.survey));
-    }
-
+  @Test
+  public void merge() {
+    assertNotNull(queryFactory.merge(QSurvey.survey));
+  }
 }

@@ -20,40 +20,38 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
 @Ignore
 public class IncrementalCompilationTest extends AbstractProcessorTest {
 
-    private static final String packagePath = "src/test/java/com/querydsl/apt/domain/";
+  private static final String packagePath = "src/test/java/com/querydsl/apt/domain/";
 
-    @Test
-    public void does_not_overwrite_unchanged_files() throws IOException, InterruptedException {
-        File source = new File(packagePath, "ExampleEntity.java");
-        String path = source.getPath();
-        File qType = new File("target/overwrite/com/querydsl/apt/domain/QExampleEntity.java");
+  @Test
+  public void does_not_overwrite_unchanged_files() throws IOException, InterruptedException {
+    File source = new File(packagePath, "ExampleEntity.java");
+    String path = source.getPath();
+    File qType = new File("target/overwrite/com/querydsl/apt/domain/QExampleEntity.java");
 
-        // QTestEntity is generated
-        process(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "overwrite");
-        assertTrue(qType.exists());
-        long modified = qType.lastModified();
-        Thread.sleep(1000);
+    // QTestEntity is generated
+    process(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "overwrite");
+    assertTrue(qType.exists());
+    long modified = qType.lastModified();
+    Thread.sleep(1000);
 
-        // TestEntity has not changed, QTestEntity is not overwritten
-        compile(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "overwrite");
-        assertEquals(modified, qType.lastModified());
+    // TestEntity has not changed, QTestEntity is not overwritten
+    compile(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "overwrite");
+    assertEquals(modified, qType.lastModified());
 
-        // TestEntity is updated, QTestEntity is overwritten
-        Files.createFile(source.toPath());
-        compile(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "overwrite");
-        assertTrue("" + modified + " >= " + qType.lastModified(), modified < qType.lastModified());
+    // TestEntity is updated, QTestEntity is overwritten
+    Files.createFile(source.toPath());
+    compile(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "overwrite");
+    assertTrue("" + modified + " >= " + qType.lastModified(), modified < qType.lastModified());
 
-        // QTestEntity is deleted and regenerated
-        assertTrue(qType.delete());
-        compile(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "overwrite");
-        assertTrue(qType.exists());
-    }
-
+    // QTestEntity is deleted and regenerated
+    assertTrue(qType.delete());
+    compile(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "overwrite");
+    assertTrue(qType.exists());
+  }
 }

@@ -13,51 +13,49 @@
  */
 package com.querydsl.core.support;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.types.Expression;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * {@code OrderedQueryMetadata} performs no metadata validation and ensures that FROM elements are before
- * JOIN elements
+ * {@code OrderedQueryMetadata} performs no metadata validation and ensures that FROM elements are
+ * before JOIN elements
  *
  * @author tiwe
- *
  */
 public class OrderedQueryMetadata extends DefaultQueryMetadata {
 
-    private static final long serialVersionUID = 6326236143414219377L;
+  private static final long serialVersionUID = 6326236143414219377L;
 
-    private List<JoinExpression> joins;
+  private List<JoinExpression> joins;
 
-    public OrderedQueryMetadata() {
-        super();
-        noValidate();
-    }
+  public OrderedQueryMetadata() {
+    super();
+    noValidate();
+  }
 
-    @Override
-    public void addJoin(JoinType joinType, Expression<?> expr) {
-        joins = null;
-        super.addJoin(joinType, expr);
-    }
+  @Override
+  public void addJoin(JoinType joinType, Expression<?> expr) {
+    joins = null;
+    super.addJoin(joinType, expr);
+  }
 
-    @Override
-    public List<JoinExpression> getJoins() {
-        if (joins == null) {
-            joins = new ArrayList<>();
-            int separator = 0;
-            for (JoinExpression j : super.getJoins()) {
-                if (j.getType() == JoinType.DEFAULT) {
-                    joins.add(separator++, j);
-                } else {
-                    joins.add(j);
-                }
-            }
+  @Override
+  public List<JoinExpression> getJoins() {
+    if (joins == null) {
+      joins = new ArrayList<>();
+      int separator = 0;
+      for (JoinExpression j : super.getJoins()) {
+        if (j.getType() == JoinType.DEFAULT) {
+          joins.add(separator++, j);
+        } else {
+          joins.add(j);
         }
-        return joins;
+      }
     }
+    return joins;
+  }
 }

@@ -14,32 +14,30 @@
 package com.querydsl.jpa.domain4;
 
 import java.io.Serializable;
-
 import javax.persistence.Embeddable;
 
 @Embeddable
 public class BookVersionPK implements Serializable {
 
-    private static final long serialVersionUID = 8483495681236266676L;
+  private static final long serialVersionUID = 8483495681236266676L;
 
-    private Long bookID;
+  private Long bookID;
 
-    private Long library;
+  private Long library;
 
-    public Long getBookID() {
-        return bookID;
-    }
+  public Long getBookID() {
+    return bookID;
+  }
 
-    public void setBookID(Long bookID) {
-        this.bookID = bookID;
-    }
+  public void setBookID(Long bookID) {
+    this.bookID = bookID;
+  }
 
-    public Long getLibrary() {
-        return library;
-    }
+  public Long getLibrary() {
+    return library;
+  }
 
-    public void setLibrary(Long library) {
-        this.library = library;
-    }
-
+  public void setLibrary(Long library) {
+    this.library = library;
+  }
 }

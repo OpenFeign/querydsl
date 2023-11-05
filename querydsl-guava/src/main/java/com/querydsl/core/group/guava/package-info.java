@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Utilities for creating group by factory expressions for Guava collection types
- */
+/** Utilities for creating group by factory expressions for Guava collection types */
 package com.querydsl.core.group.guava;
-

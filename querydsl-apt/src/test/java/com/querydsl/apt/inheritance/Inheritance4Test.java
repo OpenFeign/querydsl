@@ -13,59 +13,60 @@
  */
 package com.querydsl.apt.inheritance;
 
-import org.junit.Test;
-
 import com.querydsl.apt.domain.AbstractTest;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.core.types.dsl.StringPath;
+import org.junit.Test;
 
 public class Inheritance4Test extends AbstractTest {
 
-    @QueryEntity
-    public class EntityWithComparable {
-        private Comparable<?> field;
+  @QueryEntity
+  public class EntityWithComparable {
+    private Comparable<?> field;
 
-        public Comparable<?> getField() {
-            return field;
-        }
-
+    public Comparable<?> getField() {
+      return field;
     }
+  }
 
-    @QueryEntity
-    public class EntityWithNumber extends EntityWithComparable {
-        private Long field;
+  @QueryEntity
+  public class EntityWithNumber extends EntityWithComparable {
+    private Long field;
 
-        public Long getField() {
-            return field;
-        }
-
+    public Long getField() {
+      return field;
     }
+  }
 
-    @QueryEntity
-    public class EntityWithString extends EntityWithComparable {
-        private String field;
+  @QueryEntity
+  public class EntityWithString extends EntityWithComparable {
+    private String field;
 
-        public String getField() {
-            return field;
-        }
-
+    public String getField() {
+      return field;
     }
+  }
 
-    @Test
-    public void test() throws IllegalAccessException, NoSuchFieldException {
-        start(QInheritance4Test_EntityWithComparable.class, QInheritance4Test_EntityWithComparable.entityWithComparable);
-        match(SimplePath.class, "field");
-        matchType(Comparable.class, "field");
+  @Test
+  public void test() throws IllegalAccessException, NoSuchFieldException {
+    start(
+        QInheritance4Test_EntityWithComparable.class,
+        QInheritance4Test_EntityWithComparable.entityWithComparable);
+    match(SimplePath.class, "field");
+    matchType(Comparable.class, "field");
 
-        start(QInheritance4Test_EntityWithNumber.class, QInheritance4Test_EntityWithNumber.entityWithNumber);
-        match(NumberPath.class, "field");
-        matchType(Long.class, "field");
+    start(
+        QInheritance4Test_EntityWithNumber.class,
+        QInheritance4Test_EntityWithNumber.entityWithNumber);
+    match(NumberPath.class, "field");
+    matchType(Long.class, "field");
 
-        start(QInheritance4Test_EntityWithString.class, QInheritance4Test_EntityWithString.entityWithString);
-        match(StringPath.class, "field");
-        matchType(String.class, "field");
-
-    }
+    start(
+        QInheritance4Test_EntityWithString.class,
+        QInheritance4Test_EntityWithString.entityWithString);
+    match(StringPath.class, "field");
+    matchType(String.class, "field");
+  }
 }

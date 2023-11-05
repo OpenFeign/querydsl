@@ -17,25 +17,23 @@ package com.querydsl.sql.types;
  * Common abstract superclass for Type implementations
  *
  * @author tiwe
- *
  * @param <T>
  */
 public abstract class AbstractType<T> implements Type<T> {
 
-    private final int type;
+  private final int type;
 
-    public AbstractType(int type) {
-        this.type = type;
-    }
+  public AbstractType(int type) {
+    this.type = type;
+  }
 
-    @Override
-    public final int[] getSQLTypes() {
-        return new int[]{type};
-    }
+  @Override
+  public final int[] getSQLTypes() {
+    return new int[] {type};
+  }
 
-    @Override
-    public String getLiteral(T value) {
-        return value.toString();
-    }
-
+  @Override
+  public String getLiteral(T value) {
+    return value.toString();
+  }
 }

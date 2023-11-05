@@ -18,9 +18,8 @@ import org.junit.Ignore;
 @Ignore
 public class CUBRIDTemplatesTest extends AbstractSQLTemplatesTest {
 
-    @Override
-    protected SQLTemplates createTemplates() {
-        return new CUBRIDTemplates();
-    }
-
+  @Override
+  protected SQLTemplates createTemplates() {
+    return new CUBRIDTemplates();
+  }
 }

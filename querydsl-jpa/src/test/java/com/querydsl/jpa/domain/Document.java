@@ -14,20 +14,16 @@
 package com.querydsl.jpa.domain;
 
 import java.util.Date;
-
 import javax.persistence.*;
 
-/**
- * The Class Document.
- */
+/** The Class Document. */
 @Entity
 @Table(name = "document_")
 public class Document {
-    @Id
-    int id;
+  @Id int id;
 
-    String name;
+  String name;
 
-    @Temporal(TemporalType.DATE)
-    Date validTo;
+  @Temporal(TemporalType.DATE)
+  Date validTo;
 }

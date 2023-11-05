@@ -13,9 +13,6 @@
  */
 package com.querydsl.core.group;
 
-import java.util.NoSuchElementException;
-import java.util.Objects;
-
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Tuple;
@@ -23,94 +20,94 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.Projections;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Provides aggregated results as an iterator
  *
  * @author tiwe
- *
  * @param <K>
  * @param <V>
  */
 public class GroupByIterate<K, V> extends AbstractGroupByTransformer<K, CloseableIterator<V>> {
 
-    GroupByIterate(Expression<K> key, Expression<?>... expressions) {
-        super(key, expressions);
-    }
+  GroupByIterate(Expression<K> key, Expression<?>... expressions) {
+    super(key, expressions);
+  }
 
-    @Override
-    public CloseableIterator<V> transform(FetchableQuery<?,?> query) {
-        // create groups
-        FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-        boolean hasGroups = false;
-        for (Expression<?> e : expr.getArgs()) {
-            hasGroups |= e instanceof GroupExpression;
+  @Override
+  public CloseableIterator<V> transform(FetchableQuery<?, ?> query) {
+    // create groups
+    FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
+    boolean hasGroups = false;
+    for (Expression<?> e : expr.getArgs()) {
+      hasGroups |= e instanceof GroupExpression;
+    }
+    if (hasGroups) {
+      expr = withoutGroupExpressions(expr);
+    }
+    final CloseableIterator<Tuple> iter = query.select(expr).iterate();
+
+    return new CloseableIterator<V>() {
+
+      private GroupImpl group;
+
+      private K groupId;
+
+      @Override
+      public boolean hasNext() {
+        return group != null || iter.hasNext();
+      }
+
+      @Override
+      public V next() {
+        if (!iter.hasNext()) {
+          if (group != null) {
+            Group current = group;
+            group = null;
+            return transform(current);
+          } else {
+            throw new NoSuchElementException();
+          }
         }
-        if (hasGroups) {
-            expr = withoutGroupExpressions(expr);
+
+        while (iter.hasNext()) {
+          @SuppressWarnings("unchecked") // This type is mandated by the key type
+          K[] row = (K[]) iter.next().toArray();
+          if (group == null) {
+            group = new GroupImpl(groupExpressions, maps);
+            groupId = row[0];
+            group.add(row);
+          } else if (Objects.equals(groupId, row[0])) {
+            group.add(row);
+          } else {
+            Group current = group;
+            group = new GroupImpl(groupExpressions, maps);
+            groupId = row[0];
+            group.add(row);
+            return transform(current);
+          }
         }
-        final CloseableIterator<Tuple> iter = query.select(expr).iterate();
+        Group current = group;
+        group = null;
+        return transform(current);
+      }
 
-        return new CloseableIterator<V>() {
+      @Override
+      public void remove() {
+        throw new UnsupportedOperationException();
+      }
 
-            private GroupImpl group;
+      @Override
+      public void close() {
+        iter.close();
+      }
+    };
+  }
 
-            private K groupId;
-
-            @Override
-            public boolean hasNext() {
-                return group != null || iter.hasNext();
-            }
-
-            @Override
-            public V next() {
-                if (!iter.hasNext()) {
-                    if (group != null) {
-                        Group current = group;
-                        group = null;
-                        return transform(current);
-                    } else {
-                        throw new NoSuchElementException();
-                    }
-                }
-
-                while (iter.hasNext()) {
-                    @SuppressWarnings("unchecked") //This type is mandated by the key type
-                    K[] row = (K[]) iter.next().toArray();
-                    if (group == null) {
-                        group = new GroupImpl(groupExpressions, maps);
-                        groupId = row[0];
-                        group.add(row);
-                    } else if (Objects.equals(groupId, row[0])) {
-                        group.add(row);
-                    } else {
-                        Group current = group;
-                        group = new GroupImpl(groupExpressions, maps);
-                        groupId = row[0];
-                        group.add(row);
-                        return transform(current);
-                    }
-                }
-                Group current = group;
-                group = null;
-                return transform(current);
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public void close() {
-                iter.close();
-            }
-
-        };
-    }
-
-    @SuppressWarnings("unchecked")
-    protected V transform(Group group) {
-        return (V) group;
-    }
+  @SuppressWarnings("unchecked")
+  protected V transform(Group group) {
+    return (V) group;
+  }
 }

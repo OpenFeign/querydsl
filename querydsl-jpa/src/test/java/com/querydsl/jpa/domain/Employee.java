@@ -15,29 +15,22 @@ package com.querydsl.jpa.domain;
 
 import java.util.Collection;
 import java.util.HashSet;
-
 import javax.persistence.*;
 
-/**
- * The Class Employee.
- */
+/** The Class Employee. */
 @Entity
 @Table(name = "employee_")
 public class Employee {
-    @ManyToOne
-    public Company company;
+  @ManyToOne public Company company;
 
-    @OneToOne
-    public User user;
+  @OneToOne public User user;
 
-    public String firstName, lastName;
+  public String firstName, lastName;
 
-    @Id
-    public int id;
+  @Id public int id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "jobfunction")
-    @ElementCollection (fetch = FetchType.EAGER)
-    public Collection<JobFunction> jobFunctions = new HashSet<JobFunction>();
-
+  @Enumerated(EnumType.STRING)
+  @Column(name = "jobfunction")
+  @ElementCollection(fetch = FetchType.EAGER)
+  public Collection<JobFunction> jobFunctions = new HashSet<JobFunction>();
 }

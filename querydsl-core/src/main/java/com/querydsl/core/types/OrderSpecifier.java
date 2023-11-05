@@ -13,9 +13,8 @@
  */
 package com.querydsl.core.types;
 
-import java.io.Serializable;
-
 import com.querydsl.core.annotations.Immutable;
+import java.io.Serializable;
 
 /**
  * {@code OrderSpecifier} represents an order-by-element in a Query instance
@@ -26,104 +25,106 @@ import com.querydsl.core.annotations.Immutable;
 @Immutable
 public class OrderSpecifier<T extends Comparable> implements Serializable {
 
-    private static final long serialVersionUID = 3427652988262514678L;
+  private static final long serialVersionUID = 3427652988262514678L;
 
-    /**
-     * Behaviour for order of null values
-     */
-    public enum NullHandling { Default, NullsFirst, NullsLast }
+  /** Behaviour for order of null values */
+  public enum NullHandling {
+    Default,
+    NullsFirst,
+    NullsLast
+  }
 
-    private final Order order;
+  private final Order order;
 
-    private final Expression<T> target;
+  private final Expression<T> target;
 
-    private final NullHandling nullHandling;
+  private final NullHandling nullHandling;
 
-    public OrderSpecifier(Order order, Expression<T> target, NullHandling nullhandling) {
-        this.order = order;
-        this.target = target;
-        this.nullHandling = nullhandling;
+  public OrderSpecifier(Order order, Expression<T> target, NullHandling nullhandling) {
+    this.order = order;
+    this.target = target;
+    this.nullHandling = nullhandling;
+  }
+
+  public OrderSpecifier(Order order, Expression<T> target) {
+    this(order, target, NullHandling.Default);
+  }
+
+  /**
+   * Get the order of this specifier
+   *
+   * @return order
+   */
+  public Order getOrder() {
+    return order;
+  }
+
+  /**
+   * Get whether the order is ascending or not
+   *
+   * @return ascending order
+   */
+  public boolean isAscending() {
+    return order == Order.ASC;
+  }
+
+  /**
+   * Get the target expression of this OrderSpecifier
+   *
+   * @return target expression
+   */
+  public Expression<T> getTarget() {
+    return target;
+  }
+
+  /**
+   * Get the null handling
+   *
+   * @return null handling
+   */
+  public NullHandling getNullHandling() {
+    return nullHandling;
+  }
+
+  /**
+   * Create a new OrderSpecifier instance with null first enabled
+   *
+   * @return new instance with null first enabled
+   */
+  public OrderSpecifier<T> nullsFirst() {
+    return new OrderSpecifier<T>(order, target, NullHandling.NullsFirst);
+  }
+
+  /**
+   * Create a new OrderSpecifier instance with nulls last enabled
+   *
+   * @return new instance with nulls last enabled
+   */
+  public OrderSpecifier<T> nullsLast() {
+    return new OrderSpecifier<T>(order, target, NullHandling.NullsLast);
+  }
+
+  @Override
+  public String toString() {
+    return target + " " + order;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof OrderSpecifier) {
+      OrderSpecifier<?> os = (OrderSpecifier) o;
+      return os.order.equals(order)
+          && os.target.equals(target)
+          && os.nullHandling.equals(nullHandling);
+    } else {
+      return false;
     }
+  }
 
-    public OrderSpecifier(Order order, Expression<T> target) {
-        this(order, target, NullHandling.Default);
-    }
-
-    /**
-     * Get the order of this specifier
-     *
-     * @return order
-     */
-    public Order getOrder() {
-        return order;
-    }
-
-    /**
-     * Get whether the order is ascending or not
-     *
-     * @return ascending order
-     */
-    public boolean isAscending() {
-        return order == Order.ASC;
-    }
-
-    /**
-     * Get the target expression of this OrderSpecifier
-     *
-     * @return target expression
-     */
-    public Expression<T> getTarget() {
-        return target;
-    }
-
-    /**
-     * Get the null handling
-     *
-     * @return null handling
-     */
-    public NullHandling getNullHandling() {
-        return nullHandling;
-    }
-
-    /**
-     * Create a new OrderSpecifier instance with null first enabled
-     *
-     * @return new instance with null first enabled
-     */
-    public OrderSpecifier<T> nullsFirst() {
-        return new OrderSpecifier<T>(order, target, NullHandling.NullsFirst);
-    }
-
-    /**
-     * Create a new OrderSpecifier instance with nulls last enabled
-     *
-     * @return new instance with nulls last enabled
-     */
-    public OrderSpecifier<T> nullsLast() {
-        return new OrderSpecifier<T>(order, target, NullHandling.NullsLast);
-    }
-
-    @Override
-    public String toString() {
-        return target + " " + order;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof OrderSpecifier) {
-            OrderSpecifier<?> os = (OrderSpecifier) o;
-            return os.order.equals(order) && os.target.equals(target)
-                    && os.nullHandling.equals(nullHandling);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return target.hashCode();
-    }
-
+  @Override
+  public int hashCode() {
+    return target.hashCode();
+  }
 }

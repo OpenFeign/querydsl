@@ -15,32 +15,29 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
+import org.junit.Test;
 
 public class AnimalTest {
 
-    @QueryEntity
-    public static class Animal {
+  @QueryEntity
+  public static class Animal {
 
-        public String name;
+    public String name;
+  }
 
-    }
+  @QueryEntity
+  public static class Cat extends Animal {
 
-    @QueryEntity
-    public static class Cat extends Animal {
+    @QueryInit("name")
+    public Cat mate;
+  }
 
-        @QueryInit("name")
-        public Cat mate;
-
-    }
-
-    @Test
-    public void properties_are_copied_from_super() {
-        assertTrue("direct copy of StringPath field failed",  QAnimalTest_Cat.cat.name == QAnimalTest_Cat.cat._super.name);
-
-    }
-
+  @Test
+  public void properties_are_copied_from_super() {
+    assertTrue(
+        "direct copy of StringPath field failed",
+        QAnimalTest_Cat.cat.name == QAnimalTest_Cat.cat._super.name);
+  }
 }

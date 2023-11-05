@@ -17,47 +17,44 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
 import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code NumericBooleanType} maps Boolean to 1/0 (Integer) on the JDBC level
  *
  * @author tiwe
- *
  */
 public class NumericBooleanType extends AbstractType<Boolean> {
 
-    public static final NumericBooleanType DEFAULT = new NumericBooleanType();
+  public static final NumericBooleanType DEFAULT = new NumericBooleanType();
 
-    public NumericBooleanType() {
-        super(Types.INTEGER);
-    }
+  public NumericBooleanType() {
+    super(Types.INTEGER);
+  }
 
-    public NumericBooleanType(int type) {
-        super(type);
-    }
+  public NumericBooleanType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Boolean> getReturnedClass() {
-        return Boolean.class;
-    }
+  @Override
+  public Class<Boolean> getReturnedClass() {
+    return Boolean.class;
+  }
 
-    @Override
-    public String getLiteral(Boolean value) {
-        return value ? "1" : "0";
-    }
+  @Override
+  public String getLiteral(Boolean value) {
+    return value ? "1" : "0";
+  }
 
-    @Override
-    @Nullable
-    public Boolean getValue(ResultSet rs, int startIndex) throws SQLException {
-        Number num = (Number) rs.getObject(startIndex);
-        return num != null ? num.intValue() == 1 : null;
-    }
+  @Override
+  @Nullable
+  public Boolean getValue(ResultSet rs, int startIndex) throws SQLException {
+    Number num = (Number) rs.getObject(startIndex);
+    return num != null ? num.intValue() == 1 : null;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Boolean value) throws SQLException {
-        st.setInt(startIndex, value ? 1 : 0);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Boolean value) throws SQLException {
+    st.setInt(startIndex, value ? 1 : 0);
+  }
 }

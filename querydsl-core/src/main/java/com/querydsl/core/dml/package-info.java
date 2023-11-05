@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * DML interfaces
- */
+/** DML interfaces */
 package com.querydsl.core.dml;

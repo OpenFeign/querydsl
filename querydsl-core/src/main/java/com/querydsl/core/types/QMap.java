@@ -14,110 +14,104 @@
 package com.querydsl.core.types;
 
 import com.querydsl.core.util.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * {@code QMap} represents a projection of type Map
  *
- * <p>Usage example</p>
- * <pre>
- * {@code
+ * <p>Usage example
+ *
+ * <pre>{@code
  * List<Map<Expression<?>,?> result = query.from(employee).select(Projections.map(employee.firstName, employee.lastName)).fetch();
  * for (Tuple row : result) {
  *     System.out.println("firstName " + row.get(employee.firstName));
  *     System.out.println("lastName " + row.get(employee.lastName));
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * @author tiwe
- *
  */
-public class QMap extends FactoryExpressionBase<Map<Expression<?>,?>> {
+public class QMap extends FactoryExpressionBase<Map<Expression<?>, ?>> {
 
-    private static final long serialVersionUID = -7545994090073480810L;
+  private static final long serialVersionUID = -7545994090073480810L;
 
-    @Unmodifiable
-    private final List<Expression<?>> args;
+  @Unmodifiable private final List<Expression<?>> args;
 
-    /**
-     * Create a new QMap instance
-     *
-     * @param args
-     */
-    @SuppressWarnings("unchecked")
-    protected QMap(Expression<?>... args) {
-        super((Class) Map.class);
-        this.args = CollectionUtils.unmodifiableList(Arrays.asList(args));
+  /**
+   * Create a new QMap instance
+   *
+   * @param args
+   */
+  @SuppressWarnings("unchecked")
+  protected QMap(Expression<?>... args) {
+    super((Class) Map.class);
+    this.args = CollectionUtils.unmodifiableList(Arrays.asList(args));
+  }
+
+  /**
+   * Create a new QMap instance
+   *
+   * @param args
+   */
+  @SuppressWarnings("unchecked")
+  protected QMap(List<Expression<?>> args) {
+    super((Class) Map.class);
+    this.args = CollectionUtils.unmodifiableList(args);
+  }
+
+  /**
+   * Create a new QMap instance
+   *
+   * @param args
+   */
+  @SuppressWarnings("unchecked")
+  protected QMap(Expression<?>[]... args) {
+    super((Class) Map.class);
+    List<Expression<?>> builder = new ArrayList<>();
+    for (Expression<?>[] exprs : args) {
+      Collections.addAll(builder, exprs);
     }
+    this.args = CollectionUtils.unmodifiableList(builder);
+  }
 
-    /**
-     * Create a new QMap instance
-     *
-     * @param args
-     */
-    @SuppressWarnings("unchecked")
-    protected QMap(List<Expression<?>> args) {
-        super((Class) Map.class);
-        this.args = CollectionUtils.unmodifiableList(args);
+  @Override
+  @Nullable
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
+
+  @Override
+  @Unmodifiable
+  public List<Expression<?>> getArgs() {
+    return args;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    } else if (obj instanceof FactoryExpression) {
+      FactoryExpression<?> c = (FactoryExpression<?>) obj;
+      return args.equals(c.getArgs()) && getType().equals(c.getType());
+    } else {
+      return false;
     }
+  }
 
-    /**
-     * Create a new QMap instance
-     *
-     * @param args
-     */
-    @SuppressWarnings("unchecked")
-    protected QMap(Expression<?>[]... args) {
-        super((Class) Map.class);
-        List<Expression<?>> builder = new ArrayList<>();
-        for (Expression<?>[] exprs: args) {
-            Collections.addAll(builder, exprs);
-        }
-        this.args = CollectionUtils.unmodifiableList(builder);
+  @Override
+  @Nullable
+  public Map<Expression<?>, ?> newInstance(Object... args) {
+    Map<Expression<?>, Object> map = new HashMap<>();
+    for (int i = 0; i < args.length; i++) {
+      map.put(this.args.get(i), args[i]);
     }
-
-    @Override
-    @Nullable
-    public <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
-    }
-
-    @Override
-    @Unmodifiable
-    public List<Expression<?>> getArgs() {
-        return args;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof FactoryExpression) {
-            FactoryExpression<?> c = (FactoryExpression<?>) obj;
-            return args.equals(c.getArgs()) && getType().equals(c.getType());
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    @Nullable
-    public Map<Expression<?>, ?> newInstance(Object... args) {
-        Map<Expression<?>, Object> map = new HashMap<>();
-        for (int i = 0; i < args.length; i++) {
-            map.put(this.args.get(i), args[i]);
-        }
-        return map;
-    }
-
+    return map;
+  }
 }

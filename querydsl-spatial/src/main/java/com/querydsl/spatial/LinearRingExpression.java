@@ -13,23 +13,20 @@
  */
 package com.querydsl.spatial;
 
-import org.geolatte.geom.LineString;
-
 import com.querydsl.core.types.Expression;
+import org.geolatte.geom.LineString;
 
 /**
  * A LinearRing is a LineString that is both closed and simple.
  *
  * @author tiwe
- *
  * @param <T>
  */
 public abstract class LinearRingExpression<T extends LineString> extends LineStringExpression<T> {
 
-    private static final long serialVersionUID = -759466658721392938L;
+  private static final long serialVersionUID = -759466658721392938L;
 
-    public LinearRingExpression(Expression<T> mixin) {
-        super(mixin);
-    }
-
+  public LinearRingExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 }

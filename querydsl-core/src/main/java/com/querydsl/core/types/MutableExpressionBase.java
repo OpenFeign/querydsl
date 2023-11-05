@@ -13,37 +13,34 @@
  */
 package com.querydsl.core.types;
 
-
 /**
  * {@code MutableExpressionBase} is the base class for mutable Expression implementations
  *
  * @author tiwe
- *
  * @param <T>
  */
 public abstract class MutableExpressionBase<T> implements Expression<T> {
 
-    private static final long serialVersionUID = -6830426684911919114L;
+  private static final long serialVersionUID = -6830426684911919114L;
 
-    private final Class<? extends T> type;
+  private final Class<? extends T> type;
 
-    public MutableExpressionBase(Class<? extends T> type) {
-        this.type = type;
-    }
+  public MutableExpressionBase(Class<? extends T> type) {
+    this.type = type;
+  }
 
-    @Override
-    public final Class<? extends T> getType() {
-        return type;
-    }
+  @Override
+  public final Class<? extends T> getType() {
+    return type;
+  }
 
-    @Override
-    public final int hashCode() {
-        return accept(HashCodeVisitor.DEFAULT, null);
-    }
+  @Override
+  public final int hashCode() {
+    return accept(HashCodeVisitor.DEFAULT, null);
+  }
 
-    @Override
-    public final String toString() {
-        return accept(ToStringVisitor.DEFAULT, Templates.DEFAULT);
-    }
-
+  @Override
+  public final String toString() {
+    return accept(ToStringVisitor.DEFAULT, Templates.DEFAULT);
+  }
 }

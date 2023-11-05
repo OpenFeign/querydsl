@@ -20,35 +20,34 @@ import org.junit.Test;
 
 public class PathInitsTest {
 
-    @Test
-    public void defaultInits() {
-        assertFalse(PathInits.DEFAULT.isInitialized(""));
-    }
+  @Test
+  public void defaultInits() {
+    assertFalse(PathInits.DEFAULT.isInitialized(""));
+  }
 
-    @Test
-    public void isInitialized() {
-        PathInits inits = new PathInits(".2").get("");
-        assertFalse(inits.isInitialized("1"));
-        assertTrue(inits.isInitialized("2"));
-    }
+  @Test
+  public void isInitialized() {
+    PathInits inits = new PathInits(".2").get("");
+    assertFalse(inits.isInitialized("1"));
+    assertTrue(inits.isInitialized("2"));
+  }
 
-    @Test
-    public void wildcard() {
-        assertTrue(new PathInits("*").isInitialized(""));
-    }
+  @Test
+  public void wildcard() {
+    assertTrue(new PathInits("*").isInitialized(""));
+  }
 
-    @Test
-    public void wildcard2() {
-        PathInits inits = new PathInits(".*").get("");
-        assertTrue(inits.isInitialized("1"));
-        assertTrue(inits.isInitialized("2"));
-    }
+  @Test
+  public void wildcard2() {
+    PathInits inits = new PathInits(".*").get("");
+    assertTrue(inits.isInitialized("1"));
+    assertTrue(inits.isInitialized("2"));
+  }
 
-    @Test
-    public void deep_wildcard() {
-        PathInits inits = new PathInits("*.*").get("");
-        assertTrue(inits.isInitialized("1"));
-        assertTrue(inits.isInitialized("2"));
-    }
-
+  @Test
+  public void deep_wildcard() {
+    PathInits inits = new PathInits("*.*").get("");
+    assertTrue(inits.isInitialized("1"));
+    assertTrue(inits.isInitialized("2"));
+  }
 }

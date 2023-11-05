@@ -15,67 +15,71 @@ package com.querydsl.sql.oracle;
 
 import static org.junit.Assert.assertEquals;
 
+import com.querydsl.sql.OracleTemplates;
+import com.querydsl.sql.domain.QSurvey;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.querydsl.sql.OracleTemplates;
-import com.querydsl.sql.domain.QSurvey;
-
 public class OracleQueryTest {
 
-    private OracleQuery<?> query;
+  private OracleQuery<?> query;
 
-    private QSurvey survey = new QSurvey("survey");
+  private QSurvey survey = new QSurvey("survey");
 
-    @Before
-    public void setUp() {
-        query = new OracleQuery<Void>(null, OracleTemplates.builder().newLineToSingleSpace().build());
-        query.from(survey);
-        query.orderBy(survey.name.asc());
-    }
+  @Before
+  public void setUp() {
+    query = new OracleQuery<Void>(null, OracleTemplates.builder().newLineToSingleSpace().build());
+    query.from(survey);
+    query.orderBy(survey.name.asc());
+  }
 
-    @Test
-    public void connectByPrior() {
-        query.connectByPrior(survey.name.isNull());
-        assertEquals("from SURVEY survey connect by prior survey.NAME is null order by survey.NAME asc",
-                toString(query));
-    }
+  @Test
+  public void connectByPrior() {
+    query.connectByPrior(survey.name.isNull());
+    assertEquals(
+        "from SURVEY survey connect by prior survey.NAME is null order by survey.NAME asc",
+        toString(query));
+  }
 
-    @Test
-    public void connectBy() {
-        query.connectByPrior(survey.name.isNull());
-        assertEquals("from SURVEY survey connect by prior survey.NAME is null order by survey.NAME asc",
-                toString(query));
-    }
+  @Test
+  public void connectBy() {
+    query.connectByPrior(survey.name.isNull());
+    assertEquals(
+        "from SURVEY survey connect by prior survey.NAME is null order by survey.NAME asc",
+        toString(query));
+  }
 
-    @Test
-    public void connectByNocyclePrior() {
-        query.connectByNocyclePrior(survey.name.isNull());
-        assertEquals("from SURVEY survey connect by nocycle prior survey.NAME is null order by survey.NAME asc",
-                toString(query));
-    }
+  @Test
+  public void connectByNocyclePrior() {
+    query.connectByNocyclePrior(survey.name.isNull());
+    assertEquals(
+        "from SURVEY survey connect by nocycle prior survey.NAME is null order by survey.NAME asc",
+        toString(query));
+  }
 
-    @Test
-    public void startWith() {
-        query.startWith(survey.name.isNull());
-        assertEquals("from SURVEY survey start with survey.NAME is null order by survey.NAME asc",
-                toString(query));
-    }
+  @Test
+  public void startWith() {
+    query.startWith(survey.name.isNull());
+    assertEquals(
+        "from SURVEY survey start with survey.NAME is null order by survey.NAME asc",
+        toString(query));
+  }
 
-    @Test
-    public void orderSiblingsBy() {
-        query.orderSiblingsBy(survey.name);
-        assertEquals("from SURVEY survey order siblings by survey.NAME order by survey.NAME asc",
-                toString(query));
-    }
+  @Test
+  public void orderSiblingsBy() {
+    query.orderSiblingsBy(survey.name);
+    assertEquals(
+        "from SURVEY survey order siblings by survey.NAME order by survey.NAME asc",
+        toString(query));
+  }
 
-    @Test
-    public void rowNum() {
-        query.where(OracleGrammar.rownum.lt(5));
-        assertEquals("from SURVEY survey where rownum < ? order by survey.NAME asc", toString(query));
-    }
+  @Test
+  public void rowNum() {
+    query.where(OracleGrammar.rownum.lt(5));
+    assertEquals("from SURVEY survey where rownum < ? order by survey.NAME asc", toString(query));
+  }
 
-    private String toString(OracleQuery query) {
-        return query.toString().replace('\n', ' ');
-    }
+  private String toString(OracleQuery query) {
+    return query.toString().replace('\n', ' ');
+  }
 }

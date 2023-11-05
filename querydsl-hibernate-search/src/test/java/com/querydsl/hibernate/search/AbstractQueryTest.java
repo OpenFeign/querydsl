@@ -13,13 +13,13 @@
  */
 package com.querydsl.hibernate.search;
 
+import com.querydsl.core.util.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -30,59 +30,62 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import com.querydsl.core.util.FileUtils;
-
 public abstract class AbstractQueryTest {
 
-    private static SessionFactory sessionFactory;
+  private static SessionFactory sessionFactory;
 
-    @BeforeClass
-    public static void setUpClass() throws IOException {
-        FileUtils.delete(new File("target/derbydb"));
-        FileUtils.delete(new File("target/lucene3"));
-        Configuration cfg = new Configuration();
-        cfg.addAnnotatedClass(User.class);
-        Properties props = new Properties();
-        try (InputStream is = SearchQueryTest.class.getResourceAsStream("/derby.properties")) {
-            props.load(is);
-        }
-        cfg.setProperties(props);
-        sessionFactory = cfg.buildSessionFactory();
+  @BeforeClass
+  public static void setUpClass() throws IOException {
+    FileUtils.delete(new File("target/derbydb"));
+    FileUtils.delete(new File("target/lucene3"));
+    Configuration cfg = new Configuration();
+    cfg.addAnnotatedClass(User.class);
+    Properties props = new Properties();
+    try (InputStream is = SearchQueryTest.class.getResourceAsStream("/derby.properties")) {
+      props.load(is);
     }
+    cfg.setProperties(props);
+    sessionFactory = cfg.buildSessionFactory();
+  }
 
-    @AfterClass
-    public static void tearDownClass() {
-        if (sessionFactory != null) {
-            sessionFactory.close();
-        }
+  @AfterClass
+  public static void tearDownClass() {
+    if (sessionFactory != null) {
+      sessionFactory.close();
     }
+  }
 
-    private Session session;
+  private Session session;
 
-    protected Session getSession() {
-        return session;
+  protected Session getSession() {
+    return session;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Before
+  public void setUp() {
+    session = sessionFactory.openSession();
+    session.beginTransaction();
+
+    // clean up
+    List<User> users = session.createQuery("from User").list();
+    for (User user : users) {
+      session.delete(user);
     }
+    session.flush();
+  }
 
-    @SuppressWarnings("unchecked")
-    @Before
-    public void setUp() {
-        session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        // clean up
-        List<User> users = session.createQuery("from User").list();
-        for (User user : users) {
-            session.delete(user);
-        }
-        session.flush();
+  @After
+  public void tearDown() throws HibernateException, SQLException {
+    if (session
+        .getTransaction()
+        .getStatus()
+        .isNotOneOf(
+            TransactionStatus.ROLLED_BACK,
+            TransactionStatus.ROLLING_BACK,
+            TransactionStatus.MARKED_ROLLBACK)) {
+      session.getTransaction().commit();
     }
-
-    @After
-    public void tearDown() throws HibernateException, SQLException {
-        if (session.getTransaction().getStatus().isNotOneOf(TransactionStatus.ROLLED_BACK, TransactionStatus.ROLLING_BACK, TransactionStatus.MARKED_ROLLBACK)) {
-            session.getTransaction().commit();
-        }
-        session.close();
-    }
-
+    session.close();
+  }
 }

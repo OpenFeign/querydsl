@@ -15,46 +15,49 @@
  */
 package com.querydsl.mongodb.document;
 
-import java.util.Arrays;
-
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.mongodb.MongodbOps;
+import java.util.Arrays;
 
 /**
  * Mongodb Document-API-specific operations.
  *
  * @author tiwe
  * @author Mark Paluch
- *
  */
 public final class MongodbExpressions {
 
-    private MongodbExpressions() { }
+  private MongodbExpressions() {}
 
-    /**
-     * Finds the closest points relative to the given location and orders the results with decreasing proximity
-     *
-     * @param expr location
-     * @param latVal latitude
-     * @param longVal longitude
-     * @return predicate
-     */
-    public static BooleanExpression near(Expression<Double[]> expr, double latVal, double longVal) {
-        return Expressions.booleanOperation(MongodbOps.NEAR, expr, ConstantImpl.create(Arrays.asList(latVal, longVal)));
-    }
+  /**
+   * Finds the closest points relative to the given location and orders the results with decreasing
+   * proximity
+   *
+   * @param expr location
+   * @param latVal latitude
+   * @param longVal longitude
+   * @return predicate
+   */
+  public static BooleanExpression near(Expression<Double[]> expr, double latVal, double longVal) {
+    return Expressions.booleanOperation(
+        MongodbOps.NEAR, expr, ConstantImpl.create(Arrays.asList(latVal, longVal)));
+  }
 
-    /**
-     * Finds the closest points relative to the given location on a sphere and orders the results with decreasing proximity
-     *
-     * @param expr location
-     * @param latVal latitude
-     * @param longVal longitude
-     * @return predicate
-     */
-    public static BooleanExpression nearSphere(Expression<Double[]> expr, double latVal, double longVal) {
-        return Expressions.booleanOperation(MongodbOps.NEAR_SPHERE, expr, ConstantImpl.create(Arrays.asList(latVal, longVal)));
-    }
+  /**
+   * Finds the closest points relative to the given location on a sphere and orders the results with
+   * decreasing proximity
+   *
+   * @param expr location
+   * @param latVal latitude
+   * @param longVal longitude
+   * @return predicate
+   */
+  public static BooleanExpression nearSphere(
+      Expression<Double[]> expr, double latVal, double longVal) {
+    return Expressions.booleanOperation(
+        MongodbOps.NEAR_SPHERE, expr, ConstantImpl.create(Arrays.asList(latVal, longVal)));
+  }
 }

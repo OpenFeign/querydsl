@@ -18,40 +18,44 @@ import static org.junit.Assert.fail;
 
 public abstract class AbstractTest {
 
-    private Class<?> cl;
+  private Class<?> cl;
 
-    private com.querydsl.core.types.Expression<?> standardVariable;
+  private com.querydsl.core.types.Expression<?> standardVariable;
 
-    protected <T extends com.querydsl.core.types.Expression<?>> void start(Class<T> cl, T standardVariable) {
-        this.cl = cl;
-        this.standardVariable = standardVariable;
+  protected <T extends com.querydsl.core.types.Expression<?>> void start(
+      Class<T> cl, T standardVariable) {
+    this.cl = cl;
+    this.standardVariable = standardVariable;
+  }
 
+  protected void match(Class<?> expectedType, String name)
+      throws SecurityException, NoSuchFieldException {
+    assertTrue(
+        cl.getSimpleName() + "." + name + " failed",
+        expectedType.isAssignableFrom(cl.getField(name).getType()));
+  }
+
+  protected void matchType(Class<?> expectedType, String name)
+      throws NoSuchFieldException, IllegalAccessException {
+    Class<?> type =
+        ((com.querydsl.core.types.Expression) cl.getField(name).get(standardVariable)).getType();
+    assertTrue(cl.getSimpleName() + "." + name + " failed", expectedType.isAssignableFrom(type));
+  }
+
+  protected void assertPresent(String name) {
+    try {
+      cl.getField(name);
+    } catch (NoSuchFieldException e) {
+      fail("Expected present field : " + cl.getSimpleName() + "." + name);
     }
+  }
 
-    protected void match(Class<?> expectedType, String name) throws SecurityException, NoSuchFieldException {
-        assertTrue(cl.getSimpleName() + "." + name + " failed", expectedType.isAssignableFrom(cl.getField(name).getType()));
+  protected void assertMissing(String name) {
+    try {
+      cl.getField(name);
+      fail("Expected missing field : " + cl.getSimpleName() + "." + name);
+    } catch (NoSuchFieldException e) {
+      // expected
     }
-
-    protected void matchType(Class<?> expectedType, String name) throws NoSuchFieldException, IllegalAccessException {
-        Class<?> type = ((com.querydsl.core.types.Expression) cl.getField(name).get(standardVariable)).getType();
-        assertTrue(cl.getSimpleName() + "." + name + " failed", expectedType.isAssignableFrom(type));
-    }
-
-    protected void assertPresent(String name) {
-        try {
-            cl.getField(name);
-        } catch (NoSuchFieldException e) {
-            fail("Expected present field : " + cl.getSimpleName() + "." + name);
-        }
-    }
-
-    protected void assertMissing(String name) {
-        try {
-            cl.getField(name);
-            fail("Expected missing field : " + cl.getSimpleName() + "." + name);
-        } catch (NoSuchFieldException e) {
-            // expected
-        }
-    }
-
+  }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright 2010, Mysema Ltd
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,61 +19,60 @@ import java.util.Set;
 
 /**
  * TypeSuper is a Type for type variables and wildcard types
- * 
+ *
  * @author tiwe
- * 
  */
 public class TypeSuper extends TypeAdapter {
 
-    private final Type superType;
+  private final Type superType;
 
-    private final String varName;
+  private final String varName;
 
-    public TypeSuper(String varName, Type type) {
-        super(Types.OBJECT);
-        this.superType = type;
-        this.varName = varName;
+  public TypeSuper(String varName, Type type) {
+    super(Types.OBJECT);
+    this.superType = type;
+    this.varName = varName;
+  }
+
+  public TypeSuper(Type type) {
+    super(Types.OBJECT);
+    this.superType = type;
+    this.varName = null;
+  }
+
+  @Override
+  public String getGenericName(boolean asArgType) {
+    return getGenericName(
+        asArgType, Collections.<String>emptySet(), Collections.<String>emptySet());
+  }
+
+  @Override
+  public String getGenericName(boolean asArgType, Set<String> packages, Set<String> classes) {
+    if (!asArgType) {
+      if (superType instanceof TypeExtends) {
+        return "?";
+      } else {
+        return "? super " + superType.getGenericName(true, packages, classes);
+      }
+
+    } else {
+      return super.getGenericName(asArgType, packages, classes);
     }
+  }
 
-    public TypeSuper(Type type) {
-        super(Types.OBJECT);
-        this.superType = type;
-        this.varName = null;
-    }
+  public String getVarName() {
+    return varName;
+  }
 
-    @Override
-    public String getGenericName(boolean asArgType) {
-        return getGenericName(asArgType, Collections.<String> emptySet(),
-                Collections.<String> emptySet());
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof TypeSuper) {
+      return Objects.equals(((TypeSuper) o).varName, varName)
+          && ((TypeSuper) o).superType.equals(superType);
+    } else {
+      return false;
     }
-
-    @Override
-    public String getGenericName(boolean asArgType, Set<String> packages, Set<String> classes) {
-        if (!asArgType) {
-            if (superType instanceof TypeExtends) {
-                return "?";
-            } else {
-                return "? super " + superType.getGenericName(true, packages, classes);
-            }
-            
-        } else {
-            return super.getGenericName(asArgType, packages, classes);
-        }
-    }
-
-    public String getVarName() {
-        return varName;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof TypeSuper) {
-            return Objects.equals(((TypeSuper) o).varName, varName)
-                    && ((TypeSuper) o).superType.equals(superType);
-        } else {
-            return false;
-        }
-    }
+  }
 }

@@ -5,15 +5,13 @@ import com.querydsl.core.annotations.QueryEntity;
 @QueryEntity
 public class Subclass extends com.querydsl.core.domain.Superclass {
 
-    private int number;
+  private int number;
 
-    public int getNumber() {
-        return number;
-    }
+  public int getNumber() {
+    return number;
+  }
 
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-
+  public void setNumber(int number) {
+    this.number = number;
+  }
 }

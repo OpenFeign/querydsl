@@ -19,13 +19,8 @@ package com.querydsl.core.types;
  * @author tiwe
  */
 public enum Order {
-    /**
-     * Ascending order
-     */
-    ASC,
-    /**
-     * Descending order
-     */
-    DESC;
-
+  /** Ascending order */
+  ASC,
+  /** Descending order */
+  DESC;
 }

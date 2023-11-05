@@ -13,61 +13,59 @@
  */
 package com.querydsl.sql;
 
-import java.util.List;
-
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.SimpleExpression;
+import java.util.List;
 
 /**
  * Represents a table valued function call
  *
  * @author tiwe
- *
  * @param <T>
  */
-public class RelationalFunctionCall<T> extends SimpleExpression<T> implements TemplateExpression<T> {
+public class RelationalFunctionCall<T> extends SimpleExpression<T>
+    implements TemplateExpression<T> {
 
-    private static final long serialVersionUID = 256739044928186923L;
+  private static final long serialVersionUID = 256739044928186923L;
 
-    private static Template createTemplate(String function, int argCount) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(function);
-        builder.append("(");
-        for (int i = 0; i < argCount; i++) {
-            if (i > 0) {
-                builder.append(", ");
-            }
-            builder.append("{").append(i).append("}");
-        }
-        builder.append(")");
-        return TemplateFactory.DEFAULT.create(builder.toString());
+  private static Template createTemplate(String function, int argCount) {
+    StringBuilder builder = new StringBuilder();
+    builder.append(function);
+    builder.append("(");
+    for (int i = 0; i < argCount; i++) {
+      if (i > 0) {
+        builder.append(", ");
+      }
+      builder.append("{").append(i).append("}");
     }
+    builder.append(")");
+    return TemplateFactory.DEFAULT.create(builder.toString());
+  }
 
-    private final TemplateExpression<T> templateMixin;
+  private final TemplateExpression<T> templateMixin;
 
-    protected RelationalFunctionCall(Class<? extends T> type, String function, Object... args) {
-        super(ExpressionUtils.template(type, createTemplate(function, args.length), args));
-        templateMixin = (TemplateExpression<T>) mixin;
-    }
+  protected RelationalFunctionCall(Class<? extends T> type, String function, Object... args) {
+    super(ExpressionUtils.template(type, createTemplate(function, args.length), args));
+    templateMixin = (TemplateExpression<T>) mixin;
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(this, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
 
-    @Override
-    public Object getArg(int index) {
-        return templateMixin.getArg(index);
-    }
+  @Override
+  public Object getArg(int index) {
+    return templateMixin.getArg(index);
+  }
 
-    @Override
-    public List<?> getArgs() {
-        return templateMixin.getArgs();
-    }
+  @Override
+  public List<?> getArgs() {
+    return templateMixin.getArgs();
+  }
 
-    @Override
-    public Template getTemplate() {
-        return templateMixin.getTemplate();
-    }
-
+  @Override
+  public Template getTemplate() {
+    return templateMixin.getTemplate();
+  }
 }

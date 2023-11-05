@@ -21,142 +21,144 @@ import com.querydsl.core.types.Ops;
  * Extended String expressions, supported by the SQL module
  *
  * @author tiwe
- *
  */
 public final class StringExpressions {
 
-    /**
-     * Create a {@code ltrim(str)} expression
-     *
-     * <p>Returns a character expression after it removes leading blanks.</p>
-     *
-     * @param str string
-     * @return ltrim(str)
-     */
-    public static StringExpression ltrim(Expression<String> str) {
-        return Expressions.stringOperation(Ops.StringOps.LTRIM, str);
-    }
+  /**
+   * Create a {@code ltrim(str)} expression
+   *
+   * <p>Returns a character expression after it removes leading blanks.
+   *
+   * @param str string
+   * @return ltrim(str)
+   */
+  public static StringExpression ltrim(Expression<String> str) {
+    return Expressions.stringOperation(Ops.StringOps.LTRIM, str);
+  }
 
-    /**
-     * Create a {@code rtrim(str)} expression
-     *
-     * <p>Returns a character string after truncating all trailing blanks.</p>
-     *
-     * @param str string
-     * @return rtrim(str)
-     */
-    public static StringExpression rtrim(Expression<String> str) {
-        return Expressions.stringOperation(Ops.StringOps.RTRIM, str);
-    }
+  /**
+   * Create a {@code rtrim(str)} expression
+   *
+   * <p>Returns a character string after truncating all trailing blanks.
+   *
+   * @param str string
+   * @return rtrim(str)
+   */
+  public static StringExpression rtrim(Expression<String> str) {
+    return Expressions.stringOperation(Ops.StringOps.RTRIM, str);
+  }
 
-    /**
-     * Create a {@code lpad(in, length)} expression
-     *
-     * <p>Returns in left-padded to length characters</p>
-     *
-     * @param in string to be padded
-     * @param length target length
-     * @return lpad(in, length)
-     */
-    public static StringExpression lpad(Expression<String> in, int length) {
-        return Expressions.stringOperation(Ops.StringOps.LPAD, in, ConstantImpl.create(length));
-    }
+  /**
+   * Create a {@code lpad(in, length)} expression
+   *
+   * <p>Returns in left-padded to length characters
+   *
+   * @param in string to be padded
+   * @param length target length
+   * @return lpad(in, length)
+   */
+  public static StringExpression lpad(Expression<String> in, int length) {
+    return Expressions.stringOperation(Ops.StringOps.LPAD, in, ConstantImpl.create(length));
+  }
 
-    /**
-     * Create a {@code lpad(in, length)} expression
-     *
-     * <p>Returns in left-padded to length characters</p>
-     *
-     * @param in string to be padded
-     * @param length target length
-     * @return lpad(in, length)
-     */
-    public static StringExpression lpad(Expression<String> in, Expression<Integer> length) {
-        return Expressions.stringOperation(Ops.StringOps.LPAD, in, length);
-    }
+  /**
+   * Create a {@code lpad(in, length)} expression
+   *
+   * <p>Returns in left-padded to length characters
+   *
+   * @param in string to be padded
+   * @param length target length
+   * @return lpad(in, length)
+   */
+  public static StringExpression lpad(Expression<String> in, Expression<Integer> length) {
+    return Expressions.stringOperation(Ops.StringOps.LPAD, in, length);
+  }
 
-    /**
-     * Create a {@code rpad(in, length)} expression
-     *
-     * <p>Returns in right-padded to length characters</p>
-     *
-     * @param in string to be padded
-     * @param length target length
-     * @return rpad(in, length)
-     */
-    public static StringExpression rpad(Expression<String> in, int length) {
-        return Expressions.stringOperation(Ops.StringOps.RPAD, in, ConstantImpl.create(length));
-    }
+  /**
+   * Create a {@code rpad(in, length)} expression
+   *
+   * <p>Returns in right-padded to length characters
+   *
+   * @param in string to be padded
+   * @param length target length
+   * @return rpad(in, length)
+   */
+  public static StringExpression rpad(Expression<String> in, int length) {
+    return Expressions.stringOperation(Ops.StringOps.RPAD, in, ConstantImpl.create(length));
+  }
 
-    /**
-     * Create a {@code rpad(in, length)} expression
-     *
-     * <p>Returns in right-padded to length characters</p>
-     *
-     * @param in string to be padded
-     * @param length target length
-     * @return rpad(in, length)
-     */
-    public static StringExpression rpad(Expression<String> in, Expression<Integer> length) {
-        return Expressions.stringOperation(Ops.StringOps.RPAD, in, length);
-    }
+  /**
+   * Create a {@code rpad(in, length)} expression
+   *
+   * <p>Returns in right-padded to length characters
+   *
+   * @param in string to be padded
+   * @param length target length
+   * @return rpad(in, length)
+   */
+  public static StringExpression rpad(Expression<String> in, Expression<Integer> length) {
+    return Expressions.stringOperation(Ops.StringOps.RPAD, in, length);
+  }
 
-    /**
-     * Create a {@code lpad(in, length, c)} expression
-     *
-     * <p>Returns in left-padded to length characters with c</p>
-     *
-     * @param in string to be padded
-     * @param length target length
-     * @param c padding char
-     * @return lpad(in, length, c)
-     */
-    public static StringExpression lpad(Expression<String> in, NumberExpression<Integer> length, char c) {
-        return Expressions.stringOperation(Ops.StringOps.LPAD2, in, length, ConstantImpl.create(c));
-    }
+  /**
+   * Create a {@code lpad(in, length, c)} expression
+   *
+   * <p>Returns in left-padded to length characters with c
+   *
+   * @param in string to be padded
+   * @param length target length
+   * @param c padding char
+   * @return lpad(in, length, c)
+   */
+  public static StringExpression lpad(
+      Expression<String> in, NumberExpression<Integer> length, char c) {
+    return Expressions.stringOperation(Ops.StringOps.LPAD2, in, length, ConstantImpl.create(c));
+  }
 
-    /**
-     * Create a {@code lpad(in, length, c)} expression
-     *
-     * <p>Returns in left-padded to length characters with c</p>
-     *
-     * @param in string to be padded
-     * @param length target length
-     * @param c padding char
-     * @return lpad(in, length, c)
-     */
-    public static StringExpression lpad(Expression<String> in, int length, char c) {
-        return Expressions.stringOperation(Ops.StringOps.LPAD2, in, ConstantImpl.create(length), ConstantImpl.create(c));
-    }
+  /**
+   * Create a {@code lpad(in, length, c)} expression
+   *
+   * <p>Returns in left-padded to length characters with c
+   *
+   * @param in string to be padded
+   * @param length target length
+   * @param c padding char
+   * @return lpad(in, length, c)
+   */
+  public static StringExpression lpad(Expression<String> in, int length, char c) {
+    return Expressions.stringOperation(
+        Ops.StringOps.LPAD2, in, ConstantImpl.create(length), ConstantImpl.create(c));
+  }
 
-    /**
-     * Create a {@code rpad(in, length, c)} expression
-     *
-     * <p>Returns in right-padded to length characters with c</p>
-     *
-     * @param in string to be padded
-     * @param length target length
-     * @param c padding char
-     * @return rpad(in, length, c)
-     */
-    public static StringExpression rpad(Expression<String> in, NumberExpression<Integer> length, char c) {
-        return Expressions.stringOperation(Ops.StringOps.RPAD2, in, length, ConstantImpl.create(c));
-    }
+  /**
+   * Create a {@code rpad(in, length, c)} expression
+   *
+   * <p>Returns in right-padded to length characters with c
+   *
+   * @param in string to be padded
+   * @param length target length
+   * @param c padding char
+   * @return rpad(in, length, c)
+   */
+  public static StringExpression rpad(
+      Expression<String> in, NumberExpression<Integer> length, char c) {
+    return Expressions.stringOperation(Ops.StringOps.RPAD2, in, length, ConstantImpl.create(c));
+  }
 
-    /**
-     * Create a {@code rpad(in, length, c)} expression
-     *
-     * <p>Returns in right-padded to length characters with c</p>
-     *
-     * @param in string to be padded
-     * @param length target length
-     * @param c padding char
-     * @return rpad(in, length, c)
-     */
-    public static StringExpression rpad(Expression<String> in, int length, char c) {
-        return Expressions.stringOperation(Ops.StringOps.RPAD2, in, ConstantImpl.create(length), ConstantImpl.create(c));
-    }
+  /**
+   * Create a {@code rpad(in, length, c)} expression
+   *
+   * <p>Returns in right-padded to length characters with c
+   *
+   * @param in string to be padded
+   * @param length target length
+   * @param c padding char
+   * @return rpad(in, length, c)
+   */
+  public static StringExpression rpad(Expression<String> in, int length, char c) {
+    return Expressions.stringOperation(
+        Ops.StringOps.RPAD2, in, ConstantImpl.create(length), ConstantImpl.create(c));
+  }
 
-    private StringExpressions() { }
-
+  private StringExpressions() {}
 }

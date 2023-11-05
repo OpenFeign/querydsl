@@ -15,33 +15,30 @@ package com.querydsl.core.types.dsl;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QTuple;
+import org.junit.Test;
 
 public class QTupleTest {
 
-    private StringPath first = new StringPath("x");
+  private StringPath first = new StringPath("x");
 
-    private NumberPath<Integer> second = new NumberPath<Integer>(Integer.class,"y");
+  private NumberPath<Integer> second = new NumberPath<Integer>(Integer.class, "y");
 
-    private BooleanPath third = new BooleanPath("z");
+  private BooleanPath third = new BooleanPath("z");
 
-    private QTuple tupleExpression = Projections.tuple(first, second, third);
+  private QTuple tupleExpression = Projections.tuple(first, second, third);
 
-    @Test
-    public void newInstanceObjectArray() {
-        Tuple tuple = tupleExpression.newInstance("1", 42, true);
-        assertEquals(3, tuple.size());
-        assertEquals("1", tuple.get(0, String.class));
-        assertEquals(Integer.valueOf(42), tuple.get(1, Integer.class));
-        assertEquals(Boolean.TRUE, tuple.get(2, Boolean.class));
-        assertEquals("1", tuple.get(first));
-        assertEquals(Integer.valueOf(42), tuple.get(second));
-        assertEquals(Boolean.TRUE, tuple.get(third));
-
-    }
-
+  @Test
+  public void newInstanceObjectArray() {
+    Tuple tuple = tupleExpression.newInstance("1", 42, true);
+    assertEquals(3, tuple.size());
+    assertEquals("1", tuple.get(0, String.class));
+    assertEquals(Integer.valueOf(42), tuple.get(1, Integer.class));
+    assertEquals(Boolean.TRUE, tuple.get(2, Boolean.class));
+    assertEquals("1", tuple.get(first));
+    assertEquals(Integer.valueOf(42), tuple.get(second));
+    assertEquals(Boolean.TRUE, tuple.get(third));
+  }
 }

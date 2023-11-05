@@ -14,25 +14,24 @@
 package com.querydsl.jpa.domain;
 
 import java.util.List;
-
 import javax.persistence.*;
 
-/**
- * The Class Foo.
- */
+/** The Class Foo. */
 @Entity
 @Table(name = "foo_")
 public class Foo {
-    public String bar;
+  public String bar;
 
-    @Id
-    //@GeneratedValue(strategy=GenerationType.AUTO)
-    public int id;
+  @Id
+  // @GeneratedValue(strategy=GenerationType.AUTO)
+  public int id;
 
-    @ElementCollection
-    @CollectionTable(name = "foo_names", joinColumns = {@JoinColumn(name = "foo_id")})
-    public List<String> names;
+  @ElementCollection
+  @CollectionTable(
+      name = "foo_names",
+      joinColumns = {@JoinColumn(name = "foo_id")})
+  public List<String> names;
 
-    @Temporal(TemporalType.DATE)
-    public java.util.Date startDate;
+  @Temporal(TemporalType.DATE)
+  public java.util.Date startDate;
 }

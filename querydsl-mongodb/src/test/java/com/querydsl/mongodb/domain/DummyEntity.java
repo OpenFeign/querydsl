@@ -19,15 +19,14 @@ import org.mongodb.morphia.annotations.Property;
 @Entity
 public class DummyEntity extends AbstractEntity {
 
-    @Property("prop")
-    private String property;
+  @Property("prop")
+  private String property;
 
-    public String getProperty() {
-        return property;
-    }
+  public String getProperty() {
+    return property;
+  }
 
-    public void setProperty(String property) {
-        this.property = property;
-    }
-
+  public void setProperty(String property) {
+    this.property = property;
+  }
 }

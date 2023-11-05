@@ -13,19 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import static org.junit.Assert.assertEquals;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.testutil.ExcludeIn;
@@ -38,123 +26,129 @@ import com.querydsl.jpa.domain.sql.SAnimal;
 import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
 import com.querydsl.sql.SQLTemplates;
-
-import static org.junit.Assert.assertEquals;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.runner.RunWith;
 
 @RunWith(JPATestRunner.class)
 public class JPASQLBase extends AbstractSQLTest implements JPATest {
 
-    @Rule
-    @ClassRule
-    public static TestRule targetRule = new TargetRule();
+  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
 
-    @Rule
-    @ClassRule
-    public static TestRule hibernateOnly = new JPAProviderRule();
+  @Rule @ClassRule public static TestRule hibernateOnly = new JPAProviderRule();
 
-    private final SQLTemplates templates = Mode.getSQLTemplates();
+  private final SQLTemplates templates = Mode.getSQLTemplates();
 
-    private EntityManager entityManager;
+  private EntityManager entityManager;
 
-    private final SAnimal cat = new SAnimal("cat");
-    private final QCat catEntity = QCat.cat;
+  private final SAnimal cat = new SAnimal("cat");
+  private final QCat catEntity = QCat.cat;
 
-    @Override
-    protected JPASQLQuery<?> query() {
-        return new JPASQLQuery<Void>(entityManager, templates);
+  @Override
+  protected JPASQLQuery<?> query() {
+    return new JPASQLQuery<Void>(entityManager, templates);
+  }
+
+  @Override
+  public void setEntityManager(EntityManager entityManager) {
+    this.entityManager = entityManager;
+  }
+
+  @Before
+  public void setUp() {
+    if (query().from(cat).fetchCount() == 0) {
+      entityManager.persist(new Cat("Beck", 1, Color.BLACK));
+      entityManager.persist(new Cat("Kate", 2, Color.BLACK));
+      entityManager.persist(new Cat("Kitty", 3, Color.BLACK));
+      entityManager.persist(new Cat("Bobby", 4, Color.BLACK));
+      entityManager.persist(new Cat("Harold", 5, Color.BLACK));
+      entityManager.persist(new Cat("Tim", 6, Color.BLACK));
+      entityManager.flush();
     }
+  }
 
-    @Override
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+  private <T> void insertEntitiesForTest(final List<T> entities) {
+    for (T entity : entities) {
+      entityManager.persist(entity);
     }
+    entityManager.flush();
+  }
 
-    @Before
-    public void setUp() {
-        if (query().from(cat).fetchCount() == 0) {
-            entityManager.persist(new Cat("Beck", 1, Color.BLACK));
-            entityManager.persist(new Cat("Kate", 2, Color.BLACK));
-            entityManager.persist(new Cat("Kitty", 3, Color.BLACK));
-            entityManager.persist(new Cat("Bobby", 4, Color.BLACK));
-            entityManager.persist(new Cat("Harold", 5, Color.BLACK));
-            entityManager.persist(new Cat("Tim", 6, Color.BLACK));
-            entityManager.flush();
-        }
+  private <T> void removeEntitiesForTest(final List<T> entities) {
+    for (T entity : entities) {
+      entityManager.remove(entity);
     }
+    entityManager.flush();
+  }
 
-    private <T> void insertEntitiesForTest(final List<T> entities) {
-        for (T entity: entities) {
-            entityManager.persist(entity);
-        }
-        entityManager.flush();
-    }
+  @Test
+  public void entityQueries_createQuery() {
+    Query query = query().from(cat).select(catEntity).createQuery();
+    assertEquals(6, query.getResultList().size());
+  }
 
-    private <T> void removeEntitiesForTest(final List<T> entities) {
-        for (T entity: entities) {
-            entityManager.remove(entity);
-        }
-        entityManager.flush();
-    }
+  @Test
+  @ExcludeIn(Target.MYSQL)
+  public void entityQueries_createQuery2() {
+    SAnimal cat = new SAnimal("CAT");
 
-    @Test
-    public void entityQueries_createQuery() {
-        Query query = query().from(cat).select(catEntity).createQuery();
-        assertEquals(6, query.getResultList().size());
-    }
+    Query query = query().from(cat).select(catEntity).createQuery();
+    assertEquals(6, query.getResultList().size());
+  }
 
-    @Test
-    @ExcludeIn(Target.MYSQL)
-    public void entityQueries_createQuery2() {
-        SAnimal cat = new SAnimal("CAT");
+  @Test
+  public void should_fetch_results_with_factory_expression() {
+    final long expectedTotalResultCount = 6;
+    final HashMap<String, Expression<?>> bindings = new HashMap<String, Expression<?>>();
+    bindings.put("name", cat.name);
 
-        Query query = query().from(cat).select(catEntity).createQuery();
-        assertEquals(6, query.getResultList().size());
-    }
+    final long actualTotalResultCount =
+        query().from(cat).select(Projections.bean(Cat.class, bindings)).fetchResults().getTotal();
 
-    @Test
-    public void should_fetch_results_with_factory_expression() {
-        final long expectedTotalResultCount = 6;
-        final HashMap<String, Expression<?>> bindings = new HashMap<String, Expression<?>>();
-        bindings.put("name", cat.name);
+    assertEquals(expectedTotalResultCount, actualTotalResultCount);
+  }
 
-        final long actualTotalResultCount = query().from(cat)
-                                                   .select(Projections.bean(Cat.class, bindings))
-                                                   .fetchResults()
-                                                   .getTotal();
+  @Test
+  public void should_get_grouped_list_by_using_fetch_results() {
+    final long expectedCatColorKindCount = 1;
 
-        assertEquals(expectedTotalResultCount, actualTotalResultCount);
-    }
+    final long actualCatColorKindCount =
+        query()
+            .from(cat)
+            .select(catEntity.color)
+            .groupBy(catEntity.color)
+            .fetchResults()
+            .getTotal();
 
-    @Test
-    public void should_get_grouped_list_by_using_fetch_results() {
-        final long expectedCatColorKindCount = 1;
+    assertEquals(expectedCatColorKindCount, actualCatColorKindCount);
+  }
 
-        final long actualCatColorKindCount = query().from(cat)
-                                                    .select(catEntity.color)
-                                                    .groupBy(catEntity.color)
-                                                    .fetchResults()
-                                                    .getTotal();
+  @Test
+  public void should_get_black_cat_count_by_using_group_by_and_having() {
+    final long expectedTabbyCatCount = 2L;
+    final Cat tabbyColorCatFoo = new Cat("Foo", 7, Color.TABBY);
+    final Cat tabbyColorCatBar = new Cat("Bar", 8, Color.TABBY);
 
-        assertEquals(expectedCatColorKindCount, actualCatColorKindCount);
-    }
+    insertEntitiesForTest(Arrays.asList(tabbyColorCatFoo, tabbyColorCatBar));
 
-    @Test
-    public void should_get_black_cat_count_by_using_group_by_and_having() {
-        final long expectedTabbyCatCount = 2L;
-        final Cat tabbyColorCatFoo = new Cat("Foo", 7, Color.TABBY);
-        final Cat tabbyColorCatBar = new Cat("Bar", 8, Color.TABBY);
+    final long actualTabbyCatCount =
+        query()
+            .from(cat)
+            .select(catEntity.name.count())
+            .groupBy(catEntity.color)
+            .having(catEntity.name.count().eq(2L))
+            .fetchOne();
 
-        insertEntitiesForTest(Arrays.asList(tabbyColorCatFoo, tabbyColorCatBar));
+    removeEntitiesForTest(Arrays.asList(tabbyColorCatFoo, tabbyColorCatBar));
 
-        final long actualTabbyCatCount = query().from(cat)
-                                                .select(catEntity.name.count())
-                                                .groupBy(catEntity.color)
-                                                .having(catEntity.name.count().eq(2L))
-                                                .fetchOne();
-
-        removeEntitiesForTest(Arrays.asList(tabbyColorCatFoo, tabbyColorCatBar));
-
-        assertEquals(expectedTabbyCatCount, actualTabbyCatCount);
-    }
-
+    assertEquals(expectedTabbyCatCount, actualTabbyCatCount);
+  }
 }

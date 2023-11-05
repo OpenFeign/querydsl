@@ -13,11 +13,11 @@
  */
 package com.querydsl.codegen;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 
 /**
  * creates files with {@link javax.annotation.processing.Filer}.
@@ -25,8 +25,15 @@ import java.util.Collection;
  * @author f43nd1r
  */
 public class DefaultFiler implements Filer {
-    @Override
-    public Writer createFile(ProcessingEnvironment processingEnvironment, String classname, Collection<? extends Element> elements) throws IOException {
-        return processingEnvironment.getFiler().createSourceFile(classname, elements.toArray(new Element[0])).openWriter();
-    }
+  @Override
+  public Writer createFile(
+      ProcessingEnvironment processingEnvironment,
+      String classname,
+      Collection<? extends Element> elements)
+      throws IOException {
+    return processingEnvironment
+        .getFiler()
+        .createSourceFile(classname, elements.toArray(new Element[0]))
+        .openWriter();
+  }
 }

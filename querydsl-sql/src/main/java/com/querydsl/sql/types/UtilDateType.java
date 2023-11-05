@@ -23,36 +23,34 @@ import java.util.Date;
  * {@code UtilDateType} maps Date to Timestamp on the JDBC level
  *
  * @author tiwe
- *
  */
 public class UtilDateType extends AbstractDateTimeType<Date> {
 
-    public UtilDateType() {
-        super(Types.TIMESTAMP);
-    }
+  public UtilDateType() {
+    super(Types.TIMESTAMP);
+  }
 
-    public UtilDateType(int type) {
-        super(type);
-    }
+  public UtilDateType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getLiteral(Date value) {
-        return dateTimeFormatter.format(new java.sql.Timestamp(value.getTime()).toLocalDateTime());
-    }
+  @Override
+  public String getLiteral(Date value) {
+    return dateTimeFormatter.format(new java.sql.Timestamp(value.getTime()).toLocalDateTime());
+  }
 
-    @Override
-    public Date getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getTimestamp(startIndex);
-    }
+  @Override
+  public Date getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getTimestamp(startIndex);
+  }
 
-    @Override
-    public Class<Date> getReturnedClass() {
-        return Date.class;
-    }
+  @Override
+  public Class<Date> getReturnedClass() {
+    return Date.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Date value) throws SQLException {
-        st.setTimestamp(startIndex, new java.sql.Timestamp(value.getTime()));
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Date value) throws SQLException {
+    st.setTimestamp(startIndex, new java.sql.Timestamp(value.getTime()));
+  }
 }

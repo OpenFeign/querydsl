@@ -25,18 +25,16 @@ import java.lang.annotation.Target;
  * Defines the related SQL table column for a property
  *
  * @author tiwe
- *
  */
 @Documented
-@Target({FIELD,METHOD})
+@Target({FIELD, METHOD})
 @Retention(RUNTIME)
 public @interface Column {
 
-    /**
-     * Get the column name
-     *
-     * @return column name
-     */
-    String value();
-
+  /**
+   * Get the column name
+   *
+   * @return column name
+   */
+  String value();
 }

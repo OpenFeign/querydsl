@@ -6,6 +6,5 @@ import javax.persistence.Id;
 @Entity
 public class MyOtherEntity {
 
-    @Id
-    private int id;
+  @Id private int id;
 }

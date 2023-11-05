@@ -15,28 +15,25 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.TemplateFactory;
 import com.querydsl.core.types.dsl.StringTemplate;
-
 import java.util.Arrays;
+import org.junit.Test;
 
 public class CustomExpressionsTest extends AbstractQueryTest {
 
-    public static class MyCustomExpr extends StringTemplate {
+  public static class MyCustomExpr extends StringTemplate {
 
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-        public MyCustomExpr(Expression<?>... args) {
-            super(TemplateFactory.DEFAULT.create("myCustom({0},{1})"), Arrays.asList(args));
-        }
+    public MyCustomExpr(Expression<?>... args) {
+      super(TemplateFactory.DEFAULT.create("myCustom({0},{1})"), Arrays.asList(args));
     }
+  }
 
-    @Test
-    public void customExpressions() {
-        assertToString("myCustom(cust,cat)", new MyCustomExpr(cust, cat));
-    }
-
+  @Test
+  public void customExpressions() {
+    assertToString("myCustom(cust,cat)", new MyCustomExpr(cust, cat));
+  }
 }

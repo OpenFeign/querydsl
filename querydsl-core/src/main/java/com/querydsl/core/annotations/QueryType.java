@@ -24,15 +24,12 @@ import java.lang.annotation.Target;
  * QueryType defines the Querydsl property type for a Domain property
  *
  * @author tiwe
- *
  */
 @Documented
-@Target({FIELD,METHOD,PARAMETER})
+@Target({FIELD, METHOD, PARAMETER})
 @Retention(RUNTIME)
 public @interface QueryType {
 
-    /**
-     * property type override
-     */
-    PropertyType value();
+  /** property type override */
+  PropertyType value();
 }

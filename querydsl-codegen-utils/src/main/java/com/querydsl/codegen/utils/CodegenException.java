@@ -1,6 +1,6 @@
 /*
  * Copyright 2010, Mysema Ltd
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,21 +15,20 @@ package com.querydsl.codegen.utils;
 
 /**
  * @author tiwe
- * 
  */
 public class CodegenException extends RuntimeException {
 
-    private static final long serialVersionUID = -8704782349669898467L;
+  private static final long serialVersionUID = -8704782349669898467L;
 
-    public CodegenException(String msg) {
-        super(msg);
-    }
+  public CodegenException(String msg) {
+    super(msg);
+  }
 
-    public CodegenException(String msg, Throwable t) {
-        super(msg, t);
-    }
+  public CodegenException(String msg, Throwable t) {
+    super(msg, t);
+  }
 
-    public CodegenException(Throwable t) {
-        super(t);
-    }
+  public CodegenException(Throwable t) {
+    super(t);
+  }
 }

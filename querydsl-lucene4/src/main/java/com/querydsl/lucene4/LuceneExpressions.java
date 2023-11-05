@@ -13,62 +13,61 @@
  */
 package com.querydsl.lucene4;
 
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.util.automaton.LevenshteinAutomata;
-
-import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.BooleanExpression;
 
 /**
  * Utility methods to create filter expressions for Lucene queries that are not covered by the
  * Querydsl standard expression model
  *
  * @author tiwe
- *
  */
 public final class LuceneExpressions {
 
-    /**
-     * Create a fuzzy query
-     *
-     * @param path path
-     * @param value value to match
-     * @return condition
-     */
-    public static BooleanExpression fuzzyLike(Path<String> path, String value) {
-        Term term = new Term(path.getMetadata().getName(), value);
-        return new QueryElement(new FuzzyQuery(term));
-    }
+  /**
+   * Create a fuzzy query
+   *
+   * @param path path
+   * @param value value to match
+   * @return condition
+   */
+  public static BooleanExpression fuzzyLike(Path<String> path, String value) {
+    Term term = new Term(path.getMetadata().getName(), value);
+    return new QueryElement(new FuzzyQuery(term));
+  }
 
-    /**
-     * Create a fuzzy query
-     *
-     * @param path path
-     * @param value value to match
-     * @param maxEdits must be &gt;= 0 and &lt;= {@link LevenshteinAutomata#MAXIMUM_SUPPORTED_DISTANCE}.
-     * @return condition
-     */
-    public static BooleanExpression fuzzyLike(Path<String> path, String value, int maxEdits) {
-        Term term = new Term(path.getMetadata().getName(), value);
-        return new QueryElement(new FuzzyQuery(term, maxEdits));
-    }
+  /**
+   * Create a fuzzy query
+   *
+   * @param path path
+   * @param value value to match
+   * @param maxEdits must be &gt;= 0 and &lt;= {@link
+   *     LevenshteinAutomata#MAXIMUM_SUPPORTED_DISTANCE}.
+   * @return condition
+   */
+  public static BooleanExpression fuzzyLike(Path<String> path, String value, int maxEdits) {
+    Term term = new Term(path.getMetadata().getName(), value);
+    return new QueryElement(new FuzzyQuery(term, maxEdits));
+  }
 
-    /**
-     * Create a fuzzy query
-     *
-     * @param path path
-     * @param value value to match
-     * @param maxEdits must be &gt;= 0 and &lt;= {@link LevenshteinAutomata#MAXIMUM_SUPPORTED_DISTANCE}.
-     * @param prefixLength length of common (non-fuzzy) prefix
-     * @return condition
-     */
-    public static BooleanExpression fuzzyLike(Path<String> path, String value,
-            int maxEdits, int prefixLength) {
-        Term term = new Term(path.getMetadata().getName(), value);
-        return new QueryElement(new FuzzyQuery(term, maxEdits, prefixLength));
-    }
+  /**
+   * Create a fuzzy query
+   *
+   * @param path path
+   * @param value value to match
+   * @param maxEdits must be &gt;= 0 and &lt;= {@link
+   *     LevenshteinAutomata#MAXIMUM_SUPPORTED_DISTANCE}.
+   * @param prefixLength length of common (non-fuzzy) prefix
+   * @return condition
+   */
+  public static BooleanExpression fuzzyLike(
+      Path<String> path, String value, int maxEdits, int prefixLength) {
+    Term term = new Term(path.getMetadata().getName(), value);
+    return new QueryElement(new FuzzyQuery(term, maxEdits, prefixLength));
+  }
 
-    private LuceneExpressions() { }
-
+  private LuceneExpressions() {}
 }

@@ -22,36 +22,34 @@ import java.sql.Types;
  * {@code EnumByOrdinalType} maps Enum types to their Integer ordinals on the JDBC level
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class EnumByOrdinalType<T extends Enum<T>> extends AbstractType<T> {
 
-    private final Class<T> type;
+  private final Class<T> type;
 
-    public EnumByOrdinalType(Class<T> type) {
-        this(Types.INTEGER, type);
-    }
+  public EnumByOrdinalType(Class<T> type) {
+    this(Types.INTEGER, type);
+  }
 
-    public EnumByOrdinalType(int jdbcType, Class<T> type) {
-        super(jdbcType);
-        this.type = type;
-    }
+  public EnumByOrdinalType(int jdbcType, Class<T> type) {
+    super(jdbcType);
+    this.type = type;
+  }
 
-    @Override
-    public Class<T> getReturnedClass() {
-        return type;
-    }
+  @Override
+  public Class<T> getReturnedClass() {
+    return type;
+  }
 
-    @Override
-    public T getValue(ResultSet rs, int startIndex) throws SQLException {
-        int ordinal = rs.getInt(startIndex);
-        return rs.wasNull() ? null : type.getEnumConstants()[ordinal];
-    }
+  @Override
+  public T getValue(ResultSet rs, int startIndex) throws SQLException {
+    int ordinal = rs.getInt(startIndex);
+    return rs.wasNull() ? null : type.getEnumConstants()[ordinal];
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, T value) throws SQLException {
-        st.setInt(startIndex, value.ordinal());
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, T value) throws SQLException {
+    st.setInt(startIndex, value.ordinal());
+  }
 }

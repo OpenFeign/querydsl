@@ -22,32 +22,30 @@ import java.sql.Types;
  * {@code FloatType} maps Float to Float on the JDBC level
  *
  * @author tiwe
- *
  */
 public class FloatType extends AbstractType<Float> {
 
-    public FloatType() {
-        super(Types.FLOAT);
-    }
+  public FloatType() {
+    super(Types.FLOAT);
+  }
 
-    public FloatType(int type) {
-        super(type);
-    }
+  public FloatType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Float> getReturnedClass() {
-        return Float.class;
-    }
+  @Override
+  public Class<Float> getReturnedClass() {
+    return Float.class;
+  }
 
-    @Override
-    public Float getValue(ResultSet rs, int startIndex) throws SQLException {
-        float val = rs.getFloat(startIndex);
-        return rs.wasNull() ? null : val;
-    }
+  @Override
+  public Float getValue(ResultSet rs, int startIndex) throws SQLException {
+    float val = rs.getFloat(startIndex);
+    return rs.wasNull() ? null : val;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Float value) throws SQLException {
-        st.setFloat(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Float value) throws SQLException {
+    st.setFloat(startIndex, value);
+  }
 }

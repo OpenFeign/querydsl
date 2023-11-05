@@ -1,6 +1,6 @@
 /*
  * Copyright 2010, Mysema Ltd
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,81 +18,78 @@ import java.util.*;
 
 /**
  * @author tiwe
- * 
  */
 public final class ClassUtils {
 
-    private static final Set<String> JAVA_LANG = Collections.singleton("java.lang");
-    
-    public static String getName(Class<?> cl) {
-        return getName(cl, JAVA_LANG, Collections.<String> emptySet());
-    }
+  private static final Set<String> JAVA_LANG = Collections.singleton("java.lang");
 
-    public static String getFullName(Class<?> cl) {
-        if (cl.isArray()) {
-            return getFullName(cl.getComponentType()) + "[]";
-        }
-        final String name = cl.getName();
-        if (name.indexOf('$') > 0) {
-            return getFullName(cl.getDeclaringClass()) + "." + cl.getSimpleName();
-        }
-        return name;
-    }
+  public static String getName(Class<?> cl) {
+    return getName(cl, JAVA_LANG, Collections.<String>emptySet());
+  }
 
-    public static String getPackageName(Class<?> cl) {
-        while (cl.isArray()) {
-            cl = cl.getComponentType();
-        }
-        final String name = cl.getName();
-        final int i = name.lastIndexOf('.');
-        if (i > 0) {
-            return name.substring(0, i);
-        } else {
-            return "";
-        }
+  public static String getFullName(Class<?> cl) {
+    if (cl.isArray()) {
+      return getFullName(cl.getComponentType()) + "[]";
     }
-    
-    public static String getName(Class<?> cl, Set<String> packages, Set<String> classes) {
-        if (cl.isArray()) {
-            return getName(cl.getComponentType(), packages, classes) + "[]";
-        }
-        final String canonicalName = cl.getName().replace('$', '.');
-        final int i = cl.getName().lastIndexOf('.');
-        if (classes.contains(canonicalName)) {
-            return cl.getSimpleName();
-        } else if (cl.getEnclosingClass() != null) {
-            return getName(cl.getEnclosingClass(), packages, classes) + "." + cl.getSimpleName();
-        } else if (i == -1) {
-            return canonicalName;
-        } else if (packages.contains(canonicalName.substring(0, i))) {
-            return canonicalName.substring(i + 1);
-        }  else {
-            return canonicalName;
-        }
+    final String name = cl.getName();
+    if (name.indexOf('$') > 0) {
+      return getFullName(cl.getDeclaringClass()) + "." + cl.getSimpleName();
     }
+    return name;
+  }
 
-    public static Class<?> normalize(Class<?> clazz) {
-        if (List.class.isAssignableFrom(clazz)) {
-            return List.class;
-        } else if (Set.class.isAssignableFrom(clazz)) {
-            return Set.class;
-        } else if (Collection.class.isAssignableFrom(clazz)) {
-            return Collection.class;
-        } else if (Map.class.isAssignableFrom(clazz)) {
-            return Map.class;
-        // check for CGLIB generated classes
-        } else if (clazz.getName().contains("$$")) {
-            Class<?> zuper = clazz.getSuperclass();
-            if (zuper != null && !Object.class.equals(zuper)) {
-                return zuper;
-            }
-        } else if (!Modifier.isPublic(clazz.getModifiers())) {
-            return normalize(clazz.getSuperclass());
-        }
-        return clazz;
+  public static String getPackageName(Class<?> cl) {
+    while (cl.isArray()) {
+      cl = cl.getComponentType();
     }
-
-    private ClassUtils() {
+    final String name = cl.getName();
+    final int i = name.lastIndexOf('.');
+    if (i > 0) {
+      return name.substring(0, i);
+    } else {
+      return "";
     }
+  }
 
+  public static String getName(Class<?> cl, Set<String> packages, Set<String> classes) {
+    if (cl.isArray()) {
+      return getName(cl.getComponentType(), packages, classes) + "[]";
+    }
+    final String canonicalName = cl.getName().replace('$', '.');
+    final int i = cl.getName().lastIndexOf('.');
+    if (classes.contains(canonicalName)) {
+      return cl.getSimpleName();
+    } else if (cl.getEnclosingClass() != null) {
+      return getName(cl.getEnclosingClass(), packages, classes) + "." + cl.getSimpleName();
+    } else if (i == -1) {
+      return canonicalName;
+    } else if (packages.contains(canonicalName.substring(0, i))) {
+      return canonicalName.substring(i + 1);
+    } else {
+      return canonicalName;
+    }
+  }
+
+  public static Class<?> normalize(Class<?> clazz) {
+    if (List.class.isAssignableFrom(clazz)) {
+      return List.class;
+    } else if (Set.class.isAssignableFrom(clazz)) {
+      return Set.class;
+    } else if (Collection.class.isAssignableFrom(clazz)) {
+      return Collection.class;
+    } else if (Map.class.isAssignableFrom(clazz)) {
+      return Map.class;
+      // check for CGLIB generated classes
+    } else if (clazz.getName().contains("$$")) {
+      Class<?> zuper = clazz.getSuperclass();
+      if (zuper != null && !Object.class.equals(zuper)) {
+        return zuper;
+      }
+    } else if (!Modifier.isPublic(clazz.getModifiers())) {
+      return normalize(clazz.getSuperclass());
+    }
+    return clazz;
+  }
+
+  private ClassUtils() {}
 }

@@ -17,30 +17,31 @@ import com.querydsl.core.types.Expression;
 
 class GMax<T extends Comparable<? super T>> extends AbstractGroupExpression<T, T> {
 
-    private static final long serialVersionUID = 3815394663181131511L;
+  private static final long serialVersionUID = 3815394663181131511L;
 
-    @SuppressWarnings("unchecked")
-    GMax(Expression<T> expr) {
-        super((Class) expr.getType(), expr);
-    }
+  @SuppressWarnings("unchecked")
+  GMax(Expression<T> expr) {
+    super((Class) expr.getType(), expr);
+  }
 
-    @Override
-    public GroupCollector<T,T> createGroupCollector() {
-        return new GroupCollector<T,T>() {
-            private T max;
+  @Override
+  public GroupCollector<T, T> createGroupCollector() {
+    return new GroupCollector<T, T>() {
+      private T max;
 
-            @Override
-            public void add(T o) {
-                if (max != null) {
-                    max = o.compareTo(max) > 0 ? o : max;
-                } else {
-                    max = o;
-                }
-            }
-            @Override
-            public T get() {
-                return max;
-            }
-        };
-    }
+      @Override
+      public void add(T o) {
+        if (max != null) {
+          max = o.compareTo(max) > 0 ? o : max;
+        } else {
+          max = o;
+        }
+      }
+
+      @Override
+      public T get() {
+        return max;
+      }
+    };
+  }
 }

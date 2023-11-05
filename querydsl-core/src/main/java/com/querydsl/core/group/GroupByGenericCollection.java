@@ -20,7 +20,6 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.Projections;
-
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -33,53 +32,55 @@ import java.util.function.Supplier;
  * @param <RES> Concrete collection type
  * @author Jan-Willem Gmelig Meyling
  */
-public class GroupByGenericCollection<K, V, RES extends Collection<V>> extends AbstractGroupByTransformer<K, RES> {
+public class GroupByGenericCollection<K, V, RES extends Collection<V>>
+    extends AbstractGroupByTransformer<K, RES> {
 
-    private final Supplier<RES> resultFactory;
+  private final Supplier<RES> resultFactory;
 
-    GroupByGenericCollection(Supplier<RES> resultFactory, Expression<K> key, Expression<?>... expressions) {
-        super(key, expressions);
-        this.resultFactory = resultFactory;
+  GroupByGenericCollection(
+      Supplier<RES> resultFactory, Expression<K> key, Expression<?>... expressions) {
+    super(key, expressions);
+    this.resultFactory = resultFactory;
+  }
+
+  @Override
+  public RES transform(FetchableQuery<?, ?> query) {
+    // create groups
+    FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
+    boolean hasGroups = false;
+    for (Expression<?> e : expr.getArgs()) {
+      hasGroups |= e instanceof GroupExpression;
     }
-
-    @Override
-    public RES transform(FetchableQuery<?, ?> query) {
-        // create groups
-        FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-        boolean hasGroups = false;
-        for (Expression<?> e : expr.getArgs()) {
-            hasGroups |= e instanceof GroupExpression;
-        }
-        if (hasGroups) {
-            expr = withoutGroupExpressions(expr);
-        }
-        final CloseableIterator<Tuple> iter = query.select(expr).iterate();
-
-        RES list = resultFactory.get();
-        GroupImpl group = null;
-        K groupId = null;
-        while (iter.hasNext()) {
-            @SuppressWarnings("unchecked") //This type is mandated by the key type
-                    K[] row = (K[]) iter.next().toArray();
-            if (group == null) {
-                group = new GroupImpl(groupExpressions, maps);
-                groupId = row[0];
-            } else if (!Objects.equals(groupId, row[0])) {
-                list.add(transform(group));
-                group = new GroupImpl(groupExpressions, maps);
-                groupId = row[0];
-            }
-            group.add(row);
-        }
-        if (group != null) {
-            list.add(transform(group));
-        }
-        iter.close();
-        return list;
+    if (hasGroups) {
+      expr = withoutGroupExpressions(expr);
     }
+    final CloseableIterator<Tuple> iter = query.select(expr).iterate();
 
-    @SuppressWarnings("unchecked")
-    protected V transform(Group group) {
-        return (V) group;
+    RES list = resultFactory.get();
+    GroupImpl group = null;
+    K groupId = null;
+    while (iter.hasNext()) {
+      @SuppressWarnings("unchecked") // This type is mandated by the key type
+      K[] row = (K[]) iter.next().toArray();
+      if (group == null) {
+        group = new GroupImpl(groupExpressions, maps);
+        groupId = row[0];
+      } else if (!Objects.equals(groupId, row[0])) {
+        list.add(transform(group));
+        group = new GroupImpl(groupExpressions, maps);
+        groupId = row[0];
+      }
+      group.add(row);
     }
+    if (group != null) {
+      list.add(transform(group));
+    }
+    iter.close();
+    return list;
+  }
+
+  @SuppressWarnings("unchecked")
+  protected V transform(Group group) {
+    return (V) group;
+  }
 }

@@ -15,36 +15,34 @@ package com.querydsl.core.types.dsl;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
-import org.junit.Test;
-
 import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.Operation;
+import java.util.List;
+import org.junit.Test;
 
 public class NumberPathTest {
 
-    private NumberPath<Byte> bytePath = new NumberPath<Byte>(Byte.class, "bytePath");
+  private NumberPath<Byte> bytePath = new NumberPath<Byte>(Byte.class, "bytePath");
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void bytePath_in() {
-        Operation<?> operation = (Operation<?>) bytePath.in(1, 2, 3);
-        Constant<List<Byte>> rightArg = (Constant<List<Byte>>) operation.getArg(1);
-        List<Byte> numbers = rightArg.getConstant();
-        assertEquals(Byte.valueOf((byte) 1), numbers.get(0));
-        assertEquals(Byte.valueOf((byte) 2), numbers.get(1));
-        assertEquals(Byte.valueOf((byte) 3), numbers.get(2));
-    }
+  @SuppressWarnings("unchecked")
+  @Test
+  public void bytePath_in() {
+    Operation<?> operation = (Operation<?>) bytePath.in(1, 2, 3);
+    Constant<List<Byte>> rightArg = (Constant<List<Byte>>) operation.getArg(1);
+    List<Byte> numbers = rightArg.getConstant();
+    assertEquals(Byte.valueOf((byte) 1), numbers.get(0));
+    assertEquals(Byte.valueOf((byte) 2), numbers.get(1));
+    assertEquals(Byte.valueOf((byte) 3), numbers.get(2));
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void bytePath_notIn() {
-        Operation<?> operation = (Operation<?>) bytePath.notIn(1, 2, 3);
-        Constant<List<Byte>> rightArg = (Constant<List<Byte>>) operation.getArg(1);
-        List<Byte> numbers = rightArg.getConstant();
-        assertEquals(Byte.valueOf((byte) 1), numbers.get(0));
-        assertEquals(Byte.valueOf((byte) 2), numbers.get(1));
-        assertEquals(Byte.valueOf((byte) 3), numbers.get(2));
-    }
+  @SuppressWarnings("unchecked")
+  @Test
+  public void bytePath_notIn() {
+    Operation<?> operation = (Operation<?>) bytePath.notIn(1, 2, 3);
+    Constant<List<Byte>> rightArg = (Constant<List<Byte>>) operation.getArg(1);
+    List<Byte> numbers = rightArg.getConstant();
+    assertEquals(Byte.valueOf((byte) 1), numbers.get(0));
+    assertEquals(Byte.valueOf((byte) 2), numbers.get(1));
+    assertEquals(Byte.valueOf((byte) 3), numbers.get(2));
+  }
 }

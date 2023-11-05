@@ -19,36 +19,36 @@ import com.querydsl.core.types.dsl.ArrayPath;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 /**
- * {@code Point} is an adapter type for Double[] arrays to use geo spatial querying features of Mongodb
+ * {@code Point} is an adapter type for Double[] arrays to use geo spatial querying features of
+ * Mongodb
  *
  * @author tiwe
- *
  */
 public class Point extends ArrayPath<Double[], Double> {
 
-    private static final long serialVersionUID = 1776628530121566388L;
+  private static final long serialVersionUID = 1776628530121566388L;
 
-    public Point(String variable) {
-        super(Double[].class, variable);
-    }
+  public Point(String variable) {
+    super(Double[].class, variable);
+  }
 
-    public Point(Path<?> parent, String property) {
-        super(Double[].class, parent, property);
-    }
+  public Point(Path<?> parent, String property) {
+    super(Double[].class, parent, property);
+  }
 
-    public Point(PathMetadata metadata) {
-        super(Double[].class, metadata);
-    }
+  public Point(PathMetadata metadata) {
+    super(Double[].class, metadata);
+  }
 
-    /**
-     * Finds the closest points relative to the given location and orders the results with decreasing proximity
-     *
-     * @param latVal latitude
-     * @param longVal longitude
-     * @return predicate
-     */
-    public BooleanExpression near(double latVal, double longVal) {
-        return MongodbExpressions.near(this, latVal, longVal);
-    }
-
+  /**
+   * Finds the closest points relative to the given location and orders the results with decreasing
+   * proximity
+   *
+   * @param latVal latitude
+   * @param longVal longitude
+   * @return predicate
+   */
+  public BooleanExpression near(double latVal, double longVal) {
+    return MongodbExpressions.near(this, latVal, longVal);
+  }
 }

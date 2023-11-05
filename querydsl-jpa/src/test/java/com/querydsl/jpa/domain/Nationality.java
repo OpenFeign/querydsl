@@ -14,22 +14,17 @@
 package com.querydsl.jpa.domain;
 
 import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * The Class Nationality.
- */
+/** The Class Nationality. */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "nationality_")
 public class Nationality implements Serializable {
-    @ManyToOne
-    Calendar calendar;
+  @ManyToOne Calendar calendar;
 
-    @Id
-    long id;
+  @Id long id;
 }

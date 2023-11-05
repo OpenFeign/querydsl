@@ -21,67 +21,67 @@ import static org.junit.Assert.assertFalse;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
 public class LeftJoinTest extends AbstractQueryTest {
 
-    private QCat cat, kitten;
+  private QCat cat, kitten;
 
-    private List<Cat> cats;
+  private List<Cat> cats;
 
-    @Before
-    public void setUp() {
-        super.setUp();
-        cat = new QCat("c");
-        kitten = new QCat("k");
-        Cat bob = new Cat("Bob");
-        Cat bob2 = new Cat("Bob");
-        Cat kate = new Cat("Kate");
-        Cat kate2 = new Cat("Kate");
-        Cat franz = new Cat("Franz");
+  @Before
+  public void setUp() {
+    super.setUp();
+    cat = new QCat("c");
+    kitten = new QCat("k");
+    Cat bob = new Cat("Bob");
+    Cat bob2 = new Cat("Bob");
+    Cat kate = new Cat("Kate");
+    Cat kate2 = new Cat("Kate");
+    Cat franz = new Cat("Franz");
 
-        bob.setKittens(Collections.singletonList(bob2));
-        bob.setKittensByName(Collections.singletonMap(bob2.getName(), bob2));
-        kate.setKittens(Collections.<Cat>emptyList());
-        kate.setKittensByName(Collections.singletonMap(kate2.getName(), kate));
-        cats = Arrays.asList(bob, bob2, kate, kate2, franz);
-    }
+    bob.setKittens(Collections.singletonList(bob2));
+    bob.setKittensByName(Collections.singletonMap(bob2.getName(), bob2));
+    kate.setKittens(Collections.<Cat>emptyList());
+    kate.setKittensByName(Collections.singletonMap(kate2.getName(), kate));
+    cats = Arrays.asList(bob, bob2, kate, kate2, franz);
+  }
 
-    @Test
-    public void list() {
-        List<Cat> rv = CollQueryFactory.from(cat, cats)
+  @Test
+  public void list() {
+    List<Cat> rv =
+        CollQueryFactory.from(cat, cats)
             .leftJoin(cat.kittens, kitten)
             .where(kitten.isNotNull(), cat.name.eq(kitten.name))
             .orderBy(cat.name.asc())
             .fetch();
 
-        assertEquals(1, rv.size());
-        assertEquals("Bob", rv.get(0).getName());
-    }
+    assertEquals(1, rv.size());
+    assertEquals("Bob", rv.get(0).getName());
+  }
 
-    @Test
-    public void alias_() {
-        Cat cc = alias(Cat.class, "cat1");
-        Cat ck = alias(Cat.class, "cat2");
-        List<Cat> rv =  CollQueryFactory.from($(cc), cats)
-                        .leftJoin($(cc.getKittens()), $(ck))
-                        .where($(ck).isNotNull(), $(cc.getName()).eq($(ck.getName())))
-                        .fetch();
-        assertFalse(rv.isEmpty());
-    }
+  @Test
+  public void alias_() {
+    Cat cc = alias(Cat.class, "cat1");
+    Cat ck = alias(Cat.class, "cat2");
+    List<Cat> rv =
+        CollQueryFactory.from($(cc), cats)
+            .leftJoin($(cc.getKittens()), $(ck))
+            .where($(ck).isNotNull(), $(cc.getName()).eq($(ck.getName())))
+            .fetch();
+    assertFalse(rv.isEmpty());
+  }
 
-
-    @Test
-    public void map() {
-        List<Cat> rv = CollQueryFactory.from(cat, cats)
+  @Test
+  public void map() {
+    List<Cat> rv =
+        CollQueryFactory.from(cat, cats)
             .leftJoin(cat.kittensByName, kitten)
             .where(cat.name.eq(kitten.name))
             .orderBy(cat.name.asc())
             .fetch();
-        assertEquals("Bob", rv.get(0).getName());
-        assertEquals("Kate", rv.get(1).getName());
-    }
-
+    assertEquals("Bob", rv.get(0).getName());
+    assertEquals("Kate", rv.get(1).getName());
+  }
 }

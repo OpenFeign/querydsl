@@ -13,21 +13,19 @@
  */
 package com.querydsl.collections;
 
+import com.querydsl.core.types.dsl.PathInits;
 import java.util.Collections;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.querydsl.core.types.dsl.PathInits;
-
 public class TypeCastTest {
 
-    @Test(expected = IllegalStateException.class)
-    @Ignore
-    public void cast() {
-        QAnimal animal = QAnimal.animal;
-        QCat cat = new QCat(animal.getMetadata(), new PathInits("*"));
-        CollQueryFactory.from(animal, Collections.<Animal> emptyList()).from(cat, Collections.<Cat> emptyList());
-    }
-
+  @Test(expected = IllegalStateException.class)
+  @Ignore
+  public void cast() {
+    QAnimal animal = QAnimal.animal;
+    QCat cat = new QCat(animal.getMetadata(), new PathInits("*"));
+    CollQueryFactory.from(animal, Collections.<Animal>emptyList())
+        .from(cat, Collections.<Cat>emptyList());
+  }
 }

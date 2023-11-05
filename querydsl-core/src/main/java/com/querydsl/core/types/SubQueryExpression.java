@@ -19,16 +19,14 @@ import com.querydsl.core.QueryMetadata;
  * {@code SubQueryExpression} represents a sub query.
  *
  * @author tiwe
- *
  * @param <T> return type of subquery
  */
 public interface SubQueryExpression<T> extends Expression<T> {
 
-    /**
-     * Get the query metadata for the subquery
-     *
-     * @return metadata
-     */
-    QueryMetadata getMetadata();
-
+  /**
+   * Get the query metadata for the subquery
+   *
+   * @return metadata
+   */
+  QueryMetadata getMetadata();
 }

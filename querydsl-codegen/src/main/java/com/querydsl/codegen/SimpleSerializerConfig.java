@@ -16,63 +16,64 @@ package com.querydsl.codegen;
 import com.querydsl.core.annotations.Config;
 
 /**
- * {@code SimpleSerializerConfig} is the default implementation of the {@link SerializerConfig} interface
+ * {@code SimpleSerializerConfig} is the default implementation of the {@link SerializerConfig}
+ * interface
  *
  * @author tiwe
- *
  */
 public final class SimpleSerializerConfig implements SerializerConfig {
 
-    public static final SerializerConfig DEFAULT = new SimpleSerializerConfig(false, false, false, true, "");
+  public static final SerializerConfig DEFAULT =
+      new SimpleSerializerConfig(false, false, false, true, "");
 
-    public static SerializerConfig getConfig(Config annotation) {
-        return new SimpleSerializerConfig(
-                annotation.entityAccessors(),
-                annotation.listAccessors(),
-                annotation.mapAccessors(),
-                annotation.createDefaultVariable(),
-                annotation.defaultVariableName());
-    }
+  public static SerializerConfig getConfig(Config annotation) {
+    return new SimpleSerializerConfig(
+        annotation.entityAccessors(),
+        annotation.listAccessors(),
+        annotation.mapAccessors(),
+        annotation.createDefaultVariable(),
+        annotation.defaultVariableName());
+  }
 
-    private final boolean entityAccessors, listAccessors, mapAccessors, createDefaultVariable;
+  private final boolean entityAccessors, listAccessors, mapAccessors, createDefaultVariable;
 
-    private final String defaultVariableName;
+  private final String defaultVariableName;
 
-    public SimpleSerializerConfig(
-            boolean entityAccessors,
-            boolean listAccessors,
-            boolean mapAccessors,
-            boolean createDefaultVariable,
-            String defaultVariableName) {
-        this.entityAccessors = entityAccessors;
-        this.listAccessors = listAccessors;
-        this.mapAccessors = mapAccessors;
-        this.createDefaultVariable = createDefaultVariable;
-        this.defaultVariableName = defaultVariableName;
-    }
+  public SimpleSerializerConfig(
+      boolean entityAccessors,
+      boolean listAccessors,
+      boolean mapAccessors,
+      boolean createDefaultVariable,
+      String defaultVariableName) {
+    this.entityAccessors = entityAccessors;
+    this.listAccessors = listAccessors;
+    this.mapAccessors = mapAccessors;
+    this.createDefaultVariable = createDefaultVariable;
+    this.defaultVariableName = defaultVariableName;
+  }
 
-    @Override
-    public boolean useEntityAccessors() {
-        return entityAccessors;
-    }
+  @Override
+  public boolean useEntityAccessors() {
+    return entityAccessors;
+  }
 
-    @Override
-    public boolean useListAccessors() {
-        return listAccessors;
-    }
+  @Override
+  public boolean useListAccessors() {
+    return listAccessors;
+  }
 
-    @Override
-    public boolean useMapAccessors() {
-        return mapAccessors;
-    }
+  @Override
+  public boolean useMapAccessors() {
+    return mapAccessors;
+  }
 
-    @Override
-    public boolean createDefaultVariable() {
-        return createDefaultVariable;
-    }
+  @Override
+  public boolean createDefaultVariable() {
+    return createDefaultVariable;
+  }
 
-    @Override
-    public String defaultVariableName() {
-        return defaultVariableName;
-    }
+  @Override
+  public String defaultVariableName() {
+    return defaultVariableName;
+  }
 }

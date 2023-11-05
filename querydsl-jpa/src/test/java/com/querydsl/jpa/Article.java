@@ -1,12 +1,10 @@
 package com.querydsl.jpa;
 
-
 public class Article {
 
-    String name;
+  String name;
 
-    Content content;
+  Content content;
 
-    Person author;
-
+  Person author;
 }

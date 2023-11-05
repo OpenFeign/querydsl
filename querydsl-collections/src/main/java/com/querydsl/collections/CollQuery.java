@@ -20,80 +20,75 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 
 /**
- * {@code CollQuery} is the default implementation of the {@link FetchableQuery} interface for collections
+ * {@code CollQuery} is the default implementation of the {@link FetchableQuery} interface for
+ * collections
  *
  * @param <T> result type
- *
  * @author tiwe
  */
 public class CollQuery<T> extends AbstractCollQuery<T, CollQuery<T>> implements Cloneable {
 
-    /**
-     * Create a new CollQuery instance
-     */
-    public CollQuery() {
-        super(new DefaultQueryMetadata(), DefaultQueryEngine.getDefault());
-    }
+  /** Create a new CollQuery instance */
+  public CollQuery() {
+    super(new DefaultQueryMetadata(), DefaultQueryEngine.getDefault());
+  }
 
-    /**
-     * Creates a new CollQuery instance
-     *
-     * @param templates serialization templates
-     */
-    public CollQuery(CollQueryTemplates templates) {
-        this(new DefaultQueryEngine(new DefaultEvaluatorFactory(templates)));
-    }
+  /**
+   * Creates a new CollQuery instance
+   *
+   * @param templates serialization templates
+   */
+  public CollQuery(CollQueryTemplates templates) {
+    this(new DefaultQueryEngine(new DefaultEvaluatorFactory(templates)));
+  }
 
-    /**
-     * Create a new CollQuery instance
-     *
-     * @param queryEngine query engine for query execution
-     */
-    public CollQuery(QueryEngine queryEngine) {
-        super(new DefaultQueryMetadata(), queryEngine);
-    }
+  /**
+   * Create a new CollQuery instance
+   *
+   * @param queryEngine query engine for query execution
+   */
+  public CollQuery(QueryEngine queryEngine) {
+    super(new DefaultQueryMetadata(), queryEngine);
+  }
 
+  /**
+   * Create a new CollQuery instance
+   *
+   * @param metadata query metadata
+   */
+  public CollQuery(QueryMetadata metadata) {
+    super(metadata, DefaultQueryEngine.getDefault());
+  }
 
-    /**
-     * Create a new CollQuery instance
-     *
-     * @param metadata query metadata
-     */
-    public CollQuery(QueryMetadata metadata) {
-        super(metadata, DefaultQueryEngine.getDefault());
-    }
+  /**
+   * Create a new CollQuery instance
+   *
+   * @param metadata query metadata
+   * @param queryEngine query engine for query execution
+   */
+  public CollQuery(QueryMetadata metadata, QueryEngine queryEngine) {
+    super(metadata, queryEngine);
+  }
 
-    /**
-     * Create a new CollQuery instance
-     *
-     * @param metadata query metadata
-     * @param queryEngine query engine for query execution
-     */
-    public CollQuery(QueryMetadata metadata, QueryEngine queryEngine) {
-        super(metadata, queryEngine);
-    }
+  /** Clone the state of this query to a new CollQuery instance */
+  @Override
+  public CollQuery<T> clone() {
+    return new CollQuery<T>(queryMixin.getMetadata().clone(), getQueryEngine());
+  }
 
-    /**
-     * Clone the state of this query to a new CollQuery instance
-     */
-    @Override
-    public CollQuery<T> clone() {
-        return new CollQuery<T>(queryMixin.getMetadata().clone(), getQueryEngine());
-    }
+  @Override
+  public <E> CollQuery<E> select(Expression<E> expr) {
+    queryMixin.setProjection(expr);
+    @SuppressWarnings("unchecked") // This is the new projection's type
+    CollQuery<E> newType = (CollQuery<E>) queryMixin.getSelf();
+    return newType;
+  }
 
-    @Override
-    public <E> CollQuery<E> select(Expression<E> expr) {
-        queryMixin.setProjection(expr);
-        @SuppressWarnings("unchecked") // This is the new projection's type
-        CollQuery<E> newType = (CollQuery<E>) queryMixin.getSelf();
-        return newType;
-    }
-
-    @Override
-    public CollQuery<Tuple> select(Expression<?>... exprs) {
-        queryMixin.setProjection(exprs);
-        @SuppressWarnings("unchecked") // This is the new projection's type
-        CollQuery<Tuple> newType = (CollQuery<Tuple>) queryMixin.getSelf();
-        return newType;
-    }
+  @Override
+  public CollQuery<Tuple> select(Expression<?>... exprs) {
+    queryMixin.setProjection(exprs);
+    @SuppressWarnings("unchecked") // This is the new projection's type
+    CollQuery<Tuple> newType = (CollQuery<Tuple>) queryMixin.getSelf();
+    return newType;
+  }
 }

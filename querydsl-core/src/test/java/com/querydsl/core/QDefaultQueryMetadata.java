@@ -18,55 +18,67 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.*;
 
-
-/**
- * QDefaultQueryMetadata is a Querydsl query type for DefaultQueryMetadata
- */
+/** QDefaultQueryMetadata is a Querydsl query type for DefaultQueryMetadata */
 public class QDefaultQueryMetadata extends EntityPathBase<DefaultQueryMetadata> {
 
-    private static final long serialVersionUID = 2000363531;
+  private static final long serialVersionUID = 2000363531;
 
-    public static final QDefaultQueryMetadata defaultQueryMetadata = new QDefaultQueryMetadata("defaultQueryMetadata");
+  public static final QDefaultQueryMetadata defaultQueryMetadata =
+      new QDefaultQueryMetadata("defaultQueryMetadata");
 
-    public final BooleanPath distinct = createBoolean("distinct");
+  public final BooleanPath distinct = createBoolean("distinct");
 
-    public final SetPath<Expression<?>, SimplePath<Expression<?>>> exprInJoins = this.<Expression<?>, SimplePath<Expression<?>>>createSet("exprInJoins", Expression.class, SimplePath.class, PathInits.DIRECT);
+  public final SetPath<Expression<?>, SimplePath<Expression<?>>> exprInJoins =
+      this.<Expression<?>, SimplePath<Expression<?>>>createSet(
+          "exprInJoins", Expression.class, SimplePath.class, PathInits.DIRECT);
 
-    public final SetPath<QueryFlag, SimplePath<QueryFlag>> flags = this.<QueryFlag, SimplePath<QueryFlag>>createSet("flags", QueryFlag.class, SimplePath.class, PathInits.DIRECT);
+  public final SetPath<QueryFlag, SimplePath<QueryFlag>> flags =
+      this.<QueryFlag, SimplePath<QueryFlag>>createSet(
+          "flags", QueryFlag.class, SimplePath.class, PathInits.DIRECT);
 
-    public final ListPath<Expression<?>, SimplePath<Expression<?>>> groupBy = this.<Expression<?>, SimplePath<Expression<?>>>createList("groupBy", Expression.class, SimplePath.class, PathInits.DIRECT);
+  public final ListPath<Expression<?>, SimplePath<Expression<?>>> groupBy =
+      this.<Expression<?>, SimplePath<Expression<?>>>createList(
+          "groupBy", Expression.class, SimplePath.class, PathInits.DIRECT);
 
-    public final SimplePath<Predicate> having = createSimple("having", Predicate.class);
+  public final SimplePath<Predicate> having = createSimple("having", Predicate.class);
 
-    public final ListPath<JoinExpression, SimplePath<JoinExpression>> joins = this.<JoinExpression, SimplePath<JoinExpression>>createList("joins", JoinExpression.class, SimplePath.class, PathInits.DIRECT);
+  public final ListPath<JoinExpression, SimplePath<JoinExpression>> joins =
+      this.<JoinExpression, SimplePath<JoinExpression>>createList(
+          "joins", JoinExpression.class, SimplePath.class, PathInits.DIRECT);
 
-    public final SimplePath<QueryModifiers> modifiers = createSimple("modifiers", QueryModifiers.class);
+  public final SimplePath<QueryModifiers> modifiers =
+      createSimple("modifiers", QueryModifiers.class);
 
-    public final ListPath<OrderSpecifier<?>, SimplePath<OrderSpecifier<?>>> orderBy = this.<OrderSpecifier<?>, SimplePath<OrderSpecifier<?>>>createList("orderBy", OrderSpecifier.class, SimplePath.class, PathInits.DIRECT);
+  public final ListPath<OrderSpecifier<?>, SimplePath<OrderSpecifier<?>>> orderBy =
+      this.<OrderSpecifier<?>, SimplePath<OrderSpecifier<?>>>createList(
+          "orderBy", OrderSpecifier.class, SimplePath.class, PathInits.DIRECT);
 
-    public final MapPath<ParamExpression<?>, Object, SimplePath<Object>> params = this.<ParamExpression<?>, Object, SimplePath<Object>>createMap("params", ParamExpression.class, Object.class, SimplePath.class);
+  public final MapPath<ParamExpression<?>, Object, SimplePath<Object>> params =
+      this.<ParamExpression<?>, Object, SimplePath<Object>>createMap(
+          "params", ParamExpression.class, Object.class, SimplePath.class);
 
-    public final ListPath<Expression<?>, SimplePath<Expression<?>>> projection = this.<Expression<?>, SimplePath<Expression<?>>>createList("projection", Expression.class, SimplePath.class, PathInits.DIRECT);
+  public final ListPath<Expression<?>, SimplePath<Expression<?>>> projection =
+      this.<Expression<?>, SimplePath<Expression<?>>>createList(
+          "projection", Expression.class, SimplePath.class, PathInits.DIRECT);
 
-    public final BooleanPath unique = createBoolean("unique");
+  public final BooleanPath unique = createBoolean("unique");
 
-    public final BooleanPath validate = createBoolean("validate");
+  public final BooleanPath validate = createBoolean("validate");
 
-    public final SimplePath<ValidatingVisitor> validatingVisitor = createSimple("validatingVisitor", ValidatingVisitor.class);
+  public final SimplePath<ValidatingVisitor> validatingVisitor =
+      createSimple("validatingVisitor", ValidatingVisitor.class);
 
-    public final SimplePath<Predicate> where = createSimple("where", Predicate.class);
+  public final SimplePath<Predicate> where = createSimple("where", Predicate.class);
 
-    public QDefaultQueryMetadata(String variable) {
-        super(DefaultQueryMetadata.class, forVariable(variable));
-    }
+  public QDefaultQueryMetadata(String variable) {
+    super(DefaultQueryMetadata.class, forVariable(variable));
+  }
 
-    public QDefaultQueryMetadata(BeanPath<? extends DefaultQueryMetadata> entity) {
-        super(entity.getType(), entity.getMetadata());
-    }
+  public QDefaultQueryMetadata(BeanPath<? extends DefaultQueryMetadata> entity) {
+    super(entity.getType(), entity.getMetadata());
+  }
 
-    public QDefaultQueryMetadata(PathMetadata metadata) {
-        super(DefaultQueryMetadata.class, metadata);
-    }
-
+  public QDefaultQueryMetadata(PathMetadata metadata) {
+    super(DefaultQueryMetadata.class, metadata);
+  }
 }
-

@@ -15,38 +15,33 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class ConstructorsTest extends AbstractQueryTest {
 
-    public static final class BookmarkDTO {
+  public static final class BookmarkDTO {}
 
+  public static final class QBookmarkDTO extends ConstructorExpression<BookmarkDTO> {
+
+    private static final long serialVersionUID = 2664671413344744578L;
+
+    public QBookmarkDTO(Expression<java.lang.String> address) {
+      super(BookmarkDTO.class, new Class<?>[] {String.class}, address);
     }
+  }
 
-    public static final class QBookmarkDTO extends ConstructorExpression<BookmarkDTO> {
-
-        private static final long serialVersionUID = 2664671413344744578L;
-
-        public QBookmarkDTO(Expression<java.lang.String> address) {
-            super(BookmarkDTO.class, new Class<?>[] {String.class}, address);
-        }
-    }
-
-    @Test
-    @Ignore
-    public void constructors() {
-        ConstructorExpression<com.querydsl.jpa.domain.Cat> c =
-                Projections.constructor(
-                        com.querydsl.jpa.domain.Cat.class,
-                        new Class<?>[]{String.class},
-                        cat.name);
-        assertToString("new " + com.querydsl.jpa.domain.Cat.class.getName() + "(cat.name)", c);
-        assertToString("new " + getClass().getName() + "$BookmarkDTO(cat.name)",new QBookmarkDTO(cat.name));
-    }
-
+  @Test
+  @Ignore
+  public void constructors() {
+    ConstructorExpression<com.querydsl.jpa.domain.Cat> c =
+        Projections.constructor(
+            com.querydsl.jpa.domain.Cat.class, new Class<?>[] {String.class}, cat.name);
+    assertToString("new " + com.querydsl.jpa.domain.Cat.class.getName() + "(cat.name)", c);
+    assertToString(
+        "new " + getClass().getName() + "$BookmarkDTO(cat.name)", new QBookmarkDTO(cat.name));
+  }
 }

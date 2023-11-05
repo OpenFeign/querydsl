@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * JPA and Hibernate model based code generation
- */
+/** JPA and Hibernate model based code generation */
 package com.querydsl.jpa.codegen;

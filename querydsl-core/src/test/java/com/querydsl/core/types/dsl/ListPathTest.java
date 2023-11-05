@@ -15,34 +15,32 @@ package com.querydsl.core.types.dsl;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.PathMetadataFactory;
+import org.junit.Test;
 
 public class ListPathTest {
 
-    private ListPath<String,StringPath> stringPath = new ListPath<String,StringPath>(
-            String.class, StringPath.class,
-            PathMetadataFactory.forVariable("stringPath"));
+  private ListPath<String, StringPath> stringPath =
+      new ListPath<String, StringPath>(
+          String.class, StringPath.class, PathMetadataFactory.forVariable("stringPath"));
 
-    @Test
-    public void toString_() {
-        assertEquals("stringPath", stringPath.toString());
-        assertEquals("any(stringPath)", stringPath.any().toString());
-        assertEquals("eqIc(stringPath.get(0),X)", stringPath.get(0).equalsIgnoreCase("X").toString());
-        assertEquals("eqIc(any(stringPath),X)", stringPath.any().equalsIgnoreCase("X").toString());
-        assertEquals("stringPath.get(0)", stringPath.get(ConstantImpl.create(0)).toString());
-    }
+  @Test
+  public void toString_() {
+    assertEquals("stringPath", stringPath.toString());
+    assertEquals("any(stringPath)", stringPath.any().toString());
+    assertEquals("eqIc(stringPath.get(0),X)", stringPath.get(0).equalsIgnoreCase("X").toString());
+    assertEquals("eqIc(any(stringPath),X)", stringPath.any().equalsIgnoreCase("X").toString());
+    assertEquals("stringPath.get(0)", stringPath.get(ConstantImpl.create(0)).toString());
+  }
 
-    @Test
-    public void getElementType() {
-        assertEquals(String.class, stringPath.getElementType());
-    }
+  @Test
+  public void getElementType() {
+    assertEquals(String.class, stringPath.getElementType());
+  }
 
-    @Test
-    public void getParameter() {
-        assertEquals(String.class, stringPath.getParameter(0));
-    }
-
+  @Test
+  public void getParameter() {
+    assertEquals(String.class, stringPath.getParameter(0));
+  }
 }

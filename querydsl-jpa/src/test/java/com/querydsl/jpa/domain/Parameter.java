@@ -17,12 +17,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * The Class Parameter.
- */
+/** The Class Parameter. */
 @Entity
 @Table(name = "parameter_")
 public class Parameter {
-    @Id
-    long id;
+  @Id long id;
 }

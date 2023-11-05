@@ -13,97 +13,90 @@
  */
 package com.querydsl.apt.domain;
 
-import java.util.List;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.core.types.dsl.NumberPath;
+import java.util.List;
+import org.junit.Test;
 
 public class InterfaceTypeTest extends AbstractTest {
 
-    @QueryEntity
-    public interface InterfaceType {
-        InterfaceType getRelation();
+  @QueryEntity
+  public interface InterfaceType {
+    InterfaceType getRelation();
 
-        List<InterfaceType> getRelation2();
+    List<InterfaceType> getRelation2();
 
-        List<? extends InterfaceType> getRelation3();
+    List<? extends InterfaceType> getRelation3();
 
-        int getRelation4();
+    int getRelation4();
 
-        String getProp();
-    }
+    String getProp();
+  }
 
-    @QueryEntity
-    public interface InterfaceType2 {
+  @QueryEntity
+  public interface InterfaceType2 {
 
-        String getProp2();
+    String getProp2();
+  }
 
-    }
+  @QueryEntity
+  public interface InterfaceType3 extends InterfaceType, InterfaceType2 {
 
-    @QueryEntity
-    public interface InterfaceType3 extends InterfaceType, InterfaceType2 {
+    String getProp3();
+  }
 
-        String getProp3();
+  @QueryEntity
+  public interface InterfaceType4 {
 
-    }
+    String getProp4();
+  }
 
-    @QueryEntity
-    public interface InterfaceType4 {
+  @QueryEntity
+  public interface InterfaceType5 extends InterfaceType3, InterfaceType4 {
 
-        String getProp4();
+    String getProp5();
+  }
 
-    }
+  @Test
+  public void qInterfaceType_relation() throws SecurityException, NoSuchFieldException {
+    start(QInterfaceTypeTest_InterfaceType.class, QInterfaceTypeTest_InterfaceType.interfaceType);
+    match(QInterfaceTypeTest_InterfaceType.class, "relation");
+  }
 
-    @QueryEntity
-    public interface InterfaceType5 extends InterfaceType3, InterfaceType4 {
+  @Test
+  public void qInterfaceType_relation2() throws SecurityException, NoSuchFieldException {
+    start(QInterfaceTypeTest_InterfaceType.class, QInterfaceTypeTest_InterfaceType.interfaceType);
+    match(ListPath.class, "relation2");
+  }
 
-        String getProp5();
+  @Test
+  public void qInterfaceType_relation3() throws SecurityException, NoSuchFieldException {
+    start(QInterfaceTypeTest_InterfaceType.class, QInterfaceTypeTest_InterfaceType.interfaceType);
+    match(ListPath.class, "relation3");
+  }
 
-    }
+  @Test
+  public void qInterfaceType_relation4() throws SecurityException, NoSuchFieldException {
+    start(QInterfaceTypeTest_InterfaceType.class, QInterfaceTypeTest_InterfaceType.interfaceType);
+    match(NumberPath.class, "relation4");
+  }
 
-    @Test
-    public void qInterfaceType_relation() throws SecurityException, NoSuchFieldException {
-        start(QInterfaceTypeTest_InterfaceType.class, QInterfaceTypeTest_InterfaceType.interfaceType);
-        match(QInterfaceTypeTest_InterfaceType.class, "relation");
-    }
+  @Test
+  public void qInterfaceType3() throws SecurityException, NoSuchFieldException {
+    Class<?> cl = QInterfaceTypeTest_InterfaceType3.class;
+    cl.getField("prop");
+    cl.getField("prop2");
+    cl.getField("prop3");
+  }
 
-    @Test
-    public void qInterfaceType_relation2() throws SecurityException, NoSuchFieldException {
-        start(QInterfaceTypeTest_InterfaceType.class, QInterfaceTypeTest_InterfaceType.interfaceType);
-        match(ListPath.class, "relation2");
-    }
-
-    @Test
-    public void qInterfaceType_relation3() throws SecurityException, NoSuchFieldException {
-        start(QInterfaceTypeTest_InterfaceType.class, QInterfaceTypeTest_InterfaceType.interfaceType);
-        match(ListPath.class, "relation3");
-    }
-
-    @Test
-    public void qInterfaceType_relation4() throws SecurityException, NoSuchFieldException {
-        start(QInterfaceTypeTest_InterfaceType.class, QInterfaceTypeTest_InterfaceType.interfaceType);
-        match(NumberPath.class, "relation4");
-    }
-
-    @Test
-    public void qInterfaceType3() throws SecurityException, NoSuchFieldException {
-        Class<?> cl = QInterfaceTypeTest_InterfaceType3.class;
-        cl.getField("prop");
-        cl.getField("prop2");
-        cl.getField("prop3");
-    }
-
-    @Test
-    public void qInterfaceType5() throws SecurityException, NoSuchFieldException {
-        Class<?> cl = QInterfaceTypeTest_InterfaceType5.class;
-        cl.getField("prop");
-        cl.getField("prop2");
-        cl.getField("prop3");
-        cl.getField("prop4");
-        cl.getField("prop5");
-    }
-
+  @Test
+  public void qInterfaceType5() throws SecurityException, NoSuchFieldException {
+    Class<?> cl = QInterfaceTypeTest_InterfaceType5.class;
+    cl.getField("prop");
+    cl.getField("prop2");
+    cl.getField("prop3");
+    cl.getField("prop4");
+    cl.getField("prop5");
+  }
 }

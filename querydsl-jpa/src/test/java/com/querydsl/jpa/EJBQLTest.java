@@ -19,33 +19,32 @@ import org.junit.Test;
 
 public class EJBQLTest extends AbstractQueryTest {
 
-    // Any function or operator defined by EJB-QL 3.0: substring(), trim(),
-    // lower(), upper(), length(), locate(), abs(), sqrt(), bit_length(),
-    // mod()
-    // substring(),
-    // trim(),
-    // lower(),
-    // upper(),
-    // length(),
-    // locate(),
-    // abs(),
-    // sqrt(),
-    // bit_length(),
-    // mod()
+  // Any function or operator defined by EJB-QL 3.0: substring(), trim(),
+  // lower(), upper(), length(), locate(), abs(), sqrt(), bit_length(),
+  // mod()
+  // substring(),
+  // trim(),
+  // lower(),
+  // upper(),
+  // length(),
+  // locate(),
+  // abs(),
+  // sqrt(),
+  // bit_length(),
+  // mod()
 
-    @Test
-    public void trim() {
-        assertToString("trim(cat.name)", cat.name.trim());
-    }
+  @Test
+  public void trim() {
+    assertToString("trim(cat.name)", cat.name.trim());
+  }
 
-    @Test
-    public void lower() {
-        assertToString("lower(cat.name)", cat.name.lower());
-    }
+  @Test
+  public void lower() {
+    assertToString("lower(cat.name)", cat.name.lower());
+  }
 
-    @Test
-    public void upper() {
-        assertToString("upper(cat.name)", cat.name.upper());
-    }
-
+  @Test
+  public void upper() {
+    assertToString("upper(cat.name)", cat.name.upper());
+  }
 }

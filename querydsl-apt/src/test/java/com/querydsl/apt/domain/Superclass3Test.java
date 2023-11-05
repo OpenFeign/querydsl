@@ -13,23 +13,21 @@
  */
 package com.querydsl.apt.domain;
 
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.annotations.QueryEntity;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.querydsl.core.DefaultQueryMetadata;
-import com.querydsl.core.annotations.QueryEntity;
-
 public class Superclass3Test {
 
-    @QueryEntity
-    public static class Subtype extends DefaultQueryMetadata {
+  @QueryEntity
+  public static class Subtype extends DefaultQueryMetadata {
 
-        private static final long serialVersionUID = -218949941713252847L;
+    private static final long serialVersionUID = -218949941713252847L;
+  }
 
-    }
-
-    @Test
-    public void test() {
-        Assert.assertNotNull(QSuperclass3Test_Subtype.subtype.distinct);
-    }
+  @Test
+  public void test() {
+    Assert.assertNotNull(QSuperclass3Test_Subtype.subtype.distinct);
+  }
 }

@@ -13,15 +13,13 @@
  */
 package com.querydsl.apt;
 
-import java.sql.Date;
-
 import com.querydsl.core.annotations.QueryEntity;
+import java.sql.Date;
 
 @QueryEntity
 public class EntityWithExtensions {
 
-    String id;
+  String id;
 
-    Date date;
-
+  Date date;
 }

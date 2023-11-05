@@ -19,8 +19,8 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Inherited
 public @interface IncludeIn {
-    /**
-     * @return
-     */
-    com.querydsl.core.Target[] value();
+  /**
+   * @return
+   */
+  com.querydsl.core.Target[] value();
 }

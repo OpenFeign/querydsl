@@ -13,34 +13,32 @@
  */
 package com.querydsl.sql.codegen;
 
-import java.util.TimeZone;
-
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
-
 import com.querydsl.core.testutil.Oracle;
 import com.querydsl.sql.Connections;
+import java.util.TimeZone;
+import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 
 @Category(Oracle.class)
 public class ExportOracleTest extends ExportBaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        TimeZone tz = TimeZone.getDefault();
-        try {
-            // change time zone to work around ORA-01882
-            // see https://gist.github.com/jarek-przygodzki/cbea3cedae3aef2bbbe0ff6b057e8321
-            // the test may work fine on your machine without this, but it fails when the GitHub runner executes it
-            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-            Connections.initOracle();
-        } finally {
-            TimeZone.setDefault(tz);
-        }
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    TimeZone tz = TimeZone.getDefault();
+    try {
+      // change time zone to work around ORA-01882
+      // see https://gist.github.com/jarek-przygodzki/cbea3cedae3aef2bbbe0ff6b057e8321
+      // the test may work fine on your machine without this, but it fails when the GitHub runner
+      // executes it
+      TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+      Connections.initOracle();
+    } finally {
+      TimeZone.setDefault(tz);
     }
+  }
 
-    @Override
-    public String getSchemaPattern() {
-        return "QUERYDSL";
-    }
-
+  @Override
+  public String getSchemaPattern() {
+    return "QUERYDSL";
+  }
 }

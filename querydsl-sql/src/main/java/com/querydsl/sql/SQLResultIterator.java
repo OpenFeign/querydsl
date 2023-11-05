@@ -13,113 +13,113 @@
  */
 package com.querydsl.sql;
 
+import com.mysema.commons.lang.CloseableIterator;
+import com.querydsl.core.QueryException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.NoSuchElementException;
-
 import org.jetbrains.annotations.Nullable;
 
-import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.QueryException;
-
 /**
- * {@code SQLResultIterator} is an Iterator adapter for JDBC result sets with customizable projections
+ * {@code SQLResultIterator} is an Iterator adapter for JDBC result sets with customizable
+ * projections
  *
  * @author tiwe
- *
  * @param <T>
  */
 public abstract class SQLResultIterator<T> implements CloseableIterator<T> {
 
-    @Nullable
-    private Boolean next = null;
+  @Nullable private Boolean next = null;
 
-    private final Configuration configuration;
+  private final Configuration configuration;
 
-    private final ResultSet rs;
+  private final ResultSet rs;
 
-    private final Statement stmt;
+  private final Statement stmt;
 
-    private final SQLDetailedListener listener;
+  private final SQLDetailedListener listener;
 
-    private final SQLListenerContext context;
+  private final SQLListenerContext context;
 
-    public SQLResultIterator(Configuration conf, Statement stmt, ResultSet rs) {
-        this(conf, stmt, rs, null, null);
-    }
+  public SQLResultIterator(Configuration conf, Statement stmt, ResultSet rs) {
+    this(conf, stmt, rs, null, null);
+  }
 
-    public SQLResultIterator(Configuration conf, Statement stmt, ResultSet rs,
-                             SQLDetailedListener listener, SQLListenerContext context) {
-        this.configuration = conf;
-        this.stmt = stmt;
-        this.rs = rs;
-        this.listener = listener;
-        this.context = context;
-    }
+  public SQLResultIterator(
+      Configuration conf,
+      Statement stmt,
+      ResultSet rs,
+      SQLDetailedListener listener,
+      SQLListenerContext context) {
+    this.configuration = conf;
+    this.stmt = stmt;
+    this.rs = rs;
+    this.listener = listener;
+    this.context = context;
+  }
 
-    @Override
-    public void close() {
-        try {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } finally {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
-        } catch (SQLException e) {
-            throw configuration.translate(e);
-        } finally {
-            if (listener != null) {
-                listener.end(context);
-            }
+  @Override
+  public void close() {
+    try {
+      try {
+        if (rs != null) {
+          rs.close();
         }
-    }
-
-    @Override
-    public boolean hasNext() {
-        if (next == null) {
-            try {
-                next = rs.next();
-            } catch (SQLException e) {
-                close();
-                throw configuration.translate(e);
-            }
+      } finally {
+        if (stmt != null) {
+          stmt.close();
         }
-        return next;
+      }
+    } catch (SQLException e) {
+      throw configuration.translate(e);
+    } finally {
+      if (listener != null) {
+        listener.end(context);
+      }
     }
+  }
 
-    @Override
-    public T next() {
-        if (hasNext()) {
-            next = null;
-            try {
-                return produceNext(rs);
-            } catch (SQLException e) {
-                close();
-                throw configuration.translate(e);
-            } catch (Exception e) {
-                close();
-                throw new QueryException(e);
-            }
-        } else {
-            throw new NoSuchElementException();
-        }
+  @Override
+  public boolean hasNext() {
+    if (next == null) {
+      try {
+        next = rs.next();
+      } catch (SQLException e) {
+        close();
+        throw configuration.translate(e);
+      }
     }
+    return next;
+  }
 
-    protected abstract T produceNext(ResultSet rs) throws Exception;
-
-    @Override
-    public void remove() {
-        try {
-            rs.deleteRow();
-        } catch (SQLException e) {
-            close();
-            throw configuration.translate(e);
-        }
+  @Override
+  public T next() {
+    if (hasNext()) {
+      next = null;
+      try {
+        return produceNext(rs);
+      } catch (SQLException e) {
+        close();
+        throw configuration.translate(e);
+      } catch (Exception e) {
+        close();
+        throw new QueryException(e);
+      }
+    } else {
+      throw new NoSuchElementException();
     }
+  }
 
+  protected abstract T produceNext(ResultSet rs) throws Exception;
+
+  @Override
+  public void remove() {
+    try {
+      rs.deleteRow();
+    } catch (SQLException e) {
+      close();
+      throw configuration.translate(e);
+    }
+  }
 }

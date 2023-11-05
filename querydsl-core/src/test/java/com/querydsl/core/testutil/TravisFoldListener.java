@@ -20,22 +20,20 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
 
 /**
- *
  * @author Shredder121
  */
 public class TravisFoldListener extends RunListener {
 
-    private static final long ID = System.currentTimeMillis();
+  private static final long ID = System.currentTimeMillis();
 
-    @Override
-    public void testRunStarted(Description description) throws Exception {
-        System.out.println("travis_fold:start:tests" + ID);
-        System.out.println("Running tests");
-    }
+  @Override
+  public void testRunStarted(Description description) throws Exception {
+    System.out.println("travis_fold:start:tests" + ID);
+    System.out.println("Running tests");
+  }
 
-    @Override
-    public void testRunFinished(Result result) throws Exception {
-        System.out.println("travis_fold:end:tests" + ID);
-    }
-
+  @Override
+  public void testRunFinished(Result result) throws Exception {
+    System.out.println("travis_fold:end:tests" + ID);
+  }
 }

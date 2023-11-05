@@ -20,38 +20,38 @@ import org.junit.Test;
 
 public class CollQueryFunctionsTest {
 
-    @Test
-    public void coalesce() {
-        assertEquals("1", CollQueryFunctions.coalesce("1",null));
-        assertEquals("1", CollQueryFunctions.coalesce(null,"1","2"));
-        assertNull(CollQueryFunctions.coalesce(null,null));
-    }
+  @Test
+  public void coalesce() {
+    assertEquals("1", CollQueryFunctions.coalesce("1", null));
+    assertEquals("1", CollQueryFunctions.coalesce(null, "1", "2"));
+    assertNull(CollQueryFunctions.coalesce(null, null));
+  }
 
-    @Test
-    @Ignore
-    public void likeSpeed() {
-        // 3015
-        final int iterations = 1000000;
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < iterations; i++) {
-            CollQueryFunctions.like("abcDOG", "%DOG");
-            CollQueryFunctions.like("DOGabc", "DOG%");
-            CollQueryFunctions.like("abcDOGabc", "%DOG%");
-        }
-        long duration = System.currentTimeMillis() - start;
-        System.err.println(duration);
+  @Test
+  @Ignore
+  public void likeSpeed() {
+    // 3015
+    final int iterations = 1000000;
+    long start = System.currentTimeMillis();
+    for (int i = 0; i < iterations; i++) {
+      CollQueryFunctions.like("abcDOG", "%DOG");
+      CollQueryFunctions.like("DOGabc", "DOG%");
+      CollQueryFunctions.like("abcDOGabc", "%DOG%");
     }
+    long duration = System.currentTimeMillis() - start;
+    System.err.println(duration);
+  }
 
-    @Test
-    public void like() {
-        assertTrue(CollQueryFunctions.like("abcDOG", "%DOG"));
-        assertTrue(CollQueryFunctions.like("DOGabc", "DOG%"));
-        assertTrue(CollQueryFunctions.like("abcDOGabc", "%DOG%"));
-    }
+  @Test
+  public void like() {
+    assertTrue(CollQueryFunctions.like("abcDOG", "%DOG"));
+    assertTrue(CollQueryFunctions.like("DOGabc", "DOG%"));
+    assertTrue(CollQueryFunctions.like("abcDOGabc", "%DOG%"));
+  }
 
-    @Test
-    public void like_with_special_chars() {
-        assertTrue(CollQueryFunctions.like("$DOG", "$DOG"));
-        assertTrue(CollQueryFunctions.like("$DOGabc", "$DOG%"));
-    }
+  @Test
+  public void like_with_special_chars() {
+    assertTrue(CollQueryFunctions.like("$DOG", "$DOG"));
+    assertTrue(CollQueryFunctions.like("$DOGabc", "$DOG%"));
+  }
 }

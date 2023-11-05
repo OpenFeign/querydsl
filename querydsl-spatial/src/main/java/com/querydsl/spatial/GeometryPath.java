@@ -13,149 +13,144 @@
  */
 package com.querydsl.spatial;
 
+import com.querydsl.core.types.*;
 import java.lang.reflect.AnnotatedElement;
-
 import org.geolatte.geom.*;
 
-import com.querydsl.core.types.*;
-
 /**
- * {@code GeometryPath} extends {@link GeometryExpression} to implement the
- * {@link Path} interface
+ * {@code GeometryPath} extends {@link GeometryExpression} to implement the {@link Path} interface
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class GeometryPath<T extends Geometry> extends GeometryExpression<T> implements Path<T> {
 
-    private static final long serialVersionUID = 312776751843333543L;
+  private static final long serialVersionUID = 312776751843333543L;
 
-    private final PathImpl<T> pathMixin;
+  private final PathImpl<T> pathMixin;
 
-    private transient volatile GeometryCollectionPath<GeometryCollection> collection;
+  private transient volatile GeometryCollectionPath<GeometryCollection> collection;
 
-    private transient volatile LinearRingPath<LinearRing> linearRing;
+  private transient volatile LinearRingPath<LinearRing> linearRing;
 
-    private transient volatile LineStringPath<LineString> lineString;
+  private transient volatile LineStringPath<LineString> lineString;
 
-    private transient volatile MultiLineStringPath<MultiLineString> multiLineString;
+  private transient volatile MultiLineStringPath<MultiLineString> multiLineString;
 
-    private transient volatile MultiPointPath<MultiPoint> multiPoint;
+  private transient volatile MultiPointPath<MultiPoint> multiPoint;
 
-    private transient volatile MultiPolygonPath<MultiPolygon> multiPolygon;
+  private transient volatile MultiPolygonPath<MultiPolygon> multiPolygon;
 
-    private transient volatile PointPath<Point> point;
+  private transient volatile PointPath<Point> point;
 
-    private transient volatile PolygonPath<Polygon> polygon;
+  private transient volatile PolygonPath<Polygon> polygon;
 
-    protected GeometryPath(PathImpl<T> mixin) {
-        super(mixin);
-        this.pathMixin = mixin;
+  protected GeometryPath(PathImpl<T> mixin) {
+    super(mixin);
+    this.pathMixin = mixin;
+  }
+
+  @SuppressWarnings("unchecked")
+  public GeometryPath(Path<?> parent, String property) {
+    this((Class<? extends T>) Geometry.class, parent, property);
+  }
+
+  public GeometryPath(Class<? extends T> type, Path<?> parent, String property) {
+    this(type, PathMetadataFactory.forProperty(parent, property));
+  }
+
+  @SuppressWarnings("unchecked")
+  public GeometryPath(PathMetadata metadata) {
+    this((Class<? extends T>) Geometry.class, metadata);
+  }
+
+  public GeometryPath(Class<? extends T> type, PathMetadata metadata) {
+    super(ExpressionUtils.path(type, metadata));
+    this.pathMixin = (PathImpl<T>) mixin;
+  }
+
+  @SuppressWarnings("unchecked")
+  public GeometryPath(String var) {
+    this((Class<? extends T>) Geometry.class, PathMetadataFactory.forVariable(var));
+  }
+
+  public GeometryCollectionPath<GeometryCollection> asCollection() {
+    if (collection == null) {
+      collection = new GeometryCollectionPath<GeometryCollection>(pathMixin.getMetadata());
     }
+    return collection;
+  }
 
-    @SuppressWarnings("unchecked")
-    public GeometryPath(Path<?> parent, String property) {
-        this((Class<? extends T>) Geometry.class, parent, property);
+  public LinearRingPath<LinearRing> asLinearRing() {
+    if (linearRing == null) {
+      linearRing = new LinearRingPath<LinearRing>(pathMixin.getMetadata());
     }
+    return linearRing;
+  }
 
-    public GeometryPath(Class<? extends T> type, Path<?> parent, String property) {
-        this(type, PathMetadataFactory.forProperty(parent, property));
+  public LineStringPath<LineString> asLineString() {
+    if (lineString == null) {
+      lineString = new LineStringPath<LineString>(pathMixin.getMetadata());
     }
+    return lineString;
+  }
 
-    @SuppressWarnings("unchecked")
-    public GeometryPath(PathMetadata metadata) {
-        this((Class<? extends T>) Geometry.class, metadata);
+  public MultiLineStringPath<MultiLineString> asMultiLineString() {
+    if (multiLineString == null) {
+      multiLineString = new MultiLineStringPath<MultiLineString>(pathMixin.getMetadata());
     }
+    return multiLineString;
+  }
 
-    public GeometryPath(Class<? extends T> type, PathMetadata metadata) {
-        super(ExpressionUtils.path(type, metadata));
-        this.pathMixin = (PathImpl<T>) mixin;
+  public MultiPointPath<MultiPoint> asMultiPoint() {
+    if (multiPoint == null) {
+      multiPoint = new MultiPointPath<MultiPoint>(pathMixin.getMetadata());
     }
+    return multiPoint;
+  }
 
-    @SuppressWarnings("unchecked")
-    public GeometryPath(String var) {
-        this((Class<? extends T>) Geometry.class, PathMetadataFactory.forVariable(var));
+  public MultiPolygonPath<MultiPolygon> asMultiPolygon() {
+    if (multiPolygon == null) {
+      multiPolygon = new MultiPolygonPath<MultiPolygon>(pathMixin.getMetadata());
     }
+    return multiPolygon;
+  }
 
-    public GeometryCollectionPath<GeometryCollection> asCollection() {
-        if (collection == null) {
-            collection = new GeometryCollectionPath<GeometryCollection>(pathMixin.getMetadata());
-        }
-        return collection;
+  public PointPath<Point> asPoint() {
+    if (point == null) {
+      point = new PointPath<Point>(pathMixin.getMetadata());
     }
+    return point;
+  }
 
-    public LinearRingPath<LinearRing> asLinearRing() {
-        if (linearRing == null) {
-            linearRing = new LinearRingPath<LinearRing>(pathMixin.getMetadata());
-        }
-        return linearRing;
+  public PolygonPath<Polygon> asPolygon() {
+    if (polygon == null) {
+      polygon = new PolygonPath<Polygon>(pathMixin.getMetadata());
     }
+    return polygon;
+  }
 
-    public LineStringPath<LineString> asLineString() {
-        if (lineString == null) {
-            lineString = new LineStringPath<LineString>(pathMixin.getMetadata());
-        }
-        return lineString;
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(pathMixin, context);
+  }
 
-    public MultiLineStringPath<MultiLineString> asMultiLineString() {
-        if (multiLineString == null) {
-            multiLineString = new MultiLineStringPath<MultiLineString>(pathMixin.getMetadata());
-        }
-        return multiLineString;
-    }
+  public GeometryPath(Class<? extends T> type, String var) {
+    this(type, PathMetadataFactory.forVariable(var));
+  }
 
-    public MultiPointPath<MultiPoint> asMultiPoint() {
-        if (multiPoint == null) {
-            multiPoint = new MultiPointPath<MultiPoint>(pathMixin.getMetadata());
-        }
-        return multiPoint;
-    }
+  @Override
+  public PathMetadata getMetadata() {
+    return pathMixin.getMetadata();
+  }
 
-    public MultiPolygonPath<MultiPolygon> asMultiPolygon() {
-        if (multiPolygon == null) {
-            multiPolygon = new MultiPolygonPath<MultiPolygon>(pathMixin.getMetadata());
-        }
-        return multiPolygon;
-    }
+  @Override
+  public Path<?> getRoot() {
+    return pathMixin.getRoot();
+  }
 
-    public PointPath<Point> asPoint() {
-        if (point == null) {
-            point = new PointPath<Point>(pathMixin.getMetadata());
-        }
-        return point;
-    }
-
-    public PolygonPath<Polygon> asPolygon() {
-        if (polygon == null) {
-            polygon = new PolygonPath<Polygon>(pathMixin.getMetadata());
-        }
-        return polygon;
-    }
-
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(pathMixin, context);
-    }
-
-    public GeometryPath(Class<? extends T> type, String var) {
-        this(type, PathMetadataFactory.forVariable(var));
-    }
-
-    @Override
-    public PathMetadata getMetadata() {
-        return pathMixin.getMetadata();
-    }
-
-    @Override
-    public Path<?> getRoot() {
-        return pathMixin.getRoot();
-    }
-
-    @Override
-    public AnnotatedElement getAnnotatedElement() {
-        return pathMixin.getAnnotatedElement();
-    }
-
+  @Override
+  public AnnotatedElement getAnnotatedElement() {
+    return pathMixin.getAnnotatedElement();
+  }
 }

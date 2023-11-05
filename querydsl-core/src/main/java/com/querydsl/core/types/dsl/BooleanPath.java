@@ -13,59 +13,56 @@
  */
 package com.querydsl.core.types.dsl;
 
-import java.lang.reflect.AnnotatedElement;
-
 import com.querydsl.core.types.*;
+import java.lang.reflect.AnnotatedElement;
 
 /**
  * {@code BooleanPath} represents boolean path expressions
  *
  * @author tiwe
  * @see java.lang.Boolean
- *
  */
 public class BooleanPath extends BooleanExpression implements Path<Boolean> {
 
-    private static final long serialVersionUID = 6590516706769430565L;
+  private static final long serialVersionUID = 6590516706769430565L;
 
-    private final PathImpl<Boolean> pathMixin;
+  private final PathImpl<Boolean> pathMixin;
 
-    protected BooleanPath(PathImpl<Boolean> mixin) {
-        super(mixin);
-        this.pathMixin = mixin;
-    }
+  protected BooleanPath(PathImpl<Boolean> mixin) {
+    super(mixin);
+    this.pathMixin = mixin;
+  }
 
-    protected BooleanPath(Path<?> parent, String property) {
-        this(PathMetadataFactory.forProperty(parent, property));
-    }
+  protected BooleanPath(Path<?> parent, String property) {
+    this(PathMetadataFactory.forProperty(parent, property));
+  }
 
-    protected BooleanPath(PathMetadata metadata) {
-        super(ExpressionUtils.path(Boolean.class, metadata));
-        this.pathMixin = (PathImpl<Boolean>) mixin;
-    }
+  protected BooleanPath(PathMetadata metadata) {
+    super(ExpressionUtils.path(Boolean.class, metadata));
+    this.pathMixin = (PathImpl<Boolean>) mixin;
+  }
 
-    protected BooleanPath(String var) {
-        this(PathMetadataFactory.forVariable(var));
-    }
+  protected BooleanPath(String var) {
+    this(PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(this, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
 
-    @Override
-    public PathMetadata getMetadata() {
-        return pathMixin.getMetadata();
-    }
+  @Override
+  public PathMetadata getMetadata() {
+    return pathMixin.getMetadata();
+  }
 
-    @Override
-    public Path<?> getRoot() {
-        return pathMixin.getRoot();
-    }
+  @Override
+  public Path<?> getRoot() {
+    return pathMixin.getRoot();
+  }
 
-    @Override
-    public AnnotatedElement getAnnotatedElement() {
-        return pathMixin.getAnnotatedElement();
-    }
-
+  @Override
+  public AnnotatedElement getAnnotatedElement() {
+    return pathMixin.getAnnotatedElement();
+  }
 }

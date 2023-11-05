@@ -5,5 +5,5 @@ import javax.persistence.Entity;
 @Entity
 public class Person {
 
-    String firstName, lastName;
+  String firstName, lastName;
 }

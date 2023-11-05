@@ -13,27 +13,28 @@
  */
 package com.querydsl.sql.dml;
 
-import java.sql.Connection;
-import java.util.function.Supplier;
-
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLTemplates;
+import java.sql.Connection;
+import java.util.function.Supplier;
 
 /**
- * Defines an UPDATE clause.
- * If you need to subtype this, use {@link AbstractSQLUpdateClause} instead.
+ * Defines an UPDATE clause. If you need to subtype this, use {@link AbstractSQLUpdateClause}
+ * instead.
  */
 public class SQLUpdateClause extends AbstractSQLUpdateClause<SQLUpdateClause> {
-    public SQLUpdateClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
-        super(connection, new Configuration(templates), entity);
-    }
+  public SQLUpdateClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
+    super(connection, new Configuration(templates), entity);
+  }
 
-    public SQLUpdateClause(Connection connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-    }
+  public SQLUpdateClause(
+      Connection connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+  }
 
-    public SQLUpdateClause(Supplier<Connection> connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-    }
+  public SQLUpdateClause(
+      Supplier<Connection> connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+  }
 }

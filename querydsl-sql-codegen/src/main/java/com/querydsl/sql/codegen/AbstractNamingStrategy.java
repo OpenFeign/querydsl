@@ -13,140 +13,138 @@
  */
 package com.querydsl.sql.codegen;
 
-import javax.lang.model.SourceVersion;
-
 import com.querydsl.codegen.EntityType;
 import com.querydsl.sql.SchemaAndTable;
 import com.querydsl.sql.codegen.support.ForeignKeyData;
+import javax.lang.model.SourceVersion;
 
 /**
- * {@code AbstractNamingStrategy} is an abstract base class for {@link NamingStrategy} implementations
+ * {@code AbstractNamingStrategy} is an abstract base class for {@link NamingStrategy}
+ * implementations
  *
  * @author tiwe
- *
  */
 public abstract class AbstractNamingStrategy implements NamingStrategy {
 
-    protected String foreignKeysClassName = "ForeignKeys";
+  protected String foreignKeysClassName = "ForeignKeys";
 
-    protected String foreignKeysVariable = "fk";
+  protected String foreignKeysVariable = "fk";
 
-    protected String primaryKeysClassName = "PrimaryKeys";
+  protected String primaryKeysClassName = "PrimaryKeys";
 
-    protected String primaryKeysVariable = "pk";
+  protected String primaryKeysVariable = "pk";
 
-    protected String reservedSuffix = "_col";
+  protected String reservedSuffix = "_col";
 
-    @Override
-    public String appendSchema(String packageName, String schemaName) {
-        if (schemaName == null) {
-          return packageName;
-        }
-        String suffix = schemaName.toLowerCase();
-        if (SourceVersion.isKeyword(suffix)) {
-            suffix += "_";
-        }
-        return packageName + "." + suffix;
+  @Override
+  public String appendSchema(String packageName, String schemaName) {
+    if (schemaName == null) {
+      return packageName;
     }
-
-    protected String escape(EntityType entityType, String name) {
-        int suffix = 0;
-        while (true) {
-            String candidate = suffix > 0 ? name + suffix : name;
-            if (entityType.getEscapedPropertyNames().contains(candidate)) {
-                suffix++;
-            } else {
-                return candidate;
-            }
-        }
+    String suffix = schemaName.toLowerCase();
+    if (SourceVersion.isKeyword(suffix)) {
+      suffix += "_";
     }
+    return packageName + "." + suffix;
+  }
 
-    @Override
-    public String getForeignKeysClassName() {
-        return foreignKeysClassName;
+  protected String escape(EntityType entityType, String name) {
+    int suffix = 0;
+    while (true) {
+      String candidate = suffix > 0 ? name + suffix : name;
+      if (entityType.getEscapedPropertyNames().contains(candidate)) {
+        suffix++;
+      } else {
+        return candidate;
+      }
     }
+  }
 
-    @Override
-    public String getForeignKeysVariable(EntityType entityType) {
-        return foreignKeysVariable;
+  @Override
+  public String getForeignKeysClassName() {
+    return foreignKeysClassName;
+  }
+
+  @Override
+  public String getForeignKeysVariable(EntityType entityType) {
+    return foreignKeysVariable;
+  }
+
+  @Override
+  public String getPrimaryKeysClassName() {
+    return primaryKeysClassName;
+  }
+
+  @Override
+  public String getPrimaryKeysVariable(EntityType entityType) {
+    return primaryKeysVariable;
+  }
+
+  @Override
+  public String normalizeColumnName(String columnName) {
+    return normalizeSQLName(columnName);
+  }
+
+  @Override
+  public String normalizeTableName(String tableName) {
+    return normalizeSQLName(tableName);
+  }
+
+  @Override
+  public String normalizeSchemaName(String schemaName) {
+    return normalizeSQLName(schemaName);
+  }
+
+  protected String normalizeSQLName(String name) {
+    if (name != null) {
+      return name.replaceAll("\r", "").replaceAll("\n", " ");
+    } else {
+      return null;
     }
+  }
 
-    @Override
-    public String getPrimaryKeysClassName() {
-        return primaryKeysClassName;
-    }
+  protected String normalizeJavaName(String name) {
+    return Naming.normalize(name, reservedSuffix);
+  }
 
-    @Override
-    public String getPrimaryKeysVariable(EntityType entityType) {
-        return primaryKeysVariable;
-    }
+  public void setForeignKeysClassName(String foreignKeysClassName) {
+    this.foreignKeysClassName = foreignKeysClassName;
+  }
 
-    @Override
-    public String normalizeColumnName(String columnName) {
-        return normalizeSQLName(columnName);
-    }
+  public void setForeignKeysVariable(String foreignKeysVariable) {
+    this.foreignKeysVariable = foreignKeysVariable;
+  }
 
-    @Override
-    public String normalizeTableName(String tableName) {
-        return normalizeSQLName(tableName);
-    }
+  public void setPrimaryKeysClassName(String primaryKeysClassName) {
+    this.primaryKeysClassName = primaryKeysClassName;
+  }
 
-    @Override
-    public String normalizeSchemaName(String schemaName) {
-        return normalizeSQLName(schemaName);
-    }
+  public void setPrimaryKeysVariable(String primaryKeysVariable) {
+    this.primaryKeysVariable = primaryKeysVariable;
+  }
 
-    protected String normalizeSQLName(String name) {
-        if (name != null) {
-            return name.replaceAll("\r", "").replaceAll("\n", " ");
-        } else {
-            return null;
-        }
-    }
+  public void setReservedSuffix(String reservedSuffix) {
+    this.reservedSuffix = reservedSuffix;
+  }
 
-    protected String normalizeJavaName(String name) {
-        return Naming.normalize(name, reservedSuffix);
-    }
+  @Override
+  public String getPackage(String basePackage, SchemaAndTable schemaAndTable) {
+    return appendSchema(basePackage, schemaAndTable.getSchema());
+  }
 
-    public void setForeignKeysClassName(String foreignKeysClassName) {
-        this.foreignKeysClassName = foreignKeysClassName;
-    }
+  @Override
+  public boolean shouldGenerateClass(SchemaAndTable schemaAndTable) {
+    return true;
+  }
 
-    public void setForeignKeysVariable(String foreignKeysVariable) {
-        this.foreignKeysVariable = foreignKeysVariable;
-    }
+  @Override
+  public boolean shouldGenerateForeignKey(
+      SchemaAndTable schemaAndTable, ForeignKeyData foreignKeyData) {
+    return true;
+  }
 
-    public void setPrimaryKeysClassName(String primaryKeysClassName) {
-        this.primaryKeysClassName = primaryKeysClassName;
-    }
-
-    public void setPrimaryKeysVariable(String primaryKeysVariable) {
-        this.primaryKeysVariable = primaryKeysVariable;
-    }
-
-    public void setReservedSuffix(String reservedSuffix) {
-        this.reservedSuffix = reservedSuffix;
-    }
-
-    @Override
-    public String getPackage(String basePackage, SchemaAndTable schemaAndTable) {
-        return appendSchema(basePackage, schemaAndTable.getSchema());
-    }
-
-    @Override
-    public boolean shouldGenerateClass(SchemaAndTable schemaAndTable) {
-        return true;
-    }
-
-    @Override
-    public boolean shouldGenerateForeignKey(SchemaAndTable schemaAndTable,
-        ForeignKeyData foreignKeyData) {
-        return true;
-    }
-
-    @Override
-    public String getClassName(SchemaAndTable schemaAndTable) {
-        return getClassName(schemaAndTable.getTable());
-    }
-
+  @Override
+  public String getClassName(SchemaAndTable schemaAndTable) {
+    return getClassName(schemaAndTable.getTable());
+  }
 }

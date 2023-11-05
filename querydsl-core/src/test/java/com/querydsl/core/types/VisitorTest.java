@@ -16,23 +16,21 @@ package com.querydsl.core.types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 
 public class VisitorTest {
 
-    @Test
-    public void iteration() throws SecurityException, NoSuchMethodException {
-        List<Class<?>> types = new ArrayList<Class<?>>();
-//        types.addAll(Arrays.<Class<?>>asList(Alias.class.getClasses()));
-        types.addAll(Arrays.asList(Operation.class.getClasses()));
-        types.addAll(Arrays.asList(Path.class.getClasses()));
-        for (Class<?> innerType : types) {
-            if (!innerType.isInterface() && Expression.class.isAssignableFrom(innerType)) {
-                Visitor.class.getDeclaredMethod("visit",innerType);
-            }
-        }
-        System.out.println("successful for " + types.size() + " types");
+  @Test
+  public void iteration() throws SecurityException, NoSuchMethodException {
+    List<Class<?>> types = new ArrayList<Class<?>>();
+    //        types.addAll(Arrays.<Class<?>>asList(Alias.class.getClasses()));
+    types.addAll(Arrays.asList(Operation.class.getClasses()));
+    types.addAll(Arrays.asList(Path.class.getClasses()));
+    for (Class<?> innerType : types) {
+      if (!innerType.isInterface() && Expression.class.isAssignableFrom(innerType)) {
+        Visitor.class.getDeclaredMethod("visit", innerType);
+      }
     }
-
+    System.out.println("successful for " + types.size() + " types");
+  }
 }

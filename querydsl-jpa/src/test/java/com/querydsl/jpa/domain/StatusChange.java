@@ -15,15 +15,12 @@ package com.querydsl.jpa.domain;
 
 import javax.persistence.*;
 
-/**
- * The Class StatusChange.
- */
+/** The Class StatusChange. */
 @Entity
 @Table(name = "statuschange_")
 public class StatusChange {
-    @Id
-    long id;
+  @Id long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    java.util.Date timeStamp;
+  @Temporal(TemporalType.TIMESTAMP)
+  java.util.Date timeStamp;
 }

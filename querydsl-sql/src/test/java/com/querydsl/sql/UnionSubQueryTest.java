@@ -16,75 +16,69 @@ package com.querydsl.sql;
 import static com.querydsl.sql.SQLExpressions.*;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.SimplePath;
+import org.junit.Test;
 
 public class UnionSubQueryTest {
 
-    private static final SimpleExpression<Integer> one = Expressions.numberTemplate(Integer.class, "1");
+  private static final SimpleExpression<Integer> one =
+      Expressions.numberTemplate(Integer.class, "1");
 
-    private static final SimpleExpression<Integer> two = Expressions.numberTemplate(Integer.class, "2");
+  private static final SimpleExpression<Integer> two =
+      Expressions.numberTemplate(Integer.class, "2");
 
-    private static final SimpleExpression<Integer> three = Expressions.numberTemplate(Integer.class,"3");
+  private static final SimpleExpression<Integer> three =
+      Expressions.numberTemplate(Integer.class, "3");
 
-    private SQLTemplates templates = H2Templates.builder().newLineToSingleSpace().build();
+  private SQLTemplates templates = H2Templates.builder().newLineToSingleSpace().build();
 
-    private SQLSerializer serializer = new SQLSerializer(new Configuration(templates));
+  private SQLSerializer serializer = new SQLSerializer(new Configuration(templates));
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void in_union() {
-        NumberPath<Integer> intPath = Expressions.numberPath(Integer.class, "intPath");
-        Expression<?> expr = intPath.in(union(
-                select(one),
-                select(two)));
+  @SuppressWarnings("unchecked")
+  @Test
+  public void in_union() {
+    NumberPath<Integer> intPath = Expressions.numberPath(Integer.class, "intPath");
+    Expression<?> expr = intPath.in(union(select(one), select(two)));
 
-        serializer.handle(expr);
-        assertEquals(
-            "intPath in ((select 1 from dual)\n" +
-            "union\n" +
-            "(select 2 from dual))", serializer.toString());
-    }
+    serializer.handle(expr);
+    assertEquals(
+        "intPath in ((select 1 from dual)\n" + "union\n" + "(select 2 from dual))",
+        serializer.toString());
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void union_subQuery() {
-        SimplePath<Integer> col1 = Expressions.path(Integer.class, "col1");
-        Expression<?> union = union(
-                select(one.as(col1)),
-                select(two),
-                select(three));
+  @SuppressWarnings("unchecked")
+  @Test
+  public void union_subQuery() {
+    SimplePath<Integer> col1 = Expressions.path(Integer.class, "col1");
+    Expression<?> union = union(select(one.as(col1)), select(two), select(three));
 
-        serializer.handle(union);
-        assertEquals(
-                "(select 1 as col1 from dual)\n" +
-                "union\n" +
-                "(select 2 from dual)\n" +
-                "union\n" +
-                "(select 3 from dual)", serializer.toString());
-    }
+    serializer.handle(union);
+    assertEquals(
+        "(select 1 as col1 from dual)\n"
+            + "union\n"
+            + "(select 2 from dual)\n"
+            + "union\n"
+            + "(select 3 from dual)",
+        serializer.toString());
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void unionAll_subQuery() {
-        SimplePath<Integer> col1 = Expressions.path(Integer.class,"col1");
-        Expression<?> union = unionAll(
-                select(one.as(col1)),
-                select(two),
-                select(three));
+  @SuppressWarnings("unchecked")
+  @Test
+  public void unionAll_subQuery() {
+    SimplePath<Integer> col1 = Expressions.path(Integer.class, "col1");
+    Expression<?> union = unionAll(select(one.as(col1)), select(two), select(three));
 
-        serializer.handle(union);
-        assertEquals(
-                "(select 1 as col1 from dual)\n" +
-                "union all\n" +
-                "(select 2 from dual)\n" +
-                "union all\n" +
-                "(select 3 from dual)", serializer.toString());
-    }
-
+    serializer.handle(union);
+    assertEquals(
+        "(select 1 as col1 from dual)\n"
+            + "union all\n"
+            + "(select 2 from dual)\n"
+            + "union all\n"
+            + "(select 3 from dual)",
+        serializer.toString());
+  }
 }

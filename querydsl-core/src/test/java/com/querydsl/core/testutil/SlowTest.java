@@ -14,9 +14,5 @@
 
 package com.querydsl.core.testutil;
 
-/**
- * {@code SlowTest} is a test category for really slow tests.
- */
-public interface SlowTest {
-
-}
+/** {@code SlowTest} is a test category for really slow tests. */
+public interface SlowTest {}

@@ -15,23 +15,17 @@ package com.querydsl.jpa.domain;
 
 import java.io.Serializable;
 import java.util.Map;
-
 import javax.persistence.*;
 
-
-
-/**
- * The Class Calendar.
- */
+/** The Class Calendar. */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "calendar_")
 public class Calendar implements Serializable {
-    @ElementCollection
-    @Temporal(TemporalType.DATE)
-    @MapKeyColumn(name = "holidays_key")
-    Map<String, java.util.Date> holidays;
+  @ElementCollection
+  @Temporal(TemporalType.DATE)
+  @MapKeyColumn(name = "holidays_key")
+  Map<String, java.util.Date> holidays;
 
-    @Id
-    int id;
+  @Id int id;
 }

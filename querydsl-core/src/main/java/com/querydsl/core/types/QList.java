@@ -13,94 +13,89 @@
  */
 package com.querydsl.core.types;
 
+import com.querydsl.core.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.jetbrains.annotations.Nullable;
-
-import com.querydsl.core.util.CollectionUtils;
 import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * {@code QList} represents a projection of type List
  *
  * @author tiwe
- *
  */
 public class QList extends FactoryExpressionBase<List<?>> {
 
-    private static final long serialVersionUID = -7545994090073480810L;
+  private static final long serialVersionUID = -7545994090073480810L;
 
-    @Unmodifiable
-    private final List<Expression<?>> args;
+  @Unmodifiable private final List<Expression<?>> args;
 
-    /**
-     * Create a new QList instance
-     *
-     * @param args
-     */
-    @SuppressWarnings("unchecked")
-    protected QList(Expression<?>... args) {
-        super((Class) List.class);
-        this.args = CollectionUtils.unmodifiableList(Arrays.asList(args));
+  /**
+   * Create a new QList instance
+   *
+   * @param args
+   */
+  @SuppressWarnings("unchecked")
+  protected QList(Expression<?>... args) {
+    super((Class) List.class);
+    this.args = CollectionUtils.unmodifiableList(Arrays.asList(args));
+  }
+
+  /**
+   * Create a new QList instance
+   *
+   * @param args
+   */
+  @SuppressWarnings("unchecked")
+  protected QList(List<Expression<?>> args) {
+    super((Class) List.class);
+    this.args = CollectionUtils.unmodifiableList(args);
+  }
+
+  /**
+   * Create a new QMap instance
+   *
+   * @param args
+   */
+  @SuppressWarnings("unchecked")
+  protected QList(Expression<?>[]... args) {
+    super((Class) List.class);
+    List<Expression<?>> builder = new ArrayList<>();
+    for (Expression<?>[] exprs : args) {
+      Collections.addAll(builder, exprs);
     }
+    this.args = CollectionUtils.unmodifiableList(builder);
+  }
 
-    /**
-     * Create a new QList instance
-     *
-     * @param args
-     */
-    @SuppressWarnings("unchecked")
-    protected QList(List<Expression<?>> args) {
-        super((Class) List.class);
-        this.args = CollectionUtils.unmodifiableList(args);
+  @Override
+  @Nullable
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
+
+  @Override
+  @Unmodifiable
+  public List<Expression<?>> getArgs() {
+    return args;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    } else if (obj instanceof FactoryExpression) {
+      FactoryExpression<?> c = (FactoryExpression<?>) obj;
+      return args.equals(c.getArgs()) && getType().equals(c.getType());
+    } else {
+      return false;
     }
+  }
 
-    /**
-     * Create a new QMap instance
-     *
-     * @param args
-     */
-    @SuppressWarnings("unchecked")
-    protected QList(Expression<?>[]... args) {
-        super((Class) List.class);
-        List<Expression<?>> builder = new ArrayList<>();
-        for (Expression<?>[] exprs: args) {
-            Collections.addAll(builder, exprs);
-        }
-        this.args = CollectionUtils.unmodifiableList(builder);
-    }
-
-    @Override
-    @Nullable
-    public <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
-    }
-
-    @Override
-    @Unmodifiable
-    public List<Expression<?>> getArgs() {
-        return args;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof FactoryExpression) {
-            FactoryExpression<?> c = (FactoryExpression<?>) obj;
-            return args.equals(c.getArgs()) && getType().equals(c.getType());
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    @Nullable
-    public List<?> newInstance(Object... args) {
-        return Collections.unmodifiableList(Arrays.asList(args));
-    }
-
+  @Override
+  @Nullable
+  public List<?> newInstance(Object... args) {
+    return Collections.unmodifiableList(Arrays.asList(args));
+  }
 }

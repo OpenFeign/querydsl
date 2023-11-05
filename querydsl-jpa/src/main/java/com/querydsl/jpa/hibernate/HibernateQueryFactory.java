@@ -13,8 +13,6 @@
  */
 package com.querydsl.jpa.hibernate;
 
-import org.hibernate.Session;
-
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
@@ -22,102 +20,100 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.HQLTemplates;
 import com.querydsl.jpa.JPQLQueryFactory;
 import com.querydsl.jpa.JPQLTemplates;
-
 import java.util.function.Supplier;
+import org.hibernate.Session;
 
 /**
  * Factory class for query and DML clause creation
  *
  * @author tiwe
- *
  */
 public class HibernateQueryFactory implements JPQLQueryFactory {
 
-    private final JPQLTemplates templates;
+  private final JPQLTemplates templates;
 
-    private final Supplier<Session> session;
+  private final Supplier<Session> session;
 
-    public HibernateQueryFactory(Session session) {
-        this(HQLTemplates.DEFAULT, session);
-    }
+  public HibernateQueryFactory(Session session) {
+    this(HQLTemplates.DEFAULT, session);
+  }
 
-    public HibernateQueryFactory(JPQLTemplates templates, final Session session) {
-        this.session = () -> session;
-        this.templates = templates;
-    }
+  public HibernateQueryFactory(JPQLTemplates templates, final Session session) {
+    this.session = () -> session;
+    this.templates = templates;
+  }
 
-    public HibernateQueryFactory(Supplier<Session> session) {
-        this(HQLTemplates.DEFAULT, session);
-    }
+  public HibernateQueryFactory(Supplier<Session> session) {
+    this(HQLTemplates.DEFAULT, session);
+  }
 
-    public HibernateQueryFactory(JPQLTemplates templates, Supplier<Session> session) {
-        this.session = session;
-        this.templates = templates;
-    }
+  public HibernateQueryFactory(JPQLTemplates templates, Supplier<Session> session) {
+    this.session = session;
+    this.templates = templates;
+  }
 
-    @Override
-    public HibernateDeleteClause delete(EntityPath<?> path) {
-        return new HibernateDeleteClause(session.get(), path, templates);
-    }
+  @Override
+  public HibernateDeleteClause delete(EntityPath<?> path) {
+    return new HibernateDeleteClause(session.get(), path, templates);
+  }
 
-    @Override
-    public <T> HibernateQuery<T> select(Expression<T> expr) {
-        return query().select(expr);
-    }
+  @Override
+  public <T> HibernateQuery<T> select(Expression<T> expr) {
+    return query().select(expr);
+  }
 
-    @Override
-    public HibernateQuery<Tuple> select(Expression<?>... exprs) {
-        return query().select(exprs);
-    }
+  @Override
+  public HibernateQuery<Tuple> select(Expression<?>... exprs) {
+    return query().select(exprs);
+  }
 
-    @Override
-    public <T> HibernateQuery<T> selectDistinct(Expression<T> expr) {
-        return select(expr).distinct();
-    }
+  @Override
+  public <T> HibernateQuery<T> selectDistinct(Expression<T> expr) {
+    return select(expr).distinct();
+  }
 
-    @Override
-    public HibernateQuery<Tuple> selectDistinct(Expression<?>... exprs) {
-        return select(exprs).distinct();
-    }
+  @Override
+  public HibernateQuery<Tuple> selectDistinct(Expression<?>... exprs) {
+    return select(exprs).distinct();
+  }
 
-    @Override
-    public HibernateQuery<Integer> selectOne() {
-        return select(Expressions.ONE);
-    }
+  @Override
+  public HibernateQuery<Integer> selectOne() {
+    return select(Expressions.ONE);
+  }
 
-    @Override
-    public HibernateQuery<Integer> selectZero() {
-        return select(Expressions.ZERO);
-    }
+  @Override
+  public HibernateQuery<Integer> selectZero() {
+    return select(Expressions.ZERO);
+  }
 
-    @Override
-    public <T> HibernateQuery<T> selectFrom(EntityPath<T> from) {
-        return select(from).from(from);
-    }
+  @Override
+  public <T> HibernateQuery<T> selectFrom(EntityPath<T> from) {
+    return select(from).from(from);
+  }
 
-    @Override
-    public HibernateQuery<?> from(EntityPath<?> from) {
-        return query().from(from);
-    }
+  @Override
+  public HibernateQuery<?> from(EntityPath<?> from) {
+    return query().from(from);
+  }
 
-    @Override
-    public HibernateQuery<?> from(EntityPath<?>... from) {
-        return query().from(from);
-    }
+  @Override
+  public HibernateQuery<?> from(EntityPath<?>... from) {
+    return query().from(from);
+  }
 
-    @Override
-    public HibernateUpdateClause update(EntityPath<?> path) {
-        return new HibernateUpdateClause(session.get(), path, templates);
-    }
+  @Override
+  public HibernateUpdateClause update(EntityPath<?> path) {
+    return new HibernateUpdateClause(session.get(), path, templates);
+  }
 
-    @Override
-    public HibernateInsertClause insert(EntityPath<?> path) {
-        return new HibernateInsertClause(session.get(), path, templates);
-    }
+  @Override
+  public HibernateInsertClause insert(EntityPath<?> path) {
+    return new HibernateInsertClause(session.get(), path, templates);
+  }
 
-    @Override
-    public HibernateQuery<?> query() {
-        return new HibernateQuery<Void>(session.get(), templates);
-    }
-
+  @Override
+  public HibernateQuery<?> query() {
+    return new HibernateQuery<Void>(session.get(), templates);
+  }
 }

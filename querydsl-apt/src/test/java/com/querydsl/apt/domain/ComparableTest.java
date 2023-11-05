@@ -15,59 +15,55 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEntity;
+import org.junit.Test;
 
 public class ComparableTest {
 
-    @QueryEntity
-    public static class CustomComparableHolder {
+  @QueryEntity
+  public static class CustomComparableHolder {
 
-        private CustomComparable customComparable;
+    private CustomComparable customComparable;
 
-        public CustomComparable getCustomComparable() {
-            return customComparable;
-        }
-
-        public void setCustomComparable(CustomComparable customComparable) {
-            this.customComparable = customComparable;
-        }
+    public CustomComparable getCustomComparable() {
+      return customComparable;
     }
 
-    @QueryEmbeddable
-    public static class CustomComparable2 {
+    public void setCustomComparable(CustomComparable customComparable) {
+      this.customComparable = customComparable;
+    }
+  }
 
+  @QueryEmbeddable
+  public static class CustomComparable2 {
 
-        private CustomComparable customComparable;
+    private CustomComparable customComparable;
 
-        public CustomComparable getCustomComparable() {
-            return customComparable;
-        }
-
-        public void setCustomComparable(CustomComparable customComparable) {
-            this.customComparable = customComparable;
-        }
-
+    public CustomComparable getCustomComparable() {
+      return customComparable;
     }
 
-    public static class CustomComparable implements Comparable<CustomComparable> {
+    public void setCustomComparable(CustomComparable customComparable) {
+      this.customComparable = customComparable;
+    }
+  }
 
-        @Override
-        public int compareTo(CustomComparable o) {
-            return 0;
-        }
+  public static class CustomComparable implements Comparable<CustomComparable> {
 
-        public boolean equals(Object o) {
-            return o == this;
-        }
-
+    @Override
+    public int compareTo(CustomComparable o) {
+      return 0;
     }
 
-    @Test
-    public void customComparable_is_properly_handled() {
-        assertNotNull(QComparableTest_CustomComparableHolder.customComparableHolder.customComparable.asc());
+    public boolean equals(Object o) {
+      return o == this;
     }
+  }
 
+  @Test
+  public void customComparable_is_properly_handled() {
+    assertNotNull(
+        QComparableTest_CustomComparableHolder.customComparableHolder.customComparable.asc());
+  }
 }

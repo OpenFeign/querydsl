@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * JPQL for JPA
- */
+/** JPQL for JPA */
 package com.querydsl.jpa.impl;

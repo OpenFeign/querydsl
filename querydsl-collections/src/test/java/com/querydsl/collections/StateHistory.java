@@ -1,16 +1,14 @@
 package com.querydsl.collections;
 
-import java.util.Date;
-
 import com.querydsl.core.annotations.QueryEntity;
+import java.util.Date;
 
 @QueryEntity
 public class StateHistory {
 
-    private Date changedAt;
+  private Date changedAt;
 
-    protected final Date getChangedAtTime() {
-        return changedAt;
-    }
-
+  protected final Date getChangedAtTime() {
+    return changedAt;
+  }
 }

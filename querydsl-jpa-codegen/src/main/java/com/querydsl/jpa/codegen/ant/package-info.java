@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * ANT integration for JPA code generation
- */
+/** ANT integration for JPA code generation */
 package com.querydsl.jpa.codegen.ant;

@@ -17,13 +17,10 @@ import org.junit.runners.model.Statement;
 
 public final class EmptyStatement extends Statement {
 
-    public static final Statement DEFAULT = new EmptyStatement();
+  public static final Statement DEFAULT = new EmptyStatement();
 
-    private EmptyStatement() { }
+  private EmptyStatement() {}
 
-    @Override
-    public void evaluate() throws Throwable {
-
-    }
-
+  @Override
+  public void evaluate() throws Throwable {}
 }

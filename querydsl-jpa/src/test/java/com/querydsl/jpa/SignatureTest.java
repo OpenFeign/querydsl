@@ -13,23 +13,21 @@
  */
 package com.querydsl.jpa;
 
-import org.junit.Test;
-
 import com.querydsl.core.FilteredClause;
 import com.querydsl.jpa.hibernate.HibernateQuery;
 import com.querydsl.jpa.impl.JPAQuery;
+import org.junit.Test;
 
 public class SignatureTest {
 
-    @Test
-    public void test() {
-        meet((JPAQuery) null);
-        meet((HibernateQuery) null);
-        meet((JPQLQuery) null);
-    }
+  @Test
+  public void test() {
+    meet((JPAQuery) null);
+    meet((HibernateQuery) null);
+    meet((JPQLQuery) null);
+  }
 
-    public static <T extends FilteredClause<? super T>> T meet(T query) {
-        return null;
-    }
-
+  public static <T extends FilteredClause<? super T>> T meet(T query) {
+    return null;
+  }
 }

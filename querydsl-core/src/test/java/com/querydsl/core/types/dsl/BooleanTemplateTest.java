@@ -19,14 +19,13 @@ import org.junit.Test;
 
 public class BooleanTemplateTest {
 
-    @Test
-    public void true_() {
-        assertEquals("true", Expressions.TRUE.toString());
-    }
+  @Test
+  public void true_() {
+    assertEquals("true", Expressions.TRUE.toString());
+  }
 
-    @Test
-    public void false_() {
-        assertEquals("false", Expressions.FALSE.toString());
-    }
-
+  @Test
+  public void false_() {
+    assertEquals("false", Expressions.FALSE.toString());
+  }
 }

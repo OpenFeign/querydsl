@@ -15,31 +15,30 @@ package com.querydsl.core;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.dsl.StringExpression;
+import org.junit.Test;
 
 public class StringConstantTest {
 
-    @Test
-    public void test() {
-        assertEquals("abc", expr("ab").append("c").toString());
-        assertEquals("abc", expr("bc").prepend("a").toString());
-        assertEquals("abc", expr("ABC").lower().toString());
-        assertEquals("ABC", expr("abc").upper().toString());
-        assertEquals("ab",  expr("abc").substring(0,2).toString());
-    }
+  @Test
+  public void test() {
+    assertEquals("abc", expr("ab").append("c").toString());
+    assertEquals("abc", expr("bc").prepend("a").toString());
+    assertEquals("abc", expr("ABC").lower().toString());
+    assertEquals("ABC", expr("abc").upper().toString());
+    assertEquals("ab", expr("abc").substring(0, 2).toString());
+  }
 
-    @Test
-    public void test2() {
-        assertEquals("abc", expr("ab").append(expr("c")).toString());
-        assertEquals("abc", expr("bc").prepend(expr("a")).toString());
-        assertEquals("abc", expr("ABC").lower().toString());
-        assertEquals("ABC", expr("abc").upper().toString());
-        assertEquals("ab",  expr("abc").substring(0,2).toString());
-    }
+  @Test
+  public void test2() {
+    assertEquals("abc", expr("ab").append(expr("c")).toString());
+    assertEquals("abc", expr("bc").prepend(expr("a")).toString());
+    assertEquals("abc", expr("ABC").lower().toString());
+    assertEquals("ABC", expr("abc").upper().toString());
+    assertEquals("ab", expr("abc").substring(0, 2).toString());
+  }
 
-    private StringExpression expr(String str) {
-        return StringConstant.create(str);
-    }
+  private StringExpression expr(String str) {
+    return StringConstant.create(str);
+  }
 }

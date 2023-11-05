@@ -1,6 +1,6 @@
 /*
  * Copyright 2010, Mysema Ltd
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,57 +21,54 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-
 import javax.tools.SimpleJavaFileObject;
 
 /**
  * MemJavaFileObject defines an in memory compiled Java file
- * 
+ *
  * @author tiwe
- * 
  */
 public class MemJavaFileObject extends SimpleJavaFileObject {
 
-    private ByteArrayOutputStream baos;
+  private ByteArrayOutputStream baos;
 
-    private final String name;
+  private final String name;
 
-    public MemJavaFileObject(String urlPrefix, String name, Kind kind) {
-        super(URI.create(urlPrefix + name + kind.extension), kind);
-        this.name = name;
+  public MemJavaFileObject(String urlPrefix, String name, Kind kind) {
+    super(URI.create(urlPrefix + name + kind.extension), kind);
+    this.name = name;
+  }
+
+  @Override
+  public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+    if (baos == null) {
+      throw new FileNotFoundException(name);
     }
+    return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+  }
 
-    @Override
-    public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
-        if (baos == null) {
-            throw new FileNotFoundException(name);
-        }
-        return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+  @Override
+  public String getName() {
+    return name;
+  }
+
+  public byte[] getByteArray() {
+    return baos.toByteArray();
+  }
+
+  @Override
+  public InputStream openInputStream() throws IOException {
+    if (baos == null) {
+      throw new FileNotFoundException(name);
     }
+    return new ByteArrayInputStream(baos.toByteArray());
+  }
 
-    @Override
-    public String getName() {
-        return name;
+  @Override
+  public OutputStream openOutputStream() throws IOException {
+    if (baos == null) {
+      baos = new ByteArrayOutputStream();
     }
-
-    public byte[] getByteArray() {
-        return baos.toByteArray();
-    }
-
-    @Override
-    public InputStream openInputStream() throws IOException {
-        if (baos == null) {
-            throw new FileNotFoundException(name);
-        }
-        return new ByteArrayInputStream(baos.toByteArray());
-    }
-
-    @Override
-    public OutputStream openOutputStream() throws IOException {
-        if (baos == null) {
-            baos = new ByteArrayOutputStream();
-        }
-        return baos;
-    }
-
+    return baos;
+  }
 }

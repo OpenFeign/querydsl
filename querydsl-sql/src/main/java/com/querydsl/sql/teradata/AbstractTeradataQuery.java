@@ -13,47 +13,47 @@
  */
 package com.querydsl.sql.teradata;
 
-import java.sql.Connection;
-import java.util.function.Supplier;
-
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.sql.AbstractSQLQuery;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.TeradataTemplates;
+import java.sql.Connection;
+import java.util.function.Supplier;
 
 /**
  * {@code AbstractTeradataQuery} provides Teradata related extensions to SQLQuery
  *
  * @param <T> result type
  * @param <C> the concrete subtype.
- *
  * @author tiwe
  */
-public abstract class AbstractTeradataQuery<T, C extends AbstractTeradataQuery<T, C>> extends AbstractSQLQuery<T, C> {
-    public AbstractTeradataQuery(Connection conn) {
-        this(conn, new Configuration(TeradataTemplates.DEFAULT), new DefaultQueryMetadata());
-    }
+public abstract class AbstractTeradataQuery<T, C extends AbstractTeradataQuery<T, C>>
+    extends AbstractSQLQuery<T, C> {
+  public AbstractTeradataQuery(Connection conn) {
+    this(conn, new Configuration(TeradataTemplates.DEFAULT), new DefaultQueryMetadata());
+  }
 
-    public AbstractTeradataQuery(Connection conn, SQLTemplates templates) {
-        this(conn, new Configuration(templates), new DefaultQueryMetadata());
-    }
+  public AbstractTeradataQuery(Connection conn, SQLTemplates templates) {
+    this(conn, new Configuration(templates), new DefaultQueryMetadata());
+  }
 
-    public AbstractTeradataQuery(Connection conn, Configuration configuration) {
-        this(conn, configuration, new DefaultQueryMetadata());
-    }
+  public AbstractTeradataQuery(Connection conn, Configuration configuration) {
+    this(conn, configuration, new DefaultQueryMetadata());
+  }
 
-    public AbstractTeradataQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
-        super(conn, configuration, metadata);
-    }
+  public AbstractTeradataQuery(
+      Connection conn, Configuration configuration, QueryMetadata metadata) {
+    super(conn, configuration, metadata);
+  }
 
-    public AbstractTeradataQuery(Supplier<Connection> connProvider, Configuration configuration, QueryMetadata metadata) {
-        super(connProvider, configuration, metadata);
-    }
+  public AbstractTeradataQuery(
+      Supplier<Connection> connProvider, Configuration configuration, QueryMetadata metadata) {
+    super(connProvider, configuration, metadata);
+  }
 
-    public AbstractTeradataQuery(Supplier<Connection> connProvider, Configuration configuration) {
-        super(connProvider, configuration);
-    }
-
+  public AbstractTeradataQuery(Supplier<Connection> connProvider, Configuration configuration) {
+    super(connProvider, configuration);
+  }
 }

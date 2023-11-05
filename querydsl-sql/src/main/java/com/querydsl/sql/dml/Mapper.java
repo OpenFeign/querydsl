@@ -13,27 +13,24 @@
  */
 package com.querydsl.sql.dml;
 
-import java.util.Map;
-
 import com.querydsl.core.types.Path;
 import com.querydsl.sql.RelationalPath;
+import java.util.Map;
 
 /**
  * Create a Map of updates for a given domain object
  *
  * @param <T> object type
- *
  * @author tiwe
  */
 public interface Mapper<T> {
 
-    /**
-     * Create a map of updates for the given path and instance
-     *
-     * @param path path
-     * @param object instance
-     * @return bindings
-     */
-    Map<Path<?>, Object> createMap(RelationalPath<?> path, T object);
-
+  /**
+   * Create a map of updates for the given path and instance
+   *
+   * @param path path
+   * @param object instance
+   * @return bindings
+   */
+  Map<Path<?>, Object> createMap(RelationalPath<?> path, T object);
 }

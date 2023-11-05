@@ -17,19 +17,17 @@ import org.mongodb.morphia.annotations.Embedded;
 
 public final class Address {
 
-    public Address() {
+  public Address() {}
 
-    }
+  public Address(String street, String postCode, City city) {
+    this.street = street;
+    this.postCode = postCode;
+    this.city = city;
+  }
 
-    public Address(String street, String postCode, City city) {
-        this.street = street; this.postCode = postCode; this.city = city;
-    }
+  public String street;
 
-    public String street;
+  public String postCode;
 
-    public String postCode;
-
-    @Embedded
-    public City city;
-
+  @Embedded public City city;
 }

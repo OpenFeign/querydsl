@@ -13,13 +13,11 @@
  */
 package com.querydsl.sql.spatial;
 
+import com.querydsl.sql.types.AbstractType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
-import org.jetbrains.annotations.Nullable;
-
 import org.geolatte.geom.ByteBuffer;
 import org.geolatte.geom.ByteOrder;
 import org.geolatte.geom.Geometry;
@@ -27,49 +25,47 @@ import org.geolatte.geom.codec.Wkb;
 import org.geolatte.geom.codec.WkbDecoder;
 import org.geolatte.geom.codec.WkbEncoder;
 import org.geolatte.geom.codec.Wkt;
-
-import com.querydsl.sql.types.AbstractType;
+import org.jetbrains.annotations.Nullable;
 
 class GeometryWkbType extends AbstractType<Geometry> {
 
-    public static final GeometryWkbType NDR = new GeometryWkbType(ByteOrder.NDR);
+  public static final GeometryWkbType NDR = new GeometryWkbType(ByteOrder.NDR);
 
-    public static final GeometryWkbType XDR = new GeometryWkbType(ByteOrder.XDR);
+  public static final GeometryWkbType XDR = new GeometryWkbType(ByteOrder.XDR);
 
-    private final ByteOrder byteOrder;
+  private final ByteOrder byteOrder;
 
-    GeometryWkbType(ByteOrder byteOrder) {
-        super(Types.OTHER);
-        this.byteOrder = byteOrder;
+  GeometryWkbType(ByteOrder byteOrder) {
+    super(Types.OTHER);
+    this.byteOrder = byteOrder;
+  }
+
+  @Override
+  public Class<Geometry> getReturnedClass() {
+    return Geometry.class;
+  }
+
+  @Override
+  @Nullable
+  public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
+    byte[] bytes = rs.getBytes(startIndex);
+    if (bytes != null) {
+      WkbDecoder decoder = Wkb.newDecoder(Wkb.Dialect.POSTGIS_EWKB_1);
+      return decoder.decode(ByteBuffer.from(bytes));
+    } else {
+      return null;
     }
+  }
 
-    @Override
-    public Class<Geometry> getReturnedClass() {
-        return Geometry.class;
-    }
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
+    WkbEncoder encoder = Wkb.newEncoder(Wkb.Dialect.POSTGIS_EWKB_1);
+    ByteBuffer buffer = encoder.encode(value, byteOrder);
+    st.setBytes(startIndex, buffer.toByteArray());
+  }
 
-    @Override
-    @Nullable
-    public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
-        byte[] bytes = rs.getBytes(startIndex);
-        if (bytes != null) {
-            WkbDecoder decoder = Wkb.newDecoder(Wkb.Dialect.POSTGIS_EWKB_1);
-            return decoder.decode(ByteBuffer.from(bytes));
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
-        WkbEncoder encoder = Wkb.newEncoder(Wkb.Dialect.POSTGIS_EWKB_1);
-        ByteBuffer buffer = encoder.encode(value, byteOrder);
-        st.setBytes(startIndex, buffer.toByteArray());
-    }
-
-    @Override
-    public String getLiteral(Geometry geometry) {
-        return "'" + Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry) + "'";
-    }
-
+  @Override
+  public String getLiteral(Geometry geometry) {
+    return "'" + Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry) + "'";
+  }
 }

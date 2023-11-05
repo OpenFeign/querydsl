@@ -21,25 +21,23 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.Test;
 
 public class ExcludedPackagesTest extends AbstractProcessorTest {
 
-    private static final String packagePath = "src/test/java/com/querydsl/";
+  private static final String packagePath = "src/test/java/com/querydsl/";
 
-    @Test
-    public void process() throws IOException {
-        List<String> classes = getFiles(packagePath);
-        process(QuerydslAnnotationProcessor.class, classes, "excludedPackages");
+  @Test
+  public void process() throws IOException {
+    List<String> classes = getFiles(packagePath);
+    process(QuerydslAnnotationProcessor.class, classes, "excludedPackages");
 
-        assertFalse(new File("target/excludedPackages/com/querydsl/apt/domain/p1").exists());
-        assertTrue(new File("target/excludedPackages/com/querydsl/apt/domain/p2").exists());
-    }
+    assertFalse(new File("target/excludedPackages/com/querydsl/apt/domain/p1").exists());
+    assertTrue(new File("target/excludedPackages/com/querydsl/apt/domain/p2").exists());
+  }
 
-    @Override
-    protected Collection<String> getAPTOptions() {
-        return Collections.singletonList("-Aquerydsl.excludedPackages=com.querydsl.apt.domain.p1");
-    }
-
+  @Override
+  protected Collection<String> getAPTOptions() {
+    return Collections.singletonList("-Aquerydsl.excludedPackages=com.querydsl.apt.domain.p1");
+  }
 }

@@ -4,31 +4,30 @@ import com.querydsl.core.annotations.QueryProjection;
 
 public class CatSummary {
 
-    private long breeders;
+  private long breeders;
 
-    private boolean hasEyeColoredCat;
+  private boolean hasEyeColoredCat;
 
-    @QueryProjection
-    public CatSummary(long breeders, boolean hasEyeColoredCat) {
-        super();
-        this.breeders = breeders;
-        this.hasEyeColoredCat = hasEyeColoredCat;
-    }
+  @QueryProjection
+  public CatSummary(long breeders, boolean hasEyeColoredCat) {
+    super();
+    this.breeders = breeders;
+    this.hasEyeColoredCat = hasEyeColoredCat;
+  }
 
-    public long getBreeders() {
-        return breeders;
-    }
+  public long getBreeders() {
+    return breeders;
+  }
 
-    public void setBreeders(long breeders) {
-        this.breeders = breeders;
-    }
+  public void setBreeders(long breeders) {
+    this.breeders = breeders;
+  }
 
-    public boolean isHasEyeColoredCat() {
-        return hasEyeColoredCat;
-    }
+  public boolean isHasEyeColoredCat() {
+    return hasEyeColoredCat;
+  }
 
-    public void setHasEyeColoredCat(boolean hasEyeColoredCat) {
-        this.hasEyeColoredCat = hasEyeColoredCat;
-    }
-
+  public void setHasEyeColoredCat(boolean hasEyeColoredCat) {
+    this.hasEyeColoredCat = hasEyeColoredCat;
+  }
 }

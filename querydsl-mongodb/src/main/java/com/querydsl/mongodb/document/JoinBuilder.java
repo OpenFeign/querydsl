@@ -25,28 +25,27 @@ import com.querydsl.core.types.Predicate;
  * {@code JoinBuilder} is a builder for join constraints
  *
  * @author Mark Paluch
- *
  * @param <Q>
  * @param <T>
  */
 public class JoinBuilder<Q extends AbstractMongodbQuery<Q>, T> {
 
-    private final QueryMixin<Q> queryMixin;
+  private final QueryMixin<Q> queryMixin;
 
-    private final Path<?> ref;
+  private final Path<?> ref;
 
-    private final Path<T> target;
+  private final Path<T> target;
 
-    public JoinBuilder(QueryMixin<Q> queryMixin, Path<?> ref, Path<T> target) {
-        this.queryMixin = queryMixin;
-        this.ref = ref;
-        this.target = target;
-    }
+  public JoinBuilder(QueryMixin<Q> queryMixin, Path<?> ref, Path<T> target) {
+    this.queryMixin = queryMixin;
+    this.ref = ref;
+    this.target = target;
+  }
 
-    @SuppressWarnings("unchecked")
-    public Q on(Predicate... conditions) {
-        queryMixin.addJoin(JoinType.JOIN, ExpressionUtils.as((Path) ref, target));
-        queryMixin.on(conditions);
-        return queryMixin.getSelf();
-    }
+  @SuppressWarnings("unchecked")
+  public Q on(Predicate... conditions) {
+    queryMixin.addJoin(JoinType.JOIN, ExpressionUtils.as((Path) ref, target));
+    queryMixin.on(conditions);
+    return queryMixin.getSelf();
+  }
 }

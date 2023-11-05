@@ -14,42 +14,38 @@
 package com.querydsl.apt.domain;
 
 import java.io.Serializable;
-
 import javax.persistence.Entity;
-
 import org.junit.Ignore;
 
 @Ignore
 public class AbstractPropertiesTest {
 
-    public abstract static class GenericEntity<K extends Serializable & Comparable<K>> {
+  public abstract static class GenericEntity<K extends Serializable & Comparable<K>> {
 
-        private static final long serialVersionUID = -3988499137919577054L;
+    private static final long serialVersionUID = -3988499137919577054L;
 
-        public abstract K getId();
+    public abstract K getId();
 
-        public abstract void setId(K id);
+    public abstract void setId(K id);
+  }
 
+  @Entity
+  public static class TestEntity extends GenericEntity<Integer> {
+
+    private static final long serialVersionUID = 1803671157183603979L;
+
+    private Integer id;
+
+    @Override
+    public Integer getId() {
+      return id;
     }
 
-    @Entity
-    public static class TestEntity extends GenericEntity<Integer> {
-
-        private static final long serialVersionUID = 1803671157183603979L;
-
-        private Integer id;
-
-        @Override
-        public Integer getId() {
-            return id;
-        }
-
-        @Override
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
+    @Override
+    public void setId(Integer id) {
+      this.id = id;
     }
+  }
 
-    // TODO : tests
+  // TODO : tests
 }

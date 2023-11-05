@@ -2,7 +2,5 @@ package com.querydsl.collections;
 
 public class Projection {
 
-    public Projection(String str, Cat cat) {
-    }
-
+  public Projection(String str, Cat cat) {}
 }

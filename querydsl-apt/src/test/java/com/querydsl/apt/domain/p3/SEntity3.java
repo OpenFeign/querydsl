@@ -19,5 +19,5 @@ import com.querydsl.core.annotations.QueryEntity;
 @QueryEntity
 public class SEntity3 extends SEntity2 {
 
-    String entity3Field;
+  String entity3Field;
 }

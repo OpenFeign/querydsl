@@ -13,144 +13,139 @@
  */
 package com.querydsl.codegen;
 
+import com.querydsl.codegen.utils.CodeWriter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.*;
 
-import com.querydsl.codegen.utils.CodeWriter;
-
 /**
- * {@code GroovyBeanSerializer} is a {@link Serializer} implementation which serializes {@link EntityType}
- * instances into Groovy classes
+ * {@code GroovyBeanSerializer} is a {@link Serializer} implementation which serializes {@link
+ * EntityType} instances into Groovy classes
  *
  * @author tiwe
- *
  */
 public class GroovyBeanSerializer implements Serializer {
 
-    private final boolean propertyAnnotations;
+  private final boolean propertyAnnotations;
 
-    private final String javadocSuffix;
+  private final String javadocSuffix;
 
-    private boolean printSupertype = false;
+  private boolean printSupertype = false;
 
-    /**
-     * Create a new {@code GroovyBeanSerializer} instance
-     */
-    public GroovyBeanSerializer() {
-        this(true, " is a Querydsl bean type");
+  /** Create a new {@code GroovyBeanSerializer} instance */
+  public GroovyBeanSerializer() {
+    this(true, " is a Querydsl bean type");
+  }
+
+  /**
+   * Create a new {@code GroovyBeanSerializer} instance
+   *
+   * @param javadocSuffix suffix to be used after the simple name in class level javadoc
+   */
+  public GroovyBeanSerializer(String javadocSuffix) {
+    this(true, javadocSuffix);
+  }
+
+  /**
+   * Create a new {@code GroovyBeanSerializer} instance
+   *
+   * @param propertyAnnotations true, to serialize property annotations
+   */
+  public GroovyBeanSerializer(boolean propertyAnnotations) {
+    this(propertyAnnotations, " is a Querydsl bean type");
+  }
+
+  /**
+   * Create a new {@code GroovyBeanSerializer} instance
+   *
+   * @param propertyAnnotations true, to serialize property annotations
+   * @param javadocSuffix suffix to be used after the simple name in class level javadoc
+   */
+  public GroovyBeanSerializer(boolean propertyAnnotations, String javadocSuffix) {
+    this.propertyAnnotations = propertyAnnotations;
+    this.javadocSuffix = javadocSuffix;
+  }
+
+  @Override
+  public void serialize(EntityType model, SerializerConfig serializerConfig, CodeWriter writer)
+      throws IOException {
+    String simpleName = model.getSimpleName();
+
+    // package
+    if (!model.getPackageName().isEmpty()) {
+      writer.packageDecl(model.getPackageName());
     }
 
-    /**
-     * Create a new {@code GroovyBeanSerializer} instance
-     *
-     * @param javadocSuffix suffix to be used after the simple name in class level javadoc
-     */
-    public GroovyBeanSerializer(String javadocSuffix) {
-        this(true, javadocSuffix);
+    // imports
+    Set<String> importedClasses = getAnnotationTypes(model);
+    if (model.hasLists()) {
+      importedClasses.add(List.class.getName());
+    }
+    if (model.hasCollections()) {
+      importedClasses.add(Collection.class.getName());
+    }
+    if (model.hasSets()) {
+      importedClasses.add(Set.class.getName());
+    }
+    if (model.hasMaps()) {
+      importedClasses.add(Map.class.getName());
+    }
+    writer.importClasses(importedClasses.toArray(new String[0]));
+
+    // javadoc
+    writer.javadoc(simpleName + javadocSuffix);
+
+    // header
+    for (Annotation annotation : model.getAnnotations()) {
+      writer.annotation(annotation);
+    }
+    if (printSupertype && model.getSuperType() != null) {
+      writer.beginClass(model, model.getSuperType().getType());
+    } else {
+      writer.beginClass(model);
     }
 
-    /**
-     * Create a new {@code GroovyBeanSerializer} instance
-     *
-     * @param propertyAnnotations true, to serialize property annotations
-     */
-    public GroovyBeanSerializer(boolean propertyAnnotations) {
-        this(propertyAnnotations, " is a Querydsl bean type");
+    bodyStart(model, writer);
+
+    // fields
+    for (Property property : model.getProperties()) {
+      if (propertyAnnotations) {
+        for (Annotation annotation : property.getAnnotations()) {
+          writer.annotation(annotation);
+        }
+      }
+      writer.field(property.getType(), property.getEscapedName());
     }
 
-    /**
-     * Create a new {@code GroovyBeanSerializer} instance
-     *
-     * @param propertyAnnotations true, to serialize property annotations
-     * @param javadocSuffix suffix to be used after the simple name in class level javadoc
-     */
-    public GroovyBeanSerializer(boolean propertyAnnotations, String javadocSuffix) {
-        this.propertyAnnotations = propertyAnnotations;
-        this.javadocSuffix = javadocSuffix;
+    bodyEnd(model, writer);
+
+    writer.end();
+  }
+
+  protected void bodyStart(EntityType model, CodeWriter writer) throws IOException {
+    // template method
+  }
+
+  protected void bodyEnd(EntityType model, CodeWriter writer) throws IOException {
+    // template method
+  }
+
+  private Set<String> getAnnotationTypes(EntityType model) {
+    Set<String> imports = new HashSet<String>();
+    for (Annotation annotation : model.getAnnotations()) {
+      imports.add(annotation.annotationType().getName());
     }
-
-    @Override
-    public void serialize(EntityType model, SerializerConfig serializerConfig,
-            CodeWriter writer) throws IOException {
-        String simpleName = model.getSimpleName();
-
-        // package
-        if (!model.getPackageName().isEmpty()) {
-            writer.packageDecl(model.getPackageName());
+    if (propertyAnnotations) {
+      for (Property property : model.getProperties()) {
+        for (Annotation annotation : property.getAnnotations()) {
+          imports.add(annotation.annotationType().getName());
         }
-
-        // imports
-        Set<String> importedClasses = getAnnotationTypes(model);
-        if (model.hasLists()) {
-            importedClasses.add(List.class.getName());
-        }
-        if (model.hasCollections()) {
-            importedClasses.add(Collection.class.getName());
-        }
-        if (model.hasSets()) {
-            importedClasses.add(Set.class.getName());
-        }
-        if (model.hasMaps()) {
-            importedClasses.add(Map.class.getName());
-        }
-        writer.importClasses(importedClasses.toArray(new String[0]));
-
-        // javadoc
-        writer.javadoc(simpleName + javadocSuffix);
-
-        // header
-        for (Annotation annotation : model.getAnnotations()) {
-            writer.annotation(annotation);
-        }
-        if (printSupertype && model.getSuperType() != null) {
-            writer.beginClass(model, model.getSuperType().getType());
-        } else {
-            writer.beginClass(model);
-        }
-
-        bodyStart(model, writer);
-
-        // fields
-        for (Property property : model.getProperties()) {
-            if (propertyAnnotations) {
-                for (Annotation annotation : property.getAnnotations()) {
-                    writer.annotation(annotation);
-                }
-            }
-            writer.field(property.getType(), property.getEscapedName());
-        }
-
-        bodyEnd(model, writer);
-
-        writer.end();
+      }
     }
+    return imports;
+  }
 
-    protected void bodyStart(EntityType model, CodeWriter writer) throws IOException {
-        // template method
-    }
-
-    protected void bodyEnd(EntityType model, CodeWriter writer) throws IOException {
-        // template method
-    }
-
-    private Set<String> getAnnotationTypes(EntityType model) {
-        Set<String> imports = new HashSet<String>();
-        for (Annotation annotation : model.getAnnotations()) {
-            imports.add(annotation.annotationType().getName());
-        }
-        if (propertyAnnotations) {
-            for (Property property : model.getProperties()) {
-                for (Annotation annotation : property.getAnnotations()) {
-                    imports.add(annotation.annotationType().getName());
-                }
-            }
-        }
-        return imports;
-    }
-
-    public void setPrintSupertype(boolean printSupertype) {
-        this.printSupertype = printSupertype;
-    }
-
+  public void setPrintSupertype(boolean printSupertype) {
+    this.printSupertype = printSupertype;
+  }
 }

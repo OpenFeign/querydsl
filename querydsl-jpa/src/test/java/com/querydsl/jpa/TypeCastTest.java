@@ -15,60 +15,58 @@ package com.querydsl.jpa;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.jpa.domain.*;
+import org.junit.Test;
 
 public class TypeCastTest {
 
-    @Test
-    public void mappedSuperclass() {
-        QInheritedProperties subClass = QInheritedProperties.inheritedProperties;
-        QSuperclass superClass = subClass._super;
+  @Test
+  public void mappedSuperclass() {
+    QInheritedProperties subClass = QInheritedProperties.inheritedProperties;
+    QSuperclass superClass = subClass._super;
 
-        assertEquals(InheritedProperties.class, superClass.getType());
-//        assertEquals(InheritedProperties.class.getSimpleName(), superClass.getEntityName());
-        assertEquals("inheritedProperties", superClass.toString());
-    }
+    assertEquals(InheritedProperties.class, superClass.getType());
+    //        assertEquals(InheritedProperties.class.getSimpleName(), superClass.getEntityName());
+    assertEquals("inheritedProperties", superClass.toString());
+  }
 
-//    @Test
-//    public void mappedSuperclass2() {
-//        QInheritedProperties subClass = QInheritedProperties.inheritedProperties;
-//        QSuperclass superClass = new QSuperclass(subClass.getMetadata());
-//
-//        assertEquals(Superclass.class, superClass.getType());
-//        assertEquals(Superclass.class.getSimpleName(), superClass.getEntityName());
-//        assertEquals("inheritedProperties", superClass.toString());
-//    }
+  //    @Test
+  //    public void mappedSuperclass2() {
+  //        QInheritedProperties subClass = QInheritedProperties.inheritedProperties;
+  //        QSuperclass superClass = new QSuperclass(subClass.getMetadata());
+  //
+  //        assertEquals(Superclass.class, superClass.getType());
+  //        assertEquals(Superclass.class.getSimpleName(), superClass.getEntityName());
+  //        assertEquals("inheritedProperties", superClass.toString());
+  //    }
 
-    @Test
-    public void subClassToSuper() {
-        QCat cat = QCat.cat;
-        QAnimal animal = new QAnimal(cat);
+  @Test
+  public void subClassToSuper() {
+    QCat cat = QCat.cat;
+    QAnimal animal = new QAnimal(cat);
 
-        assertEquals(Cat.class, animal.getType());
-//        assertEquals(Cat.class.getSimpleName(), animal.getEntityName());
-        assertEquals("cat", animal.toString());
-    }
+    assertEquals(Cat.class, animal.getType());
+    //        assertEquals(Cat.class.getSimpleName(), animal.getEntityName());
+    assertEquals("cat", animal.toString());
+  }
 
-    @Test
-    public void subClassToSuper2() {
-        QCat cat = QCat.cat;
-        QAnimal animal = new QAnimal(cat.getMetadata());
+  @Test
+  public void subClassToSuper2() {
+    QCat cat = QCat.cat;
+    QAnimal animal = new QAnimal(cat.getMetadata());
 
-        assertEquals(Animal.class, animal.getType());
-//        assertEquals(Animal.class.getSimpleName(), animal.getEntityName());
-        assertEquals("cat", animal.toString());
-    }
+    assertEquals(Animal.class, animal.getType());
+    //        assertEquals(Animal.class.getSimpleName(), animal.getEntityName());
+    assertEquals("cat", animal.toString());
+  }
 
-    @Test
-    public void superClassToSub() {
-        QAnimal animal = QAnimal.animal;
-        QCat cat = new QCat(animal.getMetadata());
+  @Test
+  public void superClassToSub() {
+    QAnimal animal = QAnimal.animal;
+    QCat cat = new QCat(animal.getMetadata());
 
-        assertEquals(Cat.class, cat.getType());
-//        assertEquals(Cat.class.getSimpleName(), cat.getEntityName());
-        assertEquals("animal", cat.toString());
-    }
-
+    assertEquals(Cat.class, cat.getType());
+    //        assertEquals(Cat.class.getSimpleName(), cat.getEntityName());
+    assertEquals("animal", cat.toString());
+  }
 }

@@ -16,19 +16,18 @@ package com.querydsl.codegen;
 import com.querydsl.codegen.utils.model.Type;
 
 /**
- * {@code QueryTypeFactory} defines an interface for mapping domain types to Querydsl expression types
+ * {@code QueryTypeFactory} defines an interface for mapping domain types to Querydsl expression
+ * types
  *
  * @author tiwe
- *
  */
 public interface QueryTypeFactory {
 
-    /**
-     * Create an expression type based on the given actual type
-     *
-     * @param type actual type
-     * @return expression type
-     */
-    Type create(Type type);
-
+  /**
+   * Create an expression type based on the given actual type
+   *
+   * @param type actual type
+   * @return expression type
+   */
+  Type create(Type type);
 }
