@@ -36,6 +36,8 @@
     
     <git-code-format-maven-plugin.version>5.1</git-code-format-maven-plugin.version>
 
+    <junit.version>5.10.1</junit.version>
+
     <!-- SQL deps -->
     <db2.version>11.5.8.0</db2.version>
     <derby.version>10.16.1.1</derby.version>
@@ -104,13 +106,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.8.2</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.vintage</groupId>
       <artifactId>junit-vintage-engine</artifactId>
-      <version>5.8.2</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -151,6 +153,13 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+          <groupId>org.junit</groupId>
+          <artifactId>junit-bom</artifactId>
+          <version>${junit.version}</version>
+          <type>pom</type>
+          <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.jetbrains</groupId>
         <artifactId>annotations</artifactId>
