@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -11,15 +11,15 @@
 
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-jpa-codegen</artifactId>
+  <packaging>jar</packaging>
   <name>Querydsl - JPA Codegen support</name>
   <description>JPA Codegen support for Querydsl</description>
   <url>${project.homepage}</url>
-  <packaging>jar</packaging>
-  
+
   <scm>
+    <url>${project.githubpage}</url>
     <connection>${project.checkout}</connection>
     <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
   </scm>
 
   <dependencies>
@@ -32,6 +32,7 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
       <version>${hibernate.version}</version>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>cglib</groupId>
@@ -41,8 +42,7 @@
           <groupId>asm</groupId>
           <artifactId>asm</artifactId>
         </exclusion>
-      </exclusions>      
-      <scope>provided</scope>      
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.hibernate.validator</groupId>
@@ -51,12 +51,12 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <artifactId>jboss-logging</artifactId>
           <groupId>org.jboss.logging</groupId>
+          <artifactId>jboss-logging</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>    
- 
+    </dependency>
+
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
@@ -84,18 +84,18 @@
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-jpa</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
       <type>test-jar</type>
-    </dependency>   
-    
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
       <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
@@ -129,10 +129,10 @@
         <executions>
           <execution>
             <id>jakarta-ee</id>
+            <phase>package</phase>
             <goals>
               <goal>run</goal>
             </goals>
-            <phase>package</phase>
             <configuration>
               <classifier>jakarta</classifier>
             </configuration>
@@ -142,7 +142,7 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-      </plugin>           
+      </plugin>
     </plugins>
   </build>
 

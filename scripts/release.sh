@@ -30,11 +30,11 @@ echo "release version is: ${tag} and next snapshot is: ${snapshot}"
 
 # Update the versions, removing the snapshots, then create a new tag for the release, this will
 # start the travis-ci release process.
-./mvnw -Pall,docs -B versions:set scm:checkin -DremoveSnapshot -DgenerateBackupPoms=false -Dmessage="prepare release ${tag}" -DpushChanges=false
+./mvnw -Pdocs -B versions:set scm:checkin -DremoveSnapshot -DgenerateBackupPoms=false -Dmessage="prepare release ${tag}" -DpushChanges=false
 
 # tag the release
 echo "pushing tag ${tag}"
-./mvnw -Pall,docs scm:tag
+./mvnw -Pdocs scm:tag
 
 # Update the versions to the next snapshot
-./mvnw -Pall,docs -B versions:set scm:checkin -DnewVersion="${snapshot}" -DgenerateBackupPoms=false -Dmessage="[ci skip] updating versions to next development iteration ${snapshot}"
+./mvnw -Pdocs -B versions:set scm:checkin -DnewVersion="${snapshot}" -DgenerateBackupPoms=false -Dmessage="[ci skip] updating versions to next development iteration ${snapshot}"

@@ -27,7 +27,7 @@ commands:
       - run:
           name: 'Resolving Dependencies'
           command: |
-            ./mvnw -ntp dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true -B -Pall
+            ./mvnw -ntp dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true -B
 
   verify-formatting:
     steps:
@@ -46,7 +46,7 @@ commands:
       - run:
           name: 'Deploy Core Modules Sonatype'
           command: |
-            ./mvnw -ntp -nsu -s .circleci/settings.xml -DskipTests=true deploy -B -Pall,release
+            ./mvnw -ntp -nsu -s .circleci/settings.xml -DskipTests=true deploy -B -Prelease
 
 # our job defaults
 defaults: &defaults
@@ -108,7 +108,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp verify -B -Pall -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.EmbeddedDatabase
+            ./mvnw -ntp verify -B -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.EmbeddedDatabase
       - verify-formatting
   testMySQL:
     <<: *defaults
@@ -130,7 +130,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.MySQL
+            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.MySQL
   testPostgreSQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -150,7 +150,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.PostgreSQL
+            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.PostgreSQL
   testCUBRID:
     <<: *defaults
     working_directory: ~/querydsl
@@ -168,7 +168,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.CUBRID
+            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.CUBRID
   testOracle:
     <<: *defaults
     working_directory: ~/querydsl
@@ -188,7 +188,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.Oracle
+            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.Oracle
   testMongo:
     <<: *defaults
     working_directory: ~/querydsl
@@ -204,7 +204,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.MongoDB
+            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.MongoDB
   testFirebird:
     <<: *defaults
     working_directory: ~/querydsl
@@ -225,7 +225,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.Firebird
+            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.Firebird
   testMSSQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -245,7 +245,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.SQLServer
+            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.SQLServer
   testEmbedded:
     <<: *defaults
     working_directory: ~/querydsl
@@ -260,7 +260,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Pall -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
+            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
 
   deploy:
     executor:

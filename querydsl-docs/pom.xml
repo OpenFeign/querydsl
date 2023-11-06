@@ -68,51 +68,5 @@
       </plugin>
     </plugins>
   </build>
-  
-  <pluginRepositories>
-    <pluginRepository>
-      <id>jboss</id>
-      <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>jboss-thirdparty</id>
-      <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-
-  <repositories>
-    <repository>
-      <id>jboss</id>
-      <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>jboss-thirdparty</id>
-      <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 
 </project>
