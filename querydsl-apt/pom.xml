@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -11,15 +11,15 @@
 
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-apt</artifactId>
+  <packaging>jar</packaging>
   <name>Querydsl - APT support</name>
   <description>APT based Source code generation for Querydsl</description>
   <url>${project.homepage}</url>
-  <packaging>jar</packaging>
 
   <scm>
+    <url>${project.githubpage}</url>
     <connection>${project.checkout}</connection>
     <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
   </scm>
 
   <dependencies>
@@ -45,7 +45,7 @@
       <version>2.2.3</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- provided -->
     <dependency>
       <groupId>org.datanucleus</groupId>
@@ -60,7 +60,7 @@
       <exclusions>
         <exclusion>
           <groupId>org.apache.commons</groupId>
-          <artifactId>commons-lang3</artifactId>  
+          <artifactId>commons-lang3</artifactId>
         </exclusion>
         <exclusion>
           <groupId>commons-io</groupId>
@@ -78,14 +78,14 @@
       <version>${morphia.version}</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- test -->
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
       <version>${jodatime.version}</version>
       <scope>test</scope>
-    </dependency>  
+    </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
@@ -93,11 +93,11 @@
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <artifactId>javassist</artifactId>
           <groupId>org.javassist</groupId>
+          <artifactId>javassist</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>     
+    </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-envers</artifactId>
@@ -108,28 +108,28 @@
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
       <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.joda</groupId>
       <artifactId>joda-money</artifactId>
       <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.eclipse.jdt.core.compiler</groupId>
       <artifactId>ecj</artifactId>
       <scope>test</scope>
     </dependency>
-            
+
   </dependencies>
 
   <build>
     <plugins>
-    <!-- 
+      <!-- 
       <plugin>
         <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
@@ -159,8 +159,8 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-      </plugin>    
-         
+      </plugin>
+
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
@@ -175,27 +175,27 @@
         <executions>
           <execution>
             <id>jakarta-ee</id>
+            <phase>package</phase>
             <goals>
               <goal>run</goal>
             </goals>
-            <phase>package</phase>
             <configuration>
               <classifier>jakarta</classifier>
             </configuration>
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
           <execution>
-              <id>apt-jars</id>
-            <goals>
-              <goal>single</goal>    
-            </goals>
+            <id>apt-jars</id>
             <phase>package</phase>
-              <configuration>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
               <descriptors>
                 <descriptor>src/main/general.xml</descriptor>
                 <descriptor>src/main/hibernate.xml</descriptor>
@@ -208,14 +208,14 @@
               </descriptors>
               <outputDirectory>${project.build.directory}</outputDirectory>
             </configuration>
-          </execution>    
-        </executions>        
-      </plugin>         
+          </execution>
+        </executions>
+      </plugin>
 
       <plugin>
         <groupId>com.mysema.maven</groupId>
         <artifactId>apt-maven-plugin</artifactId>
-        <executions>  
+        <executions>
           <execution>
             <phase>generate-test-sources</phase>
             <goals>
@@ -230,12 +230,12 @@
                 <processor>com.querydsl.apt.hibernate.HibernateAnnotationProcessor</processor>
                 <processor>com.querydsl.apt.jdo.JDOAnnotationProcessor</processor>
                 <processor>com.querydsl.apt.roo.RooAnnotationProcessor</processor>
-              </processors>              
+              </processors>
             </configuration>
-          </execution>                            
+          </execution>
         </executions>
       </plugin>
-      
+
       <!-- 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -259,6 +259,4 @@
     </plugins>
   </build>
 
-  <repositories />
-  
 </project>

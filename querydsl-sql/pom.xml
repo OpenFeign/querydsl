@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -11,15 +11,13 @@
 
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-sql</artifactId>
+  <packaging>jar</packaging>
   <name>Querydsl - SQL support</name>
   <description>SQL support for Querydsl</description>
-  <packaging>jar</packaging>
 
   <properties>
-    <osgi.import.package>
-      org.joda.time.*;version="[1.6,3)",
-      ${osgi.import.package.root}
-    </osgi.import.package>
+    <osgi.import.package>org.joda.time.*;version="[1.6,3)",
+      ${osgi.import.package.root}</osgi.import.package>
     <argLine>-Xms256m -Xmx512m -Duser.timezone=UTC</argLine>
   </properties>
 
@@ -112,12 +110,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>oracle</groupId>
-      <artifactId>sdoapi</artifactId>
-      <version>11.2.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>com.microsoft.sqlserver</groupId>
       <artifactId>mssql-jdbc</artifactId>
       <version>${mssql.version}</version>
@@ -139,12 +131,12 @@
           <artifactId>log4j</artifactId>
         </exclusion>
         <exclusion>
-          <artifactId>jts-core</artifactId>
           <groupId>org.locationtech.jts</groupId>
+          <artifactId>jts-core</artifactId>
         </exclusion>
         <exclusion>
-          <artifactId>slf4j-api</artifactId>
           <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -173,8 +165,8 @@
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
       <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.github.classgraph</groupId>
@@ -217,17 +209,24 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-      </plugin>   
-    
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Automatic-Module-Name>com.querydsl.sql</Automatic-Module-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
         <executions>
           <execution>
             <id>test-jar</id>
@@ -236,13 +235,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <Automatic-Module-Name>com.querydsl.sql</Automatic-Module-Name>
-            </manifestEntries>
-          </archive>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
@@ -261,8 +253,8 @@
         <configuration>
           <systemProperties>
             <property>
-                <name>derby.stream.error.file</name>
-                <value>target/derby.log</value>
+              <name>derby.stream.error.file</name>
+              <value>target/derby.log</value>
             </property>
           </systemProperties>
         </configuration>
@@ -338,13 +330,5 @@
       </dependencies>
     </profile>
   </profiles>
-
-  <!--TODO upgrade dependencies and get rid of repositories and pluginRepositories -->
-  <repositories>
-    <repository>
-      <id>datanucleus</id>
-      <url>https://www.datanucleus.org/downloads/maven2</url>
-    </repository>
-  </repositories>
 
 </project>

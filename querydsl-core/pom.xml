@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -11,17 +11,17 @@
 
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-core</artifactId>
+  <packaging>jar</packaging>
   <name>Querydsl - Core module</name>
   <description>core module for querydsl</description>
   <url>${project.homepage}</url>
-  <packaging>jar</packaging>
-  
+
   <scm>
+    <url>${project.githubpage}</url>
     <connection>${project.checkout}</connection>
     <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
   </scm>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.jetbrains</groupId>
@@ -38,7 +38,7 @@
       <artifactId>classgraph</artifactId>
       <scope>test</scope>
     </dependency>
-    
+
     <!-- alias dependencies -->
     <dependency>
       <groupId>cglib</groupId>
@@ -46,16 +46,16 @@
       <version>${cglib.version}</version>
       <optional>true</optional>
     </dependency>
-    
-     <!-- backwards compatibility -->
+
+    <!-- backwards compatibility -->
     <dependency>
       <groupId>org.jvnet.hudson</groupId>
       <artifactId>annotation-indexer</artifactId>
       <version>1.2</version>
       <optional>true</optional>
     </dependency>
-    
-    <!--  test -->    
+
+    <!--  test -->
     <dependency>
       <groupId>jdepend</groupId>
       <artifactId>jdepend</artifactId>
@@ -63,7 +63,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -73,6 +73,13 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Automatic-Module-Name>com.querydsl.core</Automatic-Module-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
         <executions>
           <execution>
             <id>test-jar</id>
@@ -81,13 +88,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <Automatic-Module-Name>com.querydsl.core</Automatic-Module-Name>
-            </manifestEntries>
-          </archive>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
