@@ -16,9 +16,12 @@ package com.querydsl.sql;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.sql.dml.SQLInsertBatch;
 import com.querydsl.sql.dml.SQLMergeBatch;
+import com.querydsl.sql.dml.SQLMergeUsingCase;
 import com.querydsl.sql.dml.SQLUpdateBatch;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +82,22 @@ public interface SQLListener {
    * @param batches metadata of batches
    */
   void notifyMerges(RelationalPath<?> entity, QueryMetadata md, List<SQLMergeBatch> batches);
+
+  /**
+   * Notify about a merge using
+   *
+   * @param entity table to be merged
+   * @param md metadata of merge
+   * @param usingExpression expression containing update data
+   * @param usingOn join conditions between new and existing data
+   * @param whens actions based on matching
+   */
+  void notifyMergeUsing(
+      RelationalPath<?> entity,
+      QueryMetadata md,
+      SimpleExpression<?> usingExpression,
+      Predicate usingOn,
+      List<SQLMergeUsingCase> whens);
 
   /**
    * Notify about an insertion
