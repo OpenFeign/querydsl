@@ -15,11 +15,11 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
 import org.junit.Test;
 
 public class Superclass2Test {

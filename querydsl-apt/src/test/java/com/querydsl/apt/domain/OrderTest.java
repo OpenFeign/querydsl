@@ -2,9 +2,9 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import org.junit.Test;
 
 public class OrderTest {

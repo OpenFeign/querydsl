@@ -22,13 +22,13 @@ import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.support.ReplaceVisitor;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.CollectionPathBase;
+import jakarta.persistence.Entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.Entity;
 import org.jetbrains.annotations.Nullable;
 
 /**

@@ -15,10 +15,10 @@ package com.querydsl.maven;
 
 import com.querydsl.codegen.GenericExporter;
 import com.querydsl.codegen.PropertyHandling;
+import jakarta.persistence.Embedded;
 import javax.jdo.annotations.EmbeddedOnly;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.persistence.Embedded;
 
 /**
  * {@code JDOExporterMojo} calls {@link GenericExporter} using the classpath of the module

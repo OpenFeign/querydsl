@@ -17,8 +17,8 @@ import static org.junit.Assert.assertNotNull;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import org.junit.Test;
 
 public class TransientTest {

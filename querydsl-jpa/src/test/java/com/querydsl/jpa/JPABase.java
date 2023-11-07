@@ -35,13 +35,13 @@ import com.querydsl.jpa.domain.*;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.LockModeType;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -164,7 +164,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @NoEclipseLink
   @NoOpenJPA
   public void hint() {
-    javax.persistence.Query query =
+    jakarta.persistence.Query query =
         query().from(cat).setHint("org.hibernate.cacheable", true).select(cat).createQuery();
 
     assertNotNull(query);
@@ -184,7 +184,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @NoOpenJPA
   @NoBatooJPA
   public void hint3() {
-    javax.persistence.Query query =
+    jakarta.persistence.Query query =
         query()
             .from(cat)
             .setHint("eclipselink.batch.type", "IN")
@@ -215,7 +215,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void lockMode() {
-    javax.persistence.Query query =
+    jakarta.persistence.Query query =
         query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).createQuery();
     assertEquals(query.getLockMode(), LockModeType.PESSIMISTIC_READ);
     assertFalse(query.getResultList().isEmpty());

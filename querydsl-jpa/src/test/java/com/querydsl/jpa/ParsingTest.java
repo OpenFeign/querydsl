@@ -13,40 +13,85 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.core.alias.Alias.alias;
-import static com.querydsl.jpa.Constants.*;
+import static com.querydsl.jpa.Constants.account;
+import static com.querydsl.jpa.Constants.an;
+import static com.querydsl.jpa.Constants.bar;
+import static com.querydsl.jpa.Constants.calendar;
+import static com.querydsl.jpa.Constants.cat;
+import static com.querydsl.jpa.Constants.cat1;
+import static com.querydsl.jpa.Constants.catalog;
+import static com.querydsl.jpa.Constants.cust;
+import static com.querydsl.jpa.Constants.fatcat;
+import static com.querydsl.jpa.Constants.foo;
+import static com.querydsl.jpa.Constants.form;
+import static com.querydsl.jpa.Constants.item;
+import static com.querydsl.jpa.Constants.kit;
+import static com.querydsl.jpa.Constants.kitten;
+import static com.querydsl.jpa.Constants.list;
+import static com.querydsl.jpa.Constants.log;
+import static com.querydsl.jpa.Constants.m;
+import static com.querydsl.jpa.Constants.mate;
+import static com.querydsl.jpa.Constants.mother;
+import static com.querydsl.jpa.Constants.n;
+import static com.querydsl.jpa.Constants.name;
+import static com.querydsl.jpa.Constants.offspr;
+import static com.querydsl.jpa.Constants.ord;
+import static com.querydsl.jpa.Constants.p;
+import static com.querydsl.jpa.Constants.param;
+import static com.querydsl.jpa.Constants.payment;
+import static com.querydsl.jpa.Constants.person;
+import static com.querydsl.jpa.Constants.price;
+import static com.querydsl.jpa.Constants.prod;
+import static com.querydsl.jpa.Constants.product;
+import static com.querydsl.jpa.Constants.qat;
+import static com.querydsl.jpa.Constants.rival;
+import static com.querydsl.jpa.Constants.store;
 import static com.querydsl.jpa.JPAExpressions.select;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static org.junit.Assert.assertEquals;
 
-import antlr.RecognitionException;
-import antlr.TokenStreamException;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.DateExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
-import com.querydsl.jpa.domain.*;
+import com.querydsl.jpa.domain.Cat;
+import com.querydsl.jpa.domain.Catalog;
+import com.querydsl.jpa.domain.Color;
+import com.querydsl.jpa.domain.Customer;
+import com.querydsl.jpa.domain.DomesticCat;
+import com.querydsl.jpa.domain.Payment;
+import com.querydsl.jpa.domain.Product;
+import com.querydsl.jpa.domain.QFamily;
+import com.querydsl.jpa.domain.QFooDTO;
+import com.querydsl.jpa.domain.QItem;
+import com.querydsl.jpa.domain.QProduct;
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class ParsingTest extends AbstractQueryTest {
 
   @Test
-  @Ignore
   public void arrayExpr() throws Exception {
     query().from(ord).where(ord.items(0).id.eq(1234L)).parse();
   }
 
   @Test
-  public void basic() throws RecognitionException, TokenStreamException {
+  public void basic() {
     query().from(cat, fatcat).select(cat.name, fatcat.name).parse();
   }
 
   @Test
   @ExcludeIn(SQLSERVER)
-  public void beforeAndAfter() throws RecognitionException, TokenStreamException {
+  public void beforeAndAfter() {
     ComparableExpression<java.util.Date> ed = catalog.effectiveDate;
     query()
         .from(catalog)
@@ -477,13 +522,13 @@ public class ParsingTest extends AbstractQueryTest {
 
   @Test
   @NoOpenJPA
-  public void fetch() throws RecognitionException, TokenStreamException {
+  public void fetch() {
     query().from(cat).innerJoin(cat.mate, mate).fetchJoin().parse();
   }
 
   @Test
   @NoOpenJPA
-  public void fetch2() throws RecognitionException, TokenStreamException {
+  public void fetch2() {
     query().from(cat).innerJoin(cat.mate, mate).fetchJoin().fetchJoin().parse();
   }
 
@@ -500,7 +545,7 @@ public class ParsingTest extends AbstractQueryTest {
   @Test
   @NoEclipseLink
   @NoOpenJPA
-  public void joinFlags1() throws RecognitionException, TokenStreamException {
+  public void joinFlags1() {
     query().from(cat).fetchAll().parse();
   }
 
@@ -508,7 +553,7 @@ public class ParsingTest extends AbstractQueryTest {
   @NoEclipseLink
   @NoOpenJPA
   @NoBatooJPA
-  public void joinFlags2() throws RecognitionException, TokenStreamException {
+  public void joinFlags2() {
     query().from(cat).fetchAll().from(cat1).fetchAll().parse();
   }
 
@@ -516,29 +561,29 @@ public class ParsingTest extends AbstractQueryTest {
   @NoEclipseLink
   @NoOpenJPA
   @NoBatooJPA
-  public void joinFlags3() throws RecognitionException, TokenStreamException {
+  public void joinFlags3() {
     query().from(cat).fetchAll().from(cat1).fetchAll().parse();
   }
 
   @Test
-  public void joins() throws RecognitionException, TokenStreamException {
+  public void joins() {
     query().from(cat).join(cat.mate, mate).select(cat).parse();
   }
 
   @Test
-  public void innerJoin() throws RecognitionException, TokenStreamException {
+  public void innerJoin() {
     query().from(cat).innerJoin(cat.mate, mate).select(cat).parse();
   }
 
   @Test
-  public void leftJoin() throws RecognitionException, TokenStreamException {
+  public void leftJoin() {
     query().from(cat).leftJoin(cat.mate, mate).select(cat).parse();
   }
 
   @Test
   @NoOpenJPA
   @NoBatooJPA
-  public void joins2() throws RecognitionException, TokenStreamException {
+  public void joins2() {
     query().from(cat).join(cat.mate, mate).on(mate.name.eq("Bob")).parse();
   }
 
@@ -698,25 +743,25 @@ public class ParsingTest extends AbstractQueryTest {
 
   @Test
   @Ignore
-  public void sum() throws RecognitionException, TokenStreamException {
+  public void sum() {
     // NOT SUPPORTED
     query().from(cat).select(cat.kittens.size().sum()).parse();
   }
 
   @Test
   @Ignore
-  public void sum_2() throws RecognitionException, TokenStreamException {
+  public void sum_2() {
     // NOT SUPPORTED
     query().from(cat).where(cat.kittens.size().sum().gt(0)).select(cat).parse();
   }
 
   @Test
-  public void sum_3() throws RecognitionException, TokenStreamException {
+  public void sum_3() {
     query().from(cat).where(cat.kittens.isEmpty()).select(cat).parse();
   }
 
   @Test
-  public void sum_4() throws RecognitionException, TokenStreamException {
+  public void sum_4() {
     query().from(cat).where(cat.kittens.isNotEmpty()).select(cat).parse();
   }
 

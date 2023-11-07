@@ -13,11 +13,11 @@
  */
 package com.querydsl.jpa.domain4;
 
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Embeddable;
 import java.io.Serializable;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Basic;
-import javax.persistence.Embeddable;
 
 @Embeddable
 @Access(AccessType.PROPERTY)

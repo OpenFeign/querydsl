@@ -21,7 +21,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.domain.sql.SAnimal;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.MySQLTemplates;
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import org.junit.Test;
 
 public class NativeSQLSerializerTest {

@@ -16,8 +16,13 @@ package com.querydsl.jpa.domain;
 import static org.junit.Assert.fail;
 
 import com.querydsl.core.annotations.QueryInit;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.io.Serializable;
-import javax.persistence.*;
 import org.junit.Test;
 
 /** The Class Account. */

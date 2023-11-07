@@ -2,9 +2,9 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
 import org.junit.Test;
 
 public class Generic14Test extends AbstractTest {

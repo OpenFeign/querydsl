@@ -18,7 +18,7 @@
   <properties>
     <lucene.version>5.5.5</lucene.version>
     <osgi.import.package>org.apache.lucene.*;version="[5.1.0,6)",
-      ${osgi.import.package.root}</osgi.import.package>
+            ${osgi.import.package.root}</osgi.import.package>
   </properties>
   <url>${project.homepage}</url>
 

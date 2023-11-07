@@ -15,10 +15,10 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class PropertiesTest {

@@ -10,13 +10,13 @@ import com.querydsl.codegen.GenericExporter;
 import com.querydsl.codegen.Keywords;
 import com.querydsl.codegen.PropertyHandling;
 import com.querydsl.core.domain.A;
+import jakarta.persistence.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class GenericExporterTest extends AbstractProcessorTest {

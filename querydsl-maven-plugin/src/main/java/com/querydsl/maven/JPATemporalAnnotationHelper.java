@@ -15,8 +15,8 @@ package com.querydsl.maven;
 
 import com.querydsl.codegen.AnnotationHelper;
 import com.querydsl.codegen.utils.model.TypeCategory;
+import jakarta.persistence.Temporal;
 import java.lang.annotation.Annotation;
-import javax.persistence.Temporal;
 
 /**
  * An {@link AnnotationHelper} that handles JPA {@link Temporal} annotation.

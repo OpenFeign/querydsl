@@ -16,11 +16,11 @@ package com.querydsl.apt.domain;
 import static org.junit.Assert.assertEquals;
 
 import com.querydsl.core.types.dsl.NumberPath;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 import org.junit.Assert;
 import org.junit.Test;
 

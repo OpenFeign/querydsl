@@ -1,7 +1,7 @@
 package com.querydsl.apt.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import org.junit.Assert;
 import org.junit.Test;
 

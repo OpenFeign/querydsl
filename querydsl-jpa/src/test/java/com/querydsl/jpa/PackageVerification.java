@@ -21,11 +21,11 @@ import com.querydsl.apt.jpa.JPAAnnotationProcessor;
 import com.querydsl.codegen.CodegenModule;
 import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.core.types.Expression;
+import jakarta.persistence.Entity;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Scanner;
-import javax.persistence.Entity;
 import org.junit.Test;
 
 public class PackageVerification {

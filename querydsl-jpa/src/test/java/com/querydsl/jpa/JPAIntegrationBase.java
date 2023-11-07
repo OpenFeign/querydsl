@@ -13,13 +13,11 @@
  */
 package com.querydsl.jpa;
 
-import antlr.RecognitionException;
-import antlr.TokenStreamException;
 import com.querydsl.jpa.impl.JPAProvider;
 import com.querydsl.jpa.impl.JPAUtil;
 import com.querydsl.jpa.testutil.JPATestRunner;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
@@ -40,7 +38,7 @@ public class JPAIntegrationBase extends ParsingTest implements JPATest {
   protected QueryHelper<?> query() {
     return new QueryHelper<Void>(templates) {
       @Override
-      public void parse() throws RecognitionException, TokenStreamException {
+      public void parse() {
         JPQLSerializer serializer = new JPQLSerializer(templates);
         serializer.serialize(getMetadata(), false, null);
         Query query = em.createQuery(serializer.toString());

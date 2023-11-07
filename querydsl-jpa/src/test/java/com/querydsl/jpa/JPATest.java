@@ -15,7 +15,7 @@
  */
 package com.querydsl.jpa;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  * @author Shredder121

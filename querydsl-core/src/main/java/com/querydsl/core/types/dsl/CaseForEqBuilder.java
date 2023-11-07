@@ -13,7 +13,11 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.NullExpression;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Predicate;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -235,6 +239,28 @@ public final class CaseForEqBuilder<D> {
       @Override
       protected NumberExpression<T> createResult(Class<T> type, Expression<T> last) {
         return Expressions.numberOperation(type, Ops.CASE_EQ, base, last);
+      }
+
+      @Override
+      public NumberExpression<T> otherwise(Expression<T> otherwise) {
+        caseElements.add(0, new CaseElement<D>(null, otherwise));
+        Expression<T> last = null;
+        for (CaseElement<D> element : caseElements) {
+          if (last == null) {
+            last =
+                Expressions.numberOperation((Class<T>) type, Ops.CASE_EQ_ELSE, element.getTarget());
+          } else {
+            last =
+                Expressions.numberOperation(
+                    (Class<T>) type,
+                    Ops.CASE_EQ_WHEN,
+                    base,
+                    element.getEq(),
+                    element.getTarget(),
+                    last);
+          }
+        }
+        return createResult((Class<T>) type, last);
       }
     }.when(other).then(then);
   }

@@ -21,7 +21,7 @@ import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.TemplateExpression;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.ProjectableSQLQuery;
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 /**
  * Abstract super class for SQLQuery implementation for JPA and Hibernate

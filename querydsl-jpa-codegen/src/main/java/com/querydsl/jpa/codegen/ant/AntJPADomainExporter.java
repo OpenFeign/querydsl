@@ -14,15 +14,15 @@
 package com.querydsl.jpa.codegen.ant;
 
 import com.querydsl.jpa.codegen.JPADomainExporter;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.metamodel.Metamodel;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.metamodel.Metamodel;
 
 /**
  * {@code AntJPADomainExporter} exports JPA 2 metamodels to Querydsl expression types

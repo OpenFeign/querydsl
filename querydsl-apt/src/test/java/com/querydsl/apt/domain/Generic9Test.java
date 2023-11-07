@@ -1,7 +1,7 @@
 package com.querydsl.apt.domain;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class Generic9Test {

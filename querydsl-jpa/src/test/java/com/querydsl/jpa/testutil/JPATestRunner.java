@@ -15,12 +15,12 @@ package com.querydsl.jpa.testutil;
 
 import com.querydsl.jpa.JPATest;
 import com.querydsl.jpa.Mode;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import org.junit.Assert;
 import org.junit.rules.MethodRule;
 import org.junit.runner.Description;

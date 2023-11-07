@@ -13,8 +13,8 @@
  */
 package com.querydsl.jpa.domain;
 
+import jakarta.persistence.Embeddable;
 import java.io.Serializable;
-import javax.persistence.Embeddable;
 
 @SuppressWarnings("serial")
 @Embeddable

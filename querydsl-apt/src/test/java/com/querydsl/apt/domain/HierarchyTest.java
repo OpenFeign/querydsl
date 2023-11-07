@@ -17,8 +17,8 @@ import static org.junit.Assert.assertNotNull;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import org.junit.Test;
 
 public class HierarchyTest {

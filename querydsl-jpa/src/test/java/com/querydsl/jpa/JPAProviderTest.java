@@ -3,12 +3,14 @@ package com.querydsl.jpa;
 import static org.junit.Assert.assertEquals;
 
 import com.querydsl.jpa.impl.JPAProvider;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -32,7 +34,8 @@ public class JPAProviderTest {
 
   @Test
   public void hibernate() {
-    factory = Persistence.createEntityManagerFactory("h2");
+    Map<String, String> properties = new HashMap<>();
+    factory = Persistence.createEntityManagerFactory("h2", properties);
     em = factory.createEntityManager();
     System.out.println(em.getDelegate().getClass());
     assertEquals(Hibernate5Templates.DEFAULT, JPAProvider.getTemplates(em));

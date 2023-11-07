@@ -16,11 +16,11 @@ package com.querydsl.apt.domain;
 import static org.junit.Assert.assertNotNull;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class AnyUsageTest {

@@ -15,34 +15,19 @@ package com.querydsl.jpa.support;
 
 import com.querydsl.core.types.Ops;
 import com.querydsl.sql.DerbyTemplates;
-import com.querydsl.sql.SQLTemplates;
-import java.util.Arrays;
-import java.util.List;
+import org.hibernate.boot.model.FunctionContributions;
 import org.hibernate.dialect.DerbyDialect;
-import org.hibernate.dialect.function.CastFunction;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.type.Type;
 
 /** {@code QDerbyDialect} extends {@code DerbyDialect} with additional functions */
 public class QDerbyDialect extends DerbyDialect {
 
-  private static final CastFunction castFunction =
-      new CastFunction() {
-        @Override
-        public String render(Type columnType, List args, SessionFactoryImplementor factory) {
-          if (args.get(1).equals("string")) {
-            return super.render(
-                columnType, Arrays.asList("char(" + args.get(0) + ")", args.get(1)), factory);
-          } else {
-            return super.render(columnType, args, factory);
-          }
-        }
-      };
-
-  public QDerbyDialect() {
-    SQLTemplates templates = DerbyTemplates.DEFAULT;
-    getFunctions().putAll(DialectSupport.createFunctions(templates));
-    registerFunction("concat", DialectSupport.createFunction(templates, Ops.CONCAT));
-    registerFunction("cast", castFunction);
+  @Override
+  public void initializeFunctionRegistry(FunctionContributions functionContributions) {
+    super.initializeFunctionRegistry(functionContributions);
+    DialectSupport.extendRegistry(DerbyTemplates.DEFAULT, functionContributions);
+    DialectSupport.extendRegistry(
+        "concat",
+        DialectSupport.createFunction(DerbyTemplates.DEFAULT, Ops.CONCAT),
+        functionContributions);
   }
 }

@@ -2,10 +2,10 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.MapKey;
+import jakarta.persistence.OneToMany;
 import java.util.Map;
-import javax.persistence.Entity;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
 import org.junit.Assert;
 import org.junit.Test;
 

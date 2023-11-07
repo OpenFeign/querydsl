@@ -13,12 +13,11 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.jpa.Constants.*;
+import static com.querydsl.jpa.Constants.cat;
+import static com.querydsl.jpa.Constants.kitten;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import antlr.RecognitionException;
-import antlr.TokenStreamException;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.QCat;
@@ -46,7 +45,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
   protected QueryHelper<?> query() {
     return new QueryHelper<Void>(HQLTemplates.DEFAULT) {
       @Override
-      public void parse() throws RecognitionException, TokenStreamException {
+      public void parse() {
         try {
           System.out.println("query : " + toString().replace('\n', ' '));
           JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
@@ -109,7 +108,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
     HibernateQuery<?> query = new HibernateQuery<Void>(session);
     ScrollableResults results = query.from(cat).select(cat).scroll(ScrollMode.SCROLL_INSENSITIVE);
     while (results.next()) {
-      assertNotNull(results.get(0));
+      assertNotNull(((Object[]) results.get())[0]);
     }
     results.close();
   }

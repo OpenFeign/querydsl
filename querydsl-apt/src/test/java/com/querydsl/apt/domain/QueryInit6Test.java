@@ -5,10 +5,10 @@ import static org.junit.Assert.assertNotNull;
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.annotations.QueryType;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.junit.Test;
 

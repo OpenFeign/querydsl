@@ -20,9 +20,9 @@ import com.querydsl.core.annotations.QueryType;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringExpression;
+import jakarta.persistence.Entity;
 import java.util.Map;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.persistence.Entity;
 import org.junit.Test;
 
 public class QueryProjectionTest {

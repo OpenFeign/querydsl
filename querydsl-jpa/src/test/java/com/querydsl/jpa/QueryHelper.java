@@ -13,11 +13,6 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
-
-import antlr.RecognitionException;
-import antlr.TokenStreamException;
-import antlr.collections.AST;
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.NonUniqueResultException;
@@ -25,10 +20,9 @@ import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.logging.Logger;
-import org.hibernate.hql.internal.ast.HqlParser;
+import org.hibernate.grammars.hql.HqlParser;
+import org.hibernate.query.hql.internal.HqlParseTreeBuilder;
 import org.jetbrains.annotations.Nullable;
 
 class QueryHelper<T> extends JPAQueryBase<T, QueryHelper<T>> {
@@ -67,19 +61,15 @@ class QueryHelper<T> extends JPAQueryBase<T, QueryHelper<T>> {
     throw new UnsupportedOperationException();
   }
 
-  public void parse() throws RecognitionException, TokenStreamException {
+  /**
+   * Printing of the AST has been removed with hibernate 6. TODO: maybe re-add if we find a way to
+   * do it with hibernate 6.
+   */
+  public void parse() {
     String input = toString();
     logger.fine("input: " + input.replace('\n', ' '));
-    HqlParser parser = HqlParser.getInstance(input);
-    parser.setFilter(false);
+    HqlParser parser = HqlParseTreeBuilder.INSTANCE.buildHqlParser(input);
     parser.statement();
-    AST ast = parser.getAST();
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    parser.showAst(ast, new PrintStream(baos));
-    assertEquals(
-        "At least one error occurred during parsing " + input,
-        0,
-        parser.getParseErrorHandler().getErrorCount());
   }
 
   @Override

@@ -12,7 +12,7 @@ services:
         condition: service_healthy
 
   mysql:
-    image: mysql:5.6.38
+    image: mysql:8
     ports:
       - "3306:3306"
     volumes:
@@ -25,7 +25,7 @@ services:
   postgresql:
     image: mdillon/postgis:9.3-alpine
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - ./db/postgresql.sql:/docker-entrypoint-initdb.d/postgresql.sql
     environment:
@@ -57,7 +57,7 @@ services:
       start_period: 60s
 
   mongo:
-    image: mongo:3.6.1
+    image: mongo:4
     ports:
       - "27017:27017"
 

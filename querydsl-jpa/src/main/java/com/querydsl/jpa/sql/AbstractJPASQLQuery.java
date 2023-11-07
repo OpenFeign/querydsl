@@ -24,6 +24,10 @@ import com.querydsl.jpa.impl.JPAProvider;
 import com.querydsl.jpa.impl.JPAUtil;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLSerializer;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.Query;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -33,10 +37,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.Query;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -299,10 +299,10 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
   private Object uniqueResult(Query query) {
     try {
       return getSingleResult(query);
-    } catch (javax.persistence.NoResultException e) {
+    } catch (jakarta.persistence.NoResultException e) {
       logger.log(Level.FINEST, e.getMessage(), e);
       return null;
-    } catch (javax.persistence.NonUniqueResultException e) {
+    } catch (jakarta.persistence.NonUniqueResultException e) {
       throw new NonUniqueResultException(e);
     } finally {
       reset();

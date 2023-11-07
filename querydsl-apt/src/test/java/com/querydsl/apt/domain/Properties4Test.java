@@ -2,7 +2,7 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 import org.junit.Test;
 
 public class Properties4Test extends AbstractTest {

@@ -15,8 +15,8 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
+import jakarta.persistence.Entity;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.persistence.Entity;
 import org.junit.Test;
 
 public class KeywordsTest {

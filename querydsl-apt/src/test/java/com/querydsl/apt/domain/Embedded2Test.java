@@ -13,8 +13,8 @@
  */
 package com.querydsl.apt.domain;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class Embedded2Test {
@@ -48,7 +48,7 @@ public class Embedded2Test {
     String nameNl;
   }
 
-  @javax.persistence.Entity
+  @jakarta.persistence.Entity
   public static class Brand extends AbstractNamedEntity<BrandCode> {
 
     @Id

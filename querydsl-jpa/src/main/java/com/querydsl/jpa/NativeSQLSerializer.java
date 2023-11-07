@@ -17,6 +17,8 @@ import com.querydsl.core.JoinExpression;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.types.*;
 import com.querydsl.sql.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,8 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Table;
 
 /**
  * {@code NativeSQLSerializer} extends {@link SQLSerializer} to extract referenced entity paths and

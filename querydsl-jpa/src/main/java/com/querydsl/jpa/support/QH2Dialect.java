@@ -14,14 +14,15 @@
 package com.querydsl.jpa.support;
 
 import com.querydsl.sql.H2Templates;
-import com.querydsl.sql.SQLTemplates;
+import org.hibernate.boot.model.FunctionContributions;
 import org.hibernate.dialect.H2Dialect;
 
 /** {@code QH2Dialect} extends {@code H2Dialect} with additional functions */
 public class QH2Dialect extends H2Dialect {
 
-  public QH2Dialect() {
-    SQLTemplates templates = H2Templates.DEFAULT;
-    getFunctions().putAll(DialectSupport.createFunctions(templates));
+  @Override
+  public void initializeFunctionRegistry(FunctionContributions functionContributions) {
+    super.initializeFunctionRegistry(functionContributions);
+    DialectSupport.extendRegistry(H2Templates.DEFAULT, functionContributions);
   }
 }

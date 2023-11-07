@@ -1,6 +1,6 @@
 package com.querydsl.scala
 
-import javax.persistence._
+import jakarta.persistence._
 
 import com.querydsl.codegen.GenericExporter
 import org.junit.Test

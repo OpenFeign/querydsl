@@ -11,16 +11,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.jpa;
+package com.querydsl.jpa.support;
 
-import org.hibernate.type.DoubleType;
+import com.querydsl.sql.MySQLTemplates;
+import org.hibernate.boot.model.FunctionContributions;
+import org.hibernate.dialect.MySQLDialect;
 
-@SuppressWarnings("serial")
-public class ExtDoubleType extends DoubleType {
+/** {@code QMySQL5Dialect} extends {@code MySQL5Dialect} with additional functions */
+public class QMySQLDialect extends MySQLDialect {
 
-  //    @Override
-  //    public void set(PreparedStatement st, Object value, int index) throws SQLException {
-  //        st.setDouble( index, ( (Number) value ).doubleValue() );
-  //    }
-
+  @Override
+  public void initializeFunctionRegistry(FunctionContributions functionContributions) {
+    super.initializeFunctionRegistry(functionContributions);
+    DialectSupport.extendRegistry(MySQLTemplates.DEFAULT, functionContributions);
+  }
 }

@@ -15,7 +15,7 @@ package com.querydsl.jpa;
 
 import static org.junit.Assert.assertNotNull;
 
-import com.querydsl.jpa.domain.QAnimal;
+import com.querydsl.core.domain.query.QAnimal;
 import com.querydsl.jpa.hibernate.HibernateQueryFactory;
 import java.util.function.Supplier;
 import org.easymock.EasyMock;

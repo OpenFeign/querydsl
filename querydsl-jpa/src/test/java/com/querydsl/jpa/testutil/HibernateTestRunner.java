@@ -15,6 +15,7 @@ package com.querydsl.jpa.testutil;
 
 import static org.junit.Assert.assertTrue;
 
+import com.querydsl.core.Target;
 import com.querydsl.jpa.HibernateTest;
 import com.querydsl.jpa.Mode;
 import com.querydsl.jpa.domain.Domain;
@@ -94,6 +95,9 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
   }
 
   private void start() throws Exception {
+    Mode.mode.set("hsqldb");
+    Mode.target.set(Target.HSQLDB);
+
     Configuration cfg = new Configuration();
     for (Class<?> cl : Domain.classes) {
       cfg.addAnnotatedClass(cl);
@@ -128,7 +132,7 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
     }
 
     if (sessionFactory != null) {
-      sessionFactory.getCache().evictEntityRegions();
+      sessionFactory.getCache().evictAll();
       sessionFactory.close();
       sessionFactory = null;
     }

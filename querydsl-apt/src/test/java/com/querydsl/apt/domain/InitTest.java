@@ -2,7 +2,7 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import org.junit.Test;
 
 public class InitTest {

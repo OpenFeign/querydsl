@@ -3,10 +3,10 @@ package com.querydsl.apt.domain;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
 import org.junit.Test;
 
 public class Generic16Test extends AbstractTest {

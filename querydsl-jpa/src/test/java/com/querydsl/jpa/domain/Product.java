@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa.domain;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 /** The Class Product. */
 @Entity

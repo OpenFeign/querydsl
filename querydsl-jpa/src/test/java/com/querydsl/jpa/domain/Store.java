@@ -13,8 +13,8 @@
  */
 package com.querydsl.jpa.domain;
 
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 
 /** The Class Store. */
 @Entity

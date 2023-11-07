@@ -1,7 +1,7 @@
 package com.querydsl.apt.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 import org.junit.Test;
 
 public class Generic11Test {

@@ -17,8 +17,8 @@ import static org.junit.Assert.assertNotNull;
 
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryInit;
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class QueryInit7Test {

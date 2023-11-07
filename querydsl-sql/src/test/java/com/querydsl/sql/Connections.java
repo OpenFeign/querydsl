@@ -139,7 +139,7 @@ public final class Connections {
 
   private static Connection getPostgreSQL() throws ClassNotFoundException, SQLException {
     Class.forName("org.postgresql.Driver");
-    String url = "jdbc:postgresql://localhost:5432/querydsl";
+    String url = "jdbc:postgresql://localhost:5433/querydsl";
     return DriverManager.getConnection(url, "querydsl", "querydsl");
   }
 

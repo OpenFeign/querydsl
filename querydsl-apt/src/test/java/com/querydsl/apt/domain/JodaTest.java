@@ -2,8 +2,8 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
+import jakarta.persistence.*;
 import java.util.Date;
-import javax.persistence.*;
 import org.joda.time.DateTime;
 import org.junit.Test;
 

@@ -20,16 +20,17 @@ import com.querydsl.jpa.hibernate.HibernateUtil;
 import com.querydsl.sql.SQLTemplates;
 import java.util.HashMap;
 import java.util.Map;
-import org.hibernate.dialect.function.SQLFunction;
-import org.hibernate.dialect.function.SQLFunctionTemplate;
-import org.hibernate.type.Type;
+import org.hibernate.boot.model.FunctionContributions;
+import org.hibernate.query.sqm.function.SqmFunctionRegistry;
+import org.hibernate.type.BasicTypeReference;
+import org.hibernate.type.BasicTypeRegistry;
 
 final class DialectSupport {
 
   private DialectSupport() {}
 
-  public static Map<String, SQLFunction> createFunctions(SQLTemplates templates) {
-    Map<String, SQLFunction> functions = new HashMap<>();
+  public static Map<String, DialectFunctionTemplate> createPatterns(SQLTemplates templates) {
+    Map<String, DialectFunctionTemplate> functions = new HashMap<>();
     functions.put("second", createFunction(templates, Ops.DateTimeOps.SECOND));
     functions.put("minute", createFunction(templates, Ops.DateTimeOps.MINUTE));
     functions.put("hour", createFunction(templates, Ops.DateTimeOps.HOUR));
@@ -40,27 +41,55 @@ final class DialectSupport {
     return functions;
   }
 
-  public static SQLFunction createFunction(SQLTemplates templates, Operator operator) {
+  public static DialectFunctionTemplate createFunction(SQLTemplates templates, Operator operator) {
     Template template = templates.getTemplate(operator);
-    Type type = HibernateUtil.getType(operator.getType());
-    return new SQLFunctionTemplate(type, convert(template));
+    BasicTypeReference<?> type = HibernateUtil.getType(operator.getType());
+    return new DialectFunctionTemplate(convert(template), type);
   }
 
   public static String convert(Template template) {
     StringBuilder builder = new StringBuilder();
     for (Template.Element element : template.getElements()) {
-      if (element instanceof Template.AsString) {
-        builder.append("?").append(((Template.AsString) element).getIndex() + 1);
-      } else if (element instanceof Template.ByIndex) {
-        builder.append("?").append(((Template.ByIndex) element).getIndex() + 1);
-      } else if (element instanceof Template.Transformed) {
-        builder.append("?").append(((Template.Transformed) element).getIndex() + 1);
-      } else if (element instanceof Template.StaticText) {
-        builder.append(((Template.StaticText) element).getText());
+      if (element instanceof Template.AsString asString) {
+        builder.append("?").append(asString.getIndex() + 1);
+      } else if (element instanceof Template.ByIndex byIndex) {
+        builder.append("?").append(byIndex.getIndex() + 1);
+      } else if (element instanceof Template.Transformed transformed) {
+        builder.append("?").append(transformed.getIndex() + 1);
+      } else if (element instanceof Template.StaticText staticText) {
+        builder.append(staticText.getText());
       } else {
         throw new IllegalStateException("Unsupported element " + element);
       }
     }
     return builder.toString();
   }
+
+  public static void extendRegistry(
+      SQLTemplates templates, FunctionContributions functionContributions) {
+    SqmFunctionRegistry functionRegistry = functionContributions.getFunctionRegistry();
+    Map<String, DialectSupport.DialectFunctionTemplate> functions =
+        DialectSupport.createPatterns(templates);
+
+    BasicTypeRegistry basicTypeRegistry =
+        functionContributions.getTypeConfiguration().getBasicTypeRegistry();
+    functions.forEach(
+        (name, template) ->
+            functionRegistry.registerPattern(
+                name, template.pattern(), basicTypeRegistry.resolve(template.type())));
+  }
+
+  public static void extendRegistry(
+      String name,
+      DialectSupport.DialectFunctionTemplate template,
+      FunctionContributions functionContributions) {
+    SqmFunctionRegistry functionRegistry = functionContributions.getFunctionRegistry();
+
+    BasicTypeRegistry basicTypeRegistry =
+        functionContributions.getTypeConfiguration().getBasicTypeRegistry();
+    functionRegistry.registerPattern(
+        name, template.pattern(), basicTypeRegistry.resolve(template.type()));
+  }
+
+  record DialectFunctionTemplate(String pattern, BasicTypeReference<?> type) {}
 }

@@ -13,9 +13,9 @@
  */
 package com.querydsl.jpa.domain;
 
+import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
-import javax.persistence.*;
 
 /** The Class Employee. */
 @Entity
