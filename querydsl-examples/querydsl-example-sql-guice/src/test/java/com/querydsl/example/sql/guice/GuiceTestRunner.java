@@ -7,15 +7,14 @@ import org.junit.runners.model.InitializationError;
 
 public class GuiceTestRunner extends BlockJUnit4ClassRunner {
 
-    private static final Injector injector = Guice
-            .createInjector(new ServiceModule());
+  private static final Injector injector = Guice.createInjector(new ServiceModule());
 
-    public GuiceTestRunner(Class<?> klass) throws InitializationError {
-        super(klass);
-    }
+  public GuiceTestRunner(Class<?> klass) throws InitializationError {
+    super(klass);
+  }
 
-    @Override
-    protected Object createTest() throws Exception {
-        return injector.getInstance(getTestClass().getJavaClass());
-    }
+  @Override
+  protected Object createTest() throws Exception {
+    return injector.getInstance(getTestClass().getJavaClass());
+  }
 }

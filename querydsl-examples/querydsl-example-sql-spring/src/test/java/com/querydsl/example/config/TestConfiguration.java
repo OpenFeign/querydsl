@@ -10,9 +10,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class TestConfiguration {
 
-    @Bean
-    public TestDataService testDataService() {
-        return new TestDataServiceImpl();
-    }
-
+  @Bean
+  public TestDataService testDataService() {
+    return new TestDataServiceImpl();
+  }
 }

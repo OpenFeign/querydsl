@@ -2,19 +2,17 @@ package com.querydsl.example.dao;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.example.dto.Supplier;
-
 import java.util.List;
 
 public interface SupplierDao {
 
-    Supplier findById(long id);
+  Supplier findById(long id);
 
-    List<Supplier> findAll(Predicate... where);
+  List<Supplier> findAll(Predicate... where);
 
-    Supplier save(Supplier s);
+  Supplier save(Supplier s);
 
-    long count();
+  long count();
 
-    void delete(Supplier s);
-
+  void delete(Supplier s);
 }
