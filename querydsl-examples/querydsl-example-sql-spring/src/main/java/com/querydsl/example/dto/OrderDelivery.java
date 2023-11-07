@@ -6,9 +6,7 @@ import org.joda.time.LocalDate;
 @Data
 public class OrderDelivery {
 
-    private String deliveryStatusCode;
+  private String deliveryStatusCode;
 
-    private LocalDate reportedDate;
-
+  private LocalDate reportedDate;
 }
-

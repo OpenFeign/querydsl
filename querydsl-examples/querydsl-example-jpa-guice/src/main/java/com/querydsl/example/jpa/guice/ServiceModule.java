@@ -7,11 +7,11 @@ import com.querydsl.example.jpa.repository.TweetRepository;
 import com.querydsl.example.jpa.repository.UserRepository;
 
 public class ServiceModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        install(new JpaPersistModule("h2").properties(System.getProperties()));
-        bind(JpaInitializer.class).asEagerSingleton();
-        bind(TweetRepository.class).in(Scopes.SINGLETON);
-        bind(UserRepository.class).in(Scopes.SINGLETON);
-    }
+  @Override
+  protected void configure() {
+    install(new JpaPersistModule("h2").properties(System.getProperties()));
+    bind(JpaInitializer.class).asEagerSingleton();
+    bind(TweetRepository.class).in(Scopes.SINGLETON);
+    bind(UserRepository.class).in(Scopes.SINGLETON);
+  }
 }
