@@ -60,12 +60,13 @@
     <argLine>-Xms256m -Xmx512m</argLine>
 
     <!-- default bytecode version for src/main -->
-    <main.java.version>1.8</main.java.version>
+    <main.java.version>11</main.java.version>
     <latest.java.version>21</latest.java.version>
 
     <git-code-format-maven-plugin.version>5.1</git-code-format-maven-plugin.version>
 
     <junit.version>5.10.1</junit.version>
+    <ecj.version>3.33.0</ecj.version>
 
     <!-- SQL deps -->
     <db2.version>11.5.8.0</db2.version>
@@ -210,9 +211,9 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.eclipse.jdt.core.compiler</groupId>
+        <groupId>org.eclipse.jdt</groupId>
         <artifactId>ecj</artifactId>
-        <version>4.6.1</version>
+        <version>${ecj.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.classgraph</groupId>
