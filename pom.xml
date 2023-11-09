@@ -66,6 +66,7 @@
     <git-code-format-maven-plugin.version>5.1</git-code-format-maven-plugin.version>
 
     <junit.version>5.10.1</junit.version>
+    <ecj.version>3.26.0</ecj.version>
 
     <!-- SQL deps -->
     <db2.version>11.5.8.0</db2.version>
@@ -210,9 +211,9 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.eclipse.jdt.core.compiler</groupId>
+        <groupId>org.eclipse.jdt</groupId>
         <artifactId>ecj</artifactId>
-        <version>4.6.1</version>
+        <version>${ecj.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.classgraph</groupId>
@@ -369,7 +370,8 @@
             <environmentVariables>
               <TZ>UTC</TZ>
             </environmentVariables>
-            <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>       </configuration>
+            <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
