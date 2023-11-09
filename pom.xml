@@ -42,6 +42,8 @@
     <module>querydsl-scala</module>
     <module>querydsl-kotlin</module>
 
+    <!-- Examples -->
+    <module>querydsl-examples</module>
   </modules>
 
   <properties>
@@ -758,13 +760,6 @@
       <id>docs</id>
       <modules>
         <module>querydsl-docs</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>examples</id>
-      <modules>
-        <module>querydsl-examples</module>
       </modules>
     </profile>
 
