@@ -13,21 +13,21 @@
  */
 package com.querydsl.sql;
 
-import com.querydsl.core.JoinExpression;
-import com.querydsl.core.JoinFlag;
-import com.querydsl.core.QueryFlag;
+import com.querydsl.core.*;
 import com.querydsl.core.QueryFlag.Position;
-import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.SerializerBase;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.Template.Element;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.sql.dml.SQLInsertBatch;
+import com.querydsl.sql.dml.SQLMergeUsingCase;
 import com.querydsl.sql.types.Null;
 import java.sql.Types;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -548,6 +548,97 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
       append(templates.getValues());
       append("(").handle(COMMA, values).append(") ");
     }
+  }
+
+  public void serializeMergeUsing(
+      QueryMetadata metadata,
+      RelationalPath<?> entity,
+      SimpleExpression<?> usingExpression,
+      Predicate usingOn,
+      List<SQLMergeUsingCase> whens) {
+    this.entity = entity;
+    templates.serializeMergeUsing(metadata, entity, usingExpression, usingOn, whens, this);
+  }
+
+  public void serializeForMergeUsing(
+      QueryMetadata metadata,
+      RelationalPath<?> entity,
+      SimpleExpression<?> usingExpression,
+      Predicate usingOn,
+      List<SQLMergeUsingCase> whens) {
+    serialize(Position.START, metadata.getFlags());
+
+    if (!serialize(Position.START_OVERRIDE, metadata.getFlags())) {
+      append(templates.getMergeInto());
+    }
+    serialize(Position.AFTER_SELECT, metadata.getFlags());
+
+    boolean originalDmlWithSchema = dmlWithSchema;
+    dmlWithSchema = true;
+    handle(entity);
+    dmlWithSchema = originalDmlWithSchema;
+    append("\nusing ");
+    handle(usingExpression);
+    append("\n");
+    append(templates.getOn());
+    handle(usingOn);
+
+    for (final SQLMergeUsingCase when : whens) {
+      append("\nwhen ");
+      if (!when.getMatched()) {
+        append("not ");
+      }
+      append("matched ");
+      for (final Predicate matchAnd : when.getMatchAnds()) {
+        append("and ");
+        handle(matchAnd);
+      }
+      append("\nthen ");
+      if (when.getMergeOperation() == SQLMergeUsingCase.MergeOperation.INSERT) {
+        ArrayList<Path<?>> columns = new ArrayList<>(when.getUpdates().keySet());
+        List<Expression<?>> values =
+            columns.stream().map(when.getUpdates()::get).collect(Collectors.toList());
+        append("insert (");
+        skipParent = true;
+        handle(COMMA, columns);
+        skipParent = false;
+        append(")");
+        if (!useLiterals) {
+          for (int i = 0; i < columns.size(); i++) {
+            if (values.get(i) instanceof Constant<?>) {
+              constantPaths.add(columns.get(i));
+            }
+          }
+        }
+        // values
+        append(templates.getValues());
+        append("(");
+        handle(COMMA, values);
+        append(")");
+      } else if (when.getMergeOperation() == SQLMergeUsingCase.MergeOperation.UPDATE) {
+        append(templates.getUpdate());
+        append("\n");
+        append(templates.getSet());
+        boolean first = true;
+        for (final Map.Entry<Path<?>, Expression<?>> update : when.getUpdates().entrySet()) {
+          if (!first) {
+            append(COMMA);
+          }
+          skipParent = true;
+          handle(update.getKey());
+          skipParent = false;
+          append(" = ");
+          if (!useLiterals && update.getValue() instanceof Constant<?>) {
+            constantPaths.add(update.getKey());
+          }
+          handle(update.getValue());
+          first = false;
+        }
+      } else if (when.getMergeOperation() == SQLMergeUsingCase.MergeOperation.DELETE) {
+        append(templates.getDelete());
+      }
+    }
+    append(";");
   }
 
   public void serializeInsert(

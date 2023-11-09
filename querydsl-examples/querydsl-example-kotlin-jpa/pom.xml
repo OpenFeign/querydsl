@@ -10,6 +10,7 @@
   <name>Querydsl example - Kotlin JPA</name>
 
   <properties>
+    <main.java.version>11</main.java.version>
     <kotlin.version>1.9.20</kotlin.version>
   </properties>
 
@@ -58,7 +59,7 @@
               <classifier>jpa</classifier>
             </annotationProcessorPath>
           </annotationProcessorPaths>
-          <jvmTarget>1.8</jvmTarget>
+          <jvmTarget>${main.java.version}</jvmTarget>
         </configuration>
         <executions>
           <execution>
@@ -95,6 +96,7 @@
               <sourceDirs>
                 <sourceDir>src/test/kotlin</sourceDir>
                 <sourceDir>src/test/java</sourceDir>
+                <sourceDir>target/generated-sources/kapt/test</sourceDir>
               </sourceDirs>
             </configuration>
           </execution>

@@ -95,7 +95,7 @@
     <surefire.version>3.2.2</surefire.version>
     <animal-sniffer.version>1.23</animal-sniffer.version>
     <jodatime.version>2.12.5</jodatime.version>
-    <h2gis.version>2.0.0</h2gis.version>
+    <h2gis.version>2.2.0</h2gis.version>
     <morphia.version>1.3.2</morphia.version>
     <jmh.version>1.37</jmh.version>
     <hamcrest.veresion>2.2</hamcrest.veresion>
@@ -239,7 +239,7 @@
       <dependency>
         <groupId>org.geolatte</groupId>
         <artifactId>geolatte-geom</artifactId>
-        <version>1.8.2</version>
+        <version>1.9.1</version>
       </dependency>
       <dependency>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -256,7 +256,7 @@
       <dependency>
         <groupId>com.fasterxml</groupId>
         <artifactId>classmate</artifactId>
-        <version>1.5.1</version>
+        <version>1.6.0</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.logging</groupId>
@@ -331,7 +331,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -367,6 +367,10 @@
               <version>${latest.java.version}</version>
             </jdkToolchain>
             <argLine>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.naming/javax.naming=ALL-UNNAMED</argLine>
+            <environmentVariables>
+              <TZ>UTC</TZ>
+            </environmentVariables>
+            <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
           </configuration>
         </plugin>
         <plugin>
@@ -451,7 +455,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.4.1</version>
+        <version>3.4.1</version>
         <executions>
           <execution>
             <id>enforce-maven</id>
@@ -670,7 +674,7 @@
       <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
-        <version>0.101.0</version>
+        <version>0.101.3</version>
         <inherited>false</inherited>
         <configuration>
           <bomTemplateUrl>file://${project.basedir}/src/config/bom.xml</bomTemplateUrl>
@@ -780,52 +784,6 @@
         <animal.sniffer.skip>true</animal.sniffer.skip>
         <japicmp.skip>true</japicmp.skip>
       </properties>
-    </profile>
-
-    <profile>
-      <id>java-8</id>
-      <activation>
-        <jdk>1.8</jdk>
-      </activation>
-      <properties>
-        <hsqldb.version>2.5.2</hsqldb.version>
-        <derby.version>10.14.2.0</derby.version>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java-11</id>
-      <activation>
-        <jdk>[11,)</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <source>1.8</source>
-              <target>11</target>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.eluder.coveralls</groupId>
-            <artifactId>coveralls-maven-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>2.3.2</version>
-              </dependency>
-              <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-runtime</artifactId>
-                <version>2.3.2</version>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
 
     <profile>
