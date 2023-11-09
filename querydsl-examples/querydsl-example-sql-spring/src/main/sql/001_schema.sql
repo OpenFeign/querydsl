@@ -1,11 +1,11 @@
 create table supplier (
-  id serial primary key,
+  id identity primary key,
   code varchar(255),
   name varchar(255)
 );
 
 create table product (
-  id serial primary key,
+  id identity primary key,
   supplier_id long,
   name varchar(64),
   price double,
@@ -24,7 +24,7 @@ create table product_l10n (
 );
 
 create table person (
-  id serial primary key,
+  id identity primary key,
   first_name varchar(64),
   last_name varchar(64),
   phone varchar(64),
@@ -32,7 +32,7 @@ create table person (
 );
 
 create table customer (
-  id serial primary key,
+  id identity primary key,
   name varchar(64),
   contact_person_id long,
  
@@ -40,7 +40,7 @@ create table customer (
 );
 
 create table customer_payment_method (
-  id serial primary key,
+  id identity primary key,
   customer_id long,
   payment_method_code varchar(12),
   card_number varchar(24),
@@ -52,7 +52,7 @@ create table customer_payment_method (
 );
 
 create table customer_order (
-  id serial primary key, 
+  id identity primary key, 
   customer_id long,
   customer_payment_method_id long,
   order_status varchar(12),
@@ -83,7 +83,7 @@ create table customer_order_delivery (
 );
 
 create table address (
-  id serial primary key, 
+  id identity primary key, 
   street varchar(64),
   zip varchar(64),
   town varchar(64),

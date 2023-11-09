@@ -20,6 +20,8 @@
 
     <guice.version>5.0.1</guice.version>
     <h2.version>1.3.170</h2.version>
+    <main.java.version>11</main.java.version>
+    <hibernate.validator.version>6.2.5.Final</hibernate.validator.version>
   </properties>
 
   <dependencies>
