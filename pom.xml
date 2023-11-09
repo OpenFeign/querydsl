@@ -666,7 +666,7 @@
       <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
-        <version>0.101.0</version>
+        <version>0.101.3</version>
         <inherited>false</inherited>
         <configuration>
           <bomTemplateUrl>file://${project.basedir}/src/config/bom.xml</bomTemplateUrl>
