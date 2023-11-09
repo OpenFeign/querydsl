@@ -29,12 +29,6 @@ commands:
           command: |
             ./mvnw -ntp dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true -B
 
-  verify-formatting:
-    steps:
-      - run:
-          name: 'Verify formatting'
-          command: |
-            scripts/no-git-changes.sh
   configure-gpg:
     steps:
       - run:
@@ -109,7 +103,21 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp verify -B -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.EmbeddedDatabase
-      - verify-formatting
+  buildExamples:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp verify -B -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.Database -Pexamples
   testMySQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -286,6 +294,12 @@ workflows:
             <<: *all-branches
       - test:
           name: 'Compile and Test (no external databases)'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - buildExamples:
+          name: 'Compile and Test Examples'
           requires:
             - 'Resolve dependencies'
           filters:

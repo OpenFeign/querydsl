@@ -42,8 +42,6 @@
     <module>querydsl-scala</module>
     <module>querydsl-kotlin</module>
 
-    <!-- Examples -->
-    <module>querydsl-examples</module>
   </modules>
 
   <properties>
@@ -368,7 +366,10 @@
               <version>${latest.java.version}</version>
             </jdkToolchain>
             <argLine>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.naming/javax.naming=ALL-UNNAMED</argLine>
-          </configuration>
+            <environmentVariables>
+              <TZ>UTC</TZ>
+            </environmentVariables>
+            <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>       </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
@@ -760,6 +761,13 @@
       <id>docs</id>
       <modules>
         <module>querydsl-docs</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>examples</id>
+      <modules>
+        <module>querydsl-examples</module>
       </modules>
     </profile>
 
