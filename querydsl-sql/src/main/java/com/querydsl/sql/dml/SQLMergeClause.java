@@ -18,6 +18,7 @@ import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.dml.StoreClause;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.ResultSetAdapter;
 import com.querydsl.sql.*;
@@ -96,6 +97,11 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
   public SQLMergeClause addFlag(Position position, Expression<?> flag) {
     metadata.addFlag(new QueryFlag(position, flag));
     return this;
+  }
+
+  public SQLMergeUsingClause using(SimpleExpression<?> dataQuery) {
+    clear();
+    return new SQLMergeUsingClause(connection(), configuration, entity, dataQuery);
   }
 
   protected List<? extends Path<?>> getKeys() {
