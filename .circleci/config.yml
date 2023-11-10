@@ -102,7 +102,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp verify -B -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.EmbeddedDatabase
+            ./mvnw -ntp verify -B -Pno-databases
   buildExamples:
     <<: *defaults
     working_directory: ~/querydsl
@@ -117,7 +117,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp verify -B -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.Database -Pexamples
+            ./mvnw -ntp verify -B -Pexamples,no-databases
   testMySQL:
     <<: *defaults
     working_directory: ~/querydsl

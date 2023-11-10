@@ -78,7 +78,7 @@
     <mysql.version>8.0.30</mysql.version>
     <jtds.version>1.3.1</jtds.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
-    <sqlite.version>3.36.0</sqlite.version>
+    <sqlite.version>3.43.2.2</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
     <firebird.version>2.2.15</firebird.version>
 
@@ -632,12 +632,6 @@
         <configuration>
           <dynamicDependencies>
             <DynamicDependency>
-              <groupId>org.apache.maven.surefire</groupId>
-              <artifactId>surefire-junit47</artifactId>
-              <version>${surefire.version}</version>
-              <repositoryType>PLUGIN</repositoryType>
-            </DynamicDependency>
-            <DynamicDependency>
               <groupId>org.codehaus.mojo.signature</groupId>
               <artifactId>java18</artifactId>
               <version>1.0</version>
@@ -912,6 +906,16 @@
       <build>
         <directory>${basedir}/m2e-target</directory>
       </build>
+    </profile>
+    <profile>
+      <id>no-databases</id>
+
+      <properties>
+        <excludedGroups>com.querydsl.core.testutil.Database,
+                        com.querydsl.core.testutil.SlowTest,
+                        com.querydsl.core.testutil.Performance,
+                        com.querydsl.core.testutil.ReportingOnly</excludedGroups>
+      </properties>
     </profile>
   </profiles>
 
