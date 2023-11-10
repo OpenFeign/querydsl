@@ -632,12 +632,6 @@
         <configuration>
           <dynamicDependencies>
             <DynamicDependency>
-              <groupId>org.apache.maven.surefire</groupId>
-              <artifactId>surefire-junit47</artifactId>
-              <version>${surefire.version}</version>
-              <repositoryType>PLUGIN</repositoryType>
-            </DynamicDependency>
-            <DynamicDependency>
               <groupId>org.codehaus.mojo.signature</groupId>
               <artifactId>java18</artifactId>
               <version>1.0</version>
@@ -912,6 +906,16 @@
       <build>
         <directory>${basedir}/m2e-target</directory>
       </build>
+    </profile>
+    <profile>
+      <id>no-databases</id>
+
+      <properties>
+        <excludedGroups>com.querydsl.core.testutil.Database,
+                        com.querydsl.core.testutil.SlowTest,
+                        com.querydsl.core.testutil.Performance,
+                        com.querydsl.core.testutil.ReportingOnly</excludedGroups>
+      </properties>
     </profile>
   </profiles>
 
