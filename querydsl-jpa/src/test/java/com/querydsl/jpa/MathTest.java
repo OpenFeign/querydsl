@@ -13,7 +13,8 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.jpa.Constants.*;
+import static com.querydsl.jpa.Constants.cat;
+import static com.querydsl.jpa.Constants.kitten;
 
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.domain.QCat;
@@ -26,7 +27,7 @@ public class MathTest extends AbstractQueryTest {
     NumberPath<Double> path = QCat.cat.bodyWeight;
     assertToString(
         "(cat.bodyWeight - sum(cat.bodyWeight)) * cat.bodyWeight",
-        path.subtract(path.sum()).multiply(path));
+        path.subtract(path.sumDouble()).multiply(path));
   }
 
   @Test

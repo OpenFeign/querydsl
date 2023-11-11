@@ -17,7 +17,12 @@ import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Query;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.support.ExtendedSubQuery;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.MapExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
 
 /**
  * Query interface for JPQL queries
@@ -303,13 +308,6 @@ public interface JPQLQuery<T>
    * @return the current object
    */
   JPQLQuery<T> fetchJoin();
-
-  /**
-   * Add the "fetchJoin all properties" flag to the last defined join.
-   *
-   * @return the current object
-   */
-  JPQLQuery<T> fetchAll();
 
   @Override
   <U> JPQLQuery<U> select(Expression<U> expr);

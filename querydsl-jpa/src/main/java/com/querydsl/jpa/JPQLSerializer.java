@@ -377,11 +377,6 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
         handle(JPAQueryMixin.FETCH);
       }
       handleJoinTarget(je);
-      // XXX Hibernate specific flag
-      if (je.hasFlag(JPAQueryMixin.FETCH_ALL_PROPERTIES) && !forCountRow) {
-        handle(JPAQueryMixin.FETCH_ALL_PROPERTIES);
-      }
-
       if (je.getCondition() != null) {
         append(templates.isWithForOn() ? WITH : ON);
         handle(je.getCondition());

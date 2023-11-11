@@ -33,7 +33,7 @@ public class TimeConstantTest {
     TimeExpression<Time> time = TimeConstant.create(new Time(cal.getTimeInMillis()));
     assertEquals("13", time.hour().toString());
     assertEquals("30", time.minute().toString());
-    assertEquals("12", time.second().toString());
+    assertEquals("12.0", time.second().toString());
     //        assertEquals("3",    time.getMilliSecond().toString());
   }
 }

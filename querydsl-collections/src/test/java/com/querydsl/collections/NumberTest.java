@@ -17,6 +17,6 @@ public class NumberTest {
         CollQueryFactory.<BigDecimal>from(
             num, Arrays.<BigDecimal>asList(new BigDecimal("1.6"), new BigDecimal("1.3")));
 
-    assertEquals(new BigDecimal("2.9"), query.<BigDecimal>select(num.sum()).fetchOne());
+    assertEquals(new BigDecimal("2.9"), query.select(num.sumBigDecimal()).fetchOne());
   }
 }

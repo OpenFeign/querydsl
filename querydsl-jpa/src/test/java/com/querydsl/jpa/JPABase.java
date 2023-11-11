@@ -31,7 +31,12 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.domain.*;
+import com.querydsl.jpa.domain.Cat;
+import com.querydsl.jpa.domain.QCat;
+import com.querydsl.jpa.domain.QCatSummary;
+import com.querydsl.jpa.domain.QChild;
+import com.querydsl.jpa.domain.QGroup;
+import com.querydsl.jpa.domain.QParent;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
@@ -298,7 +303,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
         query()
             .from(cat)
             .groupBy(cat.alive, cat.breed)
-            .select(cat.alive, cat.breed, cat.id.sum())
+            .select(cat.alive, cat.breed, cat.id.sumLong())
             .fetchResults();
 
     assertEquals(1, results.getTotal());
@@ -310,8 +315,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
         query()
             .from(cat)
             .groupBy(cat.alive)
-            .having(cat.id.sum().gt(5))
-            .select(cat.alive, cat.id.sum())
+            .having(cat.id.sumLong().gt(5))
+            .select(cat.alive, cat.id.sumLong())
             .fetchResults();
 
     assertEquals(1, results.getTotal());

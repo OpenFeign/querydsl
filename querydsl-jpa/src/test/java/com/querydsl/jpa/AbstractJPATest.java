@@ -77,7 +77,6 @@ import com.querydsl.jpa.domain.DoubleProjection;
 import com.querydsl.jpa.domain.Employee;
 import com.querydsl.jpa.domain.Entity1;
 import com.querydsl.jpa.domain.Entity2;
-import com.querydsl.jpa.domain.FloatProjection;
 import com.querydsl.jpa.domain.Foo;
 import com.querydsl.jpa.domain.JobFunction;
 import com.querydsl.jpa.domain.Numeric;
@@ -91,7 +90,6 @@ import com.querydsl.jpa.domain.QDoubleProjection;
 import com.querydsl.jpa.domain.QEmployee;
 import com.querydsl.jpa.domain.QEntity1;
 import com.querydsl.jpa.domain.QFamily;
-import com.querydsl.jpa.domain.QFloatProjection;
 import com.querydsl.jpa.domain.QFoo;
 import com.querydsl.jpa.domain.QHuman;
 import com.querydsl.jpa.domain.QMammal;
@@ -1106,7 +1104,7 @@ public abstract class AbstractJPATest {
         .from(cat)
         .where(cat.bodyWeight.gt(0))
         .groupBy(cat.name, cat.breed)
-        .select(cat.name, cat.breed, cat.bodyWeight.sum())
+        .select(cat.name, cat.breed, cat.bodyWeight.sumDouble())
         .fetch();
   }
 
@@ -1937,39 +1935,39 @@ public abstract class AbstractJPATest {
   @Ignore
   public void sum() {
     // NOT SUPPORTED
-    query().from(cat).select(cat.kittens.size().sum()).fetch();
+    query().from(cat).select(cat.kittens.size().sumLong()).fetch();
   }
 
   @Test
   @Ignore
   public void sum_2() {
     // NOT SUPPORTED
-    query().from(cat).where(cat.kittens.size().sum().gt(0)).select(cat).fetch();
+    query().from(cat).where(cat.kittens.size().sumLong().gt(0)).select(cat).fetch();
   }
 
   @Test
   public void sum_3() {
-    assertEquals(21.0, query().from(cat).select(cat.bodyWeight.sum()).fetchFirst(), 0.0001);
+    assertEquals(21.0, query().from(cat).select(cat.bodyWeight.sumDouble()).fetchFirst(), 0.0001);
   }
 
   @Test
   public void sum_3_projected() {
-    double val = query().from(cat).select(cat.bodyWeight.sum()).fetchFirst();
+    double val = query().from(cat).select(cat.bodyWeight.sumDouble()).fetchFirst();
     DoubleProjection projection =
-        query().from(cat).select(new QDoubleProjection(cat.bodyWeight.sum())).fetchFirst();
+        query().from(cat).select(new QDoubleProjection(cat.bodyWeight.sumDouble())).fetchFirst();
     assertEquals(val, projection.val, 0.001);
   }
 
   @Test
   public void sum_4() {
-    Double dbl = query().from(cat).select(cat.bodyWeight.sum().negate()).fetchFirst();
+    Double dbl = query().from(cat).select(cat.bodyWeight.sumDouble().negate()).fetchFirst();
     assertNotNull(dbl);
   }
 
   @Test
   public void sum_5() {
     QShow show = QShow.show;
-    Long lng = query().from(show).select(show.id.sum()).fetchFirst();
+    Long lng = query().from(show).select(show.id.sumLong()).fetchFirst();
     assertNotNull(lng);
   }
 
@@ -1980,7 +1978,7 @@ public abstract class AbstractJPATest {
         Collections.emptyList(),
         query()
             .from(cat)
-            .where(select(cat2.breed.sum()).from(cat2).where(cat2.eq(cat.mate)).gt(0))
+            .where(select(cat2.breed.sumLong()).from(cat2).where(cat2.eq(cat.mate)).gt(0L))
             .select(cat)
             .fetch());
   }
@@ -1990,7 +1988,7 @@ public abstract class AbstractJPATest {
     QCat cat2 = new QCat("cat2");
     query()
         .from(cat)
-        .where(select(cat2.floatProperty.sum()).from(cat2).where(cat2.eq(cat.mate)).gt(0.0f))
+        .where(select(cat2.floatProperty.sumDouble()).from(cat2).where(cat2.eq(cat.mate)).gt(0.0d))
         .select(cat)
         .fetch();
   }
@@ -2000,34 +1998,28 @@ public abstract class AbstractJPATest {
     QCat cat2 = new QCat("cat2");
     query()
         .from(cat)
-        .where(select(cat2.bodyWeight.sum()).from(cat2).where(cat2.eq(cat.mate)).gt(0.0))
+        .where(select(cat2.bodyWeight.sumDouble()).from(cat2).where(cat2.eq(cat.mate)).gt(0.0))
         .select(cat)
         .fetch();
   }
 
   @Test
-  public void sum_as_float() {
-    float val = query().from(cat).select(cat.floatProperty.sum()).fetchFirst();
-    assertTrue(val > 0);
-  }
-
-  @Test
-  public void sum_as_float_projected() {
-    float val = query().from(cat).select(cat.floatProperty.sum()).fetchFirst();
-    FloatProjection projection =
-        query().from(cat).select(new QFloatProjection(cat.floatProperty.sum())).fetchFirst();
+  public void sum_as_double_projected() {
+    double val = query().from(cat).select(cat.floatProperty.sumDouble()).fetchFirst();
+    DoubleProjection projection =
+        query().from(cat).select(new QDoubleProjection(cat.floatProperty.sumDouble())).fetchFirst();
     assertEquals(val, projection.val, 0.001);
   }
 
   @Test
-  public void sum_as_float2() {
-    float val = query().from(cat).select(cat.floatProperty.sum().negate()).fetchFirst();
+  public void sum_as_double2() {
+    double val = query().from(cat).select(cat.floatProperty.sumDouble().negate()).fetchFirst();
     assertTrue(val < 0);
   }
 
   @Test
   public void sum_coalesce() {
-    long val = query().from(cat).select(cat.weight.sum().coalesce(0)).fetchFirst();
+    long val = query().from(cat).select(cat.weight.sumLong().coalesce(0L)).fetchFirst();
     assertEquals(0, val);
   }
 
@@ -2037,7 +2029,7 @@ public abstract class AbstractJPATest {
         query()
             .from(cat)
             .where(cat.name.eq(UUID.randomUUID().toString()))
-            .select(cat.bodyWeight.sum())
+            .select(cat.bodyWeight.sumDouble())
             .fetchFirst());
   }
 
@@ -2047,7 +2039,7 @@ public abstract class AbstractJPATest {
         query()
             .from(cat)
             .where(cat.name.eq(UUID.randomUUID().toString()))
-            .select(cat.floatProperty.sum())
+            .select(cat.floatProperty.sumDouble())
             .fetchFirst());
   }
 

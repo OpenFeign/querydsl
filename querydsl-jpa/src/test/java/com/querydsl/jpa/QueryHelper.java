@@ -66,6 +66,19 @@ class QueryHelper<T> extends JPAQueryBase<T, QueryHelper<T>> {
    * do it with hibernate 6.
    */
   public void parse() {
+    //    String input = toString();
+    //    logger.fine("input: " + input.replace('\n', ' '));
+    //    HqlParser parser = HqlParser.getInstance(input);
+    //    parser.setFilter(false);
+    //    parser.statement();
+    //    AST ast = parser.getAST();
+    //    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    //    parser.showAst(ast, new PrintStream(baos));
+    //    assertEquals(
+    //            "At least one error occurred during parsing " + input,
+    //            0,
+    //            parser.getParseErrorHandler().getErrorCount());
+
     String input = toString();
     logger.fine("input: " + input.replace('\n', ' '));
     HqlParser parser = HqlParseTreeBuilder.INSTANCE.buildHqlParser(input);
