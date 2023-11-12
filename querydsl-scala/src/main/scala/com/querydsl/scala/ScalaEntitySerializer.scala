@@ -24,7 +24,7 @@ import com.querydsl.codegen.utils.{CodeWriter, ScalaWriter}
 import com.querydsl.codegen._
 import com.querydsl.core.types._
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.immutable.Map
 import scala.collection.mutable.Set
 
@@ -117,14 +117,14 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
   }
 
   def writeAnnotations(model: EntityType, queryType: Type, writer: ScalaWriter) = {
-    model.getAnnotations.foreach(writer.annotation)
+    model.getAnnotations.asScala.foreach(writer.annotation)
   }
 
   def writeAdditionalCompanionContent(model: EntityType, writer: ScalaWriter) = {}
 
   private def getEntityProperties(model: EntityType, writer: CodeWriter,
       properties: Collection[Property]) = {
-    for (property <- properties if property.getType.getCategory == ENTITY) yield {
+    for (property <- properties.asScala if property.getType.getCategory == ENTITY) yield {
       val queryType = typeMappings.getPathType(property.getType, model, false)
       val typeName = writer.getRawName(queryType)
       val name = escape(property.getEscapedName)
@@ -134,7 +134,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
 
   private def getOtherProperties(model: EntityType, writer: CodeWriter,
       properties: Collection[Property]) = {
-    for (property <- properties if property.getType.getCategory != ENTITY) yield {
+    for (property <- properties.asScala if property.getType.getCategory != ENTITY) yield {
       val name = normalizeProperty(property.getName)
       val methodName: String = "create" + methodNames(property.getType.getCategory)
 
@@ -190,7 +190,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
   }
 
   def getAnnotationTypes(model: EntityType): Set[String] = {
-    Set() ++ model.getAnnotations.map(_.annotationType.getName)
+    Set() ++ model.getAnnotations.asScala.map(_.annotationType.getName)
   }
 
   private def getRaw(t : Type): Type = {
