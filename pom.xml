@@ -80,7 +80,7 @@
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.43.2.2</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
-    <firebird.version>4.0.6.java8</firebird.version>
+    <firebird.version>5.0.2.java8</firebird.version>
 
     <!-- JPA deps -->
     <hibernate.version>5.6.15.Final</hibernate.version>
