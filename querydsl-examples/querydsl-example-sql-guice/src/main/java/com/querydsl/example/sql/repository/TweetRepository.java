@@ -3,16 +3,18 @@ package com.querydsl.example.sql.repository;
 import static com.querydsl.example.sql.model.QLocation.location;
 import static com.querydsl.example.sql.model.QTweet.tweet;
 import static com.querydsl.example.sql.model.QTweetUser.tweetUser;
-import static com.querydsl.example.sql.model.QUser.user;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.example.sql.guice.Transactional;
+import com.querydsl.example.sql.model.QUsert;
 import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.TweetUser;
 import com.querydsl.sql.dml.SQLInsertClause;
 import java.util.List;
 
 public class TweetRepository extends AbstractRepository {
+  private static final QUsert user = QUsert.usert;
+
   @Transactional
   public Long save(Tweet entity) {
     if (entity.getId() != null) {

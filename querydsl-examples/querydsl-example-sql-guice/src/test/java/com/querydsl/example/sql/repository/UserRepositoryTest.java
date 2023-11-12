@@ -3,7 +3,7 @@ package com.querydsl.example.sql.repository;
 import static org.junit.Assert.*;
 
 import com.querydsl.example.sql.model.Tweet;
-import com.querydsl.example.sql.model.User;
+import com.querydsl.example.sql.model.Usert;
 import java.util.List;
 import javax.inject.Inject;
 import org.junit.Test;
@@ -16,7 +16,7 @@ public class UserRepositoryTest extends AbstractPersistenceTest {
   @Test
   public void save_and_get_by_id() {
     String username = "jackie";
-    User user = new User();
+    Usert user = new Usert();
     user.setUsername(username);
     Long id = repository.save(user);
     assertEquals(username, repository.findById(id).getUsername());
@@ -24,7 +24,7 @@ public class UserRepositoryTest extends AbstractPersistenceTest {
 
   @Test
   public void get_all() {
-    User user = new User();
+    Usert user = new Usert();
     user.setUsername("jimmy");
     repository.save(user);
     assertTrue(repository.all().size() == 1);
@@ -32,7 +32,7 @@ public class UserRepositoryTest extends AbstractPersistenceTest {
 
   @Test
   public void get_all_with_tweet_count() {
-    User user = new User();
+    Usert user = new Usert();
     user.setUsername("jimmy");
     Long posterId = repository.save(user);
 

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import com.querydsl.example.sql.model.Tweet;
-import com.querydsl.example.sql.model.User;
+import com.querydsl.example.sql.model.Usert;
 import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
 
   @Before
   public void setUp() {
-    User poster = new User();
+    Usert poster = new Usert();
     poster.setUsername("dr_frank");
     posterId = userRepository.save(poster);
   }
@@ -47,7 +47,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
 
   @Test
   public void save_with_mentions() {
-    User other = new User();
+    Usert other = new Usert();
     other.setUsername("dexter");
     Long otherId = userRepository.save(other);
 

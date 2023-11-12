@@ -24,9 +24,12 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.dml.SQLMergeClause;
+import com.querydsl.sql.dml.SQLMergeUsingClause;
 import com.querydsl.sql.domain.QSurvey;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.After;
@@ -51,7 +54,7 @@ public class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER})
+  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
   public void merge_with_keys() throws SQLException {
     ResultSet rs =
         merge(survey)
@@ -65,7 +68,7 @@ public class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER})
+  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
   public void merge_with_keys_listener() throws SQLException {
     final AtomicBoolean result = new AtomicBoolean();
     SQLListener listener =
@@ -125,7 +128,7 @@ public class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, POSTGRESQL, SQLSERVER, TERADATA})
+  @ExcludeIn({CUBRID, DB2, DERBY, POSTGRESQL, SQLSERVER, TERADATA, SQLITE})
   public void merge_with_keys_Null_Id() throws SQLException {
     ResultSet rs =
         merge(survey)
@@ -139,7 +142,7 @@ public class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER})
+  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
   public void merge_with_keys_Projected() throws SQLException {
     assertNotNull(
         merge(survey)
@@ -150,7 +153,7 @@ public class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER})
+  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
   public void merge_with_keys_Projected2() throws SQLException {
     Path<Object> idPath = ExpressionUtils.path(Object.class, "id");
     Object id =
@@ -229,6 +232,33 @@ public class MergeBase extends AbstractBaseTest {
             .set(survey.id, 5)
             .set(survey.name, Expressions.stringTemplate("'5'"))
             .addBatch();
+
+    assertEquals(1, merge.execute());
+  }
+
+  @Test
+  @IncludeIn({DB2, SQLSERVER})
+  public void merge_with_using() {
+    QSurvey usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
+    SQLMergeUsingClause merge =
+        merge(survey)
+            .using(
+                query()
+                    .from(survey2)
+                    .select(survey2.id.add(40).as("ID"), survey2.name)
+                    .as(usingSubqueryAlias))
+            .on(survey.id.eq(usingSubqueryAlias.id))
+            .whenNotMatched()
+            .thenInsert(
+                Arrays.asList(survey.id, survey.name),
+                Arrays.asList(usingSubqueryAlias.id, usingSubqueryAlias.name))
+            .whenMatched()
+            .and(survey.id.goe(10))
+            .thenDelete()
+            .whenMatched()
+            .thenUpdate(
+                Collections.singletonList(survey.name),
+                Collections.singletonList(usingSubqueryAlias.name));
 
     assertEquals(1, merge.execute());
   }
