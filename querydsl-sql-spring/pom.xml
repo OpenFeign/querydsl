@@ -16,6 +16,8 @@
 
   <properties>
     <spring.version>6.0.13</spring.version>
+    <!-- to match spring SDK version -->
+    <main.java.version>17</main.java.version>
   </properties>
 
   <dependencies>
