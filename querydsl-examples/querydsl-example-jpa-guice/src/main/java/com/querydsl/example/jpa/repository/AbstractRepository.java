@@ -7,8 +7,8 @@ import com.querydsl.jpa.HQLTemplates;
 import com.querydsl.jpa.hibernate.HibernateQuery;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import javax.persistence.EntityManager;
 import org.hibernate.Session;
 

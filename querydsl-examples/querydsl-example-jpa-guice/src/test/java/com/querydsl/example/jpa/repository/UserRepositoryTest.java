@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.querydsl.example.jpa.model.User;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.junit.Test;
 
 public class UserRepositoryTest extends AbstractPersistenceTest {
