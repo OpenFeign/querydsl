@@ -16,10 +16,11 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>5.3.19</spring.version>
+    <spring.version>6.0.13</spring.version>
     <h2.version>2.2.224</h2.version>
 
-    <main.java.version>11</main.java.version>
+    <!-- to match spring SDK version -->
+    <main.java.version>17</main.java.version>
   </properties>
 
   <dependencies>
