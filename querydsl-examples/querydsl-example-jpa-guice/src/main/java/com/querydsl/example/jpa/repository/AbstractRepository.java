@@ -9,7 +9,7 @@ import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
 
 public abstract class AbstractRepository<T extends Identifiable> implements Repository<T, Long> {
