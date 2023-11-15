@@ -50,7 +50,7 @@
     <project.homepage>http://www.querydsl.com</project.homepage>
     <project.githubpage>http://github.com/openfeign/querydsl</project.githubpage>
     <project.checkout>scm:git:git@github.com:openfeign/querydsl.git</project.checkout>
-    <japicmp.skip>true</japicmp.skip>
+
     <!-- default groups to exclude from surefire plugin -->
     <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
       com.querydsl.core.testutil.SlowTest,
@@ -742,26 +742,26 @@
           </dependency>
         </dependencies>
       </plugin>
-<!--      <plugin>-->
-<!--        <groupId>com.github.ekryd.sortpom</groupId>-->
-<!--        <artifactId>sortpom-maven-plugin</artifactId>-->
-<!--        <version>3.3.0</version>-->
-<!--        <configuration>-->
-<!--          <keepBlankLines>true</keepBlankLines>-->
-<!--          <lineSeparator>\n</lineSeparator>-->
-<!--          <sortOrderFile>src/config/pomSortOrder.xml</sortOrderFile>-->
-<!--          <createBackupFile>false</createBackupFile>-->
-<!--        </configuration>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <id>format</id>-->
-<!--            <phase>validate</phase>-->
-<!--            <goals>-->
-<!--              <goal>sort</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--        </executions>-->
-<!--      </plugin>-->
+      <plugin>
+        <groupId>com.github.ekryd.sortpom</groupId>
+        <artifactId>sortpom-maven-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <keepBlankLines>true</keepBlankLines>
+          <lineSeparator>\n</lineSeparator>
+          <sortOrderFile>src/config/pomSortOrder.xml</sortOrderFile>
+          <createBackupFile>false</createBackupFile>
+        </configuration>
+        <executions>
+          <execution>
+            <id>format</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>sort</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -771,6 +771,13 @@
       <id>docs</id>
       <modules>
         <module>querydsl-docs</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>examples</id>
+      <modules>
+        <module>querydsl-examples</module>
       </modules>
     </profile>
 
