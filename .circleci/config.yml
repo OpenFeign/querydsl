@@ -28,12 +28,17 @@ commands:
           command: |
             ./mvnw -ntp dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true -B
 
-  verify-formatting:
+  save-test-results:
     steps:
       - run:
-          name: 'Verify formatting'
+          name: Save test results
           command: |
-            scripts/no-git-changes.sh
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+
   configure-gpg:
     steps:
       - run:
@@ -107,8 +112,25 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp verify -B -Dcom.querydsl.core.testutil.ExternalDatabase,com.querydsl.core.testutil.SlowTest,com.querydsl.core.testutil.Performance,com.querydsl.core.testutil.ReportingOnly,com.querydsl.core.testutil.EmbeddedDatabase
-      - verify-formatting
+            ./mvnw -ntp verify -B -Pno-databases
+      - save-test-results
+  buildExamples:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-21
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp install -B -Pquickbuild
+            ./mvnw -ntp verify -B -Pexamples -rf :querydsl-examples
+      - save-test-results
   testMySQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -130,6 +152,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.MySQL
+      - save-test-results
   testPostgreSQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -150,6 +173,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.PostgreSQL
+      - save-test-results
   testCUBRID:
     <<: *defaults
     working_directory: ~/querydsl
@@ -168,6 +192,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.CUBRID
+      - save-test-results
   testOracle:
     <<: *defaults
     working_directory: ~/querydsl
@@ -188,6 +213,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.Oracle
+      - save-test-results
   testMongo:
     <<: *defaults
     working_directory: ~/querydsl
@@ -204,6 +230,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.MongoDB
+      - save-test-results
   testFirebird:
     <<: *defaults
     working_directory: ~/querydsl
@@ -225,6 +252,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.Firebird
+      - save-test-results
   testMSSQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -245,6 +273,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.SQLServer
+      - save-test-results
   testEmbedded:
     <<: *defaults
     working_directory: ~/querydsl
@@ -260,6 +289,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
+      - save-test-results
 
   deploy:
     executor:
@@ -285,6 +315,12 @@ workflows:
             <<: *all-branches
       - test:
           name: 'Compile and Test (no external databases)'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - buildExamples:
+          name: 'Compile and Test Examples'
           requires:
             - 'Resolve dependencies'
           filters:

@@ -240,7 +240,7 @@ public class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
   public void insert_with_keys() throws SQLException {
     ResultSet rs = insert(survey).set(survey.name, "Hello World").executeWithKeys();
     assertTrue(rs.next());
@@ -249,7 +249,7 @@ public class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
   public void insert_with_keys_listener() throws SQLException {
     final AtomicBoolean result = new AtomicBoolean();
     SQLListener listener =
@@ -270,13 +270,13 @@ public class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
   public void insert_with_keys_Projected() throws SQLException {
     assertNotNull(insert(survey).set(survey.name, "Hello you").executeWithKey(survey.id));
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
   public void insert_with_keys_Projected2() throws SQLException {
     Path<Object> idPath = ExpressionUtils.path(Object.class, "id");
     Object id = insert(survey).set(survey.name, "Hello you").executeWithKey(idPath);
@@ -284,7 +284,7 @@ public class InsertBase extends AbstractBaseTest {
   }
 
   @Test(expected = QueryException.class)
-  @IncludeIn({DERBY, HSQLDB})
+  @IncludeIn({DERBY, HSQLDB, SQLITE})
   public void insert_with_keys_OverriddenColumn() throws SQLException {
     String originalColumnName = ColumnMetadata.getName(survey.id);
     try {

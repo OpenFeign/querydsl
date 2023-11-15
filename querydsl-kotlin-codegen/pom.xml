@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.1-SNAPSHOT</version>
+    <version>6.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-kotlin-codegen</artifactId>
@@ -31,12 +31,12 @@
     <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>kotlinpoet</artifactId>
-      <version>1.12.0</version>
+      <version>1.14.2</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-codegen</artifactId>
-      <version>5.1-SNAPSHOT</version>
+      <version>6.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <!-- test -->
