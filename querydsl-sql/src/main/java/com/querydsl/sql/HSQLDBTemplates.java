@@ -119,6 +119,8 @@ public class HSQLDBTemplates extends SQLTemplates {
     addTypeNameToCode("float", Types.DOUBLE, true);
     addTypeNameToCode("real", Types.DOUBLE);
     addTypeNameToCode("nvarchar", Types.VARCHAR);
+
+    add(Ops.DateTimeOps.DAY_OF_WEEK, "extract(day_of_week from {0})");
   }
 
   @Override

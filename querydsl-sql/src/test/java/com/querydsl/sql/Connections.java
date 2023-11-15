@@ -16,7 +16,13 @@ package com.querydsl.sql;
 import com.querydsl.core.Target;
 import com.querydsl.sql.ddl.CreateTableClause;
 import com.querydsl.sql.ddl.DropTableClause;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 import org.hsqldb.types.Types;
@@ -121,7 +127,8 @@ public final class Connections {
 
   public static Connection getH2() throws SQLException, ClassNotFoundException {
     Class.forName("org.h2.Driver");
-    String url = "jdbc:h2:./target/h2-test;LOCK_MODE=0;AUTO_SERVER=TRUE;MODE=legacy";
+    String url =
+        "jdbc:h2:./target/h2-test;LOCK_MODE=0;AUTO_SERVER=TRUE;MODE=legacy;NON_KEYWORDS=DAY,VALUE";
     return DriverManager.getConnection(url, "sa", "");
   }
 

@@ -782,6 +782,15 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
     return (NumberExpression<P>) sum;
   }
 
+  /** Use this only for aggregation. ex. select(cat.weight.sum()) */
+  // TODO: find a better solution for this typing
+  public NumberExpression<T> sumAggregate() {
+    if (sum == null) {
+      sum = Expressions.numberOperation(getType(), Ops.AggOps.SUM_AGG, mixin);
+    }
+    return (NumberExpression<T>) sum;
+  }
+
   /** {@link Integer} {@link Long} {@link Short} are mapped to sumLong. */
   public NumberExpression<Long> sumLong() {
     return sum(Long.class);
