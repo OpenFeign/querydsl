@@ -76,7 +76,7 @@
     <postgresql.version>42.6.0</postgresql.version>
     <oracle.version>23.3.0.23.09</oracle.version>
     <mysql.version>8.0.30</mysql.version>
-    <mssql.version>12.4.2.jre8</mssql.version>
+    <mssql.version>12.5.0.jre8-preview</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.44.0.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
