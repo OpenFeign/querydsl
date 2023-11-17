@@ -79,6 +79,12 @@ import org.junit.Test;
 public class ParsingTest extends AbstractQueryTest {
 
   @Test
+  public void parseOrd() throws Exception {
+    query().from(ord).where(ord.paid.isTrue()).parse();
+  }
+
+  @Test
+  @NoEclipseLink({HSQLDB, DERBY})
   public void arrayExpr() throws Exception {
     query().from(ord).where(ord.items(0).id.eq(1234L)).parse();
   }

@@ -50,14 +50,14 @@ final class DialectSupport {
   public static String convert(Template template) {
     StringBuilder builder = new StringBuilder();
     for (Template.Element element : template.getElements()) {
-      if (element instanceof Template.AsString asString) {
-        builder.append("?").append(asString.getIndex() + 1);
-      } else if (element instanceof Template.ByIndex byIndex) {
-        builder.append("?").append(byIndex.getIndex() + 1);
-      } else if (element instanceof Template.Transformed transformed) {
-        builder.append("?").append(transformed.getIndex() + 1);
-      } else if (element instanceof Template.StaticText staticText) {
-        builder.append(staticText.getText());
+      if (element instanceof Template.AsString) {
+        builder.append("?").append(((Template.AsString) element).getIndex() + 1);
+      } else if (element instanceof Template.ByIndex) {
+        builder.append("?").append(((Template.ByIndex) element).getIndex() + 1);
+      } else if (element instanceof Template.Transformed) {
+        builder.append("?").append(((Template.Transformed) element).getIndex() + 1);
+      } else if (element instanceof Template.StaticText) {
+        builder.append(((Template.StaticText) element).getText());
       } else {
         throw new IllegalStateException("Unsupported element " + element);
       }
@@ -91,5 +91,21 @@ final class DialectSupport {
         name, template.pattern(), basicTypeRegistry.resolve(template.type()));
   }
 
-  record DialectFunctionTemplate(String pattern, BasicTypeReference<?> type) {}
+  static class DialectFunctionTemplate {
+    private final String pattern;
+    private final BasicTypeReference<?> type;
+
+    DialectFunctionTemplate(String pattern, BasicTypeReference<?> type) {
+      this.pattern = pattern;
+      this.type = type;
+    }
+
+    String pattern() {
+      return pattern;
+    }
+
+    BasicTypeReference<?> type() {
+      return type;
+    }
+  }
 }

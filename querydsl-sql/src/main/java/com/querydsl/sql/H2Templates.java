@@ -1,12 +1,15 @@
 /*
  * Copyright 2015, The Querydsl Team (http://www.querydsl.com/team)
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in
- * writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.querydsl.sql;
 
@@ -55,12 +58,8 @@ public class H2Templates extends SQLTemplates {
     add(Ops.MathOps.ROUND, "round({0},0)");
     add(Ops.TRIM, "trim(both from {0})");
 
-    add(Ops.DateTimeOps.DAY_OF_WEEK, "day_of_week({0}) + 1");
-    add(Ops.DateTimeOps.WEEK, "extract(week from {0})");
-    add(
-        Ops.DateTimeOps.YEAR_WEEK,
-        "extract(year from {0}) * 100 + extract(week from {0}) + 1",
-        Precedence.ARITH_LOW);
+    add(Ops.DateTimeOps.DAY_OF_WEEK, "day_of_week({0})");
+
     add(Ops.MathOps.LN, "log({0})");
     add(Ops.MathOps.LOG, "(log({0}) / log({1}))");
     add(Ops.MathOps.COTH, "(cosh({0}) / sinh({0}))");

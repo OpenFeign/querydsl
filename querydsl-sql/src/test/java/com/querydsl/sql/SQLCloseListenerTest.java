@@ -21,15 +21,9 @@ public class SQLCloseListenerTest {
   @Before
   public void setUp() throws SQLException, ClassNotFoundException {
     Connections.initH2();
-    Connections.initConfiguration(H2Templates.builder().newLineToSingleSpace().build());
-    Configuration configuration = Connections.getConfiguration();
-    configuration.setUseLiterals(true);
-    configuration.addListener(SQLCloseListener.DEFAULT);
-
-    query =
-        new SQLQuery<Void>(Connections.getConnection(), configuration)
-            .select(employee)
-            .from(employee);
+    Configuration conf = new Configuration(H2Templates.DEFAULT);
+    conf.addListener(SQLCloseListener.DEFAULT);
+    query = new SQLQuery<Void>(Connections.getConnection(), conf).select(employee).from(employee);
   }
 
   @After
