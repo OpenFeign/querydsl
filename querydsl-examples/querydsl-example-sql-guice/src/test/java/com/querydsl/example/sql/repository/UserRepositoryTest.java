@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.Usert;
+import jakarta.inject.Inject;
 import java.util.List;
-import javax.inject.Inject;
 import org.junit.Test;
 
 public class UserRepositoryTest extends AbstractPersistenceTest {

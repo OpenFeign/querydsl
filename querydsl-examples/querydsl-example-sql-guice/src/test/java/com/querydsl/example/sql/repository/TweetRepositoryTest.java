@@ -6,7 +6,7 @@ import static org.junit.Assert.assertFalse;
 
 import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.Usert;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -2,15 +2,15 @@ package com.querydsl.example.jpa.repository;
 
 import com.google.inject.persist.Transactional;
 import com.querydsl.example.jpa.guice.GuiceTestRunner;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
 import org.junit.Before;

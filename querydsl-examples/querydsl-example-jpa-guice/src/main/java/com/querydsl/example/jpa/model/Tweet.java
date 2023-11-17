@@ -2,7 +2,7 @@ package com.querydsl.example.jpa.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tweet")

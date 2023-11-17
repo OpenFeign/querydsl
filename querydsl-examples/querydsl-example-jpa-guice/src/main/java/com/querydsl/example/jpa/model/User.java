@@ -2,7 +2,7 @@ package com.querydsl.example.jpa.model;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "user")
