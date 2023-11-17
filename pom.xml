@@ -77,7 +77,7 @@
     <postgresql.version>42.6.0</postgresql.version>
     <oracle.version>23.3.0.23.09</oracle.version>
     <mysql.version>8.0.30</mysql.version>
-    <mssql.version>12.4.2.jre8</mssql.version>
+    <mssql.version>12.5.0.jre8-preview</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.44.0.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
@@ -166,7 +166,7 @@
       <dependency>
         <groupId>org.jetbrains</groupId>
         <artifactId>annotations</artifactId>
-        <version>24.0.1</version>
+        <version>24.1.0</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -230,7 +230,7 @@
       <dependency>
         <groupId>io.github.classgraph</groupId>
         <artifactId>classgraph</artifactId>
-        <version>4.8.164</version>
+        <version>4.8.165</version>
         <exclusions>
           <exclusion>
             <groupId>org.javassist</groupId>
