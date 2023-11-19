@@ -303,7 +303,7 @@ public abstract class AbstractDomainExporter {
       if (mappedType.isAssignableFrom(field.getType())) {
         return typeFactory.get(field.getType(), field.getGenericType());
       } else {
-        return typeFactory.get(mappedType);
+        return typeFactory.get(field.getType());
       }
     } else {
       Method method = ReflectionUtils.getGetterOrNull(cl, propertyName);
