@@ -7,13 +7,13 @@ import java.sql.Types;
 import java.time.OffsetDateTime;
 import org.jetbrains.annotations.Nullable;
 
-public class JSR310OffsetDateTimeType extends AbstractJSR310DateTimeType<OffsetDateTime> {
+public class OffsetDateTimeType extends AbstractJSR310DateTimeType<OffsetDateTime> {
 
-  public JSR310OffsetDateTimeType() {
+  public OffsetDateTimeType() {
     super(Types.TIMESTAMP_WITH_TIMEZONE);
   }
 
-  public JSR310OffsetDateTimeType(int type) {
+  public OffsetDateTimeType(int type) {
     super(type);
   }
 

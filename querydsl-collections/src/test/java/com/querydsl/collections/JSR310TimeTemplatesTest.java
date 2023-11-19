@@ -4,26 +4,29 @@ import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.TimePath;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 import org.junit.Test;
 
-public class JodaTimeTemplatesTest {
+public class JSR310TimeTemplatesTest {
 
-  private CollQuery<?> query = new CollQuery<Void>(JodaTimeTemplates.DEFAULT);
+  private CollQuery<?> query = new CollQuery<Void>(JSR310TimeTemplates.DEFAULT);
 
   @Test
   public void dateTime() {
-    DateTimePath<DateTime> entity = Expressions.dateTimePath(DateTime.class, "entity");
+    DateTimePath<ZonedDateTime> entity = Expressions.dateTimePath(ZonedDateTime.class, "entity");
     query
-        .from(entity, Arrays.asList(new DateTime(), new DateTime(0L)))
+        .from(
+            entity,
+            Arrays.asList(
+                ZonedDateTime.now(), ZonedDateTime.of(0, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault())))
         .select(
             entity.year(),
             entity.yearMonth(),
             entity.month(),
-            entity.week(),
             entity.dayOfMonth(),
             entity.dayOfWeek(),
             entity.dayOfYear(),
@@ -38,12 +41,11 @@ public class JodaTimeTemplatesTest {
   public void localDate() {
     DatePath<LocalDate> entity = Expressions.datePath(LocalDate.class, "entity");
     query
-        .from(entity, Arrays.asList(new LocalDate(), new LocalDate(0L)))
+        .from(entity, Arrays.asList(LocalDate.now(), LocalDate.of(0, 1, 1)))
         .select(
             entity.year(),
             entity.yearMonth(),
             entity.month(),
-            entity.week(),
             entity.dayOfMonth(),
             entity.dayOfWeek(),
             entity.dayOfYear())
@@ -54,7 +56,7 @@ public class JodaTimeTemplatesTest {
   public void localTime() {
     TimePath<LocalTime> entity = Expressions.timePath(LocalTime.class, "entity");
     query
-        .from(entity, Arrays.asList(new LocalTime(), new LocalTime(0L)))
+        .from(entity, Arrays.asList(LocalTime.now(), LocalTime.of(0, 0)))
         .select(entity.hour(), entity.minute(), entity.second(), entity.milliSecond())
         .fetch();
   }

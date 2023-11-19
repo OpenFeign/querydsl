@@ -6,7 +6,7 @@ import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.spring.SpringConnectionProvider;
 import com.querydsl.sql.spring.SpringExceptionTranslator;
-import com.querydsl.sql.types.DateTimeType;
+import com.querydsl.sql.types.LocalDateTimeType;
 import com.querydsl.sql.types.LocalDateType;
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -43,7 +43,7 @@ public class JdbcConfiguration {
     SQLTemplates templates = H2Templates.builder().build();
     com.querydsl.sql.Configuration configuration = new com.querydsl.sql.Configuration(templates);
     configuration.setExceptionTranslator(new SpringExceptionTranslator());
-    configuration.register(new DateTimeType());
+    configuration.register(new LocalDateTimeType());
     configuration.register(new LocalDateType());
     return configuration;
   }

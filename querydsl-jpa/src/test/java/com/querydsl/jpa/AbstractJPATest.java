@@ -32,13 +32,13 @@ import com.querydsl.jpa.domain4.QBookMark;
 import com.querydsl.jpa.domain4.QBookVersion;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.Calendar;
 import java.util.Map.Entry;
 import org.hamcrest.Matchers;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -377,7 +377,7 @@ public abstract class AbstractJPATest {
         query()
             .from(cat)
             .select(
-                cat.name.when("Bob").then(new LocalDate()).otherwise(new LocalDate().plusDays(1)))
+                cat.name.when("Bob").then(LocalDate.now()).otherwise(LocalDate.now().plusDays(1)))
             .fetch();
     assertInstancesOf(LocalDate.class, rv);
   }
@@ -402,7 +402,7 @@ public abstract class AbstractJPATest {
         query()
             .from(cat)
             .select(
-                cat.name.when("Bob").then(new LocalTime()).otherwise(new LocalTime().plusHours(1)))
+                cat.name.when("Bob").then(LocalTime.now()).otherwise(LocalTime.now().plusHours(1)))
             .fetch();
     assertInstancesOf(LocalTime.class, rv);
   }
@@ -423,13 +423,16 @@ public abstract class AbstractJPATest {
   @NoEclipseLink
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-8653
   public void case1_timestamp() {
-    List<DateTime> rv =
+    List<ZonedDateTime> rv =
         query()
             .from(cat)
             .select(
-                cat.name.when("Bob").then(new DateTime()).otherwise(new DateTime().plusHours(1)))
+                cat.name
+                    .when("Bob")
+                    .then(ZonedDateTime.now())
+                    .otherwise(ZonedDateTime.now().plusHours(1)))
             .fetch();
-    assertInstancesOf(DateTime.class, rv);
+    assertInstancesOf(ZonedDateTime.class, rv);
   }
 
   @Test

@@ -14,21 +14,25 @@
 package com.querydsl.apt.domain;
 
 import com.querydsl.core.annotations.QueryEntity;
-import com.querydsl.core.types.dsl.ComparablePath;
 import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.TimePath;
-import org.joda.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import org.junit.Test;
 
-public class JodaTimeSupportTest extends AbstractTest {
+public class JSR310TimeSupportTest extends AbstractTest {
 
   @QueryEntity
-  public static class JodaTimeSupport {
+  public static class JSR310TimeSupport {
 
-    DateMidnight dateMidnight;
+    ZonedDateTime dateMidnight;
 
-    DateTime dateTime;
+    OffsetDateTime dateTime;
 
     Instant instant;
 
@@ -37,19 +41,17 @@ public class JodaTimeSupportTest extends AbstractTest {
     LocalDateTime localDateTime;
 
     LocalTime localTime;
-
-    Partial partial;
   }
 
   @Test
   public void test() throws IllegalAccessException, NoSuchFieldException {
     start(
-        QJodaTimeSupportTest_JodaTimeSupport.class,
-        QJodaTimeSupportTest_JodaTimeSupport.jodaTimeSupport);
+        QJSR310TimeSupportTest_JSR310TimeSupport.class,
+        QJSR310TimeSupportTest_JSR310TimeSupport.jSR310TimeSupport);
     match(DateTimePath.class, "dateMidnight");
-    matchType(DateMidnight.class, "dateMidnight");
+    matchType(ZonedDateTime.class, "dateMidnight");
     match(DateTimePath.class, "dateTime");
-    matchType(DateTime.class, "dateTime");
+    matchType(OffsetDateTime.class, "dateTime");
     match(DateTimePath.class, "instant");
     matchType(Instant.class, "instant");
     match(DatePath.class, "localDate");
@@ -58,7 +60,5 @@ public class JodaTimeSupportTest extends AbstractTest {
     matchType(LocalDateTime.class, "localDateTime");
     match(TimePath.class, "localTime");
     matchType(LocalTime.class, "localTime");
-    match(ComparablePath.class, "partial");
-    matchType(Partial.class, "partial");
   }
 }

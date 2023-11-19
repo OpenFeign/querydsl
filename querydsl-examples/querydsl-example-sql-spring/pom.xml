@@ -76,11 +76,6 @@
       <version>0.8.0-beta1</version>
       <classifier>jdk7</classifier>
     </dependency>
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime.version}</version>
-    </dependency>
 
     <!-- logging -->
     <dependency>
@@ -123,7 +118,7 @@
           <jdbcUrl>jdbc:h2:mem:;INIT=runscript from 'file:${project.baseUri}/src/main/sql/001_schema.sql'</jdbcUrl>
           <jdbcUser>sa</jdbcUser>
           <customTypes>
-            <customType>com.querydsl.sql.types.DateTimeType</customType>
+            <customType>com.querydsl.sql.types.LocalDateTimeType</customType>
             <customType>com.querydsl.sql.types.LocalDateType</customType>
           </customTypes>
           <packageName>com.querydsl.example.sql</packageName>
@@ -141,11 +136,6 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${jodatime.version}</version>
           </dependency>
         </dependencies>
       </plugin>

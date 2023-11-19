@@ -34,10 +34,10 @@ import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.domain.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -64,14 +64,14 @@ public class InsertBase extends AbstractBaseTest {
 
   @Test
   @ExcludeIn({
-    CUBRID, SQLITE
+    CUBRID, SQLITE, DERBY
   }) // https://bitbucket.org/xerial/sqlite-jdbc/issue/133/prepstmtsetdate-int-date-calendar-seems
   public void insert_dates() {
     QDateTest dateTest = QDateTest.qDateTest;
-    LocalDate localDate = new LocalDate(1978, 1, 2);
+    LocalDate localDate = LocalDate.of(1978, 1, 2);
 
     Path<LocalDate> localDateProperty = ExpressionUtils.path(LocalDate.class, "DATE_TEST");
-    Path<DateTime> dateTimeProperty = ExpressionUtils.path(DateTime.class, "DATE_TEST");
+    Path<LocalDateTime> dateTimeProperty = ExpressionUtils.path(LocalDateTime.class, "DATE_TEST");
     SQLInsertClause insert = insert(dateTest);
     insert.set(localDateProperty, localDate);
     insert.execute();
@@ -89,12 +89,12 @@ public class InsertBase extends AbstractBaseTest {
     assertEquals(Integer.valueOf(1), result.get(1, Integer.class));
     assertEquals(Integer.valueOf(2), result.get(2, Integer.class));
 
-    DateTime dateTime = result.get(dateTimeProperty);
+    LocalDateTime dateTime = result.get(dateTimeProperty);
     if (target == CUBRID) {
       // XXX Cubrid adds random milliseconds for some reason
-      dateTime = dateTime.withMillisOfSecond(0);
+      dateTime = dateTime.withNano(0);
     }
-    assertEquals(localDate.toDateTimeAtStartOfDay(), dateTime);
+    assertEquals(localDate.atStartOfDay(), dateTime);
   }
 
   @Test
