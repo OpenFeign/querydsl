@@ -37,6 +37,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import org.apache.commons.compress.utils.Sets;
 import org.joda.time.*;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -1263,12 +1264,14 @@ public class SelectBase extends AbstractBaseTest {
 
     // offset
     expectedQuery =
-        "select * from (  select a.*, rownum rn from (   select e.ID from EMPLOYEE e  ) a) where rn > ?";
+        "select * from (  select a.*, rownum rn from (   select e.ID from EMPLOYEE e  ) a) where rn"
+            + " > ?";
     query().from(employee).offset(3).select(employee.id).fetch();
 
     // limit offset
     expectedQuery =
-        "select * from (  select a.*, rownum rn from (   select e.ID from EMPLOYEE e  ) a) where rn > 3 and rownum <= 4";
+        "select * from (  select a.*, rownum rn from (   select e.ID from EMPLOYEE e  ) a) where rn"
+            + " > 3 and rownum <= 4";
     query().from(employee).limit(4).offset(3).select(employee.id).fetch();
   }
 
@@ -2534,35 +2537,31 @@ public class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER})
   public void groupConcat() {
-    List<String> expected =
-        Arrays.asList("Mike,Mary", "Joe,Peter,Steve,Jim", "Jennifer,Helen,Daisy,Barbara");
-    if (Connections.getTarget() == POSTGRESQL) {
-      expected = Arrays.asList("Steve,Jim,Joe,Peter", "Barbara,Helen,Daisy,Jennifer", "Mary,Mike");
-    }
+    HashSet<String> expected =
+        Sets.newHashSet("Mike,Mary", "Joe,Peter,Steve,Jim", "Jennifer,Helen,Daisy,Barbara");
     assertEquals(
         expected,
-        query()
-            .select(SQLExpressions.groupConcat(employee.firstname))
-            .from(employee)
-            .groupBy(employee.superiorId)
-            .fetch());
+        new HashSet<>(
+            query()
+                .select(SQLExpressions.groupConcat(employee.firstname))
+                .from(employee)
+                .groupBy(employee.superiorId)
+                .fetch()));
   }
 
   @Test
   @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER})
   public void groupConcat2() {
-    List<String> expected =
-        Arrays.asList("Mike-Mary", "Joe-Peter-Steve-Jim", "Jennifer-Helen-Daisy-Barbara");
-    if (Connections.getTarget() == POSTGRESQL) {
-      expected = Arrays.asList("Steve-Jim-Joe-Peter", "Barbara-Helen-Daisy-Jennifer", "Mary-Mike");
-    }
+    HashSet<String> expected =
+        Sets.newHashSet("Mike-Mary", "Joe-Peter-Steve-Jim", "Jennifer-Helen-Daisy-Barbara");
     assertEquals(
         expected,
-        query()
-            .select(SQLExpressions.groupConcat(employee.firstname, "-"))
-            .from(employee)
-            .groupBy(employee.superiorId)
-            .fetch());
+        new HashSet<>(
+            query()
+                .select(SQLExpressions.groupConcat(employee.firstname, "-"))
+                .from(employee)
+                .groupBy(employee.superiorId)
+                .fetch()));
   }
 }
 // CHECKSTYLERULE:ON: FileLength

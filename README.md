@@ -77,7 +77,7 @@ For more information visit the project homepage at https://querydsl.github.io.
 For running tests, a Docker Compose setup is provided. It comes with the following databases:
 
 * Oracle Express Edition 11g
-* PostgreSQL 9.1.10
+* PostgreSQL 16
 * MySQL 5.5.34
 * Cubrid 9.2
 

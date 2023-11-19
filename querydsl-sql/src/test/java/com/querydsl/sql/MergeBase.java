@@ -237,7 +237,7 @@ public class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn({DB2, SQLSERVER, H2})
+  @IncludeIn({DB2, SQLSERVER, H2, POSTGRESQL})
   public void merge_with_using() {
     QSurvey usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
     SQLMergeUsingClause merge =
