@@ -39,6 +39,7 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import org.apache.commons.compress.utils.Sets;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -2524,35 +2525,31 @@ public class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER})
   public void groupConcat() {
-    List<String> expected =
-        Arrays.asList("Mike,Mary", "Joe,Peter,Steve,Jim", "Jennifer,Helen,Daisy,Barbara");
-    if (Connections.getTarget() == POSTGRESQL) {
-      expected = Arrays.asList("Steve,Jim,Joe,Peter", "Barbara,Helen,Daisy,Jennifer", "Mary,Mike");
-    }
+    HashSet<String> expected =
+        Sets.newHashSet("Mike,Mary", "Joe,Peter,Steve,Jim", "Jennifer,Helen,Daisy,Barbara");
     assertEquals(
         expected,
-        query()
-            .select(SQLExpressions.groupConcat(employee.firstname))
-            .from(employee)
-            .groupBy(employee.superiorId)
-            .fetch());
+        new HashSet<>(
+            query()
+                .select(SQLExpressions.groupConcat(employee.firstname))
+                .from(employee)
+                .groupBy(employee.superiorId)
+                .fetch()));
   }
 
   @Test
   @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER})
   public void groupConcat2() {
-    List<String> expected =
-        Arrays.asList("Mike-Mary", "Joe-Peter-Steve-Jim", "Jennifer-Helen-Daisy-Barbara");
-    if (Connections.getTarget() == POSTGRESQL) {
-      expected = Arrays.asList("Steve-Jim-Joe-Peter", "Barbara-Helen-Daisy-Jennifer", "Mary-Mike");
-    }
+    HashSet<String> expected =
+        Sets.newHashSet("Mike-Mary", "Joe-Peter-Steve-Jim", "Jennifer-Helen-Daisy-Barbara");
     assertEquals(
         expected,
-        query()
-            .select(SQLExpressions.groupConcat(employee.firstname, "-"))
-            .from(employee)
-            .groupBy(employee.superiorId)
-            .fetch());
+        new HashSet<>(
+            query()
+                .select(SQLExpressions.groupConcat(employee.firstname, "-"))
+                .from(employee)
+                .groupBy(employee.superiorId)
+                .fetch()));
   }
 }
 // CHECKSTYLERULE:ON: FileLength
