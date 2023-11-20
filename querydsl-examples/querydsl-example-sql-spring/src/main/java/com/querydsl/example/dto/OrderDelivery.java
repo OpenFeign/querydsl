@@ -1,7 +1,7 @@
 package com.querydsl.example.dto;
 
+import java.time.LocalDate;
 import lombok.Data;
-import org.joda.time.LocalDate;
 
 @Data
 public class OrderDelivery {

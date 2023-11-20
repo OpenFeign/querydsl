@@ -14,7 +14,7 @@
 package com.querydsl.lucene5;
 
 import com.querydsl.core.annotations.QueryEntity;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 @QueryEntity
 public class Person {

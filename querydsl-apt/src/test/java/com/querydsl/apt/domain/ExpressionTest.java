@@ -19,7 +19,11 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.junit.Test;
 
 public class ExpressionTest {
@@ -42,7 +46,7 @@ public class ExpressionTest {
     exprs.add(QInterfaceTypeTest_InterfaceType4.interfaceType4);
     exprs.add(QInterfaceTypeTest_InterfaceType5.interfaceType5);
     exprs.add(QGenericTest_ItemType.itemType);
-    exprs.add(QJodaTimeSupportTest_JodaTimeSupport.jodaTimeSupport);
+    exprs.add(QJSR310TimeSupportTest_JSR310TimeSupport.jSR310TimeSupport);
     exprs.add(QQueryInitTest_PEntity.pEntity);
     exprs.add(QQueryInitTest_PEntity2.pEntity2);
     exprs.add(QQueryInitTest_PEntity3.pEntity3);

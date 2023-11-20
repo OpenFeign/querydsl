@@ -1,11 +1,12 @@
 package com.querydsl.apt.domain;
 
 import com.querydsl.core.types.dsl.DateTimePath;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
 public class Properties3Test extends AbstractTest {
@@ -18,7 +19,9 @@ public class Properties3Test extends AbstractTest {
     private java.util.Date orderDate;
 
     public LocalDateTime getOrderDate() {
-      return orderDate != null ? new LocalDateTime(orderDate) : null;
+      return orderDate != null
+          ? LocalDateTime.ofInstant(orderDate.toInstant(), ZoneId.systemDefault())
+          : null;
     }
   }
 

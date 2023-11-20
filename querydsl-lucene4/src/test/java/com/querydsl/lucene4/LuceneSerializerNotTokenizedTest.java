@@ -21,6 +21,7 @@ import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
+import java.time.LocalDate;
 import java.util.Arrays;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -35,7 +36,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,8 +47,8 @@ public class LuceneSerializerNotTokenizedTest {
 
   private final QueryMetadata metadata = new DefaultQueryMetadata();
 
-  private final Person clooney = new Person("actor_1", "George Clooney", new LocalDate(1961, 4, 6));
-  private final Person pitt = new Person("actor_2", "Brad Pitt", new LocalDate(1963, 12, 18));
+  private final Person clooney = new Person("actor_1", "George Clooney", LocalDate.of(1961, 4, 6));
+  private final Person pitt = new Person("actor_2", "Brad Pitt", LocalDate.of(1963, 12, 18));
 
   private void testQuery(Expression<?> expr, String expectedQuery, int expectedHits)
       throws Exception {
