@@ -22,9 +22,9 @@ import com.querydsl.core.types.dsl.NumberPath;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.junit.Test;
 
 public class SQLTemplatesTest {
@@ -63,12 +63,12 @@ public class SQLTemplatesTest {
   }
 
   @Test
-  public void asLiteral_jodaTime() {
+  public void asLiteral_jsr310Time() {
     SQLTemplates templates = SQLTemplates.DEFAULT;
     Configuration conf = new Configuration(templates);
-    assertMatches(DATE, conf.asLiteral(new LocalDate(0)));
-    assertMatches(TIME, conf.asLiteral(new LocalTime(0)));
-    assertMatches(DATETIME, conf.asLiteral(new DateTime(0)));
+    assertMatches(DATE, conf.asLiteral(LocalDate.now()));
+    assertMatches(TIME, conf.asLiteral(LocalTime.now()));
+    assertMatches(DATETIME, conf.asLiteral(LocalDateTime.now()));
   }
 
   @Test

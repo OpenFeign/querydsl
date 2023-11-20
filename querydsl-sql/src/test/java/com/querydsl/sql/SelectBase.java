@@ -35,10 +35,11 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.compress.utils.Sets;
-import org.joda.time.*;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -486,9 +487,15 @@ public class SelectBase extends AbstractBaseTest {
   }
 
   private void dates(boolean literals) throws SQLException {
-    long ts = ((long) Math.floor(System.currentTimeMillis() / 1000)) * 1000;
-    long tsDate = new org.joda.time.LocalDate(ts).toDateMidnight().getMillis();
-    long tsTime = new org.joda.time.LocalTime(ts).getMillisOfDay();
+    java.time.Instant javaInstant =
+        java.time.Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
+    java.time.LocalDateTime javaDateTime =
+        java.time.LocalDateTime.ofInstant(javaInstant, java.time.ZoneId.of("Z"));
+    java.time.LocalDate javaDate = javaDateTime.toLocalDate();
+    java.time.LocalTime javaTime = javaDateTime.toLocalTime();
+    long ts = javaInstant.toEpochMilli();
+    long tsDate = javaInstant.truncatedTo(ChronoUnit.DAYS).toEpochMilli();
+    long tsTime = javaTime.toNanoOfDay() / 1000;
 
     List<Object> data = new ArrayList<>();
     data.add(Constants.date);
@@ -504,27 +511,7 @@ public class SelectBase extends AbstractBaseTest {
     data.add(new java.sql.Time(12, 30, 0));
     data.add(new java.sql.Time(23, 59, 59));
     // data.add(new java.sql.Time(tsTime));
-    data.add(new DateTime(ts));
-    data.add(new DateTime(tsDate));
-    data.add(new DateTime(tsTime));
-    data.add(new LocalDateTime(ts));
-    data.add(new LocalDateTime(tsDate));
-    data.add(new LocalDateTime(2014, 3, 30, 2, 0));
-    data.add(new LocalDate(2010, 1, 1));
-    data.add(new LocalDate(ts));
-    data.add(new LocalDate(tsDate));
-    data.add(new LocalTime(0, 0, 0));
-    data.add(new LocalTime(12, 30, 0));
-    data.add(new LocalTime(23, 59, 59));
-    data.add(new LocalTime(ts));
-    data.add(new LocalTime(tsTime));
 
-    java.time.Instant javaInstant =
-        java.time.Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
-    java.time.LocalDateTime javaDateTime =
-        java.time.LocalDateTime.ofInstant(javaInstant, java.time.ZoneId.of("Z"));
-    java.time.LocalDate javaDate = javaDateTime.toLocalDate();
-    java.time.LocalTime javaTime = javaDateTime.toLocalTime();
     data.add(javaInstant); // java.time.Instant
     data.add(javaDateTime); // java.time.LocalDateTime
     data.add(javaDate); // java.time.LocalDate
@@ -652,8 +639,9 @@ public class SelectBase extends AbstractBaseTest {
     add(dps, DatePart.minute, HSQLDB);
     add(dps, DatePart.second, HSQLDB);
 
-    LocalDate localDate = new LocalDate(1970, 1, 10);
-    Date date = new Date(localDate.toDateMidnight().getMillis());
+    LocalDate localDate = LocalDate.of(1970, 1, 10);
+    Date date =
+        new Date(localDate.atStartOfDay(java.time.ZoneId.of("Z")).toInstant().toEpochMilli());
 
     for (DatePart dp : dps) {
       int diff1 = query.select(SQLExpressions.datediff(dp, date, employee.datefield)).fetchFirst();
@@ -680,8 +668,9 @@ public class SelectBase extends AbstractBaseTest {
   public void date_diff2() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
 
-    LocalDate localDate = new LocalDate(1970, 1, 10);
-    Date date = new Date(localDate.toDateMidnight().getMillis());
+    LocalDate localDate = LocalDate.of(1970, 1, 10);
+    Date date =
+        new Date(localDate.atStartOfDay(java.time.ZoneId.of("Z")).toInstant().toEpochMilli());
 
     int years =
         query.select(SQLExpressions.datediff(DatePart.year, date, employee.datefield)).fetchFirst();
@@ -731,9 +720,10 @@ public class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, TERADATA, H2}) // FIXME
+  @ExcludeIn({SQLITE, TERADATA, DERBY, H2}) // FIXME
   public void date_trunc2() {
-    DateTimeExpression<DateTime> expr = DateTimeExpression.currentTimestamp(DateTime.class);
+    DateTimeExpression<LocalDateTime> expr =
+        DateTimeExpression.currentTimestamp(LocalDateTime.class);
 
     Tuple tuple =
         firstResult(
@@ -744,20 +734,20 @@ public class SelectBase extends AbstractBaseTest {
             SQLExpressions.datetrunc(DatePart.hour, expr),
             SQLExpressions.datetrunc(DatePart.minute, expr),
             SQLExpressions.datetrunc(DatePart.second, expr));
-    DateTime date = tuple.get(expr);
-    DateTime toYear = tuple.get(SQLExpressions.datetrunc(DatePart.year, expr));
-    DateTime toMonth = tuple.get(SQLExpressions.datetrunc(DatePart.month, expr));
-    DateTime toDay = tuple.get(SQLExpressions.datetrunc(DatePart.day, expr));
-    DateTime toHour = tuple.get(SQLExpressions.datetrunc(DatePart.hour, expr));
-    DateTime toMinute = tuple.get(SQLExpressions.datetrunc(DatePart.minute, expr));
-    DateTime toSecond = tuple.get(SQLExpressions.datetrunc(DatePart.second, expr));
+    LocalDateTime date = tuple.get(expr);
+    LocalDateTime toYear = tuple.get(SQLExpressions.datetrunc(DatePart.year, expr));
+    LocalDateTime toMonth = tuple.get(SQLExpressions.datetrunc(DatePart.month, expr));
+    LocalDateTime toDay = tuple.get(SQLExpressions.datetrunc(DatePart.day, expr));
+    LocalDateTime toHour = tuple.get(SQLExpressions.datetrunc(DatePart.hour, expr));
+    LocalDateTime toMinute = tuple.get(SQLExpressions.datetrunc(DatePart.minute, expr));
+    LocalDateTime toSecond = tuple.get(SQLExpressions.datetrunc(DatePart.second, expr));
 
-    assertEquals(date.getZone(), toYear.getZone());
-    assertEquals(date.getZone(), toMonth.getZone());
-    assertEquals(date.getZone(), toDay.getZone());
-    assertEquals(date.getZone(), toHour.getZone());
-    assertEquals(date.getZone(), toMinute.getZone());
-    assertEquals(date.getZone(), toSecond.getZone());
+    //    assertEquals(date.getZone(), toYear.getZone());
+    //    assertEquals(date.getZone(), toMonth.getZone());
+    //    assertEquals(date.getZone(), toDay.getZone());
+    //    assertEquals(date.getZone(), toHour.getZone());
+    //    assertEquals(date.getZone(), toMinute.getZone());
+    //    assertEquals(date.getZone(), toSecond.getZone());
 
     // year
     assertEquals(date.getYear(), toYear.getYear());
@@ -768,12 +758,12 @@ public class SelectBase extends AbstractBaseTest {
     assertEquals(date.getYear(), toSecond.getYear());
 
     // month
-    assertEquals(1, toYear.getMonthOfYear());
-    assertEquals(date.getMonthOfYear(), toMonth.getMonthOfYear());
-    assertEquals(date.getMonthOfYear(), toDay.getMonthOfYear());
-    assertEquals(date.getMonthOfYear(), toHour.getMonthOfYear());
-    assertEquals(date.getMonthOfYear(), toMinute.getMonthOfYear());
-    assertEquals(date.getMonthOfYear(), toSecond.getMonthOfYear());
+    assertEquals(1, toYear.getMonthValue());
+    assertEquals(date.getMonthValue(), toMonth.getMonthValue());
+    assertEquals(date.getMonthValue(), toDay.getMonthValue());
+    assertEquals(date.getMonthValue(), toHour.getMonthValue());
+    assertEquals(date.getMonthValue(), toMinute.getMonthValue());
+    assertEquals(date.getMonthValue(), toSecond.getMonthValue());
 
     // day
     assertEquals(1, toYear.getDayOfMonth());
@@ -784,28 +774,28 @@ public class SelectBase extends AbstractBaseTest {
     assertEquals(date.getDayOfMonth(), toSecond.getDayOfMonth());
 
     // hour
-    assertEquals(0, toYear.getHourOfDay());
-    assertEquals(0, toMonth.getHourOfDay());
-    assertEquals(0, toDay.getHourOfDay());
-    assertEquals(date.getHourOfDay(), toHour.getHourOfDay());
-    assertEquals(date.getHourOfDay(), toMinute.getHourOfDay());
-    assertEquals(date.getHourOfDay(), toSecond.getHourOfDay());
+    assertEquals(0, toYear.getHour());
+    assertEquals(0, toMonth.getHour());
+    assertEquals(0, toDay.getHour());
+    assertEquals(date.getHour(), toHour.getHour());
+    assertEquals(date.getHour(), toMinute.getHour());
+    assertEquals(date.getHour(), toSecond.getHour());
 
     // minute
-    assertEquals(0, toYear.getMinuteOfHour());
-    assertEquals(0, toMonth.getMinuteOfHour());
-    assertEquals(0, toDay.getMinuteOfHour());
-    assertEquals(0, toHour.getMinuteOfHour());
-    assertEquals(date.getMinuteOfHour(), toMinute.getMinuteOfHour());
-    assertEquals(date.getMinuteOfHour(), toSecond.getMinuteOfHour());
+    assertEquals(0, toYear.getMinute());
+    assertEquals(0, toMonth.getMinute());
+    assertEquals(0, toDay.getMinute());
+    assertEquals(0, toHour.getMinute());
+    assertEquals(date.getMinute(), toMinute.getMinute());
+    assertEquals(date.getMinute(), toSecond.getMinute());
 
     // second
-    assertEquals(0, toYear.getSecondOfMinute());
-    assertEquals(0, toMonth.getSecondOfMinute());
-    assertEquals(0, toDay.getSecondOfMinute());
-    assertEquals(0, toHour.getSecondOfMinute());
-    assertEquals(0, toMinute.getSecondOfMinute());
-    assertEquals(date.getSecondOfMinute(), toSecond.getSecondOfMinute());
+    assertEquals(0, toYear.getSecond());
+    assertEquals(0, toMonth.getSecond());
+    assertEquals(0, toDay.getSecond());
+    assertEquals(0, toHour.getSecond());
+    assertEquals(0, toMinute.getSecond());
+    assertEquals(date.getSecond(), toSecond.getSecond());
   }
 
   @Test

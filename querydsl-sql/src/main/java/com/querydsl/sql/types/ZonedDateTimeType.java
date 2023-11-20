@@ -7,13 +7,13 @@ import java.sql.Types;
 import java.time.ZonedDateTime;
 import org.jetbrains.annotations.Nullable;
 
-public class JSR310ZonedDateTimeType extends AbstractJSR310DateTimeType<ZonedDateTime> {
+public class ZonedDateTimeType extends AbstractJSR310DateTimeType<ZonedDateTime> {
 
-  public JSR310ZonedDateTimeType() {
+  public ZonedDateTimeType() {
     super(Types.TIMESTAMP_WITH_TIMEZONE);
   }
 
-  public JSR310ZonedDateTimeType(int type) {
+  public ZonedDateTimeType(int type) {
     super(type);
   }
 

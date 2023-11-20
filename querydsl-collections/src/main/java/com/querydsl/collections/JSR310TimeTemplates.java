@@ -20,24 +20,22 @@ import com.querydsl.core.types.Ops;
  *
  * @author tiwe
  */
-public class JodaTimeTemplates extends CollQueryTemplates {
+public class JSR310TimeTemplates extends CollQueryTemplates {
 
   @SuppressWarnings("FieldNameHidesFieldInSuperclass") // Intentional
-  public static final JodaTimeTemplates DEFAULT = new JodaTimeTemplates();
+  public static final JSR310TimeTemplates DEFAULT = new JSR310TimeTemplates();
 
-  protected JodaTimeTemplates() {
+  protected JSR310TimeTemplates() {
     add(Ops.DateTimeOps.YEAR, "{0}.getYear()");
-    add(Ops.DateTimeOps.MONTH, "{0}.getMonthOfYear()");
-    add(Ops.DateTimeOps.WEEK, "{0}.getWeekOfWeekyear()");
+    add(Ops.DateTimeOps.MONTH, "{0}.getMonthValue()");
     add(Ops.DateTimeOps.DAY_OF_WEEK, "{0}.getDayOfWeek()");
     add(Ops.DateTimeOps.DAY_OF_MONTH, "{0}.getDayOfMonth()");
     add(Ops.DateTimeOps.DAY_OF_YEAR, "{0}.getDayOfYear()");
-    add(Ops.DateTimeOps.HOUR, "{0}.getHourOfDay()");
-    add(Ops.DateTimeOps.MINUTE, "{0}.getMinuteOfHour()");
-    add(Ops.DateTimeOps.SECOND, "{0}.getSecondOfMinute()");
-    add(Ops.DateTimeOps.MILLISECOND, "{0}.getMillisOfSecond()");
+    add(Ops.DateTimeOps.HOUR, "{0}.getHour()");
+    add(Ops.DateTimeOps.MINUTE, "{0}.getMinute()");
+    add(Ops.DateTimeOps.SECOND, "{0}.getSecond()");
+    add(Ops.DateTimeOps.MILLISECOND, "{0}.getNano() / 1000");
 
-    add(Ops.DateTimeOps.YEAR_MONTH, "({0}.getYear() * 100 + {0}.getMonthOfYear())");
-    add(Ops.DateTimeOps.YEAR_WEEK, "({0}.getWeekyear() * 100 + {0}.getWeekOfWeekyear())");
+    add(Ops.DateTimeOps.YEAR_MONTH, "({0}.getYear() * 100 + {0}.getMonthValue())");
   }
 }

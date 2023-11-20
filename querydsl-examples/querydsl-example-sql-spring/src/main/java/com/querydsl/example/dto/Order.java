@@ -1,8 +1,8 @@
 package com.querydsl.example.dto;
 
+import java.time.LocalDate;
 import java.util.Set;
 import lombok.Data;
-import org.joda.time.LocalDate;
 
 @Data
 public class Order {
