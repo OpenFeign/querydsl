@@ -2,13 +2,13 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.time.Instant;
 import java.util.Date;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import org.junit.Test;
 
 public class JSR310Test {
