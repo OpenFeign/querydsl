@@ -51,6 +51,9 @@
     <project.githubpage>http://github.com/openfeign/querydsl</project.githubpage>
     <project.checkout>scm:git:git@github.com:openfeign/querydsl.git</project.checkout>
 
+    <!-- japicmp not letting us break API on major release, skipping until 6.0 is out -->
+    <japicmp.skip>true</japicmp.skip>
+
     <!-- default groups to exclude from surefire plugin -->
     <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
       com.querydsl.core.testutil.SlowTest,
@@ -523,7 +526,7 @@
       <plugin>
         <groupId>com.github.siom79.japicmp</groupId>
         <artifactId>japicmp-maven-plugin</artifactId>
-        <version>0.16.0</version>
+        <version>0.18.3</version>
         <configuration>
           <parameter>
             <onlyModified>true</onlyModified>
