@@ -23,7 +23,7 @@ import com.querydsl.sql.codegen.support.NumericMapping;
 import com.querydsl.sql.codegen.support.RenameMapping;
 import com.querydsl.sql.codegen.support.TypeMapping;
 import com.querydsl.sql.types.BytesType;
-import com.querydsl.sql.types.DateTimeType;
+import com.querydsl.sql.types.LocalDateTimeType;
 import com.querydsl.sql.types.LocalDateType;
 import com.querydsl.sql.types.LocalTimeType;
 import java.io.File;
@@ -86,11 +86,13 @@ public class MetadataExportMojoTest {
   }
 
   @Test
-  public void execute_with_jodaTypes() throws Exception {
+  public void execute_with_jsr310Types() throws Exception {
     mojo.setTargetFolder("target/export3");
     mojo.setCustomTypes(
         new String[] {
-          LocalDateType.class.getName(), LocalTimeType.class.getName(), DateTimeType.class.getName()
+          LocalDateType.class.getName(),
+          LocalTimeType.class.getName(),
+          LocalDateTimeType.class.getName()
         });
 
     mojo.execute();

@@ -4,16 +4,16 @@ import java.sql.*;
 import java.time.Instant;
 import org.jetbrains.annotations.Nullable;
 
-public class JSR310InstantType extends AbstractJSR310DateTimeType<Instant> {
+public class InstantType extends AbstractJSR310DateTimeType<Instant> {
 
   // JDBC 4.2 does not define any support for Instant, unlike most other JSR-310 types
   // few drivers support it natively, so go through Timestamp to handle it
 
-  public JSR310InstantType() {
+  public InstantType() {
     super(Types.TIMESTAMP);
   }
 
-  public JSR310InstantType(int type) {
+  public InstantType(int type) {
     super(type);
   }
 

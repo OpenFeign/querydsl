@@ -52,6 +52,9 @@
     <project.checkout>scm:git:git@github.com:openfeign/querydsl.git</project.checkout>
     <japicmp.skip>true</japicmp.skip>
 
+    <!-- japicmp not letting us break API on major release, skipping until 6.0 is out -->
+    <japicmp.skip>true</japicmp.skip>
+
     <!-- default groups to exclude from surefire plugin -->
     <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
       com.querydsl.core.testutil.SlowTest,
@@ -70,7 +73,7 @@
     <ecj.version>3.33.0</ecj.version>
 
     <!-- SQL deps -->
-    <db2.version>11.5.8.0</db2.version>
+    <db2.version>11.5.9.0</db2.version>
     <derby.version>10.17.1.0</derby.version>
     <hsqldb.version>2.7.2</hsqldb.version>
     <h2.version>2.2.224</h2.version>
@@ -96,7 +99,6 @@
     <slf4j.version>2.0.9</slf4j.version>
     <surefire.version>3.2.2</surefire.version>
     <animal-sniffer.version>1.23</animal-sniffer.version>
-    <jodatime.version>2.12.5</jodatime.version>
     <h2gis.version>2.2.0</h2gis.version>
     <morphia.version>1.3.2</morphia.version>
     <jmh.version>1.37</jmh.version>

@@ -20,6 +20,8 @@ public class H2WithQuotingTest extends AbstractSuite {
 
   public static class Merge extends MergeBase {}
 
+  public static class MergeUsing extends MergeUsingBase {}
+
   public static class Subqueries extends SubqueriesBase {}
 
   public static class Types extends TypesBase {}

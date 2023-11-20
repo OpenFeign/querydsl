@@ -108,11 +108,6 @@
       <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime.version}</version>
-    </dependency>
 
     <!-- TEST dependencies -->
     <dependency>
