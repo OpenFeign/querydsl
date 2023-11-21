@@ -14,12 +14,12 @@
 package com.querydsl.sql;
 
 import static com.querydsl.core.Target.*;
-import static com.querydsl.sql.Constants.survey;
-import static com.querydsl.sql.Constants.survey2;
+import static com.querydsl.sql.Constants.*;
 import static org.junit.Assert.*;
 
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.sql.dml.SQLMergeUsingClause;
+import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -138,5 +138,27 @@ public class MergeUsingBase extends AbstractBaseTest {
             .thenDelete();
 
     assertEquals(0, merge.execute());
+  }
+
+  @Test
+  @IncludeIn({DB2, SQLSERVER, H2, POSTGRESQL})
+  public void merge_with_using_direct_table_with_alias() {
+    SQLMergeUsingClause merge =
+        merge(survey).using(employee).on(survey.id.eq(employee.id)).whenMatched().thenDelete();
+
+    assertEquals(1, merge.execute());
+  }
+
+  @Test
+  @IncludeIn({DB2, SQLSERVER, H2, POSTGRESQL})
+  public void merge_with_using_direct_table_no_alias() {
+    SQLMergeUsingClause merge =
+        merge(survey)
+            .using(QEmployee.employee)
+            .on(survey.id.eq(QEmployee.employee.id))
+            .whenMatched()
+            .thenDelete();
+
+    assertEquals(1, merge.execute());
   }
 }
