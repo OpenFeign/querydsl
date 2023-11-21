@@ -579,6 +579,7 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
     dmlWithSchema = originalDmlWithSchema;
     append("\nusing ");
 
+    // A hacky way to allow merging table to table directly
     if (usingExpression instanceof RelationalPath) {
       dmlWithSchema = true;
       // If table has an alias, handle both original table name and alias
