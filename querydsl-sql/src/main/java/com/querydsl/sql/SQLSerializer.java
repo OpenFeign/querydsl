@@ -578,7 +578,24 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
     handle(entity);
     dmlWithSchema = originalDmlWithSchema;
     append("\nusing ");
+
+    if (usingExpression instanceof RelationalPath) {
+      dmlWithSchema = true;
+      // If table has an alias, handle both original table name and alias
+      if (!((RelationalPath<?>) usingExpression)
+          .getTableName()
+          .equals(ColumnMetadata.getName((RelationalPath<?>) usingExpression))) {
+        RelationalPath<?> originalEntity = this.entity;
+        this.entity = (RelationalPath<?>) usingExpression;
+        handle(usingExpression);
+        append(" ");
+        this.entity = originalEntity;
+        dmlWithSchema = originalDmlWithSchema;
+      }
+    }
     handle(usingExpression);
+    dmlWithSchema = originalDmlWithSchema;
+
     append("\n");
     append(templates.getOn());
     handle(usingOn);
