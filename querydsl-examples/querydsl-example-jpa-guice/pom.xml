@@ -14,6 +14,9 @@
   <properties>
     <guice.version>5.1.0</guice.version>
     <hibernate.validator.version>6.2.5.Final</hibernate.validator.version>
+
+    <!-- must skip, as this project needs hibernate dependencies -->
+    <enforcer.skip>true</enforcer.skip>
   </properties>
 
   <dependencies>
@@ -40,20 +43,6 @@
       <artifactId>javax.el-api</artifactId>
       <version>3.0.0</version>
       <scope>provided</scope>
-    </dependency>
-
-    <!-- logging -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
     </dependency>
 
     <!-- persistence -->
@@ -117,9 +106,8 @@
 
     <!-- TEST dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
     </dependency>
   </dependencies>
 

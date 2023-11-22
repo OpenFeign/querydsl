@@ -52,13 +52,13 @@
       <version>2.9.1</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
-          <groupId>javax.annotation</groupId>
-          <artifactId>javax.annotation-api</artifactId>
-          <version>1.3.2</version>
-          <scope>provided</scope>
-        </dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>1.3.2</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
