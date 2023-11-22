@@ -37,14 +37,6 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- backwards compatibility -->
-    <dependency>
-      <groupId>org.jvnet.hudson</groupId>
-      <artifactId>annotation-indexer</artifactId>
-      <version>1.2</version>
-      <optional>true</optional>
-    </dependency>
-
     <!--  test -->
     <dependency>
       <groupId>jdepend</groupId>
