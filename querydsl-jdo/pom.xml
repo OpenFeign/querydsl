@@ -5,16 +5,12 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.1-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-jdo</artifactId>
   <name>Querydsl - JDO support</name>
   <description>JDO support for Querydsl</description>
-  <url>${project.homepage}</url>
-  <packaging>jar</packaging>
 
   <scm>
     <connection>${project.checkout}</connection>

@@ -6,21 +6,13 @@
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
     <version>6.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-scala</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - Scala support</name>
 
   <properties>
-    <character.encoding>UTF-8</character.encoding>
     <argLine>-Xms256m -Xmx512m -Xss2m</argLine>
-    <checkstyle.skip>true</checkstyle.skip>
-
-    <scala.full.version>2.11.12</scala.full.version>
-    <hibernate.version>3.5.6-Final</hibernate.version>
   </properties>
 
   <dependencyManagement>

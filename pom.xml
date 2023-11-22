@@ -70,6 +70,7 @@
 
     <junit.version>5.10.1</junit.version>
     <ecj.version>3.33.0</ecj.version>
+    <jdo.version>3.2.1</jdo.version>
 
     <!-- SQL deps -->
     <db2.version>11.5.9.0</db2.version>
@@ -84,12 +85,14 @@
     <sqlite.version>3.44.0.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
     <firebird.version>5.0.2.java8</firebird.version>
+    <mongodb.version>3.12.14</mongodb.version>
 
     <!-- JPA deps -->
     <hibernate.version>5.6.15.Final</hibernate.version>
     <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
     <eclipselink.version>2.7.13</eclipselink.version>
 
+    <mvn.version>3.6.0</mvn.version>
     <guava.version>32.1.3-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
     <mysema.lang.version>0.2.4</mysema.lang.version>
@@ -103,6 +106,7 @@
     <hamcrest.veresion>2.2</hamcrest.veresion>
     <kotlin.version>1.9.20</kotlin.version>
     <dokka.version>1.9.10</dokka.version>
+    <scala.full.version>2.11.12</scala.full.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
     <osgi.import.package.root>*</osgi.import.package.root>
@@ -172,7 +176,7 @@
       <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>javax.jdo</artifactId>
-        <version>3.2.1</version>
+        <version>${jdo.version}</version>
       </dependency>
       <dependency>
         <groupId>com.vividsolutions</groupId>
@@ -188,11 +192,6 @@
         <groupId>javax.validation</groupId>
         <artifactId>validation-api</artifactId>
         <version>2.0.1.Final</version>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.13.2</version>
       </dependency>
       <dependency>
         <groupId>org.hamcrest</groupId>
@@ -356,11 +355,6 @@
           <version>3.1.1</version>
         </plugin>
         <plugin>
-          <groupId>com.mysema.maven</groupId>
-          <artifactId>apt-maven-plugin</artifactId>
-          <version>1.1.3</version>
-        </plugin>
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${surefire.version}</version>
@@ -515,6 +509,7 @@
                     <!-- We favor JUL over Slf4j -->
                     <exclude>org.slf4j:slf4j-api:*:*:compile</exclude>
                     <exclude>org.slf4j:slf4j-log4j12:*:*:compile</exclude>
+                    <exclude>junit:junit:*:*:*</exclude>
                   </excludes>
                   <searchTransitive>false</searchTransitive>
                 </bannedDependencies>
@@ -559,14 +554,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.eluder.coveralls</groupId>
-        <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.3.0</version>
-        <configuration>
-          <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.11</version>
@@ -578,15 +565,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.21.2</version>
-        <configuration>
-          <targetJdk>1.6</targetJdk>
-          <includeTests>true</includeTests>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

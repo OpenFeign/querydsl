@@ -9,11 +9,6 @@
   <artifactId>querydsl-example-kotlin-mongodb</artifactId>
   <name>Querydsl example - Kotlin MongoDB</name>
 
-  <properties>
-    <kotlin.version>1.9.20</kotlin.version>
-    <main.java.version>11</main.java.version>
-  </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -79,7 +74,7 @@
           <annotationProcessors>
             <annotationProcessor>org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor</annotationProcessor>
           </annotationProcessors>
-          <jvmTarget>1.8</jvmTarget>
+          <jvmTarget>${main.java.version}</jvmTarget>
         </configuration>
         <executions>
           <execution>

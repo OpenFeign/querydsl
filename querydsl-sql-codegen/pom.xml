@@ -6,12 +6,9 @@
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
     <version>6.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-sql-codegen</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - SQL codegen support</name>
   <description>SQL codegen support for Querydsl</description>
 
@@ -221,33 +218,6 @@
         </configuration>
       </plugin>
 
-      <!-- 
-      <plugin>
-        <groupId>io.github.openfeign.querydsl</groupId>
-        <artifactId>querydsl-maven-plugin</artifactId>
-        <version>${project.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-export</goal>
-            </goals>
-          </execution>            
-        </executions>
-        <configuration>
-          <jdbcDriver>org.apache.derby.jdbc.EmbeddedDriver</jdbcDriver>
-          <jdbcUrl>jdbc:derby:target/demoDB;create=true</jdbcUrl>
-          <packageName>com.querydsl.sql.domain2</packageName>
-          <targetFolder>target/generated-test-sources/java</targetFolder>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>${derby.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-       -->
     </plugins>
   </build>
 

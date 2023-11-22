@@ -9,11 +9,6 @@
   <artifactId>querydsl-example-kotlin</artifactId>
   <name>Querydsl example - Kotlin JPA</name>
 
-  <properties>
-    <main.java.version>11</main.java.version>
-    <kotlin.version>1.9.20</kotlin.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>jakarta.persistence</groupId>
