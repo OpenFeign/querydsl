@@ -52,11 +52,14 @@ public class TestMetadataExportMojoTest {
   public void execute() throws Exception {
     MavenProject project = new MavenProject();
     TestMetadataExportMojo mojo = setupMojoWith(project);
+    File target = new File("target/export4").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.execute();
 
     // 'target/export4' seems to conflict with MetadataExportMojoTest.Execute_With_TypeMappings
-    assertEquals(Collections.singletonList("target/export4"), project.getTestCompileSourceRoots());
-    assertTrue(new File("target/export4").exists());
+    assertEquals(
+        Collections.singletonList(target.getAbsolutePath()), project.getTestCompileSourceRoots());
+    assertTrue(target.exists());
   }
 
   @Test

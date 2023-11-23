@@ -11,11 +11,6 @@
   <name>Querydsl - Guava Group By utilities</name>
   <description>Utilities for creating group by factory expressions for Guava collection types</description>
 
-  <properties>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>

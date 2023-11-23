@@ -6,26 +6,12 @@
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
     <version>6.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
   <name>Querydsl - Maven plugin</name>
   <description>Querydsl Maven plugin</description>
-
-  <properties>
-    <mvn.version>2.2.1</mvn.version>
-    <maven.javadoc.skip>true</maven.javadoc.skip>
-  </properties>
-  <url>${project.homepage}</url>
-
-  <scm>
-    <url>${project.githubpage}</url>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-  </scm>
 
   <dependencyManagement>
     <dependencies>
@@ -33,6 +19,11 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
         <version>4.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-component-annotations</artifactId>
+        <version>1.7.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -50,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-project</artifactId>
+      <artifactId>maven-compat</artifactId>
       <version>${mvn.version}</version>
     </dependency>
 
@@ -79,7 +70,6 @@
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
-      <version>3.1.0</version>
       <scope>provided</scope>
     </dependency>
 

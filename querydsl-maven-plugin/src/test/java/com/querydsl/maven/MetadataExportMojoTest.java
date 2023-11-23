@@ -68,26 +68,31 @@ public class MetadataExportMojoTest {
 
   @Test
   public void execute() throws Exception {
-    mojo.setTargetFolder("target/export");
+    File target = new File("target/export").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export").exists());
+    assertEquals(
+        Collections.singletonList(target.getAbsolutePath()), project.getCompileSourceRoots());
+    assertTrue(target.exists());
   }
 
   @Test
   public void execute_with_customTypes() throws Exception {
-    mojo.setTargetFolder("target/export2");
+    File target = new File("target/export2").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.setCustomTypes(new String[] {BytesType.class.getName()});
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export2"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export2").exists());
+    assertEquals(
+        Collections.singletonList(target.getAbsolutePath()), project.getCompileSourceRoots());
+    assertTrue(target.exists());
   }
 
   @Test
   public void execute_with_jsr310Types() throws Exception {
-    mojo.setTargetFolder("target/export3");
+    File target = new File("target/export3").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.setCustomTypes(
         new String[] {
           LocalDateType.class.getName(),
@@ -97,13 +102,15 @@ public class MetadataExportMojoTest {
 
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export3"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export3").exists());
+    assertEquals(
+        Collections.singletonList(target.getAbsolutePath()), project.getCompileSourceRoots());
+    assertTrue(target.exists());
   }
 
   @Test
   public void execute_with_typeMappings() throws Exception {
-    mojo.setTargetFolder("target/export4");
+    File target = new File("target/export4").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     TypeMapping mapping = new TypeMapping();
     mapping.setTable("CATALOGS");
     mapping.setColumn("CATALOG_NAME");
@@ -112,13 +119,15 @@ public class MetadataExportMojoTest {
 
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export4"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export4").exists());
+    assertEquals(
+        Collections.singletonList(target.getAbsolutePath()), project.getCompileSourceRoots());
+    assertTrue(target.exists());
   }
 
   @Test
   public void executeWithNumericMappings() throws Exception {
-    mojo.setTargetFolder("target/export5");
+    File target = new File("target/export5").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     NumericMapping mapping = new NumericMapping();
     mapping.setTotal(1);
     mapping.setDecimal(1);
@@ -127,8 +136,9 @@ public class MetadataExportMojoTest {
 
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export5"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export5").exists());
+    assertEquals(
+        Collections.singletonList(target.getAbsolutePath()), project.getCompileSourceRoots());
+    assertTrue(target.exists());
   }
 
   @Test
@@ -204,12 +214,14 @@ public class MetadataExportMojoTest {
     mapping.setFromSchema("ABC");
     mapping.setToSchema("DEF");
 
-    mojo.setTargetFolder("target/export13");
+    File target = new File("target/export13").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.setRenameMappings(new RenameMapping[] {mapping});
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export13"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export13").exists());
+    assertEquals(
+        Collections.singletonList(target.getAbsolutePath()), project.getCompileSourceRoots());
+    assertTrue(target.exists());
   }
 
   // region Schema Pattern Matching
