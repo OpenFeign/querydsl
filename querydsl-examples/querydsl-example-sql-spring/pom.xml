@@ -6,7 +6,6 @@
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
     <version>6.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>querydsl-example-sql-spring</artifactId>
@@ -16,7 +15,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>6.1.1</spring.version>
 
-    <!-- to match spring SDK version -->
+    <!-- to match spring JDK version -->
     <main.java.version>17</main.java.version>
   </properties>
 
