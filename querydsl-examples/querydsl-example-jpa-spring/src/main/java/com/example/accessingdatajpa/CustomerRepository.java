@@ -1,11 +1,28 @@
 package com.example.accessingdatajpa;
 
+import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
 import java.util.List;
-import org.springframework.data.repository.CrudRepository;
 
-public interface CustomerRepository extends CrudRepository<Customer, Long> {
+public interface CustomerRepository extends QuerydslJpaRepository<Customer, Long> {
 
-  List<Customer> findByLastName(String lastName);
+  QCustomer C = new QCustomer("c");
 
-  Customer findById(long id);
+  default List<Customer> findByLastName(String lastName) {
+    return select(C).from(C).where(C.lastName.eq(lastName)).fetch();
+  }
+
+  default Customer findById(long id) {
+    return select(C).from(C).where(C.id.eq(id)).fetchOne();
+  }
+
+  default void insert(Customer customer) {
+    insert(C)
+        .set(C.firstName, customer.getFirstName())
+        .set(C.lastName, customer.getLastName())
+        .execute();
+  }
+
+  default List<Customer> findAll() {
+    return selectFrom(C).fetch();
+  }
 }

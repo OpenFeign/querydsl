@@ -1,0 +1,2 @@
+org.springframework.aot.hint.RuntimeHintsRegistrar=\
+	io.github.openfeign.querydsl.jpa.spring.aot.QuerydslRuntimeHints

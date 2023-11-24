@@ -14,6 +14,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <springboot.version>3.2.0</springboot.version>
 
+    <!-- must skip, as this project needs hibernate dependencies -->
+    <enforcer.skip>true</enforcer.skip>
     <!-- to match spring JDK version -->
     <main.java.version>17</main.java.version>
   </properties>
@@ -29,10 +31,16 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign.querydsl</groupId>
+      <artifactId>querydsl-jpa-spring</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -48,7 +56,31 @@
   </dependencies>
 
   <build>
+    <finalName>querydsl-example-jpa-spring</finalName>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessors>
+            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+          </annotationProcessors>
+          <annotationProcessorPaths>
+            <annotationProcessorPath>
+              <groupId>io.github.openfeign.querydsl</groupId>
+              <artifactId>querydsl-apt</artifactId>
+              <version>${project.version}</version>
+            </annotationProcessorPath>
+          </annotationProcessorPaths>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>io.github.openfeign.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

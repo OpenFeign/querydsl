@@ -20,11 +20,11 @@ public class AccessingDataJpaApplication {
   public CommandLineRunner demo(CustomerRepository repository) {
     return (args) -> {
       // save a few customers
-      repository.save(new Customer("Jack", "Bauer"));
-      repository.save(new Customer("Chloe", "O'Brian"));
-      repository.save(new Customer("Kim", "Bauer"));
-      repository.save(new Customer("David", "Palmer"));
-      repository.save(new Customer("Michelle", "Dessler"));
+      repository.insert(new Customer("Jack", "Bauer"));
+      repository.insert(new Customer("Chloe", "O'Brian"));
+      repository.insert(new Customer("Kim", "Bauer"));
+      repository.insert(new Customer("David", "Palmer"));
+      repository.insert(new Customer("Michelle", "Dessler"));
 
       // fetch all customers
       log.info("Customers found with findAll():");

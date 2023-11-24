@@ -25,6 +25,7 @@
     <module>querydsl-maven-plugin</module>
     <module>querydsl-jpa</module>
     <module>querydsl-jpa-codegen</module>
+    <module>querydsl-jpa-spring</module>
     <!-- datanucleus core seems to be incompatible with modern java: Unsupported class file major version 65 -->
     <!--<module>querydsl-jdo</module>-->
     <module>querydsl-kotlin-codegen</module>
