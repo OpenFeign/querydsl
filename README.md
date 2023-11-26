@@ -4,7 +4,7 @@ Querydsl is a framework which enables the construction of type-safe SQL-like que
 
 Instead of writing queries as inline strings or externalizing them into XML files they are constructed via a fluent API.
 
-[![Build Status](https://github.com/querydsl/querydsl/workflows/querydsl/badge.svg)](https://github.com/querydsl/querydsl/actions)
+[![Querydsl](https://circleci.com/gh/OpenFeign/querydsl.svg?style=shield)](https://app.circleci.com/pipelines/github/OpenFeign/querydsl?branch=master)
 [![Stackoverflow](https://img.shields.io/badge/StackOverflow-querydsl-yellow.svg)](https://stackoverflow.com/questions/tagged/querydsl)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.openfeign.querydsl/querydsl-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.openfeign.querydsl/querydsl-core/)
 
