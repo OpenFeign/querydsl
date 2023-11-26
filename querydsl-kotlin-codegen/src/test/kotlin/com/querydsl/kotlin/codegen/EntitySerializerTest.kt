@@ -34,8 +34,6 @@ import com.querydsl.kotlin.codegen.CompileUtils.assertCompiles
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
-import org.junit.jupiter.api.Assertions
-
 import java.io.StringWriter
 import java.sql.Time
 import java.util.*
@@ -53,7 +51,7 @@ class EntitySerializerTest {
         val entityType = EntityType(ClassType(Entity::class.java))
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("QEntitySerializerTest_Entity is a Querydsl query type for Entity"))
+        Assert.assertTrue(writer.toString().contains("QEntitySerializerTest_Entity is a Querydsl query type for Entity"))
         assertCompiles("QEntitySerializerTest_Entity", writer.toString())
     }
 
@@ -63,7 +61,7 @@ class EntitySerializerTest {
         val entityType = EntityType(ClassType(Entity::class.java))
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("class QEntitySerializerTest_Entity : EntityPathBase<EntitySerializerTest.Entity>"))
+        Assert.assertTrue(writer.toString().contains("class QEntitySerializerTest_Entity : EntityPathBase<EntitySerializerTest.Entity>"))
         assertCompiles("QEntitySerializerTest_Entity", writer.toString())
     }
 
@@ -73,7 +71,7 @@ class EntitySerializerTest {
         val entityType = EntityType(type)
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("class QEntity : EntityPathBase<Entity> {"))
+        Assert.assertTrue(writer.toString().contains("class QEntity : EntityPathBase<Entity> {"))
         assertCompiles("QEntity", writer.toString())
     }
 
@@ -93,7 +91,7 @@ class EntitySerializerTest {
             val entityType = EntityType(type)
             typeMappings.register(entityType, queryTypeFactory.create(entityType))
             serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-            Assertions.assertTrue(entry.toString(), writer.toString().contains("class QEntity : " + entry.value + " {"))
+            Assert.assertTrue(entry.toString(), writer.toString().contains("class QEntity : " + entry.value + " {"))
         }
     }
 
@@ -103,7 +101,7 @@ class EntitySerializerTest {
         val entityType = EntityType(type)
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("class QLocale : EntityPathBase<Locale> {"))
+        Assert.assertTrue(writer.toString().contains("class QLocale : EntityPathBase<Locale> {"))
         assertCompiles("QLocale", writer.toString())
     }
 
@@ -114,7 +112,7 @@ class EntitySerializerTest {
         entityType.addProperty(Property(entityType, "bytes", ClassType(ByteArray::class.java)))
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("val bytes: SimplePath<ByteArray>"))
+        Assert.assertTrue(writer.toString().contains("val bytes: SimplePath<ByteArray>"))
         assertCompiles("QEntity", writer.toString())
     }
 
@@ -164,7 +162,7 @@ class EntitySerializerTest {
         typeMappings.register(superType, queryTypeFactory.create(superType))
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("val _super: QEntity2 by lazy {\n    QEntity2(this)\n  }"))
+        Assert.assertTrue(writer.toString().contains("val _super: QEntity2 by lazy {\n    QEntity2(this)\n  }"))
         //CompileUtils.assertCompiles("QEntity", writer.toString());
     }
 
@@ -178,7 +176,7 @@ class EntitySerializerTest {
         entityType.addDelegate(delegate)
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("return Entity.test(this)"))
+        Assert.assertTrue(writer.toString().contains("return Entity.test(this)"))
         assertCompiles("QEntity", writer.toString())
     }
 
@@ -188,8 +186,8 @@ class EntitySerializerTest {
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
         val generatedSourceCode = writer.toString()
-        Assertions.assertTrue(generatedSourceCode.contains("import $generatedAnnotationImport"))
-        Assertions.assertTrue(generatedSourceCode.contains("@Generated(\"com.querydsl.kotlin.codegen.KotlinEntitySerializer\")\npublic class"))
+        Assert.assertTrue(generatedSourceCode.contains("import $generatedAnnotationImport"))
+        Assert.assertTrue(generatedSourceCode.contains("@Generated(\"com.querydsl.kotlin.codegen.KotlinEntitySerializer\")\npublic class"))
         assertCompiles("QEntitySerializerTest_Entity", generatedSourceCode)
     }
 
@@ -199,8 +197,8 @@ class EntitySerializerTest {
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         KotlinEntitySerializer(typeMappings, emptySet(), Generated::class.java).serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
         val generatedSourceCode = writer.toString()
-        Assertions.assertTrue(generatedSourceCode.contains("import " + Generated::class.java.name))
-        Assertions.assertTrue(generatedSourceCode.contains("@${Generated::class.java.simpleName}(\"com.querydsl.kotlin.codegen.KotlinEntitySerializer\")\npublic class"))
+        Assert.assertTrue(generatedSourceCode.contains("import " + Generated::class.java.name))
+        Assert.assertTrue(generatedSourceCode.contains("@${Generated::class.java.simpleName}(\"com.querydsl.kotlin.codegen.KotlinEntitySerializer\")\npublic class"))
         assertCompiles("QEntitySerializerTest_Entity", generatedSourceCode)
     }
 }

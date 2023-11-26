@@ -35,8 +35,6 @@ import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
-import org.junit.jupiter.api.Assertions
-
 import java.io.StringWriter
 import java.sql.Time
 import java.util.*
@@ -82,7 +80,7 @@ class EmbeddableSerializerTest {
             val entityType = EntityType(type)
             typeMappings.register(entityType, queryTypeFactory.create(entityType))
             serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(w))
-            Assertions.assertTrue("$value is missing from $w", w.toString().contains("class QEntity : $value {"))
+            Assert.assertTrue("$value is missing from $w", w.toString().contains("class QEntity : $value {"))
         }
     }
 
@@ -101,7 +99,7 @@ class EmbeddableSerializerTest {
         val entityType = EntityType(type)
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("class QEntity : BeanPath<Entity> {"))
+        Assert.assertTrue(writer.toString().contains("class QEntity : BeanPath<Entity> {"))
         assertCompiles("QEntity", writer.toString())
     }
 
@@ -111,7 +109,7 @@ class EmbeddableSerializerTest {
         val entityType = EntityType(type)
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("class QLocale : BeanPath<Locale> {"))
+        Assert.assertTrue(writer.toString().contains("class QLocale : BeanPath<Locale> {"))
         assertCompiles("QLocale", writer.toString())
     }
 
@@ -122,7 +120,7 @@ class EmbeddableSerializerTest {
         entityType.addProperty(Property(entityType, "bytes", ClassType(ByteArray::class.java)))
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("val bytes: SimplePath<ByteArray>"))
+        Assert.assertTrue(writer.toString().contains("val bytes: SimplePath<ByteArray>"))
         assertCompiles("QEntity", writer.toString())
     }
 
@@ -155,7 +153,7 @@ class EmbeddableSerializerTest {
         typeMappings.register(superType, queryTypeFactory.create(superType))
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("val _super: QEntity2 by lazy {\n    QEntity2(this)\n  }"))
+        Assert.assertTrue(writer.toString().contains("val _super: QEntity2 by lazy {\n    QEntity2(this)\n  }"))
         //CompileUtils.assertCompiles("QEntity", writer.toString());
     }
 
@@ -168,7 +166,7 @@ class EmbeddableSerializerTest {
         entityType.addDelegate(delegate)
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("return Entity.test(this);"))
+        Assert.assertTrue(writer.toString().contains("return Entity.test(this);"))
         assertCompiles("QEntity", writer.toString())
     }
 

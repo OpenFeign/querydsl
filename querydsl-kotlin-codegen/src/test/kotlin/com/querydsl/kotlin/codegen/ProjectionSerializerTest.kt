@@ -28,8 +28,6 @@ import com.querydsl.core.annotations.Generated
 import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.Test
-import org.junit.jupiter.api.Assertions
-
 import java.io.StringWriter
 import java.io.Writer
 import java.util.*
@@ -48,9 +46,9 @@ class ProjectionSerializerTest {
         val writer: Writer = StringWriter()
         val serializer: ProjectionSerializer = KotlinProjectionSerializer(KotlinTypeMappings())
         serializer.serialize(type, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-        Assertions.assertTrue(writer.toString().contains("firstName: Expression<String>"))
-        Assertions.assertTrue(writer.toString().contains("lastName: Expression<String>"))
-        Assertions.assertTrue(writer.toString().contains("age: Expression<Int>"))
+        Assert.assertTrue(writer.toString().contains("firstName: Expression<String>"))
+        Assert.assertTrue(writer.toString().contains("lastName: Expression<String>"))
+        Assert.assertTrue(writer.toString().contains("age: Expression<Int>"))
     }
 
     @Test
