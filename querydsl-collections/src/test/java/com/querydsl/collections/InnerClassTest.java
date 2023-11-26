@@ -15,8 +15,8 @@ package com.querydsl.collections;
 
 import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.core.alias.Alias.alias;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import org.junit.Test;

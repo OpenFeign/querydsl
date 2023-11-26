@@ -1,7 +1,7 @@
 package com.querydsl.collections;
 
 import static com.querydsl.collections.PathComparator.pathComparator;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Comparator;
 import org.junit.Before;

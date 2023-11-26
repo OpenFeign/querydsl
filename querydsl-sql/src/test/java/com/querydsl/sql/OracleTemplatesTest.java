@@ -14,8 +14,8 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.types.ConstantImpl;

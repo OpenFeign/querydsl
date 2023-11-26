@@ -13,15 +13,15 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.core.types.dsl.MapPath;
 import com.querydsl.core.types.dsl.SetPath;
 import java.util.*;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class CollectionTest {
 
@@ -82,7 +82,7 @@ public class CollectionTest {
     //        assertEquals(Object.class,
     // QMapWithUndefinedValueTest_Person.person.appData.getParameter(1));
 
-    Assert.assertEquals(MapPath.class, QCollectionTest_Classes.classes.map1.getClass());
+    Assertions.assertEquals(MapPath.class, QCollectionTest_Classes.classes.map1.getClass());
     assertEquals(MapPath.class, QCollectionTest_Classes.classes.map2.getClass());
     assertEquals(MapPath.class, QCollectionTest_Classes.classes.map3.getClass());
 

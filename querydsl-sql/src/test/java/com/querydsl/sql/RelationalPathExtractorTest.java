@@ -2,7 +2,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.sql.Constants.employee;
 import static com.querydsl.sql.RelationalPathExtractor.extract;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.domain.QEmployee;

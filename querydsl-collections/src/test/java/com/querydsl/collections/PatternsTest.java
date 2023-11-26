@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.regex.Pattern;
 import org.junit.Test;

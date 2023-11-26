@@ -1,13 +1,13 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class ManagedEmailTest {
 
@@ -31,7 +31,7 @@ public class ManagedEmailTest {
 
   @Test
   public void test() {
-    Assert.assertEquals(
+    Assertions.assertEquals(
         EmailType.class, QManagedEmailTest_ManagedEmails.managedEmails.emails.getKeyType());
     assertEquals(
         ManagedEmailImpl.class,

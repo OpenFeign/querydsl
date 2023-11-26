@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.processing.AbstractProcessor;
 import javax.tools.JavaCompiler;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 public abstract class AbstractProcessorTest {
 
@@ -48,7 +48,7 @@ public abstract class AbstractProcessorTest {
     File out = new File("target/" + target);
     FileUtils.delete(out);
     if (!out.mkdirs()) {
-      Assert.fail("Creation of " + out.getPath() + " failed");
+      Assertions.fail("Creation of " + out.getPath() + " failed");
     }
     compile(processorClass, classes, target);
   }
@@ -74,7 +74,7 @@ public abstract class AbstractProcessorTest {
     //        Processor.elementCache.clear();
     if (compilationResult != 0) {
       System.err.println(compiler.getClass().getName());
-      Assert.fail("Compilation Failed:\n " + new String(err.toByteArray(), "UTF-8"));
+      Assertions.fail("Compilation Failed:\n " + new String(err.toByteArray(), "UTF-8"));
     }
   }
 

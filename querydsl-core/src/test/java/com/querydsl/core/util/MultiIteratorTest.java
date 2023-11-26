@@ -14,7 +14,7 @@
 package com.querydsl.core.util;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.IteratorAdapter;
 import java.util.*;

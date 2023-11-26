@@ -14,7 +14,7 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.jpa.JPAExpressions.selectOne;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;

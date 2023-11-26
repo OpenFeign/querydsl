@@ -15,7 +15,7 @@ package com.querydsl.sql.mssql;
 
 import static com.querydsl.sql.Constants.employee;
 import static com.querydsl.sql.SQLExpressions.rowNumber;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.sql.Configuration;

@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.querydsl.core.types.dsl.Coalesce;
 import com.querydsl.core.types.dsl.DslExpression;
@@ -23,9 +23,9 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class SignatureTest {
 
@@ -68,7 +68,7 @@ public class SignatureTest {
       System.err.println(error);
     }
     if (!errors.isEmpty()) {
-      Assert.fail("Got " + errors.size() + " errors");
+      Assertions.fail("Got " + errors.size() + " errors");
     }
   }
 }

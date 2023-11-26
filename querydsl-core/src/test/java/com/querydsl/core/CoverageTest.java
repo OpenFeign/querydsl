@@ -14,7 +14,7 @@
 package com.querydsl.core;
 
 import static com.querydsl.core.alias.Alias.$;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.Expression;
@@ -141,6 +141,6 @@ public class CoverageTest {
     }
 
     assertTrue(
-        notContained.size() + " errors in processing, see log for details", notContained.isEmpty());
+        notContained.isEmpty(), notContained.size() + " errors in processing, see log for details");
   }
 }

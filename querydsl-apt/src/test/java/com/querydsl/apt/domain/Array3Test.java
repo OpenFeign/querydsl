@@ -1,10 +1,10 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.annotations.QueryEntity;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class Array3Test {
 
@@ -30,17 +30,17 @@ public class Array3Test {
 
   @Test
   public void domain() {
-    Assert.assertEquals(byte[].class, QArray3Test_Domain.domain.bytes.getType());
+    Assertions.assertEquals(byte[].class, QArray3Test_Domain.domain.bytes.getType());
     assertEquals(Byte[].class, QArray3Test_Domain.domain.bytes2.getType());
   }
 
   @Test
   public void domain2() {
-    Assert.assertEquals(byte[].class, QArray3Test_Domain2.domain2.bytes.getType());
+    Assertions.assertEquals(byte[].class, QArray3Test_Domain2.domain2.bytes.getType());
   }
 
   @Test
   public void domain3() {
-    Assert.assertEquals(Byte[].class, QArray3Test_Domain3.domain3.bytes.getType());
+    Assertions.assertEquals(Byte[].class, QArray3Test_Domain3.domain3.bytes.getType());
   }
 }

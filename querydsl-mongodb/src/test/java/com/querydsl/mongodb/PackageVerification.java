@@ -13,8 +13,8 @@
  */
 package com.querydsl.mongodb;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.apt.morphia.MorphiaAnnotationProcessor;
 import com.querydsl.codegen.CodegenModule;
@@ -38,7 +38,7 @@ public class PackageVerification {
   }
 
   private void verify(File oneJar) throws Exception {
-    assertTrue(oneJar.getPath() + " doesn't exist", oneJar.exists());
+    assertTrue(oneJar.exists(), oneJar.getPath() + " doesn't exist");
     // verify classLoader
     URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
     oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core

@@ -15,7 +15,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.sql.dml.SQLMergeUsingClause;

@@ -15,7 +15,7 @@ package com.querydsl.codegen;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.Constructor;

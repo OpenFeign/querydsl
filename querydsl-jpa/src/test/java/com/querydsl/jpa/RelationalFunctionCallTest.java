@@ -14,7 +14,7 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.SubQueryExpression;

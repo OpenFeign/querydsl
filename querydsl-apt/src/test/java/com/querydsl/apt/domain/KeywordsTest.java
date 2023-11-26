@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.persistence.Entity;

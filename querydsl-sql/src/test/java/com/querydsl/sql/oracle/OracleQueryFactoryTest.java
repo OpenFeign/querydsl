@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.oracle;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.domain.QSurvey;

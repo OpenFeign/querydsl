@@ -14,7 +14,7 @@
 package com.querydsl.sql.codegen;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.codegen.BeanSerializer;
 import com.querydsl.codegen.utils.SimpleCompiler;
@@ -31,6 +31,7 @@ import java.util.Set;
 import javax.tools.JavaCompiler;
 import javax.validation.constraints.NotNull;
 import org.junit.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.rules.TemporaryFolder;
 
 public class MetaDataExporterTest {
@@ -476,7 +477,7 @@ public class MetaDataExporterTest {
     int compilationResult =
         compiler.run(null, System.out, System.err, classes.toArray(new String[0]));
     if (compilationResult != 0) {
-      Assert.fail("Compilation Failed for " + targetDir.getAbsolutePath());
+      Assertions.fail("Compilation Failed for " + targetDir.getAbsolutePath());
     }
   }
 }

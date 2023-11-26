@@ -13,7 +13,7 @@
  */
 package com.querydsl.mongodb.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.bson.types.ObjectId;
 import org.junit.Test;

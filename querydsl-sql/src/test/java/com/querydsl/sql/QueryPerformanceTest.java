@@ -1,6 +1,6 @@
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;

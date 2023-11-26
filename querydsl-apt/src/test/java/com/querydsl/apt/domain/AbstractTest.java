@@ -13,8 +13,8 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public abstract class AbstractTest {
 
@@ -31,15 +31,15 @@ public abstract class AbstractTest {
   protected void match(Class<?> expectedType, String name)
       throws SecurityException, NoSuchFieldException {
     assertTrue(
-        cl.getSimpleName() + "." + name + " failed",
-        expectedType.isAssignableFrom(cl.getField(name).getType()));
+        expectedType.isAssignableFrom(cl.getField(name).getType()),
+        cl.getSimpleName() + "." + name + " failed");
   }
 
   protected void matchType(Class<?> expectedType, String name)
       throws NoSuchFieldException, IllegalAccessException {
     Class<?> type =
         ((com.querydsl.core.types.Expression) cl.getField(name).get(standardVariable)).getType();
-    assertTrue(cl.getSimpleName() + "." + name + " failed", expectedType.isAssignableFrom(type));
+    assertTrue(expectedType.isAssignableFrom(type), cl.getSimpleName() + "." + name + " failed");
   }
 
   protected void assertPresent(String name) {

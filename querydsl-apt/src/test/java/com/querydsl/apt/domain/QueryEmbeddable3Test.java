@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEntity;
@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class QueryEmbeddable3Test {
 
@@ -63,7 +63,7 @@ public class QueryEmbeddable3Test {
 
   @Test
   public void user_rawList() {
-    Assert.assertEquals(
+    Assertions.assertEquals(
         QQueryEmbeddable3Test_Complex.class,
         QQueryEmbeddable3Test_User.user.rawList.any().getClass());
   }

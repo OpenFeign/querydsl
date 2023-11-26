@@ -2,8 +2,8 @@ package com.querydsl.apt.domain;
 
 import javax.persistence.*;
 import org.hibernate.annotations.NaturalId;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class InterfaceType2Test {
 
@@ -95,7 +95,7 @@ public class InterfaceType2Test {
 
   @Test
   public void test() {
-    Assert.assertEquals(
+    Assertions.assertEquals(
         QInterfaceType2Test_PartyImpl.class,
         QInterfaceType2Test_UserImpl.userImpl.party.getClass());
   }

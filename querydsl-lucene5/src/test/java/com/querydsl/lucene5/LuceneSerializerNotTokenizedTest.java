@@ -14,7 +14,7 @@
 package com.querydsl.lucene5;
 
 import static com.querydsl.lucene5.QPerson.person;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;

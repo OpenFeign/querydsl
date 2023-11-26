@@ -1,6 +1,6 @@
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.geolatte.geom.codec.Wkt;
 import org.junit.Test;

@@ -14,7 +14,7 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;

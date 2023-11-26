@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.File;
 import java.io.IOException;

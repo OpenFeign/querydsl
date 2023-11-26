@@ -1,7 +1,7 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.jpa.JPAExpressions.select;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.dsl.PathBuilder;
 import java.util.ArrayList;

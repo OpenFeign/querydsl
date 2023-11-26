@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Type;

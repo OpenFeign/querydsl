@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -13,9 +13,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class ECJEvaluatorFactoryTest {
 
@@ -127,7 +127,7 @@ public class ECJEvaluatorFactoryTest {
       List<Class<?>> types,
       List<?> args,
       Object expectedResult) {
-    Assert.assertEquals(
+    Assertions.assertEquals(
         expectedResult,
         evaluate(
             source, projectionType, names, types, args, Collections.<String, Object>emptyMap()));

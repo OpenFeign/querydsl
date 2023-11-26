@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.apt.domain.rel.SimpleType;
 import com.querydsl.apt.domain.rel.SimpleType2;

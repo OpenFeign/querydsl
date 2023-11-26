@@ -15,7 +15,7 @@ package com.querydsl.codegen;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.*;
@@ -89,8 +89,8 @@ public class EmbeddableSerializerTest {
 
       serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(w));
       assertTrue(
-          entry.getValue() + " is missing from " + w,
-          w.toString().contains("public class QEntity extends " + entry.getValue() + " {"));
+          w.toString().contains("public class QEntity extends " + entry.getValue() + " {"),
+          entry.getValue() + " is missing from " + w);
     }
   }
 

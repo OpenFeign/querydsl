@@ -2,8 +2,8 @@ package com.querydsl.apt.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class OneToOneTest {
 
@@ -21,6 +21,6 @@ public class OneToOneTest {
 
   @Test
   public void test() {
-    Assert.assertEquals(PhoneNumberImpl.class, QOneToOneTest_Person.person.phone.getType());
+    Assertions.assertEquals(PhoneNumberImpl.class, QOneToOneTest_Person.person.phone.getType());
   }
 }

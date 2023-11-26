@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Serializable;
 import javax.persistence.Entity;

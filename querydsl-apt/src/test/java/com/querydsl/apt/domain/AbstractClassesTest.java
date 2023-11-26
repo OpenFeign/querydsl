@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.dsl.NumberPath;
 import java.io.Serializable;
@@ -21,8 +21,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 @SuppressWarnings({"rawtypes", "serial", "unchecked"})
 public class AbstractClassesTest {
@@ -77,7 +77,7 @@ public class AbstractClassesTest {
 
   @Test
   public void grant_id_type() {
-    Assert.assertEquals(
+    Assertions.assertEquals(
         QAbstractClassesTest_Party.class, QAbstractClassesTest_Grant.grant.id.getClass());
     assertEquals(Party.class, QAbstractClassesTest_Grant.grant.id.getType());
   }

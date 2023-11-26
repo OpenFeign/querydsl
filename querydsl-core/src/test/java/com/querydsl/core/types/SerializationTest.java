@@ -1,7 +1,7 @@
 package com.querydsl.core.types;
 
 import static com.querydsl.core.testutil.Serialization.serialize;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;

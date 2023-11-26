@@ -1,7 +1,7 @@
 package com.querydsl.sql.dml;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.sql.KeyAccessorsTest.QEmployee;

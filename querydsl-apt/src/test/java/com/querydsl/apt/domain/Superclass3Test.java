@@ -15,8 +15,8 @@ package com.querydsl.apt.domain;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.annotations.QueryEntity;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class Superclass3Test {
 
@@ -28,6 +28,6 @@ public class Superclass3Test {
 
   @Test
   public void test() {
-    Assert.assertNotNull(QSuperclass3Test_Subtype.subtype.distinct);
+    Assertions.assertNotNull(QSuperclass3Test_Subtype.subtype.distinct);
   }
 }

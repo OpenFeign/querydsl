@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.support;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.ConstantImpl;

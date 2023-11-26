@@ -16,7 +16,7 @@ package com.querydsl.sql;
 import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.survey;
 import static com.querydsl.sql.Constants.survey2;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;

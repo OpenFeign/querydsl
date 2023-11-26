@@ -1,6 +1,6 @@
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.Test;
 

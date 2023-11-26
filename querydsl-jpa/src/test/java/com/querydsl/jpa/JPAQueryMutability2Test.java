@@ -14,7 +14,7 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.core.types.dsl.Expressions.numberOperation;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.Operator;
 import com.querydsl.jpa.domain.QCat;

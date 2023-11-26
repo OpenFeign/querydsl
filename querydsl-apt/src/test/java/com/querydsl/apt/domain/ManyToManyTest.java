@@ -3,8 +3,8 @@ package com.querydsl.apt.domain;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class ManyToManyTest {
 
@@ -22,7 +22,7 @@ public class ManyToManyTest {
 
   @Test
   public void test() {
-    Assert.assertEquals(
+    Assertions.assertEquals(
         PhoneNumberImpl.class, QManyToManyTest_Person.person.phones.getElementType());
   }
 }

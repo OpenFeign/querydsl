@@ -15,7 +15,7 @@ package com.querydsl.core.util;
 
 import static com.querydsl.core.util.ArrayUtils.isEmpty;
 import static com.querydsl.core.util.ConstructorUtils.getConstructorParameters;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.types.ProjectionExample;
 import java.lang.reflect.Constructor;
@@ -52,7 +52,7 @@ public class ConstructorUtilsTest {
     Class<?>[] args = {Long.class, String.class};
     Class<?>[] expected = {Long.TYPE, String.class};
     Class<?>[] constructorParameters = getConstructorParameters(ProjectionExample.class, args);
-    assertArrayEquals("Constructorparameters not equal", expected, constructorParameters);
+    assertArrayEquals(expected, constructorParameters, "Constructorparameters not equal");
   }
 
   private <C> Constructor<C> getConstructor(Class<C> type, Class<?>[] givenTypes) {

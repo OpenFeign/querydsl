@@ -13,9 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.types.dsl.Param;
 import org.junit.Test;

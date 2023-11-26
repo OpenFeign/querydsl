@@ -13,8 +13,8 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.types.Expression;
 
@@ -32,6 +32,6 @@ public abstract class AbstractQueryTest {
   protected static void assertMatches(String expected, Expression<?> expr) {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
     String str = serializer.handle(expr).toString().replace("\n", " ");
-    assertTrue(expected + "\n!=\n" + str, str.matches(expected));
+    assertTrue(str.matches(expected), expected + "\n!=\n" + str);
   }
 }

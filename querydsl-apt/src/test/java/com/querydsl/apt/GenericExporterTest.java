@@ -1,6 +1,6 @@
 package com.querydsl.apt;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.querydsl.apt.domain.AbstractEntityTest;
 import com.querydsl.apt.domain.CustomCollection;

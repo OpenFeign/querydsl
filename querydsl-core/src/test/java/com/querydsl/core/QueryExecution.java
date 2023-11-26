@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * The Class StandardTest.
@@ -244,7 +244,7 @@ public abstract class QueryExecution {
       for (String e : errors) {
         buffer.append(e).append("\n");
       }
-      Assert.fail(buffer.toString());
+      Assertions.fail(buffer.toString());
     } else {
       System.out.println("Success with " + total + " tests");
     }

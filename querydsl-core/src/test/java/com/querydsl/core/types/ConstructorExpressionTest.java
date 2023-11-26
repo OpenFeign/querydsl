@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.testutil.Serialization;
 import com.querydsl.core.testutil.ThreadSafety;

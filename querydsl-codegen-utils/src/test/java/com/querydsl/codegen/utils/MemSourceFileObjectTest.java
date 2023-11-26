@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import org.junit.Test;

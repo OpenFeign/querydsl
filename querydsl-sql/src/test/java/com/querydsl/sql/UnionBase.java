@@ -2,7 +2,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.employee;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.Tuple;

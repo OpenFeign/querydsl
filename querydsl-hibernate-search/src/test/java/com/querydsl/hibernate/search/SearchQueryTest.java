@@ -13,7 +13,7 @@
  */
 package com.querydsl.hibernate.search;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryResults;

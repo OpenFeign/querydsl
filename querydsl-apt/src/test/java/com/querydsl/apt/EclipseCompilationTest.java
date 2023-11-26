@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.codegen.utils.SimpleCompiler;
 import com.querydsl.core.util.FileUtils;
@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.tools.JavaCompiler;
 import org.eclipse.jdt.internal.compiler.tool.EclipseCompiler;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class EclipseCompilationTest {
 
@@ -50,7 +50,7 @@ public class EclipseCompilationTest {
     File out = new File("target/out-eclipse");
     FileUtils.delete(out);
     if (!out.mkdirs()) {
-      Assert.fail("Creation of " + out.getPath() + " failed");
+      Assertions.fail("Creation of " + out.getPath() + " failed");
     }
 
     String classPath = SimpleCompiler.getClassPath((URLClassLoader) getClass().getClassLoader());
@@ -74,7 +74,7 @@ public class EclipseCompilationTest {
     if (compilationResult == 0) {
       System.out.println("Compilation is successful");
     } else {
-      Assert.fail("Compilation Failed");
+      Assertions.fail("Compilation Failed");
     }
 
     File resultFile = new File("target/out-eclipse/com/querydsl/eclipse/QSimpleEntity.java");

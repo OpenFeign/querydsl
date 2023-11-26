@@ -15,7 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.jpa.JPAExpressions.select;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.Pair;
 import com.querydsl.core.*;
@@ -510,7 +510,7 @@ public abstract class AbstractJPATest {
 
   private static <T> void assertInstancesOf(Class<T> clazz, Iterable<T> rows) {
     for (T row : rows) {
-      assertEquals(row.toString(), clazz, row.getClass());
+      assertEquals(clazz, row.getClass(), row.toString());
     }
   }
 

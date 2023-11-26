@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.SimpleJavaFileObject;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 public final class CompileUtils {
 
@@ -36,7 +36,7 @@ public final class CompileUtils {
             null,
             Collections.singletonList(javaFileObject));
     if (!task.call()) {
-      Assert.fail("Compilation of " + source + " failed.\n" + out.toString());
+      Assertions.fail("Compilation of " + source + " failed.\n" + out.toString());
     }
   }
 }

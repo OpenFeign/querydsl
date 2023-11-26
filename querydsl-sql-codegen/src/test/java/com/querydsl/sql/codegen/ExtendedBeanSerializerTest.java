@@ -1,7 +1,7 @@
 package com.querydsl.sql.codegen;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.Property;
@@ -78,7 +78,7 @@ public class ExtendedBeanSerializerTest {
     URLClassLoader classLoader =
         URLClassLoader.newInstance(new URL[] {compileFolder.getRoot().toURI().toURL()});
     int retCode = new SimpleCompiler().run(null, System.out, System.err, srcFile.getAbsolutePath());
-    assertEquals("The generated source should compile", 0, retCode);
+    assertEquals(0, retCode, "The generated source should compile");
 
     Class<?> cls = Class.forName(FULL_NAME, true, classLoader);
     ReflectionHelper reflection = new ReflectionHelper(cls);

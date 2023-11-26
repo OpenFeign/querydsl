@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.mysql;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.sql.MySQLTemplates;
 import com.querydsl.sql.domain.QSurvey;

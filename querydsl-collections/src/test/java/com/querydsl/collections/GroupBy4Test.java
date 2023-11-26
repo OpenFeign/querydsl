@@ -17,7 +17,7 @@ package com.querydsl.collections;
 import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.core.group.guava.GuavaGroupBy.groupBy;
 import static com.querydsl.core.group.guava.GuavaGroupBy.map;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;

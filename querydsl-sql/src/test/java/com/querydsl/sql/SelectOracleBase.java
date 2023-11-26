@@ -9,9 +9,9 @@ import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.oracle.OracleQuery;
 import java.sql.SQLException;
 import java.util.logging.Logger;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class SelectOracleBase extends AbstractBaseTest {
 
@@ -24,7 +24,7 @@ public class SelectOracleBase extends AbstractBaseTest {
         SQLSerializer serializer = super.serialize(forCountRow);
         String rv = serializer.toString();
         if (expectedQuery != null) {
-          Assert.assertEquals(expectedQuery, rv.replace('\n', ' '));
+          Assertions.assertEquals(expectedQuery, rv.replace('\n', ' '));
           expectedQuery = null;
         }
         logger.fine(rv);

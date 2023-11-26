@@ -13,8 +13,8 @@
  */
 package com.querydsl.core.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.SimpleExpression;

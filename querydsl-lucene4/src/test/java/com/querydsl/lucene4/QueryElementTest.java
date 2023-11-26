@@ -13,7 +13,7 @@
  */
 package com.querydsl.lucene4;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;

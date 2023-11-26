@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;

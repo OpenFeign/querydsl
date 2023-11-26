@@ -14,8 +14,8 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
@@ -115,7 +115,7 @@ public abstract class AbstractSQLTemplatesTest {
   protected int getPrecedence(Operator... ops) {
     int precedence = templates.getPrecedence(ops[0]);
     for (int i = 1; i < ops.length; i++) {
-      assertEquals(ops[i].name(), precedence, templates.getPrecedence(ops[i]));
+      assertEquals(precedence, templates.getPrecedence(ops[i]), ops[i].name());
     }
     return precedence;
   }
@@ -167,7 +167,7 @@ public abstract class AbstractSQLTemplatesTest {
     assertSerialized(Expressions.booleanPath("b").eq(Expressions.FALSE), "b = 0");
     query.setUseLiterals(true);
     query.where(Expressions.booleanPath("b").eq(true));
-    assertTrue(query.toString(), query.toString().endsWith("where b = 1"));
+    assertTrue(query.toString().endsWith("where b = 1"), query.toString());
   }
 
   protected void assertSerialized(Expression<?> expr, String serialized) {

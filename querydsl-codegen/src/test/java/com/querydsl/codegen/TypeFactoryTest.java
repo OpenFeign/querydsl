@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.codegen.utils.model.*;
 import com.querydsl.core.DefaultQueryMetadata;
@@ -211,7 +211,7 @@ public class TypeFactoryTest {
         Arrays.<Class<?>>asList(
             Blob.class, Clob.class, Locale.class, Class.class, Serializable.class)) {
       assertEquals(
-          "wrong type for " + cl.getName(), TypeCategory.SIMPLE, factory.get(cl).getCategory());
+          TypeCategory.SIMPLE, factory.get(cl).getCategory(), "wrong type for " + cl.getName());
     }
   }
 
@@ -219,7 +219,7 @@ public class TypeFactoryTest {
   public void numberType() {
     for (Class<?> cl : Arrays.<Class<?>>asList(Byte.class, Integer.class)) {
       assertEquals(
-          "wrong type for " + cl.getName(), TypeCategory.NUMERIC, factory.get(cl).getCategory());
+          TypeCategory.NUMERIC, factory.get(cl).getCategory(), "wrong type for " + cl.getName());
     }
   }
 

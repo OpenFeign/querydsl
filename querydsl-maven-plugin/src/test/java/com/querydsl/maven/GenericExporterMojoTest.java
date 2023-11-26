@@ -2,7 +2,7 @@ package com.querydsl.maven;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.codegen.GeneratedAnnotationResolver;
 import java.io.File;

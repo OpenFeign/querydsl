@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.apt.AbstractProcessorTest;
 import com.querydsl.apt.QuerydslAnnotationProcessor;

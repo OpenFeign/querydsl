@@ -13,8 +13,8 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;

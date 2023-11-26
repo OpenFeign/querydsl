@@ -1,6 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.types.Predicate;
 import java.util.List;

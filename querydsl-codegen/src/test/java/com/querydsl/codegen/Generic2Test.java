@@ -1,6 +1,6 @@
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.core.annotations.QueryEntity;

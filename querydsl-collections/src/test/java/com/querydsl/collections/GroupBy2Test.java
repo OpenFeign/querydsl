@@ -2,7 +2,7 @@ package com.querydsl.collections;
 
 import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.core.group.GroupBy.map;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryProjection;

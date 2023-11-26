@@ -13,7 +13,7 @@
  */
 package com.querydsl.core;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.dsl.StringExpression;
 import org.junit.Test;

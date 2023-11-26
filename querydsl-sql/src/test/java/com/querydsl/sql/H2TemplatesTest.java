@@ -13,8 +13,8 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.types.Ops;
 import org.junit.Test;

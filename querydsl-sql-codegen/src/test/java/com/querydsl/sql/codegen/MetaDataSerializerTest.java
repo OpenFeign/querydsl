@@ -32,10 +32,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 import javax.tools.JavaCompiler;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.rules.TemporaryFolder;
 
 public class MetaDataSerializerTest extends AbstractJDBCTest {
@@ -179,7 +179,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
     if (compilationResult == 0) {
       System.out.println("Compilation is successful");
     } else {
-      Assert.fail("Compilation Failed");
+      Assertions.fail("Compilation Failed");
     }
   }
 

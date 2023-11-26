@@ -14,7 +14,7 @@
 package com.querydsl.mongodb;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -580,7 +580,7 @@ public class MongodbQueryTest {
     for (Predicate predicate : predicates) {
       long count1 = where(predicate).fetchCount();
       long count2 = where(predicate.not()).fetchCount();
-      assertEquals(predicate.toString(), 4, count1 + count2);
+      assertEquals(4, count1 + count2, predicate.toString());
     }
   }
 
@@ -689,15 +689,15 @@ public class MongodbQueryTest {
     String toString = query.toString();
     List<User> results = query.fetch();
 
-    assertNotNull(toString, results);
+    assertNotNull(results, toString);
     if (expected == null) {
-      assertEquals("Should get empty result", 0, results.size());
+      assertEquals(0, results.size(), "Should get empty result");
       return;
     }
-    assertEquals(toString, expected.length, results.size());
+    assertEquals(expected.length, results.size(), toString);
     int i = 0;
     for (User u : expected) {
-      assertEquals(toString, u, results.get(i++));
+      assertEquals(u, results.get(i++), toString);
     }
   }
 

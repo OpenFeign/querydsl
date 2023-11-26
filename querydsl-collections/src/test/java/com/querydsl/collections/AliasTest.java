@@ -15,7 +15,7 @@ package com.querydsl.collections;
 
 import static com.querydsl.collections.CollQueryFactory.from;
 import static com.querydsl.core.alias.Alias.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.dsl.Expressions;

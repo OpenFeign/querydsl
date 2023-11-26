@@ -13,8 +13,8 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class DateExtensionsTest extends AbstractProcessorTest {
     // EntityWithExtensions is updated, QEntityWithExtensions is overwritten
     Files.createFile(source.toPath());
     compile(QuerydslAnnotationProcessor.class, sources, "overwrite3");
-    assertTrue("" + modified + " >= " + qType.lastModified(), modified < qType.lastModified());
+    assertTrue(modified < qType.lastModified(), "" + modified + " >= " + qType.lastModified());
     assertTrue(
         new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8).contains("QDate"));
 

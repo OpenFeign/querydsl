@@ -1,7 +1,7 @@
 package com.querydsl.sql.codegen;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.testutil.H2;
 import com.querydsl.sql.Connections;

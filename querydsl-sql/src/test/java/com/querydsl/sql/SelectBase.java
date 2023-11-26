@@ -16,7 +16,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.Pair;
@@ -40,9 +40,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.compress.utils.Sets;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class SelectBase extends AbstractBaseTest {
 
@@ -586,7 +586,7 @@ public class SelectBase extends AbstractBaseTest {
                 + " != "
                 + entry.getValue());
       }
-      Assert.fail("Failed with " + failures);
+      Assertions.fail("Failed with " + failures);
     }
   }
 
@@ -1154,7 +1154,6 @@ public class SelectBase extends AbstractBaseTest {
 
     for (String str : strs) {
       assertTrue(
-          str,
           query()
                   .from(employee)
                   .where(
@@ -1163,7 +1162,8 @@ public class SelectBase extends AbstractBaseTest {
                           Expressions.constant(str),
                           Expressions.constant(str)))
                   .fetchCount()
-              > 0);
+              > 0,
+          str);
     }
   }
 
@@ -2258,7 +2258,7 @@ public class SelectBase extends AbstractBaseTest {
     assertNotNull(row);
     assertEquals(3, row.size());
     assertNotNull(row.get(0, Object.class));
-    assertNotNull(row.get(0, Object.class) + " is not null", row.get(1, Object.class));
+    assertNotNull(row.get(1, Object.class), row.get(0, Object.class) + " is not null");
   }
 
   @Test(expected = NonUniqueResultException.class)
@@ -2408,7 +2408,7 @@ public class SelectBase extends AbstractBaseTest {
       assertNotNull(row);
       assertEquals(3, row.size());
       assertNotNull(row.get(0, Object.class));
-      assertNotNull(row.get(0, Object.class) + " is not null", row.get(1, Object.class));
+      assertNotNull(row.get(1, Object.class), row.get(0, Object.class) + " is not null");
     }
   }
 

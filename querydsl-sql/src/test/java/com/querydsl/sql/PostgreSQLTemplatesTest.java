@@ -14,8 +14,8 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
@@ -104,6 +104,6 @@ public class PostgreSQLTemplatesTest extends AbstractSQLTemplatesTest {
     assertSerialized(Expressions.booleanPath("b").eq(Expressions.FALSE), "b = false");
     query.setUseLiterals(true);
     query.where(Expressions.booleanPath("b").eq(true));
-    assertTrue(query.toString(), query.toString().endsWith("where b = true"));
+    assertTrue(query.toString().endsWith("where b = true"), query.toString());
   }
 }

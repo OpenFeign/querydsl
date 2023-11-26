@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.Field;
 import org.junit.Test;

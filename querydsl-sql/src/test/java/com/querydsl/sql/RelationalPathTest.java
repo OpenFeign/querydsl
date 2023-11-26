@@ -1,7 +1,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.core.testutil.Serialization.serialize;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QTuple;

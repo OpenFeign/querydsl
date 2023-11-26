@@ -7,10 +7,8 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hibernate.ScrollMode.FORWARD_ONLY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.IteratorAdapter;
 import com.querydsl.core.types.FactoryExpression;

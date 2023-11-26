@@ -13,8 +13,8 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.querydsl.core.types.dsl.*;
 import java.util.LinkedHashMap;

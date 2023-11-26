@@ -14,7 +14,7 @@
 package com.querydsl.lucene3;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryException;

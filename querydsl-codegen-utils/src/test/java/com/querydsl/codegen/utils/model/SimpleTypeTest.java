@@ -1,6 +1,6 @@
 package com.querydsl.codegen.utils.model;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collections;
 import org.junit.Test;

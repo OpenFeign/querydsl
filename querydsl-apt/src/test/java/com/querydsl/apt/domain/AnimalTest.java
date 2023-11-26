@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
@@ -37,7 +37,7 @@ public class AnimalTest {
   @Test
   public void properties_are_copied_from_super() {
     assertTrue(
-        "direct copy of StringPath field failed",
-        QAnimalTest_Cat.cat.name == QAnimalTest_Cat.cat._super.name);
+        QAnimalTest_Cat.cat.name == QAnimalTest_Cat.cat._super.name,
+        "direct copy of StringPath field failed");
   }
 }

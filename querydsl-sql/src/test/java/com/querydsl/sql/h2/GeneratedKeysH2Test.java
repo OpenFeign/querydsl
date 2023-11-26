@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.h2;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.sql.H2Templates;
 import com.querydsl.sql.QGeneratedKeysEntity;

@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.types.PathMetadata;

@@ -1,6 +1,6 @@
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;

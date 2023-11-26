@@ -1,6 +1,6 @@
 package com.querydsl.sql.dml;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.QueryFlag;
 import com.querydsl.sql.KeyAccessorsTest.QEmployee;
@@ -53,10 +53,10 @@ public class SQLInsertClauseTest {
 
     SQLBindings sql = insert.getSQL().get(0);
     assertEquals(
-        "The order of columns in generated sql should be predictable",
         "insert into EMPLOYEE (ID, FIRSTNAME, LASTNAME, SALARY, DATEFIELD, TIMEFIELD, SUPERIOR_ID)\n"
             + "values (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID)",
-        sql.getSQL());
+        sql.getSQL(),
+        "The order of columns in generated sql should be predictable");
   }
 
   @Test

@@ -1,7 +1,7 @@
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
 
@@ -50,7 +50,7 @@ public class JavaTemplatesTest {
   protected int getPrecedence(Operator... ops) {
     int precedence = templates.getPrecedence(ops[0]);
     for (int i = 1; i < ops.length; i++) {
-      assertEquals(ops[i].name(), precedence, templates.getPrecedence(ops[i]));
+      assertEquals(precedence, templates.getPrecedence(ops[i]), ops[i].name());
     }
     return precedence;
   }

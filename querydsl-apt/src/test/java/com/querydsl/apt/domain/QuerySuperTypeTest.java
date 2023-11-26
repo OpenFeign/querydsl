@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.annotations.QuerySupertype;
 import java.util.Set;

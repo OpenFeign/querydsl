@@ -1,6 +1,6 @@
 package com.querydsl.spatial.jts;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.vividsolutions.jts.geom.*;
 import org.junit.Test;

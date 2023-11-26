@@ -1,7 +1,7 @@
 package com.querydsl.core.support;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.querydsl.core.types.dsl.EnumPath;
 import com.querydsl.core.types.dsl.Expressions;

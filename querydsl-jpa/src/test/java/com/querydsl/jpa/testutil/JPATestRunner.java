@@ -21,7 +21,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.rules.MethodRule;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -48,11 +48,11 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
 
   @Override
   protected List<MethodRule> rules(Object test) {
-    Assert.assertTrue(
+    Assertions.assertTrue(
+        test instanceof JPATest,
         String.format(
             "In order to use the %s for %s, it should (directly or indirectly) implement %s",
-            JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class),
-        test instanceof JPATest);
+            JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class));
 
     List<MethodRule> rules = super.rules(test);
     rules.add(

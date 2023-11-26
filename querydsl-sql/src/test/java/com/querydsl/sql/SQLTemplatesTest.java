@@ -13,8 +13,8 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
@@ -35,7 +35,7 @@ public class SQLTemplatesTest {
   private static final String DATE = "\\(date '\\d{4}-\\d{2}-\\d{2}'\\)";
 
   private static void assertMatches(String regex, String str) {
-    assertTrue(str, str.matches(regex));
+    assertTrue(str.matches(regex), str);
   }
 
   @Test

@@ -1,6 +1,6 @@
 package com.querydsl.core.support;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.FactoryExpression;

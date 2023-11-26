@@ -14,8 +14,8 @@
 package com.querydsl.collections;
 
 import static com.querydsl.collections.CollQueryFactory.from;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;

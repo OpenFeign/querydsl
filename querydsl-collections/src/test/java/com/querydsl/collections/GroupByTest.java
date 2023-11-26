@@ -14,7 +14,7 @@
 package com.querydsl.collections;
 
 import static com.querydsl.core.group.GroupBy.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.group.Group;
 import com.querydsl.core.types.ConstructorExpression;

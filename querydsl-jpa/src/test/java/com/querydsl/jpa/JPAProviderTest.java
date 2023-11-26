@@ -1,6 +1,6 @@
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.jpa.impl.JPAProvider;
 import java.lang.reflect.InvocationHandler;

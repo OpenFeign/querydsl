@@ -2,8 +2,8 @@ package com.querydsl.collections;
 
 import static com.querydsl.collections.PathMatcher.hasValue;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.hamcrest.Description;
 import org.hamcrest.StringDescription;

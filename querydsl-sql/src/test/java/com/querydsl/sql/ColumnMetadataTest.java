@@ -1,6 +1,6 @@
 package com.querydsl.sql;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.sql.domain.QEmployee;
 import java.sql.Types;

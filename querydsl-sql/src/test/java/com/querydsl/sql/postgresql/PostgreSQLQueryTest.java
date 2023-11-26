@@ -1,6 +1,6 @@
 package com.querydsl.sql.postgresql;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.sql.PostgreSQLTemplates;
 import com.querydsl.sql.domain.QEmployee;

@@ -14,7 +14,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.core.types.PathMetadataFactory.forVariable;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.types.dsl.NumberPath;
 import java.io.Serializable;

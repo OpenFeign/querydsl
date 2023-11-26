@@ -14,7 +14,7 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.jpa.domain.QCat.cat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.hibernate.HibernateQuery;

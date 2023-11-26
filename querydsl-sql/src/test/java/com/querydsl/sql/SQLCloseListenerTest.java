@@ -1,8 +1,8 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.Constants.employee;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.testutil.H2;

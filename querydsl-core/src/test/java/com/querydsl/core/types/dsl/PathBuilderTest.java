@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.util.BeanMap;

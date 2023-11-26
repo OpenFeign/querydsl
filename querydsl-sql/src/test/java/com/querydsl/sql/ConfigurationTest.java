@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.alias.Gender;
 import com.querydsl.sql.domain.QSurvey;

@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.codegen;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.utils.model.Types;

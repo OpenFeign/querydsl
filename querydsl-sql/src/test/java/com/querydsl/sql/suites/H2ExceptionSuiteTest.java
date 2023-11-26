@@ -4,8 +4,8 @@ import static com.querydsl.sql.domain.QSurvey.survey;
 import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.QueryException;
 import com.querydsl.core.testutil.H2;

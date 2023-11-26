@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.support;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
@@ -100,7 +100,7 @@ public class OrderedQueryMetadataTest {
 
     String str = joins.toString();
     if (maxJoinIndex > -1 && maxFromIndex > -1) {
-      assertTrue(str, maxJoinIndex >= maxFromIndex);
+      assertTrue(maxJoinIndex >= maxFromIndex, str);
     }
   }
 }

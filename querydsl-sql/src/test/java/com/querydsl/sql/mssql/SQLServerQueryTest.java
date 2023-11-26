@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.mssql;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.sql.SQLServerTemplates;
 import com.querydsl.sql.domain.QEmployee;

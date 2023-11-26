@@ -13,8 +13,8 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.apt.hibernate.HibernateAnnotationProcessor;
 import com.querydsl.apt.jpa.JPAAnnotationProcessor;
@@ -38,7 +38,7 @@ public class PackageVerification {
   }
 
   private void verify(File oneJar, boolean hibernateDeps) throws Exception {
-    assertTrue(oneJar.getPath() + " doesn't exist", oneJar.exists());
+    assertTrue(oneJar.exists(), oneJar.getPath() + " doesn't exist");
     // verify classLoader
     URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
     oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core

@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -18,9 +18,9 @@ import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class SimpleCompilerTest {
 
@@ -58,7 +58,7 @@ public class SimpleCompilerTest {
     int compilationResult =
         compiler.run(null, null, null, options.toArray(new String[options.size()]));
     if (compilationResult != 0) {
-      Assert.fail("Compilation Failed");
+      Assertions.fail("Compilation Failed");
     }
   }
 
@@ -74,7 +74,7 @@ public class SimpleCompilerTest {
     int compilationResult =
         compiler.run(null, null, null, options.toArray(new String[options.size()]));
     if (compilationResult != 0) {
-      Assert.fail("Compilation Failed");
+      Assertions.fail("Compilation Failed");
     }
   }
 

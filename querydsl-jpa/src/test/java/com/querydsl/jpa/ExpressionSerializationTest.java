@@ -2,7 +2,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.core.testutil.Serialization.serialize;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.domain.QCat;

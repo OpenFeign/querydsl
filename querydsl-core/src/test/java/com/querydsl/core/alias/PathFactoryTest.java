@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.alias;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.types.Path;

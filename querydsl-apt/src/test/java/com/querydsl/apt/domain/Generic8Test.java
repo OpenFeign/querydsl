@@ -3,8 +3,8 @@ package com.querydsl.apt.domain;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class Generic8Test {
 
@@ -32,8 +32,8 @@ public class Generic8Test {
 
   @Test
   public void test() {
-    Assert.assertEquals(String.class, QGeneric8Test_Entity.entity.values.getElementType());
-    Assert.assertEquals(Integer.class, QGeneric8Test_Entity2.entity2.values.getElementType());
-    Assert.assertEquals(String.class, QGeneric8Test_Entity3.entity3.values.getElementType());
+    Assertions.assertEquals(String.class, QGeneric8Test_Entity.entity.values.getElementType());
+    Assertions.assertEquals(Integer.class, QGeneric8Test_Entity2.entity2.values.getElementType());
+    Assertions.assertEquals(String.class, QGeneric8Test_Entity3.entity3.values.getElementType());
   }
 }

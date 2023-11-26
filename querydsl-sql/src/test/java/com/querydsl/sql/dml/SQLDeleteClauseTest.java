@@ -1,6 +1,6 @@
 package com.querydsl.sql.dml;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.sql.KeyAccessorsTest.QEmployee;
 import com.querydsl.sql.SQLBindings;

@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.*;
@@ -101,8 +101,8 @@ public class EntitySerializerTest {
 
       serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
       assertTrue(
-          entry.toString(),
-          writer.toString().contains("public class QEntity extends " + entry.getValue() + " {"));
+          writer.toString().contains("public class QEntity extends " + entry.getValue() + " {"),
+          entry.toString());
     }
   }
 

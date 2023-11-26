@@ -1,6 +1,6 @@
 package com.querydsl.jpa.support;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Template;

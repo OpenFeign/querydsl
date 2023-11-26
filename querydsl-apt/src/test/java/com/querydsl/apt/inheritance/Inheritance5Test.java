@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.inheritance;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;

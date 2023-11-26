@@ -1,6 +1,6 @@
 package com.querydsl.maven;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import org.apache.maven.project.MavenProject;

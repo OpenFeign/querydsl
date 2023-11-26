@@ -1,6 +1,6 @@
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.lang.annotation.Annotation;
 import javax.annotation.Generated;

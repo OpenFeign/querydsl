@@ -1,7 +1,7 @@
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
@@ -82,7 +82,7 @@ public class JPQLTemplatesTest {
   protected int getPrecedence(Operator... ops) {
     int precedence = JPQLTemplates.DEFAULT.getPrecedence(ops[0]);
     for (int i = 1; i < ops.length; i++) {
-      assertEquals(ops[i].name(), precedence, JPQLTemplates.DEFAULT.getPrecedence(ops[i]));
+      assertEquals(precedence, JPQLTemplates.DEFAULT.getPrecedence(ops[i]), ops[i].name());
     }
     return precedence;
   }

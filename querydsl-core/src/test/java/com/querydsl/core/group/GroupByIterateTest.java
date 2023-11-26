@@ -14,7 +14,7 @@
 package com.querydsl.core.group;
 
 import static com.querydsl.core.group.GroupBy.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.IteratorAdapter;

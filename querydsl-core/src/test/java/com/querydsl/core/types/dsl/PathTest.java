@@ -14,7 +14,7 @@
 package com.querydsl.core.types.dsl;
 
 import static com.querydsl.core.alias.Alias.$;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.annotations.QueryEntity;

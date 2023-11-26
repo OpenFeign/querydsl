@@ -19,7 +19,7 @@ import static com.querydsl.core.alias.Alias.alias;
 import static com.querydsl.jpa.Constants.*;
 import static com.querydsl.jpa.JPAExpressions.select;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import antlr.RecognitionException;
 import antlr.TokenStreamException;

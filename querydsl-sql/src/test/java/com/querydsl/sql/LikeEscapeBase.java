@@ -14,8 +14,8 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.Constants.survey;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.sql.dml.SQLInsertClause;
 import java.sql.SQLException;
@@ -63,12 +63,12 @@ public class LikeEscapeBase extends AbstractBaseTest {
   @Test
   public void like_escaping_conclusion() {
     assertTrue(
-        "Escaped like construct must return more results",
         query().from(survey).where(survey.name.like("a!%")).fetchCount()
-            < query().from(survey).where(survey.name.like("a!%", '!')).fetchCount());
+            < query().from(survey).where(survey.name.like("a!%", '!')).fetchCount(),
+        "Escaped like construct must return more results");
     assertTrue(
-        "Escaped like construct must return more results",
         query().from(survey).where(survey.name.like("a!_")).fetchCount()
-            < query().from(survey).where(survey.name.like("a!_", '!')).fetchCount());
+            < query().from(survey).where(survey.name.like("a!_", '!')).fetchCount(),
+        "Escaped like construct must return more results");
   }
 }

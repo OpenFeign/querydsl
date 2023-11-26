@@ -1,7 +1,7 @@
 package com.querydsl.sql.spatial;
 
 import static com.querydsl.core.Target.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;

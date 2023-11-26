@@ -13,9 +13,7 @@
  */
 package com.querydsl.sql.codegen;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.sql.AbstractJDBCTest;
 import com.querydsl.sql.codegen.support.ForeignKeyData;

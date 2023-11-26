@@ -14,8 +14,8 @@
 package com.querydsl.sql;
 
 import static com.querydsl.core.Target.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.sql.dml.BeanMapper;

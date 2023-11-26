@@ -1,7 +1,7 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.querydsl.core.annotations.QueryDelegate;
 import com.querydsl.core.types.Predicate;
