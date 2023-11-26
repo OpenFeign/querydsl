@@ -14,6 +14,7 @@
 package com.querydsl.sql.codegen;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.codegen.BeanSerializer;
