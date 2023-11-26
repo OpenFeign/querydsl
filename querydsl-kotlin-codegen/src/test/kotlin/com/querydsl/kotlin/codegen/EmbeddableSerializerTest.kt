@@ -82,7 +82,7 @@ class EmbeddableSerializerTest {
             val entityType = EntityType(type)
             typeMappings.register(entityType, queryTypeFactory.create(entityType))
             serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(w))
-            Assertions.assertTrue("$value is missing from $w", w.toString().contains("class QEntity : $value {"))
+            Assertions.assertTrue(w.toString().contains("class QEntity : $value {"), "$value is missing from $w")
         }
     }
 

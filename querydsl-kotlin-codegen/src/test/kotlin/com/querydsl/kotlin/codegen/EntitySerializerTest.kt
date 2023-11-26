@@ -93,7 +93,7 @@ class EntitySerializerTest {
             val entityType = EntityType(type)
             typeMappings.register(entityType, queryTypeFactory.create(entityType))
             serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
-            Assertions.assertTrue(entry.toString(), writer.toString().contains("class QEntity : " + entry.value + " {"))
+            Assertions.assertTrue(writer.toString().contains("class QEntity : " + entry.value + " {"), entry.toString())
         }
     }
 
