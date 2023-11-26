@@ -1,7 +1,7 @@
 package com.querydsl.example.jpa.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.example.jpa.model.User;
 import javax.inject.Inject;

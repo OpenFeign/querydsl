@@ -1,6 +1,6 @@
 package com.querydsl.example.sql.repository;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.Usert;

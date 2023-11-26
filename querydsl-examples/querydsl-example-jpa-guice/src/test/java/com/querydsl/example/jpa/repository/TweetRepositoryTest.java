@@ -1,8 +1,8 @@
 package com.querydsl.example.jpa.repository;
 
 import static com.querydsl.example.jpa.model.QTweet.tweet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.example.jpa.model.Tweet;
 import com.querydsl.example.jpa.model.User;

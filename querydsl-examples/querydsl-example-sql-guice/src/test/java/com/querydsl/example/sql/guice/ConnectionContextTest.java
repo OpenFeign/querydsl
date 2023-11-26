@@ -1,6 +1,6 @@
 package com.querydsl.example.sql.guice;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.inject.Inject;
 import org.junit.After;

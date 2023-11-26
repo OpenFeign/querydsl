@@ -1,6 +1,6 @@
 package com.querydsl.example.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.example.dto.Product;
 import com.querydsl.example.dto.ProductL10n;
