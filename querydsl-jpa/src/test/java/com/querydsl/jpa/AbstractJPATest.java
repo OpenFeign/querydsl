@@ -15,6 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.jpa.JPAExpressions.select;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.Pair;
