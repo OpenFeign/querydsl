@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.inheritance;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import org.junit.Test;
@@ -57,13 +57,13 @@ public class InheritanceTest {
 
   @Test
   public void test() {
-    assertNotNull(QInheritanceTest_BobbinGenOperation.bobbinGenOperation);
-    assertNotNull(QInheritanceTest_Entity.entity);
-    assertNotNull(QInheritanceTest_FlexPlastic.flexPlastic);
-    assertNotNull(QInheritanceTest_FlexPlasticFilm.flexPlasticFilm);
-    assertNotNull(QInheritanceTest_Merchandise.merchandise);
-    assertNotNull(QInheritanceTest_Operation.operation);
-    assertNotNull(QInheritanceTest_Party.party);
-    assertNotNull(QInheritanceTest_Person.person);
+    assertThat(QInheritanceTest_BobbinGenOperation.bobbinGenOperation).isNotNull();
+    assertThat(QInheritanceTest_Entity.entity).isNotNull();
+    assertThat(QInheritanceTest_FlexPlastic.flexPlastic).isNotNull();
+    assertThat(QInheritanceTest_FlexPlasticFilm.flexPlasticFilm).isNotNull();
+    assertThat(QInheritanceTest_Merchandise.merchandise).isNotNull();
+    assertThat(QInheritanceTest_Operation.operation).isNotNull();
+    assertThat(QInheritanceTest_Party.party).isNotNull();
+    assertThat(QInheritanceTest_Person.person).isNotNull();
   }
 }
