@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.SimplePath;
 import org.junit.Test;
@@ -27,11 +27,11 @@ public class CatTest {
 
   @Test
   public void stringAsSimple() throws SecurityException, NoSuchFieldException {
-    assertTrue(QCat.cat.stringAsSimple.getClass().equals(SimplePath.class));
+    assertThat(QCat.cat.stringAsSimple.getClass().equals(SimplePath.class)).isTrue();
   }
 
   @Test
   public void dateAsSimple() {
-    assertTrue(QCat.cat.dateAsSimple.getClass().equals(SimplePath.class));
+    assertThat(QCat.cat.dateAsSimple.getClass().equals(SimplePath.class)).isTrue();
   }
 }
