@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
@@ -31,6 +31,6 @@ public class QueryMetadataTest extends AbstractQueryTest {
 
     CollQuery<?> query = new CollQuery<Void>(metadata);
     query.bind(cat, cats);
-    assertEquals(Collections.singletonList(c3), query.select(cat).fetch());
+    assertThat(query.select(cat).fetch()).isEqualTo(Collections.singletonList(c3));
   }
 }
