@@ -2,6 +2,7 @@ package com.querydsl.example.sql.repository;
 
 import static com.querydsl.example.sql.model.QTweet.tweet;
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.Usert;
 import javax.inject.Inject;

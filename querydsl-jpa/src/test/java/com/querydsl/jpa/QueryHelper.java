@@ -14,6 +14,7 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 import antlr.collections.AST;
@@ -75,7 +76,9 @@ class QueryHelper<T> extends JPAQueryBase<T, QueryHelper<T>> {
     AST ast = parser.getAST();
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     parser.showAst(ast, new PrintStream(baos));
-    assertThat(parser.getParseErrorHandler().getErrorCount()).as("At least one error occurred during parsing " + input).isEqualTo(0);
+    assertThat(parser.getParseErrorHandler().getErrorCount())
+        .as("At least one error occurred during parsing " + input)
+        .isEqualTo(0);
   }
 
   @Override

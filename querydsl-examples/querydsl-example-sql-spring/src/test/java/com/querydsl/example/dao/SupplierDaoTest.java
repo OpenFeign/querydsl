@@ -1,6 +1,7 @@
 package com.querydsl.example.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.example.dto.Supplier;
 import java.util.List;
 import org.junit.Test;

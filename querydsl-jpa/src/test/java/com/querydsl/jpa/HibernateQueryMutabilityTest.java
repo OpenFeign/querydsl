@@ -13,6 +13,9 @@
  */
 package com.querydsl.jpa;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.querydsl.core.QueryMutability;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.hibernate.HibernateQuery;

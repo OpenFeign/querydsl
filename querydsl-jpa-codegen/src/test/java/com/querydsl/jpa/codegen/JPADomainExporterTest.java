@@ -16,6 +16,7 @@ package com.querydsl.jpa.codegen;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

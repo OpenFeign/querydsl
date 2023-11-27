@@ -20,6 +20,7 @@ import static com.querydsl.jpa.Constants.*;
 import static com.querydsl.jpa.JPAExpressions.select;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static org.assertj.core.api.Assertions.assertThat;
+
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 import com.querydsl.core.testutil.ExcludeIn;

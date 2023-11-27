@@ -2,6 +2,8 @@ package com.querydsl.jpa;
 
 import static com.querydsl.sql.SQLExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
@@ -46,7 +48,8 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void count_via_unique() {
-    assertThat(query().from(cat).where(cat.dtype.eq("C")).select(cat.id.count()).fetchFirst()).isEqualTo(Long.valueOf(6));
+    assertThat(query().from(cat).where(cat.dtype.eq("C")).select(cat.id.count()).fetchFirst())
+        .isEqualTo(Long.valueOf(6));
   }
 
   @Test
@@ -172,13 +175,15 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void limit_offset() {
-    assertThat(query()
-        .from(cat)
-        .orderBy(cat.id.asc())
-        .limit(2)
-        .offset(2)
-        .select(cat.id, cat.name)
-        .fetch()).hasSize(2);
+    assertThat(
+            query()
+                .from(cat)
+                .orderBy(cat.id.asc())
+                .limit(2)
+                .offset(2)
+                .select(cat.id, cat.name)
+                .fetch())
+        .hasSize(2);
   }
 
   @Test
@@ -188,7 +193,8 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void list_limit_and_offset() {
-    assertThat(query().from(cat).orderBy(cat.id.asc()).offset(3).limit(3).select(cat.id).fetch()).hasSize(3);
+    assertThat(query().from(cat).orderBy(cat.id.asc()).offset(3).limit(3).select(cat.id).fetch())
+        .hasSize(3);
   }
 
   @Test
@@ -225,11 +231,13 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void list_non_path() {
-    assertThat(query()
-        .from(cat)
-        .where(cat.dtype.eq("C"))
-        .select(cat.birthdate.year(), cat.birthdate.month(), cat.birthdate.dayOfMonth())
-        .fetch()).hasSize(6);
+    assertThat(
+            query()
+                .from(cat)
+                .where(cat.dtype.eq("C"))
+                .select(cat.birthdate.year(), cat.birthdate.month(), cat.birthdate.dayOfMonth())
+                .fetch())
+        .hasSize(6);
   }
 
   @Test
@@ -276,11 +284,13 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void null_as_uniqueResult() {
-    assertThat(query()
-        .from(cat)
-        .where(cat.name.eq(UUID.randomUUID().toString()))
-        .select(cat.name)
-        .fetchOne()).isNull();
+    assertThat(
+            query()
+                .from(cat)
+                .where(cat.name.eq(UUID.randomUUID().toString()))
+                .select(cat.name)
+                .fetchOne())
+        .isNull();
   }
 
   private void print(Iterable<Tuple> rows) {
@@ -292,7 +302,8 @@ public abstract class AbstractSQLTest {
   @Test
   public void projections_duplicateColumns() {
     SAnimal cat = new SAnimal("cat");
-    assertThat(query().from(cat).select(Projections.list(cat.count(), cat.count())).fetch()).hasSize(1);
+    assertThat(query().from(cat).select(Projections.list(cat.count(), cat.count())).fetch())
+        .hasSize(1);
   }
 
   @Test
@@ -302,13 +313,15 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void single_result_multiple() {
-    assertThat(query()
-        .from(cat)
-        .orderBy(cat.id.asc())
-        .select(new Expression<?>[]{cat.id})
-        .fetchFirst()
-        .get(cat.id)
-        .intValue()).isEqualTo(1);
+    assertThat(
+            query()
+                .from(cat)
+                .orderBy(cat.id.asc())
+                .select(new Expression<?>[] {cat.id})
+                .fetchFirst()
+                .get(cat.id)
+                .intValue())
+        .isEqualTo(1);
   }
 
   @Test
@@ -407,19 +420,23 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void unique_result() {
-    assertThat(query().from(cat).orderBy(cat.id.asc()).limit(1).select(cat.id).fetchOne().intValue()).isEqualTo(1);
+    assertThat(
+            query().from(cat).orderBy(cat.id.asc()).limit(1).select(cat.id).fetchOne().intValue())
+        .isEqualTo(1);
   }
 
   @Test
   public void unique_result_multiple() {
-    assertThat(query()
-        .from(cat)
-        .orderBy(cat.id.asc())
-        .limit(1)
-        .select(new Expression<?>[]{cat.id})
-        .fetchOne()
-        .get(cat.id)
-        .intValue()).isEqualTo(1);
+    assertThat(
+            query()
+                .from(cat)
+                .orderBy(cat.id.asc())
+                .limit(1)
+                .select(new Expression<?>[] {cat.id})
+                .fetchOne()
+                .get(cat.id)
+                .intValue())
+        .isEqualTo(1);
   }
 
   @Test

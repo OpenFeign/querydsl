@@ -132,7 +132,7 @@ public class TypeTest implements InvocationHandler {
       Type type = (Type) pair.getSecond();
       assertThat(type.getValue(resultSet, 0)).as(type.toString()).isNull();
       type.setValue(statement, 0, pair.getFirst());
-      assertThat(type.getValue(resultSet, 0)).as(type.toString()).isEqualTo(pair.getFirst());
+      assertThat(pair.getFirst()).isEqualTo(type.getValue(resultSet, 0)).as(type.toString());
     }
   }
 }

@@ -13,6 +13,9 @@
  */
 package com.querydsl.jpa;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.querydsl.jpa.domain.QAnimal;
 import com.querydsl.jpa.hibernate.HibernateQueryFactory;
 import java.util.function.Supplier;

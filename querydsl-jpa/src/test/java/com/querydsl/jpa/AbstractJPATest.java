@@ -18,6 +18,8 @@ import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.mysema.commons.lang.Pair;
 import com.querydsl.core.*;
 import com.querydsl.core.group.Group;
@@ -598,8 +600,8 @@ public abstract class AbstractJPATest {
     List<Tuple> tuples =
         query().from(cat).select(cat.id, Expressions.constantAs("abc", path)).fetch();
     for (int i = 0; i < cats.size(); i++) {
-      assertThat(__P__.<error> << unknown >>/*__p0__*/p()).isEqualTo(Integer.valueOf(cats.get(i).getId()));
-      assertThat(tuples.get(i).get(path)).isEqualTo("abc");
+      assertEquals(Integer.valueOf(cats.get(i).getId()), tuples.get(i).get(cat.id));
+      assertEquals("abc", tuples.get(i).get(path));
     }
   }
 
@@ -1052,9 +1054,9 @@ public abstract class AbstractJPATest {
         query().from(cat).groupBy(cat.id).limit(1).select(cat.id).fetchResults();
 
     long catCount = query().from(cat).fetchCount();
-    assertThat(ids).hasSize(catCount);
+    assertThat(ids).hasSize((int) catCount);
     assertThat(count).isEqualTo(catCount);
-    assertThat(results.getResults()).hasSize(catCount);
+    assertThat(results.getResults()).hasSize((int) catCount);
     assertThat(results.getTotal()).isEqualTo(catCount);
   }
 
@@ -1794,15 +1796,18 @@ public abstract class AbstractJPATest {
     JPQLQuery<?> query = query().from(company).where(company.id.eq(companyId));
     String str = query.select(company.name).fetchFirst();
 
-    assertThat(query.select(name.length().subtract(11)).fetchFirst()).isEqualTo(Integer.valueOf(29));
+    assertThat(query.select(name.length().subtract(11)).fetchFirst())
+        .isEqualTo(Integer.valueOf(29));
 
     assertThat(query.select(name.substring(0, 7)).fetchFirst()).isEqualTo(str.substring(0, 7));
 
     assertThat(query.select(name.substring(15)).fetchFirst()).isEqualTo(str.substring(15));
 
-    assertThat(query.select(name.substring(name.length())).fetchFirst()).isEqualTo(str.substring(str.length()));
+    assertThat(query.select(name.substring(name.length())).fetchFirst())
+        .isEqualTo(str.substring(str.length()));
 
-    assertThat(query.select(name.substring(name.length().subtract(11))).fetchFirst()).isEqualTo(str.substring(str.length() - 11));
+    assertThat(query.select(name.substring(name.length().subtract(11))).fetchFirst())
+        .isEqualTo(str.substring(str.length() - 11));
   }
 
   @Test
@@ -1935,7 +1940,7 @@ public abstract class AbstractJPATest {
     float val = query().from(cat).select(cat.floatProperty.sum()).fetchFirst();
     FloatProjection projection =
         query().from(cat).select(new QFloatProjection(cat.floatProperty.sum())).fetchFirst();
-    assertThat(projection.val).isCloseTo(val, within(0.001));
+    assertThat(projection.val).isCloseTo(val, within(0.001f));
   }
 
   @Test

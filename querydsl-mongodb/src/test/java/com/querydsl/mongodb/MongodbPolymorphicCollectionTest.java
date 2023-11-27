@@ -1,6 +1,7 @@
 package com.querydsl.mongodb;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;

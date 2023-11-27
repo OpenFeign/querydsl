@@ -1,5 +1,7 @@
 package com.querydsl.spatial;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.geolatte.geom.*;
 import org.junit.Test;
 

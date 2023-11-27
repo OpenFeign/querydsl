@@ -14,6 +14,7 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.core.Target;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.jpa.domain.Cat;

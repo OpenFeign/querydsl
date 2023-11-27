@@ -15,6 +15,8 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 import com.querydsl.core.types.EntityPath;

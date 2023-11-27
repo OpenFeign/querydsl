@@ -13,8 +13,7 @@
  */
 package com.querydsl.jpa.domain;
 
-import static org.assertj.core.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.annotations.QueryInit;
 import java.io.Serializable;
@@ -39,17 +38,7 @@ public class Account implements Serializable {
 
   @Test
   public void test() {
-    try {
-      QAccount.class.getField("serialVersionUID");
-      fail("Got serialVersionUID");
-    } catch (Exception e) {
-      // expected
-    }
-    try {
-      QAccount.class.getField("transientField");
-      fail("Got transientField");
-    } catch (Exception e) {
-      // expected
-    }
+    assertThrows(Exception.class, () -> QAccount.class.getField("serialVersionUID"));
+    assertThrows(Exception.class, () -> QAccount.class.getField("transientField"));
   }
 }

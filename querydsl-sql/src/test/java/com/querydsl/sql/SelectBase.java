@@ -17,6 +17,7 @@ package com.querydsl.sql;
 import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.CloseableIterator;
@@ -1335,7 +1336,7 @@ public class SelectBase extends AbstractBaseTest {
     assertThat(firstResult(ConstantImpl.create(1)).intValue()).isEqualTo(1L);
     assertThat(firstResult(ConstantImpl.create(2L)).longValue()).isEqualTo(2L);
     assertThat(firstResult(ConstantImpl.create(3.0))).isCloseTo(3.0, within(0.001));
-    assertThat(firstResult(ConstantImpl.create(4.0f))).isCloseTo(4.0f, within(0.001));
+    assertThat(firstResult(ConstantImpl.create(4.0f))).isCloseTo(4.0f, within(0.001f));
     assertThat(firstResult(ConstantImpl.create(true))).isEqualTo(true);
     assertThat(firstResult(ConstantImpl.create(false))).isEqualTo(false);
     assertThat(firstResult(ConstantImpl.create("abc"))).isEqualTo("abc");
@@ -1922,18 +1923,18 @@ public class SelectBase extends AbstractBaseTest {
                   .fetch())
           .hasSize(1);
     } else {
-      try {
-        query()
-            .from(survey)
-            .forShare()
-            .where(survey.id.isNotNull())
-            .select(survey.id)
-            .fetch()
-            .size();
-        fail("");
-      } catch (QueryException e) {
-        assertThat(e.getMessage()).isEqualTo("Using forShare() is not supported");
-      }
+      QueryException e =
+          assertThrows(
+              QueryException.class,
+              () ->
+                  query()
+                      .from(survey)
+                      .forShare()
+                      .where(survey.id.isNotNull())
+                      .select(survey.id)
+                      .fetch()
+                      .size());
+      assertThat(e.getMessage()).isEqualTo("Using forShare() is not supported");
     }
   }
 

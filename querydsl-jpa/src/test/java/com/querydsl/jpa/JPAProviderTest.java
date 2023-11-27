@@ -1,5 +1,8 @@
 package com.querydsl.jpa;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.querydsl.jpa.impl.JPAProvider;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

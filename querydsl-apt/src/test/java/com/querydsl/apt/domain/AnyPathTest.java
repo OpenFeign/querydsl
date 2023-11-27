@@ -1,5 +1,7 @@
 package com.querydsl.apt.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import java.util.HashSet;

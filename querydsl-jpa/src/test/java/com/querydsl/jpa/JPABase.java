@@ -16,6 +16,7 @@ package com.querydsl.jpa;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
@@ -284,7 +285,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
     for (Tuple row : rows) {
       assertThat(row).isNotNull();
       assertThat(row.size()).isEqualTo(1);
-      assertThat(row.get(Expressions.nullExpression())).isNull();
+      assertThat(row.get(Expressions.<Void>nullExpression())).isNull();
     }
   }
 

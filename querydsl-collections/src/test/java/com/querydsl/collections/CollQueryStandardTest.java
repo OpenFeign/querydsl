@@ -14,6 +14,8 @@
 package com.querydsl.collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.QueryExecution;
@@ -120,7 +122,7 @@ public class CollQueryStandardTest {
     for (Tuple tuple : tuples) {
       assertThat(tuple).isNotNull();
       assertThat(tuple.size()).isEqualTo(1); // THIS FAILS WITH NPE
-      assertThat(tuple.get(Expressions.nullExpression())).isNull();
+      assertThat(tuple.get(Expressions.<Void>nullExpression())).isNull();
     }
   }
 

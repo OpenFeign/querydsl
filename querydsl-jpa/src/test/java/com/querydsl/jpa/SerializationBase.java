@@ -14,6 +14,7 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.testutil.Serialization;

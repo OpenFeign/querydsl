@@ -56,8 +56,8 @@ public class AnyUsageTest {
   @Test
   public void test() {
     QAnyUsageTest_Dealer dealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
-    assertNotNull(dealer);
-    assertNotNull(dealer.company);
+    assertThat(dealer).isNotNull();
+    assertThat(dealer.company).isNotNull();
   }
 
   @Test

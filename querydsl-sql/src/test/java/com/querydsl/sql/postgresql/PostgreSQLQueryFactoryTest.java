@@ -13,6 +13,9 @@
  */
 package com.querydsl.sql.postgresql;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.domain.QSurvey;
 import java.sql.Connection;

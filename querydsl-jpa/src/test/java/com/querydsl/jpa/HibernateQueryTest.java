@@ -14,6 +14,7 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.QEmployee;
@@ -39,6 +40,7 @@ public class HibernateQueryTest {
     QEmployee employee = QEmployee.employee;
     hqlQuery.from(employee);
     hqlQuery.innerJoin(employee.user, QUser.user);
-    assertThat(hqlQuery.toString()).isEqualTo("select employee\nfrom Employee employee\n  inner join employee.user as user");
+    assertThat(hqlQuery.toString())
+        .isEqualTo("select employee\nfrom Employee employee\n  inner join employee.user as user");
   }
 }

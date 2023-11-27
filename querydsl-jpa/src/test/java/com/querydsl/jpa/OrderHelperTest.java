@@ -2,6 +2,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.core.types.dsl.PathBuilder;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +23,18 @@ public class OrderHelperTest {
     JPQLQuery<?> query = select(entity);
     query.from(entity);
     OrderHelper.orderBy(query, entity, order);
-    assertThat(query.toString()).isEqualTo("select project\n"
-        + "from Object project\n"
-        + "  left join project.customer as customer\n"
-        + "  left join project.department as department\n"
-        + "  left join department.superior as department_superior\n"
-        + "  left join customer.company as customer_company\n"
-        + "  left join project.previousProject as previousProject\n"
-        + "  left join previousProject.customer as previousProject_customer\n"
-        + "  left join previousProject_customer.company as previousProject_customer_company\n"
-        + "order by customer.name asc, department_superior.name asc, customer_company.name asc,"
-        + " previousProject_customer_company.name asc, department.name asc");
+    assertThat(query.toString())
+        .isEqualTo(
+            "select project\n"
+                + "from Object project\n"
+                + "  left join project.customer as customer\n"
+                + "  left join project.department as department\n"
+                + "  left join department.superior as department_superior\n"
+                + "  left join customer.company as customer_company\n"
+                + "  left join project.previousProject as previousProject\n"
+                + "  left join previousProject.customer as previousProject_customer\n"
+                + "  left join previousProject_customer.company as previousProject_customer_company\n"
+                + "order by customer.name asc, department_superior.name asc, customer_company.name asc,"
+                + " previousProject_customer_company.name asc, department.name asc");
   }
 }

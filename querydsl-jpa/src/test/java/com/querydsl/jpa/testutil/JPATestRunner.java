@@ -49,9 +49,12 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
 
   @Override
   protected List<MethodRule> rules(Object test) {
-    assertThat(test instanceof JPATest).as(String.format(
-        "In order to use the %s for %s, it should (directly or indirectly) implement %s",
-        JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class)).isTrue();
+    assertThat(test instanceof JPATest)
+        .as(
+            String.format(
+                "In order to use the %s for %s, it should (directly or indirectly) implement %s",
+                JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class))
+        .isTrue();
 
     List<MethodRule> rules = super.rules(test);
     rules.add(

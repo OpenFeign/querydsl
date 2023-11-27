@@ -16,6 +16,7 @@
 package com.querydsl.mongodb.document;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.DBRef;
 import com.querydsl.core.types.Expression;

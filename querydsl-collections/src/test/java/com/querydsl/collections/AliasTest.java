@@ -16,8 +16,7 @@ package com.querydsl.collections;
 import static com.querydsl.collections.CollQueryFactory.from;
 import static com.querydsl.core.alias.Alias.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.dsl.Expressions;
@@ -45,9 +44,8 @@ public class AliasTest extends AbstractQueryTest {
   public void aliasVariations1() {
     // 1st
     QCat cat = new QCat("cat");
-    assertEquals(
-        Arrays.asList("Kitty", "Bob", "Alex", "Francis"),
-        from(cat, cats).where(cat.kittens.size().gt(0)).select(cat.name).fetch());
+    assertThat(from(cat, cats).where(cat.kittens.size().gt(0)).select(cat.name).fetch())
+        .isEqualTo(Arrays.asList("Kitty", "Bob", "Alex", "Francis"));
 
     // 2nd
     Cat c = alias(Cat.class, "cat");
@@ -59,9 +57,7 @@ public class AliasTest extends AbstractQueryTest {
   public void aliasVariations2() {
     // 1st
     QCat cat = new QCat("cat");
-    assertEquals(
-        Collections.emptyList(),
-        from(cat, cats).where(cat.name.matches("fri.*")).select(cat.name).fetch());
+    assertThat(from(cat, cats).where(cat.name.matches("fri.*")).select(cat.name).fetch()).isEmpty();
 
     // 2nd
     Cat c = alias(Cat.class, "cat");
@@ -79,15 +75,12 @@ public class AliasTest extends AbstractQueryTest {
     from(c, cats).where($(c.getBirthdate()).gt(new Date())).select($(c)).iterate();
 
     // 2
-    try {
-      from(c, cats).where($(c.getMate().getName().toUpperCase()).eq("MOE"));
-      fail("expected NPE");
-    } catch (NullPointerException ne) {
-      // expected
-    }
+    assertThrows(
+        NullPointerException.class,
+        () -> from(c, cats).where($(c.getMate().getName().toUpperCase()).eq("MOE")));
 
     // 3
-    assertEquals(cat.name, $(c.getName()));
+    assertThat($(c.getName())).isEqualTo(cat.name);
 
     // 4
     from(c, cats)

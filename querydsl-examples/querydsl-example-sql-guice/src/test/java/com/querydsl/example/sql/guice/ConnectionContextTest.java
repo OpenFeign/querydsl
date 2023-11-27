@@ -1,6 +1,7 @@
 package com.querydsl.example.sql.guice;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.inject.Inject;
 import org.junit.After;
 import org.junit.Test;

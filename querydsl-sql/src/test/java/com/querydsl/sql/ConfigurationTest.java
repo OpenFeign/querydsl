@@ -14,6 +14,7 @@
 package com.querydsl.sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.alias.Gender;
 import com.querydsl.sql.domain.QSurvey;

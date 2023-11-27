@@ -15,6 +15,7 @@ package com.querydsl.collections;
 
 import static com.querydsl.collections.CollQueryFactory.from;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;

@@ -14,11 +14,11 @@ public class CollectionAnyTest extends AbstractQueryTest {
     Cat a = new Cat("a");
     a.setKittens(null);
 
-    assertEquals(
-        0,
-        CollQueryFactory.<Cat>from(cat, Collections.<Cat>singletonList(a))
-            .where(cat.kittens.any().name.startsWith("a"))
-            .fetchCount());
+    assertThat(
+            CollQueryFactory.<Cat>from(cat, Collections.<Cat>singletonList(a))
+                .where(cat.kittens.any().name.startsWith("a"))
+                .fetchCount())
+        .isZero();
   }
 
   @Test

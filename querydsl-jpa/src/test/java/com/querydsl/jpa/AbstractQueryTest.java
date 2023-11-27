@@ -14,6 +14,7 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.core.types.Expression;
 
 public abstract class AbstractQueryTest {

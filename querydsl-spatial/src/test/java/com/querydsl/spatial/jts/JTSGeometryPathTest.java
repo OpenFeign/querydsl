@@ -1,5 +1,7 @@
 package com.querydsl.spatial.jts;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.vividsolutions.jts.geom.*;
 import org.junit.Test;
 

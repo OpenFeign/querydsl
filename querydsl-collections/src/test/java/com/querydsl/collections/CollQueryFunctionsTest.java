@@ -24,7 +24,7 @@ public class CollQueryFunctionsTest {
   public void coalesce() {
     assertThat(CollQueryFunctions.coalesce("1", null)).isEqualTo("1");
     assertThat(CollQueryFunctions.coalesce(null, "1", "2")).isEqualTo("1");
-    assertThat(CollQueryFunctions.coalesce(null, null)).isNull();
+    assertThat(CollQueryFunctions.coalesce((Integer) null, null)).isNull();
   }
 
   @Test

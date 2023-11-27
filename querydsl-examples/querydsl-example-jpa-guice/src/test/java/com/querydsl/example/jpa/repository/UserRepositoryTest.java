@@ -1,6 +1,7 @@
 package com.querydsl.example.jpa.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.example.jpa.model.User;
 import javax.inject.Inject;
 import org.junit.Test;

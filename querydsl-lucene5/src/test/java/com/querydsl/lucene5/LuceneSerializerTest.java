@@ -15,7 +15,6 @@ package com.querydsl.lucene5;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.DefaultQueryMetadata;

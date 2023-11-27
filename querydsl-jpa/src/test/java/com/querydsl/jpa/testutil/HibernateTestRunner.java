@@ -14,6 +14,7 @@
 package com.querydsl.jpa.testutil;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.jpa.HibernateTest;
 import com.querydsl.jpa.Mode;
 import com.querydsl.jpa.domain.Domain;
@@ -53,9 +54,12 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
 
   @Override
   protected List<MethodRule> rules(Object test) {
-    assertThat(test instanceof HibernateTest).as(String.format(
-        "In order to use the %s for %s, it should (directly or indirectly) implement %s",
-        HibernateTestRunner.class.getSimpleName(), test.getClass(), HibernateTest.class)).isTrue();
+    assertThat(test instanceof HibernateTest)
+        .as(
+            String.format(
+                "In order to use the %s for %s, it should (directly or indirectly) implement %s",
+                HibernateTestRunner.class.getSimpleName(), test.getClass(), HibernateTest.class))
+        .isTrue();
 
     List<MethodRule> rules = super.rules(test);
     rules.add(

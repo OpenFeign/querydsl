@@ -1,6 +1,7 @@
 package com.querydsl.example.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.example.dto.CustomerPaymentMethod;
 import com.querydsl.example.dto.Order;
 import com.querydsl.example.dto.OrderProduct;

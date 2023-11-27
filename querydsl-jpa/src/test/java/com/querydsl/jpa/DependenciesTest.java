@@ -14,6 +14,7 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.IOException;
 import jdepend.framework.JDepend;
 import org.junit.Test;

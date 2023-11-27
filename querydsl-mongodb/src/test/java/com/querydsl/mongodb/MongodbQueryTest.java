@@ -15,6 +15,7 @@ package com.querydsl.mongodb;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;

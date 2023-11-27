@@ -14,6 +14,7 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.apt.hibernate.HibernateAnnotationProcessor;
 import com.querydsl.apt.jpa.JPAAnnotationProcessor;
 import com.querydsl.codegen.CodegenModule;
@@ -53,6 +54,7 @@ public class PackageVerification {
     Class cl = oneJarClassLoader.loadClass(processor.getName()); // querydsl-apt
     cl.newInstance();
     String resourceKey = "META-INF/services/javax.annotation.processing.Processor";
-    assertThat(new Scanner(oneJarClassLoader.findResource(resourceKey).openStream()).nextLine()).isEqualTo(processor.getName());
+    assertThat(new Scanner(oneJarClassLoader.findResource(resourceKey).openStream()).nextLine())
+        .isEqualTo(processor.getName());
   }
 }

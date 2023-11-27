@@ -1,6 +1,7 @@
 package com.querydsl.example.sql.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.Usert;
 import java.util.List;

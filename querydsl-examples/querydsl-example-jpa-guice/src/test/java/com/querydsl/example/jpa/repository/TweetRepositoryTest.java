@@ -2,6 +2,7 @@ package com.querydsl.example.jpa.repository;
 
 import static com.querydsl.example.jpa.model.QTweet.tweet;
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.example.jpa.model.Tweet;
 import com.querydsl.example.jpa.model.User;
 import java.util.ArrayList;
@@ -82,12 +83,16 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     for (int i = 0; i < 100; i++) {
       repository.save(new Tweet(poster, "spamming @dr_frank " + i, users.subList(0, 1), null));
     }
-    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(1)))).isEmpty();
+    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(1))))
+        .isEmpty();
 
-    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(0)))).hasSize(100);
+    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(0))))
+        .hasSize(100);
 
-    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.any().username.eq("duplo"))).isEmpty();
+    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.any().username.eq("duplo")))
+        .isEmpty();
 
-    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.any().username.eq("dr_frank"))).hasSize(100);
+    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.any().username.eq("dr_frank")))
+        .hasSize(100);
   }
 }

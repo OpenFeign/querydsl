@@ -1,6 +1,7 @@
 package com.querydsl.sql.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Array;
 import java.sql.Connection;
@@ -68,7 +69,7 @@ public class ArrayTypeTest {
 
   @Test
   public void get_generic_object_array() throws SQLException {
-    Object[] value = new Object[] {1, 2, 3};
+    Integer[] value = new Integer[] {1, 2, 3};
     ArrayType<Integer[]> type = new ArrayType<>(Integer[].class, "INTEGER ARRAY");
 
     ResultSet rs = EasyMock.createMock(ResultSet.class);

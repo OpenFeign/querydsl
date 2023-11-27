@@ -1,6 +1,7 @@
 package com.querydsl.jpa.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.jpa.domain.Cat;
 import java.util.Collection;
 import javax.persistence.EntityManagerFactory;
