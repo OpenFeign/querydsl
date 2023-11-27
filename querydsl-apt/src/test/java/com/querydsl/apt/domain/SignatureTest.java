@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.types.dsl.EntityPathBase;
@@ -32,12 +32,12 @@ public class SignatureTest {
 
   @Test
   public void aPropertyChangeSupported() {
-    assertEquals(
-        EntityPathBase.class, QSignatureTest_APropertyChangeSupported.class.getSuperclass());
+    assertThat(QSignatureTest_APropertyChangeSupported.class.getSuperclass())
+        .isEqualTo(EntityPathBase.class);
   }
 
   @Test
   public void aValueObject() {
-    assertEquals(EntityPathBase.class, QSignatureTest_AValueObject.class.getSuperclass());
+    assertThat(QSignatureTest_AValueObject.class.getSuperclass()).isEqualTo(EntityPathBase.class);
   }
 }
