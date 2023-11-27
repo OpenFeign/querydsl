@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
@@ -44,16 +44,18 @@ public class Embeddable2Test {
   @Test
   @Ignore
   public void mapped_superClass_constructors() throws SecurityException, NoSuchMethodException {
-    assertNotNull(
-        QEmbeddable2Test_SomeMappedSuperClassHavingMyEmbeddable.class.getConstructor(
-            Class.class, PathMetadata.class, PathInits.class));
+    assertThat(
+            QEmbeddable2Test_SomeMappedSuperClassHavingMyEmbeddable.class.getConstructor(
+                Class.class, PathMetadata.class, PathInits.class))
+        .isNotNull();
   }
 
   @Test
   @Ignore
   public void entity_constructors() throws SecurityException, NoSuchMethodException {
-    assertNotNull(
-        QEmbeddable2Test_SomeEntityClassHavingMyEmbeddable.class.getConstructor(
-            Class.class, PathMetadata.class, PathInits.class));
+    assertThat(
+            QEmbeddable2Test_SomeEntityClassHavingMyEmbeddable.class.getConstructor(
+                Class.class, PathMetadata.class, PathInits.class))
+        .isNotNull();
   }
 }
