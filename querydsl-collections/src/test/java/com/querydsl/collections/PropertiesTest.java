@@ -1,6 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,20 +12,18 @@ public class PropertiesTest {
   public void hidden() {
     QStateHistory history = QStateHistory.stateHistory;
     List<StateHistory> histories = Collections.singletonList(new StateHistory());
-    assertEquals(
-        1,
-        CollQueryFactory.from(history, histories).where(history.changedAt.isNull()).fetch().size());
+    assertThat(CollQueryFactory.from(history, histories).where(history.changedAt.isNull()).fetch())
+        .hasSize(1);
   }
 
   @Test
   public void hidden2() {
     QStateHistoryOwner historyOwner = QStateHistoryOwner.stateHistoryOwner;
     List<StateHistoryOwner> historyOwners = Collections.singletonList(new StateHistoryOwner());
-    assertEquals(
-        1,
-        CollQueryFactory.from(historyOwner, historyOwners)
-            .where(historyOwner.stateHistory.isNull())
-            .fetch()
-            .size());
+    assertThat(
+            CollQueryFactory.from(historyOwner, historyOwners)
+                .where(historyOwner.stateHistory.isNull())
+                .fetch())
+        .hasSize(1);
   }
 }
