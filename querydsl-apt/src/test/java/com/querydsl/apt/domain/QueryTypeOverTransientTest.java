@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
@@ -41,11 +41,11 @@ public class QueryTypeOverTransientTest {
 
   @Test
   public void entity_reference_is_available() {
-    assertNotNull(QQueryTypeOverTransientTest_Entity.entity.reference);
+    assertThat(QQueryTypeOverTransientTest_Entity.entity.reference).isNotNull();
   }
 
   @Test
   public void entity2_reference_is_available() {
-    assertNotNull(QQueryTypeOverTransientTest_Entity2.entity2.reference);
+    assertThat(QQueryTypeOverTransientTest_Entity2.entity2.reference).isNotNull();
   }
 }
