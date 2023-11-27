@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.inheritance;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
@@ -65,22 +65,22 @@ public class Inheritance6Test {
 
   @Test
   public void gloss_subtype_should_contain_fields_from_superclass() {
-    assertEquals(String.class, QInheritance6Test_Gloss.gloss.value.getType());
+    assertThat(QInheritance6Test_Gloss.gloss.value.getType()).isEqualTo(String.class);
   }
 
   @Test
   public void intermediate_superclass_should_contain_fields_from_top_superclass() {
     QInheritance6Test_Translation translation = QInheritance6Test_Gloss.gloss._super;
-    assertEquals(DateTimePath.class, translation.createdOn.getClass());
+    assertThat(translation.createdOn.getClass()).isEqualTo(DateTimePath.class);
   }
 
   @Test
   public void gloss_subtype_should_contain_fields_from_top_superclass() {
-    assertEquals(DateTimePath.class, QInheritance6Test_Gloss.gloss.createdOn.getClass());
+    assertThat(QInheritance6Test_Gloss.gloss.createdOn.getClass()).isEqualTo(DateTimePath.class);
   }
 
   @Test
   public void gloss_subtype_should_contain_id_from_top_superclass() {
-    assertEquals(NumberPath.class, QInheritance6Test_Gloss.gloss.id.getClass());
+    assertThat(QInheritance6Test_Gloss.gloss.id.getClass()).isEqualTo(NumberPath.class);
   }
 }
