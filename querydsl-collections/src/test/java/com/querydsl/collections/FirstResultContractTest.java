@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -21,6 +21,7 @@ public class FirstResultContractTest extends AbstractQueryTest {
 
   @Test
   public void singleResult() {
-    assertNotNull(CollQueryFactory.from(cat, cats).where(cat.name.isNotNull()).fetchFirst());
+    assertThat(CollQueryFactory.from(cat, cats).where(cat.name.isNotNull()).fetchFirst())
+        .isNotNull();
   }
 }
