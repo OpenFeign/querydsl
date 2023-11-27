@@ -15,7 +15,6 @@ package com.querydsl.collections;
 
 import static com.querydsl.core.group.GroupBy.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.group.Group;
 import com.querydsl.core.types.ConstructorExpression;
@@ -137,10 +136,10 @@ public class GroupByTest {
             .transform(groupBy(post.id).as(post.name, set(comment.id), list(comment.text)));
 
     Group group = results.get(1);
-    assertEquals(toInt(1), group.getOne(post.id));
-    assertEquals("Post 1", group.getOne(post.name));
-    assertEquals(toSet(1), group.getSet(comment.id));
-    assertEquals(Collections.singletonList("Comment 1"), group.getList(comment.text));
+    assertThat(group.getOne(post.id)).isEqualTo(toInt(1));
+    assertThat(group.getOne(post.name)).isEqualTo("Post 1");
+    assertThat(group.getSet(comment.id)).isEqualTo(toSet(1));
+    assertThat(group.getList(comment.text)).isEqualTo(Collections.singletonList("Comment 1"));
   }
 
   @Test
@@ -153,10 +152,10 @@ public class GroupByTest {
             .transform(groupBy(post.id).as(post.name, set(comment.id), list(comment.text)));
 
     Group group = results.get(null);
-    assertNull(group.getOne(post.id));
-    assertEquals("null post", group.getOne(post.name));
-    assertEquals(toSet(7, 8), group.getSet(comment.id));
-    assertEquals(Arrays.asList("comment 7", "comment 8"), group.getList(comment.text));
+    assertThat(group.getOne(post.id)).isNull();
+    assertThat(group.getOne(post.name)).isEqualTo("null post");
+    assertThat(group.getSet(comment.id)).isEqualTo(toSet(7, 8));
+    assertThat(group.getList(comment.text)).isEqualTo(Arrays.asList("comment 7", "comment 8"));
   }
 
   //    @Test(expected=NoSuchElementException.class)
