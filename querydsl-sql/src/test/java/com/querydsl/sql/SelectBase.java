@@ -1471,7 +1471,7 @@ public class SelectBase extends AbstractBaseTest {
     for (Tuple tuple : tuples) {
       String firstName = tuple.get(employee.firstname);
       String lastName = tuple.get(employee.lastname);
-      assertEquals(firstName + lastName, tuple.get(concat));
+      assertThat(tuple.get(concat)).isEqualTo(firstName + lastName);
     }
   }
 
