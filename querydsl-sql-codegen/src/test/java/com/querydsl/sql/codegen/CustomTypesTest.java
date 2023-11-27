@@ -14,7 +14,6 @@
 package com.querydsl.sql.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.alias.Gender;
 import com.querydsl.sql.*;
@@ -95,8 +94,8 @@ public class CustomTypesTest extends AbstractJDBCTest {
 
     // query
     SQLQuery<?> query = new SQLQuery<Void>(connection, configuration);
-    assertEquals(
-        Gender.MALE, query.from(person).where(person.id.eq(10)).select(person.gender).fetchOne());
+    assertThat(query.from(person).where(person.id.eq(10)).select(person.gender).fetchOne())
+        .isEqualTo(Gender.MALE);
 
     // update
     SQLUpdateClause update = new SQLUpdateClause(connection, configuration, person);
@@ -107,7 +106,7 @@ public class CustomTypesTest extends AbstractJDBCTest {
 
     // query
     query = new SQLQuery<Void>(connection, configuration);
-    assertEquals(
-        Gender.FEMALE, query.from(person).where(person.id.eq(10)).select(person.gender).fetchOne());
+    assertThat(query.from(person).where(person.id.eq(10)).select(person.gender).fetchOne())
+        .isEqualTo(Gender.FEMALE);
   }
 }
