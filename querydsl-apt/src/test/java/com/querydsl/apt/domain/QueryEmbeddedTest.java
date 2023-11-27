@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
@@ -48,17 +48,17 @@ public class QueryEmbeddedTest {
 
   @Test
   public void parent_child_childProperty() {
-    assertNotNull(QQueryEmbeddedTest_Parent.parent.child.childProperty);
+    assertThat(QQueryEmbeddedTest_Parent.parent.child.childProperty).isNotNull();
   }
 
   @Test
   public void parent_children_any_childProperty() {
-    assertNotNull(QQueryEmbeddedTest_Parent2.parent2.children.any().childProperty);
+    assertThat(QQueryEmbeddedTest_Parent2.parent2.children.any().childProperty).isNotNull();
   }
 
   @Test
   public void parent_children2_mapAccess() {
-    assertNotNull(QQueryEmbeddedTest_Parent2.parent2.children2.containsKey("XXX"));
-    assertNotNull(QQueryEmbeddedTest_Parent2.parent2.children2.get("XXX").childProperty);
+    assertThat(QQueryEmbeddedTest_Parent2.parent2.children2.containsKey("XXX")).isNotNull();
+    assertThat(QQueryEmbeddedTest_Parent2.parent2.children2.get("XXX").childProperty).isNotNull();
   }
 }
