@@ -14,7 +14,6 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.testutil.Serialization;
@@ -62,8 +61,8 @@ public class SerializationBase implements JPATest {
     Predicate where = cat.kittens.any().name.eq("Ruth234");
     Predicate where2 = Serialization.serialize(where);
 
-    assertEquals(0, query().from(cat).where(where).fetchCount());
-    assertEquals(0, query().from(cat).where(where2).fetchCount());
+    assertThat(query().from(cat).where(where).fetchCount()).isEqualTo(0);
+    assertThat(query().from(cat).where(where2).fetchCount()).isEqualTo(0);
   }
 
   @Test
