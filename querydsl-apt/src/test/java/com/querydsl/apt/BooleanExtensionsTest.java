@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +41,8 @@ public class BooleanExtensionsTest extends AbstractProcessorTest {
             Files.readAllBytes(
                 Paths.get("target", "booleanExtensions", "com", "querydsl", "QExampleEntity.java")),
             StandardCharsets.UTF_8);
-    assertTrue(qtypeContent.contains("ext.java.lang.QBoolean booleanProp"));
-    assertTrue(qtypeContent.contains("ext.java.lang.QBoolean booleanProp2"));
+    assertThat(qtypeContent).contains("ext.java.lang.QBoolean booleanProp");
+    assertThat(qtypeContent).contains("ext.java.lang.QBoolean booleanProp2");
   }
 
   @Test
@@ -58,7 +58,7 @@ public class BooleanExtensionsTest extends AbstractProcessorTest {
                 Paths.get(
                     "target", "booleanExtensions2", "com", "querydsl", "QExampleEntity.java")),
             StandardCharsets.UTF_8);
-    assertTrue(qtypeContent.contains("ext.java.lang.QBoolean booleanProp"));
-    assertTrue(qtypeContent.contains("ext.java.lang.QBoolean booleanProp2"));
+    assertThat(qtypeContent).contains("ext.java.lang.QBoolean booleanProp");
+    assertThat(qtypeContent).contains("ext.java.lang.QBoolean booleanProp2");
   }
 }

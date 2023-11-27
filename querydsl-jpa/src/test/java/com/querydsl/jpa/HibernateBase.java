@@ -13,8 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.Tuple;
@@ -84,8 +83,8 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   public void query_exposure() {
     //        save(new Cat());
     List<Cat> results = query().from(cat).select(cat).createQuery().list();
-    assertNotNull(results);
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotNull();
+    assertThat(results).isNotEmpty();
   }
 
   @Test
@@ -112,9 +111,9 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   public void scroll() throws IOException {
     CloseableIterator<Cat> cats =
         new ScrollableResultsIterator<Cat>(query().from(cat).select(cat).createQuery().scroll());
-    assertTrue(cats.hasNext());
+    assertThat(cats.hasNext()).isTrue();
     while (cats.hasNext()) {
-      assertNotNull(cats.next());
+      assertThat(cats.next()).isNotNull();
     }
     cats.close();
   }
@@ -124,10 +123,10 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
     CloseableIterator<Tuple> rows =
         new ScrollableResultsIterator<Tuple>(
             query().from(cat).select(cat.name, cat.birthdate).createQuery().scroll());
-    assertTrue(rows.hasNext());
+    assertThat(rows.hasNext()).isTrue();
     while (rows.hasNext()) {
       Tuple row = rows.next();
-      assertEquals(2, row.size());
+      assertThat(row.size()).isEqualTo(2);
     }
     rows.close();
   }
@@ -137,7 +136,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   public void createQuery() {
     List<Tuple> rows = query().from(cat).select(cat.id, cat.name).createQuery().list();
     for (Tuple row : rows) {
-      assertEquals(2, row.size());
+      assertThat(row.size()).isEqualTo(2);
     }
   }
 
@@ -147,7 +146,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
     List<Tuple> rows =
         query().from(cat).select(new Expression[] {cat.id, cat.name}).createQuery().list();
     for (Tuple row : rows) {
-      assertEquals(2, row.size());
+      assertThat(row.size()).isEqualTo(2);
     }
   }
 
@@ -155,7 +154,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   public void createQuery3() {
     List<String> rows = query().from(cat).select(cat.name).createQuery().list();
     for (String row : rows) {
-      assertTrue(row instanceof String);
+      assertThat(row instanceof String).isTrue();
     }
   }
 }

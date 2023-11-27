@@ -1,8 +1,8 @@
 package com.querydsl.maven;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.codegen.GeneratedAnnotationResolver;
 import java.io.File;
@@ -34,7 +34,7 @@ public class GenericExporterMojoTest {
     GenericExporterMojo mojo = prepareMojo();
     mojo.execute();
 
-    assertTrue(Q_ENTITY_SOURCE_FILE.exists());
+    assertThat(Q_ENTITY_SOURCE_FILE).exists();
   }
 
   @Test

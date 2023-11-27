@@ -1,9 +1,7 @@
 package com.querydsl.example.sql.repository;
 
 import static com.querydsl.example.sql.model.QTweet.tweet;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.Usert;
 import javax.inject.Inject;
@@ -31,7 +29,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     tweet.setContent(content);
     tweet.setPosterId(posterId);
     Long id = repository.save(tweet);
-    assertEquals(content, repository.findById(id).getContent());
+    assertThat(repository.findById(id).getContent()).isEqualTo(content);
   }
 
   @Test
@@ -42,7 +40,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     tweet.setPosterId(posterId);
     repository.save(tweet);
 
-    assertFalse(repository.findOfUser("dr_frank").isEmpty());
+    assertThat(repository.findOfUser("dr_frank")).isNotEmpty();
   }
 
   @Test
@@ -57,7 +55,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     tweet.setPosterId(posterId);
     Long tweetId = repository.save(tweet, otherId);
 
-    assertEquals(tweetId, repository.findWithMentioned(otherId).get(0).getId());
+    assertThat(repository.findWithMentioned(otherId).get(0).getId()).isEqualTo(tweetId);
   }
 
   @Test
@@ -77,6 +75,6 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     tw3.setContent("#EpicFail");
     repository.save(tw3);
 
-    assertEquals(1, repository.findAll(tweet.content.contains("#YOLO")).size());
+    assertThat(repository.findAll(tweet.content.contains("#YOLO"))).hasSize(1);
   }
 }

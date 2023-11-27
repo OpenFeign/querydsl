@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.PathBuilder;
 import org.junit.Test;
@@ -54,8 +54,8 @@ public class QBeanPropertyTest {
             entity.getNumber("eId", Integer.class));
 
     Entity bean = beanProjection.newInstance(1, 2);
-    assertEquals(Integer.valueOf(1), bean.getcId());
-    assertEquals(Integer.valueOf(2), bean.geteId());
+    assertThat(bean.getcId()).isEqualTo(Integer.valueOf(1));
+    assertThat(bean.geteId()).isEqualTo(Integer.valueOf(2));
   }
 
   @Test
@@ -68,7 +68,7 @@ public class QBeanPropertyTest {
             entity.getNumber("eId", Integer.class));
 
     Entity bean = beanProjection.newInstance(1, 2);
-    assertEquals(Integer.valueOf(1), bean.getcId());
-    assertEquals(Integer.valueOf(2), bean.geteId());
+    assertThat(bean.getcId()).isEqualTo(Integer.valueOf(1));
+    assertThat(bean.geteId()).isEqualTo(Integer.valueOf(2));
   }
 }

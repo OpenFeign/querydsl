@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.QBeanPropertyTest.Entity;
 import com.querydsl.core.types.dsl.Expressions;
@@ -68,7 +68,7 @@ public class ProjectionsTest {
             String[].class,
             ExpressionUtils.path(String.class, "p1"),
             ExpressionUtils.path(String.class, "p2"));
-    assertEquals(String[].class, expr.newInstance("1", "2").getClass());
+    assertThat(expr.newInstance("1", "2").getClass()).isEqualTo(String[].class);
   }
 
   @Test
@@ -80,18 +80,18 @@ public class ProjectionsTest {
             entity.getNumber("cId", Integer.class),
             entity.getNumber("eId", Integer.class));
 
-    assertEquals(Entity.class, beanProjection.newInstance(1, 2).getClass());
+    assertThat(beanProjection.newInstance(1, 2).getClass()).isEqualTo(Entity.class);
   }
 
   @Test
   public void constructor() {
     Expression<Long> longVal = ConstantImpl.create(1L);
     Expression<String> stringVal = ConstantImpl.create("");
-    assertEquals(
-        ProjectionExample.class,
-        Projections.constructor(ProjectionExample.class, longVal, stringVal)
-            .newInstance(0L, "")
-            .getClass());
+    assertThat(
+            Projections.constructor(ProjectionExample.class, longVal, stringVal)
+                .newInstance(0L, "")
+                .getClass())
+        .isEqualTo(ProjectionExample.class);
   }
 
   @Test
@@ -99,7 +99,7 @@ public class ProjectionsTest {
     Expression<String> stringVal = ConstantImpl.create("");
     VarArgs instance =
         Projections.constructor(VarArgs.class, stringVal, stringVal).newInstance("X", "Y");
-    assertArrayEquals(new String[] {"X", "Y"}, instance.args);
+    assertThat(instance.args).containsExactly(new String[] {"X", "Y"});
   }
 
   @Test
@@ -108,8 +108,8 @@ public class ProjectionsTest {
     VarArgs2 instance =
         Projections.constructor(VarArgs2.class, stringVal, stringVal, stringVal)
             .newInstance("X", "Y", "Z");
-    assertEquals("X", instance.arg);
-    assertArrayEquals(new String[] {"Y", "Z"}, instance.args);
+    assertThat(instance.arg).isEqualTo("X");
+    assertThat(instance.args).containsExactly(new String[] {"Y", "Z"});
   }
 
   @Test
@@ -131,11 +131,11 @@ public class ProjectionsTest {
                 charVal,
                 charVal)
             .newInstance(null, 'm', 'y', 's', 'e', 'm', 'a', null, 'l', 't', 'd');
-    assertEquals(0L, (long) instance.id);
+    assertThat((long) instance.id).isEqualTo(0L);
     // null character cannot be inserted, so a literal String can't be used.
     String expectedText =
         String.valueOf(new char[] {'m', 'y', 's', 'e', 'm', 'a', '\0', 'l', 't', 'd'});
-    assertEquals(expectedText, instance.text);
+    assertThat(instance.text).isEqualTo(expectedText);
   }
 
   @Test
@@ -147,7 +147,7 @@ public class ProjectionsTest {
             entity.getNumber("cId", Integer.class),
             entity.getNumber("eId", Integer.class));
 
-    assertEquals(Entity.class, beanProjection.newInstance(1, 2).getClass());
+    assertThat(beanProjection.newInstance(1, 2).getClass()).isEqualTo(Entity.class);
   }
 
   @Test
@@ -160,16 +160,16 @@ public class ProjectionsTest {
     FactoryExpression<Entity2> wrapped = FactoryExpressionUtils.wrap(wrapper);
 
     Entity2 w = wrapped.newInstance("a", "b", "c");
-    assertEquals("a", w.arg1);
-    assertEquals("b", w.entity.arg1);
-    assertEquals("c", w.entity.arg2);
+    assertThat(w.arg1).isEqualTo("a");
+    assertThat(w.entity.arg1).isEqualTo("b");
+    assertThat(w.entity.arg2).isEqualTo("c");
 
     w = wrapped.newInstance("a", null, null);
-    assertEquals("a", w.arg1);
-    assertNotNull(w.entity);
+    assertThat(w.arg1).isEqualTo("a");
+    assertThat(w.entity).isNotNull();
 
     w = wrapped.newInstance(null, null, null);
-    assertNotNull(w.entity);
+    assertThat(w.entity).isNotNull();
   }
 
   @Test
@@ -183,16 +183,16 @@ public class ProjectionsTest {
     FactoryExpression<Entity2> wrapped = FactoryExpressionUtils.wrap(wrapper);
 
     Entity2 w = wrapped.newInstance("a", "b", "c");
-    assertEquals("a", w.arg1);
-    assertEquals("b", w.entity.arg1);
-    assertEquals("c", w.entity.arg2);
+    assertThat(w.arg1).isEqualTo("a");
+    assertThat(w.entity.arg1).isEqualTo("b");
+    assertThat(w.entity.arg2).isEqualTo("c");
 
     w = wrapped.newInstance("a", null, null);
-    assertEquals("a", w.arg1);
-    assertNull(w.entity);
+    assertThat(w.arg1).isEqualTo("a");
+    assertThat(w.entity).isNull();
 
     w = wrapped.newInstance(null, null, null);
-    assertNull(w.entity);
+    assertThat(w.entity).isNull();
   }
 
   @Test
@@ -207,15 +207,15 @@ public class ProjectionsTest {
     FactoryExpression<Entity2> wrapped = FactoryExpressionUtils.wrap(wrapper);
 
     Entity2 w = wrapped.newInstance("a", "b", "c");
-    assertEquals("a", w.arg1);
-    assertEquals("b", w.entity.arg1);
-    assertEquals("c", w.entity.arg2);
+    assertThat(w.arg1).isEqualTo("a");
+    assertThat(w.entity.arg1).isEqualTo("b");
+    assertThat(w.entity.arg2).isEqualTo("c");
 
     w = wrapped.newInstance("a", null, null);
-    assertEquals("a", w.arg1);
-    assertNull(w.entity);
+    assertThat(w.arg1).isEqualTo("a");
+    assertThat(w.entity).isNull();
 
     w = wrapped.newInstance(null, null, null);
-    assertNull(w);
+    assertThat(w).isNull();
   }
 }

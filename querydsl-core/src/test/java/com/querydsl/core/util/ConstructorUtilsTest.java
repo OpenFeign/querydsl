@@ -15,7 +15,8 @@ package com.querydsl.core.util;
 
 import static com.querydsl.core.util.ArrayUtils.isEmpty;
 import static com.querydsl.core.util.ConstructorUtils.getConstructorParameters;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.querydsl.core.types.ProjectionExample;
 import java.lang.reflect.Constructor;
@@ -32,19 +33,20 @@ public class ConstructorUtilsTest {
     Class<?>[] args = {};
     Constructor<?> emptyDefaultConstructor = getConstructor(ProjectionExample.class, args);
     Constructor<?> nullDefaultConstructor = getConstructor(ProjectionExample.class, null);
-    assertNotNull(emptyDefaultConstructor);
-    assertNotNull(nullDefaultConstructor);
-    assertTrue(
-        isEmpty(emptyDefaultConstructor.getParameterTypes())
-            && isEmpty(nullDefaultConstructor.getParameterTypes()));
+    assertThat(emptyDefaultConstructor).isNotNull();
+    assertThat(nullDefaultConstructor).isNotNull();
+    assertThat(
+            isEmpty(emptyDefaultConstructor.getParameterTypes())
+                && isEmpty(nullDefaultConstructor.getParameterTypes()))
+        .isTrue();
   }
 
   @Test
   public void getSimpleConstructor() {
     Class<?>[] args = {Long.class};
     Constructor<?> constructor = getConstructor(ProjectionExample.class, args);
-    assertNotNull(constructor);
-    assertArrayEquals(args, constructor.getParameterTypes());
+    assertThat(constructor).isNotNull();
+    assertThat(constructor.getParameterTypes()).containsExactly(args);
   }
 
   @Test
@@ -52,7 +54,9 @@ public class ConstructorUtilsTest {
     Class<?>[] args = {Long.class, String.class};
     Class<?>[] expected = {Long.TYPE, String.class};
     Class<?>[] constructorParameters = getConstructorParameters(ProjectionExample.class, args);
-    assertArrayEquals(expected, constructorParameters, "Constructorparameters not equal");
+    assertThat(constructorParameters)
+        .as("Constructorparameters not equal")
+        .containsExactly(expected);
   }
 
   private <C> Constructor<C> getConstructor(Class<C> type, Class<?>[] givenTypes) {
@@ -61,6 +65,7 @@ public class ConstructorUtilsTest {
       rv = ConstructorUtils.getConstructor(type, givenTypes);
     } catch (NoSuchMethodException ex) {
       fail(
+          "",
           "No constructor found for "
               + type.toString()
               + " with parameters: "

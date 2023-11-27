@@ -13,8 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -27,7 +26,7 @@ public class MultikeyTest {
   public void hashCode_() {
     int hashCode = multiKey1.hashCode();
     multiKey1.setId(1);
-    assertEquals(hashCode, multiKey1.hashCode());
+    assertThat(multiKey1.hashCode()).isEqualTo(hashCode);
 
     multiKey1.setId2("2");
     multiKey1.setId3(3);
@@ -36,7 +35,7 @@ public class MultikeyTest {
     multiKey2.setId2("2");
     multiKey2.setId3(3);
 
-    assertEquals(multiKey1.hashCode(), multiKey2.hashCode());
+    assertThat(multiKey2.hashCode()).isEqualTo(multiKey1.hashCode());
   }
 
   @Test
@@ -45,23 +44,23 @@ public class MultikeyTest {
     multiKey1.setId2("2");
     multiKey1.setId3(3);
 
-    assertFalse(multiKey1.equals(multiKey2));
+    assertThat(multiKey1.equals(multiKey2)).isFalse();
     multiKey2.setId(1);
-    assertFalse(multiKey1.equals(multiKey2));
+    assertThat(multiKey1.equals(multiKey2)).isFalse();
 
     multiKey2.setId2("2");
     multiKey2.setId3(3);
 
-    assertEquals(multiKey1, multiKey2);
+    assertThat(multiKey2).isEqualTo(multiKey1);
   }
 
   @Test
   public void toString_() {
-    assertEquals("Multikey#null;null;null", multiKey1.toString());
+    assertThat(multiKey1.toString()).isEqualTo("Multikey#null;null;null");
 
     multiKey1.setId(1);
     multiKey1.setId2("2");
     multiKey1.setId3(3);
-    assertEquals("Multikey#1;2;3", multiKey1.toString());
+    assertThat(multiKey1.toString()).isEqualTo("Multikey#1;2;3");
   }
 }

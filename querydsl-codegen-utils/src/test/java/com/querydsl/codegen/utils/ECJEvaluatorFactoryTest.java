@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 
 public class ECJEvaluatorFactoryTest {
 
@@ -100,13 +99,18 @@ public class ECJEvaluatorFactoryTest {
     constants.put("x", "Hello World");
     List<Class<?>> types = Arrays.<Class<?>>asList(String.class);
     List<String> names = Arrays.asList("a");
-    assertEquals(
-        Boolean.TRUE,
-        evaluate(
-            "a.equals(x)", boolean.class, names, types, Arrays.asList("Hello World"), constants));
-    assertEquals(
-        Boolean.FALSE,
-        evaluate("a.equals(x)", boolean.class, names, types, Arrays.asList("Hello"), constants));
+    assertThat(
+            evaluate(
+                "a.equals(x)",
+                boolean.class,
+                names,
+                types,
+                Arrays.asList("Hello World"),
+                constants))
+        .isEqualTo(Boolean.TRUE);
+    assertThat(
+            evaluate("a.equals(x)", boolean.class, names, types, Arrays.asList("Hello"), constants))
+        .isEqualTo(Boolean.FALSE);
   }
 
   @Test
@@ -127,10 +131,10 @@ public class ECJEvaluatorFactoryTest {
       List<Class<?>> types,
       List<?> args,
       Object expectedResult) {
-    Assertions.assertEquals(
-        expectedResult,
-        evaluate(
-            source, projectionType, names, types, args, Collections.<String, Object>emptyMap()));
+    assertThat(
+            evaluate(
+                source, projectionType, names, types, args, Collections.<String, Object>emptyMap()))
+        .isEqualTo(expectedResult);
   }
 
   private Object evaluate(

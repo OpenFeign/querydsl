@@ -13,8 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ExpressionUtils;
@@ -34,9 +33,9 @@ public class DerbyTemplatesTest extends AbstractSQLTemplatesTest {
   public void nextVal() {
     Operation<String> nextval =
         ExpressionUtils.operation(String.class, SQLOps.NEXTVAL, ConstantImpl.create("myseq"));
-    assertEquals(
-        "next value for myseq",
-        new SQLSerializer(new Configuration(new DerbyTemplates())).handle(nextval).toString());
+    assertThat(
+            new SQLSerializer(new Configuration(new DerbyTemplates())).handle(nextval).toString())
+        .isEqualTo("next value for myseq");
   }
 
   @Test
@@ -69,12 +68,12 @@ public class DerbyTemplatesTest extends AbstractSQLTemplatesTest {
     // OR
     int p7 = getPrecedence(Ops.OR);
 
-    assertTrue(p1 < p2);
-    assertTrue(p2 < p3);
-    assertTrue(p3 < p4);
-    assertTrue(p4 < p5);
-    assertTrue(p5 < p6);
-    assertTrue(p6 < p7);
+    assertThat(p1 < p2).isTrue();
+    assertThat(p2 < p3).isTrue();
+    assertThat(p3 < p4).isTrue();
+    assertThat(p4 < p5).isTrue();
+    assertThat(p5 < p6).isTrue();
+    assertThat(p6 < p7).isTrue();
   }
 
   @Test
@@ -84,6 +83,6 @@ public class DerbyTemplatesTest extends AbstractSQLTemplatesTest {
     assertSerialized(Expressions.booleanPath("b").eq(Expressions.FALSE), "b = false");
     query.setUseLiterals(true);
     query.where(Expressions.booleanPath("b").eq(true));
-    assertTrue(query.toString().endsWith("where b = true"), query.toString());
+    assertThat(query.toString().endsWith("where b = true")).as(query.toString()).isTrue();
   }
 }

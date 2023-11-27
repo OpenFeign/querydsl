@@ -15,6 +15,7 @@ package com.querydsl.sql.codegen;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.Assert.assertThat;
 
@@ -35,7 +36,6 @@ import javax.tools.JavaCompiler;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.rules.TemporaryFolder;
 
 public class MetaDataSerializerTest extends AbstractJDBCTest {
@@ -179,7 +179,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
     if (compilationResult == 0) {
       System.out.println("Compilation is successful");
     } else {
-      Assertions.fail("Compilation Failed");
+      fail("Compilation Failed");
     }
   }
 

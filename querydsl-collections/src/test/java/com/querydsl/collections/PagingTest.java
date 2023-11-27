@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.IteratorAdapter;
 import com.querydsl.core.QueryModifiers;
@@ -44,18 +44,18 @@ public class PagingTest extends AbstractQueryTest {
 
   private void assertResultSize(int total, int size, QueryModifiers modifiers) {
     // via fetch
-    assertEquals(size, createQuery(modifiers).select(var).fetch().size());
+    assertThat(createQuery(modifiers).select(var).fetch()).hasSize(size);
 
     // via results
     QueryResults<?> results = createQuery(modifiers).select(var).fetchResults();
-    assertEquals(total, results.getTotal());
-    assertEquals(size, results.getResults().size());
+    assertThat(results.getTotal()).isEqualTo(total);
+    assertThat(results.getResults()).hasSize(size);
 
     // via fetchCount (ignore limit and offset)
-    assertEquals(total, createQuery(modifiers).fetchCount());
+    assertThat(createQuery(modifiers).fetchCount()).isEqualTo(total);
 
     // via iterator
-    assertEquals(size, IteratorAdapter.asList(createQuery(modifiers).select(var).iterate()).size());
+    assertThat(IteratorAdapter.asList(createQuery(modifiers).select(var).iterate())).hasSize(size);
   }
 
   private CollQuery<?> createQuery(QueryModifiers modifiers) {

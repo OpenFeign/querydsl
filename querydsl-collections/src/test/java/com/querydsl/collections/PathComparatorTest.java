@@ -1,7 +1,7 @@
 package com.querydsl.collections;
 
 import static com.querydsl.collections.PathComparator.pathComparator;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Comparator;
 import org.junit.Before;
@@ -19,7 +19,7 @@ public class PathComparatorTest {
   @Test
   public void equalReference() {
     Car car = new Car();
-    assertEquals(0, comparator.compare(car, car));
+    assertThat(comparator.compare(car, car)).isEqualTo(0);
   }
 
   @Test
@@ -32,17 +32,17 @@ public class PathComparatorTest {
     similarCar.setModel("car");
     similarCar.setHorsePower(50);
 
-    assertEquals(0, comparator.compare(car, similarCar));
+    assertThat(comparator.compare(car, similarCar)).isEqualTo(0);
   }
 
   @Test
   public void leftIsNull() {
-    assertEquals(-1, comparator.compare(null, new Car()));
+    assertThat(comparator.compare(null, new Car())).isEqualTo(-1);
   }
 
   @Test
   public void rightIsNull() {
-    assertEquals(1, comparator.compare(new Car(), null));
+    assertThat(comparator.compare(new Car(), null)).isEqualTo(1);
   }
 
   @Test
@@ -53,6 +53,6 @@ public class PathComparatorTest {
     Car betterCar = new Car();
     betterCar.setHorsePower(150);
 
-    assertEquals(-1, comparator.compare(car, betterCar));
+    assertThat(comparator.compare(car, betterCar)).isEqualTo(-1);
   }
 }

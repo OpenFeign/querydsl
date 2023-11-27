@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -23,11 +23,11 @@ public class NumberExpressionTest {
 
   @Test
   public void between_start_given() {
-    assertEquals(intPath.goe(1L), intPath.between(1L, null));
+    assertThat(intPath.between(1L, null)).isEqualTo(intPath.goe(1L));
   }
 
   @Test
   public void between_end_given() {
-    assertEquals(intPath.loe(3L), intPath.between(null, 3L));
+    assertThat(intPath.between(null, 3L)).isEqualTo(intPath.loe(3L));
   }
 }

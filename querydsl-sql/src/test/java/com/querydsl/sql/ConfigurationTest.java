@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.alias.Gender;
 import com.querydsl.sql.domain.QSurvey;
@@ -56,7 +56,8 @@ public class ConfigurationTest {
     Configuration configuration = new Configuration(new H2Templates());
     //        configuration.setJavaType(Types.BLOB, InputStream.class);
     configuration.register(new InputStreamType());
-    assertEquals(InputStream.class, configuration.getJavaType(Types.BLOB, null, 0, 0, "", ""));
+    assertThat(configuration.getJavaType(Types.BLOB, null, 0, 0, "", ""))
+        .isEqualTo(InputStream.class);
   }
 
   @Test
@@ -75,40 +76,41 @@ public class ConfigurationTest {
     configuration.registerTableOverride("employee", "emp");
     configuration.registerTableOverride("public", "employee", "employees");
 
-    assertEquals("pub", configuration.getOverride(new SchemaAndTable("public", "")).getSchema());
-    assertEquals("emp", configuration.getOverride(new SchemaAndTable("", "employee")).getTable());
-    assertEquals(
-        "employees",
-        configuration.getOverride(new SchemaAndTable("public", "employee")).getTable());
+    assertThat(configuration.getOverride(new SchemaAndTable("public", "")).getSchema())
+        .isEqualTo("pub");
+    assertThat(configuration.getOverride(new SchemaAndTable("", "employee")).getTable())
+        .isEqualTo("emp");
+    assertThat(configuration.getOverride(new SchemaAndTable("public", "employee")).getTable())
+        .isEqualTo("employees");
 
     configuration.setDynamicNameMapping(new PreConfiguredNameMapping());
     SchemaAndTable notOverriddenSchemaAndTable =
         new SchemaAndTable("notoverridden", "notoverridden");
-    assertEquals(
-        notOverriddenSchemaAndTable, configuration.getOverride(notOverriddenSchemaAndTable));
+    assertThat(configuration.getOverride(notOverriddenSchemaAndTable))
+        .isEqualTo(notOverriddenSchemaAndTable);
 
     configuration.setDynamicNameMapping(
         new ChangeLetterCaseNameMapping(LetterCase.UPPER, Locale.ENGLISH));
     String notDirectOverriden = "notDirectOverriden";
-    assertEquals(
-        notDirectOverriden.toUpperCase(Locale.ENGLISH),
-        configuration.getOverride(new SchemaAndTable("public", notDirectOverriden)).getTable());
+    assertThat(
+            configuration.getOverride(new SchemaAndTable("public", notDirectOverriden)).getTable())
+        .isEqualTo(notDirectOverriden.toUpperCase(Locale.ENGLISH));
   }
 
   @Test
   public void columnOverride() {
     Configuration configuration = new Configuration(new H2Templates());
-    assertEquals(
-        "notoverriddencolumn",
-        configuration.getColumnOverride(
-            new SchemaAndTable("myschema", "mytable"), "notoverriddencolumn"));
+    assertThat(
+            configuration.getColumnOverride(
+                new SchemaAndTable("myschema", "mytable"), "notoverriddencolumn"))
+        .isEqualTo("notoverriddencolumn");
 
     // Testing when chained name mapping does not give back any result.
     configuration.setDynamicNameMapping(new PreConfiguredNameMapping());
-    assertEquals(
-        "notoverriddencolumn",
-        configuration.getColumnOverride(
-            new SchemaAndTable("myschema", "mytable"), "notoverriddencolumn"));
+    assertThat(
+            configuration.getColumnOverride(
+                new SchemaAndTable("myschema", "mytable"), "notoverriddencolumn"))
+        .isEqualTo("notoverriddencolumn");
 
     // Testing all other use-cases when letter case changing is in the end of the chain
     configuration.setDynamicNameMapping(
@@ -116,27 +118,28 @@ public class ConfigurationTest {
 
     configuration.registerColumnOverride("mytable", "oldcolumn", "newcolumn");
     configuration.registerColumnOverride("mytable", "oldcolumn2", "newcolumn2");
-    assertEquals(
-        "newcolumn",
-        configuration.getColumnOverride(new SchemaAndTable("myschema", "mytable"), "oldcolumn"));
-    assertEquals(
-        "newcolumn2",
-        configuration.getColumnOverride(new SchemaAndTable("myschema", "mytable"), "oldcolumn2"));
+    assertThat(
+            configuration.getColumnOverride(new SchemaAndTable("myschema", "mytable"), "oldcolumn"))
+        .isEqualTo("newcolumn");
+    assertThat(
+            configuration.getColumnOverride(
+                new SchemaAndTable("myschema", "mytable"), "oldcolumn2"))
+        .isEqualTo("newcolumn2");
 
     configuration.registerColumnOverride("myschema", "mytable", "oldcolumn", "newcolumnwithschema");
     configuration.registerColumnOverride(
         "myschema", "mytable", "oldcolumn2", "newcolumnwithschema2");
-    assertEquals(
-        "newcolumnwithschema2",
-        configuration.getColumnOverride(new SchemaAndTable("myschema", "mytable"), "oldcolumn2"));
-    assertEquals(
-        "notoverriddencolumn",
-        configuration.getColumnOverride(
-            new SchemaAndTable("myschema", "mytable"), "notoverriddencolumn"));
+    assertThat(
+            configuration.getColumnOverride(
+                new SchemaAndTable("myschema", "mytable"), "oldcolumn2"))
+        .isEqualTo("newcolumnwithschema2");
+    assertThat(
+            configuration.getColumnOverride(
+                new SchemaAndTable("myschema", "mytable"), "notoverriddencolumn"))
+        .isEqualTo("notoverriddencolumn");
 
-    assertEquals(
-        "lower",
-        configuration.getColumnOverride(new SchemaAndTable("myschema", "mytable"), "LOWER"));
+    assertThat(configuration.getColumnOverride(new SchemaAndTable("myschema", "mytable"), "LOWER"))
+        .isEqualTo("lower");
   }
 
   @Test(expected = NullPointerException.class)
@@ -153,14 +156,17 @@ public class ConfigurationTest {
   public void numericOverriden() {
     Configuration configuration = new Configuration(new H2Templates());
     configuration.registerNumeric(19, 0, BigInteger.class);
-    assertEquals(configuration.getJavaType(Types.NUMERIC, "", 19, 0, "", ""), BigInteger.class);
+    assertThat(BigInteger.class)
+        .isEqualTo(configuration.getJavaType(Types.NUMERIC, "", 19, 0, "", ""));
   }
 
   @Test
   public void numericOverriden2() {
     Configuration configuration = new Configuration(new H2Templates());
     configuration.registerNumeric(18, 19, 0, 0, BigInteger.class);
-    assertEquals(configuration.getJavaType(Types.NUMERIC, "", 18, 0, "", ""), BigInteger.class);
-    assertEquals(configuration.getJavaType(Types.NUMERIC, "", 19, 0, "", ""), BigInteger.class);
+    assertThat(BigInteger.class)
+        .isEqualTo(configuration.getJavaType(Types.NUMERIC, "", 18, 0, "", ""));
+    assertThat(BigInteger.class)
+        .isEqualTo(configuration.getJavaType(Types.NUMERIC, "", 19, 0, "", ""));
   }
 }

@@ -13,8 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.*;
 import java.sql.Time;
@@ -50,13 +49,13 @@ public class OperationTest {
       Operation<?> other =
           ExpressionUtils.operation(
               operation.getType(), operation.getOperator(), new ArrayList<>(operation.getArgs()));
-      assertEquals(
-          operation.toString(), operation.accept(ToStringVisitor.DEFAULT, Templates.DEFAULT));
-      assertEquals(operation.hashCode(), other.hashCode());
-      assertEquals(operation, other);
-      assertNotNull(operation.getOperator());
-      assertNotNull(operation.getArgs());
-      assertNotNull(operation.getType());
+      assertThat(operation.accept(ToStringVisitor.DEFAULT, Templates.DEFAULT))
+          .isEqualTo(operation.toString());
+      assertThat(other.hashCode()).isEqualTo(operation.hashCode());
+      assertThat(other).isEqualTo(operation);
+      assertThat(operation.getOperator()).isNotNull();
+      assertThat(operation.getArgs()).isNotNull();
+      assertThat(operation.getType()).isNotNull();
     }
   }
 }

@@ -13,8 +13,8 @@
  */
 package com.querydsl.core;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.testutil.Serialization;
@@ -46,16 +46,16 @@ public class QueryMetadaSerializationTest {
 
     QueryMetadata metadata2 = Serialization.serialize(metadata);
 
-    assertEquals(metadata.getFlags(), metadata2.getFlags());
-    assertEquals(metadata.getGroupBy().get(0), metadata2.getGroupBy().get(0));
-    assertEquals(metadata.getGroupBy(), metadata2.getGroupBy());
-    assertEquals(metadata.getHaving(), metadata2.getHaving());
-    assertEquals(metadata.getJoins(), metadata2.getJoins());
-    assertEquals(metadata.getModifiers(), metadata2.getModifiers());
-    assertEquals(metadata.getOrderBy(), metadata2.getOrderBy());
-    assertEquals(metadata.getParams(), metadata2.getParams());
-    assertEquals(metadata.getProjection(), metadata2.getProjection());
-    assertEquals(metadata.getWhere(), metadata2.getWhere());
+    assertThat(metadata2.getFlags()).isEqualTo(metadata.getFlags());
+    assertThat(metadata2.getGroupBy().get(0)).isEqualTo(metadata.getGroupBy().get(0));
+    assertThat(metadata2.getGroupBy()).isEqualTo(metadata.getGroupBy());
+    assertThat(metadata2.getHaving()).isEqualTo(metadata.getHaving());
+    assertThat(metadata2.getJoins()).isEqualTo(metadata.getJoins());
+    assertThat(metadata2.getModifiers()).isEqualTo(metadata.getModifiers());
+    assertThat(metadata2.getOrderBy()).isEqualTo(metadata.getOrderBy());
+    assertThat(metadata2.getParams()).isEqualTo(metadata.getParams());
+    assertThat(metadata2.getProjection()).isEqualTo(metadata.getProjection());
+    assertThat(metadata2.getWhere()).isEqualTo(metadata.getWhere());
   }
 
   @SuppressWarnings("unchecked")
@@ -83,7 +83,7 @@ public class QueryMetadaSerializationTest {
       Class<?> clazz = classes.pop();
       checked.add(clazz);
       if (!Serializable.class.isAssignableFrom(clazz) && !clazz.isPrimitive()) {
-        fail(clazz.getName() + " is not serializable");
+        fail("", clazz.getName() + " is not serializable");
       }
       for (Field field : clazz.getDeclaredFields()) {
         if (Modifier.isTransient(field.getModifiers())) {

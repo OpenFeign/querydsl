@@ -13,8 +13,7 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +31,8 @@ public class IncludedPackagesTest extends AbstractProcessorTest {
     List<String> classes = getFiles(packagePath);
     process(QuerydslAnnotationProcessor.class, classes, "includedPackages");
 
-    assertFalse(new File("target/includedPackages/com/querydsl/apt/domain/p1").exists());
-    assertTrue(new File("target/includedPackages/com/querydsl/apt/domain/p2").exists());
+    assertThat(new File("target/includedPackages/com/querydsl/apt/domain/p1").exists()).isFalse();
+    assertThat(new File("target/includedPackages/com/querydsl/apt/domain/p2")).exists();
   }
 
   @Override

@@ -13,10 +13,9 @@
  */
 package com.querydsl.maven;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.codegen.GeneratedAnnotationResolver;
 import java.io.File;
@@ -57,9 +56,9 @@ public class TestMetadataExportMojoTest {
     mojo.execute();
 
     // 'target/export4' seems to conflict with MetadataExportMojoTest.Execute_With_TypeMappings
-    assertEquals(
-        Collections.singletonList(target.getAbsolutePath()), project.getTestCompileSourceRoots());
-    assertTrue(target.exists());
+    assertThat(project.getTestCompileSourceRoots())
+        .isEqualTo(Collections.singletonList(target.getAbsolutePath()));
+    assertThat(target).exists();
   }
 
   @Test

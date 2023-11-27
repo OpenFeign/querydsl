@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.codegen;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.AbstractJDBCTest;
 import com.querydsl.sql.codegen.support.ForeignKeyData;
@@ -60,34 +60,34 @@ public class KeyDataFactoryTest extends AbstractJDBCTest {
     // primary key
     Map<String, PrimaryKeyData> primaryKeys =
         keyDataFactory.getPrimaryKeys(md, null, null, "EMPLOYEE");
-    assertFalse(primaryKeys.isEmpty());
+    assertThat(primaryKeys.isEmpty()).isFalse();
     // inverse foreign keys sorted in abc
     Map<String, InverseForeignKeyData> exportedKeys =
         keyDataFactory.getExportedKeys(md, null, null, "EMPLOYEE");
-    assertEquals(2, exportedKeys.size());
+    assertThat(exportedKeys).hasSize(2);
     Iterator<String> exportedKeysIterator = exportedKeys.keySet().iterator();
-    assertEquals("FK_SUPERIOR1", exportedKeysIterator.next());
-    assertEquals("FK_SUPERIOR2", exportedKeysIterator.next());
+    assertThat(exportedKeysIterator.next()).isEqualTo("FK_SUPERIOR1");
+    assertThat(exportedKeysIterator.next()).isEqualTo("FK_SUPERIOR2");
     // foreign keys sorted in abc
     Map<String, ForeignKeyData> importedKeys =
         keyDataFactory.getImportedKeys(md, null, null, "EMPLOYEE");
-    assertEquals(3, importedKeys.size());
+    assertThat(importedKeys).hasSize(3);
     Iterator<String> importedKeysIterator = importedKeys.keySet().iterator();
-    assertEquals("FK_SUPERIOR1", importedKeysIterator.next());
-    assertEquals("FK_SUPERIOR2", importedKeysIterator.next());
-    assertEquals("FK_SURVEY", importedKeysIterator.next());
+    assertThat(importedKeysIterator.next()).isEqualTo("FK_SUPERIOR1");
+    assertThat(importedKeysIterator.next()).isEqualTo("FK_SUPERIOR2");
+    assertThat(importedKeysIterator.next()).isEqualTo("FK_SURVEY");
 
     // SURVEY
 
     // primary key
     primaryKeys = keyDataFactory.getPrimaryKeys(md, null, null, "SURVEY");
-    assertFalse(primaryKeys.isEmpty());
+    assertThat(primaryKeys.isEmpty()).isFalse();
     // inverse foreign keys
     exportedKeys = keyDataFactory.getExportedKeys(md, null, null, "SURVEY");
-    assertFalse(exportedKeys.isEmpty());
-    assertTrue(exportedKeys.containsKey("FK_SURVEY"));
+    assertThat(exportedKeys.isEmpty()).isFalse();
+    assertThat(exportedKeys).containsKey("FK_SURVEY");
     // foreign keys
     importedKeys = keyDataFactory.getImportedKeys(md, null, null, "SURVEY");
-    assertTrue(importedKeys.isEmpty());
+    assertThat(importedKeys.isEmpty()).isTrue();
   }
 }

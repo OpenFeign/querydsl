@@ -1,7 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.dsl.EntityPathBase;
@@ -52,16 +51,16 @@ public class JacocoTest {
       vos.add(vo);
     }
     CloneableKlasse vo = Alias.alias(CloneableKlasse.class, "vo");
-    assertNotNull(vo);
+    assertThat(vo).isNotNull();
     CollQuery<?> query = new CollQuery<Void>();
     final EntityPathBase<CloneableKlasse> fromVo = Alias.$(vo);
-    assertNotNull(fromVo);
+    assertThat(fromVo).isNotNull();
     query.from(fromVo, vos);
     query.where(Alias.$(vo.getOtherValue()).eq(1));
     List<CloneableKlasse> result = query.select(Alias.$(vo)).fetch();
 
-    assertNotNull(result);
-    assertEquals(1, result.size());
-    assertEquals(Integer.valueOf(1), result.get(0).getOtherValue());
+    assertThat(result).isNotNull();
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).getOtherValue()).isEqualTo(Integer.valueOf(1));
   }
 }

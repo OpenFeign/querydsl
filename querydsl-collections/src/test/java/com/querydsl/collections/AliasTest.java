@@ -15,7 +15,9 @@ package com.querydsl.collections;
 
 import static com.querydsl.collections.CollQueryFactory.from;
 import static com.querydsl.core.alias.Alias.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.dsl.Expressions;
@@ -49,9 +51,8 @@ public class AliasTest extends AbstractQueryTest {
 
     // 2nd
     Cat c = alias(Cat.class, "cat");
-    assertEquals(
-        Arrays.asList("Kitty", "Bob", "Alex", "Francis"),
-        from(c, cats).where($(c.getKittens()).size().gt(0)).select($(c.getName())).fetch());
+    assertThat(from(c, cats).where($(c.getKittens()).size().gt(0)).select($(c.getName())).fetch())
+        .isEqualTo(Arrays.asList("Kitty", "Bob", "Alex", "Francis"));
   }
 
   @Test
@@ -64,9 +65,8 @@ public class AliasTest extends AbstractQueryTest {
 
     // 2nd
     Cat c = alias(Cat.class, "cat");
-    assertEquals(
-        Collections.emptyList(),
-        from(c, cats).where($(c.getName()).matches("fri.*")).select($(c.getName())).fetch());
+    assertThat(from(c, cats).where($(c.getName()).matches("fri.*")).select($(c.getName())).fetch())
+        .isEqualTo(Collections.emptyList());
   }
 
   @Test
@@ -111,8 +111,8 @@ public class AliasTest extends AbstractQueryTest {
     from(c, cats).where($(c.getName()).upper().eq("MOE")).select($(c)).iterate();
 
     // 10
-    assertNotNull($(c.getKittensByName()));
-    assertNotNull($(c.getKittensByName().get("Kitty")));
+    assertThat($(c.getKittensByName())).isNotNull();
+    assertThat($(c.getKittensByName().get("Kitty"))).isNotNull();
     from(c, cats).where($(c.getKittensByName().get("Kitty")).isNotNull()).select(cat).iterate();
 
     // 11
@@ -133,22 +133,20 @@ public class AliasTest extends AbstractQueryTest {
   @Test
   public void various1() {
     StringPath str = Expressions.stringPath("str");
-    assertEquals(
-        Arrays.asList("a", "ab"),
-        from(str, "a", "ab", "cd", "de").where(str.startsWith("a")).select(str).fetch());
+    assertThat(from(str, "a", "ab", "cd", "de").where(str.startsWith("a")).select(str).fetch())
+        .isEqualTo(Arrays.asList("a", "ab"));
   }
 
   @Test
   public void various2() {
-    assertEquals(
-        Arrays.asList(1, 2, 5, 3),
-        from(var(), 1, 2, "abc", 5, 3).where(var().ne("abc")).select(var()).fetch());
+    assertThat(from(var(), 1, 2, "abc", 5, 3).where(var().ne("abc")).select(var()).fetch())
+        .isEqualTo(Arrays.asList(1, 2, 5, 3));
   }
 
   @Test
   public void various3() {
     NumberPath<Integer> num = Expressions.numberPath(Integer.class, "num");
-    assertEquals(
-        Arrays.asList(1, 2, 3), from(num, 1, 2, 3, 4).where(num.lt(4)).select(num).fetch());
+    assertThat(from(num, 1, 2, 3, 4).where(num.lt(4)).select(num).fetch())
+        .isEqualTo(Arrays.asList(1, 2, 3));
   }
 }

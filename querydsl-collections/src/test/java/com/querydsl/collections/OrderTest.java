@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,13 +24,16 @@ public class OrderTest extends AbstractQueryTest {
   @Test
   public void test() {
     query().from(cat, cats).orderBy(cat.name.asc()).select(cat.name).fetch();
-    assertArrayEquals(new Object[] {"Alex", "Bob", "Francis", "Kitty"}, last.res.toArray());
+    assertThat(last.res.toArray())
+        .containsExactly(new Object[] {"Alex", "Bob", "Francis", "Kitty"});
 
     query().from(cat, cats).orderBy(cat.name.desc()).select(cat.name).fetch();
-    assertArrayEquals(new Object[] {"Kitty", "Francis", "Bob", "Alex"}, last.res.toArray());
+    assertThat(last.res.toArray())
+        .containsExactly(new Object[] {"Kitty", "Francis", "Bob", "Alex"});
 
     query().from(cat, cats).orderBy(cat.name.substring(1).asc()).select(cat.name).fetch();
-    assertArrayEquals(new Object[] {"Kitty", "Alex", "Bob", "Francis"}, last.res.toArray());
+    assertThat(last.res.toArray())
+        .containsExactly(new Object[] {"Kitty", "Alex", "Bob", "Francis"});
 
     query()
         .from(cat, cats)
@@ -57,7 +60,7 @@ public class OrderTest extends AbstractQueryTest {
     CollQuery<?> q = new CollQuery<Void>();
     q.from(cat, cats);
     long size = q.distinct().fetchCount();
-    assertTrue(size > 0);
+    assertThat(size > 0).isTrue();
     q.offset(0).limit(10);
     q.orderBy(cat.name.asc());
     assertEquals(

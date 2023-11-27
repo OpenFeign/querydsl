@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -26,20 +26,20 @@ public class CoalesceTest {
   @Test
   public void mutable() {
     Coalesce<String> c = new Coalesce<String>(firstname, lastname).add("xxx");
-    assertEquals("coalesce(firstname, lastname, xxx)", c.toString());
-    assertEquals("coalesce(firstname, lastname, xxx, yyy)", c.add("yyy").toString());
+    assertThat(c.toString()).isEqualTo("coalesce(firstname, lastname, xxx)");
+    assertThat(c.add("yyy").toString()).isEqualTo("coalesce(firstname, lastname, xxx, yyy)");
   }
 
   @Test
   public void withList() {
     Coalesce<String> c = new Coalesce<String>(firstname, lastname).add("xxx");
-    assertEquals("coalesce(firstname, lastname, xxx)", c.toString());
+    assertThat(c.toString()).isEqualTo("coalesce(firstname, lastname, xxx)");
   }
 
   @Test
   public void withSingleArg() {
     Coalesce<String> c = new Coalesce<String>().add("xxx");
-    assertEquals("coalesce(xxx)", c.toString());
+    assertThat(c.toString()).isEqualTo("coalesce(xxx)");
   }
 
   @Test
@@ -57,33 +57,34 @@ public class CoalesceTest {
   @Test
   public void withoutWarnings() {
     Coalesce<String> c = new Coalesce<String>(String.class).add(firstname).add(lastname);
-    assertEquals("coalesce(firstname, lastname)", c.toString());
+    assertThat(c.toString()).isEqualTo("coalesce(firstname, lastname)");
   }
 
   @Test
   public void dsl() {
-    assertEquals("coalesce(firstname, lastname)", firstname.coalesce(lastname).toString());
+    assertThat(firstname.coalesce(lastname).toString()).isEqualTo("coalesce(firstname, lastname)");
   }
 
   @Test
   public void dsl2() {
-    assertEquals(
-        "coalesce(firstname, lastname, xxx)",
-        new Coalesce<String>().add(firstname).add(lastname).add("xxx").toString());
+    assertThat(new Coalesce<String>().add(firstname).add(lastname).add("xxx").toString())
+        .isEqualTo("coalesce(firstname, lastname, xxx)");
   }
 
   @Test
   public void dsl3() {
-    assertEquals("coalesce(firstname, xxx)", firstname.coalesce("xxx").toString());
+    assertThat(firstname.coalesce("xxx").toString()).isEqualTo("coalesce(firstname, xxx)");
   }
 
   @Test
   public void asc() {
-    assertEquals("coalesce(firstname, xxx) ASC", firstname.coalesce("xxx").asc().toString());
+    assertThat(firstname.coalesce("xxx").asc().toString())
+        .isEqualTo("coalesce(firstname, xxx) ASC");
   }
 
   @Test
   public void desc() {
-    assertEquals("coalesce(firstname, xxx) DESC", firstname.coalesce("xxx").desc().toString());
+    assertThat(firstname.coalesce("xxx").desc().toString())
+        .isEqualTo("coalesce(firstname, xxx) DESC");
   }
 }

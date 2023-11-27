@@ -13,8 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import org.junit.Test;
@@ -25,36 +24,36 @@ public class CastTest extends AbstractQueryTest {
 
   @Test
   public void bytes() {
-    assertEquals(Byte.class, expr.byteValue().getType());
+    assertThat(expr.byteValue().getType()).isEqualTo(Byte.class);
   }
 
   @Test
   public void doubles() {
-    assertEquals(Double.class, expr.doubleValue().getType());
+    assertThat(expr.doubleValue().getType()).isEqualTo(Double.class);
   }
 
   @Test
   public void floats() {
-    assertEquals(Float.class, expr.floatValue().getType());
+    assertThat(expr.floatValue().getType()).isEqualTo(Float.class);
   }
 
   @Test
   public void integers() {
-    assertEquals(Integer.class, expr.intValue().getType());
+    assertThat(expr.intValue().getType()).isEqualTo(Integer.class);
   }
 
   @Test
   public void longs() {
-    assertEquals(Long.class, expr.longValue().getType());
+    assertThat(expr.longValue().getType()).isEqualTo(Long.class);
   }
 
   @Test
   public void shorts() {
-    assertEquals(Short.class, expr.shortValue().getType());
+    assertThat(expr.shortValue().getType()).isEqualTo(Short.class);
   }
 
   @Test
   public void stringCast() {
-    assertEquals(String.class, expr.stringValue().getType());
+    assertThat(expr.stringValue().getType()).isEqualTo(String.class);
   }
 }

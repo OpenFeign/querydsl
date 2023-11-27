@@ -13,8 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.hibernate.HibernateQuery;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -64,8 +63,8 @@ public class JPQLQueryTest {
 
   @Test
   public void toString_() {
-    assertEquals("", new HibernateQuery<Void>().toString());
-    assertEquals("", new JPAQuery<Void>().toString());
+    assertThat(new HibernateQuery<Void>().toString()).isEqualTo("");
+    assertThat(new JPAQuery<Void>().toString()).isEqualTo("");
     assertEquals("select cat", new HibernateQuery<Void>().select(cat).toString());
     assertEquals("select cat", new JPAQuery<Void>().select(cat).toString());
     assertEquals("select cat\nfrom Cat cat", new HibernateQuery<Void>().from(cat).toString());

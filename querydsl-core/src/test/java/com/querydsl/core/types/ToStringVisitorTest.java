@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.dsl.BooleanPath;
@@ -32,23 +32,22 @@ public class ToStringVisitorTest {
 
   @Test
   public void operation() {
-    assertEquals(
-        "cat_name is not null",
-        QCat.cat.name.isNotNull().accept(ToStringVisitor.DEFAULT, templates));
+    assertThat(QCat.cat.name.isNotNull().accept(ToStringVisitor.DEFAULT, templates))
+        .isEqualTo("cat_name is not null");
   }
 
   @Test
   public void template() {
     Expression<Boolean> template =
         ExpressionUtils.template(Boolean.class, "{0} is not null", QCat.cat.name);
-    assertEquals("cat_name is not null", template.accept(ToStringVisitor.DEFAULT, templates));
+    assertThat(template.accept(ToStringVisitor.DEFAULT, templates))
+        .isEqualTo("cat_name is not null");
   }
 
   @Test
   public void path() {
-    assertEquals(
-        "cat_kittens_kittens_name",
-        QCat.cat.kittens.any().kittens.any().name.accept(ToStringVisitor.DEFAULT, templates));
+    assertThat(QCat.cat.kittens.any().kittens.any().name.accept(ToStringVisitor.DEFAULT, templates))
+        .isEqualTo("cat_kittens_kittens_name");
   }
 
   @Test
@@ -58,6 +57,7 @@ public class ToStringVisitorTest {
     BooleanPath c = Expressions.booleanPath("c");
     BooleanPath d = Expressions.booleanPath("d");
     Predicate complex = a.or(b).and(c.or(d));
-    assertEquals("(a || d) && (c || d)", complex.accept(ToStringVisitor.DEFAULT, templates));
+    assertThat(complex.accept(ToStringVisitor.DEFAULT, templates))
+        .isEqualTo("(a || d) && (c || d)");
   }
 }

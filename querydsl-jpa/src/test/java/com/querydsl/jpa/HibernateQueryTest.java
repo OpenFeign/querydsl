@@ -13,9 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.QEmployee;
@@ -32,7 +30,7 @@ public class HibernateQueryTest {
     HibernateQuery<?> hq =
         new HibernateQuery<Void>().from(cat).where(cat.name.isNull().and(emptyBooleanBuilder));
     HibernateQuery<?> hq2 = hq.clone();
-    assertNotNull(hq2);
+    assertThat(hq2).isNotNull();
   }
 
   @Test
@@ -41,8 +39,6 @@ public class HibernateQueryTest {
     QEmployee employee = QEmployee.employee;
     hqlQuery.from(employee);
     hqlQuery.innerJoin(employee.user, QUser.user);
-    assertEquals(
-        "select employee\nfrom Employee employee\n  inner join employee.user as user",
-        hqlQuery.toString());
+    assertThat(hqlQuery.toString()).isEqualTo("select employee\nfrom Employee employee\n  inner join employee.user as user");
   }
 }

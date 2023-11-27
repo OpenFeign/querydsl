@@ -15,9 +15,9 @@ package com.querydsl.jpa;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.jpa.JPAExpressions.select;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.mysema.commons.lang.Pair;
 import com.querydsl.core.*;
 import com.querydsl.core.group.Group;
@@ -326,9 +326,9 @@ public abstract class AbstractJPATest {
             .from(cat)
             .select(new ArrayConstructorExpression<String>(String[].class, cat.name))
             .fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (String[] result : results) {
-      assertNotNull(result[0]);
+      assertThat(result[0]).isNotNull();
     }
   }
 
@@ -511,7 +511,7 @@ public abstract class AbstractJPATest {
 
   private static <T> void assertInstancesOf(Class<T> clazz, Iterable<T> rows) {
     for (T row : rows) {
-      assertEquals(clazz, row.getClass(), row.toString());
+      assertThat(row.getClass()).as(row.toString()).isEqualTo(clazz);
     }
   }
 
@@ -538,7 +538,7 @@ public abstract class AbstractJPATest {
     List<Integer> weights =
         query().from(cat).select(cat.bodyWeight.castToNum(Integer.class)).fetch();
     for (int i = 0; i < cats.size(); i++) {
-      assertEquals(Integer.valueOf((int) (cats.get(i).getBodyWeight())), weights.get(i));
+      assertThat(weights.get(i)).isEqualTo(Integer.valueOf((int) (cats.get(i).getBodyWeight())));
     }
   }
 
@@ -598,8 +598,8 @@ public abstract class AbstractJPATest {
     List<Tuple> tuples =
         query().from(cat).select(cat.id, Expressions.constantAs("abc", path)).fetch();
     for (int i = 0; i < cats.size(); i++) {
-      assertEquals(Integer.valueOf(cats.get(i).getId()), tuples.get(i).get(cat.id));
-      assertEquals("abc", tuples.get(i).get(path));
+      assertThat(__P__.<error> << unknown >>/*__p0__*/p()).isEqualTo(Integer.valueOf(cats.get(i).getId()));
+      assertThat(tuples.get(i).get(path)).isEqualTo("abc");
     }
   }
 
@@ -612,18 +612,18 @@ public abstract class AbstractJPATest {
   public void constructorProjection() {
     List<Projection> projections =
         query().from(cat).select(Projections.constructor(Projection.class, cat.name, cat)).fetch();
-    assertFalse(projections.isEmpty());
+    assertThat(projections).isNotEmpty();
     for (Projection projection : projections) {
-      assertNotNull(projection);
+      assertThat(projection).isNotNull();
     }
   }
 
   @Test
   public void constructorProjection2() {
     List<Projection> projections = query().from(cat).select(new QProjection(cat.name, cat)).fetch();
-    assertFalse(projections.isEmpty());
+    assertThat(projections).isNotEmpty();
     for (Projection projection : projections) {
-      assertNotNull(projection);
+      assertThat(projection).isNotNull();
     }
   }
 
@@ -631,9 +631,9 @@ public abstract class AbstractJPATest {
   public void constructorProjection3() {
     List<Projection> projections =
         query().from(cat).select(new QProjection(cat.id, Expressions.FALSE)).fetch();
-    assertFalse(projections.isEmpty());
+    assertThat(projections).isNotEmpty();
     for (Projection projection : projections) {
-      assertNotNull(projection);
+      assertThat(projection).isNotNull();
     }
   }
 
@@ -766,14 +766,14 @@ public abstract class AbstractJPATest {
   public void distinctResults() {
     System.out.println("-- fetch results");
     QueryResults<Date> res = query().from(cat).limit(2).select(cat.birthdate).fetchResults();
-    assertEquals(2, res.getResults().size());
-    assertEquals(6L, res.getTotal());
+    assertThat(res.getResults()).hasSize(2);
+    assertThat(res.getTotal()).isEqualTo(6L);
     System.out.println();
 
     System.out.println("-- fetch distinct results");
     res = query().from(cat).limit(2).distinct().select(cat.birthdate).fetchResults();
-    assertEquals(1, res.getResults().size());
-    assertEquals(1L, res.getTotal());
+    assertThat(res.getResults()).hasSize(1);
+    assertThat(res.getTotal()).isEqualTo(1L);
     System.out.println();
 
     System.out.println("-- fetch distinct");
@@ -797,7 +797,7 @@ public abstract class AbstractJPATest {
   @NoHibernate({DERBY, POSTGRESQL, SQLSERVER})
   public void date_yearWeek() {
     int value = query().from(cat).select(cat.birthdate.yearWeek()).fetchFirst();
-    assertTrue(value == 200006 || value == 200005);
+    assertThat(value == 200006 || value == 200005).isTrue();
   }
 
   @Test
@@ -805,7 +805,7 @@ public abstract class AbstractJPATest {
   @NoHibernate({DERBY, POSTGRESQL, SQLSERVER})
   public void date_week() {
     int value = query().from(cat).select(cat.birthdate.week()).fetchFirst();
-    assertTrue(value == 6 || value == 5);
+    assertThat(value == 6 || value == 5).isTrue();
   }
 
   @Test
@@ -925,7 +925,7 @@ public abstract class AbstractJPATest {
     query
         .from(employee)
         .where(employee.lastName.eq("Smith"), employee.jobFunctions.contains(JobFunction.CODER));
-    assertEquals(1L, query.fetchCount());
+    assertThat(query.fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -951,8 +951,8 @@ public abstract class AbstractJPATest {
             .leftJoin(cat.mate, cat2)
             .leftJoin(cat2.kittens, kitten)
             .select(Projections.tuple(cat.id, new QFamily(cat, cat2, kitten).skipNulls()));
-    assertEquals(6, query.fetch().size());
-    assertNotNull(query.limit(1).fetchOne());
+    assertThat(query.fetch()).hasSize(6);
+    assertThat(query.limit(1).fetchOne()).isNotNull();
   }
 
   @Test
@@ -1052,10 +1052,10 @@ public abstract class AbstractJPATest {
         query().from(cat).groupBy(cat.id).limit(1).select(cat.id).fetchResults();
 
     long catCount = query().from(cat).fetchCount();
-    assertEquals(catCount, ids.size());
-    assertEquals(catCount, count);
-    assertEquals(catCount, results.getResults().size());
-    assertEquals(catCount, results.getTotal());
+    assertThat(ids).hasSize(catCount);
+    assertThat(count).isEqualTo(catCount);
+    assertThat(results.getResults()).hasSize(catCount);
+    assertThat(results.getTotal()).isEqualTo(catCount);
   }
 
   @Test
@@ -1072,9 +1072,9 @@ public abstract class AbstractJPATest {
             .select(Expressions.ONE)
             .fetchResults();
 
-    assertEquals(1, ids.size());
-    assertEquals(1, results.getResults().size());
-    assertEquals(1, results.getTotal());
+    assertThat(ids).hasSize(1);
+    assertThat(results.getResults()).hasSize(1);
+    assertThat(results.getTotal()).isEqualTo(1);
   }
 
   @Test
@@ -1095,16 +1095,16 @@ public abstract class AbstractJPATest {
   @Test
   public void groupBy_results() {
     QueryResults<Integer> results = query().from(cat).groupBy(cat.id).select(cat.id).fetchResults();
-    assertEquals(6, results.getTotal());
-    assertEquals(6, results.getResults().size());
+    assertThat(results.getTotal()).isEqualTo(6);
+    assertThat(results.getResults()).hasSize(6);
   }
 
   @Test
   public void groupBy_results2() {
     QueryResults<Integer> results =
         query().from(cat).groupBy(cat.birthdate).select(cat.id.max()).fetchResults();
-    assertEquals(1, results.getTotal());
-    assertEquals(1, results.getResults().size());
+    assertThat(results.getTotal()).isEqualTo(1);
+    assertThat(results.getResults()).hasSize(1);
   }
 
   @Test
@@ -1279,7 +1279,7 @@ public abstract class AbstractJPATest {
             .innerJoin(employee.jobFunctions, jobFunction)
             .select(jobFunction)
             .fetch();
-    assertEquals(4, jobFunctions.size());
+    assertThat(jobFunctions).hasSize(4);
   }
 
   @Test
@@ -1289,9 +1289,9 @@ public abstract class AbstractJPATest {
     StringPath str = Expressions.stringPath("str");
 
     List<String> strings = query().from(foo).innerJoin(foo.names, str).select(str).fetch();
-    assertEquals(2, strings.size());
-    assertTrue(strings.contains("a"));
-    assertTrue(strings.contains("b"));
+    assertThat(strings).hasSize(2);
+    assertThat(strings).contains("a");
+    assertThat(strings).contains("b");
   }
 
   @Test
@@ -1450,7 +1450,7 @@ public abstract class AbstractJPATest {
   public void nestedProjection() {
     Concatenation concat = new Concatenation(cat.name, cat.name);
     List<Tuple> tuples = query().from(cat).select(cat.name, concat).fetch();
-    assertFalse(tuples.isEmpty());
+    assertThat(tuples).isNotEmpty();
     for (Tuple tuple : tuples) {
       assertEquals(tuple.get(concat), tuple.get(cat.name) + tuple.get(cat.name));
     }
@@ -1491,7 +1491,7 @@ public abstract class AbstractJPATest {
   public void numeric() {
     QNumeric numeric = QNumeric.numeric;
     BigDecimal singleResult = query().from(numeric).select(numeric.value).fetchFirst();
-    assertEquals(26.9, singleResult.doubleValue(), 0.001);
+    assertThat(singleResult.doubleValue()).isCloseTo(26.9, within(0.001));
   }
 
   @Test
@@ -1780,7 +1780,7 @@ public abstract class AbstractJPATest {
   @Test
   public void substring() {
     for (String str : query().from(cat).select(cat.name.substring(1, 2)).fetch()) {
-      assertEquals(1, str.length());
+      assertThat(str).hasSize(1);
     }
   }
 
@@ -1794,18 +1794,15 @@ public abstract class AbstractJPATest {
     JPQLQuery<?> query = query().from(company).where(company.id.eq(companyId));
     String str = query.select(company.name).fetchFirst();
 
-    assertEquals(Integer.valueOf(29), query.select(name.length().subtract(11)).fetchFirst());
+    assertThat(query.select(name.length().subtract(11)).fetchFirst()).isEqualTo(Integer.valueOf(29));
 
-    assertEquals(str.substring(0, 7), query.select(name.substring(0, 7)).fetchFirst());
+    assertThat(query.select(name.substring(0, 7)).fetchFirst()).isEqualTo(str.substring(0, 7));
 
-    assertEquals(str.substring(15), query.select(name.substring(15)).fetchFirst());
+    assertThat(query.select(name.substring(15)).fetchFirst()).isEqualTo(str.substring(15));
 
-    assertEquals(
-        str.substring(str.length()), query.select(name.substring(name.length())).fetchFirst());
+    assertThat(query.select(name.substring(name.length())).fetchFirst()).isEqualTo(str.substring(str.length()));
 
-    assertEquals(
-        str.substring(str.length() - 11),
-        query.select(name.substring(name.length().subtract(11))).fetchFirst());
+    assertThat(query.select(name.substring(name.length().subtract(11))).fetchFirst()).isEqualTo(str.substring(str.length() - 11));
   }
 
   @Test
@@ -1879,20 +1876,20 @@ public abstract class AbstractJPATest {
     double val = query().from(cat).select(cat.bodyWeight.sum()).fetchFirst();
     DoubleProjection projection =
         query().from(cat).select(new QDoubleProjection(cat.bodyWeight.sum())).fetchFirst();
-    assertEquals(val, projection.val, 0.001);
+    assertThat(projection.val).isCloseTo(val, within(0.001));
   }
 
   @Test
   public void sum_4() {
     Double dbl = query().from(cat).select(cat.bodyWeight.sum().negate()).fetchFirst();
-    assertNotNull(dbl);
+    assertThat(dbl).isNotNull();
   }
 
   @Test
   public void sum_5() {
     QShow show = QShow.show;
     Long lng = query().from(show).select(show.id.sum()).fetchFirst();
-    assertNotNull(lng);
+    assertThat(lng).isNotNull();
   }
 
   @Test
@@ -1930,7 +1927,7 @@ public abstract class AbstractJPATest {
   @Test
   public void sum_as_float() {
     float val = query().from(cat).select(cat.floatProperty.sum()).fetchFirst();
-    assertTrue(val > 0);
+    assertThat(val > 0).isTrue();
   }
 
   @Test
@@ -1938,19 +1935,19 @@ public abstract class AbstractJPATest {
     float val = query().from(cat).select(cat.floatProperty.sum()).fetchFirst();
     FloatProjection projection =
         query().from(cat).select(new QFloatProjection(cat.floatProperty.sum())).fetchFirst();
-    assertEquals(val, projection.val, 0.001);
+    assertThat(projection.val).isCloseTo(val, within(0.001));
   }
 
   @Test
   public void sum_as_float2() {
     float val = query().from(cat).select(cat.floatProperty.sum().negate()).fetchFirst();
-    assertTrue(val < 0);
+    assertThat(val < 0).isTrue();
   }
 
   @Test
   public void sum_coalesce() {
     int val = query().from(cat).select(cat.weight.sum().coalesce(0)).fetchFirst();
-    assertEquals(0, val);
+    assertThat(val).isEqualTo(0);
   }
 
   @Test
@@ -2040,7 +2037,7 @@ public abstract class AbstractJPATest {
   @Test
   public void tupleProjection() {
     List<Tuple> tuples = query().from(cat).select(cat.name, cat).fetch();
-    assertFalse(tuples.isEmpty());
+    assertThat(tuples).isNotEmpty();
     for (Tuple tuple : tuples) {
       assertNotNull(tuple.get(cat.name));
       assertNotNull(tuple.get(cat));
@@ -2050,8 +2047,8 @@ public abstract class AbstractJPATest {
   @Test
   public void tupleProjection_as_queryResults() {
     QueryResults<Tuple> tuples = query().from(cat).limit(1).select(cat.name, cat).fetchResults();
-    assertEquals(1, tuples.getResults().size());
-    assertTrue(tuples.getTotal() > 0);
+    assertThat(tuples.getResults()).hasSize(1);
+    assertThat(tuples.getTotal() > 0).isTrue();
   }
 
   @Test
@@ -2073,7 +2070,7 @@ public abstract class AbstractJPATest {
                                 Projections.constructor(Cat.class, kitten.name, kitten.id)))));
 
     for (Cat entry : result.values()) {
-      assertEquals(1, entry.getKittens().size());
+      assertThat(entry.getKittens()).hasSize(1);
     }
   }
 
@@ -2087,7 +2084,7 @@ public abstract class AbstractJPATest {
             .innerJoin(cat.kittens, kitten)
             .transform(GroupBy.groupBy(cat.id, kitten.id).as(cat, kitten));
 
-    assertFalse(result.isEmpty());
+    assertThat(result.isEmpty()).isFalse();
     for (Tuple row : query().from(cat).innerJoin(cat.kittens, kitten).select(cat, kitten).fetch()) {
       assertNotNull(result.get(Arrays.asList(row.get(cat).getId(), row.get(kitten).getId())));
     }
@@ -2113,7 +2110,7 @@ public abstract class AbstractJPATest {
     for (Group entry : result.values()) {
       assertNotNull(entry.getOne(cat.id));
       assertNotNull(entry.getOne(cat.name));
-      assertFalse(entry.getList(k).isEmpty());
+      assertThat(entry.getList(k)).isNotEmpty();
     }
   }
 

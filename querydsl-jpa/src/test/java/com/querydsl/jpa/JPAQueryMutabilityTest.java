@@ -13,8 +13,6 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.querydsl.core.QueryMutability;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.sql.SAnimal;
@@ -67,8 +65,8 @@ public class JPAQueryMutabilityTest implements JPATest {
     SAnimal cat = new SAnimal("cat");
     JPASQLQuery<?> query = query().from(cat).where(cat.name.isNotNull());
     JPASQLQuery<?> query2 = query.clone(entityManager);
-    assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
-    assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
+    assertThat(query2.getMetadata().getJoins()).isEqualTo(query.getMetadata().getJoins());
+    assertThat(query2.getMetadata().getWhere()).isEqualTo(query.getMetadata().getWhere());
     query2.select(cat.id).fetch();
   }
 }

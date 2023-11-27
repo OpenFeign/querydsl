@@ -15,8 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
 import static com.querydsl.jpa.JPAExpressions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.domain.QCat;
 import com.querydsl.jpa.domain.QEmployee;
 import com.querydsl.jpa.domain.QUser;
@@ -27,13 +26,13 @@ public class SubQueryTest extends AbstractQueryTest {
   @Test
   public void single_source() {
     JPQLQuery<?> query = selectFrom(cat);
-    assertEquals("select cat\nfrom Cat cat", query.toString());
+    assertThat(query.toString()).isEqualTo("select cat\nfrom Cat cat");
   }
 
   @Test
   public void multiple_sources() {
     JPQLQuery<?> query = select(cat).from(cat, fatcat);
-    assertEquals("select cat\nfrom Cat cat, Cat fatcat", query.toString());
+    assertThat(query.toString()).isEqualTo("select cat\nfrom Cat cat, Cat fatcat");
   }
 
   @Test

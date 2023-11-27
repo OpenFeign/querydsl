@@ -13,10 +13,9 @@
  */
 package com.querydsl.codegen;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.StringUtils;
@@ -64,8 +63,8 @@ public class BeanSerializerTest {
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String str = writer.toString();
 
-    assertTrue(str.contains("import com.querydsl.core.annotations.QueryEntity;"));
-    assertTrue(str.contains("@QueryEntity"));
+    assertThat(str).contains("import com.querydsl.core.annotations.QueryEntity;");
+    assertThat(str).contains("@QueryEntity");
   }
 
   @Test
@@ -78,8 +77,8 @@ public class BeanSerializerTest {
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String str = writer.toString();
 
-    assertTrue(str.contains("import com.querydsl.core.annotations.QueryEntity;"));
-    assertTrue(str.contains("@QueryEntity"));
+    assertThat(str).contains("import com.querydsl.core.annotations.QueryEntity;");
+    assertThat(str).contains("@QueryEntity");
   }
 
   @Test
@@ -92,8 +91,8 @@ public class BeanSerializerTest {
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String str = writer.toString();
 
-    assertFalse(str.contains("import com.querydsl.core.annotations.QueryEntity;"));
-    assertFalse(str.contains("@QueryEntity"));
+    assertThat(str.contains("import com.querydsl.core.annotations.QueryEntity;")).isFalse();
+    assertThat(str.contains("@QueryEntity")).isFalse();
   }
 
   @Test
@@ -103,7 +102,7 @@ public class BeanSerializerTest {
 
     BeanSerializer serializer = new BeanSerializer();
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public DomainClass getcId() {"));
+    assertThat(writer.toString()).contains("public DomainClass getcId() {");
   }
 
   @Test
@@ -111,7 +110,7 @@ public class BeanSerializerTest {
     BeanSerializer serializer = new BeanSerializer();
     serializer.addInterface(new ClassType(Serializable.class));
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public class DomainClass implements Serializable {"));
+    assertThat(writer.toString()).contains("public class DomainClass implements Serializable {");
   }
 
   @Test
@@ -119,7 +118,7 @@ public class BeanSerializerTest {
     BeanSerializer serializer = new BeanSerializer();
     serializer.addInterface(Serializable.class);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public class DomainClass implements Serializable {"));
+    assertThat(writer.toString()).contains("public class DomainClass implements Serializable {");
   }
 
   @Test
@@ -137,7 +136,7 @@ public class BeanSerializerTest {
     BeanSerializer serializer = new BeanSerializer();
     serializer.setAddToString(true);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(String.valueOf(writer).contains("    @Override\n" + "    public String toString()"));
+    assertThat(String.valueOf(writer)).contains("    @Override\n" + "    public String toString()");
   }
 
   @Test
@@ -199,7 +198,7 @@ public class BeanSerializerTest {
             "Map<DomainClass, DomainClass> mapField;",
             "Set<DomainClass> setField;",
             "java.sql.Time time;")) {
-      assertTrue(str.contains(prop), prop + " was not contained");
+      assertThat(str.contains(prop)).as(prop + " was not contained").isTrue();
     }
   }
 

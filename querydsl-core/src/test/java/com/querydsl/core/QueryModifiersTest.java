@@ -13,7 +13,7 @@
  */
 package com.querydsl.core;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,33 +24,33 @@ public class QueryModifiersTest {
   @Test
   public void limit() {
     QueryModifiers modifiers = QueryModifiers.limit(12L);
-    assertEquals(Long.valueOf(12), modifiers.getLimit());
-    assertNull(modifiers.getOffset());
-    assertTrue(modifiers.isRestricting());
+    assertThat(modifiers.getLimit()).isEqualTo(Long.valueOf(12));
+    assertThat(modifiers.getOffset()).isNull();
+    assertThat(modifiers.isRestricting()).isTrue();
   }
 
   @Test
   public void offset() {
     QueryModifiers modifiers = QueryModifiers.offset(12L);
-    assertEquals(Long.valueOf(12), modifiers.getOffset());
-    assertNull(modifiers.getLimit());
-    assertTrue(modifiers.isRestricting());
+    assertThat(modifiers.getOffset()).isEqualTo(Long.valueOf(12));
+    assertThat(modifiers.getLimit()).isNull();
+    assertThat(modifiers.isRestricting()).isTrue();
   }
 
   @Test
   public void both() {
     QueryModifiers modifiers = new QueryModifiers(1L, 2L);
-    assertEquals(Long.valueOf(1), modifiers.getLimit());
-    assertEquals(Long.valueOf(2), modifiers.getOffset());
-    assertTrue(modifiers.isRestricting());
+    assertThat(modifiers.getLimit()).isEqualTo(Long.valueOf(1));
+    assertThat(modifiers.getOffset()).isEqualTo(Long.valueOf(2));
+    assertThat(modifiers.isRestricting()).isTrue();
   }
 
   @Test
   public void empty() {
     QueryModifiers modifiers = new QueryModifiers(null, null);
-    assertNull(modifiers.getLimit());
-    assertNull(modifiers.getOffset());
-    assertFalse(modifiers.isRestricting());
+    assertThat(modifiers.getLimit()).isNull();
+    assertThat(modifiers.getOffset()).isNull();
+    assertThat(modifiers.isRestricting()).isFalse();
   }
 
   @Test
@@ -59,9 +59,9 @@ public class QueryModifiersTest {
     QueryModifiers modifiers2 = new QueryModifiers(1L, null);
     QueryModifiers modifiers3 = new QueryModifiers(null, 1L);
 
-    assertEquals(modifiers1.hashCode(), QueryModifiers.EMPTY.hashCode());
-    assertEquals(modifiers2.hashCode(), QueryModifiers.limit(1L).hashCode());
-    assertEquals(modifiers3.hashCode(), QueryModifiers.offset(1L).hashCode());
+    assertThat(QueryModifiers.EMPTY.hashCode()).isEqualTo(modifiers1.hashCode());
+    assertThat(QueryModifiers.limit(1L).hashCode()).isEqualTo(modifiers2.hashCode());
+    assertThat(QueryModifiers.offset(1L).hashCode()).isEqualTo(modifiers3.hashCode());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -77,8 +77,8 @@ public class QueryModifiersTest {
   @Test
   public void subList() {
     List<Integer> ints = Arrays.asList(1, 2, 3, 4, 5);
-    assertEquals(Arrays.asList(3, 4, 5), QueryModifiers.offset(2).subList(ints));
-    assertEquals(Arrays.asList(1, 2, 3), QueryModifiers.limit(3).subList(ints));
-    assertEquals(Arrays.asList(2, 3, 4), new QueryModifiers(3L, 1L).subList(ints));
+    assertThat(QueryModifiers.offset(2).subList(ints)).isEqualTo(Arrays.asList(3, 4, 5));
+    assertThat(QueryModifiers.limit(3).subList(ints)).isEqualTo(Arrays.asList(1, 2, 3));
+    assertThat(new QueryModifiers(3L, 1L).subList(ints)).isEqualTo(Arrays.asList(2, 3, 4));
   }
 }

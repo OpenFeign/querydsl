@@ -1,7 +1,6 @@
 package com.querydsl.example.sql.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.Usert;
 import java.util.List;
@@ -19,7 +18,7 @@ public class UserRepositoryTest extends AbstractPersistenceTest {
     Usert user = new Usert();
     user.setUsername(username);
     Long id = repository.save(user);
-    assertEquals(username, repository.findById(id).getUsername());
+    assertThat(repository.findById(id).getUsername()).isEqualTo(username);
   }
 
   @Test
@@ -27,7 +26,7 @@ public class UserRepositoryTest extends AbstractPersistenceTest {
     Usert user = new Usert();
     user.setUsername("jimmy");
     repository.save(user);
-    assertTrue(repository.all().size() == 1);
+    assertThat(repository.all().size() == 1).isTrue();
   }
 
   @Test
@@ -42,9 +41,9 @@ public class UserRepositoryTest extends AbstractPersistenceTest {
     tweetRepository.save(tw3);
 
     List<UserInfo> infos = repository.allWithTweetCount();
-    assertFalse(infos.isEmpty());
+    assertThat(infos).isNotEmpty();
     for (UserInfo info : infos) {
-      assertNotNull(info.getUsername());
+      assertThat(info.getUsername()).isNotNull();
     }
   }
 }

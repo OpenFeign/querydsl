@@ -13,8 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -22,32 +21,32 @@ public class PathInitsTest {
 
   @Test
   public void defaultInits() {
-    assertFalse(PathInits.DEFAULT.isInitialized(""));
+    assertThat(PathInits.DEFAULT.isInitialized("")).isFalse();
   }
 
   @Test
   public void isInitialized() {
     PathInits inits = new PathInits(".2").get("");
-    assertFalse(inits.isInitialized("1"));
-    assertTrue(inits.isInitialized("2"));
+    assertThat(inits.isInitialized("1")).isFalse();
+    assertThat(inits.isInitialized("2")).isTrue();
   }
 
   @Test
   public void wildcard() {
-    assertTrue(new PathInits("*").isInitialized(""));
+    assertThat(new PathInits("*").isInitialized("")).isTrue();
   }
 
   @Test
   public void wildcard2() {
     PathInits inits = new PathInits(".*").get("");
-    assertTrue(inits.isInitialized("1"));
-    assertTrue(inits.isInitialized("2"));
+    assertThat(inits.isInitialized("1")).isTrue();
+    assertThat(inits.isInitialized("2")).isTrue();
   }
 
   @Test
   public void deep_wildcard() {
     PathInits inits = new PathInits("*.*").get("");
-    assertTrue(inits.isInitialized("1"));
-    assertTrue(inits.isInitialized("2"));
+    assertThat(inits.isInitialized("1")).isTrue();
+    assertThat(inits.isInitialized("2")).isTrue();
   }
 }

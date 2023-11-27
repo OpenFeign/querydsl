@@ -1,6 +1,6 @@
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
@@ -59,7 +59,7 @@ public class QueryPerformanceTest implements JPATest {
                   .createQuery("select cat from Cat cat where id = ?")
                   .setParameter(1, i + 100)
                   .getSingleResult();
-      assertNotNull(cat);
+      assertThat(cat).isNotNull();
     }
     System.err.println("by id - raw" + (System.currentTimeMillis() - start));
   }
@@ -70,7 +70,7 @@ public class QueryPerformanceTest implements JPATest {
     for (int i = 0; i < iterations; i++) {
       QCat cat = QCat.cat;
       Cat c = query().from(cat).where(cat.id.eq(i + 100)).select(cat).fetchOne();
-      assertNotNull(c);
+      assertThat(c).isNotNull();
     }
     System.err.println("by id - dsl" + (System.currentTimeMillis() - start));
   }
@@ -85,7 +85,7 @@ public class QueryPerformanceTest implements JPATest {
                   .createQuery("select cat.id, cat.name from Cat cat where id = ?")
                   .setParameter(1, i + 100)
                   .getSingleResult();
-      assertNotNull(row);
+      assertThat(row).isNotNull();
     }
     System.err.println("by id - 2 cols - raw" + (System.currentTimeMillis() - start));
   }
@@ -96,7 +96,7 @@ public class QueryPerformanceTest implements JPATest {
     for (int i = 0; i < iterations; i++) {
       QCat cat = QCat.cat;
       Tuple row = query().from(cat).where(cat.id.eq(i + 100)).select(cat.id, cat.name).fetchOne();
-      assertNotNull(row);
+      assertThat(row).isNotNull();
     }
     System.err.println("by id - 2 cols - dsl" + (System.currentTimeMillis() - start));
   }

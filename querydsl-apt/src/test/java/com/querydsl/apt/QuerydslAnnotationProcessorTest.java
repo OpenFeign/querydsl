@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.apt.hibernate.HibernateAnnotationProcessor;
 import com.querydsl.apt.jdo.JDOAnnotationProcessor;
@@ -169,6 +169,6 @@ public class QuerydslAnnotationProcessorTest extends AbstractProcessorTest {
   public void rooAnnotationProcessor() throws IOException {
     process(RooAnnotationProcessor.class, CLASSES, "roo");
 
-    assertTrue(new File("target/roo/com/querydsl/apt/domain/QRooEntities_MyEntity.java").exists());
+    assertThat(new File("target/roo/com/querydsl/apt/domain/QRooEntities_MyEntity.java")).exists();
   }
 }

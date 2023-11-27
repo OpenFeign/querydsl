@@ -1,9 +1,9 @@
 package com.querydsl.collections;
 
 import static com.querydsl.collections.PathMatcher.hasValue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.hamcrest.Description;
 import org.hamcrest.StringDescription;
@@ -29,13 +29,13 @@ public class PathMatcherTest {
 
     Description mismatchDescription = new StringDescription();
     hasValue($.horsePower, equalTo(321)).describeMismatch(car, mismatchDescription);
-    assertEquals("value \"car.horsePower\" was <123>", mismatchDescription.toString());
+    assertThat(mismatchDescription.toString()).isEqualTo("value \"car.horsePower\" was <123>");
   }
 
   @Test
   public void describe() {
     Description description = new StringDescription();
     hasValue($.horsePower, equalTo(321)).describeTo(description);
-    assertEquals("valueOf(\"car.horsePower\", <321>)", description.toString());
+    assertThat(description.toString()).isEqualTo("valueOf(\"car.horsePower\", <321>)");
   }
 }

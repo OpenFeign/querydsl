@@ -13,7 +13,7 @@
  */
 
 import static com.querydsl.jpa.JPAExpressions.select;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPQLQuery;
@@ -27,6 +27,6 @@ public class PackagelessEntityTest {
     PathBuilder<PackagelessEntityTest> builder =
         new PathBuilder(PackagelessEntityTest.class, "entity");
     JPQLQuery<?> query = select(builder).from(builder);
-    assertEquals("select entity\nfrom PackagelessEntityTest entity", query.toString());
+    assertThat(query.toString()).isEqualTo("select entity\nfrom PackagelessEntityTest entity");
   }
 }

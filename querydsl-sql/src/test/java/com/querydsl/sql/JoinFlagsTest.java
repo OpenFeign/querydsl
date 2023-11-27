@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.JoinFlag;
 import com.querydsl.sql.domain.QSurvey;
@@ -49,8 +49,8 @@ public class JoinFlagsTest {
     query.innerJoin(s2).on(s1.eq(s2));
     query.addJoinFlag(" a ", JoinFlag.Position.BEFORE_CONDITION);
 
-    assertEquals(
-        "from SURVEY s\n" + "inner join SURVEY s2 a \n" + "on s.ID = s2.ID", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("from SURVEY s\n" + "inner join SURVEY s2 a \n" + "on s.ID = s2.ID");
   }
 
   @SuppressWarnings("unchecked")
@@ -59,8 +59,8 @@ public class JoinFlagsTest {
     query.innerJoin(s3).on(s1.eq(s3));
     query.addJoinFlag(" b ", JoinFlag.Position.BEFORE_TARGET);
 
-    assertEquals(
-        "from SURVEY s\n" + "inner join  b SURVEY s3\n" + "on s.ID = s3.ID", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("from SURVEY s\n" + "inner join  b SURVEY s3\n" + "on s.ID = s3.ID");
   }
 
   @SuppressWarnings("unchecked")
@@ -69,8 +69,8 @@ public class JoinFlagsTest {
     query.innerJoin(s4).on(s1.eq(s4));
     query.addJoinFlag(" c ", JoinFlag.Position.END);
 
-    assertEquals(
-        "from SURVEY s\n" + "inner join SURVEY s4\n" + "on s.ID = s4.ID c", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("from SURVEY s\n" + "inner join SURVEY s4\n" + "on s.ID = s4.ID c");
   }
 
   @SuppressWarnings("unchecked")
@@ -79,7 +79,7 @@ public class JoinFlagsTest {
     query.innerJoin(s5).on(s1.eq(s5));
     query.addJoinFlag(" d ", JoinFlag.Position.OVERRIDE);
 
-    assertEquals("from SURVEY s d SURVEY s5\n" + "on s.ID = s5.ID", query.toString());
+    assertThat(query.toString()).isEqualTo("from SURVEY s d SURVEY s5\n" + "on s.ID = s5.ID");
   }
 
   @SuppressWarnings("unchecked")
@@ -88,7 +88,7 @@ public class JoinFlagsTest {
     query.innerJoin(s6).on(s1.eq(s6));
     query.addJoinFlag(" e ", JoinFlag.Position.START);
 
-    assertEquals(
-        "from SURVEY s e \n" + "inner join SURVEY s6\n" + "on s.ID = s6.ID", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("from SURVEY s e \n" + "inner join SURVEY s6\n" + "on s.ID = s6.ID");
   }
 }

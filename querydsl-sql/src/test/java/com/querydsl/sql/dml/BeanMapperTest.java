@@ -1,7 +1,6 @@
 package com.querydsl.sql.dml;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Path;
 import com.querydsl.sql.domain.QEmployee;
@@ -15,17 +14,17 @@ public class BeanMapperTest extends AbstractMapperTest {
   @Test
   public void extract() {
     Map<Path<?>, Object> values = BeanMapper.DEFAULT.createMap(emp, employee);
-    assertEquals(employee.getDatefield(), values.get(emp.datefield));
-    assertEquals(employee.getFirstname(), values.get(emp.firstname));
-    assertEquals(employee.getLastname(), values.get(emp.lastname));
-    assertEquals(employee.getSalary(), values.get(emp.salary));
-    assertEquals(employee.getSuperiorId(), values.get(emp.superiorId));
-    assertEquals(employee.getTimefield(), values.get(emp.timefield));
+    assertThat(values).containsEntry(emp.datefield, employee.getDatefield());
+    assertThat(values).containsEntry(emp.firstname, employee.getFirstname());
+    assertThat(values).containsEntry(emp.lastname, employee.getLastname());
+    assertThat(values).containsEntry(emp.salary, employee.getSalary());
+    assertThat(values).containsEntry(emp.superiorId, employee.getSuperiorId());
+    assertThat(values).containsEntry(emp.timefield, employee.getTimefield());
   }
 
   @Test
   public void extract2() {
     Map<Path<?>, Object> values = BeanMapper.DEFAULT.createMap(emp, new EmployeeX());
-    assertTrue(values.isEmpty());
+    assertThat(values.isEmpty()).isTrue();
   }
 }

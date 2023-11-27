@@ -15,7 +15,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.survey;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
@@ -53,10 +53,10 @@ public class DeleteBase extends AbstractBaseTest {
 
     SQLDeleteClause delete = delete(survey);
     delete.where(survey.name.eq("A")).addBatch();
-    assertEquals(1, delete.getBatchCount());
+    assertThat(delete.getBatchCount()).isEqualTo(1);
     delete.where(survey.name.eq("B")).addBatch();
-    assertEquals(2, delete.getBatchCount());
-    assertEquals(2, delete.execute());
+    assertThat(delete.getBatchCount()).isEqualTo(2);
+    assertThat(delete.execute()).isEqualTo(2);
   }
 
   @Test
@@ -68,15 +68,15 @@ public class DeleteBase extends AbstractBaseTest {
     SQLDeleteClause delete = delete(survey);
     delete.where(survey.name.eq(Expressions.stringTemplate("'A'"))).addBatch();
     delete.where(survey.name.eq(Expressions.stringTemplate("'B'"))).addBatch();
-    assertEquals(2, delete.execute());
+    assertThat(delete.execute()).isEqualTo(2);
   }
 
   @Test
   @ExcludeIn(MYSQL)
   public void delete() throws SQLException {
     long count = query().from(survey).fetchCount();
-    assertEquals(0, delete(survey).where(survey.name.eq("XXX")).execute());
-    assertEquals(count, delete(survey).execute());
+    assertThat(delete(survey).where(survey.name.eq("XXX")).execute()).isEqualTo(0);
+    assertThat(delete(survey).execute()).isEqualTo(count);
   }
 
   @Test
@@ -86,7 +86,7 @@ public class DeleteBase extends AbstractBaseTest {
     insert(survey).values(3, "B", "C").execute();
     insert(survey).values(4, "D", "E").execute();
 
-    assertEquals(2, delete(survey).limit(2).execute());
+    assertThat(delete(survey).limit(2).execute()).isEqualTo(2);
   }
 
   @Test
@@ -96,7 +96,7 @@ public class DeleteBase extends AbstractBaseTest {
     SQLDeleteClause delete = delete(survey1);
     delete.where(
         survey1.name.eq("XXX"), query().from(employee).where(survey1.id.eq(employee.id)).exists());
-    assertEquals(0, delete.execute());
+    assertThat(delete.execute()).isEqualTo(0);
   }
 
   @Test
@@ -110,7 +110,7 @@ public class DeleteBase extends AbstractBaseTest {
 
     SQLDeleteClause delete = delete(survey1);
     delete.where(survey1.name.eq("XXX"), sq.exists());
-    assertEquals(0, delete.execute());
+    assertThat(delete.execute()).isEqualTo(0);
   }
 
   @Test
@@ -121,17 +121,17 @@ public class DeleteBase extends AbstractBaseTest {
     delete.where(
         survey1.name.eq("XXX"),
         query().from(employee).where(survey1.name.eq(employee.lastname)).exists());
-    assertEquals(0, delete.execute());
+    assertThat(delete.execute()).isEqualTo(0);
   }
 
   @Test
   @ExcludeIn({CUBRID, SQLITE})
   public void delete_with_tempateExpression_in_batch() {
-    assertEquals(
-        1,
-        delete(survey)
-            .where(survey.name.eq(Expressions.stringTemplate("'Hello World'")))
-            .addBatch()
-            .execute());
+    assertThat(
+            delete(survey)
+                .where(survey.name.eq(Expressions.stringTemplate("'Hello World'")))
+                .addBatch()
+                .execute())
+        .isEqualTo(1);
   }
 }

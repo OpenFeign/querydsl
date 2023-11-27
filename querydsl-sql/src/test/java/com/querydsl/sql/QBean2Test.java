@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
@@ -94,8 +94,8 @@ public class QBean2Test {
             Person.class, p.id, p.firstName.as("firstName"), p.lastName.as("lastName"));
 
     Person person = projection.newInstance(3, "John", "Doe");
-    assertEquals(3, person.getId());
-    assertEquals("John", person.getFirstName());
-    assertEquals("Doe", person.getLastName());
+    assertThat(person.getId()).isEqualTo(3);
+    assertThat(person.getFirstName()).isEqualTo("John");
+    assertThat(person.getLastName()).isEqualTo("Doe");
   }
 }

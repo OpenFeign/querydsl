@@ -13,8 +13,7 @@
  */
 package com.querydsl.core.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -25,26 +24,26 @@ public class NullSafeComparableComparatorTest {
 
   @Test
   public void null_before_object() {
-    assertTrue(comparator.compare(null, "X") < 0);
+    assertThat(comparator.compare(null, "X") < 0).isTrue();
   }
 
   @Test
   public void object_after_null() {
-    assertTrue(comparator.compare("X", null) > 0);
+    assertThat(comparator.compare("X", null) > 0).isTrue();
   }
 
   @Test
   public void object_eq_object() {
-    assertEquals(0, comparator.compare("X", "X"));
+    assertThat(comparator.compare("X", "X")).isEqualTo(0);
   }
 
   @Test
   public void object_lt_object() {
-    assertTrue(comparator.compare("X", "Y") < 0);
+    assertThat(comparator.compare("X", "Y") < 0).isTrue();
   }
 
   @Test
   public void object_gt_object() {
-    assertTrue(comparator.compare("Z", "Y") > 0);
+    assertThat(comparator.compare("Z", "Y") > 0).isTrue();
   }
 }

@@ -1,9 +1,8 @@
 package com.querydsl.jpa.codegen.ant;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -33,7 +32,7 @@ public class AntJPADomainExporterTest {
 
     File origRoot = new File("../querydsl-jpa/target/generated-test-sources/test-annotations");
     Set<File> files = exporter.getGeneratedFiles();
-    assertFalse(files.isEmpty());
+    assertThat(files).isNotEmpty();
     for (File file : files) {
       Path relativeFile = outputFolder.relativize(file.toPath());
       Path origFile = origRoot.toPath().resolve(relativeFile);

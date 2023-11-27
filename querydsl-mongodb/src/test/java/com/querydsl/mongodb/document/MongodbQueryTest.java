@@ -16,7 +16,7 @@
 package com.querydsl.mongodb.document;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
@@ -112,31 +112,31 @@ public class MongodbQueryTest {
   @Test
   public void query1() {
     assertEquals(4L, query(user).fetchCount());
-    assertEquals(4L, query(User.class).fetchCount());
+    assertThat(query(User.class).fetchCount()).isEqualTo(4L);
   }
 
   @Test
   public void list_keys() {
     Document u =
         where(user.firstName.eq("Jaakko")).fetch(user.firstName, user.mainAddress().street).get(0);
-    assertEquals("Jaakko", u.get("firstName"));
-    assertNull(u.get("lastName"));
-    assertEquals("Aakatu", u.get("mainAddress", Document.class).get("street"));
-    assertNull(u.get("mainAddress", Document.class).get("postCode"));
+    assertThat(u.get("firstName")).isEqualTo("Jaakko");
+    assertThat(u.get("lastName")).isNull();
+    assertThat(u.get("mainAddress", Document.class).get("street")).isEqualTo("Aakatu");
+    assertThat(u.get("mainAddress", Document.class).get("postCode")).isNull();
   }
 
   @Test
   public void singleResult_keys() {
     Document u = where(user.firstName.eq("Jaakko")).fetchFirst(user.firstName);
-    assertEquals("Jaakko", u.get("firstName"));
-    assertNull(u.get("lastName"));
+    assertThat(u.get("firstName")).isEqualTo("Jaakko");
+    assertThat(u.get("lastName")).isNull();
   }
 
   @Test
   public void uniqueResult_keys() {
     Document u = where(user.firstName.eq("Jaakko")).fetchOne(user.firstName);
-    assertEquals("Jaakko", u.get("firstName"));
-    assertNull(u.get("lastName"));
+    assertThat(u.get("firstName")).isEqualTo("Jaakko");
+    assertThat(u.get("lastName")).isNull();
   }
 
   @Test
@@ -144,8 +144,8 @@ public class MongodbQueryTest {
     Document u = where(user.firstName.eq("Jaakko")).fetchFirst(user.addresses.any().street);
     List<Document> addresses = u.get("addresses", List.class);
     for (Document a : addresses) {
-      assertNotNull(a.get("street"));
-      assertNull(a.get("city"));
+      assertThat(a.get("street")).isNotNull();
+      assertThat(a.get("city")).isNull();
     }
   }
 
@@ -315,16 +315,16 @@ public class MongodbQueryTest {
 
   @Test
   public void count() {
-    assertEquals(4, query().fetchCount());
+    assertThat(query().fetchCount()).isEqualTo(4);
   }
 
   @Test
   public void order() {
     List<Document> users = query().orderBy(user.age.asc()).fetch();
-    assertEquals(asList(u1, u2, u3, u4), users);
+    assertThat(users).isEqualTo(asList(u1, u2, u3, u4));
 
     users = query().orderBy(user.age.desc()).fetch();
-    assertEquals(asList(u4, u3, u2, u1), users);
+    assertThat(users).isEqualTo(asList(u4, u3, u2, u1));
   }
 
   @Test
@@ -336,19 +336,19 @@ public class MongodbQueryTest {
   @Test
   public void listResults() {
     QueryResults<Document> results = query().limit(2).orderBy(user.age.asc()).fetchResults();
-    assertEquals(4L, results.getTotal());
-    assertEquals(2, results.getResults().size());
+    assertThat(results.getTotal()).isEqualTo(4L);
+    assertThat(results.getResults()).hasSize(2);
 
     results = query().offset(2).orderBy(user.age.asc()).fetchResults();
-    assertEquals(4L, results.getTotal());
-    assertEquals(2, results.getResults().size());
+    assertThat(results.getTotal()).isEqualTo(4L);
+    assertThat(results.getResults()).hasSize(2);
   }
 
   @Test
   public void emptyResults() {
     QueryResults<Document> results = query().where(user.firstName.eq("XXX")).fetchResults();
-    assertEquals(0L, results.getTotal());
-    assertEquals(Collections.emptyList(), results.getResults());
+    assertThat(results.getTotal()).isEqualTo(0L);
+    assertThat(results.getResults()).isEqualTo(Collections.emptyList());
   }
 
   @Test
@@ -505,17 +505,17 @@ public class MongodbQueryTest {
     Iterator<Document> i =
         where(user.firstName.startsWith("A")).orderBy(user.firstName.asc()).iterate();
 
-    assertEquals(a.getId(), i.next().get("_id"));
-    assertEquals(b.getId(), i.next().get("_id"));
-    assertEquals(c.getId(), i.next().get("_id"));
-    assertEquals(false, i.hasNext());
+    assertThat(i.next().get("_id")).isEqualTo(a.getId());
+    assertThat(i.next().get("_id")).isEqualTo(b.getId());
+    assertThat(i.next().get("_id")).isEqualTo(c.getId());
+    assertThat(i.hasNext()).isEqualTo(false);
   }
 
   @Test
   public void uniqueResultAndLimitAndOffset() {
     SimpleMongodbQuery q = query().where(user.firstName.startsWith("Ja")).orderBy(user.age.asc());
-    assertEquals(4, q.fetch().size());
-    assertEquals(u1, q.fetch().get(0));
+    assertThat(q.fetch()).hasSize(4);
+    assertThat(q.fetch().get(0)).isEqualTo(u1);
   }
 
   @Test
@@ -569,7 +569,7 @@ public class MongodbQueryTest {
     for (Predicate predicate : predicates) {
       long count1 = where(predicate).fetchCount();
       long count2 = where(predicate.not()).fetchCount();
-      assertEquals(4, count1 + count2, predicate.toString());
+      assertThat(count1 + count2).as(predicate.toString()).isEqualTo(4);
     }
   }
 
@@ -619,15 +619,15 @@ public class MongodbQueryTest {
   public void readPreference() {
     SimpleMongodbQuery query = query();
     query.setReadPreference(ReadPreference.primary());
-    assertEquals(4, query.fetchCount());
+    assertThat(query.fetchCount()).isEqualTo(4);
   }
 
   @Test
   public void asDBObject() {
     SimpleMongodbQuery query = query();
     query.where(user.firstName.eq("Bob"), user.lastName.eq("Wilson"));
-    assertEquals(
-        new Document().append("firstName", "Bob").append("lastName", "Wilson"), query.asDocument());
+    assertThat(query.asDocument())
+        .isEqualTo(new Document().append("firstName", "Bob").append("lastName", "Wilson"));
   }
 
   private Document asDocument(AbstractEntity entity) {
@@ -669,15 +669,15 @@ public class MongodbQueryTest {
     String toString = query.toString();
     List<Document> results = query.fetch();
 
-    assertNotNull(results, toString);
+    assertThat(results).as(toString).isNotNull();
     if (expected == null) {
-      assertEquals(0, results.size(), "Should get empty result");
+      assertThat(results.size()).as("Should get empty result").isEqualTo(0);
       return;
     }
-    assertEquals(expected.length, results.size(), toString);
+    assertThat(results.size()).as(toString).isEqualTo(expected.length);
     int i = 0;
     for (Document u : expected) {
-      assertEquals(u, results.get(i++), toString);
+      assertThat(results.get(i++)).as(toString).isEqualTo(u);
     }
   }
 

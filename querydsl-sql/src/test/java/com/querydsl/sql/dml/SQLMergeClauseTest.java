@@ -1,6 +1,6 @@
 package com.querydsl.sql.dml;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.H2Templates;
 import com.querydsl.sql.KeyAccessorsTest;
@@ -14,8 +14,8 @@ public class SQLMergeClauseTest {
     SQLMergeClause merge = new SQLMergeClause(null, new H2Templates(), emp1);
     merge.set(emp1.id, 1);
     merge.addBatch();
-    assertEquals(1, merge.getBatchCount());
+    assertThat(merge.getBatchCount()).isEqualTo(1);
     merge.clear();
-    assertEquals(0, merge.getBatchCount());
+    assertThat(merge.getBatchCount()).isEqualTo(0);
   }
 }

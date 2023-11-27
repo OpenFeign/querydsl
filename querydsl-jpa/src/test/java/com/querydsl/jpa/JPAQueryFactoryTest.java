@@ -13,8 +13,6 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import com.querydsl.jpa.domain.QAnimal;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.sql.SQLExpressions;
@@ -55,7 +53,7 @@ public class JPAQueryFactoryTest {
 
   @Test
   public void query() {
-    assertNotNull(queryFactory.query());
+    assertThat(queryFactory.query()).isNotNull();
   }
 
   @Test

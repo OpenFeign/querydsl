@@ -1,7 +1,6 @@
 package com.querydsl.core.support;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
@@ -28,7 +27,7 @@ public class NumberConversionsTest {
     EnumPath<Color> color = Expressions.enumPath(Color.class, "path");
     QTuple qTuple = Projections.tuple(color);
     NumberConversions<Tuple> conversions = new NumberConversions<Tuple>(qTuple);
-    assertEquals(Color.BLUE, conversions.newInstance("BLUE").get(color));
+    assertThat(conversions.newInstance("BLUE").get(color)).isEqualTo(Color.BLUE);
   }
 
   @Test
@@ -36,7 +35,7 @@ public class NumberConversionsTest {
     EnumPath<Color> color = Expressions.enumPath(Color.class, "path");
     QTuple qTuple = Projections.tuple(color);
     NumberConversions<Tuple> conversions = new NumberConversions<Tuple>(qTuple);
-    assertEquals(Color.RED, conversions.newInstance(2).get(color));
+    assertThat(conversions.newInstance(2).get(color)).isEqualTo(Color.RED);
   }
 
   @Test
@@ -45,7 +44,7 @@ public class NumberConversionsTest {
     NumberPath<Integer> intPath = Expressions.numberPath(Integer.class, "intPath");
     QTuple qTuple = Projections.tuple(strPath, intPath);
     NumberConversions<Tuple> conversions = new NumberConversions<Tuple>(qTuple);
-    assertNotNull(conversions.newInstance(1, 2));
+    assertThat(conversions.newInstance(1, 2)).isNotNull();
   }
 
   @Test
@@ -55,7 +54,7 @@ public class NumberConversionsTest {
     QTuple qTuple = Projections.tuple(strPath, intPath);
     NumberConversions<Tuple> conversions = new NumberConversions<Tuple>(qTuple);
     Tuple tuple = conversions.newInstance("a", 3L);
-    assertEquals("a", tuple.get(strPath));
-    assertEquals(Integer.valueOf(3), tuple.get(intPath));
+    assertThat(tuple.get(strPath)).isEqualTo("a");
+    assertThat(tuple.get(intPath)).isEqualTo(Integer.valueOf(3));
   }
 }

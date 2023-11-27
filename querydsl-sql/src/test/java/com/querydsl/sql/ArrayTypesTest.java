@@ -1,6 +1,6 @@
 package com.querydsl.sql;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Types;
 import org.junit.Before;
@@ -17,9 +17,9 @@ public class ArrayTypesTest {
 
   @Test
   public void test() {
-    assertEquals(Integer[].class, getJavaType("_integer"));
-    assertEquals(Integer[].class, getJavaType("integer[]"));
-    assertEquals(Integer[].class, getJavaType("INTEGER ARRAY"));
+    assertThat(getJavaType("_integer")).isEqualTo(Integer[].class);
+    assertThat(getJavaType("integer[]")).isEqualTo(Integer[].class);
+    assertThat(getJavaType("INTEGER ARRAY")).isEqualTo(Integer[].class);
   }
 
   private Class<?> getJavaType(String typeName) {

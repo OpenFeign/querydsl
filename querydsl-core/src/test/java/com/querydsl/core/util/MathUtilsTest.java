@@ -13,7 +13,8 @@
  */
 package com.querydsl.core.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -24,12 +25,12 @@ public class MathUtilsTest {
 
   @Test
   public void sum() {
-    assertEquals(Integer.valueOf(5), MathUtils.sum(2, 3.0));
+    assertThat(MathUtils.sum(2, 3.0)).isEqualTo(Integer.valueOf(5));
   }
 
   @Test
   public void difference() {
-    assertEquals(Integer.valueOf(2), MathUtils.difference(5, 3.0));
+    assertThat(MathUtils.difference(5, 3.0)).isEqualTo(Integer.valueOf(2));
   }
 
   @Test
@@ -59,7 +60,7 @@ public class MathUtilsTest {
   @Test
   public void cast_returns_null_when_input_is_null() {
     Integer result = MathUtils.cast(null, Integer.class);
-    assertNull(result);
+    assertThat(result).isNull();
   }
 
   @Test
@@ -70,16 +71,16 @@ public class MathUtilsTest {
             () -> {
               checkCast(1, AtomicInteger.class);
             });
-    assertTrue(exception.getMessage().contains("Unsupported target type"));
+    assertThat(exception.getMessage()).contains("Unsupported target type");
   }
 
   private static void checkCast(Number value, Class<? extends Number> targetClass) {
     Number target = MathUtils.cast(value, targetClass);
-    assertSame(targetClass, target.getClass());
+    assertThat(target.getClass()).isSameAs(targetClass);
   }
 
   private static <N extends Number> void checkSame(N value, Class<N> targetClass) {
     N target = MathUtils.cast(value, targetClass);
-    assertSame(value, target);
+    assertThat(target).isSameAs(value);
   }
 }

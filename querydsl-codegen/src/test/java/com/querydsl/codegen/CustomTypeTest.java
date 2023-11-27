@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.ClassType;
@@ -42,14 +42,13 @@ public class CustomTypeTest {
     entityType.addProperty(new Property(entityType, "property", new ClassType(Double[].class)));
     typeMappings.register(new ClassType(Double[].class), new ClassType(Point.class));
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
-    assertTrue(typeMappings.isRegistered(entityType.getProperties().iterator().next().getType()));
+    assertThat(typeMappings.isRegistered(entityType.getProperties().iterator().next().getType()))
+        .isTrue();
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(
-        writer
-            .toString()
-            .contains(
-                "public final com.querydsl.codegen.Point property = "
-                    + "new com.querydsl.codegen.Point(forProperty(\"property\"));"));
+    assertThat(writer.toString())
+        .contains(
+            "public final com.querydsl.codegen.Point property = "
+                + "new com.querydsl.codegen.Point(forProperty(\"property\"));");
   }
 }

@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.alias;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -30,14 +30,16 @@ public class MethodTypeTest {
     Method size = Collection.class.getMethod("size");
     Method toString = Object.class.getMethod("toString");
 
-    assertEquals(
-        MethodType.GET_MAPPED_PATH, MethodType.get(ManagedObject.class.getMethod("__mappedPath")));
-    assertEquals(MethodType.GETTER, MethodType.get(getVal));
-    assertEquals(MethodType.HASH_CODE, MethodType.get(hashCode));
-    assertEquals(MethodType.LIST_ACCESS, MethodType.get(List.class.getMethod("get", int.class)));
-    assertEquals(MethodType.MAP_ACCESS, MethodType.get(Map.class.getMethod("get", Object.class)));
-    assertEquals(MethodType.SIZE, MethodType.get(size));
-    assertEquals(MethodType.TO_STRING, MethodType.get(toString));
+    assertThat(MethodType.get(ManagedObject.class.getMethod("__mappedPath")))
+        .isEqualTo(MethodType.GET_MAPPED_PATH);
+    assertThat(MethodType.get(getVal)).isEqualTo(MethodType.GETTER);
+    assertThat(MethodType.get(hashCode)).isEqualTo(MethodType.HASH_CODE);
+    assertThat(MethodType.get(List.class.getMethod("get", int.class)))
+        .isEqualTo(MethodType.LIST_ACCESS);
+    assertThat(MethodType.get(Map.class.getMethod("get", Object.class)))
+        .isEqualTo(MethodType.MAP_ACCESS);
+    assertThat(MethodType.get(size)).isEqualTo(MethodType.SIZE);
+    assertThat(MethodType.get(toString)).isEqualTo(MethodType.TO_STRING);
   }
 
   public String getVal() {

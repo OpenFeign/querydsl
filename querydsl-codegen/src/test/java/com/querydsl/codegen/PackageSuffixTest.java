@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.SimpleType;
@@ -42,7 +42,7 @@ public class PackageSuffixTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("import test.Entity;"));
-    assertTrue(writer.toString().contains("public class QEntity extends EntityPathBase<Entity> {"));
+    assertThat(writer.toString()).contains("import test.Entity;");
+    assertThat(writer.toString()).contains("public class QEntity extends EntityPathBase<Entity> {");
   }
 }

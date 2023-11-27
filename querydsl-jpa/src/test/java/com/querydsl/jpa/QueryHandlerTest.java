@@ -1,6 +1,6 @@
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -8,9 +8,10 @@ public class QueryHandlerTest {
 
   @Test
   public void types() {
-    assertEquals(
-        EclipseLinkHandler.class, EclipseLinkTemplates.DEFAULT.getQueryHandler().getClass());
-    assertEquals(HibernateHandler.class, HQLTemplates.DEFAULT.getQueryHandler().getClass());
-    assertEquals(DefaultQueryHandler.class, JPQLTemplates.DEFAULT.getQueryHandler().getClass());
+    assertThat(EclipseLinkTemplates.DEFAULT.getQueryHandler().getClass())
+        .isEqualTo(EclipseLinkHandler.class);
+    assertThat(HQLTemplates.DEFAULT.getQueryHandler().getClass()).isEqualTo(HibernateHandler.class);
+    assertThat(JPQLTemplates.DEFAULT.getQueryHandler().getClass())
+        .isEqualTo(DefaultQueryHandler.class);
   }
 }

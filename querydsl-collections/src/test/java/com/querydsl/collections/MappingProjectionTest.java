@@ -1,6 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.MappingProjection;
@@ -39,6 +39,6 @@ public class MappingProjectionTest extends AbstractQueryTest {
                 })
             .fetch();
 
-    assertEquals(cats.size(), list.size());
+    assertThat(list).hasSize(cats.size());
   }
 }

@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.QueryExecution;
@@ -106,7 +106,7 @@ public class CollQueryStandardTest {
     List<Tuple> tuples =
         CollQueryFactory.from(cat, data).select(new Expression<?>[] {cat.name}).fetch();
     for (Tuple tuple : tuples) {
-      assertEquals(1, tuple.size());
+      assertThat(tuple.size()).isEqualTo(1);
       assertNotNull(tuple.get(cat.name));
     }
   }
@@ -118,9 +118,9 @@ public class CollQueryStandardTest {
             .select(new Expression<?>[] {Expressions.nullExpression()})
             .fetch();
     for (Tuple tuple : tuples) {
-      assertNotNull(tuple);
-      assertEquals(1, tuple.size()); // THIS FAILS WITH NPE
-      assertNull(tuple.get(Expressions.nullExpression()));
+      assertThat(tuple).isNotNull();
+      assertThat(tuple.size()).isEqualTo(1); // THIS FAILS WITH NPE
+      assertThat(tuple.get(Expressions.nullExpression())).isNull();
     }
   }
 
@@ -143,9 +143,9 @@ public class CollQueryStandardTest {
         CollQueryFactory.from(cat, data)
             .select(new ArrayConstructorExpression<String>(String[].class, cat.name))
             .fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (String[] result : results) {
-      assertNotNull(result[0]);
+      assertThat(result[0]).isNotNull();
     }
   }
 
@@ -155,9 +155,9 @@ public class CollQueryStandardTest {
         CollQueryFactory.from(cat, data)
             .select(Projections.constructor(Projection.class, cat.name, cat))
             .fetch();
-    assertFalse(projections.isEmpty());
+    assertThat(projections).isNotEmpty();
     for (Projection projection : projections) {
-      assertNotNull(projection);
+      assertThat(projection).isNotNull();
     }
   }
 

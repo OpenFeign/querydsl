@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -23,11 +23,11 @@ public class ComparableExpressionTest {
 
   @Test
   public void between_start_given() {
-    assertEquals(strPath.goe("A"), strPath.between("A", null));
+    assertThat(strPath.between("A", null)).isEqualTo(strPath.goe("A"));
   }
 
   @Test
   public void between_end_given() {
-    assertEquals(strPath.loe("Z"), strPath.between(null, "Z"));
+    assertThat(strPath.between(null, "Z")).isEqualTo(strPath.loe("Z"));
   }
 }

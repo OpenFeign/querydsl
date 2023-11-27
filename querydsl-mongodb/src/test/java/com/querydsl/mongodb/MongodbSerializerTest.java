@@ -13,7 +13,7 @@
  */
 package com.querydsl.mongodb;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -171,13 +171,13 @@ public class MongodbSerializerTest {
   @Test
   public void orderBy() {
     DBObject orderBy = serializer.toSort(sortList(year.asc()));
-    assertEquals(dbo("year", 1), orderBy);
+    assertThat(orderBy).isEqualTo(dbo("year", 1));
 
     orderBy = serializer.toSort(sortList(year.desc()));
-    assertEquals(dbo("year", -1), orderBy);
+    assertThat(orderBy).isEqualTo(dbo("year", -1));
 
     orderBy = serializer.toSort(sortList(year.desc(), title.asc()));
-    assertEquals(dbo("year", -1).append("title", 1), orderBy);
+    assertThat(orderBy).isEqualTo(dbo("year", -1).append("title", 1));
   }
 
   @Test
@@ -280,7 +280,7 @@ public class MongodbSerializerTest {
 
   private void assertQuery(Expression<?> e, BasicDBObject expected) {
     BasicDBObject result = (BasicDBObject) serializer.handle(e);
-    assertEquals(expected.toString(), result.toString());
+    assertThat(result.toString()).isEqualTo(expected.toString());
   }
 
   public static BasicDBObject dbo(String key, Object... value) {

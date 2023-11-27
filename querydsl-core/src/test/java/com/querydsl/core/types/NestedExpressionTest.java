@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
@@ -34,24 +34,24 @@ public class NestedExpressionTest {
   @Test
   public void wrapped_projection_has_right_arguments() {
     FactoryExpression<String> wrapped = FactoryExpressionUtils.wrap(concat1);
-    assertEquals(Arrays.asList(str1, str2, str3), wrapped.getArgs());
+    assertThat(wrapped.getArgs()).isEqualTo(Arrays.asList(str1, str2, str3));
   }
 
   @Test
   public void wrapped_projection_compresses_projection() {
     FactoryExpression<String> wrapped = FactoryExpressionUtils.wrap(concat1);
-    assertEquals("123", wrapped.newInstance("1", "2", "3"));
+    assertThat(wrapped.newInstance("1", "2", "3")).isEqualTo("123");
   }
 
   @Test
   public void deeply_wrapped_projection_has_right_arguments() {
     FactoryExpression<String> wrapped = FactoryExpressionUtils.wrap(concat2);
-    assertEquals(Arrays.asList(str1, str2, str3, str4), wrapped.getArgs());
+    assertThat(wrapped.getArgs()).isEqualTo(Arrays.asList(str1, str2, str3, str4));
   }
 
   @Test
   public void deeply_wrapped_projection_compresses_projection() {
     FactoryExpression<String> wrapped = FactoryExpressionUtils.wrap(concat2);
-    assertEquals("1234", wrapped.newInstance("1", "2", "3", "4"));
+    assertThat(wrapped.newInstance("1", "2", "3", "4")).isEqualTo("1234");
   }
 }

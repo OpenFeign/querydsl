@@ -1,6 +1,6 @@
 package com.querydsl.spatial.hibernate;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Operator;
 import com.querydsl.spatial.SpatialOps;
@@ -13,7 +13,7 @@ public class HibernateSpatialSupportTest {
   public void allMapped() {
     Map<Operator, String> mapping = HibernateSpatialSupport.getSpatialOps();
     for (Operator operator : SpatialOps.values()) {
-      assertTrue(mapping.containsKey(operator), operator + " missing");
+      assertThat(mapping.containsKey(operator)).as(operator + " missing").isTrue();
     }
   }
 }

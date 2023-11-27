@@ -14,7 +14,7 @@
 package com.querydsl.mongodb;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -94,39 +94,39 @@ public class MongodbQueryTest {
   @Test
   public void query1() {
     assertEquals(4L, query(user).fetchCount());
-    assertEquals(4L, query(User.class).fetchCount());
+    assertThat(query(User.class).fetchCount()).isEqualTo(4L);
   }
 
   @Test
   public void list_keys() {
     User u =
         where(user.firstName.eq("Jaakko")).fetch(user.firstName, user.mainAddress().street).get(0);
-    assertEquals("Jaakko", u.getFirstName());
-    assertNull(u.getLastName());
-    assertEquals("Aakatu", u.getMainAddress().street);
-    assertNull(u.getMainAddress().postCode);
+    assertThat(u.getFirstName()).isEqualTo("Jaakko");
+    assertThat(u.getLastName()).isNull();
+    assertThat(u.getMainAddress().street).isEqualTo("Aakatu");
+    assertThat(u.getMainAddress().postCode).isNull();
   }
 
   @Test
   public void singleResult_keys() {
     User u = where(user.firstName.eq("Jaakko")).fetchFirst(user.firstName);
-    assertEquals("Jaakko", u.getFirstName());
-    assertNull(u.getLastName());
+    assertThat(u.getFirstName()).isEqualTo("Jaakko");
+    assertThat(u.getLastName()).isNull();
   }
 
   @Test
   public void uniqueResult_keys() {
     User u = where(user.firstName.eq("Jaakko")).fetchOne(user.firstName);
-    assertEquals("Jaakko", u.getFirstName());
-    assertNull(u.getLastName());
+    assertThat(u.getFirstName()).isEqualTo("Jaakko");
+    assertThat(u.getLastName()).isNull();
   }
 
   @Test
   public void list_deep_keys() {
     User u = where(user.firstName.eq("Jaakko")).fetchFirst(user.addresses.any().street);
     for (Address a : u.getAddresses()) {
-      assertNotNull(a.street);
-      assertNull(a.city);
+      assertThat(a.street).isNotNull();
+      assertThat(a.city).isNull();
     }
   }
 
@@ -310,16 +310,16 @@ public class MongodbQueryTest {
 
   @Test
   public void count() {
-    assertEquals(4, query().fetchCount());
+    assertThat(query().fetchCount()).isEqualTo(4);
   }
 
   @Test
   public void order() {
     List<User> users = query().orderBy(user.age.asc()).fetch();
-    assertEquals(asList(u1, u2, u3, u4), users);
+    assertThat(users).isEqualTo(asList(u1, u2, u3, u4));
 
     users = query().orderBy(user.age.desc()).fetch();
-    assertEquals(asList(u4, u3, u2, u1), users);
+    assertThat(users).isEqualTo(asList(u4, u3, u2, u1));
   }
 
   @Test
@@ -331,19 +331,19 @@ public class MongodbQueryTest {
   @Test
   public void listResults() {
     QueryResults<User> results = query().limit(2).orderBy(user.age.asc()).fetchResults();
-    assertEquals(4L, results.getTotal());
-    assertEquals(2, results.getResults().size());
+    assertThat(results.getTotal()).isEqualTo(4L);
+    assertThat(results.getResults()).hasSize(2);
 
     results = query().offset(2).orderBy(user.age.asc()).fetchResults();
-    assertEquals(4L, results.getTotal());
-    assertEquals(2, results.getResults().size());
+    assertThat(results.getTotal()).isEqualTo(4L);
+    assertThat(results.getResults()).hasSize(2);
   }
 
   @Test
   public void emptyResults() {
     QueryResults<User> results = query().where(user.firstName.eq("XXX")).fetchResults();
-    assertEquals(0L, results.getTotal());
-    assertEquals(Collections.emptyList(), results.getResults());
+    assertThat(results.getTotal()).isEqualTo(0L);
+    assertThat(results.getResults()).isEqualTo(Collections.emptyList());
   }
 
   @Test
@@ -500,17 +500,17 @@ public class MongodbQueryTest {
     Iterator<User> i =
         where(user.firstName.startsWith("A")).orderBy(user.firstName.asc()).iterate();
 
-    assertEquals(a, i.next());
-    assertEquals(b, i.next());
-    assertEquals(c, i.next());
-    assertEquals(false, i.hasNext());
+    assertThat(i.next()).isEqualTo(a);
+    assertThat(i.next()).isEqualTo(b);
+    assertThat(i.next()).isEqualTo(c);
+    assertThat(i.hasNext()).isEqualTo(false);
   }
 
   @Test
   public void uniqueResultAndLimitAndOffset() {
     MorphiaQuery<User> q = query().where(user.firstName.startsWith("Ja")).orderBy(user.age.asc());
-    assertEquals(4, q.fetch().size());
-    assertEquals(u1, q.fetch().get(0));
+    assertThat(q.fetch()).hasSize(4);
+    assertThat(q.fetch().get(0)).isEqualTo(u1);
   }
 
   @Test
@@ -580,7 +580,7 @@ public class MongodbQueryTest {
     for (Predicate predicate : predicates) {
       long count1 = where(predicate).fetchCount();
       long count2 = where(predicate.not()).fetchCount();
-      assertEquals(4, count1 + count2, predicate.toString());
+      assertThat(count1 + count2).as(predicate.toString()).isEqualTo(4);
     }
   }
 
@@ -630,16 +630,15 @@ public class MongodbQueryTest {
   public void readPreference() {
     MorphiaQuery<User> query = query();
     query.setReadPreference(ReadPreference.primary());
-    assertEquals(4, query.fetchCount());
+    assertThat(query.fetchCount()).isEqualTo(4);
   }
 
   @Test
   public void asDBObject() {
     MorphiaQuery<User> query = query();
     query.where(user.firstName.eq("Bob"), user.lastName.eq("Wilson"));
-    assertEquals(
-        new BasicDBObject().append("firstName", "Bob").append("lastName", "Wilson"),
-        query.asDBObject());
+    assertThat(query.asDBObject())
+        .isEqualTo(new BasicDBObject().append("firstName", "Bob").append("lastName", "Wilson"));
   }
 
   @Test
@@ -649,7 +648,7 @@ public class MongodbQueryTest {
 
     Country fetchedCountry =
         query(Country.class).where(country.defaultLocale.eq(Locale.GERMANY)).fetchOne();
-    assertEquals(germany, fetchedCountry);
+    assertThat(fetchedCountry).isEqualTo(germany);
   }
 
   // TODO
@@ -689,15 +688,15 @@ public class MongodbQueryTest {
     String toString = query.toString();
     List<User> results = query.fetch();
 
-    assertNotNull(results, toString);
+    assertThat(results).as(toString).isNotNull();
     if (expected == null) {
-      assertEquals(0, results.size(), "Should get empty result");
+      assertThat(results.size()).as("Should get empty result").isEqualTo(0);
       return;
     }
-    assertEquals(expected.length, results.size(), toString);
+    assertThat(results.size()).as(toString).isEqualTo(expected.length);
     int i = 0;
     for (User u : expected) {
-      assertEquals(u, results.get(i++), toString);
+      assertThat(results.get(i++)).as(toString).isEqualTo(u);
     }
   }
 

@@ -15,7 +15,7 @@
  */
 package com.querydsl.mongodb.document;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.DBRef;
 import com.querydsl.core.types.Expression;
@@ -195,13 +195,13 @@ public class MongodbDocumentSerializerTest {
   @Test
   public void orderBy() {
     Document orderBy = serializer.toSort(sortList(year.asc()));
-    assertEquals(document("year", 1), orderBy);
+    assertThat(orderBy).isEqualTo(document("year", 1));
 
     orderBy = serializer.toSort(sortList(year.desc()));
-    assertEquals(document("year", -1), orderBy);
+    assertThat(orderBy).isEqualTo(document("year", -1));
 
     orderBy = serializer.toSort(sortList(year.desc(), title.asc()));
-    assertEquals(document("year", -1).append("title", 1), orderBy);
+    assertThat(orderBy).isEqualTo(document("year", -1).append("title", 1));
   }
 
   @Test
@@ -287,7 +287,7 @@ public class MongodbDocumentSerializerTest {
 
   private void assertQuery(Expression<?> e, Document expected) {
     Document result = (Document) serializer.handle(e);
-    assertEquals(expected.toJson(), result.toJson());
+    assertThat(result.toJson()).isEqualTo(expected.toJson());
   }
 
   public static Document document(String key, Object... value) {

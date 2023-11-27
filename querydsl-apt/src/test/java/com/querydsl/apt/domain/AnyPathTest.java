@@ -1,7 +1,5 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import java.util.HashSet;
@@ -44,6 +42,6 @@ public class AnyPathTest {
 
   @Test
   public void anyPath() {
-    assertNotNull(authorFilter(new Student()));
+    assertThat(authorFilter(new Student())).isNotNull();
   }
 }

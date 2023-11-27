@@ -14,7 +14,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ExpressionUtils;
@@ -30,7 +30,7 @@ public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
-    assertEquals("select 1", query.toString());
+    assertThat(query.toString()).isEqualTo("select 1");
   }
 
   @Override
@@ -47,25 +47,26 @@ public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
     NumberExpression<Integer> three = Expressions.THREE;
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union = query.union(select(one.as(col1)), select(two), select(three));
-    assertEquals(
-        "(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)",
-        union.toString());
+    assertThat(union.toString())
+        .isEqualTo("(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)");
   }
 
   @Test
   public void limit() {
     query.from(survey1).limit(5);
     query.getMetadata().setProjection(survey1.id);
-    assertEquals("select top 5 survey1.ID from SURVEY survey1", query.toString());
+    assertThat(query.toString()).isEqualTo("select top 5 survey1.ID from SURVEY survey1");
   }
 
   @Test
   public void nextVal() {
     Operation<String> nextval =
         ExpressionUtils.operation(String.class, SQLOps.NEXTVAL, ConstantImpl.create("myseq"));
-    assertEquals(
-        "myseq.nextval",
-        new SQLSerializer(new Configuration(new SQLServerTemplates())).handle(nextval).toString());
+    assertThat(
+            new SQLSerializer(new Configuration(new SQLServerTemplates()))
+                .handle(nextval)
+                .toString())
+        .isEqualTo("myseq.nextval");
   }
 
   @SuppressWarnings("rawtypes")
@@ -75,7 +76,7 @@ public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
         query.select(
             SQLExpressions.datetrunc(
                 DatePart.week, Expressions.dateTimeTemplate(Comparable.class, "dateExpression")));
-    assertEquals(
-        "select DATEADD(WEEK, DATEDIFF(WEEK, 0, dateExpression - 1), 0)", expression.toString());
+    assertThat(expression.toString())
+        .isEqualTo("select DATEADD(WEEK, DATEDIFF(WEEK, 0, dateExpression - 1), 0)");
   }
 }

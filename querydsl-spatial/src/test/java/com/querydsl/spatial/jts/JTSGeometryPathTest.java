@@ -1,7 +1,5 @@
 package com.querydsl.spatial.jts;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.vividsolutions.jts.geom.*;
 import org.junit.Test;
 
@@ -10,15 +8,16 @@ public class JTSGeometryPathTest {
   @Test
   public void convert() {
     JTSGeometryPath<Geometry> geometry = new JTSGeometryPath<Geometry>("geometry");
-    assertEquals(
-        new JTSGeometryCollectionPath<GeometryCollection>("geometry"), geometry.asCollection());
-    assertEquals(new JTSLinearRingPath<LinearRing>("geometry"), geometry.asLinearRing());
-    assertEquals(new JTSLineStringPath<LineString>("geometry"), geometry.asLineString());
-    assertEquals(
-        new JTSMultiLineStringPath<MultiLineString>("geometry"), geometry.asMultiLineString());
-    assertEquals(new JTSMultiPointPath<MultiPoint>("geometry"), geometry.asMultiPoint());
-    assertEquals(new JTSMultiPolygonPath<MultiPolygon>("geometry"), geometry.asMultiPolygon());
-    assertEquals(new JTSPointPath<Point>("geometry"), geometry.asPoint());
-    assertEquals(new JTSPolygonPath<Polygon>("geometry"), geometry.asPolygon());
+    assertThat(geometry.asCollection())
+        .isEqualTo(new JTSGeometryCollectionPath<GeometryCollection>("geometry"));
+    assertThat(geometry.asLinearRing()).isEqualTo(new JTSLinearRingPath<LinearRing>("geometry"));
+    assertThat(geometry.asLineString()).isEqualTo(new JTSLineStringPath<LineString>("geometry"));
+    assertThat(geometry.asMultiLineString())
+        .isEqualTo(new JTSMultiLineStringPath<MultiLineString>("geometry"));
+    assertThat(geometry.asMultiPoint()).isEqualTo(new JTSMultiPointPath<MultiPoint>("geometry"));
+    assertThat(geometry.asMultiPolygon())
+        .isEqualTo(new JTSMultiPolygonPath<MultiPolygon>("geometry"));
+    assertThat(geometry.asPoint()).isEqualTo(new JTSPointPath<Point>("geometry"));
+    assertThat(geometry.asPolygon()).isEqualTo(new JTSPolygonPath<Polygon>("geometry"));
   }
 }

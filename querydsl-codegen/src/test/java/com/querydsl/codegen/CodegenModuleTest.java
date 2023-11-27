@@ -13,8 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.annotation.Annotation;
 import org.junit.Test;
@@ -25,12 +24,12 @@ public class CodegenModuleTest {
 
   @Test
   public void defaultPrefix() {
-    assertEquals("Q", module.get(String.class, CodegenModule.PREFIX));
+    assertThat(module.get(String.class, CodegenModule.PREFIX)).isEqualTo("Q");
   }
 
   @Test
   public void typeMappings() {
-    assertNotNull(module.get(TypeMappings.class));
+    assertThat(module.get(TypeMappings.class)).isNotNull();
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -42,12 +41,12 @@ public class CodegenModuleTest {
   public void defaultGeneratedClass() {
     Class<? extends Annotation> o =
         module.get(Class.class, CodegenModule.GENERATED_ANNOTATION_CLASS);
-    assertEquals(o, GeneratedAnnotationResolver.resolveDefault());
+    assertThat(GeneratedAnnotationResolver.resolveDefault()).isEqualTo(o);
   }
 
   @Test
   public void javadocSuffixForBeanSerializerOverloadedConstructorInjection() {
     String o = module.get(String.class, CodegenModule.JAVADOC_SUFFIX);
-    assertEquals(o, BeanSerializer.DEFAULT_JAVADOC_SUFFIX);
+    assertThat(BeanSerializer.DEFAULT_JAVADOC_SUFFIX).isEqualTo(o);
   }
 }

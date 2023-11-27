@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.SomeClass;
 import java.io.IOException;
@@ -26,22 +26,22 @@ public class ClassPathUtilsTest {
   public void scanPackage() throws IOException {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     Set<Class<?>> classes = ClassPathUtils.scanPackage(classLoader, SomeClass.class.getPackage());
-    assertFalse(classes.isEmpty());
+    assertThat(classes).isNotEmpty();
   }
 
   @Test
   public void scanPackage_check_initialized() throws IOException {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     Set<Class<?>> classes = ClassPathUtils.scanPackage(classLoader, getClass().getPackage());
-    assertFalse(classes.isEmpty());
-    assertEquals("XXX", SomeOtherClass2.property);
+    assertThat(classes).isNotEmpty();
+    assertThat(SomeOtherClass2.property).isEqualTo("XXX");
   }
 
   @Test
   public void safeClassForName() {
-    assertNull(safeForName("com.sun.nio.file.ExtendedOpenOption"));
-    assertNotNull(safeForName("com.suntanning.ShouldBeLoaded"));
-    assertNotNull(safeForName("com.applejuice.ShouldBeLoaded"));
+    assertThat(safeForName("com.sun.nio.file.ExtendedOpenOption")).isNull();
+    assertThat(safeForName("com.suntanning.ShouldBeLoaded")).isNotNull();
+    assertThat(safeForName("com.applejuice.ShouldBeLoaded")).isNotNull();
   }
 
   private Class<?> safeForName(String className) {

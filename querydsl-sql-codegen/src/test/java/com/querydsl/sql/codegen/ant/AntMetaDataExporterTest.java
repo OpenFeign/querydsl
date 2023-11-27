@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.codegen.ant;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.sql.Connection;
@@ -49,8 +49,8 @@ public class AntMetaDataExporterTest {
     exporter.setTargetFolder("target/AntMetaDataExporterTest");
     exporter.execute();
 
-    assertTrue(new File("target/AntMetaDataExporterTest").exists());
-    assertTrue(new File("target/AntMetaDataExporterTest/test/QTest.java").exists());
+    assertThat(new File("target/AntMetaDataExporterTest")).exists();
+    assertThat(new File("target/AntMetaDataExporterTest/test/QTest.java")).exists();
   }
 
   @Test
@@ -68,9 +68,9 @@ public class AntMetaDataExporterTest {
     exporter.setBeanSuffix("Bean");
     exporter.execute();
 
-    assertTrue(new File("target/AntMetaDataExporterTest2").exists());
-    assertTrue(new File("target/AntMetaDataExporterTest2/test/QTest.java").exists());
-    assertTrue(new File("target/AntMetaDataExporterTest2/test/TestBean.java").exists());
+    assertThat(new File("target/AntMetaDataExporterTest2")).exists();
+    assertThat(new File("target/AntMetaDataExporterTest2/test/QTest.java")).exists();
+    assertThat(new File("target/AntMetaDataExporterTest2/test/TestBean.java")).exists();
   }
 
   @Test
@@ -89,9 +89,9 @@ public class AntMetaDataExporterTest {
     exporter.setImports(new String[] {"com.pck1", "com.pck2", "com.Q1", "com.Q2"});
     exporter.execute();
 
-    assertTrue(new File("target/AntMetaDataExporterTest3").exists());
-    assertTrue(new File("target/AntMetaDataExporterTest3/test/QTest.java").exists());
-    assertTrue(new File("target/AntMetaDataExporterTest3/test/TestBean.java").exists());
+    assertThat(new File("target/AntMetaDataExporterTest3")).exists();
+    assertThat(new File("target/AntMetaDataExporterTest3/test/QTest.java")).exists();
+    assertThat(new File("target/AntMetaDataExporterTest3/test/TestBean.java")).exists();
   }
 
   @Test
@@ -105,7 +105,7 @@ public class AntMetaDataExporterTest {
     helper.parse(p, buildFile);
     p.executeTarget(p.getDefaultTarget());
 
-    assertTrue(new File("target/AntMetaDataExporterTest4").exists());
-    assertTrue(new File("target/AntMetaDataExporterTest4/test/QTest.java").exists());
+    assertThat(new File("target/AntMetaDataExporterTest4")).exists();
+    assertThat(new File("target/AntMetaDataExporterTest4/test/QTest.java")).exists();
   }
 }

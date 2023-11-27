@@ -1,6 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
@@ -17,6 +17,6 @@ public class NumberTest {
         CollQueryFactory.<BigDecimal>from(
             num, Arrays.<BigDecimal>asList(new BigDecimal("1.6"), new BigDecimal("1.3")));
 
-    assertEquals(new BigDecimal("2.9"), query.<BigDecimal>select(num.sum()).fetchOne());
+    assertThat(query.<BigDecimal>select(num.sum()).fetchOne()).isEqualTo(new BigDecimal("2.9"));
   }
 }

@@ -15,7 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
@@ -147,8 +147,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
     conditions.put("name", "Bob123");
 
     List<Cat> cats = CustomFinder.findCustom(entityManager, Cat.class, conditions, "name");
-    assertEquals(1, cats.size());
-    assertEquals("Bob123", cats.get(0).getName());
+    assertThat(cats).hasSize(1);
+    assertThat(cats.get(0).getName()).isEqualTo("Bob123");
   }
 
   @Test
@@ -163,9 +163,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
     javax.persistence.Query query =
         query().from(cat).setHint("org.hibernate.cacheable", true).select(cat).createQuery();
 
-    assertNotNull(query);
-    assertTrue(query.getHints().containsKey("org.hibernate.cacheable"));
-    assertFalse(query.getResultList().isEmpty());
+    assertThat(query).isNotNull();
+    assertThat(query.getHints()).containsKey("org.hibernate.cacheable");
+    assertThat(query.getResultList()).isNotEmpty();
   }
 
   @Test
@@ -189,8 +189,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
             .select(cat)
             .createQuery();
 
-    assertNotNull(query);
-    assertEquals("person.homeAddress", query.getHints().get("eclipselink.batch"));
+    assertThat(query).isNotNull();
+    assertThat(query.getHints()).containsEntry("eclipselink.batch", "person.homeAddress");
   }
 
   @Test
@@ -199,7 +199,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
     CloseableIterator<Cat> cats = query().from(cat).select(cat).iterate();
     while (cats.hasNext()) {
       Cat cat = cats.next();
-      assertNotNull(cat);
+      assertThat(cat).isNotNull();
     }
     cats.close();
   }
@@ -213,8 +213,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
   public void lockMode() {
     javax.persistence.Query query =
         query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).createQuery();
-    assertEquals(query.getLockMode(), LockModeType.PESSIMISTIC_READ);
-    assertFalse(query.getResultList().isEmpty());
+    assertThat(LockModeType.PESSIMISTIC_READ).isEqualTo(query.getLockMode());
+    assertThat(query.getResultList()).isNotEmpty();
   }
 
   @Test
@@ -227,8 +227,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
   public void queryExposure() {
     // save(new Cat(20));
     List<Cat> results = query().from(cat).select(cat).createQuery().getResultList();
-    assertNotNull(results);
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotNull();
+    assertThat(results).isNotEmpty();
   }
 
   @Test
@@ -252,7 +252,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   public void createQuery() {
     List<Tuple> rows = query().from(cat).select(cat.id, cat.name).createQuery().getResultList();
     for (Tuple row : rows) {
-      assertEquals(2, row.size());
+      assertThat(row.size()).isEqualTo(2);
     }
   }
 
@@ -263,7 +263,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   public void createQuery2() {
     List<Tuple> rows = query().from(cat).select(cat.id, cat.name).createQuery().getResultList();
     for (Tuple row : rows) {
-      assertEquals(2, row.size());
+      assertThat(row.size()).isEqualTo(2);
     }
   }
 
@@ -271,7 +271,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   public void createQuery3() {
     List<String> rows = query().from(cat).select(cat.name).createQuery().getResultList();
     for (String row : rows) {
-      assertNotNull(row);
+      assertThat(row).isNotNull();
     }
   }
 
@@ -282,9 +282,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
     List<Tuple> rows =
         query().from(cat).select(new Expression<?>[] {Expressions.nullExpression()}).fetch();
     for (Tuple row : rows) {
-      assertNotNull(row);
-      assertEquals(1, row.size());
-      assertNull(row.get(Expressions.nullExpression()));
+      assertThat(row).isNotNull();
+      assertThat(row.size()).isEqualTo(1);
+      assertThat(row.get(Expressions.nullExpression())).isNull();
     }
   }
 
@@ -297,7 +297,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
             .select(cat.alive, cat.breed, cat.id.sum())
             .fetchResults();
 
-    assertEquals(1, results.getTotal());
+    assertThat(results.getTotal()).isEqualTo(1);
   }
 
   @Test
@@ -310,6 +310,6 @@ public class JPABase extends AbstractJPATest implements JPATest {
             .select(cat.alive, cat.id.sum())
             .fetchResults();
 
-    assertEquals(1, results.getTotal());
+    assertThat(results.getTotal()).isEqualTo(1);
   }
 }

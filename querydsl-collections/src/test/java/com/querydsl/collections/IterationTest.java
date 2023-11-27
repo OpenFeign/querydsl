@@ -15,7 +15,7 @@ package com.querydsl.collections;
 
 import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.core.alias.Alias.alias;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,29 +40,31 @@ public class IterationTest {
 
   @Test
   public void test() {
-    assertEquals(expected, CollQueryFactory.from($(lt), allData).select($(lt.getData())).fetch());
+    assertThat(CollQueryFactory.from($(lt), allData).select($(lt.getData())).fetch())
+        .isEqualTo(expected);
   }
 
   @Test
   public void test2() {
-    assertEquals(
-        expected,
-        CollQueryFactory.<Data>from($(lt), Arrays.<Data>asList(allData.toArray(new Data[0])))
-            .select($(lt.getData()))
-            .fetch());
+    assertThat(
+            CollQueryFactory.<Data>from($(lt), Arrays.<Data>asList(allData.toArray(new Data[0])))
+                .select($(lt.getData()))
+                .fetch())
+        .isEqualTo(expected);
   }
 
   @Test
   public void test3() {
-    assertEquals(expected, CollQueryFactory.from(lt, allData).select($(lt.getData())).fetch());
+    assertThat(CollQueryFactory.from(lt, allData).select($(lt.getData())).fetch())
+        .isEqualTo(expected);
   }
 
   @Test
   public void test4() {
-    assertEquals(
-        expected,
-        CollQueryFactory.<Data>from(lt, Arrays.<Data>asList(allData.toArray(new Data[0])))
-            .select($(lt.getData()))
-            .fetch());
+    assertThat(
+            CollQueryFactory.<Data>from(lt, Arrays.<Data>asList(allData.toArray(new Data[0])))
+                .select($(lt.getData()))
+                .fetch())
+        .isEqualTo(expected);
   }
 }

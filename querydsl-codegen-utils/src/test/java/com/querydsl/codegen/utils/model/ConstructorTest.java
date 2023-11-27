@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import org.junit.Test;
@@ -20,8 +20,8 @@ public class ConstructorTest {
         new Parameter("lastName", new ClassType(TypeCategory.STRING, String.class));
     Constructor c1 = new Constructor(Arrays.asList(firstName, lastName));
     Constructor c2 = new Constructor(Arrays.asList(firstName, lastName));
-    assertEquals(c1, c1);
-    assertEquals(c1, c2);
-    assertEquals(c1.hashCode(), c2.hashCode());
+    assertThat(c1).isEqualTo(c1);
+    assertThat(c2).isEqualTo(c1);
+    assertThat(c2.hashCode()).isEqualTo(c1.hashCode());
   }
 }

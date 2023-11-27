@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import java.io.Serializable;
@@ -66,7 +66,7 @@ public class AnyUsageTest {
     companies.add(new Company());
     QAnyUsageTest_Dealer qDealer = QAnyUsageTest_Dealer.dealer;
     BooleanExpression expression = qDealer.company.in(companies);
-    assertNotNull(expression);
+    assertThat(expression).isNotNull();
   }
 
   @Test
@@ -75,6 +75,6 @@ public class AnyUsageTest {
     companies.add(new Company());
     QAnyUsageTest_Dealer qDealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
     BooleanExpression expression = qDealer.company.in(companies);
-    assertNotNull(expression);
+    assertThat(expression).isNotNull();
   }
 }

@@ -13,8 +13,7 @@
  */
 package com.querydsl.core.serialization;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.JavaTemplates;
 import com.querydsl.core.types.Operator;
@@ -30,9 +29,9 @@ public class JavaTemplatesTest {
     int matched = 0;
     for (Operator operator : Ops.values()) {
       ++matched;
-      assertNotNull(templates.getTemplate(operator));
+      assertThat(templates.getTemplate(operator)).isNotNull();
     }
 
-    assertTrue(matched > 0);
+    assertThat(matched > 0).isTrue();
   }
 }

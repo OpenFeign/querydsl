@@ -13,8 +13,8 @@
  */
 package com.querydsl.core.types;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
@@ -89,6 +89,6 @@ public class QMapTest {
   @Test
   public void null_value() {
     QMap expr = new QMap(str1, str2);
-    assertNotNull(expr.newInstance("str1", null));
+    assertThat(expr.newInstance("str1", null)).isNotNull();
   }
 }

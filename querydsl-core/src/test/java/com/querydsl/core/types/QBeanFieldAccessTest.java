@@ -13,8 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.*;
 import java.util.LinkedHashMap;
@@ -56,18 +55,18 @@ public class QBeanFieldAccessTest {
   public void with_class_and_exprs_using_fields() {
     QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, name, age, married);
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
-    assertEquals("Fritz", bean.name);
-    assertEquals(30, bean.age);
-    assertEquals(true, bean.married);
+    assertThat(bean.name).isEqualTo("Fritz");
+    assertThat(bean.age).isEqualTo(30);
+    assertThat(bean.married).isEqualTo(true);
   }
 
   @Test
   public void with_path_and_exprs_using_fields() {
     QBean<Entity> beanProjection = Projections.fields(entity, name, age, married);
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
-    assertEquals("Fritz", bean.name);
-    assertEquals(30, bean.age);
-    assertEquals(true, bean.married);
+    assertThat(bean.name).isEqualTo("Fritz");
+    assertThat(bean.age).isEqualTo(30);
+    assertThat(bean.married).isEqualTo(true);
   }
 
   @Test
@@ -78,9 +77,9 @@ public class QBeanFieldAccessTest {
     bindings.put("married", married);
     QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, bindings);
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
-    assertEquals("Fritz", bean.name);
-    assertEquals(30, bean.age);
-    assertEquals(true, bean.married);
+    assertThat(bean.name).isEqualTo("Fritz");
+    assertThat(bean.age).isEqualTo(30);
+    assertThat(bean.married).isEqualTo(true);
   }
 
   @Test
@@ -89,10 +88,10 @@ public class QBeanFieldAccessTest {
     QBean<Entity> beanProjection =
         new QBean<Entity>(Entity.class, true, name.as(name2), age, married);
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
-    assertNull(bean.name);
-    assertEquals("Fritz", bean.name2);
-    assertEquals(30, bean.age);
-    assertEquals(true, bean.married);
+    assertThat(bean.name).isNull();
+    assertThat(bean.name2).isEqualTo("Fritz");
+    assertThat(bean.age).isEqualTo(30);
+    assertThat(bean.married).isEqualTo(true);
   }
 
   @Test
@@ -103,6 +102,6 @@ public class QBeanFieldAccessTest {
     QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, bindings);
     FactoryExpression<Entity> wrappedProjection = FactoryExpressionUtils.wrap(beanProjection);
     Entity bean = wrappedProjection.newInstance(30, "Fri", "tz");
-    assertEquals("Fritz", bean.name);
+    assertThat(bean.name).isEqualTo("Fritz");
   }
 }

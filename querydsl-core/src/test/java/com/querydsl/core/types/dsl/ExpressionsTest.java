@@ -13,8 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.util.BeanUtils;
@@ -111,73 +110,75 @@ public class ExpressionsTest {
   }
 
   private void assertReturnType(Method method) {
-    assertEquals(BeanUtils.capitalize(method.getName()), method.getReturnType().getSimpleName());
+    assertThat(method.getReturnType().getSimpleName())
+        .isEqualTo(BeanUtils.capitalize(method.getName()));
   }
 
   @Test
   public void as() {
-    assertEquals("null as str", Expressions.as(null, str).toString());
-    assertEquals("s as str", Expressions.as(new StringPath("s"), str).toString());
+    assertThat(Expressions.as(null, str).toString()).isEqualTo("null as str");
+    assertThat(Expressions.as(new StringPath("s"), str).toString()).isEqualTo("s as str");
   }
 
   @Test
   public void allOf() {
-    assertEquals("a && b", Expressions.allOf(a, b).toString());
+    assertThat(Expressions.allOf(a, b).toString()).isEqualTo("a && b");
   }
 
   @Test
   public void allOf_with_nulls() {
-    assertEquals("a && b", Expressions.allOf(a, b, null).toString());
-    assertEquals("a", Expressions.allOf(a, null).toString());
-    assertEquals("a", Expressions.allOf(null, a).toString());
+    assertThat(Expressions.allOf(a, b, null).toString()).isEqualTo("a && b");
+    assertThat(Expressions.allOf(a, null).toString()).isEqualTo("a");
+    assertThat(Expressions.allOf(null, a).toString()).isEqualTo("a");
   }
 
   @Test
   public void anyOf() {
-    assertEquals("a || b", Expressions.anyOf(a, b).toString());
+    assertThat(Expressions.anyOf(a, b).toString()).isEqualTo("a || b");
   }
 
   @Test
   public void anyOf_with_nulls() {
-    assertEquals("a || b", Expressions.anyOf(a, b, null).toString());
-    assertEquals("a", Expressions.anyOf(a, null).toString());
-    assertEquals("a", Expressions.anyOf(null, a).toString());
+    assertThat(Expressions.anyOf(a, b, null).toString()).isEqualTo("a || b");
+    assertThat(Expressions.anyOf(a, null).toString()).isEqualTo("a");
+    assertThat(Expressions.anyOf(null, a).toString()).isEqualTo("a");
   }
 
   @Test
   public void constant() {
-    assertEquals("X", Expressions.constant("X").toString());
+    assertThat(Expressions.constant("X").toString()).isEqualTo("X");
   }
 
   @Test
   public void constant_as() {
-    assertEquals("str as str", Expressions.constantAs("str", str).toString());
+    assertThat(Expressions.constantAs("str", str).toString()).isEqualTo("str as str");
   }
 
   @Test
   public void template() {
-    assertEquals("a && b", Expressions.template(Object.class, "{0} && {1}", a, b).toString());
+    assertThat(Expressions.template(Object.class, "{0} && {1}", a, b).toString())
+        .isEqualTo("a && b");
   }
 
   @Test
   public void comparableTemplate() {
-    assertEquals(
-        "a && b", Expressions.comparableTemplate(Boolean.class, "{0} && {1}", a, b).toString());
+    assertThat(Expressions.comparableTemplate(Boolean.class, "{0} && {1}", a, b).toString())
+        .isEqualTo("a && b");
   }
 
   @Test
   public void numberTemplate() {
-    assertEquals("1", Expressions.numberTemplate(Integer.class, "1").toString());
+    assertThat(Expressions.numberTemplate(Integer.class, "1").toString()).isEqualTo("1");
   }
 
   @Test
   public void stringTemplate() {
-    assertEquals("X", Expressions.stringTemplate("X").toString());
+    assertThat(Expressions.stringTemplate("X").toString()).isEqualTo("X");
   }
 
   @Test
   public void booleanTemplate() {
-    assertEquals("a && b", Expressions.booleanTemplate("{0} && {1}", a, b).toString());
+    assertThat(Expressions.booleanTemplate("{0} && {1}", a, b).toString()).isEqualTo("a && b");
   }
 
   @Test
@@ -187,155 +188,156 @@ public class ExpressionsTest {
 
   @Test
   public void operation() {
-    assertEquals("a && b", Expressions.operation(Boolean.class, Ops.AND, a, b).toString());
+    assertThat(Expressions.operation(Boolean.class, Ops.AND, a, b).toString()).isEqualTo("a && b");
   }
 
   @Test
   public void predicate() {
-    assertEquals("a && b", Expressions.predicate(Ops.AND, a, b).toString());
+    assertThat(Expressions.predicate(Ops.AND, a, b).toString()).isEqualTo("a && b");
   }
 
   @Test
   public void pathClassOfTString() {
-    assertEquals("variable", Expressions.path(String.class, "variable").toString());
+    assertThat(Expressions.path(String.class, "variable").toString()).isEqualTo("variable");
   }
 
   @Test
   public void pathClassOfTPathOfQString() {
-    assertEquals(
-        "variable.property",
-        Expressions.path(String.class, Expressions.path(Object.class, "variable"), "property")
-            .toString());
+    assertThat(
+            Expressions.path(String.class, Expressions.path(Object.class, "variable"), "property")
+                .toString())
+        .isEqualTo("variable.property");
   }
 
   @Test
   public void comparablePathClassOfTString() {
-    assertEquals("variable", Expressions.comparablePath(String.class, "variable").toString());
+    assertThat(Expressions.comparablePath(String.class, "variable").toString())
+        .isEqualTo("variable");
   }
 
   @Test
   public void comparablePathClassOfTPathOfQString() {
-    assertEquals(
-        "variable.property",
-        Expressions.comparablePath(
-                String.class, Expressions.path(Object.class, "variable"), "property")
-            .toString());
+    assertThat(
+            Expressions.comparablePath(
+                    String.class, Expressions.path(Object.class, "variable"), "property")
+                .toString())
+        .isEqualTo("variable.property");
   }
 
   @Test
   public void datePathClassOfTString() {
-    assertEquals("variable", Expressions.datePath(Date.class, "variable").toString());
+    assertThat(Expressions.datePath(Date.class, "variable").toString()).isEqualTo("variable");
   }
 
   @Test
   public void datePathClassOfTPathOfQString() {
-    assertEquals(
-        "variable.property",
-        Expressions.datePath(Date.class, Expressions.path(Object.class, "variable"), "property")
-            .toString());
+    assertThat(
+            Expressions.datePath(Date.class, Expressions.path(Object.class, "variable"), "property")
+                .toString())
+        .isEqualTo("variable.property");
   }
 
   @Test
   public void dateTimePathClassOfTString() {
-    assertEquals("variable", Expressions.dateTimePath(Date.class, "variable").toString());
+    assertThat(Expressions.dateTimePath(Date.class, "variable").toString()).isEqualTo("variable");
   }
 
   @Test
   public void dateTimePathClassOfTPathOfQString() {
-    assertEquals(
-        "variable.property",
-        Expressions.dateTimePath(Date.class, Expressions.path(Object.class, "variable"), "property")
-            .toString());
+    assertThat(
+            Expressions.dateTimePath(
+                    Date.class, Expressions.path(Object.class, "variable"), "property")
+                .toString())
+        .isEqualTo("variable.property");
   }
 
   @Test
   public void timePathClassOfTString() {
-    assertEquals("variable", Expressions.timePath(Date.class, "variable").toString());
+    assertThat(Expressions.timePath(Date.class, "variable").toString()).isEqualTo("variable");
   }
 
   @Test
   public void timePathClassOfTPathOfQString() {
-    assertEquals(
-        "variable.property",
-        Expressions.timePath(Date.class, Expressions.path(Object.class, "variable"), "property")
-            .toString());
+    assertThat(
+            Expressions.timePath(Date.class, Expressions.path(Object.class, "variable"), "property")
+                .toString())
+        .isEqualTo("variable.property");
   }
 
   @Test
   public void numberPathClassOfTString() {
-    assertEquals("variable", Expressions.numberPath(Integer.class, "variable").toString());
+    assertThat(Expressions.numberPath(Integer.class, "variable").toString()).isEqualTo("variable");
   }
 
   @Test
   public void numberPathClassOfTPathOfQString() {
-    assertEquals(
-        "variable.property",
-        Expressions.numberPath(
-                Integer.class, Expressions.path(Object.class, "variable"), "property")
-            .toString());
+    assertThat(
+            Expressions.numberPath(
+                    Integer.class, Expressions.path(Object.class, "variable"), "property")
+                .toString())
+        .isEqualTo("variable.property");
   }
 
   @Test
   public void stringPathString() {
-    assertEquals("variable", Expressions.stringPath("variable").toString());
+    assertThat(Expressions.stringPath("variable").toString()).isEqualTo("variable");
   }
 
   @Test
   public void stringPathPathOfQString() {
-    assertEquals(
-        "variable.property",
-        Expressions.stringPath(Expressions.path(Object.class, "variable"), "property").toString());
+    assertThat(
+            Expressions.stringPath(Expressions.path(Object.class, "variable"), "property")
+                .toString())
+        .isEqualTo("variable.property");
   }
 
   @Test
   public void stringOperation() {
-    assertEquals(
-        "substring(str,2)",
-        Expressions.stringOperation(Ops.SUBSTR_1ARG, str, ConstantImpl.create(2)).toString());
+    assertThat(Expressions.stringOperation(Ops.SUBSTR_1ARG, str, ConstantImpl.create(2)).toString())
+        .isEqualTo("substring(str,2)");
   }
 
   @Test
   public void booleanPathString() {
-    assertEquals("variable", Expressions.booleanPath("variable").toString());
+    assertThat(Expressions.booleanPath("variable").toString()).isEqualTo("variable");
   }
 
   @Test
   public void booleanPathPathOfQString() {
-    assertEquals(
-        "variable.property",
-        Expressions.booleanPath(Expressions.path(Object.class, "variable"), "property").toString());
+    assertThat(
+            Expressions.booleanPath(Expressions.path(Object.class, "variable"), "property")
+                .toString())
+        .isEqualTo("variable.property");
   }
 
   @Test
   public void booleanOperation() {
-    assertEquals("a && b", Expressions.booleanOperation(Ops.AND, a, b).toString());
+    assertThat(Expressions.booleanOperation(Ops.AND, a, b).toString()).isEqualTo("a && b");
   }
 
   @Test
   public void comparableOperation() {
-    assertEquals(
-        "a && b", Expressions.comparableOperation(Boolean.class, Ops.AND, a, b).toString());
+    assertThat(Expressions.comparableOperation(Boolean.class, Ops.AND, a, b).toString())
+        .isEqualTo("a && b");
   }
 
   @Test
   public void dateOperation() {
-    assertEquals(
-        "current_date()",
-        Expressions.dateOperation(Date.class, Ops.DateTimeOps.CURRENT_DATE).toString());
+    assertThat(Expressions.dateOperation(Date.class, Ops.DateTimeOps.CURRENT_DATE).toString())
+        .isEqualTo("current_date()");
   }
 
   @Test
   public void dateTimeOperation() {
-    assertEquals(
-        "current_timestamp()",
-        Expressions.dateTimeOperation(Date.class, Ops.DateTimeOps.CURRENT_TIMESTAMP).toString());
+    assertThat(
+            Expressions.dateTimeOperation(Date.class, Ops.DateTimeOps.CURRENT_TIMESTAMP).toString())
+        .isEqualTo("current_timestamp()");
   }
 
   @Test
   public void timeOperation() {
-    assertEquals(
-        "current_time()",
-        Expressions.timeOperation(Time.class, Ops.DateTimeOps.CURRENT_TIME).toString());
+    assertThat(Expressions.timeOperation(Time.class, Ops.DateTimeOps.CURRENT_TIME).toString())
+        .isEqualTo("current_time()");
   }
 
   @Test
@@ -345,155 +347,155 @@ public class ExpressionsTest {
 
   @Test
   public void asBoolean_returns_a_corresponding_BooleanExpression_for_a_given_Expression() {
-    assertEquals(
-        "true = true", Expressions.asBoolean(Expressions.constant(true)).isTrue().toString());
+    assertThat(Expressions.asBoolean(Expressions.constant(true)).isTrue().toString())
+        .isEqualTo("true = true");
   }
 
   @Test
   public void asBoolean_returns_a_corresponding_BooleanExpression_for_a_given_Constant() {
-    assertEquals("true = true", Expressions.asBoolean(true).isTrue().toString());
+    assertThat(Expressions.asBoolean(true).isTrue().toString()).isEqualTo("true = true");
   }
 
   @Test
   public void asBoolean_equals_works_for_returned_values() {
-    assertEquals(Expressions.asBoolean(true), Expressions.asBoolean(true));
-    assertNotEquals(Expressions.asBoolean(true), Expressions.asBoolean(false));
+    assertThat(Expressions.asBoolean(true)).isEqualTo(Expressions.asBoolean(true));
+    assertThat(Expressions.asBoolean(false)).isNotEqualTo(Expressions.asBoolean(true));
   }
 
   @Test
   public void asComparable_returns_a_corresponding_ComparableExpression_for_a_given_Expression() {
-    assertEquals(
-        "1 = 1",
-        Expressions.asComparable(Expressions.constant(1L)).eq(Expressions.constant(1L)).toString());
+    assertThat(
+            Expressions.asComparable(Expressions.constant(1L))
+                .eq(Expressions.constant(1L))
+                .toString())
+        .isEqualTo("1 = 1");
   }
 
   @Test
   public void asComparable_returns_a_corresponding_ComparableExpression_for_a_given_Constant() {
-    assertEquals("1 = 1", Expressions.asComparable(1L).eq(1L).toString());
+    assertThat(Expressions.asComparable(1L).eq(1L).toString()).isEqualTo("1 = 1");
   }
 
   @Test
   public void asComparable_equals_works_for_returned_values() {
-    assertEquals(Expressions.asComparable(1L), Expressions.asComparable(1L));
-    assertNotEquals(Expressions.asComparable(1L), Expressions.asComparable(2L));
+    assertThat(Expressions.asComparable(1L)).isEqualTo(Expressions.asComparable(1L));
+    assertThat(Expressions.asComparable(2L)).isNotEqualTo(Expressions.asComparable(1L));
   }
 
   @Test
   public void asDate_returns_a_corresponding_DateExpression_for_a_given_Expression() {
-    assertEquals(
-        "year(Thu Jan 01 00:00:00 UTC 1970)",
-        Expressions.asDate(Expressions.constant(new Date(1L))).year().toString());
+    assertThat(Expressions.asDate(Expressions.constant(new Date(1L))).year().toString())
+        .isEqualTo("year(Thu Jan 01 00:00:00 UTC 1970)");
   }
 
   @Test
   public void asDate_returns_a_corresponding_DateExpression_for_a_given_Constant() {
-    assertEquals(
-        "year(Thu Jan 01 00:00:00 UTC 1970)", Expressions.asDate(new Date(1L)).year().toString());
+    assertThat(Expressions.asDate(new Date(1L)).year().toString())
+        .isEqualTo("year(Thu Jan 01 00:00:00 UTC 1970)");
   }
 
   @Test
   public void asDate_equals_works_for_returned_values() {
-    assertEquals(Expressions.asDate(new Date(1L)).year(), Expressions.asDate(new Date(1L)).year());
-    assertNotEquals(
-        Expressions.asDate(new Date(1L)).year(), Expressions.asDate(new Date(2L)).year());
+    assertThat(Expressions.asDate(new Date(1L)).year())
+        .isEqualTo(Expressions.asDate(new Date(1L)).year());
+    assertThat(Expressions.asDate(new Date(2L)).year())
+        .isNotEqualTo(Expressions.asDate(new Date(1L)).year());
   }
 
   @Test
   public void asDateTime_returns_a_corresponding_DateTimeExpression_for_a_given_Expression() {
-    assertEquals(
-        "min(Thu Jan 01 00:00:00 UTC 1970)",
-        Expressions.asDateTime(Expressions.constant(new Date(1L))).min().toString());
+    assertThat(Expressions.asDateTime(Expressions.constant(new Date(1L))).min().toString())
+        .isEqualTo("min(Thu Jan 01 00:00:00 UTC 1970)");
   }
 
   @Test
   public void asDateTime_returns_a_corresponding_DateTimeExpression_for_a_given_Constant() {
-    assertEquals(
-        "min(Thu Jan 01 00:00:00 UTC 1970)", Expressions.asDateTime(new Date(1L)).min().toString());
+    assertThat(Expressions.asDateTime(new Date(1L)).min().toString())
+        .isEqualTo("min(Thu Jan 01 00:00:00 UTC 1970)");
   }
 
   @Test
   public void asDateTime_equals_works_for_returned_values() {
-    assertEquals(
-        Expressions.asDateTime(new Date(1L)).min(), Expressions.asDateTime(new Date(1L)).min());
-    assertNotEquals(
-        Expressions.asDateTime(new Date(1L)).min(), Expressions.asDateTime(new Date(2L)).min());
+    assertThat(Expressions.asDateTime(new Date(1L)).min())
+        .isEqualTo(Expressions.asDateTime(new Date(1L)).min());
+    assertThat(Expressions.asDateTime(new Date(2L)).min())
+        .isNotEqualTo(Expressions.asDateTime(new Date(1L)).min());
   }
 
   @Test
   public void asTime_returns_a_corresponding_TimeExpression_for_a_given_Expression() {
-    assertEquals(
-        "hour(Thu Jan 01 00:00:00 UTC 1970)",
-        Expressions.asTime(Expressions.constant(new Date(1L))).hour().toString());
+    assertThat(Expressions.asTime(Expressions.constant(new Date(1L))).hour().toString())
+        .isEqualTo("hour(Thu Jan 01 00:00:00 UTC 1970)");
   }
 
   @Test
   public void asTime_returns_a_corresponding_TimeExpression_for_a_given_Constant() {
-    assertEquals(
-        "hour(Thu Jan 01 00:00:00 UTC 1970)", Expressions.asTime(new Date(1L)).hour().toString());
+    assertThat(Expressions.asTime(new Date(1L)).hour().toString())
+        .isEqualTo("hour(Thu Jan 01 00:00:00 UTC 1970)");
   }
 
   @Test
   public void asTime_equals_works_for_returned_values() {
-    assertEquals(Expressions.asTime(new Date(1L)).hour(), Expressions.asTime(new Date(1L)).hour());
-    assertNotEquals(
-        Expressions.asTime(new Date(1L)).hour(), Expressions.asTime(new Date(2L)).hour());
+    assertThat(Expressions.asTime(new Date(1L)).hour())
+        .isEqualTo(Expressions.asTime(new Date(1L)).hour());
+    assertThat(Expressions.asTime(new Date(2L)).hour())
+        .isNotEqualTo(Expressions.asTime(new Date(1L)).hour());
   }
 
   @Test
   public void asEnum_returns_a_corresponding_EnumExpression_for_a_given_Expression() {
-    assertEquals(
-        "ordinal(TEST)",
-        Expressions.asEnum(Expressions.constant(testEnum.TEST)).ordinal().toString());
+    assertThat(Expressions.asEnum(Expressions.constant(testEnum.TEST)).ordinal().toString())
+        .isEqualTo("ordinal(TEST)");
   }
 
   @Test
   public void asEnum_returns_a_corresponding_EnumExpression_for_a_given_Constant() {
-    assertEquals("ordinal(TEST)", Expressions.asEnum(testEnum.TEST).ordinal().toString());
+    assertThat(Expressions.asEnum(testEnum.TEST).ordinal().toString()).isEqualTo("ordinal(TEST)");
   }
 
   @Test
   public void asEnum_equals_works_for_returned_values() {
-    assertEquals(Expressions.asEnum(testEnum.TEST), Expressions.asEnum(testEnum.TEST));
-    assertNotEquals(Expressions.asEnum(testEnum.TEST), Expressions.asEnum(testEnum.TEST_2));
+    assertThat(Expressions.asEnum(testEnum.TEST)).isEqualTo(Expressions.asEnum(testEnum.TEST));
+    assertThat(Expressions.asEnum(testEnum.TEST_2)).isNotEqualTo(Expressions.asEnum(testEnum.TEST));
   }
 
   @Test
   public void asNumber_returns_a_corresponding_NumberExpression_for_a_given_Expression() {
-    assertEquals(
-        "1 + 1",
-        Expressions.asNumber(Expressions.constant(1L)).add(Expressions.constant(1L)).toString());
+    assertThat(
+            Expressions.asNumber(Expressions.constant(1L)).add(Expressions.constant(1L)).toString())
+        .isEqualTo("1 + 1");
   }
 
   @Test
   public void asNumber_returns_a_corresponding_NumberExpression_for_a_given_Constant() {
-    assertEquals("1 + 1", Expressions.asNumber(1L).add(Expressions.constant(1L)).toString());
+    assertThat(Expressions.asNumber(1L).add(Expressions.constant(1L)).toString())
+        .isEqualTo("1 + 1");
   }
 
   @Test
   public void asNumber_equals_works_for_returned_values() {
-    assertEquals(Expressions.asNumber(42L), Expressions.asNumber(42L));
-    assertNotEquals(Expressions.asNumber(42L), Expressions.asNumber(256L));
+    assertThat(Expressions.asNumber(42L)).isEqualTo(Expressions.asNumber(42L));
+    assertThat(Expressions.asNumber(256L)).isNotEqualTo(Expressions.asNumber(42L));
   }
 
   @Test
   public void asString_returns_a_corresponding_StringExpression_for_a_given_Expression() {
-    assertEquals(
-        "left + right",
-        Expressions.asString(Expressions.constant("left"))
-            .append(Expressions.constant("right"))
-            .toString());
+    assertThat(
+            Expressions.asString(Expressions.constant("left"))
+                .append(Expressions.constant("right"))
+                .toString())
+        .isEqualTo("left + right");
   }
 
   @Test
   public void asString_returns_a_corresponding_StringExpression_for_a_given_Constant() {
-    assertEquals(
-        "left + right",
-        Expressions.asString("left").append(Expressions.constant("right")).toString());
+    assertThat(Expressions.asString("left").append(Expressions.constant("right")).toString())
+        .isEqualTo("left + right");
   }
 
   @Test
   public void asString_equals_works_for_returned_values() {
-    assertEquals(Expressions.asString("foo"), Expressions.asString("foo"));
-    assertNotEquals(Expressions.asString("foo"), Expressions.asString("bar"));
+    assertThat(Expressions.asString("foo")).isEqualTo(Expressions.asString("foo"));
+    assertThat(Expressions.asString("bar")).isNotEqualTo(Expressions.asString("foo"));
   }
 }

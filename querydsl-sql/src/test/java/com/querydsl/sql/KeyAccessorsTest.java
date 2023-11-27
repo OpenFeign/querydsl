@@ -14,7 +14,6 @@
 package com.querydsl.sql;
 
 import static com.querydsl.core.types.PathMetadataFactory.forVariable;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.types.dsl.NumberPath;
 import java.io.Serializable;
@@ -67,8 +66,8 @@ public class KeyAccessorsTest {
   @Test
   public void keys() {
     QEmployee employee = QEmployee.employee;
-    assertNotNull(employee.pk.sysIdx53);
-    assertNotNull(employee.fk.superiorFk);
-    assertNotNull(employee.fk._superiorFk);
+    assertThat(employee.pk.sysIdx53).isNotNull();
+    assertThat(employee.fk.superiorFk).isNotNull();
+    assertThat(employee.fk._superiorFk).isNotNull();
   }
 }

@@ -1,8 +1,6 @@
 package com.querydsl.jpa.support;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.jpa.domain.Cat;
 import java.util.Collection;
 import javax.persistence.EntityManagerFactory;
@@ -29,10 +27,10 @@ public class JPAPathBuilderValidatorTest {
   public void validate() {
     JPAPathBuilderValidator validator =
         new JPAPathBuilderValidator(entityManagerFactory.getMetamodel());
-    assertEquals(String.class, validator.validate(Cat.class, "name", String.class));
-    assertEquals(Cat.class, validator.validate(Cat.class, "kittens", Collection.class));
-    assertEquals(Cat.class, validator.validate(Cat.class, "mate", Cat.class));
-    assertNull(validator.validate(Cat.class, "xxx", String.class));
-    assertNull(validator.validate(Object.class, "name", String.class));
+    assertThat(validator.validate(Cat.class, "name", String.class)).isEqualTo(String.class);
+    assertThat(validator.validate(Cat.class, "kittens", Collection.class)).isEqualTo(Cat.class);
+    assertThat(validator.validate(Cat.class, "mate", Cat.class)).isEqualTo(Cat.class);
+    assertThat(validator.validate(Cat.class, "xxx", String.class)).isNull();
+    assertThat(validator.validate(Object.class, "name", String.class)).isNull();
   }
 }

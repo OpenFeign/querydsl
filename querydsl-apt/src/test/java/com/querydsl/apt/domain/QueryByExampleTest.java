@@ -1,7 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryDelegate;
 import com.querydsl.core.types.Predicate;
@@ -18,7 +17,7 @@ public class QueryByExampleTest {
   public void name_not_set() {
     ExampleEntity entity = new ExampleEntity();
     Predicate qbe = QExampleEntity.exampleEntity.like(entity);
-    assertNull(qbe);
+    assertThat(qbe).isNull();
   }
 
   @Test
@@ -26,6 +25,6 @@ public class QueryByExampleTest {
     ExampleEntity entity = new ExampleEntity();
     entity.name = "XXX";
     Predicate qbe = QExampleEntity.exampleEntity.like(entity);
-    assertEquals("exampleEntity.name = XXX", qbe.toString());
+    assertThat(qbe.toString()).isEqualTo("exampleEntity.name = XXX");
   }
 }

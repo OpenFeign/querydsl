@@ -13,8 +13,7 @@
  */
 package com.querydsl.sql.codegen;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.alias.Gender;
 import com.querydsl.sql.*;
@@ -79,7 +78,7 @@ public class CustomTypesTest extends AbstractJDBCTest {
             Files.readAllBytes(Paths.get("target", "customExport", "test", "QPerson.java")),
             StandardCharsets.UTF_8);
     // System.err.println(person);
-    assertTrue(person.contains("createEnum(\"gender\""));
+    assertThat(person).contains("createEnum(\"gender\"");
   }
 
   @Test
@@ -91,7 +90,7 @@ public class CustomTypesTest extends AbstractJDBCTest {
     insert.set(person.id, 10);
     insert.set(person.firstname, "Bob");
     insert.set(person.gender, Gender.MALE);
-    assertEquals(1L, insert.execute());
+    assertThat(insert.execute()).isEqualTo(1L);
 
     // query
     SQLQuery<?> query = new SQLQuery<Void>(connection, configuration);

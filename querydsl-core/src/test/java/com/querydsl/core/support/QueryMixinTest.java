@@ -14,8 +14,7 @@
 package com.querydsl.core.support;
 
 import static com.querydsl.core.alias.Alias.$;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.alias.Alias;
@@ -42,21 +41,21 @@ public class QueryMixinTest {
     mixin.innerJoin(entity);
     mixin.on(entity.version.isNull(), entity.version.isNotNull());
 
-    assertEquals(1, mixin.getMetadata().getJoins().size());
+    assertThat(mixin.getMetadata().getJoins()).hasSize(1);
     JoinExpression je = mixin.getMetadata().getJoins().get(0);
-    assertEquals(entity, je.getTarget());
-    assertEquals(
-        Expressions.allOf(entity.version.isNull(), entity.version.isNotNull()), je.getCondition());
+    assertThat(je.getTarget()).isEqualTo(entity);
+    assertThat(je.getCondition())
+        .isEqualTo(Expressions.allOf(entity.version.isNull(), entity.version.isNotNull()));
   }
 
   @Test
   public void getJoins_no_condition() {
     mixin.innerJoin(entity);
 
-    assertEquals(1, mixin.getMetadata().getJoins().size());
+    assertThat(mixin.getMetadata().getJoins()).hasSize(1);
     JoinExpression je = mixin.getMetadata().getJoins().get(0);
-    assertEquals(entity, je.getTarget());
-    assertNull(je.getCondition());
+    assertThat(je.getTarget()).isEqualTo(entity);
+    assertThat(je.getCondition()).isNull();
   }
 
   @Test
@@ -74,7 +73,7 @@ public class QueryMixinTest {
     mixin.innerJoin($(e.getMap()), $(e4));
     mixin.innerJoin($(e.getMap()));
 
-    assertEquals(6, mixin.getMetadata().getJoins().size());
+    assertThat(mixin.getMetadata().getJoins()).hasSize(6);
   }
 
   @Test
@@ -92,7 +91,7 @@ public class QueryMixinTest {
     mixin.innerJoin($(e.getMap()), $(e4));
     mixin.innerJoin($(e.getMap()));
 
-    assertEquals(6, mixin.getMetadata().getJoins().size());
+    assertThat(mixin.getMetadata().getJoins()).hasSize(6);
   }
 
   @Test
@@ -105,7 +104,7 @@ public class QueryMixinTest {
     mixin.join($(e.getOther()), $(e2));
     mixin.on($(e).isNotNull());
 
-    assertEquals(2, mixin.getMetadata().getJoins().size());
+    assertThat(mixin.getMetadata().getJoins()).hasSize(2);
   }
 
   @Test
@@ -123,7 +122,7 @@ public class QueryMixinTest {
     mixin.leftJoin($(e.getMap()), $(e4));
     mixin.leftJoin($(e.getMap()));
 
-    assertEquals(6, mixin.getMetadata().getJoins().size());
+    assertThat(mixin.getMetadata().getJoins()).hasSize(6);
   }
 
   @Test
@@ -141,7 +140,7 @@ public class QueryMixinTest {
     mixin.rightJoin($(e.getMap()), $(e4));
     mixin.rightJoin($(e.getMap()));
 
-    assertEquals(6, mixin.getMetadata().getJoins().size());
+    assertThat(mixin.getMetadata().getJoins()).hasSize(6);
   }
 
   @Test
@@ -159,6 +158,6 @@ public class QueryMixinTest {
     mixin.fullJoin($(e.getMap()), $(e4));
     mixin.fullJoin($(e.getMap()));
 
-    assertEquals(6, mixin.getMetadata().getJoins().size());
+    assertThat(mixin.getMetadata().getJoins()).hasSize(6);
   }
 }

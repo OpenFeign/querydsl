@@ -13,7 +13,7 @@
  */
 package com.querydsl.core;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import java.util.Calendar;
@@ -34,14 +34,14 @@ public class DateTimeConstantTest {
     cal.set(Calendar.MILLISECOND, 3);
 
     DateTimeExpression<Date> date = DateTimeConstant.create(cal.getTime());
-    assertEquals("1", date.dayOfMonth().toString());
-    assertEquals("1", date.month().toString());
-    assertEquals("2000", date.year().toString());
-    assertEquals("7", date.dayOfWeek().toString());
-    assertEquals("1", date.dayOfYear().toString());
-    assertEquals("13", date.hour().toString());
-    assertEquals("30", date.minute().toString());
-    assertEquals("12", date.second().toString());
-    assertEquals("3", date.milliSecond().toString());
+    assertThat(date.dayOfMonth().toString()).isEqualTo("1");
+    assertThat(date.month().toString()).isEqualTo("1");
+    assertThat(date.year().toString()).isEqualTo("2000");
+    assertThat(date.dayOfWeek().toString()).isEqualTo("7");
+    assertThat(date.dayOfYear().toString()).isEqualTo("1");
+    assertThat(date.hour().toString()).isEqualTo("13");
+    assertThat(date.minute().toString()).isEqualTo("30");
+    assertThat(date.second().toString()).isEqualTo("12");
+    assertThat(date.milliSecond().toString()).isEqualTo("3");
   }
 }

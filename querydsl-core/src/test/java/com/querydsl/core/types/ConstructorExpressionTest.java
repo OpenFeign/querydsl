@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.Serialization;
 import com.querydsl.core.testutil.ThreadSafety;
@@ -40,34 +40,38 @@ public class ConstructorExpressionTest {
                 longVal,
                 stringVal)
             .newInstance(0L, "");
-    assertNotNull(instance);
-    assertEquals((Long) 0L, instance.id);
-    assertTrue(instance.text.isEmpty());
+    assertThat(instance).isNotNull();
+    assertThat(instance.id).isEqualTo((Long) 0L);
+    assertThat(instance.text).isEmpty();
   }
 
   @Test
   public void create() {
     Expression<Long> longVal = ConstantImpl.create(1L);
     Expression<String> stringVal = ConstantImpl.create("");
-    assertNotNull(
-        Projections.constructor(ProjectionExample.class, longVal, stringVal).newInstance(0L, ""));
+    assertThat(
+            Projections.constructor(ProjectionExample.class, longVal, stringVal)
+                .newInstance(0L, ""))
+        .isNotNull();
   }
 
   @Test
   public void create2() {
     Expression<Long> longVal = ConstantImpl.create(1L);
-    assertNotNull(Projections.constructor(ProjectionExample.class, longVal).newInstance(0L));
+    assertThat(Projections.constructor(ProjectionExample.class, longVal).newInstance(0L))
+        .isNotNull();
   }
 
   @Test
   public void create3() {
-    assertNotNull(Projections.constructor(ProjectionExample.class).newInstance());
+    assertThat(Projections.constructor(ProjectionExample.class).newInstance()).isNotNull();
   }
 
   @Test
   public void create4() {
     Expression<String> stringVal = ConstantImpl.create("");
-    assertNotNull(Projections.constructor(ProjectionExample.class, stringVal).newInstance(""));
+    assertThat(Projections.constructor(ProjectionExample.class, stringVal).newInstance(""))
+        .isNotNull();
   }
 
   @Test
@@ -92,7 +96,7 @@ public class ConstructorExpressionTest {
                 floatVal,
                 doubleVal)
             .newInstance(null, null, null, null, null, null, null, null);
-    assertNotNull(instance);
+    assertThat(instance).isNotNull();
   }
 
   @Test
@@ -100,7 +104,7 @@ public class ConstructorExpressionTest {
     FactoryExpression<ProjectionExample> constructor =
         Projections.constructor(ProjectionExample.class, concat);
     constructor = FactoryExpressionUtils.wrap(constructor);
-    assertEquals(Arrays.asList(str1, str2), constructor.getArgs());
+    assertThat(constructor.getArgs()).isEqualTo(Arrays.asList(str1, str2));
   }
 
   @Test
@@ -109,14 +113,14 @@ public class ConstructorExpressionTest {
         Projections.constructor(ProjectionExample.class, concat);
     constructor = FactoryExpressionUtils.wrap(constructor);
     ProjectionExample projection = constructor.newInstance("12", "34");
-    assertEquals("1234", projection.text);
+    assertThat(projection.text).isEqualTo("1234");
   }
 
   @Test
   public void serializability() {
     ConstructorExpression<String> expr =
         Serialization.serialize(Projections.constructor(String.class));
-    assertEquals("", expr.newInstance());
+    assertThat(expr.newInstance()).isEqualTo("");
   }
 
   @Test

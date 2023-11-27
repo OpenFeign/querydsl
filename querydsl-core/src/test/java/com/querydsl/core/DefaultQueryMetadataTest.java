@@ -13,7 +13,7 @@
  */
 package com.querydsl.core;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.types.ConstantImpl;
@@ -75,53 +75,53 @@ public class DefaultQueryMetadataTest {
   public void getGroupBy() {
     metadata.addJoin(JoinType.DEFAULT, str);
     metadata.addGroupBy(str);
-    assertEquals(Collections.singletonList(str), metadata.getGroupBy());
+    assertThat(metadata.getGroupBy()).isEqualTo(Collections.singletonList(str));
   }
 
   @Test
   public void getHaving() {
     metadata.addJoin(JoinType.DEFAULT, str);
     metadata.addHaving(str.isNotNull());
-    assertEquals(str.isNotNull(), metadata.getHaving());
+    assertThat(metadata.getHaving()).isEqualTo(str.isNotNull());
   }
 
   @Test
   public void getJoins() {
     metadata.addJoin(JoinType.DEFAULT, str);
-    assertEquals(
-        Collections.singletonList(new JoinExpression(JoinType.DEFAULT, str)), metadata.getJoins());
+    assertThat(metadata.getJoins())
+        .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, str)));
   }
 
   @Test
   public void getJoins2() {
     metadata.addJoin(JoinType.DEFAULT, str);
-    assertEquals(
-        Collections.singletonList(new JoinExpression(JoinType.DEFAULT, str)), metadata.getJoins());
+    assertThat(metadata.getJoins())
+        .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, str)));
   }
 
   @Test
   public void getJoins3() {
     metadata.addJoin(JoinType.DEFAULT, str);
-    assertEquals(
-        Collections.singletonList(new JoinExpression(JoinType.DEFAULT, str)), metadata.getJoins());
+    assertThat(metadata.getJoins())
+        .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, str)));
     metadata.addJoinCondition(str.isNull());
-    assertEquals(
-        Collections.singletonList(
-            new JoinExpression(JoinType.DEFAULT, str, str.isNull(), Collections.emptySet())),
-        metadata.getJoins());
+    assertThat(metadata.getJoins())
+        .isEqualTo(
+            Collections.singletonList(
+                new JoinExpression(JoinType.DEFAULT, str, str.isNull(), Collections.emptySet())));
     metadata.addJoin(JoinType.DEFAULT, str2);
-    assertEquals(
-        Arrays.asList(
-            new JoinExpression(JoinType.DEFAULT, str, str.isNull(), Collections.emptySet()),
-            new JoinExpression(JoinType.DEFAULT, str2)),
-        metadata.getJoins());
+    assertThat(metadata.getJoins())
+        .isEqualTo(
+            Arrays.asList(
+                new JoinExpression(JoinType.DEFAULT, str, str.isNull(), Collections.emptySet()),
+                new JoinExpression(JoinType.DEFAULT, str2)));
   }
 
   @Test
   public void getModifiers() {
     QueryModifiers modifiers = new QueryModifiers(1L, 2L);
     metadata.setModifiers(modifiers);
-    assertEquals(modifiers, metadata.getModifiers());
+    assertThat(metadata.getModifiers()).isEqualTo(modifiers);
   }
 
   @Test
@@ -130,8 +130,8 @@ public class DefaultQueryMetadataTest {
     metadata.setModifiers(modifiers);
     metadata.setLimit(3L);
 
-    assertEquals(Long.valueOf(3L), metadata.getModifiers().getLimit());
-    assertEquals(Long.valueOf(2L), metadata.getModifiers().getOffset());
+    assertThat(metadata.getModifiers().getLimit()).isEqualTo(Long.valueOf(3L));
+    assertThat(metadata.getModifiers().getOffset()).isEqualTo(Long.valueOf(2L));
   }
 
   @Test
@@ -140,8 +140,8 @@ public class DefaultQueryMetadataTest {
     metadata.setModifiers(modifiers);
     metadata.setOffset(2L);
 
-    assertEquals(Long.valueOf(1L), metadata.getModifiers().getLimit());
-    assertEquals(Long.valueOf(2L), metadata.getModifiers().getOffset());
+    assertThat(metadata.getModifiers().getLimit()).isEqualTo(Long.valueOf(1L));
+    assertThat(metadata.getModifiers().getOffset()).isEqualTo(Long.valueOf(2L));
   }
 
   @SuppressWarnings("unchecked")
@@ -150,14 +150,14 @@ public class DefaultQueryMetadataTest {
     metadata.addJoin(JoinType.DEFAULT, str);
     metadata.addOrderBy(str.asc());
     metadata.addOrderBy(str.desc());
-    assertEquals(Arrays.asList(str.asc(), str.desc()), metadata.getOrderBy());
+    assertThat(metadata.getOrderBy()).isEqualTo(Arrays.asList(str.asc(), str.desc()));
   }
 
   @Test
   public void getProjection() {
     metadata.addJoin(JoinType.DEFAULT, str);
     metadata.setProjection(str.append("abc"));
-    assertEquals(str.append("abc"), metadata.getProjection());
+    assertThat(metadata.getProjection()).isEqualTo(str.append("abc"));
   }
 
   @Test
@@ -165,21 +165,21 @@ public class DefaultQueryMetadataTest {
     metadata.addJoin(JoinType.DEFAULT, str);
     metadata.addWhere(str.eq("b"));
     metadata.addWhere(str.isNotEmpty());
-    assertEquals(str.eq("b").and(str.isNotEmpty()), metadata.getWhere());
+    assertThat(metadata.getWhere()).isEqualTo(str.eq("b").and(str.isNotEmpty()));
   }
 
   @Test
   public void isDistinct() {
-    assertFalse(metadata.isDistinct());
+    assertThat(metadata.isDistinct()).isFalse();
     metadata.setDistinct(true);
-    assertTrue(metadata.isDistinct());
+    assertThat(metadata.isDistinct()).isTrue();
   }
 
   @Test
   public void isUnique() {
-    assertFalse(metadata.isUnique());
+    assertThat(metadata.isUnique()).isFalse();
     metadata.setUnique(true);
-    assertTrue(metadata.isUnique());
+    assertThat(metadata.isUnique()).isTrue();
   }
 
   @Test
@@ -187,7 +187,7 @@ public class DefaultQueryMetadataTest {
     DefaultQueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, str);
     DefaultQueryMetadata emptyMetadata = new DefaultQueryMetadata();
-    assertFalse(md.equals(emptyMetadata));
+    assertThat(md.equals(emptyMetadata)).isFalse();
   }
 
   @Test
@@ -204,29 +204,33 @@ public class DefaultQueryMetadataTest {
     metadata.addWhere(str.isNotEmpty());
 
     QueryMetadata clone = metadata.clone();
-    assertEquals(metadata.getGroupBy(), clone.getGroupBy());
-    assertEquals(metadata.getHaving(), clone.getHaving());
-    assertEquals(metadata.getJoins(), clone.getJoins());
-    assertEquals(metadata.getModifiers(), clone.getModifiers());
-    assertEquals(metadata.getOrderBy(), clone.getOrderBy());
-    assertEquals(metadata.getProjection(), clone.getProjection());
-    assertEquals(metadata.getWhere(), clone.getWhere());
+    assertThat(clone.getGroupBy()).isEqualTo(metadata.getGroupBy());
+    assertThat(clone.getHaving()).isEqualTo(metadata.getHaving());
+    assertThat(clone.getJoins()).isEqualTo(metadata.getJoins());
+    assertThat(clone.getModifiers()).isEqualTo(metadata.getModifiers());
+    assertThat(clone.getOrderBy()).isEqualTo(metadata.getOrderBy());
+    assertThat(clone.getProjection()).isEqualTo(metadata.getProjection());
+    assertThat(clone.getWhere()).isEqualTo(metadata.getWhere());
   }
 
   @SuppressWarnings("unchecked")
   @Test
   public void setParam() {
     metadata.setParam(new Param(String.class, "str"), ConstantImpl.create("X"));
-    assertEquals(1, metadata.getParams().size());
-    assertTrue(
-        metadata.getParams().get(new Param(String.class, "str")).equals(ConstantImpl.create("X")));
+    assertThat(metadata.getParams()).hasSize(1);
+    assertThat(
+            metadata
+                .getParams()
+                .get(new Param(String.class, "str"))
+                .equals(ConstantImpl.create("X")))
+        .isTrue();
   }
 
   @Test
   public void addFlag() {
     QueryFlag flag = new QueryFlag(Position.START, "X");
     metadata.addFlag(flag);
-    assertTrue(metadata.hasFlag(flag));
+    assertThat(metadata.hasFlag(flag)).isTrue();
   }
 
   @Test
@@ -243,24 +247,24 @@ public class DefaultQueryMetadataTest {
     metadata.addWhere(str.isNotEmpty());
 
     QueryMetadata metadata2 = new DefaultQueryMetadata();
-    assertFalse(metadata.equals(metadata2));
+    assertThat(metadata.equals(metadata2)).isFalse();
     metadata2.addJoin(JoinType.DEFAULT, str);
-    assertFalse(metadata.equals(metadata2));
+    assertThat(metadata.equals(metadata2)).isFalse();
     metadata2.addGroupBy(str);
-    assertFalse(metadata.equals(metadata2));
+    assertThat(metadata.equals(metadata2)).isFalse();
     metadata2.addHaving(str.isNotNull());
-    assertFalse(metadata.equals(metadata2));
+    assertThat(metadata.equals(metadata2)).isFalse();
     metadata2.addJoin(JoinType.DEFAULT, str2);
-    assertFalse(metadata.equals(metadata2));
+    assertThat(metadata.equals(metadata2)).isFalse();
     metadata2.setModifiers(modifiers);
-    assertFalse(metadata.equals(metadata2));
+    assertThat(metadata.equals(metadata2)).isFalse();
     metadata2.addOrderBy(str.asc());
-    assertFalse(metadata.equals(metadata2));
+    assertThat(metadata.equals(metadata2)).isFalse();
     metadata2.setProjection(str.append("abc"));
-    assertFalse(metadata.equals(metadata2));
+    assertThat(metadata.equals(metadata2)).isFalse();
     metadata2.addWhere(str.eq("b"));
     metadata2.addWhere(str.isNotEmpty());
-    assertTrue(metadata.equals(metadata2));
+    assertThat(metadata.equals(metadata2)).isTrue();
   }
 
   @Test

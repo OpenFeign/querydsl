@@ -15,7 +15,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.sql.dml.SQLMergeUsingClause;
@@ -70,7 +70,7 @@ public class MergeUsingBase extends AbstractBaseTest {
                 Collections.singletonList(survey.name),
                 Collections.singletonList(usingSubqueryAlias.name));
 
-    assertEquals(1, merge.execute());
+    assertThat(merge.execute()).isEqualTo(1);
   }
 
   @Test
@@ -90,7 +90,7 @@ public class MergeUsingBase extends AbstractBaseTest {
                 Arrays.asList(survey.id, survey.name),
                 Arrays.asList(usingSubqueryAlias.id, usingSubqueryAlias.name));
 
-    assertEquals(1, merge.execute());
+    assertThat(merge.execute()).isEqualTo(1);
   }
 
   @Test
@@ -104,7 +104,7 @@ public class MergeUsingBase extends AbstractBaseTest {
             .whenMatched()
             .thenDelete();
 
-    assertEquals(1, merge.execute());
+    assertThat(merge.execute()).isEqualTo(1);
   }
 
   @Test
@@ -122,7 +122,7 @@ public class MergeUsingBase extends AbstractBaseTest {
             .whenMatched()
             .thenUpdate(List.of(survey.name), List.of(usingSubqueryAlias.name));
 
-    assertEquals(1, merge.execute());
+    assertThat(merge.execute()).isEqualTo(1);
   }
 
   @Test
@@ -137,7 +137,7 @@ public class MergeUsingBase extends AbstractBaseTest {
             .and(usingSubqueryAlias.id.lt(0))
             .thenDelete();
 
-    assertEquals(0, merge.execute());
+    assertThat(merge.execute()).isEqualTo(0);
   }
 
   @Test
@@ -146,7 +146,7 @@ public class MergeUsingBase extends AbstractBaseTest {
     SQLMergeUsingClause merge =
         merge(survey).using(employee).on(survey.id.eq(employee.id)).whenMatched().thenDelete();
 
-    assertEquals(1, merge.execute());
+    assertThat(merge.execute()).isEqualTo(1);
   }
 
   @Test
@@ -159,6 +159,6 @@ public class MergeUsingBase extends AbstractBaseTest {
             .whenMatched()
             .thenDelete();
 
-    assertEquals(1, merge.execute());
+    assertThat(merge.execute()).isEqualTo(1);
   }
 }

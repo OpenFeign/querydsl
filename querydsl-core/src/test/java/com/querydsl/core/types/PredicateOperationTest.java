@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -25,6 +25,6 @@ public class PredicateOperationTest {
     Path<?> o1 = ExpressionUtils.path(Object.class, "o1");
     Path<?> o2 = ExpressionUtils.path(Object.class, "o2");
     PredicateOperation template = ExpressionUtils.predicate(Ops.EQ, o1, o2);
-    assertEquals("!(o1 = o2)", template.not().toString());
+    assertThat(template.not().toString()).isEqualTo("!(o1 = o2)");
   }
 }

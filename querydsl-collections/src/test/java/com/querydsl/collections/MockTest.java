@@ -1,6 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimplePath;
@@ -16,6 +16,6 @@ public class MockTest {
     List<MockTest> tests = Arrays.asList(new MockTest(), new MockTest(), new MockTest());
     SimplePath<MockTest> path = Expressions.path(MockTest.class, "obj");
     MockTest mock = EasyMock.createMock(MockTest.class);
-    assertTrue(CollQueryFactory.from(path, tests).where(path.eq(mock)).fetch().isEmpty());
+    assertThat(CollQueryFactory.from(path, tests).where(path.eq(mock)).fetch()).isEmpty();
   }
 }

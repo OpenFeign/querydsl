@@ -19,8 +19,7 @@ import static com.querydsl.core.alias.Alias.alias;
 import static com.querydsl.jpa.Constants.*;
 import static com.querydsl.jpa.JPAExpressions.select;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 import com.querydsl.core.testutil.ExcludeIn;
@@ -552,10 +551,10 @@ public class ParsingTest extends AbstractQueryTest {
     QueryHelper query = query();
 
     query.from(cat);
-    assertEquals("select cat\nfrom Cat cat", query.toString());
+    assertThat(query.toString()).isEqualTo("select cat\nfrom Cat cat");
 
     query.from(fatcat);
-    assertEquals("select cat\nfrom Cat cat, Cat fatcat", query.toString());
+    assertThat(query.toString()).isEqualTo("select cat\nfrom Cat cat, Cat fatcat");
   }
 
   @Test

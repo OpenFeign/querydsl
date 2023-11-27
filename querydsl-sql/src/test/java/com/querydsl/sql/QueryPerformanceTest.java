@@ -1,6 +1,6 @@
 package com.querydsl.sql;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
@@ -248,7 +248,7 @@ public class QueryPerformanceTest {
       serializer.serialize(md, false);
       serializer.getConstants();
       serializer.getConstantPaths();
-      assertNotNull(serializer.toString());
+      assertThat(serializer.toString()).isNotNull();
     }
   }
 

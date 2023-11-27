@@ -1,5 +1,6 @@
 package com.querydsl.apt;
 
+import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.querydsl.apt.domain.AbstractEntityTest;
@@ -148,7 +149,7 @@ public class GenericExporterTest extends AbstractProcessorTest {
     expected.remove("QGeneric16Test_HidaBezGruppe.java"); // unstable
     expected.remove("QGeneric4Test_HidaBezGruppe.java"); // unstable
     if (!expected.isEmpty()) {
-      fail("Following expected failures succeeded: " + expected);
+      fail("", "Following expected failures succeeded: " + expected);
     }
 
     if (!failures.isEmpty()) {
@@ -156,6 +157,7 @@ public class GenericExporterTest extends AbstractProcessorTest {
         System.err.println(failure);
       }
       fail(
+          "",
           "Failed with " + failures.size() + " failures, " + successes + " succeeded, " + failures);
     }
   }

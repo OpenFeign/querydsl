@@ -1,6 +1,6 @@
 package com.querydsl.codegen.utils.model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
 import org.junit.Test;
@@ -17,46 +17,49 @@ public class SimpleTypeTest {
   public void PrimitiveArray() {
     Type byteArray = new ClassType(byte[].class);
     Type byteArray2 = new SimpleType(byteArray, byteArray.getParameters());
-    assertEquals(
-        "byte[]",
-        byteArray.getRawName(Collections.singleton("java.lang"), Collections.<String>emptySet()));
-    assertEquals(
-        "byte[]",
-        byteArray2.getRawName(Collections.singleton("java.lang"), Collections.<String>emptySet()));
+    assertThat(
+            byteArray.getRawName(
+                Collections.singleton("java.lang"), Collections.<String>emptySet()))
+        .isEqualTo("byte[]");
+    assertThat(
+            byteArray2.getRawName(
+                Collections.singleton("java.lang"), Collections.<String>emptySet()))
+        .isEqualTo("byte[]");
   }
 
   @Test
   public void Array_FullName() {
     Type type = new SimpleType(new ClassType(String[].class));
-    assertEquals("java.lang.String[]", type.getFullName());
+    assertThat(type.getFullName()).isEqualTo("java.lang.String[]");
   }
 
   @Test
   public void GetComponentType() {
     Type type = new SimpleType(new ClassType(String[].class));
-    assertEquals("java.lang.String", type.getComponentType().getFullName());
+    assertThat(type.getComponentType().getFullName()).isEqualTo("java.lang.String");
   }
 
   @Test
   public void GetRawName() {
-    assertEquals(
-        "String",
-        new SimpleType(Types.STRING)
-            .getRawName(
-                Collections.<String>emptySet(), Collections.singleton(Types.STRING.getFullName())));
+    assertThat(
+            new SimpleType(Types.STRING)
+                .getRawName(
+                    Collections.<String>emptySet(),
+                    Collections.singleton(Types.STRING.getFullName())))
+        .isEqualTo("String");
   }
 
   @Test
   public void GetJavaClass_For_Array() {
     System.out.println(Inner.class.getName());
-    assertEquals(byte[].class, new ClassType(byte[].class).getJavaClass());
-    assertEquals(byte[].class, new SimpleType(new ClassType(byte[].class)).getJavaClass());
+    assertThat(new ClassType(byte[].class).getJavaClass()).isEqualTo(byte[].class);
+    assertThat(new SimpleType(new ClassType(byte[].class)).getJavaClass()).isEqualTo(byte[].class);
   }
 
   @Test
   public void GetJavaClass_For_InnerClass() {
-    assertEquals(Inner.class, new ClassType(Inner.class).getJavaClass());
-    assertEquals(Inner.class, new SimpleType(new ClassType(Inner.class)).getJavaClass());
+    assertThat(new ClassType(Inner.class).getJavaClass()).isEqualTo(Inner.class);
+    assertThat(new SimpleType(new ClassType(Inner.class)).getJavaClass()).isEqualTo(Inner.class);
   }
 
   //    @Test
@@ -75,25 +78,26 @@ public class SimpleTypeTest {
     Type inner2 = new SimpleType(new ClassType(SimpleTypeTest.Inner.Inner2.class));
     Type inner3 = new SimpleType(new ClassType(SimpleTypeTest.Inner.Inner2.Inner3.class));
 
-    assertEquals(inner2, inner3.getEnclosingType());
-    assertEquals(inner, inner2.getEnclosingType());
-    assertEquals(outer, inner.getEnclosingType());
-    assertNull(outer.getEnclosingType());
+    assertThat(inner3.getEnclosingType()).isEqualTo(inner2);
+    assertThat(inner2.getEnclosingType()).isEqualTo(inner);
+    assertThat(inner.getEnclosingType()).isEqualTo(outer);
+    assertThat(outer.getEnclosingType()).isNull();
 
-    assertEquals(
-        "SimpleTypeTest.Inner.Inner2.Inner3",
-        inner3.getRawName(Collections.singleton(outer.getPackageName()), Collections.emptySet()));
-    assertEquals(
-        "Inner2.Inner3",
-        inner3.getRawName(Collections.emptySet(), Collections.singleton(inner2.getFullName())));
-    assertEquals(
-        "Inner3",
-        inner3.getRawName(Collections.emptySet(), Collections.singleton(inner3.getFullName())));
+    assertThat(
+            inner3.getRawName(
+                Collections.singleton(outer.getPackageName()), Collections.emptySet()))
+        .isEqualTo("SimpleTypeTest.Inner.Inner2.Inner3");
+    assertThat(
+            inner3.getRawName(Collections.emptySet(), Collections.singleton(inner2.getFullName())))
+        .isEqualTo("Inner2.Inner3");
+    assertThat(
+            inner3.getRawName(Collections.emptySet(), Collections.singleton(inner3.getFullName())))
+        .isEqualTo("Inner3");
   }
 
   @Test
   public void IsMember() {
-    assertTrue(new SimpleType(new ClassType(SimpleTypeTest.Inner.class)).isMember());
-    assertFalse(new SimpleType(new ClassType(SimpleType.class)).isMember());
+    assertThat(new SimpleType(new ClassType(SimpleTypeTest.Inner.class)).isMember()).isTrue();
+    assertThat(new SimpleType(new ClassType(SimpleType.class)).isMember()).isFalse();
   }
 }

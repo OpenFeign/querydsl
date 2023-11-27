@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils.model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,122 +38,124 @@ public class TypeTest {
 
   @Test
   public void arrayType() {
-    assertEquals("Object[]", Types.OBJECTS.getGenericName(true).toString());
+    assertThat(Types.OBJECTS.getGenericName(true).toString()).isEqualTo("Object[]");
   }
 
   @Test
   public void Equals() {
-    assertEquals(locale, locale2);
-    assertEquals(locale2, locale);
-    assertEquals(stringList, stringList2);
-    assertEquals(stringList2, stringList);
+    assertThat(locale2).isEqualTo(locale);
+    assertThat(locale).isEqualTo(locale2);
+    assertThat(stringList2).isEqualTo(stringList);
+    assertThat(stringList).isEqualTo(stringList2);
   }
 
   @Test
   public void Hashcode() {
-    assertEquals(locale.hashCode(), locale2.hashCode());
-    assertEquals(stringList.hashCode(), stringList2.hashCode());
+    assertThat(locale2.hashCode()).isEqualTo(locale.hashCode());
+    assertThat(stringList2.hashCode()).isEqualTo(stringList.hashCode());
   }
 
   @Test
   public void GetGenericNameBoolean() {
-    assertEquals("java.util.Locale", locale.getGenericName(true));
-    assertEquals("java.util.Locale", locale2.getGenericName(true));
-    assertEquals("java.util.List<String>", stringList.getGenericName(true));
-    assertEquals("java.util.List<String>", stringList2.getGenericName(true));
-    assertEquals("java.util.Map<String, String>", stringMap.getGenericName(true));
-    assertEquals("java.util.Map<String, String>", stringMap2.getGenericName(true));
+    assertThat(locale.getGenericName(true)).isEqualTo("java.util.Locale");
+    assertThat(locale2.getGenericName(true)).isEqualTo("java.util.Locale");
+    assertThat(stringList.getGenericName(true)).isEqualTo("java.util.List<String>");
+    assertThat(stringList2.getGenericName(true)).isEqualTo("java.util.List<String>");
+    assertThat(stringMap.getGenericName(true)).isEqualTo("java.util.Map<String, String>");
+    assertThat(stringMap2.getGenericName(true)).isEqualTo("java.util.Map<String, String>");
 
-    assertEquals("String", string.getGenericName(true));
-    assertEquals("String", string2.getGenericName(true));
+    assertThat(string.getGenericName(true)).isEqualTo("String");
+    assertThat(string2.getGenericName(true)).isEqualTo("String");
   }
 
   @Test
   public void GetRawName() {
-    assertEquals("java.util.Locale", locale.getRawName(packages, classes));
-    assertEquals("java.util.Locale", locale2.getRawName(packages, classes));
-    assertEquals("java.util.List", stringList.getRawName(packages, classes));
-    assertEquals("java.util.List", stringList2.getRawName(packages, classes));
+    assertThat(locale.getRawName(packages, classes)).isEqualTo("java.util.Locale");
+    assertThat(locale2.getRawName(packages, classes)).isEqualTo("java.util.Locale");
+    assertThat(stringList.getRawName(packages, classes)).isEqualTo("java.util.List");
+    assertThat(stringList2.getRawName(packages, classes)).isEqualTo("java.util.List");
 
-    assertEquals("String", string.getRawName(packages, classes));
-    assertEquals("String", string2.getRawName(packages, classes));
+    assertThat(string.getRawName(packages, classes)).isEqualTo("String");
+    assertThat(string2.getRawName(packages, classes)).isEqualTo("String");
   }
 
   @Test
   public void GetGenericNameBooleanSetOfStringSetOfString() {
-    assertEquals("java.util.Locale", locale.getGenericName(true, packages, classes));
-    assertEquals("java.util.Locale", locale2.getGenericName(true, packages, classes));
-    assertEquals("java.util.List<String>", stringList.getGenericName(true, packages, classes));
-    assertEquals("java.util.List<String>", stringList2.getGenericName(true, packages, classes));
+    assertThat(locale.getGenericName(true, packages, classes)).isEqualTo("java.util.Locale");
+    assertThat(locale2.getGenericName(true, packages, classes)).isEqualTo("java.util.Locale");
+    assertThat(stringList.getGenericName(true, packages, classes))
+        .isEqualTo("java.util.List<String>");
+    assertThat(stringList2.getGenericName(true, packages, classes))
+        .isEqualTo("java.util.List<String>");
   }
 
   @Test
   public void GetFullName() {
-    assertEquals("java.util.Locale", locale.getFullName());
-    assertEquals("java.util.Locale", locale2.getFullName());
-    assertEquals("java.util.List", stringList.getFullName());
-    assertEquals("java.util.List", stringList2.getFullName());
+    assertThat(locale.getFullName()).isEqualTo("java.util.Locale");
+    assertThat(locale2.getFullName()).isEqualTo("java.util.Locale");
+    assertThat(stringList.getFullName()).isEqualTo("java.util.List");
+    assertThat(stringList2.getFullName()).isEqualTo("java.util.List");
   }
 
   @Test
   public void GetPackageName() {
-    assertEquals("java.util", locale.getPackageName());
-    assertEquals("java.util", locale2.getPackageName());
-    assertEquals("java.util", stringList.getPackageName());
-    assertEquals("java.util", stringList2.getPackageName());
+    assertThat(locale.getPackageName()).isEqualTo("java.util");
+    assertThat(locale2.getPackageName()).isEqualTo("java.util");
+    assertThat(stringList.getPackageName()).isEqualTo("java.util");
+    assertThat(stringList2.getPackageName()).isEqualTo("java.util");
   }
 
   @Test
   public void GetParameters() {
-    assertEquals(Collections.emptyList(), locale.getParameters());
-    assertEquals(Collections.emptyList(), locale2.getParameters());
-    assertEquals(Collections.singletonList(Types.STRING), stringList.getParameters());
-    assertEquals(Collections.singletonList(Types.STRING), stringList2.getParameters());
+    assertThat(locale.getParameters()).isEqualTo(Collections.emptyList());
+    assertThat(locale2.getParameters()).isEqualTo(Collections.emptyList());
+    assertThat(stringList.getParameters()).isEqualTo(Collections.singletonList(Types.STRING));
+    assertThat(stringList2.getParameters()).isEqualTo(Collections.singletonList(Types.STRING));
   }
 
   @Test
   public void GetSimpleName() {
-    assertEquals("Locale", locale.getSimpleName());
-    assertEquals("Locale", locale2.getSimpleName());
-    assertEquals("List", stringList.getSimpleName());
-    assertEquals("List", stringList2.getSimpleName());
+    assertThat(locale.getSimpleName()).isEqualTo("Locale");
+    assertThat(locale2.getSimpleName()).isEqualTo("Locale");
+    assertThat(stringList.getSimpleName()).isEqualTo("List");
+    assertThat(stringList2.getSimpleName()).isEqualTo("List");
   }
 
   @Test
   public void GetJavaClass() {
-    assertEquals(Locale.class, locale.getJavaClass());
+    assertThat(locale.getJavaClass()).isEqualTo(Locale.class);
   }
 
   @Test
   public void IsFinal() {
-    assertTrue(locale.isFinal());
-    assertTrue(locale2.isFinal());
-    assertFalse(stringList.isFinal());
+    assertThat(locale.isFinal()).isTrue();
+    assertThat(locale2.isFinal()).isTrue();
+    assertThat(stringList.isFinal()).isFalse();
 
-    assertTrue(Types.STRING.isFinal());
-    assertTrue(Types.LONG.isFinal());
+    assertThat(Types.STRING.isFinal()).isTrue();
+    assertThat(Types.LONG.isFinal()).isTrue();
   }
 
   @Test
   public void IsPrimitive() {
-    assertFalse(locale.isPrimitive());
-    assertFalse(locale2.isPrimitive());
-    assertFalse(stringList.isPrimitive());
-    assertFalse(stringList2.isPrimitive());
+    assertThat(locale.isPrimitive()).isFalse();
+    assertThat(locale2.isPrimitive()).isFalse();
+    assertThat(stringList.isPrimitive()).isFalse();
+    assertThat(stringList2.isPrimitive()).isFalse();
   }
 
   @Test
   public void GetCategory() {
-    assertEquals(TypeCategory.SIMPLE, locale.getCategory());
-    assertEquals(TypeCategory.SIMPLE, locale2.getCategory());
-    assertEquals(TypeCategory.LIST, stringList.getCategory());
-    assertEquals(TypeCategory.LIST, stringList2.getCategory());
+    assertThat(locale.getCategory()).isEqualTo(TypeCategory.SIMPLE);
+    assertThat(locale2.getCategory()).isEqualTo(TypeCategory.SIMPLE);
+    assertThat(stringList.getCategory()).isEqualTo(TypeCategory.LIST);
+    assertThat(stringList2.getCategory()).isEqualTo(TypeCategory.LIST);
   }
 
   @Test
   public void As() {
-    assertEquals(TypeCategory.SIMPLE, stringList.as(TypeCategory.SIMPLE).getCategory());
-    assertEquals(TypeCategory.SIMPLE, stringList2.as(TypeCategory.SIMPLE).getCategory());
+    assertThat(stringList.as(TypeCategory.SIMPLE).getCategory()).isEqualTo(TypeCategory.SIMPLE);
+    assertThat(stringList2.as(TypeCategory.SIMPLE).getCategory()).isEqualTo(TypeCategory.SIMPLE);
   }
 
   //    @Test
@@ -166,19 +168,19 @@ public class TypeTest {
 
   @Test
   public void ToString() {
-    assertEquals("java.util.Locale", locale.toString());
-    assertEquals("java.util.Locale", locale2.toString());
-    assertEquals("java.util.List<String>", stringList.toString());
-    assertEquals("java.util.List<String>", stringList2.toString());
+    assertThat(locale.toString()).isEqualTo("java.util.Locale");
+    assertThat(locale2.toString()).isEqualTo("java.util.Locale");
+    assertThat(stringList.toString()).isEqualTo("java.util.List<String>");
+    assertThat(stringList2.toString()).isEqualTo("java.util.List<String>");
   }
 
   @Test
   public void AsArrayType() {
-    assertEquals("java.util.Locale[]", locale.asArrayType().getFullName());
-    assertEquals(TypeCategory.ARRAY, locale.asArrayType().getCategory());
-    assertEquals("java.util.Locale[]", locale2.asArrayType().getFullName());
-    assertEquals(TypeCategory.ARRAY, locale2.asArrayType().getCategory());
-    assertEquals("java.util.List[]", stringList.asArrayType().getFullName());
-    assertEquals("java.util.List[]", stringList2.asArrayType().getFullName());
+    assertThat(locale.asArrayType().getFullName()).isEqualTo("java.util.Locale[]");
+    assertThat(locale.asArrayType().getCategory()).isEqualTo(TypeCategory.ARRAY);
+    assertThat(locale2.asArrayType().getFullName()).isEqualTo("java.util.Locale[]");
+    assertThat(locale2.asArrayType().getCategory()).isEqualTo(TypeCategory.ARRAY);
+    assertThat(stringList.asArrayType().getFullName()).isEqualTo("java.util.List[]");
+    assertThat(stringList2.asArrayType().getFullName()).isEqualTo("java.util.List[]");
   }
 }

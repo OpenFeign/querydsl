@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
@@ -36,8 +36,8 @@ public class SimpleExpressionTest {
   @Test
   public void as_usage() {
     SimpleExpression<String> str = new StringPath("str");
-    assertEquals("str as alias", str.as("alias").toString());
-    assertEquals("str as alias", str.as(new StringPath("alias")).toString());
+    assertThat(str.as("alias").toString()).isEqualTo("str as alias");
+    assertThat(str.as(new StringPath("alias")).toString()).isEqualTo("str as alias");
   }
 
   @Test
@@ -63,10 +63,10 @@ public class SimpleExpressionTest {
 
     for (Class<?> cl : classes) {
       Method asPath = cl.getDeclaredMethod("as", Path.class);
-      assertEquals(cl, asPath.getReturnType());
+      assertThat(asPath.getReturnType()).isEqualTo(cl);
 
       Method asString = cl.getDeclaredMethod("as", String.class);
-      assertEquals(cl, asString.getReturnType());
+      assertThat(asString.getReturnType()).isEqualTo(cl);
     }
   }
 
@@ -92,9 +92,11 @@ public class SimpleExpressionTest {
 
     for (DslExpression<?> expr : paths) {
       Path<?> o = ExpressionUtils.path(expr.getType(), "o");
-      assertEquals(ExpressionUtils.operation(expr.getType(), Ops.ALIAS, expr, o), expr.as("o"));
+      assertThat(expr.as("o"))
+          .isEqualTo(ExpressionUtils.operation(expr.getType(), Ops.ALIAS, expr, o));
       Path p = ExpressionUtils.path(expr.getType(), "p");
-      assertEquals(ExpressionUtils.operation(expr.getType(), Ops.ALIAS, expr, p), expr.as(p));
+      assertThat(expr.as(p))
+          .isEqualTo(ExpressionUtils.operation(expr.getType(), Ops.ALIAS, expr, p));
     }
   }
 

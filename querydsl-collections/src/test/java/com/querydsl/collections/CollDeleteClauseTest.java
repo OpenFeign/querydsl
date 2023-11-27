@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,11 +31,11 @@ public class CollDeleteClauseTest {
 
     CollDeleteClause<Cat> deleteClause = new CollDeleteClause<Cat>(cat, cats);
     deleteClause.where(cat.name.eq("Bob"));
-    assertEquals(1, deleteClause.execute());
+    assertThat(deleteClause.execute()).isEqualTo(1);
 
-    assertEquals(3, cats.size());
-    assertEquals("Ann", cats.get(0).getName());
-    assertEquals("John", cats.get(1).getName());
-    assertEquals("Carl", cats.get(2).getName());
+    assertThat(cats).hasSize(3);
+    assertThat(cats.get(0).getName()).isEqualTo("Ann");
+    assertThat(cats.get(1).getName()).isEqualTo("John");
+    assertThat(cats.get(2).getName()).isEqualTo("Carl");
   }
 }

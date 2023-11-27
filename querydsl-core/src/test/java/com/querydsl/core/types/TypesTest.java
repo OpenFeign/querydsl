@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -22,16 +22,16 @@ public class TypesTest {
   @Test
   public void testExpr() {
     for (Class<?> cl : Expression.class.getClasses()) {
-      assertTrue(Expression.class.isAssignableFrom(cl), cl.getName());
+      assertThat(Expression.class.isAssignableFrom(cl)).as(cl.getName()).isTrue();
     }
   }
 
   @Test
   public void testPath() {
     for (Class<?> cl : Path.class.getClasses()) {
-      assertTrue(Path.class.isAssignableFrom(cl), cl.getName());
+      assertThat(Path.class.isAssignableFrom(cl)).as(cl.getName()).isTrue();
       if (!cl.isInterface()) {
-        assertTrue(Expression.class.isAssignableFrom(cl), cl.getName());
+        assertThat(Expression.class.isAssignableFrom(cl)).as(cl.getName()).isTrue();
       }
     }
   }

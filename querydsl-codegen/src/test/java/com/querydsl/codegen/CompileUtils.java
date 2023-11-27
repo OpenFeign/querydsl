@@ -1,5 +1,7 @@
 package com.querydsl.codegen;
 
+import static org.assertj.core.api.Assertions.fail;
+
 import com.querydsl.codegen.utils.MemFileManager;
 import com.querydsl.codegen.utils.MemSourceFileObject;
 import com.querydsl.codegen.utils.SimpleCompiler;
@@ -10,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.SimpleJavaFileObject;
-import org.junit.jupiter.api.Assertions;
 
 public final class CompileUtils {
 
@@ -36,7 +37,7 @@ public final class CompileUtils {
             null,
             Collections.singletonList(javaFileObject));
     if (!task.call()) {
-      Assertions.fail("Compilation of " + source + " failed.\n" + out.toString());
+      fail("", "Compilation of " + source + " failed.\n" + out.toString());
     }
   }
 }

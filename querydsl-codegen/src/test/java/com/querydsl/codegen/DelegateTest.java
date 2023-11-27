@@ -13,8 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.Parameter;
 import com.querydsl.codegen.utils.model.Types;
@@ -39,7 +38,7 @@ public class DelegateTest {
             "delegate",
             Collections.<Parameter>emptyList(),
             Types.STRING);
-    assertEquals(delegate, delegate2);
+    assertThat(delegate2).isEqualTo(delegate);
   }
 
   @Test
@@ -58,6 +57,6 @@ public class DelegateTest {
             "delegate2",
             Collections.<Parameter>emptyList(),
             Types.STRING);
-    assertFalse(delegate.equals(delegate2));
+    assertThat(delegate.equals(delegate2)).isFalse();
   }
 }

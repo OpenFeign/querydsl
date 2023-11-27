@@ -1,6 +1,6 @@
 package com.querydsl.core.types;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -10,6 +10,6 @@ public class TemplateExpressionImplTest {
   public void equals() {
     Expression<?> expr1 = ExpressionUtils.template(String.class, "abc", "abc");
     Expression<?> expr2 = ExpressionUtils.template(String.class, "abc", "def");
-    assertFalse(expr1.equals(expr2));
+    assertThat(expr1.equals(expr2)).isFalse();
   }
 }

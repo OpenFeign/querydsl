@@ -17,7 +17,7 @@ package com.querydsl.collections;
 import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.core.group.guava.GuavaGroupBy.groupBy;
 import static com.querydsl.core.group.guava.GuavaGroupBy.map;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
@@ -63,9 +63,9 @@ public class GroupBy4Test {
         CollQueryFactory.from(table, data)
             .transform(groupBy(table.col1).as(map(table.col2, table.col3)));
 
-    assertEquals(3, grouped.size());
-    assertEquals(2, grouped.get("1").size());
-    assertEquals(new HashSet<>(Arrays.asList("abc", "pqr")), grouped.get("1").keySet());
+    assertThat(grouped).hasSize(3);
+    assertThat(grouped.get("1")).hasSize(2);
+    assertThat(grouped.get("1").keySet()).isEqualTo(new HashSet<>(Arrays.asList("abc", "pqr")));
   }
 
   @Test
@@ -90,7 +90,7 @@ public class GroupBy4Test {
                 .putAll("3", "abc", "pqr")
                 .build());
 
-    assertEquals(expected, transform);
+    assertThat(transform).isEqualTo(expected);
   }
 
   @Test
@@ -116,7 +116,7 @@ public class GroupBy4Test {
                 .putAll("3", ImmutableMap.of("abc", "555"), ImmutableMap.of("pqr", "666"))
                 .build());
 
-    assertEquals(expected, transform);
+    assertThat(transform).isEqualTo(expected);
   }
 
   @Test
@@ -144,7 +144,7 @@ public class GroupBy4Test {
             .put("3", "pqr", "666")
             .build();
 
-    assertEquals(expected, transform);
+    assertThat(transform).isEqualTo(expected);
   }
 
   @Test
@@ -173,7 +173,7 @@ public class GroupBy4Test {
             .put("3", "pqr", ImmutableList.of("666", "777"))
             .build();
 
-    assertEquals(expected, transform);
+    assertThat(transform).isEqualTo(expected);
   }
 
   @Test
@@ -217,7 +217,7 @@ public class GroupBy4Test {
                         .build()))
             .build();
 
-    assertEquals(expected, transform);
+    assertThat(transform).isEqualTo(expected);
   }
 
   @Test
@@ -286,7 +286,7 @@ public class GroupBy4Test {
                         .build())
                 .build();
 
-    assertEquals(expected, transform);
+    assertThat(transform).isEqualTo(expected);
   }
 
   @Test
@@ -317,6 +317,6 @@ public class GroupBy4Test {
             .put("3", ImmutableMap.of("3", "pqr"), ImmutableList.of("666", "777"))
             .build();
 
-    assertEquals(expected, transform);
+    assertThat(transform).isEqualTo(expected);
   }
 }

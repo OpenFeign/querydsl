@@ -13,8 +13,6 @@
  */
 package com.querydsl.mongodb.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.mongodb.morphia.Morphia;
@@ -32,7 +30,7 @@ public class MongodbUserTest {
     user.setFirstName("Jaakko");
     user.addAddress("Aakatu", "00300", tampere);
 
-    assertNotNull(morphia.toDBObject(user));
+    assertThat(morphia.toDBObject(user)).isNotNull();
   }
 
   @Test
@@ -43,7 +41,7 @@ public class MongodbUserTest {
     User user = new User();
     user.setFriend(friend);
 
-    assertNotNull(morphia.toDBObject(user));
+    assertThat(morphia.toDBObject(user)).isNotNull();
   }
 
   @Test
@@ -54,6 +52,6 @@ public class MongodbUserTest {
     User user = new User();
     user.addFriend(friend);
 
-    assertNotNull(morphia.toDBObject(user));
+    assertThat(morphia.toDBObject(user)).isNotNull();
   }
 }

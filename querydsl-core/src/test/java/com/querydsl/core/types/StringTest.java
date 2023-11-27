@@ -15,8 +15,8 @@ package com.querydsl.core.types;
 
 import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.core.alias.Alias.alias;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
@@ -56,7 +56,7 @@ public class StringTest {
       for (Field field : missing) {
         System.err.println(field.getName());
       }
-      fail();
+      fail("");
     }
   }
 
@@ -66,23 +66,23 @@ public class StringTest {
     SomeType alias = alias(SomeType.class, "alias");
 
     // Path toString
-    assertEquals("alias.name", $(alias.getName()).toString());
-    assertEquals("alias.ref.name", $(alias.getRef().getName()).toString());
-    assertEquals("alias.refs.get(0)", $(alias.getRefs().get(0)).toString());
+    assertThat($(alias.getName()).toString()).isEqualTo("alias.name");
+    assertThat($(alias.getRef().getName()).toString()).isEqualTo("alias.ref.name");
+    assertThat($(alias.getRefs().get(0)).toString()).isEqualTo("alias.refs.get(0)");
 
     // Operation toString
-    assertEquals("lower(alias.name)", $(alias.getName()).lower().toString());
+    assertThat($(alias.getName()).lower().toString()).isEqualTo("lower(alias.name)");
 
     // ConstructorExpression
     ConstructorExpression<SomeType> someType =
         new ConstructorExpression<SomeType>(
             SomeType.class, new Class<?>[] {SomeType.class}, $(alias));
-    assertEquals("new SomeType(alias)", someType.toString());
+    assertThat(someType.toString()).isEqualTo("new SomeType(alias)");
 
     // ArrayConstructorExpression
     ArrayConstructorExpression<SomeType> someTypeArray =
         new ArrayConstructorExpression<SomeType>(SomeType[].class, $(alias));
-    assertEquals("new SomeType[](alias)", someTypeArray.toString());
+    assertThat(someTypeArray.toString()).isEqualTo("new SomeType[](alias)");
   }
 
   public static class SomeType {

@@ -1,7 +1,7 @@
 package com.querydsl.collections;
 
 import static com.querydsl.core.alias.Alias.$;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.alias.Alias;
 import java.util.Collections;
@@ -27,20 +27,20 @@ public class BooleanTest {
   @Test
   public void primitive_boolean() {
     Entity entity = Alias.alias(Entity.class);
-    assertEquals(
-        1,
-        CollQueryFactory.from(entity, Collections.singleton(new Entity()))
-            .where($(entity.isBoolean1()).eq(Boolean.TRUE))
-            .fetchCount());
+    assertThat(
+            CollQueryFactory.from(entity, Collections.singleton(new Entity()))
+                .where($(entity.isBoolean1()).eq(Boolean.TRUE))
+                .fetchCount())
+        .isEqualTo(1);
   }
 
   @Test
   public void object_boolean() {
     Entity entity = Alias.alias(Entity.class);
-    assertEquals(
-        1,
-        CollQueryFactory.from(entity, Collections.singleton(new Entity()))
-            .where($(entity.getBoolean2()).eq(Boolean.TRUE))
-            .fetchCount());
+    assertThat(
+            CollQueryFactory.from(entity, Collections.singleton(new Entity()))
+                .where($(entity.getBoolean2()).eq(Boolean.TRUE))
+                .fetchCount())
+        .isEqualTo(1);
   }
 }

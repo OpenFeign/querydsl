@@ -13,7 +13,7 @@
  */
 package com.querydsl.core;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.DateExpression;
 import java.sql.Date;
@@ -31,10 +31,10 @@ public class DateConstantTest {
     cal.set(Calendar.YEAR, 2000);
 
     DateExpression<Date> date = DateConstant.create(new Date(cal.getTimeInMillis()));
-    assertEquals("1", date.dayOfMonth().toString());
-    assertEquals("1", date.month().toString());
-    assertEquals("2000", date.year().toString());
-    assertEquals("7", date.dayOfWeek().toString());
-    assertEquals("1", date.dayOfYear().toString());
+    assertThat(date.dayOfMonth().toString()).isEqualTo("1");
+    assertThat(date.month().toString()).isEqualTo("1");
+    assertThat(date.year().toString()).isEqualTo("2000");
+    assertThat(date.dayOfWeek().toString()).isEqualTo("7");
+    assertThat(date.dayOfYear().toString()).isEqualTo("1");
   }
 }

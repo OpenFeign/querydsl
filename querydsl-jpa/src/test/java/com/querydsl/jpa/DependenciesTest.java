@@ -13,8 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import jdepend.framework.JDepend;
 import org.junit.Test;
@@ -31,6 +30,6 @@ public class DependenciesTest {
     jdepend.addDirectory("target/classes/com/querydsl/jpa/sql");
 
     jdepend.analyze();
-    assertFalse(jdepend.containsCycles());
+    assertThat(jdepend.containsCycles()).isFalse();
   }
 }

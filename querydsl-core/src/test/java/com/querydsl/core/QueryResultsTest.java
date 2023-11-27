@@ -13,7 +13,7 @@
  */
 package com.querydsl.core;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,36 +28,36 @@ public class QueryResultsTest {
 
   @Test
   public void getResults() {
-    assertEquals(list, results.getResults());
+    assertThat(results.getResults()).isEqualTo(list);
   }
 
   @Test
   public void getTotal() {
-    assertEquals(20L, results.getTotal());
+    assertThat(results.getTotal()).isEqualTo(20L);
   }
 
   @Test
   public void isEmpty() {
-    assertFalse(results.isEmpty());
+    assertThat(results.isEmpty()).isFalse();
   }
 
   @Test
   public void getLimit() {
-    assertEquals(10L, results.getLimit());
+    assertThat(results.getLimit()).isEqualTo(10L);
   }
 
   @Test
   public void getOffset() {
-    assertEquals(0L, results.getOffset());
+    assertThat(results.getOffset()).isEqualTo(0L);
   }
 
   @Test
   public void emptyResults() {
     QueryResults<Object> empty = QueryResults.emptyResults();
-    assertTrue(empty.isEmpty());
-    assertEquals(Long.MAX_VALUE, empty.getLimit());
-    assertEquals(0L, empty.getOffset());
-    assertEquals(0L, empty.getTotal());
-    assertEquals(Collections.emptyList(), empty.getResults());
+    assertThat(empty.isEmpty()).isTrue();
+    assertThat(empty.getLimit()).isEqualTo(Long.MAX_VALUE);
+    assertThat(empty.getOffset()).isEqualTo(0L);
+    assertThat(empty.getTotal()).isEqualTo(0L);
+    assertThat(empty.getResults()).isEqualTo(Collections.emptyList());
   }
 }

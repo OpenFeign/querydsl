@@ -13,8 +13,7 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,29 +40,31 @@ public class DateExtensionsTest extends AbstractProcessorTest {
 
     // QEntityWithExtensions is generated
     process(QuerydslAnnotationProcessor.class, sources, "overwrite3");
-    assertTrue(qType.exists());
+    assertThat(qType).exists();
     long modified = qType.lastModified();
     Thread.sleep(1000);
-    assertTrue(
-        new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8).contains("QDate"));
+    assertThat(new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8))
+        .contains("QDate");
 
     // EntityWithExtensions has not changed, QEntityWithExtensions is not overwritten
     compile(QuerydslAnnotationProcessor.class, sources, "overwrite3");
-    assertEquals(modified, qType.lastModified());
+    assertThat(qType.lastModified()).isEqualTo(modified);
 
     // EntityWithExtensions is updated, QEntityWithExtensions is overwritten
     Files.createFile(source.toPath());
     compile(QuerydslAnnotationProcessor.class, sources, "overwrite3");
-    assertTrue(modified < qType.lastModified(), "" + modified + " >= " + qType.lastModified());
-    assertTrue(
-        new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8).contains("QDate"));
+    assertThat(modified < qType.lastModified())
+        .as("" + modified + " >= " + qType.lastModified())
+        .isTrue();
+    assertThat(new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8))
+        .contains("QDate");
 
     // QEntityWithExtensions is deleted and regenerated
-    assertTrue(qType.delete());
+    assertThat(qType.delete()).isTrue();
     compile(QuerydslAnnotationProcessor.class, sources, "overwrite3");
-    assertTrue(qType.exists());
-    assertTrue(
-        new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8).contains("QDate"));
+    assertThat(qType).exists();
+    assertThat(new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8))
+        .contains("QDate");
   }
 
   @Override

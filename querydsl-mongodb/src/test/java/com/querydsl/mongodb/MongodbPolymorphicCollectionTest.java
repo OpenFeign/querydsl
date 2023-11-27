@@ -1,6 +1,6 @@
 package com.querydsl.mongodb;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
@@ -38,7 +38,7 @@ public class MongodbPolymorphicCollectionTest {
 
   @Test
   public void basicCount() {
-    assertEquals(where().fetchCount(), 3);
+    assertThat(3).isEqualTo(where().fetchCount());
   }
 
   @Test
@@ -62,7 +62,7 @@ public class MongodbPolymorphicCollectionTest {
 
   @Test
   public void countFishes() {
-    assertEquals(where(isFish()).fetchCount(), 2);
+    assertThat(2).isEqualTo(where(isFish()).fetchCount());
   }
 
   private Predicate isFish() {

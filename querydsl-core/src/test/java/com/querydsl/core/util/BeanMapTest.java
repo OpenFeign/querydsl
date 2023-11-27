@@ -1,6 +1,6 @@
 package com.querydsl.core.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -19,39 +19,39 @@ public class BeanMapTest {
 
   @Test
   public void size() {
-    assertEquals(4, beanMap.size());
+    assertThat(beanMap.size()).isEqualTo(4);
   }
 
   @Test
   public void clear() {
     beanMap.clear();
-    assertEquals(4, beanMap.size());
+    assertThat(beanMap.size()).isEqualTo(4);
   }
 
   @Test
   public void primitives() {
     beanMap.put("id", 5);
-    assertEquals(5, ((Entity) beanMap.getBean()).getId());
+    assertThat(((Entity) beanMap.getBean()).getId()).isEqualTo(5);
   }
 
   @Test
   public void beanMap() {
-    assertEquals(0, new BeanMap().size());
+    assertThat(new BeanMap().size()).isEqualTo(0);
   }
 
   @Test
   public void beanMapObject() {
-    assertEquals(4, new BeanMap(new Entity()).size());
+    assertThat(new BeanMap(new Entity()).size()).isEqualTo(4);
   }
 
   @Test
   public void toString_() {
-    assertEquals("BeanMap<null>", new BeanMap().toString());
+    assertThat(new BeanMap().toString()).isEqualTo("BeanMap<null>");
   }
 
   @Test
   public void clone_() throws CloneNotSupportedException {
-    assertEquals(beanMap, beanMap.clone());
+    assertThat(beanMap.clone()).isEqualTo(beanMap);
   }
 
   @Test
@@ -59,7 +59,7 @@ public class BeanMapTest {
 
   @Test
   public void containsKeyString() {
-    assertTrue(beanMap.containsKey("id"));
+    assertThat(beanMap.containsKey("id")).isTrue();
   }
 
   @Test
@@ -68,26 +68,26 @@ public class BeanMapTest {
   @Test
   public void getString() {
     beanMap.put("firstName", "John");
-    assertEquals("John", beanMap.get("firstName"));
+    assertThat(beanMap.get("firstName")).isEqualTo("John");
   }
 
   @Test
   public void keySet() {
-    assertEquals(
-        new HashSet<>(Arrays.asList("id", "class", "firstName", "lastName")), beanMap.keySet());
+    assertThat(beanMap.keySet())
+        .isEqualTo(new HashSet<>(Arrays.asList("id", "class", "firstName", "lastName")));
   }
 
   @Test
   public void entrySet() {
     beanMap.put("firstName", "John");
-    assertFalse(beanMap.entrySet().isEmpty());
+    assertThat(beanMap.entrySet()).isNotEmpty();
   }
 
   @Test
   @Ignore
   public void values() {
     beanMap.put("firstName", "John");
-    assertEquals(Arrays.asList(0, null, Entity.class, "John"), beanMap.values());
+    assertThat(beanMap.values()).isEqualTo(Arrays.asList(0, null, Entity.class, "John"));
   }
 
   @Test
@@ -95,13 +95,13 @@ public class BeanMapTest {
 
   @Test
   public void getBean() {
-    assertEquals(Entity.class, beanMap.getBean().getClass());
+    assertThat(beanMap.getBean().getClass()).isEqualTo(Entity.class);
   }
 
   @Test
   public void setBean() {
     Entity entity = new Entity();
     beanMap.setBean(entity);
-    assertTrue(entity == beanMap.getBean());
+    assertThat(entity == beanMap.getBean()).isTrue();
   }
 }

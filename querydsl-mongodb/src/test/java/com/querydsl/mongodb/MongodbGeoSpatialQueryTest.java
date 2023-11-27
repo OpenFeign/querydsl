@@ -13,7 +13,8 @@
  */
 package com.querydsl.mongodb;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
@@ -57,9 +58,9 @@ public class MongodbGeoSpatialQueryTest {
     ds.save(new GeoEntity(30.0, 50.0));
 
     List<GeoEntity> entities = query().where(geoEntity.location.near(50.0, 50.0)).fetch();
-    assertEquals(30.0, entities.get(0).getLocation()[0], 0.1);
-    assertEquals(20.0, entities.get(1).getLocation()[0], 0.1);
-    assertEquals(10.0, entities.get(2).getLocation()[0], 0.1);
+    assertThat(entities.get(0).getLocation()[0]).isCloseTo(30.0, within(0.1));
+    assertThat(entities.get(1).getLocation()[0]).isCloseTo(20.0, within(0.1));
+    assertThat(entities.get(2).getLocation()[0]).isCloseTo(10.0, within(0.1));
   }
 
   @Test
@@ -70,9 +71,9 @@ public class MongodbGeoSpatialQueryTest {
 
     List<GeoEntity> entities =
         query().where(MongodbExpressions.nearSphere(geoEntity.location, 50.0, 50.0)).fetch();
-    assertEquals(30.0, entities.get(0).getLocation()[0], 0.1);
-    assertEquals(20.0, entities.get(1).getLocation()[0], 0.1);
-    assertEquals(10.0, entities.get(2).getLocation()[0], 0.1);
+    assertThat(entities.get(0).getLocation()[0]).isCloseTo(30.0, within(0.1));
+    assertThat(entities.get(1).getLocation()[0]).isCloseTo(20.0, within(0.1));
+    assertThat(entities.get(2).getLocation()[0]).isCloseTo(10.0, within(0.1));
   }
 
   @Test
@@ -83,9 +84,9 @@ public class MongodbGeoSpatialQueryTest {
 
     List<GeoEntity> entities =
         query().where(MongodbExpressions.withinBox(geoEntity.location, 0, 0, 20, 50)).fetch();
-    assertEquals(2, entities.size());
-    assertEquals(10.0, entities.get(0).getLocation()[0], 0.1);
-    assertEquals(20.0, entities.get(1).getLocation()[0], 0.1);
+    assertThat(entities).hasSize(2);
+    assertThat(entities.get(0).getLocation()[0]).isCloseTo(10.0, within(0.1));
+    assertThat(entities.get(1).getLocation()[0]).isCloseTo(20.0, within(0.1));
   }
 
   @Test
@@ -96,8 +97,8 @@ public class MongodbGeoSpatialQueryTest {
 
     List<GeoEntity> entities =
         query().where(MongodbExpressions.geoIntersects(geoEntity.location, 20.0, 50.0)).fetch();
-    assertEquals(1, entities.size());
-    assertEquals(20.0, entities.get(0).getLocation()[0], 0.1);
+    assertThat(entities).hasSize(1);
+    assertThat(entities.get(0).getLocation()[0]).isCloseTo(20.0, within(0.1));
   }
 
   private MorphiaQuery<GeoEntity> query() {

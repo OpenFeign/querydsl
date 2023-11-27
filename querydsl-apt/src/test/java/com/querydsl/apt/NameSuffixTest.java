@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +34,8 @@ public class NameSuffixTest extends AbstractProcessorTest {
     // default Processor
     process(QuerydslAnnotationProcessor.class, classes, "suffix");
 
-    assertTrue(
-        new File("target/suffix/com/querydsl/apt/domain/query2/QAnimalTest_AnimalType.java")
-            .exists());
+    assertThat(new File("target/suffix/com/querydsl/apt/domain/query2/QAnimalTest_AnimalType.java"))
+        .exists();
   }
 
   @Override

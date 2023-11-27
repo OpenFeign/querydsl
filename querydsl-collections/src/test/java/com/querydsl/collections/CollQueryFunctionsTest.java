@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,9 +22,9 @@ public class CollQueryFunctionsTest {
 
   @Test
   public void coalesce() {
-    assertEquals("1", CollQueryFunctions.coalesce("1", null));
-    assertEquals("1", CollQueryFunctions.coalesce(null, "1", "2"));
-    assertNull(CollQueryFunctions.coalesce(null, null));
+    assertThat(CollQueryFunctions.coalesce("1", null)).isEqualTo("1");
+    assertThat(CollQueryFunctions.coalesce(null, "1", "2")).isEqualTo("1");
+    assertThat(CollQueryFunctions.coalesce(null, null)).isNull();
   }
 
   @Test
@@ -44,14 +44,14 @@ public class CollQueryFunctionsTest {
 
   @Test
   public void like() {
-    assertTrue(CollQueryFunctions.like("abcDOG", "%DOG"));
-    assertTrue(CollQueryFunctions.like("DOGabc", "DOG%"));
-    assertTrue(CollQueryFunctions.like("abcDOGabc", "%DOG%"));
+    assertThat(CollQueryFunctions.like("abcDOG", "%DOG")).isTrue();
+    assertThat(CollQueryFunctions.like("DOGabc", "DOG%")).isTrue();
+    assertThat(CollQueryFunctions.like("abcDOGabc", "%DOG%")).isTrue();
   }
 
   @Test
   public void like_with_special_chars() {
-    assertTrue(CollQueryFunctions.like("$DOG", "$DOG"));
-    assertTrue(CollQueryFunctions.like("$DOGabc", "$DOG%"));
+    assertThat(CollQueryFunctions.like("$DOG", "$DOG")).isTrue();
+    assertThat(CollQueryFunctions.like("$DOGabc", "$DOG%")).isTrue();
   }
 }

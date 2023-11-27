@@ -3,6 +3,7 @@ package com.querydsl.sql;
 import static com.querydsl.core.Target.ORACLE;
 import static com.querydsl.sql.Constants.employee;
 import static com.querydsl.sql.oracle.OracleGrammar.level;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.sql.domain.QEmployee;
@@ -11,7 +12,6 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 
 public class SelectOracleBase extends AbstractBaseTest {
 
@@ -24,7 +24,7 @@ public class SelectOracleBase extends AbstractBaseTest {
         SQLSerializer serializer = super.serialize(forCountRow);
         String rv = serializer.toString();
         if (expectedQuery != null) {
-          Assertions.assertEquals(expectedQuery, rv.replace('\n', ' '));
+          assertThat(rv.replace('\n', ' ')).isEqualTo(expectedQuery);
           expectedQuery = null;
         }
         logger.fine(rv);

@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.Evaluator;
 import org.junit.Test;
@@ -38,8 +38,8 @@ public class MultiComparatorTest {
     MultiComparator<Object[]> comparator =
         new MultiComparator<Object[]>(
             evaluator, new boolean[] {true, true}, new boolean[] {true, true});
-    assertTrue(comparator.compare(new Object[] {"a", "b"}, new Object[] {"a", "c"}) < 0);
-    assertTrue(comparator.compare(new Object[] {"b", "a"}, new Object[] {"a", "b"}) > 0);
-    assertTrue(comparator.compare(new Object[] {"b", "b"}, new Object[] {"b", "b"}) == 0);
+    assertThat(comparator.compare(new Object[] {"a", "b"}, new Object[] {"a", "c"}) < 0).isTrue();
+    assertThat(comparator.compare(new Object[] {"b", "a"}, new Object[] {"a", "b"}) > 0).isTrue();
+    assertThat(comparator.compare(new Object[] {"b", "b"}, new Object[] {"b", "b"}) == 0).isTrue();
   }
 }

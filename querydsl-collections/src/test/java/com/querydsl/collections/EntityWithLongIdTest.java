@@ -1,7 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,8 +22,8 @@ public class EntityWithLongIdTest {
     query.where(root.id.eq(1000L));
 
     Long found = query.select(root.id).fetchFirst();
-    assertNotNull(found);
-    assertEquals(found.longValue(), 1000);
+    assertThat(found).isNotNull();
+    assertThat(1000).isEqualTo(found.longValue());
   }
 
   @Test

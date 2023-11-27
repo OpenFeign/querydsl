@@ -13,8 +13,6 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.querydsl.core.QueryMutability;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.hibernate.HibernateQuery;
@@ -59,8 +57,8 @@ public class HibernateQueryMutabilityTest implements HibernateTest {
     QCat cat = QCat.cat;
     HibernateQuery<?> query = query().from(cat).where(cat.name.isNotNull());
     HibernateQuery<?> query2 = query.clone(session);
-    assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
-    assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
+    assertThat(query2.getMetadata().getJoins()).isEqualTo(query.getMetadata().getJoins());
+    assertThat(query2.getMetadata().getWhere()).isEqualTo(query.getMetadata().getWhere());
     query2.select(cat).fetch();
   }
 }

@@ -1,6 +1,6 @@
 package com.querydsl.sql;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ public class SchemaAndTableTest {
   public void equalsAndHashCode() {
     SchemaAndTable st1 = new SchemaAndTable(null, "table");
     SchemaAndTable st2 = new SchemaAndTable(null, "table");
-    assertEquals(st1, st2);
-    assertEquals(st1.hashCode(), st2.hashCode());
+    assertThat(st2).isEqualTo(st1);
+    assertThat(st2.hashCode()).isEqualTo(st1.hashCode());
   }
 }

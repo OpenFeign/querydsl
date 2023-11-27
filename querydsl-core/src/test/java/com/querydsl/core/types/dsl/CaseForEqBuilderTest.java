@@ -15,8 +15,7 @@ package com.querydsl.core.types.dsl;
 
 import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.core.alias.Alias.alias;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Time;
 import org.junit.Test;
@@ -50,14 +49,14 @@ public class CaseForEqBuilderTest {
             .then(3)
             .otherwise(4);
 
-    assertEquals(
-        "case customer.annualSpending "
-            + "when 1000 then 1 "
-            + "when 2000 then 2 "
-            + "when 5000 then 3 "
-            + "else 4 "
-            + "end",
-        cases.toString());
+    assertThat(cases.toString())
+        .isEqualTo(
+            "case customer.annualSpending "
+                + "when 1000 then 1 "
+                + "when 2000 then 2 "
+                + "when 5000 then 3 "
+                + "else 4 "
+                + "end");
   }
 
   @Test
@@ -74,7 +73,7 @@ public class CaseForEqBuilderTest {
             .then("gold")
             .otherwise("platinum");
 
-    assertNotNull(cases);
+    assertThat(cases).isNotNull();
   }
 
   @Test
@@ -83,7 +82,7 @@ public class CaseForEqBuilderTest {
 
     BooleanExpression cases = $(c.getAnnualSpending()).when(1000L).then(true).otherwise(false);
 
-    assertNotNull(cases);
+    assertThat(cases).isNotNull();
   }
 
   @Test
@@ -96,7 +95,7 @@ public class CaseForEqBuilderTest {
             .then(new java.sql.Date(0))
             .otherwise(new java.sql.Date(0));
 
-    assertNotNull(cases);
+    assertThat(cases).isNotNull();
   }
 
   @Test
@@ -109,7 +108,7 @@ public class CaseForEqBuilderTest {
             .then(new java.util.Date(0))
             .otherwise(new java.util.Date(0));
 
-    assertNotNull(cases);
+    assertThat(cases).isNotNull();
   }
 
   @Test
@@ -119,7 +118,7 @@ public class CaseForEqBuilderTest {
     TimeExpression<Time> cases =
         $(c.getAnnualSpending()).when(1000L).then(new Time(0)).otherwise(new Time(0));
 
-    assertNotNull(cases);
+    assertThat(cases).isNotNull();
   }
 
   @Test
@@ -129,6 +128,6 @@ public class CaseForEqBuilderTest {
     EnumExpression<EnumExample> cases =
         $(c.getAnnualSpending()).when(1000L).then(EnumExample.A).otherwise(EnumExample.B);
 
-    assertNotNull(cases);
+    assertThat(cases).isNotNull();
   }
 }
