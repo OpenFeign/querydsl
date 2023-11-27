@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEntity;
@@ -44,6 +44,6 @@ public class QueryEmbeddable2Test {
 
   @Test
   public void user_complex_a() {
-    assertNotNull(QQueryEmbeddable2Test_User.user.complex.a);
+    assertThat(QQueryEmbeddable2Test_User.user.complex.a).isNotNull();
   }
 }
