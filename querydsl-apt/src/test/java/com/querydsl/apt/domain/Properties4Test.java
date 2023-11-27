@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.persistence.MappedSuperclass;
 import org.junit.Test;
@@ -15,6 +15,7 @@ public class Properties4Test extends AbstractTest {
 
   @Test
   public void test() {
-    assertEquals("8FRecord", QProperties4Test_Naming.naming._8FRecord.getMetadata().getName());
+    assertThat(QProperties4Test_Naming.naming._8FRecord.getMetadata().getName())
+        .isEqualTo("8FRecord");
   }
 }
