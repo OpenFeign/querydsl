@@ -16,7 +16,6 @@ package com.querydsl.jpa;
 import static com.querydsl.jpa.Constants.*;
 import static com.querydsl.jpa.JPAExpressions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.domain.QCat;
 import com.querydsl.jpa.domain.QEmployee;
@@ -44,32 +43,28 @@ public class SubQueryTest extends AbstractQueryTest {
 
   @Test
   public void innerJoin() {
-    assertEquals(
-        "select cat\nfrom Cat cat\n  inner join cat.mate",
-        selectFrom(cat).innerJoin(cat.mate).toString());
+    assertThat(selectFrom(cat).innerJoin(cat.mate).toString())
+        .isEqualTo("select cat\nfrom Cat cat\n  inner join cat.mate");
   }
 
   @Test
   public void innerJoin2() {
     QEmployee employee = QEmployee.employee;
     QUser user = QUser.user;
-    assertEquals(
-        "select employee\nfrom Employee employee\n  inner join employee.user as user",
-        selectFrom(employee).innerJoin(employee.user, user).toString());
+    assertThat(selectFrom(employee).innerJoin(employee.user, user).toString())
+        .isEqualTo("select employee\nfrom Employee employee\n  inner join employee.user as user");
   }
 
   @Test
   public void leftJoin() {
-    assertEquals(
-        "select cat\nfrom Cat cat\n  left join cat.mate",
-        selectFrom(cat).leftJoin(cat.mate).toString());
+    assertThat(selectFrom(cat).leftJoin(cat.mate).toString())
+        .isEqualTo("select cat\nfrom Cat cat\n  left join cat.mate");
   }
 
   @Test
   public void join() {
-    assertEquals(
-        "select cat\nfrom Cat cat\n  inner join cat.mate",
-        selectFrom(cat).join(cat.mate).toString());
+    assertThat(selectFrom(cat).join(cat.mate).toString())
+        .isEqualTo("select cat\nfrom Cat cat\n  inner join cat.mate");
   }
 
   @Test
