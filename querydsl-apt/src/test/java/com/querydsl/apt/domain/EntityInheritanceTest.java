@@ -13,10 +13,11 @@
  */
 package com.querydsl.apt.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 
 public class EntityInheritanceTest {
 
@@ -36,8 +37,7 @@ public class EntityInheritanceTest {
 
   @Test
   public void test() {
-    Assertions.assertEquals(
-        QEntityInheritanceTest_TestEntity.class,
-        QEntityInheritanceTest_TestEntity.testEntity.parent.getClass());
+    assertThat(QEntityInheritanceTest_TestEntity.testEntity.parent.getClass())
+        .isEqualTo(QEntityInheritanceTest_TestEntity.class);
   }
 }
