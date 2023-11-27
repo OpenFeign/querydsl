@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.inheritance;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import org.junit.Test;
@@ -34,9 +34,9 @@ public class Inheritance11Test {
 
   @Test
   public void test() {
-    assertNotNull(QInheritance11Test_Foo.foo);
-    assertNotNull(QInheritance11Test_FooBase.fooBase);
-    assertNotNull(QInheritance11Test_Bar.bar);
-    assertNotNull(QInheritance11Test_BarBase.barBase);
+    assertThat(QInheritance11Test_Foo.foo).isNotNull();
+    assertThat(QInheritance11Test_FooBase.fooBase).isNotNull();
+    assertThat(QInheritance11Test_Bar.bar).isNotNull();
+    assertThat(QInheritance11Test_BarBase.barBase).isNotNull();
   }
 }
