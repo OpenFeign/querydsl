@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain.p6;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class TypeTest {
   public void test() {
     QType1 type1 = QType1.type1;
     QType2 type2 = QType2.type2;
-    assertEquals(type2.getType(), type1.property.getType());
-    assertEquals(type2.getClass(), type1.property.getClass());
+    assertThat(type1.property.getType()).isEqualTo(type2.getType());
+    assertThat(type1.property.getClass()).isEqualTo(type2.getClass());
   }
 }
