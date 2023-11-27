@@ -2,7 +2,6 @@ package com.querydsl.jpa;
 
 import static com.querydsl.sql.SQLExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Target;
@@ -113,7 +112,8 @@ public abstract class AbstractSQLTest {
   @Test
   public void entityQueries3() {
     QCat catEntity = new QCat("animal_");
-    assertEquals(0, query().from(catEntity).select(catEntity.toes.max()).fetchFirst().intValue());
+    assertThat(query().from(catEntity).select(catEntity.toes.max()).fetchFirst().intValue())
+        .isEqualTo(0);
   }
 
   @Test
@@ -164,8 +164,8 @@ public abstract class AbstractSQLTest {
   @Test
   public void entityQueries7() {
     QCompany company = QCompany.company;
-    assertEquals(
-        Collections.emptyList(), query().from(company).select(company.officialName).fetch());
+    assertThat(query().from(company).select(company.officialName).fetch())
+        .isEqualTo(Collections.emptyList());
   }
 
   @Test
