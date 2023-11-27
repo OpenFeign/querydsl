@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.Config;
 import com.querydsl.core.annotations.QueryEntity;
@@ -50,7 +50,7 @@ public class QuerydslConfig2Test {
 
   @Test
   public void test() {
-    assertNotNull(QQuerydslConfig2Test_Entity.entity);
+    assertThat(QQuerydslConfig2Test_Entity.entity).isNotNull();
   }
 
   @Test(expected = NoSuchFieldException.class)
