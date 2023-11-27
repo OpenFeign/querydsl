@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import org.junit.Test;
@@ -33,12 +33,12 @@ public class Superclass4Test {
 
   @Test
   public void superClass_properties() {
-    assertNotNull(QSuperclass4Test_SuperClass.superClass.superClassProperty);
+    assertThat(QSuperclass4Test_SuperClass.superClass.superClassProperty).isNotNull();
   }
 
   @Test
   public void entity_properties() {
-    assertNotNull(QSuperclass4Test_Entity.entity.entityProperty);
-    assertNotNull(QSuperclass4Test_Entity.entity.superClassProperty);
+    assertThat(QSuperclass4Test_Entity.entity.entityProperty).isNotNull();
+    assertThat(QSuperclass4Test_Entity.entity.superClassProperty).isNotNull();
   }
 }
