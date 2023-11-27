@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ public class ReservedNamesInTypesTest {
 
   @Test
   public void correctly_escaped() {
-    assertNotNull(QPublic.public$);
-    assertNotNull(QPrivate.private$);
+    assertThat(QPublic.public$).isNotNull();
+    assertThat(QPrivate.private$).isNotNull();
   }
 }
