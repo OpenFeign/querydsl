@@ -16,7 +16,7 @@ package com.querydsl.collections;
 import static com.querydsl.collections.CollQueryFactory.from;
 import static com.querydsl.core.alias.Alias.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.dsl.Expressions;
@@ -75,9 +75,8 @@ public class AliasTest extends AbstractQueryTest {
     from(c, cats).where($(c.getBirthdate()).gt(new Date())).select($(c)).iterate();
 
     // 2
-    assertThrows(
-        NullPointerException.class,
-        () -> from(c, cats).where($(c.getMate().getName().toUpperCase()).eq("MOE")));
+    assertThatExceptionOfType(NullPointerException.class)
+        .isThrownBy(() -> from(c, cats).where($(c.getMate().getName().toUpperCase()).eq("MOE")));
 
     // 3
     assertThat($(c.getName())).isEqualTo(cat.name);

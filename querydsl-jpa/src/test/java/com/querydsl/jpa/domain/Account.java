@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.annotations.QueryInit;
 import java.io.Serializable;
@@ -38,7 +38,9 @@ public class Account implements Serializable {
 
   @Test
   public void test() {
-    assertThrows(Exception.class, () -> QAccount.class.getField("serialVersionUID"));
-    assertThrows(Exception.class, () -> QAccount.class.getField("transientField"));
+    assertThatExceptionOfType(Exception.class)
+        .isThrownBy(() -> QAccount.class.getField("serialVersionUID"));
+    assertThatExceptionOfType(Exception.class)
+        .isThrownBy(() -> QAccount.class.getField("transientField"));
   }
 }

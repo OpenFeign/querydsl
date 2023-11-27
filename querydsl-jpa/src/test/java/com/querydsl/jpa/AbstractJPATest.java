@@ -600,8 +600,8 @@ public abstract class AbstractJPATest {
     List<Tuple> tuples =
         query().from(cat).select(cat.id, Expressions.constantAs("abc", path)).fetch();
     for (int i = 0; i < cats.size(); i++) {
-      assertEquals(Integer.valueOf(cats.get(i).getId()), tuples.get(i).get(cat.id));
-      assertEquals("abc", tuples.get(i).get(path));
+      assertThat(tuples.get(i).get(cat.id)).isEqualTo(Integer.valueOf(cats.get(i).getId()));
+      assertThat(tuples.get(i).get(path)).isEqualTo("abc");
     }
   }
 
