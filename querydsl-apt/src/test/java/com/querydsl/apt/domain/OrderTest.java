@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import javax.persistence.Entity;
@@ -23,7 +23,7 @@ public class OrderTest {
 
   @Test
   public void test() {
-    assertEquals(
-        QOrderTest_OrderItemImpl.class, QOrderTest_Order.order.orderItems.any().getClass());
+    assertThat(QOrderTest_Order.order.orderItems.any().getClass())
+        .isEqualTo(QOrderTest_OrderItemImpl.class);
   }
 }
