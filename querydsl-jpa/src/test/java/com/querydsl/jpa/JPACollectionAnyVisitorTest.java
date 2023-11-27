@@ -14,7 +14,6 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.support.Context;
 import com.querydsl.core.types.ConstantImpl;
@@ -33,12 +32,12 @@ public class JPACollectionAnyVisitorTest {
 
   @Test
   public void path() {
-    assertEquals("cat_kittens_0", serialize(cat.kittens.any()));
+    assertThat(serialize(cat.kittens.any())).isEqualTo("cat_kittens_0");
   }
 
   @Test
   public void longer_path() {
-    assertEquals("cat_kittens_0.name", serialize(cat.kittens.any().name));
+    assertThat(serialize(cat.kittens.any().name)).isEqualTo("cat_kittens_0.name");
   }
 
   @Test
