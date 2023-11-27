@@ -13,8 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
@@ -39,16 +38,15 @@ public class ConstructorTest {
 
   @Test
   public void classes_are_available() {
-    assertNotNull(QConstructorTest_CategorySuperclass.class);
-    assertNotNull(QConstructorTest_Category.class);
-    assertNotNull(QConstructorTest_ClassWithConstructor.class);
+    assertThat(QConstructorTest_CategorySuperclass.class).isNotNull();
+    assertThat(QConstructorTest_Category.class).isNotNull();
+    assertThat(QConstructorTest_ClassWithConstructor.class).isNotNull();
   }
 
   @Test
   public void category_super_reference_is_correct() {
-    assertEquals(
-        QConstructorTest_CategorySuperclass.class,
-        QConstructorTest_Category.category._super.getClass());
-    assertEquals(Category.class, QConstructorTest_Category.category._super.getType());
+    assertThat(QConstructorTest_Category.category._super.getClass())
+        .isEqualTo(QConstructorTest_CategorySuperclass.class);
+    assertThat(QConstructorTest_Category.category._super.getType()).isEqualTo(Category.class);
   }
 }
