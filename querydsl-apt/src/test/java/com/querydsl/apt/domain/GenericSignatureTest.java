@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import java.util.Collection;
@@ -61,23 +61,23 @@ public class GenericSignatureTest {
   public void test() {
     QGenericSignatureTest_Entity entity = QGenericSignatureTest_Entity.entity;
     // collection
-    assertEquals(Entity.class, entity.rawCollection.getParameter(0));
-    assertEquals(Entity.class, entity.genericCollection.getParameter(0));
-    assertEquals(Entity.class, entity.genericCollection2.getParameter(0));
+    assertThat(entity.rawCollection.getParameter(0)).isEqualTo(Entity.class);
+    assertThat(entity.genericCollection.getParameter(0)).isEqualTo(Entity.class);
+    assertThat(entity.genericCollection2.getParameter(0)).isEqualTo(Entity.class);
 
     // list
-    assertEquals(Entity.class, entity.rawList.getParameter(0));
-    assertEquals(Entity.class, entity.genericList.getParameter(0));
-    assertEquals(Entity.class, entity.genericList2.getParameter(0));
+    assertThat(entity.rawList.getParameter(0)).isEqualTo(Entity.class);
+    assertThat(entity.genericList.getParameter(0)).isEqualTo(Entity.class);
+    assertThat(entity.genericList2.getParameter(0)).isEqualTo(Entity.class);
 
     // set
-    assertEquals(Entity.class, entity.rawSet.getParameter(0));
-    assertEquals(Entity.class, entity.genericSet.getParameter(0));
-    assertEquals(Entity.class, entity.genericSet2.getParameter(0));
+    assertThat(entity.rawSet.getParameter(0)).isEqualTo(Entity.class);
+    assertThat(entity.genericSet.getParameter(0)).isEqualTo(Entity.class);
+    assertThat(entity.genericSet2.getParameter(0)).isEqualTo(Entity.class);
 
     // map
-    assertEquals(Entity.class, entity.rawMap.getParameter(1));
-    assertEquals(Entity.class, entity.genericMap.getParameter(1));
-    assertEquals(Entity.class, entity.genericMap2.getParameter(1));
+    assertThat(entity.rawMap.getParameter(1)).isEqualTo(Entity.class);
+    assertThat(entity.genericMap.getParameter(1)).isEqualTo(Entity.class);
+    assertThat(entity.genericMap2.getParameter(1)).isEqualTo(Entity.class);
   }
 }
