@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
@@ -20,6 +20,6 @@ public class GenericStackOverflowTest extends AbstractTest {
 
   @Test
   public void test() {
-    assertNotNull(QGenericStackOverflowTest_AbstractEntity.abstractEntity);
+    assertThat(QGenericStackOverflowTest_AbstractEntity.abstractEntity).isNotNull();
   }
 }
