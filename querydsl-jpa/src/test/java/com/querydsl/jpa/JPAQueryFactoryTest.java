@@ -14,7 +14,6 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.jpa.domain.QAnimal;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -79,12 +78,12 @@ public class JPAQueryFactoryTest {
 
   @Test
   public void from() {
-    assertNotNull(queryFactory.from(QAnimal.animal));
+    assertThat(queryFactory.from(QAnimal.animal)).isNotNull();
   }
 
   @Test
   public void delete() {
-    assertNotNull(queryFactory.delete(QAnimal.animal));
+    assertThat(queryFactory.delete(QAnimal.animal)).isNotNull();
   }
 
   @Test
@@ -99,14 +98,14 @@ public class JPAQueryFactoryTest {
     EasyMock.expect(mock.unwrap(EasyMock.anyObject(Class.class))).andReturn(mock).atLeastOnce();
     EasyMock.replay(mock, factoryMock);
 
-    assertNotNull(queryFactory3.delete(QAnimal.animal));
+    assertThat(queryFactory3.delete(QAnimal.animal)).isNotNull();
 
     EasyMock.verify(mock, factoryMock);
   }
 
   @Test
   public void update() {
-    assertNotNull(queryFactory.update(QAnimal.animal));
+    assertThat(queryFactory.update(QAnimal.animal)).isNotNull();
   }
 
   @Test
@@ -124,14 +123,14 @@ public class JPAQueryFactoryTest {
     EasyMock.expect(mock.unwrap(EasyMock.anyObject(Class.class))).andReturn(mock).atLeastOnce();
     EasyMock.replay(mock, factoryMock);
 
-    assertNotNull(queryFactory3.update(QAnimal.animal));
+    assertThat(queryFactory3.update(QAnimal.animal)).isNotNull();
 
     EasyMock.verify(mock, factoryMock);
   }
 
   @Test
   public void insert() {
-    assertNotNull(queryFactory.insert(QAnimal.animal));
+    assertThat(queryFactory.insert(QAnimal.animal)).isNotNull();
   }
 
   @Test
@@ -146,7 +145,7 @@ public class JPAQueryFactoryTest {
     EasyMock.expect(mock.unwrap(EasyMock.anyObject(Class.class))).andReturn(mock).atLeastOnce();
     EasyMock.replay(mock, factoryMock);
 
-    assertNotNull(queryFactory3.insert(QAnimal.animal));
+    assertThat(queryFactory3.insert(QAnimal.animal)).isNotNull();
 
     EasyMock.verify(mock, factoryMock);
   }
