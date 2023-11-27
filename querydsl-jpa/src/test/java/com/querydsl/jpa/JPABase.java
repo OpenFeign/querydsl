@@ -16,7 +16,6 @@ package com.querydsl.jpa;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
@@ -90,7 +89,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @NoOpenJPA
   @NoHibernate
   public void connection_access() {
-    assertNotNull(query().from(cat).select(cat).createQuery().unwrap(Connection.class));
+    assertThat(query().from(cat).select(cat).createQuery().unwrap(Connection.class)).isNotNull();
   }
 
   @Test
@@ -101,7 +100,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void delete2() {
-    assertEquals(0, delete(QGroup.group).execute());
+    assertThat(delete(QGroup.group).execute()).isEqualTo(0);
   }
 
   @Test
@@ -154,7 +153,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void flushMode() {
-    assertFalse(query().from(cat).setFlushMode(FlushModeType.AUTO).select(cat).fetch().isEmpty());
+    assertThat(query().from(cat).setFlushMode(FlushModeType.AUTO).select(cat).fetch()).isNotEmpty();
   }
 
   @Test
@@ -171,8 +170,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void hint2() {
-    assertFalse(
-        query().from(cat).setHint("org.hibernate.cacheable", true).select(cat).fetch().isEmpty());
+    assertThat(query().from(cat).setHint("org.hibernate.cacheable", true).select(cat).fetch())
+        .isNotEmpty();
   }
 
   @Test
@@ -207,7 +206,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void limit1_uniqueResult() {
-    assertNotNull(query().from(cat).limit(1).select(cat).fetchOne());
+    assertThat(query().from(cat).limit(1).select(cat).fetchOne()).isNotNull();
   }
 
   @Test
@@ -220,8 +219,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void lockMode2() {
-    assertFalse(
-        query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).fetch().isEmpty());
+    assertThat(query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).fetch())
+        .isNotEmpty();
   }
 
   @Test
@@ -238,12 +237,13 @@ public class JPABase extends AbstractJPATest implements JPATest {
     QCat cat2 = new QCat("cat2");
 
     BooleanExpression exists = selectOne().from(cat2).where(cat2.eyecolor.isNotNull()).exists();
-    assertNotNull(
-        query()
-            .from(cat)
-            .where(cat.breed.eq(0).not())
-            .select(new QCatSummary(cat.breed.count(), exists))
-            .fetchOne());
+    assertThat(
+            query()
+                .from(cat)
+                .where(cat.breed.eq(0).not())
+                .select(new QCatSummary(cat.breed.count(), exists))
+                .fetchOne())
+        .isNotNull();
   }
 
   @SuppressWarnings("unchecked")
