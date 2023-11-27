@@ -16,7 +16,6 @@
 package com.querydsl.mongodb.document;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.mongodb.DBRef;
 import com.querydsl.core.types.Expression;
@@ -91,17 +90,18 @@ public class MongodbDocumentSerializerTest {
   @Test
   public void paths() {
     QUser user = QUser.user;
-    assertEquals("user", serializer.visit(user, null));
-    assertEquals("addresses", serializer.visit(user.addresses, null));
-    assertEquals("addresses", serializer.visit(user.addresses.any(), null));
-    assertEquals("addresses.street", serializer.visit(user.addresses.any().street, null));
-    assertEquals("firstName", serializer.visit(user.firstName, null));
+    assertThat(serializer.visit(user, null)).isEqualTo("user");
+    assertThat(serializer.visit(user.addresses, null)).isEqualTo("addresses");
+    assertThat(serializer.visit(user.addresses.any(), null)).isEqualTo("addresses");
+    assertThat(serializer.visit(user.addresses.any().street, null)).isEqualTo("addresses.street");
+    assertThat(serializer.visit(user.firstName, null)).isEqualTo("firstName");
   }
 
   @Test
   public void indexedAccess() {
     QUser user = QUser.user;
-    assertEquals("addresses.0.street", serializer.visit(user.addresses.get(0).street, null));
+    assertThat(serializer.visit(user.addresses.get(0).street, null))
+        .isEqualTo("addresses.0.street");
   }
 
   @Test
@@ -275,11 +275,11 @@ public class MongodbDocumentSerializerTest {
   @Test
   public void path() {
     QUser user = QUser.user;
-    assertEquals("firstName", serializer.visit(user.firstName, null));
-    assertEquals("firstName", serializer.visit(user.as(QUser.class).firstName, null));
-    assertEquals("mainAddress.street", serializer.visit(user.mainAddress().street, null));
-    assertEquals(
-        "mainAddress.street", serializer.visit(user.mainAddress().as(QAddress.class).street, null));
+    assertThat(serializer.visit(user.firstName, null)).isEqualTo("firstName");
+    assertThat(serializer.visit(user.as(QUser.class).firstName, null)).isEqualTo("firstName");
+    assertThat(serializer.visit(user.mainAddress().street, null)).isEqualTo("mainAddress.street");
+    assertThat(serializer.visit(user.mainAddress().as(QAddress.class).street, null))
+        .isEqualTo("mainAddress.street");
   }
 
   private List<OrderSpecifier<?>> sortList(OrderSpecifier<?>... order) {
