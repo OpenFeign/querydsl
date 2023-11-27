@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.inheritance;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
@@ -57,6 +57,6 @@ public class Inheritance5Test {
 
   @Test
   public void test() {
-    assertEquals(NumberPath.class, QInheritance5Test_Entity.entity.id.getClass());
+    assertThat(QInheritance5Test_Entity.entity.id.getClass()).isEqualTo(NumberPath.class);
   }
 }
