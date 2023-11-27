@@ -14,7 +14,6 @@
 package com.querydsl.sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.alias.Gender;
 import com.querydsl.sql.domain.QSurvey;
@@ -47,9 +46,8 @@ public class ConfigurationTest {
     configuration.register("person", "secureId", new EncryptedString());
     configuration.register("person", "gender", new EnumByNameType<Gender>(Gender.class));
     configuration.register(new StringType());
-    assertEquals(
-        Gender.class,
-        configuration.getJavaType(java.sql.Types.VARCHAR, null, 0, 0, "person", "gender"));
+    assertThat(configuration.getJavaType(java.sql.Types.VARCHAR, null, 0, 0, "person", "gender"))
+        .isEqualTo(Gender.class);
   }
 
   @Test
