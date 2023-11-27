@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.Evaluator;
 import com.querydsl.core.DefaultQueryMetadata;
@@ -36,6 +36,6 @@ public class EvaluatorTransformerTest {
     EvaluatorFunction transformer = new EvaluatorFunction(projectionEvaluator);
 
     Cat c = new Cat("Kitty");
-    assertEquals("Kitty", transformer.apply(c));
+    assertThat(transformer.apply(c)).isEqualTo("Kitty");
   }
 }

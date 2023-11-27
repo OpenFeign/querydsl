@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
@@ -39,7 +39,7 @@ public class QueryInit3Test {
 
   @Test
   public void test() {
-    assertEquals(
-        "entity.prop1.prop2.prop1", QQueryInit3Test_Entity.entity.prop1.prop2.prop1.toString());
+    assertThat(QQueryInit3Test_Entity.entity.prop1.prop2.prop1.toString())
+        .isEqualTo("entity.prop1.prop2.prop1");
   }
 }

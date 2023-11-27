@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
@@ -67,25 +67,25 @@ public class EntityTest extends AbstractTest {
 
   @Test
   public void initialization_depth() {
-    assertNotNull(QEntityTest_Entity1.entity1.entity1Ref.entity1Ref.entity1Field);
+    assertThat(QEntityTest_Entity1.entity1.entity1Ref.entity1Ref.entity1Field).isNotNull();
   }
 
   @Test
   public void inheritance() {
-    assertNotNull(entity3.entity3Ref.entity2Ref);
-    assertNotNull(entity3.entity3Ref.entity3Ref);
+    assertThat(entity3.entity3Ref.entity2Ref).isNotNull();
+    assertThat(entity3.entity3Ref.entity3Ref).isNotNull();
 
     // super
-    assertNotNull(entity3.entity3Ref._super.entity2Ref);
+    assertThat(entity3.entity3Ref._super.entity2Ref).isNotNull();
   }
 
   @Test
   public void supertype_paths() {
-    assertNotNull(entity3.superTypeEntityRef.entity2Ref);
-    assertNotNull(entity3._super.superTypeEntityRef.entity2Ref);
-    assertNotNull(entity3._super._super.superTypeEntityRef.entity2Ref);
+    assertThat(entity3.superTypeEntityRef.entity2Ref).isNotNull();
+    assertThat(entity3._super.superTypeEntityRef.entity2Ref).isNotNull();
+    assertThat(entity3._super._super.superTypeEntityRef.entity2Ref).isNotNull();
 
-    assertNotNull(QEntityTest_Entity4.entity4.supertypeField);
+    assertThat(QEntityTest_Entity4.entity4.supertypeField).isNotNull();
   }
 
   @Test

@@ -13,8 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
@@ -79,25 +78,25 @@ public class QueryInitTest {
   @Test
   public void basic_inits() {
     // e2
-    assertNotNull(e1.e2);
-    assertNotNull(e1.e2.e3.e4);
-    assertNull(e1.e2.e33);
-    assertNull(e1.e2.e3.e44);
+    assertThat(e1.e2).isNotNull();
+    assertThat(e1.e2.e3.e4).isNotNull();
+    assertThat(e1.e2.e33).isNull();
+    assertThat(e1.e2.e3.e44).isNull();
 
     // e22
-    assertNotNull(e1.e22.e33.e4);
-    assertNull(e1.e22.e33.e44);
-    assertNotNull(e1.e22.e333);
+    assertThat(e1.e22.e33.e4).isNotNull();
+    assertThat(e1.e22.e33.e44).isNull();
+    assertThat(e1.e22.e333).isNotNull();
   }
 
   @Test
   public void deep_super_inits() {
-    assertNotNull(e1.e22._super.e333);
+    assertThat(e1.e22._super.e333).isNotNull();
   }
 
   @Test
   public void root_super_inits() {
-    assertNotNull(e2.e3333.e4);
-    assertNotNull(e2._super.e3333.e4);
+    assertThat(e2.e3333.e4).isNotNull();
+    assertThat(e2._super.e3333.e4).isNotNull();
   }
 }

@@ -1,6 +1,6 @@
 package com.querydsl.core.support;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
@@ -29,8 +29,8 @@ public class ReplaceVisitorTest {
         Expressions.stringPath(ExpressionUtils.path(Object.class, "customer"), "name");
     Expression<String> str2 = Expressions.stringPath("str");
     Expression<String> concat = Expressions.stringOperation(Ops.CONCAT, str, str2);
-    assertEquals("customer.name + str", concat.toString());
-    assertEquals("customer_.name + str_", concat.accept(visitor, null).toString());
+    assertThat(concat.toString()).isEqualTo("customer.name + str");
+    assertThat(concat.accept(visitor, null).toString()).isEqualTo("customer_.name + str_");
   }
 
   @Test
@@ -39,7 +39,7 @@ public class ReplaceVisitorTest {
         Expressions.stringPath(ExpressionUtils.path(Object.class, "customer"), "name");
     Expression<String> str2 = Expressions.stringPath("str");
     Expression<String> concat = Expressions.stringTemplate("{0} + {1}", str, str2);
-    assertEquals("customer.name + str", concat.toString());
-    assertEquals("customer_.name + str_", concat.accept(visitor, null).toString());
+    assertThat(concat.toString()).isEqualTo("customer.name + str");
+    assertThat(concat.accept(visitor, null).toString()).isEqualTo("customer_.name + str_");
   }
 }

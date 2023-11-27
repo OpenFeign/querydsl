@@ -14,7 +14,7 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
@@ -27,29 +27,29 @@ public class FeaturesTest extends AbstractQueryTest {
   @Test
   public void domainConstruction() {
     QInheritedProperties i = new QInheritedProperties("i");
-    assertNotNull(i.superclassProperty);
-    assertNotNull(i.classProperty);
+    assertThat(i.superclassProperty).isNotNull();
+    assertThat(i.classProperty).isNotNull();
   }
 
   @Test
   public void domainConstruction2() {
     QAccount a = new QAccount("a");
-    assertNotNull(a.embeddedData.someData);
+    assertThat(a.embeddedData.someData).isNotNull();
   }
 
   @Test
   public void basicStructure() {
-    assertNull(cat.getMetadata().getParent());
+    assertThat(cat.getMetadata().getParent()).isNull();
   }
 
   @Test
   public void basicStructure2() {
-    assertEquals(cat, cat.alive.getMetadata().getParent());
+    assertThat(cat.alive.getMetadata().getParent()).isEqualTo(cat);
   }
 
   @Test
   public void basicStructure3() {
-    assertEquals("cat", cat.getMetadata().getName());
+    assertThat(cat.getMetadata().getName()).isEqualTo("cat");
   }
 
   @Test

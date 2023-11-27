@@ -13,9 +13,9 @@
  */
 package com.querydsl.jpa.codegen;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class JPADomainExporterTest {
 
     File origRoot = new File("../querydsl-jpa/target/generated-test-sources/test-annotations");
     Set<File> files = exporter.getGeneratedFiles();
-    assertFalse(files.isEmpty());
+    assertThat(files).isNotEmpty();
     for (File file : files) {
       Path relativeFile = outputFolder.relativize(file.toPath());
       Path origFile = origRoot.toPath().resolve(relativeFile);

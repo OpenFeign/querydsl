@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.NumberPath;
 import java.io.Serializable;
@@ -21,7 +21,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import org.junit.Assert;
 import org.junit.Test;
 
 @SuppressWarnings({"rawtypes", "serial", "unchecked"})
@@ -77,14 +76,14 @@ public class AbstractClassesTest {
 
   @Test
   public void grant_id_type() {
-    Assert.assertEquals(
-        QAbstractClassesTest_Party.class, QAbstractClassesTest_Grant.grant.id.getClass());
-    assertEquals(Party.class, QAbstractClassesTest_Grant.grant.id.getType());
+    assertThat(QAbstractClassesTest_Grant.grant.id.getClass())
+        .isEqualTo(QAbstractClassesTest_Party.class);
+    assertThat(QAbstractClassesTest_Grant.grant.id.getType()).isEqualTo(Party.class);
   }
 
   @Test
   public void party_id_type() {
-    assertEquals(NumberPath.class, QAbstractClassesTest_Party.party.id.getClass());
-    assertEquals(Long.class, QAbstractClassesTest_Party.party.id.getType());
+    assertThat(QAbstractClassesTest_Party.party.id.getClass()).isEqualTo(NumberPath.class);
+    assertThat(QAbstractClassesTest_Party.party.id.getType()).isEqualTo(Long.class);
   }
 }

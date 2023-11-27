@@ -13,7 +13,8 @@
  */
 package com.querydsl.sql.oracle;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.Test;
 
@@ -21,8 +22,8 @@ public class OracleGrammarTest {
 
   @Test
   public void constants() {
-    assertNotNull(OracleGrammar.level);
-    assertNotNull(OracleGrammar.rownum);
-    assertNotNull(OracleGrammar.sysdate);
+    assertThat(OracleGrammar.level).isNotNull();
+    assertThat(OracleGrammar.rownum).isNotNull();
+    assertThat(OracleGrammar.sysdate).isNotNull();
   }
 }

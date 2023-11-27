@@ -13,7 +13,7 @@
  */
 package com.querydsl.hibernate.search;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryResults;
@@ -48,37 +48,37 @@ public class SearchQueryTest extends AbstractQueryTest {
 
   @Test
   public void exists() {
-    assertTrue(query().where(user.emailAddress.eq("bob@example.com")).fetchCount() > 0);
-    assertFalse(query().where(user.emailAddress.eq("bobby@example.com")).fetchCount() > 0);
+    assertThat(query().where(user.emailAddress.eq("bob@example.com")).fetchCount() > 0).isTrue();
+    assertThat(query().where(user.emailAddress.eq("bobby@example.com")).fetchCount() > 0).isFalse();
   }
 
   @Test
   public void notExists() {
-    assertFalse(query().where(user.emailAddress.eq("bob@example.com")).fetchCount() == 0);
-    assertTrue(query().where(user.emailAddress.eq("bobby@example.com")).fetchCount() == 0);
+    assertThat(query().where(user.emailAddress.eq("bob@example.com")).fetchCount() == 0).isFalse();
+    assertThat(query().where(user.emailAddress.eq("bobby@example.com")).fetchCount() == 0).isTrue();
   }
 
   @Test
   public void count() {
     BooleanExpression filter = user.emailAddress.eq("bob@example.com");
-    assertEquals(1, query().where(filter).fetchCount());
+    assertThat(query().where(filter).fetchCount()).isEqualTo(1);
   }
 
   @Test
   public void uniqueResult() {
     BooleanExpression filter = user.emailAddress.eq("bob@example.com");
     User u = query().where(filter).fetchOne();
-    assertNotNull(u);
-    assertEquals("bob@example.com", u.getEmailAddress());
+    assertThat(u).isNotNull();
+    assertThat(u.getEmailAddress()).isEqualTo("bob@example.com");
   }
 
   @Test
   public void list() {
     BooleanExpression filter = user.emailAddress.eq("bob@example.com");
     List<User> list = query().where(filter).fetch();
-    assertEquals(1, list.size());
+    assertThat(list).hasSize(1);
     User u = query().where(filter).fetchOne();
-    assertEquals(u, list.get(0));
+    assertThat(list.get(0)).isEqualTo(u);
   }
 
   @Test(expected = NonUniqueResultException.class)
@@ -88,7 +88,7 @@ public class SearchQueryTest extends AbstractQueryTest {
 
   @Test
   public void singleResult() {
-    assertNotNull(query().where(user.middleName.eq("X")).fetchFirst());
+    assertThat(query().where(user.middleName.eq("X")).fetchFirst()).isNotNull();
   }
 
   @Test
@@ -96,11 +96,11 @@ public class SearchQueryTest extends AbstractQueryTest {
     BooleanExpression filter = user.middleName.eq("X");
     // asc
     List<String> asc = getFirstNames(query().where(filter).orderBy(user.firstName.asc()).fetch());
-    assertEquals(Arrays.asList("Anton", "Barbara", "John", "Robert"), asc);
+    assertThat(asc).isEqualTo(Arrays.asList("Anton", "Barbara", "John", "Robert"));
 
     // desc
     List<String> desc = getFirstNames(query().where(filter).orderBy(user.firstName.desc()).fetch());
-    assertEquals(Arrays.asList("Robert", "John", "Barbara", "Anton"), desc);
+    assertThat(desc).isEqualTo(Arrays.asList("Robert", "John", "Barbara", "Anton"));
   }
 
   @Test
@@ -110,16 +110,16 @@ public class SearchQueryTest extends AbstractQueryTest {
 
     // limit
     List<String> limit = getFirstNames(query().where(filter).orderBy(order).limit(2).fetch());
-    assertEquals(Arrays.asList("Anton", "Barbara"), limit);
+    assertThat(limit).isEqualTo(Arrays.asList("Anton", "Barbara"));
 
     // offset
     List<String> offset = getFirstNames(query().where(filter).orderBy(order).offset(1).fetch());
-    assertEquals(Arrays.asList("Barbara", "John", "Robert"), offset);
+    assertThat(offset).isEqualTo(Arrays.asList("Barbara", "John", "Robert"));
 
     // limit + offset
     List<String> limitAndOffset =
         getFirstNames(query().where(filter).orderBy(order).limit(2).offset(1).fetch());
-    assertEquals(Arrays.asList("Barbara", "John"), limitAndOffset);
+    assertThat(limitAndOffset).isEqualTo(Arrays.asList("Barbara", "John"));
   }
 
   @Test
@@ -128,19 +128,19 @@ public class SearchQueryTest extends AbstractQueryTest {
     QueryResults<User> users =
         query().where(filter).orderBy(user.firstName.asc()).limit(2).fetchResults();
     List<String> asc = getFirstNames(users.getResults());
-    assertEquals(Arrays.asList("Anton", "Barbara"), asc);
-    assertEquals(4, users.getTotal());
+    assertThat(asc).isEqualTo(Arrays.asList("Anton", "Barbara"));
+    assertThat(users.getTotal()).isEqualTo(4);
   }
 
   @Test
   public void no_where() {
-    assertEquals(5, query().fetch().size());
+    assertThat(query().fetch()).hasSize(5);
   }
 
   @Test
   @Ignore // OufOfMemoryError
   public void limit_max_value() {
-    assertEquals(5, query().limit(Long.MAX_VALUE).fetch().size());
+    assertThat(query().limit(Long.MAX_VALUE).fetch()).hasSize(5);
   }
 
   private List<String> getFirstNames(List<User> users) {

@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
@@ -75,7 +75,7 @@ public class LoadTest {
     for (int i = 0; i < 5; i++) {
       long s1 = System.currentTimeMillis();
       List<Cat> bobs1 = CollQueryFactory.from(cat, data).where(cat.name.startsWith("Bob")).fetch();
-      assertEquals(1000, bobs1.size());
+      assertThat(bobs1).hasSize(1000);
       long e1 = System.currentTimeMillis();
       System.out.println(" " + (e1 - s1) + "ms");
     }
@@ -91,7 +91,7 @@ public class LoadTest {
           bobs2.add(c);
         }
       }
-      assertEquals(1000, bobs2.size());
+      assertThat(bobs2).hasSize(1000);
       long e2 = System.currentTimeMillis();
       System.out.println(" " + (e2 - s2) + "ms");
     }

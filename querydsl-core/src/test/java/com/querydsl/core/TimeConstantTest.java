@@ -13,7 +13,7 @@
  */
 package com.querydsl.core;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.TimeExpression;
 import java.sql.Time;
@@ -31,9 +31,9 @@ public class TimeConstantTest {
     cal.set(Calendar.MILLISECOND, 3);
 
     TimeExpression<Time> time = TimeConstant.create(new Time(cal.getTimeInMillis()));
-    assertEquals("13", time.hour().toString());
-    assertEquals("30", time.minute().toString());
-    assertEquals("12", time.second().toString());
+    assertThat(time.hour().toString()).isEqualTo("13");
+    assertThat(time.minute().toString()).isEqualTo("30");
+    assertThat(time.second().toString()).isEqualTo("12");
     //        assertEquals("3",    time.getMilliSecond().toString());
   }
 }

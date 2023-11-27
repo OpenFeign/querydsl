@@ -1,7 +1,6 @@
 package com.querydsl.sql.codegen;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.Property;
@@ -78,7 +77,7 @@ public class ExtendedBeanSerializerTest {
     URLClassLoader classLoader =
         URLClassLoader.newInstance(new URL[] {compileFolder.getRoot().toURI().toURL()});
     int retCode = new SimpleCompiler().run(null, System.out, System.err, srcFile.getAbsolutePath());
-    assertEquals("The generated source should compile", 0, retCode);
+    assertThat(retCode).as("The generated source should compile").isEqualTo(0);
 
     Class<?> cls = Class.forName(FULL_NAME, true, classLoader);
     ReflectionHelper reflection = new ReflectionHelper(cls);
@@ -89,11 +88,11 @@ public class ExtendedBeanSerializerTest {
     reflection.setValues(obj1a, 1, "##", null);
     reflection.setValues(obj2, 2, "--", "Y");
 
-    assertEquals(obj1, obj1a);
-    assertEquals(obj1.hashCode(), obj1a.hashCode());
-    assertNotEquals(obj1, obj2);
+    assertThat(obj1a).isEqualTo(obj1);
+    assertThat(obj1a.hashCode()).isEqualTo(obj1.hashCode());
+    assertThat(obj2).isNotEqualTo(obj1);
 
-    assertEquals(obj1.toString(), "DomainClass#1;##");
+    assertThat("DomainClass#1;##").isEqualTo(obj1.toString());
   }
 
   private static class ReflectionHelper {

@@ -1,7 +1,7 @@
 package com.querydsl.sql.types;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Array;
 import java.sql.Connection;
@@ -62,14 +62,14 @@ public class ArrayTypeTest {
     EasyMock.replay(rs, arr);
 
     Integer[] result = type.getValue(rs, 1);
-    assertSame(value, result);
+    assertThat(result).isSameAs(value);
 
     EasyMock.verify(rs, arr);
   }
 
   @Test
   public void get_generic_object_array() throws SQLException {
-    Object[] value = new Object[] {1, 2, 3};
+    Integer[] value = new Integer[] {1, 2, 3};
     ArrayType<Integer[]> type = new ArrayType<>(Integer[].class, "INTEGER ARRAY");
 
     ResultSet rs = EasyMock.createMock(ResultSet.class);
@@ -79,7 +79,7 @@ public class ArrayTypeTest {
     EasyMock.replay(rs, arr);
 
     Integer[] result = type.getValue(rs, 1);
-    assertArrayEquals(value, result);
+    assertThat(result).containsExactly(value);
 
     EasyMock.verify(rs, arr);
   }
@@ -97,7 +97,7 @@ public class ArrayTypeTest {
     EasyMock.replay(rs, arr);
 
     Integer[] result = type.getValue(rs, 1);
-    assertArrayEquals(boxedValue, result);
+    assertThat(result).containsExactly(boxedValue);
 
     EasyMock.verify(rs, arr);
   }

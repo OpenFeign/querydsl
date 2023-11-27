@@ -13,14 +13,13 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.core.types.dsl.MapPath;
 import com.querydsl.core.types.dsl.SetPath;
 import java.util.*;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class CollectionTest {
@@ -82,16 +81,16 @@ public class CollectionTest {
     //        assertEquals(Object.class,
     // QMapWithUndefinedValueTest_Person.person.appData.getParameter(1));
 
-    Assert.assertEquals(MapPath.class, QCollectionTest_Classes.classes.map1.getClass());
-    assertEquals(MapPath.class, QCollectionTest_Classes.classes.map2.getClass());
-    assertEquals(MapPath.class, QCollectionTest_Classes.classes.map3.getClass());
+    assertThat(QCollectionTest_Classes.classes.map1.getClass()).isEqualTo(MapPath.class);
+    assertThat(QCollectionTest_Classes.classes.map2.getClass()).isEqualTo(MapPath.class);
+    assertThat(QCollectionTest_Classes.classes.map3.getClass()).isEqualTo(MapPath.class);
 
-    assertEquals(ListPath.class, QCollectionTest_Classes.classes.list1.getClass());
-    assertEquals(ListPath.class, QCollectionTest_Classes.classes.list2.getClass());
-    assertEquals(ListPath.class, QCollectionTest_Classes.classes.list3.getClass());
+    assertThat(QCollectionTest_Classes.classes.list1.getClass()).isEqualTo(ListPath.class);
+    assertThat(QCollectionTest_Classes.classes.list2.getClass()).isEqualTo(ListPath.class);
+    assertThat(QCollectionTest_Classes.classes.list3.getClass()).isEqualTo(ListPath.class);
 
-    assertEquals(SetPath.class, QCollectionTest_Classes.classes.set1.getClass());
-    assertEquals(SetPath.class, QCollectionTest_Classes.classes.set2.getClass());
-    assertEquals(SetPath.class, QCollectionTest_Classes.classes.set3.getClass());
+    assertThat(QCollectionTest_Classes.classes.set1.getClass()).isEqualTo(SetPath.class);
+    assertThat(QCollectionTest_Classes.classes.set2.getClass()).isEqualTo(SetPath.class);
+    assertThat(QCollectionTest_Classes.classes.set3.getClass()).isEqualTo(SetPath.class);
   }
 }

@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
 import java.util.Date;
@@ -37,6 +37,6 @@ public class JSR310Test {
 
   @Test
   public void test() {
-    assertEquals(Date.class, QJSR310Test_BaseEntity.baseEntity.createdDate.getType());
+    assertThat(QJSR310Test_BaseEntity.baseEntity.createdDate.getType()).isEqualTo(Date.class);
   }
 }

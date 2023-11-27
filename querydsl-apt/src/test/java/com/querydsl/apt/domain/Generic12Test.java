@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +54,9 @@ public class Generic12Test {
 
   @Test
   public void test() {
-    assertEquals(
-        QGeneric12Test_Permission.class,
-        QGeneric12Test_ChannelRole.channelRole.permissions.get(0).getClass());
-    assertEquals(
-        QGeneric12Test_Permission.class,
-        QGeneric12Test_SubjectRole.subjectRole.permissions.get(0).getClass());
+    assertThat(QGeneric12Test_ChannelRole.channelRole.permissions.get(0).getClass())
+        .isEqualTo(QGeneric12Test_Permission.class);
+    assertThat(QGeneric12Test_SubjectRole.subjectRole.permissions.get(0).getClass())
+        .isEqualTo(QGeneric12Test_Permission.class);
   }
 }

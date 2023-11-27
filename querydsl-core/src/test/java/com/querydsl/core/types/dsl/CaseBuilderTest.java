@@ -15,8 +15,7 @@ package com.querydsl.core.types.dsl;
 
 import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.core.alias.Alias.alias;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -39,7 +38,7 @@ public class CaseBuilderTest {
   public void general() {
     SimpleExpression<Object> expr =
         new CaseBuilder().when(Expressions.TRUE).then(new Object()).otherwise(null);
-    assertNotNull(expr);
+    assertThat(expr).isNotNull();
   }
 
   @Test
@@ -48,9 +47,9 @@ public class CaseBuilderTest {
     BooleanExpression cases =
         new CaseBuilder().when($(c.getAnnualSpending()).gt(10000)).then(true).otherwise(false);
 
-    assertEquals(
-        "case " + "when customer.annualSpending > 10000 then true " + "else false " + "end",
-        cases.toString());
+    assertThat(cases.toString())
+        .isEqualTo(
+            "case " + "when customer.annualSpending > 10000 then true " + "else false " + "end");
   }
 
   @Test
@@ -64,13 +63,13 @@ public class CaseBuilderTest {
             .then(true)
             .otherwise(false);
 
-    assertEquals(
-        "case "
-            + "when customer.annualSpending > 20000 then false "
-            + "when customer.annualSpending > 10000 then true "
-            + "else false "
-            + "end",
-        cases.toString());
+    assertThat(cases.toString())
+        .isEqualTo(
+            "case "
+                + "when customer.annualSpending > 20000 then false "
+                + "when customer.annualSpending > 10000 then true "
+                + "else false "
+                + "end");
   }
 
   @Test
@@ -82,9 +81,9 @@ public class CaseBuilderTest {
             .then(Gender.MALE)
             .otherwise(Gender.FEMALE);
 
-    assertEquals(
-        "case " + "when customer.annualSpending > 10000 then MALE " + "else FEMALE " + "end",
-        cases.toString());
+    assertThat(cases.toString())
+        .isEqualTo(
+            "case " + "when customer.annualSpending > 10000 then MALE " + "else FEMALE " + "end");
   }
 
   @Test
@@ -100,14 +99,14 @@ public class CaseBuilderTest {
             .then(3)
             .otherwise(4);
 
-    assertEquals(
-        "case "
-            + "when customer.annualSpending > 10000 then 1 "
-            + "when customer.annualSpending > 5000 then 2 "
-            + "when customer.annualSpending > 2000 then 3 "
-            + "else 4 "
-            + "end",
-        cases.toString());
+    assertThat(cases.toString())
+        .isEqualTo(
+            "case "
+                + "when customer.annualSpending > 10000 then 1 "
+                + "when customer.annualSpending > 5000 then 2 "
+                + "when customer.annualSpending > 2000 then 3 "
+                + "else 4 "
+                + "end");
   }
 
   @Test
@@ -131,13 +130,13 @@ public class CaseBuilderTest {
             .otherwise("Bronze");
 
     // NOTE : this is just a test serialization, not the real one
-    assertEquals(
-        "case "
-            + "when customer.annualSpending > 10000 then Premier "
-            + "when customer.annualSpending > 5000 then Gold "
-            + "when customer.annualSpending > 2000 then Silver "
-            + "else Bronze "
-            + "end",
-        cases.toString());
+    assertThat(cases.toString())
+        .isEqualTo(
+            "case "
+                + "when customer.annualSpending > 10000 then Premier "
+                + "when customer.annualSpending > 5000 then Gold "
+                + "when customer.annualSpending > 2000 then Silver "
+                + "else Bronze "
+                + "end");
   }
 }

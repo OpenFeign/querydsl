@@ -13,8 +13,8 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public abstract class AbstractTest {
 
@@ -30,30 +30,32 @@ public abstract class AbstractTest {
 
   protected void match(Class<?> expectedType, String name)
       throws SecurityException, NoSuchFieldException {
-    assertTrue(
-        cl.getSimpleName() + "." + name + " failed",
-        expectedType.isAssignableFrom(cl.getField(name).getType()));
+    assertThat(expectedType.isAssignableFrom(cl.getField(name).getType()))
+        .as(cl.getSimpleName() + "." + name + " failed")
+        .isTrue();
   }
 
   protected void matchType(Class<?> expectedType, String name)
       throws NoSuchFieldException, IllegalAccessException {
     Class<?> type =
         ((com.querydsl.core.types.Expression) cl.getField(name).get(standardVariable)).getType();
-    assertTrue(cl.getSimpleName() + "." + name + " failed", expectedType.isAssignableFrom(type));
+    assertThat(expectedType.isAssignableFrom(type))
+        .as(cl.getSimpleName() + "." + name + " failed")
+        .isTrue();
   }
 
   protected void assertPresent(String name) {
     try {
       cl.getField(name);
     } catch (NoSuchFieldException e) {
-      fail("Expected present field : " + cl.getSimpleName() + "." + name);
+      fail("", "Expected present field : " + cl.getSimpleName() + "." + name);
     }
   }
 
   protected void assertMissing(String name) {
     try {
       cl.getField(name);
-      fail("Expected missing field : " + cl.getSimpleName() + "." + name);
+      fail("", "Expected missing field : " + cl.getSimpleName() + "." + name);
     } catch (NoSuchFieldException e) {
       // expected
     }

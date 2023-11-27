@@ -13,6 +13,8 @@
  */
 package com.querydsl.jpa.testutil;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.jpa.JPATest;
 import com.querydsl.jpa.Mode;
 import java.sql.DriverManager;
@@ -21,7 +23,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import org.junit.Assert;
 import org.junit.rules.MethodRule;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -48,11 +49,12 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
 
   @Override
   protected List<MethodRule> rules(Object test) {
-    Assert.assertTrue(
-        String.format(
-            "In order to use the %s for %s, it should (directly or indirectly) implement %s",
-            JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class),
-        test instanceof JPATest);
+    assertThat(test instanceof JPATest)
+        .as(
+            String.format(
+                "In order to use the %s for %s, it should (directly or indirectly) implement %s",
+                JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class))
+        .isTrue();
 
     List<MethodRule> rules = super.rules(test);
     rules.add(

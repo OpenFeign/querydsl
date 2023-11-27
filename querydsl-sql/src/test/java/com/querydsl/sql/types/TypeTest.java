@@ -13,8 +13,7 @@
  */
 package com.querydsl.sql.types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.Pair;
 import java.lang.reflect.InvocationHandler;
@@ -131,9 +130,9 @@ public class TypeTest implements InvocationHandler {
     for (Pair pair : valueAndType) {
       value = null;
       Type type = (Type) pair.getSecond();
-      assertNull(type.toString(), type.getValue(resultSet, 0));
+      assertThat(type.getValue(resultSet, 0)).as(type.toString()).isNull();
       type.setValue(statement, 0, pair.getFirst());
-      assertEquals(type.toString(), pair.getFirst(), type.getValue(resultSet, 0));
+      assertThat(pair.getFirst()).isEqualTo(type.getValue(resultSet, 0)).as(type.toString());
     }
   }
 }

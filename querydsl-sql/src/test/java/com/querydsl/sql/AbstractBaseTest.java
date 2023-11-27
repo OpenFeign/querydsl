@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
@@ -54,7 +54,7 @@ public abstract class AbstractBaseTest {
       SQLSerializer serializer = super.serialize(countRow);
       String rv = serializer.toString();
       if (expectedQuery != null) {
-        assertEquals(expectedQuery, rv.replace('\n', ' '));
+        assertThat(rv.replace('\n', ' ')).isEqualTo(expectedQuery);
         expectedQuery = null;
       }
       logger.fine(rv);

@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.h2;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.H2Templates;
 import com.querydsl.sql.QGeneratedKeysEntity;
@@ -61,22 +61,22 @@ public class GeneratedKeysH2Test {
     ResultSetMetaData md = rs.getMetaData();
     System.out.println(md.getColumnName(1));
 
-    assertTrue(rs.next());
-    assertEquals(1, rs.getInt(1));
-    assertFalse(rs.next());
+    assertThat(rs.next()).isTrue();
+    assertThat(rs.getInt(1)).isEqualTo(1);
+    assertThat(rs.next()).isFalse();
 
     insertClause = new SQLInsertClause(conn, new H2Templates(), entity);
     rs = insertClause.set(entity.name, "World").executeWithKeys();
-    assertTrue(rs.next());
-    assertEquals(2, rs.getInt(1));
-    assertFalse(rs.next());
+    assertThat(rs.next()).isTrue();
+    assertThat(rs.getInt(1)).isEqualTo(2);
+    assertThat(rs.next()).isFalse();
 
     insertClause = new SQLInsertClause(conn, new H2Templates(), entity);
-    assertEquals(3, insertClause.set(entity.name, "World").executeWithKey(entity.id).intValue());
+    assertThat(insertClause.set(entity.name, "World").executeWithKey(entity.id).intValue())
+        .isEqualTo(3);
 
     insertClause = new SQLInsertClause(conn, new H2Templates(), entity);
-    assertEquals(
-        Collections.singletonList(4),
-        insertClause.set(entity.name, "World").executeWithKeys(entity.id));
+    assertThat(insertClause.set(entity.name, "World").executeWithKeys(entity.id))
+        .isEqualTo(Collections.singletonList(4));
   }
 }

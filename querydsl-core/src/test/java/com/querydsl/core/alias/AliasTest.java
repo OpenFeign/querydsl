@@ -14,7 +14,7 @@
 package com.querydsl.core.alias;
 
 import static com.querydsl.core.alias.Alias.$;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Path;
 import org.junit.Test;
@@ -31,60 +31,61 @@ public class AliasTest {
   public void comparableEntity() {
     ComparableEntity entity = Alias.alias(ComparableEntity.class);
     Path<ComparableEntity> path = $(entity);
-    assertEquals(ComparableEntity.class, path.getType());
+    assertThat(path.getType()).isEqualTo(ComparableEntity.class);
   }
 
   @Test
   public void comparableEntity_property() {
     ComparableEntity entity = Alias.alias(ComparableEntity.class);
     Path<String> propertyPath = $(entity.getProperty());
-    assertEquals(String.class, propertyPath.getType());
-    assertEquals("property", propertyPath.getMetadata().getName());
+    assertThat(propertyPath.getType()).isEqualTo(String.class);
+    assertThat(propertyPath.getMetadata().getName()).isEqualTo("property");
   }
 
   @Test
   public void basicUsage() {
     DomainType domainType = Alias.alias(DomainType.class);
-    assertEquals("lower(domainType.firstName)", $(domainType.getFirstName()).lower().toString());
-    assertEquals("domainType.age", $(domainType.getAge()).toString());
-    assertEquals("domainType.map.get(a)", $(domainType.getMap().get("a")).toString());
-    assertEquals("domainType.list.get(0)", $(domainType.getList().get(0)).toString());
+    assertThat($(domainType.getFirstName()).lower().toString())
+        .isEqualTo("lower(domainType.firstName)");
+    assertThat($(domainType.getAge()).toString()).isEqualTo("domainType.age");
+    assertThat($(domainType.getMap().get("a")).toString()).isEqualTo("domainType.map.get(a)");
+    assertThat($(domainType.getList().get(0)).toString()).isEqualTo("domainType.list.get(0)");
 
-    assertEquals("domainType.bigDecimal", $(domainType.getBigDecimal()).toString());
-    assertEquals("domainType.bigInteger", $(domainType.getBigInteger()).toString());
-    assertEquals("domainType.byte", $(domainType.getByte()).toString());
-    assertEquals("domainType.collection", $(domainType.getCollection()).toString());
-    assertEquals("domainType.double", $(domainType.getDouble()).toString());
-    assertEquals("domainType.float", $(domainType.getFloat()).toString());
-    assertEquals("domainType.date", $(domainType.getDate()).toString());
-    assertEquals("domainType.date2", $(domainType.getDate2()).toString());
-    assertEquals("domainType.set", $(domainType.getSet()).toString());
-    assertEquals("domainType.short", $(domainType.getShort()).toString());
-    assertEquals("domainType.time", $(domainType.getTime()).toString());
-    assertEquals("domainType.timestamp", $(domainType.getTimestamp()).toString());
-    assertEquals("domainType.gender", $(domainType.getGender()).toString());
+    assertThat($(domainType.getBigDecimal()).toString()).isEqualTo("domainType.bigDecimal");
+    assertThat($(domainType.getBigInteger()).toString()).isEqualTo("domainType.bigInteger");
+    assertThat($(domainType.getByte()).toString()).isEqualTo("domainType.byte");
+    assertThat($(domainType.getCollection()).toString()).isEqualTo("domainType.collection");
+    assertThat($(domainType.getDouble()).toString()).isEqualTo("domainType.double");
+    assertThat($(domainType.getFloat()).toString()).isEqualTo("domainType.float");
+    assertThat($(domainType.getDate()).toString()).isEqualTo("domainType.date");
+    assertThat($(domainType.getDate2()).toString()).isEqualTo("domainType.date2");
+    assertThat($(domainType.getSet()).toString()).isEqualTo("domainType.set");
+    assertThat($(domainType.getShort()).toString()).isEqualTo("domainType.short");
+    assertThat($(domainType.getTime()).toString()).isEqualTo("domainType.time");
+    assertThat($(domainType.getTimestamp()).toString()).isEqualTo("domainType.timestamp");
+    assertThat($(domainType.getGender()).toString()).isEqualTo("domainType.gender");
   }
 
   @Test
   public void getAny() {
     DomainType domainType = Alias.alias(DomainType.class);
-    assertEquals(DomainType.class, Alias.getAny(domainType).getType());
-    assertEquals(String.class, Alias.getAny(domainType.getFirstName()).getType());
+    assertThat(Alias.getAny(domainType).getType()).isEqualTo(DomainType.class);
+    assertThat(Alias.getAny(domainType.getFirstName()).getType()).isEqualTo(String.class);
   }
 
   @Test
   public void otherMethods() {
     DomainType domainType = Alias.alias(DomainType.class);
-    assertEquals("domainType", domainType.toString());
+    assertThat(domainType.toString()).isEqualTo("domainType");
   }
 
   @Test
   public void var() {
-    assertEquals("it", Alias.var().toString());
-    assertEquals("varInteger1", Alias.var(1).toString());
-    assertEquals("X", Alias.var("X").toString());
-    assertEquals("varMALE", Alias.var(Gender.MALE).toString());
-    assertEquals("varAliasTest_XXX", Alias.var(new AliasTest()).toString());
+    assertThat(Alias.var().toString()).isEqualTo("it");
+    assertThat(Alias.var(1).toString()).isEqualTo("varInteger1");
+    assertThat(Alias.var("X").toString()).isEqualTo("X");
+    assertThat(Alias.var(Gender.MALE).toString()).isEqualTo("varMALE");
+    assertThat(Alias.var(new AliasTest()).toString()).isEqualTo("varAliasTest_XXX");
   }
 
   @Override

@@ -5,8 +5,7 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -29,52 +28,51 @@ public class AnnotationTest {
     String option2 =
         "@com.querydsl.codegen.utils.Annotation(prop2=false, clazz=com.querydsl.codegen.utils.AnnotationTest.class)";
     String serialized = w.toString().trim();
-    assertTrue(serialized.equals(option1) || serialized.equals(option2));
+    assertThat(serialized.equals(option1) || serialized.equals(option2)).isTrue();
   }
 
   @Test
   public void ClassAnnotation2() throws IOException {
     writer.annotation(getClass().getAnnotation(Annotation2.class));
-    assertEquals("@com.querydsl.codegen.utils.Annotation2(\"Hello\")", w.toString().trim());
+    assertThat(w.toString().trim()).isEqualTo("@com.querydsl.codegen.utils.Annotation2(\"Hello\")");
   }
 
   @Test
   public void ClassAnnotation3() throws IOException {
     writer.annotation(getClass().getAnnotation(Annotation3.class));
-    assertEquals(
-        "@com.querydsl.codegen.utils.Annotation3(type=java.lang.annotation.ElementType.ANNOTATION_TYPE)",
-        w.toString().trim());
+    assertThat(w.toString().trim())
+        .isEqualTo(
+            "@com.querydsl.codegen.utils.Annotation3(type=java.lang.annotation.ElementType.ANNOTATION_TYPE)");
   }
 
   @Test
   public void MethodAnnotation() throws IOException, SecurityException, NoSuchMethodException {
     writer.annotation(getClass().getMethod("MethodAnnotation").getAnnotation(Test.class));
-    assertEquals("@org.junit.Test", w.toString().trim());
+    assertThat(w.toString().trim()).isEqualTo("@org.junit.Test");
   }
 
   @Test
   public void Min() throws IOException {
     writer.annotation(new MinImpl(10));
-    assertEquals("@javax.validation.constraints.Min(value=10)", w.toString().trim());
+    assertThat(w.toString().trim()).isEqualTo("@javax.validation.constraints.Min(value=10)");
   }
 
   @Test
   public void Max() throws IOException {
     writer.annotation(new MaxImpl(10));
-    assertEquals("@javax.validation.constraints.Max(value=10)", w.toString().trim());
+    assertThat(w.toString().trim()).isEqualTo("@javax.validation.constraints.Max(value=10)");
   }
 
   @Test
   public void NotNull() throws IOException {
     writer.annotation(new NotNullImpl());
-    assertEquals("@javax.validation.constraints.NotNull", w.toString().trim());
+    assertThat(w.toString().trim()).isEqualTo("@javax.validation.constraints.NotNull");
   }
 
   @Test
   public void Uri_Value() throws IOException {
     writer.annotation(new Annotation2Impl("http://www.example.com#"));
-    assertEquals(
-        "@com.querydsl.codegen.utils.Annotation2(\"http://www.example.com#\")",
-        w.toString().trim());
+    assertThat(w.toString().trim())
+        .isEqualTo("@com.querydsl.codegen.utils.Annotation2(\"http://www.example.com#\")");
   }
 }

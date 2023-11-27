@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.domain.AbstractEntity;
@@ -26,6 +26,6 @@ public class ExternalEntityTest {
 
   @Test
   public void test() {
-    assertNotNull(QExternalEntityTest_MyEntity.myEntity.id);
+    assertThat(QExternalEntityTest_MyEntity.myEntity.id).isNotNull();
   }
 }

@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
@@ -53,7 +53,7 @@ public class Generic14Test extends AbstractTest {
 
   @Test
   public void test() throws IllegalAccessException, NoSuchFieldException {
-    assertNotNull(QGeneric14Test_AbstractPersistable.abstractPersistable);
+    assertThat(QGeneric14Test_AbstractPersistable.abstractPersistable).isNotNull();
 
     start(QGeneric14Test_BasePersistable.class, QGeneric14Test_BasePersistable.basePersistable);
     matchType(Serializable.class, "id");

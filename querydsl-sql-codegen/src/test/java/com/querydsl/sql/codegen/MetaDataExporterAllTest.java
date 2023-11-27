@@ -1,5 +1,7 @@
 package com.querydsl.sql.codegen;
 
+import static org.assertj.core.api.Assertions.fail;
+
 import com.querydsl.codegen.BeanSerializer;
 import com.querydsl.codegen.utils.SimpleCompiler;
 import com.querydsl.core.testutil.Parallelized;
@@ -15,7 +17,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.tools.JavaCompiler;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
@@ -166,7 +171,7 @@ public class MetaDataExporterAllTest {
     int compilationResult =
         compiler.run(null, System.out, System.err, classes.toArray(new String[0]));
     if (compilationResult != 0) {
-      Assert.fail("Compilation Failed for " + folder.getRoot().getPath());
+      fail("", "Compilation Failed for " + folder.getRoot().getPath());
     }
   }
 }

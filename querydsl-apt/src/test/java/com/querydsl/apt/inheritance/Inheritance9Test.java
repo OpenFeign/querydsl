@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.inheritance;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.domain.SuperSupertype;
@@ -37,9 +37,9 @@ public class Inheritance9Test {
 
   @Test
   public void test() {
-    assertNotNull(QInheritance9Test_Entity1.entity1.id);
-    assertNotNull(QInheritance9Test_Entity1.entity1.version);
-    assertNotNull(QInheritance9Test_Entity2.entity2.id);
-    assertNotNull(QInheritance9Test_Entity2.entity2.version);
+    assertThat(QInheritance9Test_Entity1.entity1.id).isNotNull();
+    assertThat(QInheritance9Test_Entity1.entity1.version).isNotNull();
+    assertThat(QInheritance9Test_Entity2.entity2.id).isNotNull();
+    assertThat(QInheritance9Test_Entity2.entity2.version).isNotNull();
   }
 }

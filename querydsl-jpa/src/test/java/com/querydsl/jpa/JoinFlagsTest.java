@@ -14,7 +14,7 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -23,28 +23,28 @@ public class JoinFlagsTest extends AbstractQueryTest {
   @Test
   public void fetchAll() {
     QueryHelper query1 = query().from(cat).fetchAll().where(cat.name.isNotNull());
-    assertEquals(
-        "select cat\nfrom Cat cat fetch all properties\nwhere cat.name is not null",
-        query1.toString());
+    assertThat(query1.toString())
+        .isEqualTo("select cat\nfrom Cat cat fetch all properties\nwhere cat.name is not null");
   }
 
   @Test
   public void fetchAll2() {
     QueryHelper query2 = query().from(cat).fetchAll().from(cat1).fetchAll();
-    assertEquals(
-        "select cat\nfrom Cat cat fetch all properties, Cat cat1 fetch all properties",
-        query2.toString());
+    assertThat(query2.toString())
+        .isEqualTo("select cat\nfrom Cat cat fetch all properties, Cat cat1 fetch all properties");
   }
 
   @Test
   public void fetch() {
     QueryHelper query = query().from(cat).innerJoin(cat.mate, cat1).fetchJoin();
-    assertEquals("select cat\nfrom Cat cat\n  inner join fetch cat.mate as cat1", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("select cat\nfrom Cat cat\n  inner join fetch cat.mate as cat1");
   }
 
   @Test
   public void rightJoin() {
     QueryHelper query = query().from(cat).rightJoin(cat.mate, cat1);
-    assertEquals("select cat\nfrom Cat cat\n  right join cat.mate as cat1", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("select cat\nfrom Cat cat\n  right join cat.mate as cat1");
   }
 }

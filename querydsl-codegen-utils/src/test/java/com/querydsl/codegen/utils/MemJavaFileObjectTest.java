@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -21,7 +21,7 @@ public class MemJavaFileObjectTest {
     writer.write("Hello World");
     writer.flush();
     writer.close();
-    assertEquals("Hello World", obj.getCharContent(true).toString());
+    assertThat(obj.getCharContent(true).toString()).isEqualTo("Hello World");
   }
 
   @Test

@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.testutil.ExcludeIn;
@@ -73,7 +73,7 @@ public class HibernateSQLBase extends AbstractSQLTest implements HibernateTest {
     QCat catEntity = QCat.cat;
 
     Query query = query().from(cat).select(catEntity).createQuery();
-    assertEquals(6, query.list().size());
+    assertThat(query.list()).hasSize(6);
   }
 
   @Test
@@ -83,6 +83,6 @@ public class HibernateSQLBase extends AbstractSQLTest implements HibernateTest {
     QCat catEntity = QCat.cat;
 
     Query query = query().from(cat).select(catEntity).createQuery();
-    assertEquals(6, query.list().size());
+    assertThat(query.list()).hasSize(6);
   }
 }

@@ -13,7 +13,7 @@
  */
 package com.querydsl.hibernate.search;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class SearchSerializerTest {
   public void toField() {
     SearchSerializer serializer = SearchSerializer.DEFAULT;
     QUser user = new QUser("user");
-    assertEquals("email", serializer.toField(user.emailAddress));
-    assertEquals("firstName", serializer.toField(user.firstName));
+    assertThat(serializer.toField(user.emailAddress)).isEqualTo("email");
+    assertThat(serializer.toField(user.firstName)).isEqualTo("firstName");
   }
 }

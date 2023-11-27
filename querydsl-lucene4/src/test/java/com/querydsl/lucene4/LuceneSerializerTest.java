@@ -13,21 +13,41 @@
  */
 package com.querydsl.lucene4;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
-import com.querydsl.core.*;
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.MatchingFiltersFactory;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QuerydslModule;
+import com.querydsl.core.StringConstant;
+import com.querydsl.core.Target;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CollectionPath;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.StringPath;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.DoubleField;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.FloatField;
+import org.apache.lucene.document.IntField;
+import org.apache.lucene.document.LongField;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -141,15 +161,15 @@ public class LuceneSerializerTest {
   private void testQuery(Expression<?> expr, int expectedHits) throws Exception {
     Query query = serializer.toQuery(expr, metadata);
     TopDocs docs = searcher.search(query, 100);
-    assertEquals(expectedHits, docs.totalHits);
+    assertThat(docs.totalHits).isEqualTo(expectedHits);
   }
 
   private void testQuery(Expression<?> expr, String expectedQuery, int expectedHits)
       throws Exception {
     Query query = serializer.toQuery(expr, metadata);
     TopDocs docs = searcher.search(query, 100);
-    assertEquals(expectedHits, docs.totalHits);
-    assertEquals(expectedQuery, query.toString());
+    assertThat(docs.totalHits).isEqualTo(expectedHits);
+    assertThat(query.toString()).isEqualTo(expectedQuery);
   }
 
   @Test

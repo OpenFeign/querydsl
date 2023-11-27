@@ -14,7 +14,7 @@
 package com.querydsl.lucene3;
 
 import static com.querydsl.lucene3.QPerson.person;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
@@ -54,8 +54,8 @@ public class LuceneSerializerNotTokenizedTest {
       throws Exception {
     Query query = serializer.toQuery(expr, metadata);
     TopDocs docs = searcher.search(query, 100);
-    assertEquals(expectedHits, docs.totalHits);
-    assertEquals(expectedQuery, query.toString());
+    assertThat(docs.totalHits).isEqualTo(expectedHits);
+    assertThat(query.toString()).isEqualTo(expectedQuery);
   }
 
   private Document createDocument(Person person) {

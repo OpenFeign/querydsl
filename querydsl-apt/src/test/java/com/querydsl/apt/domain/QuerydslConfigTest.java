@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.Config;
 import com.querydsl.core.annotations.QueryEntity;
@@ -45,8 +45,7 @@ public class QuerydslConfigTest {
 
   @Test
   public void long_path() {
-    assertEquals(
-        "entity.prop1.prop2.prop1",
-        QQuerydslConfigTest_Entity.entity.prop1().prop2().prop1().toString());
+    assertThat(QQuerydslConfigTest_Entity.entity.prop1().prop2().prop1().toString())
+        .isEqualTo("entity.prop1.prop2.prop1");
   }
 }

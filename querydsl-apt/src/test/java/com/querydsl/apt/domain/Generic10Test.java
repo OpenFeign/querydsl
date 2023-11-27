@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
@@ -33,7 +33,7 @@ public class Generic10Test extends AbstractTest {
 
   @Test
   public void test() {
-    assertNotNull(QGeneric10Test_FutureTrade.futureTrade);
+    assertThat(QGeneric10Test_FutureTrade.futureTrade).isNotNull();
 
     start(
         QGeneric10Test_AbstractTradingMarket.class,
