@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryInit;
@@ -182,7 +182,7 @@ public class QueryInit6Test {
 
   @Test
   public void test() {
-    assertNotNull(QQueryInit6Test_Content.content.container.packaging);
-    assertNotNull(QQueryInit6Test_Content.content.container.packaging.id);
+    assertThat(QQueryInit6Test_Content.content.container.packaging).isNotNull();
+    assertThat(QQueryInit6Test_Content.content.container.packaging.id).isNotNull();
   }
 }
