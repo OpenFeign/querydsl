@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.apt.domain.rel.RelationType2;
 import com.querydsl.core.annotations.Config;
@@ -144,11 +144,12 @@ public class RelationTest extends AbstractTest {
   @Test
   public void list_usage() {
     String expected = "relationType.list.get(0).set";
-    assertEquals(expected, QRelationTest_RelationType.relationType.list.get(0).set.toString());
+    assertThat(QRelationTest_RelationType.relationType.list.get(0).set.toString())
+        .isEqualTo(expected);
     //        assertEquals(expected,
     // QRelationTest_RelationType.relationType.getList(0).set.toString());
 
-    assertEquals(List.class, QRelationTest_RelationType.relationType.list.getType());
-    assertEquals(Set.class, QRelationTest_RelationType.relationType.set.getType());
+    assertThat(QRelationTest_RelationType.relationType.list.getType()).isEqualTo(List.class);
+    assertThat(QRelationTest_RelationType.relationType.set.getType()).isEqualTo(Set.class);
   }
 }
