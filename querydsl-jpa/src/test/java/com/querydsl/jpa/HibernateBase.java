@@ -14,7 +14,6 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
@@ -91,7 +90,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
 
   @Test
   public void delete() {
-    assertEquals(0, delete(QGroup.group).execute());
+    assertThat(delete(QGroup.group).execute()).isEqualTo(0);
   }
 
   @Test
