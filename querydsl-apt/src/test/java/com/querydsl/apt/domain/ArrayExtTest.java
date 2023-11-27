@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.*;
@@ -39,39 +39,39 @@ public class ArrayExtTest {
 
   @Test
   public void binaryFile_contentPart() {
-    assertEquals(ArrayPath.class, binaryFile.contentPart.getClass());
-    assertEquals(byte[].class, binaryFile.contentPart.getType());
+    assertThat(binaryFile.contentPart.getClass()).isEqualTo(ArrayPath.class);
+    assertThat(binaryFile.contentPart.getType()).isEqualTo(byte[].class);
   }
 
   @Test
   public void binaryFile_list() {
-    assertEquals(ListPath.class, binaryFile.list.getClass());
-    assertEquals(List.class, binaryFile.list.getType());
-    assertEquals(byte[].class, binaryFile.list.getParameter(0));
+    assertThat(binaryFile.list.getClass()).isEqualTo(ListPath.class);
+    assertThat(binaryFile.list.getType()).isEqualTo(List.class);
+    assertThat(binaryFile.list.getParameter(0)).isEqualTo(byte[].class);
 
-    assertEquals(SimplePath.class, binaryFile.list.get(0).getClass());
-    assertEquals(byte[].class, binaryFile.list.get(0).getType());
+    assertThat(binaryFile.list.get(0).getClass()).isEqualTo(SimplePath.class);
+    assertThat(binaryFile.list.get(0).getType()).isEqualTo(byte[].class);
   }
 
   @Test
   public void binaryFile_map1() {
-    assertEquals(MapPath.class, binaryFile.map1.getClass());
-    assertEquals(Map.class, binaryFile.map1.getType());
-    assertEquals(String.class, binaryFile.map1.getParameter(0));
-    assertEquals(byte[].class, binaryFile.map1.getParameter(1));
+    assertThat(binaryFile.map1.getClass()).isEqualTo(MapPath.class);
+    assertThat(binaryFile.map1.getType()).isEqualTo(Map.class);
+    assertThat(binaryFile.map1.getParameter(0)).isEqualTo(String.class);
+    assertThat(binaryFile.map1.getParameter(1)).isEqualTo(byte[].class);
 
-    assertEquals(SimplePath.class, binaryFile.map1.get("").getClass());
-    assertEquals(byte[].class, binaryFile.map1.get("").getType());
+    assertThat(binaryFile.map1.get("").getClass()).isEqualTo(SimplePath.class);
+    assertThat(binaryFile.map1.get("").getType()).isEqualTo(byte[].class);
   }
 
   @Test
   public void binaryFile_map2() {
-    assertEquals(MapPath.class, binaryFile.map2.getClass());
-    assertEquals(Map.class, binaryFile.map2.getType());
-    assertEquals(byte[].class, binaryFile.map2.getParameter(0));
-    assertEquals(String.class, binaryFile.map2.getParameter(1));
+    assertThat(binaryFile.map2.getClass()).isEqualTo(MapPath.class);
+    assertThat(binaryFile.map2.getType()).isEqualTo(Map.class);
+    assertThat(binaryFile.map2.getParameter(0)).isEqualTo(byte[].class);
+    assertThat(binaryFile.map2.getParameter(1)).isEqualTo(String.class);
 
-    assertEquals(StringPath.class, binaryFile.map2.get(new byte[0]).getClass());
-    assertEquals(String.class, binaryFile.map2.get(new byte[0]).getType());
+    assertThat(binaryFile.map2.get(new byte[0]).getClass()).isEqualTo(StringPath.class);
+    assertThat(binaryFile.map2.get(new byte[0]).getType()).isEqualTo(String.class);
   }
 }
