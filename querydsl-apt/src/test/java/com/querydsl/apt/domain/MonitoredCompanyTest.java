@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -9,7 +9,7 @@ public class MonitoredCompanyTest {
   @Test
   public void test() {
     QMonitoredCompany monitoredCompany = QMonitoredCompany.monitoredCompany;
-    assertNotNull(monitoredCompany.companyGroup);
-    assertNotNull(monitoredCompany.companyGroup.mainCompany);
+    assertThat(monitoredCompany.companyGroup).isNotNull();
+    assertThat(monitoredCompany.companyGroup.mainCompany).isNotNull();
   }
 }
