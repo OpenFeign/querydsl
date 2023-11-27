@@ -14,8 +14,6 @@
 package com.querydsl.collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.QueryExecution;
@@ -98,8 +96,8 @@ public class CollQueryStandardTest {
   public void tupleMultipleFieldsProjection() {
     List<Tuple> tuples = CollQueryFactory.from(cat, data).select(cat.name, cat.birthdate).fetch();
     for (Tuple tuple : tuples) {
-      assertNotNull(tuple.get(cat.name));
-      assertNotNull(tuple.get(cat.birthdate));
+      assertThat(tuple.get(cat.name)).isNotNull();
+      assertThat(tuple.get(cat.birthdate)).isNotNull();
     }
   }
 
@@ -109,7 +107,7 @@ public class CollQueryStandardTest {
         CollQueryFactory.from(cat, data).select(new Expression<?>[] {cat.name}).fetch();
     for (Tuple tuple : tuples) {
       assertThat(tuple.size()).isEqualTo(1);
-      assertNotNull(tuple.get(cat.name));
+      assertThat(tuple.get(cat.name)).isNotNull();
     }
   }
 
@@ -132,9 +130,9 @@ public class CollQueryStandardTest {
     List<Tuple> tuples =
         CollQueryFactory.from(cat, data).select(concat, cat.name, cat.birthdate).fetch();
     for (Tuple tuple : tuples) {
-      assertNotNull(tuple.get(cat.name));
-      assertNotNull(tuple.get(cat.birthdate));
-      assertEquals(tuple.get(cat.name) + tuple.get(cat.name), tuple.get(concat));
+      assertThat(tuple.get(cat.name)).isNotNull();
+      assertThat(tuple.get(cat.birthdate)).isNotNull();
+      assertThat(tuple.get(concat)).isEqualTo(tuple.get(cat.name) + tuple.get(cat.name));
     }
   }
 
@@ -166,37 +164,37 @@ public class CollQueryStandardTest {
   @Test
   public void params() {
     Param<String> name = new Param<String>(String.class, "name");
-    assertEquals(
-        "Bob",
-        CollQueryFactory.from(cat, data)
-            .where(cat.name.eq(name))
-            .set(name, "Bob")
-            .select(cat.name)
-            .fetchOne());
+    assertThat(
+            CollQueryFactory.from(cat, data)
+                .where(cat.name.eq(name))
+                .set(name, "Bob")
+                .select(cat.name)
+                .fetchOne())
+        .isEqualTo("Bob");
   }
 
   @Test
   public void params_anon() {
     Param<String> name = new Param<String>(String.class);
-    assertEquals(
-        "Bob",
-        CollQueryFactory.from(cat, data)
-            .where(cat.name.eq(name))
-            .set(name, "Bob")
-            .select(cat.name)
-            .fetchOne());
+    assertThat(
+            CollQueryFactory.from(cat, data)
+                .where(cat.name.eq(name))
+                .set(name, "Bob")
+                .select(cat.name)
+                .fetchOne())
+        .isEqualTo("Bob");
   }
 
   @Test(expected = ParamNotSetException.class)
   public void params_not_set() {
     Param<String> name = new Param<String>(String.class, "name");
-    assertEquals(
-        "Bob",
-        CollQueryFactory.from(cat, data).where(cat.name.eq(name)).select(cat.name).fetchOne());
+    assertThat(
+            CollQueryFactory.from(cat, data).where(cat.name.eq(name)).select(cat.name).fetchOne())
+        .isEqualTo("Bob");
   }
 
   @Test
   public void limit() {
-    assertEquals(data, CollQueryFactory.from(cat, data).limit(Long.MAX_VALUE).fetch());
+    assertThat(CollQueryFactory.from(cat, data).limit(Long.MAX_VALUE).fetch()).isEqualTo(data);
   }
 }
