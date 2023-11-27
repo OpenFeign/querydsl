@@ -15,7 +15,6 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
@@ -122,7 +121,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
     long amount = insert(cat).set(cat.name, "Bobby").set(cat.alive, false).execute();
     assertThat(amount).isEqualTo(1);
 
-    assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
+    assertThat(query().from(cat).where(cat.name.eq("Bobby")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -133,7 +132,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
     long amount = insert(cat).columns(cat.name, cat.alive).values("Bobby", false).execute();
     assertThat(amount).isEqualTo(1);
 
-    assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
+    assertThat(query().from(cat).where(cat.name.eq("Bobby")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -150,7 +149,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
             .execute();
     assertThat(amount).isEqualTo(1);
 
-    assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
+    assertThat(query().from(cat).where(cat.name.eq("Bobby")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -167,7 +166,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
             .execute();
     assertThat(amount).isEqualTo(1);
 
-    assertEquals(0L, query().from(cat).where(cat.name.eq("Bob")).fetchCount());
+    assertThat(query().from(cat).where(cat.name.eq("Bob")).fetchCount()).isEqualTo(0L);
   }
 
   @Test
