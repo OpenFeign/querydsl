@@ -1,10 +1,11 @@
 package com.querydsl.apt.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 
 public class ManyToManyTest {
 
@@ -22,7 +23,7 @@ public class ManyToManyTest {
 
   @Test
   public void test() {
-    Assertions.assertEquals(
-        PhoneNumberImpl.class, QManyToManyTest_Person.person.phones.getElementType());
+    assertThat(QManyToManyTest_Person.person.phones.getElementType())
+        .isEqualTo(PhoneNumberImpl.class);
   }
 }
