@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.inheritance;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import java.util.Set;
@@ -66,19 +66,22 @@ public class Inheritance7Test {
   @Ignore
   public void parent() {
     // FIXME
-    assertEquals(Category.class, QInheritance7Test_Category.category.parent.getType());
-    assertEquals(SubCategory.class, QInheritance7Test_SubCategory.subCategory.parent.getType());
-    assertEquals(SubCategory2.class, QInheritance7Test_SubCategory2.subCategory2.parent.getType());
+    assertThat(QInheritance7Test_Category.category.parent.getType()).isEqualTo(Category.class);
+    assertThat(QInheritance7Test_SubCategory.subCategory.parent.getType())
+        .isEqualTo(SubCategory.class);
+    assertThat(QInheritance7Test_SubCategory2.subCategory2.parent.getType())
+        .isEqualTo(SubCategory2.class);
   }
 
   @Test
   @Ignore
   public void children() {
     // FIXME
-    assertEquals(Category.class, QInheritance7Test_Category.category.children.getElementType());
-    assertEquals(
-        SubCategory.class, QInheritance7Test_SubCategory.subCategory.children.getElementType());
-    assertEquals(
-        SubCategory2.class, QInheritance7Test_SubCategory2.subCategory2.children.getElementType());
+    assertThat(QInheritance7Test_Category.category.children.getElementType())
+        .isEqualTo(Category.class);
+    assertThat(QInheritance7Test_SubCategory.subCategory.children.getElementType())
+        .isEqualTo(SubCategory.class);
+    assertThat(QInheritance7Test_SubCategory2.subCategory2.children.getElementType())
+        .isEqualTo(SubCategory2.class);
   }
 }
