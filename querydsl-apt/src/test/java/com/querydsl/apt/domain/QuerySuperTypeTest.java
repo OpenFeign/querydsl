@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QuerySupertype;
 import java.util.Set;
@@ -19,8 +19,7 @@ public class QuerySuperTypeTest {
 
   @Test
   public void jdoEntity() {
-    assertEquals(
-        QQuerySuperTypeTest_Supertype.class,
-        QQuerySuperTypeTest_JdoEntity.jdoEntity.references.any().getClass());
+    assertThat(QQuerySuperTypeTest_JdoEntity.jdoEntity.references.any().getClass())
+        .isEqualTo(QQuerySuperTypeTest_Supertype.class);
   }
 }
