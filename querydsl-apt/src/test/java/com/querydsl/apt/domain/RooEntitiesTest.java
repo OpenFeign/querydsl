@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -8,11 +8,11 @@ public class RooEntitiesTest {
 
   @Test
   public void rooJpaEntity() {
-    assertNotNull(QRooEntities_MyEntity.myEntity);
+    assertThat(QRooEntities_MyEntity.myEntity).isNotNull();
   }
 
   @Test
   public void rooJpaActiveRecord() {
-    assertNotNull(QRooEntities_MyEntity2.myEntity2);
+    assertThat(QRooEntities_MyEntity2.myEntity2).isNotNull();
   }
 }
