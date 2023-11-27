@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import org.junit.Test;
@@ -27,6 +27,6 @@ public class AnnotatedGettersTest {
 
   @Test
   public void annotated_getter_is_supported() {
-    assertNotNull(QAnnotatedGettersTest_Entity.entity.name);
+    assertThat(QAnnotatedGettersTest_Entity.entity.name).isNotNull();
   }
 }
