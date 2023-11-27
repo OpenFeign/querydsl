@@ -14,7 +14,6 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.hibernate.HibernateQuery;
@@ -67,9 +66,10 @@ public class JPQLQueryTest {
   public void toString_() {
     assertThat(new HibernateQuery<Void>().toString()).isEqualTo("");
     assertThat(new JPAQuery<Void>().toString()).isEqualTo("");
-    assertEquals("select cat", new HibernateQuery<Void>().select(cat).toString());
-    assertEquals("select cat", new JPAQuery<Void>().select(cat).toString());
-    assertEquals("select cat\nfrom Cat cat", new HibernateQuery<Void>().from(cat).toString());
-    assertEquals("select cat\nfrom Cat cat", new JPAQuery<Void>().from(cat).toString());
+    assertThat(new HibernateQuery<Void>().select(cat).toString()).isEqualTo("select cat");
+    assertThat(new JPAQuery<Void>().select(cat).toString()).isEqualTo("select cat");
+    assertThat(new HibernateQuery<Void>().from(cat).toString())
+        .isEqualTo("select cat\nfrom Cat cat");
+    assertThat(new JPAQuery<Void>().from(cat).toString()).isEqualTo("select cat\nfrom Cat cat");
   }
 }
