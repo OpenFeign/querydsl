@@ -15,7 +15,6 @@ package com.querydsl.collections;
 
 import static com.querydsl.collections.CollQueryFactory.from;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -47,13 +46,13 @@ public class CollQueryTest extends AbstractQueryTest {
 
   @Test
   public void instanceOf() {
-    assertEquals(
-        Arrays.asList(c1, c2),
-        query()
-            .from(cat, Arrays.asList(c1, c2))
-            .where(cat.instanceOf(Cat.class))
-            .select(cat)
-            .fetch());
+    assertThat(
+            query()
+                .from(cat, Arrays.asList(c1, c2))
+                .where(cat.instanceOf(Cat.class))
+                .select(cat)
+                .fetch())
+        .isEqualTo(Arrays.asList(c1, c2));
   }
 
   @Test
