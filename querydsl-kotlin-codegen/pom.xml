@@ -30,8 +30,8 @@
     </dependency>
     <dependency>
       <groupId>com.squareup</groupId>
-      <artifactId>kotlinpoet</artifactId>
-      <version>1.14.2</version>
+      <artifactId>kotlinpoet-jvm</artifactId>
+      <version>1.15.1</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
@@ -59,7 +59,7 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit</artifactId>
+      <artifactId>kotlin-test-junit5</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

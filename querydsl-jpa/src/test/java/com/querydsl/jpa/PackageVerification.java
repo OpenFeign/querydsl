@@ -13,8 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.apt.hibernate.HibernateAnnotationProcessor;
 import com.querydsl.apt.jpa.JPAAnnotationProcessor;
@@ -38,7 +37,7 @@ public class PackageVerification {
   }
 
   private void verify(File oneJar, boolean hibernateDeps) throws Exception {
-    assertTrue(oneJar.getPath() + " doesn't exist", oneJar.exists());
+    assertThat(oneJar.exists()).as(oneJar.getPath() + " doesn't exist").isTrue();
     // verify classLoader
     URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
     oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core
@@ -55,8 +54,7 @@ public class PackageVerification {
     Class cl = oneJarClassLoader.loadClass(processor.getName()); // querydsl-apt
     cl.newInstance();
     String resourceKey = "META-INF/services/javax.annotation.processing.Processor";
-    assertEquals(
-        processor.getName(),
-        new Scanner(oneJarClassLoader.findResource(resourceKey).openStream()).nextLine());
+    assertThat(new Scanner(oneJarClassLoader.findResource(resourceKey).openStream()).nextLine())
+        .isEqualTo(processor.getName());
   }
 }

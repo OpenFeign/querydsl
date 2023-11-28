@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.persistence.*;
 import org.junit.Test;
@@ -32,6 +32,6 @@ public class InitTest {
 
   @Test
   public void test() {
-    assertNotNull(QInitTest_User.user.address.city);
+    assertThat(QInitTest_User.user.address.city).isNotNull();
   }
 }

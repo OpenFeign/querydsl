@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QBean;
@@ -58,8 +58,8 @@ public class QPersonTest {
     QBean<Person> personProjection =
         Projections.bean(Person.class, person.id, person.firstname, person.securedid);
     Person p = personProjection.newInstance(3, "X", "Y");
-    assertEquals(3, p.getId());
-    assertEquals("X", p.getFirstname());
-    assertEquals("Y", p.getSecuredid());
+    assertThat(p.getId()).isEqualTo(3);
+    assertThat(p.getFirstname()).isEqualTo("X");
+    assertThat(p.getSecuredid()).isEqualTo("Y");
   }
 }

@@ -1,8 +1,7 @@
 package com.querydsl.example.jpa.repository;
 
 import static com.querydsl.example.jpa.model.QTweet.tweet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.jpa.model.Tweet;
 import com.querydsl.example.jpa.model.User;
@@ -26,7 +25,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     String content = "I am alive! #YOLO";
     Tweet tweet = new Tweet(poster, content, Collections.<User>emptyList(), null);
     repository.save(tweet);
-    assertEquals(content, repository.findById(tweet.getId()).getContent());
+    assertThat(repository.findById(tweet.getId()).getContent()).isEqualTo(content);
   }
 
   @Test
@@ -37,7 +36,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     repository.save(new Tweet(poster, "It is a alive! #YOLO", Collections.<User>emptyList(), null));
     repository.save(new Tweet(poster, "Oh the humanity!", Collections.<User>emptyList(), null));
     repository.save(new Tweet(poster, "#EpicFail", Collections.<User>emptyList(), null));
-    assertEquals(1, repository.findAll(tweet.content.contains("#YOLO")).size());
+    assertThat(repository.findAll(tweet.content.contains("#YOLO"))).hasSize(1);
   }
 
   @Test
@@ -48,7 +47,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     repository.save(new Tweet(poster, "It is a alive! #YOLO", Collections.<User>emptyList(), null));
     repository.save(new Tweet(poster, "Oh the humanity!", Collections.<User>emptyList(), null));
     repository.save(new Tweet(poster, "#EpicFail", Collections.<User>emptyList(), null));
-    assertEquals(1, repository.findAllWithHibernateQuery(tweet.content.contains("#YOLO")).size());
+    assertThat(repository.findAllWithHibernateQuery(tweet.content.contains("#YOLO"))).hasSize(1);
   }
 
   @Test
@@ -63,13 +62,13 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     for (int i = 0; i < 100; i++) {
       repository.save(new Tweet(poster, "spamming @dr_frank " + i, users.subList(0, 1), null));
     }
-    assertTrue(repository.findAll(tweet.mentions.contains(users.get(1))).isEmpty());
+    assertThat(repository.findAll(tweet.mentions.contains(users.get(1)))).isEmpty();
 
-    assertEquals(100, repository.findAll(tweet.mentions.contains(users.get(0))).size());
+    assertThat(repository.findAll(tweet.mentions.contains(users.get(0)))).hasSize(100);
 
-    assertTrue(repository.findAll(tweet.mentions.any().username.eq("duplo")).isEmpty());
+    assertThat(repository.findAll(tweet.mentions.any().username.eq("duplo"))).isEmpty();
 
-    assertEquals(100, repository.findAll(tweet.mentions.any().username.eq("dr_frank")).size());
+    assertThat(repository.findAll(tweet.mentions.any().username.eq("dr_frank"))).hasSize(100);
   }
 
   @Test
@@ -84,17 +83,16 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     for (int i = 0; i < 100; i++) {
       repository.save(new Tweet(poster, "spamming @dr_frank " + i, users.subList(0, 1), null));
     }
-    assertTrue(
-        repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(1))).isEmpty());
+    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(1))))
+        .isEmpty();
 
-    assertEquals(
-        100, repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(0))).size());
+    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(0))))
+        .hasSize(100);
 
-    assertTrue(
-        repository.findAllWithHibernateQuery(tweet.mentions.any().username.eq("duplo")).isEmpty());
+    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.any().username.eq("duplo")))
+        .isEmpty();
 
-    assertEquals(
-        100,
-        repository.findAllWithHibernateQuery(tweet.mentions.any().username.eq("dr_frank")).size());
+    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.any().username.eq("dr_frank")))
+        .hasSize(100);
   }
 }

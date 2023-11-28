@@ -1,6 +1,6 @@
 package com.querydsl.jpa.support;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Template;
@@ -12,8 +12,8 @@ public class DialectSupportTest {
   @Test
   public void convert() {
     Template trim = HSQLDBTemplates.DEFAULT.getTemplate(Ops.TRIM);
-    assertEquals("trim(both from ?1)", DialectSupport.convert(trim));
+    assertThat(DialectSupport.convert(trim)).isEqualTo("trim(both from ?1)");
     Template concat = HSQLDBTemplates.DEFAULT.getTemplate(Ops.CONCAT);
-    assertEquals("?1 || ?2", DialectSupport.convert(concat));
+    assertThat(DialectSupport.convert(concat)).isEqualTo("?1 || ?2");
   }
 }

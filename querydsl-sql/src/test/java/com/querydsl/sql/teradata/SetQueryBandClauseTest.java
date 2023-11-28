@@ -1,6 +1,6 @@
 package com.querydsl.sql.teradata;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
@@ -24,7 +24,7 @@ public class SetQueryBandClauseTest {
   @Test
   public void toString_() {
     clause.set("a", "b");
-    assertEquals("set query_band='a=b;' for session", clause.toString());
+    assertThat(clause.toString()).isEqualTo("set query_band='a=b;' for session");
   }
 
   @Test
@@ -32,7 +32,7 @@ public class SetQueryBandClauseTest {
     conf.setUseLiterals(false);
     clause.set("a", "b");
     clause.forTransaction();
-    assertEquals("set query_band=? for transaction", clause.toString());
+    assertThat(clause.toString()).isEqualTo("set query_band=? for transaction");
   }
 
   @Test
@@ -40,7 +40,7 @@ public class SetQueryBandClauseTest {
     clause.forTransaction();
     clause.set("a", "b");
     clause.set("b", "c");
-    assertEquals("set query_band='a=b;b=c;' for transaction", clause.toString());
+    assertThat(clause.toString()).isEqualTo("set query_band='a=b;b=c;' for transaction");
   }
 
   @Test
@@ -48,6 +48,7 @@ public class SetQueryBandClauseTest {
     clause.forTransaction();
     clause.set("a", "b");
     clause.set("b", "c");
-    assertEquals("set query_band='a=b;b=c;' for transaction", clause.getSQL().get(0).getSQL());
+    assertThat(clause.getSQL().get(0).getSQL())
+        .isEqualTo("set query_band='a=b;b=c;' for transaction");
   }
 }

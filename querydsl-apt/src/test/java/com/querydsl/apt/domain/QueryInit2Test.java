@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
@@ -48,10 +48,11 @@ public class QueryInit2Test {
 
   @Test
   public void long_path() {
-    assertNotNull(QQueryInit2Test_Categorization.categorization.event.account.owner);
-    assertNotNull(
-        QQueryInit2Test_Categorization.categorization.event.as(QQueryInit2Test_Activation.class)
-            .account
-            .owner);
+    assertThat(QQueryInit2Test_Categorization.categorization.event.account.owner).isNotNull();
+    assertThat(
+            QQueryInit2Test_Categorization.categorization.event.as(QQueryInit2Test_Activation.class)
+                .account
+                .owner)
+        .isNotNull();
   }
 }

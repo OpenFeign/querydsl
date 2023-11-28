@@ -1,7 +1,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.SubQueryExpression;
@@ -23,7 +23,7 @@ public class ListSubQueryTest {
     Set<SubQueryExpression<Tuple>> queries = new HashSet<>();
     queries.add(query1);
     queries.add(query2);
-    assertEquals(2, queries.size());
+    assertThat(queries).hasSize(2);
   }
 
   @Test
@@ -36,6 +36,6 @@ public class ListSubQueryTest {
     Set<SubQueryExpression<Integer>> queries = new HashSet<>();
     queries.add(query1);
     queries.add(query2);
-    assertEquals(1, queries.size());
+    assertThat(queries).hasSize(1);
   }
 }

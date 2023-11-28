@@ -1,6 +1,6 @@
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.core.annotations.QueryEntity;
@@ -36,23 +36,22 @@ public class Generic2Test {
   public void resolve() {
     TypeFactory factory = new TypeFactory(Collections.<Class<? extends Annotation>>emptyList());
     Type type = factory.get(AbstractCollectionAttribute.class);
-    assertEquals(
-        "com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute",
-        type.getGenericName(false));
-    assertEquals(
-        "com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute", type.getGenericName(true));
+    assertThat(type.getGenericName(false))
+        .isEqualTo("com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute");
+    assertThat(type.getGenericName(true))
+        .isEqualTo("com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute");
   }
 
   @Test
   public void resolve2() {
     TypeFactory factory = new TypeFactory(Collections.<Class<? extends Annotation>>emptyList());
     Type type = factory.getEntityType(AbstractCollectionAttribute.class);
-    assertEquals(
-        "com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute<? extends java.util.Collection<?>>",
-        type.getGenericName(false));
-    assertEquals(
-        "com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute<? extends java.util.Collection<?>>",
-        type.getGenericName(true));
+    assertThat(type.getGenericName(false))
+        .isEqualTo(
+            "com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute<? extends java.util.Collection<?>>");
+    assertThat(type.getGenericName(true))
+        .isEqualTo(
+            "com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute<? extends java.util.Collection<?>>");
   }
 
   @Test

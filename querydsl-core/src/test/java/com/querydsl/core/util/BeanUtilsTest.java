@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -21,19 +21,19 @@ public class BeanUtilsTest {
 
   @Test
   public void capitalize() {
-    assertEquals("X", BeanUtils.capitalize("x"));
-    assertEquals("Prop", BeanUtils.capitalize("prop"));
-    assertEquals("URL", BeanUtils.capitalize("URL"));
-    assertEquals("cId", BeanUtils.capitalize("cId"));
-    assertEquals("sEPOrder", BeanUtils.capitalize("sEPOrder"));
+    assertThat(BeanUtils.capitalize("x")).isEqualTo("X");
+    assertThat(BeanUtils.capitalize("prop")).isEqualTo("Prop");
+    assertThat(BeanUtils.capitalize("URL")).isEqualTo("URL");
+    assertThat(BeanUtils.capitalize("cId")).isEqualTo("cId");
+    assertThat(BeanUtils.capitalize("sEPOrder")).isEqualTo("sEPOrder");
   }
 
   @Test
   public void uncapitalize() {
-    assertEquals("x", BeanUtils.uncapitalize("X"));
-    assertEquals("prop", BeanUtils.uncapitalize("Prop"));
-    assertEquals("URL", BeanUtils.uncapitalize("URL"));
-    assertEquals("cId", BeanUtils.uncapitalize("cId"));
-    assertEquals("sEPOrder", BeanUtils.capitalize("sEPOrder"));
+    assertThat(BeanUtils.uncapitalize("X")).isEqualTo("x");
+    assertThat(BeanUtils.uncapitalize("Prop")).isEqualTo("prop");
+    assertThat(BeanUtils.uncapitalize("URL")).isEqualTo("URL");
+    assertThat(BeanUtils.uncapitalize("cId")).isEqualTo("cId");
+    assertThat(BeanUtils.capitalize("sEPOrder")).isEqualTo("sEPOrder");
   }
 }

@@ -1,6 +1,6 @@
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.annotation.Annotation;
 import javax.annotation.Generated;
@@ -15,19 +15,19 @@ public class GeneratedAnnotationResolverTest {
     String customClass = "some.random.Class";
     Class<? extends Annotation> resolvedAnnotationClass =
         GeneratedAnnotationResolver.resolve(customClass);
-    assertNotNull(resolvedAnnotationClass);
+    assertThat(resolvedAnnotationClass).isNotNull();
   }
 
   @Test
   public void resolveNull() {
     Class<? extends Annotation> resolvedAnnotationClass = GeneratedAnnotationResolver.resolve(null);
-    assertNotNull(resolvedAnnotationClass);
+    assertThat(resolvedAnnotationClass).isNotNull();
   }
 
   @Test
   public void resolveDefault() {
     Class<? extends Annotation> resolvedAnnotationClass =
         GeneratedAnnotationResolver.resolveDefault();
-    assertNotNull(resolvedAnnotationClass);
+    assertThat(resolvedAnnotationClass).isNotNull();
   }
 }

@@ -15,8 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.cat;
 import static com.querydsl.jpa.Constants.kitten;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.jpa.domain.Cat;
@@ -108,7 +107,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
     HibernateQuery<?> query = new HibernateQuery<Void>(session);
     ScrollableResults results = query.from(cat).select(cat).scroll(ScrollMode.SCROLL_INSENSITIVE);
     while (results.next()) {
-      assertNotNull(((Object[]) results.get())[0]);
+      assertThat(((Object[]) results.get())[0]).isNotNull();
     }
     results.close();
   }
@@ -119,9 +118,9 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
 
     QCat cat = QCat.cat;
     long amount = insert(cat).set(cat.name, "Bobby").set(cat.alive, false).execute();
-    assertEquals(1, amount);
+    assertThat(amount).isEqualTo(1);
 
-    assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
+    assertThat(query().from(cat).where(cat.name.eq("Bobby")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -130,9 +129,9 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
 
     QCat cat = QCat.cat;
     long amount = insert(cat).columns(cat.name, cat.alive).values("Bobby", false).execute();
-    assertEquals(1, amount);
+    assertThat(amount).isEqualTo(1);
 
-    assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
+    assertThat(query().from(cat).where(cat.name.eq("Bobby")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -147,9 +146,9 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
             .columns(cat.name, cat.alive)
             .select(JPAExpressions.select(bob.name, bob.alive).from(bob))
             .execute();
-    assertEquals(1, amount);
+    assertThat(amount).isEqualTo(1);
 
-    assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
+    assertThat(query().from(cat).where(cat.name.eq("Bobby")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -164,9 +163,9 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
             .set(cat.name, "Bobby")
             .set(cat.alive, false)
             .execute();
-    assertEquals(1, amount);
+    assertThat(amount).isEqualTo(1);
 
-    assertEquals(0L, query().from(cat).where(cat.name.eq("Bob")).fetchCount());
+    assertThat(query().from(cat).where(cat.name.eq("Bob")).fetchCount()).isEqualTo(0L);
   }
 
   @Test
@@ -181,7 +180,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
             .set(cat.name, (String) null)
             .set(cat.alive, false)
             .execute();
-    assertEquals(1, amount);
+    assertThat(amount).isEqualTo(1);
   }
 
   @Test
@@ -191,7 +190,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
 
     QCat cat = QCat.cat;
     long amount = delete(cat).where(cat.name.eq("Bob")).execute();
-    assertEquals(1, amount);
+    assertThat(amount).isEqualTo(1);
   }
 
   @Test

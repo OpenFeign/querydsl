@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEntity;
@@ -63,7 +63,7 @@ public class ComparableTest {
 
   @Test
   public void customComparable_is_properly_handled() {
-    assertNotNull(
-        QComparableTest_CustomComparableHolder.customComparableHolder.customComparable.asc());
+    assertThat(QComparableTest_CustomComparableHolder.customComparableHolder.customComparable.asc())
+        .isNotNull();
   }
 }

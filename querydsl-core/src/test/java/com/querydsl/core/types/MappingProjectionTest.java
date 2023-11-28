@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.Pair;
 import com.querydsl.core.Tuple;
@@ -38,8 +38,8 @@ public class MappingProjectionTest {
         };
 
     Pair<String, String> pair = mapping.newInstance("1", "2");
-    assertEquals("1", pair.getFirst());
-    assertEquals("2", pair.getSecond());
+    assertThat(pair.getFirst()).isEqualTo("1");
+    assertThat(pair.getSecond()).isEqualTo("2");
   }
 
   @SuppressWarnings("serial")
@@ -53,7 +53,7 @@ public class MappingProjectionTest {
           }
         };
 
-    assertEquals("1", mapping.newInstance("1"));
+    assertThat(mapping.newInstance("1")).isEqualTo("1");
   }
 
   @Test
@@ -66,7 +66,7 @@ public class MappingProjectionTest {
           }
         };
 
-    assertEquals(1, mapping.getArgs().size());
-    assertEquals(Pair.of("1", "1"), mapping.newInstance("1"));
+    assertThat(mapping.getArgs()).hasSize(1);
+    assertThat(mapping.newInstance("1")).isEqualTo(Pair.of("1", "1"));
   }
 }

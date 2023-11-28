@@ -15,7 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.BooleanBuilder;
 import org.junit.Test;
@@ -90,14 +90,13 @@ public class BooleanOperationsTest extends AbstractQueryTest {
 
   @Test
   public void booleanBuilder_with_null_in_where() {
-    assertEquals(
-        "select cat\nfrom Cat cat", selectFrom(cat).where(new BooleanBuilder()).toString());
+    assertThat(selectFrom(cat).where(new BooleanBuilder()).toString())
+        .isEqualTo("select cat\nfrom Cat cat");
   }
 
   @Test
   public void booleanBuilder_with_null_in_having() {
-    assertEquals(
-        "select cat\nfrom Cat cat\ngroup by cat.name",
-        selectFrom(cat).groupBy(cat.name).having(new BooleanBuilder()).toString());
+    assertThat(selectFrom(cat).groupBy(cat.name).having(new BooleanBuilder()).toString())
+        .isEqualTo("select cat\nfrom Cat cat\ngroup by cat.name");
   }
 }

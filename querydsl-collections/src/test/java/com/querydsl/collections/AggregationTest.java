@@ -1,6 +1,7 @@
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 import java.util.Arrays;
 import org.junit.Before;
@@ -28,27 +29,27 @@ public class AggregationTest extends AbstractQueryTest {
 
   @Test
   public void avg() {
-    assertEquals(3.5, query.select(cat.weight.avg()).fetchOne(), 0.0);
+    assertThat(query.select(cat.weight.avg()).fetchOne()).isCloseTo(3.5, within(0.0));
   }
 
   @Test
   public void count() {
-    assertEquals(Long.valueOf(4L), query.select(cat.count()).fetchOne());
+    assertThat(query.select(cat.count()).fetchOne()).isEqualTo(Long.valueOf(4L));
   }
 
   @Test
   public void countDistinct() {
-    assertEquals(Long.valueOf(4L), query.select(cat.countDistinct()).fetchOne());
+    assertThat(query.select(cat.countDistinct()).fetchOne()).isEqualTo(Long.valueOf(4L));
   }
 
   @Test
   public void max() {
-    assertEquals(Integer.valueOf(5), query.select(cat.weight.max()).fetchOne());
+    assertThat(query.select(cat.weight.max()).fetchOne()).isEqualTo(Integer.valueOf(5));
   }
 
   @Test
   public void min() {
-    assertEquals(Integer.valueOf(2), query.select(cat.weight.min()).fetchOne());
+    assertThat(query.select(cat.weight.min()).fetchOne()).isEqualTo(Integer.valueOf(2));
   }
 
   @SuppressWarnings("unchecked")
@@ -59,7 +60,6 @@ public class AggregationTest extends AbstractQueryTest {
 
   @Test
   public void sum() {
-    Integer actual = query.select(cat.weight.sumAggregate()).fetchOne();
-    assertEquals(Integer.valueOf(14), actual);
+    assertThat(query.select(cat.weight.sumAggregate()).fetchOne()).isEqualTo(Integer.valueOf(14));
   }
 }

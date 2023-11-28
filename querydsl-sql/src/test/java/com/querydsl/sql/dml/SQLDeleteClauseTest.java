@@ -1,6 +1,6 @@
 package com.querydsl.sql.dml;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.KeyAccessorsTest.QEmployee;
 import com.querydsl.sql.SQLBindings;
@@ -35,8 +35,8 @@ public class SQLDeleteClauseTest {
     delete.where(emp1.id.eq(1));
 
     SQLBindings sql = delete.getSQL().get(0);
-    assertEquals("delete from EMPLOYEE\nwhere EMPLOYEE.ID = ?", sql.getSQL());
-    assertEquals(Collections.singletonList(1), sql.getNullFriendlyBindings());
+    assertThat(sql.getSQL()).isEqualTo("delete from EMPLOYEE\nwhere EMPLOYEE.ID = ?");
+    assertThat(sql.getNullFriendlyBindings()).isEqualTo(Collections.singletonList(1));
   }
 
   @Test
@@ -45,8 +45,8 @@ public class SQLDeleteClauseTest {
     SQLDeleteClause delete = new SQLDeleteClause(null, SQLTemplates.DEFAULT, emp1);
     delete.where(emp1.id.eq(1));
     delete.addBatch();
-    assertEquals(1, delete.getBatchCount());
+    assertThat(delete.getBatchCount()).isEqualTo(1);
     delete.clear();
-    assertEquals(0, delete.getBatchCount());
+    assertThat(delete.getBatchCount()).isEqualTo(0);
   }
 }

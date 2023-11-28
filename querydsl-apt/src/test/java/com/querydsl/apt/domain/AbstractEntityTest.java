@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
@@ -38,6 +38,6 @@ public class AbstractEntityTest {
   public void path_is_available() {
     QAbstractEntityTest_CategoryReference categoryReference =
         QAbstractEntityTest_CategoryReference.categoryReference;
-    assertNotNull(categoryReference.category.defaultChild);
+    assertThat(categoryReference.category.defaultChild).isNotNull();
   }
 }

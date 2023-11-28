@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
@@ -40,7 +40,7 @@ public class TransientTest {
 
   @Test
   public void test() {
-    assertNotNull(QTransientTest_ExampleEntity.exampleEntity.property1);
-    assertNotNull(QTransientTest_ExampleEntity.exampleEntity.property3);
+    assertThat(QTransientTest_ExampleEntity.exampleEntity.property1).isNotNull();
+    assertThat(QTransientTest_ExampleEntity.exampleEntity.property3).isNotNull();
   }
 }

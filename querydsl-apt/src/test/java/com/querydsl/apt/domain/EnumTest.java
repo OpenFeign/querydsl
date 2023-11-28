@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEntity;
@@ -40,11 +40,11 @@ public class EnumTest {
 
   @Test
   public void enum_as_comparable() {
-    assertNotNull(QEnumTest_Gender.gender.asc());
+    assertThat(QEnumTest_Gender.gender.asc()).isNotNull();
   }
 
   @Test
   public void enumOrdinal_as_comparable() {
-    assertNotNull(QEnumTest_Gender.gender.ordinal().asc());
+    assertThat(QEnumTest_Gender.gender.ordinal().asc()).isNotNull();
   }
 }

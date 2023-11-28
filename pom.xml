@@ -84,9 +84,9 @@
     <mysql.version>8.0.30</mysql.version>
     <mssql.version>12.5.0.jre8-preview</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
-    <sqlite.version>3.44.0.0</sqlite.version>
+    <sqlite.version>3.44.1.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
-    <firebird.version>5.0.2.java8</firebird.version>
+    <firebird.version>5.0.3.java8</firebird.version>
     <mongodb.version>3.12.14</mongodb.version>
 
     <!-- JPA deps -->
@@ -95,7 +95,7 @@
     <eclipselink.version>4.0.2</eclipselink.version>
     <jpa.version>3.1.0</jpa.version>
 
-    <mvn.version>3.6.0</mvn.version>
+    <mvn.version>3.9.5</mvn.version>
     <guava.version>32.1.3-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
     <mysema.lang.version>0.2.4</mysema.lang.version>
@@ -107,7 +107,7 @@
     <morphia.version>1.3.2</morphia.version>
     <jmh.version>1.37</jmh.version>
     <hamcrest.veresion>2.2</hamcrest.veresion>
-    <kotlin.version>1.9.20</kotlin.version>
+    <kotlin.version>1.9.21</kotlin.version>
     <dokka.version>1.9.10</dokka.version>
     <scala.full.version>2.11.12</scala.full.version>
 
@@ -288,6 +288,12 @@
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.24.2</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -558,6 +564,7 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptors>
@@ -662,7 +669,7 @@
       <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
-        <version>0.101.3</version>
+        <version>0.103.0</version>
         <inherited>false</inherited>
         <configuration>
           <bomTemplateUrl>file://${project.basedir}/src/config/bom.xml</bomTemplateUrl>
@@ -901,7 +908,7 @@
         </property>
       </activation>
       <build>
-        <directory>${basedir}/m2e-target</directory>
+        <directory>${project.basedir}/m2e-target</directory>
 
         <plugins>
           <plugin>
@@ -911,11 +918,25 @@
             <executions>
               <execution>
                 <goals>
-                  <goal>add-test-source</goal>
+                  <goal>add-source</goal>
                 </goals>
                 <phase>generate-sources</phase>
                 <configuration>
                   <sources>
+                    <source>target/generated-sources/annotations</source>
+                    <source>target/generated-sources/java</source>
+                  </sources>
+                </configuration>
+              </execution>
+              <execution>
+                <id>ts</id>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <phase>generate-test-sources</phase>
+                <configuration>
+                  <sources>
+                    <source>target/generated-test-sources/test-annotations</source>
                     <source>target/generated-test-sources/java</source>
                   </sources>
                 </configuration>
@@ -934,6 +955,27 @@
                         com.querydsl.core.testutil.Performance,
                         com.querydsl.core.testutil.ReportingOnly</excludedGroups>
       </properties>
+    </profile>
+    <profile>
+      <id>dev</id>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.cosium.code</groupId>
+            <artifactId>git-code-format-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>format-code</id>
+                <goals>
+                  <goal>format-code</goal>
+                </goals>
+                <phase>initialize</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 

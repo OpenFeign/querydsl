@@ -15,8 +15,7 @@ package com.querydsl.collections;
 
 import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.core.alias.Alias.alias;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
 import org.junit.Test;
@@ -33,17 +32,17 @@ public class InnerClassTest {
   @Test
   public void query() {
     Example example = alias(Example.class);
-    assertFalse(
-        CollQueryFactory.<Example>from(
-                $(example), Collections.<Example>singletonList(new Example()))
-            .where($(example.getId()).isNull())
-            .fetch()
-            .isEmpty());
-    assertTrue(
-        CollQueryFactory.<Example>from(
-                $(example), Collections.<Example>singletonList(new Example()))
-            .where($(example.getId()).isNotNull())
-            .fetch()
-            .isEmpty());
+    assertThat(
+            CollQueryFactory.<Example>from(
+                    $(example), Collections.<Example>singletonList(new Example()))
+                .where($(example.getId()).isNull())
+                .fetch())
+        .isNotEmpty();
+    assertThat(
+            CollQueryFactory.<Example>from(
+                    $(example), Collections.<Example>singletonList(new Example()))
+                .where($(example.getId()).isNotNull())
+                .fetch())
+        .isEmpty();
   }
 }

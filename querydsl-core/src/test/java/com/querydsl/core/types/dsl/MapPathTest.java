@@ -13,8 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import org.junit.Test;
@@ -26,23 +25,23 @@ public class MapPathTest {
 
   @Test
   public void get() {
-    assertNotNull(mapPath.get("X"));
-    assertNotNull(mapPath.get(ConstantImpl.create("X")));
+    assertThat(mapPath.get("X")).isNotNull();
+    assertThat(mapPath.get(ConstantImpl.create("X"))).isNotNull();
   }
 
   @Test
   public void getKeyType() {
-    assertEquals(String.class, mapPath.getKeyType());
+    assertThat(mapPath.getKeyType()).isEqualTo(String.class);
   }
 
   @Test
   public void getValueType() {
-    assertEquals(String.class, mapPath.getValueType());
+    assertThat(mapPath.getValueType()).isEqualTo(String.class);
   }
 
   @Test
   public void getParameter() {
-    assertEquals(String.class, mapPath.getParameter(0));
-    assertEquals(String.class, mapPath.getParameter(1));
+    assertThat(mapPath.getParameter(0)).isEqualTo(String.class);
+    assertThat(mapPath.getParameter(1)).isEqualTo(String.class);
   }
 }

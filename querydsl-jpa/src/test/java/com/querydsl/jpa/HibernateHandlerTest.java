@@ -1,5 +1,6 @@
 package com.querydsl.jpa;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
@@ -7,10 +8,8 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hibernate.ScrollMode.FORWARD_ONLY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.IteratorAdapter;
 import com.querydsl.core.types.FactoryExpression;
@@ -87,13 +86,13 @@ public class HibernateHandlerTest {
 
   @Test
   public void should_get_false_when_check_native_query_type() {
-    assertFalse(hibernateHandler.createNativeQueryTyped());
+    assertThat(hibernateHandler.createNativeQueryTyped()).isFalse();
   }
 
   @Test
   public void
       should_get_true_when_check_wrap_entity_projections_for_hibernate_query_syntax_by_using_curly_braces() {
-    assertTrue(hibernateHandler.wrapEntityProjections());
+    assertThat(hibernateHandler.wrapEntityProjections()).isTrue();
   }
 
   @Test
@@ -123,7 +122,7 @@ public class HibernateHandlerTest {
     expect(queryResultList.iterator()).andReturn(iterator);
     replay(query);
 
-    assertEquals(IteratorAdapter.class, hibernateHandler.iterate(query, null).getClass());
+    assertThat(hibernateHandler.iterate(query, null).getClass()).isEqualTo(IteratorAdapter.class);
   }
 
   @Test
@@ -139,8 +138,8 @@ public class HibernateHandlerTest {
     expect(queryResultList.iterator()).andReturn(iterator);
     replay(query);
 
-    assertEquals(
-        TransformingIterator.class, hibernateHandler.iterate(query, factoryExpression).getClass());
+    assertThat(hibernateHandler.iterate(query, factoryExpression).getClass())
+        .isEqualTo(TransformingIterator.class);
   }
 
   @Test
@@ -152,6 +151,6 @@ public class HibernateHandlerTest {
         .andReturn(nativeQuery);
     replay(nativeQuery);
 
-    assertTrue(hibernateHandler.transform(nativeQuery, projection));
+    assertThat(hibernateHandler.transform(nativeQuery, projection)).isTrue();
   }
 }

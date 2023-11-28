@@ -1,7 +1,8 @@
 package com.querydsl.sql.spatial;
 
 import static com.querydsl.core.Target.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
@@ -71,11 +72,10 @@ public class SpatialBase extends AbstractBaseTest {
   public void geometryType() {
     List<Tuple> results =
         query().from(shapes).select(shapes.geometry, shapes.geometry.geometryType()).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Tuple row : results) {
-      assertEquals(
-          normalize(row.get(shapes.geometry).getGeometryType().name()),
-          normalize(row.get(shapes.geometry.geometryType())));
+      assertThat(normalize(row.get(shapes.geometry.geometryType())))
+          .isEqualTo(normalize(row.get(shapes.geometry).getGeometryType().name()));
     }
   }
 
@@ -83,12 +83,11 @@ public class SpatialBase extends AbstractBaseTest {
   public void asText() {
     List<Tuple> results =
         query().from(shapes).select(shapes.geometry, shapes.geometry.asText()).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Tuple row : results) {
       if (!(row.get(shapes.geometry) instanceof MultiPoint)) {
-        assertEquals(
-            normalize(Wkt.toWkt(row.get(shapes.geometry))),
-            normalize(row.get(shapes.geometry.asText())));
+        assertThat(normalize(row.get(shapes.geometry.asText())))
+            .isEqualTo(normalize(Wkt.toWkt(row.get(shapes.geometry))));
       }
     }
   }
@@ -98,12 +97,12 @@ public class SpatialBase extends AbstractBaseTest {
   public void point_x_y() {
     PointPath<Point> point = shapes.geometry.asPoint();
     List<Tuple> results = withPoints().select(point, point.x(), point.y()).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Tuple row : results) {
-      assertEquals(
-          Double.valueOf(row.get(point).getPosition().getCoordinate(0)), row.get(point.x()));
-      assertEquals(
-          Double.valueOf(row.get(point).getPosition().getCoordinate(1)), row.get(point.y()));
+      assertThat(row.get(point.x()))
+          .isEqualTo(Double.valueOf(row.get(point).getPosition().getCoordinate(0)));
+      assertThat(row.get(point.y()))
+          .isEqualTo(Double.valueOf(row.get(point).getPosition().getCoordinate(1)));
     }
   }
 
@@ -124,68 +123,69 @@ public class SpatialBase extends AbstractBaseTest {
       Point point1 = tuple.get(shapes1.geometry.asPoint());
       Point point2 = tuple.get(shapes2.geometry.asPoint());
       Double distance = tuple.get(shapes1.geometry.distance(shapes2.geometry));
-      assertEquals(JTSGeometryOperations.Default.distance(point1, point2), distance, 0.0001);
+      assertThat(distance)
+          .isCloseTo(JTSGeometryOperations.Default.distance(point1, point2), within(0.0001));
     }
   }
 
   @Test
   public void point_instances() {
     List<Shapes> results = withPoints().select(shapes).fetch();
-    assertEquals(5, results.size());
+    assertThat(results).hasSize(5);
     for (Shapes row : results) {
-      assertNotNull(row.getId());
-      assertNotNull(row.getGeometry());
-      assertTrue(row.getGeometry() instanceof Point);
+      assertThat(row.getId()).isNotNull();
+      assertThat(row.getGeometry()).isNotNull();
+      assertThat(row.getGeometry() instanceof Point).isTrue();
     }
   }
 
   @Test
   public void lineString_instances() {
     List<Geometry> results = withLineStrings().select(shapes.geometry).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Geometry row : results) {
-      assertNotNull(row);
-      assertTrue(row instanceof LineString);
+      assertThat(row).isNotNull();
+      assertThat(row instanceof LineString).isTrue();
     }
   }
 
   @Test
   public void polygon_instances() {
     List<Geometry> results = withPolygons().select(shapes.geometry).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Geometry row : results) {
-      assertNotNull(row);
-      assertTrue(row instanceof Polygon);
+      assertThat(row).isNotNull();
+      assertThat(row instanceof Polygon).isTrue();
     }
   }
 
   @Test
   public void multiPoint_instances() {
     List<Geometry> results = withMultipoints().select(shapes.geometry).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Geometry row : results) {
-      assertNotNull(row);
-      assertTrue(row instanceof MultiPoint);
+      assertThat(row).isNotNull();
+      assertThat(row instanceof MultiPoint).isTrue();
     }
   }
 
   @Test
   public void multiLineString_instances() {
     List<Geometry> results = withMultiLineStrings().select(shapes.geometry).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Geometry row : results) {
-      assertNotNull(row);
-      assertTrue(row instanceof MultiLineString);
+      assertThat(row).isNotNull();
+      assertThat(row instanceof MultiLineString).isTrue();
     }
   }
 
   @Test
   public void multiPolygon_instances() {
     List<Geometry> results = withMultiPolygons().select(shapes.geometry).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Geometry row : results) {
-      assertNotNull(row);
-      assertTrue(row instanceof MultiPolygon);
+      assertThat(row).isNotNull();
+      assertThat(row instanceof MultiPolygon).isTrue();
     }
   }
 

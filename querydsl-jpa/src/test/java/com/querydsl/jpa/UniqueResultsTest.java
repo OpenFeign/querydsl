@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.QCat;

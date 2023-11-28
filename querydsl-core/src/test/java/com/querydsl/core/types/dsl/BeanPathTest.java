@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.types.PathMetadata;
@@ -44,22 +44,22 @@ public class BeanPathTest {
   @Test
   public void as_path() {
     SimplePath<BeanPathTest> simplePath = new SimplePath<BeanPathTest>(BeanPathTest.class, "p");
-    assertNotNull(beanPath.as(simplePath));
+    assertThat(beanPath.as(simplePath)).isNotNull();
   }
 
   @Test
   @Ignore
   public void as_class() {
     MyBeanPath otherPath = beanPath.as(MyBeanPath.class);
-    assertEquals(beanPath, otherPath);
-    assertTrue(otherPath.getMetadata().isRoot());
+    assertThat(otherPath).isEqualTo(beanPath);
+    assertThat(otherPath.getMetadata().isRoot()).isTrue();
   }
 
   @Test
   public void as_class_cached() {
     MyBeanPath otherPath = beanPath.as(MyBeanPath.class);
     //        assertEquals(beanPath, otherPath);
-    assertTrue(otherPath == beanPath.as(MyBeanPath.class));
+    assertThat(otherPath == beanPath.as(MyBeanPath.class)).isTrue();
   }
 
   @Test
@@ -69,7 +69,7 @@ public class BeanPathTest {
         new BeanPath<BeanPathTest>(
             BeanPathTest.class, PathMetadataFactory.forVariable("p"), PathInits.DEFAULT);
     MyBeanPath otherPath = beanPath.as(MyBeanPath.class);
-    assertEquals(beanPath, otherPath);
+    assertThat(otherPath).isEqualTo(beanPath);
   }
 
   @Test
@@ -79,17 +79,17 @@ public class BeanPathTest {
             BeanPathTest.class, PathMetadataFactory.forVariable("p"), PathInits.DEFAULT);
     MyBeanPath otherPath = beanPath.as(MyBeanPath.class);
     //        assertEquals(beanPath, otherPath);
-    assertTrue(otherPath == beanPath.as(MyBeanPath.class));
+    assertThat(otherPath == beanPath.as(MyBeanPath.class)).isTrue();
   }
 
   @Test
   public void createEnum() {
-    assertNotNull(beanPath.createEnum("property", PropertyType.class));
+    assertThat(beanPath.createEnum("property", PropertyType.class)).isNotNull();
   }
 
   @Test
   public void instanceOf() {
-    assertNotNull(beanPath.instanceOf(BeanPathTest.class));
+    assertThat(beanPath.instanceOf(BeanPathTest.class)).isNotNull();
   }
 
   @Test
@@ -97,10 +97,10 @@ public class BeanPathTest {
     BooleanExpression pred1 =
         beanPath.instanceOf(BeanPathTest.class).or(beanPath.instanceOf(SubClass.class));
     BooleanExpression pred2 = beanPath.instanceOfAny(BeanPathTest.class, SubClass.class);
-    assertEquals(pred1, pred2);
-    assertEquals(
-        "p instanceof class com.querydsl.core.types.dsl.BeanPathTest || "
-            + "p instanceof class com.querydsl.core.types.dsl.BeanPathTest$SubClass",
-        pred2.toString());
+    assertThat(pred2).isEqualTo(pred1);
+    assertThat(pred2.toString())
+        .isEqualTo(
+            "p instanceof class com.querydsl.core.types.dsl.BeanPathTest || "
+                + "p instanceof class com.querydsl.core.types.dsl.BeanPathTest$SubClass");
   }
 }

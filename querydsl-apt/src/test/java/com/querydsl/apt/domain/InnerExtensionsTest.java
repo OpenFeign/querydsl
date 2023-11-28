@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.apt.AbstractProcessorTest;
 import com.querydsl.apt.QuerydslAnnotationProcessor;
@@ -29,7 +29,7 @@ public class InnerExtensionsTest extends AbstractProcessorTest {
             Files.readAllBytes(
                 Paths.get("target", "innerextensions", "com", "querydsl", "QExampleEntity2.java")),
             StandardCharsets.UTF_8);
-    assertTrue(
-        qtypeContent.contains("return InnerExtensions.ExampleEntity2Extensions.isZero(this);"));
+    assertThat(qtypeContent)
+        .contains("return InnerExtensions.ExampleEntity2Extensions.isZero(this);");
   }
 }

@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.*;
 import java.util.LinkedHashMap;
@@ -89,18 +89,18 @@ public class QBeanTest {
   public void with_class_and_exprs() {
     QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, name, age, married);
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
-    assertEquals("Fritz", bean.getName());
-    assertEquals(30, bean.getAge());
-    assertEquals(true, bean.isMarried());
+    assertThat(bean.getName()).isEqualTo("Fritz");
+    assertThat(bean.getAge()).isEqualTo(30);
+    assertThat(bean.isMarried()).isEqualTo(true);
   }
 
   @Test
   public void with_path_and_exprs() {
     QBean<Entity> beanProjection = Projections.bean(entity, name, age, married);
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
-    assertEquals("Fritz", bean.getName());
-    assertEquals(30, bean.getAge());
-    assertEquals(true, bean.isMarried());
+    assertThat(bean.getName()).isEqualTo("Fritz");
+    assertThat(bean.getAge()).isEqualTo(30);
+    assertThat(bean.isMarried()).isEqualTo(true);
   }
 
   @Test
@@ -108,8 +108,8 @@ public class QBeanTest {
     QBean<Entity> beanProjection =
         Projections.bean(entity, name, age, Expressions.booleanPath("unknown"));
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
-    assertEquals("Fritz", bean.getName());
-    assertEquals(30, bean.getAge());
+    assertThat(bean.getName()).isEqualTo("Fritz");
+    assertThat(bean.getAge()).isEqualTo(30);
   }
 
   @Test
@@ -120,9 +120,9 @@ public class QBeanTest {
     bindings.put("married", married);
     QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, bindings);
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
-    assertEquals("Fritz", bean.getName());
-    assertEquals(30, bean.getAge());
-    assertEquals(true, bean.isMarried());
+    assertThat(bean.getName()).isEqualTo("Fritz");
+    assertThat(bean.getAge()).isEqualTo(30);
+    assertThat(bean.isMarried()).isEqualTo(true);
   }
 
   @Test
@@ -130,10 +130,10 @@ public class QBeanTest {
     StringPath name2 = Expressions.stringPath("name2");
     QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, name.as(name2), age, married);
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
-    assertNull(bean.getName());
-    assertEquals("Fritz", bean.getName2());
-    assertEquals(30, bean.getAge());
-    assertEquals(true, bean.isMarried());
+    assertThat(bean.getName()).isNull();
+    assertThat(bean.getName2()).isEqualTo("Fritz");
+    assertThat(bean.getAge()).isEqualTo(30);
+    assertThat(bean.isMarried()).isEqualTo(true);
   }
 
   @Test
@@ -144,7 +144,7 @@ public class QBeanTest {
     QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, bindings);
     FactoryExpression<Entity> wrappedProjection = FactoryExpressionUtils.wrap(beanProjection);
     Entity bean = wrappedProjection.newInstance(30, "Fri", "tz");
-    assertEquals("Fritz", bean.getName());
+    assertThat(bean.getName()).isEqualTo("Fritz");
   }
 
   @Test
@@ -154,7 +154,7 @@ public class QBeanTest {
             Entity.class, age, ExpressionUtils.as(new Concatenation(name, name2), "name"));
     FactoryExpression<Entity> wrappedProjection = FactoryExpressionUtils.wrap(beanProjection);
     Entity bean = wrappedProjection.newInstance(30, "Fri", "tz");
-    assertEquals("Fritz", bean.getName());
+    assertThat(bean.getName()).isEqualTo("Fritz");
   }
 
   @Test
@@ -162,23 +162,23 @@ public class QBeanTest {
     QBean<SubEntity> beanProjection =
         new QBean<SubEntity>(SubEntity.class, true, name, age, married);
     SubEntity bean = beanProjection.newInstance("Fritz", 30, true);
-    assertEquals("Fritz", bean.getName());
-    assertEquals(30, bean.getAge());
-    assertEquals(true, bean.isMarried());
+    assertThat(bean.getName()).isEqualTo("Fritz");
+    assertThat(bean.getAge()).isEqualTo(30);
+    assertThat(bean.isMarried()).isEqualTo(true);
   }
 
   @Test
   public void skipNulls() {
     QBean<Object> bean = Projections.bean(Object.class);
-    assertEquals(bean, bean);
-    assertEquals(bean.skipNulls(), bean.skipNulls());
-    assertFalse(bean.skipNulls().equals(bean));
-    assertFalse(bean.equals(bean.skipNulls()));
+    assertThat(bean).isEqualTo(bean);
+    assertThat(bean.skipNulls()).isEqualTo(bean.skipNulls());
+    assertThat(bean.skipNulls().equals(bean)).isFalse();
+    assertThat(bean.equals(bean.skipNulls())).isFalse();
   }
 
   @Test
   public void alias() {
     QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, name.as("name2"));
-    assertEquals(name.as("name2"), beanProjection.getArgs().get(0));
+    assertThat(beanProjection.getArgs().get(0)).isEqualTo(name.as("name2"));
   }
 }

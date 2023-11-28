@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.testutil.Serialization;
@@ -40,19 +40,19 @@ public class SerializationBase implements JPATest {
     query.from(cat).where(cat.name.eq("Kate")).select(cat).fetch();
 
     QueryMetadata metadata = query.getMetadata();
-    assertFalse(metadata.getJoins().isEmpty());
-    assertTrue(metadata.getWhere() != null);
-    assertTrue(metadata.getProjection() != null);
+    assertThat(metadata.getJoins()).isNotEmpty();
+    assertThat(metadata.getWhere() != null).isTrue();
+    assertThat(metadata.getProjection() != null).isTrue();
     QueryMetadata metadata2 = Serialization.serialize(metadata);
 
     // validate it
-    assertEquals(metadata.getJoins(), metadata2.getJoins());
-    assertEquals(metadata.getWhere(), metadata2.getWhere());
-    assertEquals(metadata.getProjection(), metadata2.getProjection());
+    assertThat(metadata2.getJoins()).isEqualTo(metadata.getJoins());
+    assertThat(metadata2.getWhere()).isEqualTo(metadata.getWhere());
+    assertThat(metadata2.getProjection()).isEqualTo(metadata.getProjection());
 
     // create new query
     JPAQuery<?> query2 = new JPAQuery<Void>(entityManager, metadata2);
-    assertEquals("select cat\nfrom Cat cat\nwhere cat.name = ?1", query2.toString());
+    assertThat(query2.toString()).isEqualTo("select cat\nfrom Cat cat\nwhere cat.name = ?1");
     query2.select(cat).fetch();
   }
 
@@ -61,8 +61,8 @@ public class SerializationBase implements JPATest {
     Predicate where = cat.kittens.any().name.eq("Ruth234");
     Predicate where2 = Serialization.serialize(where);
 
-    assertEquals(0, query().from(cat).where(where).fetchCount());
-    assertEquals(0, query().from(cat).where(where2).fetchCount());
+    assertThat(query().from(cat).where(where).fetchCount()).isEqualTo(0);
+    assertThat(query().from(cat).where(where2).fetchCount()).isEqualTo(0);
   }
 
   @Test
@@ -76,14 +76,14 @@ public class SerializationBase implements JPATest {
       ObjectOutputStream out = new ObjectOutputStream(fileOutputStream);
       out.writeObject(where);
       out.close();
-      assertEquals(0, query().from(cat).where(where).fetchCount());
+      assertThat(query().from(cat).where(where).fetchCount()).isEqualTo(0);
     } else {
       // deserialize predicate on second run
       FileInputStream fileInputStream = new FileInputStream(file);
       ObjectInputStream in = new ObjectInputStream(fileInputStream);
       Predicate where2 = (Predicate) in.readObject();
       in.close();
-      assertEquals(0, query().from(cat).where(where2).fetchCount());
+      assertThat(query().from(cat).where(where2).fetchCount()).isEqualTo(0);
     }
   }
 

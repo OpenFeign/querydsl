@@ -14,7 +14,8 @@
 package com.querydsl.core.group;
 
 import static com.querydsl.core.group.GroupBy.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 import com.mysema.commons.lang.Pair;
 import com.querydsl.core.ResultTransformer;
@@ -44,7 +45,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
   public void group_order() {
     Map<Integer, Group> results =
         BASIC_RESULTS.transform(groupBy(postId).as(postName, set(commentId)));
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
   }
 
   @Test
@@ -54,9 +55,9 @@ public class GroupByMapTest extends AbstractGroupByTest {
 
     Group group = results.get(1);
     Iterator<Integer> it = group.getSet(commentId).iterator();
-    assertEquals(1, it.next().intValue());
-    assertEquals(2, it.next().intValue());
-    assertEquals(3, it.next().intValue());
+    assertThat(it.next().intValue()).isEqualTo(1);
+    assertThat(it.next().intValue()).isEqualTo(2);
+    assertThat(it.next().intValue()).isEqualTo(3);
   }
 
   @Test
@@ -67,9 +68,9 @@ public class GroupByMapTest extends AbstractGroupByTest {
 
     Group group = results.get(1);
     Iterator<Integer> it = group.getSet(commentId).iterator();
-    assertEquals(3, it.next().intValue());
-    assertEquals(2, it.next().intValue());
-    assertEquals(1, it.next().intValue());
+    assertThat(it.next().intValue()).isEqualTo(3);
+    assertThat(it.next().intValue()).isEqualTo(2);
+    assertThat(it.next().intValue()).isEqualTo(1);
   }
 
   @Test
@@ -78,10 +79,11 @@ public class GroupByMapTest extends AbstractGroupByTest {
         BASIC_RESULTS.transform(groupBy(postId).as(postName, set(commentId), list(commentText)));
 
     Group group = results.get(1);
-    assertEquals(toInt(1), group.getOne(postId));
-    assertEquals("post 1", group.getOne(postName));
-    assertEquals(toSet(1, 2, 3), group.getSet(commentId));
-    assertEquals(Arrays.asList("comment 1", "comment 2", "comment 3"), group.getList(commentText));
+    assertThat(group.getOne(postId)).isEqualTo(toInt(1));
+    assertThat(group.getOne(postName)).isEqualTo("post 1");
+    assertThat(group.getSet(commentId)).isEqualTo(toSet(1, 2, 3));
+    assertThat(group.getList(commentText))
+        .isEqualTo(Arrays.asList("comment 1", "comment 2", "comment 3"));
   }
 
   @Test
@@ -90,10 +92,10 @@ public class GroupByMapTest extends AbstractGroupByTest {
         BASIC_RESULTS.transform(groupBy(postId).as(postName, set(commentId), list(commentText)));
 
     Group group = results.get(null);
-    assertNull(group.getOne(postId));
-    assertEquals("null post", group.getOne(postName));
-    assertEquals(toSet(7, 8), group.getSet(commentId));
-    assertEquals(Arrays.asList("comment 7", "comment 8"), group.getList(commentText));
+    assertThat(group.getOne(postId)).isNull();
+    assertThat(group.getOne(postName)).isEqualTo("null post");
+    assertThat(group.getSet(commentId)).isEqualTo(toSet(7, 8));
+    assertThat(group.getList(commentText)).isEqualTo(Arrays.asList("comment 7", "comment 8"));
   }
 
   @Test(expected = NoSuchElementException.class)
@@ -122,8 +124,8 @@ public class GroupByMapTest extends AbstractGroupByTest {
     Group group = results.get(1);
 
     Map<Integer, String> comments = group.getMap(commentId, commentText);
-    assertEquals(3, comments.size());
-    assertEquals("comment 2", comments.get(2));
+    assertThat(comments).hasSize(3);
+    assertThat(comments).containsEntry(2, "comment 2");
   }
 
   @Test
@@ -135,9 +137,9 @@ public class GroupByMapTest extends AbstractGroupByTest {
 
     Iterator<Map.Entry<Integer, String>> it =
         group.getMap(commentId, commentText).entrySet().iterator();
-    assertEquals(1, it.next().getKey().intValue());
-    assertEquals(2, it.next().getKey().intValue());
-    assertEquals(3, it.next().getKey().intValue());
+    assertThat(it.next().getKey().intValue()).isEqualTo(1);
+    assertThat(it.next().getKey().intValue()).isEqualTo(2);
+    assertThat(it.next().getKey().intValue()).isEqualTo(3);
   }
 
   @Test
@@ -151,9 +153,9 @@ public class GroupByMapTest extends AbstractGroupByTest {
 
     Iterator<Map.Entry<Integer, String>> it =
         group.getMap(commentId, commentText).entrySet().iterator();
-    assertEquals(3, it.next().getKey().intValue());
-    assertEquals(2, it.next().getKey().intValue());
-    assertEquals(1, it.next().getKey().intValue());
+    assertThat(it.next().getKey().intValue()).isEqualTo(3);
+    assertThat(it.next().getKey().intValue()).isEqualTo(2);
+    assertThat(it.next().getKey().intValue()).isEqualTo(1);
   }
 
   @Test
@@ -162,8 +164,8 @@ public class GroupByMapTest extends AbstractGroupByTest {
         MAP2_RESULTS.transform(groupBy(postId).as(map(commentId, commentText)));
 
     Map<Integer, String> comments = results.get(1);
-    assertEquals(3, comments.size());
-    assertEquals("comment 2", comments.get(2));
+    assertThat(comments).hasSize(3);
+    assertThat(comments).containsEntry(2, "comment 2");
   }
 
   @Test
@@ -190,7 +192,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
       Pair<Integer, String> second = pair.getSecond();
       comments.put(second.getFirst(), second.getSecond());
     }
-    assertEquals(expected.toString(), actual.toString());
+    assertThat(actual.toString()).isEqualTo(expected.toString());
   }
 
   @Test
@@ -215,7 +217,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
       Map<Integer, String> posts = Collections.singletonMap(first.getFirst(), first.getSecond());
       comments.put(posts, pair.getSecond());
     }
-    assertEquals(expected.toString(), actual.toString());
+    assertThat(actual.toString()).isEqualTo(expected.toString());
   }
 
   @Test
@@ -225,10 +227,10 @@ public class GroupByMapTest extends AbstractGroupByTest {
 
     Group group = results.get(1);
     Object[] array = group.toArray();
-    assertEquals(toInt(1), array[0]);
-    assertEquals("post 1", array[1]);
-    assertEquals(toSet(1, 2, 3), array[2]);
-    assertEquals(Arrays.asList("comment 1", "comment 2", "comment 3"), array[3]);
+    assertThat(array[0]).isEqualTo(toInt(1));
+    assertThat(array[1]).isEqualTo("post 1");
+    assertThat(array[2]).isEqualTo(toSet(1, 2, 3));
+    assertThat(array[3]).isEqualTo(Arrays.asList("comment 1", "comment 2", "comment 3"));
   }
 
   @Test
@@ -239,10 +241,10 @@ public class GroupByMapTest extends AbstractGroupByTest {
                 .as(Projections.constructor(Post.class, postId, postName, set(qComment))));
 
     Post post = results.get(1);
-    assertNotNull(post);
-    assertEquals(toInt(1), post.getId());
-    assertEquals("post 1", post.getName());
-    assertEquals(toSet(comment(1), comment(2), comment(3)), post.getComments());
+    assertThat(post).isNotNull();
+    assertThat(post.getId()).isEqualTo(toInt(1));
+    assertThat(post.getName()).isEqualTo("post 1");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(1), comment(2), comment(3)));
   }
 
   @Test
@@ -258,10 +260,10 @@ public class GroupByMapTest extends AbstractGroupByTest {
             });
 
     Post post = results.get(1);
-    assertNotNull(post);
-    assertEquals(toInt(1), post.getId());
-    assertEquals("post 1", post.getName());
-    assertEquals(toSet(comment(1), comment(2), comment(3)), post.getComments());
+    assertThat(post).isNotNull();
+    assertThat(post.getId()).isEqualTo(toInt(1));
+    assertThat(post.getName()).isEqualTo("post 1");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(1), comment(2), comment(3)));
   }
 
   @Test
@@ -272,10 +274,10 @@ public class GroupByMapTest extends AbstractGroupByTest {
                 .as(Projections.bean(Post.class, postId, postName, set(qComment).as("comments"))));
 
     Post post = results.get(1);
-    assertNotNull(post);
-    assertEquals(toInt(1), post.getId());
-    assertEquals("post 1", post.getName());
-    assertEquals(toSet(comment(1), comment(2), comment(3)), post.getComments());
+    assertThat(post).isNotNull();
+    assertThat(post.getId()).isEqualTo(toInt(1));
+    assertThat(post.getName()).isEqualTo("post 1");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(1), comment(2), comment(3)));
   }
 
   @Test
@@ -289,13 +291,13 @@ public class GroupByMapTest extends AbstractGroupByTest {
                         userName,
                         Projections.constructor(Post.class, postId, postName, set(qComment)))));
 
-    assertEquals(2, results.size());
+    assertThat(results).hasSize(2);
 
     User user = results.get("Jane");
     Post post = user.getLatestPost();
-    assertEquals(toInt(2), post.getId());
-    assertEquals("post 2", post.getName());
-    assertEquals(toSet(comment(4), comment(5)), post.getComments());
+    assertThat(post.getId()).isEqualTo(toInt(2));
+    assertThat(post.getName()).isEqualTo("post 2");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
   }
 
   @Test
@@ -310,13 +312,13 @@ public class GroupByMapTest extends AbstractGroupByTest {
                         Projections.bean(Post.class, postId, postName, set(qComment).as("comments"))
                             .as("latestPost"))));
 
-    assertEquals(2, results.size());
+    assertThat(results).hasSize(2);
 
     User user = results.get("Jane");
     Post post = user.getLatestPost();
-    assertEquals(toInt(2), post.getId());
-    assertEquals("post 2", post.getName());
-    assertEquals(toSet(comment(4), comment(5)), post.getComments());
+    assertThat(post.getId()).isEqualTo(toInt(2));
+    assertThat(post.getName()).isEqualTo("post 2");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
   }
 
   @Test
@@ -331,13 +333,13 @@ public class GroupByMapTest extends AbstractGroupByTest {
                         Projections.constructor(Post.class, postId, postName, set(qComment))
                             .as("latestPost"))));
 
-    assertEquals(2, results.size());
+    assertThat(results).hasSize(2);
 
     User user = results.get("Jane");
     Post post = user.getLatestPost();
-    assertEquals(toInt(2), post.getId());
-    assertEquals("post 2", post.getName());
-    assertEquals(toSet(comment(4), comment(5)), post.getComments());
+    assertThat(post.getId()).isEqualTo(toInt(2));
+    assertThat(post.getName()).isEqualTo("post 2");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
   }
 
   @Test
@@ -357,15 +359,15 @@ public class GroupByMapTest extends AbstractGroupByTest {
                             GroupBy.map(str, str),
                             Comparator.nullsLast(Comparator.naturalOrder())),
                         Comparator.nullsFirst(Comparator.naturalOrder())));
-    assertNotNull(resultTransformer);
+    assertThat(resultTransformer).isNotNull();
   }
 
   @Test
   public void average_with_default_math_context() {
     Map<Integer, Double> results = POSTS_W_COMMENTS_SCORE.transform(groupBy(postId).as(avg(score)));
-    assertEquals(1.5, results.get(null), 0.0);
-    assertEquals(((1.5 + 2.0 + 0.5) / 3), results.get(1), 0.0);
-    assertEquals(((1.0 + 2.0) / 2), results.get(2), 0.0);
+    assertThat(results.get(null)).isCloseTo(1.5, within(0.0));
+    assertThat(results.get(1)).isCloseTo(((1.5 + 2.0 + 0.5) / 3), within(0.0));
+    assertThat(results.get(2)).isCloseTo(((1.0 + 2.0) / 2), within(0.0));
   }
 
   @Test
@@ -373,8 +375,8 @@ public class GroupByMapTest extends AbstractGroupByTest {
     MathContext oneDigitMathContext = new MathContext(2, RoundingMode.HALF_EVEN);
     Map<Integer, Double> results =
         POSTS_W_COMMENTS_SCORE.transform(groupBy(postId).as(avg(score, oneDigitMathContext)));
-    assertEquals(1.5, results.get(null), 0.0);
-    assertEquals(1.3, results.get(1), 0.0);
-    assertEquals(1.5, results.get(2), 0.0);
+    assertThat(results.get(null)).isCloseTo(1.5, within(0.0));
+    assertThat(results.get(1)).isCloseTo(1.3, within(0.0));
+    assertThat(results.get(2)).isCloseTo(1.5, within(0.0));
   }
 }

@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.regex.Pattern;
 import org.junit.Test;
@@ -22,10 +22,10 @@ public class PatternsTest {
 
   @Test
   public void matches() {
-    assertTrue(Pattern.matches("Bob", "Bob"));
-    assertTrue(Pattern.matches("^Bob$", "Bob"));
-    assertTrue(Pattern.matches("^Bo.*", "Bob"));
-    assertTrue(Pattern.matches(".*ob$", "Bob"));
-    assertTrue(Pattern.matches(".*o.*", "Bob"));
+    assertThat(Pattern.matches("Bob", "Bob")).isTrue();
+    assertThat(Pattern.matches("^Bob$", "Bob")).isTrue();
+    assertThat(Pattern.matches("^Bo.*", "Bob")).isTrue();
+    assertThat(Pattern.matches(".*ob$", "Bob")).isTrue();
+    assertThat(Pattern.matches(".*o.*", "Bob")).isTrue();
   }
 }

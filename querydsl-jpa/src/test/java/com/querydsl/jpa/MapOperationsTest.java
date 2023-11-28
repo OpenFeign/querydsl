@@ -14,7 +14,7 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import org.junit.Test;
@@ -23,12 +23,13 @@ public class MapOperationsTest extends AbstractQueryTest {
 
   @Test
   public void map_with_groupBy() {
-    assertEquals(
-        "select show_acts_0\nfrom Show show\n  left join show.acts as show_acts_0 on key(show_acts_0) = ?1\ngroup by show_acts_0",
-        new JPAQuery<Void>()
-            .from(show)
-            .select(show.acts.get("A"))
-            .groupBy(show.acts.get("A"))
-            .toString());
+    assertThat(
+            new JPAQuery<Void>()
+                .from(show)
+                .select(show.acts.get("A"))
+                .groupBy(show.acts.get("A"))
+                .toString())
+        .isEqualTo(
+            "select show_acts_0\nfrom Show show\n  left join show.acts as show_acts_0 on key(show_acts_0) = ?1\ngroup by show_acts_0");
   }
 }

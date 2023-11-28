@@ -1,6 +1,6 @@
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
@@ -35,12 +35,12 @@ public class JPAQueryMixinTest {
     mixin.orderBy(cat.mate.name.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Arrays.asList(
-            new JoinExpression(JoinType.DEFAULT, cat),
-            new JoinExpression(JoinType.LEFTJOIN, cat.mate.as(catMate))),
-        md.getJoins());
-    assertEquals(Collections.singletonList(catMate.name.asc()), md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(
+            Arrays.asList(
+                new JoinExpression(JoinType.DEFAULT, cat),
+                new JoinExpression(JoinType.LEFTJOIN, cat.mate.as(catMate))));
+    assertThat(md.getOrderBy()).isEqualTo(Collections.singletonList(catMate.name.asc()));
   }
 
   @Test
@@ -52,15 +52,17 @@ public class JPAQueryMixinTest {
     mixin.orderBy(department.company.ceo.firstName.asc(), department.company.ceo.lastName.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Arrays.asList(
-            new JoinExpression(JoinType.DEFAULT, department),
-            new JoinExpression(JoinType.LEFTJOIN, department.company.as(departmentCompany)),
-            new JoinExpression(JoinType.LEFTJOIN, departmentCompany.ceo.as(departmentCompanyCeo))),
-        md.getJoins());
-    assertEquals(
-        Arrays.asList(departmentCompanyCeo.firstName.asc(), departmentCompanyCeo.lastName.asc()),
-        md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(
+            Arrays.asList(
+                new JoinExpression(JoinType.DEFAULT, department),
+                new JoinExpression(JoinType.LEFTJOIN, department.company.as(departmentCompany)),
+                new JoinExpression(
+                    JoinType.LEFTJOIN, departmentCompany.ceo.as(departmentCompanyCeo))));
+    assertThat(md.getOrderBy())
+        .isEqualTo(
+            Arrays.asList(
+                departmentCompanyCeo.firstName.asc(), departmentCompanyCeo.lastName.asc()));
   }
 
   @Test
@@ -71,9 +73,9 @@ public class JPAQueryMixinTest {
     mixin.orderBy(cat.mate.name.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Collections.singletonList(new JoinExpression(JoinType.DEFAULT, cat)), md.getJoins());
-    assertEquals(Collections.singletonList(cat.mate.name.asc()), md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, cat)));
+    assertThat(md.getOrderBy()).isEqualTo(Collections.singletonList(cat.mate.name.asc()));
   }
 
   @Test
@@ -84,9 +86,9 @@ public class JPAQueryMixinTest {
     mixin.orderBy(cat.mate.name.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Collections.singletonList(new JoinExpression(JoinType.DEFAULT, cat)), md.getJoins());
-    assertEquals(Collections.singletonList(cat.mate.name.asc()), md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, cat)));
+    assertThat(md.getOrderBy()).isEqualTo(Collections.singletonList(cat.mate.name.asc()));
   }
 
   @Test
@@ -97,12 +99,12 @@ public class JPAQueryMixinTest {
     mixin.orderBy(cat.mate.name.lower().asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Arrays.asList(
-            new JoinExpression(JoinType.DEFAULT, cat),
-            new JoinExpression(JoinType.LEFTJOIN, cat.mate.as(catMate))),
-        md.getJoins());
-    assertEquals(Collections.singletonList(catMate.name.lower().asc()), md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(
+            Arrays.asList(
+                new JoinExpression(JoinType.DEFAULT, cat),
+                new JoinExpression(JoinType.LEFTJOIN, cat.mate.as(catMate))));
+    assertThat(md.getOrderBy()).isEqualTo(Collections.singletonList(catMate.name.lower().asc()));
   }
 
   @Test
@@ -114,13 +116,13 @@ public class JPAQueryMixinTest {
     mixin.orderBy(cat.mate.mate.name.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Arrays.asList(
-            new JoinExpression(JoinType.DEFAULT, cat),
-            new JoinExpression(JoinType.LEFTJOIN, cat.mate.as(catMate)),
-            new JoinExpression(JoinType.LEFTJOIN, catMate.mate.as(catMateMate))),
-        md.getJoins());
-    assertEquals(Collections.singletonList(catMateMate.name.asc()), md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(
+            Arrays.asList(
+                new JoinExpression(JoinType.DEFAULT, cat),
+                new JoinExpression(JoinType.LEFTJOIN, cat.mate.as(catMate)),
+                new JoinExpression(JoinType.LEFTJOIN, catMate.mate.as(catMateMate))));
+    assertThat(md.getOrderBy()).isEqualTo(Collections.singletonList(catMateMate.name.asc()));
   }
 
   @Test
@@ -132,12 +134,12 @@ public class JPAQueryMixinTest {
     mixin.orderBy(cat.mate.name.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Arrays.asList(
-            new JoinExpression(JoinType.DEFAULT, cat),
-            new JoinExpression(JoinType.LEFTJOIN, cat.mate.as(mate))),
-        md.getJoins());
-    assertEquals(Collections.singletonList(mate.name.asc()), md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(
+            Arrays.asList(
+                new JoinExpression(JoinType.DEFAULT, cat),
+                new JoinExpression(JoinType.LEFTJOIN, cat.mate.as(mate))));
+    assertThat(md.getOrderBy()).isEqualTo(Collections.singletonList(mate.name.asc()));
   }
 
   @Test
@@ -150,13 +152,13 @@ public class JPAQueryMixinTest {
     mixin.orderBy(cat.mate.mate.name.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Arrays.asList(
-            new JoinExpression(JoinType.DEFAULT, cat),
-            new JoinExpression(JoinType.LEFTJOIN, cat.mate.as(mate)),
-            new JoinExpression(JoinType.LEFTJOIN, mate.mate.as(mateMate))),
-        md.getJoins());
-    assertEquals(Collections.singletonList(mateMate.name.asc()), md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(
+            Arrays.asList(
+                new JoinExpression(JoinType.DEFAULT, cat),
+                new JoinExpression(JoinType.LEFTJOIN, cat.mate.as(mate)),
+                new JoinExpression(JoinType.LEFTJOIN, mate.mate.as(mateMate))));
+    assertThat(md.getOrderBy()).isEqualTo(Collections.singletonList(mateMate.name.asc()));
   }
 
   @Test
@@ -167,12 +169,12 @@ public class JPAQueryMixinTest {
     mixin.orderBy(cat.kittens.any().name.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Arrays.asList(
-            new JoinExpression(JoinType.DEFAULT, cat),
-            new JoinExpression(JoinType.LEFTJOIN, cat.kittens.as(catKittens))),
-        md.getJoins());
-    assertEquals(Collections.singletonList(catKittens.name.asc()), md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(
+            Arrays.asList(
+                new JoinExpression(JoinType.DEFAULT, cat),
+                new JoinExpression(JoinType.LEFTJOIN, cat.kittens.as(catKittens))));
+    assertThat(md.getOrderBy()).isEqualTo(Collections.singletonList(catKittens.name.asc()));
   }
 
   @Test
@@ -182,10 +184,10 @@ public class JPAQueryMixinTest {
     mixin.orderBy(bookVersion.definition.name.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Collections.singletonList(new JoinExpression(JoinType.DEFAULT, bookVersion)),
-        md.getJoins());
-    assertEquals(Collections.singletonList(bookVersion.definition.name.asc()), md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, bookVersion)));
+    assertThat(md.getOrderBy())
+        .isEqualTo(Collections.singletonList(bookVersion.definition.name.asc()));
   }
 
   @SuppressWarnings("unchecked")
@@ -197,13 +199,14 @@ public class JPAQueryMixinTest {
     mixin.orderBy(article.content.article.name.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Arrays.asList(
-            new JoinExpression(JoinType.DEFAULT, article),
-            new JoinExpression(
-                JoinType.LEFTJOIN, article.content.article.as(articleContentArticle))),
-        md.getJoins());
-    assertEquals(Collections.singletonList(articleContentArticle.name.asc()), md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(
+            Arrays.asList(
+                new JoinExpression(JoinType.DEFAULT, article),
+                new JoinExpression(
+                    JoinType.LEFTJOIN, article.content.article.as(articleContentArticle))));
+    assertThat(md.getOrderBy())
+        .isEqualTo(Collections.singletonList(articleContentArticle.name.asc()));
   }
 
   @SuppressWarnings("unchecked")
@@ -215,13 +218,12 @@ public class JPAQueryMixinTest {
     mixin.orderBy(bookVersion.definition.bookMarks.any().comment.asc());
 
     QueryMetadata md = mixin.getMetadata();
-    assertEquals(
-        Collections.singletonList(new JoinExpression(JoinType.DEFAULT, bookVersion)),
-        md.getJoins());
-    assertEquals(
-        Collections.singletonList(
-            Expressions.stringPath(bookVersion.definition.bookMarks, "comment").asc()),
-        md.getOrderBy());
+    assertThat(md.getJoins())
+        .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, bookVersion)));
+    assertThat(md.getOrderBy())
+        .isEqualTo(
+            Collections.singletonList(
+                Expressions.stringPath(bookVersion.definition.bookMarks, "comment").asc()));
   }
 
   @Test
@@ -229,8 +231,7 @@ public class JPAQueryMixinTest {
     QCat cat = QCat.cat;
     mixin.from(cat);
     mixin.orderBy(cat.mate.name.asc().nullsLast());
-    assertEquals(
-        OrderSpecifier.NullHandling.NullsLast,
-        mixin.getMetadata().getOrderBy().get(0).getNullHandling());
+    assertThat(mixin.getMetadata().getOrderBy().get(0).getNullHandling())
+        .isEqualTo(OrderSpecifier.NullHandling.NullsLast);
   }
 }

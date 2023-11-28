@@ -13,7 +13,8 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.QueryMutability;
 import com.querydsl.core.testutil.Derby;
@@ -63,8 +64,8 @@ public class QueryMutabilityTest {
   public void clone_() {
     SQLQuery<?> query = new SQLQuery<Void>(DerbyTemplates.DEFAULT).from(survey);
     SQLQuery<?> query2 = query.clone(connection);
-    assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
-    assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
+    assertThat(query2.getMetadata().getJoins()).isEqualTo(query.getMetadata().getJoins());
+    assertThat(query2.getMetadata().getWhere()).isEqualTo(query.getMetadata().getWhere());
     query2.select(survey.id).fetch();
   }
 }

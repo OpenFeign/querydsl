@@ -13,7 +13,7 @@
  */
 package com.querydsl.lucene4;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;
@@ -26,10 +26,10 @@ public class QueryElementTest {
   @Ignore
   public void test() {
     QueryElement element = new QueryElement(new TermQuery(new Term("str", "text")));
-    assertEquals("str:text", element.toString());
+    assertThat(element.toString()).isEqualTo("str:text");
     // assertEquals(element.getQuery().hashCode(), element.hashCode());
 
     QueryElement element2 = new QueryElement(new TermQuery(new Term("str", "text")));
-    assertEquals(element2, element);
+    assertThat(element).isEqualTo(element2);
   }
 }

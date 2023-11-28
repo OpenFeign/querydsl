@@ -1,6 +1,6 @@
 package com.querydsl.core.support;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.FactoryExpression;
@@ -19,12 +19,12 @@ public class ConstantHidingExpressionTest {
             Expressions.FALSE.as("false"),
             Expressions.constant(1));
     FactoryExpression<Tuple> wrapped = new ConstantHidingExpression<Tuple>(tuple);
-    assertEquals(1, wrapped.getArgs().size());
+    assertThat(wrapped.getArgs()).hasSize(1);
     Tuple t = wrapped.newInstance("s");
 
-    assertEquals("s", t.get(Expressions.stringPath("str")));
-    assertEquals(Boolean.TRUE, t.get(Expressions.TRUE));
-    assertEquals(Boolean.FALSE, t.get(Expressions.FALSE.as("false")));
-    assertEquals(Integer.valueOf(1), t.get(Expressions.constant(1)));
+    assertThat(t.get(Expressions.stringPath("str"))).isEqualTo("s");
+    assertThat(t.get(Expressions.TRUE)).isEqualTo(Boolean.TRUE);
+    assertThat(t.get(Expressions.FALSE.as("false"))).isEqualTo(Boolean.FALSE);
+    assertThat(t.get(Expressions.constant(1))).isEqualTo(Integer.valueOf(1));
   }
 }

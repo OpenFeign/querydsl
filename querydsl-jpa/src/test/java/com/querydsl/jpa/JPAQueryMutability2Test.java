@@ -14,7 +14,8 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.core.types.dsl.Expressions.numberOperation;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.types.Operator;
 import com.querydsl.jpa.domain.QCat;
@@ -91,8 +92,8 @@ public class JPAQueryMutability2Test implements JPATest {
     QCat cat = QCat.cat;
     JPAQuery<?> query = query().from(cat).where(cat.name.isNotNull());
     JPAQuery<?> query2 = query.clone(entityManager);
-    assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
-    assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
+    assertThat(query2.getMetadata().getJoins()).isEqualTo(query.getMetadata().getJoins());
+    assertThat(query2.getMetadata().getWhere()).isEqualTo(query.getMetadata().getWhere());
     query2.select(cat).fetch();
   }
 

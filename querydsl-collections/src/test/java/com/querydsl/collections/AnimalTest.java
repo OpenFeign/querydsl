@@ -13,8 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.SimplePath;
 import org.junit.Test;
@@ -24,12 +23,12 @@ public class AnimalTest {
   @Test
   public void cast() {
     QCat cat = QAnimal.animal.as(QCat.class);
-    assertEquals(QAnimal.animal, cat.getMetadata().getElement());
-    assertEquals("animal", cat.toString());
+    assertThat(cat.getMetadata().getElement()).isEqualTo(QAnimal.animal);
+    assertThat(cat.toString()).isEqualTo("animal");
   }
 
   @Test
   public void date_as_simple() {
-    assertTrue(QAnimal.animal.dateAsSimple.getClass().equals(SimplePath.class));
+    assertThat(QAnimal.animal.dateAsSimple.getClass().equals(SimplePath.class)).isTrue();
   }
 }

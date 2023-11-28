@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
@@ -43,9 +43,9 @@ public class NativeSQLSerializerTest {
     md.addWhere(cat.name.in("X", "Y"));
     md.setProjection(cat.id);
     serializer.serialize(md, false);
-    assertEquals(
-        "select animal_.id\n" + "from animal_ animal_\n" + "where animal_.name in (?1, ?2)",
-        serializer.toString());
+    assertThat(serializer.toString())
+        .isEqualTo(
+            "select animal_.id\n" + "from animal_ animal_\n" + "where animal_.name in (?1, ?2)");
   }
 
   @Test
@@ -54,7 +54,7 @@ public class NativeSQLSerializerTest {
     Configuration conf = new Configuration(new MySQLTemplates());
     NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
     serializer.handle(entity.get("name"));
-    assertEquals("entity.name", serializer.toString());
+    assertThat(serializer.toString()).isEqualTo("entity.name");
   }
 
   @Test
@@ -63,6 +63,6 @@ public class NativeSQLSerializerTest {
     Configuration conf = new Configuration(new MySQLTemplates());
     NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
     serializer.handle(entity.get("firstName"));
-    assertEquals("entity.first_name", serializer.toString());
+    assertThat(serializer.toString()).isEqualTo("entity.first_name");
   }
 }

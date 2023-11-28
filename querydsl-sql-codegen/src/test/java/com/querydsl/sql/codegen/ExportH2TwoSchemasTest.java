@@ -1,7 +1,6 @@
 package com.querydsl.sql.codegen;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.H2;
 import com.querydsl.sql.Connections;
@@ -54,11 +53,11 @@ public class ExportH2TwoSchemasTest {
         new String(
             Files.readAllBytes(new File(folder.getRoot(), "test/QSurvey.java").toPath()),
             StandardCharsets.UTF_8);
-    assertTrue(contents.contains("id"));
-    assertTrue(contents.contains("name"));
-    assertTrue(contents.contains("name2"));
+    assertThat(contents).contains("id");
+    assertThat(contents).contains("name");
+    assertThat(contents).contains("name2");
 
-    assertFalse(contents.contains("id2"));
-    assertFalse(contents.contains("name3"));
+    assertThat(contents.contains("id2")).isFalse();
+    assertThat(contents.contains("name3")).isFalse();
   }
 }

@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryInit;
@@ -112,16 +112,16 @@ public class QueryInit7Test {
 
   @Test
   public void test1DefaultCase() {
-    assertNotNull(QQueryInit7Test_SourceToTarget1.sourceToTarget1.id.source);
+    assertThat(QQueryInit7Test_SourceToTarget1.sourceToTarget1.id.source).isNotNull();
   }
 
   @Test
   public void test2AtQueryInitAndEmptyClass() {
-    assertNotNull(QQueryInit7Test_SourceToTarget2.sourceToTarget2.id.source);
+    assertThat(QQueryInit7Test_SourceToTarget2.sourceToTarget2.id.source).isNotNull();
   }
 
   @Test
   public void test3AtQueryInitAndNonEmptyClass() {
-    assertNotNull(QQueryInit7Test_SourceToTarget3.sourceToTarget3.id.source);
+    assertThat(QQueryInit7Test_SourceToTarget3.sourceToTarget3.id.source).isNotNull();
   }
 }

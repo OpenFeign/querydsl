@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.hibernate.HibernateQuery;
@@ -64,11 +64,12 @@ public class JPQLQueryTest {
 
   @Test
   public void toString_() {
-    assertEquals("", new HibernateQuery<Void>().toString());
-    assertEquals("", new JPAQuery<Void>().toString());
-    assertEquals("select cat", new HibernateQuery<Void>().select(cat).toString());
-    assertEquals("select cat", new JPAQuery<Void>().select(cat).toString());
-    assertEquals("select cat\nfrom Cat cat", new HibernateQuery<Void>().from(cat).toString());
-    assertEquals("select cat\nfrom Cat cat", new JPAQuery<Void>().from(cat).toString());
+    assertThat(new HibernateQuery<Void>().toString()).isEqualTo("");
+    assertThat(new JPAQuery<Void>().toString()).isEqualTo("");
+    assertThat(new HibernateQuery<Void>().select(cat).toString()).isEqualTo("select cat");
+    assertThat(new JPAQuery<Void>().select(cat).toString()).isEqualTo("select cat");
+    assertThat(new HibernateQuery<Void>().from(cat).toString())
+        .isEqualTo("select cat\nfrom Cat cat");
+    assertThat(new JPAQuery<Void>().from(cat).toString()).isEqualTo("select cat\nfrom Cat cat");
   }
 }

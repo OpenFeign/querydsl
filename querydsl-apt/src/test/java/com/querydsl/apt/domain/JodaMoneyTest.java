@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.NumberExpression;
 import java.math.BigDecimal;
@@ -12,6 +12,6 @@ public class JodaMoneyTest {
   @Test
   public void test() {
     NumberExpression<BigDecimal> sum = QMoney.money.sum();
-    assertNotNull(sum);
+    assertThat(sum).isNotNull();
   }
 }

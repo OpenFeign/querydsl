@@ -13,7 +13,8 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
@@ -114,7 +115,7 @@ public class QTupleTest {
 
   @Test
   public void newInstance() {
-    assertNotNull(new QTuple(str1, str1).newInstance(null, null));
-    assertNull(new QTuple(str1, str1).skipNulls().newInstance(null, null));
+    assertThat(new QTuple(str1, str1).newInstance(null, null)).isNotNull();
+    assertThat(new QTuple(str1, str1).skipNulls().newInstance(null, null)).isNull();
   }
 }

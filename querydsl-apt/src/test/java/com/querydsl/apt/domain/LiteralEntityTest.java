@@ -13,8 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.EnumPath;
@@ -27,7 +26,7 @@ public class LiteralEntityTest {
 
   @Test
   public void test() {
-    assertNotNull(QLiteralEntityTest_EnumEntity.enumEntity);
-    assertEquals(EnumPath.class, QLiteralEntityTest_EnumEntity.class.getSuperclass());
+    assertThat(QLiteralEntityTest_EnumEntity.enumEntity).isNotNull();
+    assertThat(QLiteralEntityTest_EnumEntity.class.getSuperclass()).isEqualTo(EnumPath.class);
   }
 }

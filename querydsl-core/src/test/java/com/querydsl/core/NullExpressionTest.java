@@ -13,7 +13,7 @@
  */
 package com.querydsl.core;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.domain.Cat;
 import com.querydsl.core.domain.QCat;
@@ -34,7 +34,7 @@ public class NullExpressionTest {
                 QCat.cat.id,
                 QCat.cat.bodyWeight)
             .newInstance(null, 1, 2.5);
-    assertNotNull(cat);
+    assertThat(cat).isNotNull();
   }
 
   @Test(expected = ExpressionException.class)
@@ -46,6 +46,6 @@ public class NullExpressionTest {
                 QCat.cat.id,
                 QCat.cat.birthdate)
             .newInstance(null, 1, LocalDate.now());
-    assertNotNull(cat);
+    assertThat(cat).isNotNull();
   }
 }

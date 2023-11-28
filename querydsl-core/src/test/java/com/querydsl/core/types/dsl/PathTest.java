@@ -14,7 +14,7 @@
 package com.querydsl.core.types.dsl;
 
 import static com.querydsl.core.alias.Alias.$;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.annotations.QueryEntity;
@@ -76,7 +76,7 @@ public class PathTest {
     AnnotatedElement element = $(entity).getAnnotatedElement();
 
     // type
-    assertEquals(Entity.class, element);
+    assertThat(element).isEqualTo(Entity.class);
   }
 
   @Test
@@ -88,38 +88,41 @@ public class PathTest {
     AnnotatedElement property4 = $(entity.getProperty4()).getAnnotatedElement();
 
     // property (field)
-    assertEquals(Annotations.class, property1.getClass());
+    assertThat(property1.getClass()).isEqualTo(Annotations.class);
 
     // property2 (method)
-    assertEquals(Annotations.class, property2.getClass());
+    assertThat(property2.getClass()).isEqualTo(Annotations.class);
 
     // property3 (both)
-    assertEquals(Field.class, property3.getClass());
-    assertTrue(property3.isAnnotationPresent(QueryTransient.class));
-    assertNotNull(property3.getAnnotation(QueryTransient.class));
+    assertThat(property3.getClass()).isEqualTo(Field.class);
+    assertThat(property3.isAnnotationPresent(QueryTransient.class)).isTrue();
+    assertThat(property3.getAnnotation(QueryTransient.class)).isNotNull();
 
     // property 4 (superclass)
-    assertEquals(Annotations.class, property4.getClass());
+    assertThat(property4.getClass()).isEqualTo(Annotations.class);
   }
 
   @SuppressWarnings("unchecked")
   @Test
   public void equals() {
-    assertEquals(new StringPath("s"), new StringPath("s"));
-    assertEquals(new BooleanPath("b"), new BooleanPath("b"));
-    assertEquals(
-        new NumberPath<Integer>(Integer.class, "n"), new NumberPath<Integer>(Integer.class, "n"));
+    assertThat(new StringPath("s")).isEqualTo(new StringPath("s"));
+    assertThat(new BooleanPath("b")).isEqualTo(new BooleanPath("b"));
+    assertThat(new NumberPath<Integer>(Integer.class, "n"))
+        .isEqualTo(new NumberPath<Integer>(Integer.class, "n"));
 
-    assertEquals(new ArrayPath(String[].class, "p"), ExpressionUtils.path(String.class, "p"));
-    assertEquals(new BooleanPath("p"), ExpressionUtils.path(Boolean.class, "p"));
-    assertEquals(new ComparablePath(String.class, "p"), ExpressionUtils.path(String.class, "p"));
-    assertEquals(new DatePath(Date.class, "p"), ExpressionUtils.path(Date.class, "p"));
-    assertEquals(new DateTimePath(Date.class, "p"), ExpressionUtils.path(Date.class, "p"));
-    assertEquals(
-        new EnumPath(ExampleEnum.class, "p"), ExpressionUtils.path(ExampleEnum.class, "p"));
-    assertEquals(new NumberPath(Integer.class, "p"), ExpressionUtils.path(Integer.class, "p"));
-    assertEquals(new StringPath("p"), ExpressionUtils.path(String.class, "p"));
-    assertEquals(new TimePath(Time.class, "p"), ExpressionUtils.path(Time.class, "p"));
+    assertThat(ExpressionUtils.path(String.class, "p"))
+        .isEqualTo(new ArrayPath(String[].class, "p"));
+    assertThat(ExpressionUtils.path(Boolean.class, "p")).isEqualTo(new BooleanPath("p"));
+    assertThat(ExpressionUtils.path(String.class, "p"))
+        .isEqualTo(new ComparablePath(String.class, "p"));
+    assertThat(ExpressionUtils.path(Date.class, "p")).isEqualTo(new DatePath(Date.class, "p"));
+    assertThat(ExpressionUtils.path(Date.class, "p")).isEqualTo(new DateTimePath(Date.class, "p"));
+    assertThat(ExpressionUtils.path(ExampleEnum.class, "p"))
+        .isEqualTo(new EnumPath(ExampleEnum.class, "p"));
+    assertThat(ExpressionUtils.path(Integer.class, "p"))
+        .isEqualTo(new NumberPath(Integer.class, "p"));
+    assertThat(ExpressionUtils.path(String.class, "p")).isEqualTo(new StringPath("p"));
+    assertThat(ExpressionUtils.path(Time.class, "p")).isEqualTo(new TimePath(Time.class, "p"));
   }
 
   @SuppressWarnings("unchecked")
@@ -146,12 +149,13 @@ public class PathTest {
     for (Path<?> path : paths) {
       Path other =
           ExpressionUtils.path(path.getType(), PathMetadataFactory.forProperty(parent, "p"));
-      assertEquals(path.toString(), path.accept(ToStringVisitor.DEFAULT, Templates.DEFAULT));
-      assertEquals(path.hashCode(), other.hashCode());
-      assertEquals(path, other);
-      assertNotNull(path.getMetadata());
-      assertNotNull(path.getType());
-      assertEquals(parent, path.getRoot());
+      assertThat(path.accept(ToStringVisitor.DEFAULT, Templates.DEFAULT))
+          .isEqualTo(path.toString());
+      assertThat(other.hashCode()).isEqualTo(path.hashCode());
+      assertThat(other).isEqualTo(path);
+      assertThat(path.getMetadata()).isNotNull();
+      assertThat(path.getType()).isNotNull();
+      assertThat(path.getRoot()).isEqualTo(parent);
     }
   }
 
@@ -177,12 +181,12 @@ public class PathTest {
 
     for (Path<?> path : paths) {
       Path other = ExpressionUtils.path(path.getType(), "p");
-      assertEquals(path.toString(), path.accept(ToStringVisitor.DEFAULT, null));
-      assertEquals(path.hashCode(), other.hashCode());
-      assertEquals(path, other);
-      assertNotNull(path.getMetadata());
-      assertNotNull(path.getType());
-      assertEquals(path, path.getRoot());
+      assertThat(path.accept(ToStringVisitor.DEFAULT, null)).isEqualTo(path.toString());
+      assertThat(other.hashCode()).isEqualTo(path.hashCode());
+      assertThat(other).isEqualTo(path);
+      assertThat(path.getMetadata()).isNotNull();
+      assertThat(path.getType()).isNotNull();
+      assertThat(path.getRoot()).isEqualTo(path);
     }
   }
 
@@ -190,6 +194,6 @@ public class PathTest {
   public void parent_path() {
     Path<Object> person = ExpressionUtils.path(Object.class, "person");
     Path<String> name = ExpressionUtils.path(String.class, person, "name");
-    assertEquals("person.name", name.toString());
+    assertThat(name.toString()).isEqualTo("person.name");
   }
 }

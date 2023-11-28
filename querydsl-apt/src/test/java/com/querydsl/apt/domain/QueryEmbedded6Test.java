@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
@@ -31,12 +31,12 @@ public class QueryEmbedded6Test {
 
   @Test
   public void entityPathBase_is_superClass() {
-    assertEquals(EntityPathBase.class, QQueryEmbedded6Test_User.class.getSuperclass());
+    assertThat(QQueryEmbedded6Test_User.class.getSuperclass()).isEqualTo(EntityPathBase.class);
   }
 
   @Test
   public void user_list_any() {
-    assertEquals(
-        QQueryEmbedded6Test_User.class, QQueryEmbedded6Test_User.user.list.any().getClass());
+    assertThat(QQueryEmbedded6Test_User.user.list.any().getClass())
+        .isEqualTo(QQueryEmbedded6Test_User.class);
   }
 }

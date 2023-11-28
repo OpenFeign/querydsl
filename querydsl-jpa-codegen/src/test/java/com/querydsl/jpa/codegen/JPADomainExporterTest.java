@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa.codegen;
 
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -47,7 +47,7 @@ public class JPADomainExporterTest {
     exporter.execute();
 
     Set<File> files = exporter.getGeneratedFiles();
-    assertFalse(files.isEmpty());
+    assertThat(files).isNotEmpty();
 
     return files.stream()
         .sorted(Comparator.comparing(File::getName))

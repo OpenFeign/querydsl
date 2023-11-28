@@ -1,6 +1,7 @@
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.jpa.impl.JPAProvider;
 import jakarta.persistence.EntityManager;
@@ -38,7 +39,7 @@ public class JPAProviderTest {
     factory = Persistence.createEntityManagerFactory("h2", properties);
     em = factory.createEntityManager();
     System.out.println(em.getDelegate().getClass());
-    assertEquals(Hibernate5Templates.DEFAULT, JPAProvider.getTemplates(em));
+    assertThat(JPAProvider.getTemplates(em)).isEqualTo(Hibernate5Templates.DEFAULT);
   }
 
   @Test
@@ -58,7 +59,7 @@ public class JPAProviderTest {
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {EntityManager.class},
                 handler);
-    assertEquals(Hibernate5Templates.DEFAULT, JPAProvider.getTemplates(proxy));
+    assertThat(JPAProvider.getTemplates(proxy)).isEqualTo(Hibernate5Templates.DEFAULT);
   }
 
   @Test
@@ -67,7 +68,7 @@ public class JPAProviderTest {
     em = factory.createEntityManager();
     System.out.println(em.getDelegate().getClass());
     System.out.println(em.getProperties());
-    assertEquals(EclipseLinkTemplates.DEFAULT, JPAProvider.getTemplates(em));
+    assertThat(JPAProvider.getTemplates(em)).isEqualTo(EclipseLinkTemplates.DEFAULT);
   }
 
   @Test
@@ -87,7 +88,7 @@ public class JPAProviderTest {
                 Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {EntityManager.class},
                 handler);
-    assertEquals(EclipseLinkTemplates.DEFAULT, JPAProvider.getTemplates(proxy));
+    assertThat(JPAProvider.getTemplates(proxy)).isEqualTo(EclipseLinkTemplates.DEFAULT);
   }
 
   @Test
@@ -97,7 +98,7 @@ public class JPAProviderTest {
     em = factory.createEntityManager();
     System.out.println(em.getDelegate().getClass());
     System.out.println(em.getProperties());
-    assertEquals(OpenJPATemplates.DEFAULT, JPAProvider.getTemplates(em));
+    assertThat(JPAProvider.getTemplates(em)).isEqualTo(OpenJPATemplates.DEFAULT);
   }
 
   @Test
@@ -107,6 +108,6 @@ public class JPAProviderTest {
     em = factory.createEntityManager();
     System.out.println(em.getDelegate().getClass());
     System.out.println(em.getProperties());
-    assertEquals(BatooTemplates.DEFAULT, JPAProvider.getTemplates(em));
+    assertThat(JPAProvider.getTemplates(em)).isEqualTo(BatooTemplates.DEFAULT);
   }
 }

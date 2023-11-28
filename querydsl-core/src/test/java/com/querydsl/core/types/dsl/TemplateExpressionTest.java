@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.types.*;
@@ -44,13 +44,13 @@ public class TemplateExpressionTest {
             new TimeTemplate<Time>(Time.class, template, args));
     TemplateExpression<?> prev = null;
     for (TemplateExpression<?> custom : customs) {
-      assertNotNull(custom);
-      assertNotNull(custom.getTemplate());
-      assertNotNull(custom.getType());
-      assertNotNull(custom.getArgs());
-      assertEquals(custom, custom);
+      assertThat(custom).isNotNull();
+      assertThat(custom.getTemplate()).isNotNull();
+      assertThat(custom.getType()).isNotNull();
+      assertThat(custom.getArgs()).isNotNull();
+      assertThat(custom).isEqualTo(custom);
       if (prev != null) {
-        assertFalse(custom.equals(prev));
+        assertThat(custom.equals(prev)).isFalse();
       }
       // assertEquals(custom.getType().hashCode(), custom.hashCode());
       custom.accept(ToStringVisitor.DEFAULT, templates);

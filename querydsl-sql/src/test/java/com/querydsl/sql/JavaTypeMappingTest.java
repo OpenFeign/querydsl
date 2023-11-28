@@ -13,8 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.types.*;
 import java.io.FileInputStream;
@@ -28,29 +27,29 @@ public class JavaTypeMappingTest {
   @Test
   public void getType_with_subtypes() {
     typeMapping.register(new InputStreamType());
-    assertNotNull(typeMapping.getType(InputStream.class));
-    assertNotNull(typeMapping.getType(FileInputStream.class));
+    assertThat(typeMapping.getType(InputStream.class)).isNotNull();
+    assertThat(typeMapping.getType(FileInputStream.class)).isNotNull();
   }
 
   @Test
   public void getType_with_interfaces() {
-    assertEquals(BlobType.class, typeMapping.getType(DummyBlob.class).getClass());
+    assertThat(typeMapping.getType(DummyBlob.class).getClass()).isEqualTo(BlobType.class);
   }
 
   @Test
   public void getType_for_object() {
-    assertEquals(ObjectType.class, typeMapping.getType(Object.class).getClass());
+    assertThat(typeMapping.getType(Object.class).getClass()).isEqualTo(ObjectType.class);
   }
 
   @Test
   public void getType_for_primitive() {
-    assertEquals(ByteType.class, typeMapping.getType(byte.class).getClass());
-    assertEquals(ShortType.class, typeMapping.getType(short.class).getClass());
-    assertEquals(IntegerType.class, typeMapping.getType(int.class).getClass());
-    assertEquals(LongType.class, typeMapping.getType(long.class).getClass());
-    assertEquals(FloatType.class, typeMapping.getType(float.class).getClass());
-    assertEquals(DoubleType.class, typeMapping.getType(double.class).getClass());
-    assertEquals(BooleanType.class, typeMapping.getType(boolean.class).getClass());
-    assertEquals(CharacterType.class, typeMapping.getType(char.class).getClass());
+    assertThat(typeMapping.getType(byte.class).getClass()).isEqualTo(ByteType.class);
+    assertThat(typeMapping.getType(short.class).getClass()).isEqualTo(ShortType.class);
+    assertThat(typeMapping.getType(int.class).getClass()).isEqualTo(IntegerType.class);
+    assertThat(typeMapping.getType(long.class).getClass()).isEqualTo(LongType.class);
+    assertThat(typeMapping.getType(float.class).getClass()).isEqualTo(FloatType.class);
+    assertThat(typeMapping.getType(double.class).getClass()).isEqualTo(DoubleType.class);
+    assertThat(typeMapping.getType(boolean.class).getClass()).isEqualTo(BooleanType.class);
+    assertThat(typeMapping.getType(char.class).getClass()).isEqualTo(CharacterType.class);
   }
 }

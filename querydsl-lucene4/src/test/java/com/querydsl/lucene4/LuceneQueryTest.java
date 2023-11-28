@@ -13,8 +13,8 @@
  */
 package com.querydsl.lucene4;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryException;
@@ -135,30 +135,30 @@ public class LuceneQueryTest {
 
   @Test
   public void between() {
-    assertEquals(3, query.where(year.between(1950, 1990)).fetchCount());
+    assertThat(query.where(year.between(1950, 1990)).fetchCount()).isEqualTo(3);
   }
 
   @Test
   public void count_empty_where_clause() {
-    assertEquals(4, query.fetchCount());
+    assertThat(query.fetchCount()).isEqualTo(4);
   }
 
   @Test
   public void exists() {
-    assertTrue(query.where(title.eq("Jurassic Park")).fetchCount() > 0);
-    assertFalse(query.where(title.eq("Jurassic Park X")).fetchCount() > 0);
+    assertThat(query.where(title.eq("Jurassic Park")).fetchCount() > 0).isTrue();
+    assertThat(query.where(title.eq("Jurassic Park X")).fetchCount() > 0).isFalse();
   }
 
   @Test
   public void notExists() {
-    assertFalse(query.where(title.eq("Jurassic Park")).fetchCount() == 0);
-    assertTrue(query.where(title.eq("Jurassic Park X")).fetchCount() == 0);
+    assertThat(query.where(title.eq("Jurassic Park")).fetchCount() == 0).isFalse();
+    assertThat(query.where(title.eq("Jurassic Park X")).fetchCount() == 0).isTrue();
   }
 
   @Test
   public void count() {
     query.where(title.eq("Jurassic Park"));
-    assertEquals(1, query.fetchCount());
+    assertThat(query.fetchCount()).isEqualTo(1);
   }
 
   @Test(expected = QueryException.class)
@@ -176,22 +176,22 @@ public class LuceneQueryTest {
   @Test(expected = UnsupportedOperationException.class)
   public void countDistinct() {
     query.where(year.between(1900, 3000));
-    assertEquals(3, query.distinct().fetchCount());
+    assertThat(query.distinct().fetchCount()).isEqualTo(3);
   }
 
   @Test
   public void in() {
-    assertEquals(2, query.where(title.in("Jurassic Park", "Nummisuutarit")).fetchCount());
+    assertThat(query.where(title.in("Jurassic Park", "Nummisuutarit")).fetchCount()).isEqualTo(2);
   }
 
   @Test
   public void in2() {
-    assertEquals(3, query.where(year.in(1990, 1864)).fetchCount());
+    assertThat(query.where(year.in(1990, 1864)).fetchCount()).isEqualTo(3);
   }
 
   @Test
   public void in_toString() {
-    assertEquals("year:`____F year:`____H", query.where(year.in(1990, 1864)).toString());
+    assertThat(query.where(year.in(1990, 1864)).toString()).isEqualTo("year:`____F year:`____H");
   }
 
   @Test
@@ -199,16 +199,16 @@ public class LuceneQueryTest {
     query.where(year.between(1800, 2000));
     query.orderBy(year.asc());
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(4, documents.size());
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(4);
   }
 
   @Test
   public void list_not_sorted() {
     query.where(year.between(1800, 2000));
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(4, documents.size());
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(4);
   }
 
   @Test
@@ -229,18 +229,18 @@ public class LuceneQueryTest {
     IndexReader reader = IndexReader.open(idx);
     searcher = new IndexSearcher(reader);
     query = new LuceneQuery(new LuceneSerializer(true, true, Locale.ENGLISH), searcher);
-    assertEquals(3, query.fetch().size());
+    assertThat(query.fetch()).hasSize(3);
     List<Document> results = query.where(sort.startsWith("a")).orderBy(sort.asc()).fetch();
-    assertEquals(3, results.size());
-    assertEquals("aa", results.get(0).getField("sort").stringValue());
-    assertEquals("a\u00c4", results.get(1).getField("sort").stringValue());
-    assertEquals("ab", results.get(2).getField("sort").stringValue());
+    assertThat(results).hasSize(3);
+    assertThat(results.get(0).getField("sort").stringValue()).isEqualTo("aa");
+    assertThat(results.get(1).getField("sort").stringValue()).isEqualTo("a\u00c4");
+    assertThat(results.get(2).getField("sort").stringValue()).isEqualTo("ab");
 
     query = new LuceneQuery(new LuceneSerializer(true, true, new Locale("fi", "FI")), searcher);
     results = query.where(sort.startsWith("a")).orderBy(sort.asc()).fetch();
-    assertEquals("aa", results.get(0).getField("sort").stringValue());
-    assertEquals("ab", results.get(1).getField("sort").stringValue());
-    assertEquals("a\u00c4", results.get(2).getField("sort").stringValue());
+    assertThat(results.get(0).getField("sort").stringValue()).isEqualTo("aa");
+    assertThat(results.get(1).getField("sort").stringValue()).isEqualTo("ab");
+    assertThat(results.get(2).getField("sort").stringValue()).isEqualTo("a\u00c4");
   }
 
   @Test
@@ -248,8 +248,8 @@ public class LuceneQueryTest {
     query.where(year.between(1800, 2000));
     query.limit(2);
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(2, documents.size());
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(2);
   }
 
   @Test
@@ -258,8 +258,8 @@ public class LuceneQueryTest {
     query.limit(1);
     query.orderBy(year.asc());
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(1, documents.size());
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(1);
   }
 
   @Test
@@ -267,8 +267,8 @@ public class LuceneQueryTest {
     query.where(year.between(1800, 2000));
     query.offset(2);
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(2, documents.size());
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(2);
   }
 
   @Test
@@ -277,10 +277,10 @@ public class LuceneQueryTest {
     query.offset(2);
     query.orderBy(year.asc());
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(2, documents.size());
-    assertEquals("1990", documents.get(0).get("year"));
-    assertEquals("1990", documents.get(1).get("year"));
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(2);
+    assertThat(documents.get(0).get("year")).isEqualTo("1990");
+    assertThat(documents.get(1).get("year")).isEqualTo("1990");
   }
 
   @Test
@@ -289,10 +289,10 @@ public class LuceneQueryTest {
     query.restrict(new QueryModifiers(2L, 1L));
     query.orderBy(year.asc());
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(2, documents.size());
-    assertEquals("1954", documents.get(0).get("year"));
-    assertEquals("1990", documents.get(1).get("year"));
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(2);
+    assertThat(documents.get(0).get("year")).isEqualTo("1954");
+    assertThat(documents.get(1).get("year")).isEqualTo("1990");
   }
 
   @Test
@@ -300,12 +300,12 @@ public class LuceneQueryTest {
     query.where(year.between(1800, 2000));
     query.orderBy(year.asc());
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(4, documents.size());
-    assertEquals("1864", documents.get(0).get("year"));
-    assertEquals("1954", documents.get(1).get("year"));
-    assertEquals("1990", documents.get(2).get("year"));
-    assertEquals("1990", documents.get(3).get("year"));
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(4);
+    assertThat(documents.get(0).get("year")).isEqualTo("1864");
+    assertThat(documents.get(1).get("year")).isEqualTo("1954");
+    assertThat(documents.get(2).get("year")).isEqualTo("1990");
+    assertThat(documents.get(3).get("year")).isEqualTo("1990");
   }
 
   @Test
@@ -316,31 +316,31 @@ public class LuceneQueryTest {
     // query.orderBy(year.asc());
     query.sort(sort);
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(4, documents.size());
-    assertEquals("1864", documents.get(0).get("year"));
-    assertEquals("1954", documents.get(1).get("year"));
-    assertEquals("1990", documents.get(2).get("year"));
-    assertEquals("1990", documents.get(3).get("year"));
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(4);
+    assertThat(documents.get(0).get("year")).isEqualTo("1864");
+    assertThat(documents.get(1).get("year")).isEqualTo("1954");
+    assertThat(documents.get(2).get("year")).isEqualTo("1990");
+    assertThat(documents.get(3).get("year")).isEqualTo("1990");
   }
 
   @Test
   public void list_distinct_property() {
-    assertEquals(4, query.fetch().size());
-    assertEquals(3, query.distinct(year).fetch().size());
+    assertThat(query.fetch()).hasSize(4);
+    assertThat(query.distinct(year).fetch()).hasSize(3);
   }
 
   @Test
   public void list_with_filter() {
     Filter filter = new DuplicateFilter("year");
-    assertEquals(4, query.fetch().size());
-    assertEquals(3, query.filter(filter).fetch().size());
+    assertThat(query.fetch()).hasSize(4);
+    assertThat(query.filter(filter).fetch()).hasSize(3);
   }
 
   @Test
   public void count_distinct_property() {
-    assertEquals(4L, query.fetchCount());
-    assertEquals(3L, query.distinct(year).fetchCount());
+    assertThat(query.fetchCount()).isEqualTo(4L);
+    assertThat(query.distinct(year).fetchCount()).isEqualTo(3L);
   }
 
   @Test
@@ -348,12 +348,12 @@ public class LuceneQueryTest {
     query.where(year.between(1800, 2000));
     query.orderBy(year.desc());
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(4, documents.size());
-    assertEquals("1990", documents.get(0).get("year"));
-    assertEquals("1990", documents.get(1).get("year"));
-    assertEquals("1954", documents.get(2).get("year"));
-    assertEquals("1864", documents.get(3).get("year"));
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(4);
+    assertThat(documents.get(0).get("year")).isEqualTo("1990");
+    assertThat(documents.get(1).get("year")).isEqualTo("1990");
+    assertThat(documents.get(2).get("year")).isEqualTo("1954");
+    assertThat(documents.get(3).get("year")).isEqualTo("1864");
   }
 
   @Test
@@ -361,12 +361,12 @@ public class LuceneQueryTest {
     query.where(gross.between(0.0, 1000.00));
     query.orderBy(gross.desc());
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(4, documents.size());
-    assertEquals("90.0", documents.get(0).get("gross"));
-    assertEquals("89.0", documents.get(1).get("gross"));
-    assertEquals("30.5", documents.get(2).get("gross"));
-    assertEquals("10.0", documents.get(3).get("gross"));
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(4);
+    assertThat(documents.get(0).get("gross")).isEqualTo("90.0");
+    assertThat(documents.get(1).get("gross")).isEqualTo("89.0");
+    assertThat(documents.get(2).get("gross")).isEqualTo("30.5");
+    assertThat(documents.get(3).get("gross")).isEqualTo("10.0");
   }
 
   @Test
@@ -375,12 +375,12 @@ public class LuceneQueryTest {
     query.orderBy(year.desc());
     query.orderBy(title.asc());
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(4, documents.size());
-    assertEquals("1990", documents.get(0).get("year"));
-    assertEquals("1990", documents.get(1).get("year"));
-    assertEquals("Introduction to Algorithms", documents.get(0).get("title"));
-    assertEquals("Jurassic Park", documents.get(1).get("title"));
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(4);
+    assertThat(documents.get(0).get("year")).isEqualTo("1990");
+    assertThat(documents.get(1).get("year")).isEqualTo("1990");
+    assertThat(documents.get(0).get("title")).isEqualTo("Introduction to Algorithms");
+    assertThat(documents.get(1).get("title")).isEqualTo("Jurassic Park");
   }
 
   @Test
@@ -389,12 +389,12 @@ public class LuceneQueryTest {
     query.orderBy(year.desc());
     query.orderBy(title.desc());
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(4, documents.size());
-    assertEquals("1990", documents.get(0).get("year"));
-    assertEquals("1990", documents.get(1).get("year"));
-    assertEquals("Jurassic Park", documents.get(0).get("title"));
-    assertEquals("Introduction to Algorithms", documents.get(1).get("title"));
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(4);
+    assertThat(documents.get(0).get("year")).isEqualTo("1990");
+    assertThat(documents.get(1).get("year")).isEqualTo("1990");
+    assertThat(documents.get(0).get("title")).isEqualTo("Jurassic Park");
+    assertThat(documents.get(1).get("title")).isEqualTo("Introduction to Algorithms");
   }
 
   @Ignore
@@ -424,73 +424,72 @@ public class LuceneQueryTest {
 
   @Test
   public void offset() {
-    assertTrue(query.where(title.eq("Jurassic Park")).offset(30).fetch().isEmpty());
+    assertThat(query.where(title.eq("Jurassic Park")).offset(30).fetch()).isEmpty();
   }
 
   @Test
   public void load_list() {
     Document document = query.where(title.ne("")).load(title).fetch().get(0);
-    assertNotNull(document.get("title"));
-    assertNull(document.get("year"));
+    assertThat(document.get("title")).isNotNull();
+    assertThat(document.get("year")).isNull();
   }
 
   @Test
   public void load_list_fieldSelector() {
     Document document =
         query.where(title.ne("")).load(Collections.singleton("title")).fetch().get(0);
-    assertNotNull(document.get("title"));
-    assertNull(document.get("year"));
+    assertThat(document.get("title")).isNotNull();
+    assertThat(document.get("year")).isNull();
   }
 
   @Test
   public void load_singleResult() {
     Document document = query.where(title.ne("")).load(title).fetchFirst();
-    assertNotNull(document.get("title"));
-    assertNull(document.get("year"));
+    assertThat(document.get("title")).isNotNull();
+    assertThat(document.get("year")).isNull();
   }
 
   @Test
   public void load_singleResult_fieldSelector() {
     Document document = query.where(title.ne("")).load(Collections.singleton("title")).fetchFirst();
-    assertNotNull(document.get("title"));
-    assertNull(document.get("year"));
+    assertThat(document.get("title")).isNotNull();
+    assertThat(document.get("year")).isNull();
   }
 
   @Test
   public void singleResult() {
-    assertNotNull(query.where(title.ne("")).fetchFirst());
+    assertThat(query.where(title.ne("")).fetchFirst()).isNotNull();
   }
 
   @Test
   public void single_result_takes_limit() {
-    assertEquals("Jurassic Park", query.where(title.ne("")).limit(1).fetchFirst().get("title"));
+    assertThat(query.where(title.ne("")).limit(1).fetchFirst().get("title"))
+        .isEqualTo("Jurassic Park");
   }
 
   @Test
   public void single_result_considers_limit_and_actual_result_size() {
     query.where(title.startsWith("Nummi"));
     final Document document = query.limit(3).fetchFirst();
-    assertEquals("Nummisuutarit", document.get("title"));
+    assertThat(document.get("title")).isEqualTo("Nummisuutarit");
   }
 
   @Test
   public void single_result_returns_null_if_nothing_is_in_range() {
     query.where(title.startsWith("Nummi"));
-    assertNull(query.offset(10).fetchFirst());
+    assertThat(query.offset(10).fetchFirst()).isNull();
   }
 
   @Test
   public void single_result_considers_offset() {
-    assertEquals(
-        "Introduction to Algorithms",
-        query.where(title.ne("")).offset(3).fetchFirst().get("title"));
+    assertThat(query.where(title.ne("")).offset(3).fetchFirst().get("title"))
+        .isEqualTo("Introduction to Algorithms");
   }
 
   @Test
   public void single_result_considers_limit_and_offset() {
-    assertEquals(
-        "The Lord of the Rings",
-        query.where(title.ne("")).limit(1).offset(2).fetchFirst().get("title"));
+    assertThat(query.where(title.ne("")).limit(1).offset(2).fetchFirst().get("title"))
+        .isEqualTo("The Lord of the Rings");
   }
 
   @Test(expected = NonUniqueResultException.class)
@@ -500,40 +499,40 @@ public class LuceneQueryTest {
 
   @Test
   public void unique_result_takes_limit() {
-    assertEquals("Jurassic Park", query.where(title.ne("")).limit(1).fetchOne().get("title"));
+    assertThat(query.where(title.ne("")).limit(1).fetchOne().get("title"))
+        .isEqualTo("Jurassic Park");
   }
 
   @Test
   public void unique_result_considers_limit_and_actual_result_size() {
     query.where(title.startsWith("Nummi"));
     final Document document = query.limit(3).fetchOne();
-    assertEquals("Nummisuutarit", document.get("title"));
+    assertThat(document.get("title")).isEqualTo("Nummisuutarit");
   }
 
   @Test
   public void unique_result_returns_null_if_nothing_is_in_range() {
     query.where(title.startsWith("Nummi"));
-    assertNull(query.offset(10).fetchOne());
+    assertThat(query.offset(10).fetchOne()).isNull();
   }
 
   @Test
   public void unique_result_considers_offset() {
-    assertEquals(
-        "Introduction to Algorithms", query.where(title.ne("")).offset(3).fetchOne().get("title"));
+    assertThat(query.where(title.ne("")).offset(3).fetchOne().get("title"))
+        .isEqualTo("Introduction to Algorithms");
   }
 
   @Test
   public void unique_result_considers_limit_and_offset() {
-    assertEquals(
-        "The Lord of the Rings",
-        query.where(title.ne("")).limit(1).offset(2).fetchOne().get("title"));
+    assertThat(query.where(title.ne("")).limit(1).offset(2).fetchOne().get("title"))
+        .isEqualTo("The Lord of the Rings");
   }
 
   @Test
   public void uniqueResult() {
     query.where(title.startsWith("Nummi"));
     final Document document = query.fetchOne();
-    assertEquals("Nummisuutarit", document.get("title"));
+    assertThat(document.get("title")).isEqualTo("Nummisuutarit");
   }
 
   @Test
@@ -542,7 +541,7 @@ public class LuceneQueryTest {
     query.set(param, "Nummi");
     query.where(title.startsWith(param));
     final Document document = query.fetchOne();
-    assertEquals("Nummisuutarit", document.get("title"));
+    assertThat(document.get("title")).isEqualTo("Nummisuutarit");
   }
 
   @Test(expected = ParamNotSetException.class)
@@ -561,7 +560,7 @@ public class LuceneQueryTest {
   @Test
   public void uniqueResult_finds_no_results() {
     query.where(year.eq(2200));
-    assertNull(query.fetchOne());
+    assertThat(query.fetchOne()).isNull();
   }
 
   @Test
@@ -571,7 +570,7 @@ public class LuceneQueryTest {
     query = new LuceneQuery(new LuceneSerializer(true, true), searcher);
     expect(searcher.getIndexReader().maxDoc()).andReturn(0);
     replay(searcher);
-    assertNull(query.where(year.eq(3000)).fetchOne());
+    assertThat(query.where(year.eq(3000)).fetchOne()).isNull();
     verify(searcher);
   }
 
@@ -594,7 +593,7 @@ public class LuceneQueryTest {
     query = new LuceneQuery(new LuceneSerializer(true, true), searcher);
     expect(searcher.getIndexReader().maxDoc()).andReturn(0);
     replay(searcher);
-    assertEquals(0, query.where(year.eq(3000)).fetchCount());
+    assertThat(query.where(year.eq(3000)).fetchCount()).isEqualTo(0);
     verify(searcher);
   }
 
@@ -603,8 +602,8 @@ public class LuceneQueryTest {
     query.where(year.between(1900, 2000).or(title.startsWith("Jura")));
     query.orderBy(year.asc());
     final List<Document> documents = query.distinct().fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(3, documents.size());
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(3);
   }
 
   @Test
@@ -613,12 +612,12 @@ public class LuceneQueryTest {
     query.restrict(new QueryModifiers(2L, 1L));
     query.orderBy(year.asc());
     final QueryResults<Document> results = query.fetchResults();
-    assertFalse(results.isEmpty());
-    assertEquals("1954", results.getResults().get(0).get("year"));
-    assertEquals("1990", results.getResults().get(1).get("year"));
-    assertEquals(2, results.getLimit());
-    assertEquals(1, results.getOffset());
-    assertEquals(4, results.getTotal());
+    assertThat(results.isEmpty()).isFalse();
+    assertThat(results.getResults().get(0).get("year")).isEqualTo("1954");
+    assertThat(results.getResults().get(1).get("year")).isEqualTo("1990");
+    assertThat(results.getLimit()).isEqualTo(2);
+    assertThat(results.getOffset()).isEqualTo(1);
+    assertThat(results.getTotal()).isEqualTo(4);
   }
 
   @Test(expected = UnsupportedOperationException.class)
@@ -627,18 +626,18 @@ public class LuceneQueryTest {
     query.restrict(new QueryModifiers(1L, 1L));
     query.orderBy(year.asc());
     final QueryResults<Document> results = query.distinct().fetchResults();
-    assertFalse(results.isEmpty());
-    assertEquals("1954", results.getResults().get(0).get("year"));
-    assertEquals(1, results.getLimit());
-    assertEquals(1, results.getOffset());
-    assertEquals(4, results.getTotal());
+    assertThat(results.isEmpty()).isFalse();
+    assertThat(results.getResults().get(0).get("year")).isEqualTo("1954");
+    assertThat(results.getLimit()).isEqualTo(1);
+    assertThat(results.getOffset()).isEqualTo(1);
+    assertThat(results.getTotal()).isEqualTo(4);
   }
 
   @Test
   public void list_all() {
     final List<Document> results =
         query.where(title.like("*")).orderBy(title.asc(), year.desc()).fetch();
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -692,8 +691,8 @@ public class LuceneQueryTest {
     query.offset(0);
     query.orderBy(year.asc());
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(4, documents.size());
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(4);
   }
 
   @Test
@@ -701,8 +700,8 @@ public class LuceneQueryTest {
     query.where(year.between(1800, 2000));
     query.offset(0);
     final List<Document> documents = query.fetch();
-    assertFalse(documents.isEmpty());
-    assertEquals(4, documents.size());
+    assertThat(documents).isNotEmpty();
+    assertThat(documents).hasSize(4);
   }
 
   @Test
@@ -714,12 +713,12 @@ public class LuceneQueryTest {
       iterator.next();
       ++count;
     }
-    assertEquals(4, count);
+    assertThat(count).isEqualTo(4);
   }
 
   @Test
   public void all_by_excluding_where() {
-    assertEquals(4, query.fetch().size());
+    assertThat(query.fetch()).hasSize(4);
   }
 
   @Test
@@ -731,7 +730,7 @@ public class LuceneQueryTest {
     IndexReader reader = IndexReader.open(idx);
     searcher = new IndexSearcher(reader);
     query = new LuceneQuery(new LuceneSerializer(true, true), searcher);
-    assertTrue(query.fetch().isEmpty());
+    assertThat(query.fetch()).isEmpty();
   }
 
   @Test(expected = QueryException.class)
@@ -742,6 +741,6 @@ public class LuceneQueryTest {
 
   @Test
   public void limit_max_value() {
-    assertEquals(4, query.limit(Long.MAX_VALUE).fetch().size());
+    assertThat(query.limit(Long.MAX_VALUE).fetch()).hasSize(4);
   }
 }

@@ -1,6 +1,6 @@
 package com.querydsl.codegen.utils.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -8,25 +8,23 @@ public class TypeExtendsTest {
 
   @Test
   public void GetVarName() {
-    assertEquals("var", new TypeExtends("var", Types.COLLECTION).getVarName());
+    assertThat(new TypeExtends("var", Types.COLLECTION).getVarName()).isEqualTo("var");
   }
 
   @Test
   public void GetGenericName() {
-    assertEquals(
-        "? extends java.util.Collection<java.lang.Object>",
-        new TypeExtends(Types.COLLECTION).getGenericName(false));
+    assertThat(new TypeExtends(Types.COLLECTION).getGenericName(false))
+        .isEqualTo("? extends java.util.Collection<java.lang.Object>");
   }
 
   @Test
   public void GetGenericName_As_ArgType() {
-    assertEquals(
-        "java.util.Collection<java.lang.Object>",
-        new TypeExtends(Types.COLLECTION).getGenericName(true));
+    assertThat(new TypeExtends(Types.COLLECTION).getGenericName(true))
+        .isEqualTo("java.util.Collection<java.lang.Object>");
   }
 
   @Test
   public void GetGenericName_With_Object() {
-    assertEquals("?", new TypeExtends(Types.OBJECT).getGenericName(false));
+    assertThat(new TypeExtends(Types.OBJECT).getGenericName(false)).isEqualTo("?");
   }
 }

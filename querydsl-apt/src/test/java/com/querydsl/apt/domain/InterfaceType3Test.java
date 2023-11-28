@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import org.junit.Test;
@@ -24,8 +24,8 @@ public class InterfaceType3Test {
 
   @Test
   public void test() {
-    assertNotNull(QInterfaceType3Test_C.c1.a);
-    assertNotNull(QInterfaceType3Test_C.c1.b);
-    assertNotNull(QInterfaceType3Test_C.c1.c);
+    assertThat(QInterfaceType3Test_C.c1.a).isNotNull();
+    assertThat(QInterfaceType3Test_C.c1.b).isNotNull();
+    assertThat(QInterfaceType3Test_C.c1.c).isNotNull();
   }
 }

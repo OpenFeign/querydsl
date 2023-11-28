@@ -15,7 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.cat;
 import static com.querydsl.jpa.Constants.cat1;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -23,12 +23,14 @@ public class JoinFlagsTest extends AbstractQueryTest {
   @Test
   public void fetch() {
     QueryHelper query = query().from(cat).innerJoin(cat.mate, cat1).fetchJoin();
-    assertEquals("select cat\nfrom Cat cat\n  inner join fetch cat.mate as cat1", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("select cat\nfrom Cat cat\n  inner join fetch cat.mate as cat1");
   }
 
   @Test
   public void rightJoin() {
     QueryHelper query = query().from(cat).rightJoin(cat.mate, cat1);
-    assertEquals("select cat\nfrom Cat cat\n  right join cat.mate as cat1", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("select cat\nfrom Cat cat\n  right join cat.mate as cat1");
   }
 }

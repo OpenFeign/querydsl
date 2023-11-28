@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.jpa.domain.*;
 import org.junit.Test;
@@ -25,9 +25,9 @@ public class TypeCastTest {
     QInheritedProperties subClass = QInheritedProperties.inheritedProperties;
     QSuperclass superClass = subClass._super;
 
-    assertEquals(InheritedProperties.class, superClass.getType());
+    assertThat(superClass.getType()).isEqualTo(InheritedProperties.class);
     //        assertEquals(InheritedProperties.class.getSimpleName(), superClass.getEntityName());
-    assertEquals("inheritedProperties", superClass.toString());
+    assertThat(superClass.toString()).isEqualTo("inheritedProperties");
   }
 
   //    @Test
@@ -45,9 +45,9 @@ public class TypeCastTest {
     QCat cat = QCat.cat;
     QAnimal animal = new QAnimal(cat);
 
-    assertEquals(Cat.class, animal.getType());
+    assertThat(animal.getType()).isEqualTo(Cat.class);
     //        assertEquals(Cat.class.getSimpleName(), animal.getEntityName());
-    assertEquals("cat", animal.toString());
+    assertThat(animal.toString()).isEqualTo("cat");
   }
 
   @Test
@@ -55,9 +55,9 @@ public class TypeCastTest {
     QCat cat = QCat.cat;
     QAnimal animal = new QAnimal(cat.getMetadata());
 
-    assertEquals(Animal.class, animal.getType());
+    assertThat(animal.getType()).isEqualTo(Animal.class);
     //        assertEquals(Animal.class.getSimpleName(), animal.getEntityName());
-    assertEquals("cat", animal.toString());
+    assertThat(animal.toString()).isEqualTo("cat");
   }
 
   @Test
@@ -65,8 +65,8 @@ public class TypeCastTest {
     QAnimal animal = QAnimal.animal;
     QCat cat = new QCat(animal.getMetadata());
 
-    assertEquals(Cat.class, cat.getType());
+    assertThat(cat.getType()).isEqualTo(Cat.class);
     //        assertEquals(Cat.class.getSimpleName(), cat.getEntityName());
-    assertEquals("animal", cat.toString());
+    assertThat(cat.toString()).isEqualTo("animal");
   }
 }

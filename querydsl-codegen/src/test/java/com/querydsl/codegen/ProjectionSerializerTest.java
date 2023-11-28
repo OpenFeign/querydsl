@@ -13,9 +13,9 @@
  */
 package com.querydsl.codegen;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.Constructor;
@@ -54,9 +54,9 @@ public class ProjectionSerializerTest {
     Writer writer = new StringWriter();
     ProjectionSerializer serializer = new DefaultProjectionSerializer(new JavaTypeMappings());
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("Expression<String> firstName"));
-    assertTrue(writer.toString().contains("Expression<String> lastName"));
-    assertTrue(writer.toString().contains("Expression<Integer> age"));
+    assertThat(writer.toString()).contains("Expression<String> firstName");
+    assertThat(writer.toString()).contains("Expression<String> lastName");
+    assertThat(writer.toString()).contains("Expression<Integer> age");
   }
 
   @Test
