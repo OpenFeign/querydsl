@@ -23,10 +23,6 @@ import static com.querydsl.core.Target.TERADATA;
 import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import com.mysema.commons.lang.Pair;
 import com.querydsl.core.Fetchable;
@@ -2046,39 +2042,41 @@ public abstract class AbstractJPATest {
     double val = query().from(cat).select(cat.floatProperty.sumDouble()).fetchFirst();
     DoubleProjection projection =
         query().from(cat).select(new QDoubleProjection(cat.floatProperty.sumDouble())).fetchFirst();
-    assertEquals(val, projection.val, 0.001);
+    assertThat(projection.val).isCloseTo(val, within(0.001));
   }
 
   @Test
   public void sum_as_double2() {
     double val = query().from(cat).select(cat.floatProperty.sumDouble().negate()).fetchFirst();
-    assertTrue(val < 0);
+    assertThat(val < 0).isTrue();
   }
 
   @Test
   public void sum_coalesce() {
     long val = query().from(cat).select(cat.weight.sumLong().coalesce(0L)).fetchFirst();
-    assertEquals(0, val);
+    assertThat(val).isEqualTo(0);
   }
 
   @Test
   public void sum_noRows_double() {
-    assertNull(
-        query()
-            .from(cat)
-            .where(cat.name.eq(UUID.randomUUID().toString()))
-            .select(cat.bodyWeight.sumDouble())
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(cat)
+                .where(cat.name.eq(UUID.randomUUID().toString()))
+                .select(cat.bodyWeight.sumDouble())
+                .fetchFirst())
+        .isNull();
   }
 
   @Test
   public void sum_noRows_float() {
-    assertNull(
-        query()
-            .from(cat)
-            .where(cat.name.eq(UUID.randomUUID().toString()))
-            .select(cat.floatProperty.sumDouble())
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(cat)
+                .where(cat.name.eq(UUID.randomUUID().toString()))
+                .select(cat.floatProperty.sumDouble())
+                .fetchFirst())
+        .isNull();
   }
 
   @Test

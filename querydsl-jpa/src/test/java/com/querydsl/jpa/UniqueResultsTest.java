@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.QCat;
@@ -36,35 +36,36 @@ public class UniqueResultsTest implements HibernateTest {
     session.save(new Cat("Bob2", 2));
     session.save(new Cat("Bob3", 3));
 
-    assertEquals(
-        Integer.valueOf(1),
-        query()
-            .from(QCat.cat)
-            .orderBy(QCat.cat.name.asc())
-            .offset(0)
-            .limit(1)
-            .select(QCat.cat.id)
-            .fetchOne());
-    assertEquals(
-        Integer.valueOf(2),
-        query()
-            .from(QCat.cat)
-            .orderBy(QCat.cat.name.asc())
-            .offset(1)
-            .limit(1)
-            .select(QCat.cat.id)
-            .fetchOne());
-    assertEquals(
-        Integer.valueOf(3),
-        query()
-            .from(QCat.cat)
-            .orderBy(QCat.cat.name.asc())
-            .offset(2)
-            .limit(1)
-            .select(QCat.cat.id)
-            .fetchOne());
+    assertThat(
+            query()
+                .from(QCat.cat)
+                .orderBy(QCat.cat.name.asc())
+                .offset(0)
+                .limit(1)
+                .select(QCat.cat.id)
+                .fetchOne())
+        .isEqualTo(Integer.valueOf(1));
+    assertThat(
+            query()
+                .from(QCat.cat)
+                .orderBy(QCat.cat.name.asc())
+                .offset(1)
+                .limit(1)
+                .select(QCat.cat.id)
+                .fetchOne())
+        .isEqualTo(Integer.valueOf(2));
+    assertThat(
+            query()
+                .from(QCat.cat)
+                .orderBy(QCat.cat.name.asc())
+                .offset(2)
+                .limit(1)
+                .select(QCat.cat.id)
+                .fetchOne())
+        .isEqualTo(Integer.valueOf(3));
 
-    assertEquals(Long.valueOf(3), query().from(QCat.cat).select(QCat.cat.count()).fetchOne());
+    assertThat(query().from(QCat.cat).select(QCat.cat.count()).fetchOne())
+        .isEqualTo(Long.valueOf(3));
   }
 
   private HibernateQuery<?> query() {

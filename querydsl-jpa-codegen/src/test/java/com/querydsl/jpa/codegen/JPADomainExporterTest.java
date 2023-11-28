@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Properties;
 import java.util.Set;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -71,6 +70,6 @@ public class JPADomainExporterTest {
     Path origFile = origRoot.toPath().resolve(relativeFile);
     String reference = new String(Files.readAllBytes(origFile), StandardCharsets.UTF_8);
     String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-    Assert.assertEquals("Mismatch for " + file.getName() + "\n", reference, content);
+    assertThat(content).as("Mismatch for " + file.getName() + "\n").isEqualTo(reference);
   }
 }
