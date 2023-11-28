@@ -31,8 +31,11 @@ import java.sql.*;
 import java.util.Set;
 import javax.tools.JavaCompiler;
 import javax.validation.constraints.NotNull;
-import org.junit.*;
-import org.junit.rules.TemporaryFolder;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class MetaDataExporterTest {
 
@@ -48,7 +51,7 @@ public class MetaDataExporterTest {
 
   private JavaCompiler compiler = new SimpleCompiler();
 
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir public File folder;
 
   @BeforeClass
   public static void setUpClass() throws ClassNotFoundException, SQLException {
@@ -139,14 +142,14 @@ public class MetaDataExporterTest {
 
   @Test
   public void normalSettings_repetition() throws SQLException {
-    test("Q", "", "", "", defaultNaming, folder.getRoot(), false, false, false);
+    test("Q", "", "", "", defaultNaming, folder, false, false, false);
 
-    File file = new File(folder.getRoot(), "test/QEmployee.java");
+    File file = new File(folder, "test/QEmployee.java");
     long lastModified = file.lastModified();
     assertThat(file).exists();
 
     clean = false;
-    test("Q", "", "", "", defaultNaming, folder.getRoot(), false, false, false);
+    test("Q", "", "", "", defaultNaming, folder, false, false, false);
     assertThat(file.lastModified()).isEqualTo(lastModified);
   }
 
@@ -157,14 +160,14 @@ public class MetaDataExporterTest {
     exporter.setSchemaPattern("PUBLIC");
     exporter.setNamePrefix("Q");
     exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.setNamingStrategy(new DefaultNamingStrategy());
     exporter.setBeanSerializer(new BeanSerializer());
     exporter.setBeanPackageName("test2");
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QDateTest.java")).exists();
-    assertThat(new File(folder.getRoot(), "test2/DateTest.java")).exists();
+    assertThat(new File(folder, "test/QDateTest.java")).exists();
+    assertThat(new File(folder, "test2/DateTest.java")).exists();
   }
 
   @Test
@@ -181,14 +184,13 @@ public class MetaDataExporterTest {
     exporter.setNamePrefix("Q");
     exporter.setPackageName("test");
     exporter.setTableNamePattern("FOO");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.setBeanSerializer(new BeanSerializer());
     exporter.setValidationAnnotations(true);
     exporter.export(metadata);
 
-    URLClassLoader classLoader =
-        URLClassLoader.newInstance(new URL[] {folder.getRoot().toURI().toURL()});
-    compiler.run(null, null, null, folder.getRoot().getAbsoluteFile() + "/test/Foo.java");
+    URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] {folder.toURI().toURL()});
+    compiler.run(null, null, null, folder.getAbsoluteFile() + "/test/Foo.java");
     Class<?> cls = Class.forName("test.Foo", true, classLoader);
     assertThat(
             ReflectionUtils.getAnnotatedElement(cls, "id", Integer.class)
@@ -216,14 +218,13 @@ public class MetaDataExporterTest {
     exporter.setNamePrefix("Q");
     exporter.setPackageName("test");
     exporter.setTableNamePattern("BAR");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.setBeanSerializer(new BeanSerializer());
     exporter.setValidationAnnotations(true);
     exporter.export(metadata);
 
-    URLClassLoader classLoader =
-        URLClassLoader.newInstance(new URL[] {folder.getRoot().toURI().toURL()});
-    compiler.run(null, null, null, folder.getRoot().getAbsoluteFile() + "/test/Bar.java");
+    URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] {folder.toURI().toURL()});
+    compiler.run(null, null, null, folder.getAbsoluteFile() + "/test/Bar.java");
     Class<?> cls = Class.forName("test.Bar", true, classLoader);
     assertThat(
             ReflectionUtils.getAnnotatedElement(cls, "id", Integer.class)
@@ -242,10 +243,10 @@ public class MetaDataExporterTest {
     MetaDataExporter exporter = new MetaDataExporter();
     exporter.setSchemaPattern("PUBLIC");
     exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QDateTest.java")).exists();
+    assertThat(new File(folder, "test/QDateTest.java")).exists();
   }
 
   @Test
@@ -253,10 +254,10 @@ public class MetaDataExporterTest {
     MetaDataExporter exporter = new MetaDataExporter();
     exporter.setSchemaPattern("PUBLIC2,PUBLIC");
     exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QDateTest.java")).exists();
+    assertThat(new File(folder, "test/QDateTest.java")).exists();
   }
 
   @Test
@@ -265,13 +266,13 @@ public class MetaDataExporterTest {
     exporter.setSchemaPattern("PUBLIC2,PUBLIC");
     exporter.setTableNamePattern("RESERVED,UNDERSCORE,BEANGEN1");
     exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QBeangen1.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QReserved.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QUnderscore.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QDefinstance.java").exists()).isFalse();
+    assertThat(new File(folder, "test/QBeangen1.java")).exists();
+    assertThat(new File(folder, "test/QReserved.java")).exists();
+    assertThat(new File(folder, "test/QUnderscore.java")).exists();
+    assertThat(new File(folder, "test/QDefinstance.java").exists()).isFalse();
   }
 
   @Test
@@ -280,13 +281,13 @@ public class MetaDataExporterTest {
     exporter.setSchemaPattern("PUBLIC");
     exporter.setTableNamePattern("RESERVED,UNDERSCORE,BEANGEN1");
     exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QBeangen1.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QReserved.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QUnderscore.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QDefinstance.java").exists()).isFalse();
+    assertThat(new File(folder, "test/QBeangen1.java")).exists();
+    assertThat(new File(folder, "test/QReserved.java")).exists();
+    assertThat(new File(folder, "test/QUnderscore.java")).exists();
+    assertThat(new File(folder, "test/QDefinstance.java").exists()).isFalse();
   }
 
   @Test(expected = IllegalStateException.class)
@@ -295,13 +296,13 @@ public class MetaDataExporterTest {
     exporter.setSchemaPattern("PUBLIC");
     exporter.setTableNamePattern("%,%");
     exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QBeangen1.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QReserved.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QUnderscore.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QDefinstance.java").exists()).isFalse();
+    assertThat(new File(folder, "test/QBeangen1.java")).exists();
+    assertThat(new File(folder, "test/QReserved.java")).exists();
+    assertThat(new File(folder, "test/QUnderscore.java")).exists();
+    assertThat(new File(folder, "test/QDefinstance.java").exists()).isFalse();
   }
 
   @Test
@@ -311,10 +312,10 @@ public class MetaDataExporterTest {
     exporter.setPackageName("test");
     exporter.setNamePrefix("");
     exporter.setNameSuffix("Type");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTestType.java")).exists();
+    assertThat(new File(folder, "test/DateTestType.java")).exists();
   }
 
   @Test
@@ -324,11 +325,11 @@ public class MetaDataExporterTest {
     exporter.setPackageName("test");
     exporter.setNamePrefix("");
     exporter.setNameSuffix("Type");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.setExportForeignKeys(false);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTestType.java")).exists();
+    assertThat(new File(folder, "test/DateTestType.java")).exists();
   }
 
   @Test
@@ -338,11 +339,11 @@ public class MetaDataExporterTest {
     exporter.setPackageName("test");
     exporter.setNamePrefix("");
     exporter.setNameSuffix("Type");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.setExportInverseForeignKeys(false);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTestType.java")).exists();
+    assertThat(new File(folder, "test/DateTestType.java")).exists();
   }
 
   @Test
@@ -353,11 +354,11 @@ public class MetaDataExporterTest {
     exporter.setNamePrefix("");
     exporter.setBeanPrefix("Bean");
     exporter.setBeanSerializer(new BeanSerializer());
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTest.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/BeanDateTest.java")).exists();
+    assertThat(new File(folder, "test/DateTest.java")).exists();
+    assertThat(new File(folder, "test/BeanDateTest.java")).exists();
   }
 
   @Test
@@ -368,11 +369,11 @@ public class MetaDataExporterTest {
     exporter.setNamePrefix("");
     exporter.setBeanSuffix("Bean");
     exporter.setBeanSerializer(new BeanSerializer());
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTest.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/DateTestBean.java")).exists();
+    assertThat(new File(folder, "test/DateTest.java")).exists();
+    assertThat(new File(folder, "test/DateTestBean.java")).exists();
   }
 
   @Test
@@ -383,12 +384,12 @@ public class MetaDataExporterTest {
     exporter.setNamePrefix("");
     exporter.setBeanSuffix("Bean");
     exporter.setBeanSerializer(new BeanSerializer());
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setBeansTargetFolder(folder.newFolder("beans"));
+    exporter.setTargetFolder(folder);
+    exporter.setBeansTargetFolder(newFolder(folder, "beans"));
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTest.java")).exists();
-    assertThat(new File(folder.getRoot(), "beans/test/DateTestBean.java")).exists();
+    assertThat(new File(folder, "test/DateTest.java")).exists();
+    assertThat(new File(folder, "beans/test/DateTestBean.java")).exists();
   }
 
   //    @Test FIXME can't get mysql admin access working with circle CI, might need to move to
@@ -412,22 +413,21 @@ public class MetaDataExporterTest {
       exporter.setNamePrefix("");
       exporter.setBeanSuffix("Bean");
       exporter.setBeanSerializer(new BeanSerializer());
-      exporter.setTargetFolder(folder.getRoot());
-      exporter.setBeansTargetFolder(folder.newFolder("beans"));
+      exporter.setTargetFolder(folder);
+      exporter.setBeansTargetFolder(newFolder(folder, "beans"));
 
       exporter.export(connection.getMetaData());
-      assertThat(new File(folder.getRoot(), "test/TestCatalogTableOne.java")).exists();
-      assertThat(new File(folder.getRoot(), "beans/test/TestCatalogTableOneBean.java")).exists();
+      assertThat(new File(folder, "test/TestCatalogTableOne.java")).exists();
+      assertThat(new File(folder, "beans/test/TestCatalogTableOneBean.java")).exists();
 
-      assertThat(new File(folder.getRoot(), "test/TestCatalogTableTwo.java").exists()).isFalse();
-      assertThat(new File(folder.getRoot(), "beans/test/TestCatalogTableTwoBean.java").exists())
-          .isFalse();
+      assertThat(new File(folder, "test/TestCatalogTableTwo.java").exists()).isFalse();
+      assertThat(new File(folder, "beans/test/TestCatalogTableTwoBean.java").exists()).isFalse();
 
       exporter.setCatalogPattern("catalog_test_two");
       exporter.export(connection.getMetaData());
 
-      assertThat(new File(folder.getRoot(), "test/TestCatalogTableTwo.java")).exists();
-      assertThat(new File(folder.getRoot(), "beans/test/TestCatalogTableTwoBean.java")).exists();
+      assertThat(new File(folder, "test/TestCatalogTableTwo.java")).exists();
+      assertThat(new File(folder, "beans/test/TestCatalogTableTwoBean.java")).exists();
     } finally {
       stmt.execute("DROP DATABASE IF EXISTS catalog_test_one");
       stmt.execute("DROP DATABASE IF EXISTS catalog_test_two");
@@ -484,5 +484,14 @@ public class MetaDataExporterTest {
     if (compilationResult != 0) {
       fail("", "Compilation Failed for " + targetDir.getAbsolutePath());
     }
+  }
+
+  private static File newFolder(File root, String... subDirs) throws IOException {
+    String subFolder = String.join("/", subDirs);
+    File result = new File(root, subFolder);
+    if (!result.mkdirs()) {
+      throw new IOException("Couldn't create folders " + root);
+    }
+    return result;
   }
 }

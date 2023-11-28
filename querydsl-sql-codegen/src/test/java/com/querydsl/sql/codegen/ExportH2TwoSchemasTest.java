@@ -13,15 +13,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.io.TempDir;
 
 @Category(H2.class)
 public class ExportH2TwoSchemasTest {
 
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir public File folder;
 
   @BeforeClass
   public static void setUpClass() throws Exception {
@@ -45,13 +44,13 @@ public class ExportH2TwoSchemasTest {
     MetaDataExporter exporter = new MetaDataExporter();
     exporter.setSchemaPattern(null);
     exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.setNamingStrategy(namingStrategy);
     exporter.export(Connections.getConnection().getMetaData());
 
     String contents =
         new String(
-            Files.readAllBytes(new File(folder.getRoot(), "test/QSurvey.java").toPath()),
+            Files.readAllBytes(new File(folder, "test/QSurvey.java").toPath()),
             StandardCharsets.UTF_8);
     assertThat(contents).contains("id");
     assertThat(contents).contains("name");

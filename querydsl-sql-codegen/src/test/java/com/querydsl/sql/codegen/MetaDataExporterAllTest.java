@@ -6,6 +6,7 @@ import com.querydsl.codegen.BeanSerializer;
 import com.querydsl.codegen.utils.SimpleCompiler;
 import com.querydsl.core.testutil.Parallelized;
 import com.querydsl.core.testutil.SlowTest;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -19,10 +20,9 @@ import java.util.Set;
 import javax.tools.JavaCompiler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -30,7 +30,7 @@ import org.junit.runners.Parameterized;
 @Category(SlowTest.class)
 public class MetaDataExporterAllTest {
 
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir public File folder;
 
   private static Connection connection;
   private static DatabaseMetaData metadata;
@@ -155,7 +155,7 @@ public class MetaDataExporterAllTest {
     exporter.setInnerClassesForKeys(withInnerClasses);
     exporter.setPackageName("test");
     exporter.setBeanPackageName(beanPackageName);
-    exporter.setTargetFolder(folder.getRoot());
+    exporter.setTargetFolder(folder);
     exporter.setNamingStrategy(namingStrategy);
     exporter.setSchemaToPackage(schemaToPackage);
     if (withBeans) {
@@ -171,7 +171,7 @@ public class MetaDataExporterAllTest {
     int compilationResult =
         compiler.run(null, System.out, System.err, classes.toArray(new String[0]));
     if (compilationResult != 0) {
-      fail("", "Compilation Failed for " + folder.getRoot().getPath());
+      fail("", "Compilation Failed for " + folder.getPath());
     }
   }
 }

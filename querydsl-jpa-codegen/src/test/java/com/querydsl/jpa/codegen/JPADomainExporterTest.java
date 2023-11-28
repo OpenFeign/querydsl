@@ -28,19 +28,19 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.rules.ErrorCollector;
-import org.junit.rules.TemporaryFolder;
 
 public class JPADomainExporterTest {
 
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir public File folder;
 
   @Rule public ErrorCollector errors = new ErrorCollector();
 
   @Test
   public void test() throws IOException {
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("h2", new Properties());
-    Path outputFolder = folder.getRoot().toPath();
+    Path outputFolder = folder.toPath();
     JPADomainExporter exporter = new JPADomainExporter(outputFolder.toFile(), emf.getMetamodel());
     exporter.execute();
 
