@@ -23,8 +23,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.rules.TemporaryFolder;
 
 public class ExtendedBeanSerializerTest {
 
@@ -33,7 +34,7 @@ public class ExtendedBeanSerializerTest {
   private static final String PACKAGE = String.join(".", PATH);
   private static final String FULL_NAME = PACKAGE + "." + CLASS_NAME;
 
-  @TempDir public File compileFolder;
+  @Rule public TemporaryFolder compileFolder = new TemporaryFolder();
 
   private EntityType type;
 
@@ -44,7 +45,7 @@ public class ExtendedBeanSerializerTest {
     Type typeModel =
         new SimpleType(TypeCategory.ENTITY, FULL_NAME, PACKAGE, CLASS_NAME, false, false);
     type = new EntityType(typeModel);
-    File srcFolder = newFolder(compileFolder, PATH);
+    File srcFolder = compileFolder.newFolder(PATH);
     srcFile = new File(srcFolder, CLASS_NAME + ".java");
   }
 
@@ -74,7 +75,7 @@ public class ExtendedBeanSerializerTest {
     fw.close();
 
     URLClassLoader classLoader =
-        URLClassLoader.newInstance(new URL[] {compileFolder.toURI().toURL()});
+        URLClassLoader.newInstance(new URL[] {compileFolder.getRoot().toURI().toURL()});
     int retCode = new SimpleCompiler().run(null, System.out, System.err, srcFile.getAbsolutePath());
     assertThat(retCode).as("The generated source should compile").isEqualTo(0);
 
@@ -108,23 +109,5 @@ public class ExtendedBeanSerializerTest {
       methodByName.get("setSub_id").invoke(instance, subId);
       methodByName.get("setName").invoke(instance, name);
     }
-
-    private static File newFolder(File root, String... subDirs) throws IOException {
-      String subFolder = String.join("/", subDirs);
-      File result = new File(root, subFolder);
-      if (!result.mkdirs()) {
-        throw new IOException("Couldn't create folders " + root);
-      }
-      return result;
-    }
-  }
-
-  private static File newFolder(File root, String... subDirs) throws IOException {
-    String subFolder = String.join("/", subDirs);
-    File result = new File(root, subFolder);
-    if (!result.mkdirs()) {
-      throw new IOException("Couldn't create folders " + root);
-    }
-    return result;
   }
 }

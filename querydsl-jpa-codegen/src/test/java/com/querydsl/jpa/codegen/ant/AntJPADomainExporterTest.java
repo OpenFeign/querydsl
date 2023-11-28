@@ -12,12 +12,12 @@ import java.nio.file.Path;
 import java.util.Set;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.io.TempDir;
 import org.junit.rules.ErrorCollector;
+import org.junit.rules.TemporaryFolder;
 
 public class AntJPADomainExporterTest {
 
-  @TempDir public File folder;
+  @Rule public TemporaryFolder folder = new TemporaryFolder();
 
   @Rule public ErrorCollector errors = new ErrorCollector();
 
@@ -26,7 +26,7 @@ public class AntJPADomainExporterTest {
     AntJPADomainExporter exporter = new AntJPADomainExporter();
     exporter.setNamePrefix("Q");
     exporter.setNameSuffix("");
-    Path outputFolder = folder.toPath();
+    Path outputFolder = folder.getRoot().toPath();
     exporter.setTargetFolder(outputFolder.toFile().getAbsolutePath());
     exporter.setPersistenceUnitName("h2");
     exporter.execute();

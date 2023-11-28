@@ -26,7 +26,6 @@ import com.querydsl.sql.AbstractJDBCTest;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.types.AbstractType;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.PreparedStatement;
@@ -35,13 +34,14 @@ import java.sql.SQLException;
 import java.util.Set;
 import javax.tools.JavaCompiler;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.rules.TemporaryFolder;
 
 public class MetaDataSerializerTest extends AbstractJDBCTest {
   public static class CustomNumber {}
 
-  @TempDir public File folder;
+  @Rule public TemporaryFolder folder = new TemporaryFolder();
 
   @Override
   @Before
@@ -94,7 +94,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
     exporter.setBeanSerializerClass(BeanSerializer.class);
     exporter.setNamePrefix(namePrefix);
     exporter.setPackageName("test");
-    exporter.setTargetFolder(folder);
+    exporter.setTargetFolder(folder.getRoot());
     exporter.setNamingStrategy(namingStrategy);
     exporter.export(connection.getMetaData());
 
@@ -147,7 +147,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
     exporter.setBeanSerializerClass(BeanSerializer.class);
     exporter.setNamePrefix(namePrefix);
     exporter.setPackageName("test");
-    exporter.setTargetFolder(folder);
+    exporter.setTargetFolder(folder.getRoot());
     exporter.setNamingStrategy(namingStrategy);
     exporter.setConfiguration(conf);
     exporter.setGeneratedAnnotationClass("com.querydsl.core.annotations.Generated");
@@ -184,7 +184,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
   }
 
   private void assertFileContainsInOrder(String path, String... methods) throws IOException {
-    String content = new String(Files.readAllBytes(folder.toPath().resolve(path)), UTF_8);
+    String content = new String(Files.readAllBytes(folder.getRoot().toPath().resolve(path)), UTF_8);
     assertThat(content, stringContainsInOrder(asList(methods)));
   }
 }

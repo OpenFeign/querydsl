@@ -16,15 +16,15 @@ package com.querydsl.sql.codegen;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.Connections;
-import java.io.File;
 import java.sql.SQLException;
 import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.rules.TemporaryFolder;
 
 public abstract class ExportBaseTest {
 
-  @TempDir public File folder;
+  @Rule public TemporaryFolder folder = new TemporaryFolder();
 
   @Test
   public void export() throws SQLException {
@@ -33,11 +33,11 @@ public abstract class ExportBaseTest {
     exporter.setSpatial(true);
     exporter.setSchemaPattern(getSchemaPattern());
     exporter.setPackageName("test");
-    exporter.setTargetFolder(folder);
+    exporter.setTargetFolder(folder.getRoot());
     exporter.setNamingStrategy(namingStrategy);
     exporter.export(Connections.getConnection().getMetaData());
 
-    assertThat(folder.listFiles().length).isGreaterThan(0);
+    assertThat(folder.getRoot().listFiles().length).isGreaterThan(0);
   }
 
   protected String getSchemaPattern() {
