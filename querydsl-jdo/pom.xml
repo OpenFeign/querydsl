@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -11,24 +11,23 @@
 
   <groupId>com.querydsl</groupId>
   <artifactId>querydsl-jdo</artifactId>
+  <packaging>jar</packaging>
   <name>Querydsl - JDO support</name>
   <description>JDO support for Querydsl</description>
-  <url>${project.homepage}</url>
-  <packaging>jar</packaging>
 
-  <scm>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
-  </scm>
-
-  <properties>   
+  <properties>
     <dn.version>5.2.8</dn.version>
     <dn.plugin.version>5.2.1</dn.plugin.version>
   </properties>
+  <url>${project.homepage}</url>
+
+  <scm>
+    <url>${project.githubpage}</url>
+    <connection>${project.checkout}</connection>
+    <developerConnection>${project.checkout}</developerConnection>
+  </scm>
 
   <dependencies>
-
 
     <dependency>
       <groupId>org.datanucleus</groupId>
@@ -50,20 +49,20 @@
       <artifactId>querydsl-codegen</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
-    </dependency>        
+    </dependency>
     <dependency>
       <groupId>com.querydsl</groupId>
       <artifactId>querydsl-apt</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
-    </dependency>        
-    
+    </dependency>
+
     <dependency>
       <groupId>com.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
-      <optional>true</optional> 
+      <optional>true</optional>
     </dependency>
 
     <!-- test -->
@@ -97,14 +96,14 @@
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>test</scope>
-    </dependency>    
-    
+    </dependency>
+
     <dependency>
       <groupId>com.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
       <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -118,32 +117,20 @@
       <artifactId>jdepend</artifactId>
       <version>2.9.1</version>
       <scope>test</scope>
-    </dependency>    
+    </dependency>
 
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-      </plugin>      
-    
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>apt</id>
-            <goals>
-              <goal>jar</goal>                
-            </goals>    
-            <configuration>
-              <classifier>apt</classifier>
-              <classesDirectory>src/apt</classesDirectory>                                    
-            </configuration>              
-          </execution>            
-        </executions>
         <configuration>
           <archive>
             <manifestEntries>
@@ -151,19 +138,31 @@
             </manifestEntries>
           </archive>
         </configuration>
-      </plugin> 
-        
+        <executions>
+          <execution>
+            <id>apt</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>apt</classifier>
+              <classesDirectory>src/apt</classesDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <!-- this plugin does the JDO class enhancement -->
       <plugin>
         <groupId>org.datanucleus</groupId>
         <artifactId>datanucleus-maven-plugin</artifactId>
         <version>${dn.plugin.version}</version>
         <configuration>
-            <metadataDirectory>target/test-classes</metadataDirectory>
-            <metadataIncludes>com/querydsl/jdo/test/domain/*.class</metadataIncludes>
-            <log4jConfiguration>src/test/resources/log4j.properties</log4jConfiguration>
-            <verbose>true</verbose>
-            <props>src/test/resources/datanucleus.properties</props>
+          <metadataDirectory>target/test-classes</metadataDirectory>
+          <metadataIncludes>com/querydsl/jdo/test/domain/*.class</metadataIncludes>
+          <log4jConfiguration>src/test/resources/log4j.properties</log4jConfiguration>
+          <verbose>true</verbose>
+          <props>src/test/resources/datanucleus.properties</props>
         </configuration>
         <executions>
           <execution>
@@ -188,53 +187,53 @@
             <version>${dn.version}</version>
             <scope>runtime</scope>
           </dependency>
-        </dependencies>       
-      </plugin> 
-      
+        </dependencies>
+      </plugin>
+
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
           <execution>
             <id>apt-one-jar</id>
-            <goals>
-              <goal>single</goal>    
-            </goals>
             <phase>package</phase>
-              <configuration>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
               <descriptors>
                 <descriptor>src/main/assembly.xml</descriptor>
               </descriptors>
               <outputDirectory>${project.build.directory}</outputDirectory>
             </configuration>
-          </execution>    
-        </executions>         
-      </plugin>            
-      
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <executions>
           <execution>
-          <id>verification</id>    
-          <goals>
-            <goal>test</goal>    
-          </goals>
-          <phase>verify</phase>
-          <configuration>
+            <id>verification</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
               <systemProperties>
-              <property>
+                <property>
                   <name>version</name>
-                <value>${project.version}</value>
-              </property>                  
-            </systemProperties>    
-            <includes>
-              <include>com/querydsl/jdo/PackageVerification.java</include>
-            </includes>
-          </configuration>
+                  <value>${project.version}</value>
+                </property>
+              </systemProperties>
+              <includes>
+                <include>com/querydsl/jdo/PackageVerification.java</include>
+              </includes>
+            </configuration>
           </execution>
-        </executions>        
-      </plugin>      
-      
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>com.mysema.maven</groupId>
         <artifactId>apt-maven-plugin</artifactId>
@@ -250,9 +249,9 @@
               <logOnlyOnError>true</logOnlyOnError>
             </configuration>
           </execution>
-        </executions>    
-      </plugin>   
-      
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>com.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
@@ -266,14 +265,14 @@
           <namePrefix>S</namePrefix>
         </configuration>
         <dependencies>
-            <dependency>
-              <groupId>hsqldb</groupId>
-              <artifactId>hsqldb</artifactId>
-              <version>1.8.0.10</version>
-            </dependency>
+          <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.10</version>
+          </dependency>
         </dependencies>
-      </plugin>    
-    </plugins>      
+      </plugin>
+    </plugins>
   </build>
 
   <!--TODO upgrade dependencies and get rid of repositories and pluginRepositories -->

@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.querydsl</groupId>
-  <artifactId>querydsl-root</artifactId>
-  <version>5.0.0-patched</version>
-    <name>Querydsl</name>
-  <description>parent project for Querydsl modules</description>
-  <url>https://querydsl.github.io/</url>
 
   <parent>
     <groupId>com.querydsl</groupId>
     <artifactId>querydsl-parent</artifactId>
     <version>0.1.0</version>
   </parent>
+  <groupId>com.querydsl</groupId>
+  <artifactId>querydsl-root</artifactId>
+  <version>5.0.0-patched</version>
 
   <packaging>pom</packaging>
-
-  <inceptionYear>2007</inceptionYear>
+  <name>Querydsl</name>
+  <description>parent project for Querydsl modules</description>
 
   <properties>
     <failIfNoTests>false</failIfNoTests>
@@ -27,12 +24,10 @@
     <project.checkout>scm:git:git@github.com:querydsl/querydsl.git</project.checkout>
 
     <!-- default groups to exclude from surefire plugin -->
-    <excludedGroups>
-      com.querydsl.core.testutil.ExternalDatabase,
+    <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
       com.querydsl.core.testutil.SlowTest,
       com.querydsl.core.testutil.Performance,
-      com.querydsl.core.testutil.ReportingOnly
-    </excludedGroups>
+      com.querydsl.core.testutil.ReportingOnly</excludedGroups>
 
     <!-- groups to run with surefire plugin - intended to be overridden on the command line -->
     <includedGroups></includedGroups>
@@ -42,7 +37,7 @@
     <!-- default bytecode version for src/main -->
     <main.java.version>1.8</main.java.version>
     <latest.java.version>21</latest.java.version>
-    
+
     <git-code-format-maven-plugin.version>5.1</git-code-format-maven-plugin.version>
     <!-- SQL deps -->
     <db2.version>11.5.7.0</db2.version>
@@ -80,47 +75,89 @@
     <dokka.version>1.7.20</dokka.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
-    <osgi.import.package.root>
-      *
-    </osgi.import.package.root>
+    <osgi.import.package.root>*</osgi.import.package.root>
     <osgi.import.package>${osgi.import.package.root}</osgi.import.package>
   </properties>
+  <url>https://querydsl.github.io/</url>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest</artifactId>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <version>4.3</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>cglib</groupId>
-          <artifactId>cglib-nodep</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>animal-sniffer-annotations</artifactId>
-      <version>${animal-sniffer.version}</version>
-      <optional>true</optional>
-    </dependency>
-  </dependencies>
+  <inceptionYear>2007</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>${project.githubpage}</url>
+    <connection>${project.checkout}</connection>
+    <developerConnection>${project.checkout}</developerConnection>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>timowest</id>
+      <name>Timo Westkämper</name>
+      <organization>Mysema Ltd</organization>
+      <roles>
+        <role>Project Manager</role>
+        <role>Architect</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>ssaarela</id>
+      <name>Samppa Saarela</name>
+      <organization>Mysema Ltd</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>ponzao</id>
+      <name>Vesa Marttila</name>
+      <organization>Mysema Ltd</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>mangolas</id>
+      <name>Lassi Immonen</name>
+      <organization>Mysema Ltd</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>Shredder121</id>
+      <name>Ruben Dijkstra</name>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>johnktims</id>
+      <name>John Tims</name>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>robertandrewbain</id>
+      <name>Robert Bain</name>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>jwgmeligmeyling</id>
+      <name>Jan-Willem Gmelig Meyling</name>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+  </developers>
 
   <dependencyManagement>
     <dependencies>
@@ -240,82 +277,41 @@
     </dependencies>
   </dependencyManagement>
 
-  <scm>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
-  </scm>
-
-  <developers>
-    <developer>
-      <id>timowest</id>
-      <name>Timo Westkämper</name>
-      <organization>Mysema Ltd</organization>
-      <roles>
-        <role>Project Manager</role>
-        <role>Architect</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>ssaarela</id>
-      <name>Samppa Saarela</name>
-      <organization>Mysema Ltd</organization>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>ponzao</id>
-      <name>Vesa Marttila</name>
-      <organization>Mysema Ltd</organization>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>mangolas</id>
-      <name>Lassi Immonen</name>
-      <organization>Mysema Ltd</organization>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>Shredder121</id>
-      <name>Ruben Dijkstra</name>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>johnktims</id>
-      <name>John Tims</name>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>robertandrewbain</id>
-      <name>Robert Bain</name>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>jwgmeligmeyling</id>
-      <name>Jan-Willem Gmelig Meyling</name>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-  </developers>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>4.3</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>cglib</groupId>
+          <artifactId>cglib-nodep</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>animal-sniffer-annotations</artifactId>
+      <version>${animal-sniffer.version}</version>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
 
   <build>
     <pluginManagement>
@@ -359,9 +355,7 @@
               <inherited>true</inherited>
               <configuration>
                 <instructions>
-                  <Import-Package>
-                    ${osgi.import.package}
-                  </Import-Package>
+                  <Import-Package>${osgi.import.package}</Import-Package>
                   <Export-Package>com.querydsl.*</Export-Package>
                 </instructions>
               </configuration>
@@ -445,7 +439,7 @@
                     <exclude>joda-time:joda-time:*:*:compile</exclude>
                     <exclude>org.joda:joda-money:*:*:compile</exclude>
                     <exclude>javax.el:javax.el-api:*:*:compile</exclude>
-<!--                    <exclude>jakarta.persistence:jakarta.persistence-api:*:*:compile</exclude>-->
+                    <!--                    <exclude>jakarta.persistence:jakarta.persistence-api:*:*:compile</exclude>-->
                     <exclude>org.batoo.jpa:batoo-jpa:*:*:compile</exclude>
                     <!-- The following database drivers should be in test scope -->
                     <exclude>org.hsqldb:hsqldb:*:*:compile</exclude>
@@ -671,6 +665,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>3.1.2</version>
+        <configuration>
+          <excludes>**/generated/**/*,**/jmh_generated/**/*,**/com/querydsl/codegen/utils/**/*</excludes>
+        </configuration>
         <executions>
           <execution>
             <id>checkstyle</id>
@@ -703,9 +700,6 @@
             <version>9.3</version>
           </dependency>
         </dependencies>
-        <configuration>
-          <excludes>**/generated/**/*,**/jmh_generated/**/*,**/com/querydsl/codegen/utils/**/*</excludes>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>com.cosium.code</groupId>
@@ -763,7 +757,9 @@
   <profiles>
     <profile>
       <id>all</id>
-      <activation><activeByDefault>true</activeByDefault></activation>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <modules>
         <module>querydsl-core</module>
         <module>querydsl-codegen</module>
@@ -823,7 +819,7 @@
         <module>querydsl-sql-spring</module>
         <module>querydsl-maven-plugin</module>
         <module>querydsl-jpa</module>
-<!--        <module>querydsl-jpa-codegen</module>-->
+        <!--        <module>querydsl-jpa-codegen</module>-->
       </modules>
     </profile>
 
@@ -911,24 +907,20 @@
     <profile>
       <id>jenkins</id>
       <properties>
-        <excludedGroups>
-          com.querydsl.core.testutil.Performance,
+        <excludedGroups>com.querydsl.core.testutil.Performance,
 
           com.querydsl.core.testutil.DB2,
-          com.querydsl.core.testutil.SQLServer
-        </excludedGroups>
+          com.querydsl.core.testutil.SQLServer</excludedGroups>
       </properties>
     </profile>
 
     <profile>
       <id>travis</id>
       <properties>
-        <excludedGroups>
-          com.querydsl.core.testutil.Performance,
+        <excludedGroups>com.querydsl.core.testutil.Performance,
           com.querydsl.core.testutil.ReportingOnly,
 
-          com.querydsl.core.testutil.Teradata
-        </excludedGroups>
+          com.querydsl.core.testutil.Teradata</excludedGroups>
       </properties>
       <build>
         <plugins>
