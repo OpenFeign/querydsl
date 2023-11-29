@@ -14,14 +14,14 @@ import com.querydsl.example.dto.ProductL10n;
 import com.querydsl.example.dto.Supplier;
 import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.dml.SQLInsertClause;
-import jakarta.inject.Inject;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class ProductDaoImpl implements ProductDao {
 
-  @Inject SQLQueryFactory queryFactory;
+  @Autowired SQLQueryFactory queryFactory;
 
   final QBean<ProductL10n> productL10nBean =
       bean(ProductL10n.class, productL10n.description, productL10n.lang, productL10n.name);

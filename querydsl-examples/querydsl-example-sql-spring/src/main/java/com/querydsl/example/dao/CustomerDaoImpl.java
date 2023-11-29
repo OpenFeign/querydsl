@@ -15,14 +15,14 @@ import com.querydsl.example.dto.CustomerAddress;
 import com.querydsl.example.dto.Person;
 import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.dml.SQLInsertClause;
-import jakarta.inject.Inject;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class CustomerDaoImpl implements CustomerDao {
 
-  @Inject SQLQueryFactory queryFactory;
+  @Autowired SQLQueryFactory queryFactory;
 
   final QBean<CustomerAddress> customerAddressBean =
       bean(
