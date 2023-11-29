@@ -8,8 +8,8 @@ import com.querydsl.sql.spring.SpringConnectionProvider;
 import com.querydsl.sql.spring.SpringExceptionTranslator;
 import com.querydsl.sql.types.LocalDateTimeType;
 import com.querydsl.sql.types.LocalDateType;
-import javax.inject.Inject;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -21,7 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @PropertySource({"classpath:jdbc.properties"})
 public class JdbcConfiguration {
 
-  @Inject Environment env;
+  @Autowired Environment env;
 
   @Bean
   public DataSource dataSource() {

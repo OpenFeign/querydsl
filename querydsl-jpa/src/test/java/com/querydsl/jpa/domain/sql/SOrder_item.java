@@ -6,7 +6,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** SOrder_item is a Querydsl query type for SOrder_item */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

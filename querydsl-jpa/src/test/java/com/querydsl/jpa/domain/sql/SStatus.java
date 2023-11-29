@@ -7,7 +7,7 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** SStatus is a Querydsl query type for SStatus */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

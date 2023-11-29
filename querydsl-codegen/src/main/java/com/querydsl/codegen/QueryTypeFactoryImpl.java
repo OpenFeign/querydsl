@@ -15,8 +15,8 @@ package com.querydsl.codegen;
 
 import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * {@code QueryTypeFactoryImpl} is the default implementation of the {@link QueryTypeFactory}

@@ -2,8 +2,8 @@ package com.querydsl.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.annotation.Generated;
 import java.lang.annotation.Annotation;
-import javax.annotation.Generated;
 import org.junit.Test;
 
 public class GeneratedAnnotationResolverTest {

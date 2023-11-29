@@ -8,6 +8,7 @@ import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.codegen.utils.model.Types;
+import jakarta.validation.constraints.Max;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -17,7 +18,6 @@ import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import javax.validation.constraints.Max;
 import org.junit.Before;
 import org.junit.Test;
 

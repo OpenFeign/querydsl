@@ -19,12 +19,12 @@ import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.model.*;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.*;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.function.Function;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * {@code EntitySerializer} is a {@link Serializer} implementation for entity types

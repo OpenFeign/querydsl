@@ -22,6 +22,7 @@ import com.querydsl.codegen.utils.SimpleCompiler;
 import com.querydsl.core.util.FileUtils;
 import com.querydsl.core.util.ReflectionUtils;
 import com.querydsl.sql.Connections;
+import jakarta.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -30,7 +31,6 @@ import java.net.URLClassLoader;
 import java.sql.*;
 import java.util.Set;
 import javax.tools.JavaCompiler;
-import javax.validation.constraints.NotNull;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 

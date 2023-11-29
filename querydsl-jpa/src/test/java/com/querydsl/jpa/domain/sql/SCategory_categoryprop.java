@@ -6,7 +6,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** SCategory_categoryprop is a Querydsl query type for SCategory_categoryprop */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

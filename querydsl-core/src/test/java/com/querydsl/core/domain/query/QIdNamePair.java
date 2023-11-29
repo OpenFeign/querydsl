@@ -8,7 +8,7 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.core.types.dsl.StringPath;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QIdNamePair is a Querydsl query type for IdNamePair */
 @Generated("com.querydsl.codegen.EmbeddableSerializer")

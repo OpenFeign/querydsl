@@ -7,7 +7,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.StringPath;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QCompanyPK is a Querydsl query type for CompanyPK */
 @Generated("com.querydsl.codegen.EmbeddableSerializer")

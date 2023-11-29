@@ -56,8 +56,8 @@ import com.squareup.kotlinpoet.WildcardTypeName
 import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.buildCodeBlock
 import java.util.*
-import javax.inject.Inject
-import javax.inject.Named
+import jakarta.inject.Inject
+import jakarta.inject.Named
 import kotlin.reflect.KClass
 
 open class KotlinEntitySerializer @Inject constructor(

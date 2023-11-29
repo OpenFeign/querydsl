@@ -13,10 +13,10 @@
  */
 package com.querydsl.codegen;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * {@code SupertypeSerializer} is a {@link Serializer} implementation for supertypes

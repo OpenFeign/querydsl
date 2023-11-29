@@ -7,8 +7,8 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
+import jakarta.annotation.Generated;
 import java.util.Arrays;
-import javax.annotation.Generated;
 
 /** SBookversion is a Querydsl query type for SBookversion */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

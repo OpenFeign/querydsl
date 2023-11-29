@@ -5,7 +5,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.PathInits;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QCompanyGroup is a Querydsl query type for CompanyGroup */
 @Generated("com.querydsl.codegen.EntitySerializer")

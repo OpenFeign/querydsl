@@ -8,7 +8,7 @@ import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** SDocument is a Querydsl query type for SDocument */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
