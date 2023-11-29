@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -21,11 +21,11 @@ public class BooleanTemplateTest {
 
   @Test
   public void true_() {
-    assertEquals("true", Expressions.TRUE.toString());
+    assertThat(Expressions.TRUE.toString()).isEqualTo("true");
   }
 
   @Test
   public void false_() {
-    assertEquals("false", Expressions.FALSE.toString());
+    assertThat(Expressions.FALSE.toString()).isEqualTo("false");
   }
 }

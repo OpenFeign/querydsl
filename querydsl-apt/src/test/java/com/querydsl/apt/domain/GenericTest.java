@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.apt.domain.rel.SimpleType;
 import com.querydsl.apt.domain.rel.SimpleType2;
@@ -119,9 +119,9 @@ public class GenericTest extends AbstractTest {
 
   @Test
   public void test() throws NoSuchFieldException, IllegalAccessException {
-    assertNotNull(QGenericTest_ItemType.itemType);
-    assertNotNull(QGenericTest_GenericType.genericType);
-    assertNotNull(QGenericTest_GenericType2.genericType2);
+    assertThat(QGenericTest_ItemType.itemType).isNotNull();
+    assertThat(QGenericTest_GenericType.genericType).isNotNull();
+    assertThat(QGenericTest_GenericType2.genericType2).isNotNull();
 
     start(QGenericTest_GenericType.class, QGenericTest_GenericType.genericType);
     matchType(ItemType.class, "itemType");

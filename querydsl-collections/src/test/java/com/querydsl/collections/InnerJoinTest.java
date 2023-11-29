@@ -15,8 +15,7 @@ package com.querydsl.collections;
 
 import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.core.alias.Alias.alias;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,8 +55,8 @@ public class InnerJoinTest extends AbstractQueryTest {
             .where(cat.name.eq(kitten.name))
             .orderBy(cat.name.asc())
             .fetch();
-    assertEquals("Bob", rv.get(0).getName());
-    assertEquals("Kate", rv.get(1).getName());
+    assertThat(rv.get(0).getName()).isEqualTo("Bob");
+    assertThat(rv.get(1).getName()).isEqualTo("Kate");
   }
 
   @Test
@@ -69,7 +68,7 @@ public class InnerJoinTest extends AbstractQueryTest {
             .innerJoin($(cc.getKittens()), $(ck))
             .where($(cc.getName()).eq($(ck.getName())))
             .fetch();
-    assertFalse(rv.isEmpty());
+    assertThat(rv).isNotEmpty();
   }
 
   @Test
@@ -80,7 +79,7 @@ public class InnerJoinTest extends AbstractQueryTest {
             .where(cat.name.eq(kitten.name))
             .orderBy(cat.name.asc())
             .fetch();
-    assertEquals("Bob", rv.get(0).getName());
-    assertEquals("Kate", rv.get(1).getName());
+    assertThat(rv.get(0).getName()).isEqualTo("Bob");
+    assertThat(rv.get(1).getName()).isEqualTo("Kate");
   }
 }

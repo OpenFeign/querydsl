@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Type;
@@ -26,24 +26,24 @@ public class QueryTypeFactoryTest {
   @Test
   public void prefix_only() {
     QueryTypeFactory factory = new QueryTypeFactoryImpl("Q", "", "");
-    assertEquals("com.querydsl.codegen.QPoint", factory.create(type).getFullName());
+    assertThat(factory.create(type).getFullName()).isEqualTo("com.querydsl.codegen.QPoint");
   }
 
   @Test
   public void prefix_and_suffix() {
     QueryTypeFactory factory = new QueryTypeFactoryImpl("Q", "Type", "");
-    assertEquals("com.querydsl.codegen.QPointType", factory.create(type).getFullName());
+    assertThat(factory.create(type).getFullName()).isEqualTo("com.querydsl.codegen.QPointType");
   }
 
   @Test
   public void suffix_only() {
     QueryTypeFactory factory = new QueryTypeFactoryImpl("", "Type", "");
-    assertEquals("com.querydsl.codegen.PointType", factory.create(type).getFullName());
+    assertThat(factory.create(type).getFullName()).isEqualTo("com.querydsl.codegen.PointType");
   }
 
   @Test
   public void prefix_and_package_suffix() {
     QueryTypeFactory factory = new QueryTypeFactoryImpl("Q", "", ".query");
-    assertEquals("com.querydsl.codegen.query.QPoint", factory.create(type).getFullName());
+    assertThat(factory.create(type).getFullName()).isEqualTo("com.querydsl.codegen.query.QPoint");
   }
 }

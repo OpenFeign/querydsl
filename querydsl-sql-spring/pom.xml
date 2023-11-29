@@ -3,19 +3,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-patched</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.querydsl</groupId>
   <artifactId>querydsl-sql-spring</artifactId>
   <name>Querydsl - SQL Spring support</name>
   <description>SQL Spring support for Querydsl</description>
 
   <properties>
-    <spring.version>5.3.19</spring.version>
+    <spring.version>6.1.1</spring.version>
+    <!-- to match spring SDK version -->
+    <main.java.version>17</main.java.version>
   </properties>
 
   <dependencies>
@@ -25,7 +25,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
       <version>${project.version}</version>
     </dependency>

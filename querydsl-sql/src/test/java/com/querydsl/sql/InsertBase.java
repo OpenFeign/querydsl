@@ -17,7 +17,7 @@ import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.survey;
 import static com.querydsl.sql.Constants.survey2;
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.QueryException;
 import com.querydsl.core.QueryFlag.Position;
@@ -34,10 +34,10 @@ import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.domain.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -64,14 +64,14 @@ public class InsertBase extends AbstractBaseTest {
 
   @Test
   @ExcludeIn({
-    CUBRID, SQLITE
+    CUBRID, SQLITE, DERBY
   }) // https://bitbucket.org/xerial/sqlite-jdbc/issue/133/prepstmtsetdate-int-date-calendar-seems
   public void insert_dates() {
     QDateTest dateTest = QDateTest.qDateTest;
-    LocalDate localDate = new LocalDate(1978, 1, 2);
+    LocalDate localDate = LocalDate.of(1978, 1, 2);
 
     Path<LocalDate> localDateProperty = ExpressionUtils.path(LocalDate.class, "DATE_TEST");
-    Path<DateTime> dateTimeProperty = ExpressionUtils.path(DateTime.class, "DATE_TEST");
+    Path<LocalDateTime> dateTimeProperty = ExpressionUtils.path(LocalDateTime.class, "DATE_TEST");
     SQLInsertClause insert = insert(dateTest);
     insert.set(localDateProperty, localDate);
     insert.execute();
@@ -85,16 +85,16 @@ public class InsertBase extends AbstractBaseTest {
                 dateTest.dateTest.dayOfMonth(),
                 dateTimeProperty)
             .fetchFirst();
-    assertEquals(Integer.valueOf(1978), result.get(0, Integer.class));
-    assertEquals(Integer.valueOf(1), result.get(1, Integer.class));
-    assertEquals(Integer.valueOf(2), result.get(2, Integer.class));
+    assertThat(result.get(0, Integer.class)).isEqualTo(Integer.valueOf(1978));
+    assertThat(result.get(1, Integer.class)).isEqualTo(Integer.valueOf(1));
+    assertThat(result.get(2, Integer.class)).isEqualTo(Integer.valueOf(2));
 
-    DateTime dateTime = result.get(dateTimeProperty);
+    LocalDateTime dateTime = result.get(dateTimeProperty);
     if (target == CUBRID) {
       // XXX Cubrid adds random milliseconds for some reason
-      dateTime = dateTime.withMillisOfSecond(0);
+      dateTime = dateTime.withNano(0);
     }
-    assertEquals(localDate.toDateTimeAtStartOfDay(), dateTime);
+    assertThat(dateTime).isEqualTo(localDate.atStartOfDay());
   }
 
   @Test
@@ -113,28 +113,28 @@ public class InsertBase extends AbstractBaseTest {
             .innerJoin(emp2)
             .on(emp1.superiorId.eq(emp2.superiorId), emp1.firstname.eq(emp2.firstname)));
 
-    assertEquals(0, insert.execute());
+    assertThat(insert.execute()).isEqualTo(0);
   }
 
   @Test
   public void insert_alternative_syntax() {
     // with columns
-    assertEquals(1, insert(survey).set(survey.id, 3).set(survey.name, "Hello").execute());
+    assertThat(insert(survey).set(survey.id, 3).set(survey.name, "Hello").execute()).isEqualTo(1);
   }
 
   @Test
   public void insert_batch() {
     SQLInsertClause insert = insert(survey).set(survey.id, 5).set(survey.name, "55").addBatch();
 
-    assertEquals(1, insert.getBatchCount());
+    assertThat(insert.getBatchCount()).isEqualTo(1);
 
     insert.set(survey.id, 6).set(survey.name, "66").addBatch();
 
-    assertEquals(2, insert.getBatchCount());
-    assertEquals(2, insert.execute());
+    assertThat(insert.getBatchCount()).isEqualTo(2);
+    assertThat(insert.execute()).isEqualTo(2);
 
-    assertEquals(1L, query().from(survey).where(survey.name.eq("55")).fetchCount());
-    assertEquals(1L, query().from(survey).where(survey.name.eq("66")).fetchCount());
+    assertThat(query().from(survey).where(survey.name.eq("55")).fetchCount()).isEqualTo(1L);
+    assertThat(query().from(survey).where(survey.name.eq("66")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -144,15 +144,15 @@ public class InsertBase extends AbstractBaseTest {
 
     insert.set(survey.id, 5).set(survey.name, "55").addBatch();
 
-    assertEquals(1, insert.getBatchCount());
+    assertThat(insert.getBatchCount()).isEqualTo(1);
 
     insert.set(survey.id, 6).set(survey.name, "66").addBatch();
 
-    assertEquals(2, insert.getBatchCount());
-    assertEquals(2, insert.execute());
+    assertThat(insert.getBatchCount()).isEqualTo(2);
+    assertThat(insert.execute()).isEqualTo(2);
 
-    assertEquals(1L, query().from(survey).where(survey.name.eq("55")).fetchCount());
-    assertEquals(1L, query().from(survey).where(survey.name.eq("66")).fetchCount());
+    assertThat(query().from(survey).where(survey.name.eq("55")).fetchCount()).isEqualTo(1L);
+    assertThat(query().from(survey).where(survey.name.eq("66")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -165,10 +165,10 @@ public class InsertBase extends AbstractBaseTest {
 
     insert.set(survey.id, 6).set(survey.name, Expressions.stringTemplate("'66'")).addBatch();
 
-    assertEquals(2, insert.execute());
+    assertThat(insert.execute()).isEqualTo(2);
 
-    assertEquals(1L, query().from(survey).where(survey.name.eq("55")).fetchCount());
-    assertEquals(1L, query().from(survey).where(survey.name.eq("66")).fetchCount());
+    assertThat(query().from(survey).where(survey.name.eq("55")).fetchCount()).isEqualTo(1L);
+    assertThat(query().from(survey).where(survey.name.eq("66")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -177,24 +177,25 @@ public class InsertBase extends AbstractBaseTest {
 
     insert.set(survey.id, 6).setNull(survey.name).addBatch();
 
-    assertEquals(2, insert.execute());
+    assertThat(insert.execute()).isEqualTo(2);
   }
 
   @Test
   public void insert_null_with_columns() {
-    assertEquals(1, insert(survey).columns(survey.id, survey.name).values(3, null).execute());
+    assertThat(insert(survey).columns(survey.id, survey.name).values(3, null).execute())
+        .isEqualTo(1);
   }
 
   @Test
   @ExcludeIn({DB2, DERBY})
   public void insert_null_without_columns() {
-    assertEquals(1, insert(survey).values(4, null, null).execute());
+    assertThat(insert(survey).values(4, null, null).execute()).isEqualTo(1);
   }
 
   @Test
   @ExcludeIn({FIREBIRD, HSQLDB, DB2, DERBY, ORACLE})
   public void insert_without_values() {
-    assertEquals(1, insert(survey).execute());
+    assertThat(insert(survey).execute()).isEqualTo(1);
   }
 
   @Test
@@ -208,7 +209,7 @@ public class InsertBase extends AbstractBaseTest {
     SQLInsertClause sic = insert(survey);
     sic.columns(survey.name, survey.name2).values(null, null).addBatch();
     sic.columns(survey.name, survey.name2).values(null, "X").addBatch();
-    assertEquals(2, sic.execute());
+    assertThat(sic.execute()).isEqualTo(2);
   }
 
   @Test
@@ -231,25 +232,26 @@ public class InsertBase extends AbstractBaseTest {
     e = new Employee();
     e.setFirstname("X");
     sic.populate(e, mapper).addBatch();
-    assertEquals(0, sic.execute());
+    assertThat(sic.execute()).isEqualTo(0);
   }
 
   @Test
   public void insert_with_columns() {
-    assertEquals(1, insert(survey).columns(survey.id, survey.name).values(3, "Hello").execute());
+    assertThat(insert(survey).columns(survey.id, survey.name).values(3, "Hello").execute())
+        .isEqualTo(1);
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
   public void insert_with_keys() throws SQLException {
     ResultSet rs = insert(survey).set(survey.name, "Hello World").executeWithKeys();
-    assertTrue(rs.next());
-    assertTrue(rs.getObject(1) != null);
+    assertThat(rs.next()).isTrue();
+    assertThat(rs.getObject(1) != null).isTrue();
     rs.close();
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
   public void insert_with_keys_listener() throws SQLException {
     final AtomicBoolean result = new AtomicBoolean();
     SQLListener listener =
@@ -262,29 +264,29 @@ public class InsertBase extends AbstractBaseTest {
     SQLInsertClause clause = insert(survey).set(survey.name, "Hello World");
     clause.addListener(listener);
     ResultSet rs = clause.executeWithKeys();
-    assertFalse(result.get());
-    assertTrue(rs.next());
-    assertTrue(rs.getObject(1) != null);
+    assertThat(result.get()).isFalse();
+    assertThat(rs.next()).isTrue();
+    assertThat(rs.getObject(1) != null).isTrue();
     rs.close();
-    assertTrue(result.get());
+    assertThat(result.get()).isTrue();
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
   public void insert_with_keys_Projected() throws SQLException {
-    assertNotNull(insert(survey).set(survey.name, "Hello you").executeWithKey(survey.id));
+    assertThat(insert(survey).set(survey.name, "Hello you").executeWithKey(survey.id)).isNotNull();
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
   public void insert_with_keys_Projected2() throws SQLException {
     Path<Object> idPath = ExpressionUtils.path(Object.class, "id");
     Object id = insert(survey).set(survey.name, "Hello you").executeWithKey(idPath);
-    assertNotNull(id);
+    assertThat(id).isNotNull();
   }
 
   @Test(expected = QueryException.class)
-  @IncludeIn({DERBY, HSQLDB})
+  @IncludeIn({DERBY, HSQLDB, SQLITE})
   public void insert_with_keys_OverriddenColumn() throws SQLException {
     String originalColumnName = ColumnMetadata.getName(survey.id);
     try {
@@ -294,7 +296,7 @@ public class InsertBase extends AbstractBaseTest {
       SQLInsertClause sqlInsertClause = new SQLInsertClause(connection, configuration, survey);
       sqlInsertClause.addListener(new TestLoggingListener());
       Object id = sqlInsertClause.set(survey.name, "Hello you").executeWithKey(survey.id);
-      assertNotNull(id);
+      assertThat(id).isNotNull();
     } finally {
       configuration.registerColumnOverride(
           survey.getSchemaName(), survey.getTableName(), originalColumnName, originalColumnName);
@@ -305,7 +307,8 @@ public class InsertBase extends AbstractBaseTest {
 
   @Test
   public void insert_with_set() {
-    assertEquals(1, insert(survey).set(survey.id, 5).set(survey.name, (String) null).execute());
+    assertThat(insert(survey).set(survey.id, 5).set(survey.name, (String) null).execute())
+        .isEqualTo(1);
   }
 
   @Test
@@ -316,20 +319,20 @@ public class InsertBase extends AbstractBaseTest {
 
     clause.addFlag(Position.START_OVERRIDE, "insert ignore into ");
 
-    assertEquals("insert ignore into SURVEY (ID, NAME) values (?, ?)", clause.toString());
-    assertEquals(1, clause.execute());
+    assertThat(clause.toString()).isEqualTo("insert ignore into SURVEY (ID, NAME) values (?, ?)");
+    assertThat(clause.execute()).isEqualTo(1);
   }
 
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery() {
     int count = (int) query().from(survey).fetchCount();
-    assertEquals(
-        count,
-        insert(survey)
-            .columns(survey.id, survey.name)
-            .select(query().from(survey2).select(survey2.id.add(20), survey2.name))
-            .execute());
+    assertThat(
+            insert(survey)
+                .columns(survey.id, survey.name)
+                .select(query().from(survey2).select(survey2.id.add(20), survey2.name))
+                .execute())
+        .isEqualTo(count);
   }
 
   @Test
@@ -340,18 +343,18 @@ public class InsertBase extends AbstractBaseTest {
     //        where not exists
     //        (select 1 from modules where modules.name = 'MyModule')
 
-    assertEquals(
-        1,
-        insert(survey)
-            .set(
-                survey.name,
-                query()
-                    .where(query().from(survey2).where(survey2.name.eq("MyModule")).notExists())
-                    .select(Expressions.constant("MyModule"))
-                    .fetchFirst())
-            .execute());
+    assertThat(
+            insert(survey)
+                .set(
+                    survey.name,
+                    query()
+                        .where(query().from(survey2).where(survey2.name.eq("MyModule")).notExists())
+                        .select(Expressions.constant("MyModule"))
+                        .fetchFirst())
+                .execute())
+        .isEqualTo(1);
 
-    assertEquals(1L, query().from(survey).where(survey.name.eq("MyModule")).fetchCount());
+    assertThat(query().from(survey).where(survey.name.eq("MyModule")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -362,17 +365,18 @@ public class InsertBase extends AbstractBaseTest {
     //        where not exists
     //        (select 1 from modules where modules.name = 'MyModule')
 
-    assertEquals(
-        1,
-        insert(survey)
-            .columns(survey.name)
-            .select(
-                query()
-                    .where(query().from(survey2).where(survey2.name.eq("MyModule2")).notExists())
-                    .select(Expressions.constant("MyModule2")))
-            .execute());
+    assertThat(
+            insert(survey)
+                .columns(survey.name)
+                .select(
+                    query()
+                        .where(
+                            query().from(survey2).where(survey2.name.eq("MyModule2")).notExists())
+                        .select(Expressions.constant("MyModule2")))
+                .execute())
+        .isEqualTo(1);
 
-    assertEquals(1L, query().from(survey).where(survey.name.eq("MyModule2")).fetchCount());
+    assertThat(query().from(survey).where(survey.name.eq("MyModule2")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -383,12 +387,12 @@ public class InsertBase extends AbstractBaseTest {
     sq.set(param, 20);
 
     int count = (int) query().from(survey).fetchCount();
-    assertEquals(
-        count,
-        insert(survey)
-            .columns(survey.id, survey.name)
-            .select(sq.select(survey2.id.add(param), survey2.name))
-            .execute());
+    assertThat(
+            insert(survey)
+                .columns(survey.id, survey.name)
+                .select(sq.select(survey2.id.add(param), survey2.name))
+                .execute())
+        .isEqualTo(count);
   }
 
   @Test
@@ -398,24 +402,25 @@ public class InsertBase extends AbstractBaseTest {
     SQLInsertClause insert = insert(survey, query().from(survey2));
     insert.set(survey.id, survey2.id.add(20));
     insert.set(survey.name, survey2.name);
-    assertEquals(count, insert.execute());
+    assertThat(insert.execute()).isEqualTo(count);
   }
 
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Without_Columns() {
     int count = (int) query().from(survey).fetchCount();
-    assertEquals(
-        count,
-        insert(survey)
-            .select(query().from(survey2).select(survey2.id.add(10), survey2.name, survey2.name2))
-            .execute());
+    assertThat(
+            insert(survey)
+                .select(
+                    query().from(survey2).select(survey2.id.add(10), survey2.name, survey2.name2))
+                .execute())
+        .isEqualTo(count);
   }
 
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_without_columns() {
-    assertEquals(1, insert(survey).values(4, "Hello", "World").execute());
+    assertThat(insert(survey).values(4, "Hello", "World").execute()).isEqualTo(1);
   }
 
   @Test
@@ -432,13 +437,14 @@ public class InsertBase extends AbstractBaseTest {
         .select(query().from(survey2).select(survey2.id.add(40), survey2.name))
         .addBatch();
 
-    assertEquals(1, insert.execute());
+    assertThat(insert.execute()).isEqualTo(1);
   }
 
   @Test
   public void like() {
     insert(survey).values(11, "Hello World", "a\\b").execute();
-    assertEquals(1L, query().from(survey).where(survey.name2.contains("a\\b")).fetchCount());
+    assertThat(query().from(survey).where(survey.name2.contains("a\\b")).fetchCount())
+        .isEqualTo(1L);
   }
 
   @Test
@@ -447,15 +453,15 @@ public class InsertBase extends AbstractBaseTest {
     insert.set(survey.id, 5).set(survey.name, "aaa").addBatch();
     insert.set(survey.id, 6).set(survey.name, "a_").addBatch();
     insert.set(survey.id, 7).set(survey.name, "a%").addBatch();
-    assertEquals(3, insert.execute());
+    assertThat(insert.execute()).isEqualTo(3);
 
-    assertEquals(1L, query().from(survey).where(survey.name.like("a|%", '|')).fetchCount());
-    assertEquals(1L, query().from(survey).where(survey.name.like("a|_", '|')).fetchCount());
-    assertEquals(3L, query().from(survey).where(survey.name.like("a%")).fetchCount());
-    assertEquals(2L, query().from(survey).where(survey.name.like("a_")).fetchCount());
+    assertThat(query().from(survey).where(survey.name.like("a|%", '|')).fetchCount()).isEqualTo(1L);
+    assertThat(query().from(survey).where(survey.name.like("a|_", '|')).fetchCount()).isEqualTo(1L);
+    assertThat(query().from(survey).where(survey.name.like("a%")).fetchCount()).isEqualTo(3L);
+    assertThat(query().from(survey).where(survey.name.like("a_")).fetchCount()).isEqualTo(2L);
 
-    assertEquals(1L, query().from(survey).where(survey.name.startsWith("a_")).fetchCount());
-    assertEquals(1L, query().from(survey).where(survey.name.startsWith("a%")).fetchCount());
+    assertThat(query().from(survey).where(survey.name.startsWith("a_")).fetchCount()).isEqualTo(1L);
+    assertThat(query().from(survey).where(survey.name.startsWith("a%")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -465,19 +471,19 @@ public class InsertBase extends AbstractBaseTest {
     SQLInsertClause clause = mysqlReplace(survey);
     clause.columns(survey.id, survey.name).values(3, "Hello");
 
-    assertEquals("replace into SURVEY (ID, NAME) values (?, ?)", clause.toString());
+    assertThat(clause.toString()).isEqualTo("replace into SURVEY (ID, NAME) values (?, ?)");
     clause.execute();
   }
 
   @Test
   public void insert_with_tempateExpression_in_batch() {
-    assertEquals(
-        1,
-        insert(survey)
-            .set(survey.id, 3)
-            .set(survey.name, Expressions.stringTemplate("'Hello'"))
-            .addBatch()
-            .execute());
+    assertThat(
+            insert(survey)
+                .set(survey.id, 3)
+                .set(survey.name, Expressions.stringTemplate("'Hello'"))
+                .addBatch()
+                .execute())
+        .isEqualTo(1);
   }
 
   @Test
@@ -488,7 +494,7 @@ public class InsertBase extends AbstractBaseTest {
     QUuids uuids = QUuids.uuids;
     UUID uuid = UUID.randomUUID();
     insert(uuids).set(uuids.field, uuid).execute();
-    assertEquals(uuid, query().from(uuids).select(uuids.field).fetchFirst());
+    assertThat(query().from(uuids).select(uuids.field).fetchFirst()).isEqualTo(uuid);
   }
 
   @Test
@@ -498,6 +504,6 @@ public class InsertBase extends AbstractBaseTest {
     QXmlTest xmlTest = QXmlTest.xmlTest;
     String contents = "<html><head>a</head><body>b</body></html>";
     insert(xmlTest).set(xmlTest.col, contents).execute();
-    assertEquals(contents, query().from(xmlTest).select(xmlTest.col).fetchFirst());
+    assertThat(query().from(xmlTest).select(xmlTest.col).fetchFirst()).isEqualTo(contents);
   }
 }

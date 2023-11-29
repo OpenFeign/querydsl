@@ -57,31 +57,13 @@ class JavaTypeMapping {
     registerDefault(new URLType());
     registerDefault(new UtilDateType());
     registerDefault(new UtilUUIDType(false));
-    registerDefault(new JSR310InstantType());
-    registerDefault(new JSR310LocalDateTimeType());
-    registerDefault(new JSR310LocalDateType());
-    registerDefault(new JSR310LocalTimeType());
-    registerDefault(new JSR310OffsetDateTimeType());
-    registerDefault(new JSR310OffsetTimeType());
-    registerDefault(new JSR310ZonedDateTimeType());
-
-    // initialize Joda-Time converters only if Joda-Time is available
-    try {
-      Class.forName("org.joda.time.Instant");
-      registerDefault((Type<?>) Class.forName("com.querydsl.sql.types.DateTimeType").newInstance());
-      registerDefault(
-          (Type<?>) Class.forName("com.querydsl.sql.types.LocalDateTimeType").newInstance());
-      registerDefault(
-          (Type<?>) Class.forName("com.querydsl.sql.types.LocalDateType").newInstance());
-      registerDefault(
-          (Type<?>) Class.forName("com.querydsl.sql.types.LocalTimeType").newInstance());
-    } catch (ClassNotFoundException e) {
-      // converters for Joda-Time are not loaded
-    } catch (InstantiationException e) {
-      throw new RuntimeException(e);
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
+    registerDefault(new InstantType());
+    registerDefault(new LocalDateTimeType());
+    registerDefault(new LocalDateType());
+    registerDefault(new LocalTimeType());
+    registerDefault(new OffsetDateTimeType());
+    registerDefault(new OffsetTimeType());
+    registerDefault(new ZonedDateTimeType());
   }
 
   private static void registerDefault(Type<?> type) {

@@ -1,6 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,11 +14,11 @@ public class CollectionAnyTest extends AbstractQueryTest {
     Cat a = new Cat("a");
     a.setKittens(null);
 
-    assertEquals(
-        0,
-        CollQueryFactory.<Cat>from(cat, Collections.<Cat>singletonList(a))
-            .where(cat.kittens.any().name.startsWith("a"))
-            .fetchCount());
+    assertThat(
+            CollQueryFactory.<Cat>from(cat, Collections.<Cat>singletonList(a))
+                .where(cat.kittens.any().name.startsWith("a"))
+                .fetchCount())
+        .isZero();
   }
 
   @Test
@@ -39,7 +39,7 @@ public class CollectionAnyTest extends AbstractQueryTest {
         CollQueryFactory.<Cat>from(cat, Arrays.<Cat>asList(a, b))
             .<Cat>select(cat.kittens.any())
             .fetch();
-    assertEquals(Arrays.asList(aa, ab, ac, ba, bb), kittens);
+    assertThat(kittens).isEqualTo(Arrays.asList(aa, ab, ac, ba, bb));
   }
 
   @Test
@@ -60,7 +60,7 @@ public class CollectionAnyTest extends AbstractQueryTest {
         CollQueryFactory.<Cat>from(cat, Arrays.<Cat>asList(a, b))
             .select(cat.kittens.any().name)
             .fetch();
-    assertEquals(Arrays.asList("aa", "ab", "ac", "ba", "bb"), kittens);
+    assertThat(kittens).isEqualTo(Arrays.asList("aa", "ab", "ac", "ba", "bb"));
   }
 
   @Test
@@ -83,7 +83,7 @@ public class CollectionAnyTest extends AbstractQueryTest {
             .select(cat.kittens.any())
             .fetch();
 
-    assertEquals(Arrays.asList(aa, ab, ac), kittens);
+    assertThat(kittens).isEqualTo(Arrays.asList(aa, ab, ac));
   }
 
   @Test
@@ -106,6 +106,6 @@ public class CollectionAnyTest extends AbstractQueryTest {
             .select(cat.kittens.any().name)
             .fetch();
 
-    assertEquals(Arrays.asList("aa", "ab", "ac"), kittens);
+    assertThat(kittens).isEqualTo(Arrays.asList("aa", "ab", "ac"));
   }
 }

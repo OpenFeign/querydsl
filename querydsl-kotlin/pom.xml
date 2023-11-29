@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-patched</version>
+    <version>6.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-kotlin</artifactId>
@@ -12,12 +12,12 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
@@ -29,7 +29,7 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit</artifactId>
+      <artifactId>kotlin-test-junit5</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -48,7 +48,7 @@
           </compilerPlugins>
           <annotationProcessorPaths>
             <annotationProcessorPath>
-              <groupId>com.querydsl</groupId>
+              <groupId>io.github.openfeign.querydsl</groupId>
               <artifactId>querydsl-apt</artifactId>
               <version>${project.version}</version>
               <classifier>general</classifier>

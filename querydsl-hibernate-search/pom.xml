@@ -3,34 +3,24 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-patched</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.querydsl</groupId>
   <artifactId>querydsl-hibernate-search</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - Hibernate Search support</name>
   <description>Hibernate Search support for querydsl</description>
 
   <properties>
     <hibernate.version>5.5.3.Final</hibernate.version>
     <hibernate.validator.version>7.0.4.Final</hibernate.validator.version>
-    <hibernate.search.version>5.11.10.Final</hibernate.search.version>
+    <hibernate.search.version>5.11.12.Final</hibernate.search.version>
     <lucene.version>5.5.5</lucene.version>
     <osgi.import.package>org.apache.lucene.*;version="[3.6,4)",
       org.hibernate.*;version="[4,5)",
       ${osgi.import.package.root}</osgi.import.package>
   </properties>
-  <url>${project.homepage}</url>
-
-  <scm>
-    <url>${project.githubpage}</url>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-  </scm>
 
   <dependencyManagement>
     <dependencies>
@@ -49,7 +39,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-lucene5</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -143,7 +133,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
@@ -169,6 +159,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
         <configuration>
           <archive>
             <manifestEntries>

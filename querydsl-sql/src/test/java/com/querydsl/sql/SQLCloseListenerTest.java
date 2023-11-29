@@ -1,8 +1,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.Constants.employee;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.testutil.H2;
@@ -33,22 +32,22 @@ public class SQLCloseListenerTest {
 
   @Test
   public void fetch() {
-    assertFalse(query.fetch().isEmpty());
+    assertThat(query.fetch()).isNotEmpty();
   }
 
   @Test
   public void fetchOne() {
-    assertNotNull(query.limit(1).fetchOne());
+    assertThat(query.limit(1).fetchOne()).isNotNull();
   }
 
   @Test
   public void fetchFirst() {
-    assertNotNull(query.fetchFirst());
+    assertThat(query.fetchFirst()).isNotNull();
   }
 
   @Test
   public void fetchResults() {
-    assertNotNull(query.fetchResults());
+    assertThat(query.fetchResults()).isNotNull();
   }
 
   @Test

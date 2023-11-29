@@ -2,7 +2,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.employee;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.Tuple;
@@ -28,15 +28,17 @@ public class UnionBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({MYSQL, TERADATA})
   public void in_union() {
-    assertNotNull(
-        query()
-            .from(employee)
-            .where(
-                employee.id.in(
-                    query()
-                        .union(query().select(Expressions.ONE), query().select(Expressions.TWO))))
-            .select(Expressions.ONE)
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(employee)
+                .where(
+                    employee.id.in(
+                        query()
+                            .union(
+                                query().select(Expressions.ONE), query().select(Expressions.TWO))))
+                .select(Expressions.ONE)
+                .fetchFirst())
+        .isNotNull();
   }
 
   @Test
@@ -45,11 +47,11 @@ public class UnionBase extends AbstractBaseTest {
   public void union() throws SQLException {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max().as("ID"));
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min().as("ID"));
-    assertEquals(
-        Arrays.asList(
-            query().select(employee.id.min()).from(employee).fetchFirst(),
-            query().select(employee.id.max()).from(employee).fetchFirst()),
-        query().union(sq1, sq2).orderBy(employee.id.asc()).fetch());
+    assertThat(query().union(sq1, sq2).orderBy(employee.id.asc()).fetch())
+        .isEqualTo(
+            Arrays.asList(
+                query().select(employee.id.min()).from(employee).fetchFirst(),
+                query().select(employee.id.max()).from(employee).fetchFirst()));
   }
 
   @Test
@@ -57,7 +59,7 @@ public class UnionBase extends AbstractBaseTest {
   public void union_list() throws SQLException {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
-    assertEquals(query().union(sq1, sq2).fetch(), query().union(sq1, sq2).list());
+    assertThat(query().union(sq1, sq2).list()).isEqualTo(query().union(sq1, sq2).fetch());
   }
 
   @Test
@@ -66,7 +68,7 @@ public class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
     List<Integer> list = query().unionAll(sq1, sq2).fetch();
-    assertFalse(list.isEmpty());
+    assertThat(list).isNotEmpty();
   }
 
   @SuppressWarnings("unchecked")
@@ -77,10 +79,10 @@ public class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Tuple> sq2 =
         query().from(employee).select(employee.lastname, employee.firstname);
     List<Tuple> list = query().union(sq1, sq2).fetch();
-    assertFalse(list.isEmpty());
+    assertThat(list).isNotEmpty();
     for (Tuple row : list) {
-      assertNotNull(row.get(0, Object.class));
-      assertNotNull(row.get(1, Object.class));
+      assertThat(row.get(0, Object.class)).isNotNull();
+      assertThat(row.get(1, Object.class)).isNotNull();
     }
   }
 
@@ -95,9 +97,9 @@ public class UnionBase extends AbstractBaseTest {
     SQLQuery<?> query = query();
     query.union(sq1, sq2);
     List<String> list = query.select(employee.firstname).fetch();
-    assertFalse(list.isEmpty());
+    assertThat(list).isNotEmpty();
     for (String row : list) {
-      assertNotNull(row);
+      assertThat(row).isNotNull();
     }
   }
 
@@ -112,7 +114,7 @@ public class UnionBase extends AbstractBaseTest {
     SQLQuery<?> query = query();
     query.union(sq1, sq2);
     List<Tuple> list = query.select(employee.lastname, employee.firstname).fetch();
-    assertFalse(list.isEmpty());
+    assertThat(list).isNotEmpty();
     for (Tuple row : list) {
       System.out.println(row.get(0, String.class) + " " + row.get(1, String.class));
     }
@@ -126,7 +128,7 @@ public class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Integer> sq2 =
         query().from(employee).where(employee.firstname.eq("YYY")).select(employee.id);
     List<Integer> list = query().union(sq1, sq2).fetch();
-    assertTrue(list.isEmpty());
+    assertThat(list).isEmpty();
   }
 
   @Test
@@ -138,7 +140,7 @@ public class UnionBase extends AbstractBaseTest {
                 query().from(employee).select(employee.id.max()),
                 query().from(employee).select(employee.id.min()))
             .fetch();
-    assertFalse(list.isEmpty());
+    assertThat(list).isNotEmpty();
   }
 
   @Test
@@ -149,7 +151,7 @@ public class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Tuple> sq4 =
         query().from(employee).select(new Expression[] {employee.id.min()});
     List<Tuple> list2 = query().union(sq3, sq4).fetch();
-    assertFalse(list2.isEmpty());
+    assertThat(list2).isNotEmpty();
   }
 
   @SuppressWarnings("unchecked")
@@ -158,7 +160,7 @@ public class UnionBase extends AbstractBaseTest {
   public void union4() {
     SubQueryExpression<Tuple> sq1 = query().from(employee).select(employee.id, employee.firstname);
     SubQueryExpression<Tuple> sq2 = query().from(employee).select(employee.id, employee.firstname);
-    assertEquals(1, query().union(employee, sq1, sq2).select(employee.id.count()).fetch().size());
+    assertThat(query().union(employee, sq1, sq2).select(employee.id.count()).fetch()).hasSize(1);
   }
 
   // FIXME for CUBRID
@@ -199,7 +201,7 @@ public class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id);
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id);
     List<Integer> list = query().union(sq1, sq2).orderBy(employee.id.asc()).fetch();
-    assertFalse(list.isEmpty());
+    assertThat(list).isNotEmpty();
   }
 
   @SuppressWarnings("unchecked")
@@ -212,9 +214,9 @@ public class UnionBase extends AbstractBaseTest {
         query().from(employee).select(employee.id.min(), employee.id.min().subtract(1));
 
     List<Tuple> list = query().union(sq1, sq2).list();
-    assertEquals(2, list.size());
-    assertTrue(list.get(0) != null);
-    assertTrue(list.get(1) != null);
+    assertThat(list).hasSize(2);
+    assertThat(list.get(0) != null).isTrue();
+    assertThat(list.get(1) != null).isTrue();
   }
 
   @SuppressWarnings("unchecked")
@@ -227,10 +229,10 @@ public class UnionBase extends AbstractBaseTest {
         query().from(employee).select(employee.id.min(), employee.id.min().subtract(1));
 
     try (CloseableIterator<Tuple> iterator = query().union(sq1, sq2).iterate()) {
-      assertTrue(iterator.hasNext());
-      assertTrue(iterator.next() != null);
-      assertTrue(iterator.next() != null);
-      assertFalse(iterator.hasNext());
+      assertThat(iterator.hasNext()).isTrue();
+      assertThat(iterator.next() != null).isTrue();
+      assertThat(iterator.next() != null).isTrue();
+      assertThat(iterator.hasNext()).isFalse();
     }
   }
 
@@ -241,9 +243,9 @@ public class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
 
     List<Integer> list = query().union(sq1, sq2).list();
-    assertEquals(2, list.size());
-    assertTrue(list.get(0) != null);
-    assertTrue(list.get(1) != null);
+    assertThat(list).hasSize(2);
+    assertThat(list.get(0) != null).isTrue();
+    assertThat(list.get(1) != null).isTrue();
   }
 
   @SuppressWarnings("unchecked")
@@ -253,10 +255,10 @@ public class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
 
     try (CloseableIterator<Integer> iterator = query().union(sq1, sq2).iterate()) {
-      assertTrue(iterator.hasNext());
-      assertTrue(iterator.next() != null);
-      assertTrue(iterator.next() != null);
-      assertFalse(iterator.hasNext());
+      assertThat(iterator.hasNext()).isTrue();
+      assertThat(iterator.next() != null).isTrue();
+      assertThat(iterator.next() != null).isTrue();
+      assertThat(iterator.hasNext()).isFalse();
     }
   }
 
@@ -269,7 +271,7 @@ public class UnionBase extends AbstractBaseTest {
         query().from(employee).select(Projections.constructor(Employee.class, employee.id));
     List<Employee> employees = query().union(sq1, sq2).list();
     for (Employee employee : employees) {
-      assertNotNull(employee);
+      assertThat(employee).isNotNull();
     }
   }
 
@@ -289,6 +291,6 @@ public class UnionBase extends AbstractBaseTest {
 
     SQLQuery<?> query = query();
     query.union(sq1, sq2);
-    assertEquals(10, query.clone().select(idAlias).fetch().size());
+    assertThat(query.clone().select(idAlias).fetch()).hasSize(10);
   }
 }

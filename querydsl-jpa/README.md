@@ -8,7 +8,7 @@ The JPA module provides integration with the JPA 2 persistence API.
 
 ```XML
 <dependency>
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-jpa</artifactId>
   <version>${querydsl.version}</version>
 </dependency>
@@ -38,7 +38,7 @@ And now, configure the Maven APT plugin :
         </executions>
         <dependencies>
           <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
             <version>${querydsl.version}</version>
           </dependency>

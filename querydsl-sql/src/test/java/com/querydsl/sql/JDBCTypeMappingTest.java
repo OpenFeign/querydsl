@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ReportingOnly;
 import java.math.BigDecimal;
@@ -29,33 +29,33 @@ public class JDBCTypeMappingTest {
 
   @Test
   public void get() {
-    assertEquals(Float.class, typeMapping.get(Types.FLOAT, 0, 0));
-    assertEquals(Float.class, typeMapping.get(Types.REAL, 0, 0));
+    assertThat(typeMapping.get(Types.FLOAT, 0, 0)).isEqualTo(Float.class);
+    assertThat(typeMapping.get(Types.REAL, 0, 0)).isEqualTo(Float.class);
   }
 
   @Test
   public void stringTypes() {
-    assertEquals(String.class, typeMapping.get(Types.CHAR, 0, 0));
-    assertEquals(String.class, typeMapping.get(Types.NCHAR, 0, 0));
-    assertEquals(String.class, typeMapping.get(Types.CLOB, 0, 0));
-    assertEquals(String.class, typeMapping.get(Types.NCLOB, 0, 0));
-    assertEquals(String.class, typeMapping.get(Types.LONGVARCHAR, 0, 0));
-    assertEquals(String.class, typeMapping.get(Types.LONGNVARCHAR, 0, 0));
-    assertEquals(String.class, typeMapping.get(Types.SQLXML, 0, 0));
-    assertEquals(String.class, typeMapping.get(Types.VARCHAR, 0, 0));
-    assertEquals(String.class, typeMapping.get(Types.NVARCHAR, 0, 0));
+    assertThat(typeMapping.get(Types.CHAR, 0, 0)).isEqualTo(String.class);
+    assertThat(typeMapping.get(Types.NCHAR, 0, 0)).isEqualTo(String.class);
+    assertThat(typeMapping.get(Types.CLOB, 0, 0)).isEqualTo(String.class);
+    assertThat(typeMapping.get(Types.NCLOB, 0, 0)).isEqualTo(String.class);
+    assertThat(typeMapping.get(Types.LONGVARCHAR, 0, 0)).isEqualTo(String.class);
+    assertThat(typeMapping.get(Types.LONGNVARCHAR, 0, 0)).isEqualTo(String.class);
+    assertThat(typeMapping.get(Types.SQLXML, 0, 0)).isEqualTo(String.class);
+    assertThat(typeMapping.get(Types.VARCHAR, 0, 0)).isEqualTo(String.class);
+    assertThat(typeMapping.get(Types.NVARCHAR, 0, 0)).isEqualTo(String.class);
   }
 
   @Test
   public void blobTypes() {
-    assertEquals(Blob.class, typeMapping.get(Types.BLOB, 0, 0));
+    assertThat(typeMapping.get(Types.BLOB, 0, 0)).isEqualTo(Blob.class);
   }
 
   @Test
   public void bytesTypes() {
-    assertEquals(byte[].class, typeMapping.get(Types.BINARY, 0, 0));
-    assertEquals(byte[].class, typeMapping.get(Types.VARBINARY, 0, 0));
-    assertEquals(byte[].class, typeMapping.get(Types.LONGVARBINARY, 0, 0));
+    assertThat(typeMapping.get(Types.BINARY, 0, 0)).isEqualTo(byte[].class);
+    assertThat(typeMapping.get(Types.VARBINARY, 0, 0)).isEqualTo(byte[].class);
+    assertThat(typeMapping.get(Types.LONGVARBINARY, 0, 0)).isEqualTo(byte[].class);
   }
 
   @Test
@@ -67,19 +67,19 @@ public class JDBCTypeMappingTest {
     //        1-2,0      -> Byte
 
     //        ?,?   -> BigDecimal
-    assertEquals(typeMapping.get(Types.NUMERIC, 20, 0), BigInteger.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 19, 0), BigInteger.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 15, 0), Long.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 6, 0), Integer.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 5, 0), Integer.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 4, 0), Short.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 3, 0), Short.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 2, 0), Byte.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 1, 0), Byte.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 0, 0), BigInteger.class);
+    assertThat(BigInteger.class).isEqualTo(typeMapping.get(Types.NUMERIC, 20, 0));
+    assertThat(BigInteger.class).isEqualTo(typeMapping.get(Types.NUMERIC, 19, 0));
+    assertThat(Long.class).isEqualTo(typeMapping.get(Types.NUMERIC, 15, 0));
+    assertThat(Integer.class).isEqualTo(typeMapping.get(Types.NUMERIC, 6, 0));
+    assertThat(Integer.class).isEqualTo(typeMapping.get(Types.NUMERIC, 5, 0));
+    assertThat(Short.class).isEqualTo(typeMapping.get(Types.NUMERIC, 4, 0));
+    assertThat(Short.class).isEqualTo(typeMapping.get(Types.NUMERIC, 3, 0));
+    assertThat(Byte.class).isEqualTo(typeMapping.get(Types.NUMERIC, 2, 0));
+    assertThat(Byte.class).isEqualTo(typeMapping.get(Types.NUMERIC, 1, 0));
+    assertThat(BigInteger.class).isEqualTo(typeMapping.get(Types.NUMERIC, 0, 0));
 
-    assertEquals(typeMapping.get(Types.NUMERIC, 17, 2), BigDecimal.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 5, 2), BigDecimal.class);
+    assertThat(BigDecimal.class).isEqualTo(typeMapping.get(Types.NUMERIC, 17, 2));
+    assertThat(BigDecimal.class).isEqualTo(typeMapping.get(Types.NUMERIC, 5, 2));
   }
 
   @Test
@@ -94,20 +94,20 @@ public class JDBCTypeMappingTest {
   @Test
   public void numericOverriden() {
     typeMapping.registerNumeric(19, 0, BigInteger.class);
-    assertEquals(typeMapping.get(Types.NUMERIC, 19, 0), BigInteger.class);
+    assertThat(BigInteger.class).isEqualTo(typeMapping.get(Types.NUMERIC, 19, 0));
   }
 
   @Test
   public void numericOverriden2() {
     typeMapping.registerNumeric(19, 0, BigInteger.class);
-    assertEquals(typeMapping.get(Types.INTEGER, 19, 0), BigInteger.class);
-    assertEquals(typeMapping.get(Types.INTEGER, 18, 0), Integer.class);
+    assertThat(BigInteger.class).isEqualTo(typeMapping.get(Types.INTEGER, 19, 0));
+    assertThat(Integer.class).isEqualTo(typeMapping.get(Types.INTEGER, 18, 0));
   }
 
   @Test
   public void numericOverriden3() {
     typeMapping.registerNumeric(5, 2, BigDecimal.class);
-    assertEquals(typeMapping.get(Types.DOUBLE, 5, 2), BigDecimal.class);
-    assertEquals(typeMapping.get(Types.DOUBLE, 5, 1), Double.class);
+    assertThat(BigDecimal.class).isEqualTo(typeMapping.get(Types.DOUBLE, 5, 2));
+    assertThat(Double.class).isEqualTo(typeMapping.get(Types.DOUBLE, 5, 1));
   }
 }

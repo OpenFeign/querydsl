@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.TimePath;
@@ -24,7 +24,7 @@ public class TemporalTest {
 
   @Test
   public void test() {
-    assertEquals(DatePath.class, QTemporalTest_MyEntity.myEntity.date.getClass());
-    assertEquals(TimePath.class, QTemporalTest_MyEntity.myEntity.time.getClass());
+    assertThat(QTemporalTest_MyEntity.myEntity.date.getClass()).isEqualTo(DatePath.class);
+    assertThat(QTemporalTest_MyEntity.myEntity.time.getClass()).isEqualTo(TimePath.class);
   }
 }

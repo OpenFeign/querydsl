@@ -14,8 +14,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
@@ -45,13 +44,13 @@ public class FirebirdTemplatesTest extends AbstractSQLTemplatesTest {
     Path<Integer> col1 = Expressions.numberPath(Integer.class, "col1");
     Union union = query.union(select(one.as(col1)), select(two), select(three));
 
-    assertEquals(
-        "select 1 as col1 from RDB$DATABASE\n"
-            + "union\n"
-            + "select 2 from RDB$DATABASE\n"
-            + "union\n"
-            + "select 3 from RDB$DATABASE",
-        union.toString());
+    assertThat(union.toString())
+        .isEqualTo(
+            "select 1 as col1 from RDB$DATABASE\n"
+                + "union\n"
+                + "select 2 from RDB$DATABASE\n"
+                + "union\n"
+                + "select 3 from RDB$DATABASE");
   }
 
   @Test
@@ -86,13 +85,13 @@ public class FirebirdTemplatesTest extends AbstractSQLTemplatesTest {
     int p8 = getPrecedence(Ops.XOR, Ops.XNOR);
     int p9 = getPrecedence(Ops.OR);
 
-    assertTrue(p1 < p2);
-    assertTrue(p2 < p3);
-    assertTrue(p3 < p4);
-    assertTrue(p4 < p5);
-    assertTrue(p5 < p6);
-    assertTrue(p6 < p7);
-    assertTrue(p7 < p8);
-    assertTrue(p8 < p9);
+    assertThat(p1 < p2).isTrue();
+    assertThat(p2 < p3).isTrue();
+    assertThat(p3 < p4).isTrue();
+    assertThat(p4 < p5).isTrue();
+    assertThat(p5 < p6).isTrue();
+    assertThat(p6 < p7).isTrue();
+    assertThat(p7 < p8).isTrue();
+    assertThat(p8 < p9).isTrue();
   }
 }

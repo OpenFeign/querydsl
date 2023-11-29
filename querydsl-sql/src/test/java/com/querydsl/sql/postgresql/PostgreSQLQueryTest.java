@@ -1,6 +1,6 @@
 package com.querydsl.sql.postgresql;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.PostgreSQLTemplates;
 import com.querydsl.sql.domain.QEmployee;
@@ -78,19 +78,19 @@ public class PostgreSQLQueryTest {
   @Test
   public void forShare() {
     query.from(survey).forShare();
-    assertEquals("from SURVEY survey for share", toString(query));
+    assertThat(toString(query)).isEqualTo("from SURVEY survey for share");
   }
 
   @Test
   public void forUpDate_noWait() {
     query.from(survey).forUpdate().noWait();
-    assertEquals("from SURVEY survey for update nowait", toString(query));
+    assertThat(toString(query)).isEqualTo("from SURVEY survey for update nowait");
   }
 
   @Test
   public void forUpdate_of() {
     query.from(survey).forUpdate().of(survey);
-    assertEquals("from SURVEY survey for update of SURVEY", toString(query));
+    assertThat(toString(query)).isEqualTo("from SURVEY survey for update of SURVEY");
   }
 
   @Test
@@ -101,9 +101,11 @@ public class PostgreSQLQueryTest {
         .orderBy(employee.datefield.asc(), employee.timefield.asc(), employee.salary.asc())
         .select(employee.id);
 
-    assertEquals(
-        "select distinct on(employee.DATEFIELD, employee.TIMEFIELD) employee.ID from EMPLOYEE employee order by employee.DATEFIELD asc, employee.TIMEFIELD asc, employee.SALARY asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "select distinct on(employee.DATEFIELD, employee.TIMEFIELD) employee.ID from EMPLOYEE"
+                + " employee order by employee.DATEFIELD asc, employee.TIMEFIELD asc,"
+                + " employee.SALARY asc");
   }
 
   private String toString(PostgreSQLQuery query) {

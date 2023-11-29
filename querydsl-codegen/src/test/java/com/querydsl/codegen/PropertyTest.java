@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
@@ -36,9 +36,9 @@ public class PropertyTest {
     EntityType type = new EntityType(typeModel);
     Property p1 = new Property(type, "property", type, Collections.<String>emptyList());
     Property p2 = new Property(type, "property", type, Collections.<String>emptyList());
-    assertEquals(p1, p1);
-    assertEquals(p1, p2);
-    assertEquals(p1.hashCode(), p2.hashCode());
+    assertThat(p1).isEqualTo(p1);
+    assertThat(p2).isEqualTo(p1);
+    assertThat(p2.hashCode()).isEqualTo(p1.hashCode());
   }
 
   @Test
@@ -53,6 +53,6 @@ public class PropertyTest {
             false);
     EntityType type = new EntityType(typeModel);
     Property property = new Property(type, "boolean", type, Collections.<String>emptyList());
-    assertEquals("boolean$", property.getEscapedName());
+    assertThat(property.getEscapedName()).isEqualTo("boolean$");
   }
 }

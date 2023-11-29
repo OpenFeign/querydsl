@@ -1,12 +1,11 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.MapKey;
 import jakarta.persistence.OneToMany;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class ManagedEmailTest {
@@ -31,10 +30,9 @@ public class ManagedEmailTest {
 
   @Test
   public void test() {
-    Assert.assertEquals(
-        EmailType.class, QManagedEmailTest_ManagedEmails.managedEmails.emails.getKeyType());
-    assertEquals(
-        ManagedEmailImpl.class,
-        QManagedEmailTest_ManagedEmails.managedEmails.emails.getValueType());
+    assertThat(QManagedEmailTest_ManagedEmails.managedEmails.emails.getKeyType())
+        .isEqualTo(EmailType.class);
+    assertThat(QManagedEmailTest_ManagedEmails.managedEmails.emails.getValueType())
+        .isEqualTo(ManagedEmailImpl.class);
   }
 }

@@ -1,6 +1,6 @@
 package com.querydsl.maven;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import org.apache.maven.project.MavenProject;
@@ -22,6 +22,6 @@ public class JPAExporterMojoTest {
     mojo.execute();
 
     File file = new File("target/generated-test-data2/com/querydsl/maven/QEntity.java");
-    assertTrue(file.exists());
+    assertThat(file).exists();
   }
 }

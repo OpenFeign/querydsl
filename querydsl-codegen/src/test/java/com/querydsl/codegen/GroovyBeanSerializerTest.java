@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.StringUtils;
@@ -88,7 +88,7 @@ public class GroovyBeanSerializerTest {
             "Map<DomainClass, DomainClass> mapField;",
             "Set<DomainClass> setField;",
             "java.sql.Time time;")) {
-      assertTrue(prop + " was not contained", str.contains(prop));
+      assertThat(str.contains(prop)).as(prop + " was not contained").isTrue();
     }
   }
 }

@@ -29,7 +29,6 @@ import javax.annotation.processing.SupportedAnnotationTypes;
  */
 @SupportedAnnotationTypes({
   "com.querydsl.core.annotations.*",
-  "javax.persistence.*",
   "jakarta.persistence.*",
   "org.hibernate.annotations.*"
 })

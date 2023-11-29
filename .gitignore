@@ -1,5 +1,6 @@
 .DS_Store
 target
+m2e-target/
 bin
 test-output
 nb-configuration.xml
@@ -20,3 +21,5 @@ derby.log
 /devops/**/*.semaphore
 /devops/test-connection/.lein-repl-history
 **/.flattened-pom.xml
+
+.checkstyle

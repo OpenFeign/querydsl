@@ -10,7 +10,7 @@
 
   <programlisting language="xml"><![CDATA[
 <dependency>
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-scala</artifactId>
   <version>${querydsl.version}</version>
 </dependency>
@@ -124,7 +124,7 @@ exporter.export(connection.getMetaData)
     <plugins>
       ...
       <plugin>
-        <groupId>com.querydsl</groupId>
+        <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
         <version>${querydsl.version}</version>
         <configuration>
@@ -144,7 +144,7 @@ exporter.export(connection.getMetaData)
             <version>5.1.16</version>
           </dependency>
           <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-scala</artifactId>
             <version>${querydsl.version}</version>
           </dependency>

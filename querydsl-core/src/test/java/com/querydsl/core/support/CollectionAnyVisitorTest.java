@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.support;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.ConstantImpl;
@@ -28,44 +28,45 @@ public class CollectionAnyVisitorTest {
 
   @Test
   public void path() {
-    assertEquals("cat_kittens_0", serialize(cat.kittens.any()));
+    assertThat(serialize(cat.kittens.any())).isEqualTo("cat_kittens_0");
   }
 
   @Test
   public void longer_path() {
-    assertEquals("cat_kittens_0.name", serialize(cat.kittens.any().name));
+    assertThat(serialize(cat.kittens.any().name)).isEqualTo("cat_kittens_0.name");
   }
 
   @Test
   public void longer_path2() {
     CollectionAnyVisitor visitor = new CollectionAnyVisitor();
-    assertEquals("cat_kittens_0.name", serialize(cat.kittens.any().name, visitor));
-    assertEquals("cat_kittens_1.name", serialize(cat.kittens.any().name, visitor));
+    assertThat(serialize(cat.kittens.any().name, visitor)).isEqualTo("cat_kittens_0.name");
+    assertThat(serialize(cat.kittens.any().name, visitor)).isEqualTo("cat_kittens_1.name");
   }
 
   @Test
   public void very_long_path() {
-    assertEquals("cat_kittens_0_kittens_1.name", serialize(cat.kittens.any().kittens.any().name));
+    assertThat(serialize(cat.kittens.any().kittens.any().name))
+        .isEqualTo("cat_kittens_0_kittens_1.name");
   }
 
   @Test
   public void simple_booleanOperation() {
     Predicate predicate = cat.kittens.any().name.eq("Ruth123");
-    assertEquals("cat_kittens_0.name = Ruth123", serialize(predicate));
+    assertThat(serialize(predicate)).isEqualTo("cat_kittens_0.name = Ruth123");
   }
 
   @Test
   public void simple_stringOperation() {
     Predicate predicate = cat.kittens.any().name.substring(1).eq("uth123");
-    assertEquals("substring(cat_kittens_0.name,1) = uth123", serialize(predicate));
+    assertThat(serialize(predicate)).isEqualTo("substring(cat_kittens_0.name,1) = uth123");
   }
 
   @Test
   public void and_operation() {
     Predicate predicate =
         cat.kittens.any().name.eq("Ruth123").and(cat.kittens.any().bodyWeight.gt(10.0));
-    assertEquals(
-        "cat_kittens_0.name = Ruth123 && cat_kittens_1.bodyWeight > 10.0", serialize(predicate));
+    assertThat(serialize(predicate))
+        .isEqualTo("cat_kittens_0.name = Ruth123 && cat_kittens_1.bodyWeight > 10.0");
   }
 
   @Test
@@ -73,7 +74,7 @@ public class CollectionAnyVisitorTest {
     Expression<Boolean> templateExpr =
         ExpressionUtils.template(
             Boolean.class, "{0} = {1}", cat.kittens.any().name, ConstantImpl.create("Ruth123"));
-    assertEquals("cat_kittens_0.name = Ruth123", serialize(templateExpr));
+    assertThat(serialize(templateExpr)).isEqualTo("cat_kittens_0.name = Ruth123");
   }
 
   private String serialize(Expression<?> expression) {

@@ -15,7 +15,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
 import static com.querydsl.sql.SQLExpressions.union;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
@@ -72,7 +72,9 @@ public class SQLSubQueryTest {
     serializer.handle(expr);
 
     assertEquals(
-        "(select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID, employee2.ID as col__ID7\n"
+        "(select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY,"
+            + " EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID, employee2.ID as"
+            + " col__ID7\n"
             + "from EMPLOYEE EMPLOYEE\n"
             + "inner join EMPLOYEE employee2\n"
             + "on EMPLOYEE.SUPERIOR_ID = employee2.ID)",

@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryDelegate;
 import com.querydsl.core.annotations.QueryEntity;
@@ -42,6 +42,6 @@ public class Delegate2Test {
   @Test
   public void test() {
     QDelegate2Test_Entity entity = QDelegate2Test_Entity.entity;
-    assertNotNull(entity.point.geoDistance(new Point()));
+    assertThat(entity.point.geoDistance(new Point())).isNotNull();
   }
 }

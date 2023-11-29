@@ -1,7 +1,6 @@
 package com.querydsl.apt;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,20 +40,20 @@ public class NoteTest extends AbstractProcessorTest {
   public void processDefault() throws IOException {
     aptOptions = Collections.emptyList();
     process();
-    assertTrue(isStdErrEmpty());
+    assertThat(isStdErrEmpty()).isTrue();
   }
 
   @Test
   public void processEnabled() throws IOException {
     aptOptions = Collections.singletonList("-Aquerydsl.logInfo=true");
     process();
-    assertFalse(isStdErrEmpty());
+    assertThat(isStdErrEmpty()).isFalse();
   }
 
   @Test
   public void processDisabled() throws IOException {
     aptOptions = Collections.singletonList("-Aquerydsl.logInfo=false");
     process();
-    assertTrue(isStdErrEmpty());
+    assertThat(isStdErrEmpty()).isTrue();
   }
 }

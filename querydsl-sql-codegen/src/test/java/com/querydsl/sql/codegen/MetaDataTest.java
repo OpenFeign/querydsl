@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.codegen;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.utils.model.SimpleType;
@@ -48,11 +48,11 @@ public class MetaDataTest {
 
   @Test
   public void getSimpleName() {
-    assertEquals("VwServiceName", classModel.getSimpleName());
+    assertThat(classModel.getSimpleName()).isEqualTo("VwServiceName");
   }
 
   @Test
   public void getFullName() {
-    assertEquals("com.myproject.domain.VwServiceName", classModel.getFullName());
+    assertThat(classModel.getFullName()).isEqualTo("com.myproject.domain.VwServiceName");
   }
 }

@@ -8,7 +8,7 @@ The SQL module provides integration with the JDBC API.
 
 ```XML
 <dependency>
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-sql</artifactId>
   <version>${querydsl.version}</version>
 </dependency>
@@ -24,7 +24,7 @@ This functionality is also available as a Maven plugin. The presented example ca
     <plugins>
       ...
       <plugin>
-        <groupId>com.querydsl</groupId>
+        <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
         <version>${querydsl.version}</version>
         <executions>

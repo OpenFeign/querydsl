@@ -3,24 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-patched</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.querydsl</groupId>
   <artifactId>querydsl-scala</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - Scala support</name>
 
   <properties>
     <character.encoding>UTF-8</character.encoding>
     <argLine>-Xms256m -Xmx512m -Xss2m</argLine>
-    <checkstyle.skip>true</checkstyle.skip>
-
-    <scala.full.version>2.11.12</scala.full.version>
-    <hibernate.version>3.5.6-Final</hibernate.version>
   </properties>
 
   <dependencyManagement>
@@ -40,7 +33,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -59,21 +52,26 @@
 
     <!-- provided -->
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql-codegen</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <version>2.0.1</version>
+    </dependency>
 
     <!-- test -->
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
@@ -81,7 +79,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-jpa</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -203,7 +201,7 @@
       </plugin>
       <!--
       <plugin>
-        <groupId>com.querydsl</groupId>
+        <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
         <version>${project.version}</version>
         <configuration>
@@ -216,7 +214,7 @@
         </configuration>
         <dependencies>
           <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-scala</artifactId>
             <version>${project.version}</version>
           </dependency>

@@ -14,7 +14,7 @@
 package com.querydsl.core.group;
 
 import static com.querydsl.core.group.GroupBy.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.IteratorAdapter;
@@ -30,7 +30,7 @@ public class GroupByListTest extends AbstractGroupByTest {
   public void group_order() {
     List<Group> results = BASIC_RESULTS.transform(groupBy(postId).list(postName, set(commentId)));
 
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
   }
 
   @Test
@@ -38,13 +38,14 @@ public class GroupByListTest extends AbstractGroupByTest {
     List<Group> results =
         BASIC_RESULTS.transform(groupBy(postId).list(postName, set(commentId), list(commentText)));
 
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
 
     Group group = results.get(1);
-    assertEquals(toInt(1), group.getOne(postId));
-    assertEquals("post 1", group.getOne(postName));
-    assertEquals(toSet(1, 2, 3), group.getSet(commentId));
-    assertEquals(Arrays.asList("comment 1", "comment 2", "comment 3"), group.getList(commentText));
+    assertThat(group.getOne(postId)).isEqualTo(toInt(1));
+    assertThat(group.getOne(postName)).isEqualTo("post 1");
+    assertThat(group.getSet(commentId)).isEqualTo(toSet(1, 2, 3));
+    assertThat(group.getList(commentText))
+        .isEqualTo(Arrays.asList("comment 1", "comment 2", "comment 3"));
   }
 
   @Test
@@ -52,13 +53,13 @@ public class GroupByListTest extends AbstractGroupByTest {
     List<Group> results =
         BASIC_RESULTS.transform(groupBy(postId).list(postName, set(commentId), list(commentText)));
 
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
 
     Group group = results.get(0);
-    assertNull(group.getOne(postId));
-    assertEquals("null post", group.getOne(postName));
-    assertEquals(toSet(7, 8), group.getSet(commentId));
-    assertEquals(Arrays.asList("comment 7", "comment 8"), group.getList(commentText));
+    assertThat(group.getOne(postId)).isNull();
+    assertThat(group.getOne(postName)).isEqualTo("null post");
+    assertThat(group.getSet(commentId)).isEqualTo(toSet(7, 8));
+    assertThat(group.getList(commentText)).isEqualTo(Arrays.asList("comment 7", "comment 8"));
   }
 
   @Test(expected = NoSuchElementException.class)
@@ -66,7 +67,7 @@ public class GroupByListTest extends AbstractGroupByTest {
     List<Group> results =
         BASIC_RESULTS.transform(groupBy(postId).list(postName, set(commentId), list(commentText)));
 
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
 
     Group group = results.get(1);
     group.getSet(qComment);
@@ -77,7 +78,7 @@ public class GroupByListTest extends AbstractGroupByTest {
     List<Group> results =
         BASIC_RESULTS.transform(groupBy(postId).list(postName, set(commentId), list(commentText)));
 
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
 
     Group group = results.get(1);
     group.getList(commentId);
@@ -88,12 +89,12 @@ public class GroupByListTest extends AbstractGroupByTest {
     List<Group> results =
         MAP_RESULTS.transform(groupBy(postId).list(postName, map(commentId, commentText)));
 
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
 
     Group group = results.get(1);
     Map<Integer, String> comments = group.getMap(commentId, commentText);
-    assertEquals(3, comments.size());
-    assertEquals("comment 2", comments.get(2));
+    assertThat(comments).hasSize(3);
+    assertThat(comments).containsEntry(2, "comment 2");
   }
 
   @Test
@@ -101,11 +102,11 @@ public class GroupByListTest extends AbstractGroupByTest {
     List<Map<Integer, String>> results =
         MAP2_RESULTS.transform(groupBy(postId).list(map(commentId, commentText)));
 
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
 
     Map<Integer, String> comments = results.get(1);
-    assertEquals(3, comments.size());
-    assertEquals("comment 2", comments.get(2));
+    assertThat(comments).hasSize(3);
+    assertThat(comments).containsEntry(2, "comment 2");
   }
 
   @Test
@@ -134,7 +135,7 @@ public class GroupByListTest extends AbstractGroupByTest {
       Pair<Integer, String> second = pair.getSecond();
       comments.put(second.getFirst(), second.getSecond());
     }
-    assertEquals(expected.toString(), actual.toString());
+    assertThat(actual.toString()).isEqualTo(expected.toString());
   }
 
   @Test
@@ -163,7 +164,7 @@ public class GroupByListTest extends AbstractGroupByTest {
       Map<Integer, String> posts = Collections.singletonMap(first.getFirst(), first.getSecond());
       comments.put(posts, pair.getSecond());
     }
-    assertEquals(expected.toString(), actual.toString());
+    assertThat(actual.toString()).isEqualTo(expected.toString());
   }
 
   @Test
@@ -171,14 +172,14 @@ public class GroupByListTest extends AbstractGroupByTest {
     List<Group> results =
         BASIC_RESULTS.transform(groupBy(postId).list(postName, set(commentId), list(commentText)));
 
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
 
     Group group = results.get(1);
     Object[] array = group.toArray();
-    assertEquals(toInt(1), array[0]);
-    assertEquals("post 1", array[1]);
-    assertEquals(toSet(1, 2, 3), array[2]);
-    assertEquals(Arrays.asList("comment 1", "comment 2", "comment 3"), array[3]);
+    assertThat(array[0]).isEqualTo(toInt(1));
+    assertThat(array[1]).isEqualTo("post 1");
+    assertThat(array[2]).isEqualTo(toSet(1, 2, 3));
+    assertThat(array[3]).isEqualTo(Arrays.asList("comment 1", "comment 2", "comment 3"));
   }
 
   @Test
@@ -188,13 +189,13 @@ public class GroupByListTest extends AbstractGroupByTest {
             groupBy(postId)
                 .list(Projections.constructor(Post.class, postId, postName, set(qComment))));
 
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
 
     Post post = results.get(1);
-    assertNotNull(post);
-    assertEquals(toInt(1), post.getId());
-    assertEquals("post 1", post.getName());
-    assertEquals(toSet(comment(1), comment(2), comment(3)), post.getComments());
+    assertThat(post).isNotNull();
+    assertThat(post.getId()).isEqualTo(toInt(1));
+    assertThat(post.getName()).isEqualTo("post 1");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(1), comment(2), comment(3)));
   }
 
   @Test
@@ -205,13 +206,13 @@ public class GroupByListTest extends AbstractGroupByTest {
                 .list(
                     Projections.bean(Post.class, postId, postName, set(qComment).as("comments"))));
 
-    assertEquals(4, results.size());
+    assertThat(results).hasSize(4);
 
     Post post = results.get(1);
-    assertNotNull(post);
-    assertEquals(toInt(1), post.getId());
-    assertEquals("post 1", post.getName());
-    assertEquals(toSet(comment(1), comment(2), comment(3)), post.getComments());
+    assertThat(post).isNotNull();
+    assertThat(post.getId()).isEqualTo(toInt(1));
+    assertThat(post.getName()).isEqualTo("post 1");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(1), comment(2), comment(3)));
   }
 
   @Test
@@ -225,13 +226,13 @@ public class GroupByListTest extends AbstractGroupByTest {
                         userName,
                         Projections.constructor(Post.class, postId, postName, set(qComment)))));
 
-    assertEquals(2, results.size());
+    assertThat(results).hasSize(2);
 
     User user = results.get(0);
     Post post = user.getLatestPost();
-    assertEquals(toInt(2), post.getId());
-    assertEquals("post 2", post.getName());
-    assertEquals(toSet(comment(4), comment(5)), post.getComments());
+    assertThat(post.getId()).isEqualTo(toInt(2));
+    assertThat(post.getName()).isEqualTo("post 2");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
   }
 
   @Test
@@ -246,13 +247,13 @@ public class GroupByListTest extends AbstractGroupByTest {
                         Projections.bean(Post.class, postId, postName, set(qComment).as("comments"))
                             .as("latestPost"))));
 
-    assertEquals(2, results.size());
+    assertThat(results).hasSize(2);
 
     User user = results.get(0);
     Post post = user.getLatestPost();
-    assertEquals(toInt(2), post.getId());
-    assertEquals("post 2", post.getName());
-    assertEquals(toSet(comment(4), comment(5)), post.getComments());
+    assertThat(post.getId()).isEqualTo(toInt(2));
+    assertThat(post.getName()).isEqualTo("post 2");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
   }
 
   @Test
@@ -267,12 +268,12 @@ public class GroupByListTest extends AbstractGroupByTest {
                         Projections.constructor(Post.class, postId, postName, set(qComment))
                             .as("latestPost"))));
 
-    assertEquals(2, results.size());
+    assertThat(results).hasSize(2);
 
     User user = results.get(0);
     Post post = user.getLatestPost();
-    assertEquals(toInt(2), post.getId());
-    assertEquals("post 2", post.getName());
-    assertEquals(toSet(comment(4), comment(5)), post.getComments());
+    assertThat(post.getId()).isEqualTo(toInt(2));
+    assertThat(post.getName()).isEqualTo("post 2");
+    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
   }
 }

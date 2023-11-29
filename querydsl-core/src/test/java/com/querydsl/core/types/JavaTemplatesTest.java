@@ -1,7 +1,6 @@
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -34,12 +33,12 @@ public class JavaTemplatesTest {
     int p6 = getPrecedence(Ops.AND);
     int p7 = getPrecedence(Ops.OR);
 
-    assertTrue(p1 < p2);
-    assertTrue(p2 < p3);
-    assertTrue(p3 < p4);
-    assertTrue(p4 < p5);
-    assertTrue(p5 < p6);
-    assertTrue(p6 < p7);
+    assertThat(p1 < p2).isTrue();
+    assertThat(p2 < p3).isTrue();
+    assertThat(p3 < p4).isTrue();
+    assertThat(p4 < p5).isTrue();
+    assertThat(p5 < p6).isTrue();
+    assertThat(p6 < p7).isTrue();
   }
 
   @Test
@@ -50,7 +49,7 @@ public class JavaTemplatesTest {
   protected int getPrecedence(Operator... ops) {
     int precedence = templates.getPrecedence(ops[0]);
     for (int i = 1; i < ops.length; i++) {
-      assertEquals(ops[i].name(), precedence, templates.getPrecedence(ops[i]));
+      assertThat(templates.getPrecedence(ops[i])).as(ops[i].name()).isEqualTo(precedence);
     }
     return precedence;
   }

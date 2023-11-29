@@ -13,8 +13,7 @@
  */
 package com.querydsl.lucene4;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
@@ -29,18 +28,17 @@ public class TermElementTest {
     StringPath title = Expressions.stringPath("title");
     LuceneSerializer serializer = new LuceneSerializer(false, true);
     QueryMetadata metadata = new DefaultQueryMetadata();
-    assertEquals(
-        "title:\"Hello World\"", serializer.toQuery(title.eq("Hello World"), metadata).toString());
-    assertEquals(
-        "title:Hello World",
-        serializer.toQuery(title.eq(new TermElement("Hello World")), metadata).toString());
+    assertThat(serializer.toQuery(title.eq("Hello World"), metadata).toString())
+        .isEqualTo("title:\"Hello World\"");
+    assertThat(serializer.toQuery(title.eq(new TermElement("Hello World")), metadata).toString())
+        .isEqualTo("title:Hello World");
   }
 
   @Test
   public void testEqualsAndHashCode() {
     TermElement el1 = new TermElement("x"), el2 = new TermElement("x"), el3 = new TermElement("y");
-    assertEquals(el1, el2);
-    assertFalse(el1.equals(el3));
-    assertEquals(el1.hashCode(), el2.hashCode());
+    assertThat(el2).isEqualTo(el1);
+    assertThat(el1.equals(el3)).isFalse();
+    assertThat(el2.hashCode()).isEqualTo(el1.hashCode());
   }
 }

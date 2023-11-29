@@ -1,8 +1,9 @@
 package com.querydsl.apt.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class OneToOneTest {
@@ -21,6 +22,6 @@ public class OneToOneTest {
 
   @Test
   public void test() {
-    Assert.assertEquals(PhoneNumberImpl.class, QOneToOneTest_Person.person.phone.getType());
+    assertThat(QOneToOneTest_Person.person.phone.getType()).isEqualTo(PhoneNumberImpl.class);
   }
 }

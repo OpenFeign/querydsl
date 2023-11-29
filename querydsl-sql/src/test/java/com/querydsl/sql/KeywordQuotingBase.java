@@ -15,7 +15,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
@@ -72,12 +72,12 @@ public class KeywordQuotingBase extends AbstractBaseTest {
   @Test
   public void keywords() {
     Quoting from = new Quoting("from");
-    assertEquals(
-        "from",
-        query()
-            .from(quoting.as(from))
-            .where(from.from.eq("from").and(from.all.isNotNull()))
-            .select(from.from)
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(quoting.as(from))
+                .where(from.from.eq("from").and(from.all.isNotNull()))
+                .select(from.from)
+                .fetchFirst())
+        .isEqualTo("from");
   }
 }

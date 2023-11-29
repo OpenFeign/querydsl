@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.mssql;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.SQLServerTemplates;
 import com.querydsl.sql.domain.QEmployee;
@@ -28,7 +28,8 @@ public class SQLServerQueryTest {
   public void tableHints_single() {
     SQLServerQuery<?> query = new SQLServerQuery<Void>(null, new SQLServerTemplates());
     query.from(survey).tableHints(SQLServerTableHints.NOWAIT).where(survey.name.isNull());
-    assertEquals("from SURVEY SURVEY with (NOWAIT)\nwhere SURVEY.NAME is null", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("from SURVEY SURVEY with (NOWAIT)\nwhere SURVEY.NAME is null");
   }
 
   @Test
@@ -38,8 +39,8 @@ public class SQLServerQueryTest {
         .from(survey)
         .tableHints(SQLServerTableHints.NOWAIT, SQLServerTableHints.NOLOCK)
         .where(survey.name.isNull());
-    assertEquals(
-        "from SURVEY SURVEY with (NOWAIT, NOLOCK)\nwhere SURVEY.NAME is null", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("from SURVEY SURVEY with (NOWAIT, NOLOCK)\nwhere SURVEY.NAME is null");
   }
 
   @Test
@@ -52,9 +53,10 @@ public class SQLServerQueryTest {
         .from(survey2)
         .tableHints(SQLServerTableHints.NOLOCK)
         .where(survey.name.isNull());
-    assertEquals(
-        "from SURVEY SURVEY with (NOWAIT), SURVEY survey2 with (NOLOCK)\nwhere SURVEY.NAME is null",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "from SURVEY SURVEY with (NOWAIT), SURVEY survey2 with (NOLOCK)\n"
+                + "where SURVEY.NAME is null");
   }
 
   @Test
@@ -68,9 +70,11 @@ public class SQLServerQueryTest {
         .join(employee2)
         .tableHints(SQLServerTableHints.NOLOCK)
         .on(employee1.superiorId.eq(employee2.id));
-    assertEquals(
-        "from EMPLOYEE EMPLOYEE with (NOLOCK)\njoin EMPLOYEE employee2 with (NOLOCK)\non EMPLOYEE.SUPERIOR_ID = employee2.ID",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "from EMPLOYEE EMPLOYEE with (NOLOCK)\n"
+                + "join EMPLOYEE employee2 with (NOLOCK)\n"
+                + "on EMPLOYEE.SUPERIOR_ID = employee2.ID");
   }
 
   @Test
@@ -84,8 +88,10 @@ public class SQLServerQueryTest {
         .join(employee2)
         .tableHints(SQLServerTableHints.NOLOCK, SQLServerTableHints.READUNCOMMITTED)
         .on(employee1.superiorId.eq(employee2.id));
-    assertEquals(
-        "from EMPLOYEE EMPLOYEE with (NOLOCK, READUNCOMMITTED)\njoin EMPLOYEE employee2 with (NOLOCK, READUNCOMMITTED)\non EMPLOYEE.SUPERIOR_ID = employee2.ID",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "from EMPLOYEE EMPLOYEE with (NOLOCK, READUNCOMMITTED)\n"
+                + "join EMPLOYEE employee2 with (NOLOCK, READUNCOMMITTED)\n"
+                + "on EMPLOYEE.SUPERIOR_ID = employee2.ID");
   }
 }

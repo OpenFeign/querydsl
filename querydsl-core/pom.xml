@@ -3,24 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-patched</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.querydsl</groupId>
   <artifactId>querydsl-core</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - Core module</name>
   <description>core module for querydsl</description>
-  <url>${project.homepage}</url>
-
-  <scm>
-    <url>${project.githubpage}</url>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-  </scm>
 
   <dependencies>
     <dependency>
@@ -47,26 +37,18 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- backwards compatibility -->
-    <dependency>
-      <groupId>org.jvnet.hudson</groupId>
-      <artifactId>annotation-indexer</artifactId>
-      <version>1.2</version>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>jakarta.annotation</groupId>
-      <artifactId>jakarta.annotation-api</artifactId>
-      <version>2.1.1</version>
-    </dependency>
-
     <!--  test -->
     <dependency>
       <groupId>jdepend</groupId>
       <artifactId>jdepend</artifactId>
       <version>2.9.1</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>2.1.1</version>
     </dependency>
   </dependencies>
 
@@ -79,6 +61,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
         <configuration>
           <archive>
             <manifestEntries>
@@ -96,6 +79,7 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
         <executions>
           <execution>
@@ -109,12 +93,4 @@
     </plugins>
   </build>
 
-  <profiles>
-    <profile>
-      <id>java-11</id>
-      <activation>
-        <jdk>[11,)</jdk>
-      </activation>
-    </profile>
-  </profiles>
 </project>

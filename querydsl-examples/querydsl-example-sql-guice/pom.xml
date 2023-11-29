@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>5.0.0-patched</version>
-    <relativePath>../</relativePath>
+    <version>6.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.querydsl</groupId>
   <artifactId>querydsl-example-sql-guice</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl example - SQL Guice</name>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <failIfNoTests>false</failIfNoTests>
     <guice.version>5.1.0</guice.version>
-    <h2.version>1.4.186</h2.version>
   </properties>
 
   <dependencies>
@@ -30,23 +24,9 @@
       <version>${guice.version}</version>
     </dependency>
 
-    <!-- logging -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
-
     <!-- persistence -->
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -60,18 +40,11 @@
       <artifactId>c3p0</artifactId>
       <version>0.9.1.2</version>
     </dependency>
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime.version}</version>
-    </dependency>
 
     <!-- TEST dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
-      <scope>test</scope>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
     </dependency>
   </dependencies>
 
@@ -79,25 +52,9 @@
     <finalName>querydsl-example-sql-guice</finalName>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.querydsl</groupId>
+        <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
         <version>${project.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>export</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
           <jdbcDriver>org.h2.Driver</jdbcDriver>
           <jdbcUrl>jdbc:h2:mem:;INIT=runscript from 'file:${project.baseUri}/src/main/sql/001_schema.sql'</jdbcUrl>
@@ -106,6 +63,13 @@
           <targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
           <exportBeans>true</exportBeans>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>export</goal>
+            </goals>
+          </execution>
+        </executions>
         <dependencies>
           <dependency>
             <groupId>com.h2database</groupId>
@@ -114,27 +78,6 @@
           </dependency>
         </dependencies>
       </plugin>
-
     </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>java-11</id>
-      <activation>
-        <jdk>[11,)</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <source>11</source>
-              <target>11</target>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>

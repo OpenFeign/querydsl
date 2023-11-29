@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.oracle;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.OracleTemplates;
 import com.querydsl.sql.domain.QSurvey;
@@ -36,47 +36,47 @@ public class OracleQueryTest {
   @Test
   public void connectByPrior() {
     query.connectByPrior(survey.name.isNull());
-    assertEquals(
-        "from SURVEY survey connect by prior survey.NAME is null order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "from SURVEY survey connect by prior survey.NAME is null order by survey.NAME asc");
   }
 
   @Test
   public void connectBy() {
     query.connectByPrior(survey.name.isNull());
-    assertEquals(
-        "from SURVEY survey connect by prior survey.NAME is null order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "from SURVEY survey connect by prior survey.NAME is null order by survey.NAME asc");
   }
 
   @Test
   public void connectByNocyclePrior() {
     query.connectByNocyclePrior(survey.name.isNull());
-    assertEquals(
-        "from SURVEY survey connect by nocycle prior survey.NAME is null order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "from SURVEY survey connect by nocycle prior survey.NAME is null order by survey.NAME"
+                + " asc");
   }
 
   @Test
   public void startWith() {
     query.startWith(survey.name.isNull());
-    assertEquals(
-        "from SURVEY survey start with survey.NAME is null order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo("from SURVEY survey start with survey.NAME is null order by survey.NAME asc");
   }
 
   @Test
   public void orderSiblingsBy() {
     query.orderSiblingsBy(survey.name);
-    assertEquals(
-        "from SURVEY survey order siblings by survey.NAME order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo("from SURVEY survey order siblings by survey.NAME order by survey.NAME asc");
   }
 
   @Test
   public void rowNum() {
     query.where(OracleGrammar.rownum.lt(5));
-    assertEquals("from SURVEY survey where rownum < ? order by survey.NAME asc", toString(query));
+    assertThat(toString(query))
+        .isEqualTo("from SURVEY survey where rownum < ? order by survey.NAME asc");
   }
 
   private String toString(OracleQuery query) {

@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
@@ -62,8 +62,8 @@ public class QueryInit4Test {
   @Test
   public void test() {
     QQueryInit4Test_Tenant tenant = QQueryInit4Test_Tenant.tenant;
-    assertNotNull(tenant.userTenantApplications.any().user.id);
-    assertNotNull(tenant.userTenantApplications.any().tenant.id);
-    assertNotNull(tenant.userTenantApplications.any().user.primaryTenant.id);
+    assertThat(tenant.userTenantApplications.any().user.id).isNotNull();
+    assertThat(tenant.userTenantApplications.any().tenant.id).isNotNull();
+    assertThat(tenant.userTenantApplications.any().user.primaryTenant.id).isNotNull();
   }
 }

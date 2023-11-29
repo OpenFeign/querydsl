@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.PathMetadataFactory;
@@ -27,20 +27,22 @@ public class ListPathTest {
 
   @Test
   public void toString_() {
-    assertEquals("stringPath", stringPath.toString());
-    assertEquals("any(stringPath)", stringPath.any().toString());
-    assertEquals("eqIc(stringPath.get(0),X)", stringPath.get(0).equalsIgnoreCase("X").toString());
-    assertEquals("eqIc(any(stringPath),X)", stringPath.any().equalsIgnoreCase("X").toString());
-    assertEquals("stringPath.get(0)", stringPath.get(ConstantImpl.create(0)).toString());
+    assertThat(stringPath.toString()).isEqualTo("stringPath");
+    assertThat(stringPath.any().toString()).isEqualTo("any(stringPath)");
+    assertThat(stringPath.get(0).equalsIgnoreCase("X").toString())
+        .isEqualTo("eqIc(stringPath.get(0),X)");
+    assertThat(stringPath.any().equalsIgnoreCase("X").toString())
+        .isEqualTo("eqIc(any(stringPath),X)");
+    assertThat(stringPath.get(ConstantImpl.create(0)).toString()).isEqualTo("stringPath.get(0)");
   }
 
   @Test
   public void getElementType() {
-    assertEquals(String.class, stringPath.getElementType());
+    assertThat(stringPath.getElementType()).isEqualTo(String.class);
   }
 
   @Test
   public void getParameter() {
-    assertEquals(String.class, stringPath.getParameter(0));
+    assertThat(stringPath.getParameter(0)).isEqualTo(String.class);
   }
 }

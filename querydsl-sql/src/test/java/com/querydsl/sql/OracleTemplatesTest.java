@@ -14,8 +14,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.types.ConstantImpl;
@@ -45,26 +44,26 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
     SimpleExpression<Integer> three = Expressions.template(Integer.class, "3");
     NumberPath<Integer> col1 = Expressions.numberPath(Integer.class, "col1");
     Union union = query.union(select(one.as(col1)), select(two), select(three));
-    assertEquals(
-        "(select 1 col1 from dual)\n"
-            + "union\n"
-            + "(select 2 from dual)\n"
-            + "union\n"
-            + "(select 3 from dual)",
-        union.toString());
+    assertThat(union.toString())
+        .isEqualTo(
+            "(select 1 col1 from dual)\n"
+                + "union\n"
+                + "(select 2 from dual)\n"
+                + "union\n"
+                + "(select 3 from dual)");
   }
 
   @Test
   public void modifiers() {
     query.from(survey1).limit(5).offset(3);
     query.getMetadata().setProjection(survey1.id);
-    assertEquals(
-        "select * from (  "
-            + "select a.*, rownum rn from (   "
-            + "select survey1.ID from SURVEY survey1  ) "
-            + "a) "
-            + "where rn > 3 and rownum <= 5",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "select * from (  "
+                + "select a.*, rownum rn from (   "
+                + "select survey1.ID from SURVEY survey1  ) "
+                + "a) "
+                + "where rn > 3 and rownum <= 5");
   }
 
   @Test
@@ -75,13 +74,13 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
         .getMetadata()
         .addFlag(new QueryFlag(QueryFlag.Position.AFTER_PROJECTION, ", count(*) over() "));
 
-    assertEquals(
-        "select * from (  "
-            + "select a.*, rownum rn from (   "
-            + "select survey1.ID, count(*) over()  from SURVEY survey1  ) "
-            + "a) "
-            + "where rn > 3 and rownum <= 5",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "select * from (  "
+                + "select a.*, rownum rn from (   "
+                + "select survey1.ID, count(*) over()  from SURVEY survey1  ) "
+                + "a) "
+                + "where rn > 3 and rownum <= 5");
   }
 
   @Test
@@ -92,17 +91,17 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
     }
     query.where(survey1.id.isNotNull());
     query.where(survey1.id.in(ids));
-    assertTrue(
-        query.toString().startsWith("from dual where survey1.ID is not null and (survey1.ID in "));
+    assertThat(query.toString())
+        .startsWith("from dual where survey1.ID is not null and (survey1.ID in ");
   }
 
   @Test
   public void nextVal() {
     Operation<String> nextval =
         ExpressionUtils.operation(String.class, SQLOps.NEXTVAL, ConstantImpl.create("myseq"));
-    assertEquals(
-        "myseq.nextval",
-        new SQLSerializer(new Configuration(new OracleTemplates())).handle(nextval).toString());
+    assertThat(
+            new SQLSerializer(new Configuration(new OracleTemplates())).handle(nextval).toString())
+        .isEqualTo("myseq.nextval");
   }
 
   @Test
@@ -133,13 +132,13 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
     // OR disjunction
     int p8 = getPrecedence(Ops.OR);
 
-    assertTrue(p1 < p2);
-    assertTrue(p2 < p3);
-    assertTrue(p3 < p4);
-    assertTrue(p4 < p5);
-    assertTrue(p5 < p6);
-    assertTrue(p6 < p7);
-    assertTrue(p7 < p8);
+    assertThat(p1 < p2).isTrue();
+    assertThat(p2 < p3).isTrue();
+    assertThat(p3 < p4).isTrue();
+    assertThat(p4 < p5).isTrue();
+    assertThat(p5 < p6).isTrue();
+    assertThat(p6 < p7).isTrue();
+    assertThat(p7 < p8).isTrue();
   }
 
   @SuppressWarnings("rawtypes")
@@ -149,6 +148,6 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
         query.select(
             SQLExpressions.datetrunc(
                 DatePart.week, Expressions.dateTimeTemplate(Comparable.class, "dateExpression")));
-    assertEquals("select trunc(dateExpression, 'iw') from dual", expression.toString());
+    assertThat(expression.toString()).isEqualTo("select trunc(dateExpression, 'iw') from dual");
   }
 }

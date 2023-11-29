@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.persistence.Entity;
 import javax.jdo.annotations.PersistenceCapable;
@@ -41,9 +41,9 @@ public class KeywordsTest {
 
   @Test
   public void test() {
-    assertEquals("order1", QKeywordsTest_Order.order.toString());
-    assertEquals("from1", QKeywordsTest_From.from.toString());
-    assertEquals("nonKeyword", QKeywordsTest_NonKeyword.nonKeyword.toString());
-    assertEquals("distinct1", QKeywordsTest_Distinct.distinct1.toString());
+    assertThat(QKeywordsTest_Order.order.toString()).isEqualTo("order1");
+    assertThat(QKeywordsTest_From.from.toString()).isEqualTo("from1");
+    assertThat(QKeywordsTest_NonKeyword.nonKeyword.toString()).isEqualTo("nonKeyword");
+    assertThat(QKeywordsTest_Distinct.distinct1.toString()).isEqualTo("distinct1");
   }
 }

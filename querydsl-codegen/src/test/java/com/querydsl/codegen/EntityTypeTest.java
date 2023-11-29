@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.TypeCategory;
@@ -26,28 +26,28 @@ public class EntityTypeTest {
   public void uncapSimpleName_escaped() {
     ClassType typeModel = new ClassType(TypeCategory.ENTITY, Object.class);
     EntityType entityModel = new EntityType(typeModel);
-    assertEquals("object", entityModel.getModifiedSimpleName());
+    assertThat(entityModel.getModifiedSimpleName()).isEqualTo("object");
 
     entityModel.addProperty(new Property(entityModel, "object", typeModel));
-    assertEquals("object1", entityModel.getModifiedSimpleName());
+    assertThat(entityModel.getModifiedSimpleName()).isEqualTo("object1");
   }
 
   @Test
   public void uncapSimpleName_escaped2() {
     ClassType typeModel = new ClassType(TypeCategory.ENTITY, Object.class);
     EntityType entityModel = new EntityType(typeModel);
-    assertEquals("object", entityModel.getModifiedSimpleName());
+    assertThat(entityModel.getModifiedSimpleName()).isEqualTo("object");
 
     entityModel.addProperty(
         new Property(
             entityModel, "OBJECT", "object", typeModel, Collections.<String>emptyList(), false));
-    assertEquals("object1", entityModel.getModifiedSimpleName());
+    assertThat(entityModel.getModifiedSimpleName()).isEqualTo("object1");
   }
 
   @Test
   public void uncapSimpleName_escaped3() {
     ClassType typeModel = new ClassType(TypeCategory.ENTITY, Void.class);
     EntityType entityModel = new EntityType(typeModel);
-    assertEquals("void$", entityModel.getModifiedSimpleName());
+    assertThat(entityModel.getModifiedSimpleName()).isEqualTo("void$");
   }
 }

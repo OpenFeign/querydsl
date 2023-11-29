@@ -1,6 +1,6 @@
 package com.querydsl.sql.codegen.support;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
@@ -20,12 +20,10 @@ public class RenameMappingTest {
     mapping.setToSchema("DEF");
     mapping.apply(configuration);
 
-    assertEquals(
-        new SchemaAndTable("DEF", "TABLE"),
-        configuration.getOverride(new SchemaAndTable("ABC", "TABLE")));
-    assertEquals(
-        new SchemaAndTable("ABCD", "TABLE"),
-        configuration.getOverride(new SchemaAndTable("ABCD", "TABLE")));
+    assertThat(configuration.getOverride(new SchemaAndTable("ABC", "TABLE")))
+        .isEqualTo(new SchemaAndTable("DEF", "TABLE"));
+    assertThat(configuration.getOverride(new SchemaAndTable("ABCD", "TABLE")))
+        .isEqualTo(new SchemaAndTable("ABCD", "TABLE"));
   }
 
   // to table
@@ -36,12 +34,10 @@ public class RenameMappingTest {
     mapping.setToTable("TABLE2");
     mapping.apply(configuration);
 
-    assertEquals(
-        new SchemaAndTable("DEF", "TABLE2"),
-        configuration.getOverride(new SchemaAndTable("DEF", "TABLE1")));
-    assertEquals(
-        new SchemaAndTable("DEF", "TABLE3"),
-        configuration.getOverride(new SchemaAndTable("DEF", "TABLE3")));
+    assertThat(configuration.getOverride(new SchemaAndTable("DEF", "TABLE1")))
+        .isEqualTo(new SchemaAndTable("DEF", "TABLE2"));
+    assertThat(configuration.getOverride(new SchemaAndTable("DEF", "TABLE3")))
+        .isEqualTo(new SchemaAndTable("DEF", "TABLE3"));
   }
 
   @Test
@@ -51,12 +47,10 @@ public class RenameMappingTest {
     mapping.setToTable("TABLE2");
     mapping.apply(configuration);
 
-    assertEquals(
-        new SchemaAndTable("ABC", "TABLE2"),
-        configuration.getOverride(new SchemaAndTable("ABC", "TABLE1")));
-    assertEquals(
-        new SchemaAndTable("DEF", "TABLE1"),
-        configuration.getOverride(new SchemaAndTable("DEF", "TABLE1")));
+    assertThat(configuration.getOverride(new SchemaAndTable("ABC", "TABLE1")))
+        .isEqualTo(new SchemaAndTable("ABC", "TABLE2"));
+    assertThat(configuration.getOverride(new SchemaAndTable("DEF", "TABLE1")))
+        .isEqualTo(new SchemaAndTable("DEF", "TABLE1"));
   }
 
   @Test
@@ -67,12 +61,10 @@ public class RenameMappingTest {
     mapping.setToTable("TABLE2");
     mapping.apply(configuration);
 
-    assertEquals(
-        new SchemaAndTable("ABC", "TABLE2"),
-        configuration.getOverride(new SchemaAndTable("ABC", "TABLE1")));
-    assertEquals(
-        new SchemaAndTable("DEF", "TABLE1"),
-        configuration.getOverride(new SchemaAndTable("DEF", "TABLE1")));
+    assertThat(configuration.getOverride(new SchemaAndTable("ABC", "TABLE1")))
+        .isEqualTo(new SchemaAndTable("ABC", "TABLE2"));
+    assertThat(configuration.getOverride(new SchemaAndTable("DEF", "TABLE1")))
+        .isEqualTo(new SchemaAndTable("DEF", "TABLE1"));
   }
 
   // to column
@@ -85,10 +77,10 @@ public class RenameMappingTest {
     mapping.setToColumn("COLUMN2");
     mapping.apply(configuration);
 
-    assertEquals(
-        "COLUMN2", configuration.getColumnOverride(new SchemaAndTable("ABC", "TABLE1"), "COLUMN1"));
-    assertEquals(
-        "COLUMN1", configuration.getColumnOverride(new SchemaAndTable("DEF", "TABLE1"), "COLUMN1"));
+    assertThat(configuration.getColumnOverride(new SchemaAndTable("ABC", "TABLE1"), "COLUMN1"))
+        .isEqualTo("COLUMN2");
+    assertThat(configuration.getColumnOverride(new SchemaAndTable("DEF", "TABLE1"), "COLUMN1"))
+        .isEqualTo("COLUMN1");
   }
 
   @Test
@@ -98,9 +90,9 @@ public class RenameMappingTest {
     mapping.setToColumn("COLUMN2");
     mapping.apply(configuration);
 
-    assertEquals(
-        "COLUMN2", configuration.getColumnOverride(new SchemaAndTable("ABC", "TABLE1"), "COLUMN1"));
-    assertEquals(
-        "COLUMN1", configuration.getColumnOverride(new SchemaAndTable("ABC", "TABLE2"), "COLUMN1"));
+    assertThat(configuration.getColumnOverride(new SchemaAndTable("ABC", "TABLE1"), "COLUMN1"))
+        .isEqualTo("COLUMN2");
+    assertThat(configuration.getColumnOverride(new SchemaAndTable("ABC", "TABLE2"), "COLUMN1"))
+        .isEqualTo("COLUMN1");
   }
 }

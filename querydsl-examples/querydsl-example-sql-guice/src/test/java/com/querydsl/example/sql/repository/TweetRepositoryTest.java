@@ -1,11 +1,10 @@
 package com.querydsl.example.sql.repository;
 
 import static com.querydsl.example.sql.model.QTweet.tweet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.sql.model.Tweet;
-import com.querydsl.example.sql.model.User;
+import com.querydsl.example.sql.model.Usert;
 import jakarta.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +18,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
 
   @Before
   public void setUp() {
-    User poster = new User();
+    Usert poster = new Usert();
     poster.setUsername("dr_frank");
     posterId = userRepository.save(poster);
   }
@@ -31,7 +30,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     tweet.setContent(content);
     tweet.setPosterId(posterId);
     Long id = repository.save(tweet);
-    assertEquals(content, repository.findById(id).getContent());
+    assertThat(repository.findById(id).getContent()).isEqualTo(content);
   }
 
   @Test
@@ -42,12 +41,12 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     tweet.setPosterId(posterId);
     repository.save(tweet);
 
-    assertFalse(repository.findOfUser("dr_frank").isEmpty());
+    assertThat(repository.findOfUser("dr_frank")).isNotEmpty();
   }
 
   @Test
   public void save_with_mentions() {
-    User other = new User();
+    Usert other = new Usert();
     other.setUsername("dexter");
     Long otherId = userRepository.save(other);
 
@@ -57,7 +56,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     tweet.setPosterId(posterId);
     Long tweetId = repository.save(tweet, otherId);
 
-    assertEquals(tweetId, repository.findWithMentioned(otherId).get(0).getId());
+    assertThat(repository.findWithMentioned(otherId).get(0).getId()).isEqualTo(tweetId);
   }
 
   @Test
@@ -77,6 +76,6 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     tw3.setContent("#EpicFail");
     repository.save(tw3);
 
-    assertEquals(1, repository.findAll(tweet.content.contains("#YOLO")).size());
+    assertThat(repository.findAll(tweet.content.contains("#YOLO"))).hasSize(1);
   }
 }

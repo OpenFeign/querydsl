@@ -8,7 +8,7 @@ The Mongodb module provides integration with the Mongodb API.
 
 ```XML
 <dependency>
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-mongodb</artifactId>
   <version>${querydsl.version}</version>
 </dependency>

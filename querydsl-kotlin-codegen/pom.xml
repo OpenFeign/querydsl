@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-patched</version>
+    <version>6.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-kotlin-codegen</artifactId>
@@ -16,7 +16,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -30,18 +30,18 @@
     </dependency>
     <dependency>
       <groupId>com.squareup</groupId>
-      <artifactId>kotlinpoet</artifactId>
-      <version>1.12.0</version>
+      <artifactId>kotlinpoet-jvm</artifactId>
+      <version>1.15.1</version>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-codegen</artifactId>
-      <version>5.0.0-patched</version>
+      <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
     <!-- test -->
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
@@ -59,8 +59,13 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit</artifactId>
+      <artifactId>kotlin-test-junit5</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <version>2.0.1</version>
     </dependency>
   </dependencies>
   <build>

@@ -1,6 +1,6 @@
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Projections;
@@ -100,18 +100,18 @@ public class ExtendedSQLTest {
     SQLSerializer serializer = new SQLSerializer(new Configuration(new MySQLTemplates()));
     serializer.serialize(query.getMetadata(), false);
 
-    assertEquals(
-        "select author.FIRST_NAME, author.LAST_NAME, count(*)\n"
-            + "from AUTHOR author\n"
-            + "join BOOK book\n"
-            + "on author.ID = book.AUTHOR_ID\n"
-            + "where book.LANGUAGE = ? and book.PUBLISHED = ?\n"
-            + "group by author.FIRST_NAME, author.LAST_NAME\n"
-            + "having count(*) > ?\n"
-            + "order by author.LAST_NAME asc\n"
-            + "limit ?\n"
-            + "offset ?\n"
-            + "for update",
-        serializer.toString());
+    assertThat(serializer.toString())
+        .isEqualTo(
+            "select author.FIRST_NAME, author.LAST_NAME, count(*)\n"
+                + "from AUTHOR author\n"
+                + "join BOOK book\n"
+                + "on author.ID = book.AUTHOR_ID\n"
+                + "where book.LANGUAGE = ? and book.PUBLISHED = ?\n"
+                + "group by author.FIRST_NAME, author.LAST_NAME\n"
+                + "having count(*) > ?\n"
+                + "order by author.LAST_NAME asc\n"
+                + "limit ?\n"
+                + "offset ?\n"
+                + "for update");
   }
 }

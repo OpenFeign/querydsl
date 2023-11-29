@@ -13,8 +13,7 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,12 +31,14 @@ public class IncludedClassesTest extends AbstractProcessorTest {
     List<String> classes = getFiles(packagePath);
     process(QuerydslAnnotationProcessor.class, classes, "includedClasses");
 
-    assertTrue(
-        new File("target/includedClasses/com/querydsl/apt/domain/QArrayTest_ArrayTestEntity.java")
-            .exists());
-    assertFalse(
-        new File("target/includedClasses/com/querydsl/apt/domain/QArray2Test_Example.java")
-            .exists());
+    assertThat(
+            new File(
+                "target/includedClasses/com/querydsl/apt/domain/QArrayTest_ArrayTestEntity.java"))
+        .exists();
+    assertThat(
+            new File("target/includedClasses/com/querydsl/apt/domain/QArray2Test_Example.java")
+                .exists())
+        .isFalse();
   }
 
   @Override

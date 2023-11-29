@@ -32,7 +32,7 @@ public abstract class AbstractPersistenceTest {
           public void execute(Connection connection) throws SQLException {
             List<String> tables = new ArrayList<String>();
             DatabaseMetaData md = connection.getMetaData();
-            ResultSet rs = md.getTables(null, null, null, new String[] {"TABLE"});
+            ResultSet rs = md.getTables(null, "public", null, new String[] {"TABLE"});
             try {
               while (rs.next()) {
                 tables.add(rs.getString("TABLE_NAME"));
