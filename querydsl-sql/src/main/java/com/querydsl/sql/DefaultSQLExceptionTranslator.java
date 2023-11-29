@@ -13,47 +13,44 @@
  */
 package com.querydsl.sql;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import com.querydsl.core.QueryException;
 import com.querydsl.sql.support.SQLExceptionWrapper;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Default implementation of the {@link SQLExceptionTranslator} interface
  *
  * @author tiwe
- *
  */
 public final class DefaultSQLExceptionTranslator implements SQLExceptionTranslator {
 
-    public static final SQLExceptionTranslator DEFAULT = new DefaultSQLExceptionTranslator();
+  public static final SQLExceptionTranslator DEFAULT = new DefaultSQLExceptionTranslator();
 
-    private static final SQLExceptionWrapper WRAPPER = SQLExceptionWrapper.INSTANCE;
+  private static final SQLExceptionWrapper WRAPPER = SQLExceptionWrapper.INSTANCE;
 
-    @Override
-    public RuntimeException translate(SQLException e) {
-        if (containsAdditionalExceptions(e)) {
-            return WRAPPER.wrap(e);
-        } else {
-            return new QueryException(e);
-        }
+  @Override
+  public RuntimeException translate(SQLException e) {
+    if (containsAdditionalExceptions(e)) {
+      return WRAPPER.wrap(e);
+    } else {
+      return new QueryException(e);
     }
+  }
 
-    @Override
-    public RuntimeException translate(String sql, List<Object> bindings, SQLException e) {
-        String message = "Caught " + e.getClass().getSimpleName()
-                + " for " + sql;
-        if (containsAdditionalExceptions(e)) {
-            return WRAPPER.wrap(message, e);
-        } else {
-            return new QueryException(message, e);
-        }
+  @Override
+  public RuntimeException translate(String sql, List<Object> bindings, SQLException e) {
+    String message = "Caught " + e.getClass().getSimpleName() + " for " + sql;
+    if (containsAdditionalExceptions(e)) {
+      return WRAPPER.wrap(message, e);
+    } else {
+      return new QueryException(message, e);
     }
+  }
 
-    private static boolean containsAdditionalExceptions(SQLException e) {
-        return e.getNextException() != null;
-    }
+  private static boolean containsAdditionalExceptions(SQLException e) {
+    return e.getNextException() != null;
+  }
 
-    private DefaultSQLExceptionTranslator() { }
+  private DefaultSQLExceptionTranslator() {}
 }

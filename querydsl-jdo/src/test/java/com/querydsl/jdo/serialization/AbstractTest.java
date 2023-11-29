@@ -20,11 +20,10 @@ import com.querydsl.jdo.JDOQLTemplates;
 
 public abstract class AbstractTest {
 
-    protected String serialize(SubQueryExpression<?> expr) {
-        Expression<?> source = expr.getMetadata().getJoins().get(0).getTarget();
-        JDOQLSerializer serializer = new JDOQLSerializer(JDOQLTemplates.DEFAULT, source);
-        serializer.serialize(expr.getMetadata(), false, false);
-        return serializer.toString().replace('\n', ' ');
-    }
-
+  protected String serialize(SubQueryExpression<?> expr) {
+    Expression<?> source = expr.getMetadata().getJoins().get(0).getTarget();
+    JDOQLSerializer serializer = new JDOQLSerializer(JDOQLTemplates.DEFAULT, source);
+    serializer.serialize(expr.getMetadata(), false, false);
+    return serializer.toString().replace('\n', ' ');
+  }
 }

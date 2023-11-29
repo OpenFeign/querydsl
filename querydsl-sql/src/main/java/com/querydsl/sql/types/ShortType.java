@@ -22,32 +22,30 @@ import java.sql.Types;
  * {@code ShortType} maps Short to Short on the JDBC level
  *
  * @author tiwe
- *
  */
 public class ShortType extends AbstractType<Short> {
 
-    public ShortType() {
-        super(Types.SMALLINT);
-    }
+  public ShortType() {
+    super(Types.SMALLINT);
+  }
 
-    public ShortType(int type) {
-        super(type);
-    }
+  public ShortType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Short> getReturnedClass() {
-        return Short.class;
-    }
+  @Override
+  public Class<Short> getReturnedClass() {
+    return Short.class;
+  }
 
-    @Override
-    public Short getValue(ResultSet rs, int startIndex) throws SQLException {
-        short val = rs.getShort(startIndex);
-        return rs.wasNull() ? null : val;
-    }
+  @Override
+  public Short getValue(ResultSet rs, int startIndex) throws SQLException {
+    short val = rs.getShort(startIndex);
+    return rs.wasNull() ? null : val;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Short value) throws SQLException {
-        st.setShort(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Short value) throws SQLException {
+    st.setShort(startIndex, value);
+  }
 }

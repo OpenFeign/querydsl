@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Basic Query elements
- */
+/** Basic Query elements */
 package com.querydsl.core;
-

@@ -21,35 +21,38 @@ import java.util.TimeZone;
  * Common abstract superclass for Type implementations
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class AbstractDateTimeType<T>  extends AbstractType<T> {
+public abstract class AbstractDateTimeType<T> extends AbstractType<T> {
 
-    private static final Calendar UTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+  private static final Calendar UTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
-    static {
-        UTC.setTimeInMillis(0);
-    }
+  static {
+    UTC.setTimeInMillis(0);
+  }
 
-    protected static Calendar utc() {
-        return (Calendar) UTC.clone();
-    }
+  protected static Calendar utc() {
+    return (Calendar) UTC.clone();
+  }
 
-    protected static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+  protected static final DateTimeFormatter dateFormatter =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    protected static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    
-    protected static final DateTimeFormatter dateTimeOffsetFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss xxx");
-    
-    protected static final DateTimeFormatter dateTimeZoneFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss VV");
+  protected static final DateTimeFormatter dateTimeFormatter =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    protected static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-    
-    protected static final DateTimeFormatter timeOffsetFormatter = DateTimeFormatter.ofPattern("HH:mm:ss xxx");
+  protected static final DateTimeFormatter dateTimeOffsetFormatter =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss xxx");
 
-    public AbstractDateTimeType(int type) {
-        super(type);
-    }
+  protected static final DateTimeFormatter dateTimeZoneFormatter =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss VV");
 
+  protected static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+  protected static final DateTimeFormatter timeOffsetFormatter =
+      DateTimeFormatter.ofPattern("HH:mm:ss xxx");
+
+  public AbstractDateTimeType(int type) {
+    super(type);
+  }
 }

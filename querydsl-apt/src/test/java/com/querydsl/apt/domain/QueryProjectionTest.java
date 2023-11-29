@@ -13,13 +13,6 @@
  */
 package com.querydsl.apt.domain;
 
-import java.util.Map;
-
-import javax.jdo.annotations.PersistenceCapable;
-import jakarta.persistence.Entity;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryProjection;
@@ -27,103 +20,84 @@ import com.querydsl.core.annotations.QueryType;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringExpression;
+import jakarta.persistence.Entity;
+import java.util.Map;
+import javax.jdo.annotations.PersistenceCapable;
+import org.junit.Test;
 
 public class QueryProjectionTest {
 
-    // all three annotations are needed, because all are used as entity annotations
-    @QueryEntity
-    @Entity
-    @PersistenceCapable
-    public static class EntityWithProjection {
+  // all three annotations are needed, because all are used as entity annotations
+  @QueryEntity
+  @Entity
+  @PersistenceCapable
+  public static class EntityWithProjection {
 
-        public EntityWithProjection(long id) {
+    public EntityWithProjection(long id) {}
 
-        }
+    @QueryProjection
+    public EntityWithProjection(String param0) {}
 
-        @QueryProjection
-        public EntityWithProjection(String param0) {
+    @QueryProjection
+    public EntityWithProjection(@QueryType(PropertyType.SIMPLE) Long param0) {}
 
-        }
+    @QueryProjection
+    public EntityWithProjection(long param0, CharSequence param1) {}
 
-        @QueryProjection
-        public EntityWithProjection(@QueryType(PropertyType.SIMPLE) Long param0) {
+    @QueryProjection
+    public EntityWithProjection(String param0, CharSequence param1) {}
+  }
 
-        }
+  @Test
+  public void entity_case() {
+    NumberExpression<Long> longExpr = Expressions.numberPath(Long.class, "x");
+    StringExpression stringExpr = Expressions.stringPath("x");
 
-        @QueryProjection
-        public EntityWithProjection(long param0, CharSequence param1) {
+    QQueryProjectionTest_EntityWithProjection.create(longExpr).newInstance(0L);
+    QQueryProjectionTest_EntityWithProjection.create(stringExpr).newInstance("");
+    QQueryProjectionTest_EntityWithProjection.create(longExpr, stringExpr).newInstance(0L, "");
+    QQueryProjectionTest_EntityWithProjection.create(stringExpr, stringExpr).newInstance("", "");
+  }
 
-        }
+  public static class DTOWithProjection {
 
-        @QueryProjection
-        public EntityWithProjection(String param0, CharSequence param1) {
+    public DTOWithProjection(long id) {}
 
-        }
+    @QueryProjection
+    public DTOWithProjection(@QueryType(PropertyType.SIMPLE) Long param0) {}
 
-    }
+    @QueryProjection
+    public DTOWithProjection(String param0) {}
 
-    @Test
-    public void entity_case() {
-        NumberExpression<Long> longExpr = Expressions.numberPath(Long.class, "x");
-        StringExpression stringExpr = Expressions.stringPath("x");
+    @QueryProjection
+    public DTOWithProjection(EntityWithProjection param0) {}
 
-        QQueryProjectionTest_EntityWithProjection.create(longExpr).newInstance(0L);
-        QQueryProjectionTest_EntityWithProjection.create(stringExpr).newInstance("");
-        QQueryProjectionTest_EntityWithProjection.create(longExpr, stringExpr).newInstance(0L,"");
-        QQueryProjectionTest_EntityWithProjection.create(stringExpr,stringExpr).newInstance("","");
-    }
+    @QueryProjection
+    public DTOWithProjection(long param0, CharSequence param1) {}
 
-    public static class DTOWithProjection {
+    @QueryProjection
+    public DTOWithProjection(String param0, CharSequence param1) {}
 
-        public DTOWithProjection(long id) {
+    @QueryProjection
+    public DTOWithProjection(
+        DTOWithProjection param0, long param1, Long param2, String param3, CharSequence param4) {}
 
-        }
+    @QueryProjection
+    public DTOWithProjection(
+        String param0,
+        CharSequence param1,
+        Map<Long, String> param2,
+        Map<DTOWithProjection, Long> param3) {}
+  }
 
-        @QueryProjection
-        public DTOWithProjection(@QueryType(PropertyType.SIMPLE) Long param0) {
+  @Test
+  public void dto_case() throws SecurityException, NoSuchMethodException {
+    NumberExpression<Long> longExpr = Expressions.numberPath(Long.class, "x");
+    StringExpression stringExpr = Expressions.stringPath("x");
 
-        }
-
-        @QueryProjection
-        public DTOWithProjection(String param0) {
-
-        }
-
-        @QueryProjection
-        public DTOWithProjection(EntityWithProjection param0) {
-
-        }
-
-        @QueryProjection
-        public DTOWithProjection(long param0, CharSequence param1) {
-
-        }
-
-        @QueryProjection
-        public DTOWithProjection(String param0, CharSequence param1) {
-
-        }
-
-        @QueryProjection
-        public DTOWithProjection(DTOWithProjection param0, long param1, Long param2, String param3, CharSequence param4) {
-
-        }
-
-        @QueryProjection
-        public DTOWithProjection(String param0, CharSequence param1, Map<Long,String> param2, Map<DTOWithProjection, Long> param3) {
-
-        }
-    }
-
-    @Test
-    public void dto_case() throws SecurityException, NoSuchMethodException {
-        NumberExpression<Long> longExpr = Expressions.numberPath(Long.class, "x");
-        StringExpression stringExpr = Expressions.stringPath("x");
-
-        new QQueryProjectionTest_DTOWithProjection(longExpr).newInstance(0L);
-        new QQueryProjectionTest_DTOWithProjection(stringExpr).newInstance("");
-        new QQueryProjectionTest_DTOWithProjection(longExpr, stringExpr).newInstance(0L,"");
-        new QQueryProjectionTest_DTOWithProjection(stringExpr, stringExpr).newInstance("","");
-
-    }
+    new QQueryProjectionTest_DTOWithProjection(longExpr).newInstance(0L);
+    new QQueryProjectionTest_DTOWithProjection(stringExpr).newInstance("");
+    new QQueryProjectionTest_DTOWithProjection(longExpr, stringExpr).newInstance(0L, "");
+    new QQueryProjectionTest_DTOWithProjection(stringExpr, stringExpr).newInstance("", "");
+  }
 }

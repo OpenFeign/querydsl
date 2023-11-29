@@ -17,14 +17,12 @@ import com.querydsl.sql.HSQLDBTemplates;
 import com.querydsl.sql.SQLTemplates;
 import org.hibernate.dialect.HSQLDialect;
 
-/**
- * {@code QHSQLDialect} extends {@code HSQLDialect} with additional functions
- */
+/** {@code QHSQLDialect} extends {@code HSQLDialect} with additional functions */
 public class QHSQLDialect extends HSQLDialect {
 
-    public QHSQLDialect() {
-        SQLTemplates templates = HSQLDBTemplates.DEFAULT;
-//        getFunctions().putAll(DialectSupport.createFunctions(templates));
-//        registerFunction("trim", DialectSupport.createFunction(templates, Ops.TRIM));
-    }
+  public QHSQLDialect() {
+    SQLTemplates templates = HSQLDBTemplates.DEFAULT;
+    //        getFunctions().putAll(DialectSupport.createFunctions(templates));
+    //        registerFunction("trim", DialectSupport.createFunction(templates, Ops.TRIM));
+  }
 }

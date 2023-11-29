@@ -15,14 +15,10 @@ package com.querydsl.core.dml;
 
 import com.querydsl.core.FilteredClause;
 
-
 /**
  * {@code DeleteClause} defines a generic interface for Delete clauses
  *
  * @author tiwe
- *
  * @param <C> concrete subtype
  */
-public interface DeleteClause<C extends DeleteClause<C>> extends DMLClause<C>, FilteredClause<C> {
-
-}
+public interface DeleteClause<C extends DeleteClause<C>> extends DMLClause<C>, FilteredClause<C> {}

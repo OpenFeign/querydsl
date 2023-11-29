@@ -13,68 +13,65 @@
  */
 package com.querydsl.core;
 
-import org.jetbrains.annotations.Range;
-
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.ParamExpression;
+import org.jetbrains.annotations.Range;
 
 /**
  * {@code SimpleQuery} defines a simple querying interface than {@link Query}
  *
  * @author tiwe
- *
  * @param <Q> concrete subtype
  * @see Query
  */
 public interface SimpleQuery<Q extends SimpleQuery<Q>> extends FilteredClause<Q> {
 
-    /**
-     * Set the limit / max results for the query results
-     *
-     * @param limit max rows
-     * @return the current object
-     */
-    Q limit(@Range(from = 0, to = Integer.MAX_VALUE) long limit);
+  /**
+   * Set the limit / max results for the query results
+   *
+   * @param limit max rows
+   * @return the current object
+   */
+  Q limit(@Range(from = 0, to = Integer.MAX_VALUE) long limit);
 
-    /**
-     * Set the offset for the query results
-     *
-     * @param offset row offset
-     * @return the current object
-     */
-    Q offset(@Range(from = 0, to = Integer.MAX_VALUE) long offset);
+  /**
+   * Set the offset for the query results
+   *
+   * @param offset row offset
+   * @return the current object
+   */
+  Q offset(@Range(from = 0, to = Integer.MAX_VALUE) long offset);
 
-    /**
-     * Set both limit and offset of the query results
-     *
-     * @param modifiers query modifiers
-     * @return the current object
-     */
-    Q restrict(QueryModifiers modifiers);
+  /**
+   * Set both limit and offset of the query results
+   *
+   * @param modifiers query modifiers
+   * @return the current object
+   */
+  Q restrict(QueryModifiers modifiers);
 
-    /**
-     * Add order expressions
-     *
-     * @param o order
-     * @return the current object
-     */
-    Q orderBy(OrderSpecifier<?>... o);
+  /**
+   * Add order expressions
+   *
+   * @param o order
+   * @return the current object
+   */
+  Q orderBy(OrderSpecifier<?>... o);
 
-    /**
-     * Set the given parameter to the given value
-     *
-     * @param <T>
-     * @param param param
-     * @param value binding
-     * @return the current object
-     */
-    <T> Q set(ParamExpression<T> param, T value);
+  /**
+   * Set the given parameter to the given value
+   *
+   * @param <T>
+   * @param param param
+   * @param value binding
+   * @return the current object
+   */
+  <T> Q set(ParamExpression<T> param, T value);
 
-    /**
-     * Set the Query to return distinct results
-     *
-     * @return the current object
-     */
-    Q distinct();
-
+  /**
+   * Set the Query to return distinct results
+   *
+   * @return the current object
+   */
+  Q distinct();
 }

@@ -17,16 +17,13 @@ import com.querydsl.sql.DerbyTemplates;
 import com.querydsl.sql.SQLTemplates;
 import org.hibernate.dialect.DerbyDialect;
 
-/**
- * {@code QDerbyDialect} extends {@code DerbyDialect} with additional functions
- */
+/** {@code QDerbyDialect} extends {@code DerbyDialect} with additional functions */
 public class QDerbyDialect extends DerbyDialect {
 
-    public QDerbyDialect() {
-        SQLTemplates templates = DerbyTemplates.DEFAULT;
-//        getFunctions().putAll(DialectSupport.createFunctions(templates));
-//        registerFunction("concat", DialectSupport.createFunction(templates, Ops.CONCAT));
-//        registerFunction("cast", castFunction);
-    }
-
+  public QDerbyDialect() {
+    SQLTemplates templates = DerbyTemplates.DEFAULT;
+    //        getFunctions().putAll(DialectSupport.createFunctions(templates));
+    //        registerFunction("concat", DialectSupport.createFunction(templates, Ops.CONCAT));
+    //        registerFunction("cast", castFunction);
+  }
 }

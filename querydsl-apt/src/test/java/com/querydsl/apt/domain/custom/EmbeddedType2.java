@@ -13,6 +13,4 @@
  */
 package com.querydsl.apt.domain.custom;
 
-public class EmbeddedType2 {
-
-}
+public class EmbeddedType2 {}

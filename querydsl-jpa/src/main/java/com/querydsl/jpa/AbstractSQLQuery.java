@@ -13,8 +13,6 @@
  */
 package com.querydsl.jpa;
 
-import jakarta.persistence.Entity;
-
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.types.EntityPath;
@@ -23,46 +21,46 @@ import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.TemplateExpression;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.ProjectableSQLQuery;
+import jakarta.persistence.Entity;
 
 /**
  * Abstract super class for SQLQuery implementation for JPA and Hibernate
  *
  * @param <T> result type
  * @param <Q> concrete subtype
- *
  * @author tiwe
  */
-public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>> extends ProjectableSQLQuery<T, Q> {
+public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
+    extends ProjectableSQLQuery<T, Q> {
 
-    private static final class NativeQueryMixin<T> extends QueryMixin<T> {
-        private NativeQueryMixin(QueryMetadata metadata) {
-            super(metadata, false);
-        }
-
-        @Override
-        public <RT> Expression<RT> convert(Expression<RT> expr, Role role) {
-            return Conversions.convertForNativeQuery(super.convert(expr, role));
-        }
+  private static final class NativeQueryMixin<T> extends QueryMixin<T> {
+    private NativeQueryMixin(QueryMetadata metadata) {
+      super(metadata, false);
     }
 
-    @SuppressWarnings("unchecked")
-    public AbstractSQLQuery(QueryMetadata metadata, Configuration configuration) {
-        super(new NativeQueryMixin<Q>(metadata), configuration);
-        this.queryMixin.setSelf((Q) this);
+    @Override
+    public <RT> Expression<RT> convert(Expression<RT> expr, Role role) {
+      return Conversions.convertForNativeQuery(super.convert(expr, role));
     }
+  }
 
-    protected boolean isEntityExpression(Expression<?> expr) {
-        return expr instanceof EntityPath || expr.getType().isAnnotationPresent(Entity.class);
+  @SuppressWarnings("unchecked")
+  public AbstractSQLQuery(QueryMetadata metadata, Configuration configuration) {
+    super(new NativeQueryMixin<Q>(metadata), configuration);
+    this.queryMixin.setSelf((Q) this);
+  }
+
+  protected boolean isEntityExpression(Expression<?> expr) {
+    return expr instanceof EntityPath || expr.getType().isAnnotationPresent(Entity.class);
+  }
+
+  protected Expression<?> extractEntityExpression(Expression<?> expr) {
+    if (expr instanceof Operation) {
+      return ((Operation<?>) expr).getArg(0);
+    } else if (expr instanceof TemplateExpression) {
+      return (Expression<?>) ((TemplateExpression<?>) expr).getArg(0);
+    } else {
+      return expr;
     }
-
-    protected Expression<?> extractEntityExpression(Expression<?> expr) {
-        if (expr instanceof Operation) {
-            return ((Operation<?>) expr).getArg(0);
-        } else if (expr instanceof TemplateExpression) {
-            return (Expression<?>) ((TemplateExpression<?>) expr).getArg(0);
-        } else {
-            return expr;
-        }
-    }
-
+  }
 }

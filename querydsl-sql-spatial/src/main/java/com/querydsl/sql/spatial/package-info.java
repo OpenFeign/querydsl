@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Spatial support
- */
+/** Spatial support */
 package com.querydsl.sql.spatial;

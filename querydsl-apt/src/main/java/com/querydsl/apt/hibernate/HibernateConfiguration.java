@@ -13,15 +13,13 @@
  */
 package com.querydsl.apt.hibernate;
 
+import com.querydsl.apt.jpa.JPAConfiguration;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-
-import com.querydsl.apt.jpa.JPAConfiguration;
 
 /**
  * Configuration for {@link HibernateAnnotationProcessor}
@@ -32,29 +30,31 @@ import com.querydsl.apt.jpa.JPAConfiguration;
  */
 public class HibernateConfiguration extends JPAConfiguration {
 
-    public HibernateConfiguration(
-            RoundEnvironment roundEnv,
-            ProcessingEnvironment processingEnv,
-            Class<? extends Annotation> entityAnn,
-            Class<? extends Annotation> superTypeAnn,
-            Class<? extends Annotation> embeddableAnn,
-            Class<? extends Annotation> embeddedAnn,
-            Class<? extends Annotation> skipAnn) throws ClassNotFoundException {
-        super(roundEnv, processingEnv, entityAnn, superTypeAnn, embeddableAnn, embeddedAnn, skipAnn);
-    }
+  public HibernateConfiguration(
+      RoundEnvironment roundEnv,
+      ProcessingEnvironment processingEnv,
+      Class<? extends Annotation> entityAnn,
+      Class<? extends Annotation> superTypeAnn,
+      Class<? extends Annotation> embeddableAnn,
+      Class<? extends Annotation> embeddedAnn,
+      Class<? extends Annotation> skipAnn)
+      throws ClassNotFoundException {
+    super(roundEnv, processingEnv, entityAnn, superTypeAnn, embeddableAnn, embeddedAnn, skipAnn);
+  }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected List<Class<? extends Annotation>> getAnnotations() {
-        try {
-            List<Class<? extends Annotation>> annotations = new ArrayList<Class<? extends Annotation>>(super.getAnnotations());
-            for (String simpleName : Arrays.asList("Type", "Cascade", "LazyCollection", "OnDelete")) {
-                annotations.add((Class<? extends Annotation>) Class.forName("org.hibernate.annotations." + simpleName));
-            }
-            return annotations;
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+  @SuppressWarnings("unchecked")
+  @Override
+  protected List<Class<? extends Annotation>> getAnnotations() {
+    try {
+      List<Class<? extends Annotation>> annotations =
+          new ArrayList<Class<? extends Annotation>>(super.getAnnotations());
+      for (String simpleName : Arrays.asList("Type", "Cascade", "LazyCollection", "OnDelete")) {
+        annotations.add(
+            (Class<? extends Annotation>) Class.forName("org.hibernate.annotations." + simpleName));
+      }
+      return annotations;
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
     }
-
+  }
 }

@@ -19,70 +19,68 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
+import java.lang.reflect.AnnotatedElement;
 import org.locationtech.jts.geom.MultiPolygon;
 
-import java.lang.reflect.AnnotatedElement;
-
 /**
- * {@code JTSMultiPolygonPath} extends {@link JTSMultiPolygonExpression} to implement the
- * {@link Path} interface
+ * {@code JTSMultiPolygonPath} extends {@link JTSMultiPolygonExpression} to implement the {@link
+ * Path} interface
  *
  * @author tiwe
- *
  * @param <T>
  */
-public class JTSMultiPolygonPath<T extends MultiPolygon> extends JTSMultiPolygonExpression<T> implements Path<T> {
+public class JTSMultiPolygonPath<T extends MultiPolygon> extends JTSMultiPolygonExpression<T>
+    implements Path<T> {
 
-    private static final long serialVersionUID = 312776751843333543L;
+  private static final long serialVersionUID = 312776751843333543L;
 
-    private final PathImpl<T> pathMixin;
+  private final PathImpl<T> pathMixin;
 
-    @SuppressWarnings("unchecked")
-    public JTSMultiPolygonPath(Path<?> parent, String property) {
-        this((Class<? extends T>) MultiPolygon.class, parent, property);
-    }
+  @SuppressWarnings("unchecked")
+  public JTSMultiPolygonPath(Path<?> parent, String property) {
+    this((Class<? extends T>) MultiPolygon.class, parent, property);
+  }
 
-    public JTSMultiPolygonPath(Class<? extends T> type, Path<?> parent, String property) {
-        this(type, PathMetadataFactory.forProperty(parent, property));
-    }
+  public JTSMultiPolygonPath(Class<? extends T> type, Path<?> parent, String property) {
+    this(type, PathMetadataFactory.forProperty(parent, property));
+  }
 
-    @SuppressWarnings("unchecked")
-    public JTSMultiPolygonPath(PathMetadata metadata) {
-        this((Class<? extends T>) MultiPolygon.class, metadata);
-    }
+  @SuppressWarnings("unchecked")
+  public JTSMultiPolygonPath(PathMetadata metadata) {
+    this((Class<? extends T>) MultiPolygon.class, metadata);
+  }
 
-    public JTSMultiPolygonPath(Class<? extends T> type, PathMetadata metadata) {
-        super(ExpressionUtils.path(type, metadata));
-        this.pathMixin = (PathImpl<T>) mixin;
-    }
+  public JTSMultiPolygonPath(Class<? extends T> type, PathMetadata metadata) {
+    super(ExpressionUtils.path(type, metadata));
+    this.pathMixin = (PathImpl<T>) mixin;
+  }
 
-    @SuppressWarnings("unchecked")
-    public JTSMultiPolygonPath(String var) {
-        this((Class<? extends T>) MultiPolygon.class, PathMetadataFactory.forVariable(var));
-    }
+  @SuppressWarnings("unchecked")
+  public JTSMultiPolygonPath(String var) {
+    this((Class<? extends T>) MultiPolygon.class, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(pathMixin, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(pathMixin, context);
+  }
 
-    public JTSMultiPolygonPath(Class<? extends T> type, String var) {
-        this(type, PathMetadataFactory.forVariable(var));
-    }
+  public JTSMultiPolygonPath(Class<? extends T> type, String var) {
+    this(type, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public PathMetadata getMetadata() {
-        return pathMixin.getMetadata();
-    }
+  @Override
+  public PathMetadata getMetadata() {
+    return pathMixin.getMetadata();
+  }
 
-    @Override
-    public Path<?> getRoot() {
-        return pathMixin.getRoot();
-    }
+  @Override
+  public Path<?> getRoot() {
+    return pathMixin.getRoot();
+  }
 
-    @Override
-    public AnnotatedElement getAnnotatedElement() {
-        return pathMixin.getAnnotatedElement();
-    }
-
+  @Override
+  public AnnotatedElement getAnnotatedElement() {
+    return pathMixin.getAnnotatedElement();
+  }
 }

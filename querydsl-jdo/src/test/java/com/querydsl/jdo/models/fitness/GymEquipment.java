@@ -22,28 +22,28 @@ import com.querydsl.core.annotations.QueryEntity;
  */
 @QueryEntity
 public class GymEquipment {
-    String name;
-    private Gym gym;
-    private String stringKey;
-    private String stringValue;
+  String name;
+  private Gym gym;
+  private String stringKey;
+  private String stringValue;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Gym getGym() {
-        return gym;
-    }
+  public Gym getGym() {
+    return gym;
+  }
 
-    public String getStringKey() {
-        return stringKey;
-    }
+  public String getStringKey() {
+    return stringKey;
+  }
 
-    public String getStringValue() {
-        return stringValue;
-    }
+  public String getStringValue() {
+    return stringValue;
+  }
 }

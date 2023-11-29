@@ -13,51 +13,49 @@
  */
 package com.querydsl.core.types.dsl;
 
-import java.util.List;
-
 import com.querydsl.core.types.*;
+import java.util.List;
 
 /**
  * {@code EnumTemplate} defines custom enum expressions
  *
  * @author tiwe
- *
  * @param <T> expression type
  */
-public class EnumTemplate<T extends Enum<T>> extends EnumExpression<T> implements TemplateExpression<T> {
+public class EnumTemplate<T extends Enum<T>> extends EnumExpression<T>
+    implements TemplateExpression<T> {
 
-    private static final long serialVersionUID = 351057421752203377L;
+  private static final long serialVersionUID = 351057421752203377L;
 
-    private final TemplateExpressionImpl<T> templateMixin;
+  private final TemplateExpressionImpl<T> templateMixin;
 
-    protected EnumTemplate(TemplateExpressionImpl<T> mixin) {
-        super(mixin);
-        this.templateMixin = mixin;
-    }
+  protected EnumTemplate(TemplateExpressionImpl<T> mixin) {
+    super(mixin);
+    this.templateMixin = mixin;
+  }
 
-    protected EnumTemplate(Class<? extends T> type, Template template, List<?> args) {
-        super(ExpressionUtils.template(type, template, args));
-        templateMixin = (TemplateExpressionImpl<T>) mixin;
-    }
+  protected EnumTemplate(Class<? extends T> type, Template template, List<?> args) {
+    super(ExpressionUtils.template(type, template, args));
+    templateMixin = (TemplateExpressionImpl<T>) mixin;
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(templateMixin, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(templateMixin, context);
+  }
 
-    @Override
-    public Object getArg(int index) {
-        return templateMixin.getArg(index);
-    }
+  @Override
+  public Object getArg(int index) {
+    return templateMixin.getArg(index);
+  }
 
-    @Override
-    public List<?> getArgs() {
-        return templateMixin.getArgs();
-    }
+  @Override
+  public List<?> getArgs() {
+    return templateMixin.getArgs();
+  }
 
-    @Override
-    public Template getTemplate() {
-        return templateMixin.getTemplate();
-    }
-
+  @Override
+  public Template getTemplate() {
+    return templateMixin.getTemplate();
+  }
 }

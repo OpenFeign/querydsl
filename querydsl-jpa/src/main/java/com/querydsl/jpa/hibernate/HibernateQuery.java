@@ -13,9 +13,6 @@
  */
 package com.querydsl.jpa.hibernate;
 
-import org.hibernate.Session;
-import org.hibernate.StatelessSession;
-
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.Tuple;
@@ -23,104 +20,102 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.HQLTemplates;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.JPQLTemplates;
+import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 
 /**
  * {@code HibernateQuery} is the default implementation of the JPQLQuery interface for Hibernate
  *
  * @param <T> result type
- *
  * @author tiwe
  */
-public class HibernateQuery<T> extends AbstractHibernateQuery<T, HibernateQuery<T>> implements JPQLQuery<T> {
+public class HibernateQuery<T> extends AbstractHibernateQuery<T, HibernateQuery<T>>
+    implements JPQLQuery<T> {
 
-    /**
-     * Creates a detached query
-     * The query can be attached via the clone method
-     */
-    public HibernateQuery() {
-        super(NoSessionHolder.DEFAULT, HQLTemplates.DEFAULT, new DefaultQueryMetadata());
-    }
+  /** Creates a detached query The query can be attached via the clone method */
+  public HibernateQuery() {
+    super(NoSessionHolder.DEFAULT, HQLTemplates.DEFAULT, new DefaultQueryMetadata());
+  }
 
-    /**
-     * Creates a new Session bound query
-     *
-     * @param session session
-     */
-    public HibernateQuery(Session session) {
-        super(new DefaultSessionHolder(session), HQLTemplates.DEFAULT, new DefaultQueryMetadata());
-    }
+  /**
+   * Creates a new Session bound query
+   *
+   * @param session session
+   */
+  public HibernateQuery(Session session) {
+    super(new DefaultSessionHolder(session), HQLTemplates.DEFAULT, new DefaultQueryMetadata());
+  }
 
-    /**
-     * Creates a new Session bound query
-     *
-     * @param session session
-     */
-    public HibernateQuery(Session session, QueryMetadata metadata) {
-        super(new DefaultSessionHolder(session), HQLTemplates.DEFAULT, metadata);
-    }
+  /**
+   * Creates a new Session bound query
+   *
+   * @param session session
+   */
+  public HibernateQuery(Session session, QueryMetadata metadata) {
+    super(new DefaultSessionHolder(session), HQLTemplates.DEFAULT, metadata);
+  }
 
-    /**
-     * Creates a new Session bound query
-     *
-     * @param session session
-     * @param templates templates
-     */
-    public HibernateQuery(Session session, JPQLTemplates templates) {
-        super(new DefaultSessionHolder(session), templates, new DefaultQueryMetadata());
-    }
+  /**
+   * Creates a new Session bound query
+   *
+   * @param session session
+   * @param templates templates
+   */
+  public HibernateQuery(Session session, JPQLTemplates templates) {
+    super(new DefaultSessionHolder(session), templates, new DefaultQueryMetadata());
+  }
 
-    /**
-     * Creates a new Stateless session bound query
-     *
-     * @param session session
-     */
-    public HibernateQuery(StatelessSession session) {
-        super(new StatelessSessionHolder(session), HQLTemplates.DEFAULT, new DefaultQueryMetadata());
-    }
+  /**
+   * Creates a new Stateless session bound query
+   *
+   * @param session session
+   */
+  public HibernateQuery(StatelessSession session) {
+    super(new StatelessSessionHolder(session), HQLTemplates.DEFAULT, new DefaultQueryMetadata());
+  }
 
-    /**
-     * Creates a new Session bound query
-     *
-     * @param session session
-     * @param templates templates
-     */
-    public HibernateQuery(SessionHolder session, JPQLTemplates templates) {
-        super(session, templates, new DefaultQueryMetadata());
-    }
+  /**
+   * Creates a new Session bound query
+   *
+   * @param session session
+   * @param templates templates
+   */
+  public HibernateQuery(SessionHolder session, JPQLTemplates templates) {
+    super(session, templates, new DefaultQueryMetadata());
+  }
 
-    /**
-     * Creates a new Session bound query
-     *
-     * @param session session
-     * @param templates templates
-     * @param metadata query metadata
-     */
-    public HibernateQuery(SessionHolder session, JPQLTemplates templates, QueryMetadata metadata) {
-        super(session, templates, metadata);
-    }
+  /**
+   * Creates a new Session bound query
+   *
+   * @param session session
+   * @param templates templates
+   * @param metadata query metadata
+   */
+  public HibernateQuery(SessionHolder session, JPQLTemplates templates, QueryMetadata metadata) {
+    super(session, templates, metadata);
+  }
 
-    @Override
-    protected HibernateQuery<T> clone(SessionHolder sessionHolder) {
-        HibernateQuery<T> q = new HibernateQuery<T>(sessionHolder,
-                getTemplates(), getMetadata().clone());
-        q.clone(this);
-        return q;
-    }
+  @Override
+  protected HibernateQuery<T> clone(SessionHolder sessionHolder) {
+    HibernateQuery<T> q =
+        new HibernateQuery<T>(sessionHolder, getTemplates(), getMetadata().clone());
+    q.clone(this);
+    return q;
+  }
 
-    @Override
-    public <U> HibernateQuery<U> select(Expression<U> expr) {
-        queryMixin.setProjection(expr);
-        @SuppressWarnings("unchecked") // This is the new type
-        HibernateQuery<U> newType = (HibernateQuery<U>) this;
-        return newType;
-    }
+  @Override
+  public <U> HibernateQuery<U> select(Expression<U> expr) {
+    queryMixin.setProjection(expr);
+    @SuppressWarnings("unchecked") // This is the new type
+    HibernateQuery<U> newType = (HibernateQuery<U>) this;
+    return newType;
+  }
 
-    @Override
-    public HibernateQuery<Tuple> select(Expression<?>... exprs) {
-        queryMixin.setProjection(exprs);
-        @SuppressWarnings("unchecked") // This is the new type
-        HibernateQuery<Tuple> newType = (HibernateQuery<Tuple>) this;
-        return newType;
-    }
-
+  @Override
+  public HibernateQuery<Tuple> select(Expression<?>... exprs) {
+    queryMixin.setProjection(exprs);
+    @SuppressWarnings("unchecked") // This is the new type
+    HibernateQuery<Tuple> newType = (HibernateQuery<Tuple>) this;
+    return newType;
+  }
 }

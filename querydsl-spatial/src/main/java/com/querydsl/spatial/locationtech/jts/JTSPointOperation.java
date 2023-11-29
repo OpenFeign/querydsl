@@ -19,51 +19,50 @@ import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.OperationImpl;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Visitor;
-import org.locationtech.jts.geom.Point;
-
 import java.util.Arrays;
 import java.util.List;
+import org.locationtech.jts.geom.Point;
 
 /**
- * {@code JTSPointOperation} extends {@link JTSPointExpression} to implement the
- * {@link Operation} interface
+ * {@code JTSPointOperation} extends {@link JTSPointExpression} to implement the {@link Operation}
+ * interface
  *
  * @author tiwe
- *
  * @param <T>
  */
-public class JTSPointOperation<T extends Point> extends JTSPointExpression<T> implements Operation<T> {
+public class JTSPointOperation<T extends Point> extends JTSPointExpression<T>
+    implements Operation<T> {
 
-    private static final long serialVersionUID = 3433471874808633698L;
+  private static final long serialVersionUID = 3433471874808633698L;
 
-    private final OperationImpl<T> opMixin;
+  private final OperationImpl<T> opMixin;
 
-    protected JTSPointOperation(Class<T> type, Operator op, Expression<?>... args) {
-        this(type, op, Arrays.asList(args));
-    }
+  protected JTSPointOperation(Class<T> type, Operator op, Expression<?>... args) {
+    this(type, op, Arrays.asList(args));
+  }
 
-    protected JTSPointOperation(Class<T> type, Operator op, List<Expression<?>> args) {
-        super(ExpressionUtils.operation(type, op, args));
-        this.opMixin = (OperationImpl<T>) mixin;
-    }
+  protected JTSPointOperation(Class<T> type, Operator op, List<Expression<?>> args) {
+    super(ExpressionUtils.operation(type, op, args));
+    this.opMixin = (OperationImpl<T>) mixin;
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(opMixin, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(opMixin, context);
+  }
 
-    @Override
-    public Expression<?> getArg(int index) {
-        return opMixin.getArg(index);
-    }
+  @Override
+  public Expression<?> getArg(int index) {
+    return opMixin.getArg(index);
+  }
 
-    @Override
-    public List<Expression<?>> getArgs() {
-        return opMixin.getArgs();
-    }
+  @Override
+  public List<Expression<?>> getArgs() {
+    return opMixin.getArgs();
+  }
 
-    @Override
-    public Operator getOperator() {
-        return opMixin.getOperator();
-    }
+  @Override
+  public Operator getOperator() {
+    return opMixin.getOperator();
+  }
 }

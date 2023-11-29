@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * APT Roo support
- */
+/** APT Roo support */
 package com.querydsl.apt.roo;

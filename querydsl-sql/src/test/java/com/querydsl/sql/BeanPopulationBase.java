@@ -17,87 +17,94 @@ import static com.querydsl.core.Target.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.After;
-import org.junit.Test;
-
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.sql.dml.BeanMapper;
 import com.querydsl.sql.domain.Employee;
 import com.querydsl.sql.domain.QEmployee;
+import org.junit.After;
+import org.junit.Test;
 
 @ExcludeIn({CUBRID, DB2, DERBY, ORACLE, SQLSERVER, POSTGRESQL, SQLITE, TERADATA})
 public class BeanPopulationBase extends AbstractBaseTest {
 
-    private final QEmployee e = new QEmployee("e");
+  private final QEmployee e = new QEmployee("e");
 
-    @After
-    public void tearDown() {
-        delete(e).where(e.firstname.eq("John")).execute();
-    }
+  @After
+  public void tearDown() {
+    delete(e).where(e.firstname.eq("John")).execute();
+  }
 
-    @Test
-    public void custom_projection() {
-        // Insert
-        Employee employee = new Employee();
-        employee.setFirstname("John");
-        Integer id = insert(e).populate(employee).executeWithKey(e.id);
-        employee.setId(id);
+  @Test
+  public void custom_projection() {
+    // Insert
+    Employee employee = new Employee();
+    employee.setFirstname("John");
+    Integer id = insert(e).populate(employee).executeWithKey(e.id);
+    employee.setId(id);
 
-        // Update
-        employee.setLastname("S");
-        assertEquals(1L, update(e).populate(employee).where(e.id.eq(employee.getId())).execute());
+    // Update
+    employee.setLastname("S");
+    assertEquals(1L, update(e).populate(employee).where(e.id.eq(employee.getId())).execute());
 
-        // Query
-        Employee smith = extQuery().from(e).where(e.lastname.eq("S"))
+    // Query
+    Employee smith =
+        extQuery()
+            .from(e)
+            .where(e.lastname.eq("S"))
             .limit(1)
             .uniqueResult(Employee.class, e.lastname, e.firstname);
-        assertEquals("John", smith.getFirstname());
-        assertEquals("S", smith.getLastname());
+    assertEquals("John", smith.getFirstname());
+    assertEquals("S", smith.getLastname());
 
-        // Query with alias
-        smith = extQuery().from(e).where(e.lastname.eq("S"))
+    // Query with alias
+    smith =
+        extQuery()
+            .from(e)
+            .where(e.lastname.eq("S"))
             .limit(1)
             .uniqueResult(Employee.class, e.lastname.as("lastname"), e.firstname.as("firstname"));
-        assertEquals("John", smith.getFirstname());
-        assertEquals("S", smith.getLastname());
+    assertEquals("John", smith.getFirstname());
+    assertEquals("S", smith.getLastname());
 
-        // Query into custom type
-        OtherEmployee other = extQuery().from(e).where(e.lastname.eq("S"))
+    // Query into custom type
+    OtherEmployee other =
+        extQuery()
+            .from(e)
+            .where(e.lastname.eq("S"))
             .limit(1)
             .uniqueResult(OtherEmployee.class, e.lastname, e.firstname);
-        assertEquals("John", other.getFirstname());
-        assertEquals("S", other.getLastname());
+    assertEquals("John", other.getFirstname());
+    assertEquals("S", other.getLastname());
 
-        // Delete (no changes needed)
-        assertEquals(1L, delete(e).where(e.id.eq(employee.getId())).execute());
-    }
+    // Delete (no changes needed)
+    assertEquals(1L, delete(e).where(e.id.eq(employee.getId())).execute());
+  }
 
-    @Test
-    public void insert_update_query_and_delete() {
-        // Insert
-        Employee employee = new Employee();
-        employee.setFirstname("John");
-        Integer id = insert(e).populate(employee).executeWithKey(e.id);
-        assertNotNull(id);
-        employee.setId(id);
+  @Test
+  public void insert_update_query_and_delete() {
+    // Insert
+    Employee employee = new Employee();
+    employee.setFirstname("John");
+    Integer id = insert(e).populate(employee).executeWithKey(e.id);
+    assertNotNull(id);
+    employee.setId(id);
 
-        // Update
-        employee.setLastname("S");
-        assertEquals(1L, update(e).populate(employee).where(e.id.eq(employee.getId())).execute());
+    // Update
+    employee.setLastname("S");
+    assertEquals(1L, update(e).populate(employee).where(e.id.eq(employee.getId())).execute());
 
-        // Query
-        Employee smith = query().from(e).where(e.lastname.eq("S")).limit(1).select(e).fetchFirst();
-        assertEquals("John", smith.getFirstname());
+    // Query
+    Employee smith = query().from(e).where(e.lastname.eq("S")).limit(1).select(e).fetchFirst();
+    assertEquals("John", smith.getFirstname());
 
-        // Delete (no changes needed)
-        assertEquals(1L, delete(e).where(e.id.eq(employee.getId())).execute());
-    }
+    // Delete (no changes needed)
+    assertEquals(1L, delete(e).where(e.id.eq(employee.getId())).execute());
+  }
 
-    @Test
-    public void populate_with_beanMapper() {
-        Employee employee = new Employee();
-        employee.setFirstname("John");
-        insert(e).populate(employee, new BeanMapper()).execute();
-    }
-
+  @Test
+  public void populate_with_beanMapper() {
+    Employee employee = new Employee();
+    employee.setFirstname("John");
+    insert(e).populate(employee, new BeanMapper()).execute();
+  }
 }

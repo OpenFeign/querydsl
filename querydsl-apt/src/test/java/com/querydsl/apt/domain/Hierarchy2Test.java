@@ -14,46 +14,39 @@
 package com.querydsl.apt.domain;
 
 import jakarta.persistence.*;
-
 import org.junit.Ignore;
 
 @Ignore
 public class Hierarchy2Test {
 
-    @MappedSuperclass
-    public abstract static class SomeMappedSuperClassHavingMyEmbeddable {
+  @MappedSuperclass
+  public abstract static class SomeMappedSuperClassHavingMyEmbeddable {
 
-        @Embedded
-        MyEmbeddable embeddable;
+    @Embedded MyEmbeddable embeddable;
+  }
+
+  @Entity
+  public static class A {
+
+    @OneToOne SomeEntity entry;
+
+    @Embedded MyEmbeddable myEmbeddable;
+  }
+
+  @Entity
+  public static class SomeEntity extends SomeMappedSuperClassHavingMyEmbeddable {}
+
+  @Embeddable
+  public static class MyEmbeddable implements Comparable<MyEmbeddable> {
+
+    @Basic int foo;
+
+    public int compareTo(MyEmbeddable individualToCompare) {
+      return -1;
     }
 
-    @Entity
-    public static class A {
-
-        @OneToOne
-        SomeEntity entry;
-
-        @Embedded
-        MyEmbeddable myEmbeddable;
+    public boolean equals(Object o) {
+      return o == this;
     }
-
-    @Entity
-    public static class SomeEntity extends SomeMappedSuperClassHavingMyEmbeddable {
-    }
-
-    @Embeddable
-    public static class MyEmbeddable implements Comparable<MyEmbeddable> {
-
-        @Basic
-        int foo;
-
-        public int compareTo(MyEmbeddable individualToCompare) {
-            return -1;
-        }
-
-        public boolean equals(Object o) {
-            return o == this;
-        }
-    }
-
+  }
 }

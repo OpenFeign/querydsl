@@ -15,26 +15,24 @@ package com.querydsl.core.types.dsl;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.ArrayConstructorExpression;
+import org.junit.Test;
 
 public class ArrayConstructorExpressionTest {
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void newInstanceObjectArray() {
-        ArrayConstructorExpression<String> constructor = new ArrayConstructorExpression<String>(
-                String[].class,  new StringPath("test"), new StringPath("test2"));
+  @SuppressWarnings("unchecked")
+  @Test
+  public void newInstanceObjectArray() {
+    ArrayConstructorExpression<String> constructor =
+        new ArrayConstructorExpression<String>(
+            String[].class, new StringPath("test"), new StringPath("test2"));
 
-        String[] strings = constructor.newInstance((Object[]) new String[]{"1", "2"});
-        assertEquals("1", strings[0]);
-        assertEquals("2", strings[1]);
+    String[] strings = constructor.newInstance((Object[]) new String[] {"1", "2"});
+    assertEquals("1", strings[0]);
+    assertEquals("2", strings[1]);
 
-        strings = constructor.newInstance(new Object[]{"1", "2"});
-        assertEquals("1", strings[0]);
-        assertEquals("2", strings[1]);
-
-    }
-
+    strings = constructor.newInstance(new Object[] {"1", "2"});
+    assertEquals("1", strings[0]);
+    assertEquals("2", strings[1]);
+  }
 }

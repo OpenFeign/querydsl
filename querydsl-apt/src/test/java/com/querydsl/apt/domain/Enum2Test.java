@@ -13,29 +13,20 @@
  */
 package com.querydsl.apt.domain;
 
-import org.junit.Ignore;
-
 import com.querydsl.core.annotations.QueryEntity;
+import org.junit.Ignore;
 
 @Ignore
 public class Enum2Test {
 
-    @QueryEntity
-    public abstract static class EnumPermissions<P extends Enum<P> & Permission> extends EntityImpl implements Permissions<P> {
+  @QueryEntity
+  public abstract static class EnumPermissions<P extends Enum<P> & Permission> extends EntityImpl
+      implements Permissions<P> {}
 
-    }
+  @QueryEntity
+  public abstract static class EntityImpl {}
 
-    @QueryEntity
-    public abstract static class EntityImpl {
+  public interface Permission {}
 
-    }
-
-    public interface Permission {
-
-    }
-
-    public interface Permissions<P> {
-
-    }
-
+  public interface Permissions<P> {}
 }

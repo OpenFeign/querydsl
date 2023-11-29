@@ -13,73 +13,69 @@
  */
 package com.querydsl.sql.postgresql;
 
-import java.sql.Connection;
-import java.util.function.Supplier;
-
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.*;
+import java.sql.Connection;
+import java.util.function.Supplier;
 
 /**
  * PostgreSQL specific implementation of SQLQueryFactory
  *
  * @author tiwe
- *
  */
 public class PostgreSQLQueryFactory extends AbstractSQLQueryFactory<PostgreSQLQuery<?>> {
 
-    public PostgreSQLQueryFactory(Configuration configuration, Supplier<Connection> connection) {
-        super(configuration, connection);
-    }
+  public PostgreSQLQueryFactory(Configuration configuration, Supplier<Connection> connection) {
+    super(configuration, connection);
+  }
 
-    public PostgreSQLQueryFactory(Supplier<Connection> connection) {
-        this(new Configuration(new PostgreSQLTemplates()), connection);
-    }
+  public PostgreSQLQueryFactory(Supplier<Connection> connection) {
+    this(new Configuration(new PostgreSQLTemplates()), connection);
+  }
 
-    public PostgreSQLQueryFactory(SQLTemplates templates, Supplier<Connection> connection) {
-        this(new Configuration(templates), connection);
-    }
+  public PostgreSQLQueryFactory(SQLTemplates templates, Supplier<Connection> connection) {
+    this(new Configuration(templates), connection);
+  }
 
-    @Override
-    public PostgreSQLQuery<?> query() {
-        return new PostgreSQLQuery<Void>(connection, configuration);
-    }
+  @Override
+  public PostgreSQLQuery<?> query() {
+    return new PostgreSQLQuery<Void>(connection, configuration);
+  }
 
-    @Override
-    public <T> PostgreSQLQuery<T> select(Expression<T> expr) {
-        return query().select(expr);
-    }
+  @Override
+  public <T> PostgreSQLQuery<T> select(Expression<T> expr) {
+    return query().select(expr);
+  }
 
-    @Override
-    public PostgreSQLQuery<Tuple> select(Expression<?>... exprs) {
-        return query().select(exprs);
-    }
+  @Override
+  public PostgreSQLQuery<Tuple> select(Expression<?>... exprs) {
+    return query().select(exprs);
+  }
 
-    @Override
-    public <T> PostgreSQLQuery<T> selectDistinct(Expression<T> expr) {
-        return query().select(expr).distinct();
-    }
+  @Override
+  public <T> PostgreSQLQuery<T> selectDistinct(Expression<T> expr) {
+    return query().select(expr).distinct();
+  }
 
-    @Override
-    public PostgreSQLQuery<Tuple> selectDistinct(Expression<?>... exprs) {
-        return query().select(exprs).distinct();
-    }
+  @Override
+  public PostgreSQLQuery<Tuple> selectDistinct(Expression<?>... exprs) {
+    return query().select(exprs).distinct();
+  }
 
-    @Override
-    public PostgreSQLQuery<Integer> selectZero() {
-        return select(Expressions.ZERO);
-    }
+  @Override
+  public PostgreSQLQuery<Integer> selectZero() {
+    return select(Expressions.ZERO);
+  }
 
-    @Override
-    public PostgreSQLQuery<Integer> selectOne() {
-        return select(Expressions.ONE);
-    }
+  @Override
+  public PostgreSQLQuery<Integer> selectOne() {
+    return select(Expressions.ONE);
+  }
 
-    @Override
-    public <T> PostgreSQLQuery<T> selectFrom(RelationalPath<T> expr) {
-        return select(expr).from(expr);
-    }
-
-
+  @Override
+  public <T> PostgreSQLQuery<T> selectFrom(RelationalPath<T> expr) {
+    return select(expr).from(expr);
+  }
 }

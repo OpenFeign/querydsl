@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * SQL queries for JDO
- */
+/** SQL queries for JDO */
 package com.querydsl.jdo.sql;

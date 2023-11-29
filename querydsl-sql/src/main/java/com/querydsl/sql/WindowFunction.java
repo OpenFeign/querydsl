@@ -13,190 +13,188 @@
  */
 package com.querydsl.sql;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimpleExpression;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code WindowFunction} is a builder for window function expressions
  *
  * @param <A> expression type
- *
  * @author tiwe
  */
 public class WindowFunction<A> extends MutableExpressionBase<A> {
 
-    private static final String ORDER_BY = "order by ";
+  private static final String ORDER_BY = "order by ";
 
-    private static final String PARTITION_BY = "partition by ";
+  private static final String PARTITION_BY = "partition by ";
 
-    private static final long serialVersionUID = -4130672293308756779L;
+  private static final long serialVersionUID = -4130672293308756779L;
 
-    private final List<OrderSpecifier<?>> orderBy = new ArrayList<OrderSpecifier<?>>();
+  private final List<OrderSpecifier<?>> orderBy = new ArrayList<OrderSpecifier<?>>();
 
-    private final List<Expression<?>> partitionBy = new ArrayList<Expression<?>>();
+  private final List<Expression<?>> partitionBy = new ArrayList<Expression<?>>();
 
-    private final Expression<A> target;
+  private final Expression<A> target;
 
-    @Nullable
-    private transient volatile SimpleExpression<A> value;
+  @Nullable private transient volatile SimpleExpression<A> value;
 
-    private String rowsOrRange;
+  private String rowsOrRange;
 
-    private List<Expression<?>> rowsOrRangeArgs;
+  private List<Expression<?>> rowsOrRangeArgs;
 
-    public WindowFunction(Expression<A> expr) {
-        super(expr.getType());
-        this.target = expr;
-    }
+  public WindowFunction(Expression<A> expr) {
+    super(expr.getType());
+    this.target = expr;
+  }
 
-    public SimpleExpression<A> getValue() {
-        if (value == null) {
-            int size = 0;
-            List<Expression<?>> args = new ArrayList<>();
-            StringBuilder builder = new StringBuilder();
-            builder.append("{0} over (");
-            args.add(target);
-            size++;
-            if (!partitionBy.isEmpty()) {
-                builder.append(PARTITION_BY);
-                boolean first = true;
-                for (Expression<?> expr : partitionBy) {
-                    if (!first) {
-                        builder.append(", ");
-                    }
-                    builder.append("{").append(size).append("}");
-                    args.add(expr);
-                    size++;
-                    first = false;
-                }
-
-            }
-            if (!orderBy.isEmpty()) {
-                if (!partitionBy.isEmpty()) {
-                    builder.append(" ");
-                }
-                builder.append(ORDER_BY);
-                builder.append("{").append(size).append("}");
-                args.add(ExpressionUtils.orderBy(orderBy));
-                size++;
-            }
-            if (rowsOrRange != null) {
-                builder.append(rowsOrRange);
-                args.addAll(rowsOrRangeArgs);
-                size += rowsOrRangeArgs.size();
-            }
-            builder.append(")");
-            value = Expressions.template(target.getType(), builder.toString(), Collections.unmodifiableList(args));
+  public SimpleExpression<A> getValue() {
+    if (value == null) {
+      int size = 0;
+      List<Expression<?>> args = new ArrayList<>();
+      StringBuilder builder = new StringBuilder();
+      builder.append("{0} over (");
+      args.add(target);
+      size++;
+      if (!partitionBy.isEmpty()) {
+        builder.append(PARTITION_BY);
+        boolean first = true;
+        for (Expression<?> expr : partitionBy) {
+          if (!first) {
+            builder.append(", ");
+          }
+          builder.append("{").append(size).append("}");
+          args.add(expr);
+          size++;
+          first = false;
         }
-        return value;
-    }
-
-    @SuppressWarnings("unchecked")
-    public SimpleExpression<A> as(Expression<A> alias) {
-        return Expressions.operation(getType(), Ops.ALIAS, this, alias);
-    }
-
-    public SimpleExpression<A> as(String alias) {
-        return Expressions.operation(getType(), Ops.ALIAS, this, ExpressionUtils.path(getType(), alias));
-    }
-
-    @Override
-    public <R,C> R accept(Visitor<R,C> v, C context) {
-        return getValue().accept(v, context);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof WindowFunction) {
-            WindowFunction<?> so = (WindowFunction<?>) o;
-            return so.target.equals(target)
-                && so.partitionBy.equals(partitionBy)
-                && so.orderBy.equals(orderBy);
-        } else {
-            return false;
+      }
+      if (!orderBy.isEmpty()) {
+        if (!partitionBy.isEmpty()) {
+          builder.append(" ");
         }
+        builder.append(ORDER_BY);
+        builder.append("{").append(size).append("}");
+        args.add(ExpressionUtils.orderBy(orderBy));
+        size++;
+      }
+      if (rowsOrRange != null) {
+        builder.append(rowsOrRange);
+        args.addAll(rowsOrRangeArgs);
+        size += rowsOrRangeArgs.size();
+      }
+      builder.append(")");
+      value =
+          Expressions.template(
+              target.getType(), builder.toString(), Collections.unmodifiableList(args));
     }
+    return value;
+  }
 
-    public BooleanExpression eq(Expression<A> expr) {
-        return getValue().eq(expr);
-    }
+  @SuppressWarnings("unchecked")
+  public SimpleExpression<A> as(Expression<A> alias) {
+    return Expressions.operation(getType(), Ops.ALIAS, this, alias);
+  }
 
-    public BooleanExpression eq(A arg) {
-        return getValue().eq(arg);
-    }
+  public SimpleExpression<A> as(String alias) {
+    return Expressions.operation(
+        getType(), Ops.ALIAS, this, ExpressionUtils.path(getType(), alias));
+  }
 
-    public BooleanExpression ne(Expression<A> expr) {
-        return getValue().ne(expr);
-    }
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return getValue().accept(v, context);
+  }
 
-    public BooleanExpression ne(A arg) {
-        return getValue().ne(arg);
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof WindowFunction) {
+      WindowFunction<?> so = (WindowFunction<?>) o;
+      return so.target.equals(target)
+          && so.partitionBy.equals(partitionBy)
+          && so.orderBy.equals(orderBy);
+    } else {
+      return false;
     }
+  }
 
-    public WindowFunction<A> orderBy(ComparableExpressionBase<?> orderBy) {
-        value = null;
-        this.orderBy.add(orderBy.asc());
-        return this;
-    }
+  public BooleanExpression eq(Expression<A> expr) {
+    return getValue().eq(expr);
+  }
 
-    public WindowFunction<A> orderBy(ComparableExpressionBase<?>... orderBy) {
-        value = null;
-        for (ComparableExpressionBase<?> e : orderBy) {
-            this.orderBy.add(e.asc());
-        }
-        return this;
-    }
+  public BooleanExpression eq(A arg) {
+    return getValue().eq(arg);
+  }
 
-    public WindowFunction<A> orderBy(OrderSpecifier<?> orderBy) {
-        value = null;
-        this.orderBy.add(orderBy);
-        return this;
-    }
+  public BooleanExpression ne(Expression<A> expr) {
+    return getValue().ne(expr);
+  }
 
-    public WindowFunction<A> orderBy(OrderSpecifier<?>... orderBy) {
-        value = null;
-        Collections.addAll(this.orderBy, orderBy);
-        return this;
-    }
+  public BooleanExpression ne(A arg) {
+    return getValue().ne(arg);
+  }
 
-    public WindowFunction<A> partitionBy(Expression<?> partitionBy) {
-        value = null;
-        this.partitionBy.add(partitionBy);
-        return this;
-    }
+  public WindowFunction<A> orderBy(ComparableExpressionBase<?> orderBy) {
+    value = null;
+    this.orderBy.add(orderBy.asc());
+    return this;
+  }
 
-    public WindowFunction<A> partitionBy(Expression<?>... partitionBy) {
-        value = null;
-        Collections.addAll(this.partitionBy, partitionBy);
-        return this;
+  public WindowFunction<A> orderBy(ComparableExpressionBase<?>... orderBy) {
+    value = null;
+    for (ComparableExpressionBase<?> e : orderBy) {
+      this.orderBy.add(e.asc());
     }
+    return this;
+  }
 
-    WindowFunction<A> withRowsOrRange(String s, List<Expression<?>> args) {
-        rowsOrRange = s;
-        rowsOrRangeArgs = args;
-        return this;
-    }
+  public WindowFunction<A> orderBy(OrderSpecifier<?> orderBy) {
+    value = null;
+    this.orderBy.add(orderBy);
+    return this;
+  }
 
-    public WindowRows<A> rows() {
-        value = null;
-        int offset = orderBy.size() + partitionBy.size() + 1;
-        return new WindowRows<A>(this, " rows", offset);
-    }
+  public WindowFunction<A> orderBy(OrderSpecifier<?>... orderBy) {
+    value = null;
+    Collections.addAll(this.orderBy, orderBy);
+    return this;
+  }
 
-    public WindowRows<A> range() {
-        value = null;
-        int offset = orderBy.size() + partitionBy.size() + 1;
-        return new WindowRows<A>(this, " range", offset);
-    }
+  public WindowFunction<A> partitionBy(Expression<?> partitionBy) {
+    value = null;
+    this.partitionBy.add(partitionBy);
+    return this;
+  }
+
+  public WindowFunction<A> partitionBy(Expression<?>... partitionBy) {
+    value = null;
+    Collections.addAll(this.partitionBy, partitionBy);
+    return this;
+  }
+
+  WindowFunction<A> withRowsOrRange(String s, List<Expression<?>> args) {
+    rowsOrRange = s;
+    rowsOrRangeArgs = args;
+    return this;
+  }
+
+  public WindowRows<A> rows() {
+    value = null;
+    int offset = orderBy.size() + partitionBy.size() + 1;
+    return new WindowRows<A>(this, " rows", offset);
+  }
+
+  public WindowRows<A> range() {
+    value = null;
+    int offset = orderBy.size() + partitionBy.size() + 1;
+    return new WindowRows<A>(this, " range", offset);
+  }
 }

@@ -13,53 +13,49 @@
  */
 package com.querydsl.sql.dml;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.SubQueryExpression;
+import java.util.ArrayList;
+import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code SQLMergeBatch} defines the state of an SQL MERGE batch item
  *
  * @author tiwe
- *
  */
 public class SQLMergeBatch {
 
-    private final List<Path<?>> keys;
+  private final List<Path<?>> keys;
 
-    private final List<Path<?>> columns;
+  private final List<Path<?>> columns;
 
-    private final List<Expression<?>> values;
+  private final List<Expression<?>> values;
 
-    @Nullable
-    private final SubQueryExpression<?> subQuery;
+  @Nullable private final SubQueryExpression<?> subQuery;
 
-    public SQLMergeBatch(List<Path<?>> k, List<Path<?>> c, List<Expression<?>> v, @Nullable SubQueryExpression<?> sq) {
-        keys = new ArrayList<Path<?>>(k);
-        columns = new ArrayList<Path<?>>(c);
-        values = new ArrayList<Expression<?>>(v);
-        subQuery = sq;
-    }
+  public SQLMergeBatch(
+      List<Path<?>> k, List<Path<?>> c, List<Expression<?>> v, @Nullable SubQueryExpression<?> sq) {
+    keys = new ArrayList<Path<?>>(k);
+    columns = new ArrayList<Path<?>>(c);
+    values = new ArrayList<Expression<?>>(v);
+    subQuery = sq;
+  }
 
-    public List<Path<?>> getKeys() {
-        return keys;
-    }
+  public List<Path<?>> getKeys() {
+    return keys;
+  }
 
-    public List<Path<?>> getColumns() {
-        return columns;
-    }
+  public List<Path<?>> getColumns() {
+    return columns;
+  }
 
-    public List<Expression<?>> getValues() {
-        return values;
-    }
+  public List<Expression<?>> getValues() {
+    return values;
+  }
 
-    public SubQueryExpression<?> getSubQuery() {
-        return subQuery;
-    }
-
+  public SubQueryExpression<?> getSubQuery() {
+    return subQuery;
+  }
 }

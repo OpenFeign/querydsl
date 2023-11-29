@@ -19,61 +19,59 @@ import com.querydsl.core.annotations.QueryProjection;
 @QueryEntity
 public class Comment {
 
-    private int id;
+  private int id;
 
-    private String text;
+  private String text;
 
-    private User user;
+  private User user;
 
-    private Post post;
+  private Post post;
 
-    public Comment() { }
+  public Comment() {}
 
-    @QueryProjection
-    public Comment(int id, String text) {
-        this.id = id;
-        this.text = text;
-    }
+  @QueryProjection
+  public Comment(int id, String text) {
+    this.id = id;
+    this.text = text;
+  }
 
-    @QueryProjection
-    public Comment(int id, String text, User user, Post post) {
-        this.id = id;
-        this.text = text;
-        this.user = user;
-        this.post = post;
-    }
+  @QueryProjection
+  public Comment(int id, String text, User user, Post post) {
+    this.id = id;
+    this.text = text;
+    this.user = user;
+    this.post = post;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public String getText() {
-        return text;
-    }
+  public String getText() {
+    return text;
+  }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+  public void setText(String text) {
+    this.text = text;
+  }
 
-    public User getUser() {
-        return user;
-    }
+  public User getUser() {
+    return user;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-    public Post getPost() {
-        return post;
-    }
+  public Post getPost() {
+    return post;
+  }
 
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-
+  public void setPost(Post post) {
+    this.post = post;
+  }
 }

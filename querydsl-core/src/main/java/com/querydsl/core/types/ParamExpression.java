@@ -17,30 +17,28 @@ package com.querydsl.core.types;
  * {@code ParamExpression} defines named and unnamed parameters in queries
  *
  * @author tiwe
- *
  * @param <T> expression type
  */
 public interface ParamExpression<T> extends Expression<T> {
 
-    /**
-     * Get the name of the parameter
-     *
-     * @return name
-     */
-    String getName();
+  /**
+   * Get the name of the parameter
+   *
+   * @return name
+   */
+  String getName();
 
-    /**
-     * Get whether the parameter is anonymous
-     *
-     * @return true, if anonymous
-     */
-    boolean isAnon();
+  /**
+   * Get whether the parameter is anonymous
+   *
+   * @return true, if anonymous
+   */
+  boolean isAnon();
 
-    /**
-     * Get the message for the not set case
-     *
-     * @return not set message
-     */
-    String getNotSetMessage();
-
+  /**
+   * Get the message for the not set case
+   *
+   * @return not set message
+   */
+  String getNotSetMessage();
 }

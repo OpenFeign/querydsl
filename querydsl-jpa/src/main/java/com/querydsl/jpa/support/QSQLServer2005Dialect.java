@@ -17,12 +17,10 @@ import com.querydsl.sql.SQLServer2005Templates;
 import com.querydsl.sql.SQLTemplates;
 import org.hibernate.dialect.SQLServerDialect;
 
-/**
- * {@code QSQLServer2005Dialect} extends {@code SQLServer2005Dialect} with additional functions
- */
+/** {@code QSQLServer2005Dialect} extends {@code SQLServer2005Dialect} with additional functions */
 public class QSQLServer2005Dialect extends SQLServerDialect {
 
-    public QSQLServer2005Dialect() {
-        SQLTemplates templates = SQLServer2005Templates.DEFAULT;
-    }
+  public QSQLServer2005Dialect() {
+    SQLTemplates templates = SQLServer2005Templates.DEFAULT;
+  }
 }

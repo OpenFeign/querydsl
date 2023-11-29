@@ -17,49 +17,46 @@ import org.junit.Test;
 
 public class ComparablePropertyTest {
 
-    public static class Entity {
+  public static class Entity {
 
-        private ComparableType property;
+    private ComparableType property;
 
-        public ComparableType getProperty() {
-            return property;
-        }
-
-        public void setProperty(ComparableType property) {
-            this.property = property;
-        }
-
+    public ComparableType getProperty() {
+      return property;
     }
 
-    public static class ComparableType implements Comparable<ComparableType> {
+    public void setProperty(ComparableType property) {
+      this.property = property;
+    }
+  }
 
-        @Override
-        public int compareTo(ComparableType o) {
-            return 0;
-        }
+  public static class ComparableType implements Comparable<ComparableType> {
 
-        @Override
-        public boolean equals(Object o) {
-            if (o == this) {
-                return true;
-            } else if (o instanceof ComparableType) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        public int hashCode() {
-            return super.hashCode();
-        }
-
+    @Override
+    public int compareTo(ComparableType o) {
+      return 0;
     }
 
-    @Test
-    public void test() {
-        Entity entity = Alias.alias(Entity.class);
-        Alias.$(entity.getProperty());
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      } else if (o instanceof ComparableType) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
+    @Override
+    public int hashCode() {
+      return super.hashCode();
+    }
+  }
+
+  @Test
+  public void test() {
+    Entity entity = Alias.alias(Entity.class);
+    Alias.$(entity.getProperty());
+  }
 }

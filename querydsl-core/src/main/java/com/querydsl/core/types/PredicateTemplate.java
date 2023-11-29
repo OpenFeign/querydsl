@@ -13,35 +13,31 @@
  */
 package com.querydsl.core.types;
 
-import org.jetbrains.annotations.Nullable;
 import com.querydsl.core.annotations.Immutable;
-
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code PredicateTemplate} provides a Boolean typed {@link TemplateExpression} implementation
  *
  * @author tiwe
- *
  */
 @Immutable
 public class PredicateTemplate extends TemplateExpressionImpl<Boolean> implements Predicate {
 
-    private static final long serialVersionUID = -5371430939203772072L;
+  private static final long serialVersionUID = -5371430939203772072L;
 
-    @Nullable
-    private transient volatile Predicate not;
+  @Nullable private transient volatile Predicate not;
 
-    protected PredicateTemplate(Template template, List<?> args) {
-        super(Boolean.class, template, args);
+  protected PredicateTemplate(Template template, List<?> args) {
+    super(Boolean.class, template, args);
+  }
+
+  @Override
+  public Predicate not() {
+    if (not == null) {
+      not = ExpressionUtils.predicate(Ops.NOT, this);
     }
-
-    @Override
-    public Predicate not() {
-        if (not == null) {
-            not = ExpressionUtils.predicate(Ops.NOT, this);
-        }
-        return not;
-    }
-
+    return not;
+  }
 }

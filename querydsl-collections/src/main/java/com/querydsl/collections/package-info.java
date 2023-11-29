@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Java Bean collections support
- */
+/** Java Bean collections support */
 package com.querydsl.collections;

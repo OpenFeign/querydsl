@@ -19,21 +19,20 @@ import org.geolatte.geom.GeometryCollection;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A GeometryCollection is a geometric object that is a collection of some number of geometric objects.
+ * A GeometryCollection is a geometric object that is a collection of some number of geometric
+ * objects.
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class GeometryCollectionExpression<T extends GeometryCollection> extends AbstractGeometryCollectionExpression<T> {
+public abstract class GeometryCollectionExpression<T extends GeometryCollection>
+    extends AbstractGeometryCollectionExpression<T> {
 
-    private static final long serialVersionUID = 8874174644259834690L;
+  private static final long serialVersionUID = 8874174644259834690L;
 
-    @Nullable
-    private transient volatile NumberExpression<Integer> numGeometries;
+  @Nullable private transient volatile NumberExpression<Integer> numGeometries;
 
-    public GeometryCollectionExpression(Expression<T> mixin) {
-        super(mixin);
-    }
-
+  public GeometryCollectionExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 }

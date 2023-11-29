@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface DB2 extends ExternalDatabase {
-}
+public interface DB2 extends ExternalDatabase {}

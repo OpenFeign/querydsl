@@ -15,33 +15,34 @@ package com.querydsl.jdo;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
-import org.junit.Test;
-
 import com.querydsl.core.QueryMutability;
 import com.querydsl.jdo.test.domain.QProduct;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import org.junit.Test;
 
 public class QueryMutabilityTest extends AbstractJDOTest {
 
-    @Test
-    public void queryMutability() throws IOException, SecurityException,
-            IllegalArgumentException, NoSuchMethodException,
-            IllegalAccessException, InvocationTargetException {
-        QProduct product = QProduct.product;
-        JDOQuery<?> query = query().from(product);
-        new QueryMutability(query).test(product.name, product.description);
-    }
+  @Test
+  public void queryMutability()
+      throws IOException,
+          SecurityException,
+          IllegalArgumentException,
+          NoSuchMethodException,
+          IllegalAccessException,
+          InvocationTargetException {
+    QProduct product = QProduct.product;
+    JDOQuery<?> query = query().from(product);
+    new QueryMutability(query).test(product.name, product.description);
+  }
 
-    @Test
-    public void clone_() {
-        QProduct product = QProduct.product;
-        JDOQuery<?> query = new JDOQuery<Void>().from(product).where(product.name.isNotNull());
-        JDOQuery<?> query2 = query.clone(pm);
-        assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
-        assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
-        query2.select(product).fetch();
-    }
-
+  @Test
+  public void clone_() {
+    QProduct product = QProduct.product;
+    JDOQuery<?> query = new JDOQuery<Void>().from(product).where(product.name.isNotNull());
+    JDOQuery<?> query2 = query.clone(pm);
+    assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
+    assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
+    query2.select(product).fetch();
+  }
 }

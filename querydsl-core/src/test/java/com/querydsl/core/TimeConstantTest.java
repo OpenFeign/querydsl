@@ -15,28 +15,25 @@ package com.querydsl.core;
 
 import static org.junit.Assert.assertEquals;
 
+import com.querydsl.core.types.dsl.TimeExpression;
 import java.sql.Time;
 import java.util.Calendar;
-
 import org.junit.Test;
-
-import com.querydsl.core.types.dsl.TimeExpression;
 
 public class TimeConstantTest {
 
-    @Test
-    public void test() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 13);
-        cal.set(Calendar.MINUTE,      30);
-        cal.set(Calendar.SECOND,      12);
-        cal.set(Calendar.MILLISECOND,  3);
+  @Test
+  public void test() {
+    Calendar cal = Calendar.getInstance();
+    cal.set(Calendar.HOUR_OF_DAY, 13);
+    cal.set(Calendar.MINUTE, 30);
+    cal.set(Calendar.SECOND, 12);
+    cal.set(Calendar.MILLISECOND, 3);
 
-        TimeExpression<Time> time = TimeConstant.create(new Time(cal.getTimeInMillis()));
-        assertEquals("13",   time.hour().toString());
-        assertEquals("30",   time.minute().toString());
-        assertEquals("12",   time.second().toString());
-//        assertEquals("3",    time.getMilliSecond().toString());
-    }
-
+    TimeExpression<Time> time = TimeConstant.create(new Time(cal.getTimeInMillis()));
+    assertEquals("13", time.hour().toString());
+    assertEquals("30", time.minute().toString());
+    assertEquals("12", time.second().toString());
+    //        assertEquals("3",    time.getMilliSecond().toString());
+  }
 }

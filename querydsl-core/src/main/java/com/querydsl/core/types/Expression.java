@@ -14,48 +14,45 @@
 package com.querydsl.core.types;
 
 import java.io.Serializable;
-
 import org.jetbrains.annotations.Nullable;
 
 /**
- * {@code Expression} defines a general typed expression in a Query instance. The generic type parameter
- * is a reference to the type the expression is bound to.
+ * {@code Expression} defines a general typed expression in a Query instance. The generic type
+ * parameter is a reference to the type the expression is bound to.
  *
- * <p>The central Expression subinterfaces are</p>
+ * <p>The central Expression subinterfaces are
+ *
  * <ul>
- *   <li>{@link Constant} - for constants such as Strings, numbers and entity instances</li>
- *   <li>{@link FactoryExpression} - for row based result processing</li>
- *   <li>{@link Operation} - for common supported operations and function calls</li>
- *   <li>{@link ParamExpression} - for bindable query parameters</li>
- *   <li>{@link Path} - for variables, properties and collection member access</li>
- *   <li>{@link SubQueryExpression} - for subqueries</li>
- *   <li>{@link TemplateExpression} - for custom syntax</li>
+ *   <li>{@link Constant} - for constants such as Strings, numbers and entity instances
+ *   <li>{@link FactoryExpression} - for row based result processing
+ *   <li>{@link Operation} - for common supported operations and function calls
+ *   <li>{@link ParamExpression} - for bindable query parameters
+ *   <li>{@link Path} - for variables, properties and collection member access
+ *   <li>{@link SubQueryExpression} - for subqueries
+ *   <li>{@link TemplateExpression} - for custom syntax
  * </ul>
  *
  * @author tiwe
- *
  * @param <T> expression type
- *
  */
 public interface Expression<T> extends Serializable {
 
-    /**
-     * Accept the visitor with the given context
-     *
-     * @param <R> return type
-     * @param <C> context type
-     * @param v visitor
-     * @param context context of visit
-     * @return result of visit
-     */
-    @Nullable
-    <R,C> R accept(Visitor<R,C> v, @Nullable C context);
+  /**
+   * Accept the visitor with the given context
+   *
+   * @param <R> return type
+   * @param <C> context type
+   * @param v visitor
+   * @param context context of visit
+   * @return result of visit
+   */
+  @Nullable
+  <R, C> R accept(Visitor<R, C> v, @Nullable C context);
 
-    /**
-     * Get the java type for this expression
-     *
-     * @return type of expression
-     */
-    Class<? extends T> getType();
-
+  /**
+   * Get the java type for this expression
+   *
+   * @return type of expression
+   */
+  Class<? extends T> getType();
 }

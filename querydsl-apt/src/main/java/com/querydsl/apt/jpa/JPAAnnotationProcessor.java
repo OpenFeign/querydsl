@@ -13,37 +13,36 @@
  */
 package com.querydsl.apt.jpa;
 
+import com.querydsl.apt.AbstractQuerydslProcessor;
+import com.querydsl.apt.Configuration;
+import jakarta.annotation.Generated;
+import jakarta.persistence.*;
 import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 
-import jakarta.annotation.Generated;
-import jakarta.persistence.*;
-
-import com.querydsl.apt.AbstractQuerydslProcessor;
-import com.querydsl.apt.Configuration;
-
 /**
- * AnnotationProcessor for JPA which takes {@link Entity}, {@link MappedSuperclass}, {@link Embeddable}
- * and {@link Transient} into account
+ * AnnotationProcessor for JPA which takes {@link Entity}, {@link MappedSuperclass}, {@link
+ * Embeddable} and {@link Transient} into account
  *
  * @author tiwe
- *
  */
-@SupportedAnnotationTypes({"com.querydsl.core.annotations.*", "jakarta.persistence.*", "javax.persistence.*"})
+@SupportedAnnotationTypes({
+  "com.querydsl.core.annotations.*",
+  "jakarta.persistence.*",
+  "javax.persistence.*"
+})
 public class JPAAnnotationProcessor extends AbstractQuerydslProcessor {
 
-    @Override
-    protected Configuration createConfiguration(RoundEnvironment roundEnv) {
-        Class<? extends Annotation> entity = Entity.class;
-        Class<? extends Annotation> generated = Generated.class;
-        Class<? extends Annotation> superType = MappedSuperclass.class;
-        Class<? extends Annotation> embeddable = Embeddable.class;
-        Class<? extends Annotation> embedded = Embedded.class;
-        Class<? extends Annotation> skip = Transient.class;
-        return new JPAConfiguration(roundEnv, processingEnv,
-                entity, superType, embeddable, embedded, skip);
-    }
-
+  @Override
+  protected Configuration createConfiguration(RoundEnvironment roundEnv) {
+    Class<? extends Annotation> entity = Entity.class;
+    Class<? extends Annotation> generated = Generated.class;
+    Class<? extends Annotation> superType = MappedSuperclass.class;
+    Class<? extends Annotation> embeddable = Embeddable.class;
+    Class<? extends Annotation> embedded = Embedded.class;
+    Class<? extends Annotation> skip = Transient.class;
+    return new JPAConfiguration(
+        roundEnv, processingEnv, entity, superType, embeddable, embedded, skip);
+  }
 }

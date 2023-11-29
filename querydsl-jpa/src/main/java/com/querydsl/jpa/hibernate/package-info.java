@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * JPQL for Hibernate
- */
+/** JPQL for Hibernate */
 package com.querydsl.jpa.hibernate;

@@ -20,30 +20,25 @@ import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
 
-
-/**
- * QAnimal is a Querydsl query type for Animal
- */
+/** QAnimal is a Querydsl query type for Animal */
 @SuppressWarnings("unchecked")
 public class QAbstractEntity extends EntityPathBase<AbstractEntity> {
 
-    private static final long serialVersionUID = 781156670;
+  private static final long serialVersionUID = 781156670;
 
-    public static final QAbstractEntity animal = new QAbstractEntity("abstractEntity");
+  public static final QAbstractEntity animal = new QAbstractEntity("abstractEntity");
 
-    public final NumberPath<Integer> id = createNumber("id", Integer.class);
+  public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
-    public QAbstractEntity(String variable) {
-        super(AbstractEntity.class, forVariable(variable));
-    }
+  public QAbstractEntity(String variable) {
+    super(AbstractEntity.class, forVariable(variable));
+  }
 
-    public QAbstractEntity(BeanPath<? extends AbstractEntity<?>> entity) {
-        super(entity.getType(), entity.getMetadata());
-    }
+  public QAbstractEntity(BeanPath<? extends AbstractEntity<?>> entity) {
+    super(entity.getType(), entity.getMetadata());
+  }
 
-    public QAbstractEntity(PathMetadata metadata) {
-        super(AbstractEntity.class, metadata);
-    }
-
+  public QAbstractEntity(PathMetadata metadata) {
+    super(AbstractEntity.class, metadata);
+  }
 }
-

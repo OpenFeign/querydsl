@@ -17,14 +17,12 @@ package com.querydsl.lucene3;
  * Thrown for case ignore usage
  *
  * @author tiwe
- *
  */
 public class IgnoreCaseUnsupportedException extends UnsupportedOperationException {
 
-    private static final long serialVersionUID = 412913389929530788L;
+  private static final long serialVersionUID = 412913389929530788L;
 
-    public IgnoreCaseUnsupportedException() {
-        super("Ignore case queries are not supported with Lucene");
-    }
-
+  public IgnoreCaseUnsupportedException() {
+    super("Ignore case queries are not supported with Lucene");
+  }
 }

@@ -13,114 +13,109 @@
  */
 package com.querydsl.jdo;
 
-import javax.jdo.PersistenceManager;
-
 import com.querydsl.core.QueryFactory;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jdo.dml.JDODeleteClause;
-
 import java.util.function.Supplier;
+import javax.jdo.PersistenceManager;
 
 /**
  * Factory class for query and DML clause creation
  *
  * @author tiwe
- *
  */
 public class JDOQueryFactory implements QueryFactory<JDOQuery<?>> {
 
-    private final Supplier<PersistenceManager> persistenceManager;
+  private final Supplier<PersistenceManager> persistenceManager;
 
-    public JDOQueryFactory(Supplier<PersistenceManager> persistenceManager) {
-        this.persistenceManager = persistenceManager;
-    }
+  public JDOQueryFactory(Supplier<PersistenceManager> persistenceManager) {
+    this.persistenceManager = persistenceManager;
+  }
 
-    public JDODeleteClause delete(EntityPath<?> path) {
-        return new JDODeleteClause(persistenceManager.get(), path);
-    }
+  public JDODeleteClause delete(EntityPath<?> path) {
+    return new JDODeleteClause(persistenceManager.get(), path);
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance with the given projection
-     *
-     * @param expr projection
-     * @param <T>
-     * @return select(expr)
-     */
-    public <T> JDOQuery<T> select(Expression<T> expr) {
-        return query().select(expr);
-    }
+  /**
+   * Create a new {@link JDOQuery} instance with the given projection
+   *
+   * @param expr projection
+   * @param <T>
+   * @return select(expr)
+   */
+  public <T> JDOQuery<T> select(Expression<T> expr) {
+    return query().select(expr);
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance with the given projection
-     *
-     * @param exprs projection
-     * @return select(exprs)
-     */
-    public JDOQuery<Tuple> select(Expression<?>... exprs) {
-        return query().select(exprs);
-    }
+  /**
+   * Create a new {@link JDOQuery} instance with the given projection
+   *
+   * @param exprs projection
+   * @return select(exprs)
+   */
+  public JDOQuery<Tuple> select(Expression<?>... exprs) {
+    return query().select(exprs);
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance with the given projection
-     *
-     * @param expr projection
-     * @param <T>
-     * @return select(distinct expr)
-     */
-    public <T> JDOQuery<T> selectDistinct(Expression<T> expr) {
-        return query().select(expr).distinct();
-    }
+  /**
+   * Create a new {@link JDOQuery} instance with the given projection
+   *
+   * @param expr projection
+   * @param <T>
+   * @return select(distinct expr)
+   */
+  public <T> JDOQuery<T> selectDistinct(Expression<T> expr) {
+    return query().select(expr).distinct();
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance with the given projection
-     *
-     * @param exprs projection
-     * @return select(distinct exprs)
-     */
-    public JDOQuery<Tuple> selectDistinct(Expression<?>... exprs) {
-        return query().select(exprs).distinct();
-    }
+  /**
+   * Create a new {@link JDOQuery} instance with the given projection
+   *
+   * @param exprs projection
+   * @return select(distinct exprs)
+   */
+  public JDOQuery<Tuple> selectDistinct(Expression<?>... exprs) {
+    return query().select(exprs).distinct();
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance with the projection 0
-     *
-     * @return select(0)
-     */
-    public JDOQuery<Integer> selectZero() {
-        return select(Expressions.ZERO);
-    }
+  /**
+   * Create a new {@link JDOQuery} instance with the projection 0
+   *
+   * @return select(0)
+   */
+  public JDOQuery<Integer> selectZero() {
+    return select(Expressions.ZERO);
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance with the projection 1
-     *
-     * @return select(1)
-     */
-    public JDOQuery<Integer> selectOne() {
-        return select(Expressions.ONE);
-    }
+  /**
+   * Create a new {@link JDOQuery} instance with the projection 1
+   *
+   * @return select(1)
+   */
+  public JDOQuery<Integer> selectOne() {
+    return select(Expressions.ONE);
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance with the given projection
-     *
-     * @param expr projection and source
-     * @param <T>
-     * @return select(expr).from(expr)
-     */
-    public <T> JDOQuery<T> selectFrom(EntityPath<T> expr) {
-        return select(expr).from(expr);
-    }
+  /**
+   * Create a new {@link JDOQuery} instance with the given projection
+   *
+   * @param expr projection and source
+   * @param <T>
+   * @return select(expr).from(expr)
+   */
+  public <T> JDOQuery<T> selectFrom(EntityPath<T> expr) {
+    return select(expr).from(expr);
+  }
 
-    public JDOQuery<?> from(EntityPath<?> from) {
-        return query().from(from);
-    }
+  public JDOQuery<?> from(EntityPath<?> from) {
+    return query().from(from);
+  }
 
-    @Override
-    public JDOQuery<?> query() {
-        return new JDOQuery<Void>(persistenceManager.get());
-    }
-
-
+  @Override
+  public JDOQuery<?> query() {
+    return new JDOQuery<Void>(persistenceManager.get());
+  }
 }

@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * APT JDO support
- */
+/** APT JDO support */
 package com.querydsl.apt.jdo;

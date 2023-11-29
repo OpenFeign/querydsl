@@ -13,33 +13,30 @@
  */
 package com.querydsl.lucene4;
 
-import org.joda.time.LocalDate;
-
 import com.querydsl.core.annotations.QueryEntity;
+import org.joda.time.LocalDate;
 
 @QueryEntity
 public class Person {
-    private final String id;
-    private final String name;
-    private final LocalDate birthDate;
+  private final String id;
+  private final String name;
+  private final LocalDate birthDate;
 
-    public Person(String id, String name, LocalDate birthDate) {
-        this.id = id;
-        this.name = name;
-        this.birthDate = birthDate;
-    }
+  public Person(String id, String name, LocalDate birthDate) {
+    this.id = id;
+    this.name = name;
+    this.birthDate = birthDate;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
+  public LocalDate getBirthDate() {
+    return birthDate;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 }
-
-

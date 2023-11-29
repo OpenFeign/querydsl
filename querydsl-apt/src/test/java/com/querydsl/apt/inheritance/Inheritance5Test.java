@@ -15,55 +15,48 @@ package com.querydsl.apt.inheritance;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.types.dsl.NumberPath;
+import java.io.Serializable;
+import java.util.Date;
+import org.junit.Test;
 
 public class Inheritance5Test {
 
-    @QuerySupertype
-    public static class CommonPersistence {
+  @QuerySupertype
+  public static class CommonPersistence {
 
-        private Date createdOn;
+    private Date createdOn;
 
-        public Date getCreatedOn() {
-            return new Date(createdOn.getTime());
-        }
-
-        public void setCreatedOn(Date createdOn) {
-            this.createdOn = new Date(createdOn.getTime());
-        }
-
+    public Date getCreatedOn() {
+      return new Date(createdOn.getTime());
     }
 
-    @QuerySupertype
-    public static class CommonIdentifiable<ID extends Serializable> extends CommonPersistence {
+    public void setCreatedOn(Date createdOn) {
+      this.createdOn = new Date(createdOn.getTime());
+    }
+  }
 
-        private ID id;
+  @QuerySupertype
+  public static class CommonIdentifiable<ID extends Serializable> extends CommonPersistence {
 
-        public ID getId() {
-            return id;
-        }
+    private ID id;
 
-        public void setId(ID id) {
-            this.id = id;
-        }
-
+    public ID getId() {
+      return id;
     }
 
-    @QueryEntity
-    public class Entity extends CommonIdentifiable<Long> {
-
+    public void setId(ID id) {
+      this.id = id;
     }
+  }
 
-    @Test
-    public void test() {
-        assertEquals(NumberPath.class, QInheritance5Test_Entity.entity.id.getClass());
-    }
+  @QueryEntity
+  public class Entity extends CommonIdentifiable<Long> {}
 
+  @Test
+  public void test() {
+    assertEquals(NumberPath.class, QInheritance5Test_Entity.entity.id.getClass());
+  }
 }

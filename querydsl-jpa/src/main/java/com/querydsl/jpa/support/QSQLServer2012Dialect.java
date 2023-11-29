@@ -17,15 +17,13 @@ import com.querydsl.sql.SQLServer2012Templates;
 import com.querydsl.sql.SQLTemplates;
 import org.hibernate.dialect.SQLServerDialect;
 
-/**
- * {@code QSQLServer2012Dialect} extends {@code SQLServer2012Dialect} with additional functions
- */
+/** {@code QSQLServer2012Dialect} extends {@code SQLServer2012Dialect} with additional functions */
 public class QSQLServer2012Dialect extends SQLServerDialect {
 
-    public QSQLServer2012Dialect() {
-        SQLTemplates templates = SQLServer2012Templates.DEFAULT;
-//        getFunctions().putAll(DialectSupport.createFunctions(templates));
-//        registerFunction("current_date",
-//                DialectSupport.createFunction(templates, Ops.DateTimeOps.CURRENT_DATE));
-    }
+  public QSQLServer2012Dialect() {
+    SQLTemplates templates = SQLServer2012Templates.DEFAULT;
+    //        getFunctions().putAll(DialectSupport.createFunctions(templates));
+    //        registerFunction("current_date",
+    //                DialectSupport.createFunction(templates, Ops.DateTimeOps.CURRENT_DATE));
+  }
 }

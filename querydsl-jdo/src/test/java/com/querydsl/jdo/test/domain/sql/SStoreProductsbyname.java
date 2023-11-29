@@ -23,40 +23,38 @@ import com.querydsl.sql.ForeignKey;
 import com.querydsl.sql.PrimaryKey;
 import com.querydsl.sql.RelationalPathBase;
 
-
-/**
- * SStoreProductsbyname is a Querydsl query type for SStoreProductsbyname
- */
-//@Table(value="STORE_PRODUCTSBYNAME")
+/** SStoreProductsbyname is a Querydsl query type for SStoreProductsbyname */
+// @Table(value="STORE_PRODUCTSBYNAME")
 public class SStoreProductsbyname extends RelationalPathBase<SStoreProductsbyname> {
 
-    private static final long serialVersionUID = 764053781;
+  private static final long serialVersionUID = 764053781;
 
-    public static final SStoreProductsbyname storeProductsbyname = new SStoreProductsbyname("STORE_PRODUCTSBYNAME");
+  public static final SStoreProductsbyname storeProductsbyname =
+      new SStoreProductsbyname("STORE_PRODUCTSBYNAME");
 
-    public final StringPath key = createString("KEY");
+  public final StringPath key = createString("KEY");
 
-    public final NumberPath<Long> productIdVid = createNumber("PRODUCT_ID_VID", Long.class);
+  public final NumberPath<Long> productIdVid = createNumber("PRODUCT_ID_VID", Long.class);
 
-    public final NumberPath<Long> storeIdOid = createNumber("STORE_ID_OID", Long.class);
+  public final NumberPath<Long> storeIdOid = createNumber("STORE_ID_OID", Long.class);
 
-    public final PrimaryKey<SStoreProductsbyname> sysIdx53 = createPrimaryKey(key, storeIdOid);
+  public final PrimaryKey<SStoreProductsbyname> sysIdx53 = createPrimaryKey(key, storeIdOid);
 
-    public final ForeignKey<SStore> storeProductsbynameFk1 = new ForeignKey<SStore>(this, storeIdOid, "STORE_ID");
+  public final ForeignKey<SStore> storeProductsbynameFk1 =
+      new ForeignKey<SStore>(this, storeIdOid, "STORE_ID");
 
-    public final ForeignKey<SProduct> storeProductsbynameFk2 = new ForeignKey<SProduct>(this, productIdVid, "PRODUCT_ID");
+  public final ForeignKey<SProduct> storeProductsbynameFk2 =
+      new ForeignKey<SProduct>(this, productIdVid, "PRODUCT_ID");
 
-    public SStoreProductsbyname(String variable) {
-        super(SStoreProductsbyname.class, forVariable(variable), "", "STORE_PRODUCTSBYNAME");
-    }
+  public SStoreProductsbyname(String variable) {
+    super(SStoreProductsbyname.class, forVariable(variable), "", "STORE_PRODUCTSBYNAME");
+  }
 
-    public SStoreProductsbyname(BeanPath<? extends SStoreProductsbyname> entity) {
-        super(entity.getType(),entity.getMetadata(), "", "STORE_PRODUCTSBYNAME");
-    }
+  public SStoreProductsbyname(BeanPath<? extends SStoreProductsbyname> entity) {
+    super(entity.getType(), entity.getMetadata(), "", "STORE_PRODUCTSBYNAME");
+  }
 
-    public SStoreProductsbyname(PathMetadata metadata) {
-        super(SStoreProductsbyname.class, metadata, "", "STORE_PRODUCTSBYNAME");
-    }
-
+  public SStoreProductsbyname(PathMetadata metadata) {
+    super(SStoreProductsbyname.class, metadata, "", "STORE_PRODUCTSBYNAME");
+  }
 }
-

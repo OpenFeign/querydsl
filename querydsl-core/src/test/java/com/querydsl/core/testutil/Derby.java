@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface Derby extends EmbeddedDatabase {
-}
+public interface Derby extends EmbeddedDatabase {}

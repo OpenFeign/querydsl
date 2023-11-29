@@ -13,37 +13,47 @@
  */
 package com.querydsl.core.alias;
 
-import static org.junit.Assert.assertEquals;
 import static com.querydsl.core.alias.Alias.$;
-
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import com.querydsl.core.types.EntityPath;
+import org.junit.Test;
 
 public class CollectionTest {
 
-    @Test
-    public void collectionUsage() {
-        DomainType domainType = Alias.alias(DomainType.class);
-        assertEquals("any(domainType.collection) = domainType", $(domainType.getCollection()).any().eq(domainType).toString());
-        assertEquals("any(domainType.set) = domainType", $(domainType.getSet()).any().eq(domainType).toString());
-        assertEquals("any(domainType.list) = domainType", $(domainType.getList()).any().eq(domainType).toString());
-        assertEquals("domainType.list.get(0) = domainType", $(domainType.getList().get(0)).eq(domainType).toString());
-        assertEquals("domainType.list.get(0) = domainType", $(domainType.getList()).get(0).eq(domainType).toString());
-        assertEquals("domainType.map.get(key) = domainType", $(domainType.getMap()).get("key").eq(domainType).toString());
+  @Test
+  public void collectionUsage() {
+    DomainType domainType = Alias.alias(DomainType.class);
+    assertEquals(
+        "any(domainType.collection) = domainType",
+        $(domainType.getCollection()).any().eq(domainType).toString());
+    assertEquals(
+        "any(domainType.set) = domainType", $(domainType.getSet()).any().eq(domainType).toString());
+    assertEquals(
+        "any(domainType.list) = domainType",
+        $(domainType.getList()).any().eq(domainType).toString());
+    assertEquals(
+        "domainType.list.get(0) = domainType",
+        $(domainType.getList().get(0)).eq(domainType).toString());
+    assertEquals(
+        "domainType.list.get(0) = domainType",
+        $(domainType.getList()).get(0).eq(domainType).toString());
+    assertEquals(
+        "domainType.map.get(key) = domainType",
+        $(domainType.getMap()).get("key").eq(domainType).toString());
 
-        EntityPath<DomainType> domainTypePath = $(domainType);
-        assertEquals("domainType in domainType.collection", $(domainType.getCollection()).contains(domainTypePath).toString());
-    }
+    EntityPath<DomainType> domainTypePath = $(domainType);
+    assertEquals(
+        "domainType in domainType.collection",
+        $(domainType.getCollection()).contains(domainTypePath).toString());
+  }
 
-    @Test
-    public void collectionUsage_types() {
-        DomainType domainType = Alias.alias(DomainType.class);
-        assertEquals(DomainType.class, $(domainType.getCollection()).any().getType());
-        assertEquals(DomainType.class, $(domainType.getSet()).any().getType());
-        assertEquals(DomainType.class, $(domainType.getList()).any().getType());
-        assertEquals(DomainType.class, $(domainType.getMap()).get("key").getType());
-    }
-
-
+  @Test
+  public void collectionUsage_types() {
+    DomainType domainType = Alias.alias(DomainType.class);
+    assertEquals(DomainType.class, $(domainType.getCollection()).any().getType());
+    assertEquals(DomainType.class, $(domainType.getSet()).any().getType());
+    assertEquals(DomainType.class, $(domainType.getList()).any().getType());
+    assertEquals(DomainType.class, $(domainType.getMap()).get("key").getType());
+  }
 }

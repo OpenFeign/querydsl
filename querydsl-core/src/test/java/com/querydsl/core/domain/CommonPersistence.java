@@ -18,14 +18,13 @@ import com.querydsl.core.annotations.QuerySupertype;
 @QuerySupertype
 public class CommonPersistence {
 
-    private Long version;
+  private Long version;
 
-    public Long getVersion() {
-        return version;
-    }
+  public Long getVersion() {
+    return version;
+  }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
+  public void setVersion(Long version) {
+    this.version = version;
+  }
 }

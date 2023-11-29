@@ -13,45 +13,41 @@
  */
 package com.querydsl.lucene5;
 
+import java.util.function.Function;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.IndexSearcher;
 
-import java.util.function.Function;
-
 /**
  * {@code LuceneQuery} is a Querydsl query implementation for Lucene queries.
- * <p>
- * Example:
- * </p>
  *
- * <pre>
- * {@code
+ * <p>Example:
+ *
+ * <pre>{@code
  * QDocument doc = new QDocument("doc");
  * IndexSearcher searcher = new IndexSearcher(index);
  * LuceneQuery query = new LuceneQuery(true, searcher);
  * List<Document> documents = query
  *     .where(doc.year.between("1800", "2000").and(doc.title.startsWith("Huckle"))
  *     .fetch();
- * }
- * </pre>
+ * }</pre>
  *
  * @author vema
  */
 public class LuceneQuery extends AbstractLuceneQuery<Document, LuceneQuery> {
 
-    private static final Function<Document, Document> TRANSFORMER = new Function<Document, Document>() {
+  private static final Function<Document, Document> TRANSFORMER =
+      new Function<Document, Document>() {
         @Override
         public Document apply(Document input) {
-            return input;
+          return input;
         }
-    };
+      };
 
-    public LuceneQuery(IndexSearcher searcher) {
-        super(searcher, TRANSFORMER);
-    }
+  public LuceneQuery(IndexSearcher searcher) {
+    super(searcher, TRANSFORMER);
+  }
 
-    public LuceneQuery(LuceneSerializer luceneSerializer, IndexSearcher searcher) {
-        super(luceneSerializer, searcher, TRANSFORMER);
-    }
-
+  public LuceneQuery(LuceneSerializer luceneSerializer, IndexSearcher searcher) {
+    super(luceneSerializer, searcher, TRANSFORMER);
+  }
 }

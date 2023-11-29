@@ -15,21 +15,17 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.domain.AbstractEntity;
+import org.junit.Test;
 
 public class ExternalEntityTest {
 
-    @QueryEntity
-    public static class MyEntity extends AbstractEntity<MyEntity> {
+  @QueryEntity
+  public static class MyEntity extends AbstractEntity<MyEntity> {}
 
-    }
-
-    @Test
-    public void test() {
-        assertNotNull(QExternalEntityTest_MyEntity.myEntity.id);
-    }
-
+  @Test
+  public void test() {
+    assertNotNull(QExternalEntityTest_MyEntity.myEntity.id);
+  }
 }

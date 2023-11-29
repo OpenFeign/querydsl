@@ -1,48 +1,44 @@
 package com.querydsl.apt.domain;
 
+import jakarta.persistence.Entity;
 import java.util.AbstractSet;
 import java.util.Iterator;
 
-import jakarta.persistence.Entity;
-
 public class CustomCollection {
 
-    @Entity
-    public static class MyCustomCollection<T> extends AbstractSet<T> {
+  @Entity
+  public static class MyCustomCollection<T> extends AbstractSet<T> {
 
-        @Override
-        public Iterator<T> iterator() {
-            return null;
-        }
-
-        @Override
-        public int size() {
-            return 0;
-        }
-
+    @Override
+    public Iterator<T> iterator() {
+      return null;
     }
 
-    @Entity
-    public static class MyCustomCollection2<T> extends AbstractSet<T> {
+    @Override
+    public int size() {
+      return 0;
+    }
+  }
 
-        @Override
-        public Iterator<T> iterator() {
-            return null;
-        }
+  @Entity
+  public static class MyCustomCollection2<T> extends AbstractSet<T> {
 
-        @Override
-        public int size() {
-            return 0;
-        }
-
+    @Override
+    public Iterator<T> iterator() {
+      return null;
     }
 
-    @Entity
-    public static class MyEntity {
-
-        MyCustomCollection<String> strings;
-
-        MyCustomCollection2 strings2;
+    @Override
+    public int size() {
+      return 0;
     }
+  }
 
+  @Entity
+  public static class MyEntity {
+
+    MyCustomCollection<String> strings;
+
+    MyCustomCollection2 strings2;
+  }
 }

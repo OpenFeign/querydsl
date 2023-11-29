@@ -16,12 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public abstract class AbstractDaoTest {
 
-    @Autowired
-    TestDataService testDataService;
+  @Autowired TestDataService testDataService;
 
-    @Before
-    public void setUp() {
-        testDataService.addTestData();
-    }
-
+  @Before
+  public void setUp() {
+    testDataService.addTestData();
+  }
 }

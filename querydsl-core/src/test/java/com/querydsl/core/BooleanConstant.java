@@ -22,50 +22,48 @@ import com.querydsl.core.types.dsl.BooleanExpression;
  * BooleanConstant provides constants for Boolean.TRUE and Boolean.FALSE
  *
  * @author tiwe
- *
  */
 public final class BooleanConstant extends BooleanExpression implements Constant<Boolean> {
 
-    public static final BooleanExpression FALSE = new BooleanConstant(Boolean.FALSE);
+  public static final BooleanExpression FALSE = new BooleanConstant(Boolean.FALSE);
 
-    private static final long serialVersionUID = -4106376704553234781L;
+  private static final long serialVersionUID = -4106376704553234781L;
 
-    public static final BooleanExpression TRUE = new BooleanConstant(Boolean.TRUE);
+  public static final BooleanExpression TRUE = new BooleanConstant(Boolean.TRUE);
 
-    public static BooleanExpression create(Boolean b) {
-        return b ? TRUE : FALSE;
-    }
+  public static BooleanExpression create(Boolean b) {
+    return b ? TRUE : FALSE;
+  }
 
-    private final Boolean constant;
+  private final Boolean constant;
 
-    private BooleanConstant(Boolean b) {
-        super(ConstantImpl.create(b));
-        this.constant = b;
-    }
+  private BooleanConstant(Boolean b) {
+    super(ConstantImpl.create(b));
+    this.constant = b;
+  }
 
-    @Override
-    public <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(this, context);
-    }
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
 
-    @Override
-    public BooleanExpression eq(Boolean b) {
-        return constant.equals(b) ? TRUE : FALSE;
-    }
+  @Override
+  public BooleanExpression eq(Boolean b) {
+    return constant.equals(b) ? TRUE : FALSE;
+  }
 
-    @Override
-    public Boolean getConstant() {
-        return constant;
-    }
+  @Override
+  public Boolean getConstant() {
+    return constant;
+  }
 
-    @Override
-    public BooleanExpression ne(Boolean b) {
-        return constant.equals(b) ? FALSE : TRUE;
-    }
+  @Override
+  public BooleanExpression ne(Boolean b) {
+    return constant.equals(b) ? FALSE : TRUE;
+  }
 
-    @Override
-    public BooleanExpression not() {
-        return constant ? FALSE : TRUE;
-    }
-
+  @Override
+  public BooleanExpression not() {
+    return constant ? FALSE : TRUE;
+  }
 }

@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface CUBRID extends ExternalDatabase {
-}
+public interface CUBRID extends ExternalDatabase {}

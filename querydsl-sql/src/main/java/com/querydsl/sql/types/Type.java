@@ -16,62 +16,59 @@ package com.querydsl.sql.types;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Defines the de/serialization of a typed Java object from a ResultSet or to a PreparedStatement
  *
  * <p>getValue(ResultSet, int) is used for extraction and setValue(PreparedStatement, int, T) is
- * used for population</p>
+ * used for population
  *
  * @author tiwe
- *
  * @param <T>
  */
 public interface Type<T> {
 
-    /**
-     * Get the SQL supported SQL types
-     *
-     * @return sql types
-     */
-    int[] getSQLTypes();
+  /**
+   * Get the SQL supported SQL types
+   *
+   * @return sql types
+   */
+  int[] getSQLTypes();
 
-    /**
-     * Get the returned type
-     *
-     * @return returned class
-     */
-    Class<T> getReturnedClass();
+  /**
+   * Get the returned type
+   *
+   * @return returned class
+   */
+  Class<T> getReturnedClass();
 
-    /**
-     * Get the literal representation
-     *
-     * @param value value
-     * @return literal representation
-     */
-    String getLiteral(T value);
+  /**
+   * Get the literal representation
+   *
+   * @param value value
+   * @return literal representation
+   */
+  String getLiteral(T value);
 
-    /**
-     * Get the object from the result set
-     *
-     * @param rs result set
-     * @param startIndex column index in result set
-     * @return value
-     * @throws SQLException
-     */
-    @Nullable
-    T getValue(ResultSet rs, int startIndex) throws SQLException;
+  /**
+   * Get the object from the result set
+   *
+   * @param rs result set
+   * @param startIndex column index in result set
+   * @return value
+   * @throws SQLException
+   */
+  @Nullable
+  T getValue(ResultSet rs, int startIndex) throws SQLException;
 
-    /**
-     * Set the object to the statement
-     *
-     * @param st statement
-     * @param startIndex column index in statement
-     * @param value value to be set
-     * @throws SQLException
-     */
-    void setValue(PreparedStatement st, int startIndex, T value) throws SQLException;
-
+  /**
+   * Set the object to the statement
+   *
+   * @param st statement
+   * @param startIndex column index in statement
+   * @param value value to be set
+   * @throws SQLException
+   */
+  void setValue(PreparedStatement st, int startIndex, T value) throws SQLException;
 }

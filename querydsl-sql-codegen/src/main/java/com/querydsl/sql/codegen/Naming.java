@@ -19,28 +19,26 @@ import static javax.lang.model.SourceVersion.isKeyword;
  * {@code Naming} provides name normalization functionality
  *
  * @author tiwe
- *
  */
 public final class Naming {
 
-    public static String normalize(String s, String reservedSuffix) {
-        if (isKeyword(s)) {
-            return s + reservedSuffix;
+  public static String normalize(String s, String reservedSuffix) {
+    if (isKeyword(s)) {
+      return s + reservedSuffix;
+    } else {
+      StringBuilder sb = new StringBuilder(s.length() + 1);
+      for (char c : s.toCharArray()) {
+        if (!Character.isJavaIdentifierPart(c)) {
+          sb.append("_");
+        } else if (sb.length() == 0 && !Character.isJavaIdentifierStart(c)) {
+          sb.append("_").append(c);
         } else {
-            StringBuilder sb = new StringBuilder(s.length() + 1);
-            for (char c : s.toCharArray()) {
-                if (!Character.isJavaIdentifierPart(c)) {
-                    sb.append("_");
-                } else if (sb.length() == 0 && !Character.isJavaIdentifierStart(c)) {
-                    sb.append("_").append(c);
-                } else {
-                    sb.append(c);
-                }
-            }
-            return sb.toString();
+          sb.append(c);
         }
+      }
+      return sb.toString();
     }
+  }
 
-    private Naming() { }
-
+  private Naming() {}
 }

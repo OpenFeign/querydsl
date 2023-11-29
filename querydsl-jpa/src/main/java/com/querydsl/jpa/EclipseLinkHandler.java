@@ -13,111 +13,112 @@
  */
 package com.querydsl.jpa;
 
+import com.mysema.commons.lang.CloseableIterator;
+import com.mysema.commons.lang.IteratorAdapter;
+import com.querydsl.core.types.FactoryExpression;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.Query;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.stream.Stream;
-
-import jakarta.persistence.PersistenceException;
-import jakarta.persistence.Query;
-
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 import org.eclipse.persistence.jpa.JpaQuery;
 import org.eclipse.persistence.queries.Cursor;
-
-import com.mysema.commons.lang.CloseableIterator;
-import com.mysema.commons.lang.IteratorAdapter;
-import com.querydsl.core.types.FactoryExpression;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code EclipseLinkHandler} is the {@link QueryHandler} implementation for EclipseLink
  *
  * @author tiwe
- *
  */
 class EclipseLinkHandler implements QueryHandler {
 
-    @Override
-    public void addEntity(Query query, String alias, Class<?> type) {
-        // do nothing
+  @Override
+  public void addEntity(Query query, String alias, Class<?> type) {
+    // do nothing
+  }
+
+  @Override
+  public void addScalar(Query query, String alias, Class<?> type) {
+    // do nothing
+  }
+
+  @Override
+  public boolean createNativeQueryTyped() {
+    return true;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> CloseableIterator<T> iterate(Query query, FactoryExpression<?> projection) {
+    boolean canUseCursor = false;
+    try {
+      canUseCursor = query.unwrap(Query.class) instanceof JpaQuery;
+    } catch (PersistenceException e) {
+    } // can't unwrap, just ignore the exception
+
+    Iterator<T> iterator = null;
+    Closeable closeable = null;
+    if (canUseCursor) {
+      query.setHint(QueryHints.CURSOR, HintValues.TRUE);
+      final Cursor cursor = (Cursor) query.getSingleResult();
+      final int pageSize = cursor.getPageSize();
+      closeable =
+          new Closeable() {
+            @Override
+            public void close() throws IOException {
+              cursor.close();
+            }
+          };
+      iterator =
+          new Iterator<T>() {
+            private int rowsSinceLastClear = 0;
+
+            @Override
+            public boolean hasNext() {
+              return cursor.hasNext();
+            }
+
+            @Override
+            public T next() {
+              if (rowsSinceLastClear++ == pageSize) {
+                rowsSinceLastClear = 0;
+                cursor.clear();
+              }
+              return (T) cursor.next();
+            }
+          };
+    } else {
+      iterator = query.getResultList().iterator();
     }
-
-    @Override
-    public void addScalar(Query query, String alias, Class<?> type) {
-        // do nothing
+    if (projection != null) {
+      return new TransformingIterator<T>(iterator, closeable, projection);
+    } else {
+      return new IteratorAdapter<T>(iterator, closeable);
     }
+  }
 
-    @Override
-    public boolean createNativeQueryTyped() {
-        return true;
+  @Override
+  public <T> Stream<T> stream(Query query, @Nullable FactoryExpression<?> projection) {
+    final Stream resultStream = query.getResultStream();
+    if (projection != null) {
+      return resultStream.map(
+          element ->
+              projection.newInstance(
+                  (Object[]) (element.getClass().isArray() ? element : new Object[] {element})));
     }
+    return resultStream;
+  }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> CloseableIterator<T> iterate(Query query, FactoryExpression<?> projection) {
-        boolean canUseCursor = false;
-        try {
-            canUseCursor = query.unwrap(Query.class) instanceof JpaQuery;
-        } catch (PersistenceException e) { } // can't unwrap, just ignore the exception
+  @Override
+  public boolean transform(Query query, FactoryExpression<?> projection) {
+    return false;
+  }
 
-        Iterator<T> iterator = null;
-        Closeable closeable = null;
-        if (canUseCursor) {
-            query.setHint(QueryHints.CURSOR, HintValues.TRUE);
-            final Cursor cursor = (Cursor) query.getSingleResult();
-            final int pageSize = cursor.getPageSize();
-            closeable = new Closeable() {
-                @Override
-                public void close() throws IOException {
-                    cursor.close();
-                }
-            };
-            iterator = new Iterator<T>() {
-                private int rowsSinceLastClear = 0;
-
-                @Override
-                public boolean hasNext() {
-                    return cursor.hasNext();
-                }
-
-                @Override
-                public T next() {
-                    if (rowsSinceLastClear++ == pageSize) {
-                        rowsSinceLastClear = 0;
-                        cursor.clear();
-                    }
-                    return (T) cursor.next();
-                }
-            };
-        } else {
-            iterator = query.getResultList().iterator();
-        }
-        if (projection != null) {
-            return new TransformingIterator<T>(iterator, closeable, projection);
-        } else {
-            return new IteratorAdapter<T>(iterator, closeable);
-        }
-    }
-
-    @Override
-    public <T> Stream<T> stream(Query query, @Nullable FactoryExpression<?> projection) {
-        final Stream resultStream = query.getResultStream();
-        if (projection != null) {
-            return resultStream.map(element -> projection.newInstance((Object[]) (element.getClass().isArray() ? element : new Object[] {element})));
-        }
-        return resultStream;
-    }
-
-    @Override
-    public boolean transform(Query query, FactoryExpression<?> projection) {
-        return false;
-    }
-
-    @Override
-    public boolean wrapEntityProjections() {
-        return false;
-    }
-
+  @Override
+  public boolean wrapEntityProjections() {
+    return false;
+  }
 }

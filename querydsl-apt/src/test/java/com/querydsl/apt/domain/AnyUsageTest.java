@@ -15,81 +15,66 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import jakarta.persistence.*;
-
 import org.junit.Test;
-
-import com.querydsl.core.types.dsl.BooleanExpression;
 
 public class AnyUsageTest {
 
-    @Entity
-    public static class DealerGroup implements Serializable {
-        private static final long serialVersionUID = 8001287260658920066L;
+  @Entity
+  public static class DealerGroup implements Serializable {
+    private static final long serialVersionUID = 8001287260658920066L;
 
-        @Id
-        @GeneratedValue
-        public Long id;
+    @Id @GeneratedValue public Long id;
 
-        @OneToMany(mappedBy = "dealerGroup")
-        public Set<Dealer> dealers;
+    @OneToMany(mappedBy = "dealerGroup")
+    public Set<Dealer> dealers;
+  }
 
-    }
+  @Entity
+  public static class Dealer implements Serializable {
+    private static final long serialVersionUID = -6832045219902674887L;
 
-    @Entity
-    public static class Dealer implements Serializable {
-        private static final long serialVersionUID = -6832045219902674887L;
+    @Id @GeneratedValue public Long id;
 
-        @Id
-        @GeneratedValue
-        public Long id;
+    @ManyToOne public DealerGroup dealerGroup;
 
-        @ManyToOne
-        public DealerGroup dealerGroup;
+    @ManyToOne public Company company;
+  }
 
-        @ManyToOne
-        public Company company;
+  @Entity
+  public static class Company implements Serializable {
+    private static final long serialVersionUID = -5369301332567282659L;
 
-    }
+    @Id @GeneratedValue public Long id;
+  }
 
-    @Entity
-    public static class Company implements Serializable {
-        private static final long serialVersionUID = -5369301332567282659L;
+  @Test
+  public void test() {
+    QAnyUsageTest_Dealer dealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
+    assertNotNull(dealer);
+    assertNotNull(dealer.company);
+  }
 
-        @Id
-        @GeneratedValue
-        public Long id;
+  @Test
+  public void withQDealer() {
+    List<Company> companies = new LinkedList<Company>();
+    companies.add(new Company());
+    QAnyUsageTest_Dealer qDealer = QAnyUsageTest_Dealer.dealer;
+    BooleanExpression expression = qDealer.company.in(companies);
+    assertNotNull(expression);
+  }
 
-    }
-
-    @Test
-    public void test() {
-        QAnyUsageTest_Dealer dealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
-        assertNotNull(dealer);
-        assertNotNull(dealer.company);
-    }
-
-    @Test
-    public void withQDealer() {
-        List<Company> companies = new LinkedList<Company>();
-        companies.add(new Company());
-        QAnyUsageTest_Dealer qDealer = QAnyUsageTest_Dealer.dealer;
-        BooleanExpression expression = qDealer.company.in(companies);
-        assertNotNull(expression);
-    }
-
-    @Test
-    public void withQDealerGroup() {
-        List<Company> companies = new LinkedList<Company>();
-        companies.add(new Company());
-        QAnyUsageTest_Dealer qDealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
-        BooleanExpression expression = qDealer.company.in(companies);
-        assertNotNull(expression);
-    }
-
+  @Test
+  public void withQDealerGroup() {
+    List<Company> companies = new LinkedList<Company>();
+    companies.add(new Company());
+    QAnyUsageTest_Dealer qDealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
+    BooleanExpression expression = qDealer.company.in(companies);
+    assertNotNull(expression);
+  }
 }

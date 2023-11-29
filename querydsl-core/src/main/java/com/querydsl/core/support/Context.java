@@ -13,41 +13,38 @@
  */
 package com.querydsl.core.support;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@code Context} is used in {@link CollectionAnyVisitor} as the visitor context
  *
  * @author tiwe
- *
  */
 public class Context {
 
-    public boolean replace;
+  public boolean replace;
 
-    public final List<Path<?>> paths = new ArrayList<Path<?>>();
+  public final List<Path<?>> paths = new ArrayList<Path<?>>();
 
-    public final List<EntityPath<?>> replacements = new ArrayList<EntityPath<?>>();
+  public final List<EntityPath<?>> replacements = new ArrayList<EntityPath<?>>();
 
-    public void add(Path<?> anyPath, EntityPath<?> replacement) {
-        replace = true;
-        paths.add(anyPath);
-        replacements.add(replacement);
-    }
+  public void add(Path<?> anyPath, EntityPath<?> replacement) {
+    replace = true;
+    paths.add(anyPath);
+    replacements.add(replacement);
+  }
 
-    public void add(Context c) {
-        replace |= c.replace;
-        paths.addAll(c.paths);
-        replacements.addAll(c.replacements);
-    }
+  public void add(Context c) {
+    replace |= c.replace;
+    paths.addAll(c.paths);
+    replacements.addAll(c.replacements);
+  }
 
-    public void clear() {
-        paths.clear();
-        replacements.clear();
-    }
-
+  public void clear() {
+    paths.clear();
+    replacements.clear();
+  }
 }

@@ -1,76 +1,71 @@
 package com.querydsl.apt.domain;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
-
+import java.io.Serializable;
 import org.junit.Test;
 
 public class Enum3Test {
 
-    public interface BaseInterface extends Serializable {
-        String getFoo();
-        String getBar();
+  public interface BaseInterface extends Serializable {
+    String getFoo();
+
+    String getBar();
+  }
+
+  public enum EnumImplementation implements SpecificInterface {
+    FOO,
+    BAR;
+
+    public EnumImplementation getValue() {
+      return this;
     }
 
-    public enum EnumImplementation implements SpecificInterface {
-        FOO,
-        BAR;
-
-        public EnumImplementation getValue() {
-            return this;
-        }
-        public String getFoo() {
-            return null;
-        }
-        public String getBar() {
-            return name();
-        }
+    public String getFoo() {
+      return null;
     }
 
-    public interface SpecificInterface extends BaseInterface {
-        EnumImplementation getValue();
+    public String getBar() {
+      return name();
     }
+  }
 
-    @Entity
-    public static class Entity1 {
+  public interface SpecificInterface extends BaseInterface {
+    EnumImplementation getValue();
+  }
 
-        @Enumerated(jakarta.persistence.EnumType.STRING)
-        private EnumImplementation value;
+  @Entity
+  public static class Entity1 {
 
-        public SpecificInterface getValue() {
-            return value;
-        }
+    @Enumerated(jakarta.persistence.EnumType.STRING)
+    private EnumImplementation value;
 
+    public SpecificInterface getValue() {
+      return value;
     }
+  }
 
-    @Entity
-    public static class Entity2 {
+  @Entity
+  public static class Entity2 {
 
-        private EnumImplementation value;
+    private EnumImplementation value;
 
-        @Enumerated(jakarta.persistence.EnumType.STRING)
-        public SpecificInterface getValue() {
-            return value;
-        }
-
+    @Enumerated(jakarta.persistence.EnumType.STRING)
+    public SpecificInterface getValue() {
+      return value;
     }
+  }
 
-    @Entity
-    public static class Entity3 {
+  @Entity
+  public static class Entity3 {
 
-        private EnumImplementation value;
+    private EnumImplementation value;
 
-        public SpecificInterface getValue() {
-            return value;
-        }
-
+    public SpecificInterface getValue() {
+      return value;
     }
+  }
 
-    @Test
-    public void test() {
-
-    }
-
+  @Test
+  public void test() {}
 }

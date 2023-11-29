@@ -15,44 +15,44 @@ package com.querydsl.jdo;
 
 import static org.junit.Assert.assertEquals;
 
+import com.querydsl.jdo.test.domain.Product;
+import com.querydsl.jdo.test.domain.QProduct;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.querydsl.jdo.test.domain.Product;
-import com.querydsl.jdo.test.domain.QProduct;
-
 public class AggregateTest extends AbstractJDOTest {
 
-    private final QProduct product = QProduct.product;
+  private final QProduct product = QProduct.product;
 
-    @Test
-    public void unique() {
-        double min = 200.00, avg = 400.00, max = 600.00;
-        assertEquals(Double.valueOf(min), query().from(product).select(product.price.min()).fetchOne());
-        assertEquals(Double.valueOf(avg), query().from(product).select(product.price.avg()).fetchOne());
-        assertEquals(Double.valueOf(max), query().from(product).select(product.price.max()).fetchOne());
+  @Test
+  public void unique() {
+    double min = 200.00, avg = 400.00, max = 600.00;
+    assertEquals(Double.valueOf(min), query().from(product).select(product.price.min()).fetchOne());
+    assertEquals(Double.valueOf(avg), query().from(product).select(product.price.avg()).fetchOne());
+    assertEquals(Double.valueOf(max), query().from(product).select(product.price.max()).fetchOne());
+  }
+
+  @Test
+  public void list() {
+    double min = 200.00, avg = 400.00, max = 600.00;
+    assertEquals(
+        Double.valueOf(min), query().from(product).select(product.price.min()).fetch().get(0));
+    assertEquals(
+        Double.valueOf(avg), query().from(product).select(product.price.avg()).fetch().get(0));
+    assertEquals(
+        Double.valueOf(max), query().from(product).select(product.price.max()).fetch().get(0));
+  }
+
+  @BeforeClass
+  public static void doPersist() {
+    List<Product> entities = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      entities.add(new Product("C" + i, "F", 200.00, 2));
+      entities.add(new Product("B" + i, "E", 400.00, 4));
+      entities.add(new Product("A" + i, "D", 600.00, 6));
     }
-
-    @Test
-    public void list() {
-        double min = 200.00, avg = 400.00, max = 600.00;
-        assertEquals(Double.valueOf(min), query().from(product).select(product.price.min()).fetch().get(0));
-        assertEquals(Double.valueOf(avg), query().from(product).select(product.price.avg()).fetch().get(0));
-        assertEquals(Double.valueOf(max), query().from(product).select(product.price.max()).fetch().get(0));
-    }
-
-    @BeforeClass
-    public static void doPersist() {
-        List<Product> entities = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            entities.add(new Product("C" + i, "F", 200.00, 2));
-            entities.add(new Product("B" + i, "E", 400.00, 4));
-            entities.add(new Product("A" + i, "D", 600.00, 6));
-        }
-        doPersist(entities);
-    }
-
+    doPersist(entities);
+  }
 }

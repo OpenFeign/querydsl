@@ -21,39 +21,37 @@ import com.querydsl.sql.SQLTemplates;
  * {@code SQLServer2008SpatialTemplates} is a spatial enabled SQL dialect for SQL Server 2008
  *
  * @author tiwe
- *
  */
 public class SQLServer2008SpatialTemplates extends SQLServer2008Templates {
 
-    @SuppressWarnings("FieldNameHidesFieldInSuperclass") //Intentional
-    public static final SQLServer2008SpatialTemplates DEFAULT = new SQLServer2008SpatialTemplates();
+  @SuppressWarnings("FieldNameHidesFieldInSuperclass") // Intentional
+  public static final SQLServer2008SpatialTemplates DEFAULT = new SQLServer2008SpatialTemplates();
 
-    public static Builder builder() {
-        return new Builder() {
-            @Override
-            protected SQLTemplates build(char escape, boolean quote) {
-                return new SQLServer2008SpatialTemplates(escape, quote);
-            }
-        };
-    }
+  public static Builder builder() {
+    return new Builder() {
+      @Override
+      protected SQLTemplates build(char escape, boolean quote) {
+        return new SQLServer2008SpatialTemplates(escape, quote);
+      }
+    };
+  }
 
-    public SQLServer2008SpatialTemplates() {
-        this('\\',false);
-    }
+  public SQLServer2008SpatialTemplates() {
+    this('\\', false);
+  }
 
-    public SQLServer2008SpatialTemplates(boolean quote) {
-        this('\\',quote);
-    }
+  public SQLServer2008SpatialTemplates(boolean quote) {
+    this('\\', quote);
+  }
 
-    public SQLServer2008SpatialTemplates(char escape, boolean quote) {
-        super(escape, quote);
-        addCustomType(SQLServerGeometryType.DEFAULT);
-        add(SpatialTemplatesSupport.getSpatialOps("ST", false));
-        add(SpatialOps.X, "{0}.STX");
-        add(SpatialOps.Y, "{0}.STY");
-        add(SpatialOps.M, "{0}.M");
-        add(SpatialOps.Z, "{0}.Z");
-        add(SpatialOps.SRID, "{0}.STSrid");
-    }
-
+  public SQLServer2008SpatialTemplates(char escape, boolean quote) {
+    super(escape, quote);
+    addCustomType(SQLServerGeometryType.DEFAULT);
+    add(SpatialTemplatesSupport.getSpatialOps("ST", false));
+    add(SpatialOps.X, "{0}.STX");
+    add(SpatialOps.Y, "{0}.STY");
+    add(SpatialOps.M, "{0}.M");
+    add(SpatialOps.Z, "{0}.Z");
+    add(SpatialOps.SRID, "{0}.STSrid");
+  }
 }

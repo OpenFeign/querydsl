@@ -13,72 +13,71 @@
  */
 package com.querydsl.jpa;
 
-import java.util.Iterator;
-import java.util.stream.Stream;
-
-import org.jetbrains.annotations.Nullable;
-import jakarta.persistence.Query;
-
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.IteratorAdapter;
 import com.querydsl.core.types.FactoryExpression;
+import jakarta.persistence.Query;
+import java.util.Iterator;
+import java.util.stream.Stream;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code DefaultQueryHandler} is the default implementation of the {@link QueryHandler} interface
  *
  * @author tiwe
- *
  */
 public final class DefaultQueryHandler implements QueryHandler {
 
-    public static final QueryHandler DEFAULT = new DefaultQueryHandler();
+  public static final QueryHandler DEFAULT = new DefaultQueryHandler();
 
-    @Override
-    public void addEntity(Query query, String alias, Class<?> type) {
-        // do nothing
+  @Override
+  public void addEntity(Query query, String alias, Class<?> type) {
+    // do nothing
+  }
+
+  @Override
+  public void addScalar(Query query, String alias, Class<?> type) {
+    // do nothing
+  }
+
+  @Override
+  public boolean createNativeQueryTyped() {
+    return true;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> CloseableIterator<T> iterate(
+      Query query, @Nullable final FactoryExpression<?> projection) {
+    Iterator<T> iterator = query.getResultList().iterator();
+    if (projection != null) {
+      return new TransformingIterator<T>(iterator, projection);
+    } else {
+      return new IteratorAdapter<T>(iterator);
     }
+  }
 
-    @Override
-    public void addScalar(Query query, String alias, Class<?> type) {
-        // do nothing
+  @Override
+  public <T> Stream<T> stream(Query query, @Nullable FactoryExpression<?> projection) {
+    final Stream resultStream = query.getResultStream();
+    if (projection != null) {
+      return resultStream.map(
+          element ->
+              projection.newInstance(
+                  (Object[]) (element.getClass().isArray() ? element : new Object[] {element})));
     }
+    return resultStream;
+  }
 
-    @Override
-    public boolean createNativeQueryTyped() {
-        return true;
-    }
+  @Override
+  public boolean transform(Query query, FactoryExpression<?> projection) {
+    return false;
+  }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> CloseableIterator<T> iterate(Query query, @Nullable final FactoryExpression<?> projection) {
-        Iterator<T> iterator = query.getResultList().iterator();
-        if (projection != null) {
-            return new TransformingIterator<T>(iterator, projection);
-        } else {
-            return new IteratorAdapter<T>(iterator);
-        }
-    }
+  @Override
+  public boolean wrapEntityProjections() {
+    return false;
+  }
 
-    @Override
-    public <T> Stream<T> stream(Query query, @Nullable FactoryExpression<?> projection) {
-        final Stream resultStream = query.getResultStream();
-        if (projection != null) {
-            return resultStream.map(element -> projection.newInstance((Object[]) (element.getClass().isArray() ? element : new Object[] {element})));
-        }
-        return resultStream;
-    }
-
-    @Override
-    public boolean transform(Query query, FactoryExpression<?> projection) {
-        return false;
-    }
-
-    @Override
-    public boolean wrapEntityProjections() {
-        return false;
-    }
-
-    private DefaultQueryHandler() { }
-
-
+  private DefaultQueryHandler() {}
 }

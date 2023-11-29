@@ -19,26 +19,30 @@ import org.geolatte.geom.*;
  * {@code GeometryPaths} provides factory methods for {@link GeometryExpression} creation
  *
  * @author tiwe
- *
  */
 public interface GeometryPaths {
 
-    <A extends GeometryCollection> GeometryCollectionPath<A> createGeometryCollection(String property, Class<? extends A> type);
+  <A extends GeometryCollection> GeometryCollectionPath<A> createGeometryCollection(
+      String property, Class<? extends A> type);
 
-    <A extends Geometry> GeometryPath<A> createGeometry(String property, Class<? extends A> type);
+  <A extends Geometry> GeometryPath<A> createGeometry(String property, Class<? extends A> type);
 
-    <A extends LinearRing> LinearRingPath<A> createLinearRing(String property, Class<? extends A> type);
+  <A extends LinearRing> LinearRingPath<A> createLinearRing(
+      String property, Class<? extends A> type);
 
-    <A extends LineString> LineStringPath<A> createLineString(String property, Class<? extends A> type);
+  <A extends LineString> LineStringPath<A> createLineString(
+      String property, Class<? extends A> type);
 
-    <A extends MultiLineString> MultiLineStringPath<A> createMultiLineString(String property, Class<? extends A> type);
+  <A extends MultiLineString> MultiLineStringPath<A> createMultiLineString(
+      String property, Class<? extends A> type);
 
-    <A extends MultiPoint> MultiPointPath<A> createMultiPoint(String property, Class<? extends A> type);
+  <A extends MultiPoint> MultiPointPath<A> createMultiPoint(
+      String property, Class<? extends A> type);
 
-    <A extends MultiPolygon> MultiPolygonPath<A> createMultiPolygon(String property, Class<? extends A> type);
+  <A extends MultiPolygon> MultiPolygonPath<A> createMultiPolygon(
+      String property, Class<? extends A> type);
 
-    <A extends Point> PointPath<A> createPoint(String property, Class<? extends A> type);
+  <A extends Point> PointPath<A> createPoint(String property, Class<? extends A> type);
 
-    <A extends Polygon> PolygonPath<A> createPolygon(String property, Class<? extends A> type);
-
+  <A extends Polygon> PolygonPath<A> createPolygon(String property, Class<? extends A> type);
 }

@@ -13,32 +13,30 @@
  */
 package com.querydsl.jpa.hibernate;
 
-import org.hibernate.query.Query;
-import org.hibernate.query.NativeQuery;
 import org.hibernate.StatelessSession;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 /**
  * SessionHolder implementation using StatelessSession
  *
  * @author tiwe
- *
  */
 public class StatelessSessionHolder implements SessionHolder {
 
-    private final StatelessSession session;
+  private final StatelessSession session;
 
-    public StatelessSessionHolder(StatelessSession session) {
-        this.session = session;
-    }
+  public StatelessSessionHolder(StatelessSession session) {
+    this.session = session;
+  }
 
-    @Override
-    public Query<?> createQuery(String queryString) {
-        return session.createQuery(queryString);
-    }
+  @Override
+  public Query<?> createQuery(String queryString) {
+    return session.createQuery(queryString);
+  }
 
-    @Override
-    public NativeQuery<?> createSQLQuery(String queryString) {
-        return session.createNativeQuery(queryString);
-    }
-
+  @Override
+  public NativeQuery<?> createSQLQuery(String queryString) {
+    return session.createNativeQuery(queryString);
+  }
 }

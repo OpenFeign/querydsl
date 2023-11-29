@@ -1,111 +1,102 @@
 package com.querydsl.apt.domain;
 
-import java.util.Collection;
-
-import jakarta.persistence.*;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryInit;
+import jakarta.persistence.*;
+import java.util.Collection;
+import org.junit.Test;
 
 public class DeepInitializationTest {
 
-    @MappedSuperclass
-    public abstract static class AbstractEntity implements Cloneable {
+  @MappedSuperclass
+  public abstract static class AbstractEntity implements Cloneable {
 
-        @Id
-        @Column(name = "ID")
-        @GeneratedValue(generator = "SEQUENCE")
-        private long id;
+    @Id
+    @Column(name = "ID")
+    @GeneratedValue(generator = "SEQUENCE")
+    private long id;
 
-        public long getId() {
-            return id;
-        }
-
-        @Override
-        protected Object clone() throws CloneNotSupportedException {
-            return super.clone();
-        }
+    public long getId() {
+      return id;
     }
 
-    @Entity
-    @SequenceGenerator(name = "SEQUENCE", sequenceName = "PARENT_SEQUENCE")
-    public static class Parent extends AbstractEntity {
-        @JoinColumn(name = "FK_PARENT_ID", nullable = false)
-        @OneToMany(cascade = CascadeType.PERSIST)
-        @QueryInit("subChild.*")
-        private Collection<Child> children;
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+      return super.clone();
+    }
+  }
 
-        public Parent() {
-        }
+  @Entity
+  @SequenceGenerator(name = "SEQUENCE", sequenceName = "PARENT_SEQUENCE")
+  public static class Parent extends AbstractEntity {
+    @JoinColumn(name = "FK_PARENT_ID", nullable = false)
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @QueryInit("subChild.*")
+    private Collection<Child> children;
 
-        public Collection<Child> getChildren() {
-            return children;
-        }
+    public Parent() {}
 
-        public void setChildren(Collection<Child> children) {
-            this.children = children;
-        }
+    public Collection<Child> getChildren() {
+      return children;
     }
 
-    @Entity
-    @SequenceGenerator(name = "SEQUENCE", sequenceName = "CHILD_SEQUENCE")
-    public static class Child extends AbstractEntity {
-        @OneToOne
-        @JoinColumn(name = "FK_SUBCHILD_ID", referencedColumnName = "ID")
-        private SubChild subChild;
+    public void setChildren(Collection<Child> children) {
+      this.children = children;
+    }
+  }
 
-        public Child() {
-        }
+  @Entity
+  @SequenceGenerator(name = "SEQUENCE", sequenceName = "CHILD_SEQUENCE")
+  public static class Child extends AbstractEntity {
+    @OneToOne
+    @JoinColumn(name = "FK_SUBCHILD_ID", referencedColumnName = "ID")
+    private SubChild subChild;
 
-        public SubChild getSubChild() {
-            return subChild;
-        }
+    public Child() {}
 
-        public void setSubChild(SubChild subChild) {
-            this.subChild = subChild;
-        }
+    public SubChild getSubChild() {
+      return subChild;
     }
 
-    @Entity
-    @SequenceGenerator(name = "SEQUENCE", sequenceName = "SUBCHILD_SEQUENCE")
-    public static class SubChild extends AbstractEntity {
-        @Embedded
-        private MyEmbeddable myEmbeddable;
+    public void setSubChild(SubChild subChild) {
+      this.subChild = subChild;
+    }
+  }
 
-        public SubChild() {
-        }
+  @Entity
+  @SequenceGenerator(name = "SEQUENCE", sequenceName = "SUBCHILD_SEQUENCE")
+  public static class SubChild extends AbstractEntity {
+    @Embedded private MyEmbeddable myEmbeddable;
 
-        public MyEmbeddable getMyEmbeddable() {
-            return myEmbeddable;
-        }
+    public SubChild() {}
 
-        public void setMyEmbeddable(MyEmbeddable myEmbeddable) {
-            this.myEmbeddable = myEmbeddable;
-        }
+    public MyEmbeddable getMyEmbeddable() {
+      return myEmbeddable;
     }
 
-    @Embeddable
-    public static class MyEmbeddable {
+    public void setMyEmbeddable(MyEmbeddable myEmbeddable) {
+      this.myEmbeddable = myEmbeddable;
+    }
+  }
 
-        private String number;
+  @Embeddable
+  public static class MyEmbeddable {
 
-        public MyEmbeddable() {
-        }
+    private String number;
 
-        public String getNumber() {
-            return number;
-        }
+    public MyEmbeddable() {}
 
-        public void setNumber(String number) {
-            this.number = number;
-        }
+    public String getNumber() {
+      return number;
     }
 
-    @Test
-    public void init_via_parent() {
-        QDeepInitializationTest_Parent parent = QDeepInitializationTest_Parent.parent;
-        parent.children.any().subChild.myEmbeddable.number.eq("Test");
+    public void setNumber(String number) {
+      this.number = number;
     }
+  }
 
+  @Test
+  public void init_via_parent() {
+    QDeepInitializationTest_Parent parent = QDeepInitializationTest_Parent.parent;
+    parent.children.any().subChild.myEmbeddable.number.eq("Test");
+  }
 }

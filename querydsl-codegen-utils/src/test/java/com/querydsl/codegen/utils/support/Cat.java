@@ -1,6 +1,6 @@
 /*
  * Copyright 2011, Mysema Ltd
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,139 +21,141 @@ import java.util.Map;
 
 public class Cat {
 
-    private int breed;
+  private int breed;
 
-    private java.sql.Date dateField;
+  private java.sql.Date dateField;
 
-    public enum Color {
-        BLUE, GREEN, BROWN
-    }
-    private Color eyecolor;
+  public enum Color {
+    BLUE,
+    GREEN,
+    BROWN
+  }
 
-    private List<Cat> kittens;
+  private Color eyecolor;
 
-    private Cat[] kittenArray;
+  private List<Cat> kittens;
 
-    private Map<String, Cat> kittensByName;
+  private Cat[] kittenArray;
 
-    private Cat mate;
+  private Map<String, Cat> kittensByName;
 
-    private String stringAsSimple;
+  private Cat mate;
 
-    private java.sql.Time timeField;
-    
-    private String name;
-    
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    private Date birthdate;
-    private int id;
+  private String stringAsSimple;
 
-    public Cat() {
-        this.kittensByName = Collections.emptyMap();
-    }
+  private java.sql.Time timeField;
 
-    public Cat(String name) {
-        Cat kitten = new Cat();
-        this.kittens = Arrays.asList(kitten);
-        this.kittenArray = new Cat[]{kitten};
-        this.kittensByName = Collections.singletonMap("Kitty", kitten);
-        this.name = name;
-    }
-    
-    public Cat(String name, String kittenName) {
-        this(name);
-        kittens.get(0).setName(kittenName);
-    }
+  private String name;
 
-    public Cat(String name, int id) {
-        this(name);
-        this.id = id;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Cat(String name, int id, Date birthdate) {
-        this(name, id);
-        this.birthdate = new Date(birthdate.getTime());
-        this.dateField = new java.sql.Date(birthdate.getTime());
-        this.timeField = new java.sql.Time(birthdate.getTime());
-    }
+  private Date birthdate;
+  private int id;
 
-    public int getBreed() {
-        return breed;
-    }
+  public Cat() {
+    this.kittensByName = Collections.emptyMap();
+  }
 
-    public java.sql.Date getDateField() {
-        return dateField;
-    }
+  public Cat(String name) {
+    Cat kitten = new Cat();
+    this.kittens = Arrays.asList(kitten);
+    this.kittenArray = new Cat[] {kitten};
+    this.kittensByName = Collections.singletonMap("Kitty", kitten);
+    this.name = name;
+  }
 
-    public Color getEyecolor() {
-        return eyecolor;
-    }
+  public Cat(String name, String kittenName) {
+    this(name);
+    kittens.get(0).setName(kittenName);
+  }
 
-    public List<Cat> getKittens() {
-        return kittens;
-    }
+  public Cat(String name, int id) {
+    this(name);
+    this.id = id;
+  }
 
-    public Map<String, Cat> getKittensByName() {
-        return kittensByName;
-    }
+  public Cat(String name, int id, Date birthdate) {
+    this(name, id);
+    this.birthdate = new Date(birthdate.getTime());
+    this.dateField = new java.sql.Date(birthdate.getTime());
+    this.timeField = new java.sql.Time(birthdate.getTime());
+  }
 
-    public Cat getMate() {
-        return mate;
-    }
+  public int getBreed() {
+    return breed;
+  }
 
-    public String getStringAsSimple() {
-        return stringAsSimple;
-    }
+  public java.sql.Date getDateField() {
+    return dateField;
+  }
 
-    public java.sql.Time getTimeField() {
-        return timeField;
-    }
+  public Color getEyecolor() {
+    return eyecolor;
+  }
 
-    public void setBreed(int breed) {
-        this.breed = breed;
-    }
+  public List<Cat> getKittens() {
+    return kittens;
+  }
 
-    public void setDateField(java.sql.Date dateField) {
-        this.dateField = new java.sql.Date(dateField.getTime());
-    }
+  public Map<String, Cat> getKittensByName() {
+    return kittensByName;
+  }
 
-    public void setEyecolor(Color eyecolor) {
-        this.eyecolor = eyecolor;
-    }
+  public Cat getMate() {
+    return mate;
+  }
 
-    public void setKittens(List<Cat> kittens) {
-        this.kittens = kittens;
-    }
+  public String getStringAsSimple() {
+    return stringAsSimple;
+  }
 
-    public void setKittensByName(Map<String, Cat> kittensByName) {
-        this.kittensByName = kittensByName;
-    }
+  public java.sql.Time getTimeField() {
+    return timeField;
+  }
 
-    public void setMate(Cat mate) {
-        this.mate = mate;
-    }
+  public void setBreed(int breed) {
+    this.breed = breed;
+  }
 
-    public void setStringAsSimple(String stringAsSimple) {
-        this.stringAsSimple = stringAsSimple;
-    }
+  public void setDateField(java.sql.Date dateField) {
+    this.dateField = new java.sql.Date(dateField.getTime());
+  }
 
-    public void setTimeField(java.sql.Time timeField) {
-        this.timeField = timeField;
-    }
+  public void setEyecolor(Color eyecolor) {
+    this.eyecolor = eyecolor;
+  }
 
-    public Cat[] getKittenArray() {
-        return kittenArray;
-    }
+  public void setKittens(List<Cat> kittens) {
+    this.kittens = kittens;
+  }
 
-    public void setKittenArray(Cat[] kittenArray) {
-        this.kittenArray = kittenArray.clone();
-    }
+  public void setKittensByName(Map<String, Cat> kittensByName) {
+    this.kittensByName = kittensByName;
+  }
 
-    public String toString() {
-        return name;
-    }
+  public void setMate(Cat mate) {
+    this.mate = mate;
+  }
 
+  public void setStringAsSimple(String stringAsSimple) {
+    this.stringAsSimple = stringAsSimple;
+  }
+
+  public void setTimeField(java.sql.Time timeField) {
+    this.timeField = timeField;
+  }
+
+  public Cat[] getKittenArray() {
+    return kittenArray;
+  }
+
+  public void setKittenArray(Cat[] kittenArray) {
+    this.kittenArray = kittenArray.clone();
+  }
+
+  public String toString() {
+    return name;
+  }
 }

@@ -15,36 +15,32 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
+import org.junit.Test;
 
 public class TransientTest {
 
-    @Entity
-    public static class ExampleEntity {
+  @Entity
+  public static class ExampleEntity {
 
-        @QueryType(PropertyType.SIMPLE)
-        @Transient
-        String property1;
+    @QueryType(PropertyType.SIMPLE)
+    @Transient
+    String property1;
 
-        @Transient
-        String property2;
+    @Transient String property2;
 
-        @QueryType(PropertyType.SIMPLE)
-        transient String property3;
+    @QueryType(PropertyType.SIMPLE)
+    transient String property3;
 
-        transient String property4;
-    }
+    transient String property4;
+  }
 
-    @Test
-    public void test() {
-        assertNotNull(QTransientTest_ExampleEntity.exampleEntity.property1);
-        assertNotNull(QTransientTest_ExampleEntity.exampleEntity.property3);
-    }
-
+  @Test
+  public void test() {
+    assertNotNull(QTransientTest_ExampleEntity.exampleEntity.property1);
+    assertNotNull(QTransientTest_ExampleEntity.exampleEntity.property3);
+  }
 }

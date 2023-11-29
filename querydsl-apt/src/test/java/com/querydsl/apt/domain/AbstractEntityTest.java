@@ -15,32 +15,29 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
+import org.junit.Test;
 
 public class AbstractEntityTest {
 
-    @QueryEntity
-    public abstract static class Category<T extends Category<T>> {
+  @QueryEntity
+  public abstract static class Category<T extends Category<T>> {
 
-        public Category<T> defaultChild;
+    public Category<T> defaultChild;
+  }
 
-    }
+  @QueryEntity
+  public static class CategoryReference {
 
-    @QueryEntity
-    public static class CategoryReference {
+    @QueryInit("defaultChild")
+    public Category<?> category;
+  }
 
-        @QueryInit("defaultChild")
-        public Category<?> category;
-
-    }
-
-    @Test
-    public void path_is_available() {
-        QAbstractEntityTest_CategoryReference categoryReference = QAbstractEntityTest_CategoryReference.categoryReference;
-        assertNotNull(categoryReference.category.defaultChild);
-    }
-
+  @Test
+  public void path_is_available() {
+    QAbstractEntityTest_CategoryReference categoryReference =
+        QAbstractEntityTest_CategoryReference.categoryReference;
+    assertNotNull(categoryReference.category.defaultChild);
+  }
 }

@@ -13,8 +13,6 @@
  */
 package com.querydsl.jpa;
 
-import jakarta.persistence.Entity;
-
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.CollectionAnyVisitor;
@@ -23,47 +21,53 @@ import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimplePath;
+import jakarta.persistence.Entity;
 
 /**
- * {@code JPACollectionAnyVisitor} extends the {@link CollectionAnyVisitor} class with module specific
- * extensions
+ * {@code JPACollectionAnyVisitor} extends the {@link CollectionAnyVisitor} class with module
+ * specific extensions
  *
  * @author tiwe
- *
  */
 class JPACollectionAnyVisitor extends CollectionAnyVisitor {
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected Predicate exists(Context c, Predicate condition) {
-        JPAQueryMixin<?> query = new JPAQueryMixin<Object>();
-        query.setProjection(Expressions.ONE);
-        for (int i = 0; i < c.paths.size(); i++) {
-            Path<?> child = c.paths.get(i).getMetadata().getParent();
-            EntityPath<Object> replacement = (EntityPath<Object>) c.replacements.get(i);
-            if (c.paths.get(i).getType().isAnnotationPresent(Entity.class)) {
-                query.addJoin(i == 0 ? JoinType.DEFAULT : JoinType.INNERJOIN, Expressions.as(
-                        Expressions.listPath((Class) c.paths.get(i).getType(), SimplePath.class,
-                                child.getMetadata()), replacement));
-            } else {
-                // join via parent
-                Path<?> parent = child.getMetadata().getParent();
-                EntityPathBase<Object> newParent = new EntityPathBase<Object>(parent.getType(),
-                        ExpressionUtils.createRootVariable(parent, Math.abs(condition.hashCode())));
-                EntityPath<Object> newChild = new EntityPathBase<Object>(child.getType(),
-                        PathMetadataFactory.forProperty(newParent, child.getMetadata().getName()));
-                query.from(newParent);
-                query.addJoin(JoinType.INNERJOIN, Expressions.as(newChild, replacement));
-                query.where(ExpressionUtils.eq(newParent, parent));
-            }
-        }
-        c.clear();
-        query.where(condition);
-        return ExpressionUtils.predicate(Ops.EXISTS, asExpression(query.getMetadata()));
+  @SuppressWarnings("unchecked")
+  @Override
+  protected Predicate exists(Context c, Predicate condition) {
+    JPAQueryMixin<?> query = new JPAQueryMixin<Object>();
+    query.setProjection(Expressions.ONE);
+    for (int i = 0; i < c.paths.size(); i++) {
+      Path<?> child = c.paths.get(i).getMetadata().getParent();
+      EntityPath<Object> replacement = (EntityPath<Object>) c.replacements.get(i);
+      if (c.paths.get(i).getType().isAnnotationPresent(Entity.class)) {
+        query.addJoin(
+            i == 0 ? JoinType.DEFAULT : JoinType.INNERJOIN,
+            Expressions.as(
+                Expressions.listPath(
+                    (Class) c.paths.get(i).getType(), SimplePath.class, child.getMetadata()),
+                replacement));
+      } else {
+        // join via parent
+        Path<?> parent = child.getMetadata().getParent();
+        EntityPathBase<Object> newParent =
+            new EntityPathBase<Object>(
+                parent.getType(),
+                ExpressionUtils.createRootVariable(parent, Math.abs(condition.hashCode())));
+        EntityPath<Object> newChild =
+            new EntityPathBase<Object>(
+                child.getType(),
+                PathMetadataFactory.forProperty(newParent, child.getMetadata().getName()));
+        query.from(newParent);
+        query.addJoin(JoinType.INNERJOIN, Expressions.as(newChild, replacement));
+        query.where(ExpressionUtils.eq(newParent, parent));
+      }
     }
+    c.clear();
+    query.where(condition);
+    return ExpressionUtils.predicate(Ops.EXISTS, asExpression(query.getMetadata()));
+  }
 
-    private Expression<?> asExpression(QueryMetadata metadata) {
-        return new SubQueryExpressionImpl<Object>(metadata.getProjection().getType(), metadata);
-    }
-
+  private Expression<?> asExpression(QueryMetadata metadata) {
+    return new SubQueryExpressionImpl<Object>(metadata.getProjection().getType(), metadata);
+  }
 }

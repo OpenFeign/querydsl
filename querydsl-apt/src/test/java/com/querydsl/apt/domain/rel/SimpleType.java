@@ -13,6 +13,4 @@
  */
 package com.querydsl.apt.domain.rel;
 
-public class SimpleType {
-
-}
+public class SimpleType {}

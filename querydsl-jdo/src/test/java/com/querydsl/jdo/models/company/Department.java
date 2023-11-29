@@ -13,67 +13,62 @@
  */
 package com.querydsl.jdo.models.company;
 
+import com.querydsl.core.annotations.QueryEntity;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.querydsl.core.annotations.QueryEntity;
-
 /**
- * Department in a company. Has a Manager, and a set of Projects being worked
- * on.
+ * Department in a company. Has a Manager, and a set of Projects being worked on.
  *
  * @version $Revision: 1.1 $
  */
 @QueryEntity
 public class Department {
-    private String name;
-    private Manager manager;
-    private Set<Project> projects = new HashSet<Project>();
-    private List<Employee> employees;
+  private String name;
+  private Manager manager;
+  private Set<Project> projects = new HashSet<Project>();
+  private List<Employee> employees;
 
-    public Department() {
+  public Department() {}
 
-    }
+  public Department(String name) {
+    this.name = name;
+  }
 
-    public Department(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public String getName() {
-        return this.name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setManager(Manager mgr) {
+    this.manager = mgr;
+  }
 
-    public void setManager(Manager mgr) {
-        this.manager = mgr;
-    }
+  public Manager getManager() {
+    return this.manager;
+  }
 
-    public Manager getManager() {
-        return this.manager;
-    }
+  public Set<Project> getProjects() {
+    return projects;
+  }
 
-    public Set<Project> getProjects() {
-        return projects;
-    }
+  public void setProjects(Set<Project> projects) {
+    this.projects = projects;
+  }
 
-    public void setProjects(Set<Project> projects) {
-        this.projects = projects;
-    }
+  public void addProject(Project proj) {
+    this.projects.add(proj);
+  }
 
-    public void addProject(Project proj) {
-        this.projects.add(proj);
-    }
+  public String toString() {
+    return name;
+  }
 
-    public String toString() {
-        return name;
-    }
-
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
+  public List<Employee> getEmployees() {
+    return employees;
+  }
 }

@@ -16,14 +16,11 @@ package com.querydsl.jpa.support;
 import com.querydsl.sql.MySQLTemplates;
 import com.querydsl.sql.SQLTemplates;
 
-/**
- * {@code QMySQL5InnoDBDialect} extends {@code MySQL5InnoDBDialect} with additional functions
- */
-public class QMySQL5InnoDBDialect { //extends MySQL5InnoDBDialect {
+/** {@code QMySQL5InnoDBDialect} extends {@code MySQL5InnoDBDialect} with additional functions */
+public class QMySQL5InnoDBDialect { // extends MySQL5InnoDBDialect {
 
-    public QMySQL5InnoDBDialect() {
-        SQLTemplates templates = MySQLTemplates.DEFAULT;
-//        getFunctions().putAll(DialectSupport.createFunctions(templates));
-    }
-
+  public QMySQL5InnoDBDialect() {
+    SQLTemplates templates = MySQLTemplates.DEFAULT;
+    //        getFunctions().putAll(DialectSupport.createFunctions(templates));
+  }
 }

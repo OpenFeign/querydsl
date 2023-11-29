@@ -15,53 +15,51 @@ package com.querydsl.sql;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QBean;
+import org.junit.Test;
 
 public class QPersonTest {
 
-    public static class Person {
+  public static class Person {
 
-        private int id;
+    private int id;
 
-        private String firstname, securedid;
+    private String firstname, securedid;
 
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getFirstname() {
-            return firstname;
-        }
-
-        public void setFirstname(String firstname) {
-            this.firstname = firstname;
-        }
-
-        public String getSecuredid() {
-            return securedid;
-        }
-
-        public void setSecuredid(String securedid) {
-            this.securedid = securedid;
-        }
-
+    public int getId() {
+      return id;
     }
 
-    @Test
-    public void populate() {
-        QPerson person = QPerson.person;
-        QBean<Person> personProjection = Projections.bean(Person.class, person.id, person.firstname, person.securedid);
-        Person p = personProjection.newInstance(3, "X", "Y");
-        assertEquals(3, p.getId());
-        assertEquals("X", p.getFirstname());
-        assertEquals("Y", p.getSecuredid());
+    public void setId(int id) {
+      this.id = id;
     }
 
+    public String getFirstname() {
+      return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+      this.firstname = firstname;
+    }
+
+    public String getSecuredid() {
+      return securedid;
+    }
+
+    public void setSecuredid(String securedid) {
+      this.securedid = securedid;
+    }
+  }
+
+  @Test
+  public void populate() {
+    QPerson person = QPerson.person;
+    QBean<Person> personProjection =
+        Projections.bean(Person.class, person.id, person.firstname, person.securedid);
+    Person p = personProjection.newInstance(3, "X", "Y");
+    assertEquals(3, p.getId());
+    assertEquals("X", p.getFirstname());
+    assertEquals("Y", p.getSecuredid());
+  }
 }

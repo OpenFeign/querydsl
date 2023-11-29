@@ -5,11 +5,9 @@ import lombok.Data;
 @Data
 public class OrderProduct {
 
-    private Long productId;
+  private Long productId;
 
-    private String comments;
+  private String comments;
 
-    private Integer quantity;
-
+  private Integer quantity;
 }
-

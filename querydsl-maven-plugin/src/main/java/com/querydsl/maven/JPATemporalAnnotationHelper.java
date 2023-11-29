@@ -13,12 +13,10 @@
  */
 package com.querydsl.maven;
 
-import java.lang.annotation.Annotation;
-
-import jakarta.persistence.Temporal;
-
-import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.codegen.AnnotationHelper;
+import com.querydsl.codegen.utils.model.TypeCategory;
+import jakarta.persistence.Temporal;
+import java.lang.annotation.Annotation;
 
 /**
  * An {@link AnnotationHelper} that handles JPA {@link Temporal} annotation.
@@ -27,31 +25,30 @@ import com.querydsl.codegen.AnnotationHelper;
  */
 public final class JPATemporalAnnotationHelper implements AnnotationHelper {
 
-        public static final JPATemporalAnnotationHelper INSTANCE = new JPATemporalAnnotationHelper();
+  public static final JPATemporalAnnotationHelper INSTANCE = new JPATemporalAnnotationHelper();
 
-        private JPATemporalAnnotationHelper() {
-        }
+  private JPATemporalAnnotationHelper() {}
 
-        @Override
-        public boolean isSupported(Class<? extends Annotation> annotationClass) {
-            return Temporal.class.isAssignableFrom(annotationClass);
-        }
+  @Override
+  public boolean isSupported(Class<? extends Annotation> annotationClass) {
+    return Temporal.class.isAssignableFrom(annotationClass);
+  }
 
-        @Override
-        public Object getCustomKey(Annotation annotation) {
-            return ((Temporal) annotation).value();
-        }
+  @Override
+  public Object getCustomKey(Annotation annotation) {
+    return ((Temporal) annotation).value();
+  }
 
-        @Override
-        public TypeCategory getTypeByAnnotation(Class<?> cl, Annotation annotation) {
-            switch (((Temporal) annotation).value()) {
-                case DATE:
-                    return TypeCategory.DATE;
-                case TIME:
-                    return TypeCategory.TIME;
-                case TIMESTAMP:
-                    return TypeCategory.DATETIME;
-            }
-            return null;
-        }
+  @Override
+  public TypeCategory getTypeByAnnotation(Class<?> cl, Annotation annotation) {
+    switch (((Temporal) annotation).value()) {
+      case DATE:
+        return TypeCategory.DATE;
+      case TIME:
+        return TypeCategory.TIME;
+      case TIMESTAMP:
+        return TypeCategory.DATETIME;
     }
+    return null;
+  }
+}

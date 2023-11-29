@@ -21,40 +21,39 @@ import org.mongodb.morphia.Morphia;
 
 public class UserTest {
 
-    private static final Morphia morphia = new Morphia().map(User.class);
+  private static final Morphia morphia = new Morphia().map(User.class);
 
-    @Test
-    public void map() {
-        City tampere = new City("Tampere", 61.30, 23.50);
+  @Test
+  public void map() {
+    City tampere = new City("Tampere", 61.30, 23.50);
 
-        User user = new User();
-        user.setAge(12);
-        user.setFirstName("Jaakko");
-        user.addAddress("Aakatu", "00300", tampere);
+    User user = new User();
+    user.setAge(12);
+    user.setFirstName("Jaakko");
+    user.addAddress("Aakatu", "00300", tampere);
 
-        assertNotNull(morphia.toDBObject(user));
-    }
+    assertNotNull(morphia.toDBObject(user));
+  }
 
-    @Test
-    public void friend() {
-        User friend = new User();
-        friend.setId(ObjectId.createFromLegacyFormat(1,2,3));
+  @Test
+  public void friend() {
+    User friend = new User();
+    friend.setId(ObjectId.createFromLegacyFormat(1, 2, 3));
 
-        User user = new User();
-        user.setFriend(friend);
+    User user = new User();
+    user.setFriend(friend);
 
-        assertNotNull(morphia.toDBObject(user));
-    }
+    assertNotNull(morphia.toDBObject(user));
+  }
 
-    @Test
-    public void friends() {
-        User friend = new User();
-        friend.setId(ObjectId.createFromLegacyFormat(1,2,3));
+  @Test
+  public void friends() {
+    User friend = new User();
+    friend.setId(ObjectId.createFromLegacyFormat(1, 2, 3));
 
-        User user = new User();
-        user.addFriend(friend);
+    User user = new User();
+    user.addFriend(friend);
 
-        assertNotNull(morphia.toDBObject(user));
-    }
-
+    assertNotNull(morphia.toDBObject(user));
+  }
 }

@@ -19,36 +19,34 @@ import java.sql.*;
  * {@code DateType} maps Date to Date on the JDBC level
  *
  * @author tiwe
- *
  */
 public class DateType extends AbstractDateTimeType<Date> {
 
-    public DateType() {
-        super(Types.DATE);
-    }
+  public DateType() {
+    super(Types.DATE);
+  }
 
-    public DateType(int type) {
-        super(type);
-    }
+  public DateType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getLiteral(Date value) {
-        return dateFormatter.format(value.toLocalDate());
-    }
+  @Override
+  public String getLiteral(Date value) {
+    return dateFormatter.format(value.toLocalDate());
+  }
 
-    @Override
-    public Date getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getDate(startIndex);
-    }
+  @Override
+  public Date getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getDate(startIndex);
+  }
 
-    @Override
-    public Class<Date> getReturnedClass() {
-        return Date.class;
-    }
+  @Override
+  public Class<Date> getReturnedClass() {
+    return Date.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Date value) throws SQLException {
-        st.setDate(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Date value) throws SQLException {
+    st.setDate(startIndex, value);
+  }
 }

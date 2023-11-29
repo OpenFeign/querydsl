@@ -17,56 +17,54 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Annotations is a merging adapter for the {@link AnnotatedElement} interface
  *
  * @author tiwe
- *
  */
 public class Annotations implements AnnotatedElement {
 
-    private final Map<Class<? extends Annotation>,Annotation> annotations = new HashMap<Class<? extends Annotation>,Annotation>();
+  private final Map<Class<? extends Annotation>, Annotation> annotations =
+      new HashMap<Class<? extends Annotation>, Annotation>();
 
-    public Annotations(AnnotatedElement... elements) {
-        for (AnnotatedElement element : elements) {
-            addAnnotations(element);
-        }
+  public Annotations(AnnotatedElement... elements) {
+    for (AnnotatedElement element : elements) {
+      addAnnotations(element);
     }
+  }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-        return (T) annotations.get(annotationClass);
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+    return (T) annotations.get(annotationClass);
+  }
+
+  @Override
+  public Annotation[] getAnnotations() {
+    return annotations.values().toArray(new Annotation[0]);
+  }
+
+  @Override
+  public Annotation[] getDeclaredAnnotations() {
+    return getAnnotations();
+  }
+
+  @Override
+  public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
+    return annotations.containsKey(annotationClass);
+  }
+
+  public void addAnnotation(@Nullable Annotation annotation) {
+    if (annotation != null) {
+      annotations.put(annotation.annotationType(), annotation);
     }
+  }
 
-    @Override
-    public Annotation[] getAnnotations() {
-        return annotations.values().toArray(new Annotation[0]);
+  public void addAnnotations(AnnotatedElement element) {
+    for (Annotation annotation : element.getAnnotations()) {
+      annotations.put(annotation.annotationType(), annotation);
     }
-
-    @Override
-    public Annotation[] getDeclaredAnnotations() {
-        return getAnnotations();
-    }
-
-    @Override
-    public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
-        return annotations.containsKey(annotationClass);
-    }
-
-    public void addAnnotation(@Nullable Annotation annotation) {
-        if (annotation != null) {
-            annotations.put(annotation.annotationType(), annotation);
-        }
-
-    }
-
-    public void addAnnotations(AnnotatedElement element) {
-        for (Annotation annotation : element.getAnnotations()) {
-            annotations.put(annotation.annotationType(), annotation);
-        }
-    }
+  }
 }

@@ -15,50 +15,67 @@ package com.querydsl.jdo;
 
 import static org.junit.Assert.assertEquals;
 
+import com.querydsl.jdo.test.domain.Product;
+import com.querydsl.jdo.test.domain.QProduct;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.querydsl.jdo.test.domain.Product;
-import com.querydsl.jdo.test.domain.QProduct;
-
 public class GroupByTest extends AbstractJDOTest {
 
-    private QProduct product = QProduct.product;
+  private QProduct product = QProduct.product;
 
-    @Test
-    public void distinct() {
-        assertEquals(3, query().from(product).distinct().select(product.description).fetch().size());
-        assertEquals(3, query().from(product).distinct().select(product.price).fetch().size());
+  @Test
+  public void distinct() {
+    assertEquals(3, query().from(product).distinct().select(product.description).fetch().size());
+    assertEquals(3, query().from(product).distinct().select(product.price).fetch().size());
+  }
+
+  @Test
+  public void groupBy() {
+    assertEquals(
+        3,
+        query()
+            .from(product)
+            .groupBy(product.description)
+            .select(product.description)
+            .fetch()
+            .size());
+    assertEquals(
+        3, query().from(product).groupBy(product.price).select(product.price).fetch().size());
+  }
+
+  @Test
+  public void having() {
+    assertEquals(
+        3,
+        query()
+            .from(product)
+            .groupBy(product.description)
+            .having(product.description.ne("XXX"))
+            .select(product.description)
+            .fetch()
+            .size());
+    assertEquals(
+        3,
+        query()
+            .from(product)
+            .groupBy(product.price)
+            .having(product.price.gt(0))
+            .select(product.price)
+            .fetch()
+            .size());
+  }
+
+  @BeforeClass
+  public static void doPersist() {
+    List<Object> entities = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      entities.add(new Product("C" + i, "F", 200.00, 2));
+      entities.add(new Product("B" + i, "E", 400.00, 4));
+      entities.add(new Product("A" + i, "D", 600.00, 6));
     }
-
-    @Test
-    public void groupBy() {
-        assertEquals(3, query().from(product).groupBy(product.description).select(product.description).fetch().size());
-        assertEquals(3, query().from(product).groupBy(product.price).select(product.price).fetch().size());
-    }
-
-    @Test
-    public void having() {
-        assertEquals(3, query().from(product)
-                .groupBy(product.description).having(product.description.ne("XXX"))
-                .select(product.description).fetch().size());
-        assertEquals(3, query().from(product)
-                .groupBy(product.price).having(product.price.gt(0))
-                .select(product.price).fetch().size());
-    }
-
-    @BeforeClass
-    public static void doPersist() {
-        List<Object> entities = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            entities.add(new Product("C" + i, "F", 200.00, 2));
-            entities.add(new Product("B" + i, "E", 400.00, 4));
-            entities.add(new Product("A" + i, "D", 600.00, 6));
-        }
-        doPersist(entities);
-    }
-
+    doPersist(entities);
+  }
 }

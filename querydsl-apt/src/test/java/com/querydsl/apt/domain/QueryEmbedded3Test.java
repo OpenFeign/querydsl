@@ -15,38 +15,31 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.List;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
+import java.util.List;
+import org.junit.Test;
 
 public class QueryEmbedded3Test {
 
-    @QueryEntity
-    public static class Parent {
+  @QueryEntity
+  public static class Parent {
 
-        String parentProperty;
+    String parentProperty;
 
-        @QueryEmbedded
-        List<Child> children;
+    @QueryEmbedded List<Child> children;
 
-        @QueryEmbedded
-        Child child;
+    @QueryEmbedded Child child;
+  }
 
-    }
+  public static class Child {
 
-    public static class Child {
+    String childProperty;
+  }
 
-        String childProperty;
-
-    }
-
-    @Test
-    public void test() {
-        assertNotNull(QQueryEmbedded3Test_Parent.parent.child.childProperty);
-        assertNotNull(QQueryEmbedded3Test_Parent.parent.children.any().childProperty);
-    }
-
+  @Test
+  public void test() {
+    assertNotNull(QQueryEmbedded3Test_Parent.parent.child.childProperty);
+    assertNotNull(QQueryEmbedded3Test_Parent.parent.children.any().childProperty);
+  }
 }

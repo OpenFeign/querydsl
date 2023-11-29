@@ -13,53 +13,50 @@
  */
 package com.querydsl.jpa.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import jakarta.persistence.Parameter;
-import jakarta.persistence.Query;
-
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.dsl.Param;
 import com.querydsl.core.util.MathUtils;
+import jakarta.persistence.Parameter;
+import jakarta.persistence.Query;
+import java.util.List;
+import java.util.Map;
 
 /**
  * JPAUtil provides static utility methods for JPA
  *
  * @author tiwe
- *
  */
 public final class JPAUtil {
 
-    private JPAUtil() { }
+  private JPAUtil() {}
 
-    public static void setConstants(Query query, List<Object> constants, Map<ParamExpression<?>, Object> params) {
-        boolean hasParameters = !query.getParameters().isEmpty();
+  public static void setConstants(
+      Query query, List<Object> constants, Map<ParamExpression<?>, Object> params) {
+    boolean hasParameters = !query.getParameters().isEmpty();
 
-        for (int i = 0; i < constants.size(); i++) {
-            Object val = constants.get(i);
+    for (int i = 0; i < constants.size(); i++) {
+      Object val = constants.get(i);
 
-            if (val instanceof Param) {
-                Param<?> param = (Param<?>) val;
-                val = params.get(val);
-                if (val == null) {
-                    throw new ParamNotSetException(param);
-                }
-            }
-
-            if (hasParameters) {
-                Parameter parameter = query.getParameter(i + 1);
-                Class parameterType = parameter != null ? parameter.getParameterType() : null;
-                if (parameterType != null && !parameterType.isInstance(val)) {
-                    if (val instanceof Number && Number.class.isAssignableFrom(parameterType)) {
-                        val = MathUtils.cast((Number) val, parameterType);
-                    }
-                }
-            }
-
-            query.setParameter(i + 1, val);
+      if (val instanceof Param) {
+        Param<?> param = (Param<?>) val;
+        val = params.get(val);
+        if (val == null) {
+          throw new ParamNotSetException(param);
         }
-    }
+      }
 
+      if (hasParameters) {
+        Parameter parameter = query.getParameter(i + 1);
+        Class parameterType = parameter != null ? parameter.getParameterType() : null;
+        if (parameterType != null && !parameterType.isInstance(val)) {
+          if (val instanceof Number && Number.class.isAssignableFrom(parameterType)) {
+            val = MathUtils.cast((Number) val, parameterType);
+          }
+        }
+      }
+
+      query.setParameter(i + 1, val);
+    }
+  }
 }

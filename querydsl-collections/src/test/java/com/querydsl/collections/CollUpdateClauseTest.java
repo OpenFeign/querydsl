@@ -17,22 +17,21 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 
 public class CollUpdateClauseTest {
 
-    @Test
-    public void execute() {
-        QCat cat = QCat.cat;
-        List<Cat> cats = Arrays.asList(new Cat("Ann"), new Cat("Bob"), new Cat("John"), new Cat("Carl"));
+  @Test
+  public void execute() {
+    QCat cat = QCat.cat;
+    List<Cat> cats =
+        Arrays.asList(new Cat("Ann"), new Cat("Bob"), new Cat("John"), new Cat("Carl"));
 
-        CollUpdateClause<Cat> updateClause = new CollUpdateClause<Cat>(cat, cats);
-        updateClause.where(cat.name.eq("Bob"));
-        updateClause.set(cat.name, "Bobby");
-        assertEquals(1, updateClause.execute());
+    CollUpdateClause<Cat> updateClause = new CollUpdateClause<Cat>(cat, cats);
+    updateClause.where(cat.name.eq("Bob"));
+    updateClause.set(cat.name, "Bobby");
+    assertEquals(1, updateClause.execute());
 
-        assertEquals("Bobby", cats.get(1).getName());
-    }
-
+    assertEquals("Bobby", cats.get(1).getName());
+  }
 }

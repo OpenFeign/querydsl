@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * APT Hibernate support
- */
+/** APT Hibernate support */
 package com.querydsl.apt.hibernate;

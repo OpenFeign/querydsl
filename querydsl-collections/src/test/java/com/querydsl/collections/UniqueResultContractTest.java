@@ -13,21 +13,23 @@
  */
 package com.querydsl.collections;
 
-import org.junit.Test;
-
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.types.Expression;
+import org.junit.Test;
 
 public class UniqueResultContractTest extends AbstractQueryTest {
 
-    @Test(expected = NonUniqueResultException.class)
-    public void unique_result_throws_exception_on_multiple_results() {
-        CollQueryFactory.from(cat, cats).where(cat.name.isNotNull()).fetchOne();
-    }
+  @Test(expected = NonUniqueResultException.class)
+  public void unique_result_throws_exception_on_multiple_results() {
+    CollQueryFactory.from(cat, cats).where(cat.name.isNotNull()).fetchOne();
+  }
 
-    @Test
-    public void uniqueResult_with_array() {
-        CollQueryFactory.from(cat, cats).where(cat.name.isNotNull()).limit(1).select(new Expression[]{cat}).fetchOne();
-    }
-
+  @Test
+  public void uniqueResult_with_array() {
+    CollQueryFactory.from(cat, cats)
+        .where(cat.name.isNotNull())
+        .limit(1)
+        .select(new Expression[] {cat})
+        .fetchOne();
+  }
 }

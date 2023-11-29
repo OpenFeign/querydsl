@@ -5,6 +5,5 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class Content {
 
-    Article article;
-
+  Article article;
 }

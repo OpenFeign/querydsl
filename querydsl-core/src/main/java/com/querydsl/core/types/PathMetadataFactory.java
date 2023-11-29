@@ -19,117 +19,117 @@ import org.jetbrains.annotations.Range;
  * {@code PathMetadataFactory} is a factory class for {@link Path} construction
  *
  * @author tiwe
- *
  */
 public final class PathMetadataFactory {
 
-    /**
-     * Create a new PathMetadata instance for indexed array access
-     *
-     * @param parent parent path
-     * @param index index of element
-     * @return array access path
-     */
-    public static PathMetadata forArrayAccess(Path<?> parent, Expression<Integer> index) {
-        return new PathMetadata(parent, index, PathType.ARRAYVALUE);
-    }
+  /**
+   * Create a new PathMetadata instance for indexed array access
+   *
+   * @param parent parent path
+   * @param index index of element
+   * @return array access path
+   */
+  public static PathMetadata forArrayAccess(Path<?> parent, Expression<Integer> index) {
+    return new PathMetadata(parent, index, PathType.ARRAYVALUE);
+  }
 
-    /**
-     * Create a new PathMetadata instance for indexed array access
-     *
-     * @param parent parent path
-     * @param index index of element
-     * @return array access path
-     */
-    public static PathMetadata forArrayAccess(Path<?> parent, @Range(from = 0, to = Integer.MAX_VALUE) int index) {
-        return new PathMetadata(parent, index, PathType.ARRAYVALUE_CONSTANT);
-    }
+  /**
+   * Create a new PathMetadata instance for indexed array access
+   *
+   * @param parent parent path
+   * @param index index of element
+   * @return array access path
+   */
+  public static PathMetadata forArrayAccess(
+      Path<?> parent, @Range(from = 0, to = Integer.MAX_VALUE) int index) {
+    return new PathMetadata(parent, index, PathType.ARRAYVALUE_CONSTANT);
+  }
 
-    /**
-     * Create a new PathMetadata instance for collection any access
-     *
-     * @param parent parent path
-     * @return collection any path
-     */
-    public static PathMetadata forCollectionAny(Path<?> parent) {
-        return new PathMetadata(parent, "", PathType.COLLECTION_ANY);
-    }
+  /**
+   * Create a new PathMetadata instance for collection any access
+   *
+   * @param parent parent path
+   * @return collection any path
+   */
+  public static PathMetadata forCollectionAny(Path<?> parent) {
+    return new PathMetadata(parent, "", PathType.COLLECTION_ANY);
+  }
 
-    /**
-     * Create a new PathMetadata instance for delegate access
-     *
-     * @param delegate delegate path
-     * @return wrapped path
-     */
-    public static <T> PathMetadata forDelegate(Path<T> delegate) {
-        return new PathMetadata(delegate, delegate, PathType.DELEGATE);
-    }
+  /**
+   * Create a new PathMetadata instance for delegate access
+   *
+   * @param delegate delegate path
+   * @return wrapped path
+   */
+  public static <T> PathMetadata forDelegate(Path<T> delegate) {
+    return new PathMetadata(delegate, delegate, PathType.DELEGATE);
+  }
 
-    /**
-     * Create a new PathMetadata instance for indexed list access
-     *
-     * @param parent parent path
-     * @param index index of element
-     * @return list access path
-     */
-    public static PathMetadata forListAccess(Path<?> parent, Expression<Integer> index) {
-        return new PathMetadata(parent, index, PathType.LISTVALUE);
-    }
+  /**
+   * Create a new PathMetadata instance for indexed list access
+   *
+   * @param parent parent path
+   * @param index index of element
+   * @return list access path
+   */
+  public static PathMetadata forListAccess(Path<?> parent, Expression<Integer> index) {
+    return new PathMetadata(parent, index, PathType.LISTVALUE);
+  }
 
-    /**
-     * Create a new PathMetadata instance for indexed list access
-     *
-     * @param parent parent path
-     * @param index index of element
-     * @return list access path
-     */
-    public static PathMetadata forListAccess(Path<?> parent, @Range(from = 0, to = Integer.MAX_VALUE) int index) {
-        return new PathMetadata(parent, index, PathType.LISTVALUE_CONSTANT);
-    }
+  /**
+   * Create a new PathMetadata instance for indexed list access
+   *
+   * @param parent parent path
+   * @param index index of element
+   * @return list access path
+   */
+  public static PathMetadata forListAccess(
+      Path<?> parent, @Range(from = 0, to = Integer.MAX_VALUE) int index) {
+    return new PathMetadata(parent, index, PathType.LISTVALUE_CONSTANT);
+  }
 
-    /**
-     * Create a new PathMetadata instance for key based map access
-     *
-     * @param parent parent path
-     * @param key key for map access
-     * @return map access path
-     */
-    public static <KT> PathMetadata forMapAccess(Path<?> parent, Expression<KT> key) {
-        return new PathMetadata(parent, key, PathType.MAPVALUE);
-    }
+  /**
+   * Create a new PathMetadata instance for key based map access
+   *
+   * @param parent parent path
+   * @param key key for map access
+   * @return map access path
+   */
+  public static <KT> PathMetadata forMapAccess(Path<?> parent, Expression<KT> key) {
+    return new PathMetadata(parent, key, PathType.MAPVALUE);
+  }
 
-    /**
-     * Create a new PathMetadata instance for for key based map access
-     *
-     * @param parent parent path
-     * @param key key for map access
-     * @return map access path
-     */
-    public static <KT> PathMetadata forMapAccess(Path<?> parent, KT key) {
-        return new PathMetadata(parent, key, PathType.MAPVALUE_CONSTANT);
-    }
+  /**
+   * Create a new PathMetadata instance for for key based map access
+   *
+   * @param parent parent path
+   * @param key key for map access
+   * @return map access path
+   */
+  public static <KT> PathMetadata forMapAccess(Path<?> parent, KT key) {
+    return new PathMetadata(parent, key, PathType.MAPVALUE_CONSTANT);
+  }
 
-    /**
-     * Create a new PathMetadata instance for property access
-     *
-     * @param parent parent path
-     * @param property property name
-     * @return property path
-     */
-    public static PathMetadata forProperty(Path<?> parent, String property) {
-        return new PathMetadata(parent, property, PathType.PROPERTY);
-    }
+  /**
+   * Create a new PathMetadata instance for property access
+   *
+   * @param parent parent path
+   * @param property property name
+   * @return property path
+   */
+  public static PathMetadata forProperty(Path<?> parent, String property) {
+    return new PathMetadata(parent, property, PathType.PROPERTY);
+  }
 
-    /**
-     * Create a new PathMetadata instance for a variable
-     *
-     * @param variable variable name
-     * @return variable path
-     */
-    public static PathMetadata forVariable(String variable) {
-        return new PathMetadata(null, variable, PathType.VARIABLE);
-    }
+  /**
+   * Create a new PathMetadata instance for a variable
+   *
+   * @param variable variable name
+   * @return variable path
+   */
+  public static PathMetadata forVariable(String variable) {
+    return new PathMetadata(null, variable, PathType.VARIABLE);
+  }
 
-    private PathMetadataFactory() { }
-
+  private PathMetadataFactory() {}
 }

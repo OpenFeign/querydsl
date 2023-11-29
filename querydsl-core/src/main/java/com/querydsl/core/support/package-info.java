@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Various support classes
- */
+/** Various support classes */
 package com.querydsl.core.support;

@@ -20,15 +20,14 @@ import org.locationtech.jts.geom.MultiLineString;
  * A MultiLineString is a MultiCurve whose elements are LineStrings.
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class JTSMultiLineStringExpression<T extends MultiLineString> extends JTSMultiCurveExpression<T> {
+public abstract class JTSMultiLineStringExpression<T extends MultiLineString>
+    extends JTSMultiCurveExpression<T> {
 
-    private static final long serialVersionUID = -3103756880812584473L;
+  private static final long serialVersionUID = -3103756880812584473L;
 
-    public JTSMultiLineStringExpression(Expression<T> mixin) {
-        super(mixin);
-    }
-
+  public JTSMultiLineStringExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 }

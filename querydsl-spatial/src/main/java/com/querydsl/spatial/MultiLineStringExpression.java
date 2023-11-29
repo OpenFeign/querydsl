@@ -13,23 +13,21 @@
  */
 package com.querydsl.spatial;
 
-import org.geolatte.geom.MultiLineString;
-
 import com.querydsl.core.types.Expression;
+import org.geolatte.geom.MultiLineString;
 
 /**
  * A MultiLineString is a MultiCurve whose elements are LineStrings.
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class MultiLineStringExpression<T extends MultiLineString> extends MultiCurveExpression<T> {
+public abstract class MultiLineStringExpression<T extends MultiLineString>
+    extends MultiCurveExpression<T> {
 
-    private static final long serialVersionUID = -3103756880812584473L;
+  private static final long serialVersionUID = -3103756880812584473L;
 
-    public MultiLineStringExpression(Expression<T> mixin) {
-        super(mixin);
-    }
-
+  public MultiLineStringExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 }

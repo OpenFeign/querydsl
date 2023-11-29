@@ -1,49 +1,37 @@
 package com.querydsl.apt.domain;
 
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
 
 import jakarta.persistence.*;
-
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 public class InitTest {
 
-    @Entity
-    public static class User {
+  @Entity
+  public static class User {
 
-        @ManyToOne(fetch = FetchType.EAGER)
-        private Address address;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Address address;
+  }
 
-    }
+  @Entity
+  public static class Address extends AddressBase {}
 
-    @Entity
-    public static class Address extends AddressBase {
+  @MappedSuperclass
+  public abstract static class AddressBase {
 
-    }
+    @Id private long idAddress;
 
-    @MappedSuperclass
-    public abstract static class AddressBase {
+    @Id private int numVersion;
 
-        @Id
-        private long idAddress;
+    @ManyToOne private City city;
+  }
 
-        @Id
-        private int numVersion;
+  @Entity
+  public static class City {}
 
-        @ManyToOne
-        private City city;
-
-    }
-
-    @Entity
-    public static class City {
-
-    }
-
-    @Test
-    public void test() {
-        assertNotNull(QInitTest_User.user.address.city);
-    }
-
-
+  @Test
+  public void test() {
+    assertNotNull(QInitTest_User.user.address.city);
+  }
 }

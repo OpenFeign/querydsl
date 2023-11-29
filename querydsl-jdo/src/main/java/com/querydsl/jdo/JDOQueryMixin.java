@@ -22,47 +22,45 @@ import com.querydsl.core.types.*;
  * {@code JDOQueryMixin} extends {@link QueryMixin} to provide module-specific extensions
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class JDOQueryMixin<T> extends QueryMixin<T> {
 
-    public JDOQueryMixin() { }
+  public JDOQueryMixin() {}
 
-    public JDOQueryMixin(QueryMetadata metadata) {
-        super(metadata);
+  public JDOQueryMixin(QueryMetadata metadata) {
+    super(metadata);
+  }
+
+  public JDOQueryMixin(T self, QueryMetadata metadata) {
+    super(self, metadata);
+  }
+
+  @Override
+  protected Predicate convert(Predicate predicate, Role role) {
+    predicate = (Predicate) ExpressionUtils.extract(predicate);
+    if (predicate != null) {
+      Context context = new Context();
+      Predicate transformed = (Predicate) predicate.accept(collectionAnyVisitor, context);
+      for (int i = 0; i < context.paths.size(); i++) {
+        Path<?> path = context.paths.get(i);
+        addCondition(context, i, path, role);
+      }
+      return transformed;
+    } else {
+      return null;
     }
+  }
 
-    public JDOQueryMixin(T self, QueryMetadata metadata) {
-        super(self, metadata);
+  @SuppressWarnings("unchecked")
+  private void addCondition(Context context, int i, Path<?> path, Role role) {
+    EntityPath<?> alias = context.replacements.get(i);
+    from(alias);
+    Predicate condition = ExpressionUtils.predicate(Ops.IN, alias, path.getMetadata().getParent());
+    if (role == Role.WHERE) {
+      super.where(condition);
+    } else {
+      super.having(condition);
     }
-
-    @Override
-    protected Predicate convert(Predicate predicate, Role role) {
-        predicate = (Predicate) ExpressionUtils.extract(predicate);
-        if (predicate != null) {
-            Context context = new Context();
-            Predicate transformed = (Predicate) predicate.accept(collectionAnyVisitor, context);
-            for (int i = 0; i < context.paths.size(); i++) {
-                Path<?> path = context.paths.get(i);
-                addCondition(context, i, path, role);
-            }
-            return transformed;
-        } else {
-            return null;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void addCondition(Context context, int i, Path<?> path, Role role) {
-        EntityPath<?> alias = context.replacements.get(i);
-        from(alias);
-        Predicate condition = ExpressionUtils.predicate(Ops.IN, alias, path.getMetadata().getParent());
-        if (role == Role.WHERE) {
-            super.where(condition);
-        } else {
-            super.having(condition);
-        }
-    }
-
+  }
 }

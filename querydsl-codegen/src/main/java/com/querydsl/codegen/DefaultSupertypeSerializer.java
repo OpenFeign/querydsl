@@ -13,42 +13,43 @@
  */
 package com.querydsl.codegen;
 
-import java.lang.annotation.Annotation;
-import java.util.Collection;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.lang.annotation.Annotation;
+import java.util.Collection;
 
 /**
  * {@code SupertypeSerializer} is a {@link Serializer} implementation for supertypes
  *
  * @author tiwe
- *
  */
-public final class DefaultSupertypeSerializer extends DefaultEntitySerializer implements SupertypeSerializer {
+public final class DefaultSupertypeSerializer extends DefaultEntitySerializer
+    implements SupertypeSerializer {
 
-    /**
-     * Create a new SupertypeSerializer instance
-     *
-     * @param typeMappings type mappings to be used
-     * @param keywords keywords to be used
-     * @param generatedAnnotationClass fully qualified class name to be used as class level "@Generated" annotation.
-     */
-    @Inject
-    public DefaultSupertypeSerializer(
-            TypeMappings typeMappings,
-            @Named(CodegenModule.KEYWORDS) Collection<String> keywords,
-            @Named(CodegenModule.GENERATED_ANNOTATION_CLASS) Class<? extends Annotation> generatedAnnotationClass) {
-        super(typeMappings, keywords, generatedAnnotationClass);
-    }
-    /**
-     * Create a new SupertypeSerializer instance
-     *
-     * @param typeMappings type mappings to be used
-     * @param keywords keywords to be used
-     */
-    public DefaultSupertypeSerializer(TypeMappings typeMappings, Collection<String> keywords) {
-        super(typeMappings, keywords, GeneratedAnnotationResolver.resolveDefault());
-    }
+  /**
+   * Create a new SupertypeSerializer instance
+   *
+   * @param typeMappings type mappings to be used
+   * @param keywords keywords to be used
+   * @param generatedAnnotationClass fully qualified class name to be used as class level
+   *     "@Generated" annotation.
+   */
+  @Inject
+  public DefaultSupertypeSerializer(
+      TypeMappings typeMappings,
+      @Named(CodegenModule.KEYWORDS) Collection<String> keywords,
+      @Named(CodegenModule.GENERATED_ANNOTATION_CLASS)
+          Class<? extends Annotation> generatedAnnotationClass) {
+    super(typeMappings, keywords, generatedAnnotationClass);
+  }
 
+  /**
+   * Create a new SupertypeSerializer instance
+   *
+   * @param typeMappings type mappings to be used
+   * @param keywords keywords to be used
+   */
+  public DefaultSupertypeSerializer(TypeMappings typeMappings, Collection<String> keywords) {
+    super(typeMappings, keywords, GeneratedAnnotationResolver.resolveDefault());
+  }
 }

@@ -21,30 +21,23 @@ import com.querydsl.core.types.Ops;
  * {@code Wildcard} provides constant Expressions for general wildcard expressions
  *
  * @author tiwe
- *
  */
 public final class Wildcard {
 
-    /**
-     * Wildcard expression (*) for all columns
-     */
-    public static final Expression<Object[]> all = ExpressionUtils.template(Object[].class, "*");
+  /** Wildcard expression (*) for all columns */
+  public static final Expression<Object[]> all = ExpressionUtils.template(Object[].class, "*");
 
-    /**
-     * Wildcard count expression (count(*))
-     */
-    public static final NumberExpression<Long> count = Expressions.numberOperation(Long.class, Ops.AggOps.COUNT_ALL_AGG);
+  /** Wildcard count expression (count(*)) */
+  public static final NumberExpression<Long> count =
+      Expressions.numberOperation(Long.class, Ops.AggOps.COUNT_ALL_AGG);
 
-    /**
-     * Wildcard count distinct expression (count(distinct *))
-     */
-    public static final NumberExpression<Long> countDistinct = Expressions.numberOperation(Long.class, Ops.AggOps.COUNT_DISTINCT_ALL_AGG);
+  /** Wildcard count distinct expression (count(distinct *)) */
+  public static final NumberExpression<Long> countDistinct =
+      Expressions.numberOperation(Long.class, Ops.AggOps.COUNT_DISTINCT_ALL_AGG);
 
-    /**
-     * Wildcard count expression (count(*))
-     */
-    public static final NumberExpression<Integer> countAsInt = Expressions.numberOperation(Integer.class, Ops.AggOps.COUNT_ALL_AGG);
+  /** Wildcard count expression (count(*)) */
+  public static final NumberExpression<Integer> countAsInt =
+      Expressions.numberOperation(Integer.class, Ops.AggOps.COUNT_ALL_AGG);
 
-    private Wildcard() { }
-
+  private Wildcard() {}
 }

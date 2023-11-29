@@ -13,13 +13,11 @@
  */
 package com.querydsl.core.types.dsl;
 
+import com.querydsl.core.types.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
 import org.jetbrains.annotations.Nullable;
-
-import com.querydsl.core.types.*;
 
 /**
  * {@code CollectionOperation} is a collection typed operation
@@ -29,41 +27,40 @@ import com.querydsl.core.types.*;
  */
 public class CollectionOperation<E> extends CollectionExpressionBase<Collection<E>, E> {
 
-    private static final long serialVersionUID = 3154315192589335574L;
+  private static final long serialVersionUID = 3154315192589335574L;
 
-    private final Class<E> elementType;
+  private final Class<E> elementType;
 
-    private final OperationImpl<Collection<E>> opMixin;
+  private final OperationImpl<Collection<E>> opMixin;
 
-    protected CollectionOperation(Class<? super E> type, Operator op, Expression<?>... args) {
-        this(type, op, Arrays.asList(args));
+  protected CollectionOperation(Class<? super E> type, Operator op, Expression<?>... args) {
+    this(type, op, Arrays.asList(args));
+  }
+
+  @SuppressWarnings("unchecked")
+  protected CollectionOperation(Class<? super E> type, Operator op, List<Expression<?>> args) {
+    super(ExpressionUtils.operation((Class) Collection.class, op, args));
+    this.opMixin = (OperationImpl) super.mixin;
+    this.elementType = (Class<E>) type;
+  }
+
+  @Override
+  public Class<?> getParameter(int index) {
+    if (index == 0) {
+      return elementType;
+    } else {
+      throw new IndexOutOfBoundsException(String.valueOf(index));
     }
+  }
 
-    @SuppressWarnings("unchecked")
-    protected CollectionOperation(Class<? super E> type, Operator op, List<Expression<?>> args) {
-        super(ExpressionUtils.operation((Class) Collection.class, op, args));
-        this.opMixin = (OperationImpl) super.mixin;
-        this.elementType = (Class<E>) type;
-    }
+  @Override
+  @Nullable
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return opMixin.accept(v, context);
+  }
 
-    @Override
-    public Class<?> getParameter(int index) {
-        if (index == 0) {
-            return elementType;
-        } else {
-            throw new IndexOutOfBoundsException(String.valueOf(index));
-        }
-    }
-
-    @Override
-    @Nullable
-    public <R, C> R accept(Visitor<R, C> v, C context) {
-        return opMixin.accept(v, context);
-    }
-
-    @Override
-    public Class<E> getElementType() {
-        return elementType;
-    }
-
+  @Override
+  public Class<E> getElementType() {
+    return elementType;
+  }
 }

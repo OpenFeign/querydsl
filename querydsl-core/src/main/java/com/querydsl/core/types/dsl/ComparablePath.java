@@ -13,60 +13,59 @@
  */
 package com.querydsl.core.types.dsl;
 
-import java.lang.reflect.AnnotatedElement;
-
 import com.querydsl.core.types.*;
+import java.lang.reflect.AnnotatedElement;
 
 /**
  * {@code ComparablePath} represents comparable paths
  *
  * @author tiwe
- *
  * @param <T> expression type
  * @see Comparable
  */
 @SuppressWarnings({"unchecked"})
-public class ComparablePath<T extends Comparable> extends ComparableExpression<T> implements Path<T> {
+public class ComparablePath<T extends Comparable> extends ComparableExpression<T>
+    implements Path<T> {
 
-    private static final long serialVersionUID = -7434767743611671666L;
+  private static final long serialVersionUID = -7434767743611671666L;
 
-    private final PathImpl<T> pathMixin;
+  private final PathImpl<T> pathMixin;
 
-    protected ComparablePath(PathImpl<T> mixin) {
-        super(mixin);
-        this.pathMixin = mixin;
-    }
+  protected ComparablePath(PathImpl<T> mixin) {
+    super(mixin);
+    this.pathMixin = mixin;
+  }
 
-    protected ComparablePath(Class<? extends T> type, Path<?> parent, String property) {
-        this(type, PathMetadataFactory.forProperty(parent, property));
-    }
+  protected ComparablePath(Class<? extends T> type, Path<?> parent, String property) {
+    this(type, PathMetadataFactory.forProperty(parent, property));
+  }
 
-    protected ComparablePath(Class<? extends T> type, PathMetadata metadata) {
-        super(ExpressionUtils.path(type, metadata));
-        this.pathMixin = (PathImpl<T>) mixin;
-    }
+  protected ComparablePath(Class<? extends T> type, PathMetadata metadata) {
+    super(ExpressionUtils.path(type, metadata));
+    this.pathMixin = (PathImpl<T>) mixin;
+  }
 
-    protected ComparablePath(Class<? extends T> type, String var) {
-        this(type, PathMetadataFactory.forVariable(var));
-    }
+  protected ComparablePath(Class<? extends T> type, String var) {
+    this(type, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(pathMixin, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(pathMixin, context);
+  }
 
-    @Override
-    public PathMetadata getMetadata() {
-        return pathMixin.getMetadata();
-    }
+  @Override
+  public PathMetadata getMetadata() {
+    return pathMixin.getMetadata();
+  }
 
-    @Override
-    public Path<?> getRoot() {
-        return pathMixin.getRoot();
-    }
+  @Override
+  public Path<?> getRoot() {
+    return pathMixin.getRoot();
+  }
 
-    @Override
-    public AnnotatedElement getAnnotatedElement() {
-        return pathMixin.getAnnotatedElement();
-    }
+  @Override
+  public AnnotatedElement getAnnotatedElement() {
+    return pathMixin.getAnnotatedElement();
+  }
 }

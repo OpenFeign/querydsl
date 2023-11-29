@@ -19,33 +19,40 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.*;
 
 /**
- * {@code JavaTypeMappings} defines mappings from {@link TypeCategory} instances to {@link Expression} types
+ * {@code JavaTypeMappings} defines mappings from {@link TypeCategory} instances to {@link
+ * Expression} types
  *
  * @author tiwe
- *
  */
 public class JavaTypeMappings extends TypeMappings {
 
-    public JavaTypeMappings() {
-        register(TypeCategory.STRING,     StringExpression.class,     StringPath.class,     StringTemplate.class);
-        register(TypeCategory.BOOLEAN,    BooleanExpression.class,    BooleanPath.class,    BooleanTemplate.class);
-        register(TypeCategory.COMPARABLE, ComparableExpression.class, ComparablePath.class, ComparableTemplate.class);
-        register(TypeCategory.ENUM,       EnumExpression.class,       EnumPath.class,       EnumTemplate.class);
-        register(TypeCategory.DATE,       TemporalExpression.class,   DatePath.class,       DateTemplate.class);
-        register(TypeCategory.DATETIME,   TemporalExpression.class,   DateTimePath.class,   DateTimeTemplate.class);
-        register(TypeCategory.TIME,       TemporalExpression.class,   TimePath.class,       TimeTemplate.class);
-        register(TypeCategory.NUMERIC,    NumberExpression.class,     NumberPath.class,     NumberTemplate.class);
-        register(TypeCategory.SIMPLE,     SimpleExpression.class,     SimplePath.class,     SimpleTemplate.class);
+  public JavaTypeMappings() {
+    register(TypeCategory.STRING, StringExpression.class, StringPath.class, StringTemplate.class);
+    register(
+        TypeCategory.BOOLEAN, BooleanExpression.class, BooleanPath.class, BooleanTemplate.class);
+    register(
+        TypeCategory.COMPARABLE,
+        ComparableExpression.class,
+        ComparablePath.class,
+        ComparableTemplate.class);
+    register(TypeCategory.ENUM, EnumExpression.class, EnumPath.class, EnumTemplate.class);
+    register(TypeCategory.DATE, TemporalExpression.class, DatePath.class, DateTemplate.class);
+    register(
+        TypeCategory.DATETIME,
+        TemporalExpression.class,
+        DateTimePath.class,
+        DateTimeTemplate.class);
+    register(TypeCategory.TIME, TemporalExpression.class, TimePath.class, TimeTemplate.class);
+    register(TypeCategory.NUMERIC, NumberExpression.class, NumberPath.class, NumberTemplate.class);
+    register(TypeCategory.SIMPLE, SimpleExpression.class, SimplePath.class, SimpleTemplate.class);
 
-        register(TypeCategory.ARRAY,      Expression.class,           SimplePath.class,     SimpleTemplate.class);
-        register(TypeCategory.COLLECTION, Expression.class,           SimplePath.class,     SimpleTemplate.class);
-        register(TypeCategory.SET,        Expression.class,           SimplePath.class,     SimpleTemplate.class);
-        register(TypeCategory.LIST,       Expression.class,           SimplePath.class,     SimpleTemplate.class);
-        register(TypeCategory.MAP,        Expression.class,           SimplePath.class,     SimpleTemplate.class);
+    register(TypeCategory.ARRAY, Expression.class, SimplePath.class, SimpleTemplate.class);
+    register(TypeCategory.COLLECTION, Expression.class, SimplePath.class, SimpleTemplate.class);
+    register(TypeCategory.SET, Expression.class, SimplePath.class, SimpleTemplate.class);
+    register(TypeCategory.LIST, Expression.class, SimplePath.class, SimpleTemplate.class);
+    register(TypeCategory.MAP, Expression.class, SimplePath.class, SimpleTemplate.class);
 
-        register(TypeCategory.CUSTOM,     Expression.class,           Path.class,           SimpleTemplate.class);
-        register(TypeCategory.ENTITY,     Expression.class,           Path.class,           SimpleTemplate.class);
-    }
-
-
+    register(TypeCategory.CUSTOM, Expression.class, Path.class, SimpleTemplate.class);
+    register(TypeCategory.ENTITY, Expression.class, Path.class, SimpleTemplate.class);
+  }
 }

@@ -19,27 +19,31 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
-
 import org.junit.Test;
 
 public class InnerClassTest {
 
-    public static class Example {
+  public static class Example {
 
-        public String getId() {
-            return null;
-        }
+    public String getId() {
+      return null;
     }
+  }
 
-    @Test
-    public void query() {
-        Example example = alias(Example.class);
-        assertFalse(CollQueryFactory.<Example> from($(example), Collections.<Example>singletonList(new Example()))
-                .where($(example.getId()).isNull())
-                .fetch().isEmpty());
-        assertTrue(CollQueryFactory.<Example> from($(example), Collections.<Example>singletonList(new Example()))
-                .where($(example.getId()).isNotNull())
-                .fetch().isEmpty());
-    }
-
+  @Test
+  public void query() {
+    Example example = alias(Example.class);
+    assertFalse(
+        CollQueryFactory.<Example>from(
+                $(example), Collections.<Example>singletonList(new Example()))
+            .where($(example.getId()).isNull())
+            .fetch()
+            .isEmpty());
+    assertTrue(
+        CollQueryFactory.<Example>from(
+                $(example), Collections.<Example>singletonList(new Example()))
+            .where($(example.getId()).isNotNull())
+            .fetch()
+            .isEmpty());
+  }
 }

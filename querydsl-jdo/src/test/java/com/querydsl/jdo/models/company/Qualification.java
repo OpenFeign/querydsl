@@ -13,9 +13,8 @@
  */
 package com.querydsl.jdo.models.company;
 
-import java.util.Date;
-
 import com.querydsl.core.annotations.QueryEntity;
+import java.util.Date;
 
 /**
  * Qualification of a person.
@@ -24,54 +23,51 @@ import com.querydsl.core.annotations.QueryEntity;
  */
 @QueryEntity
 public class Qualification {
-    private Person person;
-    private String name;
-    private Organisation organisation;
-    private Date date;
+  private Person person;
+  private String name;
+  private Organisation organisation;
+  private Date date;
 
-    /**
-     * Default constructor required since this is a PersistenceCapable class.
-     */
-    public Qualification() {
-    }
+  /** Default constructor required since this is a PersistenceCapable class. */
+  public Qualification() {}
 
-    public Qualification(String name) {
-        this.name = name;
-    }
+  public Qualification(String name) {
+    this.name = name;
+  }
 
-    public void setPerson(Person mgr) {
-        this.person = mgr;
-    }
+  public void setPerson(Person mgr) {
+    this.person = mgr;
+  }
 
-    public Person getPerson() {
-        return this.person;
-    }
+  public Person getPerson() {
+    return this.person;
+  }
 
-    public void setDate(Date date) {
-        this.date = new Date(date.getTime());
-    }
+  public void setDate(Date date) {
+    this.date = new Date(date.getTime());
+  }
 
-    public Date getDate() {
-        return this.date;
-    }
+  public Date getDate() {
+    return this.date;
+  }
 
-    public void setOrganisation(Organisation org) {
-        this.organisation = org;
-    }
+  public void setOrganisation(Organisation org) {
+    this.organisation = org;
+  }
 
-    public Organisation getOrganisation() {
-        return this.organisation;
-    }
+  public Organisation getOrganisation() {
+    return this.organisation;
+  }
 
-    public String getName() {
-        return this.name;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String toString() {
-        return "Qualification : " + name + " person=" + person;
-    }
+  public String toString() {
+    return "Qualification : " + name + " person=" + person;
+  }
 }

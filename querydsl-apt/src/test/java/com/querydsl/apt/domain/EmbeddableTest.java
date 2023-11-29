@@ -13,68 +13,58 @@
  */
 package com.querydsl.apt.domain;
 
-import java.util.List;
-
-import org.junit.Ignore;
-
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
+import java.util.List;
+import org.junit.Ignore;
 
 @Ignore
 public class EmbeddableTest {
 
-    @QueryEntity
-    public static class EntityWithEmbedded {
+  @QueryEntity
+  public static class EntityWithEmbedded {
 
-        public WithEntityRef e1;
+    public WithEntityRef e1;
 
-        public WithStringProp e2;
+    public WithStringProp e2;
 
-        public WithEntityAndString e3;
+    public WithEntityAndString e3;
 
-        public WithList e4;
-    }
+    public WithList e4;
+  }
 
-    @QueryEmbeddable
-    public static class WithEntityRef {
+  @QueryEmbeddable
+  public static class WithEntityRef {
 
-        public AnimalTest.Cat cat;
+    public AnimalTest.Cat cat;
+  }
 
-    }
+  @QueryEmbeddable
+  public static class WithStringProp {
 
-    @QueryEmbeddable
-    public static class WithStringProp {
+    public String str;
+  }
 
-        public String str;
-    }
+  @QueryEmbeddable
+  public static class WithEntityAndString extends WithEntityRef {
 
-    @QueryEmbeddable
-    public static class WithEntityAndString extends WithEntityRef {
+    public String str2;
+  }
 
-        public String str2;
+  @QueryEmbeddable
+  public static class WithList extends WithStringProp {
 
-    }
+    public List<AnimalTest.Cat> cats;
 
-    @QueryEmbeddable
-    public static class WithList extends WithStringProp {
+    public String str3;
+  }
 
-        public List<AnimalTest.Cat> cats;
+  @QueryEntity
+  @QueryEmbeddable
+  public static class EntityAndEmbeddable {}
 
-        public String str3;
-
-    }
-
-    @QueryEntity
-    @QueryEmbeddable
-    public static class EntityAndEmbeddable {
-
-    }
-
-    @QuerySupertype
-    @QueryEmbeddable
-    public static class SuperclassAndEmbeddable {
-
-    }
-
+  @QuerySupertype
+  @QueryEmbeddable
+  public static class SuperclassAndEmbeddable {}
 }

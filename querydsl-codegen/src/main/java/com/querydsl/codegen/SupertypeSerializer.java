@@ -17,7 +17,5 @@ package com.querydsl.codegen;
  * {@code SupertypeSerializer} is a {@link Serializer} for supertypes
  *
  * @author tiwe
- *
  */
-public interface SupertypeSerializer extends EntitySerializer {
-}
+public interface SupertypeSerializer extends EntitySerializer {}

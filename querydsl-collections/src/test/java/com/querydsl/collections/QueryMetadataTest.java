@@ -15,25 +15,22 @@ package com.querydsl.collections;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collections;
-
-import org.junit.Test;
-
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
+import java.util.Collections;
+import org.junit.Test;
 
 public class QueryMetadataTest extends AbstractQueryTest {
 
-    @Test
-    public void reusage() {
-        QueryMetadata metadata = new DefaultQueryMetadata();
-        metadata.addJoin(JoinType.DEFAULT, cat);
-        metadata.addWhere(cat.name.startsWith("A"));
+  @Test
+  public void reusage() {
+    QueryMetadata metadata = new DefaultQueryMetadata();
+    metadata.addJoin(JoinType.DEFAULT, cat);
+    metadata.addWhere(cat.name.startsWith("A"));
 
-        CollQuery<?> query = new CollQuery<Void>(metadata);
-        query.bind(cat, cats);
-        assertEquals(Collections.singletonList(c3), query.select(cat).fetch());
-    }
-
+    CollQuery<?> query = new CollQuery<Void>(metadata);
+    query.bind(cat, cats);
+    assertEquals(Collections.singletonList(c3), query.select(cat).fetch());
+  }
 }

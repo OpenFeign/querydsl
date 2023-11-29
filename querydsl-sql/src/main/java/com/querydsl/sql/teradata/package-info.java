@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Teradata support
- */
+/** Teradata support */
 package com.querydsl.sql.teradata;

@@ -1,11 +1,10 @@
 package com.querydsl.apt.domain;
 
-import java.util.Set;
-
 import jakarta.persistence.Entity;
+import java.util.Set;
 
 @Entity
 public class Location {
 
-    public Set<Path> paths;
+  public Set<Path> paths;
 }

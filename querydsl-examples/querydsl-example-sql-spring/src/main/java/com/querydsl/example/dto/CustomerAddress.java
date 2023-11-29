@@ -6,11 +6,9 @@ import org.joda.time.LocalDate;
 @Data
 public class CustomerAddress {
 
-    private Address address;
+  private Address address;
 
-    private String addressTypeCode;
+  private String addressTypeCode;
 
-    private LocalDate fromDate, toDate;
-
+  private LocalDate fromDate, toDate;
 }
-

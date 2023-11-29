@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * APT-related classes
- */
+/** APT-related classes */
 package com.querydsl.apt;

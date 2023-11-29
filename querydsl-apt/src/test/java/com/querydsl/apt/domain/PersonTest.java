@@ -19,9 +19,8 @@ import org.junit.Test;
 
 public class PersonTest {
 
-    @Test
-    public void test() {
-        assertNotNull(QPerson.person2.person);
-    }
-
+  @Test
+  public void test() {
+    assertNotNull(QPerson.person2.person);
+  }
 }

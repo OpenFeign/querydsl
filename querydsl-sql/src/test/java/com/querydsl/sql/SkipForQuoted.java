@@ -22,8 +22,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 @Documented
-@Target({METHOD,TYPE})
+@Target({METHOD, TYPE})
 @Retention(RUNTIME)
-public @interface SkipForQuoted {
-
-}
+public @interface SkipForQuoted {}

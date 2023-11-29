@@ -30,32 +30,30 @@ import org.geolatte.geom.Polygon;
  * {@code SpatialSupport} provides support for spatial types in code generation
  *
  * @author tiwe
- *
  */
 public final class SpatialSupport implements Extension {
 
-    private static void registerTypes(Configuration configuration) {
-        // mysql & postgresql
-        configuration.registerType("geometry", Geometry.class);
-        configuration.registerType("point", Point.class);
-        configuration.registerType("linestring", LineString.class);
-        configuration.registerType("polygon", Polygon.class);
-        configuration.registerType("multipoint", MultiPoint.class);
-        configuration.registerType("multilinestring", MultiLineString.class);
-        configuration.registerType("multipolygon", MultiPolygon.class);
-        configuration.registerType("geometrycollection", GeometryCollection.class);
-        // teradata
-        configuration.registerType("sysudtlib.st_geometry", Geometry.class);
-    }
+  private static void registerTypes(Configuration configuration) {
+    // mysql & postgresql
+    configuration.registerType("geometry", Geometry.class);
+    configuration.registerType("point", Point.class);
+    configuration.registerType("linestring", LineString.class);
+    configuration.registerType("polygon", Polygon.class);
+    configuration.registerType("multipoint", MultiPoint.class);
+    configuration.registerType("multilinestring", MultiLineString.class);
+    configuration.registerType("multipolygon", MultiPolygon.class);
+    configuration.registerType("geometrycollection", GeometryCollection.class);
+    // teradata
+    configuration.registerType("sysudtlib.st_geometry", Geometry.class);
+  }
 
-    /**
-     * Register spatial types to the given codegen module
-     *
-     * @param module module to be customized for spatial support
-     */
-    public void addSupport(AbstractModule module) {
-        module.bindInstance(SQLCodegenModule.ENTITYPATH_TYPE, RelationalPathSpatial.class);
-        registerTypes(module.get(Configuration.class));
-    }
-
+  /**
+   * Register spatial types to the given codegen module
+   *
+   * @param module module to be customized for spatial support
+   */
+  public void addSupport(AbstractModule module) {
+    module.bindInstance(SQLCodegenModule.ENTITYPATH_TYPE, RelationalPathSpatial.class);
+    registerTypes(module.get(Configuration.class));
+  }
 }

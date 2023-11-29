@@ -1,10 +1,8 @@
 package com.querydsl.apt.domain.p10;
 
+import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
 
-import jakarta.persistence.MappedSuperclass;
-
 @MappedSuperclass
-public class BasePersistable<T extends Serializable> extends AbstractPersistable<T> implements UpdateInfo {
-
-}
+public class BasePersistable<T extends Serializable> extends AbstractPersistable<T>
+    implements UpdateInfo {}

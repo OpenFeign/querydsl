@@ -13,13 +13,11 @@
  */
 package com.querydsl.hibernate.search;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
+import java.io.Serializable;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.search.annotations.*;
 
@@ -29,65 +27,61 @@ import org.hibernate.search.annotations.*;
 @Analyzer(impl = org.apache.lucene.analysis.standard.StandardAnalyzer.class)
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 5955148455600241741L;
+  private static final long serialVersionUID = 5955148455600241741L;
 
-    @Id
-    @GeneratedValue
-    @DocumentId
-    private Long id;
+  @Id @GeneratedValue @DocumentId private Long id;
 
-    @SortableField
-    @Field(analyze = Analyze.NO, index = Index.YES, store = Store.YES)
-    private String firstName;
+  @SortableField
+  @Field(analyze = Analyze.NO, index = Index.YES, store = Store.YES)
+  private String firstName;
 
-    @Field(analyze = Analyze.NO, index = Index.YES, store = Store.YES)
-    private String lastName;
+  @Field(analyze = Analyze.NO, index = Index.YES, store = Store.YES)
+  private String lastName;
 
-    @Field(analyze = Analyze.NO, index = Index.YES, store = Store.YES)
-    private String middleName;
+  @Field(analyze = Analyze.NO, index = Index.YES, store = Store.YES)
+  private String middleName;
 
-    @NaturalId
-    @Field(analyze = Analyze.NO, name = "email", index = Index.YES, store = Store.YES)
-    private String emailAddress;
+  @NaturalId
+  @Field(analyze = Analyze.NO, name = "email", index = Index.YES, store = Store.YES)
+  private String emailAddress;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public String getFirstName() {
-        return firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-    public String getMiddleName() {
-        return middleName;
-    }
+  public String getMiddleName() {
+    return middleName;
+  }
 
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
+  public void setMiddleName(String middleName) {
+    this.middleName = middleName;
+  }
 
-    public String getEmailAddress() {
-        return emailAddress;
-    }
+  public String getEmailAddress() {
+    return emailAddress;
+  }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
+  public void setEmailAddress(String emailAddress) {
+    this.emailAddress = emailAddress;
+  }
 }

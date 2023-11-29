@@ -15,41 +15,37 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryTransient;
 import com.querydsl.core.annotations.QueryType;
+import org.junit.Test;
 
 public class QueryTypeOverTransientTest {
 
-    @QueryEntity
-    public static class Entity {
+  @QueryEntity
+  public static class Entity {
 
-        @QueryType(PropertyType.ENTITY)
-        @QueryTransient
-        Entity reference;
+    @QueryType(PropertyType.ENTITY)
+    @QueryTransient
+    Entity reference;
+  }
 
-    }
+  @QueryEntity
+  public abstract static class Entity2 {
 
-    @QueryEntity
-    public abstract static class  Entity2 {
+    @QueryType(PropertyType.ENTITY)
+    @QueryTransient
+    public abstract Entity getReference();
+  }
 
-        @QueryType(PropertyType.ENTITY)
-        @QueryTransient
-        public abstract Entity getReference();
+  @Test
+  public void entity_reference_is_available() {
+    assertNotNull(QQueryTypeOverTransientTest_Entity.entity.reference);
+  }
 
-    }
-
-    @Test
-    public void entity_reference_is_available() {
-        assertNotNull(QQueryTypeOverTransientTest_Entity.entity.reference);
-    }
-
-    @Test
-    public void entity2_reference_is_available() {
-        assertNotNull(QQueryTypeOverTransientTest_Entity2.entity2.reference);
-    }
-
+  @Test
+  public void entity2_reference_is_available() {
+    assertNotNull(QQueryTypeOverTransientTest_Entity2.entity2.reference);
+  }
 }

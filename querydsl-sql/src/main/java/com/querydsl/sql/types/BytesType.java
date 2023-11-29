@@ -22,32 +22,29 @@ import java.sql.Types;
  * {@code BytesType} maps byte[] to byte[] on the JDBC level
  *
  * @author tiwe
- *
  */
 public class BytesType extends AbstractType<byte[]> {
 
-    public BytesType() {
-        super(Types.BLOB);
-    }
+  public BytesType() {
+    super(Types.BLOB);
+  }
 
-    public BytesType(int type) {
-        super(type);
-    }
+  public BytesType(int type) {
+    super(type);
+  }
 
-    @Override
-    public byte[] getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getBytes(startIndex);
-    }
+  @Override
+  public byte[] getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getBytes(startIndex);
+  }
 
-    @Override
-    public Class<byte[]> getReturnedClass() {
-        return byte[].class;
-    }
+  @Override
+  public Class<byte[]> getReturnedClass() {
+    return byte[].class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, byte[] value) throws SQLException {
-        st.setBytes(startIndex, value);
-    }
-
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, byte[] value) throws SQLException {
+    st.setBytes(startIndex, value);
+  }
 }

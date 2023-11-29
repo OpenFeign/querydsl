@@ -13,27 +13,24 @@
  */
 package com.querydsl.sql.mssql;
 
-
 /**
  * Convenience functions and constants for SQL Server usage
  *
  * @author tiwe
- *
  */
 final class SQLServerGrammar {
 
-    private SQLServerGrammar() { }
+  private SQLServerGrammar() {}
 
-    static String tableHints(SQLServerTableHints... tableHints) {
-        StringBuilder hints = new StringBuilder(" with ").append("(");
-        for (int i = 0; i < tableHints.length; i++) {
-            if (i > 0) {
-                hints.append(", ");
-            }
-            hints.append(tableHints[i].name());
-        }
-        hints.append(")");
-        return hints.toString();
+  static String tableHints(SQLServerTableHints... tableHints) {
+    StringBuilder hints = new StringBuilder(" with ").append("(");
+    for (int i = 0; i < tableHints.length; i++) {
+      if (i > 0) {
+        hints.append(", ");
+      }
+      hints.append(tableHints[i].name());
     }
-
+    hints.append(")");
+    return hints.toString();
+  }
 }

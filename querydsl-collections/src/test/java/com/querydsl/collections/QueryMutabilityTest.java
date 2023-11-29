@@ -13,25 +13,25 @@
  */
 package com.querydsl.collections;
 
+import com.querydsl.core.QueryMutability;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
-
 import org.junit.Test;
-
-import com.querydsl.core.QueryMutability;
 
 public class QueryMutabilityTest {
 
-    @Test
-    public void test() throws SecurityException, IllegalArgumentException,
-            NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException, IOException {
-        QCat cat = QCat.cat;
-        CollQuery<?> query = new CollQuery<Void>();
-        query.from(cat, Collections.<Cat> emptyList());
-        new QueryMutability(query).test(cat.id, cat.name);
-
-    }
-
+  @Test
+  public void test()
+      throws SecurityException,
+          IllegalArgumentException,
+          NoSuchMethodException,
+          IllegalAccessException,
+          InvocationTargetException,
+          IOException {
+    QCat cat = QCat.cat;
+    CollQuery<?> query = new CollQuery<Void>();
+    query.from(cat, Collections.<Cat>emptyList());
+    new QueryMutability(query).test(cat.id, cat.name);
+  }
 }

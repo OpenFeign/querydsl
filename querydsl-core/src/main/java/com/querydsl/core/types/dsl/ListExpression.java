@@ -13,38 +13,37 @@
  */
 package com.querydsl.core.types.dsl;
 
-import java.util.List;
-
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.Expression;
+import java.util.List;
 import org.jetbrains.annotations.Range;
 
 /**
  * {@code ListExpression} represents {@code java.util.List} typed expressions
  *
  * @author tiwe
- *
  * @param <E> component type
  * @param <Q> result type for {@code any()} and {@code get(int)} results
  * @see java.util.List
  */
-public interface ListExpression<E, Q extends SimpleExpression<? super E>> extends CollectionExpression<List<E>, E> {
+public interface ListExpression<E, Q extends SimpleExpression<? super E>>
+    extends CollectionExpression<List<E>, E> {
 
-    /**
-     * Indexed access, gets the element at the given index
-     *
-     * @param index zero based index
-     * @return this.get(index)
-     * @see java.util.List#get(int)
-     */
-    Q get(Expression<Integer> index);
+  /**
+   * Indexed access, gets the element at the given index
+   *
+   * @param index zero based index
+   * @return this.get(index)
+   * @see java.util.List#get(int)
+   */
+  Q get(Expression<Integer> index);
 
-    /**
-     * Indexed access, gets the element at the given index
-     *
-     * @param index zero based index
-     * @return this.get(index)
-     * @see java.util.List#get(int)
-     */
-    Q get(@Range(from = 0, to = Integer.MAX_VALUE) int index);
+  /**
+   * Indexed access, gets the element at the given index
+   *
+   * @param index zero based index
+   * @return this.get(index)
+   * @see java.util.List#get(int)
+   */
+  Q get(@Range(from = 0, to = Integer.MAX_VALUE) int index);
 }

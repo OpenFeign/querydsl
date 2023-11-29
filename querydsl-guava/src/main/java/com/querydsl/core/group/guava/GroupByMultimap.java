@@ -31,52 +31,50 @@ import com.querydsl.core.types.Projections;
  * Provides aggregated results as a map
  *
  * @author Jan-Willem Gmelig Meyling
- *
  * @param <K> multi map key type
  * @param <V> multi map value type
  * @param <R> multi map type
  */
-public class GroupByMultimap<K, V, R extends Multimap<K,V>> extends AbstractGroupByTransformer<K, R> {
+public class GroupByMultimap<K, V, R extends Multimap<K, V>>
+    extends AbstractGroupByTransformer<K, R> {
 
-    GroupByMultimap(Expression<K> key, Expression<?>... expressions) {
-        super(key, expressions);
+  GroupByMultimap(Expression<K> key, Expression<?>... expressions) {
+    super(key, expressions);
+  }
+
+  @Override
+  public R transform(FetchableQuery<?, ?> query) {
+    Multimap<K, Group> groups = LinkedHashMultimap.create();
+
+    // create groups
+    FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
+    boolean hasGroups = false;
+    for (Expression<?> e : expr.getArgs()) {
+      hasGroups |= e instanceof GroupExpression;
+    }
+    if (hasGroups) {
+      expr = withoutGroupExpressions(expr);
+    }
+    CloseableIterator<Tuple> iter = query.select(expr).iterate();
+    try {
+      while (iter.hasNext()) {
+        @SuppressWarnings("unchecked") // This type is mandated by the key type
+        K[] row = (K[]) iter.next().toArray();
+        K groupId = row[0];
+        GroupImpl group = new GroupImpl(groupExpressions, maps);
+        groups.put(groupId, group);
+        group.add(row);
+      }
+    } finally {
+      iter.close();
     }
 
-    @Override
-    public R transform(FetchableQuery<?,?> query) {
-        Multimap<K, Group> groups = LinkedHashMultimap.create();
+    // transform groups
+    return transform(groups);
+  }
 
-        // create groups
-        FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-        boolean hasGroups = false;
-        for (Expression<?> e : expr.getArgs()) {
-            hasGroups |= e instanceof GroupExpression;
-        }
-        if (hasGroups) {
-            expr = withoutGroupExpressions(expr);
-        }
-        CloseableIterator<Tuple> iter = query.select(expr).iterate();
-        try {
-            while (iter.hasNext()) {
-                @SuppressWarnings("unchecked") //This type is mandated by the key type
-                K[] row = (K[]) iter.next().toArray();
-                K groupId = row[0];
-                GroupImpl group = new GroupImpl(groupExpressions, maps);
-                groups.put(groupId, group);
-                group.add(row);
-            }
-        } finally {
-            iter.close();
-        }
-
-        // transform groups
-        return transform(groups);
-
-    }
-
-    @SuppressWarnings("unchecked")
-    protected R transform(Multimap<K, Group> groups) {
-        return (R) groups;
-    }
-
+  @SuppressWarnings("unchecked")
+  protected R transform(Multimap<K, Group> groups) {
+    return (R) groups;
+  }
 }

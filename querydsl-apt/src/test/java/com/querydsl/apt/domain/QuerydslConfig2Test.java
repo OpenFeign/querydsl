@@ -15,50 +15,46 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.Config;
 import com.querydsl.core.annotations.QueryEntity;
+import org.junit.Test;
 
 public class QuerydslConfig2Test {
 
-    @Config(entityAccessors = true)
-    @QueryEntity
-    public static class Entity extends Superclass {
+  @Config(entityAccessors = true)
+  @QueryEntity
+  public static class Entity extends Superclass {
 
-        Entity prop1;
+    Entity prop1;
+  }
 
-    }
+  @Config(createDefaultVariable = false)
+  @QueryEntity
+  public static class Entity2 extends Superclass2 {
 
-    @Config(createDefaultVariable = false)
-    @QueryEntity
-    public static class Entity2 extends Superclass2 {
+    Entity prop1;
+  }
 
-        Entity prop1;
+  @QueryEntity
+  public static class Superclass {
 
-    }
+    Entity prop2;
+  }
 
-    @QueryEntity
-    public static class Superclass {
+  @Config(entityAccessors = true)
+  @QueryEntity
+  public static class Superclass2 {
 
-        Entity prop2;
-    }
+    Entity prop2;
+  }
 
-    @Config(entityAccessors = true)
-    @QueryEntity
-    public static class Superclass2 {
+  @Test
+  public void test() {
+    assertNotNull(QQuerydslConfig2Test_Entity.entity);
+  }
 
-        Entity prop2;
-    }
-
-    @Test
-    public void test() {
-        assertNotNull(QQuerydslConfig2Test_Entity.entity);
-    }
-
-    @Test(expected = NoSuchFieldException.class)
-    public void create_default_variable() throws SecurityException, NoSuchFieldException {
-        QQuerydslConfig2Test_Entity2.class.getField("entity2");
-    }
+  @Test(expected = NoSuchFieldException.class)
+  public void create_default_variable() throws SecurityException, NoSuchFieldException {
+    QQuerydslConfig2Test_Entity2.class.getField("entity2");
+  }
 }
-

@@ -13,6 +13,10 @@
  */
 package com.querydsl.sql.teradata;
 
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.SQLBindings;
+import com.querydsl.sql.SQLTemplates;
+import com.querydsl.sql.dml.AbstractSQLClause;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,122 +26,117 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.querydsl.sql.Configuration;
-import com.querydsl.sql.SQLBindings;
-import com.querydsl.sql.SQLTemplates;
-import com.querydsl.sql.dml.AbstractSQLClause;
-
 /**
  * {@code SetQueryBandClause} provides support for Teradata specific set query_band executions.
  *
  * @author tiwe
- *
  */
 public class SetQueryBandClause extends AbstractSQLClause<SetQueryBandClause> {
 
-    private boolean forSession = true;
+  private boolean forSession = true;
 
-    private final Map<String, String> values = new LinkedHashMap<>();
+  private final Map<String, String> values = new LinkedHashMap<>();
 
-    private transient String queryString;
+  private transient String queryString;
 
-    private transient String parameter;
+  private transient String parameter;
 
-    public SetQueryBandClause(Connection connection, SQLTemplates templates) {
-        this(connection, new Configuration(templates));
+  public SetQueryBandClause(Connection connection, SQLTemplates templates) {
+    this(connection, new Configuration(templates));
+  }
+
+  public SetQueryBandClause(Connection connection, Configuration configuration) {
+    super(configuration, connection);
+  }
+
+  public SetQueryBandClause(Supplier<Connection> connection, Configuration configuration) {
+    super(configuration, connection);
+  }
+
+  public SetQueryBandClause forSession() {
+    queryString = null;
+    forSession = true;
+    return this;
+  }
+
+  public SetQueryBandClause forTransaction() {
+    queryString = null;
+    forSession = false;
+    return this;
+  }
+
+  public SetQueryBandClause set(String key, String value) {
+    queryString = null;
+    values.put(key, value);
+    return this;
+  }
+
+  public SetQueryBandClause set(Map<String, String> values) {
+    queryString = null;
+    this.values.putAll(values);
+    return this;
+  }
+
+  @Override
+  public void clear() {
+    values.clear();
+  }
+
+  @Override
+  public long execute() {
+    PreparedStatement stmt = null;
+    try {
+      stmt = connection().prepareStatement(toString());
+      if (parameter != null) {
+        stmt.setString(1, parameter);
+      }
+      return 1;
+    } catch (SQLException e) {
+      List<Object> bindings =
+          parameter != null ? Collections.singletonList(parameter) : Collections.emptyList();
+      throw configuration.translate(queryString, bindings, e);
+    } finally {
+      if (stmt != null) {
+        close(stmt);
+      }
     }
+  }
 
-    public SetQueryBandClause(Connection connection, Configuration configuration) {
-        super(configuration, connection);
+  @Override
+  public List<SQLBindings> getSQL() {
+    SQLBindings bindings;
+    if (configuration.getUseLiterals() || forSession) {
+      bindings = new SQLBindings(toString(), Collections.emptyList());
+    } else {
+      bindings = new SQLBindings(toString(), Collections.singletonList(parameter));
     }
+    return Collections.singletonList(bindings);
+  }
 
-    public SetQueryBandClause(Supplier<Connection> connection, Configuration configuration) {
-        super(configuration, connection);
+  @Override
+  public String toString() {
+    if (queryString == null) {
+      StringBuilder builder = new StringBuilder();
+      for (Map.Entry<String, String> entry : values.entrySet()) {
+        builder.append(entry.getKey()).append("=").append(entry.getValue());
+        builder.append(";");
+      }
+      if (configuration.getUseLiterals() || forSession) {
+        queryString =
+            "set query_band='"
+                + configuration.getTemplates().escapeLiteral(builder.toString())
+                + (forSession ? "' for session" : "' for transaction");
+        parameter = null;
+      } else {
+        queryString = "set query_band=? for transaction";
+        parameter = builder.toString();
+      }
     }
+    return queryString;
+  }
 
-    public SetQueryBandClause forSession() {
-        queryString = null;
-        forSession = true;
-        return this;
-    }
-
-    public SetQueryBandClause forTransaction() {
-        queryString = null;
-        forSession = false;
-        return this;
-    }
-
-    public SetQueryBandClause set(String key, String value) {
-        queryString = null;
-        values.put(key, value);
-        return this;
-    }
-
-    public SetQueryBandClause set(Map<String, String> values) {
-        queryString = null;
-        this.values.putAll(values);
-        return this;
-    }
-
-    @Override
-    public void clear() {
-        values.clear();
-    }
-
-    @Override
-    public long execute() {
-        PreparedStatement stmt = null;
-        try {
-            stmt = connection().prepareStatement(toString());
-            if (parameter != null) {
-                stmt.setString(1, parameter);
-            }
-            return 1;
-        } catch (SQLException e) {
-            List<Object> bindings = parameter != null ? Collections.singletonList(parameter) : Collections.emptyList();
-            throw configuration.translate(queryString, bindings, e);
-        } finally {
-            if (stmt != null) {
-                close(stmt);
-            }
-        }
-    }
-
-    @Override
-    public List<SQLBindings> getSQL() {
-        SQLBindings bindings;
-        if (configuration.getUseLiterals() || forSession) {
-            bindings = new SQLBindings(toString(), Collections.emptyList());
-        } else {
-            bindings = new SQLBindings(toString(), Collections.singletonList(parameter));
-        }
-        return Collections.singletonList(bindings);
-    }
-
-    @Override
-    public String toString() {
-        if (queryString == null) {
-            StringBuilder builder = new StringBuilder();
-            for (Map.Entry<String, String> entry : values.entrySet()) {
-                builder.append(entry.getKey()).append("=").append(entry.getValue());
-                builder.append(";");
-            }
-            if (configuration.getUseLiterals() || forSession) {
-                queryString = "set query_band='"
-                        + configuration.getTemplates().escapeLiteral(builder.toString())
-                        + (forSession ? "' for session" : "' for transaction");
-                parameter = null;
-            } else {
-                queryString = "set query_band=? for transaction";
-                parameter = builder.toString();
-            }
-
-        }
-        return queryString;
-    }
-
-    @Override
-    public int getBatchCount() {
-        return 0;
-    }
+  @Override
+  public int getBatchCount() {
+    return 0;
+  }
 }

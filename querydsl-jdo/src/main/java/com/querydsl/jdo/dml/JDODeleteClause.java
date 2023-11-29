@@ -13,13 +13,6 @@
  */
 package com.querydsl.jdo.dml;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
@@ -28,86 +21,89 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jdo.JDOQLSerializer;
 import com.querydsl.jdo.JDOQLTemplates;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 /**
  * {@link DeleteClause} implementation for JDO
  *
  * @author tiwe
- *
  */
 public class JDODeleteClause implements DeleteClause<JDODeleteClause> {
 
-    private final QueryMetadata metadata = new DefaultQueryMetadata();
+  private final QueryMetadata metadata = new DefaultQueryMetadata();
 
-    private final PersistenceManager persistenceManager;
+  private final PersistenceManager persistenceManager;
 
-    private final JDOQLTemplates templates;
+  private final JDOQLTemplates templates;
 
-    private final EntityPath<?> entity;
+  private final EntityPath<?> entity;
 
-    public JDODeleteClause(PersistenceManager pm, EntityPath<?> entity) {
-        this(pm, entity, JDOQLTemplates.DEFAULT);
-    }
+  public JDODeleteClause(PersistenceManager pm, EntityPath<?> entity) {
+    this(pm, entity, JDOQLTemplates.DEFAULT);
+  }
 
-    public JDODeleteClause(PersistenceManager persistenceManager, EntityPath<?> entity,
-            JDOQLTemplates templates) {
-        this.entity = entity;
-        this.persistenceManager = persistenceManager;
-        this.templates = templates;
-        metadata.addJoin(JoinType.DEFAULT, entity);
-    }
+  public JDODeleteClause(
+      PersistenceManager persistenceManager, EntityPath<?> entity, JDOQLTemplates templates) {
+    this.entity = entity;
+    this.persistenceManager = persistenceManager;
+    this.templates = templates;
+    metadata.addJoin(JoinType.DEFAULT, entity);
+  }
 
-    @Override
-    public long execute() {
-        Query query = persistenceManager.newQuery(entity.getType());
-        if (metadata.getWhere() != null) {
-            JDOQLSerializer serializer = new JDOQLSerializer(templates, entity);
-            serializer.handle(metadata.getWhere());
-            query.setFilter(serializer.toString());
-            Map<Object,String> constToLabel = serializer.getConstantToLabel();
+  @Override
+  public long execute() {
+    Query query = persistenceManager.newQuery(entity.getType());
+    if (metadata.getWhere() != null) {
+      JDOQLSerializer serializer = new JDOQLSerializer(templates, entity);
+      serializer.handle(metadata.getWhere());
+      query.setFilter(serializer.toString());
+      Map<Object, String> constToLabel = serializer.getConstantToLabel();
 
-            try {
-                if (!constToLabel.isEmpty()) {
-                    List<Object> constants = new ArrayList<Object>(constToLabel.size());
-                    StringBuilder builder = new StringBuilder();
-                    for (Map.Entry<Object, String> entry : constToLabel.entrySet()) {
-                        if (builder.length() > 0) {
-                            builder.append(", ");
-                        }
-                        builder.append(entry.getKey().getClass().getName()).append(" ");
-                        builder.append(entry.getValue());
-                        constants.add(entry.getKey());
-                    }
-                    query.declareParameters(builder.toString());
-                    return query.deletePersistentAll(constants.toArray());
-                } else {
-                    return query.deletePersistentAll();
-                }
-            } finally {
-                query.closeAll();
+      try {
+        if (!constToLabel.isEmpty()) {
+          List<Object> constants = new ArrayList<Object>(constToLabel.size());
+          StringBuilder builder = new StringBuilder();
+          for (Map.Entry<Object, String> entry : constToLabel.entrySet()) {
+            if (builder.length() > 0) {
+              builder.append(", ");
             }
+            builder.append(entry.getKey().getClass().getName()).append(" ");
+            builder.append(entry.getValue());
+            constants.add(entry.getKey());
+          }
+          query.declareParameters(builder.toString());
+          return query.deletePersistentAll(constants.toArray());
         } else {
-            try {
-                return query.deletePersistentAll();
-            } finally {
-                query.closeAll();
-            }
+          return query.deletePersistentAll();
         }
+      } finally {
+        query.closeAll();
+      }
+    } else {
+      try {
+        return query.deletePersistentAll();
+      } finally {
+        query.closeAll();
+      }
     }
+  }
 
-    @Override
-    public JDODeleteClause where(Predicate... o) {
-        for (Predicate p : o) {
-            metadata.addWhere(p);
-        }
-        return this;
+  @Override
+  public JDODeleteClause where(Predicate... o) {
+    for (Predicate p : o) {
+      metadata.addWhere(p);
     }
+    return this;
+  }
 
-    @Override
-    public String toString() {
-        JDOQLSerializer serializer = new JDOQLSerializer(templates, entity);
-        serializer.handle(metadata.getWhere());
-        return serializer.toString();
-    }
-
+  @Override
+  public String toString() {
+    JDOQLSerializer serializer = new JDOQLSerializer(templates, entity);
+    serializer.handle(metadata.getWhere());
+    return serializer.toString();
+  }
 }

@@ -18,83 +18,79 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 
-/**
- * Common JDO expressions
- */
+/** Common JDO expressions */
 public final class JDOExpressions {
 
-    /**
-     * Create a new detached {@link JDOQuery} instance with the given projection
-     *
-     * @param expr projection
-     * @param <T>
-     * @return select(expr)
-     */
-    public static <T> JDOQuery<T> select(Expression<T> expr) {
-        return new JDOQuery<Void>().select(expr);
-    }
+  /**
+   * Create a new detached {@link JDOQuery} instance with the given projection
+   *
+   * @param expr projection
+   * @param <T>
+   * @return select(expr)
+   */
+  public static <T> JDOQuery<T> select(Expression<T> expr) {
+    return new JDOQuery<Void>().select(expr);
+  }
 
-    /**
-     * Create a new detached {@link JDOQuery} instance with the given projection
-     *
-     * @param exprs projection
-     * @return select(exprs)
-     */
-    public static JDOQuery<Tuple> select(Expression<?>... exprs) {
-        return new JDOQuery<Void>().select(exprs);
-    }
+  /**
+   * Create a new detached {@link JDOQuery} instance with the given projection
+   *
+   * @param exprs projection
+   * @return select(exprs)
+   */
+  public static JDOQuery<Tuple> select(Expression<?>... exprs) {
+    return new JDOQuery<Void>().select(exprs);
+  }
 
-    /**
-     * Create a new detached {@link JDOQuery} instance with the given projection
-     *
-     * @param expr projection
-     * @param <T>
-     * @return select(distinct expr)
-     */
-    public static <T> JDOQuery<T> selectDistinct(Expression<T> expr) {
-        return select(expr).distinct();
-    }
+  /**
+   * Create a new detached {@link JDOQuery} instance with the given projection
+   *
+   * @param expr projection
+   * @param <T>
+   * @return select(distinct expr)
+   */
+  public static <T> JDOQuery<T> selectDistinct(Expression<T> expr) {
+    return select(expr).distinct();
+  }
 
-    /**
-     * Create a new detached {@link JDOQuery} instance with the given projection
-     *
-     * @param exprs projection
-     * @return select(distinct exprs)
-     */
-    public static JDOQuery<Tuple> selectDistinct(Expression<?>... exprs) {
-        return select(exprs).distinct();
-    }
+  /**
+   * Create a new detached {@link JDOQuery} instance with the given projection
+   *
+   * @param exprs projection
+   * @return select(distinct exprs)
+   */
+  public static JDOQuery<Tuple> selectDistinct(Expression<?>... exprs) {
+    return select(exprs).distinct();
+  }
 
+  /**
+   * Create a new detached {@link JDOQuery} instance with the given projection 0
+   *
+   * @return select(0)
+   */
+  public static JDOQuery<Integer> selectZero() {
+    return select(Expressions.ZERO);
+  }
 
-    /**
-     * Create a new detached {@link JDOQuery} instance with the given projection 0
-     *
-     * @return select(0)
-     */
-    public static JDOQuery<Integer> selectZero() {
-        return select(Expressions.ZERO);
-    }
+  /**
+   * Create a new detached {@link JDOQuery} instance with the projection 1
+   *
+   * @return select(1)
+   */
+  public static JDOQuery<Integer> selectOne() {
+    return select(Expressions.ONE);
+  }
 
-    /**
-     * Create a new detached {@link JDOQuery} instance with the projection 1
-     *
-     * @return select(1)
-     */
-    public static JDOQuery<Integer> selectOne() {
-        return select(Expressions.ONE);
-    }
+  /**
+   * Create a new detached {@link JDOQuery} instance with the given projection
+   *
+   * @param expr projection and source
+   * @param <T>
+   * @return select(expr).from(expr)
+   */
+  public static <T> JDOQuery<T> selectFrom(EntityPath<T> expr) {
+    return select(expr).from(expr);
+  }
 
-    /**
-     * Create a new detached {@link JDOQuery} instance with the given projection
-     *
-     * @param expr projection and source
-     * @param <T>
-     * @return select(expr).from(expr)
-     */
-    public static <T> JDOQuery<T> selectFrom(EntityPath<T> expr) {
-        return select(expr).from(expr);
-    }
-
-    private JDOExpressions() { }
-
+  private JDOExpressions() {}
 }

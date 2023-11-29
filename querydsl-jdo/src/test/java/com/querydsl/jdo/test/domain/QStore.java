@@ -17,39 +17,39 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.dsl.*;
 
-/**
- * QStore is a Querydsl query type for Store
- *
- */
+/** QStore is a Querydsl query type for Store */
 @SuppressWarnings("serial")
 public class QStore extends EntityPathBase<com.querydsl.jdo.test.domain.Store> {
 
-    public static final QStore store = new QStore("store");
+  public static final QStore store = new QStore("store");
 
-    public final StringPath name = createString("name");
+  public final StringPath name = createString("name");
 
-    public final MapPath<String, Product, QProduct> productsByName = this.<String, Product, QProduct>createMap("productsByName",String.class,Product.class,QProduct.class);
+  public final MapPath<String, Product, QProduct> productsByName =
+      this.<String, Product, QProduct>createMap(
+          "productsByName", String.class, Product.class, QProduct.class);
 
-    public final ListPath<Product, QProduct> products = this.<Product, QProduct>createList("products",Product.class,QProduct.class, PathInits.DIRECT);
+  public final ListPath<Product, QProduct> products =
+      this.<Product, QProduct>createList(
+          "products", Product.class, QProduct.class, PathInits.DIRECT);
 
-    public QProduct productsByName(String key) {
-        return new QProduct(PathMetadataFactory.forMapAccess(productsByName,key));
-    }
+  public QProduct productsByName(String key) {
+    return new QProduct(PathMetadataFactory.forMapAccess(productsByName, key));
+  }
 
-    public QProduct productsByName(com.querydsl.core.types.Expression<String> key) {
-        return new QProduct(PathMetadataFactory.forMapAccess(productsByName,key));
-    }
+  public QProduct productsByName(com.querydsl.core.types.Expression<String> key) {
+    return new QProduct(PathMetadataFactory.forMapAccess(productsByName, key));
+  }
 
-    public QStore(String path) {
-          this(Store.class, path);
-    }
+  public QStore(String path) {
+    this(Store.class, path);
+  }
 
-    public QStore(Class<? extends Store> cl, String path) {
-          super(cl, PathMetadataFactory.forVariable(path));
-    }
+  public QStore(Class<? extends Store> cl, String path) {
+    super(cl, PathMetadataFactory.forVariable(path));
+  }
 
-    public QStore(PathMetadata metadata) {
-         super(Store.class, metadata);
-    }
-
+  public QStore(PathMetadata metadata) {
+    super(Store.class, metadata);
+  }
 }

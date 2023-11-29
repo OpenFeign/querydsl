@@ -4,24 +4,23 @@ import org.geolatte.geom.Geometry;
 
 public class Shapes {
 
-    private int id;
+  private int id;
 
-    private Geometry geometry;
+  private Geometry geometry;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public Geometry getGeometry() {
-        return geometry;
-    }
+  public Geometry getGeometry() {
+    return geometry;
+  }
 
-    public void setGeometry(Geometry geometry) {
-        this.geometry = geometry;
-    }
-
+  public void setGeometry(Geometry geometry) {
+    this.geometry = geometry;
+  }
 }

@@ -13,26 +13,24 @@
  */
 package com.querydsl.codegen;
 
-import java.io.IOException;
-
 import com.querydsl.codegen.utils.CodeWriter;
+import java.io.IOException;
 
 /**
  * {@code Serializer} defines a common interface for {@link EntityType} serializers
  *
  * @author tiwe
- *
  */
 public interface Serializer {
 
-    /**
-     * Serialize the given {@link EntityType}
-     *
-     * @param type EntityType to serialize
-     * @param serializerConfig serializer configuration
-     * @param writer serialization target
-     * @throws IOException
-     */
-    void serialize(EntityType type, SerializerConfig serializerConfig, CodeWriter writer) throws IOException;
-
+  /**
+   * Serialize the given {@link EntityType}
+   *
+   * @param type EntityType to serialize
+   * @param serializerConfig serializer configuration
+   * @param writer serialization target
+   * @throws IOException
+   */
+  void serialize(EntityType type, SerializerConfig serializerConfig, CodeWriter writer)
+      throws IOException;
 }

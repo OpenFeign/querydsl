@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2015, The Querydsl Team (http://www.querydsl.com/team)
  *
@@ -20,29 +19,27 @@ import org.junit.Test;
 
 public class PathBuilderFactoryTest {
 
-    @Test
-    public void create() {
-        PathBuilderFactory factory = new PathBuilderFactory("");
-        PathBuilder<Object> pathBuilder = factory.create(Object.class);
-        assertEquals("object", pathBuilder.toString());
-        assertEquals(Object.class, pathBuilder.getType());
+  @Test
+  public void create() {
+    PathBuilderFactory factory = new PathBuilderFactory("");
+    PathBuilder<Object> pathBuilder = factory.create(Object.class);
+    assertEquals("object", pathBuilder.toString());
+    assertEquals(Object.class, pathBuilder.getType());
 
-        pathBuilder.get("prop", Object.class);
-        pathBuilder.get("prop", String.class);
-        pathBuilder.get("prop", Object.class);
-    }
+    pathBuilder.get("prop", Object.class);
+    pathBuilder.get("prop", String.class);
+    pathBuilder.get("prop", Object.class);
+  }
 
-    @Test
-    public void create_withSuffix() {
-        PathBuilderFactory factory = new PathBuilderFactory("_");
-        PathBuilder<Object> pathBuilder = factory.create(Object.class);
-        assertEquals("object_", pathBuilder.toString());
-        assertEquals(Object.class, pathBuilder.getType());
+  @Test
+  public void create_withSuffix() {
+    PathBuilderFactory factory = new PathBuilderFactory("_");
+    PathBuilder<Object> pathBuilder = factory.create(Object.class);
+    assertEquals("object_", pathBuilder.toString());
+    assertEquals(Object.class, pathBuilder.getType());
 
-        pathBuilder.get("prop", Object.class);
-        pathBuilder.get("prop", String.class);
-        pathBuilder.get("prop", Object.class);
-    }
-
-
+    pathBuilder.get("prop", Object.class);
+    pathBuilder.get("prop", String.class);
+    pathBuilder.get("prop", Object.class);
+  }
 }

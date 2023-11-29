@@ -13,54 +13,50 @@
  */
 package com.querydsl.sql.dml;
 
+import com.querydsl.sql.Column;
+import com.querydsl.sql.domain.Employee;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
-
 import org.junit.Before;
-
-import com.querydsl.sql.Column;
-import com.querydsl.sql.domain.Employee;
 
 public abstract class AbstractMapperTest {
 
-    public static class EmployeeX {
+  public static class EmployeeX {
 
-        private String property;
+    private String property;
 
-        public String getProperty() {
-            return property;
-        }
-
-        public void setProperty(String property) {
-            this.property = property;
-        }
+    public String getProperty() {
+      return property;
     }
 
-    public static class EmployeeNames {
-
-        @Column("ID")
-        Integer _id;
-
-        @Column("FIRSTNAME")
-        String _firstname;
-
-        @Column("LASTNAME")
-        String _lastname;
+    public void setProperty(String property) {
+      this.property = property;
     }
+  }
 
-    protected Employee employee;
+  public static class EmployeeNames {
 
-    @Before
-    public void setUp() {
-        employee = new Employee();
-        employee.setDatefield(new Date(0));
-        employee.setFirstname("A");
-        employee.setLastname("B");
-        employee.setSalary(new BigDecimal(1.0));
-        employee.setSuperiorId(2);
-        employee.setTimefield(new Time(0));
-    }
+    @Column("ID")
+    Integer _id;
 
+    @Column("FIRSTNAME")
+    String _firstname;
 
+    @Column("LASTNAME")
+    String _lastname;
+  }
+
+  protected Employee employee;
+
+  @Before
+  public void setUp() {
+    employee = new Employee();
+    employee.setDatefield(new Date(0));
+    employee.setFirstname("A");
+    employee.setLastname("B");
+    employee.setSalary(new BigDecimal(1.0));
+    employee.setSuperiorId(2);
+    employee.setTimefield(new Time(0));
+  }
 }

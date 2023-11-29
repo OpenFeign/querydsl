@@ -16,17 +16,16 @@ package com.querydsl.collections;
 import static org.junit.Assert.assertTrue;
 
 import java.util.regex.Pattern;
-
 import org.junit.Test;
 
 public class PatternsTest {
 
-    @Test
-    public void matches() {
-        assertTrue(Pattern.matches("Bob","Bob"));
-        assertTrue(Pattern.matches("^Bob$","Bob"));
-        assertTrue(Pattern.matches("^Bo.*","Bob"));
-        assertTrue(Pattern.matches(".*ob$","Bob"));
-        assertTrue(Pattern.matches(".*o.*","Bob"));
-    }
+  @Test
+  public void matches() {
+    assertTrue(Pattern.matches("Bob", "Bob"));
+    assertTrue(Pattern.matches("^Bob$", "Bob"));
+    assertTrue(Pattern.matches("^Bo.*", "Bob"));
+    assertTrue(Pattern.matches(".*ob$", "Bob"));
+    assertTrue(Pattern.matches(".*o.*", "Bob"));
+  }
 }

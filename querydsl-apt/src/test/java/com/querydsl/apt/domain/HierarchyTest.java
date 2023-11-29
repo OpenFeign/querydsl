@@ -15,60 +15,55 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import org.junit.Test;
 
 public class HierarchyTest {
 
-    @Entity
-    public static class A {
+  @Entity
+  public static class A {
 
-        B b;
+    B b;
 
-        A(B b) {
-            this.b = b;
-        }
-
-        B getB() {
-            return b;
-        }
+    A(B b) {
+      this.b = b;
     }
 
-    @Entity
-    public static class A2 extends A {
+    B getB() {
+      return b;
+    }
+  }
 
-        // XXX: uncomment @Comment to break generation - QA2.a2.b() will then
-        // return B instead of B2
-        @Column
-        int foo;
+  @Entity
+  public static class A2 extends A {
 
-        A2(B2 b2) {
-            super(b2);
-        }
+    // XXX: uncomment @Comment to break generation - QA2.a2.b() will then
+    // return B instead of B2
+    @Column int foo;
 
-        @Override
-        @QueryType(PropertyType.ENTITY)
-        B2 getB() {
-            return (B2) super.getB();
-        }
+    A2(B2 b2) {
+      super(b2);
     }
 
-    @Entity
-    public static class B {
+    @Override
+    @QueryType(PropertyType.ENTITY)
+    B2 getB() {
+      return (B2) super.getB();
     }
+  }
 
-    @Entity
-    public static class B2 extends B {
-    }
+  @Entity
+  public static class B {}
 
-    @Test
-    public void test() {
-        QHierarchyTest_B2 qb2 = QHierarchyTest_A2.a2.b;
-        assertNotNull(qb2);
-    }
+  @Entity
+  public static class B2 extends B {}
+
+  @Test
+  public void test() {
+    QHierarchyTest_B2 qb2 = QHierarchyTest_A2.a2.b;
+    assertNotNull(qb2);
+  }
 }

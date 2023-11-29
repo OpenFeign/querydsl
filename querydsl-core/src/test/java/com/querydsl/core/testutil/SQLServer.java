@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface SQLServer extends ExternalDatabase {
-}
+public interface SQLServer extends ExternalDatabase {}

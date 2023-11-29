@@ -13,42 +13,43 @@
  */
 package com.querydsl.sql.mssql;
 
-import java.sql.Connection;
-import java.util.function.Supplier;
-
 import com.querydsl.core.JoinFlag;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.sql.AbstractSQLQuery;
 import com.querydsl.sql.Configuration;
+import java.sql.Connection;
+import java.util.function.Supplier;
 
 /**
  * {@code AbstractSQLServerQuery} provides SQL Server related extensions to SQLQuery
  *
  * @param <T> result type
  * @param <C> the concrete subtype
- *
  * @author tiwe
  */
-public abstract class AbstractSQLServerQuery<T, C extends AbstractSQLServerQuery<T,C>> extends AbstractSQLQuery<T, C> {
-    public AbstractSQLServerQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
-        super(conn, configuration, metadata);
-    }
+public abstract class AbstractSQLServerQuery<T, C extends AbstractSQLServerQuery<T, C>>
+    extends AbstractSQLQuery<T, C> {
+  public AbstractSQLServerQuery(
+      Connection conn, Configuration configuration, QueryMetadata metadata) {
+    super(conn, configuration, metadata);
+  }
 
-    public AbstractSQLServerQuery(Supplier<Connection> connProvider, Configuration configuration, QueryMetadata metadata) {
-        super(connProvider, configuration, metadata);
-    }
+  public AbstractSQLServerQuery(
+      Supplier<Connection> connProvider, Configuration configuration, QueryMetadata metadata) {
+    super(connProvider, configuration, metadata);
+  }
 
-    /**
-     * Set the table hints
-     *
-     * @param tableHints table hints
-     * @return the current object
-     */
-    public C tableHints(SQLServerTableHints... tableHints) {
-        if (tableHints.length > 0) {
-            String hints = SQLServerGrammar.tableHints(tableHints);
-            addJoinFlag(hints, JoinFlag.Position.BEFORE_CONDITION);
-        }
-        return (C) this;
+  /**
+   * Set the table hints
+   *
+   * @param tableHints table hints
+   * @return the current object
+   */
+  public C tableHints(SQLServerTableHints... tableHints) {
+    if (tableHints.length > 0) {
+      String hints = SQLServerGrammar.tableHints(tableHints);
+      addJoinFlag(hints, JoinFlag.Position.BEFORE_CONDITION);
     }
+    return (C) this;
+  }
 }

@@ -16,51 +16,46 @@ package com.querydsl.apt.domain;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Collection;
-
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
-
+import java.util.Collection;
 import org.junit.Test;
 
 public class EmbeddableInterfaceTest {
 
-    @Entity
-    public static class EntityClass {
+  @Entity
+  public static class EntityClass {
 
-        @ElementCollection(targetClass = EmbeddableClass.class)
-        Collection<EmbeddableInterface> children;
+    @ElementCollection(targetClass = EmbeddableClass.class)
+    Collection<EmbeddableInterface> children;
+  }
 
+  @Embeddable
+  public interface EmbeddableInterface {
+
+    String getName();
+  }
+
+  @Embeddable
+  public static class EmbeddableClass implements EmbeddableInterface {
+
+    @Override
+    public String getName() {
+      return null;
     }
+  }
 
-    @Embeddable
-    public interface EmbeddableInterface {
+  @Test
+  public void type() {
+    assertEquals(
+        QEmbeddableInterfaceTest_EmbeddableInterface.class,
+        QEmbeddableInterfaceTest_EntityClass.entityClass.children.any().getClass());
+  }
 
-        String getName();
-    }
-
-    @Embeddable
-    public static class EmbeddableClass implements EmbeddableInterface {
-
-        @Override
-        public String getName() {
-            return null;
-        }
-
-    }
-
-    @Test
-    public void type() {
-        assertEquals(
-                QEmbeddableInterfaceTest_EmbeddableInterface.class,
-                QEmbeddableInterfaceTest_EntityClass.entityClass.children.any().getClass());
-    }
-
-    @Test
-    public void properties() {
-        assertNotNull(QEmbeddableInterfaceTest_EmbeddableInterface.embeddableInterface.name);
-        assertNotNull(QEmbeddableInterfaceTest_EmbeddableClass.embeddableClass.name);
-    }
-
+  @Test
+  public void properties() {
+    assertNotNull(QEmbeddableInterfaceTest_EmbeddableInterface.embeddableInterface.name);
+    assertNotNull(QEmbeddableInterfaceTest_EmbeddableClass.embeddableClass.name);
+  }
 }

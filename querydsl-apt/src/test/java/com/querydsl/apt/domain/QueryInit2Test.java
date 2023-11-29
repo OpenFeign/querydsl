@@ -15,46 +15,43 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
+import org.junit.Test;
 
 public class QueryInit2Test {
 
-    @QueryEntity
-    public static class Categorization {
+  @QueryEntity
+  public static class Categorization {
 
-        @QueryInit("account.owner")
-        Event event;
-    }
+    @QueryInit("account.owner")
+    Event event;
+  }
 
-    @QueryEntity
-    public static class Event {
+  @QueryEntity
+  public static class Event {
 
-        Account account;
-    }
+    Account account;
+  }
 
-    @QueryEntity
-    public static class Activation extends Event {
+  @QueryEntity
+  public static class Activation extends Event {}
 
-    }
+  @QueryEntity
+  public static class Account {
 
-    @QueryEntity
-    public static class Account {
+    Owner owner;
+  }
 
-        Owner owner;
-    }
+  @QueryEntity
+  public static class Owner {}
 
-    @QueryEntity
-    public static class Owner {
-
-    }
-
-    @Test
-    public void long_path() {
-        assertNotNull(QQueryInit2Test_Categorization.categorization.event.account.owner);
-        assertNotNull(QQueryInit2Test_Categorization.categorization.event.as(QQueryInit2Test_Activation.class).account.owner);
-    }
-
+  @Test
+  public void long_path() {
+    assertNotNull(QQueryInit2Test_Categorization.categorization.event.account.owner);
+    assertNotNull(
+        QQueryInit2Test_Categorization.categorization.event.as(QQueryInit2Test_Activation.class)
+            .account
+            .owner);
+  }
 }

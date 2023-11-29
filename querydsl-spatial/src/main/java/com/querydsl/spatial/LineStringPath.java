@@ -13,72 +13,69 @@
  */
 package com.querydsl.spatial;
 
+import com.querydsl.core.types.*;
 import java.lang.reflect.AnnotatedElement;
-
 import org.geolatte.geom.LineString;
 
-import com.querydsl.core.types.*;
-
 /**
- * {@code LineStringPath} extends {@link LineStringExpression} to implement the
- * {@link Path} interface
+ * {@code LineStringPath} extends {@link LineStringExpression} to implement the {@link Path}
+ * interface
  *
  * @author tiwe
- *
  * @param <T>
  */
-public class LineStringPath<T extends LineString> extends LineStringExpression<T> implements Path<T> {
+public class LineStringPath<T extends LineString> extends LineStringExpression<T>
+    implements Path<T> {
 
-    private static final long serialVersionUID = 312776751843333543L;
+  private static final long serialVersionUID = 312776751843333543L;
 
-    private final PathImpl<T> pathMixin;
+  private final PathImpl<T> pathMixin;
 
-    @SuppressWarnings("unchecked")
-    public LineStringPath(Path<?> parent, String property) {
-        this((Class<? extends T>) LineString.class, parent, property);
-    }
+  @SuppressWarnings("unchecked")
+  public LineStringPath(Path<?> parent, String property) {
+    this((Class<? extends T>) LineString.class, parent, property);
+  }
 
-    public LineStringPath(Class<? extends T> type, Path<?> parent, String property) {
-        this(type, PathMetadataFactory.forProperty(parent, property));
-    }
+  public LineStringPath(Class<? extends T> type, Path<?> parent, String property) {
+    this(type, PathMetadataFactory.forProperty(parent, property));
+  }
 
-    @SuppressWarnings("unchecked")
-    public LineStringPath(PathMetadata metadata) {
-        this((Class<? extends T>) LineString.class, metadata);
-    }
+  @SuppressWarnings("unchecked")
+  public LineStringPath(PathMetadata metadata) {
+    this((Class<? extends T>) LineString.class, metadata);
+  }
 
-    public LineStringPath(Class<? extends T> type, PathMetadata metadata) {
-        super(ExpressionUtils.path(type, metadata));
-        this.pathMixin = (PathImpl<T>) mixin;
-    }
+  public LineStringPath(Class<? extends T> type, PathMetadata metadata) {
+    super(ExpressionUtils.path(type, metadata));
+    this.pathMixin = (PathImpl<T>) mixin;
+  }
 
-    @SuppressWarnings("unchecked")
-    public LineStringPath(String var) {
-        this((Class<? extends T>) LineString.class, PathMetadataFactory.forVariable(var));
-    }
+  @SuppressWarnings("unchecked")
+  public LineStringPath(String var) {
+    this((Class<? extends T>) LineString.class, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(pathMixin, context);
-    }
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(pathMixin, context);
+  }
 
-    public LineStringPath(Class<? extends T> type, String var) {
-        this(type, PathMetadataFactory.forVariable(var));
-    }
+  public LineStringPath(Class<? extends T> type, String var) {
+    this(type, PathMetadataFactory.forVariable(var));
+  }
 
-    @Override
-    public PathMetadata getMetadata() {
-        return pathMixin.getMetadata();
-    }
+  @Override
+  public PathMetadata getMetadata() {
+    return pathMixin.getMetadata();
+  }
 
-    @Override
-    public Path<?> getRoot() {
-        return pathMixin.getRoot();
-    }
+  @Override
+  public Path<?> getRoot() {
+    return pathMixin.getRoot();
+  }
 
-    @Override
-    public AnnotatedElement getAnnotatedElement() {
-        return pathMixin.getAnnotatedElement();
-    }
-
+  @Override
+  public AnnotatedElement getAnnotatedElement() {
+    return pathMixin.getAnnotatedElement();
+  }
 }

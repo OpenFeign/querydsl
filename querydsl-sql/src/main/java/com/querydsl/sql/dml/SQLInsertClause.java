@@ -13,43 +13,55 @@
  */
 package com.querydsl.sql.dml;
 
-import java.sql.Connection;
-import java.util.function.Supplier;
-
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.SQLTemplates;
+import java.sql.Connection;
+import java.util.function.Supplier;
 
 /**
- * SQLInsertClause defines an INSERT INTO clause
- * If you need to subtype this, use {@link AbstractSQLInsertClause} instead.
+ * SQLInsertClause defines an INSERT INTO clause If you need to subtype this, use {@link
+ * AbstractSQLInsertClause} instead.
  *
  * @author tiwe
- *
  */
 public class SQLInsertClause extends AbstractSQLInsertClause<SQLInsertClause> {
-    public SQLInsertClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
-        this(connection, new Configuration(templates), entity);
-    }
+  public SQLInsertClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
+    this(connection, new Configuration(templates), entity);
+  }
 
-    public SQLInsertClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity, SQLQuery<?> subQuery) {
-        this(connection, new Configuration(templates), entity, subQuery);
-    }
+  public SQLInsertClause(
+      Connection connection,
+      SQLTemplates templates,
+      RelationalPath<?> entity,
+      SQLQuery<?> subQuery) {
+    this(connection, new Configuration(templates), entity, subQuery);
+  }
 
-    public SQLInsertClause(Connection connection, Configuration configuration, RelationalPath<?> entity, SQLQuery<?> subQuery) {
-        super(connection, configuration, entity, subQuery);
-    }
+  public SQLInsertClause(
+      Connection connection,
+      Configuration configuration,
+      RelationalPath<?> entity,
+      SQLQuery<?> subQuery) {
+    super(connection, configuration, entity, subQuery);
+  }
 
-    public SQLInsertClause(Connection connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-    }
+  public SQLInsertClause(
+      Connection connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+  }
 
-    public SQLInsertClause(Supplier<Connection> connection, Configuration configuration, RelationalPath<?> entity, SQLQuery<?> subQuery) {
-        super(connection, configuration, entity, subQuery);
-    }
+  public SQLInsertClause(
+      Supplier<Connection> connection,
+      Configuration configuration,
+      RelationalPath<?> entity,
+      SQLQuery<?> subQuery) {
+    super(connection, configuration, entity, subQuery);
+  }
 
-    public SQLInsertClause(Supplier<Connection> connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-    }
+  public SQLInsertClause(
+      Supplier<Connection> connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+  }
 }

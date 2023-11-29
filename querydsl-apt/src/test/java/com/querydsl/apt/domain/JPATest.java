@@ -13,32 +13,28 @@
  */
 package com.querydsl.apt.domain;
 
+import com.querydsl.core.types.dsl.StringPath;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
-
 import org.junit.Test;
-
-import com.querydsl.core.types.dsl.StringPath;
 
 public class JPATest extends AbstractTest {
 
-    @Entity
-    public static class JPAEntity {
+  @Entity
+  public static class JPAEntity {
 
-        String prop;
+    String prop;
 
-        @Transient
-        String skipped;
+    @Transient String skipped;
 
-        @Transient
-        JDOTest.JDOEntity skippedEntity;
-    }
+    @Transient JDOTest.JDOEntity skippedEntity;
+  }
 
-    @Test
-    public void test() throws SecurityException, NoSuchFieldException {
-        start(QJPATest_JPAEntity.class, QJPATest_JPAEntity.jPAEntity);
-        match(StringPath.class, "prop");
-        assertMissing("skipped");
-        assertMissing("skippedEntity");
-    }
+  @Test
+  public void test() throws SecurityException, NoSuchFieldException {
+    start(QJPATest_JPAEntity.class, QJPATest_JPAEntity.jPAEntity);
+    match(StringPath.class, "prop");
+    assertMissing("skipped");
+    assertMissing("skippedEntity");
+  }
 }

@@ -24,47 +24,43 @@ import org.jetbrains.annotations.Nullable;
  * A MultiCurve is a 1-dimensional GeometryCollection whose elements are Curves.
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class MultiCurveExpression<T extends AbstractGeometryCollection> extends AbstractGeometryCollectionExpression<T> {
+public abstract class MultiCurveExpression<T extends AbstractGeometryCollection>
+    extends AbstractGeometryCollectionExpression<T> {
 
-    private static final long serialVersionUID = 6983316799469849656L;
+  private static final long serialVersionUID = 6983316799469849656L;
 
-    @Nullable
-    private transient volatile BooleanExpression closed;
+  @Nullable private transient volatile BooleanExpression closed;
 
-    @Nullable
-    private transient volatile NumberExpression<Double> length;
+  @Nullable private transient volatile NumberExpression<Double> length;
 
-    public MultiCurveExpression(Expression<T> mixin) {
-        super(mixin);
+  public MultiCurveExpression(Expression<T> mixin) {
+    super(mixin);
+  }
+
+  /**
+   * Returns 1 (TRUE) if this MultiCurve is closed [StartPoint ( ) = EndPoint ( ) for each Curve in
+   * this MultiCurve].
+   *
+   * @return closed
+   */
+  public BooleanExpression isClosed() {
+    if (closed == null) {
+      closed = Expressions.booleanOperation(SpatialOps.IS_CLOSED, mixin);
     }
+    return closed;
+  }
 
-    /**
-     * Returns 1 (TRUE) if this MultiCurve is closed [StartPoint ( ) = EndPoint ( ) for each
-     * Curve in this MultiCurve].
-     *
-     * @return closed
-     */
-    public BooleanExpression isClosed() {
-        if (closed == null) {
-            closed = Expressions.booleanOperation(SpatialOps.IS_CLOSED, mixin);
-        }
-        return closed;
+  /**
+   * The Length of this MultiCurve which is equal to the sum of the lengths of the element Curves.
+   *
+   * @return length
+   */
+  public NumberExpression<Double> length() {
+    if (length == null) {
+      length = Expressions.numberOperation(Double.class, SpatialOps.LENGTH, mixin);
     }
-
-    /**
-     * The Length of this MultiCurve which is equal to the sum of the lengths of the element
-     * Curves.
-     *
-     * @return length
-     */
-    public NumberExpression<Double> length() {
-        if (length == null) {
-            length = Expressions.numberOperation(Double.class, SpatialOps.LENGTH, mixin);
-        }
-        return length;
-    }
-
+    return length;
+  }
 }

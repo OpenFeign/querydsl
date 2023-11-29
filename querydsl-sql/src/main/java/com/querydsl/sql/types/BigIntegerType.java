@@ -24,33 +24,30 @@ import java.sql.Types;
  * {@code BigIntegerType} maps BigInteger to BigDecimal on the JDBC level
  *
  * @author tiwe
- *
  */
 public class BigIntegerType extends AbstractType<BigInteger> {
 
-    public BigIntegerType() {
-        super(Types.NUMERIC);
-    }
+  public BigIntegerType() {
+    super(Types.NUMERIC);
+  }
 
-    public BigIntegerType(int type) {
-        super(type);
-    }
+  public BigIntegerType(int type) {
+    super(type);
+  }
 
-    @Override
-    public BigInteger getValue(ResultSet rs, int startIndex) throws SQLException {
-        BigDecimal bd = rs.getBigDecimal(startIndex);
-        return bd != null ? bd.toBigInteger() : null;
-    }
+  @Override
+  public BigInteger getValue(ResultSet rs, int startIndex) throws SQLException {
+    BigDecimal bd = rs.getBigDecimal(startIndex);
+    return bd != null ? bd.toBigInteger() : null;
+  }
 
-    @Override
-    public Class<BigInteger> getReturnedClass() {
-        return BigInteger.class;
-    }
+  @Override
+  public Class<BigInteger> getReturnedClass() {
+    return BigInteger.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, BigInteger value)
-            throws SQLException {
-        st.setBigDecimal(startIndex, new BigDecimal(value));
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, BigInteger value) throws SQLException {
+    st.setBigDecimal(startIndex, new BigDecimal(value));
+  }
 }

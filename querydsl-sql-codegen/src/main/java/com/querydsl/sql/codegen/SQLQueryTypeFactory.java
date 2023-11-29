@@ -13,57 +13,51 @@
  */
 package com.querydsl.sql.codegen;
 
+import com.querydsl.codegen.QueryTypeFactory;
+import com.querydsl.codegen.utils.model.SimpleType;
+import com.querydsl.codegen.utils.model.Type;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import com.querydsl.codegen.utils.model.SimpleType;
-import com.querydsl.codegen.utils.model.Type;
-import com.querydsl.codegen.QueryTypeFactory;
-
 /**
- * {@code SQLQueryTypeFactory} is a {@link QueryTypeFactory} implementation with configuration
- * data from this module
+ * {@code SQLQueryTypeFactory} is a {@link QueryTypeFactory} implementation with configuration data
+ * from this module
  *
  * @author tiwe
- *
  */
 public final class SQLQueryTypeFactory implements QueryTypeFactory {
 
-    private final String packageName, beanPackageName;
+  private final String packageName, beanPackageName;
+  private final int stripStart, stripEnd;
+  private final String prefix, suffix;
 
-    private final int stripStart, stripEnd;
+  private final boolean replacePackage;
 
-    private final String prefix, suffix;
+  @Inject
+  public SQLQueryTypeFactory(
+      @Named(SQLCodegenModule.PACKAGE_NAME) String packageName,
+      @Named(SQLCodegenModule.BEAN_PACKAGE_NAME) String beanPackageName,
+      @Named(SQLCodegenModule.BEAN_PREFIX) String beanPrefix,
+      @Named(SQLCodegenModule.BEAN_SUFFIX) String beanSuffix,
+      @Named(SQLCodegenModule.PREFIX) String prefix,
+      @Named(SQLCodegenModule.SUFFIX) String suffix) {
+    this.packageName = packageName;
+    this.beanPackageName = beanPackageName;
+    this.replacePackage = !packageName.equals(beanPackageName);
+    this.stripStart = beanPrefix.length();
+    this.stripEnd = beanSuffix.length();
+    this.prefix = prefix;
+    this.suffix = suffix;
+  }
 
-    private final boolean replacePackage;
-
-    @Inject
-    public SQLQueryTypeFactory(
-            @Named(SQLCodegenModule.PACKAGE_NAME) String packageName,
-            @Named(SQLCodegenModule.BEAN_PACKAGE_NAME) String beanPackageName,
-            @Named(SQLCodegenModule.BEAN_PREFIX) String beanPrefix,
-            @Named(SQLCodegenModule.BEAN_SUFFIX) String beanSuffix,
-            @Named(SQLCodegenModule.PREFIX) String prefix,
-            @Named(SQLCodegenModule.SUFFIX) String suffix) {
-        this.packageName = packageName;
-        this.beanPackageName = beanPackageName;
-        this.replacePackage = !packageName.equals(beanPackageName);
-        this.stripStart = beanPrefix.length();
-        this.stripEnd = beanSuffix.length();
-        this.prefix = prefix;
-        this.suffix = suffix;
+  @Override
+  public Type create(Type type) {
+    String packageName = type.getPackageName();
+    if (replacePackage) {
+      packageName = this.packageName + packageName.substring(beanPackageName.length());
     }
-
-    @Override
-    public Type create(Type type) {
-        String packageName = type.getPackageName();
-        if (replacePackage) {
-            packageName = this.packageName + packageName.substring(beanPackageName.length());
-        }
-        String simpleName = type.getSimpleName();
-        simpleName = prefix + simpleName.substring(stripStart, simpleName.length() - stripEnd) + suffix;
-        return new SimpleType(packageName + "." + simpleName, packageName, simpleName);
-    }
-
-
+    String simpleName = type.getSimpleName();
+    simpleName = prefix + simpleName.substring(stripStart, simpleName.length() - stripEnd) + suffix;
+    return new SimpleType(packageName + "." + simpleName, packageName, simpleName);
+  }
 }

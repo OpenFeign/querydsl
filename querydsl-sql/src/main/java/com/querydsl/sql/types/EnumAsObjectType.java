@@ -22,37 +22,34 @@ import java.sql.Types;
  * {@code EnumAsObjectType} maps Enum types to Object on the JDBC level
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class EnumAsObjectType<T extends Enum<T>> extends AbstractType<T> {
 
-    private final Class<T> type;
+  private final Class<T> type;
 
-    public EnumAsObjectType(Class<T> type) {
-        this(Types.OTHER, type);
-    }
+  public EnumAsObjectType(Class<T> type) {
+    this(Types.OTHER, type);
+  }
 
-    public EnumAsObjectType(int jdbcType, Class<T> type) {
-        super(jdbcType);
-        this.type = type;
-    }
+  public EnumAsObjectType(int jdbcType, Class<T> type) {
+    super(jdbcType);
+    this.type = type;
+  }
 
-    @Override
-    public Class<T> getReturnedClass() {
-        return type;
-    }
+  @Override
+  public Class<T> getReturnedClass() {
+    return type;
+  }
 
-    @Override
-    public T getValue(ResultSet rs, int startIndex) throws SQLException {
-        String name = rs.getString(startIndex);
-        return name != null ? Enum.valueOf(type, name) : null;
-    }
+  @Override
+  public T getValue(ResultSet rs, int startIndex) throws SQLException {
+    String name = rs.getString(startIndex);
+    return name != null ? Enum.valueOf(type, name) : null;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, T value) throws SQLException {
-        st.setObject(startIndex, value.name(), Types.OTHER);
-
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, T value) throws SQLException {
+    st.setObject(startIndex, value.name(), Types.OTHER);
+  }
 }

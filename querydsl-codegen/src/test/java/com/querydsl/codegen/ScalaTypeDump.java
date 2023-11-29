@@ -13,60 +13,57 @@
  */
 package com.querydsl.codegen;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.querydsl.codegen.utils.ScalaWriter;
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Parameter;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.*;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class ScalaTypeDump {
 
-    @Test
-    @Ignore
-    public void test() throws IOException {
-        List<Class<?>> classes = new ArrayList<Class<?>>();
-        classes.add(SimpleExpression.class);
-        classes.add(ComparableExpression.class);
-        classes.add(BooleanExpression.class);
-        classes.add(StringExpression.class);
-        classes.add(TemporalExpression.class);
-        classes.add(TimeExpression.class);
-        classes.add(DateTimeExpression.class);
-        classes.add(DateExpression.class);
-        classes.add(EnumExpression.class);
-        classes.add(NumberExpression.class);
+  @Test
+  @Ignore
+  public void test() throws IOException {
+    List<Class<?>> classes = new ArrayList<Class<?>>();
+    classes.add(SimpleExpression.class);
+    classes.add(ComparableExpression.class);
+    classes.add(BooleanExpression.class);
+    classes.add(StringExpression.class);
+    classes.add(TemporalExpression.class);
+    classes.add(TimeExpression.class);
+    classes.add(DateTimeExpression.class);
+    classes.add(DateExpression.class);
+    classes.add(EnumExpression.class);
+    classes.add(NumberExpression.class);
 
-        StringWriter w = new StringWriter();
-        ScalaWriter writer = new ScalaWriter(w);
-        writer.packageDecl("com.querydsl.scala");
-        writer.imports(Expression.class.getPackage());
-        for (Class<?> cl : classes) {
-            Type type = new ClassType(cl);
-            Type superClass = new ClassType(cl.getSuperclass());
-            writer.beginClass(type, superClass);
-            for (Method m : cl.getDeclaredMethods()) {
-                List<Parameter> params = new ArrayList<Parameter>();
-                for (Class<?> paramType : m.getParameterTypes()) {
-                    params.add(new Parameter("arg" + params.size(), new ClassType(paramType)));
-                }
-                Type returnType = new ClassType(m.getReturnType());
-                writer.beginPublicMethod(returnType, ":" + m.getName(), params.toArray(new Parameter[0]));
-                writer.end();
-            }
-            writer.end();
+    StringWriter w = new StringWriter();
+    ScalaWriter writer = new ScalaWriter(w);
+    writer.packageDecl("com.querydsl.scala");
+    writer.imports(Expression.class.getPackage());
+    for (Class<?> cl : classes) {
+      Type type = new ClassType(cl);
+      Type superClass = new ClassType(cl.getSuperclass());
+      writer.beginClass(type, superClass);
+      for (Method m : cl.getDeclaredMethods()) {
+        List<Parameter> params = new ArrayList<Parameter>();
+        for (Class<?> paramType : m.getParameterTypes()) {
+          params.add(new Parameter("arg" + params.size(), new ClassType(paramType)));
         }
-
-        System.out.println(w);
+        Type returnType = new ClassType(m.getReturnType());
+        writer.beginPublicMethod(returnType, ":" + m.getName(), params.toArray(new Parameter[0]));
+        writer.end();
+      }
+      writer.end();
     }
 
+    System.out.println(w);
+  }
 }

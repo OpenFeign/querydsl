@@ -11,14 +11,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ TYPE })
+@Target({TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Annotation {
 
-    boolean prop1() default false;
+  boolean prop1() default false;
 
-    boolean prop2();
+  boolean prop2();
 
-    Class<?> clazz();
-
+  Class<?> clazz();
 }

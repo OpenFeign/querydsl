@@ -13,6 +13,11 @@
  */
 package com.querydsl.core.alias;
 
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.util.StringUtils;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
@@ -21,19 +26,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.jetbrains.annotations.Nullable;
-
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.*;
-import com.querydsl.core.util.StringUtils;
 
 /**
  * {@code Alias} provides alias factory methods
  *
- * <p>Example:</p>
+ * <p>Example:
  *
  * <pre>{@code
  * Employee e = alias(Employee.class, "e");
@@ -41,9 +39,10 @@ import com.querydsl.core.util.StringUtils;
  *     .where($(e.getDepartment().getId()).eq(1001))
  *     .list($(e.getName()))) {
  *     System.out.println(name);
- * }}</pre>
+ * }
+ * }</pre>
  *
- * <p>using the following static imports</p>
+ * <p>using the following static imports
  *
  * <pre>{@code
  * import static com.mysema.query.alias.Alias.$;
@@ -55,423 +54,422 @@ import com.querydsl.core.util.StringUtils;
 @SuppressWarnings("PMD")
 public final class Alias {
 
-    private static final AliasFactory aliasFactory = new AliasFactory(new DefaultPathFactory(), new DefaultTypeSystem());
+  private static final AliasFactory aliasFactory =
+      new AliasFactory(new DefaultPathFactory(), new DefaultTypeSystem());
 
-    private static final SimplePath<Object> it = Expressions.path(Object.class, "it");
+  private static final SimplePath<Object> it = Expressions.path(Object.class, "it");
 
-    // exclude $-methods from Checkstyle checks
-    //CHECKSTYLE:OFF
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param <D>
-     * @return expression
-     */
-    public static <D extends Expression<?>> D $() {
-        return aliasFactory.getCurrentAndReset();
+  // exclude $-methods from Checkstyle checks
+  // CHECKSTYLE:OFF
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param <D>
+   * @return expression
+   */
+  public static <D extends Expression<?>> D $() {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @param <D>
+   * @return expression
+   */
+  public static <D> ArrayPath<D[], D> $(D[] arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static NumberPath<BigDecimal> $(BigDecimal arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static NumberPath<BigInteger> $(BigInteger arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static BooleanPath $(Boolean arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static NumberPath<Byte> $(Byte arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @param <T>
+   * @return expression
+   */
+  public static <T extends Enum<T>> EnumPath<T> $(T arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @param <D>
+   * @return expression
+   */
+  @SuppressWarnings("unchecked")
+  public static <D> CollectionPath<D, SimpleExpression<D>> $(Collection<D> arg) {
+    final Object current = aliasFactory.getCurrentAndReset();
+    if (arg instanceof CollectionPath) {
+      return (CollectionPath<D, SimpleExpression<D>>) arg; // NOSONAR
+    } else if (arg instanceof ManagedObject) {
+      return (CollectionPath<D, SimpleExpression<D>>) ((ManagedObject) arg).__mappedPath();
+    } else {
+      return (CollectionPath<D, SimpleExpression<D>>) current;
     }
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @param <D>
-     * @return expression
-     */
-    public static <D> ArrayPath<D[], D> $(D[] arg) {
-        return aliasFactory.getCurrentAndReset();
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @param <D>
+   * @return expression
+   */
+  public static <D extends Comparable<?>> ComparablePath<D> $(D arg) {
+    return Alias.getPath(arg);
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static NumberPath<Double> $(Double arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static NumberPath<Float> $(Float arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static NumberPath<Integer> $(Integer arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static DatePath<java.sql.Date> $(java.sql.Date arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static DateTimePath<java.util.Date> $(java.util.Date arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @param <D>
+   * @return expression
+   */
+  @SuppressWarnings("unchecked")
+  public static <D> ListPath<D, SimpleExpression<D>> $(List<D> arg) {
+    final Object current = aliasFactory.getCurrentAndReset();
+    if (arg instanceof ListPath) {
+      return (ListPath<D, SimpleExpression<D>>) arg; // NOSONAR
+    } else if (arg instanceof ManagedObject) {
+      return (ListPath<D, SimpleExpression<D>>) ((ManagedObject) arg).__mappedPath();
+    } else {
+      return (ListPath<D, SimpleExpression<D>>) current;
     }
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static NumberPath<BigDecimal> $(BigDecimal arg) {
-        return aliasFactory.getCurrentAndReset();
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static NumberPath<Long> $(Long arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @param <K>
+   * @param <V>
+   * @return expression
+   */
+  @SuppressWarnings("unchecked")
+  public static <K, V> MapPath<K, V, SimpleExpression<V>> $(Map<K, V> arg) {
+    final Object current = aliasFactory.getCurrentAndReset();
+    if (arg instanceof MapPath) {
+      return (MapPath<K, V, SimpleExpression<V>>) arg; // NOSONAR
+    } else if (arg instanceof ManagedObject) {
+      return (MapPath<K, V, SimpleExpression<V>>) ((ManagedObject) arg).__mappedPath();
+    } else {
+      return (MapPath<K, V, SimpleExpression<V>>) current;
     }
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static NumberPath<BigInteger> $(BigInteger arg) {
-        return aliasFactory.getCurrentAndReset();
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @param <D>
+   * @return expression
+   */
+  @SuppressWarnings("unchecked")
+  public static <D> SetPath<D, SimpleExpression<D>> $(Set<D> arg) {
+    final Object current = aliasFactory.getCurrentAndReset();
+    if (arg instanceof SetPath) {
+      return (SetPath<D, SimpleExpression<D>>) arg; // NOSONAR
+    } else if (arg instanceof ManagedObject) {
+      return (SetPath<D, SimpleExpression<D>>) ((ManagedObject) arg).__mappedPath();
+    } else {
+      return (SetPath<D, SimpleExpression<D>>) current;
     }
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static BooleanPath $(Boolean arg) {
-        return aliasFactory.getCurrentAndReset();
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static NumberPath<Short> $(Short arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static StringPath $(String arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static TimePath<Time> $(Time arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static DateTimePath<Timestamp> $(Timestamp arg) {
+    return aliasFactory.getCurrentAndReset();
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param arg alias
+   * @param <D>
+   * @return expression
+   */
+  @SuppressWarnings("unchecked")
+  @Nullable
+  public static <D> EntityPathBase<D> $(D arg) {
+    final Object current = aliasFactory.getCurrentAndReset();
+    if (arg instanceof EntityPath<?>) {
+      return (EntityPathBase<D>) arg; // NOSONAR
+    } else if (arg instanceof ManagedObject) {
+      return (EntityPathBase<D>) ((ManagedObject) arg).__mappedPath();
+    } else {
+      return (EntityPathBase<D>) current;
     }
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static NumberPath<Byte> $(Byte arg) {
-        return aliasFactory.getCurrentAndReset();
+  @SuppressWarnings("unchecked")
+  @Nullable
+  private static <D, P extends Path<D>> P getPath(D arg) {
+    final Object current = aliasFactory.getCurrentAndReset();
+    if (arg instanceof Path<?>) {
+      return (P) arg;
+    } else if (arg instanceof ManagedObject) {
+      return (P) ((ManagedObject) arg).__mappedPath();
+    } else {
+      return (P) current;
     }
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @param <T>
-     * @return expression
-     */
-    public static <T extends Enum<T>> EnumPath<T> $(T arg) {
-        return aliasFactory.getCurrentAndReset();
+  // CHECKSTYLE:ON
+
+  /**
+   * Create a new alias proxy of the given type
+   *
+   * @param cl type of the alias
+   * @return alias instance
+   */
+  public static <A> A alias(Class<A> cl) {
+    return alias(cl, StringUtils.uncapitalize(cl.getSimpleName()));
+  }
+
+  /**
+   * Create a new alias proxy of the given type for the given expression
+   *
+   * @param cl type of the alias
+   * @param expr underlying expression
+   * @return alias instance
+   */
+  public static <A> A alias(Class<A> cl, Expression<? extends A> expr) {
+    return aliasFactory.createAliasForExpr(cl, expr);
+  }
+
+  /**
+   * Create a new alias proxy of the given type for the given variable
+   *
+   * @param cl type of the alias
+   * @param var variable name for the underlying expression
+   * @return alias instance
+   */
+  public static <A> A alias(Class<A> cl, String var) {
+    return aliasFactory.createAliasForVariable(cl, var);
+  }
+
+  /**
+   * Convert the given alias to an expression
+   *
+   * @param <D>
+   * @param arg alias instance
+   * @return underlying expression
+   */
+  @SuppressWarnings("unchecked")
+  public static <D> Expression<D> getAny(D arg) {
+    Object current = aliasFactory.getCurrentAndReset();
+    if (arg instanceof ManagedObject) {
+      return (Expression<D>) ((ManagedObject) arg).__mappedPath();
+    } else if (current != null) {
+      return (Expression<D>) current;
+    } else {
+      throw new IllegalArgumentException("No path mapped to " + arg);
     }
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @param <D>
-     * @return expression
-     */
-    @SuppressWarnings("unchecked")
-    public static <D> CollectionPath<D, SimpleExpression<D>> $(Collection<D> arg) {
-        final Object current = aliasFactory.getCurrentAndReset();
-        if (arg instanceof CollectionPath) {
-            return (CollectionPath<D, SimpleExpression<D>>) arg; //NOSONAR
-        } else if (arg instanceof ManagedObject) {
-            return (CollectionPath<D, SimpleExpression<D>>) ((ManagedObject) arg).__mappedPath();
-        } else {
-            return (CollectionPath<D, SimpleExpression<D>>) current;
-        }
-    }
+  /** Reset the alias */
+  public static void resetAlias() {
+    aliasFactory.reset();
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @param <D>
-     * @return expression
-     */
-    public static <D extends Comparable<?>> ComparablePath<D> $(D arg) {
-        return Alias.getPath(arg);
-    }
+  /**
+   * Return the default variable
+   *
+   * @param <D>
+   * @return expression
+   */
+  @SuppressWarnings("unchecked")
+  public static <D> SimplePath<D> var() {
+    return (SimplePath<D>) it;
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static NumberPath<Double> $(Double arg) {
-        return aliasFactory.getCurrentAndReset();
-    }
+  /**
+   * Create a new variable path
+   *
+   * @param arg alias
+   * @param <D>
+   * @return expression
+   */
+  @SuppressWarnings("unchecked")
+  public static <D extends Comparable<?>> ComparablePath<D> var(D arg) {
+    return Expressions.comparablePath((Class<D>) arg.getClass(), "var" + arg);
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static NumberPath<Float> $(Float arg) {
-        return aliasFactory.getCurrentAndReset();
-    }
+  /**
+   * Create a new variable path
+   *
+   * @param arg alias
+   * @param <D>
+   * @return expression
+   */
+  @SuppressWarnings("unchecked")
+  public static <D extends Number & Comparable<D>> NumberPath<D> var(D arg) {
+    return Expressions.numberPath(
+        (Class<D>) arg.getClass(), "var" + arg.getClass().getSimpleName() + arg);
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static NumberPath<Integer> $(Integer arg) {
-        return aliasFactory.getCurrentAndReset();
-    }
+  /**
+   * Create a new variable path
+   *
+   * @param arg alias
+   * @param <D>
+   * @return expression
+   */
+  @SuppressWarnings("unchecked")
+  public static <D> EntityPathBase<D> var(D arg) {
+    String var = "var" + arg.getClass().getSimpleName() + "_" + arg.toString().replace(' ', '_');
+    return new PathBuilder<D>((Class) arg.getClass(), var);
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static DatePath<java.sql.Date> $(java.sql.Date arg) {
-        return aliasFactory.getCurrentAndReset();
-    }
+  /**
+   * Create a new variable path
+   *
+   * @param arg alias
+   * @return expression
+   */
+  public static StringPath var(String arg) {
+    return Expressions.stringPath(arg.replace(' ', '_'));
+  }
 
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static DateTimePath<java.util.Date> $(java.util.Date arg) {
-        return aliasFactory.getCurrentAndReset();
-    }
-
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @param <D>
-     * @return expression
-     */
-    @SuppressWarnings("unchecked")
-    public static <D> ListPath<D, SimpleExpression<D>> $(List<D> arg) {
-        final Object current = aliasFactory.getCurrentAndReset();
-        if (arg instanceof ListPath) {
-            return (ListPath<D, SimpleExpression<D>>) arg; //NOSONAR
-        } else if (arg instanceof ManagedObject) {
-            return (ListPath<D, SimpleExpression<D>>) ((ManagedObject) arg).__mappedPath();
-        } else {
-            return (ListPath<D, SimpleExpression<D>>) current;
-        }
-    }
-
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static NumberPath<Long> $(Long arg) {
-        return aliasFactory.getCurrentAndReset();
-    }
-
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @param <K>
-     * @param <V>
-     * @return expression
-     */
-    @SuppressWarnings("unchecked")
-    public static <K, V> MapPath<K, V, SimpleExpression<V>> $(Map<K, V> arg) {
-        final Object current = aliasFactory.getCurrentAndReset();
-        if (arg instanceof MapPath) {
-            return (MapPath<K, V, SimpleExpression<V>>) arg; //NOSONAR
-        } else if (arg instanceof ManagedObject) {
-            return (MapPath<K, V, SimpleExpression<V>>) ((ManagedObject) arg).__mappedPath();
-        } else {
-            return (MapPath<K, V, SimpleExpression<V>>) current;
-        }
-    }
-
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @param <D>
-     * @return expression
-     */
-    @SuppressWarnings("unchecked")
-    public static <D> SetPath<D, SimpleExpression<D>> $(Set<D> arg) {
-        final Object current = aliasFactory.getCurrentAndReset();
-        if (arg instanceof SetPath) {
-            return (SetPath<D, SimpleExpression<D>>) arg; //NOSONAR
-        } else if (arg instanceof ManagedObject) {
-            return (SetPath<D, SimpleExpression<D>>) ((ManagedObject) arg).__mappedPath();
-        } else {
-            return (SetPath<D, SimpleExpression<D>>) current;
-        }
-    }
-
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static NumberPath<Short> $(Short arg) {
-        return aliasFactory.getCurrentAndReset();
-    }
-
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static StringPath $(String arg) {
-        return aliasFactory.getCurrentAndReset();
-    }
-
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static TimePath<Time> $(Time arg) {
-        return aliasFactory.getCurrentAndReset();
-    }
-
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static DateTimePath<Timestamp> $(Timestamp arg) {
-        return aliasFactory.getCurrentAndReset();
-    }
-
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param arg alias
-     * @param <D>
-     * @return expression
-     */
-    @SuppressWarnings("unchecked")
-    @Nullable
-    public static <D> EntityPathBase<D> $(D arg) {
-        final Object current = aliasFactory.getCurrentAndReset();
-        if (arg instanceof EntityPath<?>) {
-            return (EntityPathBase<D>) arg; //NOSONAR
-        } else if (arg instanceof ManagedObject) {
-            return (EntityPathBase<D>) ((ManagedObject) arg).__mappedPath();
-        } else {
-            return (EntityPathBase<D>) current;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Nullable
-    private static <D, P extends Path<D>> P getPath(D arg) {
-        final Object current = aliasFactory.getCurrentAndReset();
-        if (arg instanceof Path<?>) {
-            return (P) arg;
-        } else if (arg instanceof ManagedObject) {
-            return (P) ((ManagedObject) arg).__mappedPath();
-        } else {
-            return (P) current;
-        }
-    }
-
-    //CHECKSTYLE:ON
-
-    /**
-     * Create a new alias proxy of the given type
-     *
-     * @param cl type of the alias
-     * @return alias instance
-     */
-    public static <A> A alias(Class<A> cl) {
-        return alias(cl, StringUtils.uncapitalize(cl.getSimpleName()));
-    }
-
-    /**
-     * Create a new alias proxy of the given type for the given expression
-     *
-     * @param cl type of the alias
-     * @param expr underlying expression
-     * @return alias instance
-     */
-    public static <A> A alias(Class<A> cl, Expression<? extends A> expr) {
-        return aliasFactory.createAliasForExpr(cl, expr);
-    }
-
-    /**
-     * Create a new alias proxy of the given type for the given variable
-     *
-     * @param cl type of the alias
-     * @param var variable name for the underlying expression
-     * @return alias instance
-     */
-    public static <A> A alias(Class<A> cl, String var) {
-        return aliasFactory.createAliasForVariable(cl, var);
-    }
-
-    /**
-     * Convert the given alias to an expression
-     *
-     * @param <D>
-     * @param arg alias instance
-     * @return underlying expression
-     */
-    @SuppressWarnings("unchecked")
-    public static <D> Expression<D> getAny(D arg) {
-        Object current = aliasFactory.getCurrentAndReset();
-        if (arg instanceof ManagedObject) {
-            return (Expression<D>) ((ManagedObject) arg).__mappedPath();
-        } else if (current != null) {
-            return (Expression<D>) current;
-        } else {
-            throw new IllegalArgumentException("No path mapped to " + arg);
-        }
-    }
-
-    /**
-     * Reset the alias
-     */
-    public static void resetAlias() {
-        aliasFactory.reset();
-    }
-
-    /**
-     * Return the default variable
-     *
-     * @param <D>
-     * @return expression
-     */
-    @SuppressWarnings("unchecked")
-    public static <D> SimplePath<D> var() {
-        return (SimplePath<D>) it;
-    }
-
-    /**
-     * Create a new variable path
-     *
-     * @param arg alias
-     * @param <D>
-     * @return expression
-     */
-    @SuppressWarnings("unchecked")
-    public static <D extends Comparable<?>> ComparablePath<D> var(D arg) {
-        return Expressions.comparablePath((Class<D>) arg.getClass(), "var" + arg);
-    }
-
-    /**
-     * Create a new variable path
-     *
-     * @param arg alias
-     * @param <D>
-     * @return expression
-     */
-    @SuppressWarnings("unchecked")
-    public static <D extends Number & Comparable<D>> NumberPath<D> var(D arg) {
-        return Expressions.numberPath((Class<D>) arg.getClass(), "var" + arg.getClass().getSimpleName() + arg);
-    }
-
-    /**
-     * Create a new variable path
-     *
-     * @param arg alias
-     * @param <D>
-     * @return expression
-     */
-    @SuppressWarnings("unchecked")
-    public static <D> EntityPathBase<D> var(D arg) {
-        String var = "var" + arg.getClass().getSimpleName() + "_" + arg.toString().replace(' ', '_');
-        return new PathBuilder<D>((Class) arg.getClass(), var);
-    }
-
-    /**
-     * Create a new variable path
-     *
-     * @param arg alias
-     * @return expression
-     */
-    public static StringPath var(String arg) {
-        return Expressions.stringPath(arg.replace(' ', '_'));
-    }
-
-    private Alias() { }
-
+  private Alias() {}
 }

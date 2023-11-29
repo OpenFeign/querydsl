@@ -13,103 +13,100 @@
  */
 package com.querydsl.jdo;
 
-import javax.jdo.PersistenceManager;
-
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
+import javax.jdo.PersistenceManager;
 
 /**
  * {@code JDOQuery} is the default implementation of the {@link JDOQLQuery} interface
  *
  * @author tiwe
- *
  * @param <T> result type
  */
 public class JDOQuery<T> extends AbstractJDOQuery<T, JDOQuery<T>> {
 
-    /**
-     * Create a detached {@link JDOQuery} instance
-     * The query can be attached via the clone method
-     *
-     */
-    public JDOQuery() {
-        super(null, JDOQLTemplates.DEFAULT, new DefaultQueryMetadata(), false);
-    }
+  /** Create a detached {@link JDOQuery} instance The query can be attached via the clone method */
+  public JDOQuery() {
+    super(null, JDOQLTemplates.DEFAULT, new DefaultQueryMetadata(), false);
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance
-     *
-     * @param persistenceManager PersistenceManager instance to use
-     * @param templates JDOQLTemplates to use
-     * @param detach detached results or not
-     */
-    public JDOQuery(PersistenceManager persistenceManager, JDOQLTemplates templates, boolean detach) {
-        super(persistenceManager, templates, new DefaultQueryMetadata(), detach);
-    }
+  /**
+   * Create a new {@link JDOQuery} instance
+   *
+   * @param persistenceManager PersistenceManager instance to use
+   * @param templates JDOQLTemplates to use
+   * @param detach detached results or not
+   */
+  public JDOQuery(PersistenceManager persistenceManager, JDOQLTemplates templates, boolean detach) {
+    super(persistenceManager, templates, new DefaultQueryMetadata(), detach);
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance
-     *
-     * @param persistenceManager PersistenceManager instance to use
-     * @param detach detached results or not
-     */
-    public JDOQuery(PersistenceManager persistenceManager, boolean detach) {
-        super(persistenceManager, JDOQLTemplates.DEFAULT, new DefaultQueryMetadata(), detach);
-    }
+  /**
+   * Create a new {@link JDOQuery} instance
+   *
+   * @param persistenceManager PersistenceManager instance to use
+   * @param detach detached results or not
+   */
+  public JDOQuery(PersistenceManager persistenceManager, boolean detach) {
+    super(persistenceManager, JDOQLTemplates.DEFAULT, new DefaultQueryMetadata(), detach);
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance
-     *
-     * @param persistenceManager PersistenceManager instance to use
-     */
-    public JDOQuery(PersistenceManager persistenceManager) {
-        super(persistenceManager, JDOQLTemplates.DEFAULT, new DefaultQueryMetadata(), false);
-    }
+  /**
+   * Create a new {@link JDOQuery} instance
+   *
+   * @param persistenceManager PersistenceManager instance to use
+   */
+  public JDOQuery(PersistenceManager persistenceManager) {
+    super(persistenceManager, JDOQLTemplates.DEFAULT, new DefaultQueryMetadata(), false);
+  }
 
-    /**
-     * Create a new {@link JDOQuery} instance
-     *
-     * @param persistenceManager PersistenceManager instance to use
-     * @param templates templates to use
-     * @param metadata query metadata
-     * @param detach detached results or not
-     */
-    protected JDOQuery(PersistenceManager persistenceManager, JDOQLTemplates templates,
-            QueryMetadata metadata, boolean detach) {
-        super(persistenceManager, templates, metadata, detach);
-    }
+  /**
+   * Create a new {@link JDOQuery} instance
+   *
+   * @param persistenceManager PersistenceManager instance to use
+   * @param templates templates to use
+   * @param metadata query metadata
+   * @param detach detached results or not
+   */
+  protected JDOQuery(
+      PersistenceManager persistenceManager,
+      JDOQLTemplates templates,
+      QueryMetadata metadata,
+      boolean detach) {
+    super(persistenceManager, templates, metadata, detach);
+  }
 
-    /**
-     * Clone the state of this query to a new {@link JDOQuery} instance with the given {@link PersistenceManager}
-     *
-     * @param persistenceManager PersistenceManager instance to use
-     * @return cloned query
-     */
-    @Override
-    public JDOQuery<T> clone(PersistenceManager persistenceManager) {
-        JDOQuery<T> query = new JDOQuery<T>(persistenceManager, getTemplates(),
-                getMetadata().clone(), isDetach());
-        query.fetchGroups.addAll(fetchGroups);
-        query.maxFetchDepth = maxFetchDepth;
-        return query;
-    }
+  /**
+   * Clone the state of this query to a new {@link JDOQuery} instance with the given {@link
+   * PersistenceManager}
+   *
+   * @param persistenceManager PersistenceManager instance to use
+   * @return cloned query
+   */
+  @Override
+  public JDOQuery<T> clone(PersistenceManager persistenceManager) {
+    JDOQuery<T> query =
+        new JDOQuery<T>(persistenceManager, getTemplates(), getMetadata().clone(), isDetach());
+    query.fetchGroups.addAll(fetchGroups);
+    query.maxFetchDepth = maxFetchDepth;
+    return query;
+  }
 
-    @Override
-    public <U> JDOQuery<U> select(Expression<U> expr) {
-        queryMixin.setProjection(expr);
-        @SuppressWarnings("unchecked") // This is the new projection type
-        JDOQuery<U> newType = (JDOQuery<U>) this;
-        return newType;
-    }
+  @Override
+  public <U> JDOQuery<U> select(Expression<U> expr) {
+    queryMixin.setProjection(expr);
+    @SuppressWarnings("unchecked") // This is the new projection type
+    JDOQuery<U> newType = (JDOQuery<U>) this;
+    return newType;
+  }
 
-    @Override
-    public JDOQuery<Tuple> select(Expression<?>... exprs) {
-        queryMixin.setProjection(exprs);
-        @SuppressWarnings("unchecked") // This is the new projection type
-        JDOQuery<Tuple> newType = (JDOQuery<Tuple>) this;
-        return newType;
-    }
-
+  @Override
+  public JDOQuery<Tuple> select(Expression<?>... exprs) {
+    queryMixin.setProjection(exprs);
+    @SuppressWarnings("unchecked") // This is the new projection type
+    JDOQuery<Tuple> newType = (JDOQuery<Tuple>) this;
+    return newType;
+  }
 }

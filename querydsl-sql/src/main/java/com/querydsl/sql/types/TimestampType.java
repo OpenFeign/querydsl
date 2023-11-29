@@ -19,36 +19,34 @@ import java.sql.*;
  * {@code TimestampType} maps Timestamp to Timestamp on the JDBC level
  *
  * @author tiwe
- *
  */
 public class TimestampType extends AbstractDateTimeType<Timestamp> {
 
-    public TimestampType() {
-        super(Types.TIMESTAMP);
-    }
+  public TimestampType() {
+    super(Types.TIMESTAMP);
+  }
 
-    public TimestampType(int type) {
-        super(type);
-    }
+  public TimestampType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getLiteral(Timestamp value) {
-        return dateTimeFormatter.format(value.toLocalDateTime());
-    }
+  @Override
+  public String getLiteral(Timestamp value) {
+    return dateTimeFormatter.format(value.toLocalDateTime());
+  }
 
-    @Override
-    public Timestamp getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getTimestamp(startIndex);
-    }
+  @Override
+  public Timestamp getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getTimestamp(startIndex);
+  }
 
-    @Override
-    public Class<Timestamp> getReturnedClass() {
-        return Timestamp.class;
-    }
+  @Override
+  public Class<Timestamp> getReturnedClass() {
+    return Timestamp.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Timestamp value) throws SQLException {
-        st.setTimestamp(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Timestamp value) throws SQLException {
+    st.setTimestamp(startIndex, value);
+  }
 }

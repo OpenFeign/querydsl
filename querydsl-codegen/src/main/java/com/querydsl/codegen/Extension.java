@@ -14,18 +14,17 @@
 package com.querydsl.codegen;
 
 /**
- * {@code Extension} allows for custom code generation extensions to be registered as service provider
+ * {@code Extension} allows for custom code generation extensions to be registered as service
+ * provider
  *
  * @author Jan-Willem Gmelig Meyling
- *
  */
 public interface Extension {
 
-    /**
-     * Register custom types to the given codegen module
-     *
-     * @param module module to be customized
-     */
-    void addSupport(AbstractModule module);
-
+  /**
+   * Register custom types to the given codegen module
+   *
+   * @param module module to be customized
+   */
+  void addSupport(AbstractModule module);
 }

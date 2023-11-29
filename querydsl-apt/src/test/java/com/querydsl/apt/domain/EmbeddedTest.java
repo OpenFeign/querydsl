@@ -17,44 +17,37 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import jakarta.persistence.*;
-
 import org.junit.Test;
 
 public class EmbeddedTest {
 
-    @Entity
-    public static class EntityClass extends AbstractEntity<SubEntityCode> {
+  @Entity
+  public static class EntityClass extends AbstractEntity<SubEntityCode> {}
 
-    }
+  @MappedSuperclass
+  public abstract static class AbstractEntity<C extends EntityCode> {
 
-    @MappedSuperclass
-    public abstract static class AbstractEntity<C extends EntityCode> {
+    @Embedded
+    @Column(name = "code", nullable = false, unique = true)
+    C code;
+  }
 
-        @Embedded
-        @Column(name = "code", nullable = false, unique = true)
-        C code;
-    }
+  @MappedSuperclass
+  public static class EntityCode {
 
-    @MappedSuperclass
-    public static class EntityCode {
+    @Column(name = "code", unique = true)
+    String code;
+  }
 
-        @Column(name = "code", unique = true)
-        String code;
+  @Embeddable
+  public static class SubEntityCode extends EntityCode {
 
-    }
+    String property;
+  }
 
-    @Embeddable
-    public static class SubEntityCode extends EntityCode {
-
-        String property;
-
-    }
-
-    @Test
-    public void entityClass() {
-        assertNotNull(QEmbeddedTest_EntityClass.entityClass.code.property);
-        assertEquals(SubEntityCode.class, QEmbeddedTest_EntityClass.entityClass.code.getType());
-    }
-
-
+  @Test
+  public void entityClass() {
+    assertNotNull(QEmbeddedTest_EntityClass.entityClass.code.property);
+    assertEquals(SubEntityCode.class, QEmbeddedTest_EntityClass.entityClass.code.getType());
+  }
 }

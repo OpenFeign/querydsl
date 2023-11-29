@@ -14,45 +14,42 @@
 package com.querydsl.sql.types;
 
 import java.sql.*;
-
 import org.joda.time.DateTime;
 
 /**
- * {@code DateTimeType} maps {@linkplain org.joda.time.DateTime}
- * to {@linkplain java.sql.Timestamp} on the JDBC level
+ * {@code DateTimeType} maps {@linkplain org.joda.time.DateTime} to {@linkplain java.sql.Timestamp}
+ * on the JDBC level
  *
  * @author tiwe
- *
  */
 public class DateTimeType extends AbstractJodaTimeDateTimeType<DateTime> {
 
-    public DateTimeType() {
-        super(Types.TIMESTAMP);
-    }
+  public DateTimeType() {
+    super(Types.TIMESTAMP);
+  }
 
-    public DateTimeType(int type) {
-        super(type);
-    }
+  public DateTimeType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getLiteral(DateTime value) {
-        return dateTimeFormatter.print(value);
-    }
+  @Override
+  public String getLiteral(DateTime value) {
+    return dateTimeFormatter.print(value);
+  }
 
-    @Override
-    public Class<DateTime> getReturnedClass() {
-        return DateTime.class;
-    }
+  @Override
+  public Class<DateTime> getReturnedClass() {
+    return DateTime.class;
+  }
 
-    @Override
-    public DateTime getValue(ResultSet rs, int startIndex) throws SQLException {
-        Timestamp ts = rs.getTimestamp(startIndex);
-        return ts != null ? new DateTime(ts.getTime()) : null;
-    }
+  @Override
+  public DateTime getValue(ResultSet rs, int startIndex) throws SQLException {
+    Timestamp ts = rs.getTimestamp(startIndex);
+    return ts != null ? new DateTime(ts.getTime()) : null;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, DateTime value) throws SQLException {
-        st.setTimestamp(startIndex, new Timestamp(value.getMillis()));
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, DateTime value) throws SQLException {
+    st.setTimestamp(startIndex, new Timestamp(value.getMillis()));
+  }
 }

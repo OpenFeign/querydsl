@@ -19,33 +19,29 @@ import java.sql.*;
  * {@code SQLXMLType} maps SQLXML to SQLXML on the JDBC level
  *
  * @author tiwe
- *
  */
 public class SQLXMLType extends AbstractType<SQLXML> {
 
-    public SQLXMLType() {
-        super(Types.SQLXML);
-    }
+  public SQLXMLType() {
+    super(Types.SQLXML);
+  }
 
-    public SQLXMLType(int type) {
-        super(type);
-    }
+  public SQLXMLType(int type) {
+    super(type);
+  }
 
-    @Override
-    public SQLXML getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getSQLXML(startIndex);
-    }
+  @Override
+  public SQLXML getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getSQLXML(startIndex);
+  }
 
-    @Override
-    public Class<SQLXML> getReturnedClass() {
-        return SQLXML.class;
-    }
+  @Override
+  public Class<SQLXML> getReturnedClass() {
+    return SQLXML.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, SQLXML value)
-            throws SQLException {
-        st.setSQLXML(startIndex, value);
-
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, SQLXML value) throws SQLException {
+    st.setSQLXML(startIndex, value);
+  }
 }

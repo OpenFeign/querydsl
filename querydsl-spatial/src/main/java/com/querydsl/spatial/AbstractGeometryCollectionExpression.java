@@ -22,43 +22,43 @@ import org.geolatte.geom.Geometry;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A GeometryCollection is a geometric object that is a collection of some number of geometric objects.
+ * A GeometryCollection is a geometric object that is a collection of some number of geometric
+ * objects.
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class AbstractGeometryCollectionExpression<T extends AbstractGeometryCollection> extends GeometryExpression<T> {
+public abstract class AbstractGeometryCollectionExpression<T extends AbstractGeometryCollection>
+    extends GeometryExpression<T> {
 
-    private static final long serialVersionUID = 8874174644259834690L;
+  private static final long serialVersionUID = 8874174644259834690L;
 
-    @Nullable
-    private transient volatile NumberExpression<Integer> numGeometries;
+  @Nullable private transient volatile NumberExpression<Integer> numGeometries;
 
-    public AbstractGeometryCollectionExpression(Expression<T> mixin) {
-        super(mixin);
+  public AbstractGeometryCollectionExpression(Expression<T> mixin) {
+    super(mixin);
+  }
+
+  /**
+   * Returns the number of geometries in this GeometryCollection.
+   *
+   * @return number of geometries
+   */
+  public NumberExpression<Integer> numGeometries() {
+    if (numGeometries == null) {
+      numGeometries = Expressions.numberOperation(Integer.class, SpatialOps.NUM_GEOMETRIES, mixin);
     }
+    return numGeometries;
+  }
 
-    /**
-     * Returns the number of geometries in this GeometryCollection.
-     *
-     * @return number of geometries
-     */
-    public NumberExpression<Integer> numGeometries() {
-        if (numGeometries == null) {
-            numGeometries = Expressions.numberOperation(Integer.class, SpatialOps.NUM_GEOMETRIES, mixin);
-        }
-        return numGeometries;
-    }
-
-    /**
-     * Returns the Nth geometry in this GeometryCollection.
-     *
-     * @param n one based index
-     * @return matching geometry
-     */
-    public GeometryExpression<Geometry> geometryN(Integer n) {
-        return GeometryExpressions.geometryOperation(SpatialOps.GEOMETRYN, mixin, ConstantImpl.create(n));
-    }
-
+  /**
+   * Returns the Nth geometry in this GeometryCollection.
+   *
+   * @param n one based index
+   * @return matching geometry
+   */
+  public GeometryExpression<Geometry> geometryN(Integer n) {
+    return GeometryExpressions.geometryOperation(
+        SpatialOps.GEOMETRYN, mixin, ConstantImpl.create(n));
+  }
 }

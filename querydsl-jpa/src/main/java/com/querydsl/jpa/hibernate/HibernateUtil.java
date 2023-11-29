@@ -16,12 +16,11 @@ package com.querydsl.jpa.hibernate;
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.dsl.Param;
-import org.hibernate.type.BasicTypeReference;
-import org.hibernate.type.StandardBasicTypes;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import org.hibernate.type.BasicTypeReference;
+import org.hibernate.type.StandardBasicTypes;
 
 /**
  * {@code HibernateUtil} provides static utility methods for Hibernate
@@ -30,76 +29,94 @@ import java.util.*;
  */
 public final class HibernateUtil {
 
-    private static final Set<Class<?>> BUILT_IN = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(Boolean.class, Byte.class,
-            Character.class, Double.class, Float.class, Integer.class, Long.class, Short.class,
-            String.class, BigDecimal.class, byte[].class, Byte[].class, java.util.Date.class,
-            java.util.Calendar.class, java.sql.Date.class, java.sql.Time.class, java.sql.Timestamp.class,
-            java.util.Locale.class, java.util.TimeZone.class, java.util.Currency.class, Class.class,
-            java.io.Serializable.class, java.sql.Blob.class, java.sql.Clob.class)));
+  private static final Set<Class<?>> BUILT_IN =
+      Collections.unmodifiableSet(
+          new HashSet<>(
+              Arrays.asList(
+                  Boolean.class,
+                  Byte.class,
+                  Character.class,
+                  Double.class,
+                  Float.class,
+                  Integer.class,
+                  Long.class,
+                  Short.class,
+                  String.class,
+                  BigDecimal.class,
+                  byte[].class,
+                  Byte[].class,
+                  java.util.Date.class,
+                  java.util.Calendar.class,
+                  java.sql.Date.class,
+                  java.sql.Time.class,
+                  java.sql.Timestamp.class,
+                  java.util.Locale.class,
+                  java.util.TimeZone.class,
+                  java.util.Currency.class,
+                  Class.class,
+                  java.io.Serializable.class,
+                  java.sql.Blob.class,
+                  java.sql.Clob.class)));
 
-    private static final Map<Class<?>, BasicTypeReference<?>> TYPES;
+  private static final Map<Class<?>, BasicTypeReference<?>> TYPES;
 
-    static {
-        Map<Class<?>, BasicTypeReference<?>> builder = new HashMap<>();
-        builder.put(Byte.class, StandardBasicTypes.BYTE);
-        builder.put(Short.class, StandardBasicTypes.SHORT);
-        builder.put(Integer.class, StandardBasicTypes.INTEGER);
-        builder.put(Long.class, StandardBasicTypes.LONG);
-        builder.put(BigInteger.class, StandardBasicTypes.BIG_INTEGER);
-        builder.put(Double.class, StandardBasicTypes.DOUBLE);
-        builder.put(Float.class, StandardBasicTypes.FLOAT);
-        builder.put(BigDecimal.class, StandardBasicTypes.BIG_DECIMAL);
-        builder.put(String.class, StandardBasicTypes.STRING);
-        builder.put(Character.class, StandardBasicTypes.CHARACTER);
-        builder.put(Date.class, StandardBasicTypes.DATE);
-        builder.put(Boolean.class, StandardBasicTypes.BOOLEAN);
-        TYPES = Collections.unmodifiableMap(builder);
-    }
+  static {
+    Map<Class<?>, BasicTypeReference<?>> builder = new HashMap<>();
+    builder.put(Byte.class, StandardBasicTypes.BYTE);
+    builder.put(Short.class, StandardBasicTypes.SHORT);
+    builder.put(Integer.class, StandardBasicTypes.INTEGER);
+    builder.put(Long.class, StandardBasicTypes.LONG);
+    builder.put(BigInteger.class, StandardBasicTypes.BIG_INTEGER);
+    builder.put(Double.class, StandardBasicTypes.DOUBLE);
+    builder.put(Float.class, StandardBasicTypes.FLOAT);
+    builder.put(BigDecimal.class, StandardBasicTypes.BIG_DECIMAL);
+    builder.put(String.class, StandardBasicTypes.STRING);
+    builder.put(Character.class, StandardBasicTypes.CHARACTER);
+    builder.put(Date.class, StandardBasicTypes.DATE);
+    builder.put(Boolean.class, StandardBasicTypes.BOOLEAN);
+    TYPES = Collections.unmodifiableMap(builder);
+  }
 
-    private HibernateUtil() {
-    }
+  private HibernateUtil() {}
 
-    public static void setConstants(
-            org.hibernate.query.Query<?> query,
-            List<Object> constants,
-            Map<ParamExpression<?>, Object> params
-    ) {
-        for (int i = 0; i < constants.size(); i++) {
-            Object val = constants.get(i);
+  public static void setConstants(
+      org.hibernate.query.Query<?> query,
+      List<Object> constants,
+      Map<ParamExpression<?>, Object> params) {
+    for (int i = 0; i < constants.size(); i++) {
+      Object val = constants.get(i);
 
-            if (val instanceof Param) {
-                Param<?> param = (Param<?>) val;
-                val = params.get(val);
-                if (val == null) {
-                    throw new ParamNotSetException(param);
-                }
-            }
-
-            setValueWithNumberedLabel(query, i + 1, val);
+      if (val instanceof Param) {
+        Param<?> param = (Param<?>) val;
+        val = params.get(val);
+        if (val == null) {
+          throw new ParamNotSetException(param);
         }
-    }
+      }
 
-    private static void setValueWithNumberedLabel(org.hibernate.query.Query<?> query, Integer key, Object val) {
-        if (val instanceof Collection<?>) {
-            query.setParameterList(key, (Collection<?>) val);
-        } else if (val instanceof Object[] && !BUILT_IN.contains(val.getClass())) {
-            query.setParameterList(key, (Object[]) val);
-        } else if (val instanceof Number && TYPES.containsKey(val.getClass())) {
-            BasicTypeReference<?> typeRef = getType(val.getClass());
-            query.setParameter(
-                key,
-                val,
-                new BasicTypeReference(
-                    typeRef.getName(),
-                    typeRef.getBindableJavaType(),
-                    typeRef.getSqlTypeCode()));
-        } else {
-            query.setParameter(key, val);
-        }
+      setValueWithNumberedLabel(query, i + 1, val);
     }
+  }
 
-    public static BasicTypeReference<?> getType(Class<?> clazz) {
-        return TYPES.get(clazz);
+  private static void setValueWithNumberedLabel(
+      org.hibernate.query.Query<?> query, Integer key, Object val) {
+    if (val instanceof Collection<?>) {
+      query.setParameterList(key, (Collection<?>) val);
+    } else if (val instanceof Object[] && !BUILT_IN.contains(val.getClass())) {
+      query.setParameterList(key, (Object[]) val);
+    } else if (val instanceof Number && TYPES.containsKey(val.getClass())) {
+      BasicTypeReference<?> typeRef = getType(val.getClass());
+      query.setParameter(
+          key,
+          val,
+          new BasicTypeReference(
+              typeRef.getName(), typeRef.getBindableJavaType(), typeRef.getSqlTypeCode()));
+    } else {
+      query.setParameter(key, val);
     }
+  }
 
+  public static BasicTypeReference<?> getType(Class<?> clazz) {
+    return TYPES.get(clazz);
+  }
 }

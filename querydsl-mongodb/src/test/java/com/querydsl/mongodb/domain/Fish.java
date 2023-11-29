@@ -18,19 +18,19 @@ import org.mongodb.morphia.annotations.Entity;
 @Entity("food")
 public class Fish extends Food {
 
-    private final String breed;
+  private final String breed;
 
-    public Fish(final String name) {
-        super(name);
-        this.breed = "unknown";
-    }
+  public Fish(final String name) {
+    super(name);
+    this.breed = "unknown";
+  }
 
-    public Fish(final String name, final String breed) {
-        super(name);
-        this.breed = breed;
-    }
+  public Fish(final String name, final String breed) {
+    super(name);
+    this.breed = breed;
+  }
 
-    public String getBreed() {
-        return breed;
-    }
+  public String getBreed() {
+    return breed;
+  }
 }

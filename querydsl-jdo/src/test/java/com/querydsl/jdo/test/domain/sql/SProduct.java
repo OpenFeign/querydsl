@@ -15,76 +15,73 @@ package com.querydsl.jdo.test.domain.sql;
 
 import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
-import java.sql.Date;
-import java.sql.Time;
-
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.ForeignKey;
 import com.querydsl.sql.PrimaryKey;
 import com.querydsl.sql.RelationalPathBase;
+import java.sql.Date;
+import java.sql.Time;
 
-
-/**
- * SProduct is a Querydsl query type for SProduct
- */
-//@Table(value="PRODUCT")
+/** SProduct is a Querydsl query type for SProduct */
+// @Table(value="PRODUCT")
 public class SProduct extends RelationalPathBase<SProduct> {
 
-    private static final long serialVersionUID = -590374403;
+  private static final long serialVersionUID = -590374403;
 
-    public static final SProduct product = new SProduct("PRODUCT");
+  public static final SProduct product = new SProduct("PRODUCT");
 
-    public final NumberPath<Integer> amount = createNumber("AMOUNT", Integer.class);
+  public final NumberPath<Integer> amount = createNumber("AMOUNT", Integer.class);
 
-    public final DatePath<Date> datefield = createDate("DATEFIELD", java.sql.Date.class);
+  public final DatePath<Date> datefield = createDate("DATEFIELD", java.sql.Date.class);
 
-    public final StringPath description = createString("DESCRIPTION");
+  public final StringPath description = createString("DESCRIPTION");
 
-    public final StringPath name = createString("NAME");
+  public final StringPath name = createString("NAME");
 
-    public final NumberPath<Double> price = createNumber("PRICE", Double.class);
+  public final NumberPath<Double> price = createNumber("PRICE", Double.class);
 
-    public final NumberPath<Long> productId = createNumber("PRODUCT_ID", Long.class);
+  public final NumberPath<Long> productId = createNumber("PRODUCT_ID", Long.class);
 
-    public final DateTimePath<java.util.Date> publicationdate = createDateTime("PUBLICATIONDATE", java.util.Date.class);
+  public final DateTimePath<java.util.Date> publicationdate =
+      createDateTime("PUBLICATIONDATE", java.util.Date.class);
 
-    public final TimePath<Time> timefield = createTime("TIMEFIELD", java.sql.Time.class);
+  public final TimePath<Time> timefield = createTime("TIMEFIELD", java.sql.Time.class);
 
-    public final PrimaryKey<SProduct> sysIdx47 = createPrimaryKey(productId);
+  public final PrimaryKey<SProduct> sysIdx47 = createPrimaryKey(productId);
 
-    public final ForeignKey<SStoreProducts> _storeProductsFk2 = new ForeignKey<SStoreProducts>(this, productId, "PRODUCT_ID_EID");
+  public final ForeignKey<SStoreProducts> _storeProductsFk2 =
+      new ForeignKey<SStoreProducts>(this, productId, "PRODUCT_ID_EID");
 
-    public final ForeignKey<SBook> _bookFk1 = new ForeignKey<SBook>(this, productId, "BOOK_ID");
+  public final ForeignKey<SBook> _bookFk1 = new ForeignKey<SBook>(this, productId, "BOOK_ID");
 
-    public final ForeignKey<SStoreProductsbyname> _storeProductsbynameFk2 = new ForeignKey<SStoreProductsbyname>(this, productId, "PRODUCT_ID_VID");
+  public final ForeignKey<SStoreProductsbyname> _storeProductsbynameFk2 =
+      new ForeignKey<SStoreProductsbyname>(this, productId, "PRODUCT_ID_VID");
 
-    public SProduct(String variable) {
-        super(SProduct.class, forVariable(variable), "", "PRODUCT");
-        addMetadata();
-    }
+  public SProduct(String variable) {
+    super(SProduct.class, forVariable(variable), "", "PRODUCT");
+    addMetadata();
+  }
 
-    public SProduct(BeanPath<? extends SProduct> entity) {
-        super(entity.getType(),entity.getMetadata(), "", "PRODUCT");
-        addMetadata();
-    }
+  public SProduct(BeanPath<? extends SProduct> entity) {
+    super(entity.getType(), entity.getMetadata(), "", "PRODUCT");
+    addMetadata();
+  }
 
-    public SProduct(PathMetadata metadata) {
-        super(SProduct.class, metadata, "", "PRODUCT");
-        addMetadata();
-    }
+  public SProduct(PathMetadata metadata) {
+    super(SProduct.class, metadata, "", "PRODUCT");
+    addMetadata();
+  }
 
-    public void addMetadata() {
-        addMetadata(amount, ColumnMetadata.named("AMOUNT"));
-        addMetadata(datefield, ColumnMetadata.named("DATEFIELD"));
-        addMetadata(description, ColumnMetadata.named("DESCRIPTION"));
-        addMetadata(name, ColumnMetadata.named("NAME"));
-        addMetadata(price, ColumnMetadata.named("PRICE"));
-        addMetadata(productId, ColumnMetadata.named("PRODUCT_ID"));
-        addMetadata(publicationdate, ColumnMetadata.named("PUBLICATIONDATE"));
-        addMetadata(timefield, ColumnMetadata.named("TIMEFIELD"));
-    }
-
+  public void addMetadata() {
+    addMetadata(amount, ColumnMetadata.named("AMOUNT"));
+    addMetadata(datefield, ColumnMetadata.named("DATEFIELD"));
+    addMetadata(description, ColumnMetadata.named("DESCRIPTION"));
+    addMetadata(name, ColumnMetadata.named("NAME"));
+    addMetadata(price, ColumnMetadata.named("PRICE"));
+    addMetadata(productId, ColumnMetadata.named("PRODUCT_ID"));
+    addMetadata(publicationdate, ColumnMetadata.named("PUBLICATIONDATE"));
+    addMetadata(timefield, ColumnMetadata.named("TIMEFIELD"));
+  }
 }
-

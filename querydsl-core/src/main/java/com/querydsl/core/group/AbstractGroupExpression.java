@@ -19,75 +19,74 @@ import com.querydsl.core.types.dsl.Expressions;
 
 /**
  * A base class for GroupExpressions
- * @author sasa
  *
+ * @author sasa
  * @param <T>
  * @param <R>
  */
 public abstract class AbstractGroupExpression<T, R> implements GroupExpression<T, R> {
 
-    private static final long serialVersionUID = 1509709546966783160L;
+  private static final long serialVersionUID = 1509709546966783160L;
 
-    private final Class<? extends R> type;
+  private final Class<? extends R> type;
 
-    private final Expression<T> expr;
+  private final Expression<T> expr;
 
-    @SuppressWarnings("unchecked")
-    public AbstractGroupExpression(Class<? super R> type, Expression<T> expr) {
-        this.type = (Class) type;
-        this.expr = expr;
+  @SuppressWarnings("unchecked")
+  public AbstractGroupExpression(Class<? super R> type, Expression<T> expr) {
+    this.type = (Class) type;
+    this.expr = expr;
+  }
+
+  /**
+   * Create an alias for the expression
+   *
+   * @return alias expression
+   */
+  public DslExpression<R> as(Path<R> alias) {
+    return Expressions.dslOperation(getType(), Ops.ALIAS, this, alias);
+  }
+
+  /**
+   * Create an alias for the expression
+   *
+   * @return alias expression
+   */
+  public DslExpression<R> as(String alias) {
+    return as(ExpressionUtils.path(getType(), alias));
+  }
+
+  @Override
+  public Expression<T> getExpression() {
+    return expr;
+  }
+
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return expr.accept(v, context);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o != null && getClass().equals(o.getClass())) {
+      return ((GroupExpression<?, ?>) o).getExpression().equals(expr);
+    } else {
+      return false;
     }
+  }
 
-    /**
-     * Create an alias for the expression
-     *
-     * @return alias expression
-     */
-    public DslExpression<R> as(Path<R> alias) {
-        return Expressions.dslOperation(getType(), Ops.ALIAS, this, alias);
-    }
+  @Override
+  public Class<? extends R> getType() {
+    return type;
+  }
 
-    /**
-     * Create an alias for the expression
-     *
-     * @return alias expression
-     */
-    public DslExpression<R> as(String alias) {
-        return as(ExpressionUtils.path(getType(), alias));
-    }
+  @Override
+  public int hashCode() {
+    return expr.hashCode();
+  }
 
-    @Override
-    public Expression<T> getExpression() {
-        return expr;
-    }
-
-    @Override
-    public <R, C> R accept(Visitor<R, C> v, C context) {
-        return expr.accept(v, context);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o != null && getClass().equals(o.getClass())) {
-            return ((GroupExpression<?,?>) o).getExpression().equals(expr);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public Class<? extends R> getType() {
-        return type;
-    }
-
-    @Override
-    public int hashCode() {
-        return expr.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return expr.toString();
-    }
-
+  @Override
+  public String toString() {
+    return expr.toString();
+  }
 }

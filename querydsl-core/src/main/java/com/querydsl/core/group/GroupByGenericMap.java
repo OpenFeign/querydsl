@@ -20,7 +20,6 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.Projections;
-
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -32,53 +31,52 @@ import java.util.function.Supplier;
  * @param <RES> Resulting map type
  * @author Jan-Willem Gmelig Meyling
  */
-public class GroupByGenericMap<K, V, RES extends Map<K, V>> extends AbstractGroupByTransformer<K, RES> {
+public class GroupByGenericMap<K, V, RES extends Map<K, V>>
+    extends AbstractGroupByTransformer<K, RES> {
 
-    private final Supplier<RES> mapFactory;
+  private final Supplier<RES> mapFactory;
 
-    GroupByGenericMap(Supplier<RES> mapFactory, Expression<K> key, Expression<?>... expressions) {
-        super(key, expressions);
-        this.mapFactory = mapFactory;
+  GroupByGenericMap(Supplier<RES> mapFactory, Expression<K> key, Expression<?>... expressions) {
+    super(key, expressions);
+    this.mapFactory = mapFactory;
+  }
+
+  @Override
+  public RES transform(FetchableQuery<?, ?> query) {
+    Map<K, Group> groups = (Map) mapFactory.get();
+
+    // create groups
+    FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
+    boolean hasGroups = false;
+    for (Expression<?> e : expr.getArgs()) {
+      hasGroups |= e instanceof GroupExpression;
+    }
+    if (hasGroups) {
+      expr = withoutGroupExpressions(expr);
+    }
+    CloseableIterator<Tuple> iter = query.select(expr).iterate();
+    try {
+      while (iter.hasNext()) {
+        @SuppressWarnings("unchecked") // This type is mandated by the key type
+        K[] row = (K[]) iter.next().toArray();
+        K groupId = row[0];
+        GroupImpl group = (GroupImpl) groups.get(groupId);
+        if (group == null) {
+          group = new GroupImpl(groupExpressions, maps);
+          groups.put(groupId, group);
+        }
+        group.add(row);
+      }
+    } finally {
+      iter.close();
     }
 
-    @Override
-    public RES transform(FetchableQuery<?, ?> query) {
-        Map<K, Group> groups = (Map) mapFactory.get();
+    // transform groups
+    return transform(groups);
+  }
 
-        // create groups
-        FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-        boolean hasGroups = false;
-        for (Expression<?> e : expr.getArgs()) {
-            hasGroups |= e instanceof GroupExpression;
-        }
-        if (hasGroups) {
-            expr = withoutGroupExpressions(expr);
-        }
-        CloseableIterator<Tuple> iter = query.select(expr).iterate();
-        try {
-            while (iter.hasNext()) {
-                @SuppressWarnings("unchecked") //This type is mandated by the key type
-                        K[] row = (K[]) iter.next().toArray();
-                K groupId = row[0];
-                GroupImpl group = (GroupImpl) groups.get(groupId);
-                if (group == null) {
-                    group = new GroupImpl(groupExpressions, maps);
-                    groups.put(groupId, group);
-                }
-                group.add(row);
-            }
-        } finally {
-            iter.close();
-        }
-
-        // transform groups
-        return transform(groups);
-
-    }
-
-    @SuppressWarnings("unchecked")
-    protected RES transform(Map<K, Group> groups) {
-        return (RES) groups;
-    }
-
+  @SuppressWarnings("unchecked")
+  protected RES transform(Map<K, Group> groups) {
+    return (RES) groups;
+  }
 }

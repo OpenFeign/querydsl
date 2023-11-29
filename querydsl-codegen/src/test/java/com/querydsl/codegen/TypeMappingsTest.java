@@ -16,52 +16,53 @@ package com.querydsl.codegen;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.querydsl.codegen.utils.model.SimpleType;
-import org.junit.Test;
-
 import com.querydsl.codegen.utils.model.ClassType;
+import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
-
 import java.util.Collections;
 import java.util.List;
+import org.junit.Test;
 
 public class TypeMappingsTest {
 
-    static class Entity { }
+  static class Entity {}
 
-    @Test
-    public void getPathType_of_innerClass() {
-        TypeMappings typeMappings = new JavaTypeMappings();
-        EntityType model = new EntityType(new ClassType(TypeMappingsTest.class));
-        EntityType type = new EntityType(new ClassType(Entity.class));
-        typeMappings.register(type, new QueryTypeFactoryImpl("Q","","").create(type));
+  @Test
+  public void getPathType_of_innerClass() {
+    TypeMappings typeMappings = new JavaTypeMappings();
+    EntityType model = new EntityType(new ClassType(TypeMappingsTest.class));
+    EntityType type = new EntityType(new ClassType(Entity.class));
+    typeMappings.register(type, new QueryTypeFactoryImpl("Q", "", "").create(type));
 
-        Type pathType = typeMappings.getPathType(type, model, false);
-        assertEquals("QTypeMappingsTest_Entity", pathType.getSimpleName());
-    }
+    Type pathType = typeMappings.getPathType(type, model, false);
+    assertEquals("QTypeMappingsTest_Entity", pathType.getSimpleName());
+  }
 
-    @Test
-    public void isRegistered() {
-        TypeMappings typeMappings = new JavaTypeMappings();
-        typeMappings.register(new ClassType(Double[].class), new ClassType(Point.class));
-        assertTrue(typeMappings.isRegistered(new ClassType(Double[].class)));
-    }
+  @Test
+  public void isRegistered() {
+    TypeMappings typeMappings = new JavaTypeMappings();
+    typeMappings.register(new ClassType(Double[].class), new ClassType(Point.class));
+    assertTrue(typeMappings.isRegistered(new ClassType(Double[].class)));
+  }
 
-    @Test
-    public void testGenericTypeRegistration() {
-        SimpleType rawListType = new SimpleType(List.class.getName());
-        SimpleType integerListType = new SimpleType(rawListType, Collections.<Type> singletonList(new SimpleType(Integer.class.getName())));
-        SimpleType longListType = new SimpleType(rawListType, Collections.<Type> singletonList(new SimpleType(Long.class.getName())));
+  @Test
+  public void testGenericTypeRegistration() {
+    SimpleType rawListType = new SimpleType(List.class.getName());
+    SimpleType integerListType =
+        new SimpleType(
+            rawListType, Collections.<Type>singletonList(new SimpleType(Integer.class.getName())));
+    SimpleType longListType =
+        new SimpleType(
+            rawListType, Collections.<Type>singletonList(new SimpleType(Long.class.getName())));
 
-        SimpleType integerListTypeExpression = new SimpleType("integerListTypeExpression");
-        SimpleType longListTypeExpression = new SimpleType("longListTypeExpression");
+    SimpleType integerListTypeExpression = new SimpleType("integerListTypeExpression");
+    SimpleType longListTypeExpression = new SimpleType("longListTypeExpression");
 
-        TypeMappings typeMappings = new JavaTypeMappings();
-        typeMappings.register(integerListType, integerListTypeExpression);
-        typeMappings.register(longListType, longListTypeExpression);
+    TypeMappings typeMappings = new JavaTypeMappings();
+    typeMappings.register(integerListType, integerListTypeExpression);
+    typeMappings.register(longListType, longListTypeExpression);
 
-        assertEquals(integerListTypeExpression, typeMappings.getExprType(integerListType, null, false));
-        assertEquals(longListTypeExpression, typeMappings.getExprType(longListType, null, false));
-    }
-
+    assertEquals(integerListTypeExpression, typeMappings.getExprType(integerListType, null, false));
+    assertEquals(longListTypeExpression, typeMappings.getExprType(longListType, null, false));
+  }
 }

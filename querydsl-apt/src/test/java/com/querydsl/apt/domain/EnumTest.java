@@ -15,38 +15,36 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEntity;
+import org.junit.Test;
 
 public class EnumTest {
 
-    @QueryEntity
-    public enum Gender {
-        MALE,
-        FEMALE
-    }
+  @QueryEntity
+  public enum Gender {
+    MALE,
+    FEMALE
+  }
 
-    @QueryEmbeddable
-    public enum Gender2 {
-        MALE,
-        FEMALE
-    }
+  @QueryEmbeddable
+  public enum Gender2 {
+    MALE,
+    FEMALE
+  }
 
-    @QueryEntity
-    public static class Bean {
-        Gender gender;
-    }
+  @QueryEntity
+  public static class Bean {
+    Gender gender;
+  }
 
-    @Test
-    public void enum_as_comparable() {
-        assertNotNull(QEnumTest_Gender.gender.asc());
-    }
+  @Test
+  public void enum_as_comparable() {
+    assertNotNull(QEnumTest_Gender.gender.asc());
+  }
 
-    @Test
-    public void enumOrdinal_as_comparable() {
-        assertNotNull(QEnumTest_Gender.gender.ordinal().asc());
-    }
-
+  @Test
+  public void enumOrdinal_as_comparable() {
+    assertNotNull(QEnumTest_Gender.gender.ordinal().asc());
+  }
 }

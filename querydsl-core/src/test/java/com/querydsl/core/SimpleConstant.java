@@ -23,60 +23,58 @@ import com.querydsl.core.types.dsl.SimpleExpression;
  * SimpleConstant represents general constant expressions
  *
  * @author tiwe
- *
  * @param <D> Java type of constant
  */
 public final class SimpleConstant<D> extends SimpleExpression<D> implements Constant<D> {
 
-    private static final long serialVersionUID = -3211963259241932307L;
+  private static final long serialVersionUID = -3211963259241932307L;
 
-    /**
-     * Factory method for constants
-     *
-     * @param <D>
-     * @param val
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> SimpleExpression<T> create(T val) {
-        if (val instanceof Boolean) {
-            return (SimpleExpression<T>) BooleanConstant.create((Boolean) val);
-        } else {
-            return new SimpleConstant<T>(val);
-        }
+  /**
+   * Factory method for constants
+   *
+   * @param <D>
+   * @param val
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> SimpleExpression<T> create(T val) {
+    if (val instanceof Boolean) {
+      return (SimpleExpression<T>) BooleanConstant.create((Boolean) val);
+    } else {
+      return new SimpleConstant<T>(val);
     }
+  }
 
-    private final D constant;
+  private final D constant;
 
-    @SuppressWarnings("unchecked")
-    SimpleConstant(D constant) {
-        super(ConstantImpl.create(constant));
-        this.constant = constant;
-    }
+  @SuppressWarnings("unchecked")
+  SimpleConstant(D constant) {
+    super(ConstantImpl.create(constant));
+    this.constant = constant;
+  }
 
-    @Override
-    public <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(this, context);
-    }
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
 
-    @Override
-    public BooleanExpression eq(D s) {
-        return BooleanConstant.create(constant.equals(s));
-    }
+  @Override
+  public BooleanExpression eq(D s) {
+    return BooleanConstant.create(constant.equals(s));
+  }
 
-    /**
-     * Get the embedded constant
-     *
-     * @return
-     */
-    @Override
-    public D getConstant() {
-        return constant;
-    }
+  /**
+   * Get the embedded constant
+   *
+   * @return
+   */
+  @Override
+  public D getConstant() {
+    return constant;
+  }
 
-    @Override
-    public BooleanExpression ne(D s) {
-        return BooleanConstant.create(!constant.equals(s));
-    }
-
+  @Override
+  public BooleanExpression ne(D s) {
+    return BooleanConstant.create(!constant.equals(s));
+  }
 }

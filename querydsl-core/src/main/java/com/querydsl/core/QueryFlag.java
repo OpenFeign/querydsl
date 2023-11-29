@@ -13,139 +13,106 @@
  */
 package com.querydsl.core;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Defines a positioned flag in a Query for customization of query serialization
  *
  * @author tiwe
- *
  */
 public class QueryFlag implements Serializable {
 
-    private static final long serialVersionUID = -7131081607441961628L;
+  private static final long serialVersionUID = -7131081607441961628L;
 
-    /**
-     * The different {@code QueryFlag} positions
-     */
-    public enum Position {
+  /** The different {@code QueryFlag} positions */
+  public enum Position {
 
-        /**
-         * WITH part (used in SQL)
-         */
-        WITH,
+    /** WITH part (used in SQL) */
+    WITH,
 
-        /**
-         * Start of the query
-         */
-        START,
+    /** Start of the query */
+    START,
 
-        /**
-         * Override for the first element (e.g SELECT, INSERT)
-         */
-        START_OVERRIDE,
+    /** Override for the first element (e.g SELECT, INSERT) */
+    START_OVERRIDE,
 
-        /**
-         * After the first element (after select)
-         */
-        AFTER_SELECT,
+    /** After the first element (after select) */
+    AFTER_SELECT,
 
-        /**
-         * After the projection (after select ...)
-         */
-        AFTER_PROJECTION,
+    /** After the projection (after select ...) */
+    AFTER_PROJECTION,
 
-        /**
-         * Before the filter conditions (where)
-         */
-        BEFORE_FILTERS,
+    /** Before the filter conditions (where) */
+    BEFORE_FILTERS,
 
-        /**
-         * After the filter conditions (where)
-         */
-        AFTER_FILTERS,
+    /** After the filter conditions (where) */
+    AFTER_FILTERS,
 
-        /**
-         * Before group by
-         */
-        BEFORE_GROUP_BY,
+    /** Before group by */
+    BEFORE_GROUP_BY,
 
-        /**
-         * After group by
-         */
-        AFTER_GROUP_BY,
+    /** After group by */
+    AFTER_GROUP_BY,
 
-        /**
-         * Before having
-         */
-        BEFORE_HAVING,
+    /** Before having */
+    BEFORE_HAVING,
 
-        /**
-         * After having
-         */
-        AFTER_HAVING,
+    /** After having */
+    AFTER_HAVING,
 
-        /**
-         * Before order (by)
-         */
-        BEFORE_ORDER,
+    /** Before order (by) */
+    BEFORE_ORDER,
 
-        /**
-         * After order (by)
-         */
-        AFTER_ORDER,
+    /** After order (by) */
+    AFTER_ORDER,
 
-        /**
-         * After all other tokens
-         */
-        END
+    /** After all other tokens */
+    END
+  }
 
+  private final Position position;
+
+  private final Expression<?> flag;
+
+  public QueryFlag(Position position, String flag) {
+    this(position, ExpressionUtils.template(Object.class, flag));
+  }
+
+  public QueryFlag(Position position, Expression<?> flag) {
+    this.position = position;
+    this.flag = flag;
+  }
+
+  public Position getPosition() {
+    return position;
+  }
+
+  public Expression<?> getFlag() {
+    return flag;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(position, flag);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    } else if (obj instanceof QueryFlag) {
+      QueryFlag other = (QueryFlag) obj;
+      return other.position.equals(position) && other.flag.equals(flag);
+    } else {
+      return false;
     }
+  }
 
-    private final Position position;
-
-    private final Expression<?> flag;
-
-    public QueryFlag(Position position, String flag) {
-        this(position, ExpressionUtils.template(Object.class, flag));
-    }
-
-    public QueryFlag(Position position, Expression<?> flag) {
-        this.position = position;
-        this.flag = flag;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public Expression<?> getFlag() {
-        return flag;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(position, flag);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof QueryFlag) {
-            QueryFlag other = (QueryFlag) obj;
-            return other.position.equals(position) && other.flag.equals(flag);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return position + " : " + flag;
-    }
+  @Override
+  public String toString() {
+    return position + " : " + flag;
+  }
 }

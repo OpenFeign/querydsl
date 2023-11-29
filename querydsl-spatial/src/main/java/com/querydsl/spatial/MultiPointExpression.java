@@ -13,25 +13,23 @@
  */
 package com.querydsl.spatial;
 
+import com.querydsl.core.types.Expression;
 import org.geolatte.geom.MultiPoint;
 
-import com.querydsl.core.types.Expression;
-
 /**
- * A MultiPoint is a 0-dimensional GeometryCollection. The elements of a MultiPoint are restricted to Points. The
- * Points are not connected or ordered in any semantically important way (see the discussion at
- * GeometryCollection).
+ * A MultiPoint is a 0-dimensional GeometryCollection. The elements of a MultiPoint are restricted
+ * to Points. The Points are not connected or ordered in any semantically important way (see the
+ * discussion at GeometryCollection).
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class MultiPointExpression<T extends MultiPoint> extends AbstractGeometryCollectionExpression<T> {
+public abstract class MultiPointExpression<T extends MultiPoint>
+    extends AbstractGeometryCollectionExpression<T> {
 
-    private static final long serialVersionUID = 7221702165705045865L;
+  private static final long serialVersionUID = 7221702165705045865L;
 
-    public MultiPointExpression(Expression<T> mixin) {
-        super(mixin);
-    }
-
+  public MultiPointExpression(Expression<T> mixin) {
+    super(mixin);
+  }
 }

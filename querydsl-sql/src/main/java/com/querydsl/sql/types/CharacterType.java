@@ -22,33 +22,30 @@ import java.sql.Types;
  * {@code CharacterType} maps Character to Character on the JDBC level
  *
  * @author tiwe
- *
  */
 public class CharacterType extends AbstractType<Character> {
 
-    public CharacterType() {
-        super(Types.CHAR);
-    }
+  public CharacterType() {
+    super(Types.CHAR);
+  }
 
-    public CharacterType(int type) {
-        super(type);
-    }
+  public CharacterType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Character getValue(ResultSet rs, int startIndex) throws SQLException {
-        String str = rs.getString(startIndex);
-        return str != null ? str.charAt(0) : null;
-    }
+  @Override
+  public Character getValue(ResultSet rs, int startIndex) throws SQLException {
+    String str = rs.getString(startIndex);
+    return str != null ? str.charAt(0) : null;
+  }
 
-    @Override
-    public Class<Character> getReturnedClass() {
-        return Character.class;
-    }
+  @Override
+  public Class<Character> getReturnedClass() {
+    return Character.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Character value)
-            throws SQLException {
-        st.setString(startIndex, value.toString());
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Character value) throws SQLException {
+    st.setString(startIndex, value.toString());
+  }
 }

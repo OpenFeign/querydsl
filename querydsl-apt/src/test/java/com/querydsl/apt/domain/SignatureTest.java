@@ -15,33 +15,29 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.Serializable;
-
-import com.querydsl.core.types.dsl.EntityPathBase;
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QuerySupertype;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import java.io.Serializable;
+import org.junit.Test;
 
 public class SignatureTest {
 
-    @QuerySupertype
-    public abstract static class APropertyChangeSupported implements Comparable<Object>, Cloneable, Serializable {
+  @QuerySupertype
+  public abstract static class APropertyChangeSupported
+      implements Comparable<Object>, Cloneable, Serializable {}
 
-    }
+  @QuerySupertype
+  public abstract static class AValueObject extends APropertyChangeSupported
+      implements Comparable<Object>, Cloneable, Serializable {}
 
-    @QuerySupertype
-    public abstract static class AValueObject extends APropertyChangeSupported implements Comparable<Object>, Cloneable, Serializable {
+  @Test
+  public void aPropertyChangeSupported() {
+    assertEquals(
+        EntityPathBase.class, QSignatureTest_APropertyChangeSupported.class.getSuperclass());
+  }
 
-    }
-
-    @Test
-    public void aPropertyChangeSupported() {
-        assertEquals(EntityPathBase.class, QSignatureTest_APropertyChangeSupported.class.getSuperclass());
-    }
-
-    @Test
-    public void aValueObject() {
-        assertEquals(EntityPathBase.class, QSignatureTest_AValueObject.class.getSuperclass());
-    }
-
+  @Test
+  public void aValueObject() {
+    assertEquals(EntityPathBase.class, QSignatureTest_AValueObject.class.getSuperclass());
+  }
 }
