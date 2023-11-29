@@ -18,7 +18,7 @@ import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
 import java.util.Iterator;
 import java.util.List;
-import org.batoo.jpa.core.impl.criteria.QueryImpl;
+import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
 import org.eclipse.persistence.internal.localization.ExceptionLocalization;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.spi.ScrollableResultsImplementor;
@@ -45,7 +45,7 @@ public class HibernateHandlerTest {
 
   @Test(expected = PersistenceException.class)
   public void addEntity_should_throw_persistence_exception_when_invalid_query_type() {
-    Query notSupportedQuery = createMock(QueryImpl.class);
+    Query notSupportedQuery = createMock(EJBQueryImpl.class);
     PersistenceException expectedThrow =
         new PersistenceException(
             ExceptionLocalization.buildMessage(
@@ -71,7 +71,7 @@ public class HibernateHandlerTest {
 
   @Test(expected = PersistenceException.class)
   public void addScalar_should_throw_persistence_exception_when_invalid_query_type() {
-    Query notSupportedQuery = createMock(QueryImpl.class);
+    Query notSupportedQuery = createMock(EJBQueryImpl.class);
     PersistenceException expectedThrow =
         new PersistenceException(
             ExceptionLocalization.buildMessage(

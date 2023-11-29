@@ -1637,7 +1637,7 @@ public class SelectBase extends AbstractBaseTest {
             + "from EMPLOYEE e "
             + "group by e.LASTNAME having salarySum > ?";
 
-    NumberExpression<BigDecimal> salarySum = employee.salary.sum().as("salarySum");
+    NumberExpression<BigDecimal> salarySum = employee.salary.sumBigDecimal().as("salarySum");
     query()
         .from(employee)
         .groupBy(employee.lastname)

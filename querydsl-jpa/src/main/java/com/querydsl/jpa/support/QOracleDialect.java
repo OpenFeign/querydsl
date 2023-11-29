@@ -13,15 +13,16 @@
  */
 package com.querydsl.jpa.support;
 
-import com.querydsl.sql.PostgreSQLTemplates;
-import com.querydsl.sql.SQLTemplates;
-import org.hibernate.dialect.PostgreSQLDialect;
+import com.querydsl.sql.OracleTemplates;
+import org.hibernate.boot.model.FunctionContributions;
+import org.hibernate.dialect.OracleDialect;
 
-/** {@code QPostgreSQL9Dialect} extends {@code PostgreSQL9Dialect} with additional functions */
-public class QPostgreSQL9Dialect extends PostgreSQLDialect {
+/** {@code QOracle10gDialect} extends {@code Oracle10gDialect} with additional functions */
+public class QOracleDialect extends OracleDialect {
 
-  public QPostgreSQL9Dialect() {
-    SQLTemplates templates = PostgreSQLTemplates.DEFAULT;
-    //        getFunctions().putAll(DialectSupport.createFunctions(templates));
+  @Override
+  public void initializeFunctionRegistry(FunctionContributions functionContributions) {
+    super.initializeFunctionRegistry(functionContributions);
+    DialectSupport.extendRegistry(OracleTemplates.DEFAULT, functionContributions);
   }
 }

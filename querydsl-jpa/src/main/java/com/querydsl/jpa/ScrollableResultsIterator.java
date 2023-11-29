@@ -59,7 +59,12 @@ public class ScrollableResultsIterator<T> implements CloseableIterator<T> {
   public T next() {
     if (hasNext()) {
       hasNext = null;
-      return (T) results.get();
+      if (asArray) {
+        return (T) results.get();
+      } else {
+        Object o = results.get();
+        return (T) o;
+      }
     } else {
       throw new NoSuchElementException();
     }

@@ -19,30 +19,33 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.search.annotations.*;
+import org.hibernate.search.engine.backend.types.Projectable;
+import org.hibernate.search.engine.backend.types.Searchable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 @Entity
 @Table(name = "user_")
 @Indexed
-@Analyzer(impl = org.apache.lucene.analysis.standard.StandardAnalyzer.class)
 public class User implements Serializable {
 
   private static final long serialVersionUID = 5955148455600241741L;
 
   @Id @GeneratedValue @DocumentId private Long id;
 
-  @SortableField
-  @Field(analyze = Analyze.NO, index = Index.YES, store = Store.YES)
+  //    @SortableField
+  @GenericField(searchable = Searchable.YES, projectable = Projectable.YES)
   private String firstName;
 
-  @Field(analyze = Analyze.NO, index = Index.YES, store = Store.YES)
+  @GenericField(searchable = Searchable.YES, projectable = Projectable.YES)
   private String lastName;
 
-  @Field(analyze = Analyze.NO, index = Index.YES, store = Store.YES)
+  @GenericField(searchable = Searchable.YES, projectable = Projectable.YES)
   private String middleName;
 
   @NaturalId
-  @Field(analyze = Analyze.NO, name = "email", index = Index.YES, store = Store.YES)
+  @GenericField(searchable = Searchable.YES, name = "email", projectable = Projectable.YES)
   private String emailAddress;
 
   public Long getId() {

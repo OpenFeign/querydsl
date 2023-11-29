@@ -206,8 +206,8 @@ public class JPADomainExporter extends AbstractDomainExporter {
         propertyType =
             new SimpleType(
                 propertyType,
-                normalize(propertyType.getParameters().get(0), keyType),
-                normalize(propertyType.getParameters().get(1), valueType));
+                normalize(keyType, propertyType.getParameters().get(0)),
+                normalize(valueType, propertyType.getParameters().get(1)));
       } else {
         Type valueType =
             typeFactory.get(((PluralAttribute<?, ?, ?>) p).getElementType().getJavaType());

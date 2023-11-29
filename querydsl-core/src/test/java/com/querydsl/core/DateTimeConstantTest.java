@@ -41,7 +41,7 @@ public class DateTimeConstantTest {
     assertThat(date.dayOfYear().toString()).isEqualTo("1");
     assertThat(date.hour().toString()).isEqualTo("13");
     assertThat(date.minute().toString()).isEqualTo("30");
-    assertThat(date.second().toString()).isEqualTo("12");
+    assertThat(date.second().toString()).isEqualTo("12.0");
     assertThat(date.milliSecond().toString()).isEqualTo("3");
   }
 }

@@ -13,7 +13,13 @@
  */
 package com.querydsl.jpa.domain4;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.Basic;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.OrderColumn;
 import java.io.Serializable;
 import java.util.List;
 

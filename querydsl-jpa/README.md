@@ -50,7 +50,7 @@ And now, configure the Maven APT plugin :
 </project>
 ```
 
-The JPAAnnotationProcessor finds domain types annotated with the javax.persistence.Entity annotation and generates query types for them.
+The JPAAnnotationProcessor finds domain types annotated with the jakarta.persistence.Entity annotation and generates query types for them.
 
 If you use Hibernate annotations in your domain types you should use the APT processor com.querydsl.apt.hibernate.HibernateAnnotationProcessor instead.
 

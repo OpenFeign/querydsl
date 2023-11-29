@@ -14,9 +14,9 @@
 
   <properties>
     <osgi.import.package>com.mongodb;version="0.0.0",
-      org.mongodb.morphia.*;version="1.3.2",
-      org.bson.*;version="0.0.0",
-      ${osgi.import.package.root}</osgi.import.package>
+            org.mongodb.morphia.*;version="1.3.2",
+            org.bson.*;version="0.0.0",
+            ${osgi.import.package.root}</osgi.import.package>
   </properties>
 
   <dependencies>

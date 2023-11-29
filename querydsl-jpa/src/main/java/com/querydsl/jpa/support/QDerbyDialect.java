@@ -13,17 +13,21 @@
  */
 package com.querydsl.jpa.support;
 
+import com.querydsl.core.types.Ops;
 import com.querydsl.sql.DerbyTemplates;
-import com.querydsl.sql.SQLTemplates;
+import org.hibernate.boot.model.FunctionContributions;
 import org.hibernate.dialect.DerbyDialect;
 
 /** {@code QDerbyDialect} extends {@code DerbyDialect} with additional functions */
 public class QDerbyDialect extends DerbyDialect {
 
-  public QDerbyDialect() {
-    SQLTemplates templates = DerbyTemplates.DEFAULT;
-    //        getFunctions().putAll(DialectSupport.createFunctions(templates));
-    //        registerFunction("concat", DialectSupport.createFunction(templates, Ops.CONCAT));
-    //        registerFunction("cast", castFunction);
+  @Override
+  public void initializeFunctionRegistry(FunctionContributions functionContributions) {
+    super.initializeFunctionRegistry(functionContributions);
+    DialectSupport.extendRegistry(DerbyTemplates.DEFAULT, functionContributions);
+    DialectSupport.extendRegistry(
+        "concat",
+        DialectSupport.createFunction(DerbyTemplates.DEFAULT, Ops.CONCAT),
+        functionContributions);
   }
 }

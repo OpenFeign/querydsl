@@ -60,6 +60,6 @@ public class AggregationTest extends AbstractQueryTest {
 
   @Test
   public void sum() {
-    assertThat(query.select(cat.weight.sum()).fetchOne()).isEqualTo(Integer.valueOf(14));
+    assertThat(query.select(cat.weight.sumAggregate()).fetchOne()).isEqualTo(Integer.valueOf(14));
   }
 }

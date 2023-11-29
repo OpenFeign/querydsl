@@ -200,32 +200,32 @@
         </dependencies>
       </plugin>
       <!--
-      <plugin>
-        <groupId>io.github.openfeign.querydsl</groupId>
-        <artifactId>querydsl-maven-plugin</artifactId>
-        <version>${project.version}</version>
-        <configuration>
-          <testClasspath>true</testClasspath>
-          <targetFolder>target/genericExporter</targetFolder>
-          <scala>true</scala>
-          <packages>
-            <package>com.querydsl.scala</package>
-          </packages>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>io.github.openfeign.querydsl</groupId>
-            <artifactId>querydsl-scala</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>${scala.full.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>    
-    -->
+              <plugin>
+                <groupId>io.github.openfeign.querydsl</groupId>
+                <artifactId>querydsl-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                  <testClasspath>true</testClasspath>
+                  <targetFolder>target/genericExporter</targetFolder>
+                  <scala>true</scala>
+                  <packages>
+                    <package>com.querydsl.scala</package>
+                  </packages>
+                </configuration>
+                <dependencies>
+                  <dependency>
+                    <groupId>io.github.openfeign.querydsl</groupId>
+                    <artifactId>querydsl-scala</artifactId>
+                    <version>${project.version}</version>
+                  </dependency>
+                  <dependency>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                    <version>${scala.full.version}</version>
+                  </dependency>
+                </dependencies>
+              </plugin>
+            -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -252,9 +252,9 @@
           </classpathContainers>
           <excludes>
             <exclude>org.scala-lang:scala-library</exclude>
-            <!-- 
-            <exclude>org.scala-lang:scala-compiler</exclude>
-             -->
+            <!--
+                        <exclude>org.scala-lang:scala-compiler</exclude>
+                         -->
           </excludes>
           <sourceIncludes>
             <sourceInclude>**/*.scala</sourceInclude>

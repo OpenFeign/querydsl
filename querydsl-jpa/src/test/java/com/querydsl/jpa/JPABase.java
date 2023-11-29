@@ -300,7 +300,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
         query()
             .from(cat)
             .groupBy(cat.alive, cat.breed)
-            .select(cat.alive, cat.breed, cat.id.sum())
+            .select(cat.alive, cat.breed, cat.id.sumLong())
             .fetchResults();
 
     assertThat(results.getTotal()).isEqualTo(1);
@@ -312,8 +312,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
         query()
             .from(cat)
             .groupBy(cat.alive)
-            .having(cat.id.sum().gt(5))
-            .select(cat.alive, cat.id.sum())
+            .having(cat.id.sumLong().gt(5))
+            .select(cat.alive, cat.id.sumLong())
             .fetchResults();
 
     assertThat(results.getTotal()).isEqualTo(1);

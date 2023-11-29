@@ -82,6 +82,10 @@
       <scope>test</scope>
       <exclusions>
         <exclusion>
+          <groupId>jakarta.activation</groupId>
+          <artifactId>activation-api</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>org.javassist</groupId>
           <artifactId>javassist</artifactId>
         </exclusion>
@@ -112,6 +116,12 @@
       <groupId>org.eclipse.jdt</groupId>
       <artifactId>ecj</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+      <version>3.1.0</version>
+      <scope>compile</scope>
     </dependency>
 
   </dependencies>
@@ -178,7 +188,6 @@
                 <descriptor>src/main/hibernate.xml</descriptor>
                 <descriptor>src/main/jdo.xml</descriptor>
                 <descriptor>src/main/jpa.xml</descriptor>
-                <descriptor>src/main/jakarta.xml</descriptor>
                 <descriptor>src/main/morphia.xml</descriptor>
                 <descriptor>src/main/roo.xml</descriptor>
                 <descriptor>src/main/onejar.xml</descriptor>

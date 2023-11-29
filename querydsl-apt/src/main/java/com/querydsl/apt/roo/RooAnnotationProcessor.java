@@ -35,7 +35,6 @@ import org.springframework.roo.addon.jpa.entity.RooJpaEntity;
  */
 @SupportedAnnotationTypes({
   "com.querydsl.core.annotations.*",
-  "javax.persistence.*",
   "org.springframework.roo.addon.jpa.entity.*"
 })
 public class RooAnnotationProcessor extends AbstractQuerydslProcessor {

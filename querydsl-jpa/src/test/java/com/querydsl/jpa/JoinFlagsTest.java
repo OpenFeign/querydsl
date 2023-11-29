@@ -13,27 +13,13 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.jpa.Constants.*;
+import static com.querydsl.jpa.Constants.cat;
+import static com.querydsl.jpa.Constants.cat1;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
 public class JoinFlagsTest extends AbstractQueryTest {
-
-  @Test
-  public void fetchAll() {
-    QueryHelper query1 = query().from(cat).fetchAll().where(cat.name.isNotNull());
-    assertThat(query1.toString())
-        .isEqualTo("select cat\nfrom Cat cat fetch all properties\nwhere cat.name is not null");
-  }
-
-  @Test
-  public void fetchAll2() {
-    QueryHelper query2 = query().from(cat).fetchAll().from(cat1).fetchAll();
-    assertThat(query2.toString())
-        .isEqualTo("select cat\nfrom Cat cat fetch all properties, Cat cat1 fetch all properties");
-  }
-
   @Test
   public void fetch() {
     QueryHelper query = query().from(cat).innerJoin(cat.mate, cat1).fetchJoin();

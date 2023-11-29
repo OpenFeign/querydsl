@@ -27,7 +27,6 @@ import static com.querydsl.jpa.Constants.an;
 import static com.querydsl.jpa.Constants.bar;
 import static com.querydsl.jpa.Constants.calendar;
 import static com.querydsl.jpa.Constants.cat;
-import static com.querydsl.jpa.Constants.cat1;
 import static com.querydsl.jpa.Constants.catalog;
 import static com.querydsl.jpa.Constants.cust;
 import static com.querydsl.jpa.Constants.fatcat;
@@ -80,7 +79,12 @@ import org.junit.Test;
 public class ParsingTest extends AbstractQueryTest {
 
   @Test
-  @Ignore
+  public void parseOrd() throws Exception {
+    query().from(ord).where(ord.paid.isTrue()).parse();
+  }
+
+  @Test
+  @NoEclipseLink({HSQLDB, DERBY})
   public void arrayExpr() throws Exception {
     query().from(ord).where(ord.items(0).id.eq(1234L)).parse();
   }
@@ -113,7 +117,11 @@ public class ParsingTest extends AbstractQueryTest {
 
   @Test
   public void docoExamples910() throws Exception {
-    query().from(cat).groupBy(cat.color).select(cat.color, cat.weight.sum(), cat.count()).parse();
+    query()
+        .from(cat)
+        .groupBy(cat.color)
+        .select(cat.color, cat.weight.sumLong(), cat.count())
+        .parse();
   }
 
   @Test
@@ -122,7 +130,7 @@ public class ParsingTest extends AbstractQueryTest {
         .from(cat)
         .groupBy(cat.color)
         .having(cat.color.in(Color.TABBY, Color.BLACK))
-        .select(cat.color, cat.weight.sum(), cat.count())
+        .select(cat.color, cat.weight.sumLong(), cat.count())
         .parse();
   }
 
@@ -134,7 +142,7 @@ public class ParsingTest extends AbstractQueryTest {
         .join(cat.kittens, kitten)
         .groupBy(cat)
         .having(kitten.weight.avg().gt(100.0))
-        .orderBy(kitten.count().asc(), kitten.weight.sum().desc())
+        .orderBy(kitten.count().asc(), kitten.weight.sumLong().desc())
         .select(cat)
         .parse();
   }
@@ -184,9 +192,9 @@ public class ParsingTest extends AbstractQueryTest {
                             .from(catalog)
                             .where(catalog.effectiveDate.lt(DateExpression.currentDate())))))
         .groupBy(ord)
-        .having(price.amount.sum().gt(0L))
-        .orderBy(price.amount.sum().desc())
-        .select(ord.id, price.amount.sum(), item.count());
+        .having(price.amount.sumLong().gt(0L))
+        .orderBy(price.amount.sumLong().desc())
+        .select(ord.id, price.amount.sumLong(), item.count());
 
     Customer c1 = new Customer();
     Catalog c2 = new Catalog();
@@ -204,9 +212,9 @@ public class ParsingTest extends AbstractQueryTest {
                 .and(price.product.eq(product))
                 .and(catalog.eq(c2)))
         .groupBy(ord)
-        .having(price.amount.sum().gt(0L))
-        .orderBy(price.amount.sum().desc())
-        .select(ord.id, price.amount.sum(), item.count());
+        .having(price.amount.sumLong().gt(0L))
+        .orderBy(price.amount.sumLong().desc())
+        .select(ord.id, price.amount.sumLong(), item.count());
   }
 
   @Test
@@ -325,7 +333,7 @@ public class ParsingTest extends AbstractQueryTest {
   public void docoExamples95() throws Exception {
     query()
         .from(cat)
-        .select(cat.weight.avg(), cat.weight.sum(), cat.weight.max(), cat.count())
+        .select(cat.weight.avg(), cat.weight.sumLong(), cat.weight.max(), cat.count())
         .parse();
   }
 
@@ -544,29 +552,6 @@ public class ParsingTest extends AbstractQueryTest {
   }
 
   @Test
-  @NoEclipseLink
-  @NoOpenJPA
-  public void joinFlags1() {
-    query().from(cat).fetchAll().parse();
-  }
-
-  @Test
-  @NoEclipseLink
-  @NoOpenJPA
-  @NoBatooJPA
-  public void joinFlags2() {
-    query().from(cat).fetchAll().from(cat1).fetchAll().parse();
-  }
-
-  @Test
-  @NoEclipseLink
-  @NoOpenJPA
-  @NoBatooJPA
-  public void joinFlags3() {
-    query().from(cat).fetchAll().from(cat1).fetchAll().parse();
-  }
-
-  @Test
   public void joins() {
     query().from(cat).join(cat.mate, mate).select(cat).parse();
   }
@@ -746,14 +731,14 @@ public class ParsingTest extends AbstractQueryTest {
   @Ignore
   public void sum() {
     // NOT SUPPORTED
-    query().from(cat).select(cat.kittens.size().sum()).parse();
+    query().from(cat).select(cat.kittens.size().sumLong()).parse();
   }
 
   @Test
   @Ignore
   public void sum_2() {
     // NOT SUPPORTED
-    query().from(cat).where(cat.kittens.size().sum().gt(0)).select(cat).parse();
+    query().from(cat).where(cat.kittens.size().sumLong().gt(0)).select(cat).parse();
   }
 
   @Test

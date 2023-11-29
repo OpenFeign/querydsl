@@ -13,22 +13,88 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.SQLSERVER;
+import static com.querydsl.core.Target.TERADATA;
 import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 import com.mysema.commons.lang.Pair;
-import com.querydsl.core.*;
+import com.querydsl.core.Fetchable;
+import com.querydsl.core.FilterFactory;
+import com.querydsl.core.MatchingFiltersFactory;
+import com.querydsl.core.ProjectionsFactory;
+import com.querydsl.core.QueryExecution;
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.QuerydslModule;
+import com.querydsl.core.Target;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.group.Group;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.group.MockTuple;
 import com.querydsl.core.group.QPair;
 import com.querydsl.core.testutil.ExcludeIn;
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.*;
-import com.querydsl.jpa.domain.*;
+import com.querydsl.core.types.ArrayConstructorExpression;
+import com.querydsl.core.types.Concatenation;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.ParamNotSetException;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.EnumPath;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.ListExpression;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.Param;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.domain.Animal;
+import com.querydsl.jpa.domain.Author;
+import com.querydsl.jpa.domain.Book;
+import com.querydsl.jpa.domain.Cat;
+import com.querydsl.jpa.domain.Color;
+import com.querydsl.jpa.domain.Company;
 import com.querydsl.jpa.domain.Company.Rating;
+import com.querydsl.jpa.domain.DomesticCat;
+import com.querydsl.jpa.domain.DoubleProjection;
+import com.querydsl.jpa.domain.Employee;
+import com.querydsl.jpa.domain.Entity1;
+import com.querydsl.jpa.domain.Entity2;
+import com.querydsl.jpa.domain.Foo;
+import com.querydsl.jpa.domain.JobFunction;
+import com.querydsl.jpa.domain.Numeric;
+import com.querydsl.jpa.domain.QAnimal;
+import com.querydsl.jpa.domain.QAuthor;
+import com.querydsl.jpa.domain.QBook;
+import com.querydsl.jpa.domain.QCat;
+import com.querydsl.jpa.domain.QCompany;
+import com.querydsl.jpa.domain.QDomesticCat;
+import com.querydsl.jpa.domain.QDoubleProjection;
+import com.querydsl.jpa.domain.QEmployee;
+import com.querydsl.jpa.domain.QEntity1;
+import com.querydsl.jpa.domain.QFamily;
+import com.querydsl.jpa.domain.QFoo;
+import com.querydsl.jpa.domain.QHuman;
+import com.querydsl.jpa.domain.QMammal;
+import com.querydsl.jpa.domain.QNumeric;
+import com.querydsl.jpa.domain.QShow;
+import com.querydsl.jpa.domain.QSimpleTypes;
+import com.querydsl.jpa.domain.QUser;
+import com.querydsl.jpa.domain.QWorld;
+import com.querydsl.jpa.domain.Show;
 import com.querydsl.jpa.domain4.QBookMark;
 import com.querydsl.jpa.domain4.QBookVersion;
 import java.math.BigDecimal;
@@ -36,9 +102,17 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -1042,7 +1116,7 @@ public abstract class AbstractJPATest {
         .from(cat)
         .where(cat.bodyWeight.gt(0))
         .groupBy(cat.name, cat.breed)
-        .select(cat.name, cat.breed, cat.bodyWeight.sum())
+        .select(cat.name, cat.breed, cat.bodyWeight.sumDouble())
         .fetch();
   }
 
@@ -1894,40 +1968,40 @@ public abstract class AbstractJPATest {
   @Ignore
   public void sum() {
     // NOT SUPPORTED
-    query().from(cat).select(cat.kittens.size().sum()).fetch();
+    query().from(cat).select(cat.kittens.size().sumLong()).fetch();
   }
 
   @Test
   @Ignore
   public void sum_2() {
     // NOT SUPPORTED
-    query().from(cat).where(cat.kittens.size().sum().gt(0)).select(cat).fetch();
+    query().from(cat).where(cat.kittens.size().sumLong().gt(0)).select(cat).fetch();
   }
 
   @Test
   public void sum_3() {
-    assertThat(query().from(cat).select(cat.bodyWeight.sum()).fetchFirst())
+    assertThat(query().from(cat).select(cat.bodyWeight.sumDouble()).fetchFirst())
         .isCloseTo(21.0, within(0.0001));
   }
 
   @Test
   public void sum_3_projected() {
-    double val = query().from(cat).select(cat.bodyWeight.sum()).fetchFirst();
+    double val = query().from(cat).select(cat.bodyWeight.sumDouble()).fetchFirst();
     DoubleProjection projection =
-        query().from(cat).select(new QDoubleProjection(cat.bodyWeight.sum())).fetchFirst();
+        query().from(cat).select(new QDoubleProjection(cat.bodyWeight.sumDouble())).fetchFirst();
     assertThat(projection.val).isCloseTo(val, within(0.001));
   }
 
   @Test
   public void sum_4() {
-    Double dbl = query().from(cat).select(cat.bodyWeight.sum().negate()).fetchFirst();
+    Double dbl = query().from(cat).select(cat.bodyWeight.sumDouble().negate()).fetchFirst();
     assertThat(dbl).isNotNull();
   }
 
   @Test
   public void sum_5() {
     QShow show = QShow.show;
-    Long lng = query().from(show).select(show.id.sum()).fetchFirst();
+    Long lng = query().from(show).select(show.id.sumLong()).fetchFirst();
     assertThat(lng).isNotNull();
   }
 
@@ -1937,7 +2011,7 @@ public abstract class AbstractJPATest {
     assertThat(
             query()
                 .from(cat)
-                .where(select(cat2.breed.sum()).from(cat2).where(cat2.eq(cat.mate)).gt(0))
+                .where(select(cat2.breed.sumLong()).from(cat2).where(cat2.eq(cat.mate)).gt(0L))
                 .select(cat)
                 .fetch())
         .isEqualTo(Collections.emptyList());
@@ -1948,7 +2022,7 @@ public abstract class AbstractJPATest {
     QCat cat2 = new QCat("cat2");
     query()
         .from(cat)
-        .where(select(cat2.floatProperty.sum()).from(cat2).where(cat2.eq(cat.mate)).gt(0.0f))
+        .where(select(cat2.floatProperty.sumDouble()).from(cat2).where(cat2.eq(cat.mate)).gt(0.0d))
         .select(cat)
         .fetch();
   }
@@ -1958,34 +2032,28 @@ public abstract class AbstractJPATest {
     QCat cat2 = new QCat("cat2");
     query()
         .from(cat)
-        .where(select(cat2.bodyWeight.sum()).from(cat2).where(cat2.eq(cat.mate)).gt(0.0))
+        .where(select(cat2.bodyWeight.sumDouble()).from(cat2).where(cat2.eq(cat.mate)).gt(0.0))
         .select(cat)
         .fetch();
   }
 
   @Test
-  public void sum_as_float() {
-    float val = query().from(cat).select(cat.floatProperty.sum()).fetchFirst();
-    assertThat(val > 0).isTrue();
+  public void sum_as_double_projected() {
+    double val = query().from(cat).select(cat.floatProperty.sumDouble()).fetchFirst();
+    DoubleProjection projection =
+        query().from(cat).select(new QDoubleProjection(cat.floatProperty.sumDouble())).fetchFirst();
+    assertThat(projection.val).isCloseTo(val, within(0.001));
   }
 
   @Test
-  public void sum_as_float_projected() {
-    float val = query().from(cat).select(cat.floatProperty.sum()).fetchFirst();
-    FloatProjection projection =
-        query().from(cat).select(new QFloatProjection(cat.floatProperty.sum())).fetchFirst();
-    assertThat(projection.val).isCloseTo(val, within(0.001f));
-  }
-
-  @Test
-  public void sum_as_float2() {
-    float val = query().from(cat).select(cat.floatProperty.sum().negate()).fetchFirst();
+  public void sum_as_double2() {
+    double val = query().from(cat).select(cat.floatProperty.sumDouble().negate()).fetchFirst();
     assertThat(val < 0).isTrue();
   }
 
   @Test
   public void sum_coalesce() {
-    int val = query().from(cat).select(cat.weight.sum().coalesce(0)).fetchFirst();
+    long val = query().from(cat).select(cat.weight.sumLong().coalesce(0L)).fetchFirst();
     assertThat(val).isEqualTo(0);
   }
 
@@ -1995,7 +2063,7 @@ public abstract class AbstractJPATest {
             query()
                 .from(cat)
                 .where(cat.name.eq(UUID.randomUUID().toString()))
-                .select(cat.bodyWeight.sum())
+                .select(cat.bodyWeight.sumDouble())
                 .fetchFirst())
         .isNull();
   }
@@ -2006,7 +2074,7 @@ public abstract class AbstractJPATest {
             query()
                 .from(cat)
                 .where(cat.name.eq(UUID.randomUUID().toString()))
-                .select(cat.floatProperty.sum())
+                .select(cat.floatProperty.sumDouble())
                 .fetchFirst())
         .isNull();
   }

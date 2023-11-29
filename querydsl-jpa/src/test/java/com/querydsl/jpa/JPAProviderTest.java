@@ -10,6 +10,8 @@ import jakarta.persistence.Persistence;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,7 +35,8 @@ public class JPAProviderTest {
 
   @Test
   public void hibernate() {
-    factory = Persistence.createEntityManagerFactory("h2");
+    Map<String, String> properties = new HashMap<>();
+    factory = Persistence.createEntityManagerFactory("h2", properties);
     em = factory.createEntityManager();
     System.out.println(em.getDelegate().getClass());
     assertThat(JPAProvider.getTemplates(em)).isEqualTo(Hibernate5Templates.DEFAULT);

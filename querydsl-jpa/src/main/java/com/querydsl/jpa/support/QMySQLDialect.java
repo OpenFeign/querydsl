@@ -14,14 +14,15 @@
 package com.querydsl.jpa.support;
 
 import com.querydsl.sql.MySQLTemplates;
-import com.querydsl.sql.SQLTemplates;
+import org.hibernate.boot.model.FunctionContributions;
 import org.hibernate.dialect.MySQLDialect;
 
-/** {@code QMySQL57InnoDBDialect} extends {@code MySQL57InnoDBDialect} with additional functions */
-public class QMySQL57InnoDBDialect extends MySQLDialect {
+/** {@code QMySQL5Dialect} extends {@code MySQL5Dialect} with additional functions */
+public class QMySQLDialect extends MySQLDialect {
 
-  public QMySQL57InnoDBDialect() {
-    SQLTemplates templates = MySQLTemplates.DEFAULT;
-    //        getFunctions().putAll(DialectSupport.createFunctions(templates));
+  @Override
+  public void initializeFunctionRegistry(FunctionContributions functionContributions) {
+    super.initializeFunctionRegistry(functionContributions);
+    DialectSupport.extendRegistry(MySQLTemplates.DEFAULT, functionContributions);
   }
 }

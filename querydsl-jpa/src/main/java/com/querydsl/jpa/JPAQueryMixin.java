@@ -20,7 +20,16 @@ import com.querydsl.core.support.Context;
 import com.querydsl.core.support.PathsExtractor;
 import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.support.ReplaceVisitor;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathType;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.CollectionPathBase;
 import jakarta.persistence.Entity;
 import java.util.ArrayList;
@@ -65,8 +74,6 @@ public class JPAQueryMixin<T> extends QueryMixin<T> {
 
   public static final JoinFlag FETCH = new JoinFlag("fetch ");
 
-  public static final JoinFlag FETCH_ALL_PROPERTIES = new JoinFlag(" fetch all properties");
-
   public JPAQueryMixin() {
     this(null, new DefaultQueryMetadata());
   }
@@ -84,11 +91,6 @@ public class JPAQueryMixin<T> extends QueryMixin<T> {
 
   public T fetchJoin() {
     addJoinFlag(FETCH);
-    return getSelf();
-  }
-
-  public T fetchAll() {
-    addJoinFlag(FETCH_ALL_PROPERTIES);
     return getSelf();
   }
 

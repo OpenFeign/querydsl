@@ -116,7 +116,7 @@ public final class HibernateUtil {
     }
   }
 
-  public static BasicTypeReference<?> getType(Class<?> clazz) {
+  public static BasicTypeReference getType(Class<?> clazz) {
     return TYPES.get(clazz);
   }
 }

@@ -223,7 +223,7 @@ public enum Ops implements Operator {
     HOUR(Integer.class),
     MINUTE(Integer.class),
     MONTH(Integer.class),
-    SECOND(Integer.class),
+    SECOND(Float.class),
     MILLISECOND(Integer.class),
     SYSDATE(Comparable.class),
     YEAR(Integer.class),
