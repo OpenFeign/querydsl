@@ -1,160 +1,151 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.github.openfeign.querydsl</groupId>
+    <artifactId>querydsl-root</artifactId>
+    <version>6.0-SNAPSHOT</version>
+  </parent>
 
-	<groupId>org.springframework.data</groupId>
-	<artifactId>spring-data-ldap</artifactId>
-	<version>3.2.0</version>
+  <artifactId>querydsl-jpa-spring</artifactId>
+  <name>Querydsl - JPA Spring support</name>
+  <description>JPA Spring support for Querydsl</description>
 
-	<name>Spring Data LDAP</name>
-	<description>Spring Data integration for LDAP</description>
-	<url>https://github.com/spring-projects/spring-data-ldap</url>
+  <properties>
+    <!-- to match spring SDK version -->
+    <main.java.version>17</main.java.version>
+    <latest.java.version>17</latest.java.version>
 
-	<parent>
-		<groupId>org.springframework.data.build</groupId>
-		<artifactId>spring-data-parent</artifactId>
-		<version>3.2.0</version>
-	</parent>
+    <!-- TODO remove -->
+    <cdi>4.0.1</cdi>
+    <webbeans>4.0.0</webbeans>
+  </properties>
 
-	<properties>
-		<spring-ldap>3.2.0</spring-ldap>
-		<springdata.commons>3.2.0</springdata.commons>
-		<java-module-name>spring.data.ldap</java-module-name>
-	</properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${springboot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-	<developers>
-		<developer>
-			<id>rwinch</id>
-			<name>Rob Winch</name>
-			<email>rwinch at pivotal.io</email>
-			<organization>Pivotal</organization>
-			<organizationUrl>https://www.pivotal.io</organizationUrl>
-			<roles>
-				<role>Project Lead</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-		<developer>
-			<id>mpaluch</id>
-			<name>Mark Paluch</name>
-			<email>mpaluch at pivotal.io</email>
-			<organization>Pivotal</organization>
-			<organizationUrl>https://www.pivotal.io</organizationUrl>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-	</developers>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
 
-	<dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>org.springframework.ldap</groupId>
+      <artifactId>spring-ldap-core</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-commons</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.springframework.ldap</groupId>
-			<artifactId>spring-ldap-core</artifactId>
-			<version>${spring-ldap}</version>
-		</dependency>
+    <dependency>
+      <groupId>com.querydsl</groupId>
+      <artifactId>querydsl-mongodb</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>spring-data-commons</artifactId>
-			<version>${springdata.commons}</version>
-		</dependency>
+    <dependency>
+      <groupId>com.querydsl</groupId>
+      <artifactId>querydsl-apt</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-mongodb</artifactId>
-			<version>${querydsl}</version>
-			<optional>true</optional>
-		</dependency>
+    <!-- CDI -->
 
-		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-apt</artifactId>
-			<version>${querydsl}</version>
-			<scope>provided</scope>
-		</dependency>
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.cdi-api</artifactId>
+      <version>${cdi}</version>
+      <optional>true</optional>
+    </dependency>
 
-		<!-- CDI -->
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>jakarta.enterprise</groupId>
-			<artifactId>jakarta.enterprise.cdi-api</artifactId>
-			<version>${cdi}</version>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-se</artifactId>
+      <version>${webbeans}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-spi</artifactId>
+      <version>${webbeans}</version>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>jakarta.annotation</groupId>
-			<artifactId>jakarta.annotation-api</artifactId>
-			<version>${jakarta-annotation-api}</version>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-		<dependency>
-			<groupId>org.apache.openwebbeans</groupId>
-			<artifactId>openwebbeans-se</artifactId>
-			<version>${webbeans}</version>
-			<scope>test</scope>
-		</dependency>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 
-	</dependencies>
+  <profiles>
+    <profile>
+      <id>springldap-next</id>
+      <properties>
+        <spring-ldap>2.3.2.BUILD-SNAPSHOT</spring-ldap>
+      </properties>
+    </profile>
+    <profile>
+      <id>antora</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.spring.maven.antora</groupId>
+            <artifactId>antora-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
-	<profiles>
-		<profile>
-			<id>springldap-next</id>
-			<properties>
-				<spring-ldap>2.3.2.BUILD-SNAPSHOT</spring-ldap>
-			</properties>
-		</profile>
-		<profile>
-			<id>antora</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>io.spring.maven.antora</groupId>
-						<artifactId>antora-maven-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
-			<id>antora-process-resources</id>
-			<build>
-				<resources>
-					<resource>
-						<directory>src/main/antora/resources/antora-resources</directory>
-						<filtering>true</filtering>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-	</profiles>
-
-	<repositories>
-		
-		
-	</repositories>
+    <profile>
+      <id>antora-process-resources</id>
+      <build>
+        <resources>
+          <resource>
+            <filtering>true</filtering>
+            <directory>src/main/antora/resources/antora-resources</directory>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
