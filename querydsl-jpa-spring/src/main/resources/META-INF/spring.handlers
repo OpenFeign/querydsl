@@ -1,1 +1,1 @@
-http\://www.springframework.org/schema/data/ldap=org.springframework.data.ldap.config.LdapNamespaceHandler
+http\://www.springframework.org/schema/data/ldap=io.github.openfeign.querydsl.jpa.spring.config.LdapNamespaceHandler
