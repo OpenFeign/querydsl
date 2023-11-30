@@ -15,7 +15,7 @@
  */
 package io.github.openfeign.querydsl.jpa.spring.config;
 
-import io.github.openfeign.querydsl.jpa.spring.repository.config.LdapRepositoryConfigurationExtension;
+import io.github.openfeign.querydsl.jpa.spring.repository.config.QuerydslJpaRepositoryConfigurationExtension;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 import org.springframework.data.repository.config.RepositoryBeanDefinitionParser;
 
@@ -30,6 +30,6 @@ public class LdapNamespaceHandler extends NamespaceHandlerSupport {
 
     registerBeanDefinitionParser(
         "repositories",
-        new RepositoryBeanDefinitionParser(new LdapRepositoryConfigurationExtension()));
+        new RepositoryBeanDefinitionParser(new QuerydslJpaRepositoryConfigurationExtension()));
   }
 }

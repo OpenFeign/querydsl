@@ -17,7 +17,7 @@ package io.github.openfeign.querydsl.jpa.spring.repository.support;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.*;
 
-import io.github.openfeign.querydsl.jpa.spring.repository.LdapRepository;
+import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
 import java.util.List;
 import java.util.Optional;
 import javax.naming.Name;
@@ -39,7 +39,7 @@ import org.springframework.util.Assert;
  * @author Mark Paluch
  * @author Jens Schauder
  */
-public class SimpleLdapRepository<T> implements LdapRepository<T> {
+public class SimpleQuerydslJpaRepository<T, ID> implements QuerydslJpaRepository<T, ID> {
 
   private static final String OBJECTCLASS_ATTRIBUTE = "objectclass";
 
@@ -48,13 +48,13 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
   private final Class<T> entityType;
 
   /**
-   * Creates a new {@link SimpleLdapRepository}.
+   * Creates a new {@link SimpleQuerydslJpaRepository}.
    *
    * @param ldapOperations must not be {@literal null}.
    * @param odm must not be {@literal null}.
    * @param entityType must not be {@literal null}.
    */
-  public SimpleLdapRepository(
+  public SimpleQuerydslJpaRepository(
       LdapOperations ldapOperations, ObjectDirectoryMapper odm, Class<T> entityType) {
 
     Assert.notNull(ldapOperations, "LdapOperations must not be null");
@@ -67,13 +67,13 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
   }
 
   /**
-   * Creates a new {@link SimpleLdapRepository}.
+   * Creates a new {@link SimpleQuerydslJpaRepository}.
    *
    * @param ldapOperations must not be {@literal null}.
    * @param odm must not be {@literal null}.
    * @param entityType must not be {@literal null}.
    */
-  SimpleLdapRepository(
+  SimpleQuerydslJpaRepository(
       LdapOperations ldapOperations,
       MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> context,
       ObjectDirectoryMapper odm,
@@ -90,7 +90,7 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
   }
 
   // -------------------------------------------------------------------------
-  // Methods from LdapRepository
+  // Methods from QuerydslJpaRepository
   // ------------------------------------------------------------------------
 
   @Override

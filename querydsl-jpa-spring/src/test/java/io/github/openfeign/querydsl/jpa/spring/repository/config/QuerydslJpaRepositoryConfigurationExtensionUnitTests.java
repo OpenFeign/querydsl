@@ -17,8 +17,9 @@ package io.github.openfeign.querydsl.jpa.spring.repository.config;
 
 import static org.junit.Assert.*;
 
-import io.github.openfeign.querydsl.jpa.spring.repository.LdapRepository;
+import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
 import java.util.Collection;
+import javax.naming.Name;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -34,11 +35,11 @@ import org.springframework.data.repository.config.RepositoryConfigurationSource;
 import org.springframework.ldap.odm.annotations.Entry;
 
 /**
- * Unit tests for {@link LdapRepositoryConfigurationExtension}.
+ * Unit tests for {@link QuerydslJpaRepositoryConfigurationExtension}.
  *
  * @author Mark Paluch
  */
-class LdapRepositoryConfigurationExtensionUnitTests {
+class QuerydslJpaRepositoryConfigurationExtensionUnitTests {
 
   private StandardAnnotationMetadata metadata = new StandardAnnotationMetadata(Config.class, true);
   private ResourceLoader loader = new PathMatchingResourcePatternResolver();
@@ -52,7 +53,8 @@ class LdapRepositoryConfigurationExtensionUnitTests {
   @Test // DATALDAP-60
   void isStrictMatchIfDomainTypeIsAnnotatedWithEntry() {
 
-    LdapRepositoryConfigurationExtension extension = new LdapRepositoryConfigurationExtension();
+    QuerydslJpaRepositoryConfigurationExtension extension =
+        new QuerydslJpaRepositoryConfigurationExtension();
     assertHasRepo(
         SampleRepository.class,
         extension.getRepositoryConfigurations(configurationSource, loader, true));
@@ -61,7 +63,8 @@ class LdapRepositoryConfigurationExtensionUnitTests {
   @Test // DATALDAP-60
   void isStrictMatchIfRepositoryExtendsStoreSpecificBase() {
 
-    LdapRepositoryConfigurationExtension extension = new LdapRepositoryConfigurationExtension();
+    QuerydslJpaRepositoryConfigurationExtension extension =
+        new QuerydslJpaRepositoryConfigurationExtension();
     assertHasRepo(
         StoreRepository.class,
         extension.getRepositoryConfigurations(configurationSource, loader, true));
@@ -70,7 +73,8 @@ class LdapRepositoryConfigurationExtensionUnitTests {
   @Test // DATALDAP-60
   void isNotStrictMatchIfDomainTypeIsNotAnnotatedWithEntry() {
 
-    LdapRepositoryConfigurationExtension extension = new LdapRepositoryConfigurationExtension();
+    QuerydslJpaRepositoryConfigurationExtension extension =
+        new QuerydslJpaRepositoryConfigurationExtension();
     assertDoesNotHaveRepo(
         UnannotatedRepository.class,
         extension.getRepositoryConfigurations(configurationSource, loader, true));
@@ -116,5 +120,5 @@ class LdapRepositoryConfigurationExtensionUnitTests {
 
   interface UnannotatedRepository extends Repository<Object, Long> {}
 
-  interface StoreRepository extends LdapRepository<Object> {}
+  interface StoreRepository extends QuerydslJpaRepository<Object, Name> {}
 }

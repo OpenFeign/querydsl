@@ -29,13 +29,13 @@ import org.springframework.util.Assert;
 
 /**
  * {@link org.springframework.beans.factory.FactoryBean} to create {@link
- * io.github.openfeign.querydsl.jpa.spring.repository.LdapRepository} instances.
+ * io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository} instances.
  *
  * @author Mattias Hellborg Arthursson
  * @author Oliver Gierke
  * @author Mark Paluch
  */
-public class LdapRepositoryFactoryBean<T extends Repository<S, Name>, S>
+public class QuerydslJpaRepositoryBean<T extends Repository<S, Name>, S>
     extends RepositoryFactoryBeanSupport<T, S, Name> {
 
   private @Nullable LdapOperations ldapOperations;
@@ -45,11 +45,11 @@ public class LdapRepositoryFactoryBean<T extends Repository<S, Name>, S>
       mappingContext;
 
   /**
-   * Creates a new {@link LdapRepositoryFactoryBean} for the given repository interface.
+   * Creates a new {@link QuerydslJpaRepositoryBean} for the given repository interface.
    *
    * @param repositoryInterface must not be {@literal null}.
    */
-  public LdapRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+  public QuerydslJpaRepositoryBean(Class<? extends T> repositoryInterface) {
     super(repositoryInterface);
   }
 
@@ -74,8 +74,8 @@ public class LdapRepositoryFactoryBean<T extends Repository<S, Name>, S>
     Assert.state(ldapOperations != null, "LdapOperations must be set");
 
     return mappingContext != null
-        ? new LdapRepositoryFactory(ldapOperations, mappingContext)
-        : new LdapRepositoryFactory(ldapOperations);
+        ? new QuerydslJpaRepositoryFactory(ldapOperations, mappingContext)
+        : new QuerydslJpaRepositoryFactory(ldapOperations);
   }
 
   @Override

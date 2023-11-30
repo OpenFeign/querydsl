@@ -41,13 +41,13 @@ import org.springframework.ldap.core.LdapOperations;
  * @author Mark Paluch
  * @since 2.1
  */
-public class LdapRepositoryExtension extends CdiRepositoryExtensionSupport {
+public class QuerydslJpaRepositoryExtension extends CdiRepositoryExtensionSupport {
 
-  private static final Log LOG = LogFactory.getLog(LdapRepositoryExtension.class);
+  private static final Log LOG = LogFactory.getLog(QuerydslJpaRepositoryExtension.class);
 
   private final Map<Set<Annotation>, Bean<LdapOperations>> ldapOperations = new HashMap<>();
 
-  public LdapRepositoryExtension() {
+  public QuerydslJpaRepositoryExtension() {
     LOG.info("Activating CDI extension for Spring Data LDAP repositories");
   }
 
@@ -119,7 +119,7 @@ public class LdapRepositoryExtension extends CdiRepositoryExtensionSupport {
     }
 
     // Construct and return the repository bean.
-    return new LdapRepositoryBean<>(
+    return new QuerydslJpaRepositoryBean<>(
         LdapOperations,
         qualifiers,
         repositoryType,

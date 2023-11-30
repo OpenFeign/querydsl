@@ -16,9 +16,10 @@
 
 package io.github.openfeign.querydsl.jpa.spring.config;
 
-import io.github.openfeign.querydsl.jpa.spring.repository.LdapRepository;
+import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
+import javax.naming.Name;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
-public interface DummyLdapRepository extends LdapRepository<DummyEntity> {}
+public interface DummyLdapRepository extends QuerydslJpaRepository<DummyEntity, Name> {}

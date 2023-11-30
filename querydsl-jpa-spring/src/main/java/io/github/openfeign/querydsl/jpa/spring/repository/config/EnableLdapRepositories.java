@@ -15,7 +15,7 @@
  */
 package io.github.openfeign.querydsl.jpa.spring.repository.config;
 
-import io.github.openfeign.querydsl.jpa.spring.repository.support.LdapRepositoryFactoryBean;
+import io.github.openfeign.querydsl.jpa.spring.repository.support.QuerydslJpaRepositoryBean;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -39,7 +39,7 @@ import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import(LdapRepositoriesRegistrar.class)
+@Import(QuerydslJpaRepositoriesRegistrar.class)
 public @interface EnableLdapRepositories {
 
   /**
@@ -103,11 +103,11 @@ public @interface EnableLdapRepositories {
   /**
    * Returns the {@link org.springframework.beans.factory.FactoryBean} class to be used for each
    * repository instance. Defaults to {@link
-   * io.github.openfeign.querydsl.jpa.spring.repository.support.LdapRepositoryFactoryBean}.
+   * io.github.openfeign.querydsl.jpa.spring.repository.support.QuerydslJpaRepositoryBean}.
    *
    * @return
    */
-  Class<?> repositoryFactoryBeanClass() default LdapRepositoryFactoryBean.class;
+  Class<?> repositoryFactoryBeanClass() default QuerydslJpaRepositoryBean.class;
 
   /**
    * Configure the repository base class to be used to create repository proxies for this particular

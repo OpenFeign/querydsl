@@ -18,8 +18,9 @@ package io.github.openfeign.querydsl.jpa.spring.repository.config;
 import static org.assertj.core.api.Assertions.*;
 
 import io.github.openfeign.querydsl.jpa.spring.config.DummyEntity;
-import io.github.openfeign.querydsl.jpa.spring.repository.LdapRepository;
-import io.github.openfeign.querydsl.jpa.spring.repository.support.SimpleLdapRepository;
+import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
+import io.github.openfeign.querydsl.jpa.spring.repository.support.SimpleQuerydslJpaRepository;
+import javax.naming.Name;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -58,12 +59,12 @@ class CustomRepositoryBaseClassTests {
   interface CustomizedDummyRepository extends CustomizedLdapRepository<DummyEntity> {}
 
   @NoRepositoryBean
-  interface CustomizedLdapRepository<T> extends LdapRepository<T> {
+  interface CustomizedLdapRepository<T> extends QuerydslJpaRepository<T, Name> {
 
     int returnOne();
   }
 
-  static class CustomizedLdapRepositoryImpl<T> extends SimpleLdapRepository<T>
+  static class CustomizedLdapRepositoryImpl<T> extends SimpleQuerydslJpaRepository<T, Name>
       implements CustomizedLdapRepository<T> {
 
     public CustomizedLdapRepositoryImpl(

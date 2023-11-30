@@ -46,15 +46,15 @@ import org.springframework.ldap.core.LdapOperations;
 import org.springframework.util.Assert;
 
 /**
- * Factory to create {@link io.github.openfeign.querydsl.jpa.spring.repository.LdapRepository}
- * instances.
+ * Factory to create {@link
+ * io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository} instances.
  *
  * @author Mattias Hellborg Arthursson
  * @author Eddu Melendez
  * @author Mark Paluch
  * @author Jens Schauder
  */
-public class LdapRepositoryFactory extends RepositoryFactorySupport {
+public class QuerydslJpaRepositoryFactory extends RepositoryFactorySupport {
 
   private final LdapQueryLookupStrategy queryLookupStrategy;
   private final LdapOperations ldapOperations;
@@ -63,11 +63,11 @@ public class LdapRepositoryFactory extends RepositoryFactorySupport {
   private final EntityInstantiators instantiators = new EntityInstantiators();
 
   /**
-   * Creates a new {@link LdapRepositoryFactory}.
+   * Creates a new {@link QuerydslJpaRepositoryFactory}.
    *
    * @param ldapOperations must not be {@literal null}.
    */
-  public LdapRepositoryFactory(LdapOperations ldapOperations) {
+  public QuerydslJpaRepositoryFactory(LdapOperations ldapOperations) {
 
     Assert.notNull(ldapOperations, "LdapOperations must not be null");
 
@@ -78,12 +78,12 @@ public class LdapRepositoryFactory extends RepositoryFactorySupport {
   }
 
   /**
-   * Creates a new {@link LdapRepositoryFactory}.
+   * Creates a new {@link QuerydslJpaRepositoryFactory}.
    *
    * @param ldapOperations must not be {@literal null}.
    * @param mappingContext must not be {@literal null}.
    */
-  LdapRepositoryFactory(
+  QuerydslJpaRepositoryFactory(
       LdapOperations ldapOperations,
       MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
           mappingContext) {
@@ -105,7 +105,7 @@ public class LdapRepositoryFactory extends RepositoryFactorySupport {
 
   @Override
   protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
-    return SimpleLdapRepository.class;
+    return SimpleQuerydslJpaRepository.class;
   }
 
   @Override

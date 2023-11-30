@@ -15,7 +15,7 @@
  */
 package io.github.openfeign.querydsl.jpa.spring.repository.cdi;
 
-import io.github.openfeign.querydsl.jpa.spring.repository.support.LdapRepositoryFactory;
+import io.github.openfeign.querydsl.jpa.spring.repository.support.QuerydslJpaRepositoryFactory;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
@@ -33,12 +33,12 @@ import org.springframework.util.Assert;
  * @author Mark Paluch
  * @since 2.1
  */
-public class LdapRepositoryBean<T> extends CdiRepositoryBean<T> {
+public class QuerydslJpaRepositoryBean<T> extends CdiRepositoryBean<T> {
 
   private final Bean<LdapOperations> operations;
 
   /**
-   * Creates a new {@link LdapRepositoryBean}.
+   * Creates a new {@link QuerydslJpaRepositoryBean}.
    *
    * @param operations must not be {@literal null}.
    * @param qualifiers must not be {@literal null}.
@@ -48,7 +48,7 @@ public class LdapRepositoryBean<T> extends CdiRepositoryBean<T> {
    *     implementations {@link CustomRepositoryImplementationDetector}, can be {@link
    *     Optional#empty()}.
    */
-  LdapRepositoryBean(
+  QuerydslJpaRepositoryBean(
       Bean<LdapOperations> operations,
       Set<Annotation> qualifiers,
       Class<T> repositoryType,
@@ -66,7 +66,7 @@ public class LdapRepositoryBean<T> extends CdiRepositoryBean<T> {
 
     LdapOperations ldapOperations = getDependencyInstance(operations, LdapOperations.class);
 
-    return create(() -> new LdapRepositoryFactory(ldapOperations), repositoryType);
+    return create(() -> new QuerydslJpaRepositoryFactory(ldapOperations), repositoryType);
   }
 
   @Override

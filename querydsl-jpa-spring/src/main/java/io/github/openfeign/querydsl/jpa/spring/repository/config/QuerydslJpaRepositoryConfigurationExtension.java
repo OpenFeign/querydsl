@@ -16,8 +16,8 @@
 package io.github.openfeign.querydsl.jpa.spring.repository.config;
 
 import io.github.openfeign.querydsl.jpa.spring.core.mapping.LdapMappingContext;
-import io.github.openfeign.querydsl.jpa.spring.repository.LdapRepository;
-import io.github.openfeign.querydsl.jpa.spring.repository.support.LdapRepositoryFactoryBean;
+import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
+import io.github.openfeign.querydsl.jpa.spring.repository.support.QuerydslJpaRepositoryBean;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,7 +42,8 @@ import org.w3c.dom.Element;
  * @author Mattias Hellborg Arthursson
  * @author Mark Paluch
  */
-public class LdapRepositoryConfigurationExtension extends RepositoryConfigurationExtensionSupport {
+public class QuerydslJpaRepositoryConfigurationExtension
+    extends RepositoryConfigurationExtensionSupport {
 
   private static final String ATT_LDAP_TEMPLATE_REF = "ldap-template-ref";
   private static final String MAPPING_CONTEXT_BEAN_NAME = "ldapMappingContext";
@@ -58,7 +59,7 @@ public class LdapRepositoryConfigurationExtension extends RepositoryConfiguratio
   }
 
   public String getRepositoryFactoryBeanClassName() {
-    return LdapRepositoryFactoryBean.class.getName();
+    return QuerydslJpaRepositoryBean.class.getName();
   }
 
   @Override
@@ -68,7 +69,7 @@ public class LdapRepositoryConfigurationExtension extends RepositoryConfiguratio
 
   @Override
   protected Collection<Class<?>> getIdentifyingTypes() {
-    return Collections.singleton(LdapRepository.class);
+    return Collections.singleton(QuerydslJpaRepository.class);
   }
 
   @Override

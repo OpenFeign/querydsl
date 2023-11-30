@@ -16,9 +16,11 @@
 package io.github.openfeign.querydsl.jpa.spring.repository.cdi;
 
 import io.github.openfeign.querydsl.jpa.spring.config.DummyEntity;
-import io.github.openfeign.querydsl.jpa.spring.repository.LdapRepository;
+import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
+import javax.naming.Name;
 
 /**
  * @author Mark Paluch
  */
-public interface SampleRepository extends LdapRepository<DummyEntity>, SampleFragment {}
+public interface SampleRepository
+    extends QuerydslJpaRepository<DummyEntity, Name>, SampleFragment {}

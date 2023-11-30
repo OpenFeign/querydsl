@@ -19,12 +19,13 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import io.github.openfeign.querydsl.jpa.spring.repository.support.LdapRepositoryFactory;
+import io.github.openfeign.querydsl.jpa.spring.repository.support.QuerydslJpaRepositoryFactory;
 import io.github.openfeign.querydsl.jpa.spring.repository.support.UnitTestPerson;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.naming.Name;
 import javax.naming.ldap.LdapName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,12 +37,12 @@ import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
 
 /**
- * Unit tests for {@link LdapRepository}.
+ * Unit tests for {@link QuerydslJpaRepository}.
  *
  * @author Mark Paluch
  */
 @MockitoSettings
-class LdapRepositoryUnitTests {
+class QuerydslJpaRepositoryUnitTests {
 
   @Mock LdapOperations ldapOperations;
 
@@ -73,7 +74,8 @@ class LdapRepositoryUnitTests {
             "DEA",
             "000");
 
-    repository = new LdapRepositoryFactory(ldapOperations).getRepository(PersonRepository.class);
+    repository =
+        new QuerydslJpaRepositoryFactory(ldapOperations).getRepository(PersonRepository.class);
   }
 
   @Test
@@ -131,7 +133,7 @@ class LdapRepositoryUnitTests {
     assertThat(query.attributes()).containsOnly("lastName");
   }
 
-  interface PersonRepository extends LdapRepository<UnitTestPerson> {
+  interface PersonRepository extends QuerydslJpaRepository<UnitTestPerson, Name> {
 
     Stream<PersonProjection> streamAllByLastName(String lastName);
 

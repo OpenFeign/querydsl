@@ -24,7 +24,7 @@ import org.springframework.data.repository.config.RepositoryConfigurationExtensi
  *
  * @author Mattias Hellborg Arthursson
  */
-class LdapRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrarSupport {
+class QuerydslJpaRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrarSupport {
 
   @Override
   protected Class<? extends Annotation> getAnnotation() {
@@ -33,6 +33,6 @@ class LdapRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrarSupport
 
   @Override
   protected RepositoryConfigurationExtension getExtension() {
-    return new LdapRepositoryConfigurationExtension();
+    return new QuerydslJpaRepositoryConfigurationExtension();
   }
 }

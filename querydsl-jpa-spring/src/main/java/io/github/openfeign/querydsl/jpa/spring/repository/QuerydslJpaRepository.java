@@ -17,7 +17,6 @@ package io.github.openfeign.querydsl.jpa.spring.repository;
 
 import java.util.List;
 import java.util.Optional;
-import javax.naming.Name;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
@@ -30,7 +29,7 @@ import org.springframework.ldap.query.LdapQuery;
  * @author Mark Paluch
  */
 @NoRepositoryBean
-public interface LdapRepository<T> extends Repository<T, Name> {
+public interface QuerydslJpaRepository<T, ID> extends Repository<T, ID> {
 
   /**
    * Find one entry matching the specified query.

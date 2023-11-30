@@ -23,8 +23,9 @@ import java.lang.annotation.Target;
 import org.springframework.ldap.query.SearchScope;
 
 /**
- * Annotation for use in {@link io.github.openfeign.querydsl.jpa.spring.repository.LdapRepository}
- * declarations to create automatic query methods based on statically defined queries.
+ * Annotation for use in {@link
+ * io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository} declarations to create
+ * automatic query methods based on statically defined queries.
  *
  * @author Mattias Hellborg Arthursson
  */

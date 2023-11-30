@@ -15,15 +15,16 @@
  */
 package io.github.openfeign.querydsl.jpa.spring.repository.query;
 
-import io.github.openfeign.querydsl.jpa.spring.repository.LdapRepository;
+import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
 import io.github.openfeign.querydsl.jpa.spring.repository.support.BaseUnitTestPerson;
 import io.github.openfeign.querydsl.jpa.spring.repository.support.UnitTestPerson;
 import java.util.List;
+import javax.naming.Name;
 
 /**
  * @author Rob Winch
  */
-public interface BaseTestPersonRepository extends LdapRepository<UnitTestPerson> {
+public interface BaseTestPersonRepository extends QuerydslJpaRepository<UnitTestPerson, Name> {
 
   List<BaseUnitTestPerson> findByFullName(String name);
 }

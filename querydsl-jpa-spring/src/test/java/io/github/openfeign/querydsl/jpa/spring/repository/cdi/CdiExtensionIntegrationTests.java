@@ -29,7 +29,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.LdapQueryBuilder;
 
 /**
- * Integration tests for {@link LdapRepositoryExtension}.
+ * Integration tests for {@link QuerydslJpaRepositoryExtension}.
  *
  * @author Mark Paluch
  */

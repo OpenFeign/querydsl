@@ -21,6 +21,7 @@ import io.github.openfeign.querydsl.jpa.spring.core.mapping.LdapMappingContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import javax.naming.Name;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -42,7 +43,7 @@ import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
  * @deprecated since 2.6, use {@link QuerydslLdapPredicateExecutor} instead.
  */
 @Deprecated
-public class QuerydslLdapRepository<T> extends SimpleLdapRepository<T>
+public class QuerydslLdapRepository<T> extends SimpleQuerydslJpaRepository<T, Name>
     implements QuerydslPredicateExecutor<T> {
 
   private final QuerydslLdapPredicateExecutor<T> executor;

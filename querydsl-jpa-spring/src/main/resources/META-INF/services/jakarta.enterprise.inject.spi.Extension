@@ -1,1 +1,1 @@
-io.github.openfeign.querydsl.jpa.spring.repository.cdi.LdapRepositoryExtension
+io.github.openfeign.querydsl.jpa.spring.repository.cdi.QuerydslJpaRepositoryExtension
