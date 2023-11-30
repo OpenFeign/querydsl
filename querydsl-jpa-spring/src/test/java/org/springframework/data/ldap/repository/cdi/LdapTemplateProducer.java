@@ -19,7 +19,6 @@ import static org.mockito.Mockito.*;
 
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
-
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 
@@ -30,15 +29,15 @@ import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
  */
 class LdapTemplateProducer {
 
-	@Produces
-	@Singleton
-	public LdapTemplate createLdapTemplate() {
+  @Produces
+  @Singleton
+  public LdapTemplate createLdapTemplate() {
 
-		LdapTemplate ldapTemplateMock = mock(LdapTemplate.class);
-		ObjectDirectoryMapper odmMock = mock(ObjectDirectoryMapper.class);
+    LdapTemplate ldapTemplateMock = mock(LdapTemplate.class);
+    ObjectDirectoryMapper odmMock = mock(ObjectDirectoryMapper.class);
 
-		when(ldapTemplateMock.getObjectDirectoryMapper()).thenReturn(odmMock);
+    when(ldapTemplateMock.getObjectDirectoryMapper()).thenReturn(odmMock);
 
-		return ldapTemplateMock;
-	}
+    return ldapTemplateMock;
+  }
 }

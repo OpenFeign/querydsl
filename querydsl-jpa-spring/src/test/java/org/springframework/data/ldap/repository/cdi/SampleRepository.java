@@ -15,11 +15,8 @@
  */
 package org.springframework.data.ldap.repository.cdi;
 
-import javax.naming.Name;
-
 import org.springframework.data.ldap.config.DummyEntity;
 import org.springframework.data.ldap.repository.LdapRepository;
-import org.springframework.data.repository.CrudRepository;
 
 /**
  * @author Mark Paluch

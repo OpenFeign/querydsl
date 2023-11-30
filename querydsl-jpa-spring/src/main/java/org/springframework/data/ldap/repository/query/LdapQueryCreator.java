@@ -19,7 +19,6 @@ import static org.springframework.ldap.query.LdapQueryBuilder.*;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mapping.PropertyPath;
@@ -42,113 +41,118 @@ import org.springframework.util.Assert;
  */
 class LdapQueryCreator extends AbstractQueryCreator<LdapQuery, ContainerCriteria> {
 
-	private final Class<?> entityType;
-	private final ObjectDirectoryMapper mapper;
-	private final List<String> inputProperties;
+  private final Class<?> entityType;
+  private final ObjectDirectoryMapper mapper;
+  private final List<String> inputProperties;
 
-	/**
-	 * Constructs a new {@link LdapQueryCreator}.
-	 *
-	 * @param tree must not be {@literal null}.
-	 * @param entityType must not be {@literal null}.
-	 * @param mapper must not be {@literal null}.
-	 * @param values must not be {@literal null}.
-	 * @param inputProperties must not be {@literal null}.
-	 */
-	LdapQueryCreator(PartTree tree, Class<?> entityType, ObjectDirectoryMapper mapper,
-			LdapParameterAccessor parameterAccessor, List<String> inputProperties) {
+  /**
+   * Constructs a new {@link LdapQueryCreator}.
+   *
+   * @param tree must not be {@literal null}.
+   * @param entityType must not be {@literal null}.
+   * @param mapper must not be {@literal null}.
+   * @param values must not be {@literal null}.
+   * @param inputProperties must not be {@literal null}.
+   */
+  LdapQueryCreator(
+      PartTree tree,
+      Class<?> entityType,
+      ObjectDirectoryMapper mapper,
+      LdapParameterAccessor parameterAccessor,
+      List<String> inputProperties) {
 
-		super(tree, parameterAccessor);
+    super(tree, parameterAccessor);
 
-		Assert.notNull(entityType, "Entity type must not be null");
-		Assert.notNull(mapper, "ObjectDirectoryMapper must not be null");
+    Assert.notNull(entityType, "Entity type must not be null");
+    Assert.notNull(mapper, "ObjectDirectoryMapper must not be null");
 
-		this.entityType = entityType;
-		this.mapper = mapper;
-		this.inputProperties = inputProperties;
-	}
+    this.entityType = entityType;
+    this.mapper = mapper;
+    this.inputProperties = inputProperties;
+  }
 
-	@Override
-	protected ContainerCriteria create(Part part, Iterator<Object> iterator) {
+  @Override
+  protected ContainerCriteria create(Part part, Iterator<Object> iterator) {
 
-		Entry entry = AnnotatedElementUtils.findMergedAnnotation(entityType, Entry.class);
+    Entry entry = AnnotatedElementUtils.findMergedAnnotation(entityType, Entry.class);
 
-		LdapQueryBuilder query = query();
+    LdapQueryBuilder query = query();
 
-		if (entry != null) {
-			query = query.base(entry.base());
-		}
+    if (entry != null) {
+      query = query.base(entry.base());
+    }
 
-		if (!inputProperties.isEmpty()) {
-			query.attributes(inputProperties.toArray(new String[0]));
-		}
+    if (!inputProperties.isEmpty()) {
+      query.attributes(inputProperties.toArray(new String[0]));
+    }
 
-		ConditionCriteria criteria = query.where(getAttribute(part));
+    ConditionCriteria criteria = query.where(getAttribute(part));
 
-		return appendCondition(part, iterator, criteria);
-	}
+    return appendCondition(part, iterator, criteria);
+  }
 
-	private ContainerCriteria appendCondition(Part part, Iterator<Object> iterator, ConditionCriteria criteria) {
+  private ContainerCriteria appendCondition(
+      Part part, Iterator<Object> iterator, ConditionCriteria criteria) {
 
-		Part.Type type = part.getType();
+    Part.Type type = part.getType();
 
-		String value = null;
-		if (iterator.hasNext()) {
-			Object next = iterator.next();
-			value = next != null ? next.toString() : null;
-		}
-		switch (type) {
-			case NEGATING_SIMPLE_PROPERTY:
-				return criteria.not().is(value);
-			case SIMPLE_PROPERTY:
-				return criteria.is(value);
-			case STARTING_WITH:
-				return criteria.like(value + "*");
-			case ENDING_WITH:
-				return criteria.like("*" + value);
-			case CONTAINING:
-				return criteria.like("*" + value + "*");
-			case LIKE:
-				return criteria.like(value);
-			case NOT_LIKE:
-				return criteria.not().like(value);
-			case GREATER_THAN_EQUAL:
-				return criteria.gte(value);
-			case LESS_THAN_EQUAL:
-				return criteria.lte(value);
-			case IS_NOT_NULL:
-				return criteria.isPresent();
-			case IS_NULL:
-				return criteria.not().isPresent();
-			default:
-				throw new IllegalArgumentException(String.format("%s queries are not supported for LDAP repositories", type));
-		}
+    String value = null;
+    if (iterator.hasNext()) {
+      Object next = iterator.next();
+      value = next != null ? next.toString() : null;
+    }
+    switch (type) {
+      case NEGATING_SIMPLE_PROPERTY:
+        return criteria.not().is(value);
+      case SIMPLE_PROPERTY:
+        return criteria.is(value);
+      case STARTING_WITH:
+        return criteria.like(value + "*");
+      case ENDING_WITH:
+        return criteria.like("*" + value);
+      case CONTAINING:
+        return criteria.like("*" + value + "*");
+      case LIKE:
+        return criteria.like(value);
+      case NOT_LIKE:
+        return criteria.not().like(value);
+      case GREATER_THAN_EQUAL:
+        return criteria.gte(value);
+      case LESS_THAN_EQUAL:
+        return criteria.lte(value);
+      case IS_NOT_NULL:
+        return criteria.isPresent();
+      case IS_NULL:
+        return criteria.not().isPresent();
+      default:
+        throw new IllegalArgumentException(
+            String.format("%s queries are not supported for LDAP repositories", type));
+    }
+  }
 
-	}
+  private String getAttribute(Part part) {
+    PropertyPath path = part.getProperty();
+    if (path.hasNext()) {
+      throw new IllegalArgumentException("Nested properties are not supported");
+    }
 
-	private String getAttribute(Part part) {
-		PropertyPath path = part.getProperty();
-		if (path.hasNext()) {
-			throw new IllegalArgumentException("Nested properties are not supported");
-		}
+    return mapper.attributeFor(entityType, path.getSegment());
+  }
 
-		return mapper.attributeFor(entityType, path.getSegment());
-	}
+  @Override
+  protected ContainerCriteria and(Part part, ContainerCriteria base, Iterator<Object> iterator) {
+    ConditionCriteria criteria = base.and(getAttribute(part));
 
-	@Override
-	protected ContainerCriteria and(Part part, ContainerCriteria base, Iterator<Object> iterator) {
-		ConditionCriteria criteria = base.and(getAttribute(part));
+    return appendCondition(part, iterator, criteria);
+  }
 
-		return appendCondition(part, iterator, criteria);
-	}
+  @Override
+  protected ContainerCriteria or(ContainerCriteria base, ContainerCriteria criteria) {
+    return base.or(criteria);
+  }
 
-	@Override
-	protected ContainerCriteria or(ContainerCriteria base, ContainerCriteria criteria) {
-		return base.or(criteria);
-	}
-
-	@Override
-	protected LdapQuery complete(ContainerCriteria criteria, Sort sort) {
-		return criteria;
-	}
+  @Override
+  protected LdapQuery complete(ContainerCriteria criteria, Sort sort) {
+    return criteria;
+  }
 }

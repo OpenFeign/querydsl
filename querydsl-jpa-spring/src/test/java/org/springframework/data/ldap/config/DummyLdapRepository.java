@@ -16,13 +16,9 @@
 
 package org.springframework.data.ldap.config;
 
-import javax.naming.Name;
-
 import org.springframework.data.ldap.repository.LdapRepository;
-import org.springframework.data.repository.CrudRepository;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
-public interface DummyLdapRepository extends LdapRepository<DummyEntity> {
-}
+public interface DummyLdapRepository extends LdapRepository<DummyEntity> {}

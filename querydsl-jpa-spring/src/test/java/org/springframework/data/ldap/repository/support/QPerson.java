@@ -24,32 +24,30 @@ import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.core.types.dsl.PathInits;
 import com.querydsl.core.types.dsl.StringPath;
 
-/**
- * QPerson is a Querydsl query type for Person
- */
+/** QPerson is a Querydsl query type for Person */
 public class QPerson extends EntityPathBase<UnitTestPerson> {
 
-	private static final long serialVersionUID = -1526737794;
+  private static final long serialVersionUID = -1526737794;
 
-	public static final QPerson person = new QPerson("person");
+  public static final QPerson person = new QPerson("person");
 
-	public final StringPath fullName = createString("fullName");
+  public final StringPath fullName = createString("fullName");
 
-	public final ListPath<String, StringPath> description = this.<String, StringPath> createList("description",
-			String.class, StringPath.class, PathInits.DIRECT2);
+  public final ListPath<String, StringPath> description =
+      this.<String, StringPath>createList(
+          "description", String.class, StringPath.class, PathInits.DIRECT2);
 
-	public final StringPath lastName = createString("lastName");
+  public final StringPath lastName = createString("lastName");
 
-	public QPerson(String variable) {
-		super(UnitTestPerson.class, forVariable(variable));
-	}
+  public QPerson(String variable) {
+    super(UnitTestPerson.class, forVariable(variable));
+  }
 
-	public QPerson(Path<? extends UnitTestPerson> path) {
-		super(path.getType(), path.getMetadata());
-	}
+  public QPerson(Path<? extends UnitTestPerson> path) {
+    super(path.getType(), path.getMetadata());
+  }
 
-	public QPerson(PathMetadata metadata) {
-		super(UnitTestPerson.class, metadata);
-	}
-
+  public QPerson(PathMetadata metadata) {
+    super(UnitTestPerson.class, metadata);
+  }
 }

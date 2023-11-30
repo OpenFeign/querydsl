@@ -1,6 +1,4 @@
-/**
- * XML configuration support for Spring Data LDAP repositories.
- */
+/** XML configuration support for Spring Data LDAP repositories. */
 @NonNullApi
 package org.springframework.data.ldap.config;
 

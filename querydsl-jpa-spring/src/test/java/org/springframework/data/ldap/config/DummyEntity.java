@@ -18,5 +18,4 @@ package org.springframework.data.ldap.config;
 /**
  * @author Mattias Hellborg Arthursson
  */
-public class DummyEntity {
-}
+public class DummyEntity {}

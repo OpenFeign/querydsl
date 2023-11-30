@@ -15,10 +15,11 @@
  */
 package org.springframework.data.ldap.repository.support;
 
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,9 +33,6 @@ import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
-
 /**
  * Base repository implementation for QueryDSL support.
  *
@@ -44,86 +42,97 @@ import com.querydsl.core.types.Predicate;
  * @deprecated since 2.6, use {@link QuerydslLdapPredicateExecutor} instead.
  */
 @Deprecated
-public class QuerydslLdapRepository<T> extends SimpleLdapRepository<T> implements QuerydslPredicateExecutor<T> {
+public class QuerydslLdapRepository<T> extends SimpleLdapRepository<T>
+    implements QuerydslPredicateExecutor<T> {
 
-	private final QuerydslLdapPredicateExecutor<T> executor;
+  private final QuerydslLdapPredicateExecutor<T> executor;
 
-	/**
-	 * Creates a new {@link QuerydslLdapRepository}.
-	 *
-	 * @param ldapOperations must not be {@literal null}.
-	 * @param odm must not be {@literal null}.
-	 * @param entityType must not be {@literal null}.
-	 */
-	public QuerydslLdapRepository(LdapOperations ldapOperations, ObjectDirectoryMapper odm, Class<T> entityType) {
+  /**
+   * Creates a new {@link QuerydslLdapRepository}.
+   *
+   * @param ldapOperations must not be {@literal null}.
+   * @param odm must not be {@literal null}.
+   * @param entityType must not be {@literal null}.
+   */
+  public QuerydslLdapRepository(
+      LdapOperations ldapOperations, ObjectDirectoryMapper odm, Class<T> entityType) {
 
-		super(ldapOperations, odm, entityType);
+    super(ldapOperations, odm, entityType);
 
-		this.executor = new QuerydslLdapPredicateExecutor<>(entityType, new SpelAwareProxyProjectionFactory(),
-				ldapOperations, new LdapMappingContext());
-	}
+    this.executor =
+        new QuerydslLdapPredicateExecutor<>(
+            entityType,
+            new SpelAwareProxyProjectionFactory(),
+            ldapOperations,
+            new LdapMappingContext());
+  }
 
-	/**
-	 * Creates a new {@link QuerydslLdapRepository}.
-	 *
-	 * @param ldapOperations must not be {@literal null}.
-	 * @param context must not be {@literal null}.
-	 * @param odm must not be {@literal null}.
-	 * @param entityType must not be {@literal null}.
-	 * @since 2.6
-	 */
-	QuerydslLdapRepository(LdapOperations ldapOperations,
-			MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> context,
-			ObjectDirectoryMapper odm, Class<T> entityType) {
+  /**
+   * Creates a new {@link QuerydslLdapRepository}.
+   *
+   * @param ldapOperations must not be {@literal null}.
+   * @param context must not be {@literal null}.
+   * @param odm must not be {@literal null}.
+   * @param entityType must not be {@literal null}.
+   * @since 2.6
+   */
+  QuerydslLdapRepository(
+      LdapOperations ldapOperations,
+      MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> context,
+      ObjectDirectoryMapper odm,
+      Class<T> entityType) {
 
-		super(ldapOperations, context, odm, entityType);
+    super(ldapOperations, context, odm, entityType);
 
-		this.executor = new QuerydslLdapPredicateExecutor<>(entityType, new SpelAwareProxyProjectionFactory(),
-				ldapOperations, new LdapMappingContext());
-	}
+    this.executor =
+        new QuerydslLdapPredicateExecutor<>(
+            entityType,
+            new SpelAwareProxyProjectionFactory(),
+            ldapOperations,
+            new LdapMappingContext());
+  }
 
-	@Override
-	public Optional<T> findOne(Predicate predicate) {
-		return executor.findOne(predicate);
-	}
+  @Override
+  public Optional<T> findOne(Predicate predicate) {
+    return executor.findOne(predicate);
+  }
 
-	@Override
-	public List<T> findAll(Predicate predicate) {
-		return executor.findAll(predicate);
-	}
+  @Override
+  public List<T> findAll(Predicate predicate) {
+    return executor.findAll(predicate);
+  }
 
-	@Override
-	public long count(Predicate predicate) {
-		return executor.count(predicate);
-	}
+  @Override
+  public long count(Predicate predicate) {
+    return executor.count(predicate);
+  }
 
-	public boolean exists(Predicate predicate) {
-		return executor.exists(predicate);
-	}
+  public boolean exists(Predicate predicate) {
+    return executor.exists(predicate);
+  }
 
-	public Iterable<T> findAll(Predicate predicate, Sort sort) {
-		return executor.findAll(predicate, sort);
-	}
+  public Iterable<T> findAll(Predicate predicate, Sort sort) {
+    return executor.findAll(predicate, sort);
+  }
 
-	public Iterable<T> findAll(OrderSpecifier<?>... orders) {
-		return executor.findAll(orders);
-	}
+  public Iterable<T> findAll(OrderSpecifier<?>... orders) {
+    return executor.findAll(orders);
+  }
 
-	@Override
-	public Iterable<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
-		return executor.findAll(predicate, orders);
-	}
+  @Override
+  public Iterable<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
+    return executor.findAll(predicate, orders);
+  }
 
-	@Override
-	public Page<T> findAll(Predicate predicate, Pageable pageable) {
-		return executor.findAll(predicate, pageable);
-	}
+  @Override
+  public Page<T> findAll(Predicate predicate, Pageable pageable) {
+    return executor.findAll(predicate, pageable);
+  }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <S extends T, R> R findBy(Predicate predicate,
-			Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
-		return executor.findBy(predicate, queryFunction);
-	}
-
+  @Override
+  @SuppressWarnings("unchecked")
+  public <S extends T, R> R findBy(
+      Predicate predicate, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    return executor.findBy(predicate, queryFunction);
+  }
 }

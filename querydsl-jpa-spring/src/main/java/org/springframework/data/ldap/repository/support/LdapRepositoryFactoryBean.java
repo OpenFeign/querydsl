@@ -16,7 +16,6 @@
 package org.springframework.data.ldap.repository.support;
 
 import javax.naming.Name;
-
 import org.springframework.data.ldap.core.mapping.LdapMappingContext;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
@@ -29,62 +28,65 @@ import org.springframework.ldap.core.LdapOperations;
 import org.springframework.util.Assert;
 
 /**
- * {@link org.springframework.beans.factory.FactoryBean} to create
- * {@link org.springframework.data.ldap.repository.LdapRepository} instances.
+ * {@link org.springframework.beans.factory.FactoryBean} to create {@link
+ * org.springframework.data.ldap.repository.LdapRepository} instances.
  *
  * @author Mattias Hellborg Arthursson
  * @author Oliver Gierke
  * @author Mark Paluch
  */
 public class LdapRepositoryFactoryBean<T extends Repository<S, Name>, S>
-		extends RepositoryFactoryBeanSupport<T, S, Name> {
+    extends RepositoryFactoryBeanSupport<T, S, Name> {
 
-	private @Nullable LdapOperations ldapOperations;
-	private boolean mappingContextConfigured = false;
-	private @Nullable MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext;
+  private @Nullable LdapOperations ldapOperations;
+  private boolean mappingContextConfigured = false;
+  private @Nullable MappingContext<
+          ? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+      mappingContext;
 
-	/**
-	 * Creates a new {@link LdapRepositoryFactoryBean} for the given repository interface.
-	 *
-	 * @param repositoryInterface must not be {@literal null}.
-	 */
-	public LdapRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
-		super(repositoryInterface);
-	}
+  /**
+   * Creates a new {@link LdapRepositoryFactoryBean} for the given repository interface.
+   *
+   * @param repositoryInterface must not be {@literal null}.
+   */
+  public LdapRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+    super(repositoryInterface);
+  }
 
-	/**
-	 * @param ldapOperations
-	 */
-	public void setLdapOperations(LdapOperations ldapOperations) {
-		this.ldapOperations = ldapOperations;
-	}
+  /**
+   * @param ldapOperations
+   */
+  public void setLdapOperations(LdapOperations ldapOperations) {
+    this.ldapOperations = ldapOperations;
+  }
 
-	@Override
-	public void setMappingContext(MappingContext<?, ?> mappingContext) {
+  @Override
+  public void setMappingContext(MappingContext<?, ?> mappingContext) {
 
-		super.setMappingContext(mappingContext);
-		this.mappingContext = mappingContext;
-		this.mappingContextConfigured = true;
-	}
+    super.setMappingContext(mappingContext);
+    this.mappingContext = mappingContext;
+    this.mappingContextConfigured = true;
+  }
 
-	@Override
-	protected RepositoryFactorySupport createRepositoryFactory() {
+  @Override
+  protected RepositoryFactorySupport createRepositoryFactory() {
 
-		Assert.state(ldapOperations != null, "LdapOperations must be set");
+    Assert.state(ldapOperations != null, "LdapOperations must be set");
 
-		return mappingContext != null ? new LdapRepositoryFactory(ldapOperations, mappingContext)
-				: new LdapRepositoryFactory(ldapOperations);
-	}
+    return mappingContext != null
+        ? new LdapRepositoryFactory(ldapOperations, mappingContext)
+        : new LdapRepositoryFactory(ldapOperations);
+  }
 
-	@Override
-	public void afterPropertiesSet() {
+  @Override
+  public void afterPropertiesSet() {
 
-		Assert.notNull(ldapOperations, "LdapOperations must be set");
+    Assert.notNull(ldapOperations, "LdapOperations must be set");
 
-		super.afterPropertiesSet();
+    super.afterPropertiesSet();
 
-		if (!mappingContextConfigured) {
-			setMappingContext(new LdapMappingContext());
-		}
-	}
+    if (!mappingContextConfigured) {
+      setMappingContext(new LdapMappingContext());
+    }
+  }
 }

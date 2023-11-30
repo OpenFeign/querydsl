@@ -1,6 +1,4 @@
-/**
- * Support infrastructure for query derivation of LDAP specific repositories.
- */
+/** Support infrastructure for query derivation of LDAP specific repositories. */
 @NonNullApi
 package org.springframework.data.ldap.repository.support;
 

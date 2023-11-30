@@ -18,7 +18,6 @@ package org.springframework.data.ldap.repository.config;
 import static org.junit.Assert.*;
 
 import java.util.Collection;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -41,68 +40,81 @@ import org.springframework.ldap.odm.annotations.Entry;
  */
 class LdapRepositoryConfigurationExtensionUnitTests {
 
-	private StandardAnnotationMetadata metadata = new StandardAnnotationMetadata(Config.class, true);
-	private ResourceLoader loader = new PathMatchingResourcePatternResolver();
-	private Environment environment = new StandardEnvironment();
-	private BeanDefinitionRegistry registry = new DefaultListableBeanFactory();
+  private StandardAnnotationMetadata metadata = new StandardAnnotationMetadata(Config.class, true);
+  private ResourceLoader loader = new PathMatchingResourcePatternResolver();
+  private Environment environment = new StandardEnvironment();
+  private BeanDefinitionRegistry registry = new DefaultListableBeanFactory();
 
-	private RepositoryConfigurationSource configurationSource = new AnnotationRepositoryConfigurationSource(metadata,
-			EnableLdapRepositories.class, loader, environment, registry);
+  private RepositoryConfigurationSource configurationSource =
+      new AnnotationRepositoryConfigurationSource(
+          metadata, EnableLdapRepositories.class, loader, environment, registry);
 
-	@Test // DATALDAP-60
-	void isStrictMatchIfDomainTypeIsAnnotatedWithEntry() {
+  @Test // DATALDAP-60
+  void isStrictMatchIfDomainTypeIsAnnotatedWithEntry() {
 
-		LdapRepositoryConfigurationExtension extension = new LdapRepositoryConfigurationExtension();
-		assertHasRepo(SampleRepository.class, extension.getRepositoryConfigurations(configurationSource, loader, true));
-	}
+    LdapRepositoryConfigurationExtension extension = new LdapRepositoryConfigurationExtension();
+    assertHasRepo(
+        SampleRepository.class,
+        extension.getRepositoryConfigurations(configurationSource, loader, true));
+  }
 
-	@Test // DATALDAP-60
-	void isStrictMatchIfRepositoryExtendsStoreSpecificBase() {
+  @Test // DATALDAP-60
+  void isStrictMatchIfRepositoryExtendsStoreSpecificBase() {
 
-		LdapRepositoryConfigurationExtension extension = new LdapRepositoryConfigurationExtension();
-		assertHasRepo(StoreRepository.class, extension.getRepositoryConfigurations(configurationSource, loader, true));
-	}
+    LdapRepositoryConfigurationExtension extension = new LdapRepositoryConfigurationExtension();
+    assertHasRepo(
+        StoreRepository.class,
+        extension.getRepositoryConfigurations(configurationSource, loader, true));
+  }
 
-	@Test // DATALDAP-60
-	void isNotStrictMatchIfDomainTypeIsNotAnnotatedWithEntry() {
+  @Test // DATALDAP-60
+  void isNotStrictMatchIfDomainTypeIsNotAnnotatedWithEntry() {
 
-		LdapRepositoryConfigurationExtension extension = new LdapRepositoryConfigurationExtension();
-		assertDoesNotHaveRepo(UnannotatedRepository.class,
-				extension.getRepositoryConfigurations(configurationSource, loader, true));
-	}
+    LdapRepositoryConfigurationExtension extension = new LdapRepositoryConfigurationExtension();
+    assertDoesNotHaveRepo(
+        UnannotatedRepository.class,
+        extension.getRepositoryConfigurations(configurationSource, loader, true));
+  }
 
-	private static void assertHasRepo(Class<?> repositoryInterface,
-			Collection<RepositoryConfiguration<RepositoryConfigurationSource>> configs) {
+  private static void assertHasRepo(
+      Class<?> repositoryInterface,
+      Collection<RepositoryConfiguration<RepositoryConfigurationSource>> configs) {
 
-		for (RepositoryConfiguration<?> config : configs) {
-			if (config.getRepositoryInterface().equals(repositoryInterface.getName())) {
-				return;
-			}
-		}
+    for (RepositoryConfiguration<?> config : configs) {
+      if (config.getRepositoryInterface().equals(repositoryInterface.getName())) {
+        return;
+      }
+    }
 
-		fail("Expected to find config for repository interface ".concat(repositoryInterface.getName()).concat(" but got ")
-				.concat(configs.toString()));
-	}
+    fail(
+        "Expected to find config for repository interface "
+            .concat(repositoryInterface.getName())
+            .concat(" but got ")
+            .concat(configs.toString()));
+  }
 
-	private static void assertDoesNotHaveRepo(Class<?> repositoryInterface,
-			Collection<RepositoryConfiguration<RepositoryConfigurationSource>> configs) {
+  private static void assertDoesNotHaveRepo(
+      Class<?> repositoryInterface,
+      Collection<RepositoryConfiguration<RepositoryConfigurationSource>> configs) {
 
-		for (RepositoryConfiguration<?> config : configs) {
-			if (config.getRepositoryInterface().equals(repositoryInterface.getName())) {
-				fail("Expected not to find config for repository interface ".concat(repositoryInterface.getName()));
-			}
-		}
-	}
+    for (RepositoryConfiguration<?> config : configs) {
+      if (config.getRepositoryInterface().equals(repositoryInterface.getName())) {
+        fail(
+            "Expected not to find config for repository interface "
+                .concat(repositoryInterface.getName()));
+      }
+    }
+  }
 
-	@EnableLdapRepositories(considerNestedRepositories = true)
-	private static class Config {}
+  @EnableLdapRepositories(considerNestedRepositories = true)
+  private static class Config {}
 
-	@Entry(objectClasses = "person")
-	static class Sample {}
+  @Entry(objectClasses = "person")
+  static class Sample {}
 
-	interface SampleRepository extends Repository<Sample, Long> {}
+  interface SampleRepository extends Repository<Sample, Long> {}
 
-	interface UnannotatedRepository extends Repository<Object, Long> {}
+  interface UnannotatedRepository extends Repository<Object, Long> {}
 
-	interface StoreRepository extends LdapRepository<Object> {}
+  interface StoreRepository extends LdapRepository<Object> {}
 }

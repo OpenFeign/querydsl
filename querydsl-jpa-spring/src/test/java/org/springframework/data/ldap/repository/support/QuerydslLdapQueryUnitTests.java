@@ -22,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
-
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.filter.AbsoluteTrueFilter;
 import org.springframework.ldap.filter.EqualsFilter;
@@ -37,40 +36,43 @@ import org.springframework.ldap.query.LdapQuery;
 @MockitoSettings
 class QuerydslLdapQueryUnitTests {
 
-	@Mock LdapOperations ldapOperations;
+  @Mock LdapOperations ldapOperations;
 
-	@BeforeEach
-	void before() {
-		when(ldapOperations.getObjectDirectoryMapper()).thenReturn(new DefaultObjectDirectoryMapper());
-	}
+  @BeforeEach
+  void before() {
+    when(ldapOperations.getObjectDirectoryMapper()).thenReturn(new DefaultObjectDirectoryMapper());
+  }
 
-	@Test // DATALDAP-65
-	void shouldCreateFilter() {
+  @Test // DATALDAP-65
+  void shouldCreateFilter() {
 
-		QuerydslLdapQuery<UnitTestPerson> query = new QuerydslLdapQuery<>(ldapOperations, UnitTestPerson.class);
+    QuerydslLdapQuery<UnitTestPerson> query =
+        new QuerydslLdapQuery<>(ldapOperations, UnitTestPerson.class);
 
-		LdapQuery ldapQuery = query.where(QPerson.person.fullName.eq("foo")).buildQuery();
+    LdapQuery ldapQuery = query.where(QPerson.person.fullName.eq("foo")).buildQuery();
 
-		assertThat(ldapQuery.filter()).isInstanceOf(EqualsFilter.class);
-	}
+    assertThat(ldapQuery.filter()).isInstanceOf(EqualsFilter.class);
+  }
 
-	@Test // DATALDAP-65
-	void shouldCreateEmptyFilter() {
+  @Test // DATALDAP-65
+  void shouldCreateEmptyFilter() {
 
-		QuerydslLdapQuery<UnitTestPerson> query = new QuerydslLdapQuery<>(ldapOperations, UnitTestPerson.class);
+    QuerydslLdapQuery<UnitTestPerson> query =
+        new QuerydslLdapQuery<>(ldapOperations, UnitTestPerson.class);
 
-		LdapQuery ldapQuery = query.buildQuery();
+    LdapQuery ldapQuery = query.buildQuery();
 
-		assertThat(ldapQuery.filter()).isInstanceOf(AbsoluteTrueFilter.class);
-	}
+    assertThat(ldapQuery.filter()).isInstanceOf(AbsoluteTrueFilter.class);
+  }
 
-	@Test // DATALDAP-65
-	void shouldCreateEmptyFilterFromWhereNull() {
+  @Test // DATALDAP-65
+  void shouldCreateEmptyFilterFromWhereNull() {
 
-		QuerydslLdapQuery<UnitTestPerson> query = new QuerydslLdapQuery<>(ldapOperations, QPerson.person);
+    QuerydslLdapQuery<UnitTestPerson> query =
+        new QuerydslLdapQuery<>(ldapOperations, QPerson.person);
 
-		LdapQuery ldapQuery = query.where(null).buildQuery();
+    LdapQuery ldapQuery = query.where(null).buildQuery();
 
-		assertThat(ldapQuery.filter()).isInstanceOf(AbsoluteTrueFilter.class);
-	}
+    assertThat(ldapQuery.filter()).isInstanceOf(AbsoluteTrueFilter.class);
+  }
 }

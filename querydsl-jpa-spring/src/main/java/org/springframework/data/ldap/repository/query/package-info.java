@@ -1,6 +1,4 @@
-/**
- * Query derivation mechanism for LDAP specific repositories.
- */
+/** Query derivation mechanism for LDAP specific repositories. */
 @NonNullApi
 package org.springframework.data.ldap.repository.query;
 

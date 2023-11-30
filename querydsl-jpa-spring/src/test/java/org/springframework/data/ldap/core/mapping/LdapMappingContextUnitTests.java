@@ -27,19 +27,18 @@ import org.springframework.ldap.odm.annotations.Id;
  */
 class LdapMappingContextUnitTests {
 
-	@Test // DATALDAP-60
-	void shouldCreatePersistentEntities() {
+  @Test // DATALDAP-60
+  void shouldCreatePersistentEntities() {
 
-		LdapMappingContext context = new LdapMappingContext();
+    LdapMappingContext context = new LdapMappingContext();
 
-		BasicLdapPersistentEntity<?> entity = context.getPersistentEntity(Person.class);
+    BasicLdapPersistentEntity<?> entity = context.getPersistentEntity(Person.class);
 
-		assertThat(entity).isNotNull();
-	}
+    assertThat(entity).isNotNull();
+  }
 
-	static class Person {
+  static class Person {
 
-		@Id String id;
-
-	}
+    @Id String id;
+  }
 }

@@ -18,7 +18,6 @@ package org.springframework.data.ldap.repository.config;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -39,37 +38,42 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig(classes = CustomRepositoryBaseClassTests.Config.class)
 class CustomRepositoryBaseClassTests {
 
-	@Autowired ApplicationContext applicationContext;
+  @Autowired ApplicationContext applicationContext;
 
-	@Test // DATALDAP-2
-	void shouldImplementCustomizedRepository() {
+  @Test // DATALDAP-2
+  void shouldImplementCustomizedRepository() {
 
-		CustomizedDummyRepository repository = applicationContext.getBean(CustomizedDummyRepository.class);
-		assertThat(repository.returnOne()).isEqualTo(1);
-	}
+    CustomizedDummyRepository repository =
+        applicationContext.getBean(CustomizedDummyRepository.class);
+    assertThat(repository.returnOne()).isEqualTo(1);
+  }
 
-	@Configuration
-	@ImportResource("classpath:/infrastructure.xml")
-	@EnableLdapRepositories(considerNestedRepositories = true, repositoryBaseClass = CustomizedLdapRepositoryImpl.class)
-	static class Config {}
+  @Configuration
+  @ImportResource("classpath:/infrastructure.xml")
+  @EnableLdapRepositories(
+      considerNestedRepositories = true,
+      repositoryBaseClass = CustomizedLdapRepositoryImpl.class)
+  static class Config {}
 
-	interface CustomizedDummyRepository extends CustomizedLdapRepository<DummyEntity> {}
+  interface CustomizedDummyRepository extends CustomizedLdapRepository<DummyEntity> {}
 
-	@NoRepositoryBean
-	interface CustomizedLdapRepository<T> extends LdapRepository<T> {
+  @NoRepositoryBean
+  interface CustomizedLdapRepository<T> extends LdapRepository<T> {
 
-		int returnOne();
-	}
+    int returnOne();
+  }
 
-	static class CustomizedLdapRepositoryImpl<T> extends SimpleLdapRepository<T> implements CustomizedLdapRepository<T> {
+  static class CustomizedLdapRepositoryImpl<T> extends SimpleLdapRepository<T>
+      implements CustomizedLdapRepository<T> {
 
-		public CustomizedLdapRepositoryImpl(LdapOperations ldapOperations, ObjectDirectoryMapper odm, Class<T> clazz) {
-			super(ldapOperations, odm, clazz);
-		}
+    public CustomizedLdapRepositoryImpl(
+        LdapOperations ldapOperations, ObjectDirectoryMapper odm, Class<T> clazz) {
+      super(ldapOperations, odm, clazz);
+    }
 
-		@Override
-		public int returnOne() {
-			return 1;
-		}
-	}
+    @Override
+    public int returnOne() {
+      return 1;
+    }
+  }
 }

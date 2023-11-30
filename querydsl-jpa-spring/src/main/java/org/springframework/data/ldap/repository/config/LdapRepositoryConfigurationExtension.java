@@ -18,7 +18,6 @@ package org.springframework.data.ldap.repository.config;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Collections;
-
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -45,71 +44,73 @@ import org.w3c.dom.Element;
  */
 public class LdapRepositoryConfigurationExtension extends RepositoryConfigurationExtensionSupport {
 
-	private static final String ATT_LDAP_TEMPLATE_REF = "ldap-template-ref";
-	private static final String MAPPING_CONTEXT_BEAN_NAME = "ldapMappingContext";
+  private static final String ATT_LDAP_TEMPLATE_REF = "ldap-template-ref";
+  private static final String MAPPING_CONTEXT_BEAN_NAME = "ldapMappingContext";
 
-	@Override
-	public String getModuleName() {
-		return "LDAP";
-	}
+  @Override
+  public String getModuleName() {
+    return "LDAP";
+  }
 
-	@Override
-	protected String getModulePrefix() {
-		return "ldap";
-	}
+  @Override
+  protected String getModulePrefix() {
+    return "ldap";
+  }
 
-	public String getRepositoryFactoryBeanClassName() {
-		return LdapRepositoryFactoryBean.class.getName();
-	}
+  public String getRepositoryFactoryBeanClassName() {
+    return LdapRepositoryFactoryBean.class.getName();
+  }
 
-	@Override
-	protected Collection<Class<? extends Annotation>> getIdentifyingAnnotations() {
-		return Collections.singleton(Entry.class);
-	}
+  @Override
+  protected Collection<Class<? extends Annotation>> getIdentifyingAnnotations() {
+    return Collections.singleton(Entry.class);
+  }
 
-	@Override
-	protected Collection<Class<?>> getIdentifyingTypes() {
-		return Collections.singleton(LdapRepository.class);
-	}
+  @Override
+  protected Collection<Class<?>> getIdentifyingTypes() {
+    return Collections.singleton(LdapRepository.class);
+  }
 
-	@Override
-	public void postProcess(BeanDefinitionBuilder builder, XmlRepositoryConfigurationSource config) {
+  @Override
+  public void postProcess(BeanDefinitionBuilder builder, XmlRepositoryConfigurationSource config) {
 
-		Element element = config.getElement();
-		String ldapTemplateRef = element.getAttribute(ATT_LDAP_TEMPLATE_REF);
+    Element element = config.getElement();
+    String ldapTemplateRef = element.getAttribute(ATT_LDAP_TEMPLATE_REF);
 
-		if (!StringUtils.hasText(ldapTemplateRef)) {
-			ldapTemplateRef = "ldapTemplate";
-		}
+    if (!StringUtils.hasText(ldapTemplateRef)) {
+      ldapTemplateRef = "ldapTemplate";
+    }
 
-		builder.addPropertyReference("ldapOperations", ldapTemplateRef);
-		builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
-	}
+    builder.addPropertyReference("ldapOperations", ldapTemplateRef);
+    builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
+  }
 
-	@Override
-	public void postProcess(BeanDefinitionBuilder builder, AnnotationRepositoryConfigurationSource config) {
+  @Override
+  public void postProcess(
+      BeanDefinitionBuilder builder, AnnotationRepositoryConfigurationSource config) {
 
-		AnnotationAttributes attributes = config.getAttributes();
+    AnnotationAttributes attributes = config.getAttributes();
 
-		builder.addPropertyReference("ldapOperations", attributes.getString("ldapTemplateRef"));
-		builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
-	}
+    builder.addPropertyReference("ldapOperations", attributes.getString("ldapTemplateRef"));
+    builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
+  }
 
-	@Override
-	public void registerBeansForRoot(BeanDefinitionRegistry registry, RepositoryConfigurationSource configurationSource) {
+  @Override
+  public void registerBeansForRoot(
+      BeanDefinitionRegistry registry, RepositoryConfigurationSource configurationSource) {
 
-		if (!registry.containsBeanDefinition(MAPPING_CONTEXT_BEAN_NAME)) {
+    if (!registry.containsBeanDefinition(MAPPING_CONTEXT_BEAN_NAME)) {
 
-			RootBeanDefinition definition = new RootBeanDefinition(LdapMappingContext.class);
-			definition.setRole(AbstractBeanDefinition.ROLE_INFRASTRUCTURE);
-			definition.setSource(configurationSource.getSource());
+      RootBeanDefinition definition = new RootBeanDefinition(LdapMappingContext.class);
+      definition.setRole(AbstractBeanDefinition.ROLE_INFRASTRUCTURE);
+      definition.setSource(configurationSource.getSource());
 
-			registry.registerBeanDefinition(MAPPING_CONTEXT_BEAN_NAME, definition);
-		}
-	}
+      registry.registerBeanDefinition(MAPPING_CONTEXT_BEAN_NAME, definition);
+    }
+  }
 
-	@Override
-	protected boolean useRepositoryConfiguration(RepositoryMetadata metadata) {
-		return !metadata.isReactiveRepository();
-	}
+  @Override
+  protected boolean useRepositoryConfiguration(RepositoryMetadata metadata) {
+    return !metadata.isReactiveRepository();
+  }
 }

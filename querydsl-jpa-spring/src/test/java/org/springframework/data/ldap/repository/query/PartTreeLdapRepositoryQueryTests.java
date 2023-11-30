@@ -18,9 +18,7 @@ package org.springframework.data.ldap.repository.query;
 import static org.assertj.core.api.Assertions.*;
 
 import java.lang.reflect.Method;
-
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.ldap.core.mapping.LdapMappingContext;
 import org.springframework.data.ldap.repository.support.BaseUnitTestPerson;
@@ -43,106 +41,133 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @ContextConfiguration
 class PartTreeLdapRepositoryQueryTests {
 
-	@Autowired private LdapTemplate ldapTemplate;
+  @Autowired private LdapTemplate ldapTemplate;
 
-	private Class<?> entityClass = UnitTestPerson.class;
-	private Class<?> targetClass = UnitTestPersonRepository.class;
-	private DefaultRepositoryMetadata repositoryMetadata = new DefaultRepositoryMetadata(targetClass);
-	private ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
+  private Class<?> entityClass = UnitTestPerson.class;
+  private Class<?> targetClass = UnitTestPersonRepository.class;
+  private DefaultRepositoryMetadata repositoryMetadata = new DefaultRepositoryMetadata(targetClass);
+  private ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
 
-	@Test
-	void testFindByFullName() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullName", String.class), "(cn=John Doe)", "John Doe");
-	}
+  @Test
+  void testFindByFullName() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullName", String.class), "(cn=John Doe)", "John Doe");
+  }
 
-	// LDAP-314
-	@Test
-	void testFindByFullNameWithBase() throws NoSuchMethodException {
+  // LDAP-314
+  @Test
+  void testFindByFullNameWithBase() throws NoSuchMethodException {
 
-		entityClass = BaseUnitTestPerson.class;
-		targetClass = BaseTestPersonRepository.class;
-		repositoryMetadata = new DefaultRepositoryMetadata(targetClass);
+    entityClass = BaseUnitTestPerson.class;
+    targetClass = BaseTestPersonRepository.class;
+    repositoryMetadata = new DefaultRepositoryMetadata(targetClass);
 
-		assertFilterAndBaseForMethod(targetClass.getMethod("findByFullName", String.class), "(cn=John Doe)", "ou=someOu",
-				"John Doe");
-	}
+    assertFilterAndBaseForMethod(
+        targetClass.getMethod("findByFullName", String.class),
+        "(cn=John Doe)",
+        "ou=someOu",
+        "John Doe");
+  }
 
-	@Test
-	void testFindByFullNameLike() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameLike", String.class), "(cn=*John*)", "*John*");
-	}
+  @Test
+  void testFindByFullNameLike() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullNameLike", String.class), "(cn=*John*)", "*John*");
+  }
 
-	@Test
-	void testFindByFullNameStartsWith() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameStartsWith", String.class), "(cn=John*)", "John");
-	}
+  @Test
+  void testFindByFullNameStartsWith() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullNameStartsWith", String.class), "(cn=John*)", "John");
+  }
 
-	@Test
-	void testFindByFullNameEndsWith() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameEndsWith", String.class), "(cn=*John)", "John");
-	}
+  @Test
+  void testFindByFullNameEndsWith() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullNameEndsWith", String.class), "(cn=*John)", "John");
+  }
 
-	@Test
-	void testFindByFullNameContains() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameContains", String.class), "(cn=*John*)", "John");
-	}
+  @Test
+  void testFindByFullNameContains() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullNameContains", String.class), "(cn=*John*)", "John");
+  }
 
-	@Test
-	void testFindByFullNameGreaterThanEqual() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameGreaterThanEqual", String.class), "(cn>=John)", "John");
-	}
+  @Test
+  void testFindByFullNameGreaterThanEqual() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullNameGreaterThanEqual", String.class),
+        "(cn>=John)",
+        "John");
+  }
 
-	@Test
-	void testFindByFullNameLessThanEqual() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameLessThanEqual", String.class), "(cn<=John)", "John");
-	}
+  @Test
+  void testFindByFullNameLessThanEqual() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullNameLessThanEqual", String.class), "(cn<=John)", "John");
+  }
 
-	@Test
-	void testFindByFullNameIsNotNull() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameIsNotNull"), "(cn=*)");
-	}
+  @Test
+  void testFindByFullNameIsNotNull() throws NoSuchMethodException {
+    assertFilterForMethod(targetClass.getMethod("findByFullNameIsNotNull"), "(cn=*)");
+  }
 
-	@Test
-	void testFindByFullNameIsNull() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameIsNull"), "(!(cn=*))");
-	}
+  @Test
+  void testFindByFullNameIsNull() throws NoSuchMethodException {
+    assertFilterForMethod(targetClass.getMethod("findByFullNameIsNull"), "(!(cn=*))");
+  }
 
-	@Test
-	void testFindByFullNameNot() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameNot", String.class), "(!(cn=John Doe))", "John Doe");
-	}
+  @Test
+  void testFindByFullNameNot() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullNameNot", String.class), "(!(cn=John Doe))", "John Doe");
+  }
 
-	@Test
-	void testFindByFullNameNotLike() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameNotLike", String.class), "(!(cn=*John*))", "*John*");
-	}
+  @Test
+  void testFindByFullNameNotLike() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullNameNotLike", String.class), "(!(cn=*John*))", "*John*");
+  }
 
-	@Test
-	void testFindByFullNameAndLastName() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameAndLastName", String.class, String.class),
-				"(&(cn=John Doe)(sn=Doe))", "John Doe", "Doe");
-	}
+  @Test
+  void testFindByFullNameAndLastName() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullNameAndLastName", String.class, String.class),
+        "(&(cn=John Doe)(sn=Doe))",
+        "John Doe",
+        "Doe");
+  }
 
-	@Test
-	void testFindByFullNameAndLastNameNot() throws NoSuchMethodException {
-		assertFilterForMethod(targetClass.getMethod("findByFullNameAndLastNameNot", String.class, String.class),
-				"(&(cn=John Doe)(!(sn=Doe)))", "John Doe", "Doe");
-	}
+  @Test
+  void testFindByFullNameAndLastNameNot() throws NoSuchMethodException {
+    assertFilterForMethod(
+        targetClass.getMethod("findByFullNameAndLastNameNot", String.class, String.class),
+        "(&(cn=John Doe)(!(sn=Doe)))",
+        "John Doe",
+        "Doe");
+  }
 
-	private void assertFilterForMethod(Method targetMethod, String expectedFilter, Object... expectedParams) {
-		assertFilterAndBaseForMethod(targetMethod, expectedFilter, "", expectedParams);
-	}
+  private void assertFilterForMethod(
+      Method targetMethod, String expectedFilter, Object... expectedParams) {
+    assertFilterAndBaseForMethod(targetMethod, expectedFilter, "", expectedParams);
+  }
 
-	private void assertFilterAndBaseForMethod(Method targetMethod, String expectedFilter, String expectedBase,
-			Object... expectedParams) {
+  private void assertFilterAndBaseForMethod(
+      Method targetMethod, String expectedFilter, String expectedBase, Object... expectedParams) {
 
-		LdapQueryMethod queryMethod = new LdapQueryMethod(targetMethod, repositoryMetadata, factory);
-		PartTreeLdapRepositoryQuery tested = new PartTreeLdapRepositoryQuery(queryMethod, entityClass, ldapTemplate,
-				new LdapMappingContext(), new EntityInstantiators());
+    LdapQueryMethod queryMethod = new LdapQueryMethod(targetMethod, repositoryMetadata, factory);
+    PartTreeLdapRepositoryQuery tested =
+        new PartTreeLdapRepositoryQuery(
+            queryMethod,
+            entityClass,
+            ldapTemplate,
+            new LdapMappingContext(),
+            new EntityInstantiators());
 
-		LdapQuery query = tested.createQuery(new LdapParametersParameterAccessor(queryMethod, expectedParams));
-		String base = query.base().toString();
-		assertThat(base).isEqualTo(expectedBase);
-		assertThat(query.filter().encode()).isEqualTo(expectedFilter);
-	}
+    LdapQuery query =
+        tested.createQuery(new LdapParametersParameterAccessor(queryMethod, expectedParams));
+    String base = query.base().toString();
+    assertThat(base).isEqualTo(expectedBase);
+    assertThat(query.filter().encode()).isEqualTo(expectedFilter);
+  }
 }

@@ -16,7 +16,6 @@
 package org.springframework.data.ldap.repository.query;
 
 import java.util.List;
-
 import org.springframework.data.ldap.repository.LdapRepository;
 import org.springframework.data.ldap.repository.support.UnitTestPerson;
 
@@ -25,30 +24,29 @@ import org.springframework.data.ldap.repository.support.UnitTestPerson;
  */
 public interface UnitTestPersonRepository extends LdapRepository<UnitTestPerson> {
 
-	List<UnitTestPerson> findByFullName(String name);
+  List<UnitTestPerson> findByFullName(String name);
 
-	List<UnitTestPerson> findByFullNameNot(String name);
+  List<UnitTestPerson> findByFullNameNot(String name);
 
-	List<UnitTestPerson> findByFullNameLike(String name);
+  List<UnitTestPerson> findByFullNameLike(String name);
 
-	List<UnitTestPerson> findByFullNameNotLike(String name);
+  List<UnitTestPerson> findByFullNameNotLike(String name);
 
-	List<UnitTestPerson> findByFullNameStartsWith(String name);
+  List<UnitTestPerson> findByFullNameStartsWith(String name);
 
-	List<UnitTestPerson> findByFullNameEndsWith(String name);
+  List<UnitTestPerson> findByFullNameEndsWith(String name);
 
-	List<UnitTestPerson> findByFullNameContains(String name);
+  List<UnitTestPerson> findByFullNameContains(String name);
 
-	List<UnitTestPerson> findByFullNameGreaterThanEqual(String name);
+  List<UnitTestPerson> findByFullNameGreaterThanEqual(String name);
 
-	List<UnitTestPerson> findByFullNameLessThanEqual(String name);
+  List<UnitTestPerson> findByFullNameLessThanEqual(String name);
 
-	List<UnitTestPerson> findByFullNameIsNotNull();
+  List<UnitTestPerson> findByFullNameIsNotNull();
 
-	List<UnitTestPerson> findByFullNameIsNull();
+  List<UnitTestPerson> findByFullNameIsNull();
 
-	List<UnitTestPerson> findByFullNameAndLastName(String fullName, String lastName);
+  List<UnitTestPerson> findByFullNameAndLastName(String fullName, String lastName);
 
-	List<UnitTestPerson> findByFullNameAndLastNameNot(String fullName, String lastName);
-
+  List<UnitTestPerson> findByFullNameAndLastNameNot(String fullName, String lastName);
 }

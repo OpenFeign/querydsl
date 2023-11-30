@@ -27,19 +27,19 @@ import org.springframework.ldap.odm.annotations.Id;
  */
 class LdapPersistentPropertyUnitTests {
 
-	@Test // DATALDAP-60
-	void shouldConsiderOdmIdAsIdentifier() {
+  @Test // DATALDAP-60
+  void shouldConsiderOdmIdAsIdentifier() {
 
-		LdapMappingContext context = new LdapMappingContext();
-		BasicLdapPersistentEntity<?> entity = context.getRequiredPersistentEntity(Person.class);
+    LdapMappingContext context = new LdapMappingContext();
+    BasicLdapPersistentEntity<?> entity = context.getRequiredPersistentEntity(Person.class);
 
-		assertThat(entity.getRequiredPersistentProperty("odmId").isIdProperty()).isTrue();
-		assertThat(entity.getRequiredPersistentProperty("dataId").isIdProperty()).isFalse();
-	}
+    assertThat(entity.getRequiredPersistentProperty("odmId").isIdProperty()).isTrue();
+    assertThat(entity.getRequiredPersistentProperty("dataId").isIdProperty()).isFalse();
+  }
 
-	static class Person {
+  static class Person {
 
-		@Id String odmId;
-		@org.springframework.data.annotation.Id String dataId;
-	}
+    @Id String odmId;
+    @org.springframework.data.annotation.Id String dataId;
+  }
 }

@@ -26,23 +26,23 @@ import org.springframework.data.util.TypeInformation;
  * @author Mark Paluch
  * @since 2.0.4
  */
-public class LdapMappingContext extends AbstractMappingContext<BasicLdapPersistentEntity<?>, LdapPersistentProperty> {
+public class LdapMappingContext
+    extends AbstractMappingContext<BasicLdapPersistentEntity<?>, LdapPersistentProperty> {
 
-	/**
-	 * Creates a new {@link LdapMappingContext}.
-	 */
-	public LdapMappingContext() {
-		setSimpleTypeHolder(LdapSimpleTypes.HOLDER);
-	}
+  /** Creates a new {@link LdapMappingContext}. */
+  public LdapMappingContext() {
+    setSimpleTypeHolder(LdapSimpleTypes.HOLDER);
+  }
 
-	@Override
-	protected <T> BasicLdapPersistentEntity<?> createPersistentEntity(TypeInformation<T> typeInformation) {
-		return new BasicLdapPersistentEntity<>(typeInformation);
-	}
+  @Override
+  protected <T> BasicLdapPersistentEntity<?> createPersistentEntity(
+      TypeInformation<T> typeInformation) {
+    return new BasicLdapPersistentEntity<>(typeInformation);
+  }
 
-	@Override
-	protected LdapPersistentProperty createPersistentProperty(Property property, BasicLdapPersistentEntity<?> owner,
-			SimpleTypeHolder simpleTypeHolder) {
-		return new LdapPersistentProperty(property, owner, simpleTypeHolder);
-	}
+  @Override
+  protected LdapPersistentProperty createPersistentProperty(
+      Property property, BasicLdapPersistentEntity<?> owner, SimpleTypeHolder simpleTypeHolder) {
+    return new LdapPersistentProperty(property, owner, simpleTypeHolder);
+  }
 }

@@ -18,7 +18,6 @@ package org.springframework.data.ldap.config;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -31,10 +30,10 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig
 class LdapNamespaceHandlerTests {
 
-	@Autowired private ApplicationContext context;
+  @Autowired private ApplicationContext context;
 
-	@Test // DATALDAP-1
-	void shouldCreateRepository() {
-		assertThat(context.getBean(DummyLdapRepository.class)).isNotNull();
-	}
+  @Test // DATALDAP-1
+  void shouldCreateRepository() {
+    assertThat(context.getBean(DummyLdapRepository.class)).isNotNull();
+  }
 }

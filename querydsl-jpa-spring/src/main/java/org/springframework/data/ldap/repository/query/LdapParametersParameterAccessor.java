@@ -25,35 +25,35 @@ import org.springframework.data.repository.query.QueryMethod;
  * @author Mark Paluch
  * @since 2.6
  */
-class LdapParametersParameterAccessor extends ParametersParameterAccessor implements LdapParameterAccessor {
+class LdapParametersParameterAccessor extends ParametersParameterAccessor
+    implements LdapParameterAccessor {
 
-	/**
-	 * Creates a new {@link LdapParametersParameterAccessor}.
-	 *
-	 * @param method must not be {@literal null}.
-	 * @param values must not be {@literal null}.
-	 */
-	public LdapParametersParameterAccessor(QueryMethod method, Object[] values) {
-		super(method.getParameters(), values);
-	}
+  /**
+   * Creates a new {@link LdapParametersParameterAccessor}.
+   *
+   * @param method must not be {@literal null}.
+   * @param values must not be {@literal null}.
+   */
+  public LdapParametersParameterAccessor(QueryMethod method, Object[] values) {
+    super(method.getParameters(), values);
+  }
 
-	@Override
-	public Object[] getBindableParameterValues() {
+  @Override
+  public Object[] getBindableParameterValues() {
 
-		Parameters<?, ?> bindableParameters = getParameters().getBindableParameters();
-		int count = bindableParameters.getNumberOfParameters();
+    Parameters<?, ?> bindableParameters = getParameters().getBindableParameters();
+    int count = bindableParameters.getNumberOfParameters();
 
-		if (count == 0) {
-			return new Object[0];
-		}
+    if (count == 0) {
+      return new Object[0];
+    }
 
-		Object[] values = new Object[count];
+    Object[] values = new Object[count];
 
-		for (int i = 0; i < count; i++) {
-			values[i] = getBindableValue(i);
-		}
+    for (int i = 0; i < count; i++) {
+      values[i] = getBindableValue(i);
+    }
 
-		return values;
-	}
-
+    return values;
+  }
 }

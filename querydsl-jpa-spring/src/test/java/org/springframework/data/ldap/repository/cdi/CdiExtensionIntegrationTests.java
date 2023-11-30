@@ -20,13 +20,10 @@ import static org.mockito.Mockito.*;
 
 import jakarta.enterprise.inject.se.SeContainer;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
-
 import java.util.Collections;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.data.ldap.config.DummyEntity;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.LdapQueryBuilder;
@@ -38,42 +35,43 @@ import org.springframework.ldap.query.LdapQueryBuilder;
  */
 class CdiExtensionIntegrationTests {
 
-	private static SeContainer container;
+  private static SeContainer container;
 
-	@BeforeAll
-	static void setUp() {
+  @BeforeAll
+  static void setUp() {
 
-		container = SeContainerInitializer.newInstance() //
-				.disableDiscovery() //
-				.addPackages(CdiExtensionIntegrationTests.class) //
-				.initialize();
-	}
+    container =
+        SeContainerInitializer.newInstance() //
+            .disableDiscovery() //
+            .addPackages(CdiExtensionIntegrationTests.class) //
+            .initialize();
+  }
 
-	@AfterAll
-	static void tearDown() {
-		container.close();
-	}
+  @AfterAll
+  static void tearDown() {
+    container.close();
+  }
 
-	@Test // DATALDAP-5
-	void bootstrapsRepositoryCorrectly() {
+  @Test // DATALDAP-5
+  void bootstrapsRepositoryCorrectly() {
 
-		RepositoryClient client = container.select(RepositoryClient.class).get();
-		LdapTemplate ldapTemplateMock = client.getLdapTemplate();
+    RepositoryClient client = container.select(RepositoryClient.class).get();
+    LdapTemplate ldapTemplateMock = client.getLdapTemplate();
 
-		DummyEntity entity = new DummyEntity();
-		when(ldapTemplateMock.findAll(DummyEntity.class)).thenReturn(Collections.singletonList(entity));
+    DummyEntity entity = new DummyEntity();
+    when(ldapTemplateMock.findAll(DummyEntity.class)).thenReturn(Collections.singletonList(entity));
 
-		SampleRepository repository = client.getSampleRepository();
+    SampleRepository repository = client.getSampleRepository();
 
-		assertThat(repository).isNotNull();
+    assertThat(repository).isNotNull();
 
-		repository.findAll(LdapQueryBuilder.query().filter("*"));
-	}
+    repository.findAll(LdapQueryBuilder.query().filter("*"));
+  }
 
-	@Test // DATALDAP-5
-	void returnOneFromCustomImpl() {
+  @Test // DATALDAP-5
+  void returnOneFromCustomImpl() {
 
-		RepositoryClient repositoryConsumer = container.select(RepositoryClient.class).get();
-		assertThat(repositoryConsumer.getSampleRepository().returnOne()).isEqualTo(1);
-	}
+    RepositoryClient repositoryConsumer = container.select(RepositoryClient.class).get();
+    assertThat(repositoryConsumer.getSampleRepository().returnOne()).isEqualTo(1);
+  }
 }

@@ -1,5 +1,3 @@
-/**
- * CDI support for LDAP specific repository implementation.
- */
+/** CDI support for LDAP specific repository implementation. */
 @org.springframework.lang.NonNullApi
 package org.springframework.data.ldap.repository.cdi;

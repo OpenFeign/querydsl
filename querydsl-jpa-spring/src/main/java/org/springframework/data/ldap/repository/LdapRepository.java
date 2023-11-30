@@ -17,11 +17,8 @@ package org.springframework.data.ldap.repository;
 
 import java.util.List;
 import java.util.Optional;
-
 import javax.naming.Name;
-
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
 import org.springframework.ldap.query.LdapQuery;
@@ -33,23 +30,23 @@ import org.springframework.ldap.query.LdapQuery;
  * @author Mark Paluch
  */
 @NoRepositoryBean
-public interface LdapRepository<T>	
-	extends Repository<T, Name> {
+public interface LdapRepository<T> extends Repository<T, Name> {
 
-	/**
-	 * Find one entry matching the specified query.
-	 *
-	 * @param ldapQuery the query specification.
-	 * @return the found entry or <code>null</code> if no matching entry was found.
-	 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one entry matches the query.
-	 */
-	Optional<T> findOne(LdapQuery ldapQuery);
+  /**
+   * Find one entry matching the specified query.
+   *
+   * @param ldapQuery the query specification.
+   * @return the found entry or <code>null</code> if no matching entry was found.
+   * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one entry
+   *     matches the query.
+   */
+  Optional<T> findOne(LdapQuery ldapQuery);
 
-	/**
-	 * Find all entries matching the specified query.
-	 *
-	 * @param ldapQuery the query specification.
-	 * @return the entries matching the query.
-	 */
-	List<T> findAll(LdapQuery ldapQuery);
+  /**
+   * Find all entries matching the specified query.
+   *
+   * @param ldapQuery the query specification.
+   * @return the entries matching the query.
+   */
+  List<T> findAll(LdapQuery ldapQuery);
 }

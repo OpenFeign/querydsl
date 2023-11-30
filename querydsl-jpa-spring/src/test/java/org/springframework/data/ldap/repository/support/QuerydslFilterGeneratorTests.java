@@ -17,12 +17,11 @@ package org.springframework.data.ldap.repository.support;
 
 import static org.assertj.core.api.Assertions.*;
 
+import com.querydsl.core.types.Expression;
 import org.junit.jupiter.api.Test;
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
-
-import com.querydsl.core.types.Expression;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -30,108 +29,108 @@ import com.querydsl.core.types.Expression;
  */
 class QuerydslFilterGeneratorTests {
 
-	private ObjectDirectoryMapper odm = new DefaultObjectDirectoryMapper();
-	private LdapSerializer tested = new LdapSerializer(odm, UnitTestPerson.class);
-	private QPerson person = QPerson.person;
+  private ObjectDirectoryMapper odm = new DefaultObjectDirectoryMapper();
+  private LdapSerializer tested = new LdapSerializer(odm, UnitTestPerson.class);
+  private QPerson person = QPerson.person;
 
-	@Test
-	void testEqualsFilter() {
+  @Test
+  void testEqualsFilter() {
 
-		Expression<?> expression = person.fullName.eq("John Doe");
-		Filter result = tested.handle(expression);
+    Expression<?> expression = person.fullName.eq("John Doe");
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(cn=John Doe)");
-	}
+    assertThat(result).hasToString("(cn=John Doe)");
+  }
 
-	@Test
-	void testAndFilter() {
+  @Test
+  void testAndFilter() {
 
-		Expression<?> expression = person.fullName.eq("John Doe").and(person.lastName.eq("Doe"));
-		Filter result = tested.handle(expression);
+    Expression<?> expression = person.fullName.eq("John Doe").and(person.lastName.eq("Doe"));
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(&(cn=John Doe)(sn=Doe))");
-	}
+    assertThat(result).hasToString("(&(cn=John Doe)(sn=Doe))");
+  }
 
-	@Test
-	void testOrFilter() {
+  @Test
+  void testOrFilter() {
 
-		Expression<?> expression = person.fullName.eq("John Doe").or(person.lastName.eq("Doe"));
-		Filter result = tested.handle(expression);
+    Expression<?> expression = person.fullName.eq("John Doe").or(person.lastName.eq("Doe"));
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(|(cn=John Doe)(sn=Doe))");
-	}
+    assertThat(result).hasToString("(|(cn=John Doe)(sn=Doe))");
+  }
 
-	@Test
-	void testOr() {
+  @Test
+  void testOr() {
 
-		Expression<?> expression = person.fullName.eq("John Doe")
-				.and(person.lastName.eq("Doe").or(person.lastName.eq("Die")));
+    Expression<?> expression =
+        person.fullName.eq("John Doe").and(person.lastName.eq("Doe").or(person.lastName.eq("Die")));
 
-		Filter result = tested.handle(expression);
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(&(cn=John Doe)(|(sn=Doe)(sn=Die)))");
-	}
+    assertThat(result).hasToString("(&(cn=John Doe)(|(sn=Doe)(sn=Die)))");
+  }
 
-	@Test
-	void testNot() {
+  @Test
+  void testNot() {
 
-		Expression<?> expression = person.fullName.eq("John Doe").not();
-		Filter result = tested.handle(expression);
+    Expression<?> expression = person.fullName.eq("John Doe").not();
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(!(cn=John Doe))");
-	}
+    assertThat(result).hasToString("(!(cn=John Doe))");
+  }
 
-	@Test
-	void testIsLike() {
+  @Test
+  void testIsLike() {
 
-		Expression<?> expression = person.fullName.like("kalle*");
-		Filter result = tested.handle(expression);
+    Expression<?> expression = person.fullName.like("kalle*");
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(cn=kalle*)");
-	}
+    assertThat(result).hasToString("(cn=kalle*)");
+  }
 
-	@Test
-	void testStartsWith() {
+  @Test
+  void testStartsWith() {
 
-		Expression<?> expression = person.fullName.startsWith("kalle");
-		Filter result = tested.handle(expression);
+    Expression<?> expression = person.fullName.startsWith("kalle");
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(cn=kalle*)");
-	}
+    assertThat(result).hasToString("(cn=kalle*)");
+  }
 
-	@Test
-	void testEndsWith() {
+  @Test
+  void testEndsWith() {
 
-		Expression<?> expression = person.fullName.endsWith("kalle");
-		Filter result = tested.handle(expression);
+    Expression<?> expression = person.fullName.endsWith("kalle");
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(cn=*kalle)");
-	}
+    assertThat(result).hasToString("(cn=*kalle)");
+  }
 
-	@Test
-	void testContains() {
+  @Test
+  void testContains() {
 
-		Expression<?> expression = person.fullName.contains("kalle");
-		Filter result = tested.handle(expression);
+    Expression<?> expression = person.fullName.contains("kalle");
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(cn=*kalle*)");
-	}
+    assertThat(result).hasToString("(cn=*kalle*)");
+  }
 
-	@Test
-	void testNotNull() {
+  @Test
+  void testNotNull() {
 
-		Expression<?> expression = person.fullName.isNotNull();
-		Filter result = tested.handle(expression);
+    Expression<?> expression = person.fullName.isNotNull();
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(cn=*)");
-	}
+    assertThat(result).hasToString("(cn=*)");
+  }
 
-	@Test
-	void testNull() {
+  @Test
+  void testNull() {
 
-		Expression<?> expression = person.fullName.isNull();
-		Filter result = tested.handle(expression);
+    Expression<?> expression = person.fullName.isNull();
+    Filter result = tested.handle(expression);
 
-		assertThat(result).hasToString("(!(cn=*))");
-	}
+    assertThat(result).hasToString("(!(cn=*))");
+  }
 }

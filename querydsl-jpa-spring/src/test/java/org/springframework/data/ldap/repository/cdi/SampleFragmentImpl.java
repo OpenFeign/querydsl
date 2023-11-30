@@ -20,8 +20,8 @@ package org.springframework.data.ldap.repository.cdi;
  */
 class SampleFragmentImpl implements SampleFragment {
 
-	@Override
-	public int returnOne() {
-		return 1;
-	}
+  @Override
+  public int returnOne() {
+    return 1;
+  }
 }

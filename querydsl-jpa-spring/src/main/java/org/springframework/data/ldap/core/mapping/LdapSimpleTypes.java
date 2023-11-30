@@ -18,9 +18,7 @@ package org.springframework.data.ldap.core.mapping;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.naming.Name;
-
 import org.springframework.data.mapping.model.SimpleTypeHolder;
 
 /**
@@ -31,17 +29,16 @@ import org.springframework.data.mapping.model.SimpleTypeHolder;
  */
 public abstract class LdapSimpleTypes {
 
-	static {
+  static {
+    Set<Class<?>> simpleTypes = new HashSet<>();
+    simpleTypes.add(Name.class);
 
-		Set<Class<?>> simpleTypes = new HashSet<>();
-		simpleTypes.add(Name.class);
+    VAULT_SIMPLE_TYPES = Collections.unmodifiableSet(simpleTypes);
+  }
 
-		VAULT_SIMPLE_TYPES = Collections.unmodifiableSet(simpleTypes);
-	}
+  private static final Set<Class<?>> VAULT_SIMPLE_TYPES;
 
-	private static final Set<Class<?>> VAULT_SIMPLE_TYPES;
+  public static final SimpleTypeHolder HOLDER = new SimpleTypeHolder(VAULT_SIMPLE_TYPES, true);
 
-	public static final SimpleTypeHolder HOLDER = new SimpleTypeHolder(VAULT_SIMPLE_TYPES, true);
-
-	private LdapSimpleTypes() {}
+  private LdapSimpleTypes() {}
 }

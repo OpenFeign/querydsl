@@ -15,6 +15,8 @@
  */
 package org.springframework.data.ldap.repository.support;
 
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import java.beans.FeatureDescriptor;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +27,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.convert.DtoInstantiatingConverter;
 import org.springframework.data.domain.Example;
@@ -48,9 +49,6 @@ import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.util.Assert;
 
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
-
 /**
  * LDAP-specific {@link QuerydslPredicateExecutor}.
  *
@@ -59,334 +57,351 @@ import com.querydsl.core.types.Predicate;
  */
 public class QuerydslLdapPredicateExecutor<T> implements ListQuerydslPredicateExecutor<T> {
 
-	private final EntityInformation<T, ?> entityInformation;
-	private final ProjectionFactory projectionFactory;
-	private final LdapOperations ldapOperations;
-	private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext;
-	private final EntityInstantiators entityInstantiators = new EntityInstantiators();
-
-	/**
-	 * Creates a new {@link QuerydslLdapPredicateExecutor}.
-	 *
-	 * @param entityType must not be {@literal null}.
-	 * @param projectionFactory must not be {@literal null}.
-	 * @param ldapOperations must not be {@literal null}.
-	 * @param mappingContext must not be {@literal null}.
-	 */
-	public QuerydslLdapPredicateExecutor(Class<T> entityType, ProjectionFactory projectionFactory,
-			LdapOperations ldapOperations,
-			MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext) {
-
-		Assert.notNull(entityType, "Entity type must not be null");
-		Assert.notNull(projectionFactory, "ProjectionFactory must not be null");
-		Assert.notNull(ldapOperations, "LdapOperations must not be null");
-		Assert.notNull(mappingContext, "MappingContext must not be null");
-
-		this.entityInformation = new LdapEntityInformation<>(entityType, ldapOperations.getObjectDirectoryMapper());
-		this.ldapOperations = ldapOperations;
-		this.projectionFactory = projectionFactory;
-		this.mappingContext = mappingContext;
-	}
-
-	/**
-	 * Creates a new {@link QuerydslLdapPredicateExecutor}.
-	 *
-	 * @param entityInformation must not be {@literal null}.
-	 * @param projectionFactory must not be {@literal null}.
-	 * @param ldapOperations must not be {@literal null}.
-	 * @param mappingContext must not be {@literal null}.
-	 */
-	public QuerydslLdapPredicateExecutor(EntityInformation<T, ?> entityInformation, ProjectionFactory projectionFactory,
-			LdapOperations ldapOperations,
-			MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext) {
-
-		Assert.notNull(entityInformation, "EntityInformation must not be null");
-		Assert.notNull(projectionFactory, "ProjectionFactory must not be null");
-		Assert.notNull(ldapOperations, "LdapOperations must not be null");
-		Assert.notNull(mappingContext, "MappingContext must not be null");
-
-		this.entityInformation = entityInformation;
-		this.ldapOperations = ldapOperations;
-		this.projectionFactory = projectionFactory;
-		this.mappingContext = mappingContext;
-	}
-
-	@Override
-	public Optional<T> findOne(Predicate predicate) {
-		return findBy(predicate, Function.identity()).one();
-	}
-
-	@Override
-	public List<T> findAll(Predicate predicate) {
-		return queryFor(predicate).list();
-	}
-
-	@Override
-	public long count(Predicate predicate) {
-		return findBy(predicate, FluentQuery.FetchableFluentQuery::count);
-	}
-
-	public boolean exists(Predicate predicate) {
-		return findBy(predicate, FluentQuery.FetchableFluentQuery::exists);
-	}
-
-	public List<T> findAll(Predicate predicate, Sort sort) {
-
-		Assert.notNull(sort, "Pageable must not be null");
-
-		if (sort.isUnsorted()) {
-			return findAll(predicate);
-		}
-
-		throw new UnsupportedOperationException("Sorting is not supported");
-	}
-
-	public List<T> findAll(OrderSpecifier<?>... orders) {
-
-		if (orders.length == 0) {
-			return findAll();
-		}
-
-		throw new UnsupportedOperationException("Sorting is not supported");
-	}
-
-	@Override
-	public List<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
-
-		if (orders.length == 0) {
-			return findAll(predicate);
-		}
-
-		throw new UnsupportedOperationException("Sorting is not supported");
-	}
-
-	@Override
-	public Page<T> findAll(Predicate predicate, Pageable pageable) {
+  private final EntityInformation<T, ?> entityInformation;
+  private final ProjectionFactory projectionFactory;
+  private final LdapOperations ldapOperations;
+  private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+      mappingContext;
+  private final EntityInstantiators entityInstantiators = new EntityInstantiators();
+
+  /**
+   * Creates a new {@link QuerydslLdapPredicateExecutor}.
+   *
+   * @param entityType must not be {@literal null}.
+   * @param projectionFactory must not be {@literal null}.
+   * @param ldapOperations must not be {@literal null}.
+   * @param mappingContext must not be {@literal null}.
+   */
+  public QuerydslLdapPredicateExecutor(
+      Class<T> entityType,
+      ProjectionFactory projectionFactory,
+      LdapOperations ldapOperations,
+      MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+          mappingContext) {
+
+    Assert.notNull(entityType, "Entity type must not be null");
+    Assert.notNull(projectionFactory, "ProjectionFactory must not be null");
+    Assert.notNull(ldapOperations, "LdapOperations must not be null");
+    Assert.notNull(mappingContext, "MappingContext must not be null");
+
+    this.entityInformation =
+        new LdapEntityInformation<>(entityType, ldapOperations.getObjectDirectoryMapper());
+    this.ldapOperations = ldapOperations;
+    this.projectionFactory = projectionFactory;
+    this.mappingContext = mappingContext;
+  }
+
+  /**
+   * Creates a new {@link QuerydslLdapPredicateExecutor}.
+   *
+   * @param entityInformation must not be {@literal null}.
+   * @param projectionFactory must not be {@literal null}.
+   * @param ldapOperations must not be {@literal null}.
+   * @param mappingContext must not be {@literal null}.
+   */
+  public QuerydslLdapPredicateExecutor(
+      EntityInformation<T, ?> entityInformation,
+      ProjectionFactory projectionFactory,
+      LdapOperations ldapOperations,
+      MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+          mappingContext) {
+
+    Assert.notNull(entityInformation, "EntityInformation must not be null");
+    Assert.notNull(projectionFactory, "ProjectionFactory must not be null");
+    Assert.notNull(ldapOperations, "LdapOperations must not be null");
+    Assert.notNull(mappingContext, "MappingContext must not be null");
+
+    this.entityInformation = entityInformation;
+    this.ldapOperations = ldapOperations;
+    this.projectionFactory = projectionFactory;
+    this.mappingContext = mappingContext;
+  }
+
+  @Override
+  public Optional<T> findOne(Predicate predicate) {
+    return findBy(predicate, Function.identity()).one();
+  }
+
+  @Override
+  public List<T> findAll(Predicate predicate) {
+    return queryFor(predicate).list();
+  }
+
+  @Override
+  public long count(Predicate predicate) {
+    return findBy(predicate, FluentQuery.FetchableFluentQuery::count);
+  }
+
+  public boolean exists(Predicate predicate) {
+    return findBy(predicate, FluentQuery.FetchableFluentQuery::exists);
+  }
+
+  public List<T> findAll(Predicate predicate, Sort sort) {
+
+    Assert.notNull(sort, "Pageable must not be null");
+
+    if (sort.isUnsorted()) {
+      return findAll(predicate);
+    }
+
+    throw new UnsupportedOperationException("Sorting is not supported");
+  }
+
+  public List<T> findAll(OrderSpecifier<?>... orders) {
+
+    if (orders.length == 0) {
+      return findAll();
+    }
+
+    throw new UnsupportedOperationException("Sorting is not supported");
+  }
+
+  @Override
+  public List<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
 
-		Assert.notNull(pageable, "Pageable must not be null");
+    if (orders.length == 0) {
+      return findAll(predicate);
+    }
 
-		if (pageable.isUnpaged()) {
-			return PageableExecutionUtils.getPage(findAll(predicate), pageable, () -> count(predicate));
-		}
+    throw new UnsupportedOperationException("Sorting is not supported");
+  }
 
-		if (pageable.getSort().isUnsorted() && pageable.getPageNumber() == 0) {
+  @Override
+  public Page<T> findAll(Predicate predicate, Pageable pageable) {
 
-			return PageableExecutionUtils.getPage(queryFor(predicate, q -> q.countLimit(pageable.getPageSize())).list(),
-					pageable, () -> count(predicate));
-		}
+    Assert.notNull(pageable, "Pageable must not be null");
 
-		throw new UnsupportedOperationException("Pagination and Sorting is not supported");
-	}
+    if (pageable.isUnpaged()) {
+      return PageableExecutionUtils.getPage(findAll(predicate), pageable, () -> count(predicate));
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <S extends T, R> R findBy(Predicate predicate,
-			Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    if (pageable.getSort().isUnsorted() && pageable.getPageNumber() == 0) {
 
-		Assert.notNull(queryFunction, "Query function must not be null");
+      return PageableExecutionUtils.getPage(
+          queryFor(predicate, q -> q.countLimit(pageable.getPageSize())).list(),
+          pageable,
+          () -> count(predicate));
+    }
 
-		return queryFunction.apply(new FluentQuerydsl<>(predicate, (Class<S>) entityInformation.getJavaType()));
-	}
+    throw new UnsupportedOperationException("Pagination and Sorting is not supported");
+  }
 
-	private QuerydslLdapQuery<T> queryFor(Predicate predicate) {
-		return queryFor(predicate, it -> {
+  @Override
+  @SuppressWarnings("unchecked")
+  public <S extends T, R> R findBy(
+      Predicate predicate, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
 
-		});
-	}
+    Assert.notNull(queryFunction, "Query function must not be null");
 
-	private QuerydslLdapQuery<T> queryFor(Predicate predicate, Consumer<LdapQueryBuilder> queryBuilderConsumer) {
+    return queryFunction.apply(
+        new FluentQuerydsl<>(predicate, (Class<S>) entityInformation.getJavaType()));
+  }
 
-		Assert.notNull(predicate, "Predicate must not be null");
+  private QuerydslLdapQuery<T> queryFor(Predicate predicate) {
+    return queryFor(predicate, it -> {});
+  }
 
-		return new QuerydslLdapQuery<>(ldapOperations, entityInformation.getJavaType(), queryBuilderConsumer)
-				.where(predicate);
-	}
+  private QuerydslLdapQuery<T> queryFor(
+      Predicate predicate, Consumer<LdapQueryBuilder> queryBuilderConsumer) {
 
-	/**
-	 * {@link FetchableFluentQuery} using {@link Example}.
-	 *
-	 * @author Mark Paluch
-	 * @since 2.6
-	 */
-	class FluentQuerydsl<R> implements FluentQuery.FetchableFluentQuery<R> {
+    Assert.notNull(predicate, "Predicate must not be null");
 
-		private final Predicate predicate;
-		private final Sort sort;
-		private final Class<R> resultType;
-		private final List<String> projection;
+    return new QuerydslLdapQuery<>(
+            ldapOperations, entityInformation.getJavaType(), queryBuilderConsumer)
+        .where(predicate);
+  }
 
-		FluentQuerydsl(Predicate predicate, Class<R> resultType) {
-			this(predicate, Sort.unsorted(), resultType, Collections.emptyList());
-		}
+  /**
+   * {@link FetchableFluentQuery} using {@link Example}.
+   *
+   * @author Mark Paluch
+   * @since 2.6
+   */
+  class FluentQuerydsl<R> implements FluentQuery.FetchableFluentQuery<R> {
 
-		FluentQuerydsl(Predicate predicate, Sort sort, Class<R> resultType, List<String> projection) {
-			this.predicate = predicate;
-			this.sort = sort;
-			this.resultType = resultType;
-			this.projection = projection;
-		}
+    private final Predicate predicate;
+    private final Sort sort;
+    private final Class<R> resultType;
+    private final List<String> projection;
 
-		@Override
-		public FetchableFluentQuery<R> sortBy(Sort sort) {
-			throw new UnsupportedOperationException();
-		}
+    FluentQuerydsl(Predicate predicate, Class<R> resultType) {
+      this(predicate, Sort.unsorted(), resultType, Collections.emptyList());
+    }
 
-		@Override
-		public <R1> FetchableFluentQuery<R1> as(Class<R1> resultType) {
+    FluentQuerydsl(Predicate predicate, Sort sort, Class<R> resultType, List<String> projection) {
+      this.predicate = predicate;
+      this.sort = sort;
+      this.resultType = resultType;
+      this.projection = projection;
+    }
 
-			Assert.notNull(projection, "Projection target type must not be null");
+    @Override
+    public FetchableFluentQuery<R> sortBy(Sort sort) {
+      throw new UnsupportedOperationException();
+    }
 
-			return new FluentQuerydsl<>(predicate, sort, resultType, projection);
-		}
+    @Override
+    public <R1> FetchableFluentQuery<R1> as(Class<R1> resultType) {
 
-		@Override
-		public FetchableFluentQuery<R> project(Collection<String> properties) {
+      Assert.notNull(projection, "Projection target type must not be null");
 
-			Assert.notNull(properties, "Projection properties must not be null");
+      return new FluentQuerydsl<>(predicate, sort, resultType, projection);
+    }
 
-			return new FluentQuerydsl<>(predicate, sort, resultType, new ArrayList<>(properties));
-		}
+    @Override
+    public FetchableFluentQuery<R> project(Collection<String> properties) {
 
-		@Nullable
-		@Override
-		public R oneValue() {
+      Assert.notNull(properties, "Projection properties must not be null");
 
-			List<T> results = findTop(2);
+      return new FluentQuerydsl<>(predicate, sort, resultType, new ArrayList<>(properties));
+    }
 
-			if (results.isEmpty()) {
-				return null;
-			}
+    @Nullable
+    @Override
+    public R oneValue() {
 
-			if (results.size() > 1) {
-				throw new IncorrectResultSizeDataAccessException(1);
-			}
+      List<T> results = findTop(2);
 
-			T one = results.get(0);
-			return getConversionFunction().apply(one);
-		}
+      if (results.isEmpty()) {
+        return null;
+      }
 
-		@Nullable
-		@Override
-		public R firstValue() {
+      if (results.size() > 1) {
+        throw new IncorrectResultSizeDataAccessException(1);
+      }
 
-			List<T> results = findTop(2);
+      T one = results.get(0);
+      return getConversionFunction().apply(one);
+    }
 
-			if (results.isEmpty()) {
-				return null;
-			}
+    @Nullable
+    @Override
+    public R firstValue() {
 
-			T one = results.get(0);
-			return getConversionFunction().apply(one);
-		}
+      List<T> results = findTop(2);
 
-		@Override
-		public List<R> all() {
-			return stream().collect(Collectors.toList());
-		}
+      if (results.isEmpty()) {
+        return null;
+      }
 
-		@Override
-		public Page<R> page(Pageable pageable) {
+      T one = results.get(0);
+      return getConversionFunction().apply(one);
+    }
 
-			Assert.notNull(pageable, "Pageable must not be null");
+    @Override
+    public List<R> all() {
+      return stream().collect(Collectors.toList());
+    }
 
-			if (pageable.isUnpaged()) {
-				return PageableExecutionUtils.getPage(all(), pageable, this::count);
-			}
+    @Override
+    public Page<R> page(Pageable pageable) {
 
-			if (pageable.getSort().isUnsorted() && pageable.getPageNumber() == 0) {
+      Assert.notNull(pageable, "Pageable must not be null");
 
-				Function<Object, R> conversionFunction = getConversionFunction();
+      if (pageable.isUnpaged()) {
+        return PageableExecutionUtils.getPage(all(), pageable, this::count);
+      }
 
-				return PageableExecutionUtils.getPage(
-						findTop(pageable.getPageSize()).stream().map(conversionFunction).collect(Collectors.toList()), pageable,
-						this::count);
-			}
+      if (pageable.getSort().isUnsorted() && pageable.getPageNumber() == 0) {
 
-			throw new UnsupportedOperationException("Pagination and Sorting is not supported");
-		}
+        Function<Object, R> conversionFunction = getConversionFunction();
 
-		@Override
-		public Stream<R> stream() {
+        return PageableExecutionUtils.getPage(
+            findTop(pageable.getPageSize()).stream()
+                .map(conversionFunction)
+                .collect(Collectors.toList()),
+            pageable,
+            this::count);
+      }
 
-			Function<Object, R> conversionFunction = getConversionFunction();
+      throw new UnsupportedOperationException("Pagination and Sorting is not supported");
+    }
 
-			return search(null, QuerydslLdapQuery::list).stream().map(conversionFunction);
-		}
+    @Override
+    public Stream<R> stream() {
 
-		@Override
-		public long count() {
-			return search(null, q -> q.search(it -> true)).size();
-		}
+      Function<Object, R> conversionFunction = getConversionFunction();
 
-		@Override
-		public boolean exists() {
-			return !search(1, q -> q.search(it -> true)).isEmpty();
-		}
+      return search(null, QuerydslLdapQuery::list).stream().map(conversionFunction);
+    }
 
-		private List<T> findTop(int limit) {
-			return search(limit, QuerydslLdapQuery::list);
-		}
+    @Override
+    public long count() {
+      return search(null, q -> q.search(it -> true)).size();
+    }
 
-		private <S> S search(@Nullable Integer limit, Function<QuerydslLdapQuery<T>, S> searchFunction) {
+    @Override
+    public boolean exists() {
+      return !search(1, q -> q.search(it -> true)).isEmpty();
+    }
 
-			QuerydslLdapQuery<T> q = queryFor(predicate, query -> {
+    private List<T> findTop(int limit) {
+      return search(limit, QuerydslLdapQuery::list);
+    }
 
-				List<String> projection = getProjection();
+    private <S> S search(
+        @Nullable Integer limit, Function<QuerydslLdapQuery<T>, S> searchFunction) {
 
-				if (!projection.isEmpty()) {
-					query.attributes(projection.toArray(new String[0]));
-				}
+      QuerydslLdapQuery<T> q =
+          queryFor(
+              predicate,
+              query -> {
+                List<String> projection = getProjection();
 
-				if (limit != null) {
-					query.countLimit(limit);
-				}
-			});
+                if (!projection.isEmpty()) {
+                  query.attributes(projection.toArray(new String[0]));
+                }
 
-			return searchFunction.apply(q);
-		}
+                if (limit != null) {
+                  query.countLimit(limit);
+                }
+              });
 
-		@SuppressWarnings("unchecked")
-		private <P> Function<Object, P> getConversionFunction(Class<?> inputType, Class<P> targetType) {
+      return searchFunction.apply(q);
+    }
 
-			if (targetType.isAssignableFrom(inputType)) {
-				return (Function<Object, P>) Function.identity();
-			}
+    @SuppressWarnings("unchecked")
+    private <P> Function<Object, P> getConversionFunction(Class<?> inputType, Class<P> targetType) {
 
-			if (targetType.isInterface()) {
-				return o -> projectionFactory.createProjection(targetType, o);
-			}
+      if (targetType.isAssignableFrom(inputType)) {
+        return (Function<Object, P>) Function.identity();
+      }
 
-			DtoInstantiatingConverter converter = new DtoInstantiatingConverter(targetType, mappingContext,
-					entityInstantiators);
+      if (targetType.isInterface()) {
+        return o -> projectionFactory.createProjection(targetType, o);
+      }
 
-			return o -> (P) converter.convert(o);
-		}
+      DtoInstantiatingConverter converter =
+          new DtoInstantiatingConverter(targetType, mappingContext, entityInstantiators);
 
-		private Function<Object, R> getConversionFunction() {
-			return getConversionFunction(entityInformation.getJavaType(), resultType);
-		}
+      return o -> (P) converter.convert(o);
+    }
 
-		private List<String> getProjection() {
+    private Function<Object, R> getConversionFunction() {
+      return getConversionFunction(entityInformation.getJavaType(), resultType);
+    }
 
-			if (projection.isEmpty()) {
+    private List<String> getProjection() {
 
-				if (resultType.isAssignableFrom(entityInformation.getJavaType())) {
-					return projection;
-				}
+      if (projection.isEmpty()) {
 
-				if (resultType.isInterface()) {
-					ProjectionInformation projectionInformation = projectionFactory.getProjectionInformation(resultType);
+        if (resultType.isAssignableFrom(entityInformation.getJavaType())) {
+          return projection;
+        }
 
-					if (projectionInformation.isClosed()) {
-						return projectionInformation.getInputProperties().stream().map(FeatureDescriptor::getName)
-								.collect(Collectors.toList());
-					}
-				}
-			}
+        if (resultType.isInterface()) {
+          ProjectionInformation projectionInformation =
+              projectionFactory.getProjectionInformation(resultType);
 
-			return projection;
-		}
+          if (projectionInformation.isClosed()) {
+            return projectionInformation.getInputProperties().stream()
+                .map(FeatureDescriptor::getName)
+                .collect(Collectors.toList());
+          }
+        }
+      }
 
-	}
-
+      return projection;
+    }
+  }
 }

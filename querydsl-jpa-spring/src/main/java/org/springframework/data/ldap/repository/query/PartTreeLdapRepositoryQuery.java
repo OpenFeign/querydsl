@@ -17,7 +17,6 @@ package org.springframework.data.ldap.repository.query;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.context.MappingContext;
@@ -37,41 +36,46 @@ import org.springframework.ldap.query.LdapQuery;
  */
 public class PartTreeLdapRepositoryQuery extends AbstractLdapRepositoryQuery {
 
-	private final PartTree partTree;
-	private final ObjectDirectoryMapper objectDirectoryMapper;
+  private final PartTree partTree;
+  private final ObjectDirectoryMapper objectDirectoryMapper;
 
-	/**
-	 * Creates a new {@link PartTreeLdapRepositoryQuery}.
-	 *
-	 * @param queryMethod must not be {@literal null}.
-	 * @param entityType must not be {@literal null}.
-	 * @param ldapOperations must not be {@literal null}.
-	 * @param mappingContext must not be {@literal null}.
-	 * @param instantiators must not be {@literal null}.
-	 */
-	public PartTreeLdapRepositoryQuery(LdapQueryMethod queryMethod, Class<?> entityType, LdapOperations ldapOperations,
-			MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext,
-			EntityInstantiators instantiators) {
+  /**
+   * Creates a new {@link PartTreeLdapRepositoryQuery}.
+   *
+   * @param queryMethod must not be {@literal null}.
+   * @param entityType must not be {@literal null}.
+   * @param ldapOperations must not be {@literal null}.
+   * @param mappingContext must not be {@literal null}.
+   * @param instantiators must not be {@literal null}.
+   */
+  public PartTreeLdapRepositoryQuery(
+      LdapQueryMethod queryMethod,
+      Class<?> entityType,
+      LdapOperations ldapOperations,
+      MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+          mappingContext,
+      EntityInstantiators instantiators) {
 
-		super(queryMethod, entityType, ldapOperations, mappingContext, instantiators);
+    super(queryMethod, entityType, ldapOperations, mappingContext, instantiators);
 
-		partTree = new PartTree(queryMethod.getName(), entityType);
-		objectDirectoryMapper = ldapOperations.getObjectDirectoryMapper();
-	}
+    partTree = new PartTree(queryMethod.getName(), entityType);
+    objectDirectoryMapper = ldapOperations.getObjectDirectoryMapper();
+  }
 
-	@Override
-	protected LdapQuery createQuery(LdapParameterAccessor parameters) {
+  @Override
+  protected LdapQuery createQuery(LdapParameterAccessor parameters) {
 
-		List<String> inputProperties = Collections.emptyList();
-		ReturnedType returnedType = getQueryMethod().getResultProcessor().withDynamicProjection(parameters)
-				.getReturnedType();
+    List<String> inputProperties = Collections.emptyList();
+    ReturnedType returnedType =
+        getQueryMethod().getResultProcessor().withDynamicProjection(parameters).getReturnedType();
 
-		if (returnedType.needsCustomConstruction()) {
-			inputProperties = returnedType.getInputProperties();
-		}
+    if (returnedType.needsCustomConstruction()) {
+      inputProperties = returnedType.getInputProperties();
+    }
 
-		org.springframework.data.ldap.repository.query.LdapQueryCreator queryCreator = new LdapQueryCreator(partTree,
-				getEntityClass(), objectDirectoryMapper, parameters, inputProperties);
-		return queryCreator.createQuery();
-	}
+    org.springframework.data.ldap.repository.query.LdapQueryCreator queryCreator =
+        new LdapQueryCreator(
+            partTree, getEntityClass(), objectDirectoryMapper, parameters, inputProperties);
+    return queryCreator.createQuery();
+  }
 }

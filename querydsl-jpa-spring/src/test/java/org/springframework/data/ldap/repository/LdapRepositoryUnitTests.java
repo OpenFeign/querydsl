@@ -23,9 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.naming.ldap.LdapName;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -45,93 +43,106 @@ import org.springframework.ldap.query.LdapQuery;
 @MockitoSettings
 class LdapRepositoryUnitTests {
 
-	@Mock LdapOperations ldapOperations;
+  @Mock LdapOperations ldapOperations;
 
-	UnitTestPerson walter, hank;
+  UnitTestPerson walter, hank;
 
-	PersonRepository repository;
+  PersonRepository repository;
 
-	@BeforeEach
-	void before() throws Exception {
+  @BeforeEach
+  void before() throws Exception {
 
-		when(ldapOperations.getObjectDirectoryMapper()).thenReturn(new DefaultObjectDirectoryMapper());
+    when(ldapOperations.getObjectDirectoryMapper()).thenReturn(new DefaultObjectDirectoryMapper());
 
-		walter = new UnitTestPerson(new LdapName("cn=walter"), "Walter", "White", Collections.emptyList(), "US",
-				"Heisenberg", "000");
-		hank = new UnitTestPerson(new LdapName("cn=hank"), "Hank", "Schrader", Collections.emptyList(), "US", "DEA", "000");
+    walter =
+        new UnitTestPerson(
+            new LdapName("cn=walter"),
+            "Walter",
+            "White",
+            Collections.emptyList(),
+            "US",
+            "Heisenberg",
+            "000");
+    hank =
+        new UnitTestPerson(
+            new LdapName("cn=hank"),
+            "Hank",
+            "Schrader",
+            Collections.emptyList(),
+            "US",
+            "DEA",
+            "000");
 
-		repository = new LdapRepositoryFactory(ldapOperations).getRepository(PersonRepository.class);
-	}
+    repository = new LdapRepositoryFactory(ldapOperations).getRepository(PersonRepository.class);
+  }
 
-	@Test
-	void shouldReturnInterfaceProjection() {
+  @Test
+  void shouldReturnInterfaceProjection() {
 
-		when(ldapOperations.findOne(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(walter);
+    when(ldapOperations.findOne(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(walter);
 
-		PersonProjection walter = repository.findByLastName("White");
+    PersonProjection walter = repository.findByLastName("White");
 
-		assertThat(walter).isNotNull();
-		assertThat(walter.getLastName()).isEqualTo("White");
+    assertThat(walter).isNotNull();
+    assertThat(walter.getLastName()).isEqualTo("White");
 
-		ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
+    ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
 
-		verify(ldapOperations).findOne(captor.capture(), any());
+    verify(ldapOperations).findOne(captor.capture(), any());
 
-		LdapQuery query = captor.getValue();
-		assertThat(query.attributes()).containsOnly("lastName");
-	}
+    LdapQuery query = captor.getValue();
+    assertThat(query.attributes()).containsOnly("lastName");
+  }
 
-	@Test
-	void shouldReturnDynamicDtoProjection() {
+  @Test
+  void shouldReturnDynamicDtoProjection() {
 
-		when(ldapOperations.findOne(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(walter);
+    when(ldapOperations.findOne(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(walter);
 
-		PersonDto walter = repository.findByLastName("White", PersonDto.class);
+    PersonDto walter = repository.findByLastName("White", PersonDto.class);
 
-		assertThat(walter).isNotNull();
-		assertThat(walter.lastName()).isEqualTo("White");
+    assertThat(walter).isNotNull();
+    assertThat(walter.lastName()).isEqualTo("White");
 
-		ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
+    ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
 
-		verify(ldapOperations).findOne(captor.capture(), any());
+    verify(ldapOperations).findOne(captor.capture(), any());
 
-		LdapQuery query = captor.getValue();
-		assertThat(query.attributes()).contains("lastName");
-	}
+    LdapQuery query = captor.getValue();
+    assertThat(query.attributes()).contains("lastName");
+  }
 
-	@Test
-	void shouldReturnInterfaceProjectionAsStream() {
+  @Test
+  void shouldReturnInterfaceProjectionAsStream() {
 
-		when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
-				.thenReturn(Collections.singletonList(walter));
+    when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
+        .thenReturn(Collections.singletonList(walter));
 
-		Stream<PersonProjection> walter = repository.streamAllByLastName("White");
+    Stream<PersonProjection> walter = repository.streamAllByLastName("White");
 
-		List<PersonProjection> list = walter.collect(Collectors.toList());
-		assertThat(list).hasSize(1).hasOnlyElementsOfType(PersonProjection.class);
+    List<PersonProjection> list = walter.collect(Collectors.toList());
+    assertThat(list).hasSize(1).hasOnlyElementsOfType(PersonProjection.class);
 
-		ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
+    ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
 
-		verify(ldapOperations).find(captor.capture(), any());
+    verify(ldapOperations).find(captor.capture(), any());
 
-		LdapQuery query = captor.getValue();
-		assertThat(query.attributes()).containsOnly("lastName");
-	}
+    LdapQuery query = captor.getValue();
+    assertThat(query.attributes()).containsOnly("lastName");
+  }
 
-	interface PersonRepository extends LdapRepository<UnitTestPerson> {
+  interface PersonRepository extends LdapRepository<UnitTestPerson> {
 
-		Stream<PersonProjection> streamAllByLastName(String lastName);
+    Stream<PersonProjection> streamAllByLastName(String lastName);
 
-		PersonProjection findByLastName(String lastname);
+    PersonProjection findByLastName(String lastname);
 
-		<T> T findByLastName(String lastname, Class<T> projection);
+    <T> T findByLastName(String lastname, Class<T> projection);
+  }
 
-	}
+  interface PersonProjection {
+    String getLastName();
+  }
 
-	interface PersonProjection {
-		String getLastName();
-	}
-
-	record PersonDto(String lastName) {
-	}
+  record PersonDto(String lastName) {}
 }

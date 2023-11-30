@@ -21,7 +21,6 @@ import static org.springframework.data.repository.core.support.RepositoryComposi
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Optional;
-
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.ldap.core.mapping.LdapMappingContext;
 import org.springframework.data.ldap.repository.query.AnnotatedLdapRepositoryQuery;
@@ -56,161 +55,189 @@ import org.springframework.util.Assert;
  */
 public class LdapRepositoryFactory extends RepositoryFactorySupport {
 
-	private final LdapQueryLookupStrategy queryLookupStrategy;
-	private final LdapOperations ldapOperations;
-	private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext;
-	private final EntityInstantiators instantiators = new EntityInstantiators();
+  private final LdapQueryLookupStrategy queryLookupStrategy;
+  private final LdapOperations ldapOperations;
+  private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+      mappingContext;
+  private final EntityInstantiators instantiators = new EntityInstantiators();
 
-	/**
-	 * Creates a new {@link LdapRepositoryFactory}.
-	 *
-	 * @param ldapOperations must not be {@literal null}.
-	 */
-	public LdapRepositoryFactory(LdapOperations ldapOperations) {
+  /**
+   * Creates a new {@link LdapRepositoryFactory}.
+   *
+   * @param ldapOperations must not be {@literal null}.
+   */
+  public LdapRepositoryFactory(LdapOperations ldapOperations) {
 
-		Assert.notNull(ldapOperations, "LdapOperations must not be null");
+    Assert.notNull(ldapOperations, "LdapOperations must not be null");
 
-		this.ldapOperations = ldapOperations;
-		this.mappingContext = new LdapMappingContext();
-		this.queryLookupStrategy = new LdapQueryLookupStrategy(ldapOperations, instantiators, mappingContext);
-	}
+    this.ldapOperations = ldapOperations;
+    this.mappingContext = new LdapMappingContext();
+    this.queryLookupStrategy =
+        new LdapQueryLookupStrategy(ldapOperations, instantiators, mappingContext);
+  }
 
-	/**
-	 * Creates a new {@link LdapRepositoryFactory}.
-	 *
-	 * @param ldapOperations must not be {@literal null}.
-	 * @param mappingContext must not be {@literal null}.
-	 */
-	LdapRepositoryFactory(LdapOperations ldapOperations,
-			MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext) {
+  /**
+   * Creates a new {@link LdapRepositoryFactory}.
+   *
+   * @param ldapOperations must not be {@literal null}.
+   * @param mappingContext must not be {@literal null}.
+   */
+  LdapRepositoryFactory(
+      LdapOperations ldapOperations,
+      MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+          mappingContext) {
 
-		Assert.notNull(ldapOperations, "LdapOperations must not be null");
-		Assert.notNull(mappingContext, "LdapMappingContext must not be null");
+    Assert.notNull(ldapOperations, "LdapOperations must not be null");
+    Assert.notNull(mappingContext, "LdapMappingContext must not be null");
 
-		this.queryLookupStrategy = new LdapQueryLookupStrategy(ldapOperations, instantiators, mappingContext);
-		this.ldapOperations = ldapOperations;
-		this.mappingContext = mappingContext;
-	}
+    this.queryLookupStrategy =
+        new LdapQueryLookupStrategy(ldapOperations, instantiators, mappingContext);
+    this.ldapOperations = ldapOperations;
+    this.mappingContext = mappingContext;
+  }
 
-	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T, ID> EntityInformation<T, ID> getEntityInformation(Class<T> domainClass) {
-		return new LdapEntityInformation(domainClass, ldapOperations.getObjectDirectoryMapper());
-	}
+  @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public <T, ID> EntityInformation<T, ID> getEntityInformation(Class<T> domainClass) {
+    return new LdapEntityInformation(domainClass, ldapOperations.getObjectDirectoryMapper());
+  }
 
-	@Override
-	protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
-		return SimpleLdapRepository.class;
-	}
+  @Override
+  protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
+    return SimpleLdapRepository.class;
+  }
 
-	@Override
-	protected RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
-		return getRepositoryFragments(metadata, this.ldapOperations);
-	}
+  @Override
+  protected RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
+    return getRepositoryFragments(metadata, this.ldapOperations);
+  }
 
-	/**
-	 * Creates {@link RepositoryFragments} based on {@link RepositoryMetadata} to add LDAP-specific extensions. Typically,
-	 * adds a {@link QuerydslLdapPredicateExecutor} if the repository interface uses Querydsl.
-	 * <p>
-	 * Can be overridden by subclasses to customize {@link RepositoryFragments}.
-	 *
-	 * @param metadata repository metadata.
-	 * @param operations the LDAP operations manager.
-	 * @return
-	 * @since 2.6
-	 */
-	protected RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata, LdapOperations operations) {
+  /**
+   * Creates {@link RepositoryFragments} based on {@link RepositoryMetadata} to add LDAP-specific
+   * extensions. Typically, adds a {@link QuerydslLdapPredicateExecutor} if the repository interface
+   * uses Querydsl.
+   *
+   * <p>Can be overridden by subclasses to customize {@link RepositoryFragments}.
+   *
+   * @param metadata repository metadata.
+   * @param operations the LDAP operations manager.
+   * @return
+   * @since 2.6
+   */
+  protected RepositoryFragments getRepositoryFragments(
+      RepositoryMetadata metadata, LdapOperations operations) {
 
-		boolean isQueryDslRepository = QUERY_DSL_PRESENT
-				&& QuerydslPredicateExecutor.class.isAssignableFrom(metadata.getRepositoryInterface());
+    boolean isQueryDslRepository =
+        QUERY_DSL_PRESENT
+            && QuerydslPredicateExecutor.class.isAssignableFrom(metadata.getRepositoryInterface());
 
-		if (isQueryDslRepository) {
+    if (isQueryDslRepository) {
 
-			if (metadata.isReactiveRepository()) {
-				throw new InvalidDataAccessApiUsageException(
-						"Cannot combine Querydsl and reactive repository support in a single interface");
-			}
+      if (metadata.isReactiveRepository()) {
+        throw new InvalidDataAccessApiUsageException(
+            "Cannot combine Querydsl and reactive repository support in a single interface");
+      }
 
-			return RepositoryFragments.just(new QuerydslLdapPredicateExecutor<>(
-					getEntityInformation(metadata.getDomainType()), getProjectionFactory(), operations, mappingContext));
-		}
+      return RepositoryFragments.just(
+          new QuerydslLdapPredicateExecutor<>(
+              getEntityInformation(metadata.getDomainType()),
+              getProjectionFactory(),
+              operations,
+              mappingContext));
+    }
 
-		return RepositoryFragments.empty();
-	}
+    return RepositoryFragments.empty();
+  }
 
-	@Override
-	protected Object getTargetRepository(RepositoryInformation information) {
+  @Override
+  protected Object getTargetRepository(RepositoryInformation information) {
 
-		boolean acceptsMappingContext = acceptsMappingContext(information);
+    boolean acceptsMappingContext = acceptsMappingContext(information);
 
-		if (acceptsMappingContext) {
-			return getTargetRepositoryViaReflection(information, ldapOperations, mappingContext,
-					ldapOperations.getObjectDirectoryMapper(), information.getDomainType());
-		}
+    if (acceptsMappingContext) {
+      return getTargetRepositoryViaReflection(
+          information,
+          ldapOperations,
+          mappingContext,
+          ldapOperations.getObjectDirectoryMapper(),
+          information.getDomainType());
+    }
 
-		return getTargetRepositoryViaReflection(information, ldapOperations,
-				ldapOperations.getObjectDirectoryMapper(),
-				information.getDomainType());
-	}
+    return getTargetRepositoryViaReflection(
+        information,
+        ldapOperations,
+        ldapOperations.getObjectDirectoryMapper(),
+        information.getDomainType());
+  }
 
-	@Override
-	protected Optional<QueryLookupStrategy> getQueryLookupStrategy(@Nullable Key key,
-			QueryMethodEvaluationContextProvider evaluationContextProvider) {
-		return Optional.of(queryLookupStrategy);
-	}
+  @Override
+  protected Optional<QueryLookupStrategy> getQueryLookupStrategy(
+      @Nullable Key key, QueryMethodEvaluationContextProvider evaluationContextProvider) {
+    return Optional.of(queryLookupStrategy);
+  }
 
-	/**
-	 * Allow creation of repository base classes that do not accept a {@link LdapMappingContext} that was introduced with
-	 * version 2.6.
-	 *
-	 * @param information
-	 * @return
-	 */
-	private static boolean acceptsMappingContext(RepositoryInformation information) {
+  /**
+   * Allow creation of repository base classes that do not accept a {@link LdapMappingContext} that
+   * was introduced with version 2.6.
+   *
+   * @param information
+   * @return
+   */
+  private static boolean acceptsMappingContext(RepositoryInformation information) {
 
-		Class<?> repositoryBaseClass = information.getRepositoryBaseClass();
+    Class<?> repositoryBaseClass = information.getRepositoryBaseClass();
 
-		Constructor<?>[] declaredConstructors = repositoryBaseClass.getDeclaredConstructors();
+    Constructor<?>[] declaredConstructors = repositoryBaseClass.getDeclaredConstructors();
 
-		boolean acceptsMappingContext = false;
+    boolean acceptsMappingContext = false;
 
-		for (Constructor<?> declaredConstructor : declaredConstructors) {
-			Class<?>[] parameterTypes = declaredConstructor.getParameterTypes();
+    for (Constructor<?> declaredConstructor : declaredConstructors) {
+      Class<?>[] parameterTypes = declaredConstructor.getParameterTypes();
 
-			if (parameterTypes.length == 4 && parameterTypes[1].isAssignableFrom(LdapMappingContext.class)) {
-				acceptsMappingContext = true;
-			}
-		}
+      if (parameterTypes.length == 4
+          && parameterTypes[1].isAssignableFrom(LdapMappingContext.class)) {
+        acceptsMappingContext = true;
+      }
+    }
 
-		return acceptsMappingContext;
-	}
+    return acceptsMappingContext;
+  }
 
-	private static final class LdapQueryLookupStrategy implements QueryLookupStrategy {
+  private static final class LdapQueryLookupStrategy implements QueryLookupStrategy {
 
-		private final LdapOperations ldapOperations;
-		private final EntityInstantiators instantiators;
-		private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext;
+    private final LdapOperations ldapOperations;
+    private final EntityInstantiators instantiators;
+    private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+        mappingContext;
 
-		public LdapQueryLookupStrategy(LdapOperations ldapOperations, EntityInstantiators instantiators,
-				MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext) {
+    public LdapQueryLookupStrategy(
+        LdapOperations ldapOperations,
+        EntityInstantiators instantiators,
+        MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+            mappingContext) {
 
-			this.ldapOperations = ldapOperations;
-			this.instantiators = instantiators;
-			this.mappingContext = mappingContext;
-		}
+      this.ldapOperations = ldapOperations;
+      this.instantiators = instantiators;
+      this.mappingContext = mappingContext;
+    }
 
-		@Override
-		public RepositoryQuery resolveQuery(Method method, RepositoryMetadata metadata, ProjectionFactory factory,
-				NamedQueries namedQueries) {
+    @Override
+    public RepositoryQuery resolveQuery(
+        Method method,
+        RepositoryMetadata metadata,
+        ProjectionFactory factory,
+        NamedQueries namedQueries) {
 
-			LdapQueryMethod queryMethod = new LdapQueryMethod(method, metadata, factory);
-			Class<?> domainType = metadata.getDomainType();
+      LdapQueryMethod queryMethod = new LdapQueryMethod(method, metadata, factory);
+      Class<?> domainType = metadata.getDomainType();
 
-			if (queryMethod.hasQueryAnnotation()) {
-				return new AnnotatedLdapRepositoryQuery(queryMethod, domainType, ldapOperations, mappingContext, instantiators);
-			} else {
-				return new PartTreeLdapRepositoryQuery(queryMethod, domainType, ldapOperations, mappingContext, instantiators);
-			}
-		}
-	}
+      if (queryMethod.hasQueryAnnotation()) {
+        return new AnnotatedLdapRepositoryQuery(
+            queryMethod, domainType, ldapOperations, mappingContext, instantiators);
+      } else {
+        return new PartTreeLdapRepositoryQuery(
+            queryMethod, domainType, ldapOperations, mappingContext, instantiators);
+      }
+    }
+  }
 }

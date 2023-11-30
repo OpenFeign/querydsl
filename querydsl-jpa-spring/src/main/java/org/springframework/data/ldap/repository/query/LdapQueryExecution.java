@@ -30,8 +30,8 @@ import org.springframework.util.ClassUtils;
 
 /**
  * Set of classes to contain query execution strategies. Depending (mostly) on the return type of a
- * {@link org.springframework.data.repository.query.QueryMethod} a {@link AbstractLdapRepositoryQuery} can be executed
- * in various flavors.
+ * {@link org.springframework.data.repository.query.QueryMethod} a {@link
+ * AbstractLdapRepositoryQuery} can be executed in various flavors.
  *
  * @author Mark Paluch
  * @since 2.6
@@ -39,131 +39,140 @@ import org.springframework.util.ClassUtils;
 @FunctionalInterface
 interface LdapQueryExecution {
 
-	Object execute(LdapQuery query);
+  Object execute(LdapQuery query);
 
-	/**
-	 * {@link LdapQueryExecution} returning a single object.
-	 *
-	 * @author Mark Paluch
-	 */
-	final class FindOneExecution implements LdapQueryExecution {
+  /**
+   * {@link LdapQueryExecution} returning a single object.
+   *
+   * @author Mark Paluch
+   */
+  final class FindOneExecution implements LdapQueryExecution {
 
-		private final LdapOperations operations;
-		private final Class<?> entityType;
+    private final LdapOperations operations;
+    private final Class<?> entityType;
 
-		FindOneExecution(LdapOperations operations, Class<?> entityType) {
-			this.operations = operations;
-			this.entityType = entityType;
-		}
+    FindOneExecution(LdapOperations operations, Class<?> entityType) {
+      this.operations = operations;
+      this.entityType = entityType;
+    }
 
-		@Override
-		public Object execute(LdapQuery query) {
-			try {
-				return operations.findOne(query, entityType);
-			} catch (EmptyResultDataAccessException e) {
-				return null;
-			}
-		}
-	}
+    @Override
+    public Object execute(LdapQuery query) {
+      try {
+        return operations.findOne(query, entityType);
+      } catch (EmptyResultDataAccessException e) {
+        return null;
+      }
+    }
+  }
 
-	/**
-	 * {@link LdapQueryExecution} returning a list of objects.
-	 *
-	 * @author Mark Paluch
-	 */
-	final class CollectionExecution implements LdapQueryExecution {
+  /**
+   * {@link LdapQueryExecution} returning a list of objects.
+   *
+   * @author Mark Paluch
+   */
+  final class CollectionExecution implements LdapQueryExecution {
 
-		private final LdapOperations operations;
-		private final Class<?> entityType;
+    private final LdapOperations operations;
+    private final Class<?> entityType;
 
-		CollectionExecution(LdapOperations operations, Class<?> entityType) {
-			this.operations = operations;
-			this.entityType = entityType;
-		}
+    CollectionExecution(LdapOperations operations, Class<?> entityType) {
+      this.operations = operations;
+      this.entityType = entityType;
+    }
 
-		@Override
-		public Object execute(LdapQuery query) {
-			return operations.find(query, entityType);
-		}
-	}
+    @Override
+    public Object execute(LdapQuery query) {
+      return operations.find(query, entityType);
+    }
+  }
 
-	/**
-	 * {@link LdapQueryExecution} for a Stream.
-	 *
-	 * @author Mark Paluch
-	 */
-	final class StreamExecution implements LdapQueryExecution {
+  /**
+   * {@link LdapQueryExecution} for a Stream.
+   *
+   * @author Mark Paluch
+   */
+  final class StreamExecution implements LdapQueryExecution {
 
-		private final LdapOperations operations;
-		private final Class<?> entityType;
-		private final Converter<Object, Object> resultProcessing;
+    private final LdapOperations operations;
+    private final Class<?> entityType;
+    private final Converter<Object, Object> resultProcessing;
 
-		StreamExecution(LdapOperations operations, Class<?> entityType, Converter<Object, Object> resultProcessing) {
-			this.operations = operations;
-			this.entityType = entityType;
-			this.resultProcessing = resultProcessing;
-		}
+    StreamExecution(
+        LdapOperations operations,
+        Class<?> entityType,
+        Converter<Object, Object> resultProcessing) {
+      this.operations = operations;
+      this.entityType = entityType;
+      this.resultProcessing = resultProcessing;
+    }
 
-		@Override
-		public Object execute(LdapQuery query) {
-			return operations.find(query, entityType).stream().map(resultProcessing::convert);
-		}
-	}
+    @Override
+    public Object execute(LdapQuery query) {
+      return operations.find(query, entityType).stream().map(resultProcessing::convert);
+    }
+  }
 
-	/**
-	 * An {@link LdapQueryExecution} that wraps the results of the given delegate with the given result processing.
-	 */
-	final class ResultProcessingExecution implements LdapQueryExecution {
+  /**
+   * An {@link LdapQueryExecution} that wraps the results of the given delegate with the given
+   * result processing.
+   */
+  final class ResultProcessingExecution implements LdapQueryExecution {
 
-		private final LdapQueryExecution delegate;
-		private final Converter<Object, Object> converter;
+    private final LdapQueryExecution delegate;
+    private final Converter<Object, Object> converter;
 
-		public ResultProcessingExecution(LdapQueryExecution delegate, Converter<Object, Object> converter) {
-			this.delegate = delegate;
-			this.converter = converter;
-		}
+    public ResultProcessingExecution(
+        LdapQueryExecution delegate, Converter<Object, Object> converter) {
+      this.delegate = delegate;
+      this.converter = converter;
+    }
 
-		@Override
-		public Object execute(LdapQuery query) {
-			return converter.convert(delegate.execute(query));
-		}
-	}
+    @Override
+    public Object execute(LdapQuery query) {
+      return converter.convert(delegate.execute(query));
+    }
+  }
 
-	/**
-	 * A {@link Converter} to post-process all source objects using the given {@link ResultProcessor}.
-	 *
-	 * @author Mark Paluch
-	 */
-	final class ResultProcessingConverter implements Converter<Object, Object> {
+  /**
+   * A {@link Converter} to post-process all source objects using the given {@link ResultProcessor}.
+   *
+   * @author Mark Paluch
+   */
+  final class ResultProcessingConverter implements Converter<Object, Object> {
 
-		private final ResultProcessor processor;
-		private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext;
-		private final EntityInstantiators instantiators;
+    private final ResultProcessor processor;
+    private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+        mappingContext;
+    private final EntityInstantiators instantiators;
 
-		public ResultProcessingConverter(ResultProcessor processor,
-				MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext,
-				EntityInstantiators instantiators) {
-			this.processor = processor;
-			this.mappingContext = mappingContext;
-			this.instantiators = instantiators;
-		}
+    public ResultProcessingConverter(
+        ResultProcessor processor,
+        MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+            mappingContext,
+        EntityInstantiators instantiators) {
+      this.processor = processor;
+      this.mappingContext = mappingContext;
+      this.instantiators = instantiators;
+    }
 
-		@Override
-		public Object convert(Object source) {
+    @Override
+    public Object convert(Object source) {
 
-			ReturnedType returnedType = processor.getReturnedType();
+      ReturnedType returnedType = processor.getReturnedType();
 
-			if (ClassUtils.isPrimitiveOrWrapper(returnedType.getReturnedType())) {
-				return source;
-			}
+      if (ClassUtils.isPrimitiveOrWrapper(returnedType.getReturnedType())) {
+        return source;
+      }
 
-			if (source != null && returnedType.isInstance(source)) {
-				return source;
-			}
-			Converter<Object, Object> converter = new DtoInstantiatingConverter(returnedType.getReturnedType(),
-					mappingContext, instantiators);
+      if (source != null && returnedType.isInstance(source)) {
+        return source;
+      }
+      Converter<Object, Object> converter =
+          new DtoInstantiatingConverter(
+              returnedType.getReturnedType(), mappingContext, instantiators);
 
-			return processor.processResult(source, converter);
-		}
-	}
+      return processor.processResult(source, converter);
+    }
+  }
 }

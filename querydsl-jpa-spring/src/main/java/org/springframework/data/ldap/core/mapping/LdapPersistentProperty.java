@@ -24,35 +24,38 @@ import org.springframework.data.util.Lazy;
 import org.springframework.ldap.odm.annotations.Id;
 
 /**
- * LDAP-specific {@link AnnotationBasedPersistentProperty}. By default, if a property is named {@code id} it's used as
- * Id property.
+ * LDAP-specific {@link AnnotationBasedPersistentProperty}. By default, if a property is named
+ * {@code id} it's used as Id property.
  *
  * @author Mark Paluch
  * @since 2.0.4
  */
-public class LdapPersistentProperty extends AnnotationBasedPersistentProperty<LdapPersistentProperty> {
+public class LdapPersistentProperty
+    extends AnnotationBasedPersistentProperty<LdapPersistentProperty> {
 
-	private final Lazy<Boolean> isId = Lazy.of(() -> isAnnotationPresent(Id.class));
+  private final Lazy<Boolean> isId = Lazy.of(() -> isAnnotationPresent(Id.class));
 
-	/**
-	 * Create a new {@link LdapPersistentProperty}.
-	 *
-	 * @param property must not be {@literal null}.
-	 * @param owner must not be {@literal null}.
-	 * @param simpleTypeHolder must not be {@literal null}.
-	 */
-	public LdapPersistentProperty(Property property, PersistentEntity<?, LdapPersistentProperty> owner,
-			SimpleTypeHolder simpleTypeHolder) {
-		super(property, owner, simpleTypeHolder);
-	}
+  /**
+   * Create a new {@link LdapPersistentProperty}.
+   *
+   * @param property must not be {@literal null}.
+   * @param owner must not be {@literal null}.
+   * @param simpleTypeHolder must not be {@literal null}.
+   */
+  public LdapPersistentProperty(
+      Property property,
+      PersistentEntity<?, LdapPersistentProperty> owner,
+      SimpleTypeHolder simpleTypeHolder) {
+    super(property, owner, simpleTypeHolder);
+  }
 
-	@Override
-	protected Association<LdapPersistentProperty> createAssociation() {
-		return null;
-	}
+  @Override
+  protected Association<LdapPersistentProperty> createAssociation() {
+    return null;
+  }
 
-	@Override
-	public boolean isIdProperty() {
-		return isId.get();
-	}
+  @Override
+  public boolean isIdProperty() {
+    return isId.get();
+  }
 }

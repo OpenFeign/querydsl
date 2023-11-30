@@ -15,24 +15,22 @@
  */
 package org.springframework.data.ldap.repository.support;
 
+import com.querydsl.apt.AbstractQuerydslProcessor;
+import com.querydsl.apt.Configuration;
+import com.querydsl.apt.DefaultConfiguration;
+import com.querydsl.core.annotations.QueryEntities;
 import java.util.Collections;
-
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.tools.Diagnostic;
-
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Transient;
 
-import com.querydsl.apt.AbstractQuerydslProcessor;
-import com.querydsl.apt.Configuration;
-import com.querydsl.apt.DefaultConfiguration;
-import com.querydsl.core.annotations.QueryEntities;
-
 /**
- * QueryDSL Annotation Processor to generate QueryDSL classes for entity classes annotated with {@link Entry}.
+ * QueryDSL Annotation Processor to generate QueryDSL classes for entity classes annotated with
+ * {@link Entry}.
  *
  * @author Mattias Hellborg Arthursson
  * @author Eddu Melendez
@@ -42,15 +40,26 @@ import com.querydsl.core.annotations.QueryEntities;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class LdapAnnotationProcessor extends AbstractQuerydslProcessor {
 
-	@Override
-	protected Configuration createConfiguration(RoundEnvironment roundEnv) {
-		processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Running " + getClass().getSimpleName());
+  @Override
+  protected Configuration createConfiguration(RoundEnvironment roundEnv) {
+    processingEnv
+        .getMessager()
+        .printMessage(Diagnostic.Kind.NOTE, "Running " + getClass().getSimpleName());
 
-		DefaultConfiguration configuration = new DefaultLdapAnnotationProcessorConfiguration(processingEnv, roundEnv,
-				Collections.emptySet(), QueryEntities.class, Entry.class, null, null, null, Transient.class);
-		configuration.setUseFields(true);
-		configuration.setUseGetters(false);
+    DefaultConfiguration configuration =
+        new DefaultLdapAnnotationProcessorConfiguration(
+            processingEnv,
+            roundEnv,
+            Collections.emptySet(),
+            QueryEntities.class,
+            Entry.class,
+            null,
+            null,
+            null,
+            Transient.class);
+    configuration.setUseFields(true);
+    configuration.setUseGetters(false);
 
-		return configuration;
-	}
+    return configuration;
+  }
 }

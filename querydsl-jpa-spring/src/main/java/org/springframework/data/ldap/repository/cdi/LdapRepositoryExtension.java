@@ -21,7 +21,6 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.ProcessBean;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.data.repository.cdi.CdiRepositoryBean;
@@ -45,74 +43,87 @@ import org.springframework.ldap.core.LdapOperations;
  */
 public class LdapRepositoryExtension extends CdiRepositoryExtensionSupport {
 
-	private static final Log LOG = LogFactory.getLog(LdapRepositoryExtension.class);
+  private static final Log LOG = LogFactory.getLog(LdapRepositoryExtension.class);
 
-	private final Map<Set<Annotation>, Bean<LdapOperations>> ldapOperations = new HashMap<>();
+  private final Map<Set<Annotation>, Bean<LdapOperations>> ldapOperations = new HashMap<>();
 
-	public LdapRepositoryExtension() {
-		LOG.info("Activating CDI extension for Spring Data LDAP repositories");
-	}
+  public LdapRepositoryExtension() {
+    LOG.info("Activating CDI extension for Spring Data LDAP repositories");
+  }
 
-	@SuppressWarnings("unchecked")
-	<X> void processBean(@Observes ProcessBean<X> processBean) {
+  @SuppressWarnings("unchecked")
+  <X> void processBean(@Observes ProcessBean<X> processBean) {
 
-		Bean<X> bean = processBean.getBean();
+    Bean<X> bean = processBean.getBean();
 
-		for (Type type : bean.getTypes()) {
-			if (type instanceof Class<?> && LdapOperations.class.isAssignableFrom((Class<?>) type)) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug(
-							String.format("Discovered %s with qualifiers %s", LdapOperations.class.getName(), bean.getQualifiers()));
-				}
+    for (Type type : bean.getTypes()) {
+      if (type instanceof Class<?> && LdapOperations.class.isAssignableFrom((Class<?>) type)) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(
+              String.format(
+                  "Discovered %s with qualifiers %s",
+                  LdapOperations.class.getName(), bean.getQualifiers()));
+        }
 
-				// Store the EntityManager bean using its qualifiers.
-				ldapOperations.put(new HashSet<>(bean.getQualifiers()), (Bean<LdapOperations>) bean);
-			}
-		}
-	}
+        // Store the EntityManager bean using its qualifiers.
+        ldapOperations.put(new HashSet<>(bean.getQualifiers()), (Bean<LdapOperations>) bean);
+      }
+    }
+  }
 
-	void afterBeanDiscovery(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
+  void afterBeanDiscovery(
+      @Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
 
-		for (Entry<Class<?>, Set<Annotation>> entry : getRepositoryTypes()) {
+    for (Entry<Class<?>, Set<Annotation>> entry : getRepositoryTypes()) {
 
-			Class<?> repositoryType = entry.getKey();
-			Set<Annotation> qualifiers = entry.getValue();
+      Class<?> repositoryType = entry.getKey();
+      Set<Annotation> qualifiers = entry.getValue();
 
-			// Create the bean representing the repository.
-			CdiRepositoryBean<?> repositoryBean = createRepositoryBean(repositoryType, qualifiers, beanManager);
+      // Create the bean representing the repository.
+      CdiRepositoryBean<?> repositoryBean =
+          createRepositoryBean(repositoryType, qualifiers, beanManager);
 
-			if (LOG.isInfoEnabled()) {
-				LOG.info(String.format("Registering bean for %s with qualifiers %s", repositoryType.getName(), qualifiers));
-			}
+      if (LOG.isInfoEnabled()) {
+        LOG.info(
+            String.format(
+                "Registering bean for %s with qualifiers %s",
+                repositoryType.getName(), qualifiers));
+      }
 
-			// Register the bean to the container.
-			registerBean(repositoryBean);
-			afterBeanDiscovery.addBean(repositoryBean);
-		}
-	}
+      // Register the bean to the container.
+      registerBean(repositoryBean);
+      afterBeanDiscovery.addBean(repositoryBean);
+    }
+  }
 
-	/**
-	 * Creates a {@link CdiRepositoryBean} for the repository of the given type.
-	 *
-	 * @param <T> the type of the repository.
-	 * @param repositoryType the class representing the repository.
-	 * @param qualifiers the qualifiers to be applied to the bean.
-	 * @param beanManager the BeanManager instance.
-	 * @return the repository bean.
-	 */
-	private <T> CdiRepositoryBean<T> createRepositoryBean(Class<T> repositoryType, Set<Annotation> qualifiers,
-			BeanManager beanManager) {
+  /**
+   * Creates a {@link CdiRepositoryBean} for the repository of the given type.
+   *
+   * @param <T> the type of the repository.
+   * @param repositoryType the class representing the repository.
+   * @param qualifiers the qualifiers to be applied to the bean.
+   * @param beanManager the BeanManager instance.
+   * @return the repository bean.
+   */
+  private <T> CdiRepositoryBean<T> createRepositoryBean(
+      Class<T> repositoryType, Set<Annotation> qualifiers, BeanManager beanManager) {
 
-		// Determine the LdapOperations bean which matches the qualifiers of the repository.
-		Bean<LdapOperations> LdapOperations = this.ldapOperations.get(qualifiers);
+    // Determine the LdapOperations bean which matches the qualifiers of the repository.
+    Bean<LdapOperations> LdapOperations = this.ldapOperations.get(qualifiers);
 
-		if (LdapOperations == null) {
-			throw new UnsatisfiedResolutionException(String.format("Unable to resolve a bean for '%s' with qualifiers %s",
-					LdapOperations.class.getName(), qualifiers));
-		}
+    if (LdapOperations == null) {
+      throw new UnsatisfiedResolutionException(
+          String.format(
+              "Unable to resolve a bean for '%s' with qualifiers %s",
+              LdapOperations.class.getName(), qualifiers));
+    }
 
-		// Construct and return the repository bean.
-		return new LdapRepositoryBean<>(LdapOperations, qualifiers, repositoryType, beanManager,
-				Optional.of(getCustomImplementationDetector()));
-	}
+    // Construct and return the repository bean.
+    return new LdapRepositoryBean<>(
+        LdapOperations,
+        qualifiers,
+        repositoryType,
+        beanManager,
+        Optional.of(getCustomImplementationDetector()));
+  }
 }

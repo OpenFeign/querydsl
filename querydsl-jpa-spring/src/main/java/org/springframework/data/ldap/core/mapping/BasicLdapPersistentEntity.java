@@ -25,14 +25,14 @@ import org.springframework.data.util.TypeInformation;
  * @since 2.0.4
  */
 public class BasicLdapPersistentEntity<T> extends BasicPersistentEntity<T, LdapPersistentProperty>
-		implements LdapPersistentEntity<T> {
+    implements LdapPersistentEntity<T> {
 
-	/**
-	 * Creates a new {@link BasicLdapPersistentEntity}.
-	 *
-	 * @param information must not be {@literal null}.
-	 */
-	public BasicLdapPersistentEntity(TypeInformation<T> information) {
-		super(information);
-	}
+  /**
+   * Creates a new {@link BasicLdapPersistentEntity}.
+   *
+   * @param information must not be {@literal null}.
+   */
+  public BasicLdapPersistentEntity(TypeInformation<T> information) {
+    super(information);
+  }
 }

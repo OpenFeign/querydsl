@@ -16,7 +16,6 @@
 package org.springframework.data.ldap.repository.query;
 
 import java.lang.reflect.Method;
-
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.ldap.repository.Query;
 import org.springframework.data.projection.ProjectionFactory;
@@ -33,56 +32,59 @@ import org.springframework.lang.Nullable;
  */
 public class LdapQueryMethod extends QueryMethod {
 
-	private final Method method;
+  private final Method method;
 
-	/**
-	 * Creates a new LdapQueryMethod from the given parameters.
-	 *
-	 * @param method must not be {@literal null}
-	 * @param metadata must not be {@literal null}
-	 */
-	public LdapQueryMethod(Method method, RepositoryMetadata metadata, ProjectionFactory factory) {
+  /**
+   * Creates a new LdapQueryMethod from the given parameters.
+   *
+   * @param method must not be {@literal null}
+   * @param metadata must not be {@literal null}
+   */
+  public LdapQueryMethod(Method method, RepositoryMetadata metadata, ProjectionFactory factory) {
 
-		super(method, metadata, factory);
+    super(method, metadata, factory);
 
-		this.method = method;
-	}
+    this.method = method;
+  }
 
-	/**
-	 * Check whether the target method is annotated with {@link org.springframework.data.ldap.repository.Query}.
-	 *
-	 * @return <code>true</code> if the target method is annotated with
-	 *         {@link org.springframework.data.ldap.repository.Query}, <code>false</code> otherwise.
-	 */
-	public boolean hasQueryAnnotation() {
-		return getQueryAnnotation() != null;
-	}
+  /**
+   * Check whether the target method is annotated with {@link
+   * org.springframework.data.ldap.repository.Query}.
+   *
+   * @return <code>true</code> if the target method is annotated with {@link
+   *     org.springframework.data.ldap.repository.Query}, <code>false</code> otherwise.
+   */
+  public boolean hasQueryAnnotation() {
+    return getQueryAnnotation() != null;
+  }
 
-	/**
-	 * Get the {@link org.springframework.data.ldap.repository.Query} annotation of the target method (if any).
-	 *
-	 * @return the {@link org.springframework.data.ldap.repository.Query} annotation of the target method if present, or
-	 *         <code>null</code> otherwise.
-	 */
-	@Nullable
-	Query getQueryAnnotation() {
-		return AnnotationUtils.getAnnotation(method, Query.class);
-	}
+  /**
+   * Get the {@link org.springframework.data.ldap.repository.Query} annotation of the target method
+   * (if any).
+   *
+   * @return the {@link org.springframework.data.ldap.repository.Query} annotation of the target
+   *     method if present, or <code>null</code> otherwise.
+   */
+  @Nullable
+  Query getQueryAnnotation() {
+    return AnnotationUtils.getAnnotation(method, Query.class);
+  }
 
-	/**
-	 * Get the required {@link org.springframework.data.ldap.repository.Query} annotation of the target method.
-	 *
-	 * @return the {@link org.springframework.data.ldap.repository.Query} annotation of the target method if present, or
-	 *         {@link IllegalStateException} otherwise.
-	 */
-	Query getRequiredQueryAnnotation() {
+  /**
+   * Get the required {@link org.springframework.data.ldap.repository.Query} annotation of the
+   * target method.
+   *
+   * @return the {@link org.springframework.data.ldap.repository.Query} annotation of the target
+   *     method if present, or {@link IllegalStateException} otherwise.
+   */
+  Query getRequiredQueryAnnotation() {
 
-		Query queryAnnotation = getQueryAnnotation();
+    Query queryAnnotation = getQueryAnnotation();
 
-		if (queryAnnotation != null) {
-			return queryAnnotation;
-		}
+    if (queryAnnotation != null) {
+      return queryAnnotation;
+    }
 
-		throw new IllegalStateException("Required @Query annotation is not present");
-	}
+    throw new IllegalStateException("Required @Query annotation is not present");
+  }
 }

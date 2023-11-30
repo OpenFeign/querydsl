@@ -16,7 +16,6 @@
 package org.springframework.data.ldap.repository.query;
 
 import java.util.List;
-
 import org.springframework.data.ldap.repository.LdapRepository;
 import org.springframework.data.ldap.repository.support.BaseUnitTestPerson;
 import org.springframework.data.ldap.repository.support.UnitTestPerson;
@@ -26,5 +25,5 @@ import org.springframework.data.ldap.repository.support.UnitTestPerson;
  */
 public interface BaseTestPersonRepository extends LdapRepository<UnitTestPerson> {
 
-	List<BaseUnitTestPerson> findByFullName(String name);
+  List<BaseUnitTestPerson> findByFullName(String name);
 }

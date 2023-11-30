@@ -38,83 +38,92 @@ import org.springframework.util.Assert;
  */
 public abstract class AbstractLdapRepositoryQuery implements RepositoryQuery {
 
-	private final LdapQueryMethod queryMethod;
-	private final Class<?> entityType;
-	private final LdapOperations ldapOperations;
-	private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext;
-	private final EntityInstantiators instantiators;
+  private final LdapQueryMethod queryMethod;
+  private final Class<?> entityType;
+  private final LdapOperations ldapOperations;
+  private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+      mappingContext;
+  private final EntityInstantiators instantiators;
 
-	/**
-	 * Creates a new {@link AbstractLdapRepositoryQuery} instance given {@link LdapQuery}, {@link Class} and
-	 * {@link LdapOperations}.
-	 *
-	 * @param queryMethod must not be {@literal null}.
-	 * @param entityType must not be {@literal null}.
-	 * @param ldapOperations must not be {@literal null}.
-	 * @param mappingContext must not be {@literal null}.
-	 * @param instantiators must not be {@literal null}.
-	 */
-	public AbstractLdapRepositoryQuery(LdapQueryMethod queryMethod, Class<?> entityType, LdapOperations ldapOperations,
-			MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext,
-			EntityInstantiators instantiators) {
+  /**
+   * Creates a new {@link AbstractLdapRepositoryQuery} instance given {@link LdapQuery}, {@link
+   * Class} and {@link LdapOperations}.
+   *
+   * @param queryMethod must not be {@literal null}.
+   * @param entityType must not be {@literal null}.
+   * @param ldapOperations must not be {@literal null}.
+   * @param mappingContext must not be {@literal null}.
+   * @param instantiators must not be {@literal null}.
+   */
+  public AbstractLdapRepositoryQuery(
+      LdapQueryMethod queryMethod,
+      Class<?> entityType,
+      LdapOperations ldapOperations,
+      MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+          mappingContext,
+      EntityInstantiators instantiators) {
 
-		Assert.notNull(queryMethod, "LdapQueryMethod must not be null");
-		Assert.notNull(entityType, "Entity type must not be null");
-		Assert.notNull(ldapOperations, "LdapOperations must not be null");
+    Assert.notNull(queryMethod, "LdapQueryMethod must not be null");
+    Assert.notNull(entityType, "Entity type must not be null");
+    Assert.notNull(ldapOperations, "LdapOperations must not be null");
 
-		this.queryMethod = queryMethod;
-		this.entityType = entityType;
-		this.ldapOperations = ldapOperations;
-		this.mappingContext = mappingContext;
-		this.instantiators = instantiators;
-	}
+    this.queryMethod = queryMethod;
+    this.entityType = entityType;
+    this.ldapOperations = ldapOperations;
+    this.mappingContext = mappingContext;
+    this.instantiators = instantiators;
+  }
 
-	@Override
-	@SuppressWarnings("ConstantConditions")
-	public final Object execute(Object[] parameters) {
+  @Override
+  @SuppressWarnings("ConstantConditions")
+  public final Object execute(Object[] parameters) {
 
-		LdapParametersParameterAccessor parameterAccessor = new LdapParametersParameterAccessor(queryMethod, parameters);
-		LdapQuery query = createQuery(parameterAccessor);
+    LdapParametersParameterAccessor parameterAccessor =
+        new LdapParametersParameterAccessor(queryMethod, parameters);
+    LdapQuery query = createQuery(parameterAccessor);
 
-		ResultProcessor processor = queryMethod.getResultProcessor().withDynamicProjection(parameterAccessor);
-		Class<?> typeToRead = processor.getReturnedType().getDomainType();
+    ResultProcessor processor =
+        queryMethod.getResultProcessor().withDynamicProjection(parameterAccessor);
+    Class<?> typeToRead = processor.getReturnedType().getDomainType();
 
-		ResultProcessingConverter converter = new ResultProcessingConverter(processor, mappingContext, instantiators);
-		ResultProcessingExecution execution = new ResultProcessingExecution(
-				getLdapQueryExecutionToWrap(typeToRead, converter), converter);
+    ResultProcessingConverter converter =
+        new ResultProcessingConverter(processor, mappingContext, instantiators);
+    ResultProcessingExecution execution =
+        new ResultProcessingExecution(
+            getLdapQueryExecutionToWrap(typeToRead, converter), converter);
 
-		return execution.execute(query);
-	}
+    return execution.execute(query);
+  }
 
-	private LdapQueryExecution getLdapQueryExecutionToWrap(Class<?> typeToRead,
-			Converter<Object, Object> resultProcessing) {
+  private LdapQueryExecution getLdapQueryExecutionToWrap(
+      Class<?> typeToRead, Converter<Object, Object> resultProcessing) {
 
-		if (queryMethod.isCollectionQuery()) {
-			return new CollectionExecution(ldapOperations, typeToRead);
-		} else if (queryMethod.isStreamQuery()) {
-			return new StreamExecution(ldapOperations, typeToRead, resultProcessing);
-		} else {
-			return new FindOneExecution(ldapOperations, typeToRead);
-		}
-	}
+    if (queryMethod.isCollectionQuery()) {
+      return new CollectionExecution(ldapOperations, typeToRead);
+    } else if (queryMethod.isStreamQuery()) {
+      return new StreamExecution(ldapOperations, typeToRead, resultProcessing);
+    } else {
+      return new FindOneExecution(ldapOperations, typeToRead);
+    }
+  }
 
-	/**
-	 * Creates a {@link Query} instance using the given {@literal parameters}.
-	 *
-	 * @param parameters must not be {@literal null}.
-	 * @return
-	 */
-	protected abstract LdapQuery createQuery(LdapParameterAccessor parameters);
+  /**
+   * Creates a {@link Query} instance using the given {@literal parameters}.
+   *
+   * @param parameters must not be {@literal null}.
+   * @return
+   */
+  protected abstract LdapQuery createQuery(LdapParameterAccessor parameters);
 
-	/**
-	 * @return
-	 */
-	protected Class<?> getEntityClass() {
-		return entityType;
-	}
+  /**
+   * @return
+   */
+  protected Class<?> getEntityClass() {
+    return entityType;
+  }
 
-	@Override
-	public final QueryMethod getQueryMethod() {
-		return queryMethod;
-	}
+  @Override
+  public final QueryMethod getQueryMethod() {
+    return queryMethod;
+  }
 }

@@ -27,43 +27,49 @@ import org.springframework.ldap.query.LdapQuery;
 import org.springframework.util.Assert;
 
 /**
- * Handles queries for repository methods annotated with {@link org.springframework.data.ldap.repository.Query}.
+ * Handles queries for repository methods annotated with {@link
+ * org.springframework.data.ldap.repository.Query}.
  *
  * @author Mattias Hellborg Arthursson
  * @author Mark Paluch
  */
 public class AnnotatedLdapRepositoryQuery extends AbstractLdapRepositoryQuery {
 
-	private final Query queryAnnotation;
+  private final Query queryAnnotation;
 
-	/**
-	 * Construct a new instance.
-	 *
-	 * @param queryMethod the QueryMethod.
-	 * @param entityType the managed class.
-	 * @param ldapOperations the LdapOperations instance to use.
-	 * @param mappingContext must not be {@literal null}.
-	 * @param instantiators must not be {@literal null}.
-	 */
-	public AnnotatedLdapRepositoryQuery(LdapQueryMethod queryMethod, Class<?> entityType, LdapOperations ldapOperations,
-			MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> mappingContext,
-			EntityInstantiators instantiators) {
+  /**
+   * Construct a new instance.
+   *
+   * @param queryMethod the QueryMethod.
+   * @param entityType the managed class.
+   * @param ldapOperations the LdapOperations instance to use.
+   * @param mappingContext must not be {@literal null}.
+   * @param instantiators must not be {@literal null}.
+   */
+  public AnnotatedLdapRepositoryQuery(
+      LdapQueryMethod queryMethod,
+      Class<?> entityType,
+      LdapOperations ldapOperations,
+      MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
+          mappingContext,
+      EntityInstantiators instantiators) {
 
-		super(queryMethod, entityType, ldapOperations, mappingContext, instantiators);
+    super(queryMethod, entityType, ldapOperations, mappingContext, instantiators);
 
-		Assert.notNull(queryMethod.getQueryAnnotation(), "Annotation must be present");
-		Assert.hasLength(queryMethod.getQueryAnnotation().value(), "Query filter must be specified");
+    Assert.notNull(queryMethod.getQueryAnnotation(), "Annotation must be present");
+    Assert.hasLength(queryMethod.getQueryAnnotation().value(), "Query filter must be specified");
 
-		queryAnnotation = queryMethod.getRequiredQueryAnnotation();
-	}
+    queryAnnotation = queryMethod.getRequiredQueryAnnotation();
+  }
 
-	@Override
-	protected LdapQuery createQuery(LdapParameterAccessor parameters) {
+  @Override
+  protected LdapQuery createQuery(LdapParameterAccessor parameters) {
 
-		return query().base(queryAnnotation.base()) //
-				.searchScope(queryAnnotation.searchScope()) //
-				.countLimit(queryAnnotation.countLimit()) //
-				.timeLimit(queryAnnotation.timeLimit()) //
-				.filter(queryAnnotation.value(), parameters.getBindableParameterValues());
-	}
+    return query()
+        .base(queryAnnotation.base()) //
+        .searchScope(queryAnnotation.searchScope()) //
+        .countLimit(queryAnnotation.countLimit()) //
+        .timeLimit(queryAnnotation.timeLimit()) //
+        .filter(queryAnnotation.value(), parameters.getBindableParameterValues());
+  }
 }

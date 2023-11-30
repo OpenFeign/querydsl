@@ -23,9 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
 import javax.naming.ldap.LdapName;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -51,210 +49,266 @@ import org.springframework.ldap.query.LdapQuery;
 @MockitoSettings
 class QuerydslLdapPredicateExecutorUnitTests {
 
-	@Mock LdapOperations ldapOperations;
+  @Mock LdapOperations ldapOperations;
+
+  UnitTestPerson walter, hank;
 
-	UnitTestPerson walter, hank;
+  QuerydslLdapPredicateExecutor<UnitTestPerson> repository;
+
+  @BeforeEach
+  void before() throws Exception {
+    when(ldapOperations.getObjectDirectoryMapper()).thenReturn(new DefaultObjectDirectoryMapper());
+    repository =
+        new QuerydslLdapPredicateExecutor<>(
+            UnitTestPerson.class,
+            new SpelAwareProxyProjectionFactory(),
+            ldapOperations,
+            new LdapMappingContext());
+
+    walter =
+        new UnitTestPerson(
+            new LdapName("cn=walter"),
+            "Walter",
+            "White",
+            Collections.emptyList(),
+            "US",
+            "Heisenberg",
+            "000");
 
-	QuerydslLdapPredicateExecutor<UnitTestPerson> repository;
+    hank =
+        new UnitTestPerson(
+            new LdapName("cn=hank"),
+            "Hank",
+            "Schrader",
+            Collections.emptyList(),
+            "US",
+            "DEA",
+            "000");
+  }
 
-	@BeforeEach
-	void before() throws Exception {
-		when(ldapOperations.getObjectDirectoryMapper()).thenReturn(new DefaultObjectDirectoryMapper());
-		repository = new QuerydslLdapPredicateExecutor<>(UnitTestPerson.class, new SpelAwareProxyProjectionFactory(),
-				ldapOperations, new LdapMappingContext());
+  @Test // GH-269
+  void findByShouldReturnFirst() {
 
-		walter = new UnitTestPerson(new LdapName("cn=walter"), "Walter", "White", Collections.emptyList(), "US",
-				"Heisenberg", "000");
+    when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
+        .thenReturn(Arrays.asList(walter, hank), Collections.emptyList());
 
-		hank = new UnitTestPerson(new LdapName("cn=hank"), "Hank", "Schrader", Collections.emptyList(), "US", "DEA", "000");
+    UnitTestPerson first =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::firstValue);
 
-	}
+    assertThat(first).isEqualTo(walter);
 
-	@Test // GH-269
-	void findByShouldReturnFirst() {
+    first =
+        repository.findBy(QPerson.person.fullName.eq("Walter"), Function.identity()).firstValue();
 
-		when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(Arrays.asList(walter, hank),
-				Collections.emptyList());
+    assertThat(first).isNull();
+  }
 
-		UnitTestPerson first = repository.findBy(QPerson.person.fullName.eq("Walter"),
-				FluentQuery.FetchableFluentQuery::firstValue);
+  @Test // GH-269
+  void findByShouldReturnOne() {
 
-		assertThat(first).isEqualTo(walter);
+    when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
+        .thenReturn(Arrays.asList(walter, hank), Collections.singletonList(walter));
 
-		first = repository.findBy(QPerson.person.fullName.eq("Walter"), Function.identity()).firstValue();
+    assertThatExceptionOfType(IncorrectResultSizeDataAccessException.class)
+        .isThrownBy(
+            () ->
+                repository.findBy(
+                    QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::one));
 
-		assertThat(first).isNull();
-	}
+    UnitTestPerson one =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::oneValue);
 
-	@Test // GH-269
-	void findByShouldReturnOne() {
+    assertThat(one).isEqualTo(walter);
+  }
 
-		when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(Arrays.asList(walter, hank),
-				Collections.singletonList(walter));
+  @Test // GH-269
+  void findByShouldReturnFirstWithProjection() {
 
-		assertThatExceptionOfType(IncorrectResultSizeDataAccessException.class).isThrownBy(
-				() -> repository.findBy(QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::one));
+    when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
+        .thenReturn(Arrays.asList(walter));
 
-		UnitTestPerson one = repository.findBy(QPerson.person.fullName.eq("Walter"),
-				FluentQuery.FetchableFluentQuery::oneValue);
+    PersonProjection interfaceProjection =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), it -> it.as(PersonProjection.class).firstValue());
+    assertThat(interfaceProjection.getLastName()).isEqualTo("White");
 
-		assertThat(one).isEqualTo(walter);
-	}
+    PersonDto dto =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), it -> it.as(PersonDto.class).firstValue());
+    assertThat(dto.lastName()).isEqualTo("White");
 
-	@Test // GH-269
-	void findByShouldReturnFirstWithProjection() {
+    ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
 
-		when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(Arrays.asList(walter));
+    verify(ldapOperations, times(2)).find(captor.capture(), any());
 
-		PersonProjection interfaceProjection = repository.findBy(QPerson.person.fullName.eq("Walter"),
-				it -> it.as(PersonProjection.class).firstValue());
-		assertThat(interfaceProjection.getLastName()).isEqualTo("White");
+    List<LdapQuery> queries = captor.getAllValues();
 
-		PersonDto dto = repository.findBy(QPerson.person.fullName.eq("Walter"), it -> it.as(PersonDto.class).firstValue());
-		assertThat(dto.lastName()).isEqualTo("White");
+    assertThat(queries.get(0).attributes()).containsOnly("lastName");
+    assertThat(queries.get(1).attributes()).isNullOrEmpty();
+  }
 
-		ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
+  @Test // GH-269
+  void findByShouldReturnOneWithProjection() {
 
-		verify(ldapOperations, times(2)).find(captor.capture(), any());
+    when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
+        .thenReturn(Collections.singletonList(walter));
 
-		List<LdapQuery> queries = captor.getAllValues();
+    PersonProjection interfaceProjection =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), it -> it.as(PersonProjection.class).oneValue());
+    assertThat(interfaceProjection.getLastName()).isEqualTo("White");
 
-		assertThat(queries.get(0).attributes()).containsOnly("lastName");
-		assertThat(queries.get(1).attributes()).isNullOrEmpty();
-	}
+    PersonDto dto =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), it -> it.as(PersonDto.class).oneValue());
+    assertThat(dto.lastName()).isEqualTo("White");
 
-	@Test // GH-269
-	void findByShouldReturnOneWithProjection() {
+    ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
 
-		when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
-				.thenReturn(Collections.singletonList(walter));
+    verify(ldapOperations, times(2)).find(captor.capture(), any());
 
-		PersonProjection interfaceProjection = repository.findBy(QPerson.person.fullName.eq("Walter"),
-				it -> it.as(PersonProjection.class).oneValue());
-		assertThat(interfaceProjection.getLastName()).isEqualTo("White");
+    List<LdapQuery> queries = captor.getAllValues();
 
-		PersonDto dto = repository.findBy(QPerson.person.fullName.eq("Walter"), it -> it.as(PersonDto.class).oneValue());
-		assertThat(dto.lastName()).isEqualTo("White");
+    assertThat(queries.get(0).attributes()).containsOnly("lastName");
+    assertThat(queries.get(1).attributes()).isNullOrEmpty();
+  }
 
-		ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
+  @Test // GH-269
+  void findByShouldReturnAll() {
 
-		verify(ldapOperations, times(2)).find(captor.capture(), any());
+    when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
+        .thenReturn(Arrays.asList(walter, hank));
 
-		List<LdapQuery> queries = captor.getAllValues();
+    List<UnitTestPerson> all =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::all);
 
-		assertThat(queries.get(0).attributes()).containsOnly("lastName");
-		assertThat(queries.get(1).attributes()).isNullOrEmpty();
-	}
+    assertThat(all).contains(walter);
+  }
 
-	@Test // GH-269
-	void findByShouldReturnAll() {
+  @Test // GH-269
+  void findByShouldReturnAllWithProjection() {
 
-		when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(Arrays.asList(walter, hank));
+    when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
+        .thenReturn(Arrays.asList(walter, hank));
 
-		List<UnitTestPerson> all = repository.findBy(QPerson.person.fullName.eq("Walter"),
-				FluentQuery.FetchableFluentQuery::all);
+    Stream<PersonProjection> all =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), q -> q.as(PersonProjection.class).stream());
 
-		assertThat(all).contains(walter);
-	}
+    assertThat(all).hasOnlyElementsOfType(PersonProjection.class);
+  }
 
-	@Test // GH-269
-	void findByShouldReturnAllWithProjection() {
+  @Test // GH-269
+  void findByShouldReturnFirstPage() {
 
-		when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(Arrays.asList(walter, hank));
+    when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
+        .thenReturn(Collections.singletonList(walter));
+    when(ldapOperations.search(any(LdapQuery.class), any(ContextMapper.class)))
+        .thenReturn(Arrays.asList(true, true));
 
-		Stream<PersonProjection> all = repository.findBy(QPerson.person.fullName.eq("Walter"),
-				q -> q.as(PersonProjection.class).stream());
+    Page<PersonProjection> page =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"),
+            it -> it.as(PersonProjection.class).page(PageRequest.of(0, 1, Sort.unsorted())));
+    assertThat(page.getContent().get(0).getLastName()).isEqualTo("White");
+    assertThat(page.getTotalPages()).isEqualTo(2);
 
-		assertThat(all).hasOnlyElementsOfType(PersonProjection.class);
-	}
+    ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
 
-	@Test // GH-269
-	void findByShouldReturnFirstPage() {
+    verify(ldapOperations).find(captor.capture(), any());
 
-		when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
-				.thenReturn(Collections.singletonList(walter));
-		when(ldapOperations.search(any(LdapQuery.class), any(ContextMapper.class))).thenReturn(Arrays.asList(true, true));
+    LdapQuery query = captor.getValue();
 
-		Page<PersonProjection> page = repository.findBy(QPerson.person.fullName.eq("Walter"),
-				it -> it.as(PersonProjection.class).page(PageRequest.of(0, 1, Sort.unsorted())));
-		assertThat(page.getContent().get(0).getLastName()).isEqualTo("White");
-		assertThat(page.getTotalPages()).isEqualTo(2);
+    assertThat(query.countLimit()).isEqualTo(1);
+  }
 
-		ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
+  @Test // GH-269
+  void shouldRejectNextPage() {
 
-		verify(ldapOperations).find(captor.capture(), any());
+    assertThatExceptionOfType(UnsupportedOperationException.class)
+        .isThrownBy(
+            () ->
+                repository.findBy(
+                    QPerson.person.fullName.eq("Walter"),
+                    it ->
+                        it.as(PersonProjection.class).page(PageRequest.of(1, 1, Sort.unsorted()))));
+  }
 
-		LdapQuery query = captor.getValue();
+  @Test // GH-269
+  void shouldRejectSortedPage() {
 
-		assertThat(query.countLimit()).isEqualTo(1);
-	}
+    assertThatExceptionOfType(UnsupportedOperationException.class)
+        .isThrownBy(
+            () ->
+                repository.findBy(
+                    QPerson.person.fullName.eq("Walter"),
+                    it ->
+                        it.as(PersonProjection.class)
+                            .page(PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "foo")))));
+  }
 
-	@Test // GH-269
-	void shouldRejectNextPage() {
+  @Test // GH-269
+  void findByShouldReturnStream() {
 
-		assertThatExceptionOfType(UnsupportedOperationException.class)
-				.isThrownBy(() -> repository.findBy(QPerson.person.fullName.eq("Walter"),
-						it -> it.as(PersonProjection.class).page(PageRequest.of(1, 1, Sort.unsorted()))));
-	}
+    when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
+        .thenReturn(Arrays.asList(walter, hank));
 
-	@Test // GH-269
-	void shouldRejectSortedPage() {
+    List<UnitTestPerson> all =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::all);
 
-		assertThatExceptionOfType(UnsupportedOperationException.class)
-				.isThrownBy(() -> repository.findBy(QPerson.person.fullName.eq("Walter"),
-						it -> it.as(PersonProjection.class).page(PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "foo")))));
-	}
+    assertThat(all).contains(walter);
+  }
 
-	@Test // GH-269
-	void findByShouldReturnStream() {
+  @Test // GH-269
+  void findByShouldReturnStreamWithProjection() {
 
-		when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(Arrays.asList(walter, hank));
+    when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
+        .thenReturn(Arrays.asList(walter, hank));
 
-		List<UnitTestPerson> all = repository.findBy(QPerson.person.fullName.eq("Walter"),
-				FluentQuery.FetchableFluentQuery::all);
+    Stream<PersonProjection> all =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), q -> q.as(PersonProjection.class).stream());
 
-		assertThat(all).contains(walter);
-	}
+    assertThat(all).hasOnlyElementsOfType(PersonProjection.class);
+  }
 
-	@Test // GH-269
-	void findByShouldReturnStreamWithProjection() {
+  @Test // GH-269
+  void findByShouldReturnCount() {
 
-		when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class))).thenReturn(Arrays.asList(walter, hank));
+    when(ldapOperations.search(any(LdapQuery.class), any(ContextMapper.class)))
+        .thenReturn(Arrays.asList(true, true));
 
-		Stream<PersonProjection> all = repository.findBy(QPerson.person.fullName.eq("Walter"),
-				q -> q.as(PersonProjection.class).stream());
+    long count =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::count);
 
-		assertThat(all).hasOnlyElementsOfType(PersonProjection.class);
-	}
+    assertThat(count).isEqualTo(2);
+  }
 
-	@Test // GH-269
-	void findByShouldReturnCount() {
+  @Test // GH-269
+  void findByShouldReturnExists() {
 
-		when(ldapOperations.search(any(LdapQuery.class), any(ContextMapper.class))).thenReturn(Arrays.asList(true, true));
+    when(ldapOperations.search(any(LdapQuery.class), any(ContextMapper.class)))
+        .thenReturn(Arrays.asList(true, true), Collections.emptyList());
 
-		long count = repository.findBy(QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::count);
+    boolean exists =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::exists);
+    assertThat(exists).isTrue();
 
-		assertThat(count).isEqualTo(2);
-	}
+    exists =
+        repository.findBy(
+            QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::exists);
+    assertThat(exists).isFalse();
+  }
 
-	@Test // GH-269
-	void findByShouldReturnExists() {
+  interface PersonProjection {
+    String getLastName();
+  }
 
-		when(ldapOperations.search(any(LdapQuery.class), any(ContextMapper.class))).thenReturn(Arrays.asList(true, true),
-				Collections.emptyList());
-
-		boolean exists = repository.findBy(QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::exists);
-		assertThat(exists).isTrue();
-
-		exists = repository.findBy(QPerson.person.fullName.eq("Walter"), FluentQuery.FetchableFluentQuery::exists);
-		assertThat(exists).isFalse();
-	}
-
-	interface PersonProjection {
-		String getLastName();
-	}
-
-	record PersonDto(String lastName) {
-
-	}
+  record PersonDto(String lastName) {}
 }

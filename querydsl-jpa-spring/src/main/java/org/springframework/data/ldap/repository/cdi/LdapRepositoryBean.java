@@ -18,11 +18,9 @@ package org.springframework.data.ldap.repository.cdi;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
-
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 import java.util.Set;
-
 import org.springframework.data.ldap.repository.support.LdapRepositoryFactory;
 import org.springframework.data.repository.cdi.CdiRepositoryBean;
 import org.springframework.data.repository.config.CustomRepositoryImplementationDetector;
@@ -37,37 +35,42 @@ import org.springframework.util.Assert;
  */
 public class LdapRepositoryBean<T> extends CdiRepositoryBean<T> {
 
-	private final Bean<LdapOperations> operations;
+  private final Bean<LdapOperations> operations;
 
-	/**
-	 * Creates a new {@link LdapRepositoryBean}.
-	 *
-	 * @param operations must not be {@literal null}.
-	 * @param qualifiers must not be {@literal null}.
-	 * @param repositoryType must not be {@literal null}.
-	 * @param beanManager must not be {@literal null}.
-	 * @param detector detector for the custom {@link org.springframework.data.repository.Repository} implementations
-	 *          {@link CustomRepositoryImplementationDetector}, can be {@link Optional#empty()}.
-	 */
-	LdapRepositoryBean(Bean<LdapOperations> operations, Set<Annotation> qualifiers, Class<T> repositoryType,
-			BeanManager beanManager, Optional<CustomRepositoryImplementationDetector> detector) {
+  /**
+   * Creates a new {@link LdapRepositoryBean}.
+   *
+   * @param operations must not be {@literal null}.
+   * @param qualifiers must not be {@literal null}.
+   * @param repositoryType must not be {@literal null}.
+   * @param beanManager must not be {@literal null}.
+   * @param detector detector for the custom {@link org.springframework.data.repository.Repository}
+   *     implementations {@link CustomRepositoryImplementationDetector}, can be {@link
+   *     Optional#empty()}.
+   */
+  LdapRepositoryBean(
+      Bean<LdapOperations> operations,
+      Set<Annotation> qualifiers,
+      Class<T> repositoryType,
+      BeanManager beanManager,
+      Optional<CustomRepositoryImplementationDetector> detector) {
 
-		super(qualifiers, repositoryType, beanManager, detector);
+    super(qualifiers, repositoryType, beanManager, detector);
 
-		Assert.notNull(operations, "LdapOperations bean must not be null");
-		this.operations = operations;
-	}
+    Assert.notNull(operations, "LdapOperations bean must not be null");
+    this.operations = operations;
+  }
 
-	@Override
-	protected T create(CreationalContext<T> creationalContext, Class<T> repositoryType) {
+  @Override
+  protected T create(CreationalContext<T> creationalContext, Class<T> repositoryType) {
 
-		LdapOperations ldapOperations = getDependencyInstance(operations, LdapOperations.class);
+    LdapOperations ldapOperations = getDependencyInstance(operations, LdapOperations.class);
 
-		return create(() -> new LdapRepositoryFactory(ldapOperations), repositoryType);
-	}
+    return create(() -> new LdapRepositoryFactory(ldapOperations), repositoryType);
+  }
 
-	@Override
-	public Class<? extends Annotation> getScope() {
-		return operations.getScope();
-	}
+  @Override
+  public Class<? extends Annotation> getScope() {
+    return operations.getScope();
+  }
 }

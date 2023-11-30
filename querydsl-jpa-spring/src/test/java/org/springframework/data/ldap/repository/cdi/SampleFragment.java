@@ -20,5 +20,5 @@ package org.springframework.data.ldap.repository.cdi;
  */
 interface SampleFragment {
 
-	int returnOne();
+  int returnOne();
 }

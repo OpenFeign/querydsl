@@ -16,7 +16,6 @@
 package org.springframework.data.ldap.repository.cdi;
 
 import jakarta.inject.Inject;
-
 import org.springframework.ldap.core.LdapTemplate;
 
 /**
@@ -24,14 +23,14 @@ import org.springframework.ldap.core.LdapTemplate;
  */
 class RepositoryClient {
 
-	@Inject SampleRepository sampleRepository;
-	@Inject LdapTemplate ldapTemplate;
+  @Inject SampleRepository sampleRepository;
+  @Inject LdapTemplate ldapTemplate;
 
-	public SampleRepository getSampleRepository() {
-		return sampleRepository;
-	}
+  public SampleRepository getSampleRepository() {
+    return sampleRepository;
+  }
 
-	public LdapTemplate getLdapTemplate() {
-		return ldapTemplate;
-	}
+  public LdapTemplate getLdapTemplate() {
+    return ldapTemplate;
+  }
 }

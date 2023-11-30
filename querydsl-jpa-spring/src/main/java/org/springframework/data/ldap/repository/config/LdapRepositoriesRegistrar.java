@@ -16,7 +16,6 @@
 package org.springframework.data.ldap.repository.config;
 
 import java.lang.annotation.Annotation;
-
 import org.springframework.data.repository.config.RepositoryBeanDefinitionRegistrarSupport;
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 
@@ -27,13 +26,13 @@ import org.springframework.data.repository.config.RepositoryConfigurationExtensi
  */
 class LdapRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrarSupport {
 
-	@Override
-	protected Class<? extends Annotation> getAnnotation() {
-		return EnableLdapRepositories.class;
-	}
+  @Override
+  protected Class<? extends Annotation> getAnnotation() {
+    return EnableLdapRepositories.class;
+  }
 
-	@Override
-	protected RepositoryConfigurationExtension getExtension() {
-		return new LdapRepositoryConfigurationExtension();
-	}
+  @Override
+  protected RepositoryConfigurationExtension getExtension() {
+    return new LdapRepositoryConfigurationExtension();
+  }
 }

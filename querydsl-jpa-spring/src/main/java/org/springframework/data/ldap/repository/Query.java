@@ -20,12 +20,11 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import org.springframework.ldap.query.SearchScope;
 
 /**
- * Annotation for use in {@link org.springframework.data.ldap.repository.LdapRepository} declarations to create
- * automatic query methods based on statically defined queries.
+ * Annotation for use in {@link org.springframework.data.ldap.repository.LdapRepository}
+ * declarations to create automatic query methods based on statically defined queries.
  *
  * @author Mattias Hellborg Arthursson
  */
@@ -34,41 +33,44 @@ import org.springframework.ldap.query.SearchScope;
 @Documented
 public @interface Query {
 
-	/**
-	 * Search base, to be used as input to {@link org.springframework.ldap.query.LdapQueryBuilder#base(javax.naming.Name)}
-	 * .
-	 *
-	 * @return the search base, default is {@link org.springframework.ldap.support.LdapUtils#emptyLdapName()}
-	 */
-	String base() default "";
+  /**
+   * Search base, to be used as input to {@link
+   * org.springframework.ldap.query.LdapQueryBuilder#base(javax.naming.Name)} .
+   *
+   * @return the search base, default is {@link
+   *     org.springframework.ldap.support.LdapUtils#emptyLdapName()}
+   */
+  String base() default "";
 
-	/**
-	 * The filter format string, to be used as input to
-	 * {@link org.springframework.ldap.query.LdapQueryBuilder#filter(String, Object...)}.
-	 *
-	 * @return search filter, must be specified.
-	 */
-	String value() default "";
+  /**
+   * The filter format string, to be used as input to {@link
+   * org.springframework.ldap.query.LdapQueryBuilder#filter(String, Object...)}.
+   *
+   * @return search filter, must be specified.
+   */
+  String value() default "";
 
-	/**
-	 * Search scope, to be used as input to
-	 * {@link org.springframework.ldap.query.LdapQueryBuilder#searchScope(org.springframework.ldap.query.SearchScope)}.
-	 *
-	 * @return the search scope.
-	 */
-	SearchScope searchScope() default SearchScope.SUBTREE;
+  /**
+   * Search scope, to be used as input to {@link
+   * org.springframework.ldap.query.LdapQueryBuilder#searchScope(org.springframework.ldap.query.SearchScope)}.
+   *
+   * @return the search scope.
+   */
+  SearchScope searchScope() default SearchScope.SUBTREE;
 
-	/**
-	 * Time limit, to be used as input to {@link org.springframework.ldap.query.LdapQueryBuilder#timeLimit(int)}.
-	 *
-	 * @return the time limit.
-	 */
-	int timeLimit() default 0;
+  /**
+   * Time limit, to be used as input to {@link
+   * org.springframework.ldap.query.LdapQueryBuilder#timeLimit(int)}.
+   *
+   * @return the time limit.
+   */
+  int timeLimit() default 0;
 
-	/**
-	 * Count limit, to be used as input to {@link org.springframework.ldap.query.LdapQueryBuilder#countLimit(int)}.
-	 *
-	 * @return the count limit.
-	 */
-	int countLimit() default 0;
+  /**
+   * Count limit, to be used as input to {@link
+   * org.springframework.ldap.query.LdapQueryBuilder#countLimit(int)}.
+   *
+   * @return the count limit.
+   */
+  int countLimit() default 0;
 }

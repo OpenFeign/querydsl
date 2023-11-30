@@ -26,9 +26,10 @@ import org.springframework.data.repository.config.RepositoryBeanDefinitionParser
  */
 public class LdapNamespaceHandler extends NamespaceHandlerSupport {
 
-	public void init() {
+  public void init() {
 
-		registerBeanDefinitionParser("repositories",
-				new RepositoryBeanDefinitionParser(new LdapRepositoryConfigurationExtension()));
-	}
+    registerBeanDefinitionParser(
+        "repositories",
+        new RepositoryBeanDefinitionParser(new LdapRepositoryConfigurationExtension()));
+  }
 }
