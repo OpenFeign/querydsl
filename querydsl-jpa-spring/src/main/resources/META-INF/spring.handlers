@@ -1,0 +1,1 @@
+http\://www.springframework.org/schema/data/ldap=org.springframework.data.ldap.config.LdapNamespaceHandler

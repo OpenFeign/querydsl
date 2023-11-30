@@ -1,0 +1,20 @@
+[[spring-data-ldap-reference-documentation]]
+= Spring Data LDAP
+:revnumber: {version}
+:revdate: {localdate}
+:feature-scroll: true
+
+_Spring Data LDAP provides repository support for Lightweight Directory Access Protocol (LDAP).
+It eases development of applications with a consistent programming model that need to access LDAP data sources._
+
+[horizontal]
+xref:repositories/introduction.adoc[Introduction] :: Introduction to Spring Data Repositories
+xref:ldap.adoc[LDAP] :: LDAP and LDAP Repositories
+https://github.com/spring-projects/spring-data-commons/wiki[Wiki] :: What's New, Upgrade Notes, Supported Versions, additional cross-version information.
+
+Mattias Hellborg Arthursson, Ulrik Sandberg, Eric Dalquist, Keith Barlow, Rob Winch, Mark Paluch, Jay Bryant
+
+(C) 2008-2023 VMware, Inc.
+
+Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.
+

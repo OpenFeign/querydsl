@@ -1,0 +1,8 @@
+[[common.basics]]
+= Introduction
+:page-section-summary-toc: 1
+
+This chapter explains the basic foundations of Spring Data repositories.
+Before continuing to the LDAP specifics, make sure you have a sound understanding of the basic concepts explained here.
+
+include::{commons}@data-commons::page$repositories.adoc[leveloffset=+1]

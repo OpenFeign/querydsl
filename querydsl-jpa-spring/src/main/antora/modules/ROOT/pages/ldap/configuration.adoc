@@ -1,0 +1,119 @@
+[[ldap.configuration]]
+= Configuration
+
+This section describes configuring Spring Data LDAP.
+Spring LDAP repositories can be enabled by using a `<data-ldap:repositories>` tag in your XML configuration or by using an `@EnableLdapRepositories` annotation on a configuration class:
+
+* "`<<ldap.namespace,Spring Namespace>>`" (XML configuration)
+* "`<<ldap.java-config,Annotation-based Configuration>>`" (Java configuration)
+
+To include support for `LdapQuery` parameters in automatically generated repositories, have your interface extend `LdapRepository` rather than `CrudRepository`.
+
+All Spring LDAP repositories must work with entities annotated with the ODM annotations, as described in https://docs.spring.io/spring-ldap/reference/odm.html[Object-Directory Mapping].
+
+Since all ODM managed classes must have a Distinguished Name as the ID, all Spring LDAP repositories must have the ID type parameter set to `javax.naming.Name`.
+
+Indeed, the built-in `LdapRepository` only takes one type parameter: the managed entity class, which defaults the ID to `javax.naming.Name`.
+
+Due to specifics of the LDAP protocol, paging and sorting are not supported for Spring LDAP repositories.
+
+NOTE: You must use ODM annotations, such as `org.springframework.ldap.odm.annotations.Id`.
+Using Spring Data's annotation does not work, because Spring LDAP uses its own mapping layer.
+
+[[ldap.java-config]]
+== Annotation-based Configuration
+
+The Spring Data LDAP repositories support can be activated through both JavaConfig as well as a custom XML namespace, as shown in the following example:
+
+.Spring Data LDAP repositories using JavaConfig
+====
+[source,java]
+----
+@Configuration
+@EnableLdapRepositories("com.acme.*.repositories")
+class MyConfig {
+
+  @Bean
+  ContextSource contextSource() {
+
+    LdapContextSource ldapContextSource = new LdapContextSource();
+
+    ldapContextSource.setUserDn("cn=Admin");
+    ldapContextSource.setPassword("secret");
+    ldapContextSource.setUrl("ldap://127.0.0.1:389");
+
+    return ldapContextSource;
+  }
+
+  @Bean
+  LdapTemplate ldapTemplate(ContextSource contextSource) {
+    return new LdapTemplate(contextSource);
+  }
+}
+----
+====
+
+This configuration causes the base packages to be scanned for interfaces that extend contain LDAP repositories and create Spring beans for each one found.
+
+If no base package is configured, the infrastructure scans the package of the annotated configuration class.
+
+[[ldap.namespace]]
+== Spring Namespace
+
+The LDAP module of Spring Data contains a custom namespace that allows defining repository beans.
+It also contains certain features and element attributes that are special to LDAP.
+Generally, the LDAP repositories can be set up by using the `repositories` element, as shown in the following example:
+
+.Setting up LDAP repositories by using the namespace
+====
+[source,xml]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ldap="http://www.springframework.org/schema/ldap"
+  xmlns:data-ldap="http://www.springframework.org/schema/data/ldap"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    https://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/ldap
+    https://www.springframework.org/schema/ldap/spring-ldap.xsd
+    http://www.springframework.org/schema/data/ldap
+    https://www.springframework.org/schema/data/ldap/spring-ldap.xsd">
+
+  <ldap:context-source url="ldap://127.0.0.1:389"
+                     username="cn=Admin"
+                     password="secret" />
+
+  <ldap:ldap-template />
+
+  <data-ldap:repositories base-package="com.acme.*.repositories" />
+
+</beans>
+----
+====
+
+This configuration causes the base packages to be scanned for interfaces that extend contain LDAP repositories and create Spring beans for each one found.
+
+By default, the repositories get an autowired `LdapTemplate` Spring bean that is called `ldapTemplate`, so you only need to configure `ldap-template-ref` explicitly if you deviate from this convention.
+
+TIP: Which is better, JavaConfig or XML?
+XML is how Spring was configured long ago.
+In today's era of fast-growing Java, record types, annotations, and more, new projects typically use as much pure Java as possible.
+While there is no immediate plan to remove XML support, some of the newest features MAY not be available through XML.
+
+Using the `repositories` element looks up Spring Data repositories as described in xref:repositories/create-instances.adoc[Creating Repository Instances].
+
+[[ldap.namespace.custom-namespace-attributes]]
+=== Custom Namespace Attributes
+
+Beyond the xref:repositories/namespace-reference.adoc[default attributes of the `repositories` element], the LDAP namespace offers additional attributes to let you gain more detailed control over the setup of the repositories:
+
+.Custom LDAP-specific attributes of the `repositories` element
+[options = "autowidth"]
+|===============
+|`ldap-template-ref`|Explicitly wire the `LdapTemplate` to be used with the repositories being detected by the `repositories` element. Usually used if multiple `LdapTemplate` beans are used within the application. If not configured, Spring Data automatically looks up the `LdapTemplate` bean with the name `ldapTemplate` in the `ApplicationContext`.
+|===============
+
+NOTE: Spring Data LDAP requires a `LdapMappingContext` bean named `ldapMappingContext` to be present.
+If no such bean is defined, then Spring Data LDAP registers a default instance in the application context.
+
+

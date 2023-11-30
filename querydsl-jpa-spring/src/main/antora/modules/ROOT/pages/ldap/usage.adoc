@@ -1,0 +1,78 @@
+[[ldap.repo-usage]]
+= Usage
+
+To access domain entities stored in a LDAP-compliant directory, you can use our sophisticated repository support that significantly eases implementation.
+To do so, create an interface for your repository, as the following example shows:
+
+.Sample Person entity
+====
+[source,java]
+----
+@Entry(objectClasses = { "person", "top" }, base="ou=someOu")
+public class Person {
+
+   @Id
+   private Name dn;
+
+   @Attribute(name="cn")
+   @DnAttribute(value="cn", index=1)
+   private String fullName;
+
+   @Attribute(name="firstName")
+   private String firstName;
+
+   // No @Attribute annotation means this is bound to the LDAP attribute
+   // with the same value
+   private String firstName;
+
+   @DnAttribute(value="ou", index=0)
+   @Transient
+   private String company;
+
+   @Transient
+   private String someUnmappedField;
+   // ...more attributes below
+}
+----
+====
+
+We have a simple domain object here.
+Note that it has a property named `dn` of type `Name`.
+With that domain object, we can create a repository to persist objects of that type by defining an interface for it, as follows:
+
+.Basic repository interface to persist `Person` entities
+====
+[source]
+----
+public interface PersonRepository extends CrudRepository<Person, Long> {
+
+  // additional custom finder methods go here
+}
+----
+====
+
+Because our domain repository extends `CrudRepository`, it provides you with CRUD operations as well as methods for access to the entities.
+Working with the repository instance is a matter of dependency injecting it into a client.
+
+.Access to Person entities
+====
+[source,java]
+----
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration
+class PersonRepositoryTests {
+
+    @Autowired PersonRepository repository;
+
+    @Test
+    void readAll() {
+
+      List<Person> persons = repository.findAll();
+      assertThat(persons.isEmpty(), is(false));
+    }
+}
+----
+====
+
+The sample creates an application context with Spring's unit test support, which will perform annotation-based dependency injection into test cases.
+Inside the test method, we use the repository to query the datastore.
