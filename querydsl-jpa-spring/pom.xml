@@ -1,173 +1,141 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>io.github.openfeign.querydsl</groupId>
-    <artifactId>querydsl-root</artifactId>
-    <version>6.0-SNAPSHOT</version>
-  </parent>
+	<groupId>org.springframework.data</groupId>
+	<artifactId>spring-data-envers</artifactId>
+	<version>2.7.19-SNAPSHOT</version>
 
-  <artifactId>querydsl-jpa-spring</artifactId>
-  <name>Querydsl - JPA Spring support</name>
-  <description>JPA Spring support for Querydsl</description>
+	<parent>
+		<groupId>org.springframework.data.build</groupId>
+		<artifactId>spring-data-parent</artifactId>
+		<version>2.7.19-SNAPSHOT</version>
+		<relativePath/>
+	</parent>
 
-  <properties>
-    <!-- to match spring SDK version -->
-    <main.java.version>17</main.java.version>
+	<name>Spring Data Envers</name>
+	<description>Spring Data extension to work with Hibernate Envers</description>
+	<url>https://github.com/SpringSource/spring-data-envers</url>
 
-    <!-- TODO remove -->
-    <cdi>4.0.1</cdi>
-    <webbeans>4.0.0</webbeans>
-  </properties>
+	<developers>
+		<developer>
+			<name>Oliver Gierke</name>
+			<email>ogierke@pivotal.io</email>
+			<organization>Pivotal Software, Inc.</organization>
+			<organizationUrl>www.spring.io</organizationUrl>
+		</developer>
+		<developer>
+			<name>Philip Huegelmeyer</name>
+			<email>philip.huegelmeyer@ble.de</email>
+			<organization>BLE</organization>
+			<organizationUrl>www.ble.de</organizationUrl>
+		</developer>
+		<developer>
+			<name>Michael Igler</name>
+			<email>michael.igler@forward-tech.de</email>
+			<organization>Freelancer</organization>
+		</developer>
+		<developer>
+			<name>Jens Schauder</name>
+			<email>jschauder@vmware.com</email>
+			<organization>VMware, Inc.</organization>
+			<organizationUrl>www.spring.io</organizationUrl>
+		</developer>
+	</developers>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${springboot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+	<scm>
+		<url>https://github.com/SpringSource/spring-data-envers</url>
+	</scm>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-    </dependency>
+	<properties>
+		<springdata.jpa>2.7.19-SNAPSHOT</springdata.jpa>
+		<hibernate.envers>5.5.3.Final</hibernate.envers>
+		<java-module-name>spring.data.envers</java-module-name>
+	</properties>
 
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-tx</artifactId>
-    </dependency>
+	<dependencies>
 
-    <dependency>
-      <groupId>org.springframework.ldap</groupId>
-      <artifactId>spring-ldap-core</artifactId>
-    </dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>${springdata.jpa}</version>
+		</dependency>
 
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-jpa</artifactId>
-    </dependency>
+		<!-- Hibernate -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-envers</artifactId>
+			<version>${hibernate.envers}</version>
+		</dependency>
 
-    <dependency>
-      <groupId>io.github.openfeign.querydsl</groupId>
-      <artifactId>querydsl-jpa</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>${jodatime}</version>
+		</dependency>
 
-    <dependency>
-      <groupId>io.github.openfeign.querydsl</groupId>
-      <artifactId>querydsl-apt</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <!-- CDI -->
+		<!-- QueryDsl -->
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-apt</artifactId>
+			<version>${querydsl}</version>
+			<scope>provided</scope>
+		</dependency>
 
-    <dependency>
-      <groupId>jakarta.enterprise</groupId>
-      <artifactId>jakarta.enterprise.cdi-api</artifactId>
-      <version>${cdi}</version>
-      <optional>true</optional>
-    </dependency>
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-jpa</artifactId>
+			<version>${querydsl}</version>
+			<optional>true</optional>
+		</dependency>
 
-    <dependency>
-      <groupId>jakarta.annotation</groupId>
-      <artifactId>jakarta.annotation-api</artifactId>
-      <scope>test</scope>
-    </dependency>
+		<!-- Test -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
+			<scope>test</scope>
+		</dependency>
 
-    <dependency>
-      <groupId>org.apache.openwebbeans</groupId>
-      <artifactId>openwebbeans-se</artifactId>
-      <version>${webbeans}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.openwebbeans</groupId>
-      <artifactId>openwebbeans-spi</artifactId>
-      <version>${webbeans}</version>
-      <scope>test</scope>
-    </dependency>
+	</dependencies>
 
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+	<build>
+		<plugins>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.asciidoctor</groupId>
+				<artifactId>asciidoctor-maven-plugin</artifactId>
+			</plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <annotationProcessors>
-            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-          </annotationProcessors>
-          <annotationProcessorPaths>
-            <annotationProcessorPath>
-              <groupId>io.github.openfeign.querydsl</groupId>
-              <artifactId>querydsl-apt</artifactId>
-              <version>${project.version}</version>
-            </annotationProcessorPath>
-          </annotationProcessorPaths>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>io.github.openfeign.querydsl</groupId>
-            <artifactId>querydsl-apt</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>
+		</plugins>
+	</build>
 
-  <profiles>
-    <profile>
-      <id>springldap-next</id>
-      <properties>
-        <spring-ldap>2.3.2.BUILD-SNAPSHOT</spring-ldap>
-      </properties>
-    </profile>
-    <profile>
-      <id>antora</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.spring.maven.antora</groupId>
-            <artifactId>antora-maven-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+	<repositories>
+		<repository>
+			<id>spring-snapshot</id>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>spring-milestone</id>
+			<url>https://repo.spring.io/milestone</url>
+		</repository>
+	</repositories>
 
-    <profile>
-      <id>antora-process-resources</id>
-      <build>
-        <resources>
-          <resource>
-            <filtering>true</filtering>
-            <directory>src/main/antora/resources/antora-resources</directory>
-          </resource>
-        </resources>
-      </build>
-    </profile>
-  </profiles>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-plugins-release</id>
+			<url>https://repo.spring.io/plugins-release</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 </project>
