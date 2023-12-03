@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import io.github.openfeign.querydsl.jpa.spring.repository.support.QUnitTestPerson;
 import io.github.openfeign.querydsl.jpa.spring.repository.support.QuerydslJpaRepositoryFactory;
 import io.github.openfeign.querydsl.jpa.spring.repository.support.UnitTestPerson;
 import java.util.Collections;
@@ -56,23 +57,8 @@ class QuerydslJpaRepositoryUnitTests {
     when(ldapOperations.getObjectDirectoryMapper()).thenReturn(new DefaultObjectDirectoryMapper());
 
     walter =
-        new UnitTestPerson(
-            new LdapName("cn=walter"),
-            "Walter",
-            "White",
-            Collections.emptyList(),
-            "US",
-            "Heisenberg",
-            "000");
-    hank =
-        new UnitTestPerson(
-            new LdapName("cn=hank"),
-            "Hank",
-            "Schrader",
-            Collections.emptyList(),
-            "US",
-            "DEA",
-            "000");
+        new UnitTestPerson(new LdapName("cn=walter"), "Walter", "White", "US", "Heisenberg", "000");
+    hank = new UnitTestPerson(new LdapName("cn=hank"), "Hank", "Schrader", "US", "DEA", "000");
 
     repository =
         new QuerydslJpaRepositoryFactory(ldapOperations).getRepository(PersonRepository.class);
@@ -120,9 +106,9 @@ class QuerydslJpaRepositoryUnitTests {
     when(ldapOperations.find(any(LdapQuery.class), eq(UnitTestPerson.class)))
         .thenReturn(Collections.singletonList(walter));
 
-    Stream<PersonProjection> walter = repository.streamAllByLastName("White");
+    Stream<UnitTestPerson> walter = repository.streamAllByLastName("White");
 
-    List<PersonProjection> list = walter.collect(Collectors.toList());
+    List<UnitTestPerson> list = walter.collect(Collectors.toList());
     assertThat(list).hasSize(1).hasOnlyElementsOfType(PersonProjection.class);
 
     ArgumentCaptor<LdapQuery> captor = ArgumentCaptor.forClass(LdapQuery.class);
@@ -135,7 +121,11 @@ class QuerydslJpaRepositoryUnitTests {
 
   interface PersonRepository extends QuerydslJpaRepository<UnitTestPerson, Name> {
 
-    Stream<PersonProjection> streamAllByLastName(String lastName);
+    default Stream<UnitTestPerson> streamAllByLastName(String lastName) {
+      return selectFrom(QUnitTestPerson.unitTestPerson)
+          .where(QUnitTestPerson.unitTestPerson.lastName.eq(lastName))
+          .stream();
+    }
 
     PersonProjection findByLastName(String lastname);
 

@@ -15,7 +15,6 @@
   <properties>
     <!-- to match spring SDK version -->
     <main.java.version>17</main.java.version>
-    <latest.java.version>17</latest.java.version>
 
     <!-- TODO remove -->
     <cdi>4.0.1</cdi>
@@ -52,21 +51,20 @@
 
     <dependency>
       <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-commons</artifactId>
+      <artifactId>spring-data-jpa</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.querydsl</groupId>
-      <artifactId>querydsl-mongodb</artifactId>
-      <optional>true</optional>
+      <groupId>io.github.openfeign.querydsl</groupId>
+      <artifactId>querydsl-jpa</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-apt</artifactId>
-      <scope>provided</scope>
+      <version>${project.version}</version>
     </dependency>
-
     <!-- CDI -->
 
     <dependency>
@@ -112,6 +110,30 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessors>
+            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+          </annotationProcessors>
+          <annotationProcessorPaths>
+            <annotationProcessorPath>
+              <groupId>io.github.openfeign.querydsl</groupId>
+              <artifactId>querydsl-apt</artifactId>
+              <version>${project.version}</version>
+            </annotationProcessorPath>
+          </annotationProcessorPaths>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>io.github.openfeign.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

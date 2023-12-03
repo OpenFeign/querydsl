@@ -15,12 +15,16 @@
  */
 package io.github.openfeign.querydsl.jpa.spring.repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.dml.DeleteClause;
+import com.querydsl.core.dml.InsertClause;
+import com.querydsl.core.dml.UpdateClause;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
-import org.springframework.ldap.query.LdapQuery;
 
 /**
  * Ldap specific extensions to {@link CrudRepository}.
@@ -32,20 +36,83 @@ import org.springframework.ldap.query.LdapQuery;
 public interface QuerydslJpaRepository<T, ID> extends Repository<T, ID> {
 
   /**
-   * Find one entry matching the specified query.
+   * Create a new DELETE clause
    *
-   * @param ldapQuery the query specification.
-   * @return the found entry or <code>null</code> if no matching entry was found.
-   * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one entry
-   *     matches the query.
+   * @param path entity to delete from
+   * @return delete clause
    */
-  Optional<T> findOne(LdapQuery ldapQuery);
+  DeleteClause<?> delete(EntityPath<T> path);
 
   /**
-   * Find all entries matching the specified query.
+   * Create a new JPQLQuery instance with the given projection
    *
-   * @param ldapQuery the query specification.
-   * @return the entries matching the query.
+   * @param expr projection
+   * @param <T>
+   * @return select(expr)
    */
-  List<T> findAll(LdapQuery ldapQuery);
+  JPQLQuery<T> select(Expression<T> expr);
+
+  /**
+   * Create a new JPQLQuery instance with the given projection
+   *
+   * @param exprs projection
+   * @return select(exprs)
+   */
+  JPQLQuery<Tuple> select(Expression<?>... exprs);
+
+  /**
+   * Create a new JPQLQuery instance with the given projection
+   *
+   * @param expr projection
+   * @param <T>
+   * @return select(distinct expr)
+   */
+  JPQLQuery<T> selectDistinct(Expression<T> expr);
+
+  /**
+   * Create a new JPQLQuery instance with the given projection
+   *
+   * @param exprs projection
+   * @return select(distinct exprs)
+   */
+  JPQLQuery<Tuple> selectDistinct(Expression<?>... exprs);
+
+  /**
+   * Create a new JPQLQuery instance with the projection one
+   *
+   * @return select(1)
+   */
+  JPQLQuery<Integer> selectOne();
+
+  /**
+   * Create a new JPQLQuery instance with the projection zero
+   *
+   * @return select(0)
+   */
+  JPQLQuery<Integer> selectZero();
+
+  /**
+   * Create a new JPQLQuery instance with the given source and projection
+   *
+   * @param from projection and source
+   * @param <T>
+   * @return select(from).from(from)
+   */
+  JPQLQuery<T> selectFrom(EntityPath<T> from);
+
+  /**
+   * Create a new UPDATE clause
+   *
+   * @param path entity to update
+   * @return update clause
+   */
+  UpdateClause<?> update(EntityPath<T> path);
+
+  /**
+   * Create a new INSERT clause
+   *
+   * @param path entity to insert to
+   * @return insert clause
+   */
+  InsertClause<?> insert(EntityPath<T> path);
 }

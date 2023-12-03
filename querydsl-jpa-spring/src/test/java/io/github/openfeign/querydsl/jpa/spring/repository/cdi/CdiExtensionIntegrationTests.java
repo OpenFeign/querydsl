@@ -26,7 +26,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.query.LdapQueryBuilder;
 
 /**
  * Integration tests for {@link QuerydslJpaRepositoryExtension}.
@@ -65,7 +64,7 @@ class CdiExtensionIntegrationTests {
 
     assertThat(repository).isNotNull();
 
-    repository.findAll(LdapQueryBuilder.query().filter("*"));
+    repository.selectZero().fetch();
   }
 
   @Test // DATALDAP-5

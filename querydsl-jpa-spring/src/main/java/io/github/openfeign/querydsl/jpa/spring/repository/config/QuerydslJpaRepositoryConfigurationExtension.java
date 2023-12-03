@@ -50,12 +50,12 @@ public class QuerydslJpaRepositoryConfigurationExtension
 
   @Override
   public String getModuleName() {
-    return "LDAP";
+    return "QUERYDSL";
   }
 
   @Override
   protected String getModulePrefix() {
-    return "ldap";
+    return "querydsl";
   }
 
   public String getRepositoryFactoryBeanClassName() {
@@ -82,8 +82,8 @@ public class QuerydslJpaRepositoryConfigurationExtension
       ldapTemplateRef = "ldapTemplate";
     }
 
-    builder.addPropertyReference("ldapOperations", ldapTemplateRef);
-    builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
+    //    builder.addPropertyReference("ldapOperations", ldapTemplateRef);
+    //    builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
   }
 
   @Override
@@ -92,8 +92,8 @@ public class QuerydslJpaRepositoryConfigurationExtension
 
     AnnotationAttributes attributes = config.getAttributes();
 
-    builder.addPropertyReference("ldapOperations", attributes.getString("ldapTemplateRef"));
-    builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
+    //    builder.addPropertyReference("ldapOperations", attributes.getString("ldapTemplateRef"));
+    //    builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
   }
 
   @Override

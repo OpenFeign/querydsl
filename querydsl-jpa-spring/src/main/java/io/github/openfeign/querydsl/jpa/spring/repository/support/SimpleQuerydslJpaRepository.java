@@ -17,19 +17,16 @@ package io.github.openfeign.querydsl.jpa.spring.repository.support;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.*;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.dml.DeleteClause;
+import com.querydsl.core.dml.InsertClause;
+import com.querydsl.core.dml.UpdateClause;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
-import java.util.List;
-import java.util.Optional;
-import javax.naming.Name;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.mapping.PersistentEntity;
-import org.springframework.data.mapping.PersistentProperty;
-import org.springframework.data.mapping.context.MappingContext;
-import org.springframework.lang.Nullable;
-import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
-import org.springframework.ldap.query.LdapQuery;
+import jakarta.persistence.EntityManager;
 import org.springframework.util.Assert;
 
 /**
@@ -43,28 +40,9 @@ public class SimpleQuerydslJpaRepository<T, ID> implements QuerydslJpaRepository
 
   private static final String OBJECTCLASS_ATTRIBUTE = "objectclass";
 
-  private final LdapOperations ldapOperations;
-  private final ObjectDirectoryMapper odm;
   private final Class<T> entityType;
 
-  /**
-   * Creates a new {@link SimpleQuerydslJpaRepository}.
-   *
-   * @param ldapOperations must not be {@literal null}.
-   * @param odm must not be {@literal null}.
-   * @param entityType must not be {@literal null}.
-   */
-  public SimpleQuerydslJpaRepository(
-      LdapOperations ldapOperations, ObjectDirectoryMapper odm, Class<T> entityType) {
-
-    Assert.notNull(ldapOperations, "LdapOperations must not be null");
-    Assert.notNull(odm, "ObjectDirectoryMapper must not be null");
-    Assert.notNull(entityType, "Entity type must not be null");
-
-    this.ldapOperations = ldapOperations;
-    this.odm = odm;
-    this.entityType = entityType;
-  }
+  private final JPAQueryFactory jpaQueryFactory;
 
   /**
    * Creates a new {@link SimpleQuerydslJpaRepository}.
@@ -72,53 +50,64 @@ public class SimpleQuerydslJpaRepository<T, ID> implements QuerydslJpaRepository
    * @param ldapOperations must not be {@literal null}.
    * @param odm must not be {@literal null}.
    * @param entityType must not be {@literal null}.
+   * @param entityManager
    */
-  SimpleQuerydslJpaRepository(
-      LdapOperations ldapOperations,
-      MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> context,
-      ObjectDirectoryMapper odm,
-      Class<T> entityType) {
+  public SimpleQuerydslJpaRepository(Class<T> entityType, EntityManager entityManager) {
 
-    Assert.notNull(ldapOperations, "LdapOperations must not be null");
-    Assert.notNull(context, "MappingContext must not be null");
-    Assert.notNull(odm, "ObjectDirectoryMapper must not be null");
     Assert.notNull(entityType, "Entity type must not be null");
+    Assert.notNull(entityManager, "entityManager must not be null");
 
-    this.ldapOperations = ldapOperations;
-    this.odm = odm;
     this.entityType = entityType;
-  }
-
-  // -------------------------------------------------------------------------
-  // Methods from QuerydslJpaRepository
-  // ------------------------------------------------------------------------
-
-  @Override
-  public Optional<T> findOne(LdapQuery ldapQuery) {
-
-    Assert.notNull(ldapQuery, "LdapQuery must not be null");
-
-    try {
-      return Optional.ofNullable(ldapOperations.findOne(ldapQuery, entityType));
-    } catch (EmptyResultDataAccessException e) {
-      return Optional.empty();
-    }
+    this.jpaQueryFactory = new JPAQueryFactory(entityManager);
   }
 
   @Override
-  public List<T> findAll(LdapQuery ldapQuery) {
-
-    Assert.notNull(ldapQuery, "LdapQuery must not be null");
-    return ldapOperations.find(ldapQuery, entityType);
+  public DeleteClause<?> delete(EntityPath<T> path) {
+    return jpaQueryFactory.delete(path);
   }
 
-  private <S extends T> boolean isNew(S entity, @Nullable Name id) {
+  @Override
+  public JPQLQuery<T> select(Expression<T> expr) {
+    return jpaQueryFactory.select(expr);
+  }
 
-    if (entity instanceof Persistable) {
-      Persistable<?> persistable = (Persistable<?>) entity;
-      return persistable.isNew();
-    } else {
-      return id == null;
-    }
+  @Override
+  public JPQLQuery<Tuple> select(Expression<?>... exprs) {
+    return jpaQueryFactory.select(exprs);
+  }
+
+  @Override
+  public JPQLQuery<T> selectDistinct(Expression<T> expr) {
+    return jpaQueryFactory.selectDistinct(expr);
+  }
+
+  @Override
+  public JPQLQuery<Tuple> selectDistinct(Expression<?>... exprs) {
+    return jpaQueryFactory.selectDistinct(exprs);
+  }
+
+  @Override
+  public JPQLQuery<Integer> selectOne() {
+    return jpaQueryFactory.selectOne();
+  }
+
+  @Override
+  public JPQLQuery<Integer> selectZero() {
+    return jpaQueryFactory.selectZero();
+  }
+
+  @Override
+  public JPQLQuery<T> selectFrom(EntityPath<T> from) {
+    return jpaQueryFactory.selectFrom(from);
+  }
+
+  @Override
+  public UpdateClause<?> update(EntityPath<T> path) {
+    return jpaQueryFactory.update(path);
+  }
+
+  @Override
+  public InsertClause<?> insert(EntityPath<T> path) {
+    return jpaQueryFactory.insert(path);
   }
 }

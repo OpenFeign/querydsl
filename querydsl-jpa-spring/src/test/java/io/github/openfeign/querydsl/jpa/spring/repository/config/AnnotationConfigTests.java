@@ -44,6 +44,6 @@ class AnnotationConfigTests {
 
   @Configuration
   @ImportResource("classpath:/infrastructure.xml")
-  @EnableLdapRepositories(basePackageClasses = DummyLdapRepository.class)
+  @EnableQuerydslRepositories(basePackageClasses = DummyLdapRepository.class)
   static class Config {}
 }

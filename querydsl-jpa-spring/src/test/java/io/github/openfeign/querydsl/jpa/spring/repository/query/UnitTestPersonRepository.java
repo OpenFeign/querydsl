@@ -18,12 +18,11 @@ package io.github.openfeign.querydsl.jpa.spring.repository.query;
 import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
 import io.github.openfeign.querydsl.jpa.spring.repository.support.UnitTestPerson;
 import java.util.List;
-import javax.naming.Name;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
-public interface UnitTestPersonRepository extends QuerydslJpaRepository<UnitTestPerson, Name> {
+public interface UnitTestPersonRepository extends QuerydslJpaRepository<UnitTestPerson, Long> {
 
   List<UnitTestPerson> findByFullName(String name);
 

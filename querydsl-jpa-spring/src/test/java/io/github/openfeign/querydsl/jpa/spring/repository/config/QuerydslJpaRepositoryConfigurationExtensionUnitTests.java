@@ -48,7 +48,7 @@ class QuerydslJpaRepositoryConfigurationExtensionUnitTests {
 
   private RepositoryConfigurationSource configurationSource =
       new AnnotationRepositoryConfigurationSource(
-          metadata, EnableLdapRepositories.class, loader, environment, registry);
+          metadata, EnableQuerydslRepositories.class, loader, environment, registry);
 
   @Test // DATALDAP-60
   void isStrictMatchIfDomainTypeIsAnnotatedWithEntry() {
@@ -110,7 +110,7 @@ class QuerydslJpaRepositoryConfigurationExtensionUnitTests {
     }
   }
 
-  @EnableLdapRepositories(considerNestedRepositories = true)
+  @EnableQuerydslRepositories(considerNestedRepositories = true)
   private static class Config {}
 
   @Entry(objectClasses = "person")

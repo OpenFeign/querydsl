@@ -21,6 +21,7 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.ProcessBean;
+import jakarta.persistence.EntityManager;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class QuerydslJpaRepositoryExtension extends CdiRepositoryExtensionSuppor
 
   private static final Log LOG = LogFactory.getLog(QuerydslJpaRepositoryExtension.class);
 
-  private final Map<Set<Annotation>, Bean<LdapOperations>> ldapOperations = new HashMap<>();
+  private final Map<Set<Annotation>, Bean<EntityManager>> entityManager = new HashMap<>();
 
   public QuerydslJpaRepositoryExtension() {
     LOG.info("Activating CDI extension for Spring Data LDAP repositories");
@@ -66,7 +67,7 @@ public class QuerydslJpaRepositoryExtension extends CdiRepositoryExtensionSuppor
         }
 
         // Store the EntityManager bean using its qualifiers.
-        ldapOperations.put(new HashSet<>(bean.getQualifiers()), (Bean<LdapOperations>) bean);
+        entityManager.put(new HashSet<>(bean.getQualifiers()), (Bean<EntityManager>) bean);
       }
     }
   }
@@ -109,9 +110,9 @@ public class QuerydslJpaRepositoryExtension extends CdiRepositoryExtensionSuppor
       Class<T> repositoryType, Set<Annotation> qualifiers, BeanManager beanManager) {
 
     // Determine the LdapOperations bean which matches the qualifiers of the repository.
-    Bean<LdapOperations> LdapOperations = this.ldapOperations.get(qualifiers);
+    Bean<EntityManager> entityManager = this.entityManager.get(qualifiers);
 
-    if (LdapOperations == null) {
+    if (entityManager == null) {
       throw new UnsatisfiedResolutionException(
           String.format(
               "Unable to resolve a bean for '%s' with qualifiers %s",
@@ -120,7 +121,7 @@ public class QuerydslJpaRepositoryExtension extends CdiRepositoryExtensionSuppor
 
     // Construct and return the repository bean.
     return new QuerydslJpaRepositoryBean<>(
-        LdapOperations,
+        entityManager,
         qualifiers,
         repositoryType,
         beanManager,

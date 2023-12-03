@@ -25,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import io.github.openfeign.querydsl.jpa.spring.repository.config.EnableQuerydslRepositories;
-
 @DataJpaTest
-@EnableQuerydslRepositories(basePackageClasses = CustomerRepository.class)
 public class CustomerRepositoryTests {
   @Autowired private TestEntityManager entityManager;
 

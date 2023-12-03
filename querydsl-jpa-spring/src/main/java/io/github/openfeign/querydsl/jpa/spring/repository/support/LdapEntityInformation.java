@@ -16,10 +16,7 @@
 
 package io.github.openfeign.querydsl.jpa.spring.repository.support;
 
-import javax.naming.Name;
 import org.springframework.data.repository.core.support.AbstractEntityInformation;
-import org.springframework.lang.Nullable;
-import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 
 /**
  * ODM-based {@link org.springframework.data.repository.core.EntityInformation} for LDAP entities.
@@ -29,23 +26,19 @@ import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
  * @see org.springframework.ldap.odm.core.ObjectDirectoryMapper
  * @see org.springframework.ldap.odm.annotations.Entry
  */
-class LdapEntityInformation<T> extends AbstractEntityInformation<T, Name> {
+class LdapEntityInformation<T, ID> extends AbstractEntityInformation<T, ID> {
 
-  private final ObjectDirectoryMapper odm;
-
-  public LdapEntityInformation(Class<T> domainClass, ObjectDirectoryMapper odm) {
+  public LdapEntityInformation(Class<T> domainClass) {
     super(domainClass);
-    this.odm = odm;
-  }
-
-  @Nullable
-  @Override
-  public Name getId(T entity) {
-    return odm.getId(entity);
   }
 
   @Override
-  public Class<Name> getIdType() {
-    return Name.class;
+  public Class<ID> getIdType() {
+    return null;
+  }
+
+  @Override
+  public ID getId(T entity) {
+    return null;
   }
 }

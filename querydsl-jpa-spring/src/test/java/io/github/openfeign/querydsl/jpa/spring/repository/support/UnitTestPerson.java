@@ -16,58 +16,87 @@
 
 package io.github.openfeign.querydsl.jpa.spring.repository.support;
 
-import java.util.List;
-import javax.naming.Name;
-import org.springframework.ldap.odm.annotations.Attribute;
-import org.springframework.ldap.odm.annotations.DnAttribute;
-import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.ldap.odm.annotations.Id;
-import org.springframework.ldap.odm.annotations.Transient;
+import jakarta.persistence.*;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
-@Entry(objectClasses = {"inetOrgPerson", "organizationalPerson", "person", "top"})
+@Entity
 public class UnitTestPerson {
-  @Id private Name dn;
+  @Id private Long dn;
 
-  @Attribute(name = "cn")
-  @DnAttribute("cn")
   private String fullName;
 
-  @Attribute(name = "sn")
   private String lastName;
 
-  @Attribute(name = "description")
-  private List<String> description;
-
-  @Transient
-  @DnAttribute("c")
   private String country;
 
-  @Transient
-  @DnAttribute("ou")
   private String company;
 
-  // This should be automatically found
   private String telephoneNumber;
 
   public UnitTestPerson() {}
 
   public UnitTestPerson(
-      Name dn,
+      Long dn,
       String fullName,
       String lastName,
-      List<String> description,
       String country,
       String company,
       String telephoneNumber) {
     this.dn = dn;
     this.fullName = fullName;
     this.lastName = lastName;
-    this.description = description;
     this.country = country;
     this.company = company;
+    this.telephoneNumber = telephoneNumber;
+  }
+
+  public Long getDn() {
+    return dn;
+  }
+
+  public void setDn(Long dn) {
+    this.dn = dn;
+  }
+
+  public String getFullName() {
+    return fullName;
+  }
+
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
+  }
+
+  public String getCompany() {
+    return company;
+  }
+
+  public void setCompany(String company) {
+    this.company = company;
+  }
+
+  public String getTelephoneNumber() {
+    return telephoneNumber;
+  }
+
+  public void setTelephoneNumber(String telephoneNumber) {
     this.telephoneNumber = telephoneNumber;
   }
 }

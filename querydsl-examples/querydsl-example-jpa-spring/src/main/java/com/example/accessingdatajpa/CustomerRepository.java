@@ -23,6 +23,6 @@ public interface CustomerRepository extends QuerydslJpaRepository<Customer, Long
   }
 
   default List<Customer> findAll() {
-    return selectFrom(C).fetch();
+    return select(C).from(C).fetch();
   }
 }

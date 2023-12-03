@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 import io.github.openfeign.querydsl.jpa.spring.config.DummyEntity;
 import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
 import io.github.openfeign.querydsl.jpa.spring.repository.support.SimpleQuerydslJpaRepository;
+import jakarta.persistence.EntityManager;
 import javax.naming.Name;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /**
- * Unit tests for {@link EnableLdapRepositories#repositoryBaseClass()}.
+ * Unit tests for {@link EnableQuerydslRepositories#repositoryBaseClass()}.
  *
  * @author Mark Paluch
  */
@@ -51,7 +50,7 @@ class CustomRepositoryBaseClassTests {
 
   @Configuration
   @ImportResource("classpath:/infrastructure.xml")
-  @EnableLdapRepositories(
+  @EnableQuerydslRepositories(
       considerNestedRepositories = true,
       repositoryBaseClass = CustomizedLdapRepositoryImpl.class)
   static class Config {}
@@ -67,9 +66,8 @@ class CustomRepositoryBaseClassTests {
   static class CustomizedLdapRepositoryImpl<T> extends SimpleQuerydslJpaRepository<T, Name>
       implements CustomizedLdapRepository<T> {
 
-    public CustomizedLdapRepositoryImpl(
-        LdapOperations ldapOperations, ObjectDirectoryMapper odm, Class<T> clazz) {
-      super(ldapOperations, odm, clazz);
+    public CustomizedLdapRepositoryImpl(Class<T> clazz, EntityManager entityManager) {
+      super(clazz, entityManager);
     }
 
     @Override

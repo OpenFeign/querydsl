@@ -28,7 +28,7 @@ class QuerydslJpaRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrar
 
   @Override
   protected Class<? extends Annotation> getAnnotation() {
-    return EnableLdapRepositories.class;
+    return EnableQuerydslRepositories.class;
   }
 
   @Override

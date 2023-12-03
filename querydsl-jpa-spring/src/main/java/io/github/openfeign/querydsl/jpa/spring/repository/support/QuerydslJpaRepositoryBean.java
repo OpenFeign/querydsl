@@ -16,6 +16,7 @@
 package io.github.openfeign.querydsl.jpa.spring.repository.support;
 
 import io.github.openfeign.querydsl.jpa.spring.core.mapping.LdapMappingContext;
+import jakarta.persistence.EntityManager;
 import javax.naming.Name;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
@@ -24,7 +25,6 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.lang.Nullable;
-import org.springframework.ldap.core.LdapOperations;
 import org.springframework.util.Assert;
 
 /**
@@ -38,7 +38,7 @@ import org.springframework.util.Assert;
 public class QuerydslJpaRepositoryBean<T extends Repository<S, Name>, S>
     extends RepositoryFactoryBeanSupport<T, S, Name> {
 
-  private @Nullable LdapOperations ldapOperations;
+  private EntityManager entityManager;
   private boolean mappingContextConfigured = false;
   private @Nullable MappingContext<
           ? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>>
@@ -54,10 +54,10 @@ public class QuerydslJpaRepositoryBean<T extends Repository<S, Name>, S>
   }
 
   /**
-   * @param ldapOperations
+   * @param entityManager
    */
-  public void setLdapOperations(LdapOperations ldapOperations) {
-    this.ldapOperations = ldapOperations;
+  public void setEntityManager(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 
   @Override
@@ -71,17 +71,15 @@ public class QuerydslJpaRepositoryBean<T extends Repository<S, Name>, S>
   @Override
   protected RepositoryFactorySupport createRepositoryFactory() {
 
-    Assert.state(ldapOperations != null, "LdapOperations must be set");
+    Assert.state(entityManager != null, "entityManager must be set");
 
-    return mappingContext != null
-        ? new QuerydslJpaRepositoryFactory(ldapOperations, mappingContext)
-        : new QuerydslJpaRepositoryFactory(ldapOperations);
+    return new QuerydslJpaRepositoryFactory(entityManager);
   }
 
   @Override
   public void afterPropertiesSet() {
 
-    Assert.notNull(ldapOperations, "LdapOperations must be set");
+    Assert.notNull(entityManager, "entityManager must be set");
 
     super.afterPropertiesSet();
 

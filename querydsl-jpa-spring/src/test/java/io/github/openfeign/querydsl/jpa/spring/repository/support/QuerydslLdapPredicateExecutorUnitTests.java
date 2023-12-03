@@ -66,24 +66,9 @@ class QuerydslLdapPredicateExecutorUnitTests {
             new LdapMappingContext());
 
     walter =
-        new UnitTestPerson(
-            new LdapName("cn=walter"),
-            "Walter",
-            "White",
-            Collections.emptyList(),
-            "US",
-            "Heisenberg",
-            "000");
+        new UnitTestPerson(new LdapName("cn=walter"), "Walter", "White", "US", "Heisenberg", "000");
 
-    hank =
-        new UnitTestPerson(
-            new LdapName("cn=hank"),
-            "Hank",
-            "Schrader",
-            Collections.emptyList(),
-            "US",
-            "DEA",
-            "000");
+    hank = new UnitTestPerson(new LdapName("cn=hank"), "Hank", "Schrader", "US", "DEA", "000");
   }
 
   @Test // GH-269

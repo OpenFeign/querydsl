@@ -40,12 +40,12 @@ import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 @Documented
 @Inherited
 @Import(QuerydslJpaRepositoriesRegistrar.class)
-public @interface EnableLdapRepositories {
+public @interface EnableQuerydslRepositories {
 
   /**
    * Alias for the {@link #basePackages()} attribute. Allows for more concise annotation
-   * declarations e.g.: {@code @EnableLdapRepositories("org.my.pkg")} instead of
-   * {@code @EnableLdapRepositories(basePackages="org.my.pkg")}.
+   * declarations e.g.: {@code @EnableQuerydslRepositories("org.my.pkg")} instead of
+   * {@code @EnableQuerydslRepositories(basePackages="org.my.pkg")}.
    */
   String[] value() default {};
 

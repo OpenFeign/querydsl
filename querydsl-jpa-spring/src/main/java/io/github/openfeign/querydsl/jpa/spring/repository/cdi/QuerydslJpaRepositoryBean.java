@@ -19,12 +19,12 @@ import io.github.openfeign.querydsl.jpa.spring.repository.support.QuerydslJpaRep
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.persistence.EntityManager;
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.repository.cdi.CdiRepositoryBean;
 import org.springframework.data.repository.config.CustomRepositoryImplementationDetector;
-import org.springframework.ldap.core.LdapOperations;
 import org.springframework.util.Assert;
 
 /**
@@ -35,7 +35,7 @@ import org.springframework.util.Assert;
  */
 public class QuerydslJpaRepositoryBean<T> extends CdiRepositoryBean<T> {
 
-  private final Bean<LdapOperations> operations;
+  private final Bean<EntityManager> entityManager;
 
   /**
    * Creates a new {@link QuerydslJpaRepositoryBean}.
@@ -49,7 +49,7 @@ public class QuerydslJpaRepositoryBean<T> extends CdiRepositoryBean<T> {
    *     Optional#empty()}.
    */
   QuerydslJpaRepositoryBean(
-      Bean<LdapOperations> operations,
+      Bean<EntityManager> entityManager,
       Set<Annotation> qualifiers,
       Class<T> repositoryType,
       BeanManager beanManager,
@@ -57,20 +57,20 @@ public class QuerydslJpaRepositoryBean<T> extends CdiRepositoryBean<T> {
 
     super(qualifiers, repositoryType, beanManager, detector);
 
-    Assert.notNull(operations, "LdapOperations bean must not be null");
-    this.operations = operations;
+    Assert.notNull(entityManager, "entityManager bean must not be null");
+    this.entityManager = entityManager;
   }
 
   @Override
   protected T create(CreationalContext<T> creationalContext, Class<T> repositoryType) {
 
-    LdapOperations ldapOperations = getDependencyInstance(operations, LdapOperations.class);
+    EntityManager entityManager = getDependencyInstance(this.entityManager, EntityManager.class);
 
-    return create(() -> new QuerydslJpaRepositoryFactory(ldapOperations), repositoryType);
+    return create(() -> new QuerydslJpaRepositoryFactory(entityManager), repositoryType);
   }
 
   @Override
   public Class<? extends Annotation> getScope() {
-    return operations.getScope();
+    return entityManager.getScope();
   }
 }
