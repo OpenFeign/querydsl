@@ -1,6 +1,6 @@
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.SimpleType;
@@ -36,9 +36,8 @@ public class InnerClassesTest {
     StringWriter str = new StringWriter();
     JavaWriter writer = new JavaWriter(str);
 
-    assertEquals(
-        "com.querydsl.codegen.utils.InnerClassesTest.Entity",
-        writer.getRawName(new ClassType(Entity.class)));
+    assertThat(writer.getRawName(new ClassType(Entity.class)))
+        .isEqualTo("com.querydsl.codegen.utils.InnerClassesTest.Entity");
   }
 
   @Test
@@ -46,8 +45,7 @@ public class InnerClassesTest {
     StringWriter str = new StringWriter();
     ScalaWriter writer = new ScalaWriter(str);
 
-    assertEquals(
-        "com.querydsl.codegen.utils.InnerClassesTest$Entity",
-        writer.getRawName(new ClassType(Entity.class)));
+    assertThat(writer.getRawName(new ClassType(Entity.class)))
+        .isEqualTo("com.querydsl.codegen.utils.InnerClassesTest$Entity");
   }
 }

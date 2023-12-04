@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import org.junit.Test;
@@ -23,6 +23,6 @@ public class ArrayPathTest {
   @Test
   public void get() {
     ArrayPath<String[], String> arrayPath = new ArrayPath<String[], String>(String[].class, "p");
-    assertNotNull(arrayPath.get(ConstantImpl.create(0)));
+    assertThat(arrayPath.get(ConstantImpl.create(0))).isNotNull();
   }
 }

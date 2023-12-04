@@ -13,7 +13,8 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.querydsl.codegen.utils.SimpleCompiler;
 import com.querydsl.core.util.FileUtils;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.tools.JavaCompiler;
 import org.eclipse.jdt.internal.compiler.tool.EclipseCompiler;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -50,7 +50,7 @@ public class EclipseCompilationTest {
     File out = new File("target/out-eclipse");
     FileUtils.delete(out);
     if (!out.mkdirs()) {
-      Assert.fail("Creation of " + out.getPath() + " failed");
+      fail("", "Creation of " + out.getPath() + " failed");
     }
 
     String classPath = SimpleCompiler.getClassPath((URLClassLoader) getClass().getClassLoader());
@@ -74,15 +74,15 @@ public class EclipseCompilationTest {
     if (compilationResult == 0) {
       System.out.println("Compilation is successful");
     } else {
-      Assert.fail("Compilation Failed");
+      fail("Compilation Failed");
     }
 
     File resultFile = new File("target/out-eclipse/com/querydsl/eclipse/QSimpleEntity.java");
-    assertTrue(resultFile.exists());
+    assertThat(resultFile).exists();
     String result = new String(Files.readAllBytes(resultFile.toPath()), StandardCharsets.UTF_8);
-    assertTrue(result.contains("NumberPath<java.math.BigDecimal> bigDecimalProp"));
-    assertTrue(result.contains("NumberPath<Integer> integerProp"));
-    assertTrue(result.contains("NumberPath<Integer> intProp"));
-    assertTrue(result.contains("StringPath stringProp"));
+    assertThat(result).contains("NumberPath<java.math.BigDecimal> bigDecimalProp");
+    assertThat(result).contains("NumberPath<Integer> integerProp");
+    assertThat(result).contains("NumberPath<Integer> intProp");
+    assertThat(result).contains("StringPath stringProp");
   }
 }

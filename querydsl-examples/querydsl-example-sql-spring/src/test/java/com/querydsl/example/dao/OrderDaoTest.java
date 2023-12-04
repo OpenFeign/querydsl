@@ -1,6 +1,6 @@
 package com.querydsl.example.dao;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.dto.CustomerPaymentMethod;
 import com.querydsl.example.dto.Order;
@@ -17,12 +17,12 @@ public class OrderDaoTest extends AbstractDaoTest {
   @Test
   public void findAll() {
     List<Order> orders = orderDao.findAll();
-    assertFalse(orders.isEmpty());
+    assertThat(orders).isNotEmpty();
   }
 
   @Test
   public void findById() {
-    assertNotNull(orderDao.findById(1));
+    assertThat(orderDao.findById(1)).isNotNull();
   }
 
   @Test
@@ -44,8 +44,8 @@ public class OrderDaoTest extends AbstractDaoTest {
     order.setCustomerPaymentMethod(paymentMethod);
     order.setOrderProducts(Collections.singleton(orderProduct));
     orderDao.save(order);
-    assertNotNull(order.getId());
+    assertThat(order.getId()).isNotNull();
     orderDao.delete(order);
-    assertNull(orderDao.findById(order.getId()));
+    assertThat(orderDao.findById(order.getId())).isNull();
   }
 }

@@ -14,11 +14,11 @@
 package com.querydsl.jpa.domain;
 
 import com.querydsl.core.annotations.QueryProjection;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.List;
-import javax.persistence.ElementCollection;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 public class FooDTO {
   String bar;

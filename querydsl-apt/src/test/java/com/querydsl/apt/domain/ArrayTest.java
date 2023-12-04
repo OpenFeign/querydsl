@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class ArrayTest {
   @Test
   public void test() {
     QArrayTest_ArrayTestEntity entity = QArrayTest_ArrayTestEntity.arrayTestEntity;
-    assertEquals(ArrayTestEntity[].class, entity.entityArray.getType());
-    assertEquals(ArrayTestEntity.class, entity.entityArray.get(0).getType());
+    assertThat(entity.entityArray.getType()).isEqualTo(ArrayTestEntity[].class);
+    assertThat(entity.entityArray.get(0).getType()).isEqualTo(ArrayTestEntity.class);
   }
 }

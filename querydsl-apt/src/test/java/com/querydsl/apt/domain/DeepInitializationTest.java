@@ -1,8 +1,8 @@
 package com.querydsl.apt.domain;
 
 import com.querydsl.core.annotations.QueryInit;
+import jakarta.persistence.*;
 import java.util.Collection;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class DeepInitializationTest {

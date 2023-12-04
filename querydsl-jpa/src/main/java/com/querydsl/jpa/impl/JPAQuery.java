@@ -19,7 +19,7 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.JPQLTemplates;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  * {@code JPAQuery} is the default implementation of the {@link JPQLQuery} interface for JPA

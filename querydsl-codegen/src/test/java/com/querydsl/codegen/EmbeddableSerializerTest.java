@@ -13,9 +13,9 @@
  */
 package com.querydsl.codegen;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.*;
@@ -88,9 +88,9 @@ public class EmbeddableSerializerTest {
       typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
       serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(w));
-      assertTrue(
-          entry.getValue() + " is missing from " + w,
-          w.toString().contains("public class QEntity extends " + entry.getValue() + " {"));
+      assertThat(w.toString().contains("public class QEntity extends " + entry.getValue() + " {"))
+          .as(entry.getValue() + " is missing from " + w)
+          .isTrue();
     }
   }
 
@@ -110,7 +110,7 @@ public class EmbeddableSerializerTest {
     EntityType entityType = new EntityType(type);
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public class QEntity extends BeanPath<Entity> {"));
+    assertThat(writer.toString()).contains("public class QEntity extends BeanPath<Entity> {");
     CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
@@ -122,7 +122,7 @@ public class EmbeddableSerializerTest {
     EntityType entityType = new EntityType(type);
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public class QLocale extends BeanPath<Locale> {"));
+    assertThat(writer.toString()).contains("public class QLocale extends BeanPath<Locale> {");
     CompileUtils.assertCompiles("QLocale", writer.toString());
   }
 
@@ -134,7 +134,7 @@ public class EmbeddableSerializerTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
 
-    assertTrue(writer.toString().contains("public final SimplePath<byte[]> bytes"));
+    assertThat(writer.toString()).contains("public final SimplePath<byte[]> bytes");
     CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
@@ -183,7 +183,7 @@ public class EmbeddableSerializerTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public final QEntity2 _super = new QEntity2(this);"));
+    assertThat(writer.toString()).contains("public final QEntity2 _super = new QEntity2(this);");
     // CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
@@ -197,7 +197,7 @@ public class EmbeddableSerializerTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("return Entity.test(this);"));
+    assertThat(writer.toString()).contains("return Entity.test(this);");
     CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 

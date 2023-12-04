@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEmbedded;
@@ -38,6 +38,6 @@ public class QueryEmbedded2Test {
 
   @Test
   public void test() {
-    assertNotNull(QQueryEmbedded2Test_Parent.parent.child.childProperty);
+    assertThat(QQueryEmbedded2Test_Parent.parent.child.childProperty).isNotNull();
   }
 }

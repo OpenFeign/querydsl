@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.testutil.ExcludeIn;
@@ -26,11 +26,11 @@ import com.querydsl.jpa.domain.sql.SAnimal;
 import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
 import com.querydsl.sql.SQLTemplates;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -92,7 +92,7 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
   @Test
   public void entityQueries_createQuery() {
     Query query = query().from(cat).select(catEntity).createQuery();
-    assertEquals(6, query.getResultList().size());
+    assertThat(query.getResultList()).hasSize(6);
   }
 
   @Test
@@ -101,7 +101,7 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
     SAnimal cat = new SAnimal("CAT");
 
     Query query = query().from(cat).select(catEntity).createQuery();
-    assertEquals(6, query.getResultList().size());
+    assertThat(query.getResultList()).hasSize(6);
   }
 
   @Test
@@ -113,7 +113,7 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
     final long actualTotalResultCount =
         query().from(cat).select(Projections.bean(Cat.class, bindings)).fetchResults().getTotal();
 
-    assertEquals(expectedTotalResultCount, actualTotalResultCount);
+    assertThat(actualTotalResultCount).isEqualTo(expectedTotalResultCount);
   }
 
   @Test
@@ -128,7 +128,7 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
             .fetchResults()
             .getTotal();
 
-    assertEquals(expectedCatColorKindCount, actualCatColorKindCount);
+    assertThat(actualCatColorKindCount).isEqualTo(expectedCatColorKindCount);
   }
 
   @Test
@@ -149,6 +149,6 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
 
     removeEntitiesForTest(Arrays.asList(tabbyColorCatFoo, tabbyColorCatBar));
 
-    assertEquals(expectedTabbyCatCount, actualTabbyCatCount);
+    assertThat(actualTabbyCatCount).isEqualTo(expectedTabbyCatCount);
   }
 }

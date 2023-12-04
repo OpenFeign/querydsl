@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -60,6 +60,6 @@ public class TemplateTest {
   }
 
   private void match(String string, Template template) {
-    assertEquals(string, template.getElements().toString());
+    assertThat(template.getElements().toString()).isEqualTo(string);
   }
 }

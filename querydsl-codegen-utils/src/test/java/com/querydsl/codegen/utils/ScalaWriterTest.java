@@ -1,7 +1,6 @@
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Parameter;
@@ -9,6 +8,7 @@ import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.codegen.utils.model.Types;
+import jakarta.validation.constraints.Max;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -18,7 +18,6 @@ import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import javax.validation.constraints.Max;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,19 +61,19 @@ public class ScalaWriterTest {
   public void Object() throws IOException {
     writer.beginObject("Test");
     writer.end();
-    assertTrue(w.toString().contains("object Test {"));
+    assertThat(w.toString()).contains("object Test {");
   }
 
   @Test
   public void Class_With_Interfaces() throws IOException {
     writer.beginClass(testType, testType2, testInterface1);
-    assertTrue(w.toString().contains("class JavaWriterTest extends Test with TestInterface1 {"));
+    assertThat(w.toString()).contains("class JavaWriterTest extends Test with TestInterface1 {");
   }
 
   @Test
   public void Interface_With_Superinterfaces() throws IOException {
     writer.beginInterface(testType, testType2, testInterface1);
-    assertTrue(w.toString().contains("trait JavaWriterTest extends Test with TestInterface1 {"));
+    assertThat(w.toString()).contains("trait JavaWriterTest extends Test with TestInterface1 {");
   }
 
   @Test
@@ -129,9 +128,9 @@ public class ScalaWriterTest {
     writer.end();
 
     System.out.println(w);
-    assertTrue(w.toString().contains("var stringArray: Array[String]"));
-    assertTrue(w.toString().contains("def main(args: Array[String])"));
-    assertTrue(w.toString().contains("def main2(args: Array[String])"));
+    assertThat(w.toString()).contains("var stringArray: Array[String]");
+    assertThat(w.toString()).contains("def main(args: Array[String])");
+    assertThat(w.toString()).contains("def main2(args: Array[String])");
   }
 
   @Test
@@ -139,7 +138,7 @@ public class ScalaWriterTest {
     writer.field(Types.BYTE_P.asArrayType(), "byteArray");
 
     System.out.println(w);
-    assertTrue(w.toString().contains("var byteArray: Array[Byte]"));
+    assertThat(w.toString()).contains("var byteArray: Array[Byte]");
   }
 
   @Test
@@ -150,7 +149,7 @@ public class ScalaWriterTest {
     writer.end();
 
     System.out.println(w);
-    assertTrue(w.toString().contains("trait MyTrait"));
+    assertThat(w.toString()).contains("trait MyTrait");
   }
 
   @Test
@@ -162,7 +161,7 @@ public class ScalaWriterTest {
     writer.end();
 
     System.out.println(w);
-    assertTrue(w.toString().contains("private val people: List[Person]"));
+    assertThat(w.toString()).contains("private val people: List[Person]");
   }
 
   @Test
@@ -255,7 +254,7 @@ public class ScalaWriterTest {
 
     writer.imports(Target.class.getPackage());
     writer.annotation(annotation);
-    assertTrue(w.toString().contains("@Target(Array(FIELD, METHOD))"));
+    assertThat(w.toString()).contains("@Target(Array(FIELD, METHOD))");
   }
 
   @Test
@@ -373,12 +372,12 @@ public class ScalaWriterTest {
         "TestType", new Parameter("a", Types.STRING), new Parameter("b", Types.STRING));
 
     System.out.println(w);
-    assertEquals("case class TestType(a: String, b: String)\n", w.toString());
+    assertThat(w.toString()).isEqualTo("case class TestType(a: String, b: String)\n");
   }
 
   @Test
   public void ClassConstants() {
-    assertEquals("classOf[SomeClass]", writer.getClassConstant("SomeClass"));
+    assertThat(writer.getClassConstant("SomeClass")).isEqualTo("classOf[SomeClass]");
   }
 
   @Test
@@ -392,7 +391,7 @@ public class ScalaWriterTest {
 
     System.out.println(w);
 
-    assertTrue(w.toString().contains("def this(a: Int) {"));
+    assertThat(w.toString()).contains("def this(a: Int) {");
   }
 
   @Test
@@ -408,7 +407,7 @@ public class ScalaWriterTest {
 
     for (String type :
         Arrays.asList("boolean", "byte", "char", "int", "long", "short", "double", "float")) {
-      assertTrue(w.toString().contains("field: " + StringUtils.capitalize(type)));
+      assertThat(w.toString()).contains("field: " + StringUtils.capitalize(type));
     }
   }
 
@@ -428,8 +427,8 @@ public class ScalaWriterTest {
 
     System.out.println(w);
 
-    assertTrue(w.toString().contains("`type`: Int"));
-    assertTrue(w.toString().contains("`class`: JavaWriterTest"));
-    assertTrue(w.toString().contains("`var`(): JavaWriterTest"));
+    assertThat(w.toString()).contains("`type`: Int");
+    assertThat(w.toString()).contains("`class`: JavaWriterTest");
+    assertThat(w.toString()).contains("`var`(): JavaWriterTest");
   }
 }

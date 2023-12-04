@@ -13,7 +13,8 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.querydsl.core.types.dsl.Coalesce;
 import com.querydsl.core.types.dsl.DslExpression;
@@ -23,7 +24,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +46,7 @@ public class SignatureTest {
 
   @Test
   public void returnType_extends_simpleExpression() {
-    assertFalse(classes.isEmpty());
+    assertThat(classes).isNotEmpty();
     Set<String> skippedMethods = new HashSet<String>(Arrays.asList("getArg", "getRoot", "not"));
     List<String> errors = new ArrayList<String>();
     for (Class<?> cl : classes) {
@@ -68,7 +68,7 @@ public class SignatureTest {
       System.err.println(error);
     }
     if (!errors.isEmpty()) {
-      Assert.fail("Got " + errors.size() + " errors");
+      fail("", "Got " + errors.size() + " errors");
     }
   }
 }

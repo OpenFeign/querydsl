@@ -13,10 +13,9 @@
  */
 package com.querydsl.maven;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import com.querydsl.codegen.GeneratedAnnotationResolver;
 import java.io.File;
@@ -52,11 +51,14 @@ public class TestMetadataExportMojoTest {
   public void execute() throws Exception {
     MavenProject project = new MavenProject();
     TestMetadataExportMojo mojo = setupMojoWith(project);
+    File target = new File("target/export4").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.execute();
 
     // 'target/export4' seems to conflict with MetadataExportMojoTest.Execute_With_TypeMappings
-    assertEquals(Collections.singletonList("target/export4"), project.getTestCompileSourceRoots());
-    assertTrue(new File("target/export4").exists());
+    assertThat(project.getTestCompileSourceRoots())
+        .isEqualTo(Collections.singletonList(target.getAbsolutePath()));
+    assertThat(target).exists();
   }
 
   @Test

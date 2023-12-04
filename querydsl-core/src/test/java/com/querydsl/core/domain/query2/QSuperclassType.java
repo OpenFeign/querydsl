@@ -10,7 +10,7 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.core.types.dsl.PathInits;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QSuperclass is a Querydsl query type for Superclass */
 @Generated("com.querydsl.codegen.EntitySerializer")

@@ -14,8 +14,8 @@
 package com.querydsl.apt.domain;
 
 import com.querydsl.core.types.dsl.StringPath;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import org.junit.Test;
 
 public class JPATest extends AbstractTest {

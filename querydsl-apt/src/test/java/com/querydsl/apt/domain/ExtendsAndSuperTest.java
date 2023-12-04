@@ -13,8 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import java.util.Collection;
@@ -55,19 +54,19 @@ public class ExtendsAndSuperTest {
   @Test
   public void validate() {
     QExtendsAndSuperTest_ExtendsAndSuper var = QExtendsAndSuperTest_ExtendsAndSuper.extendsAndSuper;
-    assertEquals(Object.class, var.extendsCol.getElementType());
-    assertEquals(CharSequence.class, var.extendsCol2.getElementType());
+    assertThat(var.extendsCol.getElementType()).isEqualTo(Object.class);
+    assertThat(var.extendsCol2.getElementType()).isEqualTo(CharSequence.class);
 
-    assertEquals(Object.class, var.superCol.getElementType());
-    assertEquals(Object.class, var.superCol2.getElementType());
+    assertThat(var.superCol.getElementType()).isEqualTo(Object.class);
+    assertThat(var.superCol2.getElementType()).isEqualTo(Object.class);
   }
 
   @Test
   public void test() {
     QExtendsAndSuperTest_ExtendsAndSuper var = QExtendsAndSuperTest_ExtendsAndSuper.extendsAndSuper;
     ExtendsAndSuper<Object> entity = new ExtendsAndSuper<Object>();
-    assertNotNull(var.eq(entity));
-    assertNotNull(var.extendsMap.containsKey(""));
-    assertNotNull(var.extendsMap2.containsValue(""));
+    assertThat(var.eq(entity)).isNotNull();
+    assertThat(var.extendsMap.containsKey("")).isNotNull();
+    assertThat(var.extendsMap2.containsValue("")).isNotNull();
   }
 }

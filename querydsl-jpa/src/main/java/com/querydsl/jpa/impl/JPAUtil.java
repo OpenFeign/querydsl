@@ -17,10 +17,10 @@ import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.dsl.Param;
 import com.querydsl.core.util.MathUtils;
+import jakarta.persistence.Parameter;
+import jakarta.persistence.Query;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.Parameter;
-import javax.persistence.Query;
 
 /**
  * JPAUtil provides static utility methods for JPA

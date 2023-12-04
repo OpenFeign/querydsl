@@ -21,7 +21,7 @@ import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimplePath;
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 /**
  * {@code JPACollectionAnyVisitor} extends the {@link CollectionAnyVisitor} class with module

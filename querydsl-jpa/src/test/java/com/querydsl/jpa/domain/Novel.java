@@ -1,6 +1,6 @@
 package com.querydsl.jpa.domain;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Entity
 public class Novel extends Book {

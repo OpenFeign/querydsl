@@ -13,13 +13,13 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
 import org.junit.Test;
 
 public class Superclass2Test {
@@ -45,11 +45,11 @@ public class Superclass2Test {
 
   @Test
   public void defaultInstance() {
-    assertNotNull(QSuperclass2Test_CommonPersistence.commonPersistence);
+    assertThat(QSuperclass2Test_CommonPersistence.commonPersistence).isNotNull();
   }
 
   @Test
   public void test() {
-    assertNotNull(QSuperclass2Test_Subtype.subtype.createdOn);
+    assertThat(QSuperclass2Test_Subtype.subtype.createdOn).isNotNull();
   }
 }

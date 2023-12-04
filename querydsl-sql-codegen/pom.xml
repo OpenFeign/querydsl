@@ -6,12 +6,9 @@
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
     <version>6.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-sql-codegen</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - SQL codegen support</name>
   <description>SQL codegen support for Querydsl</description>
 
@@ -45,12 +42,6 @@
     </dependency>
 
     <!-- test -->
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime.version}</version>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
@@ -131,8 +122,8 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -165,6 +156,11 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <version>2.0.1</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -175,6 +171,7 @@
       </plugin>
 
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptors>
@@ -187,6 +184,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
         <configuration>
           <archive>
             <manifestEntries>
@@ -204,6 +202,7 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
         <executions>
           <execution>
@@ -227,33 +226,6 @@
         </configuration>
       </plugin>
 
-      <!-- 
-      <plugin>
-        <groupId>io.github.openfeign.querydsl</groupId>
-        <artifactId>querydsl-maven-plugin</artifactId>
-        <version>${project.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-export</goal>
-            </goals>
-          </execution>            
-        </executions>
-        <configuration>
-          <jdbcDriver>org.apache.derby.jdbc.EmbeddedDriver</jdbcDriver>
-          <jdbcUrl>jdbc:derby:target/demoDB;create=true</jdbcUrl>
-          <packageName>com.querydsl.sql.domain2</packageName>
-          <targetFolder>target/generated-test-sources/java</targetFolder>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>${derby.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-       -->
     </plugins>
   </build>
 

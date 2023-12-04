@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.util.BeanMap;
@@ -28,8 +28,8 @@ public class PathBuilderTest {
   public void getEnum() {
     PathBuilder<User> entityPath = new PathBuilder<User>(User.class, "entity");
     EnumPath<Gender> enumPath = entityPath.getEnum("gender", Gender.class);
-    assertNotNull(enumPath.ordinal());
-    assertEquals(enumPath, entityPath.get(enumPath));
+    assertThat(enumPath.ordinal()).isNotNull();
+    assertThat(entityPath.get(enumPath)).isEqualTo(enumPath);
   }
 
   @Test
@@ -38,16 +38,16 @@ public class PathBuilderTest {
     user.setFirstName("firstName");
     user.setLastName("lastName");
     String byExample = getByExample(user).toString();
-    assertTrue(byExample.contains("entity.lastName = lastName"));
-    assertTrue(byExample.contains("entity.firstName = firstName"));
+    assertThat(byExample).contains("entity.lastName = lastName");
+    assertThat(byExample).contains("entity.firstName = firstName");
   }
 
   @Test
   public void getArray() {
     PathBuilder<User> entityPath = new PathBuilder<User>(User.class, "entity");
     ArrayPath<String[], String> array = entityPath.getArray("array", String[].class);
-    assertEquals(String[].class, array.getType());
-    assertEquals(String.class, array.getElementType());
+    assertThat(array.getType()).isEqualTo(String[].class);
+    assertThat(array.getElementType()).isEqualTo(String.class);
   }
 
   @Test
@@ -86,11 +86,11 @@ public class PathBuilderTest {
     StringPath strPath = new StringPath("str");
     BooleanPath booleanPath = new BooleanPath("boolean");
 
-    assertEquals("entity.int", entity.get(intPath).toString());
-    assertEquals("entity.str", entity.get(strPath).toString());
-    assertEquals("entity.boolean", entity.get(booleanPath).toString());
+    assertThat(entity.get(intPath).toString()).isEqualTo("entity.int");
+    assertThat(entity.get(strPath).toString()).isEqualTo("entity.str");
+    assertThat(entity.get(booleanPath).toString()).isEqualTo("entity.boolean");
 
-    assertEquals("entity.int", entity.get(entity.get(intPath)).toString());
+    assertThat(entity.get(entity.get(intPath)).toString()).isEqualTo("entity.int");
   }
 
   @Test
@@ -114,9 +114,9 @@ public class PathBuilderTest {
   public void calling_get_with_the_same_name_and_different_types_returns_correct_type() {
     PathBuilder<User> entity = new PathBuilder<User>(User.class, "entity");
     String pathName = "some_path";
-    assertEquals(Object.class, entity.get(pathName).getType());
-    assertEquals(Integer.class, entity.get(pathName, Integer.class).getType());
-    assertEquals(User.class, entity.get(pathName, User.class).getType());
+    assertThat(entity.get(pathName).getType()).isEqualTo(Object.class);
+    assertThat(entity.get(pathName, Integer.class).getType()).isEqualTo(Integer.class);
+    assertThat(entity.get(pathName, User.class).getType()).isEqualTo(User.class);
   }
 
   @Test
@@ -125,8 +125,8 @@ public class PathBuilderTest {
     PathBuilder<User> entity =
         new PathBuilder<User>(User.class, "entity", PathBuilderValidator.FIELDS);
     String pathName = "username";
-    assertEquals(String.class, entity.get(pathName).getType());
-    assertEquals(String.class, entity.get(pathName, Comparable.class).getType());
-    assertEquals(String.class, entity.get(pathName, Object.class).getType());
+    assertThat(entity.get(pathName).getType()).isEqualTo(String.class);
+    assertThat(entity.get(pathName, Comparable.class).getType()).isEqualTo(String.class);
+    assertThat(entity.get(pathName, Object.class).getType()).isEqualTo(String.class);
   }
 }

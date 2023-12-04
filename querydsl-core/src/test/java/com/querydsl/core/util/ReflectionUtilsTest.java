@@ -13,8 +13,7 @@
  */
 package com.querydsl.core.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.SimpleExpression;
@@ -33,14 +32,14 @@ public class ReflectionUtilsTest {
   public void getAnnotatedElement() {
     AnnotatedElement annotatedElement =
         ReflectionUtils.getAnnotatedElement(ReflectionUtilsTest.class, "property", String.class);
-    assertNotNull(annotatedElement);
+    assertThat(annotatedElement).isNotNull();
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void getImplementedInterfaces() {
     Set<Class<?>> ifaces = ReflectionUtils.getImplementedInterfaces(SimpleExpression.class);
-    assertEquals(
-        new HashSet<Class<?>>(Arrays.asList(Serializable.class, Expression.class)), ifaces);
+    assertThat(ifaces)
+        .isEqualTo(new HashSet<Class<?>>(Arrays.asList(Serializable.class, Expression.class)));
   }
 }

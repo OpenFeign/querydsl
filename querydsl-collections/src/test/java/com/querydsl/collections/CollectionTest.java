@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,81 +45,86 @@ public class CollectionTest {
 
   @Test
   public void join() {
-    assertEquals(
-        "4",
-        CollQueryFactory.from(cat, cats)
-            .innerJoin(cat.kittens, other)
-            .where(other.name.eq("4"))
-            .select(cat.name)
-            .fetchFirst());
+    assertThat(
+            CollQueryFactory.from(cat, cats)
+                .innerJoin(cat.kittens, other)
+                .where(other.name.eq("4"))
+                .select(cat.name)
+                .fetchFirst())
+        .isEqualTo("4");
   }
 
   @Test
   public void join_from_two_sources() {
     QCat catKittens = new QCat("cat_kittens");
     QCat otherKittens = new QCat("other_kittens");
-    assertEquals(
-        30,
-        CollQueryFactory.from(cat, cats)
-            .from(other, cats)
-            .innerJoin(cat.kittens, catKittens)
-            .innerJoin(other.kittens, otherKittens)
-            .where(catKittens.eq(otherKittens))
-            .fetchCount());
+    assertThat(
+            CollQueryFactory.from(cat, cats)
+                .from(other, cats)
+                .innerJoin(cat.kittens, catKittens)
+                .innerJoin(other.kittens, otherKittens)
+                .where(catKittens.eq(otherKittens))
+                .fetchCount())
+        .isEqualTo(30);
   }
 
   @Test
   public void any_uniqueResult() {
-    assertEquals(
-        "4",
-        CollQueryFactory.from(cat, cats)
-            .where(cat.kittens.any().name.eq("4"))
-            .select(cat.name)
-            .fetchOne());
+    assertThat(
+            CollQueryFactory.from(cat, cats)
+                .where(cat.kittens.any().name.eq("4"))
+                .select(cat.name)
+                .fetchOne())
+        .isEqualTo("4");
   }
 
   @Test
   public void any_count() {
-    assertEquals(
-        4, CollQueryFactory.from(cat, cats).where(cat.kittens.any().name.isNotNull()).fetchCount());
+    assertThat(
+            CollQueryFactory.from(cat, cats).where(cat.kittens.any().name.isNotNull()).fetchCount())
+        .isEqualTo(4);
   }
 
   @Test
   public void any_two_levels() {
-    assertEquals(
-        4,
-        CollQueryFactory.from(cat, cats)
-            .where(cat.kittens.any().kittens.any().isNotNull())
-            .fetchCount());
+    assertThat(
+            CollQueryFactory.from(cat, cats)
+                .where(cat.kittens.any().kittens.any().isNotNull())
+                .fetchCount())
+        .isEqualTo(4);
   }
 
   @Test
   public void any_two_levels2() {
-    assertEquals(
-        4,
-        CollQueryFactory.from(cat, cats)
-            .where(cat.kittens.any().name.isNotNull(), cat.kittens.any().kittens.any().isNotNull())
-            .fetchCount());
+    assertThat(
+            CollQueryFactory.from(cat, cats)
+                .where(
+                    cat.kittens.any().name.isNotNull(), cat.kittens.any().kittens.any().isNotNull())
+                .fetchCount())
+        .isEqualTo(4);
   }
 
   @Test
   public void any_from_two_sources() {
-    assertEquals(
-        16,
-        CollQueryFactory.from(cat, cats)
-            .from(other, cats)
-            .where(cat.kittens.any().name.eq(other.kittens.any().name))
-            .fetchCount());
+    assertThat(
+            CollQueryFactory.from(cat, cats)
+                .from(other, cats)
+                .where(cat.kittens.any().name.eq(other.kittens.any().name))
+                .fetchCount())
+        .isEqualTo(16);
   }
 
   @Test
   public void list_size() {
-    assertEquals(4, CollQueryFactory.from(cat, cats).where(cat.kittens.size().gt(0)).fetchCount());
-    assertEquals(2, CollQueryFactory.from(cat, cats).where(cat.kittens.size().gt(2)).fetchCount());
+    assertThat(CollQueryFactory.from(cat, cats).where(cat.kittens.size().gt(0)).fetchCount())
+        .isEqualTo(4);
+    assertThat(CollQueryFactory.from(cat, cats).where(cat.kittens.size().gt(2)).fetchCount())
+        .isEqualTo(2);
   }
 
   @Test
   public void list_is_empty() {
-    assertEquals(0, CollQueryFactory.from(cat, cats).where(cat.kittens.isEmpty()).fetchCount());
+    assertThat(CollQueryFactory.from(cat, cats).where(cat.kittens.isEmpty()).fetchCount())
+        .isEqualTo(0);
   }
 }

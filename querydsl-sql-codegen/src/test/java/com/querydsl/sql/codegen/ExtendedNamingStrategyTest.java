@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.codegen;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.utils.model.Types;
@@ -35,67 +35,67 @@ public class ExtendedNamingStrategyTest {
 
   @Test
   public void getClassName() {
-    assertEquals("UserData", namingStrategy.getClassName("user_data"));
-    assertEquals("U", namingStrategy.getClassName("u"));
-    assertEquals("Us", namingStrategy.getClassName("us"));
-    assertEquals("U_", namingStrategy.getClassName("u_"));
-    assertEquals("Us_", namingStrategy.getClassName("us_"));
+    assertThat(namingStrategy.getClassName("user_data")).isEqualTo("UserData");
+    assertThat(namingStrategy.getClassName("u")).isEqualTo("U");
+    assertThat(namingStrategy.getClassName("us")).isEqualTo("Us");
+    assertThat(namingStrategy.getClassName("u_")).isEqualTo("U_");
+    assertThat(namingStrategy.getClassName("us_")).isEqualTo("Us_");
   }
 
   @Test
   public void getPropertyName() {
-    assertEquals("whileCol", namingStrategy.getPropertyName("while", entityModel));
-    assertEquals("name", namingStrategy.getPropertyName("name", entityModel));
-    assertEquals("userId", namingStrategy.getPropertyName("user_id", entityModel));
-    assertEquals("accountEventId", namingStrategy.getPropertyName("accountEvent_id", entityModel));
+    assertThat(namingStrategy.getPropertyName("while", entityModel)).isEqualTo("whileCol");
+    assertThat(namingStrategy.getPropertyName("name", entityModel)).isEqualTo("name");
+    assertThat(namingStrategy.getPropertyName("user_id", entityModel)).isEqualTo("userId");
+    assertThat(namingStrategy.getPropertyName("accountEvent_id", entityModel))
+        .isEqualTo("accountEventId");
 
-    assertEquals("_123abc", namingStrategy.getPropertyName("123abc", entityModel));
-    assertEquals("_123Abc", namingStrategy.getPropertyName("123 abc", entityModel));
+    assertThat(namingStrategy.getPropertyName("123abc", entityModel)).isEqualTo("_123abc");
+    assertThat(namingStrategy.getPropertyName("123 abc", entityModel)).isEqualTo("_123Abc");
   }
 
   @Test
   public void getPropertyName_for_column_with_spaces() {
-    assertEquals("userId", namingStrategy.getPropertyName("user id", entityModel));
+    assertThat(namingStrategy.getPropertyName("user id", entityModel)).isEqualTo("userId");
   }
 
   @Test
   public void getPropertyNameForInverseForeignKey() {
-    assertEquals(
-        "_superiorFk",
-        namingStrategy.getPropertyNameForInverseForeignKey("fk_superior", entityModel));
+    assertThat(namingStrategy.getPropertyNameForInverseForeignKey("fk_superior", entityModel))
+        .isEqualTo("_superiorFk");
     // fk_order_rows
-    assertEquals(
-        "rows", namingStrategy.getPropertyNameForInverseForeignKey("fk_order_rows", entityModel));
+    assertThat(namingStrategy.getPropertyNameForInverseForeignKey("fk_order_rows", entityModel))
+        .isEqualTo("rows");
     // fk_category_events
-    assertEquals(
-        "events",
-        namingStrategy.getPropertyNameForInverseForeignKey("fk_category_events", entityModel));
+    assertThat(
+            namingStrategy.getPropertyNameForInverseForeignKey("fk_category_events", entityModel))
+        .isEqualTo("events");
   }
 
   @Test
   public void getPropertyNameForForeignKey() {
-    assertEquals(
-        "superiorFk", namingStrategy.getPropertyNameForForeignKey("fk_superior", entityModel));
-    assertEquals(
-        "superiorFk", namingStrategy.getPropertyNameForForeignKey("FK_SUPERIOR", entityModel));
+    assertThat(namingStrategy.getPropertyNameForForeignKey("fk_superior", entityModel))
+        .isEqualTo("superiorFk");
+    assertThat(namingStrategy.getPropertyNameForForeignKey("FK_SUPERIOR", entityModel))
+        .isEqualTo("superiorFk");
     // fk_order_rows
-    assertEquals(
-        "order", namingStrategy.getPropertyNameForForeignKey("fk_order_rows", entityModel));
+    assertThat(namingStrategy.getPropertyNameForForeignKey("fk_order_rows", entityModel))
+        .isEqualTo("order");
     // fk_category_events
-    assertEquals(
-        "category", namingStrategy.getPropertyNameForForeignKey("fk_category_events", entityModel));
+    assertThat(namingStrategy.getPropertyNameForForeignKey("fk_category_events", entityModel))
+        .isEqualTo("category");
   }
 
   @Test
   public void getPropertyNameForPrimaryKey() {
-    assertEquals(
-        "superiorPk", namingStrategy.getPropertyNameForPrimaryKey("pk_superior", entityModel));
-    assertEquals(
-        "superiorPk", namingStrategy.getPropertyNameForPrimaryKey("PK_SUPERIOR", entityModel));
+    assertThat(namingStrategy.getPropertyNameForPrimaryKey("pk_superior", entityModel))
+        .isEqualTo("superiorPk");
+    assertThat(namingStrategy.getPropertyNameForPrimaryKey("PK_SUPERIOR", entityModel))
+        .isEqualTo("superiorPk");
   }
 
   @Test
   public void getDefaultVariableName() {
-    assertEquals("object", namingStrategy.getDefaultVariableName(entityModel));
+    assertThat(namingStrategy.getDefaultVariableName(entityModel)).isEqualTo("object");
   }
 }

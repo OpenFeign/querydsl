@@ -6,10 +6,10 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.sql.ColumnMetadata;
+import jakarta.annotation.Generated;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import javax.annotation.Generated;
 
 /** SSimpletypes is a Querydsl query type for SSimpletypes */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

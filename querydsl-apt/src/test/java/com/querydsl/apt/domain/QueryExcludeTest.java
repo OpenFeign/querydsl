@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryExclude;
@@ -31,6 +31,6 @@ public class QueryExcludeTest {
 
   @Test
   public void subEntity() {
-    assertEquals(EntityPathBase.class, QQueryExcludeTest_SubEntity.class.getSuperclass());
+    assertThat(QQueryExcludeTest_SubEntity.class.getSuperclass()).isEqualTo(EntityPathBase.class);
   }
 }

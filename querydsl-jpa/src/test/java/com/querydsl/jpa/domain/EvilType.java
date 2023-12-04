@@ -13,12 +13,18 @@
  */
 package com.querydsl.jpa.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 /** The Class EvilType. */
 @Entity
 @Table(name = "eviltype_")
 public class EvilType {
+
   @ManyToOne
   @JoinColumn(name = "_asc")
   EvilType asc;
@@ -29,6 +35,8 @@ public class EvilType {
 
   @Id int id;
 
-  @ManyToOne EvilType isnull, isnotnull, get, getType, getMetadata;
-  @ManyToOne EvilType toString, hashCode, getClass, notify, notifyAll, wait;
+  @ManyToOne(fetch = FetchType.LAZY)
+  EvilType isnull, isnotnull, get, getType, getMetadata;
+  @ManyToOne(fetch = FetchType.LAZY)
+  EvilType toString, hashCode, getClass, notify, notifyAll, wait;
 }

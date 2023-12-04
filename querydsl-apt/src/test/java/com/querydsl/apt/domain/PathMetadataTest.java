@@ -13,8 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.StringExpression;
@@ -29,10 +28,10 @@ public class PathMetadataTest {
 
   @Before
   public void setUp() {
-    assertNotNull(QAnimalTest_Animal.animal);
-    assertNotNull(QAnimalTest_Cat.cat);
-    assertNotNull(QConstructorTest_Category.category);
-    assertNotNull(QSimpleTypesTest_SimpleTypes.simpleTypes);
+    assertThat(QAnimalTest_Animal.animal).isNotNull();
+    assertThat(QAnimalTest_Cat.cat).isNotNull();
+    assertThat(QConstructorTest_Category.category).isNotNull();
+    assertThat(QSimpleTypesTest_SimpleTypes.simpleTypes).isNotNull();
   }
 
   @SuppressWarnings("unchecked")
@@ -44,16 +43,16 @@ public class PathMetadataTest {
     System.out.println(cache.size() + " entries in ConstantImpl string cache");
 
     // numbers
-    assertTrue(cache.containsKey("0"));
-    assertTrue(cache.containsKey("10"));
+    assertThat(cache).containsKey("0");
+    assertThat(cache).containsKey("10");
 
     // variables
-    assertTrue(cache.containsKey("animal"));
-    assertTrue(cache.containsKey("cat"));
-    assertTrue(cache.containsKey("category"));
-    assertTrue(cache.containsKey("simpleTypes"));
+    assertThat(cache).containsKey("animal");
+    assertThat(cache).containsKey("cat");
+    assertThat(cache).containsKey("category");
+    assertThat(cache).containsKey("simpleTypes");
 
     // properties
-    assertTrue(cache.containsKey("mate"));
+    assertThat(cache).containsKey("mate");
   }
 }

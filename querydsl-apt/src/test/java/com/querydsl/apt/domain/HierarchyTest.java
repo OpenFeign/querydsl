@@ -13,12 +13,12 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import org.junit.Test;
 
 public class HierarchyTest {
@@ -64,6 +64,6 @@ public class HierarchyTest {
   @Test
   public void test() {
     QHierarchyTest_B2 qb2 = QHierarchyTest_A2.a2.b;
-    assertNotNull(qb2);
+    assertThat(qb2).isNotNull();
   }
 }

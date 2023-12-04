@@ -6,31 +6,21 @@
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
     <version>6.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-hibernate-search</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - Hibernate Search support</name>
   <description>Hibernate Search support for querydsl</description>
 
   <properties>
-    <hibernate.version>5.6.15.Final</hibernate.version>
+    <hibernate.version>6.3.1.Final</hibernate.version>
     <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
-    <hibernate.search.version>5.11.12.Final</hibernate.search.version>
+    <hibernate.search.version>6.2.2.Final</hibernate.search.version>
     <lucene.version>5.5.5</lucene.version>
     <osgi.import.package>org.apache.lucene.*;version="[3.6,4)",
-      org.hibernate.*;version="[4,5)",
-      ${osgi.import.package.root}</osgi.import.package>
+            org.hibernate.*;version="[4,5)",
+            ${osgi.import.package.root}</osgi.import.package>
   </properties>
-  <url>${project.homepage}</url>
-
-  <scm>
-    <url>${project.githubpage}</url>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-  </scm>
 
   <dependencyManagement>
     <dependencies>
@@ -42,7 +32,7 @@
       <dependency>
         <groupId>org.hibernate.common</groupId>
         <artifactId>hibernate-commons-annotations</artifactId>
-        <version>5.1.2.Final</version>
+        <version>6.0.6.Final</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -56,7 +46,7 @@
 
     <!-- backend dependencies -->
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
       <version>${hibernate.version}</version>
       <scope>provided</scope>
@@ -91,7 +81,7 @@
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
-      <version>2.2.3</version>
+      <version>3.1.0</version>
       <scope>provided</scope>
     </dependency>
 
@@ -102,8 +92,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-search-orm</artifactId>
+      <groupId>org.hibernate.search</groupId>
+      <artifactId>hibernate-search-mapper-orm-orm6</artifactId>
       <version>${hibernate.search.version}</version>
       <scope>provided</scope>
       <exclusions>
@@ -112,7 +102,7 @@
           <artifactId>hsqldb</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.hibernate</groupId>
+          <groupId>org.hibernate.orm</groupId>
           <artifactId>hibernate-core</artifactId>
         </exclusion>
         <exclusion>
@@ -158,8 +148,8 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -169,6 +159,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
         <configuration>
           <archive>
             <manifestEntries>

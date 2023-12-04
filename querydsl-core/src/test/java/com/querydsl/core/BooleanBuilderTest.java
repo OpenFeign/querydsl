@@ -13,7 +13,7 @@
  */
 package com.querydsl.core;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Templates;
@@ -31,42 +31,42 @@ public class BooleanBuilderTest {
 
   @Test
   public void null_in_constructor() {
-    assertNull(new BooleanBuilder(null).getValue());
+    assertThat(new BooleanBuilder(null).getValue()).isNull();
   }
 
   @Test
   public void and_empty() {
     BooleanBuilder builder = new BooleanBuilder();
     builder.and(new BooleanBuilder());
-    assertNull(ExpressionUtils.extract(builder));
+    assertThat(ExpressionUtils.extract(builder)).isNull();
   }
 
   @Test
   public void and_any_of() {
     BooleanBuilder builder = new BooleanBuilder();
     builder.andAnyOf(first, null);
-    assertEquals(first, builder.getValue());
+    assertThat(builder.getValue()).isEqualTo(first);
   }
 
   @Test
   public void and_any_of2() {
     BooleanBuilder builder = new BooleanBuilder();
     builder.andAnyOf(null, first);
-    assertEquals(first, builder.getValue());
+    assertThat(builder.getValue()).isEqualTo(first);
   }
 
   @Test
   public void or_all_of() {
     BooleanBuilder builder = new BooleanBuilder();
     builder.orAllOf(first, null);
-    assertEquals(first, builder.getValue());
+    assertThat(builder.getValue()).isEqualTo(first);
   }
 
   @Test
   public void or_all_of2() {
     BooleanBuilder builder = new BooleanBuilder();
     builder.orAllOf(null, first);
-    assertEquals(first, builder.getValue());
+    assertThat(builder.getValue()).isEqualTo(first);
   }
 
   @Test(expected = QueryException.class)
@@ -78,8 +78,8 @@ public class BooleanBuilderTest {
   @Test
   public void basic() {
     //        new BooleanBuilder().and(first).or(second);
-    assertEquals(
-        first.or(second).toString(), new BooleanBuilder().and(first).or(second).toString());
+    assertThat(new BooleanBuilder().and(first).or(second).toString())
+        .isEqualTo(first.or(second).toString());
   }
 
   @Test
@@ -87,7 +87,7 @@ public class BooleanBuilderTest {
     BooleanBuilder builder = new BooleanBuilder();
     builder.andAnyOf(first, second, first);
     builder.orAllOf(first, second, first);
-    assertEquals("true || false || true || true && false && true", builder.toString());
+    assertThat(builder.toString()).isEqualTo("true || false || true || true && false && true");
   }
 
   @Test
@@ -96,67 +96,68 @@ public class BooleanBuilderTest {
     builder.and(null);
     builder.or(null);
     builder.and(second);
-    assertEquals(second, builder.getValue());
+    assertThat(builder.getValue()).isEqualTo(second);
   }
 
   @Test
   public void and_null_supported() {
-    assertEquals(first, first.and(null));
+    assertThat(first.and(null)).isEqualTo(first);
   }
 
   @Test
   public void or_null_supported() {
-    assertEquals(first, first.or(null));
+    assertThat(first.or(null)).isEqualTo(first);
   }
 
   @Test
   public void and_not() {
     BooleanBuilder builder = new BooleanBuilder();
     builder.and(first).andNot(second);
-    assertEquals(first.and(second.not()), builder.getValue());
+    assertThat(builder.getValue()).isEqualTo(first.and(second.not()));
   }
 
   @Test
   public void or_not() {
     BooleanBuilder builder = new BooleanBuilder();
     builder.and(first).orNot(second);
-    assertEquals(first.or(second.not()), builder.getValue());
+    assertThat(builder.getValue()).isEqualTo(first.or(second.not()));
   }
 
   @Test
   public void not() {
     BooleanBuilder builder = new BooleanBuilder();
     builder.and(first).not();
-    assertEquals(first.not(), builder.getValue());
+    assertThat(builder.getValue()).isEqualTo(first.not());
   }
 
   @Test
   public void booleanBuilder_equals_booleanBuilder() {
-    assertEquals(new BooleanBuilder(first), new BooleanBuilder(first));
+    assertThat(new BooleanBuilder(first)).isEqualTo(new BooleanBuilder(first));
   }
 
   @Test
   public void constant_equals_booleanBuilder() {
-    assertFalse(first.equals(new BooleanBuilder(first)));
+    assertThat(first.equals(new BooleanBuilder(first))).isFalse();
   }
 
   @Test
   public void booleanBuilder_equals_constant() {
-    assertFalse(new BooleanBuilder(first).equals(first));
+    assertThat(new BooleanBuilder(first).equals(first)).isFalse();
   }
 
   @Test
   public void hashCode_() {
-    assertEquals(new BooleanBuilder(first).hashCode(), new BooleanBuilder(first).hashCode());
-    assertEquals(new BooleanBuilder().hashCode(), new BooleanBuilder().hashCode());
+    assertThat(new BooleanBuilder(first).hashCode())
+        .isEqualTo(new BooleanBuilder(first).hashCode());
+    assertThat(new BooleanBuilder().hashCode()).isEqualTo(new BooleanBuilder().hashCode());
   }
 
   @Test
   public void toString_() {
     BooleanBuilder builder = new BooleanBuilder().and(first);
-    assertEquals("true", builder.toString());
+    assertThat(builder.toString()).isEqualTo("true");
     builder.or(Expressions.booleanPath("condition"));
-    assertEquals("true || condition", builder.toString());
+    assertThat(builder.toString()).isEqualTo("true || condition");
   }
 
   //    @Test
@@ -176,6 +177,7 @@ public class BooleanBuilderTest {
     BooleanBuilder builder = new BooleanBuilder();
     builder.and(first);
     builder.or(Expressions.booleanPath("condition"));
-    assertEquals("true || condition", builder.accept(ToStringVisitor.DEFAULT, Templates.DEFAULT));
+    assertThat(builder.accept(ToStringVisitor.DEFAULT, Templates.DEFAULT))
+        .isEqualTo("true || condition");
   }
 }

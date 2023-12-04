@@ -20,9 +20,9 @@ import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
 
 /**
  * @author tiwe

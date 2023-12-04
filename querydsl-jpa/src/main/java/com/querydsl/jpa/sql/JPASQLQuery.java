@@ -19,7 +19,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.QueryHandler;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  * {@code JPASQLQuery} is an SQLQuery implementation that uses JPA Native SQL functionality to

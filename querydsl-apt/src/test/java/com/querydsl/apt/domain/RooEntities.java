@@ -1,7 +1,7 @@
 package com.querydsl.apt.domain;
 
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.jpa.entity.RooJpaEntity;
 

@@ -15,7 +15,7 @@ package com.querydsl.maven;
 
 import com.querydsl.codegen.GenericExporter;
 import com.querydsl.codegen.PropertyHandling;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * {@code JPAExporterMojo} calls {@link GenericExporter} using the classpath of the module

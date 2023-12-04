@@ -15,7 +15,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
 import static com.querydsl.sql.SQLExpressions.union;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;

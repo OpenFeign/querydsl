@@ -14,7 +14,7 @@
 package com.querydsl.jpa;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.SubQueryExpression;
@@ -56,11 +56,11 @@ public class RelationalFunctionCallTest {
     Configuration conf = new Configuration(new SQLServerTemplates());
     SQLSerializer serializer = new NativeSQLSerializer(conf, true);
     serializer.serialize(expr.getMetadata(), false);
-    assertEquals(
-        "select SURVEY.NAME\n"
-            + "from SURVEY SURVEY\n"
-            + "join TableValuedFunction(?1) as tokFunc\n"
-            + "on not (SURVEY.NAME like tokFunc.prop escape '\\')",
-        serializer.toString());
+    assertThat(serializer.toString())
+        .isEqualTo(
+            "select SURVEY.NAME\n"
+                + "from SURVEY SURVEY\n"
+                + "join TableValuedFunction(?1) as tokFunc\n"
+                + "on not (SURVEY.NAME like tokFunc.prop escape '\\')");
   }
 }

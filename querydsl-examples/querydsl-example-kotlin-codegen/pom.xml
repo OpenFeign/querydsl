@@ -9,15 +9,10 @@
   <artifactId>querydsl-example-kotlin-codegen</artifactId>
   <name>Querydsl example - Kotlin Codegen</name>
 
-  <properties>
-    <kotlin.version>1.9.20</kotlin.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
-      <version>2.2.3</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -32,7 +27,7 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit</artifactId>
+      <artifactId>kotlin-test-junit5</artifactId>
       <version>${kotlin.version}</version>
       <scope>test</scope>
     </dependency>

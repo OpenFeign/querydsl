@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -21,6 +21,6 @@ public class PersonTest {
 
   @Test
   public void test() {
-    assertNotNull(QPerson.person2.person);
+    assertThat(QPerson.person2.person).isNotNull();
   }
 }

@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa.domain2;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Child {

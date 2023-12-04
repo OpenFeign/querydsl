@@ -13,8 +13,9 @@
  */
 package com.querydsl.jpa.testutil;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.querydsl.core.Target;
 import com.querydsl.jpa.HibernateTest;
 import com.querydsl.jpa.Mode;
 import com.querydsl.jpa.domain.Domain;
@@ -54,11 +55,12 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
 
   @Override
   protected List<MethodRule> rules(Object test) {
-    assertTrue(
-        String.format(
-            "In order to use the %s for %s, it should (directly or indirectly) implement %s",
-            HibernateTestRunner.class.getSimpleName(), test.getClass(), HibernateTest.class),
-        test instanceof HibernateTest);
+    assertThat(test instanceof HibernateTest)
+        .as(
+            String.format(
+                "In order to use the %s for %s, it should (directly or indirectly) implement %s",
+                HibernateTestRunner.class.getSimpleName(), test.getClass(), HibernateTest.class))
+        .isTrue();
 
     List<MethodRule> rules = super.rules(test);
     rules.add(
@@ -94,6 +96,9 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
   }
 
   private void start() throws Exception {
+    Mode.mode.set("hsqldb");
+    Mode.target.set(Target.HSQLDB);
+
     Configuration cfg = new Configuration();
     for (Class<?> cl : Domain.classes) {
       cfg.addAnnotatedClass(cl);
@@ -128,7 +133,7 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
     }
 
     if (sessionFactory != null) {
-      sessionFactory.getCache().evictEntityRegions();
+      sessionFactory.getCache().evictAll();
       sessionFactory.close();
       sessionFactory = null;
     }

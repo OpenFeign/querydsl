@@ -15,8 +15,9 @@ package com.querydsl.sql;
 
 import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
-import org.joda.time.LocalDate;
 
 public final class Constants {
 
@@ -35,8 +36,8 @@ public final class Constants {
   public static final QSurvey survey2 = new QSurvey("s2");
 
   static {
-    LocalDate localDate = new LocalDate(2000, 2, 10);
-    date = new java.sql.Date(localDate.toDateMidnight().getMillis());
+    LocalDate localDate = LocalDate.of(2000, 2, 10);
+    date = new java.sql.Date(localDate.atStartOfDay(ZoneId.of("Z")).toInstant().toEpochMilli());
 
     Calendar cal = Calendar.getInstance();
     cal.set(1970, 0, 1, 3, 4);

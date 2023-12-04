@@ -13,8 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import java.io.Serializable;
@@ -51,30 +50,28 @@ public class AbstractProperties2Test {
 
   @Test
   public void genericEntity_id_is_available() {
-    assertNotNull(QAbstractProperties2Test_GenericEntity.genericEntity.id);
+    assertThat(QAbstractProperties2Test_GenericEntity.genericEntity.id).isNotNull();
   }
 
   @Test
   public void abstractEntity_is_available() {
-    assertNotNull(QAbstractProperties2Test_AbstractEntity.abstractEntity.id);
+    assertThat(QAbstractProperties2Test_AbstractEntity.abstractEntity.id).isNotNull();
   }
 
   @Test
   public void abstractEntity_super_is_available() {
-    assertEquals(
-        QAbstractProperties2Test_GenericEntity.class,
-        QAbstractProperties2Test_AbstractEntity.abstractEntity._super.getClass());
+    assertThat(QAbstractProperties2Test_AbstractEntity.abstractEntity._super.getClass())
+        .isEqualTo(QAbstractProperties2Test_GenericEntity.class);
   }
 
   @Test
   public void user_is_available() {
-    assertNotNull(QAbstractProperties2Test_User.user.id);
+    assertThat(QAbstractProperties2Test_User.user.id).isNotNull();
   }
 
   @Test
   public void user_super_is_available() {
-    assertEquals(
-        QAbstractProperties2Test_AbstractEntity.class,
-        QAbstractProperties2Test_User.user._super.getClass());
+    assertThat(QAbstractProperties2Test_User.user._super.getClass())
+        .isEqualTo(QAbstractProperties2Test_AbstractEntity.class);
   }
 }

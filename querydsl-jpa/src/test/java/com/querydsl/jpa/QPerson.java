@@ -6,7 +6,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.StringPath;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QPerson is a Querydsl query type for Person */
 @Generated("com.querydsl.codegen.EntitySerializer")

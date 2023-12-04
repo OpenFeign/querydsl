@@ -1,14 +1,14 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.annotations.QueryType;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.junit.Test;
 
@@ -182,7 +182,7 @@ public class QueryInit6Test {
 
   @Test
   public void test() {
-    assertNotNull(QQueryInit6Test_Content.content.container.packaging);
-    assertNotNull(QQueryInit6Test_Content.content.container.packaging.id);
+    assertThat(QQueryInit6Test_Content.content.container.packaging).isNotNull();
+    assertThat(QQueryInit6Test_Content.content.container.packaging.id).isNotNull();
   }
 }

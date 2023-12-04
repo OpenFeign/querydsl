@@ -13,9 +13,12 @@
  */
 package com.querydsl.jpa.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.List;
-import javax.persistence.*;
-import org.batoo.jpa.annotations.Index;
 
 /** The Class Department. */
 @Entity
@@ -23,9 +26,7 @@ import org.batoo.jpa.annotations.Index;
 public class Department {
   @ManyToOne Company company;
 
-  @OneToMany
-  @Index(name = "_index")
-  List<Employee> employees;
+  @OneToMany List<Employee> employees;
 
   @Id int id;
 

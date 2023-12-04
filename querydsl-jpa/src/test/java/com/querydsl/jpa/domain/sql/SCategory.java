@@ -8,7 +8,7 @@ import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** SCategory is a Querydsl query type for SCategory */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

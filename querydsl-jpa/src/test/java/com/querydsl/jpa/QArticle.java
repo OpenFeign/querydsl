@@ -7,7 +7,7 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.PathInits;
 import com.querydsl.core.types.dsl.StringPath;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QArticle is a Querydsl query type for Article */
 @Generated("com.querydsl.codegen.EntitySerializer")

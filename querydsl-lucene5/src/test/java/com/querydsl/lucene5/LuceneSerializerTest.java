@@ -13,8 +13,8 @@
  */
 package com.querydsl.lucene5;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.DefaultQueryMetadata;
@@ -161,15 +161,15 @@ public class LuceneSerializerTest {
   private void testQuery(Expression<?> expr, int expectedHits) throws Exception {
     Query query = serializer.toQuery(expr, metadata);
     TopDocs docs = searcher.search(query, 100);
-    assertEquals(expectedHits, docs.totalHits);
+    assertThat(docs.totalHits).isEqualTo(expectedHits);
   }
 
   private void testQuery(Expression<?> expr, String expectedQuery, int expectedHits)
       throws Exception {
     Query query = serializer.toQuery(expr, metadata);
     TopDocs docs = searcher.search(query, 100);
-    assertEquals(expectedHits, docs.totalHits);
-    assertEquals(expectedQuery, query.toString());
+    assertThat(docs.totalHits).isEqualTo(expectedHits);
+    assertThat(query.toString()).isEqualTo(expectedQuery);
   }
 
   @Test

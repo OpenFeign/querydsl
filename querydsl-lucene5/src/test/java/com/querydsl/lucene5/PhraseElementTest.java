@@ -13,8 +13,7 @@
  */
 package com.querydsl.lucene5;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
@@ -29,11 +28,10 @@ public class PhraseElementTest {
     StringPath title = Expressions.stringPath("title");
     LuceneSerializer serializer = new LuceneSerializer(false, false);
     QueryMetadata metadata = new DefaultQueryMetadata();
-    assertEquals(
-        "title:Hello World", serializer.toQuery(title.eq("Hello World"), metadata).toString());
-    assertEquals(
-        "title:\"Hello World\"",
-        serializer.toQuery(title.eq(new PhraseElement("Hello World")), metadata).toString());
+    assertThat(serializer.toQuery(title.eq("Hello World"), metadata).toString())
+        .isEqualTo("title:Hello World");
+    assertThat(serializer.toQuery(title.eq(new PhraseElement("Hello World")), metadata).toString())
+        .isEqualTo("title:\"Hello World\"");
   }
 
   @Test
@@ -41,13 +39,13 @@ public class PhraseElementTest {
     PhraseElement el1 = new PhraseElement("x"),
         el2 = new PhraseElement("x"),
         el3 = new PhraseElement("y");
-    assertEquals(el1, el2);
-    assertFalse(el1.equals(el3));
+    assertThat(el2).isEqualTo(el1);
+    assertThat(el1.equals(el3)).isFalse();
   }
 
   @Test
   public void hashCode_() {
     PhraseElement el1 = new PhraseElement("x"), el2 = new PhraseElement("x");
-    assertEquals(el1.hashCode(), el2.hashCode());
+    assertThat(el2.hashCode()).isEqualTo(el1.hashCode());
   }
 }

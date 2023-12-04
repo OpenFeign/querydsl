@@ -2,7 +2,7 @@ package com.querydsl.collections;
 
 import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.core.group.GroupBy.map;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryProjection;
@@ -116,14 +116,14 @@ public class GroupBy2Test {
                             user.id, user.name, list(role.id), list(role.name), list(group.id))));
 
     UserDto dto1 = userDtos.get(3L);
-    assertEquals(1, dto1.roleIds.size());
-    assertEquals(1, dto1.roleNames.size());
-    assertEquals(1, dto1.secIds.size());
+    assertThat(dto1.roleIds).hasSize(1);
+    assertThat(dto1.roleNames).hasSize(1);
+    assertThat(dto1.secIds).hasSize(1);
 
     UserDto dto2 = userDtos.get(32L);
-    assertEquals(3, dto2.roleIds.size());
-    assertEquals(1, dto2.roleNames.size());
-    assertEquals(3, dto2.secIds.size());
+    assertThat(dto2.roleIds).hasSize(3);
+    assertThat(dto2.roleNames).hasSize(1);
+    assertThat(dto2.secIds).hasSize(3);
   }
 
   @Test
@@ -146,13 +146,13 @@ public class GroupBy2Test {
                             map(group.id, group.name))));
 
     UserDto dto1 = userDtos.get(3L);
-    assertEquals(1, dto1.roleIds.size());
-    assertEquals(1, dto1.roleNames.size());
-    assertEquals(1, dto1.secIds.size());
+    assertThat(dto1.roleIds).hasSize(1);
+    assertThat(dto1.roleNames).hasSize(1);
+    assertThat(dto1.secIds).hasSize(1);
 
     UserDto dto2 = userDtos.get(32L);
-    assertEquals(2, dto2.roleIds.size());
-    assertEquals(2, dto2.roleNames.size());
-    assertEquals(3, dto2.secIds.size());
+    assertThat(dto2.roleIds).hasSize(2);
+    assertThat(dto2.roleNames).hasSize(2);
+    assertThat(dto2.secIds).hasSize(3);
   }
 }

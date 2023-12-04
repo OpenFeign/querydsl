@@ -8,7 +8,7 @@ import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** SPerson is a Querydsl query type for SPerson */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

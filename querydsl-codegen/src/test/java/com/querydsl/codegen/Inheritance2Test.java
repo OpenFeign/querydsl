@@ -1,7 +1,6 @@
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeExtends;
@@ -39,7 +38,7 @@ public class Inheritance2Test {
     TypeFactory typeFactory = new TypeFactory();
     Field field = Base.class.getDeclaredField("base");
     Type type = typeFactory.get(field.getType(), field.getGenericType());
-    assertEquals(0, type.getParameters().size());
+    assertThat(type.getParameters()).isEmpty();
   }
 
   @Test
@@ -47,9 +46,9 @@ public class Inheritance2Test {
     TypeFactory typeFactory = new TypeFactory();
     Field field = Base.class.getDeclaredField("base2");
     Type type = typeFactory.get(field.getType(), field.getGenericType());
-    assertEquals(2, type.getParameters().size());
-    assertNull(((TypeExtends) type.getParameters().get(0)).getVarName());
-    assertNull(((TypeExtends) type.getParameters().get(1)).getVarName());
+    assertThat(type.getParameters()).hasSize(2);
+    assertThat(((TypeExtends) type.getParameters().get(0)).getVarName()).isNull();
+    assertThat(((TypeExtends) type.getParameters().get(1)).getVarName()).isNull();
   }
 
   @Test

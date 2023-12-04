@@ -14,8 +14,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
@@ -28,7 +27,7 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
-    assertEquals("select 1", query.toString());
+    assertThat(query.toString()).isEqualTo("select 1");
   }
 
   @Override
@@ -45,16 +44,15 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
     NumberExpression<Integer> three = Expressions.THREE;
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union = query.union(select(one.as(col1)), select(two), select(three));
-    assertEquals(
-        "(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)",
-        union.toString());
+    assertThat(union.toString())
+        .isEqualTo("(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)");
   }
 
   @Test
   public void limit() {
     query.from(survey1).limit(5);
     query.getMetadata().setProjection(survey1.id);
-    assertEquals("select top (?) survey1.ID from SURVEY survey1", query.toString());
+    assertThat(query.toString()).isEqualTo("select top (?) survey1.ID from SURVEY survey1");
   }
 
   @Test
@@ -62,31 +60,33 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
     query.from(survey1).limit(5).offset(3);
     query.orderBy(survey1.id.asc());
     query.getMetadata().setProjection(survey1.id);
-    assertEquals(
-        "select * from ("
-            + "   select survey1.ID, row_number() over (order by survey1.ID asc) as rn from SURVEY survey1) a "
-            + "where rn > ? and rn <= ? order by rn",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "select * from ("
+                + "   select survey1.ID, row_number() over (order by survey1.ID asc) as rn from SURVEY survey1) a "
+                + "where rn > ? and rn <= ? order by rn");
   }
 
   @Test
   public void modifiers_noOrder() {
     query.from(survey1).limit(5).offset(3);
     query.getMetadata().setProjection(survey1.id);
-    assertEquals(
-        "select * from ("
-            + "   select survey1.ID, row_number() over (order by current_timestamp asc) as rn from SURVEY survey1) a "
-            + "where rn > ? and rn <= ? order by rn",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "select * from ("
+                + "   select survey1.ID, row_number() over (order by current_timestamp asc) as rn from SURVEY survey1) a "
+                + "where rn > ? and rn <= ? order by rn");
   }
 
   @Test
   public void nextVal() {
     Operation<String> nextval =
         ExpressionUtils.operation(String.class, SQLOps.NEXTVAL, ConstantImpl.create("myseq"));
-    assertEquals(
-        "myseq.nextval",
-        new SQLSerializer(new Configuration(new SQLServerTemplates())).handle(nextval).toString());
+    assertThat(
+            new SQLSerializer(new Configuration(new SQLServerTemplates()))
+                .handle(nextval)
+                .toString())
+        .isEqualTo("myseq.nextval");
   }
 
   @Test
@@ -107,10 +107,10 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
     int p7 = getPrecedence(Ops.BETWEEN, Ops.IN, Ops.LIKE, Ops.LIKE_ESCAPE, Ops.OR);
     // 8 = (Assignment)
 
-    assertTrue(p2 < p3);
-    assertTrue(p3 < p4);
-    assertTrue(p4 < p5);
-    assertTrue(p5 < p6);
-    assertTrue(p6 < p7);
+    assertThat(p2 < p3).isTrue();
+    assertThat(p3 < p4).isTrue();
+    assertThat(p4 < p5).isTrue();
+    assertThat(p5 < p6).isTrue();
+    assertThat(p6 < p7).isTrue();
   }
 }

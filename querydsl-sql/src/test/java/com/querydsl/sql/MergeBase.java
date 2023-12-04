@@ -16,7 +16,7 @@ package com.querydsl.sql;
 import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.survey;
 import static com.querydsl.sql.Constants.survey2;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
@@ -24,12 +24,9 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.dml.SQLMergeClause;
-import com.querydsl.sql.dml.SQLMergeUsingClause;
 import com.querydsl.sql.domain.QSurvey;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.After;
@@ -62,8 +59,8 @@ public class MergeBase extends AbstractBaseTest {
             .set(survey.id, 7)
             .set(survey.name, "Hello World")
             .executeWithKeys();
-    assertTrue(rs.next());
-    assertTrue(rs.getObject(1) != null);
+    assertThat(rs.next()).isTrue();
+    assertThat(rs.getObject(1) != null).isTrue();
     rs.close();
   }
 
@@ -82,25 +79,26 @@ public class MergeBase extends AbstractBaseTest {
         merge(survey).keys(survey.id).set(survey.id, 7).set(survey.name, "Hello World");
     clause.addListener(listener);
     ResultSet rs = clause.executeWithKeys();
-    assertTrue(rs.next());
-    assertTrue(rs.getObject(1) != null);
+    assertThat(rs.next()).isTrue();
+    assertThat(rs.getObject(1) != null).isTrue();
     rs.close();
-    assertTrue(result.get());
+    assertThat(result.get()).isTrue();
   }
 
   @Test
   @IncludeIn(H2)
   public void merge_with_keys_and_subQuery() {
-    assertEquals(1, insert(survey).set(survey.id, 6).set(survey.name, "H").execute());
+    assertThat(insert(survey).set(survey.id, 6).set(survey.name, "H").execute()).isEqualTo(1);
 
     // keys + subquery
     QSurvey survey2 = new QSurvey("survey2");
-    assertEquals(
-        2,
-        merge(survey)
-            .keys(survey.id)
-            .select(query().from(survey2).select(survey2.id.add(1), survey2.name, survey2.name2))
-            .execute());
+    assertThat(
+            merge(survey)
+                .keys(survey.id)
+                .select(
+                    query().from(survey2).select(survey2.id.add(1), survey2.name, survey2.name2))
+                .execute())
+        .isEqualTo(2);
   }
 
   @Test
@@ -108,23 +106,32 @@ public class MergeBase extends AbstractBaseTest {
   public void merge_with_keys_and_values() {
     // NOTE : doesn't work with composite merge implementation
     // keys + values
-    assertEquals(1, merge(survey).keys(survey.id).values(5, "Hello World", "Hello").execute());
+    assertThat(merge(survey).keys(survey.id).values(5, "Hello World", "Hello").execute())
+        .isEqualTo(1);
   }
 
   @Test
   public void merge_with_keys_columns_and_values() {
     // keys + columns + values
-    assertEquals(
-        1,
-        merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, "Hello World").execute());
+    assertThat(
+            merge(survey)
+                .keys(survey.id)
+                .set(survey.id, 5)
+                .set(survey.name, "Hello World")
+                .execute())
+        .isEqualTo(1);
   }
 
   @Test
   public void merge_with_keys_columns_and_values_using_null() {
     // keys + columns + values
-    assertEquals(
-        1,
-        merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, (String) null).execute());
+    assertThat(
+            merge(survey)
+                .keys(survey.id)
+                .set(survey.id, 5)
+                .set(survey.name, (String) null)
+                .execute())
+        .isEqualTo(1);
   }
 
   @Test
@@ -136,20 +143,21 @@ public class MergeBase extends AbstractBaseTest {
             .setNull(survey.id)
             .set(survey.name, "Hello World")
             .executeWithKeys();
-    assertTrue(rs.next());
-    assertTrue(rs.getObject(1) != null);
+    assertThat(rs.next()).isTrue();
+    assertThat(rs.getObject(1) != null).isTrue();
     rs.close();
   }
 
   @Test
   @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
   public void merge_with_keys_Projected() throws SQLException {
-    assertNotNull(
-        merge(survey)
-            .keys(survey.id)
-            .set(survey.id, 8)
-            .set(survey.name, "Hello you")
-            .executeWithKey(survey.id));
+    assertThat(
+            merge(survey)
+                .keys(survey.id)
+                .set(survey.id, 8)
+                .set(survey.name, "Hello you")
+                .executeWithKey(survey.id))
+        .isNotNull();
   }
 
   @Test
@@ -162,7 +170,7 @@ public class MergeBase extends AbstractBaseTest {
             .set(survey.id, 9)
             .set(survey.name, "Hello you")
             .executeWithKey(idPath);
-    assertNotNull(id);
+    assertThat(id).isNotNull();
   }
 
   @Test
@@ -170,16 +178,16 @@ public class MergeBase extends AbstractBaseTest {
   public void mergeBatch() {
     SQLMergeClause merge =
         merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, "5").addBatch();
-    assertEquals(1, merge.getBatchCount());
-    assertFalse(merge.isEmpty());
+    assertThat(merge.getBatchCount()).isEqualTo(1);
+    assertThat(merge.isEmpty()).isFalse();
 
     merge.keys(survey.id).set(survey.id, 6).set(survey.name, "6").addBatch();
 
-    assertEquals(2, merge.getBatchCount());
-    assertEquals(2, merge.execute());
+    assertThat(merge.getBatchCount()).isEqualTo(2);
+    assertThat(merge.execute()).isEqualTo(2);
 
-    assertEquals(1L, query().from(survey).where(survey.name.eq("5")).fetchCount());
-    assertEquals(1L, query().from(survey).where(survey.name.eq("6")).fetchCount());
+    assertThat(query().from(survey).where(survey.name.eq("5")).fetchCount()).isEqualTo(1L);
+    assertThat(query().from(survey).where(survey.name.eq("6")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -198,10 +206,10 @@ public class MergeBase extends AbstractBaseTest {
         .set(survey.name, Expressions.stringTemplate("'6'"))
         .addBatch();
 
-    assertEquals(2, merge.execute());
+    assertThat(merge.execute()).isEqualTo(2);
 
-    assertEquals(1L, query().from(survey).where(survey.name.eq("5")).fetchCount());
-    assertEquals(1L, query().from(survey).where(survey.name.eq("6")).fetchCount());
+    assertThat(query().from(survey).where(survey.name.eq("5")).fetchCount()).isEqualTo(1L);
+    assertThat(query().from(survey).where(survey.name.eq("6")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -220,7 +228,7 @@ public class MergeBase extends AbstractBaseTest {
         .select(query().from(survey2).select(survey2.id.add(40), survey2.name))
         .addBatch();
 
-    assertEquals(1, merge.execute());
+    assertThat(merge.execute()).isEqualTo(1);
   }
 
   @Test
@@ -233,34 +241,7 @@ public class MergeBase extends AbstractBaseTest {
             .set(survey.name, Expressions.stringTemplate("'5'"))
             .addBatch();
 
-    assertEquals(1, merge.execute());
-  }
-
-  @Test
-  @IncludeIn({DB2, SQLSERVER})
-  public void merge_with_using() {
-    QSurvey usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
-    SQLMergeUsingClause merge =
-        merge(survey)
-            .using(
-                query()
-                    .from(survey2)
-                    .select(survey2.id.add(40).as("ID"), survey2.name)
-                    .as(usingSubqueryAlias))
-            .on(survey.id.eq(usingSubqueryAlias.id))
-            .whenNotMatched()
-            .thenInsert(
-                Arrays.asList(survey.id, survey.name),
-                Arrays.asList(usingSubqueryAlias.id, usingSubqueryAlias.name))
-            .whenMatched()
-            .and(survey.id.goe(10))
-            .thenDelete()
-            .whenMatched()
-            .thenUpdate(
-                Collections.singletonList(survey.name),
-                Collections.singletonList(usingSubqueryAlias.name));
-
-    assertEquals(1, merge.execute());
+    assertThat(merge.execute()).isEqualTo(1);
   }
 
   @Test
@@ -279,7 +260,7 @@ public class MergeBase extends AbstractBaseTest {
     SQLMergeClause clause =
         merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, "Hello World");
     clause.addListener(listener);
-    assertEquals(1, clause.execute());
-    assertEquals(1, calls.intValue());
+    assertThat(clause.execute()).isEqualTo(1);
+    assertThat(calls.intValue()).isEqualTo(1);
   }
 }

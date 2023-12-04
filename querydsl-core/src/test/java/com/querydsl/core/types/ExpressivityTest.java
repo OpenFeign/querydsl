@@ -1,7 +1,12 @@
 package com.querydsl.core.types;
 
 import com.querydsl.core.support.QueryMixin;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.MathExpressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.StringExpressions;
 import java.util.Arrays;
 import java.util.Date;
 import org.junit.Before;
@@ -474,7 +479,7 @@ public class ExpressivityTest {
     // Field<String>          substring(int startingPosition, int length)
     str.substring(1, 3);
     // Field<BigDecimal>      sum()
-    num.sum();
+    num.sumDouble();
     // WindowPartitionByStep<BigDecimal>      sumOver()
 
     // Field<BigDecimal>      tan()

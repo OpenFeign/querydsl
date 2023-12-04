@@ -13,13 +13,12 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
 import java.util.Collection;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 import org.junit.Test;
 
 public class EmbeddableInterfaceTest {
@@ -48,14 +47,13 @@ public class EmbeddableInterfaceTest {
 
   @Test
   public void type() {
-    assertEquals(
-        QEmbeddableInterfaceTest_EmbeddableInterface.class,
-        QEmbeddableInterfaceTest_EntityClass.entityClass.children.any().getClass());
+    assertThat(QEmbeddableInterfaceTest_EntityClass.entityClass.children.any().getClass())
+        .isEqualTo(QEmbeddableInterfaceTest_EmbeddableInterface.class);
   }
 
   @Test
   public void properties() {
-    assertNotNull(QEmbeddableInterfaceTest_EmbeddableInterface.embeddableInterface.name);
-    assertNotNull(QEmbeddableInterfaceTest_EmbeddableClass.embeddableClass.name);
+    assertThat(QEmbeddableInterfaceTest_EmbeddableInterface.embeddableInterface.name).isNotNull();
+    assertThat(QEmbeddableInterfaceTest_EmbeddableClass.embeddableClass.name).isNotNull();
   }
 }

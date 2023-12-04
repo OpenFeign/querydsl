@@ -13,8 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Ops;
 import org.junit.Test;
@@ -30,7 +29,7 @@ public class H2TemplatesTest extends AbstractSQLTemplatesTest {
   public void builder() {
     SQLTemplates templates = H2Templates.builder().quote().newLineToSingleSpace().build();
 
-    assertNotNull(templates);
+    assertThat(templates).isNotNull();
   }
 
   @Test
@@ -53,12 +52,12 @@ public class H2TemplatesTest extends AbstractSQLTemplatesTest {
     int p7 = getPrecedence(Ops.AND);
     int p8 = getPrecedence(Ops.OR);
 
-    assertTrue(p1 < p2);
-    assertTrue(p2 < p3);
-    assertTrue(p3 < p4);
-    assertTrue(p4 < p5);
-    assertTrue(p5 < p6);
-    assertTrue(p6 < p7);
-    assertTrue(p7 < p8);
+    assertThat(p1 < p2).isTrue();
+    assertThat(p2 < p3).isTrue();
+    assertThat(p3 < p4).isTrue();
+    assertThat(p4 < p5).isTrue();
+    assertThat(p5 < p6).isTrue();
+    assertThat(p6 < p7).isTrue();
+    assertThat(p7 < p8).isTrue();
   }
 }

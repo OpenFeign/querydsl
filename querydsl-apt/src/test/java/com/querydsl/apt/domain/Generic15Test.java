@@ -1,9 +1,9 @@
 package com.querydsl.apt.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
 import org.junit.Test;
 
 public class Generic15Test extends AbstractTest {

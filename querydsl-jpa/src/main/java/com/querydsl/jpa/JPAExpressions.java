@@ -25,9 +25,9 @@ import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
+import jakarta.persistence.Entity;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
-import javax.persistence.Entity;
 
 /**
  * {@code JPAExpressions} provides factory methods for JPQL specific operations elements.

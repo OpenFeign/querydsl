@@ -57,22 +57,22 @@ public final class HibernateUtil {
                   java.sql.Blob.class,
                   java.sql.Clob.class)));
 
-  private static final Map<Class<?>, Type> TYPES;
+  private static final Map<Class<?>, BasicTypeReference<?>> TYPES;
 
   static {
-    Map<Class<?>, Type> builder = new HashMap<>();
-    builder.put(Byte.class, new ByteType());
-    builder.put(Short.class, new ShortType());
-    builder.put(Integer.class, new IntegerType());
-    builder.put(Long.class, new LongType());
-    builder.put(BigInteger.class, new BigIntegerType());
-    builder.put(Double.class, new DoubleType());
-    builder.put(Float.class, new FloatType());
-    builder.put(BigDecimal.class, new BigDecimalType());
-    builder.put(String.class, new StringType());
-    builder.put(Character.class, new CharacterType());
-    builder.put(Date.class, new DateType());
-    builder.put(Boolean.class, new BooleanType());
+    Map<Class<?>, BasicTypeReference<?>> builder = new HashMap<>();
+    builder.put(Byte.class, StandardBasicTypes.BYTE);
+    builder.put(Short.class, StandardBasicTypes.SHORT);
+    builder.put(Integer.class, StandardBasicTypes.INTEGER);
+    builder.put(Long.class, StandardBasicTypes.LONG);
+    builder.put(BigInteger.class, StandardBasicTypes.BIG_INTEGER);
+    builder.put(Double.class, StandardBasicTypes.DOUBLE);
+    builder.put(Float.class, StandardBasicTypes.FLOAT);
+    builder.put(BigDecimal.class, StandardBasicTypes.BIG_DECIMAL);
+    builder.put(String.class, StandardBasicTypes.STRING);
+    builder.put(Character.class, StandardBasicTypes.CHARACTER);
+    builder.put(Date.class, StandardBasicTypes.DATE);
+    builder.put(Boolean.class, StandardBasicTypes.BOOLEAN);
     TYPES = Collections.unmodifiableMap(builder);
   }
 
@@ -110,7 +110,7 @@ public final class HibernateUtil {
     }
   }
 
-  public static Type getType(Class<?> clazz) {
+  public static BasicTypeReference getType(Class<?> clazz) {
     return TYPES.get(clazz);
   }
 }

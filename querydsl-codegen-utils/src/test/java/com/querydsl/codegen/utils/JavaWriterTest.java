@@ -5,8 +5,7 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Parameter;
@@ -58,7 +57,7 @@ public class JavaWriterTest {
     }
     String expected = textBuilder.toString().replace("\r\n", System.lineSeparator()).trim();
     String actual = text.trim();
-    assertEquals(expected, actual);
+    assertThat(actual).isEqualTo(expected);
   }
 
   @Before
@@ -99,15 +98,15 @@ public class JavaWriterTest {
     writer.end();
 
     System.out.println(w);
-    assertTrue(w.toString().contains("String[] stringArray;"));
-    assertTrue(w.toString().contains("public void main(String[] args) {"));
-    assertTrue(w.toString().contains("public void main2(String[] args) {"));
+    assertThat(w.toString()).contains("String[] stringArray;");
+    assertThat(w.toString()).contains("public void main(String[] args) {");
+    assertThat(w.toString()).contains("public void main2(String[] args) {");
   }
 
   @Test
   public void Primitive_Arrays() {
     ClassType byteArray = new ClassType(byte[].class);
-    assertEquals("byte[]", writer.getRawName(byteArray));
+    assertThat(writer.getRawName(byteArray)).isEqualTo("byte[]");
   }
 
   @Test
@@ -163,10 +162,8 @@ public class JavaWriterTest {
     writer.beginInterface(testType, testType2, testInterface1, testInterface2);
     writer.end();
 
-    assertTrue(
-        w.toString()
-            .contains(
-                "public interface JavaWriterTest extends Test, TestInterface1, TestInterface2 {"));
+    assertThat(w.toString())
+        .contains("public interface JavaWriterTest extends Test, TestInterface1, TestInterface2 {");
   }
 
   @Test
@@ -243,12 +240,12 @@ public class JavaWriterTest {
 
     writer.imports(Target.class.getPackage());
     writer.annotation(annotation);
-    assertTrue(w.toString().contains("@Target({FIELD, METHOD})"));
+    assertThat(w.toString()).contains("@Target({FIELD, METHOD})");
   }
 
   @Test
   public void ClassConstants() {
-    assertEquals("SomeClass.class", writer.getClassConstant("SomeClass"));
+    assertThat(writer.getClassConstant("SomeClass")).isEqualTo("SomeClass.class");
   }
 
   @Test
@@ -347,7 +344,7 @@ public class JavaWriterTest {
   public void Imports3() throws IOException {
     writer.importClasses("java.util.Locale");
 
-    assertTrue(w.toString().contains("import java.util.Locale;"));
+    assertThat(w.toString()).contains("import java.util.Locale;");
   }
 
   @Test
