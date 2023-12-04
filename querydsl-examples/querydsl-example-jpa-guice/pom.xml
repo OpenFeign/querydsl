@@ -13,9 +13,6 @@
 
   <properties>
     <guice.version>7.0.0</guice.version>
-
-    <!-- must skip, as this project needs hibernate dependencies -->
-    <enforcer.skip>true</enforcer.skip>
   </properties>
 
   <dependencies>
@@ -64,6 +61,7 @@
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>${hibernate.validator.version}</version>
+      <scope>runtime</scope>
       <exclusions>
         <exclusion>
           <groupId>org.slf4j</groupId>
