@@ -11,10 +11,6 @@
   <name>Querydsl example - JPA Spring</name>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <!-- must skip, as this project needs hibernate dependencies -->
-    <enforcer.skip>true</enforcer.skip>
     <!-- to match spring JDK version -->
     <main.java.version>17</main.java.version>
   </properties>

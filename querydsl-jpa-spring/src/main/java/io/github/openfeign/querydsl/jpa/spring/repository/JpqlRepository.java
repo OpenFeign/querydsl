@@ -23,16 +23,10 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.JPQLQueryFactory;
-
-import org.springframework.data.history.Revisions;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.history.RevisionRepository;
 
-/**
- * A repository which can access {@link JPQLQueryFactory} methods
- */
+/** A repository which can access {@link JPQLQueryFactory} methods */
 @NoRepositoryBean
 public interface JpqlRepository<T, ID> extends Repository<T, ID> {
 
