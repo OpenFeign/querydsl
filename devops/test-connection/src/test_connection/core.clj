@@ -10,7 +10,7 @@
 
 (def postgres-db {:classname "org.postgresql.Driver"
                   :subprotocol "postgresql"
-                  :subname "//localhost:5433/querydsl"
+                  :subname "//localhost:5432/querydsl"
                   :user "querydsl"
                   :password "querydsl"})
 
