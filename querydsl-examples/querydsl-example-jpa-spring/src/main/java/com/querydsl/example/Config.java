@@ -29,11 +29,6 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
-/**
- * Spring JavaConfig configuration for general infrastructure.
- *
- * @author Oliver Gierke
- */
 @Configuration
 @EnableQuerydslRepositories
 public class Config {

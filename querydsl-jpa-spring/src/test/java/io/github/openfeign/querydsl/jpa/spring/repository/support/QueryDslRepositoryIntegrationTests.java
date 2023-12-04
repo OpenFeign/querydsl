@@ -27,14 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-/**
- * Integration tests for repositories with Querydsl support. They make sure that methods provided by
- * both {@link org.springframework.data.repository.history.RevisionRepository} and {@link
- * org.springframework.data.querydsl.QuerydslPredicateExecutor} are working.
- *
- * @author Dmytro Iaroslavskyi
- * @author Jens Schauder
- */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = Config.class)
 class QueryDslRepositoryIntegrationTests {
