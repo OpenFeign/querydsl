@@ -36,6 +36,12 @@
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-jpa-spring</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.antlr</groupId>
+          <artifactId>antlr4-runtime</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
