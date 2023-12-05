@@ -118,19 +118,35 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:with-docker
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
             - querydsl-dependencies-
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp install -B -Pquickbuild
+            ./mvnw -ntp install -B -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb -am -T2
             ./mvnw -ntp verify -B -Pexamples -rf :querydsl-examples
       - save-test-results
+  buildQuarkusExample:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: cimg/base:2022.06
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: 'Test'
+          command: |
+            cp querydsl-examples/querydsl-example-jpa-quarkus/Dockerfile .
+            docker build --progress=plain .
   testMySQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -323,6 +339,10 @@ workflows:
           name: 'Compile and Test Examples'
           requires:
             - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - buildQuarkusExample:
+          name: 'Compile and Test Quarkus Example'
           filters:
             <<: *all-branches
       - testMySQL:

@@ -112,12 +112,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>oracle</groupId>
-      <artifactId>sdoapi</artifactId>
-      <version>11.2.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>com.microsoft.sqlserver</groupId>
       <artifactId>mssql-jdbc</artifactId>
       <version>${mssql.version}</version>
@@ -273,13 +267,5 @@
       </dependencies>
     </profile>
   </profiles>
-
-  <!--TODO upgrade dependencies and get rid of repositories and pluginRepositories -->
-  <repositories>
-    <repository>
-      <id>datanucleus</id>
-      <url>https://www.datanucleus.org/downloads/maven2</url>
-    </repository>
-  </repositories>
 
 </project>

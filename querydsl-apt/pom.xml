@@ -32,7 +32,6 @@
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
-      <version>3.1.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -117,13 +116,6 @@
       <artifactId>ecj</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>jakarta.persistence</groupId>
-      <artifactId>jakarta.persistence-api</artifactId>
-      <version>3.1.0</version>
-      <scope>compile</scope>
-    </dependency>
-
   </dependencies>
 
   <build>
@@ -152,24 +144,6 @@
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.eclipse.transformer</groupId>
-        <artifactId>org.eclipse.transformer.maven</artifactId>
-        <version>0.2.0</version>
-        <executions>
-          <execution>
-            <id>jakarta-ee</id>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <classifier>jakarta</classifier>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>
