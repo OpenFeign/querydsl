@@ -13,13 +13,16 @@
   <name>Querydsl - Examples</name>
 
   <modules>
-    <module>querydsl-example-sql-spring</module>
     <module>querydsl-example-sql-guice</module>
-    <module>querydsl-example-jpa-spring</module>
+    <module>querydsl-example-sql-spring</module>
+
     <module>querydsl-example-jpa-guice</module>
+    <module>querydsl-example-jpa-quarkus</module>
+    <module>querydsl-example-jpa-spring</module>
+
+    <module>querydsl-example-kotlin-codegen</module>
     <module>querydsl-example-kotlin-jpa</module>
     <module>querydsl-example-kotlin-mongodb</module>
-    <module>querydsl-example-kotlin-codegen</module>
   </modules>
 
   <dependencyManagement>
