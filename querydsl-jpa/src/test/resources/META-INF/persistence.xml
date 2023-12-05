@@ -254,7 +254,7 @@
             <property name="hibernate.archive.autodetection" value="class"/>
             <property name="hibernate.dialect" value="com.querydsl.jpa.support.QPostgreSQL9Dialect"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
-            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5433/querydsl"/>
+            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/querydsl"/>
             <property name="hibernate.connection.username" value="querydsl"/>
             <property name="hibernate.connection.password" value="querydsl"/>
             <!-- <property name="hibernate.show_sql" value="true"/> -->
@@ -268,7 +268,7 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5433/querydsl"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/querydsl"/>
             <property name="jakarta.persistence.jdbc.user" value="querydsl"/>
             <property name="jakarta.persistence.jdbc.password" value="querydsl"/>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>

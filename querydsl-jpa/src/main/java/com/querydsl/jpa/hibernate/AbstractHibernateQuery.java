@@ -119,7 +119,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
       query.setLockMode(entry.getKey().toString(), entry.getValue());
     }
     if (flushMode != null) {
-      query.setFlushMode(flushMode.toJpaFlushMode());
+      query.setHibernateFlushMode(flushMode);
     }
 
     if (modifiers != null && modifiers.isRestricting()) {

@@ -18,13 +18,13 @@ import com.querydsl.codegen.utils.model.*;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.NumberExpression;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * {@code ProjectionSerializer} is a {@link Serializer} implementation for projection types

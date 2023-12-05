@@ -8,7 +8,6 @@
     <version>6.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-codegen</artifactId>
   <name>Querydsl - Codegen module</name>
   <description>codegen module for querydsl</description>
@@ -30,9 +29,9 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
-      <version>1</version>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <version>2.0.1</version>
     </dependency>
     <dependency>
       <groupId>io.github.classgraph</groupId>

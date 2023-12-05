@@ -6,7 +6,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** SHumanHairs is a Querydsl query type for SHumanHairs */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

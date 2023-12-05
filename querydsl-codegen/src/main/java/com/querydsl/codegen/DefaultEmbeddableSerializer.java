@@ -22,11 +22,11 @@ import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.codegen.utils.model.Types;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.*;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * {@code EmbeddableSerializer} is a {@link Serializer} implementation for embeddable types

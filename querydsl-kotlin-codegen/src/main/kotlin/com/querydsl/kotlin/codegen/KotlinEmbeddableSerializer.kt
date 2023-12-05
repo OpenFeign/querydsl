@@ -19,8 +19,8 @@ import com.querydsl.codegen.GeneratedAnnotationResolver
 import com.querydsl.codegen.TypeMappings
 import com.querydsl.core.types.Path
 import com.querydsl.core.types.dsl.BeanPath
-import javax.inject.Inject
-import javax.inject.Named
+import jakarta.inject.Inject
+import jakarta.inject.Named
 import kotlin.reflect.KClass
 
 class KotlinEmbeddableSerializer @Inject constructor(

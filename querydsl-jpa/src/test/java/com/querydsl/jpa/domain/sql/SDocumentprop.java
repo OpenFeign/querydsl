@@ -7,7 +7,7 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** SDocumentprop is a Querydsl query type for SDocumentprop */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

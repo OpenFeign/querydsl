@@ -7,7 +7,7 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** SBar is a Querydsl query type for SBar */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

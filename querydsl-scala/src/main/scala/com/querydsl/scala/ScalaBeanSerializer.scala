@@ -15,7 +15,7 @@
 package com.querydsl.scala
 
 import java.util._
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 import com.querydsl.codegen.utils.model.Parameter
 import com.querydsl.codegen.utils.{CodeWriter, ScalaWriter}

@@ -15,13 +15,13 @@ import com.querydsl.example.dto.OrderProduct;
 import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.dml.SQLInsertClause;
 import java.util.List;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class OrderDaoImpl implements OrderDao {
 
-  @Inject SQLQueryFactory queryFactory;
+  @Autowired SQLQueryFactory queryFactory;
 
   final QBean<OrderProduct> orderProductBean =
       bean(

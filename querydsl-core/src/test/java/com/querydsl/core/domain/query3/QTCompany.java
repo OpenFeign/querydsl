@@ -6,7 +6,7 @@ import com.querydsl.core.domain.Company;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.PathInits;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QCompany is a Querydsl query type for Company */
 @Generated("com.querydsl.codegen.EntitySerializer")

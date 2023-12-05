@@ -13,14 +13,14 @@
  */
 package com.querydsl.codegen;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * {@code AbstractModule} provides a base class for annotation based dependency injection

@@ -8,13 +8,13 @@ import com.querydsl.core.types.QBean;
 import com.querydsl.example.dto.Supplier;
 import com.querydsl.sql.SQLQueryFactory;
 import java.util.List;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class SupplierDaoImpl implements SupplierDao {
 
-  @Inject SQLQueryFactory queryFactory;
+  @Autowired SQLQueryFactory queryFactory;
 
   final QBean<Supplier> supplierBean = bean(Supplier.class, supplier.all());
 
