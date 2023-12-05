@@ -146,8 +146,7 @@ jobs:
           name: 'Test'
           command: |
             cp querydsl-examples/querydsl-example-jpa-quarkus/Dockerfile .
-            docker build .
-      - save-test-results
+            docker build --progress=plain .
   testMySQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -344,8 +343,6 @@ workflows:
             <<: *all-branches
       - buildQuarkusExample:
           name: 'Compile and Test Quarkus Example'
-          requires:
-            - 'Resolve dependencies'
           filters:
             <<: *all-branches
       - testMySQL:
