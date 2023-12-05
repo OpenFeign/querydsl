@@ -52,10 +52,6 @@
     <project.homepage>http://www.querydsl.com</project.homepage>
     <project.githubpage>http://github.com/openfeign/querydsl</project.githubpage>
     <project.checkout>scm:git:git@github.com:openfeign/querydsl.git</project.checkout>
-    <japicmp.skip>true</japicmp.skip>
-
-    <!-- japicmp not letting us break API on major release, skipping until 6.0 is out -->
-    <japicmp.skip>true</japicmp.skip>
 
     <!-- default groups to exclude from surefire plugin -->
     <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
@@ -516,6 +512,7 @@
         <version>0.18.3</version>
         <configuration>
           <parameter>
+            <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
             <onlyModified>true</onlyModified>
             <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
             <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
