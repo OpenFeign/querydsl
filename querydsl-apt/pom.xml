@@ -32,7 +32,6 @@
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
-      <version>3.1.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -117,13 +116,6 @@
       <artifactId>ecj</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>jakarta.persistence</groupId>
-      <artifactId>jakarta.persistence-api</artifactId>
-      <version>3.1.0</version>
-      <scope>compile</scope>
-    </dependency>
-
   </dependencies>
 
   <build>

@@ -133,6 +133,21 @@ jobs:
             ./mvnw -ntp install -B -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb -am -T2
             ./mvnw -ntp verify -B -Pexamples -rf :querydsl-examples
       - save-test-results
+  buildQuarkusExample:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: cimg/base:2022.06
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: 'Test'
+          command: |
+            cp querydsl-examples/querydsl-example-jpa-quarkus/Dockerfile .
+            docker build .
+      - save-test-results
   testMySQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -323,6 +338,12 @@ workflows:
             <<: *all-branches
       - buildExamples:
           name: 'Compile and Test Examples'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - buildQuarkusExample:
+          name: 'Compile and Test Quarkus Example'
           requires:
             - 'Resolve dependencies'
           filters:

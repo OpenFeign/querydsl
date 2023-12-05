@@ -290,9 +290,6 @@
               <includes>
                 <include>com/querydsl/jpa/PackageVerification.java</include>
               </includes>
-              <jdkToolchain>
-                <version>${latest.java.version}</version>
-              </jdkToolchain>
             </configuration>
           </execution>
         </executions>
