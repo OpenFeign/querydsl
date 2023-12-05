@@ -2,6 +2,7 @@ package com.querydsl.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -26,19 +27,28 @@ import org.jboss.logging.Logger;
 @Consumes("application/json")
 public class FruitResource {
 
-  private static final Logger LOGGER = Logger.getLogger(FruitResource.class.getName());
+  private static final QFruit f = new QFruit("f");
 
-  @Inject EntityManager entityManager;
+  private static final Logger LOGGER = Logger.getLogger(FruitResource.class.getName());
+  private final JPAQueryFactory queryFactory;
+
+  private final EntityManager entityManager;
+
+  @Inject
+  public FruitResource(EntityManager entityManager) {
+    this.entityManager = entityManager;
+    this.queryFactory = new JPAQueryFactory(entityManager);
+  }
 
   @GET
   public List<Fruit> get() {
-    return entityManager.createNamedQuery("Fruits.findAll", Fruit.class).getResultList();
+    return queryFactory.selectFrom(f).fetch();
   }
 
   @GET
   @Path("{id}")
   public Fruit getSingle(Integer id) {
-    Fruit entity = entityManager.find(Fruit.class, id);
+    Fruit entity = queryFactory.selectFrom(f).where(f.id.eq(id)).fetchOne();
     if (entity == null) {
       throw new WebApplicationException("Fruit with id of " + id + " does not exist.", 404);
     }
@@ -64,12 +74,7 @@ public class FruitResource {
       throw new WebApplicationException("Fruit Name was not set on request.", 422);
     }
 
-    Fruit entity = entityManager.find(Fruit.class, id);
-
-    if (entity == null) {
-      throw new WebApplicationException("Fruit with id of " + id + " does not exist.", 404);
-    }
-
+    Fruit entity = getSingle(id);
     entity.setName(fruit.getName());
 
     return entity;
@@ -79,11 +84,10 @@ public class FruitResource {
   @Path("{id}")
   @Transactional
   public Response delete(Integer id) {
-    Fruit entity = entityManager.getReference(Fruit.class, id);
-    if (entity == null) {
+    long modified = queryFactory.delete(f).where(f.id.eq(id)).execute();
+    if (modified == 0L) {
       throw new WebApplicationException("Fruit with id of " + id + " does not exist.", 404);
     }
-    entityManager.remove(entity);
     return Response.status(204).build();
   }
 
