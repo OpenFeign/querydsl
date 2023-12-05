@@ -1,4 +1,4 @@
-package org.acme.hibernate.orm;
+package com.querydsl.example;
 
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;

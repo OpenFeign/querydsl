@@ -1,4 +1,4 @@
-package org.acme.hibernate.orm;
+package com.querydsl.example;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;

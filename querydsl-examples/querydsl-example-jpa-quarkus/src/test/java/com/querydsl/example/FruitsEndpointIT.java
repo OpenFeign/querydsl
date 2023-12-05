@@ -1,4 +1,4 @@
-package org.acme.hibernate.orm;
+package com.querydsl.example;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
