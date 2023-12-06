@@ -14,8 +14,11 @@
 package com.querydsl.jpa.hibernate.sql;
 
 import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.jpa.AbstractSQLQuery;
@@ -35,7 +38,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import org.hibernate.*;
+import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 import org.hibernate.query.Query;
 import org.jetbrains.annotations.Nullable;
 
@@ -163,8 +167,7 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
   public CloseableIterator<T> iterate() {
     try {
       Query query = createQuery();
-      ScrollableResults results = query.scroll(ScrollMode.FORWARD_ONLY);
-      return new ScrollableResultsIterator<T>(results);
+      return new ScrollableResultsIterator<T>(query.getResultList());
     } finally {
       reset();
     }
