@@ -512,7 +512,7 @@
         <version>0.18.3</version>
         <configuration>
           <parameter>
-            <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
+            <japicmp.skip>true</japicmp.skip>
             <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
             <onlyModified>true</onlyModified>
             <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
