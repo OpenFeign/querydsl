@@ -43,7 +43,6 @@
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -182,14 +181,6 @@
       <version>2.9.1</version>
       <scope>test</scope>
     </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.antlr/antlr4-runtime -->
-    <dependency>
-      <groupId>org.antlr</groupId>
-      <artifactId>antlr4-runtime</artifactId>
-      <version>4.12.0</version>
-    </dependency>
-
   </dependencies>
 
   <build>
@@ -242,23 +233,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.eclipse.transformer</groupId>
-        <artifactId>org.eclipse.transformer.maven</artifactId>
-        <version>0.2.0</version>
-        <executions>
-          <execution>
-            <id>jakarta-ee</id>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <classifier>jakarta</classifier>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -315,9 +290,6 @@
               <includes>
                 <include>com/querydsl/jpa/PackageVerification.java</include>
               </includes>
-              <jdkToolchain>
-                <version>${latest.java.version}</version>
-              </jdkToolchain>
             </configuration>
           </execution>
         </executions>

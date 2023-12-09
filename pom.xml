@@ -25,6 +25,7 @@
     <module>querydsl-maven-plugin</module>
     <module>querydsl-jpa</module>
     <module>querydsl-jpa-codegen</module>
+    <module>querydsl-jpa-spring</module>
     <!-- datanucleus core seems to be incompatible with modern java: Unsupported class file major version 65 -->
     <!--<module>querydsl-jdo</module>-->
     <module>querydsl-kotlin-codegen</module>
@@ -51,10 +52,6 @@
     <project.homepage>http://www.querydsl.com</project.homepage>
     <project.githubpage>http://github.com/openfeign/querydsl</project.githubpage>
     <project.checkout>scm:git:git@github.com:openfeign/querydsl.git</project.checkout>
-    <japicmp.skip>true</japicmp.skip>
-
-    <!-- japicmp not letting us break API on major release, skipping until 6.0 is out -->
-    <japicmp.skip>true</japicmp.skip>
 
     <!-- default groups to exclude from surefire plugin -->
     <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
@@ -73,13 +70,14 @@
     <junit.version>5.10.1</junit.version>
     <ecj.version>3.33.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
+    <springboot.version>3.2.0</springboot.version>
 
     <!-- SQL deps -->
     <db2.version>11.5.9.0</db2.version>
     <derby.version>10.17.1.0</derby.version>
     <hsqldb.version>2.7.2</hsqldb.version>
     <h2.version>2.2.224</h2.version>
-    <postgresql.version>42.7.0</postgresql.version>
+    <postgresql.version>42.7.1</postgresql.version>
     <oracle.version>23.3.0.23.09</oracle.version>
     <mysql.version>8.0.30</mysql.version>
     <mssql.version>12.5.0.jre8-preview</mssql.version>
@@ -90,7 +88,7 @@
     <mongodb.version>3.12.14</mongodb.version>
 
     <!-- JPA deps -->
-    <hibernate.version>6.3.1.Final</hibernate.version>
+    <hibernate.version>6.4.0.Final</hibernate.version>
     <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
     <eclipselink.version>4.0.2</eclipselink.version>
     <jpa.version>3.1.0</jpa.version>
@@ -168,7 +166,7 @@
       <dependency>
         <groupId>io.smallrye</groupId>
         <artifactId>jandex</artifactId>
-        <version>3.1.2</version>
+        <version>3.1.6</version>
       </dependency>
       <dependency>
         <groupId>org.jetbrains</groupId>
@@ -204,7 +202,7 @@
       <dependency>
         <groupId>jakarta.activation</groupId>
         <artifactId>jakarta.activation-api</artifactId>
-        <version>2.1.1</version>
+        <version>2.1.2</version>
       </dependency>
       <dependency>
         <groupId>org.hamcrest</groupId>
@@ -378,15 +376,17 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${surefire.version}</version>
           <configuration>
-            <jdkToolchain>
-              <version>${latest.java.version}</version>
-            </jdkToolchain>
             <argLine>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.naming/javax.naming=ALL-UNNAMED</argLine>
             <environmentVariables>
               <TZ>UTC</TZ>
             </environmentVariables>
             <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${surefire.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
@@ -434,39 +434,6 @@
     </pluginManagement>
 
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-toolchains-plugin</artifactId>
-        <version>3.1.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>toolchain</goal>
-            </goals>
-            <configuration>
-              <toolchains>
-                <jdk>
-                  <version>${main.java.version}</version>
-                </jdk>
-              </toolchains>
-            </configuration>
-          </execution>
-          <execution>
-            <id>test</id>
-            <phase>generate-test-sources</phase>
-            <goals>
-              <goal>toolchain</goal>
-            </goals>
-            <configuration>
-              <toolchains>
-                <jdk>
-                  <version>${latest.java.version}</version>
-                </jdk>
-              </toolchains>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -545,6 +512,7 @@
         <version>0.18.3</version>
         <configuration>
           <parameter>
+            <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
             <onlyModified>true</onlyModified>
             <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
             <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
@@ -626,10 +594,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.0</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>de.qaware.maven</groupId>
@@ -780,6 +744,7 @@
         <enforcer.skip>true</enforcer.skip>
         <animal.sniffer.skip>true</animal.sniffer.skip>
         <japicmp.skip>true</japicmp.skip>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
       </properties>
     </profile>
 
@@ -975,6 +940,71 @@
                 <phase>initialize</phase>
               </execution>
             </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>toolchain</id>
+      <activation>
+        <property>
+          <name>!toolchain.skip</name>
+        </property>
+      </activation>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-toolchains-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>toolchain</goal>
+                </goals>
+                <configuration>
+                  <toolchains>
+                    <jdk>
+                      <version>${main.java.version}</version>
+                    </jdk>
+                  </toolchains>
+                </configuration>
+              </execution>
+              <execution>
+                <id>test</id>
+                <goals>
+                  <goal>toolchain</goal>
+                </goals>
+                <phase>generate-test-sources</phase>
+                <configuration>
+                  <toolchains>
+                    <jdk>
+                      <version>${latest.java.version}</version>
+                    </jdk>
+                  </toolchains>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <jdkToolchain>
+                <version>${latest.java.version}</version>
+              </jdkToolchain>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <jdkToolchain>
+                <version>${latest.java.version}</version>
+              </jdkToolchain>
+            </configuration>
           </plugin>
         </plugins>
       </build>
