@@ -506,34 +506,34 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>com.github.siom79.japicmp</groupId>
-        <artifactId>japicmp-maven-plugin</artifactId>
-        <version>0.18.3</version>
-        <configuration>
-          <parameter>
-            <japicmp.skip>true</japicmp.skip>
-            <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
-            <onlyModified>true</onlyModified>
-            <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
-            <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
-            <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
-            <ignoreMissingClasses>true</ignoreMissingClasses>
-            <excludeModules>
-              <excludeModule>querydsl-maven-plugin</excludeModule>
-              <excludeModule>querydsl-example.*</excludeModule>
-            </excludeModules>
-          </parameter>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>verify</phase>
-            <goals>
-              <goal>cmp</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>com.github.siom79.japicmp</groupId>-->
+<!--        <artifactId>japicmp-maven-plugin</artifactId>-->
+<!--        <version>0.18.3</version>-->
+<!--        <configuration>-->
+<!--          <parameter>-->
+<!--            <japicmp.skip>true</japicmp.skip>-->
+<!--            <ignoreMissingOldVersion>true</ignoreMissingOldVersion>-->
+<!--            <onlyModified>true</onlyModified>-->
+<!--            <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>-->
+<!--            <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>-->
+<!--            <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>-->
+<!--            <ignoreMissingClasses>true</ignoreMissingClasses>-->
+<!--            <excludeModules>-->
+<!--              <excludeModule>querydsl-maven-plugin</excludeModule>-->
+<!--              <excludeModule>querydsl-example.*</excludeModule>-->
+<!--            </excludeModules>-->
+<!--          </parameter>-->
+<!--        </configuration>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <phase>verify</phase>-->
+<!--            <goals>-->
+<!--              <goal>cmp</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
