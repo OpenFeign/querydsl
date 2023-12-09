@@ -9,7 +9,6 @@ import static org.easymock.EasyMock.verify;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hibernate.ScrollMode.FORWARD_ONLY;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.mysema.commons.lang.IteratorAdapter;
 import com.querydsl.core.types.FactoryExpression;
@@ -103,6 +102,7 @@ public class HibernateHandlerTest {
 
     expect(nativeQuery.unwrap(org.hibernate.query.Query.class)).andReturn(nativeQuery);
     expect(nativeQuery.scroll(FORWARD_ONLY)).andReturn(scrollableResultsImplementor);
+    expect(nativeQuery.getResultList()).andReturn(List.of());
     replay(nativeQuery);
 
     assertThat(
