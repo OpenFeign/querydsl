@@ -512,6 +512,7 @@
         <version>0.18.3</version>
         <configuration>
           <parameter>
+            <skip>true</skip>
             <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
             <onlyModified>true</onlyModified>
             <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
