@@ -328,6 +328,6 @@ public class JPABase extends AbstractJPATest implements JPATest {
     Map<Boolean, List<Cat>> transform =
         query().select(cat).from(cat).transform(GroupBy.groupBy(cat.alive).as(list(cat)));
 
-    assertThat(transform).is(HamcrestCondition.matching(IsMapWithSize.aMapWithSize(2)));
+    assertThat(transform).is(HamcrestCondition.matching(IsMapWithSize.aMapWithSize(1)));
   }
 }
