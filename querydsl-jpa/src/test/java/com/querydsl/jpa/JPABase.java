@@ -13,6 +13,7 @@
  */
 package com.querydsl.jpa;
 
+import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,6 +23,7 @@ import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
@@ -43,6 +45,8 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.assertj.core.api.HamcrestCondition;
+import org.hamcrest.collection.IsMapWithSize;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -317,5 +321,13 @@ public class JPABase extends AbstractJPATest implements JPATest {
             .fetchResults();
 
     assertThat(results.getTotal()).isEqualTo(1);
+  }
+
+  @Test
+  public void shouldTransformWithGroupBy() {
+    Map<Boolean, List<Cat>> transform =
+        query().select(cat).from(cat).transform(GroupBy.groupBy(cat.alive).as(list(cat)));
+
+    assertThat(transform).is(HamcrestCondition.matching(IsMapWithSize.aMapWithSize(1)));
   }
 }

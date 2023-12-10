@@ -111,7 +111,8 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   @Test
   public void scroll() throws IOException {
     CloseableIterator<Cat> cats =
-        new ScrollableResultsIterator<Cat>(query().from(cat).select(cat).createQuery().scroll());
+        new ScrollableResultsIterator<Cat>(
+            query().from(cat).select(cat).createQuery().getResultList());
     assertThat(cats.hasNext()).isTrue();
     while (cats.hasNext()) {
       assertThat(cats.next()).isNotNull();
@@ -123,7 +124,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   public void scrollTuple() throws IOException {
     CloseableIterator<Tuple> rows =
         new ScrollableResultsIterator<Tuple>(
-            query().from(cat).select(cat.name, cat.birthdate).createQuery().scroll());
+            query().from(cat).select(cat.name, cat.birthdate).createQuery().getResultList());
     assertThat(rows.hasNext()).isTrue();
     while (rows.hasNext()) {
       Tuple row = rows.next();
