@@ -104,7 +104,6 @@
     <h2gis.version>2.2.0</h2gis.version>
     <morphia.version>1.3.2</morphia.version>
     <jmh.version>1.37</jmh.version>
-    <hamcrest.veresion>2.2</hamcrest.veresion>
     <kotlin.version>1.9.21</kotlin.version>
     <dokka.version>1.9.10</dokka.version>
     <scala.full.version>2.11.12</scala.full.version>
@@ -112,6 +111,9 @@
     <!-- Import-Package definitions for maven-bundle-plugin -->
     <osgi.import.package.root>*</osgi.import.package.root>
     <osgi.import.package>${osgi.import.package.root}</osgi.import.package>
+
+    <!-- try to removed this after 6.0.0 is out -->
+    <japicmp.skip>true</japicmp.skip>
   </properties>
   <url>https://querydsl.github.io/</url>
 
@@ -205,24 +207,6 @@
         <version>2.1.2</version>
       </dependency>
       <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest</artifactId>
-        <version>${hamcrest.veresion}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-core</artifactId>
-        <version>${hamcrest.veresion}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-all</artifactId>
-        <version>${hamcrest.veresion}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
         <groupId>org.eclipse.jdt</groupId>
         <artifactId>ecj</artifactId>
         <version>${ecj.version}</version>
@@ -300,17 +284,6 @@
     <dependency>
       <groupId>org.junit.vintage</groupId>
       <artifactId>junit-vintage-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
-      <version>2.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

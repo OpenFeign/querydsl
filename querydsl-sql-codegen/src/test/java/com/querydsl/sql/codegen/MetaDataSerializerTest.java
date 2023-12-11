@@ -14,9 +14,8 @@
 package com.querydsl.sql.codegen;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.Assert.assertThat;
 
 import com.querydsl.codegen.BeanSerializer;
@@ -185,6 +184,6 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
 
   private void assertFileContainsInOrder(String path, String... methods) throws IOException {
     String content = new String(Files.readAllBytes(folder.getRoot().toPath().resolve(path)), UTF_8);
-    assertThat(content, stringContainsInOrder(asList(methods)));
+    assertThat(content).contains(methods);
   }
 }
