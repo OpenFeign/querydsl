@@ -45,8 +45,6 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.assertj.core.api.HamcrestCondition;
-import org.hamcrest.collection.IsMapWithSize;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -328,6 +326,6 @@ public class JPABase extends AbstractJPATest implements JPATest {
     Map<Boolean, List<Cat>> transform =
         query().select(cat).from(cat).transform(GroupBy.groupBy(cat.alive).as(list(cat)));
 
-    assertThat(transform).is(HamcrestCondition.matching(IsMapWithSize.aMapWithSize(1)));
+    assertThat(transform).hasSize(1);
   }
 }

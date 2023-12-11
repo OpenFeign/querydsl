@@ -1,8 +1,6 @@
 package com.querydsl.maven;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
 
 import com.querydsl.codegen.GeneratedAnnotationResolver;
 import java.io.File;
@@ -44,8 +42,7 @@ public class GenericExporterMojoTest {
 
     File file = Q_ENTITY_SOURCE_FILE;
     String source = FileUtils.fileRead(file);
-    assertThat(
-        source, containsString("@" + GeneratedAnnotationResolver.resolveDefault().getSimpleName()));
+    assertThat(source).contains("@" + GeneratedAnnotationResolver.resolveDefault().getSimpleName());
   }
 
   @Test
@@ -57,6 +54,6 @@ public class GenericExporterMojoTest {
 
     File file = Q_ENTITY_SOURCE_FILE;
     String source = FileUtils.fileRead(file);
-    assertThat(source, containsString("@" + annotationClass.getSimpleName()));
+    assertThat(source).contains("@" + annotationClass.getSimpleName());
   }
 }

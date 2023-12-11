@@ -14,8 +14,6 @@
 package com.querydsl.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.StringUtils;
@@ -207,13 +205,11 @@ public class BeanSerializerTest {
     Serializer serializer = new BeanSerializer();
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String generatedSource = String.valueOf(writer);
-    assertThat(
-        generatedSource,
-        containsString(
-            String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName())));
-    assertThat(
-        generatedSource,
-        containsString("@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class"));
+    assertThat(generatedSource)
+        .contains(
+            String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()));
+    assertThat(generatedSource)
+        .contains("@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class");
   }
 
   @Test
@@ -222,9 +218,8 @@ public class BeanSerializerTest {
         new BeanSerializer(BeanSerializer.DEFAULT_JAVADOC_SUFFIX, Generated.class);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String generatedSource = String.valueOf(writer);
-    assertThat(generatedSource, containsString("import com.querydsl.core.annotations.Generated;"));
-    assertThat(
-        generatedSource,
-        containsString("@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class"));
+    assertThat(generatedSource).contains("import com.querydsl.core.annotations.Generated;");
+    assertThat(generatedSource)
+        .contains("@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class");
   }
 }

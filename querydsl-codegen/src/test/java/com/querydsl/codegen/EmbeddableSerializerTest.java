@@ -14,8 +14,6 @@
 package com.querydsl.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.*;
@@ -209,14 +207,11 @@ public class EmbeddableSerializerTest {
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     final String generatedSource = writer.toString();
-    assertThat(
-        generatedSource,
-        containsString(
-            String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName())));
-    assertThat(
-        generatedSource,
-        containsString(
-            "@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")\npublic class"));
+    assertThat(generatedSource)
+        .contains(
+            String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()));
+    assertThat(generatedSource)
+        .contains("@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")\npublic class");
     CompileUtils.assertCompiles("QEntity", generatedSource);
   }
 
@@ -232,10 +227,8 @@ public class EmbeddableSerializerTest {
             com.querydsl.core.annotations.Generated.class)
         .serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String generatedSourceCode = writer.toString();
-    assertThat(
-        generatedSourceCode,
-        containsString(
-            "@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")\npublic class"));
+    assertThat(generatedSourceCode)
+        .contains("@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")\npublic class");
     CompileUtils.assertCompiles("QEntity", generatedSourceCode);
   }
 }

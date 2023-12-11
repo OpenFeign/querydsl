@@ -6,9 +6,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hibernate.ScrollMode.FORWARD_ONLY;
-import static org.junit.Assert.assertThat;
 
 import com.mysema.commons.lang.IteratorAdapter;
 import com.querydsl.core.types.FactoryExpression;
@@ -105,9 +103,8 @@ public class HibernateHandlerTest {
     expect(nativeQuery.getResultList()).andReturn(List.of());
     replay(nativeQuery);
 
-    assertThat(
-        hibernateHandler.iterate(nativeQuery, factoryExpression),
-        instanceOf(TransformingIterator.class));
+    assertThat(hibernateHandler.iterate(nativeQuery, factoryExpression))
+        .isInstanceOf(TransformingIterator.class);
   }
 
   @Test
