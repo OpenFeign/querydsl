@@ -31,11 +31,15 @@ public class LocalDateTimeType extends AbstractJSR310DateTimeType<LocalDateTime>
   @Nullable
   @Override
   public LocalDateTime getValue(ResultSet rs, int startIndex) throws SQLException {
-    Timestamp timestamp = rs.getTimestamp(startIndex);
-    if (timestamp == null) {
-      return null;
+    try {
+      return rs.getObject(startIndex, LocalDateTime.class);
+    } catch (SQLException e) {
+      Timestamp timestamp = rs.getTimestamp(startIndex);
+      if (timestamp == null) {
+        return null;
+      }
+      return timestamp.toLocalDateTime();
     }
-    return timestamp.toLocalDateTime();
   }
 
   @Override
