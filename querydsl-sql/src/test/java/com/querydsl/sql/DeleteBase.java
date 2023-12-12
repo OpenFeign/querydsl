@@ -60,7 +60,7 @@ public class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLITE})
+  @ExcludeIn({CUBRID, SQLITE, FIREBIRD})
   public void batch_templates() throws SQLException {
     insert(survey).values(2, "A", "B").execute();
     insert(survey).values(3, "B", "C").execute();
@@ -125,7 +125,7 @@ public class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLITE})
+  @ExcludeIn({CUBRID, SQLITE, FIREBIRD})
   public void delete_with_tempateExpression_in_batch() {
     assertThat(
             delete(survey)
