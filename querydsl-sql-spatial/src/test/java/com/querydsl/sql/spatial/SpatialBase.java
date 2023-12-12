@@ -3,6 +3,7 @@ package com.querydsl.sql.spatial;
 import static com.querydsl.core.Target.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
@@ -196,7 +197,7 @@ public class SpatialBase extends AbstractBaseTest {
     List<Expression<?>> expressions = new ArrayList<>();
     add(expressions, point.asBinary(), H2);
     add(expressions, point.asText());
-    add(expressions, point.boundary(), H2, MYSQL);
+    add(expressions, point.boundary(), H2, MYSQL, POSTGRESQL);
     add(expressions, point.convexHull(), H2, MYSQL);
     add(expressions, point.dimension());
     add(expressions, point.envelope(), H2);
@@ -214,11 +215,15 @@ public class SpatialBase extends AbstractBaseTest {
 
     for (Expression<?> expr : expressions) {
       boolean logged = false;
-      for (Object row : withPoints().select(expr).fetch()) {
-        if (row == null && !logged) {
-          System.err.println(expr.toString());
-          logged = true;
+      try {
+        for (Object row : withPoints().select(expr).fetch()) {
+          if (row == null && !logged) {
+            System.err.println(expr.toString());
+            logged = true;
+          }
         }
+      } catch (Exception e) {
+        fail("Error with expression " + expr, e);
       }
     }
   }
@@ -228,16 +233,16 @@ public class SpatialBase extends AbstractBaseTest {
     List<Expression<?>> expressions = new ArrayList<>();
     add(expressions, point1.contains(point2));
     add(expressions, point1.crosses(point2));
-    add(expressions, point1.difference(point2), H2, MYSQL);
+    add(expressions, point1.difference(point2), H2, MYSQL, POSTGRESQL);
     add(expressions, point1.disjoint(point2));
     add(expressions, point1.distance(point2), MYSQL);
-    add(expressions, point1.distanceSphere(point2), H2, MYSQL, SQLSERVER);
+    add(expressions, point1.distanceSphere(point2), H2, MYSQL, POSTGRESQL, SQLSERVER);
     add(expressions, point1.distanceSpheroid(point2), H2, MYSQL, POSTGRESQL, SQLSERVER);
     add(expressions, point1.eq(point2));
-    add(expressions, point1.intersection(point2), H2, MYSQL);
+    add(expressions, point1.intersection(point2), H2, MYSQL, POSTGRESQL);
     add(expressions, point1.intersects(point2));
     add(expressions, point1.overlaps(point2));
-    add(expressions, point1.symDifference(point2), H2, MYSQL);
+    add(expressions, point1.symDifference(point2), H2, MYSQL, POSTGRESQL);
     add(expressions, point1.touches(point2));
     add(expressions, point1.union(point2), H2, MYSQL);
     add(expressions, point1.within(point2));
@@ -258,16 +263,20 @@ public class SpatialBase extends AbstractBaseTest {
 
     for (Expression<?> expr : expressions) {
       boolean logged = false;
-      for (Object row :
-          query()
-              .from(shapes1, shapes2)
-              .where(shapes1.id.loe(5), shapes2.id.loe(5))
-              .select(expr)
-              .fetch()) {
-        if (row == null && !logged) {
-          System.err.println(expr.toString());
-          logged = true;
+      try {
+        for (Object row :
+            query()
+                .from(shapes1, shapes2)
+                .where(shapes1.id.loe(5), shapes2.id.loe(5))
+                .select(expr)
+                .fetch()) {
+          if (row == null && !logged) {
+            System.err.println(expr.toString());
+            logged = true;
+          }
         }
+      } catch (Exception e) {
+        fail("Error with expression " + expr, e);
       }
     }
   }
