@@ -26,7 +26,7 @@ commands:
       - run:
           name: 'Resolving Dependencies'
           command: |
-            ./mvnw -ntp dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true -B
+            ./mvnw -ntp -B dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true
 
   save-test-results:
     steps:
@@ -50,7 +50,7 @@ commands:
       - run:
           name: 'Deploy Core Modules Sonatype'
           command: |
-            ./mvnw -ntp -nsu -s .circleci/settings.xml -DskipTests=true deploy -B -Prelease
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease
 
 # our job defaults
 defaults: &defaults
@@ -112,7 +112,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp verify -B -Pno-databases
+            ./mvnw -ntp -B verify -Pno-databases
       - save-test-results
   buildExamples:
     <<: *defaults
@@ -130,8 +130,8 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp install -B -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb -am -T2
-            ./mvnw -ntp verify -B -Pexamples -rf :querydsl-examples
+            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb -am -T2
+            ./mvnw -ntp -B verify -Pexamples -rf :querydsl-examples
       - save-test-results
   buildQuarkusExample:
     <<: *defaults
@@ -167,7 +167,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.MySQL
+            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.MySQL
       - save-test-results
   testPostgreSQL:
     <<: *defaults
@@ -188,7 +188,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.PostgreSQL
+            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
       - save-test-results
   testCUBRID:
     <<: *defaults
@@ -207,7 +207,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.CUBRID
+            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.CUBRID
       - save-test-results
   testOracle:
     <<: *defaults
@@ -228,7 +228,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.Oracle
+            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.Oracle
       - save-test-results
   testMongo:
     <<: *defaults
@@ -245,7 +245,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.MongoDB
+            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.MongoDB
       - save-test-results
   testFirebird:
     <<: *defaults
@@ -267,7 +267,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.Firebird
+            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.Firebird
       - save-test-results
   testMSSQL:
     <<: *defaults
@@ -288,7 +288,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.SQLServer
+            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.SQLServer
       - save-test-results
   testEmbedded:
     <<: *defaults
@@ -304,7 +304,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
+            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
       - save-test-results
 
   deploy:

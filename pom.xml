@@ -891,6 +891,15 @@
       </properties>
     </profile>
     <profile>
+      <id>ci</id>
+      <properties>
+        <!-- default groups to exclude from surefire plugin -->
+        <excludedGroups>com.querydsl.core.testutil.SlowTest,
+                        com.querydsl.core.testutil.Performance,
+                        com.querydsl.core.testutil.ReportingOnly</excludedGroups>
+      </properties>
+    </profile>
+    <profile>
       <id>dev</id>
       <properties>
         <!-- default groups to exclude from surefire plugin -->
