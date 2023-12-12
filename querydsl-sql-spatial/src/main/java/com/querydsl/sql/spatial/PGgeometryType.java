@@ -18,10 +18,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import net.postgis.jdbc.PGgeometry;
 import org.geolatte.geom.Geometry;
 import org.geolatte.geom.codec.Wkt;
 import org.jetbrains.annotations.Nullable;
-import org.postgis.PGgeometry;
 
 class PGgeometryType extends AbstractType<Geometry> {
 
