@@ -53,12 +53,6 @@
     <project.githubpage>http://github.com/openfeign/querydsl</project.githubpage>
     <project.checkout>scm:git:git@github.com:openfeign/querydsl.git</project.checkout>
 
-    <!-- default groups to exclude from surefire plugin -->
-    <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
-      com.querydsl.core.testutil.SlowTest,
-      com.querydsl.core.testutil.Performance,
-      com.querydsl.core.testutil.ReportingOnly</excludedGroups>
-
     <argLine>-Xms256m -Xmx512m</argLine>
 
     <!-- default bytecode version for src/main -->
@@ -898,6 +892,13 @@
     </profile>
     <profile>
       <id>dev</id>
+      <properties>
+        <!-- default groups to exclude from surefire plugin -->
+        <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
+                        com.querydsl.core.testutil.SlowTest,
+                        com.querydsl.core.testutil.Performance,
+                        com.querydsl.core.testutil.ReportingOnly</excludedGroups>
+      </properties>
 
       <build>
         <plugins>
