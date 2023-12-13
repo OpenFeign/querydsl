@@ -3,6 +3,7 @@ package com.querydsl.sql.types;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +31,15 @@ public class LocalDateTimeType extends AbstractJSR310DateTimeType<LocalDateTime>
   @Nullable
   @Override
   public LocalDateTime getValue(ResultSet rs, int startIndex) throws SQLException {
-    return rs.getObject(startIndex, LocalDateTime.class);
+    try {
+      return rs.getObject(startIndex, LocalDateTime.class);
+    } catch (SQLException e) {
+      Timestamp timestamp = rs.getTimestamp(startIndex);
+      if (timestamp == null) {
+        return null;
+      }
+      return timestamp.toLocalDateTime();
+    }
   }
 
   @Override
