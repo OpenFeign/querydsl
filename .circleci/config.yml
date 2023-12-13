@@ -219,6 +219,7 @@ jobs:
           - ORACLE_PASSWORD=querydsl
           - APP_USER=querydsl
           - APP_USER_PASSWORD=querydsl
+          - TZ=UTC
     steps:
       - checkout
       - restore_cache:
@@ -258,6 +259,7 @@ jobs:
           - FIREBIRD_DATABASE=querydsl.fdb
           - FIREBIRD_USER=querydsl
           - FIREBIRD_PASSWORD=querydsl
+          - TZ=UTC
     steps:
       - checkout
       - restore_cache:
