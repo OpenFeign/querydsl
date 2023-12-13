@@ -348,12 +348,17 @@
               <TZ>UTC</TZ>
             </environmentVariables>
             <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+            <perCoreThreadCount>0.5C</perCoreThreadCount>
           </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <version>${surefire.version}</version>
+          <configuration>
+            <forkCount>0.5C</forkCount>
+            <perCoreThreadCount>0.5C</perCoreThreadCount>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
