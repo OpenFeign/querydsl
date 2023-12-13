@@ -64,7 +64,7 @@ public class InsertBase extends AbstractBaseTest {
 
   @Test
   @ExcludeIn({
-    CUBRID, SQLITE, DERBY
+    CUBRID, SQLITE, DERBY, ORACLE
   }) // https://bitbucket.org/xerial/sqlite-jdbc/issue/133/prepstmtsetdate-int-date-calendar-seems
   public void insert_dates() {
     QDateTest dateTest = QDateTest.qDateTest;

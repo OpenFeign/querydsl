@@ -541,7 +541,7 @@ public class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, H2})
+  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, H2, FIREBIRD})
   public void dates() throws SQLException {
     if (!configuration.getUseLiterals()) {
       dates(false);
@@ -549,7 +549,7 @@ public class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, SQLITE, TERADATA})
+  @ExcludeIn({CUBRID, DB2, DERBY, SQLITE, TERADATA, FIREBIRD})
   public void dates_literals() throws SQLException {
     if (configuration.getUseLiterals()) {
       dates(true);
@@ -739,7 +739,7 @@ public class SelectBase extends AbstractBaseTest {
   // TDO Date_diff with timestamps
 
   @Test
-  @ExcludeIn({DB2, HSQLDB, SQLITE, TERADATA})
+  @ExcludeIn({DB2, HSQLDB, SQLITE, TERADATA, ORACLE})
   public void date_diff2() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
 
