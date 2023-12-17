@@ -93,20 +93,15 @@ public final class Types {
 
   public static final SimpleType DATE_TIME =
       new SimpleType(
-          TypeCategory.DATETIME,
-          "org.joda.time.DateTime",
-          "org.joda.time",
-          "DateTime",
-          false,
-          false);
+          TypeCategory.DATETIME, "java.time.DateTime", "java.time", "DateTime", false, false);
 
   public static final SimpleType LOCAL_DATE =
       new SimpleType(
-          TypeCategory.DATE, "org.joda.time.LocalDate", "org.joda.time", "LocalDate", false, false);
+          TypeCategory.DATE, "java.time.LocalDate", "java.time", "LocalDate", false, false);
 
   public static final SimpleType LOCAL_TIME =
       new SimpleType(
-          TypeCategory.TIME, "org.joda.time.LocalTime", "org.joda.time", "LocalTime", false, false);
+          TypeCategory.TIME, "java.time.LocalTime", "java.time", "LocalTime", false, false);
 
   static {
     Map<Type, Type> primitives = new HashMap<Type, Type>();

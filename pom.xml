@@ -441,7 +441,6 @@
                     <exclude>org.datanucleus:javax.jdo:*:*:compile</exclude>
                     <exclude>org.springframework.roo:org.springframework.roo.annotations:*:*:compile</exclude>
                     <exclude>org.mongodb.morphia:morphia:*:*:compile</exclude>
-                    <exclude>joda-time:joda-time:*:*:compile</exclude>
                     <exclude>org.joda:joda-money:*:*:compile</exclude>
                     <exclude>javax.el:javax.el-api:*:*:compile</exclude>
                     <exclude>javax.persistence:javax.persistence-api:*:*:compile</exclude>

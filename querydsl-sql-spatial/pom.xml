@@ -12,11 +12,6 @@
   <name>Querydsl - SQL Spatial support</name>
   <description>SQL support for Querydsl</description>
 
-  <properties>
-    <osgi.import.package>org.joda.time.*;version="[1.6,3)",
-            ${osgi.import.package.root}</osgi.import.package>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>

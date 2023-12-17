@@ -13,8 +13,6 @@
   <description>SQL support for Querydsl</description>
 
   <properties>
-    <osgi.import.package>org.joda.time.*;version="[1.6,3)",
-      ${osgi.import.package.root}</osgi.import.package>
     <argLine>-Xms256m -Xmx512m -Duser.timezone=UTC</argLine>
   </properties>
 
