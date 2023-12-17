@@ -78,7 +78,7 @@ public class TypeElementHandler {
 
     // constructors
     if (config.visitConstructors()) {
-      handleConstructors(entityType, elements);
+      handleConstructors(entityType, elements, true);
     }
 
     // fields
@@ -175,13 +175,13 @@ public class TypeElementHandler {
     return new Property(entityType, name, propertyType, inits);
   }
 
-  public EntityType handleProjectionType(TypeElement e) {
+  public EntityType handleProjectionType(TypeElement e, boolean onlyAnnotatedConstructors) {
     Type c = typeFactory.getType(e.asType(), true);
     EntityType entityType =
         new EntityType(c.as(TypeCategory.ENTITY), configuration.getVariableNameFunction());
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
     List<? extends Element> elements = e.getEnclosedElements();
-    handleConstructors(entityType, elements);
+    handleConstructors(entityType, elements, onlyAnnotatedConstructors);
     return entityType;
   }
 
@@ -197,9 +197,10 @@ public class TypeElementHandler {
     return rv;
   }
 
-  private void handleConstructors(EntityType entityType, List<? extends Element> elements) {
+  private void handleConstructors(
+      EntityType entityType, List<? extends Element> elements, boolean onlyAnnotatedConstructors) {
     for (ExecutableElement constructor : ElementFilter.constructorsIn(elements)) {
-      if (configuration.isValidConstructor(constructor)) {
+      if (configuration.isValidConstructor(constructor, onlyAnnotatedConstructors)) {
         List<Parameter> parameters = transformParams(constructor.getParameters());
         entityType.addConstructor(new Constructor(parameters));
       }

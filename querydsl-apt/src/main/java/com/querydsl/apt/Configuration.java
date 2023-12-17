@@ -83,7 +83,7 @@ public interface Configuration {
 
   boolean isUseGetters();
 
-  boolean isValidConstructor(ExecutableElement constructor);
+  boolean isValidConstructor(ExecutableElement constructor, boolean onlyAnnotatedConstructors);
 
   boolean isValidField(VariableElement field);
 
