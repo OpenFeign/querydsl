@@ -27,6 +27,8 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
@@ -36,77 +38,43 @@ import org.sonatype.plexus.build.incremental.BuildContext;
  */
 public abstract class AbstractExporterMojo extends AbstractMojo {
 
-  /**
-   * target folder for sources
-   *
-   * @parameter
-   * @required
-   */
-  private File targetFolder;
-
-  /**
-   * switch for scala source generation
-   *
-   * @parameter default-value=false
-   */
-  private boolean scala;
-
-  /**
-   * packages to be exported
-   *
-   * @parameter
-   * @required
-   */
-  private String[] packages;
-
-  /**
-   * switch for inspecting fields
-   *
-   * @parameter default-value=true
-   */
-  private boolean handleFields = true;
-
-  /**
-   * switch for inspecting getters
-   *
-   * @parameter default-value=true
-   */
-  private boolean handleMethods = true;
-
-  /**
-   * switch for usage of field types instead of getter types
-   *
-   * @parameter default-value=false
-   */
-  private boolean useFieldTypes = false;
-
-  /**
-   * maven project
-   *
-   * @parameter default-value="${project}"
-   * @readonly
-   */
+  /** maven project */
+  @Parameter(defaultValue = "${project}", required = true, readonly = true)
   private MavenProject project;
 
-  /**
-   * source file encoding
-   *
-   * @parameter
-   */
-  private String sourceEncoding;
+  /** target folder for sources */
+  @Parameter(required = true)
+  private File targetFolder;
 
-  /**
-   * test classpath usage switch
-   *
-   * @parameter default-value=false
-   */
+  /** switch for scala source generation */
+  @Parameter(defaultValue = "false")
+  private boolean scala;
+
+  /** packages to be exported */
+  @Parameter(required = true)
+  private String[] packages;
+
+  /** switch for inspecting fields */
+  @Parameter(defaultValue = "true")
+  private boolean handleFields = true;
+
+  /** switch for inspecting getters */
+  @Parameter(defaultValue = "true")
+  private boolean handleMethods = true;
+
+  /** switch for usage of field types instead of getter types */
+  @Parameter(defaultValue = "false")
+  private boolean useFieldTypes = false;
+
+  /** source file encoding */
+  @Parameter private String sourceEncoding;
+
+  /** test classpath usage switch */
+  @Parameter(defaultValue = "false")
   private boolean testClasspath;
 
-  /**
-   * Whether to skip the exporting execution
-   *
-   * @parameter default-value=false property="maven.querydsl.skip"
-   */
+  /** Whether to skip the exporting execution */
+  @Parameter(defaultValue = "false", property = "maven.querydsl.skip")
   private boolean skip;
 
   /**
@@ -116,17 +84,11 @@ public abstract class AbstractExporterMojo extends AbstractMojo {
    * <em>See also</em> <a
    * href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.7.3">Single-Element
    * Annotation</a>
-   *
-   * @parameter
    */
-  private String generatedAnnotationClass;
+  @Parameter private String generatedAnnotationClass;
 
-  /**
-   * build context
-   *
-   * @component
-   */
-  private BuildContext buildContext;
+  /** build context */
+  @Component private BuildContext buildContext;
 
   @SuppressWarnings("unchecked")
   @Override
