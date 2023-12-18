@@ -16,14 +16,15 @@ package com.querydsl.maven;
 import com.querydsl.codegen.GenericExporter;
 import com.querydsl.codegen.PropertyHandling;
 import jakarta.persistence.*;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
  * {@code JPAExporterMojo} calls {@link GenericExporter} using the classpath of the module
  *
- * @goal jpa-export
- * @requiresDependencyResolution test
  * @author tiwe
  */
+@Mojo(name = "jpa-export", requiresDependencyResolution = ResolutionScope.TEST)
 public class JPAExporterMojo extends AbstractExporterMojo {
 
   @Override

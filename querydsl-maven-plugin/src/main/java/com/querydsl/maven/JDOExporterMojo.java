@@ -19,14 +19,15 @@ import jakarta.persistence.Embedded;
 import javax.jdo.annotations.EmbeddedOnly;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
  * {@code JDOExporterMojo} calls {@link GenericExporter} using the classpath of the module
  *
- * @goal jdo-export
- * @requiresDependencyResolution test
  * @author tiwe
  */
+@Mojo(name = "jdo-export", requiresDependencyResolution = ResolutionScope.TEST)
 public class JDOExporterMojo extends AbstractExporterMojo {
 
   @Override
