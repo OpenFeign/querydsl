@@ -1,9 +1,8 @@
 package com.querydsl.sql.spatial;
 
 import static com.querydsl.core.Target.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.within;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;

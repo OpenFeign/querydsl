@@ -15,7 +15,6 @@ package com.querydsl.sql.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import com.querydsl.codegen.BeanSerializer;
 import com.querydsl.codegen.utils.SimpleCompiler;
@@ -482,7 +481,7 @@ public class MetaDataExporterTest {
     int compilationResult =
         compiler.run(null, System.out, System.err, classes.toArray(new String[0]));
     if (compilationResult != 0) {
-      fail("", "Compilation Failed for " + targetDir.getAbsolutePath());
+      fail("Compilation Failed for " + targetDir.getAbsolutePath());
     }
   }
 }
