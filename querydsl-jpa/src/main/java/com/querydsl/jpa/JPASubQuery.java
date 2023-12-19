@@ -21,7 +21,7 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 
-class JPASubQuery<T> extends JPAQueryBase<T, JPASubQuery<T>> {
+class JPASubQuery<T> extends JPAQueryBase<T, JPASubQuery<T>> implements JPQLSubQuery<T> {
 
   JPASubQuery() {
     super(new DefaultQueryMetadata(), JPQLTemplates.DEFAULT);

@@ -15,7 +15,7 @@
  */
 package io.github.openfeign.querydsl.jpa.spring.repository.support;
 
-import io.github.openfeign.querydsl.jpa.spring.repository.JpqlRepository;
+import io.github.openfeign.querydsl.jpa.spring.repository.JPQLRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
@@ -25,8 +25,8 @@ import org.springframework.data.repository.core.support.RepositoryComposition.Re
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.data.repository.history.RevisionRepository;
 
-/** {@link FactoryBean} creating {@link JpqlRepository} instances. */
-public class QuerydslJpaRepositoryFactoryBean<T extends JpqlRepository<S, ID>, S, ID>
+/** {@link FactoryBean} creating {@link JPQLRepository} instances. */
+public class QuerydslJpaRepositoryFactoryBean<T extends JPQLRepository<S, ID>, S, ID>
     extends JpaRepositoryFactoryBean<T, S, ID> {
 
   /**

@@ -23,7 +23,7 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import io.github.openfeign.querydsl.jpa.spring.repository.JpqlRepository;
+import io.github.openfeign.querydsl.jpa.spring.repository.JPQLRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.repository.core.EntityInformation;
@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
 
 /** Repository implementation using query dsl compiled queries */
 @Transactional(readOnly = true)
-public class QuerydslJpaRepositoryImpl<T, ID> implements JpqlRepository<T, ID> {
+public class QuerydslJpaRepositoryImpl<T, ID> implements JPQLRepository<T, ID> {
 
   private final EntityInformation<T, ?> entityInformation;
   private final EntityManager entityManager;
@@ -62,7 +62,7 @@ public class QuerydslJpaRepositoryImpl<T, ID> implements JpqlRepository<T, ID> {
   }
 
   @Override
-  public JPQLQuery<T> select(Expression<T> expr) {
+  public <U> JPQLQuery<U> select(Expression<U> expr) {
     return jpaQueryFactory.select(expr);
   }
 
@@ -72,7 +72,7 @@ public class QuerydslJpaRepositoryImpl<T, ID> implements JpqlRepository<T, ID> {
   }
 
   @Override
-  public JPQLQuery<T> selectDistinct(Expression<T> expr) {
+  public <U> JPQLQuery<U> selectDistinct(Expression<U> expr) {
     return jpaQueryFactory.selectDistinct(expr);
   }
 
@@ -92,7 +92,7 @@ public class QuerydslJpaRepositoryImpl<T, ID> implements JpqlRepository<T, ID> {
   }
 
   @Override
-  public JPQLQuery<T> selectFrom(EntityPath<T> from) {
+  public <U> JPQLQuery<U> selectFrom(EntityPath<U> from) {
     return jpaQueryFactory.selectFrom(from);
   }
 

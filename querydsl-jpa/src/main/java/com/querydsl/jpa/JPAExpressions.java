@@ -44,7 +44,7 @@ public final class JPAExpressions {
    * @param <T>
    * @return select(expr)
    */
-  public static <T> JPQLQuery<T> select(Expression<T> expr) {
+  public static <T> JPQLSubQuery<T> select(Expression<T> expr) {
     return new JPASubQuery<Void>().select(expr);
   }
 
@@ -54,7 +54,7 @@ public final class JPAExpressions {
    * @param exprs projection
    * @return select(exprs)
    */
-  public static JPQLQuery<Tuple> select(Expression<?>... exprs) {
+  public static JPQLSubQuery<Tuple> select(Expression<?>... exprs) {
     return new JPASubQuery<Void>().select(exprs);
   }
 
@@ -65,7 +65,7 @@ public final class JPAExpressions {
    * @param <T>
    * @return select(distinct expr)
    */
-  public static <T> JPQLQuery<T> selectDistinct(Expression<T> expr) {
+  public static <T> JPQLSubQuery<T> selectDistinct(Expression<T> expr) {
     return new JPASubQuery<Void>().select(expr).distinct();
   }
 
@@ -75,7 +75,7 @@ public final class JPAExpressions {
    * @param exprs projection
    * @return select(distinct expr)
    */
-  public static JPQLQuery<Tuple> selectDistinct(Expression<?>... exprs) {
+  public static JPQLSubQuery<Tuple> selectDistinct(Expression<?>... exprs) {
     return new JPASubQuery<Void>().select(exprs).distinct();
   }
 
@@ -84,7 +84,7 @@ public final class JPAExpressions {
    *
    * @return select(0)
    */
-  public static JPQLQuery<Integer> selectZero() {
+  public static JPQLSubQuery<Integer> selectZero() {
     return select(Expressions.ZERO);
   }
 
@@ -93,7 +93,7 @@ public final class JPAExpressions {
    *
    * @return select(1)
    */
-  public static JPQLQuery<Integer> selectOne() {
+  public static JPQLSubQuery<Integer> selectOne() {
     return select(Expressions.ONE);
   }
 
@@ -104,7 +104,7 @@ public final class JPAExpressions {
    * @param <T>
    * @return select(expr).from(expr)
    */
-  public static <T> JPQLQuery<T> selectFrom(EntityPath<T> expr) {
+  public static <T> JPQLSubQuery<T> selectFrom(EntityPath<T> expr) {
     return select(expr).from(expr);
   }
 
