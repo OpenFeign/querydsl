@@ -31,9 +31,9 @@
 
     <!-- alias dependencies -->
     <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib</artifactId>
-      <version>${cglib.version}</version>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>${byte-buddy.version}</version>
       <optional>true</optional>
     </dependency>
 
