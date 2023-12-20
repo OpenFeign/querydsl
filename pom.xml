@@ -599,12 +599,41 @@
         </configuration>
       </plugin>
       <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>set number of slashes in URL</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <condition property="urlSlashesOsModifier" value="//">
+                  <and>
+                    <not>
+                      <os family="windows"></os>
+                    </not>
+                  </and>
+                </condition>
+                <condition property="urlSlashesOsModifier" value="///">
+                  <and>
+                    <os family="windows"></os>
+                  </and>
+                </condition>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
         <version>0.103.1</version>
         <inherited>false</inherited>
         <configuration>
-          <bomTemplateUrl>file://${project.basedir}/src/config/bom.xml</bomTemplateUrl>
+          <bomTemplateUrl>file:${urlSlashesOsModifier}${project.basedir}/src/config/bom.xml</bomTemplateUrl>
           <boms>
             <bom>
               <artifactId>querydsl-bom</artifactId>

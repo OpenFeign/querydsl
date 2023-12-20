@@ -227,7 +227,10 @@ public class EntitySerializerTest {
         .contains(
             String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()));
     assertThat(generatedSourceCode)
-        .contains("@Generated(\"com.querydsl.codegen.DefaultEntitySerializer\")\npublic class");
+        .contains(
+            "@Generated(\"com.querydsl.codegen.DefaultEntitySerializer\")"
+                + System.lineSeparator()
+                + "public class");
     CompileUtils.assertCompiles("QEntitySerializerTest_Entity", generatedSourceCode);
   }
 
@@ -248,7 +251,9 @@ public class EntitySerializerTest {
         .contains(
             "@"
                 + com.querydsl.core.annotations.Generated.class.getSimpleName()
-                + "(\"com.querydsl.codegen.DefaultEntitySerializer\")\npublic class");
+                + "(\"com.querydsl.codegen.DefaultEntitySerializer\")"
+                + System.lineSeparator()
+                + "public class");
     CompileUtils.assertCompiles("QEntitySerializerTest_Entity", generatedSourceCode);
   }
 }

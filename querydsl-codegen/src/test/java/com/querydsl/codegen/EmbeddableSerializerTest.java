@@ -211,7 +211,10 @@ public class EmbeddableSerializerTest {
         .contains(
             String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()));
     assertThat(generatedSource)
-        .contains("@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")\npublic class");
+        .contains(
+            "@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")"
+                + System.lineSeparator()
+                + "public class");
     CompileUtils.assertCompiles("QEntity", generatedSource);
   }
 
@@ -228,7 +231,10 @@ public class EmbeddableSerializerTest {
         .serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String generatedSourceCode = writer.toString();
     assertThat(generatedSourceCode)
-        .contains("@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")\npublic class");
+        .contains(
+            "@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")"
+                + System.lineSeparator()
+                + "public class");
     CompileUtils.assertCompiles("QEntity", generatedSourceCode);
   }
 }

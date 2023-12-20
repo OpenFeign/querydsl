@@ -134,7 +134,8 @@ public class BeanSerializerTest {
     BeanSerializer serializer = new BeanSerializer();
     serializer.setAddToString(true);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertThat(String.valueOf(writer)).contains("    @Override\n" + "    public String toString()");
+    assertThat(String.valueOf(writer))
+        .contains("    @Override" + System.lineSeparator() + "    public String toString()");
   }
 
   @Test
@@ -209,7 +210,10 @@ public class BeanSerializerTest {
         .contains(
             String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()));
     assertThat(generatedSource)
-        .contains("@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class");
+        .contains(
+            "@Generated(\"com.querydsl.codegen.BeanSerializer\")"
+                + System.lineSeparator()
+                + "public class");
   }
 
   @Test
@@ -220,6 +224,9 @@ public class BeanSerializerTest {
     String generatedSource = String.valueOf(writer);
     assertThat(generatedSource).contains("import com.querydsl.core.annotations.Generated;");
     assertThat(generatedSource)
-        .contains("@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class");
+        .contains(
+            "@Generated(\"com.querydsl.codegen.BeanSerializer\")"
+                + System.lineSeparator()
+                + "public class");
   }
 }
