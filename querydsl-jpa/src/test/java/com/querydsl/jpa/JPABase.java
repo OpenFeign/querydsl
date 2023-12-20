@@ -30,6 +30,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.domain.Cat;
+import com.querydsl.jpa.domain.Parent;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.QCatSummary;
 import com.querydsl.jpa.domain.QChild;
@@ -142,7 +143,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
     QChild child = QChild.child;
     QParent parent = QParent.parent;
 
-    JPQLQuery<?> subQuery = selectFrom(parent).where(parent.id.eq(2), child.parent.eq(parent));
+    JPQLSubQuery<Parent> subQuery =
+        selectFrom(parent).where(parent.id.eq(2), child.parent.eq(parent));
     // child.in(parent.children));
 
     delete(child).where(child.id.eq(1), subQuery.exists()).execute();

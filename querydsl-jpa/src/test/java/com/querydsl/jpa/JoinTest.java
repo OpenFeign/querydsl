@@ -33,7 +33,7 @@ public class JoinTest {
   private final Entity alias = Alias.alias(Entity.class);
 
   private final StringPath path = Expressions.stringPath("path");
-  private final JPQLQuery<?> subQuery = selectOne();
+  private final JPQLSubQuery<Integer> subQuery = selectOne();
   private final HibernateQuery<?> query =
       new HibernateQuery<Void>(new DummySessionHolder(), HQLTemplates.DEFAULT);
 

@@ -21,14 +21,17 @@ import com.querydsl.core.dml.InsertClause;
 import com.querydsl.core.dml.UpdateClause;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.JPQLQueryFactory;
+import com.querydsl.jpa.JPQLSubQuery;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
 
 /** A repository which can access {@link JPQLQueryFactory} methods */
 @NoRepositoryBean
-public interface JpqlRepository<T, ID> extends Repository<T, ID> {
+public interface JPQLRepository<T, ID> extends Repository<T, ID> {
 
   /**
    * Create a new DELETE clause
@@ -45,7 +48,7 @@ public interface JpqlRepository<T, ID> extends Repository<T, ID> {
    * @param <T>
    * @return select(expr)
    */
-  JPQLQuery<T> select(Expression<T> expr);
+  <U> JPQLQuery<U> select(Expression<U> expr);
 
   /**
    * Create a new JPQLQuery instance with the given projection
@@ -62,7 +65,7 @@ public interface JpqlRepository<T, ID> extends Repository<T, ID> {
    * @param <T>
    * @return select(distinct expr)
    */
-  JPQLQuery<T> selectDistinct(Expression<T> expr);
+  <U> JPQLQuery<U> selectDistinct(Expression<U> expr);
 
   /**
    * Create a new JPQLQuery instance with the given projection
@@ -93,7 +96,7 @@ public interface JpqlRepository<T, ID> extends Repository<T, ID> {
    * @param <T>
    * @return select(from).from(from)
    */
-  JPQLQuery<T> selectFrom(EntityPath<T> from);
+  <U> JPQLQuery<U> selectFrom(EntityPath<U> from);
 
   /**
    * Create a new UPDATE clause
@@ -110,4 +113,75 @@ public interface JpqlRepository<T, ID> extends Repository<T, ID> {
    * @return insert clause
    */
   InsertClause<?> insert(EntityPath<T> path);
+
+  /**
+   * Create a new detached JPQLQuery instance with the given projection
+   *
+   * @param expr projection
+   * @param <T>
+   * @return select(expr)
+   */
+  default <U> JPQLSubQuery<U> subSelect(Expression<U> expr) {
+    return JPAExpressions.select(expr);
+  }
+
+  /**
+   * Create a new detached JPQLQuery instance with the given projection
+   *
+   * @param exprs projection
+   * @return select(exprs)
+   */
+  default JPQLSubQuery<Tuple> subSelect(Expression<?>... exprs) {
+    return JPAExpressions.select(exprs);
+  }
+
+  /**
+   * Create a new detached JPQLQuery instance with the given projection
+   *
+   * @param expr projection
+   * @param <U>
+   * @return select(distinct expr)
+   */
+  default <U> JPQLSubQuery<U> subSelectDistinct(Expression<U> expr) {
+    return JPAExpressions.select(expr).distinct();
+  }
+
+  /**
+   * Create a new detached JPQLQuery instance with the given projection
+   *
+   * @param exprs projection
+   * @return select(distinct expr)
+   */
+  default JPQLSubQuery<Tuple> subSelectDistinct(Expression<?>... exprs) {
+    return JPAExpressions.select(exprs).distinct();
+  }
+
+  /**
+   * Create a new detached JPQLQuery instance with the projection zero
+   *
+   * @return select(0)
+   */
+  default JPQLSubQuery<Integer> subSelectZero() {
+    return subSelect(Expressions.ZERO);
+  }
+
+  /**
+   * Create a new detached JPQLQuery instance with the projection one
+   *
+   * @return select(1)
+   */
+  default JPQLSubQuery<Integer> subSelectOne() {
+    return subSelect(Expressions.ONE);
+  }
+
+  /**
+   * Create a new detached JPQLQuery instance with the given projection
+   *
+   * @param expr projection and source
+   * @param <U>
+   * @return select(expr).from(expr)
+   */
+  default <U> JPQLSubQuery<U> subSelectFrom(EntityPath<U> expr) {
+    return subSelect(expr).from(expr);
+  }
 }
