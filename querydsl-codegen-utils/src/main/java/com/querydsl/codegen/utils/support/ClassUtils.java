@@ -79,8 +79,8 @@ public final class ClassUtils {
       return Collection.class;
     } else if (Map.class.isAssignableFrom(clazz)) {
       return Map.class;
-      // check for CGLIB generated classes
-    } else if (clazz.getName().contains("$$")) {
+      // check for Easy Mock or Byte Buddy generated classes
+    } else if (clazz.getName().contains("$$") || clazz.getName().contains("$ByteBuddy$")) {
       Class<?> zuper = clazz.getSuperclass();
       if (zuper != null && !Object.class.equals(zuper)) {
         return zuper;
