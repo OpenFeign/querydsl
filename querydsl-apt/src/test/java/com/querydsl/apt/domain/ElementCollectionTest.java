@@ -22,51 +22,27 @@ import com.google.testing.compile.JavaFileObjects;
 import com.querydsl.apt.jpa.JPAAnnotationProcessor;
 import com.querydsl.core.types.dsl.ElementCollectionPath;
 import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import java.io.File;
 import java.util.Collection;
 import org.junit.Test;
 
-public class EmbeddableInterfaceTest {
+public class ElementCollectionTest {
 
   @Entity
   public static class EntityClass {
 
-    @ElementCollection(targetClass = EmbeddableClass.class)
-    Collection<EmbeddableInterface> children;
-  }
-
-  @Embeddable
-  public interface EmbeddableInterface {
-
-    String getName();
-  }
-
-  @Embeddable
-  public static class EmbeddableClass implements EmbeddableInterface {
-
-    @Override
-    public String getName() {
-      return null;
-    }
-  }
-
-  @Test
-  public void type() {
-    assertThat(QEmbeddableInterfaceTest_EntityClass.entityClass.children.any())
-        .isInstanceOf(QEmbeddableInterfaceTest_EmbeddableInterface.class);
-    assertThat(QEmbeddableInterfaceTest_EntityClass.entityClass.children)
-        .isInstanceOf(ElementCollectionPath.class);
-  }
-
-  @Test
-  public void properties() {
-    assertThat(QEmbeddableInterfaceTest_EmbeddableInterface.embeddableInterface.name).isNotNull();
-    assertThat(QEmbeddableInterfaceTest_EmbeddableClass.embeddableClass.name).isNotNull();
+    @ElementCollection Collection<String> collectionOfElements;
   }
 
   private final File main = new File("src/test/java/").getAbsoluteFile();
+
+  @Test
+  public void properties() {
+    assertThat(QElementCollectionTest_EntityClass.entityClass.collectionOfElements).isNotNull();
+    assertThat(QElementCollectionTest_EntityClass.entityClass.collectionOfElements)
+        .isInstanceOf(ElementCollectionPath.class);
+  }
 
   @Test
   public void test() throws Exception {
@@ -76,13 +52,13 @@ public class EmbeddableInterfaceTest {
             .withClasspathFrom(this.getClass().getClassLoader())
             .compile(
                 JavaFileObjects.forResource(
-                    new File(main, "com/querydsl/apt/domain/EmbeddableInterfaceTest.java")
+                    new File(main, "com/querydsl/apt/domain/ElementCollectionTest.java")
                         .toURI()
                         .toURL()));
     assertThat(compilation).succeeded();
     assertThat(compilation)
-        .generatedSourceFile("com.querydsl.apt.domain.QEmbeddableInterfaceTest_EntityClass")
+        .generatedSourceFile("com.querydsl.apt.domain.QElementCollectionTest_EntityClass")
         .contentsAsUtf8String()
-        .contains("createElementCollection(\"children\"");
+        .contains("createElementCollection(\"collectionOfElements\"");
   }
 }

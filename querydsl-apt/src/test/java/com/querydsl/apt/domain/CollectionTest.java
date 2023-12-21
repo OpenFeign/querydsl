@@ -81,16 +81,16 @@ public class CollectionTest {
     //        assertEquals(Object.class,
     // QMapWithUndefinedValueTest_Person.person.appData.getParameter(1));
 
-    assertThat(QCollectionTest_Classes.classes.map1.getClass()).isEqualTo(MapPath.class);
-    assertThat(QCollectionTest_Classes.classes.map2.getClass()).isEqualTo(MapPath.class);
-    assertThat(QCollectionTest_Classes.classes.map3.getClass()).isEqualTo(MapPath.class);
+    assertThat(QCollectionTest_Classes.classes.map1).isInstanceOf(MapPath.class);
+    assertThat(QCollectionTest_Classes.classes.map2).isInstanceOf(MapPath.class);
+    assertThat(QCollectionTest_Classes.classes.map3).isInstanceOf(MapPath.class);
 
-    assertThat(QCollectionTest_Classes.classes.list1.getClass()).isEqualTo(ListPath.class);
-    assertThat(QCollectionTest_Classes.classes.list2.getClass()).isEqualTo(ListPath.class);
-    assertThat(QCollectionTest_Classes.classes.list3.getClass()).isEqualTo(ListPath.class);
+    assertThat(QCollectionTest_Classes.classes.list1).isInstanceOf(ListPath.class);
+    assertThat(QCollectionTest_Classes.classes.list2).isInstanceOf(ListPath.class);
+    assertThat(QCollectionTest_Classes.classes.list3).isInstanceOf(ListPath.class);
 
-    assertThat(QCollectionTest_Classes.classes.set1.getClass()).isEqualTo(SetPath.class);
-    assertThat(QCollectionTest_Classes.classes.set2.getClass()).isEqualTo(SetPath.class);
-    assertThat(QCollectionTest_Classes.classes.set3.getClass()).isEqualTo(SetPath.class);
+    assertThat(QCollectionTest_Classes.classes.set1).isInstanceOf(SetPath.class);
+    assertThat(QCollectionTest_Classes.classes.set2).isInstanceOf(SetPath.class);
+    assertThat(QCollectionTest_Classes.classes.set3).isInstanceOf(SetPath.class);
   }
 }

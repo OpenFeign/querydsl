@@ -34,6 +34,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathType;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.dsl.ElementCollectionPath;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.MathUtils;
 import jakarta.persistence.Entity;
@@ -471,8 +472,10 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
       visitOperation(type, Ops.NOT_IN, args);
 
     } else if (operator == Ops.IN || operator == Ops.NOT_IN) {
-      if (args.get(1) instanceof Path) {
+      if (args.get(1) instanceof ElementCollectionPath) {
         visitAnyInPath(type, operator, args);
+      } else if (args.get(1) instanceof Path) {
+        super.visitOperation(type, operator, args);
       } else if (args.get(0) instanceof Path && args.get(1) instanceof Constant<?>) {
         visitPathInCollection(type, operator, args);
       } else {

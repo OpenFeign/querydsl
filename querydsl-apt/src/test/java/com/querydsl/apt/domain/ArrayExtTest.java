@@ -39,39 +39,39 @@ public class ArrayExtTest {
 
   @Test
   public void binaryFile_contentPart() {
-    assertThat(binaryFile.contentPart.getClass()).isEqualTo(ArrayPath.class);
+    assertThat(binaryFile.contentPart).isInstanceOf(ArrayPath.class);
     assertThat(binaryFile.contentPart.getType()).isEqualTo(byte[].class);
   }
 
   @Test
   public void binaryFile_list() {
-    assertThat(binaryFile.list.getClass()).isEqualTo(ListPath.class);
+    assertThat(binaryFile.list).isInstanceOf(ListPath.class);
     assertThat(binaryFile.list.getType()).isEqualTo(List.class);
     assertThat(binaryFile.list.getParameter(0)).isEqualTo(byte[].class);
 
-    assertThat(binaryFile.list.get(0).getClass()).isEqualTo(SimplePath.class);
+    assertThat(binaryFile.list.get(0)).isInstanceOf(SimplePath.class);
     assertThat(binaryFile.list.get(0).getType()).isEqualTo(byte[].class);
   }
 
   @Test
   public void binaryFile_map1() {
-    assertThat(binaryFile.map1.getClass()).isEqualTo(MapPath.class);
+    assertThat(binaryFile.map1).isInstanceOf(MapPath.class);
     assertThat(binaryFile.map1.getType()).isEqualTo(Map.class);
     assertThat(binaryFile.map1.getParameter(0)).isEqualTo(String.class);
     assertThat(binaryFile.map1.getParameter(1)).isEqualTo(byte[].class);
 
-    assertThat(binaryFile.map1.get("").getClass()).isEqualTo(SimplePath.class);
+    assertThat(binaryFile.map1.get("")).isInstanceOf(SimplePath.class);
     assertThat(binaryFile.map1.get("").getType()).isEqualTo(byte[].class);
   }
 
   @Test
   public void binaryFile_map2() {
-    assertThat(binaryFile.map2.getClass()).isEqualTo(MapPath.class);
+    assertThat(binaryFile.map2).isInstanceOf(MapPath.class);
     assertThat(binaryFile.map2.getType()).isEqualTo(Map.class);
     assertThat(binaryFile.map2.getParameter(0)).isEqualTo(byte[].class);
     assertThat(binaryFile.map2.getParameter(1)).isEqualTo(String.class);
 
-    assertThat(binaryFile.map2.get(new byte[0]).getClass()).isEqualTo(StringPath.class);
+    assertThat(binaryFile.map2.get(new byte[0])).isInstanceOf(StringPath.class);
     assertThat(binaryFile.map2.get(new byte[0]).getType()).isEqualTo(String.class);
   }
 }

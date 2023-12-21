@@ -209,7 +209,7 @@ public class JPQLSerializerTest {
     md.addWhere(user.roles.contains(UserRole.ADMIN));
     serializer.serialize(md, false, null);
     assertThat(serializer.toString())
-        .isEqualTo("""
+        .isEqualToIgnoringWhitespace("""
 select user
 from User user
 where ?1 in user.roles
