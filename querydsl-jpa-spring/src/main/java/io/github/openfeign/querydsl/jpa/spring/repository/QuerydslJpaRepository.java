@@ -27,4 +27,4 @@ import org.springframework.data.repository.history.RevisionRepository;
  * @author Michael Igler
  */
 @NoRepositoryBean
-public interface QuerydslJpaRepository<T, ID> extends JpqlRepository<T, ID>, JpaRepository<T, ID> {}
+public interface QuerydslJpaRepository<T, ID> extends JPQLRepository<T, ID>, JpaRepository<T, ID> {}

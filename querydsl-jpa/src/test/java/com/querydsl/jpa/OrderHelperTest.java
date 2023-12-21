@@ -20,7 +20,7 @@ public class OrderHelperTest {
     order.add("previousProject.customer.company.name");
     order.add("department.name");
 
-    JPQLQuery<?> query = select(entity);
+    JPQLSubQuery<?> query = select(entity);
     query.from(entity);
     OrderHelper.orderBy(query, entity, order);
     assertThat(query.toString())

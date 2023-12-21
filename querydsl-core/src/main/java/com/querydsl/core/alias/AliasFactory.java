@@ -17,12 +17,14 @@ import com.querydsl.core.QueryException;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadataFactory;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.matcher.ElementMatchers;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -98,21 +100,26 @@ class AliasFactory {
    * @param path underlying expression
    * @return proxy instance
    */
-  @SuppressWarnings("unchecked")
   protected <A> A createProxy(Class<A> cl, Expression<?> path) {
-    Enhancer enhancer = new Enhancer();
-    enhancer.setClassLoader(AliasFactory.class.getClassLoader());
-    if (cl.isInterface()) {
-      enhancer.setInterfaces(new Class<?>[] {cl, ManagedObject.class});
-    } else {
-      enhancer.setSuperclass(cl);
-      enhancer.setInterfaces(new Class<?>[] {ManagedObject.class});
+    try {
+      return new ByteBuddy()
+          .subclass(cl)
+          .implement(ManagedObject.class)
+          .method(ElementMatchers.any())
+          .intercept(
+              MethodDelegation.to(
+                  new PropertyAccessInvocationHandler(path, this, pathFactory, typeSystem)))
+          .make()
+          .load(AliasFactory.class.getClassLoader())
+          .getLoaded()
+          .getDeclaredConstructor()
+          .newInstance();
+    } catch (InvocationTargetException
+        | InstantiationException
+        | IllegalAccessException
+        | NoSuchMethodException e) {
+      throw new RuntimeException(e);
     }
-    // creates one handler per proxy
-    MethodInterceptor handler =
-        new PropertyAccessInvocationHandler(path, this, pathFactory, typeSystem);
-    enhancer.setCallback(handler);
-    return (A) enhancer.create();
   }
 
   /**
