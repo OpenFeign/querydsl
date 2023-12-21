@@ -16,7 +16,7 @@
   <description>Lucene support for Querydsl</description>
 
   <properties>
-    <lucene.version>5.5.5</lucene.version>
+    <lucene.version>9.9.1</lucene.version>
     <osgi.import.package>org.apache.lucene.*;version="[5.1.0,6)",
       ${osgi.import.package.root}</osgi.import.package>
   </properties>
