@@ -13,18 +13,25 @@
  */
 package com.querydsl.jpa.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Set;
 
 /** The Class User. */
 @Entity
-@Table(name = "user_")
+@Table(name = "userc")
 public class User {
   @ManyToOne Company company;
 
   @Id long id;
 
   String userName, firstName, lastName;
+
+  @Convert(converter = UserRolesConverter.class)
+  @Column(columnDefinition = "TEXT")
+  Set<UserRole> roles;
 }

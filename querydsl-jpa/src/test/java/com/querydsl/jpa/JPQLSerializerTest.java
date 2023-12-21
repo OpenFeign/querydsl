@@ -32,6 +32,8 @@ import com.querydsl.jpa.domain.JobFunction;
 import com.querydsl.jpa.domain.Location;
 import com.querydsl.jpa.domain.QDomesticCat;
 import com.querydsl.jpa.domain.QEmployee;
+import com.querydsl.jpa.domain.QUser;
+import com.querydsl.jpa.domain.UserRole;
 import java.util.Arrays;
 import org.junit.Test;
 
@@ -194,6 +196,24 @@ public class JPQLSerializerTest {
             from Cat cat
             where cat.id = ?2 and kitten member of cat.kittens)\
             """);
+  }
+
+  @Test
+  public void where_in() {
+    QUser user = QUser.user;
+
+    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, user);
+    md.setProjection(user);
+    md.addWhere(user.roles.contains(UserRole.ADMIN));
+    serializer.serialize(md, false, null);
+    assertThat(serializer.toString())
+        .isEqualTo("""
+select user
+from User user
+where ?1 in user.roles
+""");
   }
 
   @Test
