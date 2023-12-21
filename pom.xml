@@ -92,7 +92,7 @@
     <mysema.lang.version>0.2.4</mysema.lang.version>
     <cglib.version>3.3.0</cglib.version>
     <slf4j.version>2.0.9</slf4j.version>
-    <surefire.version>3.2.2</surefire.version>
+    <surefire.version>3.2.3</surefire.version>
     <animal-sniffer.version>1.23</animal-sniffer.version>
     <jodatime.version>2.12.5</jodatime.version>
     <h2gis.version>2.2.0</h2gis.version>
