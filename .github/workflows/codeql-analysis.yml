@@ -93,7 +93,7 @@ jobs:
       run: ./mvnw -v
 
     - name: Compile project
-      run: ./mvnw -B -ntp clean package -DskipTests=true
+      run: ./mvnw -B -ntp clean package -DskipTests=true -Dtoolchain.skip=true
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
