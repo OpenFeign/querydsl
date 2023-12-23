@@ -66,17 +66,21 @@
 
   <modules>
     <module>querydsl-core</module>
+    <module>querydsl-spatial</module>
+
     <module>querydsl-codegen</module>
     <module>querydsl-codegen-utils</module>
-    <module>querydsl-spatial</module>
     <module>querydsl-apt</module>
+    <module>querydsl-maven-plugin</module>
+    <module>querydsl-gradle-plugin</module>
+
     <module>querydsl-collections</module>
     <module>querydsl-guava</module>
     <module>querydsl-sql</module>
     <module>querydsl-sql-spatial</module>
     <module>querydsl-sql-codegen</module>
     <module>querydsl-sql-spring</module>
-    <module>querydsl-maven-plugin</module>
+
     <module>querydsl-jpa</module>
     <module>querydsl-jpa-codegen</module>
     <module>querydsl-jpa-spring</module>
