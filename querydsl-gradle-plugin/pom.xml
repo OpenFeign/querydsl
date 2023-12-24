@@ -9,9 +9,17 @@
   </parent>
 
   <artifactId>querydsl-gradle-plugin</artifactId>
+  <packaging>pom</packaging>
   <name>Querydsl - Gradle plugin</name>
   <description>Querydsl Gradle plugin</description>
-  <dependencies></dependencies>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.github.openfeign.querydsl</groupId>
+      <artifactId>querydsl-sql-codegen</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -37,5 +45,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>

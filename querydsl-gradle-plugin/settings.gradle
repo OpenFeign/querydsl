@@ -7,4 +7,3 @@
  */
 
 rootProject.name = 'querydsl-gradle-plugin'
-include('plugin')
