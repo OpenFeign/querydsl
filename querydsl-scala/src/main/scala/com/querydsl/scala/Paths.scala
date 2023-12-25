@@ -187,7 +187,7 @@ class ListPath[T, Q <: Ex[_ >: T]](t: Class[T],  q: Class[Q], md: PathMetadata)
 }
 
 class MapPath[K, V, Q <: Ex[_ >: V]](k: Class[K], v: Class[V], q: Class[Q], md: PathMetadata)
-  extends PathImpl[java.util.Map[K, V]](classOf[java.util.Map[K, V]], md) with MapExpression[K, V, Q] {
+  extends PathImpl[java.util.Map[K, V]](classOf[java.util.Map[K, V]], md) with MapExpression[K, V] {
 
   def this(k: Class[K], v: Class[V], q: Class[Q], variable: String) = this(k, v, q, forVariable(variable))
 

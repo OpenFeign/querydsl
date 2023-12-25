@@ -4,7 +4,7 @@ import com.querydsl.codegen.utils.model._
 import com.querydsl.codegen._
 import com.querydsl.core.util.StringUtils.uncapitalize
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 object EntityTypes {
 

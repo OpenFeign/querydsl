@@ -25,7 +25,7 @@ import com.querydsl.sql._
 import com.querydsl.sql.codegen._
 import com.querydsl.sql.codegen.support._
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 /**
  * MetaDataSerializer implementation for Scala

@@ -19,7 +19,7 @@
     <argLine>-Xms256m -Xmx512m -Xss2m</argLine>
     <checkstyle.skip>true</checkstyle.skip>
 
-    <scala.full.version>2.11.12</scala.full.version>
+    <scala.full.version>2.13.12</scala.full.version>
     <hibernate.version>3.5.6-Final</hibernate.version>
   </properties>
 
@@ -157,7 +157,7 @@
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
-        <version>3.1.3</version>
+        <version>4.8.1</version>
         <configuration>
           <charset>${character.encoding}</charset>
           <scalaVersion>${scala.full.version}</scalaVersion>
@@ -173,6 +173,8 @@
             <!-- <arg>-verbose</arg> -->
             <!-- <arg>-optimise</arg> -->
             <!-- <arg>-language:implicitConversions</arg> -->
+            <arg>-language:postfixOps</arg>
+            <arg>-language:implicitConversions</arg>
           </args>
           <!-- <recompileMode>incremental</recompileMode> -->
           <!-- <useZincServer>true</useZincServer> -->
