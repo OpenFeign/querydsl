@@ -84,7 +84,7 @@
 
     <!-- JPA deps -->
     <hibernate.version>5.6.15.Final</hibernate.version>
-    <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
+    <hibernate.validator.version>7.0.5.Final</hibernate.validator.version>
     <eclipselink.version>2.7.13</eclipselink.version>
 
     <guava.version>33.0.0-jre</guava.version>
