@@ -10,7 +10,7 @@ import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.Test;
 
 /** A simple unit test for the 'io.github.openfeign.querydsl.gradle.greeting' plugin. */
-class QuerydslGradlePluginPluginTest {
+class QuerydslGradlePluginTest {
   @Test
   void pluginRegistersATask() {
     // Create a test project and apply the plugin

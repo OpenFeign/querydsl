@@ -82,6 +82,18 @@
               </tasks>
             </configuration>
           </execution>
+          <execution>
+            <id>verify</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>invoke</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <task>functionalTest</task>
+              </tasks>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>

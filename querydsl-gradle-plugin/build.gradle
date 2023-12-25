@@ -53,8 +53,14 @@ gradlePlugin {
     plugins {
         greeting {
             id = 'io.github.openfeign.querydsl.gradle.greeting'
-            implementationClass = 'io.github.openfeign.querydsl.gradle.QuerydslGradlePluginPlugin'
+            implementationClass = 'io.github.openfeign.querydsl.gradle.QuerydslGradlePlugin'
         }
+    }
+}
+
+eclipse {
+    classpath {
+       downloadSources=true
     }
 }
 

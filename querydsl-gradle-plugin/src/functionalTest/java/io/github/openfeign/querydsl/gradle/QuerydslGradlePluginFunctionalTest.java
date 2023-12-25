@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * A simple functional test for the 'io.github.openfeign.querydsl.gradle.greeting' plugin.
  */
-class QuerydslGradlePluginPluginFunctionalTest {
+class QuerydslGradlePluginFunctionalTest {
     @TempDir
     File projectDir;
 
