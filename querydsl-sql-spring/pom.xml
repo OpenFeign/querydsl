@@ -15,7 +15,7 @@
   <description>SQL Spring support for Querydsl</description>
 
   <properties>
-    <spring.version>5.3.8</spring.version>
+    <spring.version>5.3.31</spring.version>
   </properties>
 
   <dependencies>
