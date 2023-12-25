@@ -13,11 +13,21 @@
   <name>Querydsl - Gradle plugin</name>
   <description>Querydsl Gradle plugin</description>
 
+  <properties>
+    <gradle.version>8.5</gradle.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql-codegen</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.hazendaz.gradle</groupId>
+      <artifactId>gradle</artifactId>
+      <version>${gradle.version}</version>
+      <type>pom</type>
     </dependency>
   </dependencies>
 
@@ -31,7 +41,7 @@
         <artifactId>gradle-maven-plugin</artifactId>
         <version>1.0.12</version>
         <configuration>
-          <gradleVersion>8.5</gradleVersion>
+          <gradleVersion>${gradle.version}</gradleVersion>
         </configuration>
         <executions>
           <execution>
