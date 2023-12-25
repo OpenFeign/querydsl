@@ -95,9 +95,6 @@ jobs:
         distribution: 'temurin'
         java-version: '21'
 
-    - name: versions
-      run: ./mvnw -v
-
     - name: Compile project
       run: ./mvnw -B -ntp clean package -DskipTests=true -Dtoolchain.skip=true
 
