@@ -22,24 +22,65 @@
   </dependencies>
 
   <build>
+    <!-- prevent maven from building module -->
+    <sourceDirectory>source</sourceDirectory>
+    <testSourceDirectory>test</testSourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.thingsboard</groupId>
         <artifactId>gradle-maven-plugin</artifactId>
         <version>1.0.12</version>
         <configuration>
-          <tasks>
-            <task>clean</task>
-            <task>test</task>
-          </tasks>
           <gradleVersion>8.5</gradleVersion>
         </configuration>
         <executions>
           <execution>
+            <id>clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>invoke</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <task>clean</task>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
+            <id>compile</id>
             <phase>compile</phase>
             <goals>
               <goal>invoke</goal>
             </goals>
+            <configuration>
+              <tasks>
+                <task>compileJava</task>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>invoke</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <task>test</task>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
+            <id>package</id>
+            <phase>package</phase>
+            <goals>
+              <goal>invoke</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <task>jar</task>
+              </tasks>
+            </configuration>
           </execution>
         </executions>
       </plugin>
