@@ -143,13 +143,27 @@ jobs:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
             - querydsl-dependencies-
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb -am -T2
             ./mvnw -ntp -B verify -Pexamples -rf :querydsl-examples
+      - save-test-results
+  buildGradle:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-docker
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-gradle-plugin -am
       - save-test-results
   buildQuarkusExample:
     <<: *defaults
@@ -363,6 +377,12 @@ workflows:
             <<: *all-branches
       - buildExamples:
           name: 'Compile and package Examples'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - buildGradle:
+          name: 'Compile and Test Gradle plugin'
           requires:
             - 'Resolve dependencies'
           filters:
