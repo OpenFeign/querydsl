@@ -45,62 +45,15 @@
         </configuration>
         <executions>
           <execution>
-            <id>clean</id>
-            <phase>clean</phase>
+            <phase>install</phase>
             <goals>
               <goal>invoke</goal>
             </goals>
             <configuration>
               <tasks>
                 <task>clean</task>
-              </tasks>
-            </configuration>
-          </execution>
-          <execution>
-            <id>compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>invoke</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <task>compileJava</task>
-              </tasks>
-            </configuration>
-          </execution>
-          <execution>
-            <id>test</id>
-            <phase>test</phase>
-            <goals>
-              <goal>invoke</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <task>test</task>
-              </tasks>
-            </configuration>
-          </execution>
-          <execution>
-            <id>package</id>
-            <phase>package</phase>
-            <goals>
-              <goal>invoke</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <task>jar</task>
-              </tasks>
-            </configuration>
-          </execution>
-          <execution>
-            <id>verify</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>invoke</goal>
-            </goals>
-            <configuration>
-              <tasks>
                 <task>functionalTest</task>
+                <task>jar</task>
               </tasks>
             </configuration>
           </execution>
