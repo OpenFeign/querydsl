@@ -13,6 +13,7 @@
  */
 package com.querydsl.sql.codegen;
 
+import com.querydsl.codegen.BeanSerializer;
 import com.querydsl.codegen.CodegenModule;
 import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.GeneratedAnnotationResolver;
@@ -34,15 +35,18 @@ import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.SQLTemplatesRegistry;
 import com.querydsl.sql.SchemaAndTable;
+import com.querydsl.sql.codegen.support.CustomType;
 import com.querydsl.sql.codegen.support.ForeignKeyData;
 import com.querydsl.sql.codegen.support.InverseForeignKeyData;
 import com.querydsl.sql.codegen.support.NotNullImpl;
+import com.querydsl.sql.codegen.support.NumericMapping;
 import com.querydsl.sql.codegen.support.PrimaryKeyData;
+import com.querydsl.sql.codegen.support.RenameMapping;
 import com.querydsl.sql.codegen.support.SizeImpl;
+import com.querydsl.sql.codegen.support.TypeMapping;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -86,23 +90,11 @@ public class MetaDataExporter {
 
   private final Set<String> classes = new HashSet<String>();
 
-  private File targetFolder;
-
-  private File beansTargetFolder;
-
   @Nullable private String beanPackageName;
-
-  @Nullable private String schemaPattern, tableNamePattern, catalogPattern;
-
-  @Nullable private Serializer beanSerializer;
-
-  private boolean createScalaSources = false;
 
   private final Map<EntityType, Type> entityToWrapped = new HashMap<EntityType, Type>();
 
   private Serializer serializer;
-
-  private TypeMappings typeMappings;
 
   private QueryTypeFactory queryTypeFactory;
 
@@ -112,35 +104,15 @@ public class MetaDataExporter {
 
   private KeyDataFactory keyDataFactory;
 
-  private boolean columnAnnotations = false;
+  private final MetadataExporterConfig config;
 
-  private boolean validationAnnotations = false;
+  private Serializer beanSerializer;
 
-  private boolean schemaToPackage = false;
+  private TypeMappings typeMappings;
 
-  private String sourceEncoding = "UTF-8";
-
-  private boolean lowerCase = false;
-
-  private boolean exportTables = true;
-
-  private boolean exportViews = true;
-
-  private boolean exportAll = false;
-
-  private boolean exportPrimaryKeys = true;
-
-  private boolean exportForeignKeys = true;
-
-  private boolean exportDirectForeignKeys = true;
-
-  private boolean exportInverseForeignKeys = true;
-
-  private boolean spatial = false;
-
-  @Nullable private String tableTypesToExport;
-
-  public MetaDataExporter() {}
+  public MetaDataExporter(MetadataExporterConfig config) {
+    this.config = config;
+  }
 
   protected EntityType createEntityType(SchemaAndTable schemaAndTable, final String className) {
     EntityType classModel;
@@ -190,7 +162,7 @@ public class MetaDataExporter {
 
   private String normalizePackage(String packageName, SchemaAndTable schemaAndTable) {
     String rval = packageName;
-    if (schemaToPackage) {
+    if (config.isSchemaToPackage()) {
       rval = namingStrategy.getPackage(rval, schemaAndTable);
     }
     return rval;
@@ -209,12 +181,26 @@ public class MetaDataExporter {
    * @throws SQLException
    */
   public void export(DatabaseMetaData md) throws SQLException {
-    if (beanPackageName == null) {
+    configuration = module.get(Configuration.class);
+    configureModule();
+
+    if (config.getNamingStrategyClass() != null) {
+      try {
+        namingStrategy = config.getNamingStrategyClass().newInstance();
+      } catch (InstantiationException | IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      namingStrategy = new DefaultNamingStrategy();
+    }
+    module.bind(NamingStrategy.class, namingStrategy);
+
+    if (config.getBeanPackageName() == null) {
       beanPackageName = module.getPackageName();
+    } else {
+      beanPackageName = config.getBeanPackageName();
     }
-    if (beansTargetFolder == null) {
-      beansTargetFolder = targetFolder;
-    }
+
     module.bind(SQLCodegenModule.BEAN_PACKAGE_NAME, beanPackageName);
     module.loadExtensions();
 
@@ -224,7 +210,6 @@ public class MetaDataExporter {
     serializer = module.get(Serializer.class);
     beanSerializer = module.get(Serializer.class, SQLCodegenModule.BEAN_SERIALIZER);
     namingStrategy = module.get(NamingStrategy.class);
-    configuration = module.get(Configuration.class);
 
     SQLTemplates templates = sqlTemplatesRegistry.getTemplates(md);
     if (templates != null) {
@@ -240,7 +225,7 @@ public class MetaDataExporter {
               module.getPackageName(),
               module.getPrefix(),
               module.getSuffix(),
-              schemaToPackage);
+              config.isSchemaToPackage());
     } else {
       keyDataFactory =
           new KeyDataFactory(
@@ -248,31 +233,31 @@ public class MetaDataExporter {
               beanPackageName,
               module.getBeanPrefix(),
               module.getBeanSuffix(),
-              schemaToPackage);
+              config.isSchemaToPackage());
     }
 
     String[] typesArray = null;
 
-    if (tableTypesToExport != null && !tableTypesToExport.isEmpty()) {
+    if (config.getTableTypesToExport() != null && !config.getTableTypesToExport().isEmpty()) {
       List<String> types = new ArrayList<String>();
-      for (String tableType : tableTypesToExport.split(",")) {
+      for (String tableType : config.getTableTypesToExport().split(",")) {
         types.add(tableType.trim());
       }
       typesArray = types.toArray(new String[0]);
-    } else if (!exportAll) {
+    } else if (!config.isExportAll()) {
       List<String> types = new ArrayList<String>(2);
-      if (exportTables) {
+      if (config.isExportTables()) {
         types.add("TABLE");
       }
-      if (exportViews) {
+      if (config.isExportViews()) {
         types.add("VIEW");
       }
       typesArray = types.toArray(new String[0]);
     }
 
-    List<String> catalogs = patternAsList(catalogPattern);
-    List<String> schemas = patternAsList(schemaPattern);
-    List<String> tables = patternAsList(tableNamePattern);
+    List<String> catalogs = patternAsList(config.getCatalogPattern());
+    List<String> schemas = patternAsList(config.getSchemaPattern());
+    List<String> tables = patternAsList(config.getTableNamePattern());
 
     for (String catalog : catalogs) {
       catalog = trimIfNonNull(catalog);
@@ -283,6 +268,101 @@ public class MetaDataExporter {
           handleTables(md, catalog, schema, table, typesArray);
         }
       }
+    }
+  }
+
+  private void configureModule() {
+    if (config.getNamePrefix() != null) module.bind(CodegenModule.PREFIX, config.getNamePrefix());
+
+    if (config.getNameSuffix() != null) {
+      module.bind(CodegenModule.SUFFIX, config.getNameSuffix());
+    }
+
+    if (config.getBeanPrefix() != null) {
+      module.bind(SQLCodegenModule.BEAN_PREFIX, config.getBeanPrefix());
+    }
+
+    if (config.getBeanSuffix() != null) {
+      module.bind(SQLCodegenModule.BEAN_SUFFIX, config.getBeanSuffix());
+    }
+
+    module.bind(SQLCodegenModule.PACKAGE_NAME, config.getPackageName());
+
+    module.bind(SQLCodegenModule.INNER_CLASSES_FOR_KEYS, config.isInnerClassesForKeys());
+
+    module.bind(NamingStrategy.class, namingStrategy);
+
+    module.bind(SQLCodegenModule.SCHEMA_TO_PACKAGE, config.isSchemaToPackage());
+
+    if (config.getImports() != null && !config.getImports().isEmpty())
+      module.bind(CodegenModule.IMPORTS, new HashSet<String>(config.getImports()));
+
+    module.bindInstance(
+        CodegenModule.GENERATED_ANNOTATION_CLASS,
+        GeneratedAnnotationResolver.resolve(config.getGeneratedAnnotationClass()));
+
+    if (config.isExportBeans()) {
+      BeanSerializer serializer;
+      if (config.getBeanSerializerClass() == null) {
+        serializer = new BeanSerializer();
+      } else {
+        try {
+          serializer = (BeanSerializer) config.getBeanSerializerClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+          throw new RuntimeException(e);
+        }
+      }
+      if (config.getBeanInterfaces() != null) {
+        for (String iface : config.getBeanInterfaces()) {
+          int sepIndex = iface.lastIndexOf('.');
+          if (sepIndex < 0) {
+            serializer.addInterface(new SimpleType(iface));
+          } else {
+            String packageName = iface.substring(0, sepIndex);
+            String simpleName = iface.substring(sepIndex + 1);
+            serializer.addInterface(new SimpleType(iface, packageName, simpleName));
+          }
+        }
+      }
+      serializer.setAddFullConstructor(config.isBeanAddFullConstructor());
+      serializer.setAddToString(config.isBeanAddToString());
+      serializer.setPrintSupertype(config.isBeanPrintSupertype());
+      module.bind(SQLCodegenModule.BEAN_SERIALIZER, serializer);
+    }
+
+    if (config.getCustomTypes() != null) {
+      for (CustomType cl : config.getCustomTypes()) {
+        try {
+          configuration.register(
+              (com.querydsl.sql.types.Type) Class.forName(cl.getClassName()).newInstance());
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }
+    if (config.getTypeMappings() != null) {
+      for (TypeMapping mapping : config.getTypeMappings()) {
+        mapping.apply(configuration);
+      }
+    }
+    if (config.getNumericMappings() != null) {
+      for (NumericMapping mapping : config.getNumericMappings()) {
+        mapping.apply(configuration);
+      }
+    }
+    if (config.getRenameMappings() != null) {
+      for (RenameMapping mapping : config.getRenameMappings()) {
+        mapping.apply(configuration);
+      }
+    }
+
+    if (config.getColumnComparatorClass() != null)
+      module.bind(
+          SQLCodegenModule.COLUMN_COMPARATOR,
+          config.getColumnComparatorClass().asSubclass(Comparator.class));
+
+    if (config.getSerializerClass() != null) {
+      module.bind(Serializer.class, config.getSerializerClass());
     }
   }
 
@@ -365,10 +445,10 @@ public class MetaDataExporter {
     }
     property.getData().put("COLUMN", column);
 
-    if (columnAnnotations) {
+    if (config.isColumnAnnotations()) {
       property.addAnnotation(new ColumnImpl(normalizedColumnName));
     }
-    if (validationAnnotations) {
+    if (config.isValidationAnnotations()) {
       if (nullable == DatabaseMetaData.columnNoNulls && columnDefaultValue == null) {
         property.addAnnotation(new NotNullImpl());
       }
@@ -398,7 +478,7 @@ public class MetaDataExporter {
     String className = namingStrategy.getClassName(schemaAndTable);
     EntityType classModel = createEntityType(schemaAndTable, className);
 
-    if (exportPrimaryKeys) {
+    if (config.isExportPrimaryKeys()) {
       // collect primary keys
       Map<String, PrimaryKeyData> primaryKeyData =
           keyDataFactory.getPrimaryKeys(md, catalog, schema, tableName);
@@ -407,8 +487,8 @@ public class MetaDataExporter {
       }
     }
 
-    if (exportForeignKeys) {
-      if (exportDirectForeignKeys) {
+    if (config.isExportForeignKeys()) {
+      if (config.isExportDirectForeignKeys()) {
         // collect foreign keys
         Map<String, ForeignKeyData> foreignKeyData =
             keyDataFactory.getImportedKeys(md, catalog, schema, tableName);
@@ -426,7 +506,7 @@ public class MetaDataExporter {
         }
       }
 
-      if (exportInverseForeignKeys) {
+      if (config.isExportInverseForeignKeys()) {
         // collect inverse foreign keys
         Map<String, InverseForeignKeyData> inverseForeignKeyData =
             keyDataFactory.getExportedKeys(md, catalog, schema, tableName);
@@ -450,7 +530,7 @@ public class MetaDataExporter {
   }
 
   private String normalize(String str) {
-    if (lowerCase && str != null) {
+    if (config.isLowerCase() && str != null) {
       return str.toLowerCase();
     } else {
       return str;
@@ -459,19 +539,26 @@ public class MetaDataExporter {
 
   private void serialize(EntityType type, SchemaAndTable schemaAndTable) {
     try {
-      String fileSuffix = createScalaSources ? ".scala" : ".java";
+      String fileSuffix = config.isCreateScalaSources() ? ".scala" : ".java";
 
       if (beanSerializer != null) {
         String packageName = normalizePackage(beanPackageName, schemaAndTable);
         String path = packageName.replace('.', '/') + "/" + type.getSimpleName() + fileSuffix;
-        write(beanSerializer, new File(beansTargetFolder, path), type);
+        write(
+            beanSerializer,
+            new File(
+                config.getBeansTargetFolder() != null
+                    ? config.getBeansTargetFolder()
+                    : config.getTargetFolder(),
+                path),
+            type);
 
         String otherPath = entityToWrapped.get(type).getFullName().replace('.', '/') + fileSuffix;
-        write(serializer, new File(targetFolder, otherPath), type);
+        write(serializer, new File(config.getTargetFolder(), otherPath), type);
       } else {
         String packageName = normalizePackage(module.getPackageName(), schemaAndTable);
         String path = packageName.replace('.', '/') + "/" + type.getSimpleName() + fileSuffix;
-        write(serializer, new File(targetFolder, path), type);
+        write(serializer, new File(config.getTargetFolder(), path), type);
       }
 
     } catch (IOException e) {
@@ -487,15 +574,14 @@ public class MetaDataExporter {
               + ", please check your configuration");
     }
     StringWriter w = new StringWriter();
-    CodeWriter writer = createScalaSources ? new ScalaWriter(w) : new JavaWriter(w);
+    CodeWriter writer = config.isCreateScalaSources() ? new ScalaWriter(w) : new JavaWriter(w);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, writer);
 
     // conditional creation
     boolean generate = true;
-    byte[] bytes = w.toString().getBytes(sourceEncoding);
+    byte[] bytes = w.toString().getBytes(config.getSourceEncoding());
     if (targetFile.exists() && targetFile.length() == bytes.length) {
-      String str =
-          new String(Files.readAllBytes(targetFile.toPath()), Charset.forName(sourceEncoding));
+      String str = new String(Files.readAllBytes(targetFile.toPath()), config.getSourceEncoding());
       if (str.equals(w.toString())) {
         generate = false;
       }
@@ -508,349 +594,7 @@ public class MetaDataExporter {
     }
   }
 
-  /**
-   * Set the schema pattern filter to be used
-   *
-   * @param schemaPattern a schema name pattern; must match the schema name as it is stored in the
-   *     database; "" retrieves those without a schema; {@code null} means that the schema name
-   *     should not be used to narrow the search (default: null)
-   */
-  public void setSchemaPattern(@Nullable String schemaPattern) {
-    this.schemaPattern = schemaPattern;
-  }
-
-  /**
-   * a catalog name; must match the catalog name as it is stored in the database; "" retrieves those
-   * without a catalog; <code>null</code> means that the catalog name should not be used to narrow
-   * the search
-   */
-  public void setCatalogPattern(@Nullable String catalogPattern) {
-    this.catalogPattern = catalogPattern;
-  }
-
-  /**
-   * Set the table name pattern filter to be used
-   *
-   * @param tableNamePattern a table name pattern; must match the table name as it is stored in the
-   *     database (default: null)
-   */
-  public void setTableNamePattern(@Nullable String tableNamePattern) {
-    this.tableNamePattern = tableNamePattern;
-  }
-
-  /**
-   * Override the configuration
-   *
-   * @param configuration override configuration for custom type mappings etc
-   */
   public void setConfiguration(Configuration configuration) {
     module.bind(Configuration.class, configuration);
-  }
-
-  /**
-   * Set true to create Scala sources instead of Java sources
-   *
-   * @param createScalaSources whether to create Scala sources (default: false)
-   */
-  public void setCreateScalaSources(boolean createScalaSources) {
-    this.createScalaSources = createScalaSources;
-  }
-
-  /**
-   * Set the target folder
-   *
-   * @param targetFolder target source folder to create the sources into (e.g.
-   *     target/generated-sources/java)
-   */
-  public void setTargetFolder(File targetFolder) {
-    this.targetFolder = targetFolder;
-  }
-
-  /**
-   * Set the target folder for beans
-   *
-   * <p>defaults to the targetFolder value
-   *
-   * @param targetFolder target source folder to create the bean sources into
-   */
-  public void setBeansTargetFolder(File targetFolder) {
-    this.beansTargetFolder = targetFolder;
-  }
-
-  /**
-   * Set the package name
-   *
-   * @param packageName package name for sources
-   */
-  public void setPackageName(String packageName) {
-    module.bind(SQLCodegenModule.PACKAGE_NAME, packageName);
-  }
-
-  /**
-   * Override the bean package name (default: packageName)
-   *
-   * @param beanPackageName package name for bean sources
-   */
-  public void setBeanPackageName(@Nullable String beanPackageName) {
-    this.beanPackageName = beanPackageName;
-  }
-
-  /**
-   * Override the name prefix for the classes (default: Q)
-   *
-   * @param namePrefix name prefix for querydsl-types (default: Q)
-   */
-  public void setNamePrefix(String namePrefix) {
-    module.bind(CodegenModule.PREFIX, namePrefix);
-  }
-
-  /**
-   * Override the name suffix for the classes (default: "")
-   *
-   * @param nameSuffix name suffix for querydsl-types (default: "")
-   */
-  public void setNameSuffix(String nameSuffix) {
-    module.bind(CodegenModule.SUFFIX, nameSuffix);
-  }
-
-  /**
-   * Override the bean prefix for the classes (default: "")
-   *
-   * @param beanPrefix bean prefix for bean-types (default: "")
-   */
-  public void setBeanPrefix(String beanPrefix) {
-    module.bind(SQLCodegenModule.BEAN_PREFIX, beanPrefix);
-  }
-
-  /**
-   * Override the bean suffix for the classes (default: "")
-   *
-   * @param beanSuffix bean suffix for bean-types (default: "")
-   */
-  public void setBeanSuffix(String beanSuffix) {
-    module.bind(SQLCodegenModule.BEAN_SUFFIX, beanSuffix);
-  }
-
-  /**
-   * Override the NamingStrategy (default: new DefaultNamingStrategy())
-   *
-   * @param namingStrategy naming strategy to override (default: new DefaultNamingStrategy())
-   */
-  public void setNamingStrategy(NamingStrategy namingStrategy) {
-    module.bind(NamingStrategy.class, namingStrategy);
-  }
-
-  /**
-   * Set the Bean serializer to create bean types as well
-   *
-   * @param beanSerializer serializer for JavaBeans (default: null)
-   */
-  public void setBeanSerializer(@Nullable Serializer beanSerializer) {
-    module.bind(SQLCodegenModule.BEAN_SERIALIZER, beanSerializer);
-  }
-
-  /**
-   * Set the Bean serializer class to create bean types as well
-   *
-   * @param beanSerializerClass serializer for JavaBeans (default: null)
-   */
-  public void setBeanSerializerClass(Class<? extends Serializer> beanSerializerClass) {
-    module.bind(SQLCodegenModule.BEAN_SERIALIZER, beanSerializerClass);
-  }
-
-  /**
-   * Set whether inner classes should be created for keys
-   *
-   * @param innerClassesForKeys
-   */
-  public void setInnerClassesForKeys(boolean innerClassesForKeys) {
-    module.bind(SQLCodegenModule.INNER_CLASSES_FOR_KEYS, innerClassesForKeys);
-  }
-
-  /**
-   * Set the column comparator class
-   *
-   * @param columnComparatorClass
-   */
-  public void setColumnComparatorClass(
-      Class<? extends Comparator<Property>> columnComparatorClass) {
-    module.bind(SQLCodegenModule.COLUMN_COMPARATOR, columnComparatorClass);
-  }
-
-  /**
-   * Set the serializer class
-   *
-   * @param serializerClass
-   */
-  public void setSerializerClass(Class<? extends Serializer> serializerClass) {
-    module.bind(Serializer.class, serializerClass);
-  }
-
-  /**
-   * Set the type mappings to use
-   *
-   * @param typeMappings
-   */
-  public void setTypeMappings(TypeMappings typeMappings) {
-    module.bind(TypeMappings.class, typeMappings);
-  }
-
-  /**
-   * Set whether column annotations should be created
-   *
-   * @param columnAnnotations
-   */
-  public void setColumnAnnotations(boolean columnAnnotations) {
-    this.columnAnnotations = columnAnnotations;
-  }
-
-  /**
-   * Set whether validation annotations should be created
-   *
-   * @param validationAnnotations
-   */
-  public void setValidationAnnotations(boolean validationAnnotations) {
-    this.validationAnnotations = validationAnnotations;
-  }
-
-  /**
-   * Set the source encoding
-   *
-   * @param sourceEncoding
-   */
-  public void setSourceEncoding(String sourceEncoding) {
-    this.sourceEncoding = sourceEncoding;
-  }
-
-  /**
-   * Set whether schema names should be appended to the package name.
-   *
-   * <p><b>!!! Important !!!</b><i> {@link NamingStrategy#getPackage(String, SchemaAndTable)} will
-   * be invoked only if <code>schemaToPackage</code> is set to <code>true</code>.</i>
-   *
-   * @deprecated This flag will not be necessary in the future because the generated package name
-   *     can be controlled in method {@link NamingStrategy#getPackage(String, SchemaAndTable)}.
-   * @param schemaToPackage
-   */
-  @Deprecated
-  public void setSchemaToPackage(boolean schemaToPackage) {
-    this.schemaToPackage = schemaToPackage;
-    module.bind(SQLCodegenModule.SCHEMA_TO_PACKAGE, schemaToPackage);
-  }
-
-  /**
-   * Set whether names should be normalized to lowercase
-   *
-   * @param lowerCase
-   */
-  public void setLowerCase(boolean lowerCase) {
-    this.lowerCase = lowerCase;
-  }
-
-  /**
-   * Set whether tables should be exported
-   *
-   * @param exportTables
-   */
-  public void setExportTables(boolean exportTables) {
-    this.exportTables = exportTables;
-  }
-
-  /**
-   * Set whether views should be exported
-   *
-   * @param exportViews
-   */
-  public void setExportViews(boolean exportViews) {
-    this.exportViews = exportViews;
-  }
-
-  /**
-   * Set whether all table types should be exported
-   *
-   * @param exportAll
-   */
-  public void setExportAll(boolean exportAll) {
-    this.exportAll = exportAll;
-  }
-
-  /**
-   * Set whether primary keys should be exported
-   *
-   * @param exportPrimaryKeys
-   */
-  public void setExportPrimaryKeys(boolean exportPrimaryKeys) {
-    this.exportPrimaryKeys = exportPrimaryKeys;
-  }
-
-  /**
-   * Set whether foreign keys should be exported
-   *
-   * @param exportForeignKeys
-   */
-  public void setExportForeignKeys(boolean exportForeignKeys) {
-    this.exportForeignKeys = exportForeignKeys;
-  }
-
-  /**
-   * Set whether direct foreign keys should be exported
-   *
-   * @param exportDirectForeignKeys
-   */
-  public void setExportDirectForeignKeys(boolean exportDirectForeignKeys) {
-    this.exportDirectForeignKeys = exportDirectForeignKeys;
-  }
-
-  /**
-   * Set whether inverse foreign keys should be exported
-   *
-   * @param exportInverseForeignKeys
-   */
-  public void setExportInverseForeignKeys(boolean exportInverseForeignKeys) {
-    this.exportInverseForeignKeys = exportInverseForeignKeys;
-  }
-
-  /**
-   * Set the java imports
-   *
-   * @param imports java imports array
-   */
-  public void setImports(String[] imports) {
-    module.bind(CodegenModule.IMPORTS, new HashSet<String>(Arrays.asList(imports)));
-  }
-
-  /**
-   * Set whether spatial type support should be used
-   *
-   * @param spatial
-   */
-  public void setSpatial(boolean spatial) {
-    this.spatial = spatial;
-  }
-
-  /**
-   * Set the table types to export as a comma separated string
-   *
-   * @param tableTypesToExport
-   */
-  public void setTableTypesToExport(String tableTypesToExport) {
-    this.tableTypesToExport = tableTypesToExport;
-  }
-
-  /**
-   * Set the fully qualified class name of the "generated" annotation added ot the generated sources
-   *
-   * @param generatedAnnotationClass the fully qualified class name of the <em>Single-Element
-   *     Annotation</em> (with {@code String} element) to be used on the generated sources, or
-   *     {@code null} (defaulting to {@code javax.annotation.Generated} or {@code
-   *     javax.annotation.processing.Generated} depending on the java version).
-   * @see <a
-   *     href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.7.3">Single-Element
-   *     Annotation</a>
-   */
-  public void setGeneratedAnnotationClass(@Nullable String generatedAnnotationClass) {
-    module.bindInstance(
-        CodegenModule.GENERATED_ANNOTATION_CLASS,
-        GeneratedAnnotationResolver.resolve(generatedAnnotationClass));
   }
 }

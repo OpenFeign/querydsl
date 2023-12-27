@@ -38,8 +38,8 @@ public class MetaDataExporterAllTest {
 
   private String namePrefix, nameSuffix, beanPrefix, beanSuffix;
   private String beanPackageName;
-  private BeanSerializer beanSerializer = new BeanSerializer();
-  private NamingStrategy namingStrategy;
+  private Class<? extends BeanSerializer> beanSerializer = BeanSerializer.class;
+  private Class<? extends NamingStrategy> namingStrategyClass;
   private boolean withBeans, withInnerClasses, withOrdinalPositioning;
   private boolean exportColumns, schemaToPackage;
 
@@ -61,8 +61,9 @@ public class MetaDataExporterAllTest {
   public static List<Object[]> parameters() {
     List<Object[]> params = new ArrayList<>();
 
-    List<NamingStrategy> ns =
-        Arrays.<NamingStrategy>asList(new DefaultNamingStrategy(), new OriginalNamingStrategy());
+    List<Class<? extends NamingStrategy>> ns =
+        Arrays.<Class<? extends NamingStrategy>>asList(
+            DefaultNamingStrategy.class, OriginalNamingStrategy.class);
     List<String> prefixOrSuffix = Arrays.asList("", "Q");
     List<String> beanPackage = Arrays.asList(null, "test2");
     List<Boolean> booleans = Arrays.asList(true, false);
@@ -72,7 +73,7 @@ public class MetaDataExporterAllTest {
         for (String beanPrefix : prefixOrSuffix) {
           for (String beanSuffix : prefixOrSuffix) {
             for (String beanPackageName : beanPackage) {
-              for (NamingStrategy namingStrategy : ns) {
+              for (Class<? extends NamingStrategy> namingStrategy : ns) {
                 for (boolean withBeans : booleans) {
                   for (boolean withInnerClasses : booleans) {
                     for (boolean withOrdinalPositioning : booleans) {
@@ -124,7 +125,7 @@ public class MetaDataExporterAllTest {
       String beanPrefix,
       String beanSuffix,
       String beanPackageName,
-      NamingStrategy namingStrategy,
+      Class<? extends NamingStrategy> namingStrategy,
       boolean withBeans,
       boolean withInnerClasses,
       boolean withOrdinalPositioning,
@@ -136,7 +137,7 @@ public class MetaDataExporterAllTest {
     this.beanSuffix = beanSuffix;
     this.beanPackageName = beanPackageName;
     this.schemaToPackage = schemaToPackage;
-    this.namingStrategy = namingStrategy;
+    this.namingStrategyClass = namingStrategy;
     this.withBeans = withBeans;
     this.withInnerClasses = withInnerClasses;
     this.withOrdinalPositioning = withOrdinalPositioning;
@@ -145,26 +146,27 @@ public class MetaDataExporterAllTest {
 
   @Test
   public void export() throws SQLException, IOException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setColumnAnnotations(exportColumns);
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setNamePrefix(namePrefix);
-    exporter.setNameSuffix(nameSuffix);
-    exporter.setBeanPrefix(beanPrefix);
-    exporter.setBeanSuffix(beanSuffix);
-    exporter.setInnerClassesForKeys(withInnerClasses);
-    exporter.setPackageName("test");
-    exporter.setBeanPackageName(beanPackageName);
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setNamingStrategy(namingStrategy);
-    exporter.setSchemaToPackage(schemaToPackage);
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setColumnAnnotations(exportColumns);
+    config.setSchemaPattern("PUBLIC");
+    config.setNamePrefix(namePrefix);
+    config.setNameSuffix(nameSuffix);
+    config.setBeanPrefix(beanPrefix);
+    config.setBeanSuffix(beanSuffix);
+    config.setInnerClassesForKeys(withInnerClasses);
+    config.setPackageName("test");
+    config.setBeanPackageName(beanPackageName);
+    config.setTargetFolder(folder.getRoot());
+    config.setNamingStrategyClass(namingStrategyClass);
+    config.setSchemaToPackage(schemaToPackage);
     if (withBeans) {
-      exporter.setBeanSerializer(beanSerializer);
+      config.setBeanSerializerClass(beanSerializer);
     }
     if (withOrdinalPositioning) {
-      exporter.setColumnComparatorClass(OrdinalPositionComparator.class);
+      config.setColumnComparatorClass(OrdinalPositionComparator.class);
     }
 
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     Set<String> classes = exporter.getClasses();
