@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     implementation gradleApi()
-    implementation 'io.github.openfeign.querydsl:querydsl-maven-plugin:6.0-SNAPSHOT'
+    implementation 'io.github.openfeign.querydsl:querydsl-sql-codegen:' + providers.systemProperty('querydsl.version').get()
 }
 
 testing {
