@@ -74,14 +74,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <annotationProcessors>
-            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-          </annotationProcessors>
           <annotationProcessorPaths>
             <annotationProcessorPath>
               <groupId>io.github.openfeign.querydsl</groupId>
               <artifactId>querydsl-apt</artifactId>
               <version>${project.version}</version>
+              <classifier>jpa</classifier>
             </annotationProcessorPath>
           </annotationProcessorPaths>
 

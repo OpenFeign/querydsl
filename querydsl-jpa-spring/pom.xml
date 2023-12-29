@@ -52,6 +52,7 @@
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-apt</artifactId>
       <version>${project.version}</version>
+      <classifier>jpa</classifier>
     </dependency>
 
     <!-- Test -->
