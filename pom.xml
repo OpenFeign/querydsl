@@ -599,35 +599,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>set number of slashes in URL</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <exportAntProperties>true</exportAntProperties>
-              <target>
-                <condition property="urlSlashesOsModifier" value="//">
-                  <and>
-                    <not>
-                      <os family="windows"></os>
-                    </not>
-                  </and>
-                </condition>
-                <condition property="urlSlashesOsModifier" value="///">
-                  <and>
-                    <os family="windows"></os>
-                  </and>
-                </condition>
-              </target>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
         <version>0.103.1</version>
@@ -717,7 +688,6 @@
   </build>
 
   <profiles>
-
     <profile>
       <id>docs</id>
       <modules>
@@ -1019,6 +989,29 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+
+    <profile>
+      <id>windows</id>
+      <activation>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
+      <properties>
+        <urlSlashesOsModifier>///</urlSlashesOsModifier>
+      </properties>
+    </profile>
+    <profile>
+      <id>not-windows</id>
+      <activation>
+        <os>
+          <family>!windows</family>
+        </os>
+      </activation>
+      <properties>
+        <urlSlashesOsModifier>//</urlSlashesOsModifier>
+      </properties>
     </profile>
   </profiles>
 
