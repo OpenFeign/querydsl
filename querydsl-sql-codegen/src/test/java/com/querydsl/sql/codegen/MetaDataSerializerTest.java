@@ -16,7 +16,6 @@ package com.querydsl.sql.codegen;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assert.assertThat;
 
 import com.querydsl.codegen.BeanSerializer;
 import com.querydsl.codegen.GeneratedAnnotationResolver;
@@ -30,7 +29,6 @@ import java.nio.file.Files;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 import javax.tools.JavaCompiler;
 import org.junit.Before;
 import org.junit.Rule;
@@ -68,28 +66,29 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
 
     // employee
     statement.execute(
-        "create table employee("
-            + "id INT, "
-            + "firstname VARCHAR(50), "
-            + "lastname VARCHAR(50), "
-            + "salary DECIMAL(10, 2), "
-            + "datefield DATE, "
-            + "timefield TIME, "
-            + "superior_id int, "
-            + "survey_id int, "
-            + "\"123abc\" int,"
-            + "survey_name varchar(30), "
-            + "CONSTRAINT PK_employee PRIMARY KEY (id), "
-            + "CONSTRAINT FK_survey FOREIGN KEY (survey_id, survey_name) REFERENCES survey(id,name), "
-            + "CONSTRAINT FK_superior FOREIGN KEY (superior_id) REFERENCES employee(id))");
+        """
+			create table employee(
+			id INT,
+			firstname VARCHAR(50),
+			lastname VARCHAR(50),
+			salary DECIMAL(10, 2),
+			datefield DATE,
+			timefield TIME,
+			superior_id int,
+			survey_id int,
+			"123abc" int,
+			survey_name varchar(30),
+			CONSTRAINT PK_employee PRIMARY KEY (id),
+			CONSTRAINT FK_survey FOREIGN KEY (survey_id, survey_name) REFERENCES survey(id,name),
+			CONSTRAINT FK_superior FOREIGN KEY (superior_id) REFERENCES employee(id))""");
   }
 
   @Test
   public void normal_serialization() throws SQLException {
-    String namePrefix = "Q";
+    var namePrefix = "Q";
     NamingStrategy namingStrategy = new DefaultNamingStrategy();
     // customization of serialization
-    MetaDataExporter exporter = new MetaDataExporter();
+    var exporter = new MetaDataExporter();
     exporter.setBeanSerializerClass(BeanSerializer.class);
     exporter.setNamePrefix(namePrefix);
     exporter.setPackageName("test");
@@ -106,11 +105,11 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
           "test/QSurvey.java",
           String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()),
           "@Generated(\"com.querydsl.sql.codegen.MetaDataSerializer\")\npublic class QSurvey",
-          // variable + schema constructor
-          "    public QSurvey(String variable, String schema) {\n"
-              + "        super(Survey.class, forVariable(variable), schema, \"SURVEY\");\n"
-              + "        addMetadata();\n"
-              + "    }");
+          """
+			    public QSurvey(String variable, String schema) {
+			        super(Survey.class, forVariable(variable), schema, "SURVEY");
+			        addMetadata();
+			    }""");
     } catch (IOException ex) {
       throw new RuntimeException(ex);
     }
@@ -118,8 +117,8 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
 
   @Test
   public void customized_serialization() throws SQLException {
-    String namePrefix = "Q";
-    Configuration conf = new Configuration(SQLTemplates.DEFAULT);
+    var namePrefix = "Q";
+    var conf = new Configuration(SQLTemplates.DEFAULT);
     conf.register(
         "EMPLOYEE",
         "ID",
@@ -142,7 +141,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
         });
     NamingStrategy namingStrategy = new DefaultNamingStrategy();
     // customization of serialization
-    MetaDataExporter exporter = new MetaDataExporter();
+    var exporter = new MetaDataExporter();
     exporter.setBeanSerializerClass(BeanSerializer.class);
     exporter.setNamePrefix(namePrefix);
     exporter.setPackageName("test");
@@ -161,11 +160,11 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
           "test/QSurvey.java",
           "import com.querydsl.core.annotations.Generated;",
           "@Generated(\"com.querydsl.sql.codegen.MetaDataSerializer\")\npublic class QSurvey",
-          // variable + schema constructor
-          "    public QSurvey(String variable, String schema) {\n"
-              + "        super(Survey.class, forVariable(variable), schema, \"SURVEY\");\n"
-              + "        addMetadata();\n"
-              + "    }");
+          """
+			    public QSurvey(String variable, String schema) {
+			        super(Survey.class, forVariable(variable), schema, "SURVEY");
+			        addMetadata();
+			    }""");
     } catch (IOException ex) {
       throw new RuntimeException(ex);
     }
@@ -173,8 +172,8 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
 
   private void compile(MetaDataExporter exporter) {
     JavaCompiler compiler = new SimpleCompiler();
-    Set<String> classes = exporter.getClasses();
-    int compilationResult = compiler.run(null, null, null, classes.toArray(new String[0]));
+    var classes = exporter.getClasses();
+    var compilationResult = compiler.run(null, null, null, classes.toArray(new String[0]));
     if (compilationResult == 0) {
       System.out.println("Compilation is successful");
     } else {
@@ -183,7 +182,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
   }
 
   private void assertFileContainsInOrder(String path, String... methods) throws IOException {
-    String content = new String(Files.readAllBytes(folder.getRoot().toPath().resolve(path)), UTF_8);
-    assertThat(content).contains(methods);
+    var content = new String(Files.readAllBytes(folder.getRoot().toPath().resolve(path)), UTF_8);
+    assertThat(content).containsIgnoringNewLines(methods);
   }
 }
