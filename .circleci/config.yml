@@ -129,7 +129,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B verify -Pno-databases
+            ./mvnw -ntp -B verify -Pno-databases -Dtoolchain.skip=true
           shell: bash.exe
       - save-test-results
 
