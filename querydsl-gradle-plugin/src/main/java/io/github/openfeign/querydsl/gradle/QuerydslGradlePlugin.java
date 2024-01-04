@@ -3,22 +3,37 @@
  */
 package io.github.openfeign.querydsl.gradle;
 
+import java.sql.SQLException;
+
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+
+import com.querydsl.sql.codegen.MetaDataExporter;
+import com.querydsl.sql.codegen.MetadataExporterConfigImpl;
 
 /** A simple 'hello world' plugin. */
 public class QuerydslGradlePlugin implements Plugin<Project> {
   public void apply(Project project) {
-    // Register a task
-    project
-        .getTasks()
-        .register(
-            "greeting",
-            task -> {
-              task.doLast(
-                  s ->
-                      System.out.println(
-                          "Hello from plugin 'io.github.openfeign.querydsl.gradle.greeting'"));
-            });
+	  MetadataExporterConfigImpl querydsl = project.getExtensions().create("querydsl",
+			  MetadataExporterConfigImpl.class
+	        );
+
+	        project.afterEvaluate(p -> {
+	                p.getTasks().create(
+	                    "export",
+	                    task -> {
+	                        task.doLast(
+	                                s ->
+	                                   {
+										try {
+											new MetaDataExporter(querydsl).export(null);
+										} catch (SQLException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									});
+	                          }
+	                );
+	        });
   }
 }

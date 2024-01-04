@@ -1,6 +1,5 @@
 package com.querydsl.sql.codegen;
 
-import com.querydsl.codegen.BeanSerializer;
 import com.querydsl.codegen.Property;
 import com.querydsl.codegen.Serializer;
 import com.querydsl.sql.SchemaAndTable;
@@ -219,7 +218,7 @@ public interface MetadataExporterConfig {
    *
    * @return serializer for JavaBeans (default: null)
    */
-  Class<? extends BeanSerializer> getBeanSerializerClass();
+  Class<? extends Serializer> getBeanSerializerClass();
 
   /**
    * @return additional interfaces to be implemented by beans

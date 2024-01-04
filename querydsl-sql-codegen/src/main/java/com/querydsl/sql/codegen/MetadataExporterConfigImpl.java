@@ -1,6 +1,5 @@
 package com.querydsl.sql.codegen;
 
-import com.querydsl.codegen.BeanSerializer;
 import com.querydsl.codegen.Property;
 import com.querydsl.codegen.Serializer;
 import com.querydsl.sql.codegen.support.CustomType;
@@ -66,7 +65,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
 
   private String generatedAnnotationClass;
 
-  private Class<? extends BeanSerializer> beanSerializerClass;
+  private Class<? extends Serializer> beanSerializerClass;
 
   private String[] beanInterfaces;
 
@@ -88,6 +87,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
 
   private Class<? extends Serializer> serializerClass;
 
+  @Override
   public String getNamePrefix() {
     return namePrefix;
   }
@@ -96,6 +96,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.namePrefix = namePrefix;
   }
 
+  @Override
   public String getNameSuffix() {
     return nameSuffix;
   }
@@ -104,6 +105,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.nameSuffix = nameSuffix;
   }
 
+  @Override
   public String getBeanPrefix() {
     return beanPrefix;
   }
@@ -112,6 +114,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.beanPrefix = beanPrefix;
   }
 
+  @Override
   public String getBeanSuffix() {
     return beanSuffix;
   }
@@ -120,6 +123,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.beanSuffix = beanSuffix;
   }
 
+  @Override
   public File getBeansTargetFolder() {
     return beansTargetFolder;
   }
@@ -128,6 +132,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.beansTargetFolder = beansTarFolder;
   }
 
+  @Override
   public File getTargetFolder() {
     return targetFolder;
   }
@@ -136,6 +141,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.targetFolder = tarFolder;
   }
 
+  @Override
   public boolean isCreateScalaSources() {
     return createScalaSources;
   }
@@ -144,6 +150,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.createScalaSources = createScalaSources;
   }
 
+  @Override
   public String getPackageName() {
     return packageName;
   }
@@ -152,6 +159,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.packageName = packageName;
   }
 
+  @Override
   public String getBeanPackageName() {
     return beanPackageName;
   }
@@ -160,6 +168,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.beanPackageName = beanPackageName;
   }
 
+  @Override
   public boolean isInnerClassesForKeys() {
     return innerClassesForKeys;
   }
@@ -168,6 +177,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.innerClassesForKeys = innerClassesForKeys;
   }
 
+  @Override
   public Class<? extends NamingStrategy> getNamingStrategyClass() {
     return namingStrategyClass;
   }
@@ -176,6 +186,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.namingStrategyClass = namingStrategyClass;
   }
 
+  @Override
   public String getSchemaPattern() {
     return schemaPattern;
   }
@@ -184,6 +195,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.schemaPattern = schemaPattern;
   }
 
+  @Override
   public String getCatalogPattern() {
     return catalogPattern;
   }
@@ -192,6 +204,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.catalogPattern = catalogPattern;
   }
 
+  @Override
   public String getTableNamePattern() {
     return tableNamePattern;
   }
@@ -200,6 +213,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.tableNamePattern = tableNamePattern;
   }
 
+  @Override
   public boolean isColumnAnnotations() {
     return columnAnnotations;
   }
@@ -208,6 +222,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.columnAnnotations = columnAnnotations;
   }
 
+  @Override
   public boolean isValidationAnnotations() {
     return validationAnnotations;
   }
@@ -216,6 +231,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.validationAnnotations = validationAnnotations;
   }
 
+  @Override
   public boolean isSchemaToPackage() {
     return schemaToPackage;
   }
@@ -224,6 +240,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.schemaToPackage = schemaToPackage;
   }
 
+  @Override
   public boolean isLowerCase() {
     return lowerCase;
   }
@@ -232,6 +249,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.lowerCase = lowerCase;
   }
 
+  @Override
   public boolean isExportTables() {
     return exportTables;
   }
@@ -240,6 +258,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.exportTables = exportTables;
   }
 
+  @Override
   public boolean isExportViews() {
     return exportViews;
   }
@@ -248,6 +267,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.exportViews = exportViews;
   }
 
+  @Override
   public boolean isExportAll() {
     return exportAll;
   }
@@ -256,6 +276,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.exportAll = exportAll;
   }
 
+  @Override
   public boolean isExportBeans() {
     return exportBeans;
   }
@@ -264,6 +285,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.exportBeans = exportBeans;
   }
 
+  @Override
   public boolean isExportPrimaryKeys() {
     return exportPrimaryKeys;
   }
@@ -272,6 +294,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.exportPrimaryKeys = exportPrimaryKeys;
   }
 
+  @Override
   public boolean isExportForeignKeys() {
     return exportForeignKeys;
   }
@@ -280,6 +303,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.exportForeignKeys = exportForeignKeys;
   }
 
+  @Override
   public boolean isExportDirectForeignKeys() {
     return exportDirectForeignKeys;
   }
@@ -288,6 +312,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.exportDirectForeignKeys = exportDirectForeignKeys;
   }
 
+  @Override
   public boolean isExportInverseForeignKeys() {
     return exportInverseForeignKeys;
   }
@@ -296,6 +321,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.exportInverseForeignKeys = exportInverseForeignKeys;
   }
 
+  @Override
   public Charset getSourceEncoding() {
     return sourceEncoding;
   }
@@ -304,6 +330,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.sourceEncoding = sourceEncoding;
   }
 
+  @Override
   public String getTableTypesToExport() {
     return tableTypesToExport;
   }
@@ -312,6 +339,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.tableTypesToExport = tableTypesToExport;
   }
 
+  @Override
   public List<String> getImports() {
     return imports;
   }
@@ -320,6 +348,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.imports = imports;
   }
 
+  @Override
   public String getGeneratedAnnotationClass() {
     return generatedAnnotationClass;
   }
@@ -328,14 +357,16 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.generatedAnnotationClass = generatedAnnotationClass;
   }
 
-  public Class<? extends BeanSerializer> getBeanSerializerClass() {
+  @Override
+  public Class<? extends Serializer> getBeanSerializerClass() {
     return beanSerializerClass;
   }
 
-  public void setBeanSerializerClass(Class<? extends BeanSerializer> beanSerializerClass) {
+  public void setBeanSerializerClass(Class<? extends Serializer> beanSerializerClass) {
     this.beanSerializerClass = beanSerializerClass;
   }
 
+  @Override
   public String[] getBeanInterfaces() {
     return beanInterfaces;
   }
@@ -344,6 +375,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.beanInterfaces = beanInterfaces;
   }
 
+  @Override
   public boolean isBeanAddToString() {
     return beanAddToString;
   }
@@ -352,6 +384,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.beanAddToString = beanAddToString;
   }
 
+  @Override
   public boolean isBeanAddFullConstructor() {
     return beanAddFullConstructor;
   }
@@ -360,6 +393,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.beanAddFullConstructor = beanAddFullConstructor;
   }
 
+  @Override
   public boolean isBeanPrintSupertype() {
     return beanPrintSupertype;
   }
@@ -368,6 +402,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.beanPrintSupertype = beanPrintSupertype;
   }
 
+  @Override
   public List<CustomType> getCustomTypes() {
     return customTypes;
   }
@@ -376,6 +411,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.customTypes = customTypes;
   }
 
+  @Override
   public List<TypeMapping> getTypeMappings() {
     return typeMappings;
   }
@@ -384,6 +420,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.typeMappings = typeMappings;
   }
 
+  @Override
   public List<NumericMapping> getNumericMappings() {
     return numericMappings;
   }
@@ -392,6 +429,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.numericMappings = numericMappings;
   }
 
+  @Override
   public List<RenameMapping> getRenameMappings() {
     return renameMappings;
   }
@@ -400,6 +438,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.renameMappings = renameMappings;
   }
 
+  @Override
   public Class<? extends Comparator<Property>> getColumnComparatorClass() {
     return columnComparatorClass;
   }
@@ -409,6 +448,7 @@ public class MetadataExporterConfigImpl implements MetadataExporterConfig {
     this.columnComparatorClass = columnComparatorClass;
   }
 
+  @Override
   public Class<? extends Serializer> getSerializerClass() {
     return serializerClass;
   }

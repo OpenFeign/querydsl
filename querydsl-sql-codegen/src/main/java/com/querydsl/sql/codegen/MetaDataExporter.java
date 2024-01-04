@@ -302,31 +302,34 @@ public class MetaDataExporter {
         GeneratedAnnotationResolver.resolve(config.getGeneratedAnnotationClass()));
 
     if (config.isExportBeans()) {
-      BeanSerializer serializer;
+      Serializer serializer;
       if (config.getBeanSerializerClass() == null) {
         serializer = new BeanSerializer();
       } else {
         try {
-          serializer = (BeanSerializer) config.getBeanSerializerClass().newInstance();
+          serializer = config.getBeanSerializerClass().newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
           throw new RuntimeException(e);
         }
       }
-      if (config.getBeanInterfaces() != null) {
-        for (String iface : config.getBeanInterfaces()) {
-          int sepIndex = iface.lastIndexOf('.');
-          if (sepIndex < 0) {
-            serializer.addInterface(new SimpleType(iface));
-          } else {
-            String packageName = iface.substring(0, sepIndex);
-            String simpleName = iface.substring(sepIndex + 1);
-            serializer.addInterface(new SimpleType(iface, packageName, simpleName));
+      if (serializer instanceof BeanSerializer) {
+        BeanSerializer bserializer = (BeanSerializer) serializer;
+        if (config.getBeanInterfaces() != null) {
+          for (String iface : config.getBeanInterfaces()) {
+            int sepIndex = iface.lastIndexOf('.');
+            if (sepIndex < 0) {
+              bserializer.addInterface(new SimpleType(iface));
+            } else {
+              String packageName = iface.substring(0, sepIndex);
+              String simpleName = iface.substring(sepIndex + 1);
+              bserializer.addInterface(new SimpleType(iface, packageName, simpleName));
+            }
           }
         }
+        bserializer.setAddFullConstructor(config.isBeanAddFullConstructor());
+        bserializer.setAddToString(config.isBeanAddToString());
+        bserializer.setPrintSupertype(config.isBeanPrintSupertype());
       }
-      serializer.setAddFullConstructor(config.isBeanAddFullConstructor());
-      serializer.setAddToString(config.isBeanAddToString());
-      serializer.setPrintSupertype(config.isBeanPrintSupertype());
       module.bind(SQLCodegenModule.BEAN_SERIALIZER, serializer);
     }
 
@@ -596,5 +599,14 @@ public class MetaDataExporter {
 
   public void setConfiguration(Configuration configuration) {
     module.bind(Configuration.class, configuration);
+  }
+
+  /**
+   * Set the type mappings to use
+   *
+   * @param typeMappings
+   */
+  public void setTypeMappings(TypeMappings typeMappings) {
+    module.bind(TypeMappings.class, typeMappings);
   }
 }
