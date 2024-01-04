@@ -116,7 +116,9 @@ jobs:
       - save-test-results
 
   windows:
-    executor: win/default
+    machine:
+      image: windows-server-2019-vs2019:current # Windows machine image
+    resource_class: windows.medium
 
     steps:
       - checkout
@@ -128,6 +130,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B verify -Pno-databases
+          shell: bash.exe
       - save-test-results
 
   buildExamples:
