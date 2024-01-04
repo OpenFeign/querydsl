@@ -102,3 +102,7 @@ If you are unsure about the details of a contribution, ask on the Querydsl Googl
 ### Slack
 
 If you want to join Slack workspace for Querydsl contributors join by following [this link](https://join.slack.com/t/querydsl/shared_invite/zt-r7ufzz6q-zxIHgpOSSMFvoU3YU4SclQ).
+
+## SAST Tools
+
+[PVS-Studio](https://pvs-studio.com/en/pvs-studio/?utm_source=website&utm_medium=github&utm_campaign=open_source) - static analyzer for C, C++, C#, and Java code.
