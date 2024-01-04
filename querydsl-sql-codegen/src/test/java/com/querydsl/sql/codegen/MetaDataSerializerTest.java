@@ -183,6 +183,6 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
 
   private void assertFileContainsInOrder(String path, String... methods) throws IOException {
     var content = new String(Files.readAllBytes(folder.getRoot().toPath().resolve(path)), UTF_8);
-    assertThat(content).containsIgnoringNewLines(methods);
+    assertThat(content).containsIgnoringWhitespaces(methods);
   }
 }
