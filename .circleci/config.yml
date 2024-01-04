@@ -131,7 +131,15 @@ jobs:
           command: |
             ./mvnw -ntp -B verify -Pno-databases -Dtoolchain.skip=true
           shell: bash.exe
-      - save-test-results
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+          shell: bash.exe
+      - store_test_results:
+          path: ~/test-results
 
   buildExamples:
     <<: *defaults
