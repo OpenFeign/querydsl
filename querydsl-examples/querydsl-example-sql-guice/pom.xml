@@ -63,13 +63,6 @@
           <targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
           <exportBeans>true</exportBeans>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>export</goal>
-            </goals>
-          </execution>
-        </executions>
         <dependencies>
           <dependency>
             <groupId>com.h2database</groupId>
@@ -77,6 +70,13 @@
             <version>${h2.version}</version>
           </dependency>
         </dependencies>
+        <executions>
+          <execution>
+            <goals>
+              <goal>export</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
