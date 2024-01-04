@@ -402,6 +402,19 @@
 
     <plugins>
       <plugin>
+        <groupId>com.pvsstudio</groupId>
+        <artifactId>pvsstudio-maven-plugin</artifactId>
+        <version>7.28.77080</version>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>pvsAnalyze</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>3.4.1</version>
