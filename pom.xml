@@ -1020,29 +1020,6 @@
         </plugins>
       </build>
     </profile>
-
-    <profile>
-      <id>windows</id>
-      <activation>
-        <os>
-          <family>windows</family>
-        </os>
-      </activation>
-      <properties>
-        <urlSlashesOsModifier>///</urlSlashesOsModifier>
-      </properties>
-    </profile>
-    <profile>
-      <id>not-windows</id>
-      <activation>
-        <os>
-          <family>!windows</family>
-        </os>
-      </activation>
-      <properties>
-        <urlSlashesOsModifier>//</urlSlashesOsModifier>
-      </properties>
-    </profile>
   </profiles>
 
 </project>
