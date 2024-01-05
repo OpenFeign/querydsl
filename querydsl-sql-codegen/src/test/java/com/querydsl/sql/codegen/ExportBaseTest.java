@@ -28,13 +28,14 @@ public abstract class ExportBaseTest {
 
   @Test
   public void export() throws SQLException {
-    NamingStrategy namingStrategy = new DefaultNamingStrategy();
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSpatial(true);
-    exporter.setSchemaPattern(getSchemaPattern());
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setNamingStrategy(namingStrategy);
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    //    config.setSpatial(true);
+    config.setSchemaPattern(getSchemaPattern());
+    config.setPackageName("test");
+    config.setTargetFolder(folder.getRoot());
+    config.setNamingStrategyClass(DefaultNamingStrategy.class);
+
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(Connections.getConnection().getMetaData());
 
     assertThat(folder.getRoot().listFiles().length).isGreaterThan(0);

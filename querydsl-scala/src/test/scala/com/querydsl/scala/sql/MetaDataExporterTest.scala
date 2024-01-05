@@ -1,6 +1,7 @@
 package com.querydsl.scala.sql
 
 import com.querydsl.scala._
+import com.querydsl.sql._
 import com.querydsl.sql.codegen._
 import org.junit._
 
@@ -66,14 +67,20 @@ class MetaDataExporterTest {
   @Test
   def Generate_Without_BeanTypes() {
     val directory = new java.io.File("target/jdbcgen1")
-    val exporter = new MetaDataExporter()
-    exporter.setNamePrefix("Q")
-    exporter.setPackageName("com.querydsl")
-    exporter.setSchemaPattern("PUBLIC")
-    exporter.setTargetFolder(directory)
-    exporter.setSerializerClass(classOf[ScalaMetaDataSerializer])
-    exporter.setCreateScalaSources(true)
+    val config = new MetadataExporterConfigImpl();
+    config.setNamePrefix("Q")
+    config.setPackageName("com.querydsl")
+    config.setSchemaPattern("PUBLIC")
+    config.setTargetFolder(directory)
+    config.setSerializerClass(classOf[ScalaMetaDataSerializer])
+    config.setCreateScalaSources(true)
+
+    val exporter = new MetaDataExporter(config);
     exporter.setTypeMappings(ScalaTypeMappings.create)
+    
+    val configuration = new Configuration(new HSQLDBTemplates());
+    exporter.setConfiguration(configuration);
+    
     exporter.export(connection.getMetaData)
 
     CompileTestUtils.assertCompileSuccess(directory)
@@ -82,15 +89,20 @@ class MetaDataExporterTest {
   @Test
   def Generate_With_BeanTypes() {
     val directory = new java.io.File("target/jdbcgen2")
-    val exporter = new MetaDataExporter()
-    exporter.setNamePrefix("Q")
-    exporter.setPackageName("com.querydsl")
-    exporter.setSchemaPattern("PUBLIC")
-    exporter.setTargetFolder(directory)
-    exporter.setSerializerClass(classOf[ScalaMetaDataSerializer])
-    exporter.setBeanSerializerClass(classOf[ScalaBeanSerializer])
-    exporter.setCreateScalaSources(true)
+    val config = new MetadataExporterConfigImpl();
+    config.setNamePrefix("Q")
+    config.setPackageName("com.querydsl")
+    config.setSchemaPattern("PUBLIC")
+    config.setTargetFolder(directory)
+    config.setSerializerClass(classOf[ScalaMetaDataSerializer])
+    config.setCreateScalaSources(true)
+
+    val exporter = new MetaDataExporter(config);
     exporter.setTypeMappings(ScalaTypeMappings.create)
+    
+    val configuration = new Configuration(new HSQLDBTemplates());
+    exporter.setConfiguration(configuration);
+    
     exporter.export(connection.getMetaData)
 
     CompileTestUtils.assertCompileSuccess(directory)
@@ -99,15 +111,18 @@ class MetaDataExporterTest {
   @Test
   def Generate_With_Schema() {
     val directory = new java.io.File("target/jdbcgen3")
-    val exporter = new MetaDataExporter()
-    exporter.setNamePrefix("Q")
-    exporter.setPackageName("com.querydsl")
-    exporter.setSchemaPattern("PUBLIC")
-    exporter.setSchemaToPackage(true)
-    exporter.setTargetFolder(directory)
-    exporter.setSerializerClass(classOf[ScalaMetaDataSerializer])
-    exporter.setCreateScalaSources(true)
+    val config = new MetadataExporterConfigImpl();
+    config.setNamePrefix("Q")
+    config.setPackageName("com.querydsl")
+    config.setSchemaPattern("PUBLIC")
+    config.setSchemaToPackage(true)
+    config.setTargetFolder(directory)
+    config.setSerializerClass(classOf[ScalaMetaDataSerializer])
+    config.setCreateScalaSources(true)
+
+    val exporter = new MetaDataExporter(config);
     exporter.setTypeMappings(ScalaTypeMappings.create)
+
     exporter.export(connection.getMetaData)
 
     CompileTestUtils.assertCompileSuccess(directory)
@@ -116,16 +131,22 @@ class MetaDataExporterTest {
   @Test
   def Generate_With_BeanTypes_And_Schema() {
     val directory = new java.io.File("target/jdbcgen4")
-    val exporter = new MetaDataExporter()
-    exporter.setNamePrefix("Q")
-    exporter.setPackageName("com.querydsl")
-    exporter.setSchemaPattern("PUBLIC")
-    exporter.setSchemaToPackage(true)
-    exporter.setTargetFolder(directory)
-    exporter.setSerializerClass(classOf[ScalaMetaDataSerializer])
-    exporter.setBeanSerializerClass(classOf[ScalaBeanSerializer])
-    exporter.setCreateScalaSources(true)
+    val config = new MetadataExporterConfigImpl();
+    config.setNamePrefix("Q")
+    config.setPackageName("com.querydsl")
+    config.setSchemaPattern("PUBLIC")
+    config.setSchemaToPackage(true)
+    config.setTargetFolder(directory)
+    config.setSerializerClass(classOf[ScalaMetaDataSerializer])
+    config.setBeanSerializerClass(classOf[ScalaBeanSerializer])
+    config.setCreateScalaSources(true)
+
+    val exporter = new MetaDataExporter(config);
     exporter.setTypeMappings(ScalaTypeMappings.create)
+    
+    val configuration = new Configuration(new HSQLDBTemplates());
+    exporter.setConfiguration(configuration);
+    
     exporter.export(connection.getMetaData)
 
     CompileTestUtils.assertCompileSuccess(directory)

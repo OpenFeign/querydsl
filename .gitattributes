@@ -4,3 +4,14 @@
 *.jpg binary
 *.pdf binary
 *.png binary
+
+#
+# https://help.github.com/articles/dealing-with-line-endings/
+#
+# Linux start script should use lf
+/querydsl-gradle-plugin/gradlew        text eol=lf
+/mvnw                                  text eol=lf
+
+# These are Windows script files and should use crlf
+*.bat           text eol=crlf
+

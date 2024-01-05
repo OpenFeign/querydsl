@@ -6,6 +6,10 @@ public class CustomType {
 
   public CustomType() {}
 
+  public CustomType(String className) {
+    this.className = className;
+  }
+
   public String getClassName() {
     return className;
   }

@@ -13,10 +13,12 @@ public final class Export {
     String url = "jdbc:mysql://localhost:3306/querydsl";
     Connection conn = DriverManager.getConnection(url, "querydsl", "querydsl");
 
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setNamePrefix("S");
-    exporter.setPackageName("com.querydsl.jpa.domain.sql");
-    exporter.setTargetFolder(new File("../querydsl-jpa/src/test/java"));
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setNamePrefix("S");
+    config.setPackageName("com.querydsl.jpa.domain.sql");
+    config.setTargetFolder(new File("../querydsl-jpa/src/test/java"));
+
+    MetaDataExporter exporter = new MetaDataExporter(config);
     //        exporter.setLowerCase(true);
     exporter.export(conn.getMetaData());
 

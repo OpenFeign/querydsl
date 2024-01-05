@@ -88,14 +88,15 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
   @Test
   public void normal_serialization() throws SQLException {
     var namePrefix = "Q";
-    NamingStrategy namingStrategy = new DefaultNamingStrategy();
     // customization of serialization
-    var exporter = new MetaDataExporter();
-    exporter.setBeanSerializerClass(BeanSerializer.class);
-    exporter.setNamePrefix(namePrefix);
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setNamingStrategy(namingStrategy);
+    var config = new MetadataExporterConfigImpl();
+    config.setBeanSerializerClass(BeanSerializer.class);
+    config.setNamePrefix(namePrefix);
+    config.setPackageName("test");
+    config.setTargetFolder(folder.getRoot());
+    config.setNamingStrategyClass(DefaultNamingStrategy.class);
+    config.setExportBeans(true);
+    var exporter = new MetaDataExporter(config);
     exporter.export(connection.getMetaData());
 
     compile(exporter);
@@ -143,16 +144,17 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
             throw new UnsupportedOperationException();
           }
         });
-    NamingStrategy namingStrategy = new DefaultNamingStrategy();
     // customization of serialization
-    var exporter = new MetaDataExporter();
-    exporter.setBeanSerializerClass(BeanSerializer.class);
-    exporter.setNamePrefix(namePrefix);
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setNamingStrategy(namingStrategy);
+    var config = new MetadataExporterConfigImpl();
+    config.setBeanSerializerClass(BeanSerializer.class);
+    config.setNamePrefix(namePrefix);
+    config.setPackageName("test");
+    config.setTargetFolder(folder.getRoot());
+    config.setNamingStrategyClass(DefaultNamingStrategy.class);
+    config.setGeneratedAnnotationClass("com.querydsl.core.annotations.Generated");
+    config.setExportBeans(true);
+    var exporter = new MetaDataExporter(config);
     exporter.setConfiguration(conf);
-    exporter.setGeneratedAnnotationClass("com.querydsl.core.annotations.Generated");
     exporter.export(connection.getMetaData());
 
     compile(exporter);

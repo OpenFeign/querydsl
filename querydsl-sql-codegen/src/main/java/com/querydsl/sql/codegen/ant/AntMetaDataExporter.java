@@ -14,22 +14,24 @@
 package com.querydsl.sql.codegen.ant;
 
 import com.querydsl.codegen.BeanSerializer;
-import com.querydsl.codegen.utils.model.SimpleType;
-import com.querydsl.sql.Configuration;
-import com.querydsl.sql.SQLTemplates;
+import com.querydsl.codegen.Property;
+import com.querydsl.codegen.Serializer;
 import com.querydsl.sql.codegen.DefaultNamingStrategy;
 import com.querydsl.sql.codegen.MetaDataExporter;
+import com.querydsl.sql.codegen.MetadataExporterConfig;
 import com.querydsl.sql.codegen.NamingStrategy;
 import com.querydsl.sql.codegen.support.CustomType;
 import com.querydsl.sql.codegen.support.NumericMapping;
 import com.querydsl.sql.codegen.support.RenameMapping;
 import com.querydsl.sql.codegen.support.TypeMapping;
-import com.querydsl.sql.types.Type;
 import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import org.apache.tools.ant.BuildException;
@@ -40,7 +42,7 @@ import org.apache.tools.ant.Task;
  *
  * @author tiwe
  */
-public class AntMetaDataExporter extends Task {
+public class AntMetaDataExporter extends Task implements MetadataExporterConfig {
 
   /** JDBC driver class name */
   private String jdbcDriver;
@@ -78,6 +80,8 @@ public class AntMetaDataExporter extends Task {
    * not be used to narrow the search (default: null)
    */
   private String schemaPattern;
+
+  private String catalogPattern;
 
   /**
    * tableNamePattern a table name pattern; must match the table name as it is stored in the
@@ -160,9 +164,6 @@ public class AntMetaDataExporter extends Task {
   /** override default column order (default: alphabetical) */
   private String columnComparatorClass;
 
-  /** spatial type support */
-  private boolean spatial;
-
   /**
    * Comma-separated list of table types to export (allowable values will depend on JDBC driver).
    * Allows for arbitrary set of types to be exported, e.g.: "TABLE, MATERIALIZED VIEW". The
@@ -201,99 +202,8 @@ public class AntMetaDataExporter extends Task {
       Class.forName(jdbcDriver).newInstance();
 
       dbConn = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
-      Configuration configuration = new Configuration(SQLTemplates.DEFAULT);
 
-      MetaDataExporter exporter = new MetaDataExporter();
-      if (namePrefix != null) {
-        exporter.setNamePrefix(namePrefix);
-      }
-      if (nameSuffix != null) {
-        exporter.setNameSuffix(nameSuffix);
-      }
-      if (beanPrefix != null) {
-        exporter.setBeanPrefix(beanPrefix);
-      }
-      if (beanSuffix != null) {
-        exporter.setBeanSuffix(beanSuffix);
-      }
-      if (beansTargetFolder != null) {
-        exporter.setBeansTargetFolder(new File(beansTargetFolder));
-      }
-      exporter.setPackageName(packageName);
-      exporter.setBeanPackageName(beanPackageName);
-      exporter.setTargetFolder(new File(targetFolder));
-      exporter.setNamingStrategy((NamingStrategy) Class.forName(namingStrategyClass).newInstance());
-      exporter.setInnerClassesForKeys(innerClassesForKeys);
-      exporter.setSchemaPattern(schemaPattern);
-      exporter.setTableNamePattern(tableNamePattern);
-      exporter.setColumnAnnotations(columnAnnotations);
-      exporter.setValidationAnnotations(validationAnnotations);
-      exporter.setSchemaToPackage(schemaToPackage);
-      exporter.setLowerCase(lowerCase);
-      exporter.setExportTables(exportTables);
-      exporter.setExportViews(exportViews);
-      exporter.setExportAll(exportAll);
-      exporter.setTableTypesToExport(tableTypesToExport);
-      exporter.setExportPrimaryKeys(exportPrimaryKeys);
-      exporter.setExportForeignKeys(exportForeignKeys);
-      exporter.setExportDirectForeignKeys(exportDirectForeignKeys);
-      exporter.setExportInverseForeignKeys(exportInverseForeignKeys);
-      exporter.setSpatial(spatial);
-
-      if (imports != null && imports.length > 0) {
-        exporter.setImports(imports);
-      }
-
-      if (exportBeans) {
-        BeanSerializer serializer =
-            (BeanSerializer) Class.forName(beanSerializerClass).newInstance();
-        if (beanInterfaces != null) {
-          for (String iface : beanInterfaces) {
-            int sepIndex = iface.lastIndexOf('.');
-            if (sepIndex < 0) {
-              serializer.addInterface(new SimpleType(iface));
-            } else {
-              String packageName = iface.substring(0, sepIndex);
-              String simpleName = iface.substring(sepIndex + 1);
-              serializer.addInterface(new SimpleType(iface, packageName, simpleName));
-            }
-          }
-        }
-        serializer.setAddFullConstructor(beanAddFullConstructor);
-        serializer.setAddToString(beanAddToString);
-        serializer.setPrintSupertype(beanPrintSupertype);
-        exporter.setBeanSerializer(serializer);
-      }
-      if (sourceEncoding != null) {
-        exporter.setSourceEncoding(sourceEncoding);
-      }
-      if (customTypes != null) {
-        for (CustomType customType : customTypes) {
-          configuration.register((Type<?>) Class.forName(customType.getClassName()).newInstance());
-        }
-      }
-      if (typeMappings != null) {
-        for (TypeMapping mapping : typeMappings) {
-          mapping.apply(configuration);
-        }
-      }
-      if (numericMappings != null) {
-        for (NumericMapping mapping : numericMappings) {
-          mapping.apply(configuration);
-        }
-      }
-      if (renameMappings != null) {
-        for (RenameMapping mapping : renameMappings) {
-          mapping.apply(configuration);
-        }
-      }
-
-      if (columnComparatorClass != null) {
-        exporter.setColumnComparatorClass(
-            (Class) Class.forName(this.columnComparatorClass).asSubclass(Comparator.class));
-      }
-
-      exporter.setConfiguration(configuration);
+      MetaDataExporter exporter = new MetaDataExporter(this);
 
       exporter.export(dbConn.getMetaData());
 
@@ -410,32 +320,53 @@ public class AntMetaDataExporter extends Task {
     this.tableNamePattern = tableNamePattern;
   }
 
-  public String getTargetFolder() {
-    return targetFolder;
+  public File getTargetFolder() {
+    return new File(targetFolder);
   }
 
   public void setTargetFolder(String targetFolder) {
     this.targetFolder = targetFolder;
   }
 
-  public String getNamingStrategyClass() {
-    return namingStrategyClass;
+  public Class<? extends NamingStrategy> getNamingStrategyClass() {
+    if (namingStrategyClass == null) {
+      return null;
+    }
+    try {
+      return (Class<? extends NamingStrategy>) Class.forName(namingStrategyClass);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void setNamingStrategyClass(String namingStrategyClass) {
     this.namingStrategyClass = namingStrategyClass;
   }
 
-  public String getBeanSerializerClass() {
-    return beanSerializerClass;
+  public Class<? extends BeanSerializer> getBeanSerializerClass() {
+    if (exportBeans && beanSerializerClass != null) {
+      try {
+        return (Class<? extends BeanSerializer>) Class.forName(beanSerializerClass);
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return null;
   }
 
   public void setBeanSerializerClass(String beanSerializerClass) {
     this.beanSerializerClass = beanSerializerClass;
   }
 
-  public String getSerializerClass() {
-    return serializerClass;
+  public Class<? extends Serializer> getSerializerClass() {
+    if (serializerClass == null) {
+      return null;
+    }
+    try {
+      return (Class<? extends Serializer>) Class.forName(serializerClass);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void setSerializerClass(String serializerClass) {
@@ -517,13 +448,8 @@ public class AntMetaDataExporter extends Task {
    * @return a list of custom types
    * @deprecated Use addCustomType instead
    */
-  public String[] getCustomTypes() {
-    String[] customTypes = new String[this.customTypes.size()];
-    for (int i = 0; i < this.customTypes.size(); i++) {
-      CustomType customType = this.customTypes.get(i);
-      customTypes[i] = customType.getClassName();
-    }
-    return customTypes;
+  public List<CustomType> getCustomTypes() {
+    return this.customTypes;
   }
 
   /**
@@ -539,10 +465,6 @@ public class AntMetaDataExporter extends Task {
       customType.setClassName(string);
       this.customTypes.add(customType);
     }
-  }
-
-  public boolean isCreateScalaSources() {
-    return createScalaSources;
   }
 
   public void setCreateScalaSources(boolean createScalaSources) {
@@ -621,20 +543,20 @@ public class AntMetaDataExporter extends Task {
     this.exportForeignKeys = exportForeignKeys;
   }
 
-  public String getColumnComparatorClass() {
-    return columnComparatorClass;
+  @Override
+  public Class<? extends Comparator<Property>> getColumnComparatorClass() {
+    if (columnComparatorClass == null) {
+      return null;
+    }
+    try {
+      return (Class<? extends Comparator<Property>>) Class.forName(columnComparatorClass);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void setColumnComparatorClass(String columnComparatorClass) {
     this.columnComparatorClass = columnComparatorClass;
-  }
-
-  public boolean isSpatial() {
-    return spatial;
-  }
-
-  public void setSpatial(boolean spatial) {
-    this.spatial = spatial;
   }
 
   public String getTableTypesToExport() {
@@ -645,24 +567,32 @@ public class AntMetaDataExporter extends Task {
     this.tableTypesToExport = tableTypesToExport;
   }
 
-  public String[] getImports() {
-    return imports;
+  public List<String> getImports() {
+    if (imports == null) {
+      return null;
+    }
+    return Arrays.asList(imports);
   }
 
   public void setImports(String[] imports) {
     this.imports = imports;
   }
 
-  public String getSourceEncoding() {
-    return sourceEncoding;
+  public Charset getSourceEncoding() {
+    if (sourceEncoding != null) return Charset.forName(sourceEncoding);
+
+    return StandardCharsets.UTF_8;
   }
 
   public void setSourceEncoding(String sourceEncoding) {
     this.sourceEncoding = sourceEncoding;
   }
 
-  public String getBeansTargetFolder() {
-    return beansTargetFolder;
+  public File getBeansTargetFolder() {
+    if (beansTargetFolder != null) {
+      return new File(beansTargetFolder);
+    }
+    return null;
   }
 
   public void setBeansTargetFolder(String beansTargetFolder) {
@@ -682,5 +612,39 @@ public class AntMetaDataExporter extends Task {
   /** Adds RenameMapping instance, called by Ant */
   public void addRenameMapping(RenameMapping mapping) {
     renameMappings.add(mapping);
+  }
+
+  @Override
+  public boolean isCreateScalaSources() {
+    return createScalaSources;
+  }
+
+  @Override
+  public String getCatalogPattern() {
+    return catalogPattern;
+  }
+
+  public void setCatalogPattern(String catalogPattern) {
+    this.catalogPattern = catalogPattern;
+  }
+
+  @Override
+  public String getGeneratedAnnotationClass() {
+    return null;
+  }
+
+  @Override
+  public List<TypeMapping> getTypeMappings() {
+    return typeMappings;
+  }
+
+  @Override
+  public List<NumericMapping> getNumericMappings() {
+    return numericMappings;
+  }
+
+  @Override
+  public List<RenameMapping> getRenameMappings() {
+    return renameMappings;
   }
 }
