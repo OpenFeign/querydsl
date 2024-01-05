@@ -564,7 +564,6 @@
         <version>0.103.1</version>
         <inherited>false</inherited>
         <configuration>
-          <bomTemplateUrl>file:${urlSlashesOsModifier}${project.basedir}/src/config/bom.xml</bomTemplateUrl>
           <boms>
             <bom>
               <artifactId>querydsl-bom</artifactId>
