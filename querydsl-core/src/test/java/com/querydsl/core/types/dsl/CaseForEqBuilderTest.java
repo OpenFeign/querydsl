@@ -51,12 +51,14 @@ public class CaseForEqBuilderTest {
 
     assertThat(cases.toString())
         .isEqualTo(
-            "case customer.annualSpending "
-                + "when 1000 then 1 "
-                + "when 2000 then 2 "
-                + "when 5000 then 3 "
-                + "else 4 "
-                + "end");
+            """
+            case customer.annualSpending \
+            when 1000 then 1 \
+            when 2000 then 2 \
+            when 5000 then 3 \
+            else 4 \
+            end\
+            """);
   }
 
   @Test

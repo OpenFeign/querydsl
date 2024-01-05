@@ -48,7 +48,9 @@ public class CustomTypeTest {
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     assertThat(writer.toString())
         .contains(
-            "public final com.querydsl.codegen.Point property = "
-                + "new com.querydsl.codegen.Point(forProperty(\"property\"));");
+            """
+            public final com.querydsl.codegen.Point property = \
+            new com.querydsl.codegen.Point(forProperty("property"));\
+            """);
   }
 }

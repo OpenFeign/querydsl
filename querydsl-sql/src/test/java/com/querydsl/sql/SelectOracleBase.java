@@ -50,9 +50,11 @@ public class SelectOracleBase extends AbstractBaseTest {
   @SkipForQuoted
   public void connectByPrior() throws SQLException {
     expectedQuery =
-        "select e.ID, e.LASTNAME, e.SUPERIOR_ID "
-            + "from EMPLOYEE e "
-            + "connect by prior e.ID = e.SUPERIOR_ID";
+        """
+        select e.ID, e.LASTNAME, e.SUPERIOR_ID \
+        from EMPLOYEE e \
+        connect by prior e.ID = e.SUPERIOR_ID\
+        """;
     oracleQuery()
         .from(employee)
         .connectByPrior(employee.id.eq(employee.superiorId))
@@ -69,10 +71,12 @@ public class SelectOracleBase extends AbstractBaseTest {
     }
 
     expectedQuery =
-        "select e.ID, e.LASTNAME, e.SUPERIOR_ID "
-            + "from EMPLOYEE e "
-            + "start with e.ID = ? "
-            + "connect by prior e.ID = e.SUPERIOR_ID";
+        """
+        select e.ID, e.LASTNAME, e.SUPERIOR_ID \
+        from EMPLOYEE e \
+        start with e.ID = ? \
+        connect by prior e.ID = e.SUPERIOR_ID\
+        """;
     oracleQuery()
         .from(employee)
         .startWith(employee.id.eq(1))
@@ -90,11 +94,13 @@ public class SelectOracleBase extends AbstractBaseTest {
     }
 
     expectedQuery =
-        "select e.ID, e.LASTNAME, e.SUPERIOR_ID "
-            + "from EMPLOYEE e "
-            + "start with e.ID = ? "
-            + "connect by prior e.ID = e.SUPERIOR_ID "
-            + "order siblings by e.LASTNAME";
+        """
+        select e.ID, e.LASTNAME, e.SUPERIOR_ID \
+        from EMPLOYEE e \
+        start with e.ID = ? \
+        connect by prior e.ID = e.SUPERIOR_ID \
+        order siblings by e.LASTNAME\
+        """;
     oracleQuery()
         .from(employee)
         .startWith(employee.id.eq(1))
@@ -113,9 +119,11 @@ public class SelectOracleBase extends AbstractBaseTest {
     }
 
     expectedQuery =
-        "select e.ID, e.LASTNAME, e.SUPERIOR_ID "
-            + "from EMPLOYEE e "
-            + "connect by nocycle prior e.ID = e.SUPERIOR_ID";
+        """
+        select e.ID, e.LASTNAME, e.SUPERIOR_ID \
+        from EMPLOYEE e \
+        connect by nocycle prior e.ID = e.SUPERIOR_ID\
+        """;
     oracleQuery()
         .from(employee)
         .connectByNocyclePrior(employee.id.eq(employee.superiorId))
@@ -138,10 +146,12 @@ public class SelectOracleBase extends AbstractBaseTest {
     //        9  from emp
     //       10  order by deptno, sal;
     expectedQuery =
-        "select e.LASTNAME, e.SALARY, "
-            + "sum(e.SALARY) over (partition by e.SUPERIOR_ID order by e.LASTNAME asc, e.SALARY asc), "
-            + "sum(e.SALARY) over (order by e.SUPERIOR_ID asc, e.SALARY asc), "
-            + "sum(e.SALARY) over () from EMPLOYEE e order by e.SALARY asc, e.SUPERIOR_ID asc";
+        """
+        select e.LASTNAME, e.SALARY, \
+        sum(e.SALARY) over (partition by e.SUPERIOR_ID order by e.LASTNAME asc, e.SALARY asc), \
+        sum(e.SALARY) over (order by e.SUPERIOR_ID asc, e.SALARY asc), \
+        sum(e.SALARY) over () from EMPLOYEE e order by e.SALARY asc, e.SUPERIOR_ID asc\
+        """;
 
     oracleQuery()
         .from(employee)

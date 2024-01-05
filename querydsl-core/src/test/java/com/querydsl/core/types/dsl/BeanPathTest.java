@@ -100,7 +100,9 @@ public class BeanPathTest {
     assertThat(pred2).isEqualTo(pred1);
     assertThat(pred2.toString())
         .isEqualTo(
-            "p instanceof class com.querydsl.core.types.dsl.BeanPathTest || "
-                + "p instanceof class com.querydsl.core.types.dsl.BeanPathTest$SubClass");
+            """
+            p instanceof class com.querydsl.core.types.dsl.BeanPathTest || \
+            p instanceof class com.querydsl.core.types.dsl.BeanPathTest$SubClass\
+            """);
   }
 }

@@ -45,7 +45,11 @@ public class NativeSQLSerializerTest {
     serializer.serialize(md, false);
     assertThat(serializer.toString())
         .isEqualTo(
-            "select animal_.id\n" + "from animal_ animal_\n" + "where animal_.name in (?1, ?2)");
+            """
+            select animal_.id
+            from animal_ animal_
+            where animal_.name in (?1, ?2)\
+            """);
   }
 
   @Test

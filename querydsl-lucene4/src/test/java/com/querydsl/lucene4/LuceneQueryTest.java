@@ -232,13 +232,13 @@ public class LuceneQueryTest {
     assertThat(query.fetch()).hasSize(3);
     List<Document> results = query.where(sort.startsWith("a")).orderBy(sort.asc()).fetch();
     assertThat(results).hasSize(3);
-    assertThat(results.get(0).getField("sort").stringValue()).isEqualTo("aa");
+    assertThat(results.getFirst().getField("sort").stringValue()).isEqualTo("aa");
     assertThat(results.get(1).getField("sort").stringValue()).isEqualTo("a\u00c4");
     assertThat(results.get(2).getField("sort").stringValue()).isEqualTo("ab");
 
-    query = new LuceneQuery(new LuceneSerializer(true, true, new Locale("fi", "FI")), searcher);
+    query = new LuceneQuery(new LuceneSerializer(true, true, Locale.of("fi", "FI")), searcher);
     results = query.where(sort.startsWith("a")).orderBy(sort.asc()).fetch();
-    assertThat(results.get(0).getField("sort").stringValue()).isEqualTo("aa");
+    assertThat(results.getFirst().getField("sort").stringValue()).isEqualTo("aa");
     assertThat(results.get(1).getField("sort").stringValue()).isEqualTo("ab");
     assertThat(results.get(2).getField("sort").stringValue()).isEqualTo("a\u00c4");
   }
@@ -279,7 +279,7 @@ public class LuceneQueryTest {
     final List<Document> documents = query.fetch();
     assertThat(documents).isNotEmpty();
     assertThat(documents).hasSize(2);
-    assertThat(documents.get(0).get("year")).isEqualTo("1990");
+    assertThat(documents.getFirst().get("year")).isEqualTo("1990");
     assertThat(documents.get(1).get("year")).isEqualTo("1990");
   }
 
@@ -291,7 +291,7 @@ public class LuceneQueryTest {
     final List<Document> documents = query.fetch();
     assertThat(documents).isNotEmpty();
     assertThat(documents).hasSize(2);
-    assertThat(documents.get(0).get("year")).isEqualTo("1954");
+    assertThat(documents.getFirst().get("year")).isEqualTo("1954");
     assertThat(documents.get(1).get("year")).isEqualTo("1990");
   }
 
@@ -302,7 +302,7 @@ public class LuceneQueryTest {
     final List<Document> documents = query.fetch();
     assertThat(documents).isNotEmpty();
     assertThat(documents).hasSize(4);
-    assertThat(documents.get(0).get("year")).isEqualTo("1864");
+    assertThat(documents.getFirst().get("year")).isEqualTo("1864");
     assertThat(documents.get(1).get("year")).isEqualTo("1954");
     assertThat(documents.get(2).get("year")).isEqualTo("1990");
     assertThat(documents.get(3).get("year")).isEqualTo("1990");
@@ -318,7 +318,7 @@ public class LuceneQueryTest {
     final List<Document> documents = query.fetch();
     assertThat(documents).isNotEmpty();
     assertThat(documents).hasSize(4);
-    assertThat(documents.get(0).get("year")).isEqualTo("1864");
+    assertThat(documents.getFirst().get("year")).isEqualTo("1864");
     assertThat(documents.get(1).get("year")).isEqualTo("1954");
     assertThat(documents.get(2).get("year")).isEqualTo("1990");
     assertThat(documents.get(3).get("year")).isEqualTo("1990");
@@ -350,7 +350,7 @@ public class LuceneQueryTest {
     final List<Document> documents = query.fetch();
     assertThat(documents).isNotEmpty();
     assertThat(documents).hasSize(4);
-    assertThat(documents.get(0).get("year")).isEqualTo("1990");
+    assertThat(documents.getFirst().get("year")).isEqualTo("1990");
     assertThat(documents.get(1).get("year")).isEqualTo("1990");
     assertThat(documents.get(2).get("year")).isEqualTo("1954");
     assertThat(documents.get(3).get("year")).isEqualTo("1864");
@@ -363,7 +363,7 @@ public class LuceneQueryTest {
     final List<Document> documents = query.fetch();
     assertThat(documents).isNotEmpty();
     assertThat(documents).hasSize(4);
-    assertThat(documents.get(0).get("gross")).isEqualTo("90.0");
+    assertThat(documents.getFirst().get("gross")).isEqualTo("90.0");
     assertThat(documents.get(1).get("gross")).isEqualTo("89.0");
     assertThat(documents.get(2).get("gross")).isEqualTo("30.5");
     assertThat(documents.get(3).get("gross")).isEqualTo("10.0");
@@ -377,9 +377,9 @@ public class LuceneQueryTest {
     final List<Document> documents = query.fetch();
     assertThat(documents).isNotEmpty();
     assertThat(documents).hasSize(4);
-    assertThat(documents.get(0).get("year")).isEqualTo("1990");
+    assertThat(documents.getFirst().get("year")).isEqualTo("1990");
     assertThat(documents.get(1).get("year")).isEqualTo("1990");
-    assertThat(documents.get(0).get("title")).isEqualTo("Introduction to Algorithms");
+    assertThat(documents.getFirst().get("title")).isEqualTo("Introduction to Algorithms");
     assertThat(documents.get(1).get("title")).isEqualTo("Jurassic Park");
   }
 
@@ -391,9 +391,9 @@ public class LuceneQueryTest {
     final List<Document> documents = query.fetch();
     assertThat(documents).isNotEmpty();
     assertThat(documents).hasSize(4);
-    assertThat(documents.get(0).get("year")).isEqualTo("1990");
+    assertThat(documents.getFirst().get("year")).isEqualTo("1990");
     assertThat(documents.get(1).get("year")).isEqualTo("1990");
-    assertThat(documents.get(0).get("title")).isEqualTo("Jurassic Park");
+    assertThat(documents.getFirst().get("title")).isEqualTo("Jurassic Park");
     assertThat(documents.get(1).get("title")).isEqualTo("Introduction to Algorithms");
   }
 

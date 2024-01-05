@@ -61,8 +61,10 @@ public class EntitySerializerTest {
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     assertThat(writer.toString())
         .contains(
-            "public class QEntitySerializerTest_Entity "
-                + "extends EntityPathBase<EntitySerializerTest.Entity>");
+            """
+            public class QEntitySerializerTest_Entity \
+            extends EntityPathBase<EntitySerializerTest.Entity>\
+            """);
     CompileUtils.assertCompiles("QEntitySerializerTest_Entity", writer.toString());
   }
 
@@ -224,8 +226,7 @@ public class EntitySerializerTest {
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String generatedSourceCode = writer.toString();
     assertThat(generatedSourceCode)
-        .contains(
-            String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()));
+        .contains("import %s;".formatted(GeneratedAnnotationResolver.resolveDefault().getName()));
     assertThat(generatedSourceCode)
         .contains("@Generated(\"com.querydsl.codegen.DefaultEntitySerializer\")\npublic class");
     CompileUtils.assertCompiles("QEntitySerializerTest_Entity", generatedSourceCode);

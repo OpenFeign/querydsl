@@ -208,8 +208,7 @@ public class EmbeddableSerializerTest {
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     final String generatedSource = writer.toString();
     assertThat(generatedSource)
-        .contains(
-            String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()));
+        .contains("import %s;".formatted(GeneratedAnnotationResolver.resolveDefault().getName()));
     assertThat(generatedSource)
         .contains("@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")\npublic class");
     CompileUtils.assertCompiles("QEntity", generatedSource);

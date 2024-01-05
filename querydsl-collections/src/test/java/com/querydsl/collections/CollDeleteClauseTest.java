@@ -34,7 +34,7 @@ public class CollDeleteClauseTest {
     assertThat(deleteClause.execute()).isEqualTo(1);
 
     assertThat(cats).hasSize(3);
-    assertThat(cats.get(0).getName()).isEqualTo("Ann");
+    assertThat(cats.getFirst().getName()).isEqualTo("Ann");
     assertThat(cats.get(1).getName()).isEqualTo("John");
     assertThat(cats.get(2).getName()).isEqualTo("Carl");
   }

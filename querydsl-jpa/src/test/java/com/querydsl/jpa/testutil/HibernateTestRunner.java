@@ -57,9 +57,11 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
   protected List<MethodRule> rules(Object test) {
     assertThat(test instanceof HibernateTest)
         .as(
-            String.format(
-                "In order to use the %s for %s, it should (directly or indirectly) implement %s",
-                HibernateTestRunner.class.getSimpleName(), test.getClass(), HibernateTest.class))
+            "In order to use the %s for %s, it should (directly or indirectly) implement %s"
+                .formatted(
+                    HibernateTestRunner.class.getSimpleName(),
+                    test.getClass(),
+                    HibernateTest.class))
         .isTrue();
 
     List<MethodRule> rules = super.rules(test);
@@ -106,7 +108,7 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
     String mode = Mode.mode.get() + ".properties";
     isDerby = mode.contains("derby");
     if (isDerby) {
-      Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+      Class.forName("org.apache.derby.jdbc.EmbeddedDriver").getDeclaredConstructor().newInstance();
     }
     Properties props = new Properties();
     InputStream is = HibernateTestRunner.class.getResourceAsStream(mode);

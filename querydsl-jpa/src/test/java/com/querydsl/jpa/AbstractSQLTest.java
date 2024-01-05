@@ -202,7 +202,7 @@ public abstract class AbstractSQLTest {
     List<Tuple> tuples =
         query().from(cat).orderBy(cat.id.asc()).offset(3).limit(3).select(cat.id, cat.name).fetch();
     assertThat(tuples).hasSize(3);
-    assertThat(tuples.get(0).size()).isEqualTo(2);
+    assertThat(tuples.getFirst().size()).isEqualTo(2);
   }
 
   @Test
@@ -216,7 +216,7 @@ public abstract class AbstractSQLTest {
             .select(Projections.tuple(cat.id, cat.name))
             .fetch();
     assertThat(tuples).hasSize(3);
-    assertThat(tuples.get(0).size()).isEqualTo(2);
+    assertThat(tuples.getFirst().size()).isEqualTo(2);
   }
 
   @Test

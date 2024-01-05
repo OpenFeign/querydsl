@@ -720,8 +720,8 @@ public class MongodbQueryTest {
       user.addFriend(u);
     }
     if (!users.isEmpty()) {
-      user.setFriend(users.get(users.size() - 1));
-      user.setEnemy(users.get(users.size() - 1));
+      user.setFriend(users.getLast());
+      user.setEnemy(users.getLast());
     }
     ds.save(user);
     users.add(user);

@@ -43,11 +43,13 @@ public class SQLUpdateClauseTest {
     SQLBindings sql = update.getSQL().get(0);
     assertThat(sql.getSQL())
         .isEqualTo(
-            "update EMPLOYEE\n"
-                + "set ID = ?\n"
-                + "where EMPLOYEE.ID = (select emp2.ID\n"
-                + "from EMPLOYEE emp2\n"
-                + "where emp2.SUPERIOR_ID is not null)");
+            """
+            update EMPLOYEE
+            set ID = ?
+            where EMPLOYEE.ID = (select emp2.ID
+            from EMPLOYEE emp2
+            where emp2.SUPERIOR_ID is not null)\
+            """);
   }
 
   @Test
@@ -60,10 +62,12 @@ public class SQLUpdateClauseTest {
     SQLBindings sql = update.getSQL().get(0);
     assertThat(sql.getSQL())
         .isEqualTo(
-            "update EMPLOYEE\n"
-                + "set ID = (select emp2.ID\n"
-                + "from EMPLOYEE emp2\n"
-                + "where emp2.SUPERIOR_ID is not null)");
+            """
+            update EMPLOYEE
+            set ID = (select emp2.ID
+            from EMPLOYEE emp2
+            where emp2.SUPERIOR_ID is not null)\
+            """);
   }
 
   @Test
@@ -76,10 +80,12 @@ public class SQLUpdateClauseTest {
     SQLBindings sql = update.getSQL().get(0);
     assertThat(sql.getSQL())
         .isEqualTo(
-            "update EMPLOYEE\n"
-                + "set SUPERIOR_ID = (select emp2.ID\n"
-                + "from EMPLOYEE emp2\n"
-                + "where emp2.ID = EMPLOYEE.ID)");
+            """
+            update EMPLOYEE
+            set SUPERIOR_ID = (select emp2.ID
+            from EMPLOYEE emp2
+            where emp2.ID = EMPLOYEE.ID)\
+            """);
   }
 
   @Test
@@ -89,17 +95,18 @@ public class SQLUpdateClauseTest {
     SQLUpdateClause update =
         new SQLUpdateClause(null, SQLTemplates.DEFAULT, emp1)
             .set(emp1.superiorId, emp2.id)
-            .addFlag(
-                Position.BEFORE_FILTERS, String.format("\nfrom %s %s", emp2.getTableName(), emp2))
+            .addFlag(Position.BEFORE_FILTERS, "\nfrom %s %s".formatted(emp2.getTableName(), emp2))
             .where(emp2.id.eq(emp1.id));
 
     SQLBindings sql = update.getSQL().get(0);
     assertThat(sql.getSQL())
         .isEqualTo(
-            "update EMPLOYEE\n"
-                + "set SUPERIOR_ID = emp2.ID\n"
-                + "from EMPLOYEE emp2\n"
-                + "where emp2.ID = EMPLOYEE.ID");
+            """
+            update EMPLOYEE
+            set SUPERIOR_ID = emp2.ID
+            from EMPLOYEE emp2
+            where emp2.ID = EMPLOYEE.ID\
+            """);
 
     update =
         new SQLUpdateClause(null, SQLTemplates.DEFAULT, emp1)
@@ -110,9 +117,11 @@ public class SQLUpdateClauseTest {
     sql = update.getSQL().get(0);
     assertThat(sql.getSQL())
         .isEqualTo(
-            "update EMPLOYEE\n"
-                + "set SUPERIOR_ID = emp2.ID THE_FLAG\n"
-                + "where emp2.ID = EMPLOYEE.ID");
+            """
+            update EMPLOYEE
+            set SUPERIOR_ID = emp2.ID THE_FLAG
+            where emp2.ID = EMPLOYEE.ID\
+            """);
   }
 
   @Test

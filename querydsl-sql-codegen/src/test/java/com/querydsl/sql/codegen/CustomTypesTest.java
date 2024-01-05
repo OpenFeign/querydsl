@@ -42,13 +42,15 @@ public class CustomTypesTest extends AbstractJDBCTest {
     // create schema
     statement.execute("drop table person if exists");
     statement.execute(
-        "create table person("
-            + "id INT, "
-            + "firstname VARCHAR(50), "
-            + "gender VARCHAR(50), "
-            + "securedId VARCHAR(50), "
-            + "CONSTRAINT PK_person PRIMARY KEY (id) "
-            + ")");
+        """
+        create table person(\
+        id INT, \
+        firstname VARCHAR(50), \
+        gender VARCHAR(50), \
+        securedId VARCHAR(50), \
+        CONSTRAINT PK_person PRIMARY KEY (id) \
+        )\
+        """);
 
     // create configuration
     configuration = new Configuration(new HSQLDBTemplates());

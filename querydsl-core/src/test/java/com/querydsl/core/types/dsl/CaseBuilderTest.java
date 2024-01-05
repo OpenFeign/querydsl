@@ -49,7 +49,12 @@ public class CaseBuilderTest {
 
     assertThat(cases.toString())
         .isEqualTo(
-            "case " + "when customer.annualSpending > 10000 then true " + "else false " + "end");
+            """
+            case \
+            when customer.annualSpending > 10000 then true \
+            else false \
+            end\
+            """);
   }
 
   @Test
@@ -65,11 +70,13 @@ public class CaseBuilderTest {
 
     assertThat(cases.toString())
         .isEqualTo(
-            "case "
-                + "when customer.annualSpending > 20000 then false "
-                + "when customer.annualSpending > 10000 then true "
-                + "else false "
-                + "end");
+            """
+            case \
+            when customer.annualSpending > 20000 then false \
+            when customer.annualSpending > 10000 then true \
+            else false \
+            end\
+            """);
   }
 
   @Test
@@ -83,7 +90,12 @@ public class CaseBuilderTest {
 
     assertThat(cases.toString())
         .isEqualTo(
-            "case " + "when customer.annualSpending > 10000 then MALE " + "else FEMALE " + "end");
+            """
+            case \
+            when customer.annualSpending > 10000 then MALE \
+            else FEMALE \
+            end\
+            """);
   }
 
   @Test
@@ -101,12 +113,14 @@ public class CaseBuilderTest {
 
     assertThat(cases.toString())
         .isEqualTo(
-            "case "
-                + "when customer.annualSpending > 10000 then 1 "
-                + "when customer.annualSpending > 5000 then 2 "
-                + "when customer.annualSpending > 2000 then 3 "
-                + "else 4 "
-                + "end");
+            """
+            case \
+            when customer.annualSpending > 10000 then 1 \
+            when customer.annualSpending > 5000 then 2 \
+            when customer.annualSpending > 2000 then 3 \
+            else 4 \
+            end\
+            """);
   }
 
   @Test
@@ -132,11 +146,13 @@ public class CaseBuilderTest {
     // NOTE : this is just a test serialization, not the real one
     assertThat(cases.toString())
         .isEqualTo(
-            "case "
-                + "when customer.annualSpending > 10000 then Premier "
-                + "when customer.annualSpending > 5000 then Gold "
-                + "when customer.annualSpending > 2000 then Silver "
-                + "else Bronze "
-                + "end");
+            """
+            case \
+            when customer.annualSpending > 10000 then Premier \
+            when customer.annualSpending > 5000 then Gold \
+            when customer.annualSpending > 2000 then Silver \
+            else Bronze \
+            end\
+            """);
   }
 }

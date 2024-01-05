@@ -1702,9 +1702,11 @@ public class SelectBase extends AbstractBaseTest {
   @SkipForQuoted
   public void path_alias() {
     expectedQuery =
-        "select e.LASTNAME, sum(e.SALARY) as salarySum "
-            + "from EMPLOYEE e "
-            + "group by e.LASTNAME having salarySum > ?";
+        """
+        select e.LASTNAME, sum(e.SALARY) as salarySum \
+        from EMPLOYEE e \
+        group by e.LASTNAME having salarySum > ?\
+        """;
 
     NumberExpression<BigDecimal> salarySum = employee.salary.sumBigDecimal().as("salarySum");
     query()
@@ -2093,7 +2095,7 @@ public class SelectBase extends AbstractBaseTest {
   @IncludeIn(H2)
   public void standardTest_turkish() {
     Locale defaultLocale = Locale.getDefault();
-    Locale.setDefault(new Locale("tr", "TR"));
+    Locale.setDefault(Locale.of("tr", "TR"));
     try {
       standardTest();
     } finally {

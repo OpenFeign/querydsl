@@ -37,8 +37,8 @@ public class MockTuple implements Tuple {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof Tuple) {
-      return Arrays.equals(a, ((Tuple) obj).toArray());
+    } else if (obj instanceof Tuple tuple) {
+      return Arrays.equals(a, tuple.toArray());
     } else {
       return false;
     }

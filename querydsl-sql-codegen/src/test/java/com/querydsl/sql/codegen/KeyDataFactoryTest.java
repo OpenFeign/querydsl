@@ -35,20 +35,24 @@ public class KeyDataFactoryTest extends AbstractJDBCTest {
     statement.execute("drop table date_time_test if exists");
 
     statement.execute(
-        "create table survey (id int, name varchar(30), "
-            + "CONSTRAINT PK_survey PRIMARY KEY (id, name))");
+        """
+        create table survey (id int, name varchar(30), \
+        CONSTRAINT PK_survey PRIMARY KEY (id, name))\
+        """);
 
     statement.execute(
-        "create table employee("
-            + "id INT, "
-            + "superior_id int, "
-            + "superior_id2 int, "
-            + "survey_id int, "
-            + "survey_name varchar(30), "
-            + "CONSTRAINT PK_employee PRIMARY KEY (id), "
-            + "CONSTRAINT FK_survey FOREIGN KEY (survey_id, survey_name) REFERENCES survey(id,name), "
-            + "CONSTRAINT FK_superior2 FOREIGN KEY (superior_id) REFERENCES employee(id), "
-            + "CONSTRAINT FK_superior1 FOREIGN KEY (superior_id2) REFERENCES employee(id))");
+        """
+        create table employee(\
+        id INT, \
+        superior_id int, \
+        superior_id2 int, \
+        survey_id int, \
+        survey_name varchar(30), \
+        CONSTRAINT PK_employee PRIMARY KEY (id), \
+        CONSTRAINT FK_survey FOREIGN KEY (survey_id, survey_name) REFERENCES survey(id,name), \
+        CONSTRAINT FK_superior2 FOREIGN KEY (superior_id) REFERENCES employee(id), \
+        CONSTRAINT FK_superior1 FOREIGN KEY (superior_id2) REFERENCES employee(id))\
+        """);
 
     KeyDataFactory keyDataFactory =
         new KeyDataFactory(new DefaultNamingStrategy(), "Q", "", "test", false);

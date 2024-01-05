@@ -85,8 +85,7 @@ public class CoverageTest {
     exprs.addAll(filters.map($(entity.getMap()), $(entity.getMap()), "", ""));
 
     for (Expression<?> e : exprs) {
-      if (e instanceof Operation) {
-        Operation<?> op = (Operation<?>) e;
+      if (e instanceof Operation op) {
         if (op.getArg(0) instanceof Operation) {
           usedOperators.add(((Operation<?>) op.getArg(0)).getOperator());
         } else if (op.getArgs().size() > 1 && op.getArg(1) instanceof Operation) {

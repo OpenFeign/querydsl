@@ -62,9 +62,11 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
     query.getMetadata().setProjection(survey1.id);
     assertThat(query.toString())
         .isEqualTo(
-            "select * from ("
-                + "   select survey1.ID, row_number() over (order by survey1.ID asc) as rn from SURVEY survey1) a "
-                + "where rn > ? and rn <= ? order by rn");
+            """
+            select * from (\
+               select survey1.ID, row_number() over (order by survey1.ID asc) as rn from SURVEY survey1) a \
+            where rn > ? and rn <= ? order by rn\
+            """);
   }
 
   @Test
@@ -73,9 +75,11 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
     query.getMetadata().setProjection(survey1.id);
     assertThat(query.toString())
         .isEqualTo(
-            "select * from ("
-                + "   select survey1.ID, row_number() over (order by current_timestamp asc) as rn from SURVEY survey1) a "
-                + "where rn > ? and rn <= ? order by rn");
+            """
+            select * from (\
+               select survey1.ID, row_number() over (order by current_timestamp asc) as rn from SURVEY survey1) a \
+            where rn > ? and rn <= ? order by rn\
+            """);
   }
 
   @Test

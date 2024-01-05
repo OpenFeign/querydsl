@@ -1,7 +1,5 @@
 package com.querydsl.sql;
 
-import static java.lang.String.format;
-
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
@@ -32,84 +30,84 @@ public class TestLoggingListener implements SQLDetailedListener {
   @Override
   public void start(SQLListenerContext context) {
     if (enabled) {
-      System.out.println(format("\n\tstart %s", context));
+      System.out.println("\n\tstart %s".formatted(context));
     }
   }
 
   @Override
   public void preRender(SQLListenerContext context) {
     if (enabled) {
-      System.out.println(format("\t\tpreRender %s", context));
+      System.out.println("\t\tpreRender %s".formatted(context));
     }
   }
 
   @Override
   public void rendered(SQLListenerContext context) {
     if (enabled) {
-      System.out.println(format("\t\t\trendered %s", context));
+      System.out.println("\t\t\trendered %s".formatted(context));
     }
   }
 
   @Override
   public void prePrepare(SQLListenerContext context) {
     if (enabled) {
-      System.out.println(format("\t\tprePrepare %s", context));
+      System.out.println("\t\tprePrepare %s".formatted(context));
     }
   }
 
   @Override
   public void prepared(SQLListenerContext context) {
     if (enabled) {
-      System.out.println(format("\t\t\tprepared %s", context));
+      System.out.println("\t\t\tprepared %s".formatted(context));
     }
   }
 
   @Override
   public void preExecute(SQLListenerContext context) {
     if (enabled) {
-      System.out.println(format("\t\tpreExecute %s", context));
+      System.out.println("\t\tpreExecute %s".formatted(context));
     }
   }
 
   @Override
   public void executed(SQLListenerContext context) {
     if (enabled) {
-      System.out.println(format("\t\t\texecuted %s", context));
+      System.out.println("\t\t\texecuted %s".formatted(context));
     }
   }
 
   @Override
   public void exception(SQLListenerContext context) {
     if (enabled) {
-      System.out.println(format("\t\texception %s", context));
+      System.out.println("\t\texception %s".formatted(context));
     }
   }
 
   @Override
   public void end(SQLListenerContext context) {
     if (enabled) {
-      System.out.println(format("\tend %s\n\n", context));
+      System.out.println("\tend %s\n\n".formatted(context));
     }
   }
 
   @Override
   public void notifyQuery(QueryMetadata md) {
     if (enabled) {
-      System.out.println(format("\t\t\tnotifyQuery %s", md));
+      System.out.println("\t\t\tnotifyQuery %s".formatted(md));
     }
   }
 
   @Override
   public void notifyDelete(RelationalPath<?> entity, QueryMetadata md) {
     if (enabled) {
-      System.out.println(format("\t\t\tnotifyDelete %s", entity));
+      System.out.println("\t\t\tnotifyDelete %s".formatted(entity));
     }
   }
 
   @Override
   public void notifyDeletes(RelationalPath<?> entity, List<QueryMetadata> batches) {
     if (enabled) {
-      System.out.println(format("\t\t\tnotifyDeletes %s", entity));
+      System.out.println("\t\t\tnotifyDeletes %s".formatted(entity));
     }
   }
 
@@ -122,7 +120,7 @@ public class TestLoggingListener implements SQLDetailedListener {
       List<Expression<?>> values,
       SubQueryExpression<?> subQuery) {
     if (enabled) {
-      System.out.println(format("\t\t\tnotifyMerge %s", entity));
+      System.out.println("\t\t\tnotifyMerge %s".formatted(entity));
     }
   }
 
@@ -130,7 +128,7 @@ public class TestLoggingListener implements SQLDetailedListener {
   public void notifyMerges(
       RelationalPath<?> entity, QueryMetadata md, List<SQLMergeBatch> batches) {
     if (enabled) {
-      System.out.println(format("\t\t\tnotifyMerges %s", entity));
+      System.out.println("\t\t\tnotifyMerges %s".formatted(entity));
     }
   }
 
@@ -142,7 +140,7 @@ public class TestLoggingListener implements SQLDetailedListener {
       Predicate usingOn,
       List<SQLMergeUsingCase> whens) {
     if (enabled) {
-      System.out.println(format("\t\t\tnotifyMergeUsing %s", entity));
+      System.out.println("\t\t\tnotifyMergeUsing %s".formatted(entity));
     }
   }
 
@@ -154,7 +152,7 @@ public class TestLoggingListener implements SQLDetailedListener {
       List<Expression<?>> values,
       SubQueryExpression<?> subQuery) {
     if (enabled) {
-      System.out.println(format("\t\t\tnotifyInsert %s", entity));
+      System.out.println("\t\t\tnotifyInsert %s".formatted(entity));
     }
   }
 
@@ -162,7 +160,7 @@ public class TestLoggingListener implements SQLDetailedListener {
   public void notifyInserts(
       RelationalPath<?> entity, QueryMetadata md, List<SQLInsertBatch> batches) {
     if (enabled) {
-      System.out.println(format("\t\t\tnotifyInserts %s", entity));
+      System.out.println("\t\t\tnotifyInserts %s".formatted(entity));
     }
   }
 
@@ -170,14 +168,14 @@ public class TestLoggingListener implements SQLDetailedListener {
   public void notifyUpdate(
       RelationalPath<?> entity, QueryMetadata md, Map<Path<?>, Expression<?>> updates) {
     if (enabled) {
-      System.out.println(format("\t\t\tnotifyUpdate %s", entity));
+      System.out.println("\t\t\tnotifyUpdate %s".formatted(entity));
     }
   }
 
   @Override
   public void notifyUpdates(RelationalPath<?> entity, List<SQLUpdateBatch> batches) {
     if (enabled) {
-      System.out.println(format("\t\t\tnotifyUpdates %s", entity));
+      System.out.println("\t\t\tnotifyUpdates %s".formatted(entity));
     }
   }
 }

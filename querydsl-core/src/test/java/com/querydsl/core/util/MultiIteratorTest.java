@@ -115,7 +115,7 @@ public class MultiIteratorTest {
     MultiIterator<Integer> iterator = new MultiIterator<Integer>(asList(list1, list2));
     List<Object[]> list = IteratorAdapter.asList(iterator);
 
-    assertThat(asList(list.get(0))).isEqualTo(asList(1, 10));
+    assertThat(asList(list.getFirst())).isEqualTo(asList(1, 10));
     assertThat(asList(list.get(1))).isEqualTo(asList(1, 20));
     assertThat(asList(list.get(2))).isEqualTo(asList(1, 30));
     assertThat(asList(list.get(3))).isEqualTo(asList(2, 10));
