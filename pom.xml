@@ -9,6 +9,60 @@
   <packaging>pom</packaging>
   <name>Querydsl</name>
   <description>parent project for Querydsl modules</description>
+  <url>https://querydsl.github.io/</url>
+
+  <inceptionYear>2007</inceptionYear>
+
+  <organization>
+    <name>OpenFeign</name>
+    <url>https://github.com/openfeign</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>velo</id>
+      <name>Marvin Herman Froeder</name>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>Timo Westkämper</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Samppa Saarela</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Vesa Marttila</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Lassi Immonen</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Ruben Dijkstra</name>
+    </contributor>
+    <contributor>
+      <name>John Tims</name>
+    </contributor>
+    <contributor>
+      <name>Robert Bain</name>
+    </contributor>
+    <contributor>
+      <name>Jan-Willem Gmelig Meyling</name>
+    </contributor>
+  </contributors>
 
   <modules>
     <module>querydsl-core</module>
@@ -45,6 +99,23 @@
     <module>querydsl-kotlin</module>
 
   </modules>
+
+  <scm>
+    <connection>${project.checkout}</connection>
+    <developerConnection>${project.checkout}</developerConnection>
+    <url>${project.githubpage}</url>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <properties>
     <failIfNoTests>false</failIfNoTests>
@@ -109,46 +180,6 @@
     <!-- try to removed this after 6.0.0 is out -->
     <japicmp.skip>true</japicmp.skip>
   </properties>
-  <url>https://querydsl.github.io/</url>
-
-  <inceptionYear>2007</inceptionYear>
-
-  <organization>
-    <name>OpenFeign</name>
-    <url>https://github.com/openfeign</url>
-  </organization>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <scm>
-    <url>${project.githubpage}</url>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-  </scm>
-
-  <developers>
-    <developer>
-      <id>velo</id>
-      <name>Marvin Herman Froeder</name>
-    </developer>
-  </developers>
-
-  <distributionManagement>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
 
   <dependencyManagement>
     <dependencies>
@@ -362,10 +393,10 @@
           <executions>
             <execution>
               <id>bundle-manifest</id>
-              <phase>process-classes</phase>
               <goals>
                 <goal>manifest</goal>
               </goals>
+              <phase>process-classes</phase>
               <inherited>true</inherited>
               <configuration>
                 <instructions>
@@ -382,10 +413,10 @@
           <version>${dokka.version}</version>
           <executions>
             <execution>
-              <phase>prepare-package</phase>
               <goals>
                 <goal>javadocJar</goal>
               </goals>
+              <phase>prepare-package</phase>
             </execution>
           </executions>
         </plugin>
@@ -408,10 +439,10 @@
         <executions>
           <execution>
             <id>enforce-maven</id>
-            <phase>validate</phase>
             <goals>
               <goal>enforce</goal>
             </goals>
+            <phase>validate</phase>
             <configuration>
               <rules>
                 <dependencyConvergence></dependencyConvergence>
@@ -420,10 +451,10 @@
           </execution>
           <execution>
             <id>enforce-banned-dependencies</id>
-            <phase>validate</phase>
             <goals>
               <goal>enforce</goal>
             </goals>
+            <phase>validate</phase>
             <configuration>
               <rules>
                 <bannedDependencies>
@@ -492,10 +523,10 @@
         </configuration>
         <executions>
           <execution>
-            <phase>verify</phase>
             <goals>
               <goal>cmp</goal>
             </goals>
+            <phase>verify</phase>
           </execution>
         </executions>
       </plugin>
@@ -534,10 +565,10 @@
           <!-- Ensure main source tree compiles to Java ${main.java.version} bytecode. -->
           <execution>
             <id>default-compile</id>
-            <phase>compile</phase>
             <goals>
               <goal>compile</goal>
             </goals>
+            <phase>compile</phase>
             <configuration>
               <source>${main.java.version}</source>
               <target>${main.java.version}</target>
@@ -545,10 +576,10 @@
           </execution>
           <execution>
             <id>default-testCompile</id>
-            <phase>test-compile</phase>
             <goals>
               <goal>testCompile</goal>
             </goals>
+            <phase>test-compile</phase>
             <configuration>
               <source>${latest.java.version}</source>
               <target>${latest.java.version}</target>
@@ -604,7 +635,6 @@
         <version>0.103.1</version>
         <inherited>false</inherited>
         <configuration>
-          <bomTemplateUrl>file://${project.basedir}/src/config/bom.xml</bomTemplateUrl>
           <boms>
             <bom>
               <artifactId>querydsl-bom</artifactId>
@@ -638,6 +668,14 @@
         <groupId>com.cosium.code</groupId>
         <artifactId>git-code-format-maven-plugin</artifactId>
         <version>${git-code-format-maven-plugin.version}</version>
+        <dependencies>
+          <!-- Enable https://github.com/google/google-java-format -->
+          <dependency>
+            <groupId>com.cosium.code</groupId>
+            <artifactId>google-java-format</artifactId>
+            <version>${git-code-format-maven-plugin.version}</version>
+          </dependency>
+        </dependencies>
         <executions>
           <!-- On commit, format the modified files -->
           <execution>
@@ -655,14 +693,6 @@
             </goals>
           </execution>
         </executions>
-        <dependencies>
-          <!-- Enable https://github.com/google/google-java-format -->
-          <dependency>
-            <groupId>com.cosium.code</groupId>
-            <artifactId>google-java-format</artifactId>
-            <version>${git-code-format-maven-plugin.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>com.github.ekryd.sortpom</groupId>
@@ -671,16 +701,16 @@
         <configuration>
           <keepBlankLines>true</keepBlankLines>
           <lineSeparator>\n</lineSeparator>
-          <sortOrderFile>src/config/pomSortOrder.xml</sortOrderFile>
+          <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
           <createBackupFile>false</createBackupFile>
         </configuration>
         <executions>
           <execution>
             <id>format</id>
-            <phase>validate</phase>
             <goals>
               <goal>sort</goal>
             </goals>
+            <phase>validate</phase>
           </execution>
         </executions>
       </plugin>
@@ -688,7 +718,6 @@
   </build>
 
   <profiles>
-
     <profile>
       <id>docs</id>
       <modules>
@@ -992,36 +1021,5 @@
       </build>
     </profile>
   </profiles>
-
-  <contributors>
-    <contributor>
-      <name>Timo Westkämper</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Samppa Saarela</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Vesa Marttila</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Lassi Immonen</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Ruben Dijkstra</name>
-    </contributor>
-    <contributor>
-      <name>John Tims</name>
-    </contributor>
-    <contributor>
-      <name>Robert Bain</name>
-    </contributor>
-    <contributor>
-      <name>Jan-Willem Gmelig Meyling</name>
-    </contributor>
-  </contributors>
 
 </project>
