@@ -9,6 +9,60 @@
   <packaging>pom</packaging>
   <name>Querydsl</name>
   <description>parent project for Querydsl modules</description>
+  <url>https://querydsl.github.io/</url>
+
+  <inceptionYear>2007</inceptionYear>
+
+  <organization>
+    <name>OpenFeign</name>
+    <url>https://github.com/openfeign</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>velo</id>
+      <name>Marvin Herman Froeder</name>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>Timo Westkämper</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Samppa Saarela</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Vesa Marttila</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Lassi Immonen</name>
+      <organization>Mysema Ltd</organization>
+    </contributor>
+    <contributor>
+      <name>Ruben Dijkstra</name>
+    </contributor>
+    <contributor>
+      <name>John Tims</name>
+    </contributor>
+    <contributor>
+      <name>Robert Bain</name>
+    </contributor>
+    <contributor>
+      <name>Jan-Willem Gmelig Meyling</name>
+    </contributor>
+  </contributors>
 
   <modules>
     <module>querydsl-core</module>
@@ -45,6 +99,23 @@
     <module>querydsl-kotlin</module>
 
   </modules>
+
+  <scm>
+    <connection>${project.checkout}</connection>
+    <developerConnection>${project.checkout}</developerConnection>
+    <url>${project.githubpage}</url>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <properties>
     <failIfNoTests>false</failIfNoTests>
@@ -630,7 +701,7 @@
         <configuration>
           <keepBlankLines>true</keepBlankLines>
           <lineSeparator>\n</lineSeparator>
-          <predefinedSortOrder>custom_1</predefinedSortOrder>
+          <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
           <createBackupFile>false</createBackupFile>
         </configuration>
         <executions>
@@ -645,77 +716,6 @@
       </plugin>
     </plugins>
   </build>
-  <url>https://querydsl.github.io/</url>
-
-  <inceptionYear>2007</inceptionYear>
-
-  <organization>
-    <name>OpenFeign</name>
-    <url>https://github.com/openfeign</url>
-  </organization>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <developers>
-    <developer>
-      <id>velo</id>
-      <name>Marvin Herman Froeder</name>
-    </developer>
-  </developers>
-
-  <contributors>
-    <contributor>
-      <name>Timo Westkämper</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Samppa Saarela</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Vesa Marttila</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Lassi Immonen</name>
-      <organization>Mysema Ltd</organization>
-    </contributor>
-    <contributor>
-      <name>Ruben Dijkstra</name>
-    </contributor>
-    <contributor>
-      <name>John Tims</name>
-    </contributor>
-    <contributor>
-      <name>Robert Bain</name>
-    </contributor>
-    <contributor>
-      <name>Jan-Willem Gmelig Meyling</name>
-    </contributor>
-  </contributors>
-
-  <scm>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
-  </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
 
   <profiles>
     <profile>
