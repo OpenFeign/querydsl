@@ -683,6 +683,7 @@
             <goals>
               <goal>install-hooks</goal>
             </goals>
+            <inherited>false</inherited>
           </execution>
           <!-- On Maven verify phase, fail if any file (including unmodified) is
             badly formatted -->
