@@ -207,8 +207,7 @@ public class BeanSerializerTest {
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     var generatedSource = String.valueOf(writer);
     assertThat(generatedSource)
-        .contains(
-            String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()));
+        .contains("import %s;".formatted(GeneratedAnnotationResolver.resolveDefault().getName()));
     assertThat(generatedSource)
         .containsIgnoringNewLines(
             "@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class");

@@ -51,9 +51,8 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
   protected List<MethodRule> rules(Object test) {
     assertThat(test instanceof JPATest)
         .as(
-            String.format(
-                "In order to use the %s for %s, it should (directly or indirectly) implement %s",
-                JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class))
+            "In order to use the %s for %s, it should (directly or indirectly) implement %s"
+                .formatted(JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class))
         .isTrue();
 
     List<MethodRule> rules = super.rules(test);
@@ -97,7 +96,7 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
     System.out.println(mode);
     isDerby = mode.contains("derby");
     if (isDerby) {
-      Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+      Class.forName("org.apache.derby.jdbc.EmbeddedDriver").getDeclaredConstructor().newInstance();
     }
     entityManagerFactory = Persistence.createEntityManagerFactory(mode);
     entityManager = entityManagerFactory.createEntityManager();

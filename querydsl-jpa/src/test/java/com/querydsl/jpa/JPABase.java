@@ -157,7 +157,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
     List<Cat> cats = CustomFinder.findCustom(entityManager, Cat.class, conditions, "name");
     assertThat(cats).hasSize(1);
-    assertThat(cats.get(0).getName()).isEqualTo("Bob123");
+    assertThat(cats.getFirst().getName()).isEqualTo("Bob123");
   }
 
   @Test

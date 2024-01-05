@@ -64,7 +64,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     }
     assertThat(repository.findAll(tweet.mentions.contains(users.get(1)))).isEmpty();
 
-    assertThat(repository.findAll(tweet.mentions.contains(users.get(0)))).hasSize(100);
+    assertThat(repository.findAll(tweet.mentions.contains(users.getFirst()))).hasSize(100);
 
     assertThat(repository.findAll(tweet.mentions.any().username.eq("duplo"))).isEmpty();
 
@@ -86,7 +86,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     assertThat(repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(1))))
         .isEmpty();
 
-    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(0))))
+    assertThat(repository.findAllWithHibernateQuery(tweet.mentions.contains(users.getFirst())))
         .hasSize(100);
 
     assertThat(repository.findAllWithHibernateQuery(tweet.mentions.any().username.eq("duplo")))

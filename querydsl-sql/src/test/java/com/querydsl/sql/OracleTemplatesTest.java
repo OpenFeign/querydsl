@@ -46,11 +46,13 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
     Union union = query.union(select(one.as(col1)), select(two), select(three));
     assertThat(union.toString())
         .isEqualTo(
-            "(select 1 col1 from dual)\n"
-                + "union\n"
-                + "(select 2 from dual)\n"
-                + "union\n"
-                + "(select 3 from dual)");
+            """
+            (select 1 col1 from dual)
+            union
+            (select 2 from dual)
+            union
+            (select 3 from dual)\
+            """);
   }
 
   @Test
@@ -59,11 +61,13 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
     query.getMetadata().setProjection(survey1.id);
     assertThat(query.toString())
         .isEqualTo(
-            "select * from (  "
-                + "select a.*, rownum rn from (   "
-                + "select survey1.ID from SURVEY survey1  ) "
-                + "a) "
-                + "where rn > 3 and rownum <= 5");
+            """
+            select * from (  \
+            select a.*, rownum rn from (   \
+            select survey1.ID from SURVEY survey1  ) \
+            a) \
+            where rn > 3 and rownum <= 5\
+            """);
   }
 
   @Test
@@ -76,11 +80,13 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
 
     assertThat(query.toString())
         .isEqualTo(
-            "select * from (  "
-                + "select a.*, rownum rn from (   "
-                + "select survey1.ID, count(*) over()  from SURVEY survey1  ) "
-                + "a) "
-                + "where rn > 3 and rownum <= 5");
+            """
+            select * from (  \
+            select a.*, rownum rn from (   \
+            select survey1.ID, count(*) over()  from SURVEY survey1  ) \
+            a) \
+            where rn > 3 and rownum <= 5\
+            """);
   }
 
   @Test

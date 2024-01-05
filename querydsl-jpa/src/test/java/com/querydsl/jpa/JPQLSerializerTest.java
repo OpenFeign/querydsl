@@ -188,9 +188,12 @@ public class JPQLSerializerTest {
     serializer.serializeForDelete(md);
     assertThat(serializer.toString())
         .isEqualTo(
-            "delete from Cat kitten\n"
-                + "where kitten.id = ?1 and exists (select 1\n"
-                + "from Cat cat\nwhere cat.id = ?2 and kitten member of cat.kittens)");
+            """
+            delete from Cat kitten
+            where kitten.id = ?1 and exists (select 1
+            from Cat cat
+            where cat.id = ?2 and kitten member of cat.kittens)\
+            """);
   }
 
   @Test
@@ -268,9 +271,11 @@ public class JPQLSerializerTest {
     serializer.serialize(md, false, null);
     assertThat(serializer.toString())
         .isEqualTo(
-            "select domesticCat\n"
-                + "from Cat cat\n"
-                + "  inner join treat(cat.mate as DomesticCat) as domesticCat");
+            """
+            select domesticCat
+            from Cat cat
+              inner join treat(cat.mate as DomesticCat) as domesticCat\
+            """);
   }
 
   @Test
@@ -285,7 +290,11 @@ public class JPQLSerializerTest {
     serializer.serialize(md, false, null);
     assertThat(serializer.toString())
         .isEqualTo(
-            "select animal\n" + "from Animal animal\n" + "where treat(animal as Cat).breed = ?1");
+            """
+            select animal
+            from Animal animal
+            where treat(animal as Cat).breed = ?1\
+            """);
   }
 
   @Test

@@ -61,6 +61,6 @@ public class JacocoTest {
 
     assertThat(result).isNotNull();
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).getOtherValue()).isEqualTo(Integer.valueOf(1));
+    assertThat(result.getFirst().getOtherValue()).isEqualTo(Integer.valueOf(1));
   }
 }

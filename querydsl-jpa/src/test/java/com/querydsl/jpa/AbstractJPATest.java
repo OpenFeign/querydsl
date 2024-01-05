@@ -583,7 +583,7 @@ public abstract class AbstractJPATest {
             query()
                 .from(cat)
                 .orderBy(cat.id.asc())
-                .select(cat.mate.when(savedCats.get(0)).then(0).otherwise(1))
+                .select(cat.mate.when(savedCats.getFirst()).then(0).otherwise(1))
                 .fetch())
         .isEqualTo(Arrays.asList(1, 0, 1, 1, 1, 1));
   }
@@ -729,7 +729,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void contains2() {
-    assertThat(query().from(cat).where(cat.kittens.contains(savedCats.get(0))).fetchCount())
+    assertThat(query().from(cat).where(cat.kittens.contains(savedCats.getFirst())).fetchCount())
         .isEqualTo(1L);
   }
 
@@ -2085,8 +2085,8 @@ public abstract class AbstractJPATest {
   @NoBatooJPA
   @ExcludeIn({ORACLE, SQLSERVER, DERBY})
   public void test() {
-    Cat kitten = savedCats.get(0);
-    Cat noKitten = savedCats.get(savedCats.size() - 1);
+    Cat kitten = savedCats.getFirst();
+    Cat noKitten = savedCats.getLast();
 
     ProjectionsFactory projections =
         new ProjectionsFactory(QuerydslModule.JPA, getTarget()) {

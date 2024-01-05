@@ -30,7 +30,7 @@ public class DummyFetchable<T> implements Fetchable<T> {
   @Nullable
   @Override
   public T fetchFirst() {
-    return results.isEmpty() ? null : results.get(0);
+    return results.isEmpty() ? null : results.getFirst();
   }
 
   @Nullable
@@ -41,7 +41,7 @@ public class DummyFetchable<T> implements Fetchable<T> {
     } else if (results.isEmpty()) {
       return null;
     } else {
-      return results.get(0);
+      return results.getFirst();
     }
   }
 

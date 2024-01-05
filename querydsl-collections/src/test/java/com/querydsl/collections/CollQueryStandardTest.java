@@ -73,7 +73,7 @@ public class CollQueryStandardTest {
 
   @Test
   public void test() {
-    Cat kitten = data.get(0).getKittens().get(0);
+    Cat kitten = data.getFirst().getKittens().get(0);
     standardTest.runArrayTests(cat.kittenArray, otherCat.kittenArray, kitten, new Cat());
     standardTest.runBooleanTests(cat.name.isNull(), otherCat.kittens.isEmpty());
     standardTest.runCollectionTests(cat.kittens, otherCat.kittens, kitten, new Cat());

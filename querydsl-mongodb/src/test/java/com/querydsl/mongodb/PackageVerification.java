@@ -42,11 +42,14 @@ public class PackageVerification {
     URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
     oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core
     oneJarClassLoader.loadClass(CodeWriter.class.getName()); // codegen
-    oneJarClassLoader.loadClass(CodegenModule.class.getName()).newInstance();
+    oneJarClassLoader
+        .loadClass(CodegenModule.class.getName())
+        .getDeclaredConstructor()
+        .newInstance();
     oneJarClassLoader.loadClass(Entity.class.getName()); // morphia
     Class cl =
         oneJarClassLoader.loadClass(MorphiaAnnotationProcessor.class.getName()); // querydsl-apt
-    cl.newInstance();
+    cl.getDeclaredConstructor().newInstance();
     String resourceKey = "META-INF/services/javax.annotation.processing.Processor";
     assertThat(
             new String(

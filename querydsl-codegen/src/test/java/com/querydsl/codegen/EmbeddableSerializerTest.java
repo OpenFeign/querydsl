@@ -212,8 +212,7 @@ public class EmbeddableSerializerTest {
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     final var generatedSource = writer.toString();
     assertThat(generatedSource)
-        .contains(
-            String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()));
+        .contains("import %s;".formatted(GeneratedAnnotationResolver.resolveDefault().getName()));
     assertThat(generatedSource)
         .containsIgnoringNewLines(
             "@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")\npublic class");

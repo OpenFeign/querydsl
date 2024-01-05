@@ -52,8 +52,10 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
 
     // survey
     statement.execute(
-        "create table survey (id int, name varchar(30), "
-            + "CONSTRAINT PK_survey PRIMARY KEY (id, name))");
+        """
+        create table survey (id int, name varchar(30), \
+        CONSTRAINT PK_survey PRIMARY KEY (id, name))\
+        """);
 
     // date_test
     statement.execute("create table date_test (d date)");
@@ -103,13 +105,15 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
       //
       assertFileContainsInOrder(
           "test/QSurvey.java",
-          String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()),
+          "import %s;".formatted(GeneratedAnnotationResolver.resolveDefault().getName()),
           "@Generated(\"com.querydsl.sql.codegen.MetaDataSerializer\")\npublic class QSurvey",
+          // variable + schema constructor
           """
-			    public QSurvey(String variable, String schema) {
-			        super(Survey.class, forVariable(variable), schema, "SURVEY");
-			        addMetadata();
-			    }""");
+              public QSurvey(String variable, String schema) {
+                  super(Survey.class, forVariable(variable), schema, "SURVEY");
+                  addMetadata();
+              }\
+          """);
     } catch (IOException ex) {
       throw new RuntimeException(ex);
     }
@@ -160,11 +164,13 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
           "test/QSurvey.java",
           "import com.querydsl.core.annotations.Generated;",
           "@Generated(\"com.querydsl.sql.codegen.MetaDataSerializer\")\npublic class QSurvey",
+          // variable + schema constructor
           """
-			    public QSurvey(String variable, String schema) {
-			        super(Survey.class, forVariable(variable), schema, "SURVEY");
-			        addMetadata();
-			    }""");
+              public QSurvey(String variable, String schema) {
+                  super(Survey.class, forVariable(variable), schema, "SURVEY");
+                  addMetadata();
+              }\
+          """);
     } catch (IOException ex) {
       throw new RuntimeException(ex);
     }

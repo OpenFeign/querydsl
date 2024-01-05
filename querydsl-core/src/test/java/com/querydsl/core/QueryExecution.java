@@ -205,9 +205,9 @@ public abstract class QueryExecution {
   }
 
   private void close(Fetchable p) {
-    if (p instanceof Closeable) {
+    if (p instanceof Closeable closeable) {
       try {
-        ((Closeable) p).close();
+        closeable.close();
       } catch (IOException e) {
         throw new QueryException(e);
       }

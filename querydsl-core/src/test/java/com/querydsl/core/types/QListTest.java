@@ -14,7 +14,7 @@ public class QListTest {
     QList qList = new QList(Expressions.stringPath("a"), Expressions.stringPath("b"));
     List<?> list = qList.newInstance("a", null);
     assertEquals(2, list.size());
-    assertEquals("a", list.get(0));
+    assertEquals("a", list.getFirst());
     assertNull(list.get(1));
   }
 }

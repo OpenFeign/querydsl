@@ -69,17 +69,15 @@ public class ExpressionTest {
     for (Expression<?> expr : exprs) {
       for (Field field : expr.getClass().getFields()) {
         Object rv = field.get(expr);
-        if (rv instanceof Expression) {
-          if (rv instanceof StringExpression) {
-            StringExpression str = (StringExpression) rv;
+        if (rv instanceof Expression expression) {
+          if (rv instanceof StringExpression str) {
             toVisit.add(str.toLowerCase());
             toVisit.add(str.charAt(0));
             toVisit.add(str.isEmpty());
-          } else if (rv instanceof BooleanExpression) {
-            BooleanExpression b = (BooleanExpression) rv;
+          } else if (rv instanceof BooleanExpression b) {
             toVisit.add(b.not());
           }
-          toVisit.add((Expression<?>) rv);
+          toVisit.add(expression);
         }
       }
     }

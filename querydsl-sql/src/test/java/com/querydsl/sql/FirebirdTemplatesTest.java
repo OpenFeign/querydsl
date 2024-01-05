@@ -46,11 +46,13 @@ public class FirebirdTemplatesTest extends AbstractSQLTemplatesTest {
 
     assertThat(union.toString())
         .isEqualTo(
-            "select 1 as col1 from RDB$DATABASE\n"
-                + "union\n"
-                + "select 2 from RDB$DATABASE\n"
-                + "union\n"
-                + "select 3 from RDB$DATABASE");
+            """
+            select 1 as col1 from RDB$DATABASE
+            union
+            select 2 from RDB$DATABASE
+            union
+            select 3 from RDB$DATABASE\
+            """);
   }
 
   @Test

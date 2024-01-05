@@ -56,10 +56,12 @@ public class SQLSerializerTest {
     serializer.serializeForQuery(query.getMetadata(), true);
     assertThat(serializer.toString())
         .isEqualTo(
-            "select count(*)\n"
-                + "from (select distinct EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, "
-                + "EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID\n"
-                + "from EMPLOYEE EMPLOYEE) internal");
+            """
+            select count(*)
+            from (select distinct EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, \
+            EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID
+            from EMPLOYEE EMPLOYEE) internal\
+            """);
   }
 
   @Test
@@ -72,10 +74,12 @@ public class SQLSerializerTest {
     serializer.serializeForQuery(query.getMetadata(), true);
     assertThat(serializer.toString())
         .isEqualTo(
-            "select count("
-                + "distinct (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, "
-                + "EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID))\n"
-                + "from EMPLOYEE EMPLOYEE");
+            """
+            select count(\
+            distinct (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, \
+            EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID))
+            from EMPLOYEE EMPLOYEE\
+            """);
   }
 
   @Test
@@ -90,9 +94,11 @@ public class SQLSerializerTest {
     // USER is a reserved word in ANSI SQL 2008
     assertThat(serializer.toString())
         .isEqualTo(
-            "(select \"user\".id, \"user\".username\n"
-                + "from \"user\"\n"
-                + "where \"user\".id = ?)");
+            """
+            (select "user".id, "user".username
+            from "user"
+            where "user".id = ?)\
+            """);
   }
 
   @Test
@@ -107,9 +113,11 @@ public class SQLSerializerTest {
     // USER is a reserved word in ANSI SQL 2008
     assertThat(serializer.toString())
         .isEqualTo(
-            "(select \"user\".id, \"user\".username\n"
-                + "from \"user\"\n"
-                + "where \"user\".id = ?)");
+            """
+            (select "user".id, "user".username
+            from "user"
+            where "user".id = ?)\
+            """);
   }
 
   @Test
@@ -385,15 +393,17 @@ public class SQLSerializerTest {
     serializer.serialize(md, false);
     assertThat(serializer.toString())
         .isEqualTo(
-            "with recursive sub as ((select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID\n"
-                + "from EMPLOYEE EMPLOYEE\n"
-                + "where EMPLOYEE.FIRSTNAME = ?)\n"
-                + "union all\n"
-                + "(select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID\n"
-                + "from EMPLOYEE EMPLOYEE, sub\n"
-                + "where EMPLOYEE.SUPERIOR_ID = sub.ID))\n"
-                + "select *\n"
-                + "from sub");
+            """
+            with recursive sub as ((select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID
+            from EMPLOYEE EMPLOYEE
+            where EMPLOYEE.FIRSTNAME = ?)
+            union all
+            (select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID
+            from EMPLOYEE EMPLOYEE, sub
+            where EMPLOYEE.SUPERIOR_ID = sub.ID))
+            select *
+            from sub\
+            """);
   }
 
   @SuppressWarnings("unchecked")
@@ -425,15 +435,17 @@ public class SQLSerializerTest {
     serializer.serialize(md, false);
     assertThat(serializer.toString())
         .isEqualTo(
-            "with recursive sub (ID, FIRSTNAME, SUPERIOR_ID) as ((select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID\n"
-                + "from EMPLOYEE EMPLOYEE\n"
-                + "where EMPLOYEE.FIRSTNAME = ?)\n"
-                + "union all\n"
-                + "(select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID\n"
-                + "from EMPLOYEE EMPLOYEE, sub\n"
-                + "where EMPLOYEE.SUPERIOR_ID = sub.ID))\n"
-                + "select *\n"
-                + "from sub");
+            """
+            with recursive sub (ID, FIRSTNAME, SUPERIOR_ID) as ((select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID
+            from EMPLOYEE EMPLOYEE
+            where EMPLOYEE.FIRSTNAME = ?)
+            union all
+            (select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID
+            from EMPLOYEE EMPLOYEE, sub
+            where EMPLOYEE.SUPERIOR_ID = sub.ID))
+            select *
+            from sub\
+            """);
   }
 
   @Test
