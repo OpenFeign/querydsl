@@ -14,12 +14,9 @@ public class QuerydslGradlePlugin implements Plugin<Project> {
     project
         .getTasks()
         .register(
-            "greeting",
+            "querydslSql",
             task -> {
-              task.doLast(
-                  s ->
-                      System.out.println(
-                          "Hello from plugin 'io.github.openfeign.querydsl.gradle.greeting'"));
+              task.doLast(s -> System.out.println("Hello from plugin 'querydsl.exporter'"));
             });
   }
 }

@@ -52,8 +52,8 @@ testing {
 gradlePlugin {
     // Define the plugin
     plugins {
-        greeting {
-            id = 'io.github.openfeign.querydsl.gradle.greeting'
+        querydslSql {
+            id = 'querydsl.exporter'
             implementationClass = 'io.github.openfeign.querydsl.gradle.QuerydslGradlePlugin'
         }
     }

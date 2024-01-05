@@ -29,22 +29,18 @@ class QuerydslGradlePluginFunctionalTest {
   @Test
   void canRunTask() throws IOException {
     writeString(getSettingsFile(), "");
-    writeString(
-        getBuildFile(), "plugins {" + "  id('io.github.openfeign.querydsl.gradle.greeting')" + "}");
+    writeString(getBuildFile(), "plugins {" + "  id('querydsl.exporter')" + "}");
 
     // Run the build
     GradleRunner runner = GradleRunner.create();
     runner.forwardOutput();
     runner.withPluginClasspath();
-    runner.withArguments("greeting");
+    runner.withArguments("querydslSql");
     runner.withProjectDir(projectDir);
     BuildResult result = runner.build();
 
     // Verify the result
-    assertTrue(
-        result
-            .getOutput()
-            .contains("Hello from plugin 'io.github.openfeign.querydsl.gradle.greeting'"));
+    assertTrue(result.getOutput().contains("Hello from plugin 'querydsl.exporter'"));
   }
 
   private void writeString(File file, String string) throws IOException {

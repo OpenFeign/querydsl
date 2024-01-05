@@ -14,9 +14,9 @@ class QuerydslGradlePluginTest {
   void pluginRegistersATask() {
     // Create a test project and apply the plugin
     var project = ProjectBuilder.builder().build();
-    project.getPlugins().apply("io.github.openfeign.querydsl.gradle.greeting");
+    project.getPlugins().apply("querydsl.exporter");
 
     // Verify the result
-    assertNotNull(project.getTasks().findByName("greeting"));
+    assertNotNull(project.getTasks().findByName("querydslSql"));
   }
 }
