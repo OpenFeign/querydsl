@@ -10,6 +10,7 @@ plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     id 'java-gradle-plugin'
     id 'eclipse'
+    id 'com.diffplug.spotless' version '6.23.3'
 }
 
 repositories {
@@ -69,4 +70,10 @@ gradlePlugin.testSourceSets.add(sourceSets.functionalTest)
 tasks.named('check') {
     // Include functionalTest as part of the check lifecycle
     dependsOn(testing.suites.functionalTest)
+}
+
+spotless {
+  java {
+    googleJavaFormat()
+  }
 }
