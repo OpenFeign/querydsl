@@ -76,6 +76,18 @@
           </annotationProcessors>
           <jvmTarget>${main.java.version}</jvmTarget>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-allopen</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-noarg</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <id>kapt</id>
@@ -91,10 +103,10 @@
           </execution>
           <execution>
             <id>compile</id>
-            <phase>process-sources</phase>
             <goals>
               <goal>compile</goal>
             </goals>
+            <phase>process-sources</phase>
             <configuration>
               <sourceDirs>
                 <sourceDir>src/main/kotlin</sourceDir>
@@ -128,18 +140,6 @@
             </configuration>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-allopen</artifactId>
-            <version>${kotlin.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-noarg</artifactId>
-            <version>${kotlin.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>

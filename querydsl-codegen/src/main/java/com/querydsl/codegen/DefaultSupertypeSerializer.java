@@ -23,7 +23,7 @@ import java.util.Collection;
  *
  * @author tiwe
  */
-public final class DefaultSupertypeSerializer extends DefaultEntitySerializer
+public class DefaultSupertypeSerializer extends DefaultEntitySerializer
     implements SupertypeSerializer {
 
   /**

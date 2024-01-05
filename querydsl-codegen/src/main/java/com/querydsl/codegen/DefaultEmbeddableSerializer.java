@@ -33,7 +33,7 @@ import java.util.Collection;
  *
  * @author tiwe
  */
-public final class DefaultEmbeddableSerializer extends DefaultEntitySerializer
+public class DefaultEmbeddableSerializer extends DefaultEntitySerializer
     implements EmbeddableSerializer {
 
   /**

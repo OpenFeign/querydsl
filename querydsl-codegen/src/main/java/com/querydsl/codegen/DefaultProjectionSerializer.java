@@ -31,7 +31,7 @@ import java.util.function.Function;
  *
  * @author tiwe
  */
-public final class DefaultProjectionSerializer implements ProjectionSerializer {
+public class DefaultProjectionSerializer implements ProjectionSerializer {
 
   private final Class<? extends Annotation> generatedAnnotationClass;
   private final TypeMappings typeMappings;
@@ -74,8 +74,7 @@ public final class DefaultProjectionSerializer implements ProjectionSerializer {
     }
 
     // imports
-    writer.imports(NumberExpression.class.getPackage());
-    writer.imports(ConstructorExpression.class, generatedAnnotationClass);
+    imports(model, writer);
 
     Set<Integer> sizes = new HashSet<>();
     for (Constructor c : model.getConstructors()) {
@@ -95,6 +94,11 @@ public final class DefaultProjectionSerializer implements ProjectionSerializer {
     Type superType = new ClassType(TypeCategory.SIMPLE, ConstructorExpression.class, model);
     writer.beginClass(queryType, superType);
     writer.privateStaticFinal(Types.LONG_P, "serialVersionUID", model.hashCode() + "L");
+  }
+
+  protected void imports(EntityType model, CodeWriter writer) throws IOException {
+    writer.imports(NumberExpression.class.getPackage());
+    writer.imports(ConstructorExpression.class, generatedAnnotationClass);
   }
 
   protected void outro(EntityType model, CodeWriter writer) throws IOException {
@@ -141,18 +145,14 @@ public final class DefaultProjectionSerializer implements ProjectionSerializer {
         if (!first) {
           writer.append(", ");
         }
-        if (Types.PRIMITIVES.containsKey(p.getType())) {
-          Type primitive = Types.PRIMITIVES.get(p.getType());
-          writer.append(writer.getClassConstant(primitive.getFullName()));
-        } else {
-          writer.append(writer.getClassConstant(writer.getRawName(p.getType())));
-        }
+        parameterType(writer, p);
         first = false;
       }
       writer.append("}");
 
       for (Parameter p : c.getParameters()) {
-        writer.append(", ").append(p.getName());
+        writer.append(", ");
+        parameter(writer, p);
       }
 
       // end
@@ -162,5 +162,18 @@ public final class DefaultProjectionSerializer implements ProjectionSerializer {
 
     // outro
     outro(model, writer);
+  }
+
+  protected void parameterType(CodeWriter writer, Parameter p) throws IOException {
+    if (Types.PRIMITIVES.containsKey(p.getType())) {
+      Type primitive = Types.PRIMITIVES.get(p.getType());
+      writer.append(writer.getClassConstant(primitive.getFullName()));
+    } else {
+      writer.append(writer.getClassConstant(writer.getRawName(p.getType())));
+    }
+  }
+
+  protected void parameter(CodeWriter writer, Parameter p) throws IOException {
+    writer.append(p.getName());
   }
 }

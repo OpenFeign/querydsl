@@ -119,8 +119,6 @@
   </dependencies>
 
   <build>
-    <sourceDirectory>src/main/scala</sourceDirectory>
-    <testSourceDirectory>src/test/scala</testSourceDirectory>
     <pluginManagement>
       <plugins>
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
@@ -175,22 +173,6 @@
           <!-- <recompileMode>incremental</recompileMode> -->
           <!-- <useZincServer>true</useZincServer> -->
         </configuration>
-        <executions>
-          <execution>
-            <id>scala-compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>scala-test-compile</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-          </execution>
-        </executions>
         <dependencies>
           <dependency>
             <groupId>org.scala-lang</groupId>
@@ -198,6 +180,22 @@
             <version>${scala.full.version}</version>
           </dependency>
         </dependencies>
+        <executions>
+          <execution>
+            <id>scala-compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <phase>compile</phase>
+          </execution>
+          <execution>
+            <id>scala-test-compile</id>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <phase>test-compile</phase>
+          </execution>
+        </executions>
       </plugin>
       <!--
               <plugin>
@@ -263,5 +261,7 @@
         </configuration>
       </plugin>
     </plugins>
+    <sourceDirectory>src/main/scala</sourceDirectory>
+    <testSourceDirectory>src/test/scala</testSourceDirectory>
   </build>
 </project>
