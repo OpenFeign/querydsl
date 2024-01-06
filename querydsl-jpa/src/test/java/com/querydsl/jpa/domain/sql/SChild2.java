@@ -1,20 +1,21 @@
 package com.querydsl.jpa.domain.sql;
 
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
-import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.sql.ColumnMetadata;
-import jakarta.annotation.Generated;
+import java.sql.Types;
+import javax.annotation.processing.Generated;
 
 /** SChild2 is a Querydsl query type for SChild2 */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
 public class SChild2 extends com.querydsl.sql.RelationalPathBase<SChild2> {
 
-  private static final long serialVersionUID = 386731719;
+  private static final long serialVersionUID = 395031838;
 
-  public static final SChild2 Child2 = new SChild2("Child2");
+  public static final SChild2 child2 = new SChild2("CHILD2");
 
   public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
@@ -22,11 +23,11 @@ public class SChild2 extends com.querydsl.sql.RelationalPathBase<SChild2> {
 
   public final com.querydsl.sql.PrimaryKey<SChild2> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SParent2> fk783f9ab6c2dbacbc =
-      createForeignKey(parentId, "id");
+  public final com.querydsl.sql.ForeignKey<SParent2> child2ParentIdFk =
+      createForeignKey(parentId, "ID");
 
   public SChild2(String variable) {
-    super(SChild2.class, forVariable(variable), "", "Child2");
+    super(SChild2.class, forVariable(variable), "null", "CHILD2");
     addMetadata();
   }
 
@@ -35,18 +36,26 @@ public class SChild2 extends com.querydsl.sql.RelationalPathBase<SChild2> {
     addMetadata();
   }
 
+  public SChild2(String variable, String schema) {
+    super(SChild2.class, forVariable(variable), schema, "CHILD2");
+    addMetadata();
+  }
+
   public SChild2(Path<? extends SChild2> path) {
-    super(path.getType(), path.getMetadata(), "", "Child2");
+    super(path.getType(), path.getMetadata(), "null", "CHILD2");
     addMetadata();
   }
 
   public SChild2(PathMetadata metadata) {
-    super(SChild2.class, metadata, "", "Child2");
+    super(SChild2.class, metadata, "null", "CHILD2");
     addMetadata();
   }
 
   public void addMetadata() {
-    addMetadata(id, ColumnMetadata.named("id").withIndex(1).ofType(4).withSize(10).notNull());
-    addMetadata(parentId, ColumnMetadata.named("parent_id").withIndex(2).ofType(4).withSize(10));
+    addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
+    addMetadata(
+        parentId,
+        ColumnMetadata.named("PARENT_ID").withIndex(2).ofType(Types.INTEGER).withSize(10));
   }
 }
