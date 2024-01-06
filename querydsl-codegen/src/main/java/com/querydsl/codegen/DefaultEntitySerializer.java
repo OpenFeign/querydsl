@@ -21,6 +21,7 @@ import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.persistence.ElementCollection;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -900,6 +901,9 @@ public class DefaultEntitySerializer implements EntitySerializer {
           localRawName = writer.getRawName(property.getParameter(0));
           queryType = typeMappings.getPathType(property.getParameter(0), model, true);
 
+          String createCollection =
+              isElementCollection(property) ? "createElementCollection" : "createCollection";
+
           serialize(
               model,
               property,
@@ -910,7 +914,8 @@ public class DefaultEntitySerializer implements EntitySerializer {
                   + genericKey
                   + COMMA
                   + writer.getGenericName(true, genericQueryType)
-                  + ">createCollection",
+                  + ">"
+                  + createCollection,
               writer.getClassConstant(localRawName),
               writer.getClassConstant(writer.getRawName(queryType)),
               inits);
@@ -923,6 +928,8 @@ public class DefaultEntitySerializer implements EntitySerializer {
           localRawName = writer.getRawName(property.getParameter(0));
           queryType = typeMappings.getPathType(property.getParameter(0), model, true);
 
+          String createSet = isElementCollection(property) ? "createElementSet" : "createSet";
+
           serialize(
               model,
               property,
@@ -932,7 +939,8 @@ public class DefaultEntitySerializer implements EntitySerializer {
                   + genericKey
                   + COMMA
                   + writer.getGenericName(true, genericQueryType)
-                  + ">createSet",
+                  + ">"
+                  + createSet,
               writer.getClassConstant(localRawName),
               writer.getClassConstant(writer.getRawName(queryType)),
               inits);
@@ -945,6 +953,8 @@ public class DefaultEntitySerializer implements EntitySerializer {
           localRawName = writer.getRawName(property.getParameter(0));
           queryType = typeMappings.getPathType(property.getParameter(0), model, true);
 
+          String createList = isElementCollection(property) ? "createElementList" : "createList";
+
           serialize(
               model,
               property,
@@ -954,7 +964,8 @@ public class DefaultEntitySerializer implements EntitySerializer {
                   + genericKey
                   + COMMA
                   + writer.getGenericName(true, genericQueryType)
-                  + ">createList",
+                  + ">"
+                  + createList,
               writer.getClassConstant(localRawName),
               writer.getClassConstant(writer.getRawName(queryType)),
               inits);
@@ -994,6 +1005,15 @@ public class DefaultEntitySerializer implements EntitySerializer {
           entityField(model, property, config, writer);
           break;
       }
+    }
+  }
+
+  private boolean isElementCollection(Property property) {
+    try {
+      Class.forName("jakarta.persistence.ElementCollection");
+      return property.getAnnotation(ElementCollection.class) == null;
+    } catch (ClassNotFoundException e) {
+      return false;
     }
   }
 

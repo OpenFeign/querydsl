@@ -24,6 +24,7 @@ import java.sql.Time;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 
@@ -183,6 +184,14 @@ public class EntitySerializerTest {
         new Property(entityType, "s", new ClassType(TypeCategory.STRING, String.class)));
     entityType.addProperty(
         new Property(entityType, "t", new ClassType(TypeCategory.TIME, Time.class)));
+    Property property =
+        new Property(
+            entityType,
+            "cl",
+            new ClassType(TypeCategory.LIST, List.class, new ClassType(String.class)));
+    property.addAnnotation(new ElementCollectionImpl());
+    entityType.addProperty(property);
+
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));

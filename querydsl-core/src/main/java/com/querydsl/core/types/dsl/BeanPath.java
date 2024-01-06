@@ -203,6 +203,21 @@ public class BeanPath<T> extends SimpleExpression<T> implements Path<T> {
   }
 
   /**
+   * Create a new Collection typed path
+   *
+   * @param <A>
+   * @param property property name
+   * @param type property type
+   * @return property path
+   */
+  @SuppressWarnings("unchecked")
+  protected <A, Q extends SimpleExpression<? super A>> CollectionPath<A, Q> createElementCollection(
+      String property, Class<? super A> type, Class<? super Q> queryType, PathInits inits) {
+    return add(
+        new ElementCollectionPath<A, Q>(type, (Class) queryType, forProperty(property), inits));
+  }
+
+  /**
    * Create a new List typed path
    *
    * @param <A>
@@ -213,9 +228,23 @@ public class BeanPath<T> extends SimpleExpression<T> implements Path<T> {
    * @return property path
    */
   @SuppressWarnings("unchecked")
-  protected <A, E extends SimpleExpression<? super A>> ListPath<A, E> createList(
+  protected <A, E extends SimpleExpression<? super A>> ListPath<A, E> createElementList(
       String property, Class<? super A> type, Class<? super E> queryType, PathInits inits) {
-    return add(new ListPath<A, E>(type, (Class) queryType, forProperty(property), inits));
+    return add(new ElementListPath<A, E>(type, (Class) queryType, forProperty(property), inits));
+  }
+
+  /**
+   * Create a new Set typed path
+   *
+   * @param <A>
+   * @param property property name
+   * @param type property type
+   * @return property path
+   */
+  @SuppressWarnings("unchecked")
+  protected <A, E extends SimpleExpression<? super A>> SetPath<A, E> createElementSet(
+      String property, Class<? super A> type, Class<? super E> queryType, PathInits inits) {
+    return add(new ElementSetPath<A, E>(type, (Class) queryType, forProperty(property), inits));
   }
 
   /**
@@ -298,6 +327,22 @@ public class BeanPath<T> extends SimpleExpression<T> implements Path<T> {
   @SuppressWarnings("unchecked")
   protected <A extends Comparable> TimePath<A> createTime(String property, Class<? super A> type) {
     return add(new TimePath<A>((Class) type, forProperty(property)));
+  }
+
+  /**
+   * Create a new List typed path
+   *
+   * @param <A>
+   * @param <E>
+   * @param property property name
+   * @param type property type
+   * @param queryType expression type
+   * @return property path
+   */
+  @SuppressWarnings("unchecked")
+  protected <A, E extends SimpleExpression<? super A>> ListPath<A, E> createList(
+      String property, Class<? super A> type, Class<? super E> queryType, PathInits inits) {
+    return add(new ListPath<A, E>(type, (Class) queryType, forProperty(property), inits));
   }
 
   protected PathMetadata forProperty(String property) {
