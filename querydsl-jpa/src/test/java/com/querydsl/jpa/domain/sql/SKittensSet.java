@@ -1,18 +1,19 @@
 package com.querydsl.jpa.domain.sql;
 
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
-import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.sql.ColumnMetadata;
-import jakarta.annotation.Generated;
+import java.sql.Types;
+import javax.annotation.processing.Generated;
 
 /** SKittensSet is a Querydsl query type for SKittensSet */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
 public class SKittensSet extends com.querydsl.sql.RelationalPathBase<SKittensSet> {
 
-  private static final long serialVersionUID = -227477337;
+  private static final long serialVersionUID = -1409901698;
 
   public static final SKittensSet kittensSet = new SKittensSet("kittens_set");
 
@@ -22,14 +23,14 @@ public class SKittensSet extends com.querydsl.sql.RelationalPathBase<SKittensSet
 
   public final com.querydsl.sql.PrimaryKey<SKittensSet> primary = createPrimaryKey(catId, kittenId);
 
-  public final com.querydsl.sql.ForeignKey<SAnimal> fk4fccad6f8f00fdf8 =
-      createForeignKey(catId, "id");
+  public final com.querydsl.sql.ForeignKey<SAnimal_> kittensSetCatIdFK =
+      createForeignKey(catId, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SAnimal> fk4fccad6f3881aaa7 =
-      createForeignKey(kittenId, "id");
+  public final com.querydsl.sql.ForeignKey<SAnimal_> kittensSetKittenIdFK =
+      createForeignKey(kittenId, "ID");
 
   public SKittensSet(String variable) {
-    super(SKittensSet.class, forVariable(variable), "", "kittens_set");
+    super(SKittensSet.class, forVariable(variable), "null", "kittens_set");
     addMetadata();
   }
 
@@ -38,20 +39,31 @@ public class SKittensSet extends com.querydsl.sql.RelationalPathBase<SKittensSet
     addMetadata();
   }
 
+  public SKittensSet(String variable, String schema) {
+    super(SKittensSet.class, forVariable(variable), schema, "kittens_set");
+    addMetadata();
+  }
+
   public SKittensSet(Path<? extends SKittensSet> path) {
-    super(path.getType(), path.getMetadata(), "", "kittens_set");
+    super(path.getType(), path.getMetadata(), "null", "kittens_set");
     addMetadata();
   }
 
   public SKittensSet(PathMetadata metadata) {
-    super(SKittensSet.class, metadata, "", "kittens_set");
+    super(SKittensSet.class, metadata, "null", "kittens_set");
     addMetadata();
   }
 
   public void addMetadata() {
     addMetadata(
-        catId, ColumnMetadata.named("cat_id").withIndex(1).ofType(4).withSize(10).notNull());
+        catId,
+        ColumnMetadata.named("cat_id").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
     addMetadata(
-        kittenId, ColumnMetadata.named("kitten_id").withIndex(2).ofType(4).withSize(10).notNull());
+        kittenId,
+        ColumnMetadata.named("kitten_id")
+            .withIndex(2)
+            .ofType(Types.INTEGER)
+            .withSize(10)
+            .notNull());
   }
 }
