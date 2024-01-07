@@ -23,3 +23,6 @@ derby.log
 **/.flattened-pom.xml
 
 .checkstyle
+
+querydsl-gradle-plugin/build/
+querydsl-gradle-plugin/.gradle/
