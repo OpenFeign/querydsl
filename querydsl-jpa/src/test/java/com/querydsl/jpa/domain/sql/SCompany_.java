@@ -34,6 +34,18 @@ public class SCompany_ extends com.querydsl.sql.RelationalPathBase<SCompany_> {
   public final com.querydsl.sql.ForeignKey<SEmployee_> company_CEOIDFK =
       createForeignKey(ceoId, "ID");
 
+  public final com.querydsl.sql.ForeignKey<SCompany_department_> _company_department_CompanyIDFK =
+      createInvForeignKey(id, "Company_ID");
+
+  public final com.querydsl.sql.ForeignKey<SDepartment_> _department_COMPANYIDFK =
+      createInvForeignKey(id, "COMPANY_ID");
+
+  public final com.querydsl.sql.ForeignKey<SEmployee_> _employee_COMPANYIDFK =
+      createInvForeignKey(id, "COMPANY_ID");
+
+  public final com.querydsl.sql.ForeignKey<SUser_> _user_COMPANYIDFK =
+      createInvForeignKey(id, "COMPANY_ID");
+
   public SCompany_(String variable) {
     super(SCompany_.class, forVariable(variable), "null", "company_");
     addMetadata();

@@ -21,6 +21,9 @@ public class SWorld extends com.querydsl.sql.RelationalPathBase<SWorld> {
 
   public final com.querydsl.sql.PrimaryKey<SWorld> primary = createPrimaryKey(id);
 
+  public final com.querydsl.sql.ForeignKey<SWorldMammal> _wORLDMAMMALWorldIDFK =
+      createInvForeignKey(id, "World_ID");
+
   public SWorld(String variable) {
     super(SWorld.class, forVariable(variable), "null", "WORLD");
     addMetadata();

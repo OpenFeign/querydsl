@@ -40,6 +40,18 @@ public class SCategory_ extends com.querydsl.sql.RelationalPathBase<SCategory_> 
 
   public final com.querydsl.sql.PrimaryKey<SCategory_> primary = createPrimaryKey(id);
 
+  public final com.querydsl.sql.ForeignKey<SCategory_category_> _category_category_childIdFK =
+      createInvForeignKey(id, "childId");
+
+  public final com.querydsl.sql.ForeignKey<SCategory_category_> _category_category_parentIdFK =
+      createInvForeignKey(id, "parentId");
+
+  public final com.querydsl.sql.ForeignKey<SCategory_categoryprop_>
+      _category_categoryprop_CategoryIDFK = createInvForeignKey(id, "Category_ID");
+
+  public final com.querydsl.sql.ForeignKey<SUserprop_category_>
+      _userprop_category_childCategoriesIDFK = createInvForeignKey(id, "childCategories_ID");
+
   public SCategory_(String variable) {
     super(SCategory_.class, forVariable(variable), "null", "category_");
     addMetadata();

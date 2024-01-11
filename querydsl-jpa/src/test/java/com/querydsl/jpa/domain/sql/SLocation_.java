@@ -23,6 +23,9 @@ public class SLocation_ extends com.querydsl.sql.RelationalPathBase<SLocation_> 
 
   public final com.querydsl.sql.PrimaryKey<SLocation_> primary = createPrimaryKey(id);
 
+  public final com.querydsl.sql.ForeignKey<SStore_> _store_LOCATIONIDFK =
+      createInvForeignKey(id, "LOCATION_ID");
+
   public SLocation_(String variable) {
     super(SLocation_.class, forVariable(variable), "null", "location_");
     addMetadata();

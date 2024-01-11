@@ -21,6 +21,9 @@ public class SParent2 extends com.querydsl.sql.RelationalPathBase<SParent2> {
 
   public final com.querydsl.sql.PrimaryKey<SParent2> primary = createPrimaryKey(id);
 
+  public final com.querydsl.sql.ForeignKey<SChild2> _child2ParentIdFk =
+      createInvForeignKey(id, "PARENT_ID");
+
   public SParent2(String variable) {
     super(SParent2.class, forVariable(variable), "null", "PARENT2");
     addMetadata();

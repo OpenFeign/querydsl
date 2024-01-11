@@ -21,6 +21,9 @@ public class SBookid_ extends com.querydsl.sql.RelationalPathBase<SBookid_> {
 
   public final com.querydsl.sql.PrimaryKey<SBookid_> primary = createPrimaryKey(identity);
 
+  public final com.querydsl.sql.ForeignKey<SBookversion_> _bookversion_BOOKIDIDENTITYFK =
+      createInvForeignKey(identity, "BOOKID_IDENTITY");
+
   public SBookid_(String variable) {
     super(SBookid_.class, forVariable(variable), "null", "bookid_");
     addMetadata();

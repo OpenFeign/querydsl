@@ -40,6 +40,15 @@ public class SUserprop_ extends com.querydsl.sql.RelationalPathBase<SUserprop_> 
 
   public final com.querydsl.sql.PrimaryKey<SUserprop_> primary = createPrimaryKey(id);
 
+  public final com.querydsl.sql.ForeignKey<SUser2_userprop_> _user2_userprop_propertiesIDFK =
+      createInvForeignKey(id, "properties_ID");
+
+  public final com.querydsl.sql.ForeignKey<SUserprop_category_> _userprop_category_UserPropIDFK =
+      createInvForeignKey(id, "UserProp_ID");
+
+  public final com.querydsl.sql.ForeignKey<SUserprop_categoryprop_>
+      _userprop_categoryprop_UserPropIDFK = createInvForeignKey(id, "UserProp_ID");
+
   public SUserprop_(String variable) {
     super(SUserprop_.class, forVariable(variable), "null", "userprop_");
     addMetadata();

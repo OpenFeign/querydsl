@@ -26,6 +26,9 @@ public class SNationality_ extends com.querydsl.sql.RelationalPathBase<SNational
   public final com.querydsl.sql.ForeignKey<SCalendar_> nationality_CALENDARIDFK =
       createForeignKey(calendarId, "ID");
 
+  public final com.querydsl.sql.ForeignKey<SPerson_> _person_NATIONALITYIDFK =
+      createInvForeignKey(id, "NATIONALITY_ID");
+
   public SNationality_(String variable) {
     super(SNationality_.class, forVariable(variable), "null", "nationality_");
     addMetadata();

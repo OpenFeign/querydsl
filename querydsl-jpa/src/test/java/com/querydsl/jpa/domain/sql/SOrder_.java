@@ -28,6 +28,21 @@ public class SOrder_ extends com.querydsl.sql.RelationalPathBase<SOrder_> {
   public final com.querydsl.sql.ForeignKey<SCustomer_> order_CUSTOMERIDFK =
       createForeignKey(customerId, "ID");
 
+  public final com.querydsl.sql.ForeignKey<SLineItems2> _lineItems2OrderIDFK =
+      createInvForeignKey(id, "Order_ID");
+
+  public final com.querydsl.sql.ForeignKey<SLineItems> _lineItemsOrderIDFK =
+      createInvForeignKey(id, "Order_ID");
+
+  public final com.querydsl.sql.ForeignKey<SOrderDELIVEREDITEMINDICES>
+      _orderDELIVEREDITEMINDICESOrderIDFK = createInvForeignKey(id, "Order_ID");
+
+  public final com.querydsl.sql.ForeignKey<SCustomer_> _customer_CURRENTORDERIDFK =
+      createInvForeignKey(id, "CURRENTORDER_ID");
+
+  public final com.querydsl.sql.ForeignKey<SOrder_item_> _order_item_OrderIDFK =
+      createInvForeignKey(id, "Order_ID");
+
   public SOrder_(String variable) {
     super(SOrder_.class, forVariable(variable), "null", "order_");
     addMetadata();

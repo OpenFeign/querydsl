@@ -42,6 +42,27 @@ public class SItem_ extends com.querydsl.sql.RelationalPathBase<SItem_> {
   public final com.querydsl.sql.ForeignKey<SStatus_> item_STATUSIDFK =
       createForeignKey(statusId, "ID");
 
+  public final com.querydsl.sql.ForeignKey<SLineItems2> _lineItems2LineItemsMapIDFK =
+      createInvForeignKey(id, "lineItemsMap_ID");
+
+  public final com.querydsl.sql.ForeignKey<SLineItems> _lineItemsLineItemsIDFK =
+      createInvForeignKey(id, "lineItems_ID");
+
+  public final com.querydsl.sql.ForeignKey<SAuditlog_> _auditlog_ITEMIDFK =
+      createInvForeignKey(id, "ITEM_ID");
+
+  public final com.querydsl.sql.ForeignKey<SItem_> _item_PRODUCTIDFK =
+      createInvForeignKey(id, "PRODUCT_ID");
+
+  public final com.querydsl.sql.ForeignKey<SItem_statuschange_> _item_statuschange_PaymentIDFK =
+      createInvForeignKey(id, "Payment_ID");
+
+  public final com.querydsl.sql.ForeignKey<SOrder_item_> _order_item_itemsIDFK =
+      createInvForeignKey(id, "items_ID");
+
+  public final com.querydsl.sql.ForeignKey<SPrice_> _price_PRODUCTIDFK =
+      createInvForeignKey(id, "PRODUCT_ID");
+
   public SItem_(String variable) {
     super(SItem_.class, forVariable(variable), "null", "item_");
     addMetadata();

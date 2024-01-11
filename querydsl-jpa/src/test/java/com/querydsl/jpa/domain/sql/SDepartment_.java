@@ -28,6 +28,12 @@ public class SDepartment_ extends com.querydsl.sql.RelationalPathBase<SDepartmen
   public final com.querydsl.sql.ForeignKey<SCompany_> department_COMPANYIDFK =
       createForeignKey(companyId, "ID");
 
+  public final com.querydsl.sql.ForeignKey<SCompany_department_>
+      _company_department_departmentsIDFK = createInvForeignKey(id, "departments_ID");
+
+  public final com.querydsl.sql.ForeignKey<SDepartment_employee_>
+      _department_employee_DepartmentIDFK = createInvForeignKey(id, "Department_ID");
+
   public SDepartment_(String variable) {
     super(SDepartment_.class, forVariable(variable), "null", "department_");
     addMetadata();

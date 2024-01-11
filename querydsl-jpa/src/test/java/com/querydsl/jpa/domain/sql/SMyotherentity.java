@@ -21,6 +21,9 @@ public class SMyotherentity extends com.querydsl.sql.RelationalPathBase<SMyother
 
   public final com.querydsl.sql.PrimaryKey<SMyotherentity> primary = createPrimaryKey(id);
 
+  public final com.querydsl.sql.ForeignKey<SMyentity> _myentityAttributewithinitproblemIdFk =
+      createInvForeignKey(id, "ATTRIBUTEWITHINITPROBLEM_ID");
+
   public SMyotherentity(String variable) {
     super(SMyotherentity.class, forVariable(variable), "null", "MYOTHERENTITY");
     addMetadata();

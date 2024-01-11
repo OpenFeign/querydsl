@@ -26,6 +26,12 @@ public class SShow_ extends com.querydsl.sql.RelationalPathBase<SShow_> {
   public final com.querydsl.sql.ForeignKey<SShow_> show_PARENTIDFK =
       createForeignKey(parentId, "ID");
 
+  public final com.querydsl.sql.ForeignKey<SShowACTS> _showACTSShowIDFK =
+      createInvForeignKey(id, "Show_ID");
+
+  public final com.querydsl.sql.ForeignKey<SShow_> _show_PARENTIDFK =
+      createInvForeignKey(id, "PARENT_ID");
+
   public SShow_(String variable) {
     super(SShow_.class, forVariable(variable), "null", "show_");
     addMetadata();
