@@ -46,9 +46,9 @@ public class NativeSQLSerializerTest {
     assertThat(serializer.toString())
         .isEqualTo(
             """
-            select animal_.id
+            select animal_.ID
             from animal_ animal_
-            where animal_.name in (?1, ?2)\
+            where animal_.NAME in (?1, ?2)\
             """);
   }
 
