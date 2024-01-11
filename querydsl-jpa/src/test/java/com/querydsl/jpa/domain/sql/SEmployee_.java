@@ -35,15 +35,6 @@ public class SEmployee_ extends com.querydsl.sql.RelationalPathBase<SEmployee_> 
   public final com.querydsl.sql.ForeignKey<SUser_> employee_USERIDFK =
       createForeignKey(userId, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SEmployeeJOBFUNCTIONS>
-      _employeeJOBFUNCTIONSEmployeeIDFK = createInvForeignKey(id, "Employee_ID");
-
-  public final com.querydsl.sql.ForeignKey<SCompany_> _company_CEOIDFK =
-      createInvForeignKey(id, "CEO_ID");
-
-  public final com.querydsl.sql.ForeignKey<SDepartment_employee_>
-      _department_employee_employeesIDFK = createInvForeignKey(id, "employees_ID");
-
   public SEmployee_(String variable) {
     super(SEmployee_.class, forVariable(variable), "null", "employee_");
     addMetadata();

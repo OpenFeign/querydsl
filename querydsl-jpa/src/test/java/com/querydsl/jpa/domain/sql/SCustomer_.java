@@ -31,12 +31,6 @@ public class SCustomer_ extends com.querydsl.sql.RelationalPathBase<SCustomer_> 
   public final com.querydsl.sql.ForeignKey<SName_> customer_NAMEIDFK =
       createForeignKey(nameId, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SOrder_> _order_CUSTOMERIDFK =
-      createInvForeignKey(id, "CUSTOMER_ID");
-
-  public final com.querydsl.sql.ForeignKey<SStore_customer_> _store_customer_customersIDFK =
-      createInvForeignKey(id, "customers_ID");
-
   public SCustomer_(String variable) {
     super(SCustomer_.class, forVariable(variable), "null", "customer_");
     addMetadata();

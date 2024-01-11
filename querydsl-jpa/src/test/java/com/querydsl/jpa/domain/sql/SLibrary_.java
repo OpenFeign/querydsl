@@ -21,9 +21,6 @@ public class SLibrary_ extends com.querydsl.sql.RelationalPathBase<SLibrary_> {
 
   public final com.querydsl.sql.PrimaryKey<SLibrary_> primary = createPrimaryKey(identity);
 
-  public final com.querydsl.sql.ForeignKey<SBookversion_> _bookversion_LIBRARYIDENTITYFK =
-      createInvForeignKey(identity, "LIBRARY_IDENTITY");
-
   public SLibrary_(String variable) {
     super(SLibrary_.class, forVariable(variable), "null", "library_");
     addMetadata();

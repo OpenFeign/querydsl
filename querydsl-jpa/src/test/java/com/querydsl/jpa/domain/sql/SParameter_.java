@@ -21,9 +21,6 @@ public class SParameter_ extends com.querydsl.sql.RelationalPathBase<SParameter_
 
   public final com.querydsl.sql.PrimaryKey<SParameter_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SFormula_> _formula_PARAMETERIDFK =
-      createInvForeignKey(id, "PARAMETER_ID");
-
   public SParameter_(String variable) {
     super(SParameter_.class, forVariable(variable), "null", "parameter_");
     addMetadata();

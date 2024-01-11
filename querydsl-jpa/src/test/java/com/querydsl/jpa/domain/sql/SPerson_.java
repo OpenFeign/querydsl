@@ -35,9 +35,6 @@ public class SPerson_ extends com.querydsl.sql.RelationalPathBase<SPerson_> {
   public final com.querydsl.sql.ForeignKey<SPersonid_> person_PIDIDFK =
       createForeignKey(pidId, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SAccount_> _account_OWNERIFK =
-      createInvForeignKey(i, "OWNER_I");
-
   public SPerson_(String variable) {
     super(SPerson_.class, forVariable(variable), "null", "person_");
     addMetadata();

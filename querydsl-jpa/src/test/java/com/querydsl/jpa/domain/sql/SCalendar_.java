@@ -21,12 +21,6 @@ public class SCalendar_ extends com.querydsl.sql.RelationalPathBase<SCalendar_> 
 
   public final com.querydsl.sql.PrimaryKey<SCalendar_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SCalendarHOLIDAYS> _calendarHOLIDAYSCalendarIDFK =
-      createInvForeignKey(id, "Calendar_ID");
-
-  public final com.querydsl.sql.ForeignKey<SNationality_> _nationality_CALENDARIDFK =
-      createInvForeignKey(id, "CALENDAR_ID");
-
   public SCalendar_(String variable) {
     super(SCalendar_.class, forVariable(variable), "null", "calendar_");
     addMetadata();

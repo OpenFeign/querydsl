@@ -25,9 +25,6 @@ public class SPersonid_ extends com.querydsl.sql.RelationalPathBase<SPersonid_> 
 
   public final com.querydsl.sql.PrimaryKey<SPersonid_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SPerson_> _person_PIDIDFK =
-      createInvForeignKey(id, "PID_ID");
-
   public SPersonid_(String variable) {
     super(SPersonid_.class, forVariable(variable), "null", "personid_");
     addMetadata();

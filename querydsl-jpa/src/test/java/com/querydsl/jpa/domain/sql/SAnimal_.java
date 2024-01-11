@@ -53,21 +53,6 @@ public class SAnimal_ extends com.querydsl.sql.RelationalPathBase<SAnimal_> {
   public final com.querydsl.sql.ForeignKey<SAnimal_> animal_MATEIDFK =
       createForeignKey(mateId, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SAnimal_> _animal_MATEIDFK =
-      createInvForeignKey(id, "MATE_ID");
-
-  public final com.querydsl.sql.ForeignKey<SKittens> _kittensCatIdFK =
-      createInvForeignKey(id, "cat_id");
-
-  public final com.querydsl.sql.ForeignKey<SKittens> _kittensKittenIdFK =
-      createInvForeignKey(id, "kitten_id");
-
-  public final com.querydsl.sql.ForeignKey<SKittensSet> _kittensSetCatIdFK =
-      createInvForeignKey(id, "cat_id");
-
-  public final com.querydsl.sql.ForeignKey<SKittensSet> _kittensSetKittenIdFK =
-      createInvForeignKey(id, "kitten_id");
-
   public SAnimal_(String variable) {
     super(SAnimal_.class, forVariable(variable), "null", "animal_");
     addMetadata();

@@ -1,35 +1,22 @@
 package com.querydsl.jpa.domain.sql;
 
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.StringPath;
-import com.querydsl.sql.ColumnMetadata;
-import jakarta.annotation.Generated;
+import com.querydsl.core.types.dsl.*;
+import javax.annotation.processing.Generated;
 
 /** SShowActs is a Querydsl query type for SShowActs */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
 public class SShowActs extends com.querydsl.sql.RelationalPathBase<SShowActs> {
 
-  private static final long serialVersionUID = 283130543;
+  private static final long serialVersionUID = -330389690;
 
-  public static final SShowActs ShowActs = new SShowActs("Show_acts");
-
-  public final StringPath acts = createString("acts");
-
-  public final StringPath actsKEY = createString("actsKEY");
-
-  public final NumberPath<Long> showId = createNumber("showId", Long.class);
-
-  public final com.querydsl.sql.PrimaryKey<SShowActs> primary = createPrimaryKey(showId, actsKEY);
-
-  public final com.querydsl.sql.ForeignKey<SShow> fk5f6ee03ab40105c =
-      createForeignKey(showId, "id");
+  public static final SShowActs showActs = new SShowActs("show_acts");
 
   public SShowActs(String variable) {
-    super(SShowActs.class, forVariable(variable), "", "Show_acts");
+    super(SShowActs.class, forVariable(variable), "null", "show_acts");
     addMetadata();
   }
 
@@ -38,21 +25,20 @@ public class SShowActs extends com.querydsl.sql.RelationalPathBase<SShowActs> {
     addMetadata();
   }
 
+  public SShowActs(String variable, String schema) {
+    super(SShowActs.class, forVariable(variable), schema, "show_acts");
+    addMetadata();
+  }
+
   public SShowActs(Path<? extends SShowActs> path) {
-    super(path.getType(), path.getMetadata(), "", "Show_acts");
+    super(path.getType(), path.getMetadata(), "null", "show_acts");
     addMetadata();
   }
 
   public SShowActs(PathMetadata metadata) {
-    super(SShowActs.class, metadata, "", "Show_acts");
+    super(SShowActs.class, metadata, "null", "show_acts");
     addMetadata();
   }
 
-  public void addMetadata() {
-    addMetadata(acts, ColumnMetadata.named("acts").withIndex(2).ofType(12).withSize(255));
-    addMetadata(
-        actsKEY, ColumnMetadata.named("acts_KEY").withIndex(3).ofType(12).withSize(255).notNull());
-    addMetadata(
-        showId, ColumnMetadata.named("Show_id").withIndex(1).ofType(-5).withSize(19).notNull());
-  }
+  public void addMetadata() {}
 }

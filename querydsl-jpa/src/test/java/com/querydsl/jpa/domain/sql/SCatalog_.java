@@ -24,9 +24,6 @@ public class SCatalog_ extends com.querydsl.sql.RelationalPathBase<SCatalog_> {
 
   public final com.querydsl.sql.PrimaryKey<SCatalog_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SCatalog_price_> _catalog_price_CatalogIDFK =
-      createInvForeignKey(id, "Catalog_ID");
-
   public SCatalog_(String variable) {
     super(SCatalog_.class, forVariable(variable), "null", "catalog_");
     addMetadata();

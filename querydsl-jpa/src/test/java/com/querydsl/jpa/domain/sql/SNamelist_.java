@@ -21,9 +21,6 @@ public class SNamelist_ extends com.querydsl.sql.RelationalPathBase<SNamelist_> 
 
   public final com.querydsl.sql.PrimaryKey<SNamelist_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SNameListNAMES> _nameListNAMESNameListIDFK =
-      createInvForeignKey(id, "NameList_ID");
-
   public SNamelist_(String variable) {
     super(SNamelist_.class, forVariable(variable), "null", "namelist_");
     addMetadata();

@@ -27,12 +27,6 @@ public class SCategoryprop_ extends com.querydsl.sql.RelationalPathBase<SCategor
 
   public final com.querydsl.sql.PrimaryKey<SCategoryprop_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SCategory_categoryprop_>
-      _category_categoryprop_propertiesIDFK = createInvForeignKey(id, "properties_ID");
-
-  public final com.querydsl.sql.ForeignKey<SUserprop_categoryprop_>
-      _userprop_categoryprop_propertiesIDFK = createInvForeignKey(id, "properties_ID");
-
   public SCategoryprop_(String variable) {
     super(SCategoryprop_.class, forVariable(variable), "null", "categoryprop_");
     addMetadata();

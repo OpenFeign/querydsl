@@ -21,9 +21,6 @@ public class SPlayer_ extends com.querydsl.sql.RelationalPathBase<SPlayer_> {
 
   public final com.querydsl.sql.PrimaryKey<SPlayer_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SPlayerSCORES> _playerSCORESPlayerIDFK =
-      createInvForeignKey(id, "Player_ID");
-
   public SPlayer_(String variable) {
     super(SPlayer_.class, forVariable(variable), "null", "player_");
     addMetadata();

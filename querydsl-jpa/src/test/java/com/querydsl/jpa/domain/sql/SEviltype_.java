@@ -86,45 +86,6 @@ public class SEviltype_ extends com.querydsl.sql.RelationalPathBase<SEviltype_> 
   public final com.querydsl.sql.ForeignKey<SEviltype_> eviltype_DescFK =
       createForeignKey(_desc, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_GETCLASSIDFK =
-      createInvForeignKey(id, "GETCLASS_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_GETMETADATAIDFK =
-      createInvForeignKey(id, "GETMETADATA_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_GETTYPEIDFK =
-      createInvForeignKey(id, "GETTYPE_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_GETIDFK =
-      createInvForeignKey(id, "GET_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_HASHCODEIDFK =
-      createInvForeignKey(id, "HASHCODE_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_ISNOTNULLIDFK =
-      createInvForeignKey(id, "ISNOTNULL_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_ISNULLIDFK =
-      createInvForeignKey(id, "ISNULL_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_NOTIFYALLIDFK =
-      createInvForeignKey(id, "NOTIFYALL_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_NOTIFYIDFK =
-      createInvForeignKey(id, "NOTIFY_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_TOSTRINGIDFK =
-      createInvForeignKey(id, "TOSTRING_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_WAITIDFK =
-      createInvForeignKey(id, "WAIT_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_AscFK =
-      createInvForeignKey(id, "_asc");
-
-  public final com.querydsl.sql.ForeignKey<SEviltype_> _eviltype_DescFK =
-      createInvForeignKey(id, "_desc");
-
   public SEviltype_(String variable) {
     super(SEviltype_.class, forVariable(variable), "null", "eviltype_");
     addMetadata();

@@ -28,9 +28,6 @@ public class SPrice_ extends com.querydsl.sql.RelationalPathBase<SPrice_> {
   public final com.querydsl.sql.ForeignKey<SItem_> price_PRODUCTIDFK =
       createForeignKey(productId, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SCatalog_price_> _catalog_price_pricesIDFK =
-      createInvForeignKey(id, "prices_ID");
-
   public SPrice_(String variable) {
     super(SPrice_.class, forVariable(variable), "null", "price_");
     addMetadata();

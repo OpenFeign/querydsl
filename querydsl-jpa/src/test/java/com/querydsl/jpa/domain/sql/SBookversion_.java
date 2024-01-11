@@ -7,7 +7,6 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.sql.ColumnMetadata;
 import java.sql.Types;
-import java.util.*;
 import javax.annotation.processing.Generated;
 
 /** SBookversion_ is a Querydsl query type for SBookversion_ */
@@ -34,11 +33,6 @@ public class SBookversion_ extends com.querydsl.sql.RelationalPathBase<SBookvers
 
   public final com.querydsl.sql.ForeignKey<SLibrary_> bookversion_LIBRARYIDENTITYFK =
       createForeignKey(libraryIdentity, "IDENTITY");
-
-  public final com.querydsl.sql.ForeignKey<SBookBookmarks> _bookBookmarksBOOKIDIDENTITYFK =
-      createInvForeignKey(
-          Arrays.asList(bookidIdentity, libraryIdentity),
-          Arrays.asList("BOOKID_IDENTITY", "LIBRARY_IDENTITY"));
 
   public SBookversion_(String variable) {
     super(SBookversion_.class, forVariable(variable), "null", "bookversion_");

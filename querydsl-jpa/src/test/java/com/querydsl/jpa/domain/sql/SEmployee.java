@@ -36,9 +36,6 @@ public class SEmployee extends com.querydsl.sql.RelationalPathBase<SEmployee> {
   public final com.querydsl.sql.ForeignKey<SEmployee> superiorFk =
       createForeignKey(superiorId, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SEmployee> _superiorFk =
-      createInvForeignKey(id, "SUPERIOR_ID");
-
   public SEmployee(String variable) {
     super(SEmployee.class, forVariable(variable), "null", "EMPLOYEE");
     addMetadata();

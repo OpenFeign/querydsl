@@ -26,9 +26,6 @@ public class SStore_ extends com.querydsl.sql.RelationalPathBase<SStore_> {
   public final com.querydsl.sql.ForeignKey<SLocation_> store_LOCATIONIDFK =
       createForeignKey(locationId, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SStore_customer_> _store_customer_StoreIDFK =
-      createInvForeignKey(id, "Store_ID");
-
   public SStore_(String variable) {
     super(SStore_.class, forVariable(variable), "null", "store_");
     addMetadata();

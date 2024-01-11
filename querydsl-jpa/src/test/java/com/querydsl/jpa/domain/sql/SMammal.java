@@ -23,12 +23,6 @@ public class SMammal extends com.querydsl.sql.RelationalPathBase<SMammal> {
 
   public final com.querydsl.sql.PrimaryKey<SMammal> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SHumanHAIRS> _humanHAIRSHumanIDFK =
-      createInvForeignKey(id, "Human_ID");
-
-  public final com.querydsl.sql.ForeignKey<SWorldMammal> _wORLDMAMMALMammalsIDFK =
-      createInvForeignKey(id, "mammals_ID");
-
   public SMammal(String variable) {
     super(SMammal.class, forVariable(variable), "null", "MAMMAL");
     addMetadata();

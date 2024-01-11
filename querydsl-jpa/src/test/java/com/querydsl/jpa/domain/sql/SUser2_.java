@@ -46,9 +46,6 @@ public class SUser2_ extends com.querydsl.sql.RelationalPathBase<SUser2_> {
 
   public final com.querydsl.sql.PrimaryKey<SUser2_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SUser2_userprop_> _user2_userprop_User2IDFK =
-      createInvForeignKey(id, "User2_ID");
-
   public SUser2_(String variable) {
     super(SUser2_.class, forVariable(variable), "null", "user2_");
     addMetadata();

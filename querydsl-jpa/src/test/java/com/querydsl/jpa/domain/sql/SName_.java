@@ -27,9 +27,6 @@ public class SName_ extends com.querydsl.sql.RelationalPathBase<SName_> {
 
   public final com.querydsl.sql.PrimaryKey<SName_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SCustomer_> _customer_NAMEIDFK =
-      createInvForeignKey(id, "NAME_ID");
-
   public SName_(String variable) {
     super(SName_.class, forVariable(variable), "null", "name_");
     addMetadata();

@@ -24,9 +24,6 @@ public class SStatuschange_ extends com.querydsl.sql.RelationalPathBase<SStatusc
 
   public final com.querydsl.sql.PrimaryKey<SStatuschange_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SItem_statuschange_>
-      _item_statuschange_statusChangesIDFK = createInvForeignKey(id, "statusChanges_ID");
-
   public SStatuschange_(String variable) {
     super(SStatuschange_.class, forVariable(variable), "null", "statuschange_");
     addMetadata();

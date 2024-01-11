@@ -23,12 +23,6 @@ public class SStatus_ extends com.querydsl.sql.RelationalPathBase<SStatus_> {
 
   public final com.querydsl.sql.PrimaryKey<SStatus_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SItem_> _item_CURRENTSTATUSIDFK =
-      createInvForeignKey(id, "CURRENTSTATUS_ID");
-
-  public final com.querydsl.sql.ForeignKey<SItem_> _item_STATUSIDFK =
-      createInvForeignKey(id, "STATUS_ID");
-
   public SStatus_(String variable) {
     super(SStatus_.class, forVariable(variable), "null", "status_");
     addMetadata();

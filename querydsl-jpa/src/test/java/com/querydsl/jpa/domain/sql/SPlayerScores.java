@@ -1,30 +1,22 @@
 package com.querydsl.jpa.domain.sql;
 
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.sql.ColumnMetadata;
-import jakarta.annotation.Generated;
+import com.querydsl.core.types.dsl.*;
+import javax.annotation.processing.Generated;
 
 /** SPlayerScores is a Querydsl query type for SPlayerScores */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
 public class SPlayerScores extends com.querydsl.sql.RelationalPathBase<SPlayerScores> {
 
-  private static final long serialVersionUID = 1627547091;
+  private static final long serialVersionUID = -810897686;
 
-  public static final SPlayerScores PlayerScores = new SPlayerScores("Player_scores");
-
-  public final NumberPath<Long> playerId = createNumber("playerId", Long.class);
-
-  public final NumberPath<Integer> scores = createNumber("scores", Integer.class);
-
-  public final com.querydsl.sql.ForeignKey<SPlayer> fkd5dc571fd8736d5c =
-      createForeignKey(playerId, "id");
+  public static final SPlayerScores playerScores = new SPlayerScores("player_scores");
 
   public SPlayerScores(String variable) {
-    super(SPlayerScores.class, forVariable(variable), "", "Player_scores");
+    super(SPlayerScores.class, forVariable(variable), "null", "player_scores");
     addMetadata();
   }
 
@@ -33,19 +25,20 @@ public class SPlayerScores extends com.querydsl.sql.RelationalPathBase<SPlayerSc
     addMetadata();
   }
 
+  public SPlayerScores(String variable, String schema) {
+    super(SPlayerScores.class, forVariable(variable), schema, "player_scores");
+    addMetadata();
+  }
+
   public SPlayerScores(Path<? extends SPlayerScores> path) {
-    super(path.getType(), path.getMetadata(), "", "Player_scores");
+    super(path.getType(), path.getMetadata(), "null", "player_scores");
     addMetadata();
   }
 
   public SPlayerScores(PathMetadata metadata) {
-    super(SPlayerScores.class, metadata, "", "Player_scores");
+    super(SPlayerScores.class, metadata, "null", "player_scores");
     addMetadata();
   }
 
-  public void addMetadata() {
-    addMetadata(
-        playerId, ColumnMetadata.named("Player_id").withIndex(1).ofType(-5).withSize(19).notNull());
-    addMetadata(scores, ColumnMetadata.named("scores").withIndex(2).ofType(4).withSize(10));
-  }
+  public void addMetadata() {}
 }

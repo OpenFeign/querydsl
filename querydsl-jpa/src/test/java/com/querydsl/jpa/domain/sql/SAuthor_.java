@@ -23,9 +23,6 @@ public class SAuthor_ extends com.querydsl.sql.RelationalPathBase<SAuthor_> {
 
   public final com.querydsl.sql.PrimaryKey<SAuthor_> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SBook_> _book_AUTHORIDFK =
-      createInvForeignKey(id, "AUTHOR_ID");
-
   public SAuthor_(String variable) {
     super(SAuthor_.class, forVariable(variable), "null", "author_");
     addMetadata();
