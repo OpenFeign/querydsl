@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.domain.sql.SAnimal;
+import com.querydsl.jpa.domain.sql.SAnimal_;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.MySQLTemplates;
 import jakarta.persistence.Column;
@@ -38,7 +38,7 @@ public class NativeSQLSerializerTest {
     Configuration conf = new Configuration(new MySQLTemplates());
     NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
     DefaultQueryMetadata md = new DefaultQueryMetadata();
-    SAnimal cat = SAnimal.animal_;
+    SAnimal_ cat = SAnimal_.animal_;
     md.addJoin(JoinType.DEFAULT, cat);
     md.addWhere(cat.name.in("X", "Y"));
     md.setProjection(cat.id);
@@ -46,9 +46,9 @@ public class NativeSQLSerializerTest {
     assertThat(serializer.toString())
         .isEqualTo(
             """
-            select animal_.id
+            select animal_.ID
             from animal_ animal_
-            where animal_.name in (?1, ?2)\
+            where animal_.NAME in (?1, ?2)\
             """);
   }
 

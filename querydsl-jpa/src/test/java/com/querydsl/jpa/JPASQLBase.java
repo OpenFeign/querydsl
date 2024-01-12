@@ -22,7 +22,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.Color;
 import com.querydsl.jpa.domain.QCat;
-import com.querydsl.jpa.domain.sql.SAnimal;
+import com.querydsl.jpa.domain.sql.SAnimal_;
 import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
 import com.querydsl.sql.SQLTemplates;
@@ -49,7 +49,7 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
 
   private EntityManager entityManager;
 
-  private final SAnimal cat = new SAnimal("cat");
+  private final SAnimal_ cat = new SAnimal_("cat");
   private final QCat catEntity = QCat.cat;
 
   @Override
@@ -98,7 +98,7 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
   @Test
   @ExcludeIn(Target.MYSQL)
   public void entityQueries_createQuery2() {
-    SAnimal cat = new SAnimal("CAT");
+    SAnimal_ cat = new SAnimal_("CAT");
 
     Query query = query().from(cat).select(catEntity).createQuery();
     assertThat(query.getResultList()).hasSize(6);
