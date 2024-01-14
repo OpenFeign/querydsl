@@ -78,7 +78,7 @@ public interface SQLCommonQuery<Q extends SQLCommonQuery<Q>> extends Query<Q> {
    * @param o from
    * @return the current object
    */
-  Q from(Expression<?>... o);
+  Q from(RelationalPath<?>... o);
 
   /**
    * Adds a sub query source

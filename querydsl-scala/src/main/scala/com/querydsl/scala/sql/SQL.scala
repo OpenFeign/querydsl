@@ -46,7 +46,7 @@ trait SQL extends SQLHelpers {
 
   def query() = new SQLQuery(connection, templates)
 
-  def from(expr: Expression[_]*) = query.from(expr:_*)
+  def from(expr: RelationalPath[_]*) = query.from(expr:_*)
 
   def insert(path: RelationalPath[_]) = new SQLInsertClause(connection, templates, path)
 

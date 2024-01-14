@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.jpa.domain.QAnimal;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.sql.SQLExpressions;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.Date;
@@ -156,7 +155,7 @@ public class JPAQueryFactoryTest {
         .insert(QAnimal.animal)
         .columns(QAnimal.animal.id, QAnimal.animal.birthdate)
         .select(
-            SQLExpressions.select(QAnimal.animal.id, QAnimal.animal.birthdate)
+            JPAExpressions.select(QAnimal.animal.id, QAnimal.animal.birthdate)
                 .from(QAnimal.animal));
   }
 }
