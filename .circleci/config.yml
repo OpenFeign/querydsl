@@ -31,7 +31,7 @@ commands:
   save-test-results:
     steps:
       - run:
-          name: Save test results
+          name: Save package results
           command: |
             mkdir -p ~/test-results/junit/
             find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
@@ -185,7 +185,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.MySQL
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.MySQL
       - save-test-results
   testPostgreSQL:
     <<: *defaults
@@ -206,7 +206,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
       - save-test-results
   testCUBRID:
     <<: *defaults
@@ -225,7 +225,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.CUBRID
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.CUBRID
       - save-test-results
   testOracle:
     <<: *defaults
@@ -247,7 +247,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.Oracle
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.Oracle
       - save-test-results
   testMongo:
     <<: *defaults
@@ -264,7 +264,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.MongoDB
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.MongoDB
       - save-test-results
   testFirebird:
     <<: *defaults
@@ -287,7 +287,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.Firebird
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.Firebird
       - save-test-results
   testMSSQL:
     <<: *defaults
@@ -308,7 +308,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.SQLServer
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.SQLServer
       - save-test-results
   testEmbedded:
     <<: *defaults
@@ -324,7 +324,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B test -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
       - save-test-results
 
   deploy:
@@ -350,25 +350,25 @@ workflows:
           filters:
             <<: *all-branches
       - test:
-          name: 'Compile and Test (no external databases)'
+          name: 'Compile and package (no external databases)'
           requires:
             - 'Resolve dependencies'
           filters:
             <<: *all-branches
       - windows:
-          name: 'Compile and Test on Windows (no external databases)'
+          name: 'Compile and package on Windows (no external databases)'
           requires:
             - 'Resolve dependencies'
           filters:
             <<: *all-branches
       - buildExamples:
-          name: 'Compile and Test Examples'
+          name: 'Compile and package Examples'
           requires:
             - 'Resolve dependencies'
           filters:
             <<: *all-branches
       - buildQuarkusExample:
-          name: 'Compile and Test Quarkus Example'
+          name: 'Compile and package Quarkus Example'
           filters:
             <<: *all-branches
       - testMySQL:
