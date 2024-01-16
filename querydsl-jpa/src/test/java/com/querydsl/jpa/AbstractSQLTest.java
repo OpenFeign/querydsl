@@ -15,8 +15,8 @@ import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.Color;
 import com.querydsl.jpa.domain.QCat;
-import com.querydsl.jpa.domain.QCompany;
 import com.querydsl.jpa.domain.sql.SAnimal_;
+import com.querydsl.jpa.domain.sql.SCompany_;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -111,8 +111,14 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void entityQueries3() {
-    QCat catEntity = new QCat("animal_");
-    assertThat(query().from(catEntity).select(catEntity.toes.max()).fetchFirst().intValue())
+    SAnimal_ catEntity = new SAnimal_("animal_");
+    assertThat(
+            query()
+                .from(catEntity)
+                .select(catEntity.toes.max())
+                .where(catEntity.dtype.eq("C"))
+                .fetchFirst()
+                .intValue())
         .isEqualTo(0);
   }
 
@@ -163,7 +169,7 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void entityQueries7() {
-    QCompany company = QCompany.company;
+    SCompany_ company = SCompany_.company_;
     assertThat(query().from(company).select(company.officialName).fetch())
         .isEqualTo(Collections.emptyList());
   }
