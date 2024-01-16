@@ -74,10 +74,10 @@ public class ProjectionSerializerTest {
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String generatedSource = writer.toString();
     assertThat(generatedSource)
-        .contains(
-            String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName()));
+        .contains("import %s;".formatted(GeneratedAnnotationResolver.resolveDefault().getName()));
     assertThat(generatedSource)
-        .contains("@Generated(\"com.querydsl.codegen.DefaultProjectionSerializer\")\npublic class");
+        .containsIgnoringNewLines(
+            "@Generated(\"com.querydsl.codegen.DefaultProjectionSerializer\")\npublic class");
   }
 
   @Test
@@ -99,6 +99,7 @@ public class ProjectionSerializerTest {
     String generatedSource = writer.toString();
     assertThat(generatedSource).contains("import com.querydsl.core.annotations.Generated");
     assertThat(generatedSource)
-        .contains("@Generated(\"com.querydsl.codegen.DefaultProjectionSerializer\")\npublic class");
+        .containsIgnoringNewLines(
+            "@Generated(\"com.querydsl.codegen.DefaultProjectionSerializer\")\npublic class");
   }
 }

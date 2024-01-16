@@ -61,7 +61,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
 
     assertThat(results).hasSize(4);
 
-    Group group = results.get(0);
+    Group group = results.getFirst();
     assertThat(group.getOne(postId)).isNull();
     assertThat(group.getOne(postName)).isEqualTo("null post");
     assertThat(group.getSet(commentId)).isEqualTo(toSet(7, 8));
@@ -273,7 +273,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
 
     assertThat(results).hasSize(2);
 
-    User user = results.get(0);
+    User user = results.getFirst();
     Post post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(toInt(2));
     assertThat(post.getName()).isEqualTo("post 2");
@@ -295,7 +295,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
 
     assertThat(results).hasSize(2);
 
-    User user = results.get(0);
+    User user = results.getFirst();
     Post post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(toInt(2));
     assertThat(post.getName()).isEqualTo("post 2");
@@ -317,7 +317,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
 
     assertThat(results).hasSize(2);
 
-    User user = results.get(0);
+    User user = results.getFirst();
     Post post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(toInt(2));
     assertThat(post.getName()).isEqualTo("post 2");

@@ -30,16 +30,16 @@ public class GroupByTest {
 
   private static final List<Post> posts =
       Arrays.asList(
-          new Post(1, "Post 1", users.get(0)),
-          new Post(2, "Post 2", users.get(0)),
+          new Post(1, "Post 1", users.getFirst()),
+          new Post(2, "Post 2", users.getFirst()),
           new Post(3, "Post 3", users.get(1)));
 
   private static final List<Comment> comments =
       Arrays.asList(
-          new Comment(1, "Comment 1", users.get(0), posts.get(0)),
+          new Comment(1, "Comment 1", users.getFirst(), posts.getFirst()),
           new Comment(2, "Comment 2", users.get(1), posts.get(1)),
           new Comment(3, "Comment 3", users.get(2), posts.get(1)),
-          new Comment(4, "Comment 4", users.get(0), posts.get(2)),
+          new Comment(4, "Comment 4", users.getFirst(), posts.get(2)),
           new Comment(5, "Comment 5", users.get(1), posts.get(2)),
           new Comment(6, "Comment 6", users.get(2), posts.get(2)));
 

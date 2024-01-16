@@ -32,7 +32,11 @@ import org.openjdk.jmh.runner.options.TimeValue;
 public class QueryPerformanceTest {
 
   private static final String QUERY =
-      "select COMPANIES.NAME\n" + "from COMPANIES COMPANIES\n" + "where COMPANIES.ID = ?";
+      """
+      select COMPANIES.NAME
+      from COMPANIES COMPANIES
+      where COMPANIES.ID = ?\
+      """;
 
   private static final SQLTemplates templates = new H2Templates();
 

@@ -31,7 +31,10 @@ public class TeradataTemplatesTest extends AbstractSQLTemplatesTest {
     query.from(survey1).limit(5).offset(10);
     assertThat(query.toString())
         .isEqualTo(
-            "from SURVEY survey1 " + "qualify row_number() over (order by 1) between ? and ?");
+            """
+            from SURVEY survey1 \
+            qualify row_number() over (order by 1) between ? and ?\
+            """);
   }
 
   @Test
@@ -39,9 +42,11 @@ public class TeradataTemplatesTest extends AbstractSQLTemplatesTest {
     query.from(survey1).orderBy(survey1.name.asc()).limit(5);
     assertThat(query.toString())
         .isEqualTo(
-            "from SURVEY survey1 "
-                + "order by survey1.NAME asc "
-                + "qualify row_number() over (order by survey1.NAME asc) <= ?");
+            """
+            from SURVEY survey1 \
+            order by survey1.NAME asc \
+            qualify row_number() over (order by survey1.NAME asc) <= ?\
+            """);
   }
 
   @Test

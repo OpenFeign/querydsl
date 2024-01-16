@@ -150,12 +150,21 @@ public abstract class ProjectableSQLQuery<T, Q extends ProjectableSQLQuery<T, Q>
     return ((Number) fetchOne()).longValue();
   }
 
-  public Q from(Expression<?> arg) {
+  protected Q from(Expression<?> arg) {
     return queryMixin.from(arg);
   }
 
+  public Q from(RelationalPath<?> arg) {
+    return queryMixin.from(arg);
+  }
+
+  public Q from(RelationalPath<?> arg, Expression<?>... args) {
+    queryMixin.from(arg);
+    return queryMixin.from(args);
+  }
+
   @Override
-  public Q from(Expression<?>... args) {
+  public Q from(RelationalPath<?>... args) {
     return queryMixin.from(args);
   }
 

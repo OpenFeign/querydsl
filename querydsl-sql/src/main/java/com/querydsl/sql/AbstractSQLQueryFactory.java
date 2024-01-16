@@ -51,13 +51,13 @@ public abstract class AbstractSQLQueryFactory<Q extends SQLCommonQuery<?>>
 
   @SuppressWarnings("unchecked")
   @Override
-  public final Q from(Expression<?> from) {
+  public final Q from(RelationalPath<?> from) {
     return (Q) query().from(from);
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public final Q from(Expression<?>... args) {
+  public final Q from(RelationalPath<?>... args) {
     return (Q) query().from(args);
   }
 

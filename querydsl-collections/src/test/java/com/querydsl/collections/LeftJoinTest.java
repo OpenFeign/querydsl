@@ -57,7 +57,7 @@ public class LeftJoinTest extends AbstractQueryTest {
             .fetch();
 
     assertThat(rv).hasSize(1);
-    assertThat(rv.get(0).getName()).isEqualTo("Bob");
+    assertThat(rv.getFirst().getName()).isEqualTo("Bob");
   }
 
   @Test
@@ -80,7 +80,7 @@ public class LeftJoinTest extends AbstractQueryTest {
             .where(cat.name.eq(kitten.name))
             .orderBy(cat.name.asc())
             .fetch();
-    assertThat(rv.get(0).getName()).isEqualTo("Bob");
+    assertThat(rv.getFirst().getName()).isEqualTo("Bob");
     assertThat(rv.get(1).getName()).isEqualTo("Kate");
   }
 }

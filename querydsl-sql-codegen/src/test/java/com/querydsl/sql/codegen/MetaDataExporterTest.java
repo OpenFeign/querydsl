@@ -94,18 +94,20 @@ public class MetaDataExporterTest {
       stmt.execute("create table newline2 (id int, \"new\nline\" int)");
 
       stmt.execute(
-          "create table employee("
-              + "id INT, "
-              + "firstname VARCHAR(50), "
-              + "lastname VARCHAR(50), "
-              + "salary DECIMAL(10, 2), "
-              + "datefield DATE, "
-              + "timefield TIME, "
-              + "superior_id int, "
-              + "survey_id int, "
-              + "survey_name varchar(30), "
-              + "CONSTRAINT PK_employee PRIMARY KEY (id), "
-              + "CONSTRAINT FK_superior FOREIGN KEY (superior_id) REFERENCES employee(id))");
+          """
+          create table employee(\
+          id INT, \
+          firstname VARCHAR(50), \
+          lastname VARCHAR(50), \
+          salary DECIMAL(10, 2), \
+          datefield DATE, \
+          timefield TIME, \
+          superior_id int, \
+          survey_id int, \
+          survey_name varchar(30), \
+          CONSTRAINT PK_employee PRIMARY KEY (id), \
+          CONSTRAINT FK_superior FOREIGN KEY (superior_id) REFERENCES employee(id))\
+          """);
 
       // multi key
       stmt.execute(
@@ -113,10 +115,12 @@ public class MetaDataExporterTest {
 
       //  M_PRODUCT_BOM_ID
       stmt.execute(
-          "create table product(id int, "
-              + "m_product_bom_id int, "
-              + "m_productbom_id int, "
-              + "constraint product_bom foreign key (m_productbom_id) references product(id))");
+          """
+          create table product(id int, \
+          m_product_bom_id int, \
+          m_productbom_id int, \
+          constraint product_bom foreign key (m_productbom_id) references product(id))\
+          """);
     }
   }
 
@@ -171,9 +175,11 @@ public class MetaDataExporterTest {
       throws SQLException, ClassNotFoundException, MalformedURLException {
     Statement stmt = connection.createStatement();
     stmt.execute(
-        "CREATE TABLE foo ("
-            + "id INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,"
-            + "name VARCHAR(255) NOT NULL DEFAULT 'some default')");
+        """
+        CREATE TABLE foo (\
+        id INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,\
+        name VARCHAR(255) NOT NULL DEFAULT 'some default')\
+        """);
 
     MetaDataExporter exporter = new MetaDataExporter();
     exporter.setSchemaPattern("PUBLIC");
@@ -206,9 +212,11 @@ public class MetaDataExporterTest {
       throws SQLException, ClassNotFoundException, MalformedURLException {
     Statement stmt = connection.createStatement();
     stmt.execute(
-        "CREATE TABLE bar ("
-            + "id VARCHAR(10) PRIMARY KEY NOT NULL,"
-            + "name VARCHAR(255) NOT NULL)");
+        """
+        CREATE TABLE bar (\
+        id VARCHAR(10) PRIMARY KEY NOT NULL,\
+        name VARCHAR(255) NOT NULL)\
+        """);
 
     MetaDataExporter exporter = new MetaDataExporter();
     exporter.setSchemaPattern("PUBLIC");

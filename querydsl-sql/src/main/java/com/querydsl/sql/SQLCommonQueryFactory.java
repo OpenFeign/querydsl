@@ -14,7 +14,6 @@
 package com.querydsl.sql;
 
 import com.querydsl.core.QueryFactory;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.sql.dml.SQLDeleteClause;
@@ -57,7 +56,7 @@ public interface SQLCommonQueryFactory<
    * @param from query source
    * @return query
    */
-  Q from(Expression<?> from);
+  Q from(RelationalPath<?> from);
 
   /**
    * Create a new SELECT query
@@ -65,7 +64,7 @@ public interface SQLCommonQueryFactory<
    * @param from query sources
    * @return query
    */
-  Q from(Expression<?>... from);
+  Q from(RelationalPath<?>... from);
 
   /**
    * Create a new SELECT query

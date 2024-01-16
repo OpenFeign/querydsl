@@ -58,7 +58,7 @@ public class MongodbGeoSpatialQueryTest {
     ds.save(new GeoEntity(30.0, 50.0));
 
     List<GeoEntity> entities = query().where(geoEntity.location.near(50.0, 50.0)).fetch();
-    assertThat(entities.get(0).getLocation()[0]).isCloseTo(30.0, within(0.1));
+    assertThat(entities.getFirst().getLocation()[0]).isCloseTo(30.0, within(0.1));
     assertThat(entities.get(1).getLocation()[0]).isCloseTo(20.0, within(0.1));
     assertThat(entities.get(2).getLocation()[0]).isCloseTo(10.0, within(0.1));
   }
@@ -71,7 +71,7 @@ public class MongodbGeoSpatialQueryTest {
 
     List<GeoEntity> entities =
         query().where(MongodbExpressions.nearSphere(geoEntity.location, 50.0, 50.0)).fetch();
-    assertThat(entities.get(0).getLocation()[0]).isCloseTo(30.0, within(0.1));
+    assertThat(entities.getFirst().getLocation()[0]).isCloseTo(30.0, within(0.1));
     assertThat(entities.get(1).getLocation()[0]).isCloseTo(20.0, within(0.1));
     assertThat(entities.get(2).getLocation()[0]).isCloseTo(10.0, within(0.1));
   }
@@ -85,7 +85,7 @@ public class MongodbGeoSpatialQueryTest {
     List<GeoEntity> entities =
         query().where(MongodbExpressions.withinBox(geoEntity.location, 0, 0, 20, 50)).fetch();
     assertThat(entities).hasSize(2);
-    assertThat(entities.get(0).getLocation()[0]).isCloseTo(10.0, within(0.1));
+    assertThat(entities.getFirst().getLocation()[0]).isCloseTo(10.0, within(0.1));
     assertThat(entities.get(1).getLocation()[0]).isCloseTo(20.0, within(0.1));
   }
 
@@ -98,7 +98,7 @@ public class MongodbGeoSpatialQueryTest {
     List<GeoEntity> entities =
         query().where(MongodbExpressions.geoIntersects(geoEntity.location, 20.0, 50.0)).fetch();
     assertThat(entities).hasSize(1);
-    assertThat(entities.get(0).getLocation()[0]).isCloseTo(20.0, within(0.1));
+    assertThat(entities.getFirst().getLocation()[0]).isCloseTo(20.0, within(0.1));
   }
 
   private MorphiaQuery<GeoEntity> query() {

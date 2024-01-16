@@ -38,9 +38,11 @@ public class TupleTest extends AbstractQueryTest {
                     .contains(Projections.tuple(cat.mate, cat.birthdate)));
 
     assertToString(
-        "(select cat.birthdate, cat.name, cat.mate from Cat cat "
-            + "where (cat.mate, cat.birthdate) in "
-            + "(select cat.mate, max(cat.birthdate) from Cat cat group by cat.mate))",
+        """
+        (select cat.birthdate, cat.name, cat.mate from Cat cat \
+        where (cat.mate, cat.birthdate) in \
+        (select cat.mate, max(cat.birthdate) from Cat cat group by cat.mate))\
+        """,
         subQuery);
   }
 }

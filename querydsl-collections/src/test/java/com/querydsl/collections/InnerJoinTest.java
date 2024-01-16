@@ -55,7 +55,7 @@ public class InnerJoinTest extends AbstractQueryTest {
             .where(cat.name.eq(kitten.name))
             .orderBy(cat.name.asc())
             .fetch();
-    assertThat(rv.get(0).getName()).isEqualTo("Bob");
+    assertThat(rv.getFirst().getName()).isEqualTo("Bob");
     assertThat(rv.get(1).getName()).isEqualTo("Kate");
   }
 
@@ -79,7 +79,7 @@ public class InnerJoinTest extends AbstractQueryTest {
             .where(cat.name.eq(kitten.name))
             .orderBy(cat.name.asc())
             .fetch();
-    assertThat(rv.get(0).getName()).isEqualTo("Bob");
+    assertThat(rv.getFirst().getName()).isEqualTo("Bob");
     assertThat(rv.get(1).getName()).isEqualTo("Kate");
   }
 }

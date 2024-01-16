@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.QueryMutability;
-import com.querydsl.jpa.domain.sql.SAnimal;
+import com.querydsl.jpa.domain.sql.SAnimal_;
 import com.querydsl.jpa.hibernate.sql.HibernateSQLQuery;
 import com.querydsl.sql.DerbyTemplates;
 import com.querydsl.sql.SQLTemplates;
@@ -50,14 +50,14 @@ public class QueryMutabilityTest {
           IllegalAccessException,
           InvocationTargetException,
           IOException {
-    SAnimal cat = new SAnimal("cat");
+    SAnimal_ cat = new SAnimal_("cat");
     HibernateSQLQuery<?> query = query().from(cat);
     new QueryMutability(query).test(cat.id, cat.name);
   }
 
   @Test
   public void clone_() {
-    SAnimal cat = new SAnimal("cat");
+    SAnimal_ cat = new SAnimal_("cat");
     HibernateSQLQuery<?> query = query().from(cat).where(cat.name.isNotNull());
     HibernateSQLQuery<?> query2 = query.clone(session);
     assertThat(query2.getMetadata().getJoins()).isEqualTo(query.getMetadata().getJoins());

@@ -22,7 +22,7 @@ import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -110,7 +110,7 @@ public class TypeTest implements InvocationHandler {
     valueAndType.add(Pair.of(true, new YesNoType()));
     valueAndType.add(Pair.of(new Timestamp(0), new TimestampType()));
     valueAndType.add(Pair.of(new Time(0), new TimeType()));
-    valueAndType.add(Pair.of(new URL("http://www.mysema.com"), new URLType()));
+    valueAndType.add(Pair.of(URI.create("http://www.mysema.com").toURL(), new URLType()));
     valueAndType.add(Pair.of(new java.util.Date(), new UtilDateType()));
 
     valueAndType.add(Pair.of(ZonedDateTime.now(), new ZonedDateTimeType()));

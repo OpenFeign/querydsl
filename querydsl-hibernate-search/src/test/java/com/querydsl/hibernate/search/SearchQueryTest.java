@@ -78,7 +78,7 @@ public class SearchQueryTest extends AbstractQueryTest {
     List<User> list = query().where(filter).fetch();
     assertThat(list).hasSize(1);
     User u = query().where(filter).fetchOne();
-    assertThat(list.get(0)).isEqualTo(u);
+    assertThat(list.getFirst()).isEqualTo(u);
   }
 
   @Test(expected = NonUniqueResultException.class)

@@ -85,8 +85,10 @@ public class MySQLQueryFactoryTest {
             SQLExpressions.set(QSurvey.survey.name, "B"));
     assertThat(clause.toString())
         .isEqualTo(
-            "insert into SURVEY\n"
-                + "values () on duplicate key update SURVEY.ID = ?, SURVEY.NAME = ?");
+            """
+            insert into SURVEY
+            values () on duplicate key update SURVEY.ID = ?, SURVEY.NAME = ?\
+            """);
   }
 
   @Test
@@ -96,8 +98,10 @@ public class MySQLQueryFactoryTest {
             QSurvey.survey, SQLExpressions.set(QSurvey.survey.name, QSurvey.survey.name));
     assertThat(clause.toString())
         .isEqualTo(
-            "insert into SURVEY\n"
-                + "values () on duplicate key update SURVEY.NAME = values(SURVEY.NAME)");
+            """
+            insert into SURVEY
+            values () on duplicate key update SURVEY.NAME = values(SURVEY.NAME)\
+            """);
   }
 
   @Test

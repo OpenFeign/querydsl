@@ -30,14 +30,12 @@ public class QueryInit6Test {
     @Transient
     public Container getContainer() {
       Component temp = this.parent;
-      if (this.parent instanceof HibernateProxy) {
-        temp =
-            (Component)
-                ((HibernateProxy) this.parent).getHibernateLazyInitializer().getImplementation();
+      if (this.parent instanceof HibernateProxy proxy) {
+        temp = (Component) proxy.getHibernateLazyInitializer().getImplementation();
       }
 
-      if (temp instanceof Container) {
-        return (Container) temp;
+      if (temp instanceof Container container) {
+        return container;
       } else {
         if (!temp.isRoot()) {
           return temp.getParent().getContainer();

@@ -12,15 +12,14 @@ services:
         condition: service_healthy
 
   mysql:
-    image: mysql:8
+    image: mysql:5.6.38
     ports:
       - "3306:3306"
-    volumes:
-      - ./db/mysql.sh:/docker-entrypoint-initdb.d/mysql.sh
     environment:
       - MYSQL_ROOT_PASSWORD=querydsl
       - MYSQL_USER=querydsl
       - MYSQL_PASSWORD=querydsl
+      - MYSQL_DATABASE=querydsl
 
   postgresql:
     image: postgis/postgis:16-3.4-alpine

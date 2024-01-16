@@ -215,7 +215,7 @@ public class UnionBase extends AbstractBaseTest {
 
     List<Tuple> list = query().union(sq1, sq2).list();
     assertThat(list).hasSize(2);
-    assertThat(list.get(0) != null).isTrue();
+    assertThat(list.getFirst() != null).isTrue();
     assertThat(list.get(1) != null).isTrue();
   }
 
@@ -244,7 +244,7 @@ public class UnionBase extends AbstractBaseTest {
 
     List<Integer> list = query().union(sq1, sq2).list();
     assertThat(list).hasSize(2);
-    assertThat(list.get(0) != null).isTrue();
+    assertThat(list.getFirst() != null).isTrue();
     assertThat(list.get(1) != null).isTrue();
   }
 

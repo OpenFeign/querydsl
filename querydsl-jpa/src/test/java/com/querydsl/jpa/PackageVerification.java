@@ -42,7 +42,10 @@ public class PackageVerification {
     URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
     oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core
     oneJarClassLoader.loadClass(CodeWriter.class.getName()); // codegen
-    oneJarClassLoader.loadClass(CodegenModule.class.getName()).newInstance();
+    oneJarClassLoader
+        .loadClass(CodegenModule.class.getName())
+        .getDeclaredConstructor()
+        .newInstance();
     oneJarClassLoader.loadClass(Entity.class.getName()); // jpa
     Class<?> processor;
     if (hibernateDeps) {
@@ -52,7 +55,7 @@ public class PackageVerification {
       processor = JPAAnnotationProcessor.class;
     }
     Class cl = oneJarClassLoader.loadClass(processor.getName()); // querydsl-apt
-    cl.newInstance();
+    cl.getDeclaredConstructor().newInstance();
     String resourceKey = "META-INF/services/javax.annotation.processing.Processor";
     assertThat(new Scanner(oneJarClassLoader.findResource(resourceKey).openStream()).nextLine())
         .isEqualTo(processor.getName());

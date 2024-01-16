@@ -81,9 +81,9 @@ public class ExtendedBeanSerializerTest {
 
     Class<?> cls = Class.forName(FULL_NAME, true, classLoader);
     ReflectionHelper reflection = new ReflectionHelper(cls);
-    Object obj1 = cls.newInstance();
-    Object obj1a = cls.newInstance();
-    Object obj2 = cls.newInstance();
+    Object obj1 = cls.getDeclaredConstructor().newInstance();
+    Object obj1a = cls.getDeclaredConstructor().newInstance();
+    Object obj2 = cls.getDeclaredConstructor().newInstance();
     reflection.setValues(obj1, 1, "##", "X");
     reflection.setValues(obj1a, 1, "##", null);
     reflection.setValues(obj2, 2, "--", "Y");
