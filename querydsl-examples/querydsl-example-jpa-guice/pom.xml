@@ -83,6 +83,7 @@
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-apt</artifactId>
       <version>${project.version}</version>
+      <classifier>jpa</classifier>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
@@ -99,17 +100,6 @@
 
   <build>
     <finalName>querydsl-example-jpa-guice</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <annotationProcessors>
-            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-          </annotationProcessors>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
 
 </project>
