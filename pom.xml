@@ -171,7 +171,7 @@
     <jmh.version>1.37</jmh.version>
     <kotlin.version>1.9.22</kotlin.version>
     <dokka.version>1.9.10</dokka.version>
-    <scala.full.version>2.11.12</scala.full.version>
+    <scala.version>2.11.12</scala.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
     <osgi.import.package.root>*</osgi.import.package.root>
