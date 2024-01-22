@@ -489,6 +489,7 @@
                     <exclude>org.slf4j:slf4j-api:*:*:compile</exclude>
                     <exclude>org.slf4j:slf4j-log4j12:*:*:compile</exclude>
                     <exclude>junit:junit:*:*:*</exclude>
+                    <exclude>cglib:cglib:*:*:*</exclude>
                   </excludes>
                   <searchTransitive>false</searchTransitive>
                 </bannedDependencies>

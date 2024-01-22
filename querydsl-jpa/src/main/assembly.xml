@@ -26,7 +26,6 @@
     <dependencySet>
       <unpack>true</unpack>
       <excludes>
-        <exclude>cglib:cglib</exclude>
         <exclude>com.querydsl:querydsl-sql</exclude>
         <exclude>com.querydsl:querydsl-jpa</exclude>
       </excludes>
