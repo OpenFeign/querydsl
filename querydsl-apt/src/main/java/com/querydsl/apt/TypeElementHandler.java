@@ -172,7 +172,9 @@ public class TypeElementHandler {
       inits = Arrays.asList(annotations.getAnnotation(QueryInit.class).value());
     }
 
-    return new Property(entityType, name, propertyType, inits);
+    Property props = new Property(entityType, name, propertyType, inits);
+    Arrays.stream(annotations.getAnnotations()).forEach(props::addAnnotation);
+    return props;
   }
 
   public EntityType handleProjectionType(TypeElement e, boolean onlyAnnotatedConstructors) {

@@ -29,13 +29,14 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.domain.*;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.Parent;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.QCatSummary;
-import com.querydsl.jpa.domain.QChild;
 import com.querydsl.jpa.domain.QGroup;
 import com.querydsl.jpa.domain.QParent;
+import com.querydsl.jpa.domain.UserRole;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
@@ -60,6 +61,7 @@ import org.junit.runner.RunWith;
 public class JPABase extends AbstractJPATest implements JPATest {
 
   private static final QCat cat = QCat.cat;
+  private static final QUser user = QUser.user;
 
   @Rule @ClassRule public static TestRule targetRule = new TargetRule();
 
@@ -329,5 +331,23 @@ public class JPABase extends AbstractJPATest implements JPATest {
         query().select(cat).from(cat).transform(GroupBy.groupBy(cat.alive).as(list(cat)));
 
     assertThat(transform).hasSize(1);
+  }
+
+  @Test
+  public void converterSet_anyEq() {
+    List<User> rows =
+        query().from(user).select(user).where(user.roles.any().eq(UserRole.ADMIN)).fetch();
+    for (User row : rows) {
+      assertThat(row).isNotNull();
+    }
+  }
+
+  @Test
+  public void converterSet_contains() {
+    List<User> rows =
+        query().from(user).select(user).where(user.roles.contains(UserRole.ADMIN)).fetch();
+    for (User row : rows) {
+      assertThat(row).isNotNull();
+    }
   }
 }
