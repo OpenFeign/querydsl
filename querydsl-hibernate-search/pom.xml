@@ -52,10 +52,6 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <groupId>cglib</groupId>
-          <artifactId>cglib</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>asm</groupId>
           <artifactId>asm</artifactId>
         </exclusion>
