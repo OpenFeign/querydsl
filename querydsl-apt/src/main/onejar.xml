@@ -25,12 +25,6 @@
   <dependencySets>
     <dependencySet>
       <unpack>true</unpack>
-      <excludes>
-        <exclude>cglib:cglib</exclude>
-      </excludes>
-    </dependencySet>
-    <dependencySet>
-      <unpack>true</unpack>
       <scope>provided</scope>
       <includes>
         <include>com.querydsl:*</include>
