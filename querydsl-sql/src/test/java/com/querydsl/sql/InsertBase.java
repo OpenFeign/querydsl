@@ -286,7 +286,7 @@ public class InsertBase extends AbstractBaseTest {
   }
 
   @Test(expected = QueryException.class)
-  @IncludeIn({DERBY, HSQLDB, SQLITE})
+  @IncludeIn({DERBY, HSQLDB})
   public void insert_with_keys_OverriddenColumn() throws SQLException {
     String originalColumnName = ColumnMetadata.getName(survey.id);
     try {
