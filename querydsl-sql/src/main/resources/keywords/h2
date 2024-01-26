@@ -1,4 +1,5 @@
 # source https://www.h2database.com/html/advanced.html#keywords
+_ROWID_
 ALL
 AND
 ANY
@@ -71,7 +72,6 @@ RANGE
 REGEXP
 RIGHT
 ROW
-_ROWID_
 ROWNUM
 ROWS
 SECOND
