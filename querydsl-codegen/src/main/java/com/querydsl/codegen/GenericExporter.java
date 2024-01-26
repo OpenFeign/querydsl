@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -386,7 +387,9 @@ public class GenericExporter {
   }
 
   private void addConstructors(Class<?> cl, EntityType type) {
-    for (Constructor<?> constructor : cl.getConstructors()) {
+    final Constructor<?>[] constructors = cl.getConstructors();
+    Arrays.sort(constructors, Comparator.comparing(Constructor::toString));
+    for (Constructor<?> constructor : constructors) {
       if (constructor.isAnnotationPresent(QueryProjection.class)) {
         List<Parameter> parameters = new ArrayList<>();
         for (int i = 0; i < constructor.getParameterTypes().length; i++) {
