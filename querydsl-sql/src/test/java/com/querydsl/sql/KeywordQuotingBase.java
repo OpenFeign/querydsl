@@ -17,17 +17,21 @@ package com.querydsl.sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.base.Splitter;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.dsl.BooleanPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ddl.CreateTableClause;
 import com.querydsl.sql.ddl.DropTableClause;
+import java.sql.SQLException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class KeywordQuotingBase extends AbstractBaseTest {
+
+  private static Splitter COMMA = Splitter.on(',');
 
   private static class Quoting extends RelationalPathBase<Quoting> {
 
@@ -79,5 +83,36 @@ public class KeywordQuotingBase extends AbstractBaseTest {
                 .select(from.from)
                 .fetchFirst())
         .isEqualTo("from");
+  }
+
+  @Test
+  public void validateKeywordsCompleteness() throws SQLException {
+    var keywords =
+        switch (target) {
+          case CUBRID -> Keywords.CUBRID;
+          case DB2 -> Keywords.DB2;
+          case DERBY -> Keywords.DERBY;
+          case FIREBIRD -> Keywords.FIREBIRD;
+          case H2 -> Keywords.H2;
+          case HSQLDB -> Keywords.HSQLDB;
+          case LUCENE -> Keywords.DEFAULT;
+          case MEM -> Keywords.DEFAULT;
+          case MYSQL -> Keywords.MYSQL;
+          case ORACLE -> Keywords.ORACLE;
+          case POSTGRESQL -> Keywords.POSTGRESQL;
+          case SQLITE -> Keywords.SQLITE;
+          case SQLSERVER -> Keywords.SQLSERVER2012;
+          case TERADATA -> Keywords.DEFAULT;
+        };
+
+    var driverKeyWords =
+        COMMA
+            .splitToStream(connection.getMetaData().getSQLKeywords())
+            .filter(w -> !w.isBlank())
+            .map(String::toUpperCase)
+            .map(String::strip)
+            .toList();
+
+    assertThat(keywords).containsAll(driverKeyWords);
   }
 }
