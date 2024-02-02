@@ -217,6 +217,27 @@ where ?1 in user.roles
   }
 
   @Test
+  public void where_in2() {
+    QEmployee employee = QEmployee.employee;
+
+    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, employee);
+    md.setProjection(employee);
+    md.addWhere(employee.lastName.eq("Smith"));
+    md.addWhere(employee.jobFunctions.contains(JobFunction.CODER));
+    serializer.serialize(md, false, null);
+    assertThat(serializer.toString())
+        .isEqualToIgnoringWhitespace(
+            """
+			  select employee
+			  from Employee employee
+			  where employee.lastName = ?1
+			  and ?2 member of employee.jobFunctions
+			  """);
+  }
+
+  @Test
   public void in() {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.numberPath(Integer.class, "id").in(Arrays.asList(1, 2)));

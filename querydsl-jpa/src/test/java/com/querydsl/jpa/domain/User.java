@@ -23,7 +23,7 @@ import java.util.Set;
 
 /** The Class User. */
 @Entity
-@Table(name = "userc")
+@Table(name = "user_")
 public class User {
   @ManyToOne Company company;
 
@@ -32,6 +32,6 @@ public class User {
   String userName, firstName, lastName;
 
   @Convert(converter = UserRolesConverter.class)
-  @Column(columnDefinition = "TEXT")
+  @Column(columnDefinition = "varchar(50)")
   Set<UserRole> roles;
 }

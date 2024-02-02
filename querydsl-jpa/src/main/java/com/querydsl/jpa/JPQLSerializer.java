@@ -474,6 +474,8 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     } else if (operator == Ops.IN || operator == Ops.NOT_IN) {
       if (args.get(1) instanceof ElementCollectionPath) {
         visitAnyInPath(type, operator, args);
+      } else if (args.get(0) instanceof Path && args.get(1) instanceof Path) {
+        visitAnyInPath(type, operator, args);
       } else if (args.get(1) instanceof Path) {
         super.visitOperation(type, operator, args);
       } else if (args.get(0) instanceof Path && args.get(1) instanceof Constant<?>) {
