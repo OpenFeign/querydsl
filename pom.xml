@@ -130,7 +130,7 @@
     <main.java.version>11</main.java.version>
     <latest.java.version>21</latest.java.version>
 
-    <git-code-format-maven-plugin.version>5.1</git-code-format-maven-plugin.version>
+    <git-code-format-maven-plugin.version>5.3</git-code-format-maven-plugin.version>
 
     <junit.version>5.10.1</junit.version>
     <ecj.version>3.33.0</ecj.version>
