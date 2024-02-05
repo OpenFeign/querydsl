@@ -304,7 +304,7 @@ import com.querydsl.core.annotations.Config;
 
         <para>
             Notice that you need to use a proper classifier when defining dependency
-            to <code>com.querydsl:querydsl-apt</code>. Those additional artifacts
+            to <code>io.github.openfeign.querydsl:querydsl-apt</code>. Those additional artifacts
             define the annotation processor to be used in
             <code>META-INF/services/javax.annotation.processing.Processor</code>.
         </para>
@@ -580,7 +580,7 @@ public class QTimestamp extends DateTimePath<java.sql.Timestamp> {
 
         <para>To make GenericExporter available add a dependency to the querydsl-codegen
             module to your project, or to be more precise
-            <code>com.querydsl:querydsl-codegen:${querydsl.version}</code>.
+            <code>io.github.openfeign.querydsl:querydsl-codegen:${querydsl.version}</code>.
         </para>
 
         <para>Below is an example for JPA</para>

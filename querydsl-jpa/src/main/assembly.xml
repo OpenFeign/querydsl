@@ -26,15 +26,15 @@
     <dependencySet>
       <unpack>true</unpack>
       <excludes>
-        <exclude>com.querydsl:querydsl-sql</exclude>
-        <exclude>com.querydsl:querydsl-jpa</exclude>
+        <exclude>io.github.openfeign.querydsl:querydsl-sql</exclude>
+        <exclude>io.github.openfeign.querydsl:querydsl-jpa</exclude>
       </excludes>
     </dependencySet>
     <dependencySet>
       <unpack>true</unpack>
       <scope>provided</scope>
       <includes>
-        <include>com.querydsl:*</include>
+        <include>io.github.openfeign.querydsl:*</include>
         <include>com.querydsl.codegen.utils:*</include>
         <include>org.hibernate.jakarta.persistence:*</include>
       </includes>

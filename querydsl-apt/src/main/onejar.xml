@@ -27,7 +27,7 @@
       <unpack>true</unpack>
       <scope>provided</scope>
       <includes>
-        <include>com.querydsl:*</include>
+        <include>io.github.openfeign.querydsl:*</include>
       </includes>
     </dependencySet>
   </dependencySets>
