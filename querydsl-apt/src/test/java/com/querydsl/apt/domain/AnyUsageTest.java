@@ -13,14 +13,14 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class AnyUsageTest {
@@ -56,8 +56,8 @@ public class AnyUsageTest {
   @Test
   public void test() {
     QAnyUsageTest_Dealer dealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
-    assertNotNull(dealer);
-    assertNotNull(dealer.company);
+    assertThat(dealer).isNotNull();
+    assertThat(dealer.company).isNotNull();
   }
 
   @Test
@@ -66,7 +66,7 @@ public class AnyUsageTest {
     companies.add(new Company());
     QAnyUsageTest_Dealer qDealer = QAnyUsageTest_Dealer.dealer;
     BooleanExpression expression = qDealer.company.in(companies);
-    assertNotNull(expression);
+    assertThat(expression).isNotNull();
   }
 
   @Test
@@ -75,6 +75,6 @@ public class AnyUsageTest {
     companies.add(new Company());
     QAnyUsageTest_Dealer qDealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
     BooleanExpression expression = qDealer.company.in(companies);
-    assertNotNull(expression);
+    assertThat(expression).isNotNull();
   }
 }

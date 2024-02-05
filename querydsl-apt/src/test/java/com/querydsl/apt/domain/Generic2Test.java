@@ -1,9 +1,9 @@
 package com.querydsl.apt.domain;
 
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
 import org.junit.Test;
 
 public class Generic2Test extends AbstractTest {

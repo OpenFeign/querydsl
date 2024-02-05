@@ -8,8 +8,8 @@ import com.querydsl.core.types.dsl.BooleanPath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.RelationalPathBase;
+import jakarta.annotation.Generated;
 import java.sql.Types;
-import javax.annotation.Generated;
 
 /** QNumberTest is a Querydsl query type for QNumberTest */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

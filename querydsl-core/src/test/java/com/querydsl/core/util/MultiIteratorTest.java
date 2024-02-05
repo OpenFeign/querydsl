@@ -14,7 +14,8 @@
 package com.querydsl.core.util;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.mysema.commons.lang.IteratorAdapter;
 import java.util.*;
@@ -114,25 +115,25 @@ public class MultiIteratorTest {
     MultiIterator<Integer> iterator = new MultiIterator<Integer>(asList(list1, list2));
     List<Object[]> list = IteratorAdapter.asList(iterator);
 
-    assertEquals(asList(1, 10), asList(list.get(0)));
-    assertEquals(asList(1, 20), asList(list.get(1)));
-    assertEquals(asList(1, 30), asList(list.get(2)));
-    assertEquals(asList(2, 10), asList(list.get(3)));
-    assertEquals(asList(2, 20), asList(list.get(4)));
-    assertEquals(asList(2, 30), asList(list.get(5)));
-    assertEquals(asList(3, 10), asList(list.get(6)));
-    assertEquals(asList(3, 20), asList(list.get(7)));
-    assertEquals(asList(3, 30), asList(list.get(8)));
-    assertEquals(asList(4, 10), asList(list.get(9)));
-    assertEquals(asList(4, 20), asList(list.get(10)));
-    assertEquals(asList(4, 30), asList(list.get(11)));
+    assertThat(asList(list.getFirst())).isEqualTo(asList(1, 10));
+    assertThat(asList(list.get(1))).isEqualTo(asList(1, 20));
+    assertThat(asList(list.get(2))).isEqualTo(asList(1, 30));
+    assertThat(asList(list.get(3))).isEqualTo(asList(2, 10));
+    assertThat(asList(list.get(4))).isEqualTo(asList(2, 20));
+    assertThat(asList(list.get(5))).isEqualTo(asList(2, 30));
+    assertThat(asList(list.get(6))).isEqualTo(asList(3, 10));
+    assertThat(asList(list.get(7))).isEqualTo(asList(3, 20));
+    assertThat(asList(list.get(8))).isEqualTo(asList(3, 30));
+    assertThat(asList(list.get(9))).isEqualTo(asList(4, 10));
+    assertThat(asList(list.get(10))).isEqualTo(asList(4, 20));
+    assertThat(asList(list.get(11))).isEqualTo(asList(4, 30));
   }
 
   protected void assertIteratorEquals(Iterator<Object[]> a, Iterator<Object[]> b) {
     while (a.hasNext()) {
-      assertEquals(Arrays.asList(a.next()), Arrays.asList(b.next()));
+      assertThat(Arrays.asList(b.next())).isEqualTo(Arrays.asList(a.next()));
     }
-    assertFalse(b.hasNext());
+    assertThat(b.hasNext()).isFalse();
   }
 
   protected Object[] row(Object... row) {

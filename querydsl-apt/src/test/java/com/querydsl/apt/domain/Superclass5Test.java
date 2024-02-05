@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.types.PathMetadataFactory;
@@ -36,14 +36,14 @@ public class Superclass5Test {
   public void superClass_properties() {
     QSuperclass5Test_SuperClass qtype =
         new QSuperclass5Test_SuperClass(PathMetadataFactory.forVariable("var"));
-    assertNotNull(qtype.superClassProperty);
+    assertThat(qtype.superClassProperty).isNotNull();
   }
 
   @Test
   public void entity_properties() {
     QSuperclass5Test_Embeddable qtype =
         new QSuperclass5Test_Embeddable(PathMetadataFactory.forVariable("var"));
-    assertNotNull(qtype.superClassProperty);
-    assertNotNull(qtype.embeddableProperty);
+    assertThat(qtype.superClassProperty).isNotNull();
+    assertThat(qtype.embeddableProperty).isNotNull();
   }
 }

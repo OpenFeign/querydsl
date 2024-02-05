@@ -13,8 +13,8 @@
  */
 package com.querydsl.apt.domain;
 
+import jakarta.persistence.Entity;
 import java.io.Serializable;
-import javax.persistence.Entity;
 import org.junit.Ignore;
 
 @Ignore

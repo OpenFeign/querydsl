@@ -1,7 +1,6 @@
 package com.querydsl.sql.dml;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Path;
 import com.querydsl.sql.domain.QEmployee;
@@ -20,21 +19,21 @@ public class AnnotationMapperTest extends AbstractMapperTest {
     names._lastname = "B";
 
     Map<Path<?>, Object> values = AnnotationMapper.DEFAULT.createMap(emp, names);
-    assertEquals(3, values.size());
-    assertEquals(names._id, values.get(emp.id));
-    assertEquals(names._firstname, values.get(emp.firstname));
-    assertEquals(names._lastname, values.get(emp.lastname));
+    assertThat(values).hasSize(3);
+    assertThat(values).containsEntry(emp.id, names._id);
+    assertThat(values).containsEntry(emp.firstname, names._firstname);
+    assertThat(values).containsEntry(emp.lastname, names._lastname);
   }
 
   @Test
   public void extract_failure() {
     Map<Path<?>, Object> values = AnnotationMapper.DEFAULT.createMap(emp, employee);
-    assertTrue(values.isEmpty());
+    assertThat(values.isEmpty()).isTrue();
   }
 
   @Test
   public void extract2() {
     Map<Path<?>, Object> values = AnnotationMapper.DEFAULT.createMap(emp, new EmployeeX());
-    assertTrue(values.isEmpty());
+    assertThat(values.isEmpty()).isTrue();
   }
 }

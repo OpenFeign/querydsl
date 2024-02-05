@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import org.junit.Ignore;
 
 @Ignore

@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
@@ -41,21 +41,23 @@ public class StringHandlingTest extends AbstractQueryTest {
         Arrays.asList("petER - PETer", "THomas - thOMAS", "joHAN - JOhan").iterator();
     for (Tuple arr :
         query().from(a, data1).from(b, data2).where(a.equalsIgnoreCase(b)).select(a, b).fetch()) {
-      assertEquals(res.next(), arr.get(a) + " - " + arr.get(b));
+      assertThat(arr.get(a) + " - " + arr.get(b)).isEqualTo(res.next());
     }
   }
 
   @Test
   public void startsWithIgnoreCase() {
-    assertEquals(
-        2, CollQueryFactory.from(a, data).where(a.startsWithIgnoreCase("AB")).fetchCount());
-    assertEquals(
-        2, CollQueryFactory.from(a, data).where(a.startsWithIgnoreCase("ab")).fetchCount());
+    assertThat(CollQueryFactory.from(a, data).where(a.startsWithIgnoreCase("AB")).fetchCount())
+        .isEqualTo(2);
+    assertThat(CollQueryFactory.from(a, data).where(a.startsWithIgnoreCase("ab")).fetchCount())
+        .isEqualTo(2);
   }
 
   @Test
   public void endsWithIgnoreCase() {
-    assertEquals(2, CollQueryFactory.from(a, data).where(a.endsWithIgnoreCase("BC")).fetchCount());
-    assertEquals(2, CollQueryFactory.from(a, data).where(a.endsWithIgnoreCase("bc")).fetchCount());
+    assertThat(CollQueryFactory.from(a, data).where(a.endsWithIgnoreCase("BC")).fetchCount())
+        .isEqualTo(2);
+    assertThat(CollQueryFactory.from(a, data).where(a.endsWithIgnoreCase("bc")).fetchCount())
+        .isEqualTo(2);
   }
 }

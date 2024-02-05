@@ -315,12 +315,20 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   private void processProjectionTypes(Set<TypeElement> elements) {
     Set<Element> visited = new HashSet<Element>();
     for (Element element : getElements(QueryProjection.class)) {
-      Element parent = element.getEnclosingElement();
-      if (!elements.contains(parent) && !visited.contains(parent)) {
-        EntityType model = elementHandler.handleProjectionType((TypeElement) parent);
-        registerTypeElement(model.getFullName(), (TypeElement) parent);
+      if (element.getKind() == ElementKind.CONSTRUCTOR) {
+        Element parent = element.getEnclosingElement();
+        if (!elements.contains(parent) && !visited.contains(parent)) {
+          EntityType model = elementHandler.handleProjectionType((TypeElement) parent, true);
+          registerTypeElement(model.getFullName(), (TypeElement) parent);
+          context.projectionTypes.put(model.getFullName(), model);
+          visited.add(parent);
+        }
+      }
+      if (element.getKind().isClass() && !visited.contains(element)) {
+        EntityType model = elementHandler.handleProjectionType((TypeElement) element, false);
+        registerTypeElement(model.getFullName(), (TypeElement) element);
         context.projectionTypes.put(model.getFullName(), model);
-        visited.add(parent);
+        visited.add(element);
       }
     }
   }
@@ -372,7 +380,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     while (iterator.hasNext()) {
       TypeElement element = iterator.next();
       String name = element.getQualifiedName().toString();
-      if (name.startsWith("java.") || name.startsWith("org.joda.time.")) {
+      if (name.startsWith("java.")) {
         iterator.remove();
       } else {
         boolean annotated = false;

@@ -13,9 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Param;
 import org.junit.Test;
@@ -30,20 +28,21 @@ public class ParamTest {
 
   @Test
   public void identity() {
-    assertEquals(param11, param12);
-    assertFalse(param11.equals(param2));
-    assertFalse(param11.equals(param3));
-    assertFalse(param11.equals(param4));
+    assertThat(param12).isEqualTo(param11);
+    assertThat(param11.equals(param2)).isFalse();
+    assertThat(param11.equals(param3)).isFalse();
+    assertThat(param11.equals(param4)).isFalse();
   }
 
   @Test
   public void anon() {
-    assertNotNull(param4.getName());
+    assertThat(param4.getName()).isNotNull();
   }
 
   @Test
   public void getNotSetMessage() {
-    assertEquals("The parameter param1 needs to be set", param11.getNotSetMessage());
-    assertEquals("A parameter of type java.lang.String was not set", param4.getNotSetMessage());
+    assertThat(param11.getNotSetMessage()).isEqualTo("The parameter param1 needs to be set");
+    assertThat(param4.getNotSetMessage())
+        .isEqualTo("A parameter of type java.lang.String was not set");
   }
 }

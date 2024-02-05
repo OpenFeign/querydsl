@@ -1,6 +1,6 @@
 package com.querydsl.example.dao;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.dto.Supplier;
 import java.util.List;
@@ -14,12 +14,12 @@ public class SupplierDaoTest extends AbstractDaoTest {
   @Test
   public void findAll() {
     List<Supplier> suppliers = supplierDao.findAll();
-    assertFalse(suppliers.isEmpty());
+    assertThat(suppliers).isNotEmpty();
   }
 
   @Test
   public void findById() {
-    assertNotNull(supplierDao.findById(1));
+    assertThat(supplierDao.findById(1)).isNotNull();
   }
 
   @Test
@@ -32,8 +32,8 @@ public class SupplierDaoTest extends AbstractDaoTest {
   public void delete() {
     Supplier supplier = new Supplier();
     supplierDao.save(supplier);
-    assertNotNull(supplier.getId());
+    assertThat(supplier.getId()).isNotNull();
     supplierDao.delete(supplier);
-    assertNull(supplierDao.findById(supplier.getId()));
+    assertThat(supplierDao.findById(supplier.getId())).isNull();
   }
 }

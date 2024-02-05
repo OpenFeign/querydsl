@@ -13,17 +13,16 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.jpa.domain.QAnimal;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.sql.SQLExpressions;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +54,7 @@ public class JPAQueryFactoryTest {
 
   @Test
   public void query() {
-    assertNotNull(queryFactory.query());
+    assertThat(queryFactory.query()).isNotNull();
   }
 
   @Test
@@ -78,12 +77,12 @@ public class JPAQueryFactoryTest {
 
   @Test
   public void from() {
-    assertNotNull(queryFactory.from(QAnimal.animal));
+    assertThat(queryFactory.from(QAnimal.animal)).isNotNull();
   }
 
   @Test
   public void delete() {
-    assertNotNull(queryFactory.delete(QAnimal.animal));
+    assertThat(queryFactory.delete(QAnimal.animal)).isNotNull();
   }
 
   @Test
@@ -98,14 +97,14 @@ public class JPAQueryFactoryTest {
     EasyMock.expect(mock.unwrap(EasyMock.anyObject(Class.class))).andReturn(mock).atLeastOnce();
     EasyMock.replay(mock, factoryMock);
 
-    assertNotNull(queryFactory3.delete(QAnimal.animal));
+    assertThat(queryFactory3.delete(QAnimal.animal)).isNotNull();
 
     EasyMock.verify(mock, factoryMock);
   }
 
   @Test
   public void update() {
-    assertNotNull(queryFactory.update(QAnimal.animal));
+    assertThat(queryFactory.update(QAnimal.animal)).isNotNull();
   }
 
   @Test
@@ -123,14 +122,14 @@ public class JPAQueryFactoryTest {
     EasyMock.expect(mock.unwrap(EasyMock.anyObject(Class.class))).andReturn(mock).atLeastOnce();
     EasyMock.replay(mock, factoryMock);
 
-    assertNotNull(queryFactory3.update(QAnimal.animal));
+    assertThat(queryFactory3.update(QAnimal.animal)).isNotNull();
 
     EasyMock.verify(mock, factoryMock);
   }
 
   @Test
   public void insert() {
-    assertNotNull(queryFactory.insert(QAnimal.animal));
+    assertThat(queryFactory.insert(QAnimal.animal)).isNotNull();
   }
 
   @Test
@@ -145,7 +144,7 @@ public class JPAQueryFactoryTest {
     EasyMock.expect(mock.unwrap(EasyMock.anyObject(Class.class))).andReturn(mock).atLeastOnce();
     EasyMock.replay(mock, factoryMock);
 
-    assertNotNull(queryFactory3.insert(QAnimal.animal));
+    assertThat(queryFactory3.insert(QAnimal.animal)).isNotNull();
 
     EasyMock.verify(mock, factoryMock);
   }
@@ -156,7 +155,7 @@ public class JPAQueryFactoryTest {
         .insert(QAnimal.animal)
         .columns(QAnimal.animal.id, QAnimal.animal.birthdate)
         .select(
-            SQLExpressions.select(QAnimal.animal.id, QAnimal.animal.birthdate)
+            JPAExpressions.select(QAnimal.animal.id, QAnimal.animal.birthdate)
                 .from(QAnimal.animal));
   }
 }

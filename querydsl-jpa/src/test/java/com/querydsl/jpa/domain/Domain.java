@@ -51,7 +51,6 @@ public final class Domain {
           Employee.class,
           Entity1.class,
           Entity2.class,
-          EvilType.class,
           Family.class,
           Foo.class,
           Formula.class,

@@ -1,8 +1,8 @@
 package com.querydsl.apt.domain;
 
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Transient;
 import java.io.File;
-import javax.persistence.Embeddable;
-import javax.persistence.Transient;
 
 @Embeddable
 public class FileAttachment {

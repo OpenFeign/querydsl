@@ -1,12 +1,12 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class AnyPathTest {
@@ -44,6 +44,6 @@ public class AnyPathTest {
 
   @Test
   public void anyPath() {
-    assertNotNull(authorFilter(new Student()));
+    assertThat(authorFilter(new Student())).isNotNull();
   }
 }

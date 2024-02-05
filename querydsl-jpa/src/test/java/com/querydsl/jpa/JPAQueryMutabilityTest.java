@@ -13,18 +13,19 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.QueryMutability;
 import com.querydsl.jpa.domain.Cat;
-import com.querydsl.jpa.domain.sql.SAnimal;
+import com.querydsl.jpa.domain.sql.SAnimal_;
 import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
 import com.querydsl.sql.DerbyTemplates;
 import com.querydsl.sql.SQLTemplates;
+import jakarta.persistence.EntityManager;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import javax.persistence.EntityManager;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,18 +58,18 @@ public class JPAQueryMutabilityTest implements JPATest {
     entityManager.persist(new Cat("Beck", 1));
     entityManager.flush();
 
-    SAnimal cat = new SAnimal("cat");
+    SAnimal_ cat = new SAnimal_("cat");
     JPASQLQuery<?> query = query().from(cat);
     new QueryMutability(query).test(cat.id, cat.name);
   }
 
   @Test
   public void clone_() {
-    SAnimal cat = new SAnimal("cat");
+    SAnimal_ cat = new SAnimal_("cat");
     JPASQLQuery<?> query = query().from(cat).where(cat.name.isNotNull());
     JPASQLQuery<?> query2 = query.clone(entityManager);
-    assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
-    assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
+    assertThat(query2.getMetadata().getJoins()).isEqualTo(query.getMetadata().getJoins());
+    assertThat(query2.getMetadata().getWhere()).isEqualTo(query.getMetadata().getWhere());
     query2.select(cat.id).fetch();
   }
 }

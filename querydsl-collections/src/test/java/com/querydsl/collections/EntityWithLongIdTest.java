@@ -1,7 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,33 +22,33 @@ public class EntityWithLongIdTest {
     query.where(root.id.eq(1000L));
 
     Long found = query.select(root.id).fetchFirst();
-    assertNotNull(found);
-    assertEquals(found.longValue(), 1000);
+    assertThat(found).isNotNull();
+    assertThat(1000).isEqualTo(found.longValue());
   }
 
   @Test
   public void cartesianEquals() {
     QEntityWithLongId root = new QEntityWithLongId("root1");
     QEntityWithLongId root2 = new QEntityWithLongId("root2");
-    assertEquals(
-        entities.size(),
-        new CollQuery<Void>()
-            .from(root, entities)
-            .from(root2, entities)
-            .where(root2.id.eq(root.id))
-            .fetchCount());
+    assertThat(
+            new CollQuery<Void>()
+                .from(root, entities)
+                .from(root2, entities)
+                .where(root2.id.eq(root.id))
+                .fetchCount())
+        .isEqualTo(entities.size());
   }
 
   @Test
   public void cartesianPlus1() {
     QEntityWithLongId root = new QEntityWithLongId("root1");
     QEntityWithLongId root2 = new QEntityWithLongId("root2");
-    assertEquals(
-        2,
-        new CollQuery<Void>()
-            .from(root, entities)
-            .from(root2, entities)
-            .where(root2.id.eq(root.id.add(1)))
-            .fetchCount());
+    assertThat(
+            new CollQuery<Void>()
+                .from(root, entities)
+                .from(root2, entities)
+                .where(root2.id.eq(root.id.add(1)))
+                .fetchCount())
+        .isEqualTo(2);
   }
 }

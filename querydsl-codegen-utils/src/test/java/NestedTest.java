@@ -1,4 +1,4 @@
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.support.ClassUtils;
@@ -11,11 +11,11 @@ public class NestedTest {
   @Test
   public void ClassUtils_getName() {
     String name = ClassUtils.getName(NestedTest.Inner.class);
-    assertEquals("NestedTest.Inner", name);
+    assertThat(name).isEqualTo("NestedTest.Inner");
   }
 
   @Test
   public void ClassType_getName() {
-    assertEquals("NestedTest.Inner", new ClassType(NestedTest.Inner.class).getFullName());
+    assertThat(new ClassType(NestedTest.Inner.class).getFullName()).isEqualTo("NestedTest.Inner");
   }
 }

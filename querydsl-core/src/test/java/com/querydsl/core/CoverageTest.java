@@ -14,7 +14,7 @@
 package com.querydsl.core;
 
 import static com.querydsl.core.alias.Alias.$;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.Expression;
@@ -85,8 +85,7 @@ public class CoverageTest {
     exprs.addAll(filters.map($(entity.getMap()), $(entity.getMap()), "", ""));
 
     for (Expression<?> e : exprs) {
-      if (e instanceof Operation) {
-        Operation<?> op = (Operation<?>) e;
+      if (e instanceof Operation op) {
         if (op.getArg(0) instanceof Operation) {
           usedOperators.add(((Operation<?>) op.getArg(0)).getOperator());
         } else if (op.getArgs().size() > 1 && op.getArg(1) instanceof Operation) {
@@ -140,7 +139,8 @@ public class CoverageTest {
       }
     }
 
-    assertTrue(
-        notContained.size() + " errors in processing, see log for details", notContained.isEmpty());
+    assertThat(notContained.isEmpty())
+        .as(notContained.size() + " errors in processing, see log for details")
+        .isTrue();
   }
 }

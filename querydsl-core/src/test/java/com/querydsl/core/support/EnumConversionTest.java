@@ -1,7 +1,7 @@
 package com.querydsl.core.support;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.querydsl.core.types.dsl.EnumPath;
 import com.querydsl.core.types.dsl.Expressions;
@@ -23,21 +23,21 @@ public class EnumConversionTest {
   public void nameForCharacter() {
     EnumPath<Color> color = Expressions.enumPath(Color.class, "path");
     EnumConversion<Color> conv = new EnumConversion<Color>(color);
-    assertEquals(Color.W, conv.newInstance('W'));
+    assertThat(conv.newInstance('W')).isEqualTo(Color.W);
   }
 
   @Test
   public void name() {
     EnumPath<Color> color = Expressions.enumPath(Color.class, "path");
     EnumConversion<Color> conv = new EnumConversion<Color>(color);
-    assertEquals(Color.BLUE, conv.newInstance("BLUE"));
+    assertThat(conv.newInstance("BLUE")).isEqualTo(Color.BLUE);
   }
 
   @Test
   public void ordinal() {
     EnumPath<Color> color = Expressions.enumPath(Color.class, "path");
     EnumConversion<Color> conv = new EnumConversion<Color>(color);
-    assertEquals(Color.RED, conv.newInstance(2));
+    assertThat(conv.newInstance(2)).isEqualTo(Color.RED);
   }
 
   @Test(expected = IllegalArgumentException.class)

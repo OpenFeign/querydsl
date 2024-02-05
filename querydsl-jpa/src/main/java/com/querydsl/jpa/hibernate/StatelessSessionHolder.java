@@ -31,12 +31,14 @@ public class StatelessSessionHolder implements SessionHolder {
   }
 
   @Override
+  @Deprecated
   public Query<?> createQuery(String queryString) {
     return session.createQuery(queryString);
   }
 
   @Override
+  @Deprecated
   public NativeQuery<?> createSQLQuery(String queryString) {
-    return session.createSQLQuery(queryString);
+    return session.createNativeQuery(queryString);
   }
 }

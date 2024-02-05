@@ -13,8 +13,7 @@
  */
 package com.querydsl.sql.types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.Pair;
 import java.lang.reflect.InvocationHandler;
@@ -23,14 +22,14 @@ import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import org.easymock.EasyMock;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 import org.junit.Test;
 
 public class TypeTest implements InvocationHandler {
@@ -111,13 +110,13 @@ public class TypeTest implements InvocationHandler {
     valueAndType.add(Pair.of(true, new YesNoType()));
     valueAndType.add(Pair.of(new Timestamp(0), new TimestampType()));
     valueAndType.add(Pair.of(new Time(0), new TimeType()));
-    valueAndType.add(Pair.of(new URL("http://www.mysema.com"), new URLType()));
+    valueAndType.add(Pair.of(URI.create("http://www.mysema.com").toURL(), new URLType()));
     valueAndType.add(Pair.of(new java.util.Date(), new UtilDateType()));
 
-    valueAndType.add(Pair.of(new DateTime(), new DateTimeType()));
-    valueAndType.add(Pair.of(new LocalDateTime(), new LocalDateTimeType()));
-    valueAndType.add(Pair.of(new LocalDate(), new LocalDateType()));
-    valueAndType.add(Pair.of(new LocalTime(), new LocalTimeType()));
+    valueAndType.add(Pair.of(ZonedDateTime.now(), new ZonedDateTimeType()));
+    valueAndType.add(Pair.of(LocalDateTime.now(), new LocalDateTimeType()));
+    valueAndType.add(Pair.of(LocalDate.now(), new LocalDateType()));
+    valueAndType.add(Pair.of(LocalTime.now(), new LocalTimeType()));
 
     valueAndType.add(Pair.of(Gender.MALE, new EnumByNameType<Gender>(Gender.class)));
     valueAndType.add(Pair.of(Gender.MALE, new EnumByOrdinalType<Gender>(Gender.class)));
@@ -131,9 +130,9 @@ public class TypeTest implements InvocationHandler {
     for (Pair pair : valueAndType) {
       value = null;
       Type type = (Type) pair.getSecond();
-      assertNull(type.toString(), type.getValue(resultSet, 0));
+      assertThat(type.getValue(resultSet, 0)).as(type.toString()).isNull();
       type.setValue(statement, 0, pair.getFirst());
-      assertEquals(type.toString(), pair.getFirst(), type.getValue(resultSet, 0));
+      assertThat(pair.getFirst()).isEqualTo(type.getValue(resultSet, 0)).as(type.toString());
     }
   }
 }

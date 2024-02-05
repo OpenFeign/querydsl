@@ -6,7 +6,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.PathInits;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QContent is a Querydsl query type for Content */
 @Generated("com.querydsl.codegen.EmbeddableSerializer")

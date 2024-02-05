@@ -20,9 +20,9 @@ import com.querydsl.jpa.HQLTemplates;
 import com.querydsl.jpa.Hibernate5Templates;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.OpenJPATemplates;
+import jakarta.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Map;
-import javax.persistence.EntityManager;
 
 /**
  * {@code JPAProvider} provides detection of the JPA provider based on the EntityManager instance

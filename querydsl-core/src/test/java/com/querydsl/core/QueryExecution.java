@@ -13,6 +13,8 @@
  */
 package com.querydsl.core;
 
+import static org.assertj.core.api.Assertions.fail;
+
 import com.querydsl.core.support.QueryBase;
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.Expression;
@@ -24,7 +26,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.junit.Assert;
 
 /**
  * The Class StandardTest.
@@ -204,9 +205,9 @@ public abstract class QueryExecution {
   }
 
   private void close(Fetchable p) {
-    if (p instanceof Closeable) {
+    if (p instanceof Closeable closeable) {
       try {
-        ((Closeable) p).close();
+        closeable.close();
       } catch (IOException e) {
         throw new QueryException(e);
       }
@@ -244,7 +245,7 @@ public abstract class QueryExecution {
       for (String e : errors) {
         buffer.append(e).append("\n");
       }
-      Assert.fail(buffer.toString());
+      fail("", buffer.toString());
     } else {
       System.out.println("Success with " + total + " tests");
     }

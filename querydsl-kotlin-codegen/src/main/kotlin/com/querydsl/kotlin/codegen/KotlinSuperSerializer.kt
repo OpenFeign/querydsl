@@ -15,8 +15,8 @@ package com.querydsl.kotlin.codegen
 
 import com.querydsl.codegen.SupertypeSerializer
 import com.querydsl.codegen.TypeMappings
-import javax.inject.Inject
-import javax.inject.Named
+import jakarta.inject.Inject
+import jakarta.inject.Named
 
 class KotlinSuperSerializer @Inject constructor(mappings: TypeMappings, @Named("keywords") keyword: Collection<String>) : KotlinEntitySerializer(mappings, keyword),
     SupertypeSerializer {

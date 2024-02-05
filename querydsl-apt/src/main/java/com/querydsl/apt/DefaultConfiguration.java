@@ -469,9 +469,10 @@ public class DefaultConfiguration implements Configuration {
   }
 
   @Override
-  public boolean isValidConstructor(ExecutableElement constructor) {
+  public boolean isValidConstructor(
+      ExecutableElement constructor, boolean onlyAnnotatedConstructors) {
     return constructor.getModifiers().contains(Modifier.PUBLIC)
-        && constructor.getAnnotation(QueryProjection.class) != null
+        && (!onlyAnnotatedConstructors || constructor.getAnnotation(QueryProjection.class) != null)
         && !constructor.getParameters().isEmpty();
   }
 

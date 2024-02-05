@@ -13,15 +13,15 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.domain.sql.SAnimal;
+import com.querydsl.jpa.domain.sql.SAnimal_;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.MySQLTemplates;
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import org.junit.Test;
 
 public class NativeSQLSerializerTest {
@@ -38,14 +38,18 @@ public class NativeSQLSerializerTest {
     Configuration conf = new Configuration(new MySQLTemplates());
     NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
     DefaultQueryMetadata md = new DefaultQueryMetadata();
-    SAnimal cat = SAnimal.animal_;
+    SAnimal_ cat = SAnimal_.animal_;
     md.addJoin(JoinType.DEFAULT, cat);
     md.addWhere(cat.name.in("X", "Y"));
     md.setProjection(cat.id);
     serializer.serialize(md, false);
-    assertEquals(
-        "select animal_.id\n" + "from animal_ animal_\n" + "where animal_.name in (?1, ?2)",
-        serializer.toString());
+    assertThat(serializer.toString())
+        .isEqualTo(
+            """
+            select animal_.ID
+            from animal_ animal_
+            where animal_.NAME in (?1, ?2)\
+            """);
   }
 
   @Test
@@ -54,7 +58,7 @@ public class NativeSQLSerializerTest {
     Configuration conf = new Configuration(new MySQLTemplates());
     NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
     serializer.handle(entity.get("name"));
-    assertEquals("entity.name", serializer.toString());
+    assertThat(serializer.toString()).isEqualTo("entity.name");
   }
 
   @Test
@@ -63,6 +67,6 @@ public class NativeSQLSerializerTest {
     Configuration conf = new Configuration(new MySQLTemplates());
     NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
     serializer.handle(entity.get("firstName"));
-    assertEquals("entity.first_name", serializer.toString());
+    assertThat(serializer.toString()).isEqualTo("entity.first_name");
   }
 }

@@ -21,6 +21,8 @@ import com.querydsl.codegen.utils.model.Parameter;
 import com.querydsl.codegen.utils.model.Types;
 import com.querydsl.sql.Column;
 import com.querydsl.sql.codegen.support.PrimaryKeyData;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -28,8 +30,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * {@code ExtendedBeanSerializer} outputs primary key based {@code equals}, {@code hashCode} and

@@ -1,13 +1,13 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.TimePath;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.Date;
-import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import org.junit.Test;
 
 public class TemporalTest {
@@ -24,7 +24,7 @@ public class TemporalTest {
 
   @Test
   public void test() {
-    assertEquals(DatePath.class, QTemporalTest_MyEntity.myEntity.date.getClass());
-    assertEquals(TimePath.class, QTemporalTest_MyEntity.myEntity.time.getClass());
+    assertThat(QTemporalTest_MyEntity.myEntity.date.getClass()).isEqualTo(DatePath.class);
+    assertThat(QTemporalTest_MyEntity.myEntity.time.getClass()).isEqualTo(TimePath.class);
   }
 }

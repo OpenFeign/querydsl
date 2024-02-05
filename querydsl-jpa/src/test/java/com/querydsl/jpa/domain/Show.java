@@ -13,8 +13,13 @@
  */
 package com.querydsl.jpa.domain;
 
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.Table;
 import java.util.Map;
-import javax.persistence.*;
 
 /** The Class Show. */
 @Entity

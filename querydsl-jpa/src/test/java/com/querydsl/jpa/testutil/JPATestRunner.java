@@ -13,15 +13,16 @@
  */
 package com.querydsl.jpa.testutil;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.jpa.JPATest;
 import com.querydsl.jpa.Mode;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import org.junit.Assert;
 import org.junit.rules.MethodRule;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -48,11 +49,11 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
 
   @Override
   protected List<MethodRule> rules(Object test) {
-    Assert.assertTrue(
-        String.format(
-            "In order to use the %s for %s, it should (directly or indirectly) implement %s",
-            JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class),
-        test instanceof JPATest);
+    assertThat(test instanceof JPATest)
+        .as(
+            "In order to use the %s for %s, it should (directly or indirectly) implement %s"
+                .formatted(JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class))
+        .isTrue();
 
     List<MethodRule> rules = super.rules(test);
     rules.add(
@@ -95,7 +96,7 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
     System.out.println(mode);
     isDerby = mode.contains("derby");
     if (isDerby) {
-      Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+      Class.forName("org.apache.derby.jdbc.EmbeddedDriver").getDeclaredConstructor().newInstance();
     }
     entityManagerFactory = Persistence.createEntityManagerFactory(mode);
     entityManager = entityManagerFactory.createEntityManager();

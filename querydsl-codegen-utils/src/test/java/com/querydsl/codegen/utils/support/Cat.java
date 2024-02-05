@@ -68,7 +68,7 @@ public class Cat {
 
   public Cat(String name, String kittenName) {
     this(name);
-    kittens.get(0).setName(kittenName);
+    kittens.getFirst().setName(kittenName);
   }
 
   public Cat(String name, int id) {

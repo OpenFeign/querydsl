@@ -15,7 +15,12 @@ package com.querydsl.jpa;
 
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.FetchableSubQueryBase;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.MapExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
 
 /**
@@ -66,11 +71,6 @@ public abstract class JPAQueryBase<T, Q extends JPAQueryBase<T, Q>>
   @Override
   public Q fetchJoin() {
     return queryMixin.fetchJoin();
-  }
-
-  @Override
-  public Q fetchAll() {
-    return queryMixin.fetchAll();
   }
 
   public Q from(EntityPath<?> arg) {

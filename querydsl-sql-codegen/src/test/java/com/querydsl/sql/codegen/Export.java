@@ -17,7 +17,6 @@ public final class Export {
     exporter.setNamePrefix("S");
     exporter.setPackageName("com.querydsl.jpa.domain.sql");
     exporter.setTargetFolder(new File("../querydsl-jpa/src/test/java"));
-    //        exporter.setLowerCase(true);
     exporter.export(conn.getMetaData());
 
     conn.close();

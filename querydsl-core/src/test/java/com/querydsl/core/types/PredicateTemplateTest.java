@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -22,6 +22,6 @@ public class PredicateTemplateTest {
   @Test
   public void not() {
     PredicateTemplate template = ExpressionUtils.predicateTemplate("XXX");
-    assertEquals("!XXX", template.not().toString());
+    assertThat(template.not().toString()).isEqualTo("!XXX");
   }
 }

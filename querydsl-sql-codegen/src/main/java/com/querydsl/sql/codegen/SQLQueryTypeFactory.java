@@ -16,8 +16,8 @@ package com.querydsl.sql.codegen;
 import com.querydsl.codegen.QueryTypeFactory;
 import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * {@code SQLQueryTypeFactory} is a {@link QueryTypeFactory} implementation with configuration data

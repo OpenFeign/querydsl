@@ -1,8 +1,6 @@
 package com.querydsl.sql;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import com.querydsl.core.types.dsl.Coalesce;
 import org.junit.Test;
@@ -15,10 +13,8 @@ public class CoalesceTest {
         new Coalesce<String>(
             SQLExpressions.select(QCompanies.companies.name).from(QCompanies.companies),
             QCompanies.companies.name);
-    assertThat(
-        SQLExpressions.select(coalesce).toString(),
-        is(
-            equalTo(
-                "select coalesce((select COMPANIES.NAME\nfrom COMPANIES COMPANIES), COMPANIES.NAME)\nfrom dual")));
+    assertThat(SQLExpressions.select(coalesce).toString())
+        .isEqualTo(
+            "select coalesce((select COMPANIES.NAME\nfrom COMPANIES COMPANIES), COMPANIES.NAME)\nfrom dual");
   }
 }

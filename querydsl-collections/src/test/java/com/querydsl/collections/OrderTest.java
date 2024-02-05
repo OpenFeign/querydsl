@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,13 +24,16 @@ public class OrderTest extends AbstractQueryTest {
   @Test
   public void test() {
     query().from(cat, cats).orderBy(cat.name.asc()).select(cat.name).fetch();
-    assertArrayEquals(new Object[] {"Alex", "Bob", "Francis", "Kitty"}, last.res.toArray());
+    assertThat(last.res.toArray())
+        .containsExactly(new Object[] {"Alex", "Bob", "Francis", "Kitty"});
 
     query().from(cat, cats).orderBy(cat.name.desc()).select(cat.name).fetch();
-    assertArrayEquals(new Object[] {"Kitty", "Francis", "Bob", "Alex"}, last.res.toArray());
+    assertThat(last.res.toArray())
+        .containsExactly(new Object[] {"Kitty", "Francis", "Bob", "Alex"});
 
     query().from(cat, cats).orderBy(cat.name.substring(1).asc()).select(cat.name).fetch();
-    assertArrayEquals(new Object[] {"Kitty", "Alex", "Bob", "Francis"}, last.res.toArray());
+    assertThat(last.res.toArray())
+        .containsExactly(new Object[] {"Kitty", "Alex", "Bob", "Francis"});
 
     query()
         .from(cat, cats)
@@ -45,11 +48,10 @@ public class OrderTest extends AbstractQueryTest {
   @Test
   public void test2() {
     List<String> orderedNames = Arrays.asList("Alex", "Bob", "Francis", "Kitty");
-    assertEquals(
-        orderedNames, query().from(cat, cats).orderBy(cat.name.asc()).select(cat.name).fetch());
-    assertEquals(
-        orderedNames,
-        query().from(cat, cats).orderBy(cat.name.asc()).distinct().select(cat.name).fetch());
+    assertThat(query().from(cat, cats).orderBy(cat.name.asc()).select(cat.name).fetch())
+        .isEqualTo(orderedNames);
+    assertThat(query().from(cat, cats).orderBy(cat.name.asc()).distinct().select(cat.name).fetch())
+        .isEqualTo(orderedNames);
   }
 
   @Test
@@ -57,11 +59,11 @@ public class OrderTest extends AbstractQueryTest {
     CollQuery<?> q = new CollQuery<Void>();
     q.from(cat, cats);
     long size = q.distinct().fetchCount();
-    assertTrue(size > 0);
+    assertThat(size > 0).isTrue();
     q.offset(0).limit(10);
     q.orderBy(cat.name.asc());
-    assertEquals(
-        Arrays.asList("Alex", "Bob", "Francis", "Kitty"), q.distinct().select(cat.name).fetch());
+    assertThat(q.distinct().select(cat.name).fetch())
+        .isEqualTo(Arrays.asList("Alex", "Bob", "Francis", "Kitty"));
   }
 
   @Test
@@ -70,12 +72,10 @@ public class OrderTest extends AbstractQueryTest {
     Cat bob = new Cat("Bob");
     Cat alex = new Cat("Alex");
     List<Cat> cats = Arrays.asList(alex, unknown, bob);
-    assertEquals(
-        Arrays.asList(unknown, alex, bob),
-        query().from(cat, cats).orderBy(cat.name.asc()).select(cat).fetch());
-    assertEquals(
-        Arrays.asList(unknown, bob, alex),
-        query().from(cat, cats).orderBy(cat.name.desc()).select(cat).fetch());
+    assertThat(query().from(cat, cats).orderBy(cat.name.asc()).select(cat).fetch())
+        .isEqualTo(Arrays.asList(unknown, alex, bob));
+    assertThat(query().from(cat, cats).orderBy(cat.name.desc()).select(cat).fetch())
+        .isEqualTo(Arrays.asList(unknown, bob, alex));
   }
 
   @Test
@@ -84,19 +84,19 @@ public class OrderTest extends AbstractQueryTest {
     Cat bob = new Cat("Bob");
     Cat alex = new Cat("Alex");
     List<Cat> cats = Arrays.asList(alex, unknown, bob);
-    assertEquals(
-        Arrays.asList(bob, alex, unknown),
-        query()
-            .from(this.cat, cats)
-            .orderBy(this.cat.name.desc().nullsLast())
-            .select(this.cat)
-            .fetch());
-    assertEquals(
-        Arrays.asList(alex, bob, unknown),
-        query()
-            .from(this.cat, cats)
-            .orderBy(this.cat.name.asc().nullsLast())
-            .select(this.cat)
-            .fetch());
+    assertThat(
+            query()
+                .from(this.cat, cats)
+                .orderBy(this.cat.name.desc().nullsLast())
+                .select(this.cat)
+                .fetch())
+        .isEqualTo(Arrays.asList(bob, alex, unknown));
+    assertThat(
+            query()
+                .from(this.cat, cats)
+                .orderBy(this.cat.name.asc().nullsLast())
+                .select(this.cat)
+                .fetch())
+        .isEqualTo(Arrays.asList(alex, bob, unknown));
   }
 }

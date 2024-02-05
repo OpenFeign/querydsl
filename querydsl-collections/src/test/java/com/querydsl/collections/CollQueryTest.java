@@ -14,8 +14,7 @@
 package com.querydsl.collections;
 
 import static com.querydsl.collections.CollQueryFactory.from;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -47,13 +46,13 @@ public class CollQueryTest extends AbstractQueryTest {
 
   @Test
   public void instanceOf() {
-    assertEquals(
-        Arrays.asList(c1, c2),
-        query()
-            .from(cat, Arrays.asList(c1, c2))
-            .where(cat.instanceOf(Cat.class))
-            .select(cat)
-            .fetch());
+    assertThat(
+            query()
+                .from(cat, Arrays.asList(c1, c2))
+                .where(cat.instanceOf(Cat.class))
+                .select(cat)
+                .fetch())
+        .isEqualTo(Arrays.asList(c1, c2));
   }
 
   @Test
@@ -78,7 +77,7 @@ public class CollQueryTest extends AbstractQueryTest {
         .where(cat.name.ne(otherCat.name))
         .select(cat.name, otherCat.name)
         .fetch();
-    assertEquals(4 * 3, last.res.size());
+    assertThat(last.res).hasSize(4 * 3);
   }
 
   @Test
@@ -107,41 +106,41 @@ public class CollQueryTest extends AbstractQueryTest {
             .from(cat, Collections.<Cat>emptyList())
             .where(cat.isNotNull())
             .clone();
-    assertEquals("cat is not null", query.getMetadata().getWhere().toString());
+    assertThat(query.getMetadata().getWhere().toString()).isEqualTo("cat is not null");
   }
 
   @Test
   public void primitives() {
     // select cats with kittens
     query().from(cat, cats).where(cat.kittens.size().ne(0)).select(cat.name).fetch();
-    assertTrue(last.res.size() == 4);
+    assertThat(last.res.size() == 4).isTrue();
 
     // select cats without kittens
     query().from(cat, cats).where(cat.kittens.size().eq(0)).select(cat.name).fetch();
-    assertTrue(last.res.size() == 0);
+    assertThat(last.res.size() == 0).isTrue();
   }
 
   @Test
   public void simpleCases() {
     // select all cat names
     query().from(cat, cats).select(cat.name).fetch();
-    assertTrue(last.res.size() == 4);
+    assertThat(last.res.size() == 4).isTrue();
 
     // select all kittens
     query().from(cat, cats).select(cat.kittens).fetch();
-    assertTrue(last.res.size() == 4);
+    assertThat(last.res.size() == 4).isTrue();
 
     // select cats with kittens
     query().from(cat, cats).where(cat.kittens.size().gt(0)).select(cat.name).fetch();
-    assertTrue(last.res.size() == 4);
+    assertThat(last.res.size() == 4).isTrue();
 
     // select cats named Kitty
     query().from(cat, cats).where(cat.name.eq("Kitty")).select(cat.name).fetch();
-    assertTrue(last.res.size() == 1);
+    assertThat(last.res.size() == 1).isTrue();
 
     // select cats named Kitt%
     query().from(cat, cats).where(cat.name.matches("Kitt.*")).select(cat.name).fetch();
-    assertTrue(last.res.size() == 1);
+    assertThat(last.res.size() == 1).isTrue();
 
     query().from(cat, cats).select(cat.bodyWeight.add(cat.weight)).fetch();
   }
@@ -156,7 +155,7 @@ public class CollQueryTest extends AbstractQueryTest {
             .where(a.startsWith(b))
             .select(a, b)
             .fetch()) {
-      assertEquals(strs.get(a), strs.get(b) + strs.get(b));
+      assertThat(strs.get(b) + strs.get(b)).isEqualTo(strs.get(a));
     }
 
     query().from(cat, cats).select(cat.mate).fetch();
@@ -178,7 +177,7 @@ public class CollQueryTest extends AbstractQueryTest {
             .where(a.lt(new BigDecimal("35.1")))
             .select(a)
             .fetch();
-    assertEquals(Arrays.asList(new BigDecimal("2.1"), new BigDecimal("20.21")), nums);
+    assertThat(nums).isEqualTo(Arrays.asList(new BigDecimal("2.1"), new BigDecimal("20.21")));
   }
 
   @Test(expected = UnsupportedOperationException.class)

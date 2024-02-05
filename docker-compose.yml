@@ -15,19 +15,16 @@ services:
     image: mysql:5.6.38
     ports:
       - "3306:3306"
-    volumes:
-      - ./db/mysql.sh:/docker-entrypoint-initdb.d/mysql.sh
     environment:
       - MYSQL_ROOT_PASSWORD=querydsl
       - MYSQL_USER=querydsl
       - MYSQL_PASSWORD=querydsl
+      - MYSQL_DATABASE=querydsl
 
   postgresql:
     image: postgis/postgis:16-3.4-alpine
     ports:
       - "5432:5432"
-    volumes:
-      - ./db/postgresql.sql:/docker-entrypoint-initdb.d/postgresql.sql
     environment:
       - POSTGRES_USER=querydsl
       - POSTGRES_PASSWORD=querydsl
@@ -57,7 +54,7 @@ services:
       start_period: 60s
 
   mongo:
-    image: mongo:3.6.1
+    image: mongo:4
     ports:
       - "27017:27017"
 
@@ -94,7 +91,7 @@ services:
       start_period: 60s
 
   firebird:
-    image: jacobalberty/firebird:2.5.9-ss
+    image: jacobalberty/firebird:v4
     ports:
       - "3050:3050"
     environment:

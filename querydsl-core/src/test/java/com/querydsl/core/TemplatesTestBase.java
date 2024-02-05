@@ -15,7 +15,7 @@
  */
 package com.querydsl.core;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.assertj.core.api.Assertions.*;
 
 import com.querydsl.core.types.Templates;
 import io.github.classgraph.ClassGraph;
@@ -49,7 +49,7 @@ public class TemplatesTestBase {
     for (Class<?> template : moduleSpecific) {
       try {
         Templates defaultInstance = (Templates) template.getField("DEFAULT").get(null);
-        errorCollector.checkThat(defaultInstance, instanceOf(template));
+        errorCollector.checkSucceeds(() -> assertThat(defaultInstance).isInstanceOf(template));
       } catch (Exception ex) {
         errorCollector.addError(ex);
       }

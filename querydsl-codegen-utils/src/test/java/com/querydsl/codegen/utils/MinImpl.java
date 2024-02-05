@@ -1,8 +1,8 @@
 package com.querydsl.codegen.utils;
 
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.*;
 import java.lang.annotation.Annotation;
-import javax.validation.Payload;
-import javax.validation.constraints.*;
 
 /**
  * @author tiwe

@@ -22,4 +22,8 @@ derby.log
 /devops/test-connection/.lein-repl-history
 **/.flattened-pom.xml
 
+.gitignore
 .checkstyle
+
+querydsl-gradle-plugin/build/
+querydsl-gradle-plugin/.gradle/

@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Type;
@@ -49,7 +49,7 @@ public class ComplexEvaluationTest {
     List<String> a = Arrays.asList("1", "2", "3", "4");
     List<String> b = Arrays.asList("2", "4", "6", "8");
 
-    assertEquals(Arrays.asList("2", "4"), evaluator.evaluate(a, b));
+    assertThat(evaluator.evaluate(a, b)).isEqualTo(Arrays.asList("2", "4"));
   }
 
   @Test
@@ -90,12 +90,12 @@ public class ComplexEvaluationTest {
       {fuzzy, mittens}, {fuzzy, sparkles}, {spot, mittens}, {spot, sparkles}
     };
     List<Object[]> result = evaluator.evaluate(a, b);
-    assertEquals(expResults.length, result.size());
+    assertThat(result).hasSize(expResults.length);
 
     for (int i = 0; i < expResults.length; i++) {
-      assertEquals(expResults[i].length, result.get(i).length);
+      assertThat(result.get(i).length).isEqualTo(expResults[i].length);
       for (int j = 0; j < expResults[i].length; j++) {
-        assertEquals(expResults[i][j], result.get(i)[j]);
+        assertThat(result.get(i)[j]).isEqualTo(expResults[i][j]);
       }
     }
   }
@@ -129,7 +129,7 @@ public class ComplexEvaluationTest {
     List<String> a = Arrays.asList("1", "2", "3", "4");
     List<String> b = Arrays.asList("2", "4", "6", "8");
 
-    assertEquals(Arrays.asList("2", "4"), evaluator.evaluate(a, b));
+    assertThat(evaluator.evaluate(a, b)).isEqualTo(Arrays.asList("2", "4"));
   }
 
   @Test
@@ -160,7 +160,7 @@ public class ComplexEvaluationTest {
     List<Boolean> a = Arrays.asList(true, true, true);
     List<Boolean> b = Arrays.asList(false, false, true);
 
-    assertEquals(Arrays.asList(true, true, true), evaluator.evaluate(a, b));
+    assertThat(evaluator.evaluate(a, b)).isEqualTo(Arrays.asList(true, true, true));
   }
 
   @Test
@@ -192,7 +192,7 @@ public class ComplexEvaluationTest {
     List<Boolean> a = Arrays.asList(true, true, true);
     List<Boolean> b = Arrays.asList(false, false, true);
 
-    assertEquals(Arrays.asList(true, true, true), evaluator.evaluate(a, b));
+    assertThat(evaluator.evaluate(a, b)).isEqualTo(Arrays.asList(true, true, true));
   }
 
   public static final class SuperCat extends Cat {

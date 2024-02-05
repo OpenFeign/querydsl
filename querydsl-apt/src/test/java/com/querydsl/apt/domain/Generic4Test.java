@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 import org.junit.Test;
 
 public class Generic4Test {

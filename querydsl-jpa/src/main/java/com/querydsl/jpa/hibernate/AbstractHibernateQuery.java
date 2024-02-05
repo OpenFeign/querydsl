@@ -14,20 +14,33 @@
 package com.querydsl.jpa.hibernate;
 
 import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryException;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.Path;
-import com.querydsl.jpa.*;
+import com.querydsl.jpa.FactoryExpressionTransformer;
+import com.querydsl.jpa.HQLTemplates;
+import com.querydsl.jpa.JPAQueryBase;
+import com.querydsl.jpa.JPQLSerializer;
+import com.querydsl.jpa.JPQLTemplates;
+import com.querydsl.jpa.ScrollableResultsIterator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import org.hibernate.*;
+import org.hibernate.FlushMode;
+import org.hibernate.LockMode;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
+import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 import org.hibernate.query.Query;
 import org.jetbrains.annotations.Nullable;
 
@@ -119,7 +132,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
       query.setLockMode(entry.getKey().toString(), entry.getValue());
     }
     if (flushMode != null) {
-      query.setFlushMode(flushMode);
+      query.setHibernateFlushMode(flushMode);
     }
 
     if (modifiers != null && modifiers.isRestricting()) {
@@ -153,7 +166,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   public CloseableIterator<T> iterate() {
     try {
       Query query = createQuery();
-      ScrollableResults results = query.scroll(ScrollMode.FORWARD_ONLY);
+      List results = query.getResultList();
       return new ScrollableResultsIterator<T>(results);
     } finally {
       reset();

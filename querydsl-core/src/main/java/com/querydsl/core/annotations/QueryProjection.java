@@ -51,6 +51,6 @@ import java.lang.annotation.Target;
  * }</pre>
  */
 @Documented
-@Target(ElementType.CONSTRUCTOR)
+@Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RUNTIME)
 public @interface QueryProjection {}

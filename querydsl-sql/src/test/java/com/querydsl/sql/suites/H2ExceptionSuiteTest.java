@@ -1,11 +1,7 @@
 package com.querydsl.sql.suites;
 
 import static com.querydsl.sql.domain.QSurvey.survey;
-import static org.hamcrest.Matchers.emptyArray;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.QueryException;
 import com.querydsl.core.testutil.H2;
@@ -61,11 +57,11 @@ public class H2ExceptionSuiteTest extends AbstractBaseTest {
     } catch (QueryException e) {
       result = e;
     }
-    assertNotNull(result);
+    assertThat(result).isNotNull();
     inspectExceptionResult(result);
   }
 
   private void inspectExceptionResult(Exception result) {
-    assertThat(result.getSuppressed(), is(not(emptyArray())));
+    assertThat(result.getSuppressed()).isNotEmpty();
   }
 }

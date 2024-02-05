@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.bytebuddy.implementation.bind.annotation.AllArguments;
 import net.bytebuddy.implementation.bind.annotation.Origin;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.implementation.bind.annotation.SuperMethod;
 import net.bytebuddy.implementation.bind.annotation.This;
 import org.jetbrains.annotations.Nullable;
 
@@ -72,7 +73,11 @@ public class PropertyAccessInvocationHandler {
 
   // CHECKSTYLE:OFF
   @RuntimeType
-  public Object intercept(@This Object proxy, @AllArguments Object[] args, @Origin Method method) {
+  public Object intercept(
+      @This Object proxy,
+      @Origin Method method,
+      @AllArguments Object[] args,
+      @SuperMethod(nullIfImpossible = true) Method methodProxy) {
     // CHECKSTYLE:ON
     Object rv = null;
 

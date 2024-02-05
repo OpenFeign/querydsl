@@ -17,6 +17,7 @@ import com.querydsl.core.QueryException;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadataFactory;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Map;
@@ -101,25 +102,40 @@ class AliasFactory {
    * @return proxy instance
    */
   protected <A> A createProxy(Class<A> cl, Expression<?> path) {
-    try {
-      return new ByteBuddy()
-          .subclass(cl)
-          .implement(ManagedObject.class)
-          .method(ElementMatchers.any())
-          .intercept(
-              MethodDelegation.to(
-                  new PropertyAccessInvocationHandler(path, this, pathFactory, typeSystem)))
-          .make()
-          .load(AliasFactory.class.getClassLoader())
-          .getLoaded()
-          .getDeclaredConstructor()
-          .newInstance();
-    } catch (InvocationTargetException
-        | InstantiationException
-        | IllegalAccessException
-        | NoSuchMethodException e) {
-      throw new RuntimeException(e);
+    Class<? extends A> loaded =
+        new ByteBuddy()
+            .subclass(cl)
+            .implement(ManagedObject.class)
+            .method(ElementMatchers.any())
+            .intercept(
+                MethodDelegation.to(
+                    new PropertyAccessInvocationHandler(path, this, pathFactory, typeSystem)))
+            .make()
+            .load(AliasFactory.class.getClassLoader())
+            .getLoaded();
+    Constructor<?> constructor = null;
+    // search constructor, prefer default one
+    for (Constructor<?> declaredConstructor : loaded.getDeclaredConstructors()) {
+      if (declaredConstructor.getParameterCount() == 0) {
+        constructor = declaredConstructor;
+        break;
+      } else {
+        constructor = declaredConstructor;
+      }
     }
+    A result = null;
+    if (constructor != null) {
+      Object[] initargs = new Object[constructor.getParameterCount()];
+      try {
+        result = (A) constructor.newInstance(initargs);
+      } catch (InstantiationException
+          | IllegalAccessException
+          | IllegalArgumentException
+          | InvocationTargetException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+    return result;
   }
 
   /**

@@ -13,9 +13,7 @@
  */
 package com.querydsl.maven;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.codegen.ExtendedBeanSerializer;
 import com.querydsl.sql.codegen.OriginalNamingStrategy;
@@ -23,7 +21,7 @@ import com.querydsl.sql.codegen.support.NumericMapping;
 import com.querydsl.sql.codegen.support.RenameMapping;
 import com.querydsl.sql.codegen.support.TypeMapping;
 import com.querydsl.sql.types.BytesType;
-import com.querydsl.sql.types.DateTimeType;
+import com.querydsl.sql.types.LocalDateTimeType;
 import com.querydsl.sql.types.LocalDateType;
 import com.querydsl.sql.types.LocalTimeType;
 import java.io.File;
@@ -68,40 +66,49 @@ public class MetadataExportMojoTest {
 
   @Test
   public void execute() throws Exception {
-    mojo.setTargetFolder("target/export");
+    File target = new File("target/export").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export").exists());
+    assertThat(project.getCompileSourceRoots())
+        .isEqualTo(Collections.singletonList(target.getAbsolutePath()));
+    assertThat(target).exists();
   }
 
   @Test
   public void execute_with_customTypes() throws Exception {
-    mojo.setTargetFolder("target/export2");
+    File target = new File("target/export2").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.setCustomTypes(new String[] {BytesType.class.getName()});
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export2"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export2").exists());
+    assertThat(project.getCompileSourceRoots())
+        .isEqualTo(Collections.singletonList(target.getAbsolutePath()));
+    assertThat(target).exists();
   }
 
   @Test
-  public void execute_with_jodaTypes() throws Exception {
-    mojo.setTargetFolder("target/export3");
+  public void execute_with_jsr310Types() throws Exception {
+    File target = new File("target/export3").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.setCustomTypes(
         new String[] {
-          LocalDateType.class.getName(), LocalTimeType.class.getName(), DateTimeType.class.getName()
+          LocalDateType.class.getName(),
+          LocalTimeType.class.getName(),
+          LocalDateTimeType.class.getName()
         });
 
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export3"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export3").exists());
+    assertThat(project.getCompileSourceRoots())
+        .isEqualTo(Collections.singletonList(target.getAbsolutePath()));
+    assertThat(target).exists();
   }
 
   @Test
   public void execute_with_typeMappings() throws Exception {
-    mojo.setTargetFolder("target/export4");
+    File target = new File("target/export4").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     TypeMapping mapping = new TypeMapping();
     mapping.setTable("CATALOGS");
     mapping.setColumn("CATALOG_NAME");
@@ -110,13 +117,15 @@ public class MetadataExportMojoTest {
 
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export4"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export4").exists());
+    assertThat(project.getCompileSourceRoots())
+        .isEqualTo(Collections.singletonList(target.getAbsolutePath()));
+    assertThat(target).exists();
   }
 
   @Test
   public void executeWithNumericMappings() throws Exception {
-    mojo.setTargetFolder("target/export5");
+    File target = new File("target/export5").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     NumericMapping mapping = new NumericMapping();
     mapping.setTotal(1);
     mapping.setDecimal(1);
@@ -125,8 +134,9 @@ public class MetadataExportMojoTest {
 
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export5"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export5").exists());
+    assertThat(project.getCompileSourceRoots())
+        .isEqualTo(Collections.singletonList(target.getAbsolutePath()));
+    assertThat(target).exists();
   }
 
   @Test
@@ -135,7 +145,7 @@ public class MetadataExportMojoTest {
     mojo.setExportBeans(true);
     mojo.execute();
 
-    assertTrue(new File("target/export6").exists());
+    assertThat(new File("target/export6")).exists();
   }
 
   @Test
@@ -145,7 +155,7 @@ public class MetadataExportMojoTest {
     mojo.setCreateScalaSources(true);
     mojo.execute();
 
-    assertTrue(new File("target/export7").exists());
+    assertThat(new File("target/export7")).exists();
   }
 
   @Test
@@ -154,7 +164,7 @@ public class MetadataExportMojoTest {
     mojo.setNamingStrategyClass(OriginalNamingStrategy.class.getName());
     mojo.execute();
 
-    assertTrue(new File("target/export8").exists());
+    assertThat(new File("target/export8")).exists();
   }
 
   @Test
@@ -164,7 +174,7 @@ public class MetadataExportMojoTest {
     mojo.setBeanSerializerClass(ExtendedBeanSerializer.class.getName());
     mojo.execute();
 
-    assertTrue(new File("target/export9").exists());
+    assertThat(new File("target/export9")).exists();
   }
 
   @Test
@@ -174,7 +184,7 @@ public class MetadataExportMojoTest {
     mojo.setBeanInterfaces(new String[] {Serializable.class.getName()});
     mojo.execute();
 
-    assertTrue(new File("target/export10").exists());
+    assertThat(new File("target/export10")).exists();
   }
 
   @Test
@@ -183,7 +193,7 @@ public class MetadataExportMojoTest {
     mojo.setImports(new String[] {"com.pck1", "com.pck2", "com.Q1", "com.Q2"});
     mojo.execute();
 
-    assertTrue(new File("target/export11").exists());
+    assertThat(new File("target/export11")).exists();
   }
 
   @Test
@@ -193,7 +203,7 @@ public class MetadataExportMojoTest {
     mojo.setExportBeans(true);
     mojo.execute();
 
-    assertTrue(new File("target/export12").exists());
+    assertThat(new File("target/export12")).exists();
   }
 
   @Test
@@ -202,12 +212,14 @@ public class MetadataExportMojoTest {
     mapping.setFromSchema("ABC");
     mapping.setToSchema("DEF");
 
-    mojo.setTargetFolder("target/export13");
+    File target = new File("target/export13").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.setRenameMappings(new RenameMapping[] {mapping});
     mojo.execute();
 
-    assertEquals(Collections.singletonList("target/export13"), project.getCompileSourceRoots());
-    assertTrue(new File("target/export13").exists());
+    assertThat(project.getCompileSourceRoots())
+        .isEqualTo(Collections.singletonList(target.getAbsolutePath()));
+    assertThat(target).exists();
   }
 
   // region Schema Pattern Matching
@@ -220,9 +232,9 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern(null);
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java")).exists();
   }
 
   @Test
@@ -233,10 +245,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("SCHEMA1");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertFalse(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists()).isFalse();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java").exists()).isFalse();
   }
 
   @Test
@@ -247,10 +259,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("%EMA1");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertFalse(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists()).isFalse();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java").exists()).isFalse();
   }
 
   @Test
@@ -261,9 +273,9 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("NON_EXISTENT_SCHEMA");
     mojo.execute();
 
-    assertFalse(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertFalse(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
-    assertFalse(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists()).isFalse();
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java").exists()).isFalse();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java").exists()).isFalse();
   }
 
   @Test
@@ -274,10 +286,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("SCHEMA1,SCHEMA2");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists()).isFalse();
   }
 
   // endregion Schema Pattern Matching
@@ -292,10 +304,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
-    assertFalse(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java").exists()).isFalse();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java").exists()).isFalse();
   }
 
   @Test
@@ -306,9 +318,9 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("SCHEMA1,,SCHEMA2");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java")).exists();
   }
 
   @Test
@@ -319,10 +331,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern(",SCHEMA2");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java").exists()).isFalse();
   }
 
   @Test
@@ -334,10 +346,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("SCHEMA1,");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java").exists()).isFalse();
   }
 
   // endregion Schema Pattern Matching - Empty Values
@@ -352,10 +364,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("BLANK");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
-    assertFalse(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java").exists()).isFalse();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java").exists()).isFalse();
   }
 
   @Test
@@ -366,10 +378,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("blank");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
-    assertFalse(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java").exists()).isFalse();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java").exists()).isFalse();
   }
 
   @Test
@@ -380,9 +392,9 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("SCHEMA1BLANK");
     mojo.execute();
 
-    assertFalse(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertFalse(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
-    assertFalse(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists()).isFalse();
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java").exists()).isFalse();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java").exists()).isFalse();
   }
 
   @Test
@@ -393,9 +405,9 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("SCHEMA1,BLANK,SCHEMA2");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java")).exists();
   }
 
   @Test
@@ -406,10 +418,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("BLANK,SCHEMA2");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java").exists()).isFalse();
   }
 
   @Test
@@ -421,10 +433,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("SCHEMA1,BLANK");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertTrue(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java")).exists();
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java").exists()).isFalse();
   }
 
   @Test
@@ -435,10 +447,10 @@ public class MetadataExportMojoTest {
     mojo.setSchemaPattern("SCHEMA1,SCHEMA2BLANK");
     mojo.execute();
 
-    assertTrue(new File(targetFolder + "/com/example/QSchema1Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QSchema1Table.java")).exists();
 
-    assertFalse(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists());
-    assertFalse(new File(targetFolder + "/com/example/QSchema2Table.java").exists());
+    assertThat(new File(targetFolder + "/com/example/QNoSchemaTable.java").exists()).isFalse();
+    assertThat(new File(targetFolder + "/com/example/QSchema2Table.java").exists()).isFalse();
   }
 
   // endregion Schema Pattern Matching - BLANK Values

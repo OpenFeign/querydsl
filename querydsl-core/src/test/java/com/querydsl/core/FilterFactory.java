@@ -17,8 +17,27 @@ import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.MapExpression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.*;
-import java.util.*;
+import com.querydsl.core.types.dsl.ArrayExpression;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Coalesce;
+import com.querydsl.core.types.dsl.CollectionExpressionBase;
+import com.querydsl.core.types.dsl.ComparableExpression;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.DateTimeExpression;
+import com.querydsl.core.types.dsl.ListExpression;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.MapExpressionBase;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.TemporalExpression;
+import com.querydsl.core.types.dsl.TimeExpression;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * @author tiwe
@@ -144,7 +163,7 @@ public class FilterFactory {
     rv.add(expr.minute().eq(1));
     rv.add(expr.minute().eq(other.minute()));
 
-    rv.add(expr.second().eq(1));
+    rv.add(expr.second().eq(1f));
     rv.add(expr.second().eq(other.second()));
     return Collections.unmodifiableList(rv);
   }

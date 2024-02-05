@@ -17,13 +17,13 @@ import com.querydsl.apt.AbstractQuerydslProcessor;
 import com.querydsl.apt.Configuration;
 import com.querydsl.apt.DefaultConfiguration;
 import com.querydsl.apt.jpa.JPAConfiguration;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import java.lang.annotation.Annotation;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.jpa.entity.RooJpaEntity;
 
@@ -35,7 +35,6 @@ import org.springframework.roo.addon.jpa.entity.RooJpaEntity;
  */
 @SupportedAnnotationTypes({
   "com.querydsl.core.annotations.*",
-  "javax.persistence.*",
   "org.springframework.roo.addon.jpa.entity.*"
 })
 public class RooAnnotationProcessor extends AbstractQuerydslProcessor {

@@ -19,6 +19,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code Fetchable} defines default projection methods for {@link Query} implementations. All
@@ -40,6 +41,7 @@ public interface Fetchable<T> {
    *
    * @return first result or null
    */
+  @Nullable
   T fetchFirst();
 
   /**
@@ -48,6 +50,7 @@ public interface Fetchable<T> {
    * @throws NonUniqueResultException if there is more than one matching result
    * @return first result or null
    */
+  @Nullable
   T fetchOne() throws NonUniqueResultException;
 
   /**

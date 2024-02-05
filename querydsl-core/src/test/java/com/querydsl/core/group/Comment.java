@@ -62,8 +62,7 @@ public class Comment {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Comment) {
-      Comment other = (Comment) o;
+    } else if (o instanceof Comment other) {
       return this.id.equals(other.id)
           && this.text.equals(other.text)
           && this.score.equals(other.score);

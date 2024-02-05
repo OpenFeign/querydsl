@@ -1,6 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.TemplatesTestUtils;
@@ -21,6 +21,6 @@ public class CollQueryTemplatesTest {
     StringPath b = Expressions.stringPath("b");
     Expression<?> expr = a.append(b).toLowerCase();
     String str = new CollQuerySerializer(CollQueryTemplates.DEFAULT).handle(expr).toString();
-    assertEquals("(a + b).toLowerCase()", str);
+    assertThat(str).isEqualTo("(a + b).toLowerCase()");
   }
 }

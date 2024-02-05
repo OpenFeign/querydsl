@@ -13,10 +13,9 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import org.junit.Test;
 
 public class EmbeddedTest {
@@ -47,7 +46,7 @@ public class EmbeddedTest {
 
   @Test
   public void entityClass() {
-    assertNotNull(QEmbeddedTest_EntityClass.entityClass.code.property);
-    assertEquals(SubEntityCode.class, QEmbeddedTest_EntityClass.entityClass.code.getType());
+    assertThat(QEmbeddedTest_EntityClass.entityClass.code.property).isNotNull();
+    assertThat(QEmbeddedTest_EntityClass.entityClass.code.getType()).isEqualTo(SubEntityCode.class);
   }
 }

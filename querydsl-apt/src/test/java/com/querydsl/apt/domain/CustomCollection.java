@@ -1,8 +1,8 @@
 package com.querydsl.apt.domain;
 
+import jakarta.persistence.Entity;
 import java.util.AbstractSet;
 import java.util.Iterator;
-import javax.persistence.Entity;
 
 public class CustomCollection {
 

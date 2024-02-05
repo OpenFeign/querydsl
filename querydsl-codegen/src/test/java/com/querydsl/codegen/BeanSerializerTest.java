@@ -13,10 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.StringUtils;
@@ -60,40 +57,40 @@ public class BeanSerializerTest {
   public void annotations() throws IOException {
     type.addAnnotation(new QueryEntityImpl());
 
-    BeanSerializer serializer = new BeanSerializer();
+    var serializer = new BeanSerializer();
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    String str = writer.toString();
+    var str = writer.toString();
 
-    assertTrue(str.contains("import com.querydsl.core.annotations.QueryEntity;"));
-    assertTrue(str.contains("@QueryEntity"));
+    assertThat(str).contains("import com.querydsl.core.annotations.QueryEntity;");
+    assertThat(str).contains("@QueryEntity");
   }
 
   @Test
   public void annotated_property() throws IOException {
-    Property property = new Property(type, "entityField", type);
+    var property = new Property(type, "entityField", type);
     property.addAnnotation(new QueryEntityImpl());
     type.addProperty(property);
 
-    BeanSerializer serializer = new BeanSerializer();
+    var serializer = new BeanSerializer();
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    String str = writer.toString();
+    var str = writer.toString();
 
-    assertTrue(str.contains("import com.querydsl.core.annotations.QueryEntity;"));
-    assertTrue(str.contains("@QueryEntity"));
+    assertThat(str).contains("import com.querydsl.core.annotations.QueryEntity;");
+    assertThat(str).contains("@QueryEntity");
   }
 
   @Test
   public void annotated_property_not_serialized() throws IOException {
-    Property property = new Property(type, "entityField", type);
+    var property = new Property(type, "entityField", type);
     property.addAnnotation(new QueryEntityImpl());
     type.addProperty(property);
 
-    BeanSerializer serializer = new BeanSerializer(false);
+    var serializer = new BeanSerializer(false);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    String str = writer.toString();
+    var str = writer.toString();
 
-    assertFalse(str.contains("import com.querydsl.core.annotations.QueryEntity;"));
-    assertFalse(str.contains("@QueryEntity"));
+    assertThat(str.contains("import com.querydsl.core.annotations.QueryEntity;")).isFalse();
+    assertThat(str.contains("@QueryEntity")).isFalse();
   }
 
   @Test
@@ -101,25 +98,25 @@ public class BeanSerializerTest {
     // property
     type.addProperty(new Property(type, "cId", type));
 
-    BeanSerializer serializer = new BeanSerializer();
+    var serializer = new BeanSerializer();
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public DomainClass getcId() {"));
+    assertThat(writer.toString()).contains("public DomainClass getcId() {");
   }
 
   @Test
   public void interfaces() throws IOException {
-    BeanSerializer serializer = new BeanSerializer();
+    var serializer = new BeanSerializer();
     serializer.addInterface(new ClassType(Serializable.class));
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public class DomainClass implements Serializable {"));
+    assertThat(writer.toString()).contains("public class DomainClass implements Serializable {");
   }
 
   @Test
   public void interfaces2() throws IOException {
-    BeanSerializer serializer = new BeanSerializer();
+    var serializer = new BeanSerializer();
     serializer.addInterface(Serializable.class);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public class DomainClass implements Serializable {"));
+    assertThat(writer.toString()).contains("public class DomainClass implements Serializable {");
   }
 
   @Test
@@ -134,10 +131,11 @@ public class BeanSerializerTest {
     type.addProperty(
         new Property(type, "mapField", new SimpleType(Types.MAP, typeModel, typeModel)));
 
-    BeanSerializer serializer = new BeanSerializer();
+    var serializer = new BeanSerializer();
     serializer.setAddToString(true);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(String.valueOf(writer).contains("    @Override\n" + "    public String toString()"));
+    assertThat(String.valueOf(writer))
+        .containsIgnoringNewLines("    @Override\n" + "    public String toString()");
   }
 
   @Test
@@ -152,7 +150,7 @@ public class BeanSerializerTest {
     type.addProperty(
         new Property(type, "mapField", new SimpleType(Types.MAP, typeModel, typeModel)));
 
-    BeanSerializer serializer = new BeanSerializer();
+    var serializer = new BeanSerializer();
     serializer.setAddFullConstructor(true);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     // System.out.println(writer.toString());
@@ -182,9 +180,9 @@ public class BeanSerializerTest {
       type.addProperty(new Property(type, StringUtils.uncapitalize(cl.getSimpleName()), classType));
     }
 
-    BeanSerializer serializer = new BeanSerializer();
+    var serializer = new BeanSerializer();
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    String str = writer.toString();
+    var str = writer.toString();
     // System.err.println(str);
     for (String prop :
         Arrays.asList(
@@ -199,7 +197,7 @@ public class BeanSerializerTest {
             "Map<DomainClass, DomainClass> mapField;",
             "Set<DomainClass> setField;",
             "java.sql.Time time;")) {
-      assertTrue(prop + " was not contained", str.contains(prop));
+      assertThat(str.contains(prop)).as(prop + " was not contained").isTrue();
     }
   }
 
@@ -207,14 +205,12 @@ public class BeanSerializerTest {
   public void defaultsGeneratedAnnotation() throws IOException {
     Serializer serializer = new BeanSerializer();
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    String generatedSource = String.valueOf(writer);
-    assertThat(
-        generatedSource,
-        containsString(
-            String.format("import %s;", GeneratedAnnotationResolver.resolveDefault().getName())));
-    assertThat(
-        generatedSource,
-        containsString("@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class"));
+    var generatedSource = String.valueOf(writer);
+    assertThat(generatedSource)
+        .contains("import %s;".formatted(GeneratedAnnotationResolver.resolveDefault().getName()));
+    assertThat(generatedSource)
+        .containsIgnoringNewLines(
+            "@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class");
   }
 
   @Test
@@ -222,10 +218,10 @@ public class BeanSerializerTest {
     Serializer serializer =
         new BeanSerializer(BeanSerializer.DEFAULT_JAVADOC_SUFFIX, Generated.class);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    String generatedSource = String.valueOf(writer);
-    assertThat(generatedSource, containsString("import com.querydsl.core.annotations.Generated;"));
-    assertThat(
-        generatedSource,
-        containsString("@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class"));
+    var generatedSource = String.valueOf(writer);
+    assertThat(generatedSource).contains("import com.querydsl.core.annotations.Generated;");
+    assertThat(generatedSource)
+        .containsIgnoringNewLines(
+            "@Generated(\"com.querydsl.codegen.BeanSerializer\")\npublic class");
   }
 }

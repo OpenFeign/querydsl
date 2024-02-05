@@ -17,14 +17,41 @@ import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.SerializerBase;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.MapExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathType;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.MathUtils;
-import java.util.*;
-import javax.persistence.*;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceUnitUtil;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.Metamodel;
+import jakarta.persistence.metamodel.SingularAttribute;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -40,7 +67,7 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
               Ops.ADD, Ops.SUB, Ops.MULT, Ops.DIV, Ops.LT, Ops.LOE, Ops.GT, Ops.GOE, Ops.BETWEEN));
 
   private static final Set<? extends Operator> CASE_OPS =
-      Collections.unmodifiableSet(EnumSet.of(Ops.CASE_EQ_ELSE, Ops.CASE_ELSE));
+      Collections.unmodifiableSet(EnumSet.of(Ops.CASE_ELSE));
 
   private static final String COMMA = ", ";
 
@@ -350,11 +377,6 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
         handle(JPAQueryMixin.FETCH);
       }
       handleJoinTarget(je);
-      // XXX Hibernate specific flag
-      if (je.hasFlag(JPAQueryMixin.FETCH_ALL_PROPERTIES) && !forCountRow) {
-        handle(JPAQueryMixin.FETCH_ALL_PROPERTIES);
-      }
-
       if (je.getCondition() != null) {
         append(templates.isWithForOn() ? WITH : ON);
         handle(je.getCondition());

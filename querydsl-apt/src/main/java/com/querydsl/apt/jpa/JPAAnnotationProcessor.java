@@ -15,10 +15,11 @@ package com.querydsl.apt.jpa;
 
 import com.querydsl.apt.AbstractQuerydslProcessor;
 import com.querydsl.apt.Configuration;
+import jakarta.persistence.*;
+import jakarta.persistence.MappedSuperclass;
 import java.lang.annotation.Annotation;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.persistence.*;
 
 /**
  * AnnotationProcessor for JPA which takes {@link Entity}, {@link MappedSuperclass}, {@link
@@ -26,11 +27,7 @@ import javax.persistence.*;
  *
  * @author tiwe
  */
-@SupportedAnnotationTypes({
-  "com.querydsl.core.annotations.*",
-  "jakarta.persistence.*",
-  "javax.persistence.*"
-})
+@SupportedAnnotationTypes({"com.querydsl.core.annotations.*", "jakarta.persistence.*"})
 public class JPAAnnotationProcessor extends AbstractQuerydslProcessor {
 
   @Override

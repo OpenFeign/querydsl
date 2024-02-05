@@ -15,7 +15,8 @@ package com.querydsl.collections;
 
 import static com.querydsl.collections.CollQueryFactory.from;
 import static com.querydsl.core.alias.Alias.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.dsl.Expressions;
@@ -43,30 +44,25 @@ public class AliasTest extends AbstractQueryTest {
   public void aliasVariations1() {
     // 1st
     QCat cat = new QCat("cat");
-    assertEquals(
-        Arrays.asList("Kitty", "Bob", "Alex", "Francis"),
-        from(cat, cats).where(cat.kittens.size().gt(0)).select(cat.name).fetch());
+    assertThat(from(cat, cats).where(cat.kittens.size().gt(0)).select(cat.name).fetch())
+        .isEqualTo(Arrays.asList("Kitty", "Bob", "Alex", "Francis"));
 
     // 2nd
     Cat c = alias(Cat.class, "cat");
-    assertEquals(
-        Arrays.asList("Kitty", "Bob", "Alex", "Francis"),
-        from(c, cats).where($(c.getKittens()).size().gt(0)).select($(c.getName())).fetch());
+    assertThat(from(c, cats).where($(c.getKittens()).size().gt(0)).select($(c.getName())).fetch())
+        .isEqualTo(Arrays.asList("Kitty", "Bob", "Alex", "Francis"));
   }
 
   @Test
   public void aliasVariations2() {
     // 1st
     QCat cat = new QCat("cat");
-    assertEquals(
-        Collections.emptyList(),
-        from(cat, cats).where(cat.name.matches("fri.*")).select(cat.name).fetch());
+    assertThat(from(cat, cats).where(cat.name.matches("fri.*")).select(cat.name).fetch()).isEmpty();
 
     // 2nd
     Cat c = alias(Cat.class, "cat");
-    assertEquals(
-        Collections.emptyList(),
-        from(c, cats).where($(c.getName()).matches("fri.*")).select($(c.getName())).fetch());
+    assertThat(from(c, cats).where($(c.getName()).matches("fri.*")).select($(c.getName())).fetch())
+        .isEqualTo(Collections.emptyList());
   }
 
   @Test
@@ -79,15 +75,11 @@ public class AliasTest extends AbstractQueryTest {
     from(c, cats).where($(c.getBirthdate()).gt(new Date())).select($(c)).iterate();
 
     // 2
-    try {
-      from(c, cats).where($(c.getMate().getName().toUpperCase()).eq("MOE"));
-      fail("expected NPE");
-    } catch (NullPointerException ne) {
-      // expected
-    }
+    assertThatExceptionOfType(NullPointerException.class)
+        .isThrownBy(() -> from(c, cats).where($(c.getMate().getName().toUpperCase()).eq("MOE")));
 
     // 3
-    assertEquals(cat.name, $(c.getName()));
+    assertThat($(c.getName())).isEqualTo(cat.name);
 
     // 4
     from(c, cats)
@@ -111,8 +103,8 @@ public class AliasTest extends AbstractQueryTest {
     from(c, cats).where($(c.getName()).upper().eq("MOE")).select($(c)).iterate();
 
     // 10
-    assertNotNull($(c.getKittensByName()));
-    assertNotNull($(c.getKittensByName().get("Kitty")));
+    assertThat($(c.getKittensByName())).isNotNull();
+    assertThat($(c.getKittensByName().get("Kitty"))).isNotNull();
     from(c, cats).where($(c.getKittensByName().get("Kitty")).isNotNull()).select(cat).iterate();
 
     // 11
@@ -133,22 +125,20 @@ public class AliasTest extends AbstractQueryTest {
   @Test
   public void various1() {
     StringPath str = Expressions.stringPath("str");
-    assertEquals(
-        Arrays.asList("a", "ab"),
-        from(str, "a", "ab", "cd", "de").where(str.startsWith("a")).select(str).fetch());
+    assertThat(from(str, "a", "ab", "cd", "de").where(str.startsWith("a")).select(str).fetch())
+        .isEqualTo(Arrays.asList("a", "ab"));
   }
 
   @Test
   public void various2() {
-    assertEquals(
-        Arrays.asList(1, 2, 5, 3),
-        from(var(), 1, 2, "abc", 5, 3).where(var().ne("abc")).select(var()).fetch());
+    assertThat(from(var(), 1, 2, "abc", 5, 3).where(var().ne("abc")).select(var()).fetch())
+        .isEqualTo(Arrays.asList(1, 2, 5, 3));
   }
 
   @Test
   public void various3() {
     NumberPath<Integer> num = Expressions.numberPath(Integer.class, "num");
-    assertEquals(
-        Arrays.asList(1, 2, 3), from(num, 1, 2, 3, 4).where(num.lt(4)).select(num).fetch());
+    assertThat(from(num, 1, 2, 3, 4).where(num.lt(4)).select(num).fetch())
+        .isEqualTo(Arrays.asList(1, 2, 3));
   }
 }

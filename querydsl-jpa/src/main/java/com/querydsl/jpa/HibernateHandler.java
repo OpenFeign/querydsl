@@ -16,12 +16,11 @@ package com.querydsl.jpa;
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.IteratorAdapter;
 import com.querydsl.core.types.FactoryExpression;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.Query;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.ResultTransformer;
 import org.jetbrains.annotations.Nullable;
@@ -53,8 +52,8 @@ public class HibernateHandler implements QueryHandler {
   public <T> CloseableIterator<T> iterate(Query query, FactoryExpression<?> projection) {
     try {
       org.hibernate.query.Query<?> unwrappedQuery = query.unwrap(org.hibernate.query.Query.class);
-      ScrollableResults results = unwrappedQuery.scroll(ScrollMode.FORWARD_ONLY);
-      CloseableIterator<T> iterator = new ScrollableResultsIterator<T>(results);
+      CloseableIterator<T> iterator =
+          new ScrollableResultsIterator<T>((List<T>) unwrappedQuery.getResultList());
       if (projection != null) {
         iterator = new TransformingIterator<T>(iterator, projection);
       }

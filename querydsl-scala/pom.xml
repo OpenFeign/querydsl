@@ -5,22 +5,15 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.3-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-scala</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - Scala support</name>
 
   <properties>
     <character.encoding>UTF-8</character.encoding>
     <argLine>-Xms256m -Xmx512m -Xss2m</argLine>
-    <checkstyle.skip>true</checkstyle.skip>
-
-    <scala.full.version>2.11.12</scala.full.version>
-    <hibernate.version>3.5.6-Final</hibernate.version>
   </properties>
 
   <dependencyManagement>
@@ -28,7 +21,7 @@
       <dependency>
         <groupId>org.scala-lang</groupId>
         <artifactId>scala-library</artifactId>
-        <version>${scala.full.version}</version>
+        <version>${scala.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -47,13 +40,13 @@
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>${scala.full.version}</version>
+      <version>${scala.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-compiler</artifactId>
-      <version>${scala.full.version}</version>
+      <version>${scala.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -69,6 +62,11 @@
       <artifactId>querydsl-sql-codegen</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <version>2.0.1</version>
     </dependency>
 
     <!-- test -->
@@ -121,8 +119,6 @@
   </dependencies>
 
   <build>
-    <sourceDirectory>src/main/scala</sourceDirectory>
-    <testSourceDirectory>src/test/scala</testSourceDirectory>
     <pluginManagement>
       <plugins>
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
@@ -157,10 +153,10 @@
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
-        <version>3.4.6</version>
+        <version>4.8.1</version>
         <configuration>
           <charset>${character.encoding}</charset>
-          <scalaVersion>${scala.full.version}</scalaVersion>
+          <scalaVersion>${scala.version}</scalaVersion>
           <args>
             <arg>-encoding</arg>
             <arg>${character.encoding}</arg>
@@ -180,54 +176,20 @@
         <executions>
           <execution>
             <id>scala-compile</id>
-            <phase>compile</phase>
             <goals>
               <goal>compile</goal>
             </goals>
+            <phase>compile</phase>
           </execution>
           <execution>
             <id>scala-test-compile</id>
-            <phase>test-compile</phase>
             <goals>
               <goal>testCompile</goal>
             </goals>
+            <phase>test-compile</phase>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-compiler</artifactId>
-            <version>${scala.full.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
-      <!--
-      <plugin>
-        <groupId>io.github.openfeign.querydsl</groupId>
-        <artifactId>querydsl-maven-plugin</artifactId>
-        <version>${project.version}</version>
-        <configuration>
-          <testClasspath>true</testClasspath>
-          <targetFolder>target/genericExporter</targetFolder>
-          <scala>true</scala>
-          <packages>
-            <package>com.querydsl.scala</package>
-          </packages>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>io.github.openfeign.querydsl</groupId>
-            <artifactId>querydsl-scala</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>${scala.full.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>    
-    -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -254,9 +216,9 @@
           </classpathContainers>
           <excludes>
             <exclude>org.scala-lang:scala-library</exclude>
-            <!-- 
-            <exclude>org.scala-lang:scala-compiler</exclude>
-             -->
+            <!--
+                        <exclude>org.scala-lang:scala-compiler</exclude>
+                         -->
           </excludes>
           <sourceIncludes>
             <sourceInclude>**/*.scala</sourceInclude>
@@ -265,5 +227,7 @@
         </configuration>
       </plugin>
     </plugins>
+    <sourceDirectory>src/main/scala</sourceDirectory>
+    <testSourceDirectory>src/test/scala</testSourceDirectory>
   </build>
 </project>

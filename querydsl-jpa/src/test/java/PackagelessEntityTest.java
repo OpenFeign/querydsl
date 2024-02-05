@@ -13,10 +13,10 @@
  */
 
 import static com.querydsl.jpa.JPAExpressions.select;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.JPQLSubQuery;
 import org.junit.Test;
 
 public class PackagelessEntityTest {
@@ -26,7 +26,7 @@ public class PackagelessEntityTest {
   public void packageLess_path() {
     PathBuilder<PackagelessEntityTest> builder =
         new PathBuilder(PackagelessEntityTest.class, "entity");
-    JPQLQuery<?> query = select(builder).from(builder);
-    assertEquals("select entity\nfrom PackagelessEntityTest entity", query.toString());
+    JPQLSubQuery<PackagelessEntityTest> query = select(builder).from(builder);
+    assertThat(query.toString()).isEqualTo("select entity\nfrom PackagelessEntityTest entity");
   }
 }

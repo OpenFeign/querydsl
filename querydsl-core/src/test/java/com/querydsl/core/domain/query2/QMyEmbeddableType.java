@@ -19,7 +19,7 @@ import com.querydsl.core.domain.MyEmbeddable;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.NumberPath;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QMyEmbeddable is a Querydsl query type for MyEmbeddable */
 @Generated("com.querydsl.codegen.EmbeddableSerializer")

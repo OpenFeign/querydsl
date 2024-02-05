@@ -93,7 +93,7 @@ public final class DateTimeConstant<D extends java.util.Date> extends DateTimeEx
   }
 
   @Override
-  public NumberExpression<Integer> second() {
+  public NumberExpression<Float> second() {
     return time.second();
   }
 

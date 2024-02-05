@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ArrayConstructorExpression;
 import org.junit.Test;
@@ -28,11 +28,11 @@ public class ArrayConstructorExpressionTest {
             String[].class, new StringPath("test"), new StringPath("test2"));
 
     String[] strings = constructor.newInstance((Object[]) new String[] {"1", "2"});
-    assertEquals("1", strings[0]);
-    assertEquals("2", strings[1]);
+    assertThat(strings[0]).isEqualTo("1");
+    assertThat(strings[1]).isEqualTo("2");
 
     strings = constructor.newInstance(new Object[] {"1", "2"});
-    assertEquals("1", strings[0]);
-    assertEquals("2", strings[1]);
+    assertThat(strings[0]).isEqualTo("1");
+    assertThat(strings[1]).isEqualTo("2");
   }
 }

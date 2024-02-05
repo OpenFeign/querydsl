@@ -7,8 +7,8 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.RelationalPathBase;
+import jakarta.annotation.Generated;
 import java.sql.Types;
-import javax.annotation.Generated;
 
 /** QXmlTest is a Querydsl query type for QXmlTest */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

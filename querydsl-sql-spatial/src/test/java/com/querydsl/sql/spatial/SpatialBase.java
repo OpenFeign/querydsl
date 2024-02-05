@@ -1,7 +1,8 @@
 package com.querydsl.sql.spatial;
 
 import static com.querydsl.core.Target.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.within;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
@@ -71,11 +72,10 @@ public class SpatialBase extends AbstractBaseTest {
   public void geometryType() {
     List<Tuple> results =
         query().from(shapes).select(shapes.geometry, shapes.geometry.geometryType()).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Tuple row : results) {
-      assertEquals(
-          normalize(row.get(shapes.geometry).getGeometryType().name()),
-          normalize(row.get(shapes.geometry.geometryType())));
+      assertThat(normalize(row.get(shapes.geometry.geometryType())))
+          .isEqualTo(normalize(row.get(shapes.geometry).getGeometryType().name()));
     }
   }
 
@@ -83,12 +83,11 @@ public class SpatialBase extends AbstractBaseTest {
   public void asText() {
     List<Tuple> results =
         query().from(shapes).select(shapes.geometry, shapes.geometry.asText()).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Tuple row : results) {
       if (!(row.get(shapes.geometry) instanceof MultiPoint)) {
-        assertEquals(
-            normalize(Wkt.toWkt(row.get(shapes.geometry))),
-            normalize(row.get(shapes.geometry.asText())));
+        assertThat(normalize(row.get(shapes.geometry.asText())))
+            .isEqualTo(normalize(Wkt.toWkt(row.get(shapes.geometry))));
       }
     }
   }
@@ -98,12 +97,12 @@ public class SpatialBase extends AbstractBaseTest {
   public void point_x_y() {
     PointPath<Point> point = shapes.geometry.asPoint();
     List<Tuple> results = withPoints().select(point, point.x(), point.y()).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Tuple row : results) {
-      assertEquals(
-          Double.valueOf(row.get(point).getPosition().getCoordinate(0)), row.get(point.x()));
-      assertEquals(
-          Double.valueOf(row.get(point).getPosition().getCoordinate(1)), row.get(point.y()));
+      assertThat(row.get(point.x()))
+          .isEqualTo(Double.valueOf(row.get(point).getPosition().getCoordinate(0)));
+      assertThat(row.get(point.y()))
+          .isEqualTo(Double.valueOf(row.get(point).getPosition().getCoordinate(1)));
     }
   }
 
@@ -124,68 +123,69 @@ public class SpatialBase extends AbstractBaseTest {
       Point point1 = tuple.get(shapes1.geometry.asPoint());
       Point point2 = tuple.get(shapes2.geometry.asPoint());
       Double distance = tuple.get(shapes1.geometry.distance(shapes2.geometry));
-      assertEquals(JTSGeometryOperations.Default.distance(point1, point2), distance, 0.0001);
+      assertThat(distance)
+          .isCloseTo(JTSGeometryOperations.Default.distance(point1, point2), within(0.0001));
     }
   }
 
   @Test
   public void point_instances() {
     List<Shapes> results = withPoints().select(shapes).fetch();
-    assertEquals(5, results.size());
+    assertThat(results).hasSize(5);
     for (Shapes row : results) {
-      assertNotNull(row.getId());
-      assertNotNull(row.getGeometry());
-      assertTrue(row.getGeometry() instanceof Point);
+      assertThat(row.getId()).isNotNull();
+      assertThat(row.getGeometry()).isNotNull();
+      assertThat(row.getGeometry() instanceof Point).isTrue();
     }
   }
 
   @Test
   public void lineString_instances() {
     List<Geometry> results = withLineStrings().select(shapes.geometry).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Geometry row : results) {
-      assertNotNull(row);
-      assertTrue(row instanceof LineString);
+      assertThat(row).isNotNull();
+      assertThat(row instanceof LineString).isTrue();
     }
   }
 
   @Test
   public void polygon_instances() {
     List<Geometry> results = withPolygons().select(shapes.geometry).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Geometry row : results) {
-      assertNotNull(row);
-      assertTrue(row instanceof Polygon);
+      assertThat(row).isNotNull();
+      assertThat(row instanceof Polygon).isTrue();
     }
   }
 
   @Test
   public void multiPoint_instances() {
     List<Geometry> results = withMultipoints().select(shapes.geometry).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Geometry row : results) {
-      assertNotNull(row);
-      assertTrue(row instanceof MultiPoint);
+      assertThat(row).isNotNull();
+      assertThat(row instanceof MultiPoint).isTrue();
     }
   }
 
   @Test
   public void multiLineString_instances() {
     List<Geometry> results = withMultiLineStrings().select(shapes.geometry).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Geometry row : results) {
-      assertNotNull(row);
-      assertTrue(row instanceof MultiLineString);
+      assertThat(row).isNotNull();
+      assertThat(row instanceof MultiLineString).isTrue();
     }
   }
 
   @Test
   public void multiPolygon_instances() {
     List<Geometry> results = withMultiPolygons().select(shapes.geometry).fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Geometry row : results) {
-      assertNotNull(row);
-      assertTrue(row instanceof MultiPolygon);
+      assertThat(row).isNotNull();
+      assertThat(row instanceof MultiPolygon).isTrue();
     }
   }
 
@@ -196,7 +196,7 @@ public class SpatialBase extends AbstractBaseTest {
     List<Expression<?>> expressions = new ArrayList<>();
     add(expressions, point.asBinary(), H2);
     add(expressions, point.asText());
-    add(expressions, point.boundary(), H2, MYSQL);
+    add(expressions, point.boundary(), H2, MYSQL, POSTGRESQL);
     add(expressions, point.convexHull(), H2, MYSQL);
     add(expressions, point.dimension());
     add(expressions, point.envelope(), H2);
@@ -214,11 +214,15 @@ public class SpatialBase extends AbstractBaseTest {
 
     for (Expression<?> expr : expressions) {
       boolean logged = false;
-      for (Object row : withPoints().select(expr).fetch()) {
-        if (row == null && !logged) {
-          System.err.println(expr.toString());
-          logged = true;
+      try {
+        for (Object row : withPoints().select(expr).fetch()) {
+          if (row == null && !logged) {
+            System.err.println(expr.toString());
+            logged = true;
+          }
         }
+      } catch (Exception e) {
+        fail("Error with expression " + expr, e);
       }
     }
   }
@@ -228,16 +232,16 @@ public class SpatialBase extends AbstractBaseTest {
     List<Expression<?>> expressions = new ArrayList<>();
     add(expressions, point1.contains(point2));
     add(expressions, point1.crosses(point2));
-    add(expressions, point1.difference(point2), H2, MYSQL);
+    add(expressions, point1.difference(point2), H2, MYSQL, POSTGRESQL);
     add(expressions, point1.disjoint(point2));
     add(expressions, point1.distance(point2), MYSQL);
-    add(expressions, point1.distanceSphere(point2), H2, MYSQL, SQLSERVER);
+    add(expressions, point1.distanceSphere(point2), H2, MYSQL, POSTGRESQL, SQLSERVER);
     add(expressions, point1.distanceSpheroid(point2), H2, MYSQL, POSTGRESQL, SQLSERVER);
     add(expressions, point1.eq(point2));
-    add(expressions, point1.intersection(point2), H2, MYSQL);
+    add(expressions, point1.intersection(point2), H2, MYSQL, POSTGRESQL);
     add(expressions, point1.intersects(point2));
     add(expressions, point1.overlaps(point2));
-    add(expressions, point1.symDifference(point2), H2, MYSQL);
+    add(expressions, point1.symDifference(point2), H2, MYSQL, POSTGRESQL);
     add(expressions, point1.touches(point2));
     add(expressions, point1.union(point2), H2, MYSQL);
     add(expressions, point1.within(point2));
@@ -258,16 +262,20 @@ public class SpatialBase extends AbstractBaseTest {
 
     for (Expression<?> expr : expressions) {
       boolean logged = false;
-      for (Object row :
-          query()
-              .from(shapes1, shapes2)
-              .where(shapes1.id.loe(5), shapes2.id.loe(5))
-              .select(expr)
-              .fetch()) {
-        if (row == null && !logged) {
-          System.err.println(expr.toString());
-          logged = true;
+      try {
+        for (Object row :
+            query()
+                .from(shapes1, shapes2)
+                .where(shapes1.id.loe(5), shapes2.id.loe(5))
+                .select(expr)
+                .fetch()) {
+          if (row == null && !logged) {
+            System.err.println(expr.toString());
+            logged = true;
+          }
         }
+      } catch (Exception e) {
+        fail("Error with expression " + expr, e);
       }
     }
   }

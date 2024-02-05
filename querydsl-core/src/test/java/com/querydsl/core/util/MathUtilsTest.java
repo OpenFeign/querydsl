@@ -13,27 +13,24 @@
  */
 package com.querydsl.core.util;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class MathUtilsTest {
 
-  @Rule public final ExpectedException expectedException = ExpectedException.none();
-
   @Test
   public void sum() {
-    assertEquals(Integer.valueOf(5), MathUtils.sum(2, 3.0));
+    assertThat(MathUtils.sum(2, 3.0)).isEqualTo(Integer.valueOf(5));
   }
 
   @Test
   public void difference() {
-    assertEquals(Integer.valueOf(2), MathUtils.difference(5, 3.0));
+    assertThat(MathUtils.difference(5, 3.0)).isEqualTo(Integer.valueOf(2));
   }
 
   @Test
@@ -63,24 +60,27 @@ public class MathUtilsTest {
   @Test
   public void cast_returns_null_when_input_is_null() {
     Integer result = MathUtils.cast(null, Integer.class);
-    assertNull(result);
+    assertThat(result).isNull();
   }
 
   @Test
   public void cast_throws_on_unsupported_numbers() {
-    expectedException.expect(IllegalArgumentException.class);
-    expectedException.expectMessage("Unsupported target type");
-
-    checkCast(1, AtomicInteger.class);
+    Throwable exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> {
+              checkCast(1, AtomicInteger.class);
+            });
+    assertThat(exception.getMessage()).contains("Unsupported target type");
   }
 
   private static void checkCast(Number value, Class<? extends Number> targetClass) {
     Number target = MathUtils.cast(value, targetClass);
-    assertSame(targetClass, target.getClass());
+    assertThat(target.getClass()).isSameAs(targetClass);
   }
 
   private static <N extends Number> void checkSame(N value, Class<N> targetClass) {
     N target = MathUtils.cast(value, targetClass);
-    assertSame(value, target);
+    assertThat(target).isSameAs(value);
   }
 }
