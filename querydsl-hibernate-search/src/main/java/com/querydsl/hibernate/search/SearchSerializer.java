@@ -14,12 +14,14 @@
 package com.querydsl.hibernate.search;
 
 import com.querydsl.core.types.Path;
-import com.querydsl.lucene3.LuceneSerializer;
-import org.hibernate.search.annotations.Field;
+import com.querydsl.lucene5.LuceneSerializer;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 /**
- * {@code SearchSerializer} extends the {@link LuceneSerializer} to use {@link Field} annotation
- * data from paths
+ * {@code SearchSerializer} extends the {@link LuceneSerializer} to use {@link FullTextField}
+ * annotation data from paths
  *
  * @author tiwe
  */
@@ -40,9 +42,17 @@ public class SearchSerializer extends LuceneSerializer {
   @Override
   public String toField(Path<?> path) {
     if (path.getAnnotatedElement() != null) {
-      Field fieldAnn = path.getAnnotatedElement().getAnnotation(Field.class);
-      if (fieldAnn != null && fieldAnn.name().length() > 0) {
-        return fieldAnn.name();
+      FullTextField fullTextField = path.getAnnotatedElement().getAnnotation(FullTextField.class);
+      if (fullTextField != null && fullTextField.name().length() > 0) {
+        return fullTextField.name();
+      }
+      KeywordField keywordField = path.getAnnotatedElement().getAnnotation(KeywordField.class);
+      if (keywordField != null && keywordField.name().length() > 0) {
+        return keywordField.name();
+      }
+      GenericField genericField = path.getAnnotatedElement().getAnnotation(GenericField.class);
+      if (genericField != null && genericField.name().length() > 0) {
+        return genericField.name();
       }
     }
     return super.toField(path);

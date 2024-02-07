@@ -2,25 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>6.1-SNAPSHOT</version>
   </parent>
   <artifactId>querydsl-example-kotlin</artifactId>
   <name>Querydsl example - Kotlin JPA</name>
-
-  <properties>
-    <kotlin.version>1.4.10</kotlin.version>
-  </properties>
 
   <dependencies>
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
-      <version>2.2.3</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-jpa</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -31,7 +27,7 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit</artifactId>
+      <artifactId>kotlin-test-junit5</artifactId>
       <version>${kotlin.version}</version>
       <scope>test</scope>
     </dependency>
@@ -49,13 +45,13 @@
           </compilerPlugins>
           <annotationProcessorPaths>
             <annotationProcessorPath>
-              <groupId>com.querydsl</groupId>
+              <groupId>io.github.openfeign.querydsl</groupId>
               <artifactId>querydsl-apt</artifactId>
               <version>${project.version}</version>
               <classifier>jpa</classifier>
             </annotationProcessorPath>
           </annotationProcessorPaths>
-          <jvmTarget>1.8</jvmTarget>
+          <jvmTarget>${main.java.version}</jvmTarget>
         </configuration>
         <dependencies>
           <dependency>
@@ -104,6 +100,7 @@
               <sourceDirs>
                 <sourceDir>src/test/kotlin</sourceDir>
                 <sourceDir>src/test/java</sourceDir>
+                <sourceDir>target/generated-sources/kapt/test</sourceDir>
               </sourceDirs>
             </configuration>
           </execution>

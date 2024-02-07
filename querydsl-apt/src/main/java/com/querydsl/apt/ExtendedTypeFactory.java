@@ -167,7 +167,13 @@ public class ExtendedTypeFactory {
               case INTERFACE:
                 return createInterfaceType(declaredType, typeElement, p);
               default:
-                throw new IllegalArgumentException("Illegal type " + typeElement);
+                {
+                  if (typeElement.getKind().name().equals("RECORD")) {
+                    return createClassType(declaredType, typeElement, p);
+                  }
+
+                  throw new IllegalArgumentException("Illegal type " + typeElement);
+                }
             }
           } else {
             throw new IllegalArgumentException(

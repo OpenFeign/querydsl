@@ -1,8 +1,6 @@
 package com.querydsl.r2dbc;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Coalesce;
 import org.junit.Test;
@@ -15,12 +13,10 @@ public class CoalesceTest {
         new Coalesce<String>(
             R2DBCExpressions.select(QCompanies.companies.name).from(QCompanies.companies),
             QCompanies.companies.name);
-    assertThat(
-        R2DBCExpressions.select(coalesce).toString(),
-        is(
-            equalTo(
-                "select coalesce((select COMPANIES.NAME\n"
-                    + "from COMPANIES COMPANIES), COMPANIES.NAME)\n"
-                    + "from dual")));
+    assertThat(R2DBCExpressions.select(coalesce).toString())
+        .isEqualTo(
+            "select coalesce((select COMPANIES.NAME\n"
+                + "from COMPANIES COMPANIES), COMPANIES.NAME)\n"
+                + "from dual");
   }
 }

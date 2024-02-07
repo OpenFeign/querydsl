@@ -35,6 +35,8 @@ import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.wagon.authentication.AuthenticationInfo;
 
@@ -43,317 +45,182 @@ import org.apache.maven.wagon.authentication.AuthenticationInfo;
  *
  * @author tiwe
  */
-public class AbstractSqlMetaDataExportMojo extends AbstractMojo {
+public abstract class AbstractSqlMetaDataExportMojo extends AbstractMojo {
 
-  /**
-   * maven project
-   *
-   * @parameter default-value="${project}"
-   * @readonly
-   */
+  /** maven project */
+  @Parameter(defaultValue = "${project}", required = true, readonly = true)
   private MavenProject project;
 
-  /**
-   * The Maven Wagon manager to use when obtaining server authentication details.
-   *
-   * @component
-   */
-  private WagonManager wagonManager;
+  /** The Maven Wagon manager to use when obtaining server authentication details. */
+  @Component private WagonManager wagonManager;
 
-  /**
-   * The server id in settings.xml to use as an alternative to jdbcUser and jdbcPassword
-   *
-   * @parameter
-   */
-  private String server;
+  /** The server id in settings.xml to use as an alternative to jdbcUser and jdbcPassword */
+  @Parameter private String server;
 
-  /**
-   * JDBC driver class name
-   *
-   * @parameter required=true
-   */
+  /** JDBC driver class name */
+  @Parameter(required = true)
   private String jdbcDriver;
 
-  /**
-   * JDBC connection url
-   *
-   * @parameter required=true
-   */
+  /** JDBC connection url */
+  @Parameter(required = true)
   private String jdbcUrl;
 
-  /**
-   * JDBC connection username
-   *
-   * @parameter
-   */
-  private String jdbcUser;
+  /** JDBC connection username */
+  @Parameter private String jdbcUser;
 
-  /**
-   * JDBC connection password
-   *
-   * @parameter
-   */
-  private String jdbcPassword;
+  /** JDBC connection password */
+  @Parameter private String jdbcPassword;
 
-  /**
-   * name prefix for querydsl-types (default: "Q")
-   *
-   * @parameter default-value="Q"
-   */
+  /** name prefix for querydsl-types (default: "Q") */
+  @Parameter(defaultValue = "Q")
   private String namePrefix;
 
-  /**
-   * name suffix for querydsl-types (default: "")
-   *
-   * @parameter default-value=""
-   */
+  /** name suffix for querydsl-types (default: "") */
+  @Parameter(defaultValue = "")
   private String nameSuffix;
 
-  /**
-   * name prefix for bean types (default: "")
-   *
-   * @parameter default-value=""
-   */
+  /** name prefix for bean types (default: "") */
+  @Parameter(defaultValue = "")
   private String beanPrefix;
 
-  /**
-   * name suffix for bean types (default: "")
-   *
-   * @parameter default-value=""
-   */
+  /** name suffix for bean types (default: "") */
+  @Parameter(defaultValue = "")
   private String beanSuffix;
 
-  /**
-   * package name for sources
-   *
-   * @parameter
-   * @required
-   */
+  /** package name for sources */
+  @Parameter(required = true)
   private String packageName;
 
-  private static final Pattern BLANK_VALUE_PATTERN =
-      Pattern.compile("(^|,)BLANK(,|$)", Pattern.CASE_INSENSITIVE);
-  private static final String BLANK_VALUE_REPLACEMENT = "$1$2";
-
-  /**
-   * package name for bean sources (default: packageName)
-   *
-   * @parameter
-   */
-  private String beanPackageName;
+  /** package name for bean sources (default: packageName) */
+  @Parameter private String beanPackageName;
 
   /**
    * schemaPattern a schema name pattern; must match the schema name as it is stored in the
    * database; "" retrieves those without a schema; {@code null} means that the schema name should
    * not be used to narrow the search (default: null)
-   *
-   * @parameter
    */
-  private String schemaPattern;
+  @Parameter private String schemaPattern;
 
   /**
-   * target source folder to create the sources into (e.g. target/generated-sources/java)
-   *
-   * @parameter
-   * @required
+   * a catalog name; must match the catalog name as it is stored in the database; "" retrieves those
+   * without a catalog; <code>null</code> means that the catalog name should not be used to narrow
+   * the search
    */
+  @Parameter private String catalogPattern;
+
+  /**
+   * tableNamePattern a table name pattern; must match the table name as it is stored in the
+   * database (default: null)
+   */
+  @Parameter private String tableNamePattern;
+
+  /** target source folder to create the sources into (e.g. target/generated-sources/java) */
+  @Parameter(required = true)
   private String targetFolder;
 
-  /**
-   * target source folder to create the bean sources into
-   *
-   * @parameter
-   */
-  private String beansTargetFolder;
+  /** target source folder to create the bean sources into */
+  @Parameter private String beansTargetFolder;
 
-  /**
-   * namingstrategy class to override (default: DefaultNamingStrategy)
-   *
-   * @parameter
-   */
-  private String namingStrategyClass;
+  /** namingstrategy class to override (default: DefaultNamingStrategy) */
+  @Parameter private String namingStrategyClass;
 
-  /**
-   * name for bean serializer class
-   *
-   * @parameter
-   */
-  private String beanSerializerClass;
+  /** name for bean serializer class */
+  @Parameter private String beanSerializerClass;
 
-  /**
-   * name for serializer class
-   *
-   * @parameter
-   */
-  private String serializerClass;
+  /** name for serializer class */
+  @Parameter private String serializerClass;
 
-  /**
-   * serialize beans as well
-   *
-   * @parameter default-value=false
-   */
+  /** serialize beans as well */
+  @Parameter(defaultValue = "false")
   private boolean exportBeans;
 
-  /**
-   * additional interfaces to be implemented by beans
-   *
-   * @parameter
-   */
-  private String[] beanInterfaces;
+  /** additional interfaces to be implemented by beans */
+  @Parameter private String[] beanInterfaces;
 
-  /**
-   * switch for {@code toString} addition
-   *
-   * @parameter default-value=false
-   */
+  /** switch for {@code toString} addition */
+  @Parameter(defaultValue = "false")
   private boolean beanAddToString;
 
-  /**
-   * switch for full constructor addition
-   *
-   * @parameter default-value=false
-   */
+  /** switch for full constructor addition */
+  @Parameter(defaultValue = "false")
   private boolean beanAddFullConstructor;
 
-  /**
-   * switch to print supertype content
-   *
-   * @parameter default-value=false
-   */
+  /** switch to print supertype content */
+  @Parameter(defaultValue = "false")
   private boolean beanPrintSupertype;
 
-  /**
-   * wrap key properties into inner classes (default: false)
-   *
-   * @parameter default-value=false
-   */
+  /** wrap key properties into inner classes (default: false) */
+  @Parameter(defaultValue = "false")
   private boolean innerClassesForKeys;
 
-  /**
-   * export validation annotations (default: false)
-   *
-   * @parameter default-value=false
-   */
+  /** export validation annotations (default: false) */
+  @Parameter(defaultValue = "false")
   private boolean validationAnnotations;
 
-  /**
-   * export column annotations (default: false)
-   *
-   * @parameter default-value=false
-   */
+  /** export column annotations (default: false) */
+  @Parameter(defaultValue = "false")
   private boolean columnAnnotations;
 
-  /**
-   * custom type classnames to use
-   *
-   * @parameter
-   */
-  private String[] customTypes;
+  /** custom type classnames to use */
+  @Parameter private String[] customTypes;
 
-  /**
-   * custom type mappings to use
-   *
-   * @parameter
-   */
-  private TypeMapping[] typeMappings;
+  /** custom type mappings to use */
+  @Parameter private TypeMapping[] typeMappings;
 
-  /**
-   * custom numeric mappings
-   *
-   * @parameter
-   */
-  private NumericMapping[] numericMappings;
+  /** custom numeric mappings */
+  @Parameter private NumericMapping[] numericMappings;
 
-  /**
-   * custom rename mappings
-   *
-   * @parameter
-   */
-  private RenameMapping[] renameMappings;
+  /** custom rename mappings */
+  @Parameter private RenameMapping[] renameMappings;
 
-  /**
-   * switch for generating scala sources
-   *
-   * @parameter default-value=false
-   */
+  /** switch for generating scala sources */
+  @Parameter(defaultValue = "false")
   private boolean createScalaSources;
 
   /**
    * switch for using schema as suffix in package generation, full package name will be {@code
    * ${packageName}.${schema}}
-   *
-   * @parameter default-value=false
    */
+  @Parameter(defaultValue = "false")
   private boolean schemaToPackage;
 
-  /**
-   * switch to normalize schema, table and column names to lowercase
-   *
-   * @parameter default-value=false
-   */
+  /** switch to normalize schema, table and column names to lowercase */
+  @Parameter(defaultValue = "false")
   private boolean lowerCase;
 
-  /**
-   * switch to export tables
-   *
-   * @parameter default-value=true
-   */
+  /** switch to export tables */
+  @Parameter(defaultValue = "true")
   private boolean exportTables;
 
-  /**
-   * switch to export views
-   *
-   * @parameter default-value=true
-   */
+  /** switch to export views */
+  @Parameter(defaultValue = "true")
   private boolean exportViews;
 
-  /**
-   * switch to export all types
-   *
-   * @parameter default-value=false
-   */
+  /** switch to export all types */
+  @Parameter(defaultValue = "false")
   private boolean exportAll;
 
-  /**
-   * switch to export primary keys
-   *
-   * @parameter default-value=true
-   */
+  /** switch to export primary keys */
+  @Parameter(defaultValue = "true")
   private boolean exportPrimaryKeys;
 
-  /**
-   * switch to export foreign keys
-   *
-   * @parameter default-value=true
-   */
+  /** switch to export foreign keys */
+  @Parameter(defaultValue = "true")
   private boolean exportForeignKeys;
 
-  /**
-   * switch to export direct foreign keys
-   *
-   * @parameter default-value=true
-   */
+  /** switch to export direct foreign keys */
+  @Parameter(defaultValue = "true")
   private boolean exportDirectForeignKeys;
 
-  /**
-   * switch to export inverse foreign keys
-   *
-   * @parameter default-value=true
-   */
+  /** switch to export inverse foreign keys */
+  @Parameter(defaultValue = "true")
   private boolean exportInverseForeignKeys;
 
-  /**
-   * override default column order (default: alphabetical)
-   *
-   * @parameter
-   */
-  private String columnComparatorClass;
+  /** override default column order (default: alphabetical) */
+  @Parameter private String columnComparatorClass;
 
-  /**
-   * switch to enable spatial type support
-   *
-   * @parameter default-value=false
-   */
+  /** switch to enable spatial type support */
+  @Parameter(defaultValue = "false")
   private boolean spatial;
 
   /**
@@ -361,40 +228,18 @@ public class AbstractSqlMetaDataExportMojo extends AbstractMojo {
    * Allows for arbitrary set of types to be exported, e.g.: "TABLE, MATERIALIZED VIEW". The
    * exportTables and exportViews parameters will be ignored if this parameter is set. (default:
    * none)
-   *
-   * @parameter
    */
-  private String tableTypesToExport;
+  @Parameter private String tableTypesToExport;
 
   /**
    * java import added to generated query classes: com.bar for package (without .* notation)
    * com.bar.Foo for class
-   *
-   * @parameter
    */
-  private String[] imports;
+  @Parameter private String[] imports;
 
-  /**
-   * Whether to skip the exporting execution
-   *
-   * @parameter default-value=false property="maven.querydsl.skip"
-   */
+  /** Whether to skip the exporting execution */
+  @Parameter(defaultValue = "false", property = "maven.querydsl.skip")
   private boolean skip;
-
-  /**
-   * a catalog name; must match the catalog name as it is stored in the database; "" retrieves those
-   * without a catalog; <code>null</code> means that the catalog name should not be used to narrow
-   * the search
-   */
-  private String catalogPattern;
-
-  /**
-   * tableNamePattern a table name pattern; must match the table name as it is stored in the
-   * database (default: null)
-   *
-   * @parameter
-   */
-  private String tableNamePattern;
 
   /**
    * The fully qualified class name of the <em>Single-Element Annotation</em> (with <code>String
@@ -407,150 +252,6 @@ public class AbstractSqlMetaDataExportMojo extends AbstractMojo {
    * @parameter
    */
   private String generatedAnnotationClass;
-
-  private static String processBlankValues(String value) {
-    if (value == null) {
-      return null;
-    }
-    return BLANK_VALUE_PATTERN.matcher(value).replaceAll(BLANK_VALUE_REPLACEMENT);
-  }
-
-  private static String emptyIfSetToBlank(String value) {
-    boolean setToBlank = value == null || value.equalsIgnoreCase("BLANK");
-    return setToBlank ? "" : value;
-  }
-
-  protected boolean isForTest() {
-    return false;
-  }
-
-  public void setProject(MavenProject project) {
-    this.project = project;
-  }
-
-  public void setServer(String server) {
-    this.server = server;
-  }
-
-  public void setJdbcDriver(String jdbcDriver) {
-    this.jdbcDriver = jdbcDriver;
-  }
-
-  public void setJdbcUrl(String jdbcUrl) {
-    this.jdbcUrl = jdbcUrl;
-  }
-
-  public void setJdbcUser(String jdbcUser) {
-    this.jdbcUser = jdbcUser;
-  }
-
-  public void setJdbcPassword(String jdbcPassword) {
-    this.jdbcPassword = jdbcPassword;
-  }
-
-  public void setNamePrefix(String namePrefix) {
-    this.namePrefix = namePrefix;
-  }
-
-  public void setNameSuffix(String nameSuffix) {
-    this.nameSuffix = nameSuffix;
-  }
-
-  public void setBeanInterfaces(String[] beanInterfaces) {
-    this.beanInterfaces = beanInterfaces;
-  }
-
-  public void setBeanPrefix(String beanPrefix) {
-    this.beanPrefix = beanPrefix;
-  }
-
-  public void setBeanSuffix(String beanSuffix) {
-    this.beanSuffix = beanSuffix;
-  }
-
-  public void setPackageName(String packageName) {
-    this.packageName = packageName;
-  }
-
-  public void setBeanPackageName(String beanPackageName) {
-    this.beanPackageName = beanPackageName;
-  }
-
-  public void setSchemaPattern(String schemaPattern) {
-    this.schemaPattern = schemaPattern;
-  }
-
-  public void setTableNamePattern(String tableNamePattern) {
-    this.tableNamePattern = tableNamePattern;
-  }
-
-  public void setTargetFolder(String targetFolder) {
-    this.targetFolder = targetFolder;
-  }
-
-  public void setNamingStrategyClass(String namingStrategyClass) {
-    this.namingStrategyClass = namingStrategyClass;
-  }
-
-  public void setBeanSerializerClass(String beanSerializerClass) {
-    this.beanSerializerClass = beanSerializerClass;
-  }
-
-  public void setSerializerClass(String serializerClass) {
-    this.serializerClass = serializerClass;
-  }
-
-  public void setExportBeans(boolean exportBeans) {
-    this.exportBeans = exportBeans;
-  }
-
-  public void setInnerClassesForKeys(boolean innerClassesForKeys) {
-    this.innerClassesForKeys = innerClassesForKeys;
-  }
-
-  public void setValidationAnnotations(boolean validationAnnotations) {
-    this.validationAnnotations = validationAnnotations;
-  }
-
-  public void setColumnAnnotations(boolean columnAnnotations) {
-    this.columnAnnotations = columnAnnotations;
-  }
-
-  public void setCustomTypes(String[] customTypes) {
-    this.customTypes = customTypes;
-  }
-
-  public void setCreateScalaSources(boolean createScalaSources) {
-    this.createScalaSources = createScalaSources;
-  }
-
-  public void setSchemaToPackage(boolean schemaToPackage) {
-    this.schemaToPackage = schemaToPackage;
-  }
-
-  public void setLowerCase(boolean lowerCase) {
-    this.lowerCase = lowerCase;
-  }
-
-  public void setTypeMappings(TypeMapping[] typeMappings) {
-    this.typeMappings = typeMappings;
-  }
-
-  public void setNumericMappings(NumericMapping[] numericMappings) {
-    this.numericMappings = numericMappings;
-  }
-
-  public void setRenameMappings(RenameMapping[] renameMappings) {
-    this.renameMappings = renameMappings;
-  }
-
-  public void setImports(String[] imports) {
-    this.imports = imports;
-  }
-
-  public void setSkip(boolean skip) {
-    this.skip = skip;
-  }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   @Override
@@ -722,11 +423,165 @@ public class AbstractSqlMetaDataExportMojo extends AbstractMojo {
     }
   }
 
+  protected abstract boolean isForTest();
+
+  public void setProject(MavenProject project) {
+    this.project = project;
+  }
+
+  public void setServer(String server) {
+    this.server = server;
+  }
+
+  public void setJdbcDriver(String jdbcDriver) {
+    this.jdbcDriver = jdbcDriver;
+  }
+
+  public void setJdbcUrl(String jdbcUrl) {
+    this.jdbcUrl = jdbcUrl;
+  }
+
+  public void setJdbcUser(String jdbcUser) {
+    this.jdbcUser = jdbcUser;
+  }
+
+  public void setJdbcPassword(String jdbcPassword) {
+    this.jdbcPassword = jdbcPassword;
+  }
+
+  public void setNamePrefix(String namePrefix) {
+    this.namePrefix = namePrefix;
+  }
+
+  public void setNameSuffix(String nameSuffix) {
+    this.nameSuffix = nameSuffix;
+  }
+
+  public void setBeanInterfaces(String[] beanInterfaces) {
+    this.beanInterfaces = beanInterfaces;
+  }
+
+  public void setBeanPrefix(String beanPrefix) {
+    this.beanPrefix = beanPrefix;
+  }
+
+  public void setBeanSuffix(String beanSuffix) {
+    this.beanSuffix = beanSuffix;
+  }
+
+  public void setPackageName(String packageName) {
+    this.packageName = packageName;
+  }
+
+  public void setBeanPackageName(String beanPackageName) {
+    this.beanPackageName = beanPackageName;
+  }
+
   public void setCatalogPattern(String catalogPattern) {
     this.catalogPattern = catalogPattern;
+  }
+
+  public void setSchemaPattern(String schemaPattern) {
+    this.schemaPattern = schemaPattern;
+  }
+
+  public void setTableNamePattern(String tableNamePattern) {
+    this.tableNamePattern = tableNamePattern;
+  }
+
+  public void setTargetFolder(String targetFolder) {
+    this.targetFolder = targetFolder;
+  }
+
+  public void setNamingStrategyClass(String namingStrategyClass) {
+    this.namingStrategyClass = namingStrategyClass;
+  }
+
+  public void setBeanSerializerClass(String beanSerializerClass) {
+    this.beanSerializerClass = beanSerializerClass;
+  }
+
+  public void setSerializerClass(String serializerClass) {
+    this.serializerClass = serializerClass;
+  }
+
+  public void setExportBeans(boolean exportBeans) {
+    this.exportBeans = exportBeans;
+  }
+
+  public void setExportTables(boolean exportTables) {
+    this.exportTables = exportTables;
+  }
+
+  public void setExportViews(boolean exportViews) {
+    this.exportViews = exportViews;
+  }
+
+  public void setInnerClassesForKeys(boolean innerClassesForKeys) {
+    this.innerClassesForKeys = innerClassesForKeys;
+  }
+
+  public void setValidationAnnotations(boolean validationAnnotations) {
+    this.validationAnnotations = validationAnnotations;
+  }
+
+  public void setColumnAnnotations(boolean columnAnnotations) {
+    this.columnAnnotations = columnAnnotations;
+  }
+
+  public void setCustomTypes(String[] customTypes) {
+    this.customTypes = customTypes;
+  }
+
+  public void setCreateScalaSources(boolean createScalaSources) {
+    this.createScalaSources = createScalaSources;
+  }
+
+  public void setSchemaToPackage(boolean schemaToPackage) {
+    this.schemaToPackage = schemaToPackage;
+  }
+
+  public void setLowerCase(boolean lowerCase) {
+    this.lowerCase = lowerCase;
+  }
+
+  public void setTypeMappings(TypeMapping[] typeMappings) {
+    this.typeMappings = typeMappings;
+  }
+
+  public void setNumericMappings(NumericMapping[] numericMappings) {
+    this.numericMappings = numericMappings;
+  }
+
+  public void setRenameMappings(RenameMapping[] renameMappings) {
+    this.renameMappings = renameMappings;
+  }
+
+  public void setImports(String[] imports) {
+    this.imports = imports;
+  }
+
+  public void setSkip(boolean skip) {
+    this.skip = skip;
   }
 
   public void setGeneratedAnnotationClass(String generatedAnnotationClass) {
     this.generatedAnnotationClass = generatedAnnotationClass;
   }
+
+  private static String emptyIfSetToBlank(String value) {
+    boolean setToBlank = value == null || value.equalsIgnoreCase("BLANK");
+    return setToBlank ? "" : value;
+  }
+
+  private static String processBlankValues(String value) {
+    if (value == null) {
+      return null;
+    }
+    return BLANK_VALUE_PATTERN.matcher(value).replaceAll(BLANK_VALUE_REPLACEMENT);
+  }
+
+  private static final Pattern BLANK_VALUE_PATTERN =
+      Pattern.compile("(^|,)BLANK(,|$)", Pattern.CASE_INSENSITIVE);
+  private static final String BLANK_VALUE_REPLACEMENT = "$1$2";
 }

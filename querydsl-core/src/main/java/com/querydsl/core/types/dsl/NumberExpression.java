@@ -13,9 +13,17 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Ops.MathOps;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.util.MathUtils;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
@@ -72,7 +80,10 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
     return Constants.RANDOM;
   }
 
-  @Nullable private transient volatile NumberExpression<T> abs, sum, min, max, floor, ceil, round;
+  @Nullable private transient volatile NumberExpression<T> abs, min, max, floor, ceil, round;
+
+  private transient volatile NumberExpression<? extends Number> sum;
+
   @Nullable private transient volatile NumberExpression<Double> avg, sqrt;
 
   @Nullable private transient volatile NumberExpression<T> negation;
@@ -750,15 +761,54 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
   /**
    * Create a {@code sum(this)} expression
    *
-   * <p>Get the sum of this expression (aggregation)
+   * <p>Get the sum of this expression (aggregation) Use one of the other methods (sumLong,
+   * sumDouble).
+   *
+   * <p>{@link Integer} {@link Long} {@link Short} are mapped to sumLong.
+   *
+   * <p>{@link BigInteger} are mapped to sumBigInteger.
+   *
+   * <p>{@link Float} {@link Double} {@link java.math.BigDecimal} are mapped to sumDouble.
+   *
+   * <p>{@link java.math.BigDecimal} are mapped to sumBigDecimal. This is needed in order to comply
+   * with hibernate 6 APIs.
    *
    * @return sum(this)
    */
-  public NumberExpression<T> sum() {
+  private <P extends Number & Comparable<?>> NumberExpression<P> sum(Class<P> clazz) {
+    if (sum == null) {
+      sum = Expressions.numberOperation(clazz, Ops.AggOps.SUM_AGG, mixin);
+    }
+    return (NumberExpression<P>) sum;
+  }
+
+  /** Use this only for aggregation. ex. select(cat.weight.sum()) */
+  // TODO: find a better solution for this typing
+  public NumberExpression<T> sumAggregate() {
     if (sum == null) {
       sum = Expressions.numberOperation(getType(), Ops.AggOps.SUM_AGG, mixin);
     }
-    return sum;
+    return (NumberExpression<T>) sum;
+  }
+
+  /** {@link Integer} {@link Long} {@link Short} are mapped to sumLong. */
+  public NumberExpression<Long> sumLong() {
+    return sum(Long.class);
+  }
+
+  /** {@link Float} {@link Double} are mapped to sumDouble. */
+  public NumberExpression<Double> sumDouble() {
+    return sum(Double.class);
+  }
+
+  /** {@link java.math.BigDecimal} are mapped to sumBigDecimal. */
+  public NumberExpression<BigDecimal> sumBigDecimal() {
+    return sum(BigDecimal.class);
+  }
+
+  /** {@link java.math.BigInteger} are mapped to sumBigInteger. */
+  public NumberExpression<BigInteger> sumBigInteger() {
+    return sum(BigInteger.class);
   }
 
   @Override
@@ -777,5 +827,87 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
       list.add(MathUtils.cast(number, getType()));
     }
     return list;
+  }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public NumberExpression<T> nullif(Expression<T> other) {
+    return Expressions.numberOperation(getType(), Ops.NULLIF, mixin, other);
+  }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public NumberExpression<T> nullif(T other) {
+    return nullif(ConstantImpl.create(other));
+  }
+
+  /**
+   * Create a {@code coalesce(this, expr)} expression
+   *
+   * @param expr additional argument
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked"})
+  public NumberExpression<T> coalesce(Expression<T> expr) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    coalesce.add(expr);
+    return (NumberExpression<T>) coalesce.asNumber();
+  }
+
+  /**
+   * Create a {@code coalesce(this, exprs...)} expression
+   *
+   * @param exprs additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public NumberExpression<T> coalesce(Expression<?>... exprs) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (Expression expr : exprs) {
+      coalesce.add(expr);
+    }
+    return (NumberExpression<T>) coalesce.asNumber();
+  }
+
+  /**
+   * Create a {@code coalesce(this, arg)} expression
+   *
+   * @param arg additional argument
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked"})
+  public NumberExpression<T> coalesce(T arg) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    coalesce.add(arg);
+    return (NumberExpression<T>) coalesce.asNumber();
+  }
+
+  /**
+   * Create a {@code coalesce(this, args...)} expression
+   *
+   * @param args additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked"})
+  public NumberExpression<T> coalesce(T... args) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (T arg : args) {
+      coalesce.add(arg);
+    }
+    return (NumberExpression<T>) coalesce.asNumber();
   }
 }

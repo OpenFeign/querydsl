@@ -1,11 +1,11 @@
 package com.querydsl.example.sql.repository;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.sql.model.Tweet;
-import com.querydsl.example.sql.model.User;
+import com.querydsl.example.sql.model.Usert;
+import jakarta.inject.Inject;
 import java.util.List;
-import javax.inject.Inject;
 import org.junit.Test;
 
 public class UserRepositoryTest extends AbstractPersistenceTest {
@@ -16,23 +16,23 @@ public class UserRepositoryTest extends AbstractPersistenceTest {
   @Test
   public void save_and_get_by_id() {
     String username = "jackie";
-    User user = new User();
+    Usert user = new Usert();
     user.setUsername(username);
     Long id = repository.save(user);
-    assertEquals(username, repository.findById(id).getUsername());
+    assertThat(repository.findById(id).getUsername()).isEqualTo(username);
   }
 
   @Test
   public void get_all() {
-    User user = new User();
+    Usert user = new Usert();
     user.setUsername("jimmy");
     repository.save(user);
-    assertTrue(repository.all().size() == 1);
+    assertThat(repository.all().size() == 1).isTrue();
   }
 
   @Test
   public void get_all_with_tweet_count() {
-    User user = new User();
+    Usert user = new Usert();
     user.setUsername("jimmy");
     Long posterId = repository.save(user);
 
@@ -42,9 +42,9 @@ public class UserRepositoryTest extends AbstractPersistenceTest {
     tweetRepository.save(tw3);
 
     List<UserInfo> infos = repository.allWithTweetCount();
-    assertFalse(infos.isEmpty());
+    assertThat(infos).isNotEmpty();
     for (UserInfo info : infos) {
-      assertNotNull(info.getUsername());
+      assertThat(info.getUsername()).isNotNull();
     }
   }
 }

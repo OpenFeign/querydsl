@@ -13,8 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.SimpleType;
@@ -35,14 +34,14 @@ public class TypeMappingsTest {
     typeMappings.register(type, new QueryTypeFactoryImpl("Q", "", "").create(type));
 
     Type pathType = typeMappings.getPathType(type, model, false);
-    assertEquals("QTypeMappingsTest_Entity", pathType.getSimpleName());
+    assertThat(pathType.getSimpleName()).isEqualTo("QTypeMappingsTest_Entity");
   }
 
   @Test
   public void isRegistered() {
     TypeMappings typeMappings = new JavaTypeMappings();
     typeMappings.register(new ClassType(Double[].class), new ClassType(Point.class));
-    assertTrue(typeMappings.isRegistered(new ClassType(Double[].class)));
+    assertThat(typeMappings.isRegistered(new ClassType(Double[].class))).isTrue();
   }
 
   @Test
@@ -62,7 +61,9 @@ public class TypeMappingsTest {
     typeMappings.register(integerListType, integerListTypeExpression);
     typeMappings.register(longListType, longListTypeExpression);
 
-    assertEquals(integerListTypeExpression, typeMappings.getExprType(integerListType, null, false));
-    assertEquals(longListTypeExpression, typeMappings.getExprType(longListType, null, false));
+    assertThat(typeMappings.getExprType(integerListType, null, false))
+        .isEqualTo(integerListTypeExpression);
+    assertThat(typeMappings.getExprType(longListType, null, false))
+        .isEqualTo(longListTypeExpression);
   }
 }

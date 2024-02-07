@@ -13,6 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
@@ -34,8 +35,8 @@ public abstract class TimeExpression<T extends Comparable> extends TemporalExpre
     private static final TimeExpression<Time> CURRENT_TIME = currentTime(Time.class);
   }
 
-  @Nullable
-  private transient volatile NumberExpression<Integer> hours, minutes, seconds, milliseconds;
+  @Nullable private transient volatile NumberExpression<Integer> hours, minutes, milliseconds;
+  @Nullable private transient volatile NumberExpression<Float> seconds;
 
   public TimeExpression(Expression<T> mixin) {
     super(mixin);
@@ -80,9 +81,9 @@ public abstract class TimeExpression<T extends Comparable> extends TemporalExpre
    *
    * @return second
    */
-  public NumberExpression<Integer> second() {
+  public NumberExpression<Float> second() {
     if (seconds == null) {
-      seconds = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.SECOND, mixin);
+      seconds = Expressions.numberOperation(Float.class, Ops.DateTimeOps.SECOND, mixin);
     }
     return seconds;
   }
@@ -117,5 +118,85 @@ public abstract class TimeExpression<T extends Comparable> extends TemporalExpre
    */
   public static <T extends Comparable> TimeExpression<T> currentTime(Class<T> cl) {
     return Expressions.timeOperation(cl, Ops.DateTimeOps.CURRENT_TIME);
+  }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public TimeExpression<T> nullif(Expression<T> other) {
+    return Expressions.timeOperation(getType(), Ops.NULLIF, mixin, other);
+  }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public TimeExpression<T> nullif(T other) {
+    return nullif(ConstantImpl.create(other));
+  }
+
+  /**
+   * Create a {@code coalesce(this, expr)} expression
+   *
+   * @param expr additional argument
+   * @return coalesce
+   */
+  @Override
+  public TimeExpression<T> coalesce(Expression<T> expr) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    coalesce.add(expr);
+    return coalesce.asTime();
+  }
+
+  /**
+   * Create a {@code coalesce(this, exprs...)} expression
+   *
+   * @param exprs additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public TimeExpression<T> coalesce(Expression<?>... exprs) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (Expression expr : exprs) {
+      coalesce.add(expr);
+    }
+    return coalesce.asTime();
+  }
+
+  /**
+   * Create a {@code coalesce(this, arg)} expression
+   *
+   * @param arg additional argument
+   * @return coalesce
+   */
+  @Override
+  public TimeExpression<T> coalesce(T arg) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    coalesce.add(arg);
+    return coalesce.asTime();
+  }
+
+  /**
+   * Create a {@code coalesce(this, args...)} expression
+   *
+   * @param args additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked"})
+  public TimeExpression<T> coalesce(T... args) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (T arg : args) {
+      coalesce.add(arg);
+    }
+    return coalesce.asTime();
   }
 }

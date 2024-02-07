@@ -1,25 +1,25 @@
 package com.querydsl.example.dao;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.dto.Customer;
 import java.util.List;
-import javax.annotation.Resource;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CustomerDaoTest extends AbstractDaoTest {
 
-  @Resource CustomerDao customerDao;
+  @Autowired CustomerDao customerDao;
 
   @Test
   public void findAll() {
     List<Customer> customers = customerDao.findAll();
-    assertFalse(customers.isEmpty());
+    assertThat(customers).isNotEmpty();
   }
 
   @Test
   public void findById() {
-    assertNotNull(customerDao.findById(1));
+    assertThat(customerDao.findById(1)).isNotNull();
   }
 
   @Test
@@ -32,6 +32,6 @@ public class CustomerDaoTest extends AbstractDaoTest {
   public void delete() {
     Customer customer = customerDao.findById(1);
     customerDao.delete(customer);
-    assertNull(customerDao.findById(1));
+    assertThat(customerDao.findById(1)).isNull();
   }
 }

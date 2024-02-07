@@ -14,15 +14,14 @@
 package com.querydsl.maven;
 
 import com.querydsl.sql.codegen.MetaDataExporter;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * {@code MetadataExportMojo} is a goal for {@link MetaDataExporter} execution. It is executed by
  * default in the {@code generate-sources} phase.
- *
- * @phase generate-sources
- * @goal export
  */
-@Deprecated
+@Mojo(name = "export", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class MetadataExportMojo extends AbstractSqlMetaDataExportMojo {
 
   @Override

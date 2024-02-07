@@ -13,21 +13,21 @@
  */
 package com.querydsl.sql;
 
-import com.querydsl.core.JoinExpression;
-import com.querydsl.core.JoinFlag;
-import com.querydsl.core.QueryFlag;
+import com.querydsl.core.*;
 import com.querydsl.core.QueryFlag.Position;
-import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.SerializerBase;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.Template.Element;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.sql.dml.SQLInsertBatch;
+import com.querydsl.sql.dml.SQLMergeUsingCase;
 import com.querydsl.sql.types.Null;
 import java.sql.Types;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -52,8 +52,6 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
   protected static final String COMMA = ", ";
 
   protected final LinkedList<Path<?>> constantPaths = new LinkedList<Path<?>>();
-
-  protected final List<Object> constants = new ArrayList<Object>();
 
   protected final Set<Path<?>> withAliases = new HashSet<>();
 
@@ -109,10 +107,6 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
 
   protected void appendTableName(String table, boolean precededByDot) {
     append(templates.quoteIdentifier(table, precededByDot));
-  }
-
-  public List<Object> getConstants() {
-    return constants;
   }
 
   public List<Path<?>> getConstantPaths() {
@@ -556,6 +550,115 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
     }
   }
 
+  public void serializeMergeUsing(
+      QueryMetadata metadata,
+      RelationalPath<?> entity,
+      SimpleExpression<?> usingExpression,
+      Predicate usingOn,
+      List<SQLMergeUsingCase> whens) {
+    this.entity = entity;
+    templates.serializeMergeUsing(metadata, entity, usingExpression, usingOn, whens, this);
+  }
+
+  public void serializeForMergeUsing(
+      QueryMetadata metadata,
+      RelationalPath<?> entity,
+      SimpleExpression<?> usingExpression,
+      Predicate usingOn,
+      List<SQLMergeUsingCase> whens) {
+    serialize(Position.START, metadata.getFlags());
+
+    if (!serialize(Position.START_OVERRIDE, metadata.getFlags())) {
+      append(templates.getMergeInto());
+    }
+    serialize(Position.AFTER_SELECT, metadata.getFlags());
+
+    boolean originalDmlWithSchema = dmlWithSchema;
+    dmlWithSchema = true;
+    handle(entity);
+    dmlWithSchema = originalDmlWithSchema;
+    append("\nusing ");
+
+    // A hacky way to allow merging table to table directly
+    if (usingExpression instanceof RelationalPath) {
+      dmlWithSchema = true;
+      // If table has an alias, handle both original table name and alias
+      if (!((RelationalPath<?>) usingExpression)
+          .getTableName()
+          .equals(ColumnMetadata.getName((RelationalPath<?>) usingExpression))) {
+        RelationalPath<?> originalEntity = this.entity;
+        this.entity = (RelationalPath<?>) usingExpression;
+        handle(usingExpression);
+        append(" ");
+        this.entity = originalEntity;
+        dmlWithSchema = originalDmlWithSchema;
+      }
+    }
+    handle(usingExpression);
+    dmlWithSchema = originalDmlWithSchema;
+
+    append("\n");
+    append(templates.getOn());
+    handle(usingOn);
+
+    for (final SQLMergeUsingCase when : whens) {
+      append("\nwhen ");
+      if (!when.getMatched()) {
+        append("not ");
+      }
+      append("matched ");
+      for (final Predicate matchAnd : when.getMatchAnds()) {
+        append("and ");
+        handle(matchAnd);
+      }
+      append("\nthen ");
+      if (when.getMergeOperation() == SQLMergeUsingCase.MergeOperation.INSERT) {
+        ArrayList<Path<?>> columns = new ArrayList<>(when.getUpdates().keySet());
+        List<Expression<?>> values =
+            columns.stream().map(when.getUpdates()::get).collect(Collectors.toList());
+        append("insert (");
+        skipParent = true;
+        handle(COMMA, columns);
+        skipParent = false;
+        append(")");
+        if (!useLiterals) {
+          for (int i = 0; i < columns.size(); i++) {
+            if (values.get(i) instanceof Constant<?>) {
+              constantPaths.add(columns.get(i));
+            }
+          }
+        }
+        // values
+        append(templates.getValues());
+        append("(");
+        handle(COMMA, values);
+        append(")");
+      } else if (when.getMergeOperation() == SQLMergeUsingCase.MergeOperation.UPDATE) {
+        append(templates.getUpdate());
+        append("\n");
+        append(templates.getSet());
+        boolean first = true;
+        for (final Map.Entry<Path<?>, Expression<?>> update : when.getUpdates().entrySet()) {
+          if (!first) {
+            append(COMMA);
+          }
+          skipParent = true;
+          handle(update.getKey());
+          skipParent = false;
+          append(" = ");
+          if (!useLiterals && update.getValue() instanceof Constant<?>) {
+            constantPaths.add(update.getKey());
+          }
+          handle(update.getValue());
+          first = false;
+        }
+      } else if (when.getMergeOperation() == SQLMergeUsingCase.MergeOperation.DELETE) {
+        append(templates.getDelete());
+      }
+    }
+    append(";");
+  }
+
   public void serializeInsert(
       QueryMetadata metadata,
       RelationalPath<?> entity,
@@ -826,7 +929,7 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
         if (!first) {
           append(COMMA);
         }
-        append("?");
+        serializeConstant(constants.size() + 1, null);
         constants.add(o);
         if (first && (constantPaths.size() < constants.size())) {
           constantPaths.add(null);
@@ -849,7 +952,7 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
         super.visitOperation(
             constant.getClass(), SQLOps.CAST, Arrays.<Expression<?>>asList(Q, type));
       } else {
-        append("?");
+        serializeConstant(constants.size() + 1, null);
       }
       constants.add(constant);
       if (constantPaths.size() < constants.size()) {
@@ -860,12 +963,17 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
 
   @Override
   public Void visit(ParamExpression<?> param, Void context) {
-    append("?");
     constants.add(param);
+    serializeConstant(constants.size(), null);
     if (constantPaths.size() < constants.size()) {
       constantPaths.add(null);
     }
     return null;
+  }
+
+  @Override
+  protected void serializeConstant(int parameterIndex, String constantLabel) {
+    append("?");
   }
 
   @Override

@@ -217,15 +217,15 @@ public abstract class AbstractMongodbQuery<Q extends AbstractMongodbQuery<Q>>
     this.readPreference = readPreference;
   }
 
-  QueryMixin<Q> getQueryMixin() {
+  protected QueryMixin<Q> getQueryMixin() {
     return queryMixin;
   }
 
-  MongodbDocumentSerializer getSerializer() {
+  protected MongodbDocumentSerializer getSerializer() {
     return serializer;
   }
 
-  ReadPreference getReadPreference() {
+  protected ReadPreference getReadPreference() {
     return readPreference;
   }
 

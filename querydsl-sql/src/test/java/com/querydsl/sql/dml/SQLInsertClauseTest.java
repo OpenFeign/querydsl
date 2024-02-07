@@ -1,6 +1,6 @@
 package com.querydsl.sql.dml;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.QueryFlag;
 import com.querydsl.sql.KeyAccessorsTest.QEmployee;
@@ -26,8 +26,8 @@ public class SQLInsertClauseTest {
     insert.set(emp1.id, 1);
 
     SQLBindings sql = insert.getSQL().get(0);
-    assertEquals("insert into EMPLOYEE (ID)\nvalues (?)", sql.getSQL());
-    assertEquals(Collections.singletonList(1), sql.getNullFriendlyBindings());
+    assertThat(sql.getSQL()).isEqualTo("insert into EMPLOYEE (ID)\nvalues (?)");
+    assertThat(sql.getNullFriendlyBindings()).isEqualTo(Collections.singletonList(1));
   }
 
   @Test
@@ -40,9 +40,8 @@ public class SQLInsertClauseTest {
     insert.addBatch();
     insert.addFlag(QueryFlag.Position.END, " on duplicate key ignore");
     insert.setBatchToBulk(true);
-    assertEquals(
-        "insert into EMPLOYEE (ID)\n" + "values (?), (?) on duplicate key ignore",
-        insert.getSQL().get(0).getSQL());
+    assertThat(insert.getSQL().get(0).getSQL())
+        .isEqualTo("insert into EMPLOYEE (ID)\n" + "values (?), (?) on duplicate key ignore");
   }
 
   @Test
@@ -52,13 +51,13 @@ public class SQLInsertClauseTest {
     insert.populate(emp1);
 
     SQLBindings sql = insert.getSQL().get(0);
-    assertEquals(
-        "The order of columns in generated sql should be predictable",
-        "insert into EMPLOYEE (ID, FIRSTNAME, LASTNAME, SALARY, DATEFIELD, TIMEFIELD,"
-            + " SUPERIOR_ID)\n"
-            + "values (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY,"
-            + " EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID)",
-        sql.getSQL());
+    assertThat(sql.getSQL())
+        .as("The order of columns in generated sql should be predictable")
+        .isEqualTo(
+            """
+            insert into EMPLOYEE (ID, FIRSTNAME, LASTNAME, SALARY, DATEFIELD, TIMEFIELD, SUPERIOR_ID)
+            values (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID)\
+            """);
   }
 
   @Test
@@ -67,8 +66,8 @@ public class SQLInsertClauseTest {
     SQLInsertClause insert = new SQLInsertClause(null, SQLTemplates.DEFAULT, emp1);
     insert.set(emp1.id, 1);
     insert.addBatch();
-    assertEquals(1, insert.getBatchCount());
+    assertThat(insert.getBatchCount()).isEqualTo(1);
     insert.clear();
-    assertEquals(0, insert.getBatchCount());
+    assertThat(insert.getBatchCount()).isEqualTo(0);
   }
 }

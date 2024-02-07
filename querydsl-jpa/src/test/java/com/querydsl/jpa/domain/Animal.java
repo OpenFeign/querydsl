@@ -13,9 +13,13 @@
  */
 package com.querydsl.jpa.domain;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.Date;
-import javax.persistence.*;
-import org.hibernate.annotations.Type;
 
 /** The Class Animal. */
 @Entity
@@ -30,7 +34,6 @@ public class Animal {
   private int weight, toes;
 
   // needed for JPA tests
-  @Type(type = "com.querydsl.jpa.ExtDoubleType")
   private double bodyWeight;
 
   private float floatProperty;

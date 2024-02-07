@@ -17,7 +17,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
-import org.geolatte.geom.GeometryCollection;
+import org.geolatte.geom.AbstractGeometryCollection;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -26,8 +26,8 @@ import org.jetbrains.annotations.Nullable;
  * @author tiwe
  * @param <T>
  */
-public abstract class MultiCurveExpression<T extends GeometryCollection>
-    extends GeometryCollectionExpression<T> {
+public abstract class MultiCurveExpression<T extends AbstractGeometryCollection>
+    extends AbstractGeometryCollectionExpression<T> {
 
   private static final long serialVersionUID = 6983316799469849656L;
 

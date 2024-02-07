@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.inheritance;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.domain.CommonIdentifiable;
@@ -31,13 +31,13 @@ public class Inheritance8Test {
 
   @Test
   public void simple_subclass_should_contain_fields_from_external_superclass() {
-    assertEquals(
-        NumberPath.class, QInheritance8Test_SimpleSubclass.simpleSubclass.version.getClass());
+    assertThat(QInheritance8Test_SimpleSubclass.simpleSubclass.version.getClass())
+        .isEqualTo(NumberPath.class);
   }
 
   @Test
   public void generic_subclass_should_contain_fields_from_external_superclass() {
-    assertEquals(
-        NumberPath.class, QInheritance8Test_GenericSubclass.genericSubclass.version.getClass());
+    assertThat(QInheritance8Test_GenericSubclass.genericSubclass.version.getClass())
+        .isEqualTo(NumberPath.class);
   }
 }

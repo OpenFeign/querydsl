@@ -1,10 +1,10 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import org.junit.Test;
 
 public class OrderTest {
@@ -23,7 +23,7 @@ public class OrderTest {
 
   @Test
   public void test() {
-    assertEquals(
-        QOrderTest_OrderItemImpl.class, QOrderTest_Order.order.orderItems.any().getClass());
+    assertThat(QOrderTest_Order.order.orderItems.any().getClass())
+        .isEqualTo(QOrderTest_OrderItemImpl.class);
   }
 }

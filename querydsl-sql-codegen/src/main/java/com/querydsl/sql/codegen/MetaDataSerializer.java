@@ -17,12 +17,7 @@ import static com.querydsl.codegen.utils.Symbols.COMMA;
 import static com.querydsl.codegen.utils.Symbols.NEW;
 import static com.querydsl.codegen.utils.Symbols.SUPER;
 
-import com.querydsl.codegen.EntitySerializer;
-import com.querydsl.codegen.EntityType;
-import com.querydsl.codegen.GeneratedAnnotationResolver;
-import com.querydsl.codegen.Property;
-import com.querydsl.codegen.SerializerConfig;
-import com.querydsl.codegen.TypeMappings;
+import com.querydsl.codegen.*;
 import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Parameter;
@@ -37,6 +32,8 @@ import com.querydsl.sql.codegen.support.ForeignKeyData;
 import com.querydsl.sql.codegen.support.InverseForeignKeyData;
 import com.querydsl.sql.codegen.support.KeyData;
 import com.querydsl.sql.codegen.support.PrimaryKeyData;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -49,8 +46,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * {@code MetaDataSerializer} defines the Query type serialization logic for {@link
@@ -58,7 +53,7 @@ import javax.inject.Named;
  *
  * @author tiwe
  */
-public class MetaDataSerializer extends EntitySerializer {
+public class MetaDataSerializer extends DefaultEntitySerializer {
 
   private static final Map<Integer, String> typeConstants = new HashMap<>();
 

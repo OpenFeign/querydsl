@@ -13,7 +13,11 @@
  */
 package com.querydsl.jpa.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 /** The Class StatusChange. */
 @Entity

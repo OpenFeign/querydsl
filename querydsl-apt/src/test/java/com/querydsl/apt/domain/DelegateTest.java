@@ -13,8 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryDelegate;
 import com.querydsl.core.annotations.QueryEntity;
@@ -69,25 +68,25 @@ public class DelegateTest {
   @Test
   public void user() {
     QDelegateTest_User user = QDelegateTest_User.user;
-    assertNotNull(user.isManagedBy(new User()));
-    assertNotNull(user.isManagedBy(user));
-    assertNotNull(user.simpleMethod());
-    assertEquals(user.name, user.getName());
+    assertThat(user.isManagedBy(new User())).isNotNull();
+    assertThat(user.isManagedBy(user)).isNotNull();
+    assertThat(user.simpleMethod()).isNotNull();
+    assertThat(user.getName()).isEqualTo(user.name);
   }
 
   @Test
   public void simpleUser() {
     QDelegateTest_SimpleUser user = QDelegateTest_SimpleUser.simpleUser;
-    assertNotNull(user.isManagedBy(new User()));
-    assertNotNull(user.isManagedBy(user._super));
-    assertEquals(user.name, user.getName());
+    assertThat(user.isManagedBy(new User())).isNotNull();
+    assertThat(user.isManagedBy(user._super)).isNotNull();
+    assertThat(user.getName()).isEqualTo(user.name);
   }
 
   @Test
   public void simpleUser2() {
     QDelegateTest_SimpleUser2 user = QDelegateTest_SimpleUser2.simpleUser2;
-    assertNotNull(user.isManagedBy(new User()));
-    assertNotNull(user.isManagedBy(user._super._super));
-    assertEquals(user.name, user.getName());
+    assertThat(user.isManagedBy(new User())).isNotNull();
+    assertThat(user.isManagedBy(user._super._super)).isNotNull();
+    assertThat(user.getName()).isEqualTo(user.name);
   }
 }

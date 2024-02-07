@@ -60,8 +60,8 @@ public final class TimeConstant<D extends java.util.Date> extends TimeExpression
   }
 
   @Override
-  public NumberExpression<Integer> second() {
-    return NumberConstant.create(calendar.get(Calendar.SECOND));
+  public NumberExpression<Float> second() {
+    return NumberConstant.create((float) calendar.get(Calendar.SECOND));
   }
 
   @Override

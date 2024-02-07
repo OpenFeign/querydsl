@@ -20,10 +20,8 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
 
 /** QSpatialRefSys is a Querydsl query type for SpatialRefSys */
-@Generated("com.querydsl.sql.codegen.MetaDataSerializer")
 public class QSpatialRefSys extends RelationalPathSpatial<SpatialRefSys> {
 
   private static final long serialVersionUID = 1681874658;

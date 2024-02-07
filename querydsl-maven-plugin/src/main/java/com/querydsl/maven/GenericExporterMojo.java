@@ -14,11 +14,9 @@
 package com.querydsl.maven;
 
 import com.querydsl.codegen.GenericExporter;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
-/**
- * {@code GenericExporterMojo} calls {@link GenericExporter} using the classpath of the module
- *
- * @goal generic-export
- * @requiresDependencyResolution test
- */
+/** {@code GenericExporterMojo} calls {@link GenericExporter} using the classpath of the module */
+@Mojo(name = "generic-export", requiresDependencyResolution = ResolutionScope.TEST)
 public class GenericExporterMojo extends AbstractExporterMojo {}

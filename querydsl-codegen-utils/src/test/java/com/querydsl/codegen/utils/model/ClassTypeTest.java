@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils.model;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
 import java.util.Map;
@@ -28,76 +28,77 @@ public class ClassTypeTest {
 
   @Test
   public void InnerClass_Name() {
-    assertEquals(
-        "com.querydsl.codegen.utils.model.ClassTypeTest.Inner",
-        new ClassType(Inner.class).getFullName());
-    assertEquals(
-        "com.querydsl.codegen.utils.model.ClassTypeTest.Inner[]",
-        new ClassType(Inner.class).asArrayType().getFullName());
+    assertThat(new ClassType(Inner.class).getFullName())
+        .isEqualTo("com.querydsl.codegen.utils.model.ClassTypeTest.Inner");
+    assertThat(new ClassType(Inner.class).asArrayType().getFullName())
+        .isEqualTo("com.querydsl.codegen.utils.model.ClassTypeTest.Inner[]");
   }
 
   @Test
   public void ArrayType() {
     Type type = new ClassType(TypeCategory.ARRAY, String[].class);
-    assertEquals("java.lang", type.getPackageName());
+    assertThat(type.getPackageName()).isEqualTo("java.lang");
   }
 
   @Test
   public void ArrayType_Equals_SimpleType() {
     Type type = new ClassType(TypeCategory.ARRAY, String[].class);
     Type type2 = new SimpleType("java.lang.String[]", "java.lang", "String[]");
-    assertEquals(type, type2);
+    assertThat(type2).isEqualTo(type);
   }
 
   @Test
   public void As() {
-    assertEquals(TypeCategory.COMPARABLE, stringType.as(TypeCategory.COMPARABLE).getCategory());
+    assertThat(stringType.as(TypeCategory.COMPARABLE).getCategory())
+        .isEqualTo(TypeCategory.COMPARABLE);
   }
 
   @Test
   public void GetParameters() {
     ClassType mapType = new ClassType(TypeCategory.MAP, Map.class, stringType, stringType);
-    assertEquals(2, mapType.getParameters().size());
-    assertEquals(stringType, mapType.getParameters().get(0));
-    assertEquals(stringType, mapType.getParameters().get(1));
+    assertThat(mapType.getParameters()).hasSize(2);
+    assertThat(mapType.getParameters().get(0)).isEqualTo(stringType);
+    assertThat(mapType.getParameters().get(1)).isEqualTo(stringType);
     // assertEquals(stringType, mapType.getSelfOrValueType());
-    assertFalse(mapType.isPrimitive());
+    assertThat(mapType.isPrimitive()).isFalse();
   }
 
   @Test
   public void GetComponentType() {
-    assertEquals(
-        "java.lang.String", new ClassType(String[].class).getComponentType().getFullName());
+    assertThat(new ClassType(String[].class).getComponentType().getFullName())
+        .isEqualTo("java.lang.String");
   }
 
   @Test
   public void Primitive_Arrays() {
     ClassType byteArray = new ClassType(byte[].class);
-    assertEquals(
-        "byte[]",
-        byteArray.getRawName(Collections.singleton("java.lang"), Collections.<String>emptySet()));
-    assertEquals("byte[]", byteArray.getSimpleName());
-    assertEquals("byte[]", byteArray.getFullName());
+    assertThat(
+            byteArray.getRawName(
+                Collections.singleton("java.lang"), Collections.<String>emptySet()))
+        .isEqualTo("byte[]");
+    assertThat(byteArray.getSimpleName()).isEqualTo("byte[]");
+    assertThat(byteArray.getFullName()).isEqualTo("byte[]");
   }
 
   @Test
   public void Array() {
     ClassType byteArray = new ClassType(Byte[].class);
-    assertEquals(
-        "Byte[]",
-        byteArray.getRawName(Collections.singleton("java.lang"), Collections.<String>emptySet()));
-    assertEquals("Byte[]", byteArray.getSimpleName());
-    assertEquals("java.lang.Byte[]", byteArray.getFullName());
+    assertThat(
+            byteArray.getRawName(
+                Collections.singleton("java.lang"), Collections.<String>emptySet()))
+        .isEqualTo("Byte[]");
+    assertThat(byteArray.getSimpleName()).isEqualTo("Byte[]");
+    assertThat(byteArray.getFullName()).isEqualTo("java.lang.Byte[]");
   }
 
   @Test
   public void IsPrimitive() {
-    assertTrue(Types.CHAR.isPrimitive());
-    assertTrue(Types.DOUBLE_P.isPrimitive());
-    assertTrue(Types.FLOAT_P.isPrimitive());
-    assertTrue(Types.INT.isPrimitive());
-    assertTrue(Types.LONG_P.isPrimitive());
-    assertTrue(Types.SHORT_P.isPrimitive());
+    assertThat(Types.CHAR.isPrimitive()).isTrue();
+    assertThat(Types.DOUBLE_P.isPrimitive()).isTrue();
+    assertThat(Types.FLOAT_P.isPrimitive()).isTrue();
+    assertThat(Types.INT.isPrimitive()).isTrue();
+    assertThat(Types.LONG_P.isPrimitive()).isTrue();
+    assertThat(Types.SHORT_P.isPrimitive()).isTrue();
   }
 
   //    @Test
@@ -117,19 +118,20 @@ public class ClassTypeTest {
     Type inner2 = new ClassType(ClassTypeTest.Inner.Inner2.class);
     Type inner3 = new ClassType(ClassTypeTest.Inner.Inner2.Inner3.class);
 
-    assertEquals(inner2, inner3.getEnclosingType());
-    assertEquals(inner, inner2.getEnclosingType());
-    assertEquals(outer, inner.getEnclosingType());
-    assertNull(outer.getEnclosingType());
+    assertThat(inner3.getEnclosingType()).isEqualTo(inner2);
+    assertThat(inner2.getEnclosingType()).isEqualTo(inner);
+    assertThat(inner.getEnclosingType()).isEqualTo(outer);
+    assertThat(outer.getEnclosingType()).isNull();
 
-    assertEquals(
-        "ClassTypeTest.Inner.Inner2.Inner3",
-        inner3.getRawName(Collections.singleton(outer.getPackageName()), Collections.emptySet()));
-    assertEquals(
-        "Inner2.Inner3",
-        inner3.getRawName(Collections.emptySet(), Collections.singleton(inner2.getFullName())));
-    assertEquals(
-        "Inner3",
-        inner3.getRawName(Collections.emptySet(), Collections.singleton(inner3.getFullName())));
+    assertThat(
+            inner3.getRawName(
+                Collections.singleton(outer.getPackageName()), Collections.emptySet()))
+        .isEqualTo("ClassTypeTest.Inner.Inner2.Inner3");
+    assertThat(
+            inner3.getRawName(Collections.emptySet(), Collections.singleton(inner2.getFullName())))
+        .isEqualTo("Inner2.Inner3");
+    assertThat(
+            inner3.getRawName(Collections.emptySet(), Collections.singleton(inner3.getFullName())))
+        .isEqualTo("Inner3");
   }
 }

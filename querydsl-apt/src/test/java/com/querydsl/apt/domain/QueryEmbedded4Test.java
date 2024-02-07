@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
@@ -60,21 +60,21 @@ public class QueryEmbedded4Test {
 
   @Test
   public void user_address_city() {
-    assertNotNull(QQueryEmbedded4Test_User.user.address.city);
+    assertThat(QQueryEmbedded4Test_User.user.address.city).isNotNull();
   }
 
   @Test
   public void user_address_name() {
-    assertNotNull(QQueryEmbedded4Test_User.user.address.name);
+    assertThat(QQueryEmbedded4Test_User.user.address.name).isNotNull();
   }
 
   @Test
   public void user_address_city_name() {
-    assertNotNull(QQueryEmbedded4Test_User.user.address.city.name);
+    assertThat(QQueryEmbedded4Test_User.user.address.city.name).isNotNull();
   }
 
   @Test
   public void user_complex_a() {
-    assertNotNull(QQueryEmbedded4Test_User.user.complex.a);
+    assertThat(QQueryEmbedded4Test_User.user.complex.a).isNotNull();
   }
 }

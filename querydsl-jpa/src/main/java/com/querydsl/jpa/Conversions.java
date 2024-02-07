@@ -21,9 +21,9 @@ import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLOps;
+import jakarta.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
 
 /**
  * {@code Conversions} provides module specific projection conversion functionality

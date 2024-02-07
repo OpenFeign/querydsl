@@ -1,6 +1,6 @@
 package com.querydsl.sql;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.domain.QEmployee;
 import java.sql.Types;
@@ -11,33 +11,33 @@ public class ColumnMetadataTest {
   @Test
   public void defaultColumn() {
     ColumnMetadata column = ColumnMetadata.named("Person");
-    assertEquals("Person", column.getName());
-    assertFalse(column.hasJdbcType());
-    assertFalse(column.hasSize());
-    assertTrue(column.isNullable());
+    assertThat(column.getName()).isEqualTo("Person");
+    assertThat(column.hasJdbcType()).isFalse();
+    assertThat(column.hasSize()).isFalse();
+    assertThat(column.isNullable()).isTrue();
   }
 
   @Test
   public void fullyConfigured() {
     ColumnMetadata column =
         ColumnMetadata.named("Person").withSize(10).notNull().ofType(Types.BIGINT);
-    assertEquals("Person", column.getName());
-    assertTrue(column.hasJdbcType());
-    assertEquals(Types.BIGINT, column.getJdbcType());
-    assertTrue(column.hasSize());
-    assertEquals(10, column.getSize());
-    assertFalse(column.isNullable());
+    assertThat(column.getName()).isEqualTo("Person");
+    assertThat(column.hasJdbcType()).isTrue();
+    assertThat(column.getJdbcType()).isEqualTo(Types.BIGINT);
+    assertThat(column.hasSize()).isTrue();
+    assertThat(column.getSize()).isEqualTo(10);
+    assertThat(column.isNullable()).isFalse();
   }
 
   @Test
   public void extractFromRelationalPath() {
     ColumnMetadata column = ColumnMetadata.getColumnMetadata(QEmployee.employee.id);
-    assertEquals("ID", column.getName());
+    assertThat(column.getName()).isEqualTo("ID");
   }
 
   @Test
   public void fallBackToDefaultWhenMissing() {
     ColumnMetadata column = ColumnMetadata.getColumnMetadata(QEmployee.employee.salary);
-    assertEquals("SALARY", column.getName());
+    assertThat(column.getName()).isEqualTo("SALARY");
   }
 }

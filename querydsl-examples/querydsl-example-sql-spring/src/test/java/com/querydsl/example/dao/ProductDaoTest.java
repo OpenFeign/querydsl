@@ -1,29 +1,29 @@
 package com.querydsl.example.dao;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.dto.Product;
 import com.querydsl.example.dto.ProductL10n;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.Resource;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProductDaoTest extends AbstractDaoTest {
 
-  @Resource SupplierDao supplierDao;
+  @Autowired SupplierDao supplierDao;
 
-  @Resource ProductDao productDao;
+  @Autowired ProductDao productDao;
 
   @Test
   public void findAll() {
     List<Product> products = productDao.findAll();
-    assertFalse(products.isEmpty());
+    assertThat(products).isNotEmpty();
   }
 
   @Test
   public void findById() {
-    assertNotNull(productDao.findById(1));
+    assertThat(productDao.findById(1)).isNotNull();
   }
 
   @Test
@@ -39,8 +39,8 @@ public class ProductDaoTest extends AbstractDaoTest {
     product.setName("ProductX");
     product.setLocalizations(Collections.singleton(new ProductL10n()));
     productDao.save(product);
-    assertNotNull(productDao.findById(product.getId()));
+    assertThat(productDao.findById(product.getId())).isNotNull();
     productDao.delete(product);
-    assertNull(productDao.findById(product.getId()));
+    assertThat(productDao.findById(product.getId())).isNull();
   }
 }

@@ -55,7 +55,7 @@ public abstract class GSet<T, S extends Set<T>> extends AbstractGroupExpression<
     };
   }
 
-  public GSet(Expression<T> expr) {
+  GSet(Expression<T> expr) {
     super(Set.class, expr);
   }
 

@@ -1,7 +1,7 @@
 package com.querydsl.core.types;
 
 import static com.querydsl.core.testutil.Serialization.serialize;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
@@ -9,14 +9,11 @@ import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.group.GroupExpression;
 import com.querydsl.core.testutil.Serialization;
 import com.querydsl.core.types.dsl.*;
+import io.github.classgraph.ClassGraph;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 public class SerializationTest {
 
@@ -52,8 +49,9 @@ public class SerializationTest {
     args.put(QueryMetadata.class, new DefaultQueryMetadata());
     args.put(String.class, "obj");
 
-    Reflections reflections = new Reflections();
-    Set<Class<? extends Expression>> types = reflections.getSubTypesOf(Expression.class);
+    ClassGraph reflections = new ClassGraph().enableClassInfo();
+    List<Class<?>> types =
+        reflections.scan().getSubclasses(Expression.class.getName()).loadClasses();
     for (Class<?> type : types) {
       if (!type.isInterface()
           && !type.isMemberClass()
@@ -67,7 +65,7 @@ public class SerializationTest {
           }
           c.setAccessible(true);
           Object o = c.newInstance(parameters);
-          assertEquals(o, Serialization.serialize(o));
+          assertThat(Serialization.serialize(o)).isEqualTo(o);
         }
       }
     }
@@ -76,18 +74,18 @@ public class SerializationTest {
   @Test
   public void order() {
     OrderSpecifier<?> order = new OrderSpecifier<String>(Order.ASC, Expressions.stringPath("str"));
-    assertEquals(order, Serialization.serialize(order));
+    assertThat(Serialization.serialize(order)).isEqualTo(order);
   }
 
   @Test
   public void roundtrip() throws Exception {
     Path<?> path = ExpressionUtils.path(Object.class, "entity");
     SimplePath<?> path2 = Expressions.path(Object.class, "entity");
-    assertEquals(path, serialize(path));
-    assertEquals(path2, serialize(path2));
-    assertEquals(path2.isNull(), serialize(path2.isNull()));
-    assertEquals(path.hashCode(), serialize(path).hashCode());
-    assertEquals(path2.hashCode(), serialize(path2).hashCode());
-    assertEquals(path2.isNull().hashCode(), serialize(path2.isNull()).hashCode());
+    assertThat(serialize(path)).isEqualTo(path);
+    assertThat(serialize(path2)).isEqualTo(path2);
+    assertThat(serialize(path2.isNull())).isEqualTo(path2.isNull());
+    assertThat(serialize(path).hashCode()).isEqualTo(path.hashCode());
+    assertThat(serialize(path2).hashCode()).isEqualTo(path2.hashCode());
+    assertThat(serialize(path2.isNull()).hashCode()).isEqualTo(path2.isNull().hashCode());
   }
 }

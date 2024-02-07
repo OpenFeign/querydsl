@@ -3,36 +3,25 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.querydsl</groupId>
   <artifactId>querydsl-lucene3</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - Lucene 3 support</name>
   <description>Lucene support for Querydsl</description>
-  <url>${project.homepage}</url>
-
-  <scm>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
-  </scm>
 
   <properties>
     <lucene.version>3.6.2</lucene.version>
     <osgi.import.package>org.apache.lucene.*;version="[3.6,4)",
-      ${osgi.import.package.root}</osgi.import.package>
+            ${osgi.import.package.root}</osgi.import.package>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
-      <version>20.1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -48,20 +37,14 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <!-- test -->
     <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib</artifactId>
-      <version>${cglib.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
@@ -69,14 +52,7 @@
     </dependency>
 
     <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-apt</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -87,6 +63,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
         <configuration>
           <archive>
             <manifestEntries>
@@ -102,21 +79,13 @@
       </plugin>
 
       <plugin>
-        <groupId>com.mysema.maven</groupId>
-        <artifactId>apt-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-process</goal>
-              <goal>add-test-sources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>target/generated-test-sources/java</outputDirectory>
-              <processor>com.querydsl.apt.QuerydslAnnotationProcessor</processor>
-              <showWarnings>true</showWarnings>
-            </configuration>
-          </execution>
-        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessors>
+            <annotationProcessor>com.querydsl.apt.QuerydslAnnotationProcessor</annotationProcessor>
+          </annotationProcessors>
+        </configuration>
       </plugin>
     </plugins>
   </build>

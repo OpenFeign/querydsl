@@ -1,22 +1,25 @@
 package com.querydsl.example.sql.repository;
 
 import static com.querydsl.example.sql.model.QTweet.tweet;
-import static com.querydsl.example.sql.model.QUser.user;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.example.sql.guice.Transactional;
-import com.querydsl.example.sql.model.User;
+import com.querydsl.example.sql.model.QUsert;
+import com.querydsl.example.sql.model.Usert;
 import java.util.List;
 
 public class UserRepository extends AbstractRepository {
+
+  private static final QUsert user = QUsert.usert;
+
   @Transactional
-  public User findById(Long id) {
+  public Usert findById(Long id) {
     return selectFrom(user).where(user.id.eq(id)).fetchOne();
   }
 
   @Transactional
-  public Long save(User entity) {
+  public Long save(Usert entity) {
     if (entity.getId() != null) {
       update(user).populate(entity).execute();
       return entity.getId();
@@ -35,12 +38,12 @@ public class UserRepository extends AbstractRepository {
   }
 
   @Transactional
-  public List<User> findAll(Predicate expr) {
+  public List<Usert> findAll(Predicate expr) {
     return selectFrom(user).where(expr).fetch();
   }
 
   @Transactional
-  public List<User> all() {
+  public List<Usert> all() {
     return selectFrom(user).fetch();
   }
 }

@@ -30,8 +30,8 @@ public class LocaleConverter extends TypeConverter implements SimpleValueConvert
     if (fromDBObject == null) {
       return null;
     }
-    if (fromDBObject instanceof String) {
-      return Locale.forLanguageTag((String) fromDBObject);
+    if (fromDBObject instanceof String string) {
+      return Locale.forLanguageTag(string);
     }
     throw new MappingException("Unable to convert " + fromDBObject.getClass().getName());
   }

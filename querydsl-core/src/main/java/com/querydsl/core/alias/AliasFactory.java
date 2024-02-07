@@ -17,12 +17,15 @@ import com.querydsl.core.QueryException;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadataFactory;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.matcher.ElementMatchers;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -41,7 +44,7 @@ class AliasFactory {
   private final ConcurrentHashMap<Class<?>, Map<Expression<?>, ManagedObject>> proxyCache =
       new ConcurrentHashMap<>();
 
-  public AliasFactory(final PathFactory pathFactory, TypeSystem typeSystem) {
+  AliasFactory(final PathFactory pathFactory, TypeSystem typeSystem) {
     this.pathFactory = pathFactory;
     this.typeSystem = typeSystem;
   }
@@ -98,21 +101,41 @@ class AliasFactory {
    * @param path underlying expression
    * @return proxy instance
    */
-  @SuppressWarnings("unchecked")
   protected <A> A createProxy(Class<A> cl, Expression<?> path) {
-    Enhancer enhancer = new Enhancer();
-    enhancer.setClassLoader(AliasFactory.class.getClassLoader());
-    if (cl.isInterface()) {
-      enhancer.setInterfaces(new Class<?>[] {cl, ManagedObject.class});
-    } else {
-      enhancer.setSuperclass(cl);
-      enhancer.setInterfaces(new Class<?>[] {ManagedObject.class});
+    Class<? extends A> loaded =
+        new ByteBuddy()
+            .subclass(cl)
+            .implement(ManagedObject.class)
+            .method(ElementMatchers.any())
+            .intercept(
+                MethodDelegation.to(
+                    new PropertyAccessInvocationHandler(path, this, pathFactory, typeSystem)))
+            .make()
+            .load(AliasFactory.class.getClassLoader())
+            .getLoaded();
+    Constructor<?> constructor = null;
+    // search constructor, prefer default one
+    for (Constructor<?> declaredConstructor : loaded.getDeclaredConstructors()) {
+      if (declaredConstructor.getParameterCount() == 0) {
+        constructor = declaredConstructor;
+        break;
+      } else {
+        constructor = declaredConstructor;
+      }
     }
-    // creates one handler per proxy
-    MethodInterceptor handler =
-        new PropertyAccessInvocationHandler(path, this, pathFactory, typeSystem);
-    enhancer.setCallback(handler);
-    return (A) enhancer.create();
+    A result = null;
+    if (constructor != null) {
+      Object[] initargs = new Object[constructor.getParameterCount()];
+      try {
+        result = (A) constructor.newInstance(initargs);
+      } catch (InstantiationException
+          | IllegalAccessException
+          | IllegalArgumentException
+          | InvocationTargetException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+    return result;
   }
 
   /**

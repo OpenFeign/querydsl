@@ -3,8 +3,7 @@ package com.querydsl.sql;
 import static com.querydsl.core.Target.*;
 import static com.querydsl.sql.Constants.*;
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.SubQueryExpression;
@@ -60,14 +59,18 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   public void subQueries() throws SQLException {
     // subquery in where block
     expectedQuery =
-        "select e.ID from EMPLOYEE e " + "where e.ID = (select max(e.ID) " + "from EMPLOYEE e)";
+        """
+        select e.ID from EMPLOYEE e \
+        where e.ID = (select max(e.ID) \
+        from EMPLOYEE e)\
+        """;
     List<Integer> list =
         query()
             .from(employee)
             .where(employee.id.eq(query().from(employee).select(employee.id.max())))
             .select(employee.id)
             .fetch();
-    assertFalse(list.isEmpty());
+    assertThat(list).isNotEmpty();
   }
 
   @Test
@@ -127,7 +130,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
     SQLQuery<?> subQuery = select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));
     subQuery.set(aParam, "Mike");
 
-    assertEquals(1, query().from(subQuery).fetchCount());
+    assertThat(query().from(subQuery).fetchCount()).isEqualTo(1);
   }
 
   @Test
@@ -151,7 +154,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
             .from(query().from(employee).select(employee.id), employee)
             .select(employee.id)
             .fetch();
-    assertEquals(ids1, ids2);
+    assertThat(ids2).isEqualTo(ids1);
   }
 
   @Test
@@ -162,7 +165,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
             .from(query().from(employee).select(employee.id).as(employee))
             .select(employee.id)
             .fetch();
-    assertEquals(ids1, ids2);
+    assertThat(ids2).isEqualTo(ids1);
   }
 
   @Test
@@ -170,10 +173,10 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   public void subQuerySerialization() {
     SQLQuery<?> query = query();
     query.from(survey);
-    assertEquals("from SURVEY s", query.toString());
+    assertThat(query.toString()).isEqualTo("from SURVEY s");
 
     query.from(survey2);
-    assertEquals("from SURVEY s, SURVEY s2", query.toString());
+    assertThat(query.toString()).isEqualTo("from SURVEY s, SURVEY s2");
   }
 
   @Test
@@ -187,9 +190,8 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
             .from(employee)
             .select(employee.salary.add(employee.salary).add(employee.salary).as(sal))
             .as(sq));
-    assertEquals(
-        "(select (e.SALARY + e.SALARY + e.SALARY) as sal\nfrom EMPLOYEE e) as sq",
-        serializer.toString());
+    assertThat(serializer.toString())
+        .isEqualTo("(select (e.SALARY + e.SALARY + e.SALARY) as sal\nfrom EMPLOYEE e) as sq");
   }
 
   @Test
@@ -207,13 +209,16 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
                     .in(Arrays.asList("Mike", "Mary"))));
 
     expectedQuery =
-        "(\nfrom EMPLOYEE e\n"
-            + "where (select e.FIRSTNAME\n"
-            + "from EMPLOYEE e\n"
-            + "order by e.SALARY asc\n"
-            + "limit ?) in (?, ?))";
+        """
+        (
+        from EMPLOYEE e
+        where (select e.FIRSTNAME
+        from EMPLOYEE e
+        order by e.SALARY asc
+        limit ?) in (?, ?))\
+        """;
 
-    assertEquals(expectedQuery, serializer.toString());
+    assertThat(serializer.toString()).isEqualTo(expectedQuery);
   }
 
   @Test
@@ -231,12 +236,15 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
                     .in("Mike", "Mary")));
 
     expectedQuery =
-        "(\nfrom EMPLOYEE e\n"
-            + "where (select e.FIRSTNAME\n"
-            + "from EMPLOYEE e\n"
-            + "order by e.SALARY asc\n"
-            + "limit ?) in (?, ?))";
+        """
+        (
+        from EMPLOYEE e
+        where (select e.FIRSTNAME
+        from EMPLOYEE e
+        order by e.SALARY asc
+        limit ?) in (?, ?))\
+        """;
 
-    assertEquals(expectedQuery, serializer.toString());
+    assertThat(serializer.toString()).isEqualTo(expectedQuery);
   }
 }

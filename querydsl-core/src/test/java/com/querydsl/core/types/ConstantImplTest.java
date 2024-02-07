@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -21,13 +21,13 @@ public class ConstantImplTest {
 
   @Test
   public void create() {
-    assertNotNull(ConstantImpl.create(true));
-    assertNotNull(ConstantImpl.create((byte) 1));
-    assertNotNull(ConstantImpl.create(ConstantImplTest.class));
-    assertNotNull(ConstantImpl.create(1));
-    assertNotNull(ConstantImpl.create(1L));
-    assertNotNull(ConstantImpl.create((short) 1));
-    assertNotNull(ConstantImpl.create("x"));
+    assertThat(ConstantImpl.create(true)).isNotNull();
+    assertThat(ConstantImpl.create((byte) 1)).isNotNull();
+    assertThat(ConstantImpl.create(ConstantImplTest.class)).isNotNull();
+    assertThat(ConstantImpl.create(1)).isNotNull();
+    assertThat(ConstantImpl.create(1L)).isNotNull();
+    assertThat(ConstantImpl.create((short) 1)).isNotNull();
+    assertThat(ConstantImpl.create("x")).isNotNull();
     //        assertNotNull(ConstantImpl.create("x",true));
   }
 }

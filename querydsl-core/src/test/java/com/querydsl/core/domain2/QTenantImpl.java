@@ -5,7 +5,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.EntityPathBase;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QTenantImpl is a Querydsl query type for TenantImpl */
 @Generated("com.querydsl.codegen.EntitySerializer")

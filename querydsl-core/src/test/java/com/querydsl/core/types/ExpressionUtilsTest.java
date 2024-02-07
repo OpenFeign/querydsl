@@ -13,8 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryException;
@@ -34,16 +33,16 @@ public class ExpressionUtilsTest {
 
   @Test
   public void likeToRegex() {
-    assertEquals(".*", regex(ConstantImpl.create("%")));
-    assertEquals("^abc.*", regex(ConstantImpl.create("abc%")));
-    assertEquals(".*abc$", regex(ConstantImpl.create("%abc")));
-    assertEquals("^.$", regex(ConstantImpl.create("_")));
+    assertThat(regex(ConstantImpl.create("%"))).isEqualTo(".*");
+    assertThat(regex(ConstantImpl.create("abc%"))).isEqualTo("^abc.*");
+    assertThat(regex(ConstantImpl.create("%abc"))).isEqualTo(".*abc$");
+    assertThat(regex(ConstantImpl.create("_"))).isEqualTo("^.$");
 
     StringPath path = Expressions.stringPath("path");
-    assertEquals("path + .*", regex(path.append("%")));
-    assertEquals(".* + path", regex(path.prepend("%")));
-    assertEquals("path + .", regex(path.append("_")));
-    assertEquals(". + path", regex(path.prepend("_")));
+    assertThat(regex(path.append("%"))).isEqualTo("path + .*");
+    assertThat(regex(path.prepend("%"))).isEqualTo(".* + path");
+    assertThat(regex(path.append("_"))).isEqualTo("path + .");
+    assertThat(regex(path.prepend("_"))).isEqualTo(". + path");
   }
 
   @Test
@@ -69,20 +68,20 @@ public class ExpressionUtilsTest {
 
   @Test
   public void likeToRegex_escape() {
-    assertEquals("^\\.$", regex(ConstantImpl.create(".")));
+    assertThat(regex(ConstantImpl.create("."))).isEqualTo("^\\.$");
   }
 
   @Test
   public void regexToLike() {
-    assertEquals("%", like(ConstantImpl.create(".*")));
-    assertEquals("_", like(ConstantImpl.create(".")));
-    assertEquals(".", like(ConstantImpl.create("\\.")));
+    assertThat(like(ConstantImpl.create(".*"))).isEqualTo("%");
+    assertThat(like(ConstantImpl.create("."))).isEqualTo("_");
+    assertThat(like(ConstantImpl.create("\\."))).isEqualTo(".");
 
     StringPath path = Expressions.stringPath("path");
-    assertEquals("path + %", like(path.append(".*")));
-    assertEquals("% + path", like(path.prepend(".*")));
-    assertEquals("path + _", like(path.append(".")));
-    assertEquals("_ + path", like(path.prepend(".")));
+    assertThat(like(path.append(".*"))).isEqualTo("path + %");
+    assertThat(like(path.prepend(".*"))).isEqualTo("% + path");
+    assertThat(like(path.append("."))).isEqualTo("path + _");
+    assertThat(like(path.prepend("."))).isEqualTo("_ + path");
   }
 
   @Test(expected = QueryException.class)
@@ -129,23 +128,23 @@ public class ExpressionUtilsTest {
 
   @Test
   public void count() {
-    assertEquals("count(str)", ExpressionUtils.count(str).toString());
+    assertThat(ExpressionUtils.count(str).toString()).isEqualTo("count(str)");
   }
 
   @Test
   public void eqConst() {
-    assertEquals("str = X", ExpressionUtils.eqConst(str, "X").toString());
+    assertThat(ExpressionUtils.eqConst(str, "X").toString()).isEqualTo("str = X");
   }
 
   @Test
   public void eq() {
-    assertEquals("str = str2", ExpressionUtils.eq(str, str2).toString());
+    assertThat(ExpressionUtils.eq(str, str2).toString()).isEqualTo("str = str2");
   }
 
   @Test
   public void in() {
-    assertEquals(
-        "str in [a, b, c]", ExpressionUtils.in(str, Arrays.asList("a", "b", "c")).toString());
+    assertThat(ExpressionUtils.in(str, Arrays.asList("a", "b", "c")).toString())
+        .isEqualTo("str in [a, b, c]");
   }
 
   @Test
@@ -154,43 +153,43 @@ public class ExpressionUtilsTest {
         ExpressionUtils.in(
                 str, new SubQueryExpressionImpl<String>(String.class, new DefaultQueryMetadata()))
             .toString();
-    assertTrue(s.startsWith("str in com.querydsl.core.DefaultQueryMetadata@c"));
+    assertThat(s).startsWith("str in com.querydsl.core.DefaultQueryMetadata@c");
   }
 
   @Test
   public void inAny() {
     Collection<List<String>> of =
         Arrays.asList(Arrays.asList("a", "b", "c"), Arrays.asList("d", "e", "f"));
-    assertEquals("str in [a, b, c] || str in [d, e, f]", ExpressionUtils.inAny(str, of).toString());
+    assertThat(ExpressionUtils.inAny(str, of).toString())
+        .isEqualTo("str in [a, b, c] || str in [d, e, f]");
   }
 
   @Test
   public void isNull() {
-    assertEquals("str is null", ExpressionUtils.isNull(str).toString());
+    assertThat(ExpressionUtils.isNull(str).toString()).isEqualTo("str is null");
   }
 
   @Test
   public void isNotNull() {
-    assertEquals("str is not null", ExpressionUtils.isNotNull(str).toString());
+    assertThat(ExpressionUtils.isNotNull(str).toString()).isEqualTo("str is not null");
   }
 
   @Test
   public void neConst() {
-    assertEquals("str != X", ExpressionUtils.neConst(str, "X").toString());
+    assertThat(ExpressionUtils.neConst(str, "X").toString()).isEqualTo("str != X");
   }
 
   @Test
   public void ne() {
-    assertEquals("str != str2", ExpressionUtils.ne(str, str2).toString());
+    assertThat(ExpressionUtils.ne(str, str2).toString()).isEqualTo("str != str2");
   }
 
   @Test
   public void notInAny() {
     Collection<List<String>> of =
         Arrays.asList(Arrays.asList("a", "b", "c"), Arrays.asList("d", "e", "f"));
-    assertEquals(
-        "str not in [a, b, c] && str not in [d, e, f]",
-        ExpressionUtils.notInAny(str, of).toString());
+    assertThat(ExpressionUtils.notInAny(str, of).toString())
+        .isEqualTo("str not in [a, b, c] && str not in [d, e, f]");
   }
 
   @Test
@@ -199,6 +198,6 @@ public class ExpressionUtilsTest {
         ExpressionUtils.notIn(
                 str, new SubQueryExpressionImpl<String>(String.class, new DefaultQueryMetadata()))
             .toString();
-    assertTrue(s.startsWith("str not in com.querydsl.core.DefaultQueryMetadata@c"));
+    assertThat(s).startsWith("str not in com.querydsl.core.DefaultQueryMetadata@c");
   }
 }

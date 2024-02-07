@@ -14,13 +14,21 @@
 package com.querydsl.jpa.impl;
 
 import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.jpa.JPAQueryBase;
 import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.QueryHandler;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.Query;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,10 +36,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.Query;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -126,9 +130,9 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   protected Query createQuery(@Nullable QueryModifiers modifiers, boolean forCount) {
     JPQLSerializer serializer = serialize(forCount);
     String queryString = serializer.toString();
-    logQuery(queryString, serializer.getConstantToAllLabels());
+    logQuery(queryString);
     Query query = entityManager.createQuery(queryString);
-    JPAUtil.setConstants(query, serializer.getConstantToAllLabels(), getMetadata().getParams());
+    JPAUtil.setConstants(query, serializer.getConstants(), getMetadata().getParams());
     if (modifiers != null && modifiers.isRestricting()) {
       Integer limit = modifiers.getLimitAsInteger();
       Integer offset = modifiers.getOffsetAsInteger();
@@ -311,7 +315,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
     }
   }
 
-  protected void logQuery(String queryString, Map<Object, String> parameters) {
+  protected void logQuery(String queryString) {
     if (logger.isLoggable(Level.FINEST)) {
       String normalizedQuery = queryString.replace('\n', ' ');
       logger.finest(normalizedQuery);
@@ -328,10 +332,10 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
     try {
       Query query = createQuery(getMetadata().getModifiers(), false);
       return (T) getSingleResult(query);
-    } catch (javax.persistence.NoResultException e) {
+    } catch (jakarta.persistence.NoResultException e) {
       logger.log(Level.FINEST, e.getMessage(), e);
       return null;
-    } catch (javax.persistence.NonUniqueResultException e) {
+    } catch (jakarta.persistence.NonUniqueResultException e) {
       throw new NonUniqueResultException(e);
     } finally {
       reset();

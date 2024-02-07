@@ -6,7 +6,7 @@
     <codegen
       jdbcDriver="org.h2.Driver"
       jdbcUser="sa"
-      jdbcUrl="jdbc:h2:./target/dbs/h2_AntMetaDataExporterTest"
+      jdbcUrl="jdbc:h2:./target/dbs/h2_AntMetaDataExporterTest;MODE=legacy"
       packageName="test"
       targetFolder="target/AntMetaDataExporterTest4">
       <renameMapping fromSchema="PUBLIC" toSchema="PUB"/>

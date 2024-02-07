@@ -70,19 +70,15 @@ public interface Tuple {
 
   /**
    * All Tuples should override equals and hashCode. For compatibility across different Tuple
-   * implementations, equality check should use {@link java.util.Arrays#equals(Object[], Object[])}
-   * with {@link #toArray()} as parameters.
-   *
-   * @see Object#equals(Object)
+   * implementations, equality check should use {@code java.util.Arrays#equals(Object[], Object[])}
+   * with {@code #toArray()} as parameters.
    */
   boolean equals(Object o);
 
   /**
    * All Tuples should override equals and hashCode. For compatibility across different Tuple
-   * implementations, hashCode should use {@link java.util.Arrays#hashCode(Object[])} with {@link
+   * implementations, hashCode should use {@code java.util.Arrays#hashCode(Object[])} with {@code
    * #toArray()} as parameter.
-   *
-   * @see Object#hashCode()
    */
   int hashCode();
 }

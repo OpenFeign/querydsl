@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
@@ -33,12 +33,12 @@ public class QTupleTest {
   @Test
   public void newInstanceObjectArray() {
     Tuple tuple = tupleExpression.newInstance("1", 42, true);
-    assertEquals(3, tuple.size());
-    assertEquals("1", tuple.get(0, String.class));
-    assertEquals(Integer.valueOf(42), tuple.get(1, Integer.class));
-    assertEquals(Boolean.TRUE, tuple.get(2, Boolean.class));
-    assertEquals("1", tuple.get(first));
-    assertEquals(Integer.valueOf(42), tuple.get(second));
-    assertEquals(Boolean.TRUE, tuple.get(third));
+    assertThat(tuple.size()).isEqualTo(3);
+    assertThat(tuple.get(0, String.class)).isEqualTo("1");
+    assertThat(tuple.get(1, Integer.class)).isEqualTo(Integer.valueOf(42));
+    assertThat(tuple.get(2, Boolean.class)).isEqualTo(Boolean.TRUE);
+    assertThat(tuple.get(first)).isEqualTo("1");
+    assertThat(tuple.get(second)).isEqualTo(Integer.valueOf(42));
+    assertThat(tuple.get(third)).isEqualTo(Boolean.TRUE);
   }
 }

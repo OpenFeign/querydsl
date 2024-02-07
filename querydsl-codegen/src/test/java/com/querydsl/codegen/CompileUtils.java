@@ -1,24 +1,24 @@
 package com.querydsl.codegen;
 
+import static org.assertj.core.api.Assertions.fail;
+
 import com.querydsl.codegen.utils.MemFileManager;
 import com.querydsl.codegen.utils.MemSourceFileObject;
 import com.querydsl.codegen.utils.SimpleCompiler;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.SimpleJavaFileObject;
-import org.junit.Assert;
 
 public final class CompileUtils {
 
   private CompileUtils() {}
 
   public static void assertCompiles(String name, String source) {
-    URLClassLoader parent = (URLClassLoader) CompileUtils.class.getClassLoader();
+    ClassLoader parent = CompileUtils.class.getClassLoader();
     SimpleCompiler compiler = new SimpleCompiler();
     MemFileManager fileManager =
         new MemFileManager(parent, compiler.getStandardFileManager(null, null, null));
@@ -37,7 +37,7 @@ public final class CompileUtils {
             null,
             Collections.singletonList(javaFileObject));
     if (!task.call()) {
-      Assert.fail("Compilation of " + source + " failed.\n" + out.toString());
+      fail("", "Compilation of " + source + " failed.\n" + out.toString());
     }
   }
 }

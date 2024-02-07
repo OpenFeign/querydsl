@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.support.Context;
 import com.querydsl.core.types.ConstantImpl;
@@ -32,80 +32,92 @@ public class JPACollectionAnyVisitorTest {
 
   @Test
   public void path() {
-    assertEquals("cat_kittens_0", serialize(cat.kittens.any()));
+    assertThat(serialize(cat.kittens.any())).isEqualTo("cat_kittens_0");
   }
 
   @Test
   public void longer_path() {
-    assertEquals("cat_kittens_0.name", serialize(cat.kittens.any().name));
+    assertThat(serialize(cat.kittens.any().name)).isEqualTo("cat_kittens_0.name");
   }
 
   @Test
   public void nested_any_booleanOperation() {
     QCompany company = QCompany.company;
     Predicate predicate = company.departments.any().employees.any().firstName.eq("Bob");
-    assertEquals(
-        "exists (select 1\n"
-            + "from company.departments as company_departments_0\n"
-            + "  inner join company_departments_0.employees as company_departments_0_employees_1\n"
-            + "where company_departments_0_employees_1.firstName = ?1)",
-        serialize(predicate));
+    assertThat(serialize(predicate))
+        .isEqualTo(
+            """
+            exists (select 1
+            from company.departments as company_departments_0
+              inner join company_departments_0.employees as company_departments_0_employees_1
+            where company_departments_0_employees_1.firstName = ?1)\
+            """);
   }
 
   @Test
   public void simple_booleanOperation() {
     Predicate predicate = cat.kittens.any().name.eq("Ruth123");
-    assertEquals(
-        "exists (select 1\n"
-            + "from cat.kittens as cat_kittens_0\n"
-            + "where cat_kittens_0.name = ?1)",
-        serialize(predicate));
+    assertThat(serialize(predicate))
+        .isEqualTo(
+            """
+            exists (select 1
+            from cat.kittens as cat_kittens_0
+            where cat_kittens_0.name = ?1)\
+            """);
   }
 
   @Test
   public void simple_booleanOperation_longPath() {
     Predicate predicate = cat.kittens.any().kittens.any().name.eq("Ruth123");
-    assertEquals(
-        "exists (select 1\n"
-            + "from cat.kittens as cat_kittens_0\n"
-            + "  inner join cat_kittens_0.kittens as cat_kittens_0_kittens_1\n"
-            + "where cat_kittens_0_kittens_1.name = ?1)",
-        serialize(predicate));
+    assertThat(serialize(predicate))
+        .isEqualTo(
+            """
+            exists (select 1
+            from cat.kittens as cat_kittens_0
+              inner join cat_kittens_0.kittens as cat_kittens_0_kittens_1
+            where cat_kittens_0_kittens_1.name = ?1)\
+            """);
   }
 
   @Test
   public void simple_booleanOperation_elementCollection() {
     QEmployee employee = QEmployee.employee;
     Predicate predicate = employee.jobFunctions.any().stringValue().eq("CODER");
-    assertEquals(
-        "exists (select 1\n"
-            + "from Employee employee_1463394548\n"
-            + "  inner join employee_1463394548.jobFunctions as employee_jobFunctions_0\n"
-            + "where employee_1463394548 = employee and str(employee_jobFunctions_0) = ?1)",
-        serialize(predicate));
+    assertThat(serialize(predicate))
+        .isEqualTo(
+            """
+            exists (select 1
+            from Employee employee_1463394548
+              inner join employee_1463394548.jobFunctions as employee_jobFunctions_0
+            where employee_1463394548 = employee and str(employee_jobFunctions_0) = ?1)\
+            """);
   }
 
   @Test
   public void simple_stringOperation() {
     Predicate predicate = cat.kittens.any().name.substring(1).eq("uth123");
-    assertEquals(
-        "exists (select 1\n"
-            + "from cat.kittens as cat_kittens_0\n"
-            + "where substring(cat_kittens_0.name,2) = ?1)",
-        serialize(predicate));
+    assertThat(serialize(predicate))
+        .isEqualTo(
+            """
+            exists (select 1
+            from cat.kittens as cat_kittens_0
+            where substring(cat_kittens_0.name,2) = ?1)\
+            """);
   }
 
   @Test
   public void and_operation() {
     Predicate predicate =
         cat.kittens.any().name.eq("Ruth123").and(cat.kittens.any().bodyWeight.gt(10.0));
-    assertEquals(
-        "exists (select 1\n"
-            + "from cat.kittens as cat_kittens_0\n"
-            + "where cat_kittens_0.name = ?1) and exists (select 1\n"
-            + "from cat.kittens as cat_kittens_1\n"
-            + "where cat_kittens_1.bodyWeight > ?2)",
-        serialize(predicate));
+    assertThat(serialize(predicate))
+        .isEqualTo(
+            """
+            exists (select 1
+            from cat.kittens as cat_kittens_0
+            where cat_kittens_0.name = ?1) and exists (select 1
+            from cat.kittens as cat_kittens_1
+            where cat_kittens_1.bodyWeight > ?2)\
+            """);
   }
 
   @Test
@@ -113,11 +125,13 @@ public class JPACollectionAnyVisitorTest {
     Expression<Boolean> templateExpr =
         ExpressionUtils.template(
             Boolean.class, "{0} = {1}", cat.kittens.any().name, ConstantImpl.create("Ruth123"));
-    assertEquals(
-        "exists (select 1\n"
-            + "from cat.kittens as cat_kittens_0\n"
-            + "where cat_kittens_0.name = ?1)",
-        serialize(templateExpr));
+    assertThat(serialize(templateExpr))
+        .isEqualTo(
+            """
+            exists (select 1
+            from cat.kittens as cat_kittens_0
+            where cat_kittens_0.name = ?1)\
+            """);
   }
 
   @Test
@@ -130,11 +144,13 @@ public class JPACollectionAnyVisitorTest {
     QDomesticCat anyCat = QCat.cat.kittens.any().as(QDomesticCat.class);
     Predicate predicate = anyCat.name.eq("X");
 
-    assertEquals(
-        "exists (select 1\n"
-            + "from cat.kittens as cat_kittens_0\n"
-            + "where cat_kittens_0.name = ?1)",
-        serialize(predicate));
+    assertThat(serialize(predicate))
+        .isEqualTo(
+            """
+            exists (select 1
+            from cat.kittens as cat_kittens_0
+            where cat_kittens_0.name = ?1)\
+            """);
   }
 
   private String serialize(Expression<?> expression) {

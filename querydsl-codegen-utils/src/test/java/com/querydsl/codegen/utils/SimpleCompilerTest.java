@@ -5,7 +5,8 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -18,7 +19,6 @@ import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -58,7 +58,7 @@ public class SimpleCompilerTest {
     int compilationResult =
         compiler.run(null, null, null, options.toArray(new String[options.size()]));
     if (compilationResult != 0) {
-      Assert.fail("Compilation Failed");
+      fail("Compilation Failed");
     }
   }
 
@@ -74,13 +74,13 @@ public class SimpleCompilerTest {
     int compilationResult =
         compiler.run(null, null, null, options.toArray(new String[options.size()]));
     if (compilationResult != 0) {
-      Assert.fail("Compilation Failed");
+      fail("Compilation Failed");
     }
   }
 
   @Test
   public void Surefire() {
     URLClassLoader cl = (URLClassLoader) Thread.currentThread().getContextClassLoader();
-    assertTrue(SimpleCompiler.isSureFireBooter(cl));
+    assertThat(SimpleCompiler.isSureFireBooter(cl)).isTrue();
   }
 }

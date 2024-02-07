@@ -13,10 +13,10 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.dsl.Expressions;
 import org.junit.Test;
 
 public class MySQLTemplatesTest extends AbstractSQLTemplatesTest {
@@ -37,19 +37,19 @@ public class MySQLTemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void order_nullsFirst() {
     query.from(survey1).orderBy(survey1.name.asc().nullsFirst());
-    assertEquals(
-        "from SURVEY survey1 order by (case when survey1.NAME is null then 0 else 1 end),"
-            + " survey1.NAME asc",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "from SURVEY survey1 order by (case when survey1.NAME is null then 0 else 1 end),"
+                + " survey1.NAME asc");
   }
 
   @Test
   public void order_nullsLast() {
     query.from(survey1).orderBy(survey1.name.asc().nullsLast());
-    assertEquals(
-        "from SURVEY survey1 order by (case when survey1.NAME is null then 1 else 0 end),"
-            + " survey1.NAME asc",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "from SURVEY survey1 order by (case when survey1.NAME is null then 1 else 0 end),"
+                + " survey1.NAME asc");
   }
 
   @Test
@@ -93,13 +93,26 @@ public class MySQLTemplatesTest extends AbstractSQLTemplatesTest {
     int p8 = getPrecedence(Ops.OR);
     // = (assignment), :=
 
-    assertTrue(p0 < p1);
-    assertTrue(p1 < p2);
-    assertTrue(p2 < p3);
-    assertTrue(p3 < p4);
-    assertTrue(p4 < p5);
-    assertTrue(p5 < p6);
-    assertTrue(p6 < p7);
-    assertTrue(p7 < p8);
+    assertThat(p0 < p1).isTrue();
+    assertThat(p1 < p2).isTrue();
+    assertThat(p2 < p3).isTrue();
+    assertThat(p3 < p4).isTrue();
+    assertThat(p4 < p5).isTrue();
+    assertThat(p5 < p6).isTrue();
+    assertThat(p6 < p7).isTrue();
+    assertThat(p7 < p8).isTrue();
+  }
+
+  @SuppressWarnings("rawtypes")
+  @Test
+  public void truncateWeek() {
+    final SQLQuery<Comparable> expression =
+        query.select(
+            SQLExpressions.datetrunc(
+                DatePart.week, Expressions.dateTimeTemplate(Comparable.class, "dateExpression")));
+    assertThat(expression.toString())
+        .isEqualTo(
+            "select str_to_date(concat(date_format(dateExpression,'%Y-%u'),'-1'),'%Y-%u-%w') from"
+                + " dual");
   }
 }

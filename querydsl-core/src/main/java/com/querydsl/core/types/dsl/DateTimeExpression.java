@@ -1,18 +1,16 @@
 /*
  * Copyright 2015, The Querydsl Team (http://www.querydsl.com/team)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in
+ * writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
  */
 package com.querydsl.core.types.dsl;
 
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
@@ -74,8 +72,8 @@ public abstract class DateTimeExpression<T extends Comparable> extends TemporalE
   }
 
   @Nullable private transient volatile NumberExpression<Integer> dayOfMonth, dayOfWeek, dayOfYear;
-  @Nullable
-  private transient volatile NumberExpression<Integer> hours, minutes, seconds, milliseconds;
+  @Nullable private transient volatile NumberExpression<Integer> hours, minutes, milliseconds;
+  @Nullable private transient volatile NumberExpression<Float> seconds;
   @Nullable private transient volatile DateTimeExpression<T> min, max;
   @Nullable
   private transient volatile NumberExpression<Integer> week, month, year, yearMonth, yearWeek;
@@ -215,9 +213,9 @@ public abstract class DateTimeExpression<T extends Comparable> extends TemporalE
    *
    * @return second
    */
-  public NumberExpression<Integer> second() {
+  public NumberExpression<Float> second() {
     if (seconds == null) {
-      seconds = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.SECOND, mixin);
+      seconds = Expressions.numberOperation(Float.class, Ops.DateTimeOps.SECOND, mixin);
     }
     return seconds;
   }
@@ -268,5 +266,85 @@ public abstract class DateTimeExpression<T extends Comparable> extends TemporalE
       yearWeek = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.YEAR_WEEK, mixin);
     }
     return yearWeek;
+  }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public DateTimeExpression<T> nullif(Expression<T> other) {
+    return Expressions.dateTimeOperation(getType(), Ops.NULLIF, mixin, other);
+  }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public DateTimeExpression<T> nullif(T other) {
+    return nullif(ConstantImpl.create(other));
+  }
+
+  /**
+   * Create a {@code coalesce(this, expr)} expression
+   *
+   * @param expr additional argument
+   * @return coalesce
+   */
+  @Override
+  public DateTimeExpression<T> coalesce(Expression<T> expr) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    coalesce.add(expr);
+    return coalesce.asDateTime();
+  }
+
+  /**
+   * Create a {@code coalesce(this, exprs...)} expression
+   *
+   * @param exprs additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public DateTimeExpression<T> coalesce(Expression<?>... exprs) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (Expression expr : exprs) {
+      coalesce.add(expr);
+    }
+    return coalesce.asDateTime();
+  }
+
+  /**
+   * Create a {@code coalesce(this, arg)} expression
+   *
+   * @param arg additional argument
+   * @return coalesce
+   */
+  @Override
+  public DateTimeExpression<T> coalesce(T arg) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    coalesce.add(arg);
+    return coalesce.asDateTime();
+  }
+
+  /**
+   * Create a {@code coalesce(this, args...)} expression
+   *
+   * @param args additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings("unchecked")
+  public DateTimeExpression<T> coalesce(T... args) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (T arg : args) {
+      coalesce.add(arg);
+    }
+    return coalesce.asDateTime();
   }
 }

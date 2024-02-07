@@ -14,8 +14,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
@@ -33,7 +32,7 @@ public class PostgreSQLTemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
-    assertEquals("select 1", query.toString());
+    assertThat(query.toString()).isEqualTo("select 1");
   }
 
   @SuppressWarnings("unchecked")
@@ -44,9 +43,8 @@ public class PostgreSQLTemplatesTest extends AbstractSQLTemplatesTest {
     NumberExpression<Integer> three = Expressions.THREE;
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union = query.union(select(one.as(col1)), select(two), select(three));
-    assertEquals(
-        "(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)",
-        union.toString());
+    assertThat(union.toString())
+        .isEqualTo("(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)");
   }
 
   @Test
@@ -84,17 +82,17 @@ public class PostgreSQLTemplatesTest extends AbstractSQLTemplatesTest {
     // OR    left    logical disjunction
     int p11 = getPrecedence(Ops.OR);
 
-    assertTrue(p0 < p1);
-    assertTrue(p1 < p2);
-    assertTrue(p2 < p3);
-    assertTrue(p3 < p4);
-    assertTrue(p4 < p5);
-    assertTrue(p5 < p6);
-    assertTrue(p6 < p7);
-    assertTrue(p7 < p8);
-    assertTrue(p8 < p9);
-    assertTrue(p9 < p10);
-    assertTrue(p10 < p11);
+    assertThat(p0 < p1).isTrue();
+    assertThat(p1 < p2).isTrue();
+    assertThat(p2 < p3).isTrue();
+    assertThat(p3 < p4).isTrue();
+    assertThat(p4 < p5).isTrue();
+    assertThat(p5 < p6).isTrue();
+    assertThat(p6 < p7).isTrue();
+    assertThat(p7 < p8).isTrue();
+    assertThat(p8 < p9).isTrue();
+    assertThat(p9 < p10).isTrue();
+    assertThat(p10 < p11).isTrue();
   }
 
   @Test
@@ -104,6 +102,6 @@ public class PostgreSQLTemplatesTest extends AbstractSQLTemplatesTest {
     assertSerialized(Expressions.booleanPath("b").eq(Expressions.FALSE), "b = false");
     query.setUseLiterals(true);
     query.where(Expressions.booleanPath("b").eq(true));
-    assertTrue(query.toString(), query.toString().endsWith("where b = true"));
+    assertThat(query.toString().endsWith("where b = true")).as(query.toString()).isTrue();
   }
 }

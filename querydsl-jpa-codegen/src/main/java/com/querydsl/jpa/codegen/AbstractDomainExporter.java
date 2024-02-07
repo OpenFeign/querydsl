@@ -13,19 +13,7 @@
  */
 package com.querydsl.jpa.codegen;
 
-import com.querydsl.codegen.CodegenModule;
-import com.querydsl.codegen.EmbeddableSerializer;
-import com.querydsl.codegen.EntitySerializer;
-import com.querydsl.codegen.EntityType;
-import com.querydsl.codegen.Property;
-import com.querydsl.codegen.QueryTypeFactory;
-import com.querydsl.codegen.Serializer;
-import com.querydsl.codegen.SerializerConfig;
-import com.querydsl.codegen.SimpleSerializerConfig;
-import com.querydsl.codegen.Supertype;
-import com.querydsl.codegen.SupertypeSerializer;
-import com.querydsl.codegen.TypeFactory;
-import com.querydsl.codegen.TypeMappings;
+import com.querydsl.codegen.*;
 import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.Type;
@@ -37,6 +25,8 @@ import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.annotations.QueryType;
 import com.querydsl.core.util.Annotations;
 import com.querydsl.core.util.ReflectionUtils;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -57,8 +47,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -87,7 +75,8 @@ public abstract class AbstractDomainExporter {
   @SuppressWarnings("unchecked")
   protected final TypeFactory typeFactory =
       new TypeFactory(
-          Arrays.asList(Entity.class, javax.persistence.MappedSuperclass.class, Embeddable.class));
+          Arrays.asList(
+              Entity.class, jakarta.persistence.MappedSuperclass.class, Embeddable.class));
 
   private final QueryTypeFactory queryTypeFactory;
 
@@ -314,7 +303,7 @@ public abstract class AbstractDomainExporter {
       if (mappedType.isAssignableFrom(field.getType())) {
         return typeFactory.get(field.getType(), field.getGenericType());
       } else {
-        return typeFactory.get(mappedType);
+        return typeFactory.get(field.getType());
       }
     } else {
       Method method = ReflectionUtils.getGetterOrNull(cl, propertyName);

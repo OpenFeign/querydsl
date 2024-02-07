@@ -13,35 +13,39 @@
  */
 package com.querydsl.jpa;
 
+import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.domain.*;
+import com.querydsl.jpa.domain.Cat;
+import com.querydsl.jpa.domain.Parent;
+import com.querydsl.jpa.domain.QCat;
+import com.querydsl.jpa.domain.QCatSummary;
+import com.querydsl.jpa.domain.QChild;
+import com.querydsl.jpa.domain.QGroup;
+import com.querydsl.jpa.domain.QParent;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.LockModeType;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -85,6 +89,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @Override
   protected void save(Object entity) {
     entityManager.persist(entity);
+    entityManager.flush();
   }
 
   @Test
@@ -92,7 +97,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @NoOpenJPA
   @NoHibernate
   public void connection_access() {
-    assertNotNull(query().from(cat).select(cat).createQuery().unwrap(Connection.class));
+    assertThat(query().from(cat).select(cat).createQuery().unwrap(Connection.class)).isNotNull();
   }
 
   @Test
@@ -103,7 +108,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void delete2() {
-    assertEquals(0, delete(QGroup.group).execute());
+    assertThat(delete(QGroup.group).execute()).isEqualTo(0);
   }
 
   @Test
@@ -138,7 +143,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
     QChild child = QChild.child;
     QParent parent = QParent.parent;
 
-    JPQLQuery<?> subQuery = selectFrom(parent).where(parent.id.eq(2), child.parent.eq(parent));
+    JPQLSubQuery<Parent> subQuery =
+        selectFrom(parent).where(parent.id.eq(2), child.parent.eq(parent));
     // child.in(parent.children));
 
     delete(child).where(child.id.eq(1), subQuery.exists()).execute();
@@ -150,31 +156,31 @@ public class JPABase extends AbstractJPATest implements JPATest {
     conditions.put("name", "Bob123");
 
     List<Cat> cats = CustomFinder.findCustom(entityManager, Cat.class, conditions, "name");
-    assertEquals(1, cats.size());
-    assertEquals("Bob123", cats.get(0).getName());
+    assertThat(cats).hasSize(1);
+    assertThat(cats.getFirst().getName()).isEqualTo("Bob123");
   }
 
   @Test
   public void flushMode() {
-    assertFalse(query().from(cat).setFlushMode(FlushModeType.AUTO).select(cat).fetch().isEmpty());
+    assertThat(query().from(cat).setFlushMode(FlushModeType.AUTO).select(cat).fetch()).isNotEmpty();
   }
 
   @Test
   @NoEclipseLink
   @NoOpenJPA
   public void hint() {
-    javax.persistence.Query query =
+    jakarta.persistence.Query query =
         query().from(cat).setHint("org.hibernate.cacheable", true).select(cat).createQuery();
 
-    assertNotNull(query);
-    assertTrue(query.getHints().containsKey("org.hibernate.cacheable"));
-    assertFalse(query.getResultList().isEmpty());
+    assertThat(query).isNotNull();
+    assertThat(query.getHints()).containsKey("org.hibernate.cacheable");
+    assertThat(query.getResultList()).isNotEmpty();
   }
 
   @Test
   public void hint2() {
-    assertFalse(
-        query().from(cat).setHint("org.hibernate.cacheable", true).select(cat).fetch().isEmpty());
+    assertThat(query().from(cat).setHint("org.hibernate.cacheable", true).select(cat).fetch())
+        .isNotEmpty();
   }
 
   @Test
@@ -183,7 +189,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @NoOpenJPA
   @NoBatooJPA
   public void hint3() {
-    javax.persistence.Query query =
+    jakarta.persistence.Query query =
         query()
             .from(cat)
             .setHint("eclipselink.batch.type", "IN")
@@ -192,8 +198,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
             .select(cat)
             .createQuery();
 
-    assertNotNull(query);
-    assertEquals("person.homeAddress", query.getHints().get("eclipselink.batch"));
+    assertThat(query).isNotNull();
+    assertThat(query.getHints()).containsEntry("eclipselink.batch", "person.homeAddress");
   }
 
   @Test
@@ -202,36 +208,36 @@ public class JPABase extends AbstractJPATest implements JPATest {
     CloseableIterator<Cat> cats = query().from(cat).select(cat).iterate();
     while (cats.hasNext()) {
       Cat cat = cats.next();
-      assertNotNull(cat);
+      assertThat(cat).isNotNull();
     }
     cats.close();
   }
 
   @Test
   public void limit1_uniqueResult() {
-    assertNotNull(query().from(cat).limit(1).select(cat).fetchOne());
+    assertThat(query().from(cat).limit(1).select(cat).fetchOne()).isNotNull();
   }
 
   @Test
   public void lockMode() {
-    javax.persistence.Query query =
+    jakarta.persistence.Query query =
         query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).createQuery();
-    assertEquals(query.getLockMode(), LockModeType.PESSIMISTIC_READ);
-    assertFalse(query.getResultList().isEmpty());
+    assertThat(LockModeType.PESSIMISTIC_READ).isEqualTo(query.getLockMode());
+    assertThat(query.getResultList()).isNotEmpty();
   }
 
   @Test
   public void lockMode2() {
-    assertFalse(
-        query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).fetch().isEmpty());
+    assertThat(query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).fetch())
+        .isNotEmpty();
   }
 
   @Test
   public void queryExposure() {
     // save(new Cat(20));
     List<Cat> results = query().from(cat).select(cat).createQuery().getResultList();
-    assertNotNull(results);
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotNull();
+    assertThat(results).isNotEmpty();
   }
 
   @Test
@@ -240,12 +246,13 @@ public class JPABase extends AbstractJPATest implements JPATest {
     QCat cat2 = new QCat("cat2");
 
     BooleanExpression exists = selectOne().from(cat2).where(cat2.eyecolor.isNotNull()).exists();
-    assertNotNull(
-        query()
-            .from(cat)
-            .where(cat.breed.eq(0).not())
-            .select(new QCatSummary(cat.breed.count(), exists))
-            .fetchOne());
+    assertThat(
+            query()
+                .from(cat)
+                .where(cat.breed.eq(0).not())
+                .select(new QCatSummary(cat.breed.count(), exists))
+                .fetchOne())
+        .isNotNull();
   }
 
   @SuppressWarnings("unchecked")
@@ -255,7 +262,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   public void createQuery() {
     List<Tuple> rows = query().from(cat).select(cat.id, cat.name).createQuery().getResultList();
     for (Tuple row : rows) {
-      assertEquals(2, row.size());
+      assertThat(row.size()).isEqualTo(2);
     }
   }
 
@@ -266,7 +273,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   public void createQuery2() {
     List<Tuple> rows = query().from(cat).select(cat.id, cat.name).createQuery().getResultList();
     for (Tuple row : rows) {
-      assertEquals(2, row.size());
+      assertThat(row.size()).isEqualTo(2);
     }
   }
 
@@ -274,7 +281,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   public void createQuery3() {
     List<String> rows = query().from(cat).select(cat.name).createQuery().getResultList();
     for (String row : rows) {
-      assertNotNull(row);
+      assertThat(row).isNotNull();
     }
   }
 
@@ -285,9 +292,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
     List<Tuple> rows =
         query().from(cat).select(new Expression<?>[] {Expressions.nullExpression()}).fetch();
     for (Tuple row : rows) {
-      assertNotNull(row);
-      assertEquals(1, row.size());
-      assertNull(row.get(Expressions.nullExpression()));
+      assertThat(row).isNotNull();
+      assertThat(row.size()).isEqualTo(1);
+      assertThat(row.get(Expressions.<Void>nullExpression())).isNull();
     }
   }
 
@@ -297,10 +304,10 @@ public class JPABase extends AbstractJPATest implements JPATest {
         query()
             .from(cat)
             .groupBy(cat.alive, cat.breed)
-            .select(cat.alive, cat.breed, cat.id.sum())
+            .select(cat.alive, cat.breed, cat.id.sumLong())
             .fetchResults();
 
-    assertEquals(1, results.getTotal());
+    assertThat(results.getTotal()).isEqualTo(1);
   }
 
   @Test
@@ -309,10 +316,18 @@ public class JPABase extends AbstractJPATest implements JPATest {
         query()
             .from(cat)
             .groupBy(cat.alive)
-            .having(cat.id.sum().gt(5))
-            .select(cat.alive, cat.id.sum())
+            .having(cat.id.sumLong().gt(5))
+            .select(cat.alive, cat.id.sumLong())
             .fetchResults();
 
-    assertEquals(1, results.getTotal());
+    assertThat(results.getTotal()).isEqualTo(1);
+  }
+
+  @Test
+  public void shouldTransformWithGroupBy() {
+    Map<Boolean, List<Cat>> transform =
+        query().select(cat).from(cat).transform(GroupBy.groupBy(cat.alive).as(list(cat)));
+
+    assertThat(transform).hasSize(1);
   }
 }

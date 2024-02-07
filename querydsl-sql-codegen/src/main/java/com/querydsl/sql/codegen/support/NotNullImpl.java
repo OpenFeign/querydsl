@@ -13,9 +13,9 @@
  */
 package com.querydsl.sql.codegen.support;
 
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotNull;
 import java.lang.annotation.Annotation;
-import javax.validation.Payload;
-import javax.validation.constraints.NotNull;
 
 /**
  * {@code NotNullImpl} is an implementation of the {@link NotNull} interface

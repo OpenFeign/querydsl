@@ -1,7 +1,7 @@
 package com.querydsl.apt.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import org.junit.Ignore;
 
 @Ignore
@@ -36,7 +36,7 @@ public class Enum4Test {
     private final int code;
     private final Integer factor; // to minutes
 
-    private ExportUnit(int code, Integer factor) {
+    ExportUnit(int code, Integer factor) {
       this.code = code;
       this.factor = factor;
     }

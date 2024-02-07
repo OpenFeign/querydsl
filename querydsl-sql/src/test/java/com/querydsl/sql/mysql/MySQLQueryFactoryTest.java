@@ -13,8 +13,7 @@
  */
 package com.querydsl.sql.mysql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.SQLExpressions;
 import com.querydsl.sql.SQLTemplates;
@@ -32,49 +31,49 @@ public class MySQLQueryFactoryTest {
 
   @Before
   public void setUp() {
-    Supplier<Connection> provider = () -> EasyMock.createNiceMock(Connection.class);
+    Supplier<Connection> provider = () -> EasyMock.<Connection>createNiceMock(Connection.class);
     queryFactory = new MySQLQueryFactory(SQLTemplates.DEFAULT, provider);
   }
 
   @Test
   public void query() {
-    assertNotNull(queryFactory.query());
+    assertThat(queryFactory.query()).isNotNull();
   }
 
   @Test
   public void from() {
-    assertNotNull(queryFactory.from(QSurvey.survey));
+    assertThat(queryFactory.from(QSurvey.survey)).isNotNull();
   }
 
   @Test
   public void delete() {
-    assertNotNull(queryFactory.delete(QSurvey.survey));
+    assertThat(queryFactory.delete(QSurvey.survey)).isNotNull();
   }
 
   @Test
   public void insert() {
-    assertNotNull(queryFactory.insert(QSurvey.survey));
+    assertThat(queryFactory.insert(QSurvey.survey)).isNotNull();
   }
 
   @Test
   public void insertIgnore() {
     SQLInsertClause clause = queryFactory.insertIgnore(QSurvey.survey);
-    assertEquals("insert ignore into SURVEY\nvalues ()", clause.toString());
+    assertThat(clause.toString()).isEqualTo("insert ignore into SURVEY\nvalues ()");
   }
 
   @Test
   public void insertOnDuplicateKeyUpdate() {
     SQLInsertClause clause = queryFactory.insertOnDuplicateKeyUpdate(QSurvey.survey, "c = c+1");
-    assertEquals(
-        "insert into SURVEY\nvalues () on duplicate key update c = c+1", clause.toString());
+    assertThat(clause.toString())
+        .isEqualTo("insert into SURVEY\nvalues () on duplicate key update c = c+1");
   }
 
   @Test
   public void insertOnDuplicateKeyUpdate2() {
     SQLInsertClause clause =
         queryFactory.insertOnDuplicateKeyUpdate(QSurvey.survey, QSurvey.survey.id.eq(2));
-    assertEquals(
-        "insert into SURVEY\nvalues () on duplicate key update SURVEY.ID = ?", clause.toString());
+    assertThat(clause.toString())
+        .isEqualTo("insert into SURVEY\nvalues () on duplicate key update SURVEY.ID = ?");
   }
 
   @Test
@@ -84,9 +83,12 @@ public class MySQLQueryFactoryTest {
             QSurvey.survey,
             SQLExpressions.set(QSurvey.survey.id, 2),
             SQLExpressions.set(QSurvey.survey.name, "B"));
-    assertEquals(
-        "insert into SURVEY\n" + "values () on duplicate key update SURVEY.ID = ?, SURVEY.NAME = ?",
-        clause.toString());
+    assertThat(clause.toString())
+        .isEqualTo(
+            """
+            insert into SURVEY
+            values () on duplicate key update SURVEY.ID = ?, SURVEY.NAME = ?\
+            """);
   }
 
   @Test
@@ -94,10 +96,12 @@ public class MySQLQueryFactoryTest {
     SQLInsertClause clause =
         queryFactory.insertOnDuplicateKeyUpdate(
             QSurvey.survey, SQLExpressions.set(QSurvey.survey.name, QSurvey.survey.name));
-    assertEquals(
-        "insert into SURVEY\n"
-            + "values () on duplicate key update SURVEY.NAME = values(SURVEY.NAME)",
-        clause.toString());
+    assertThat(clause.toString())
+        .isEqualTo(
+            """
+            insert into SURVEY
+            values () on duplicate key update SURVEY.NAME = values(SURVEY.NAME)\
+            """);
   }
 
   @Test
@@ -105,23 +109,22 @@ public class MySQLQueryFactoryTest {
     SQLInsertClause clause =
         queryFactory.insertOnDuplicateKeyUpdate(
             QSurvey.survey, SQLExpressions.set(QSurvey.survey.name, (String) null));
-    assertEquals(
-        "insert into SURVEY\n" + "values () on duplicate key update SURVEY.NAME = null",
-        clause.toString());
+    assertThat(clause.toString())
+        .isEqualTo("insert into SURVEY\n" + "values () on duplicate key update SURVEY.NAME = null");
   }
 
   @Test
   public void replace() {
-    assertNotNull(queryFactory.replace(QSurvey.survey));
+    assertThat(queryFactory.replace(QSurvey.survey)).isNotNull();
   }
 
   @Test
   public void update() {
-    assertNotNull(queryFactory.update(QSurvey.survey));
+    assertThat(queryFactory.update(QSurvey.survey)).isNotNull();
   }
 
   @Test
   public void merge() {
-    assertNotNull(queryFactory.merge(QSurvey.survey));
+    assertThat(queryFactory.merge(QSurvey.survey)).isNotNull();
   }
 }

@@ -1,6 +1,6 @@
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
@@ -32,7 +32,11 @@ import org.openjdk.jmh.runner.options.TimeValue;
 public class QueryPerformanceTest {
 
   private static final String QUERY =
-      "select COMPANIES.NAME\n" + "from COMPANIES COMPANIES\n" + "where COMPANIES.ID = ?";
+      """
+      select COMPANIES.NAME
+      from COMPANIES COMPANIES
+      where COMPANIES.ID = ?\
+      """;
 
   private static final SQLTemplates templates = new H2Templates();
 
@@ -248,7 +252,7 @@ public class QueryPerformanceTest {
       serializer.serialize(md, false);
       serializer.getConstants();
       serializer.getConstantPaths();
-      assertNotNull(serializer.toString());
+      assertThat(serializer.toString()).isNotNull();
     }
   }
 

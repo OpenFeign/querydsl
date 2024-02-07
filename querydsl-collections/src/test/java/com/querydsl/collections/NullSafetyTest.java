@@ -1,6 +1,6 @@
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import org.junit.Test;
@@ -12,7 +12,7 @@ public class NullSafetyTest extends AbstractQueryTest {
     QCat cat = QCat.cat;
     CollQuery<Cat> query =
         CollQueryFactory.<Cat>from(cat, Arrays.<Cat>asList(new Cat(), new Cat("Bob")));
-    assertEquals(1L, query.where(cat.name.eq("Bob")).fetchCount());
+    assertThat(query.where(cat.name.eq("Bob")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
@@ -28,6 +28,6 @@ public class NullSafetyTest extends AbstractQueryTest {
     CollQuery<Cat> query =
         CollQueryFactory.<Cat>from(cat, Arrays.<Cat>asList(cat1, cat2))
             .innerJoin(cat.kittens, kitten);
-    assertEquals(1, query.where(kitten.name.eq("Bob")).fetchCount());
+    assertThat(query.where(kitten.name.eq("Bob")).fetchCount()).isEqualTo(1);
   }
 }

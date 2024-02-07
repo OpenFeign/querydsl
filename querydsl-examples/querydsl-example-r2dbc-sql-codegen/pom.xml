@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
     <version>5.0.0-SNAPSHOT</version>
     <relativePath>../</relativePath>
   </parent>
 
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-example-r2dbc-sql-codegen</artifactId>
   <packaging>jar</packaging>
   <name>Querydsl example - R2DBC SQL Codegen</name>
@@ -48,7 +48,7 @@
 
     <!-- persistence -->
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-r2dbc</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -127,7 +127,7 @@
       </plugin>
 
       <plugin>
-        <groupId>com.querydsl</groupId>
+        <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
         <version>${project.version}</version>
         <configuration>

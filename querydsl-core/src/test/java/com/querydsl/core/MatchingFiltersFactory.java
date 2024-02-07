@@ -24,11 +24,11 @@ import java.util.HashSet;
  */
 public class MatchingFiltersFactory {
 
-  private final Module module;
+  private final QuerydslModule module;
 
   private final Target target;
 
-  public MatchingFiltersFactory(Module module, Target target) {
+  public MatchingFiltersFactory(QuerydslModule module, Target target) {
     this.module = module;
     this.target = target;
   }
@@ -40,7 +40,7 @@ public class MatchingFiltersFactory {
       A missingElement) {
     HashSet<Predicate> rv = new HashSet<Predicate>();
     //        rv.add(expr.isEmpty().not());
-    if (!module.equals(Module.RDFBEAN)) {
+    if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size().gt(0));
     }
     return Collections.unmodifiableSet(rv);
@@ -52,7 +52,7 @@ public class MatchingFiltersFactory {
       A knownElement,
       A missingElement) {
     HashSet<Predicate> rv = new HashSet<Predicate>();
-    if (!module.equals(Module.RDFBEAN)) {
+    if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.contains(knownElement));
       rv.add(expr.contains(missingElement).not());
     }
@@ -78,10 +78,10 @@ public class MatchingFiltersFactory {
     rv.add(expr.dayOfMonth().eq(other.dayOfMonth()));
 
     if (!target.equals(Target.DERBY)
-        && !module.equals(Module.JDO)
+        && !module.equals(QuerydslModule.JDO)
         && !target.equals(Target.ORACLE)
         && !target.equals(Target.FIREBIRD)
-        && (!target.equals(Target.POSTGRESQL) || !module.equals(Module.JPA))) {
+        && (!target.equals(Target.POSTGRESQL) || !module.equals(QuerydslModule.JPA))) {
       rv.add(expr.dayOfWeek().eq(other.dayOfWeek()));
       rv.add(expr.dayOfYear().eq(other.dayOfYear()));
 
@@ -120,9 +120,9 @@ public class MatchingFiltersFactory {
     rv.add(expr.dayOfMonth().eq(other.dayOfMonth()));
 
     if (!target.equals(Target.DERBY)
-        && !module.equals(Module.JDO)
+        && !module.equals(QuerydslModule.JDO)
         && !target.equals(Target.ORACLE)
-        && (!target.equals(Target.POSTGRESQL) || !module.equals(Module.JPA))) {
+        && (!target.equals(Target.POSTGRESQL) || !module.equals(QuerydslModule.JPA))) {
       rv.add(expr.dayOfWeek().eq(other.dayOfWeek()));
       rv.add(expr.dayOfYear().eq(other.dayOfYear()));
 
@@ -198,7 +198,7 @@ public class MatchingFiltersFactory {
 
   public Collection<Predicate> string(StringExpression expr, StringExpression other) {
     HashSet<Predicate> rv = new HashSet<Predicate>();
-    if (module != Module.LUCENE) {
+    if (module != QuerydslModule.LUCENE) {
       rv.addAll(comparable(expr, other));
 
       rv.add(expr.charAt(0).eq(other.charAt(0)));
@@ -232,26 +232,26 @@ public class MatchingFiltersFactory {
     rv.add(expr.eq(other));
     rv.add(expr.equalsIgnoreCase(other));
 
-    if (module != Module.LUCENE) {
+    if (module != QuerydslModule.LUCENE) {
       rv.add(expr.indexOf(other).eq(0));
       rv.add(expr.locate(other).eq(1));
     }
 
-    if (target != Target.DERBY && module != Module.LUCENE) {
+    if (target != Target.DERBY && module != QuerydslModule.LUCENE) {
       rv.add(expr.indexOf(other.substring(1)).eq(1));
       rv.add(expr.indexOf(other.substring(2)).eq(2));
     }
 
-    if (module != Module.LUCENE) {
+    if (module != QuerydslModule.LUCENE) {
       rv.add(expr.isEmpty().not());
       rv.add(expr.isNotEmpty());
     }
 
-    if (module != Module.LUCENE) {
+    if (module != QuerydslModule.LUCENE) {
       rv.add(expr.length().eq(other.length()));
       rv.add(expr.like(other));
 
-      if (module != Module.JDO || other instanceof Constant<?>) {
+      if (module != QuerydslModule.JDO || other instanceof Constant<?>) {
         rv.add(expr.like(other.substring(0, 1).append("%")));
         rv.add(expr.like(other.substring(0, 1).append("%").append(other.substring(2))));
         rv.add(expr.like(other.substring(1).prepend("%")));
@@ -261,8 +261,8 @@ public class MatchingFiltersFactory {
 
     rv.add(expr.lower().eq(other.lower()));
 
-    if (module != Module.LUCENE) {
-      if (!module.equals(Module.SQL)
+    if (module != QuerydslModule.LUCENE) {
+      if (!module.equals(QuerydslModule.SQL)
           || (!target.equals(Target.HSQLDB)
               && !target.equals(Target.FIREBIRD)
               && !target.equals(Target.H2)
@@ -273,7 +273,7 @@ public class MatchingFiltersFactory {
 
         rv.add(expr.matches(other));
 
-        if (module != Module.JDO || other instanceof Constant<?>) {
+        if (module != QuerydslModule.JDO || other instanceof Constant<?>) {
           rv.add(expr.matches(other.substring(0, 1).append(".*")));
           rv.add(expr.matches(other.substring(0, 1).append(".").append(other.substring(2))));
           rv.add(expr.matches(other.substring(1).prepend(".*")));
@@ -292,7 +292,7 @@ public class MatchingFiltersFactory {
     rv.add(expr.startsWithIgnoreCase(other.substring(0, 1)));
     rv.add(expr.startsWithIgnoreCase(other.substring(0, 2)));
 
-    if (module != Module.LUCENE) {
+    if (module != QuerydslModule.LUCENE) {
       rv.add(expr.substring(0, 1).eq(other.substring(0, 1)));
       rv.add(expr.substring(1, 2).eq(other.substring(1, 2)));
       rv.add(expr.substring(1).eq(other.substring(1)));

@@ -16,12 +16,11 @@ package com.querydsl.jpa;
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.IteratorAdapter;
 import com.querydsl.core.types.FactoryExpression;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.Query;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.ResultTransformer;
 import org.jetbrains.annotations.Nullable;
@@ -52,9 +51,9 @@ public class HibernateHandler implements QueryHandler {
   @Override
   public <T> CloseableIterator<T> iterate(Query query, FactoryExpression<?> projection) {
     try {
-      org.hibernate.query.Query unwrappedQuery = query.unwrap(org.hibernate.query.Query.class);
-      ScrollableResults results = unwrappedQuery.scroll(ScrollMode.FORWARD_ONLY);
-      CloseableIterator<T> iterator = new ScrollableResultsIterator<T>(results);
+      org.hibernate.query.Query<?> unwrappedQuery = query.unwrap(org.hibernate.query.Query.class);
+      CloseableIterator<T> iterator =
+          new ScrollableResultsIterator<T>((List<T>) unwrappedQuery.getResultList());
       if (projection != null) {
         iterator = new TransformingIterator<T>(iterator, projection);
       }
@@ -70,6 +69,7 @@ public class HibernateHandler implements QueryHandler {
   }
 
   @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public <T> Stream<T> stream(Query query, @Nullable FactoryExpression<?> projection) {
     final Stream resultStream = query.getResultStream();
     if (projection != null) {
@@ -81,7 +81,6 @@ public class HibernateHandler implements QueryHandler {
     return resultStream;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean transform(Query query, FactoryExpression<?> projection) {
     try {

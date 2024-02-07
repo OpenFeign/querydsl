@@ -2,13 +2,13 @@ package com.querydsl.example.sql.repository;
 
 import com.querydsl.example.sql.guice.GuiceTestRunner;
 import com.querydsl.example.sql.guice.Transactional;
+import jakarta.inject.Inject;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Inject;
 import javax.sql.DataSource;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -23,7 +23,7 @@ public abstract class AbstractPersistenceTest {
     try (Connection connection = dataSource.getConnection()) {
       List<String> tables = new ArrayList<String>();
       DatabaseMetaData md = connection.getMetaData();
-      ResultSet rs = md.getTables(null, null, null, new String[] {"TABLE"});
+      ResultSet rs = md.getTables(null, "PUBLIC", null, new String[] {"TABLE"});
       try {
         while (rs.next()) {
           tables.add(rs.getString("TABLE_NAME"));

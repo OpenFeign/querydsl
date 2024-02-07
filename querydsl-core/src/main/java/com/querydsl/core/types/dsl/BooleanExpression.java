@@ -150,4 +150,83 @@ public abstract class BooleanExpression extends LiteralExpression<Boolean> imple
       return eqFalse;
     }
   }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public BooleanExpression nullif(Expression<Boolean> other) {
+    return Expressions.booleanOperation(Ops.NULLIF, mixin, other);
+  }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public BooleanExpression nullif(Boolean other) {
+    return nullif(ConstantImpl.create(other));
+  }
+
+  /**
+   * Create a {@code coalesce(this, expr)} expression
+   *
+   * @param expr additional argument
+   * @return coalesce
+   */
+  @Override
+  public BooleanExpression coalesce(Expression<Boolean> expr) {
+    Coalesce<Boolean> coalesce = new Coalesce<Boolean>(getType(), mixin);
+    coalesce.add(expr);
+    return coalesce.asBoolean();
+  }
+
+  /**
+   * Create a {@code coalesce(this, exprs...)} expression
+   *
+   * @param exprs additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public BooleanExpression coalesce(Expression<?>... exprs) {
+    Coalesce<Boolean> coalesce = new Coalesce<Boolean>(getType(), mixin);
+    for (Expression expr : exprs) {
+      coalesce.add(expr);
+    }
+    return coalesce.asBoolean();
+  }
+
+  /**
+   * Create a {@code coalesce(this, arg)} expression
+   *
+   * @param arg additional argument
+   * @return coalesce
+   */
+  @Override
+  public BooleanExpression coalesce(Boolean arg) {
+    Coalesce<Boolean> coalesce = new Coalesce<Boolean>(getType(), mixin);
+    coalesce.add(arg);
+    return coalesce.asBoolean();
+  }
+
+  /**
+   * Create a {@code coalesce(this, args...)} expression
+   *
+   * @param args additional arguments
+   * @return coalesce
+   */
+  @Override
+  public BooleanExpression coalesce(Boolean... args) {
+    Coalesce<Boolean> coalesce = new Coalesce<Boolean>(getType(), mixin);
+    for (Boolean arg : args) {
+      coalesce.add(arg);
+    }
+    return coalesce.asBoolean();
+  }
 }

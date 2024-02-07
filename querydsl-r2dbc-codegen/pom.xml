@@ -3,20 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.querydsl</groupId>
   <artifactId>querydsl-r2dbc-codegen</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - R2DBC codegen support</name>
   <description>R2DBC codegen support for Querydsl</description>
 
   <properties>
-    <ant.version>1.8.1</ant.version>
+    <ant.version>1.10.14</ant.version>
   </properties>
 
   <dependencies>
@@ -27,19 +24,23 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-codegen</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql-codegen</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-r2dbc</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
     </dependency>
 
     <!-- ANT integration -->
@@ -52,14 +53,14 @@
 
     <!-- test -->
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-r2dbc</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
@@ -79,20 +80,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>net.sourceforge.jtds</groupId>
-      <artifactId>jtds</artifactId>
-      <version>${jtds.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>${h2.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
@@ -159,34 +153,6 @@
           </systemProperties>
         </configuration>
       </plugin>
-
-      <!--
-            <plugin>
-              <groupId>com.querydsl</groupId>
-              <artifactId>querydsl-maven-plugin</artifactId>
-              <version>${project.version}</version>
-              <executions>
-                <execution>
-                  <goals>
-                    <goal>test-export</goal>
-                  </goals>
-                </execution>
-              </executions>
-              <configuration>
-                <jdbcDriver>org.apache.derby.jdbc.EmbeddedDriver</jdbcDriver>
-                <jdbcUrl>jdbc:derby:target/demoDB;create=true</jdbcUrl>
-                <packageName>com.querydsl.sql.domain2</packageName>
-                <targetFolder>target/generated-test-sources/java</targetFolder>
-              </configuration>
-              <dependencies>
-                <dependency>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derby</artifactId>
-                  <version>${derby.version}</version>
-                </dependency>
-              </dependencies>
-            </plugin>
-             -->
     </plugins>
   </build>
 

@@ -1,11 +1,11 @@
 package com.querydsl.apt.domain;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
 
 @MappedSuperclass
 public abstract class AbstractSecurable<U, PK extends Serializable> {

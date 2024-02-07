@@ -386,4 +386,84 @@ public abstract class ComparableExpression<T extends Comparable>
   public ComparableExpression<T> max() {
     return Expressions.comparableOperation(getType(), Ops.AggOps.MAX_AGG, mixin);
   }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public ComparableExpression<T> nullif(Expression<T> other) {
+    return Expressions.comparableOperation(this.getType(), Ops.NULLIF, mixin, other);
+  }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public ComparableExpression<T> nullif(T other) {
+    return nullif(ConstantImpl.create(other));
+  }
+
+  /**
+   * Create a {@code coalesce(this, expr)} expression
+   *
+   * @param expr additional argument
+   * @return coalesce
+   */
+  @Override
+  public ComparableExpression<T> coalesce(Expression<T> expr) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    coalesce.add(expr);
+    return coalesce.getValue();
+  }
+
+  /**
+   * Create a {@code coalesce(this, exprs...)} expression
+   *
+   * @param exprs additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public ComparableExpression<T> coalesce(Expression<?>... exprs) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (Expression expr : exprs) {
+      coalesce.add(expr);
+    }
+    return coalesce.getValue();
+  }
+
+  /**
+   * Create a {@code coalesce(this, arg)} expression
+   *
+   * @param arg additional argument
+   * @return coalesce
+   */
+  @Override
+  public ComparableExpression<T> coalesce(T arg) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    coalesce.add(arg);
+    return coalesce.getValue();
+  }
+
+  /**
+   * Create a {@code coalesce(this, args...)} expression
+   *
+   * @param args additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked"})
+  public ComparableExpression<T> coalesce(T... args) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (T arg : args) {
+      coalesce.add(arg);
+    }
+    return coalesce.getValue();
+  }
 }

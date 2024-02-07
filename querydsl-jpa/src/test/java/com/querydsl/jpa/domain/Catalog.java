@@ -13,9 +13,14 @@
  */
 package com.querydsl.jpa.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.Date;
 import java.util.Set;
-import javax.persistence.*;
 
 /** The Class Catalog. */
 @Entity

@@ -1,6 +1,6 @@
 package com.querydsl.apt;
 
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.apt.domain.AbstractEntityTest;
 import com.querydsl.apt.domain.CustomCollection;
@@ -10,13 +10,13 @@ import com.querydsl.codegen.GenericExporter;
 import com.querydsl.codegen.Keywords;
 import com.querydsl.codegen.PropertyHandling;
 import com.querydsl.core.domain.A;
+import jakarta.persistence.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class GenericExporterTest extends AbstractProcessorTest {
@@ -147,16 +147,8 @@ public class GenericExporterTest extends AbstractProcessorTest {
     expected.remove("QGeneric4Test_HidaBez.java"); // unstable
     expected.remove("QGeneric16Test_HidaBezGruppe.java"); // unstable
     expected.remove("QGeneric4Test_HidaBezGruppe.java"); // unstable
-    if (!expected.isEmpty()) {
-      fail("Following expected failures succeeded: " + expected);
-    }
 
-    if (!failures.isEmpty()) {
-      for (String failure : failures) {
-        System.err.println(failure);
-      }
-      fail(
-          "Failed with " + failures.size() + " failures, " + successes + " succeeded, " + failures);
-    }
+    assertThat(expected).isEmpty();
+    assertThat(failures).isEmpty();
   }
 }

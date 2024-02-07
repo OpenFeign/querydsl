@@ -1,7 +1,6 @@
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
 import java.util.Map;
@@ -39,52 +38,51 @@ public class PathBuilderValidatorTest {
 
   @Test
   public void defaults() {
-    assertEquals(
-        String.class, PathBuilderValidator.DEFAULT.validate(Customer.class, "name", String.class));
-    assertEquals(
-        String.class,
-        PathBuilderValidator.DEFAULT.validate(ExtendedCustomer.class, "name", String.class));
-    assertEquals(
-        String.class, PathBuilderValidator.DEFAULT.validate(Project.class, "name", String.class));
-    assertEquals(
-        String.class,
-        PathBuilderValidator.DEFAULT.validate(ExtendedProject.class, "name", String.class));
+    assertThat(PathBuilderValidator.DEFAULT.validate(Customer.class, "name", String.class))
+        .isEqualTo(String.class);
+    assertThat(PathBuilderValidator.DEFAULT.validate(ExtendedCustomer.class, "name", String.class))
+        .isEqualTo(String.class);
+    assertThat(PathBuilderValidator.DEFAULT.validate(Project.class, "name", String.class))
+        .isEqualTo(String.class);
+    assertThat(PathBuilderValidator.DEFAULT.validate(ExtendedProject.class, "name", String.class))
+        .isEqualTo(String.class);
   }
 
   @Test
   public void fields() {
-    assertEquals(
-        String.class, PathBuilderValidator.FIELDS.validate(Customer.class, "name", String.class));
-    assertEquals(
-        String.class,
-        PathBuilderValidator.FIELDS.validate(ExtendedCustomer.class, "name", String.class));
-    assertEquals(
-        Integer.class,
-        PathBuilderValidator.FIELDS.validate(Customer.class, "collection", Collection.class));
-    assertEquals(
-        Integer.class, PathBuilderValidator.FIELDS.validate(Customer.class, "map", Map.class));
-    assertNull(PathBuilderValidator.FIELDS.validate(Project.class, "name", String.class));
-    assertNull(PathBuilderValidator.FIELDS.validate(ExtendedProject.class, "name", String.class));
+    assertThat(PathBuilderValidator.FIELDS.validate(Customer.class, "name", String.class))
+        .isEqualTo(String.class);
+    assertThat(PathBuilderValidator.FIELDS.validate(ExtendedCustomer.class, "name", String.class))
+        .isEqualTo(String.class);
+    assertThat(PathBuilderValidator.FIELDS.validate(Customer.class, "collection", Collection.class))
+        .isEqualTo(Integer.class);
+    assertThat(PathBuilderValidator.FIELDS.validate(Customer.class, "map", Map.class))
+        .isEqualTo(Integer.class);
+    assertThat(PathBuilderValidator.FIELDS.validate(Project.class, "name", String.class)).isNull();
+    assertThat(PathBuilderValidator.FIELDS.validate(ExtendedProject.class, "name", String.class))
+        .isNull();
   }
 
   @Test
   public void properties() {
-    assertNull(PathBuilderValidator.PROPERTIES.validate(Customer.class, "name", String.class));
-    assertNull(
-        PathBuilderValidator.PROPERTIES.validate(ExtendedCustomer.class, "name", String.class));
-    assertEquals(
-        String.class,
-        PathBuilderValidator.PROPERTIES.validate(Project.class, "name", String.class));
-    assertEquals(
-        String.class,
-        PathBuilderValidator.PROPERTIES.validate(ExtendedProject.class, "name", String.class));
-    assertEquals(
-        Boolean.class,
-        PathBuilderValidator.PROPERTIES.validate(ExtendedProject.class, "started", Boolean.class));
-    assertEquals(
-        Integer.class,
-        PathBuilderValidator.PROPERTIES.validate(Project.class, "collection", Collection.class));
-    assertEquals(
-        Integer.class, PathBuilderValidator.PROPERTIES.validate(Project.class, "map", Map.class));
+    assertThat(PathBuilderValidator.PROPERTIES.validate(Customer.class, "name", String.class))
+        .isNull();
+    assertThat(
+            PathBuilderValidator.PROPERTIES.validate(ExtendedCustomer.class, "name", String.class))
+        .isNull();
+    assertThat(PathBuilderValidator.PROPERTIES.validate(Project.class, "name", String.class))
+        .isEqualTo(String.class);
+    assertThat(
+            PathBuilderValidator.PROPERTIES.validate(ExtendedProject.class, "name", String.class))
+        .isEqualTo(String.class);
+    assertThat(
+            PathBuilderValidator.PROPERTIES.validate(
+                ExtendedProject.class, "started", Boolean.class))
+        .isEqualTo(Boolean.class);
+    assertThat(
+            PathBuilderValidator.PROPERTIES.validate(Project.class, "collection", Collection.class))
+        .isEqualTo(Integer.class);
+    assertThat(PathBuilderValidator.PROPERTIES.validate(Project.class, "map", Map.class))
+        .isEqualTo(Integer.class);
   }
 }

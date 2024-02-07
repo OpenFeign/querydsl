@@ -1,5 +1,6 @@
 .DS_Store
 target
+m2e-target/
 bin
 test-output
 nb-configuration.xml
@@ -19,5 +20,11 @@ derby.log
 /devops/*.rpm.zip
 /devops/**/*.semaphore
 /devops/test-connection/.lein-repl-history
+**/.flattened-pom.xml
 
 .java-version
+.gitignore
+.checkstyle
+
+querydsl-gradle-plugin/build/
+querydsl-gradle-plugin/.gradle/

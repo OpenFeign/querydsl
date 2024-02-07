@@ -104,8 +104,11 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
             @Override
             public char[] getMainTypeName() {
               int dot = targetName.lastIndexOf('.');
-              if (dot > 0) return targetName.substring(dot + 1).toCharArray();
-              else return targetName.toCharArray();
+              if (dot > 0) {
+                return targetName.substring(dot + 1).toCharArray();
+              } else {
+                return targetName.toCharArray();
+              }
             }
 
             @Override
@@ -192,7 +195,9 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
           public boolean isPackage(char[][] parentPackageName, char[] packageName) {
             // if the parent is a class, the child can't be a package
             String parent = join(parentPackageName, '.');
-            if (isClass(parent)) return false;
+            if (isClass(parent)) {
+              return false;
+            }
 
             // if the child is a class, it's not a package
             String qualifiedName = (parent.isEmpty() ? "" : parent + ".") + new String(packageName);

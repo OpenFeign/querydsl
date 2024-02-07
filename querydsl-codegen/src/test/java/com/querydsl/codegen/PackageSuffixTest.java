@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.SimpleType;
@@ -30,7 +30,7 @@ public class PackageSuffixTest {
   private final TypeMappings typeMappings = new JavaTypeMappings();
 
   private final EntitySerializer serializer =
-      new EntitySerializer(typeMappings, Collections.<String>emptySet());
+      new DefaultEntitySerializer(typeMappings, Collections.<String>emptySet());
 
   private final StringWriter writer = new StringWriter();
 
@@ -42,7 +42,7 @@ public class PackageSuffixTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("import test.Entity;"));
-    assertTrue(writer.toString().contains("public class QEntity extends EntityPathBase<Entity> {"));
+    assertThat(writer.toString()).contains("import test.Entity;");
+    assertThat(writer.toString()).contains("public class QEntity extends EntityPathBase<Entity> {");
   }
 }

@@ -1,6 +1,6 @@
 package com.querydsl.jpa.domain5;
 
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class MyMappedSuperclass {}

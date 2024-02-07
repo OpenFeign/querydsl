@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -25,50 +25,50 @@ public class BooleanExpressionTest {
 
   @Test
   public void anyOf() {
-    assertEquals(a.or(b).or(c), Expressions.anyOf(a, b, c));
+    assertThat(Expressions.anyOf(a, b, c)).isEqualTo(a.or(b).or(c));
   }
 
   @Test
   public void allOf() {
-    assertEquals(a.and(b).and(c), Expressions.allOf(a, b, c));
+    assertThat(Expressions.allOf(a, b, c)).isEqualTo(a.and(b).and(c));
   }
 
   @Test
   public void allOf_with_nulls() {
-    assertEquals("a && b", Expressions.allOf(a, b, null).toString());
-    assertEquals("a", Expressions.allOf(a, null).toString());
-    assertEquals("a", Expressions.allOf(null, a).toString());
+    assertThat(Expressions.allOf(a, b, null).toString()).isEqualTo("a && b");
+    assertThat(Expressions.allOf(a, null).toString()).isEqualTo("a");
+    assertThat(Expressions.allOf(null, a).toString()).isEqualTo("a");
   }
 
   @Test
   public void anyOf_with_nulls() {
-    assertEquals("a || b", Expressions.anyOf(a, b, null).toString());
-    assertEquals("a", Expressions.anyOf(a, null).toString());
-    assertEquals("a", Expressions.anyOf(null, a).toString());
+    assertThat(Expressions.anyOf(a, b, null).toString()).isEqualTo("a || b");
+    assertThat(Expressions.anyOf(a, null).toString()).isEqualTo("a");
+    assertThat(Expressions.anyOf(null, a).toString()).isEqualTo("a");
   }
 
   @Test
   public void andAnyOf() {
-    assertEquals(a.and(b.or(c)), a.andAnyOf(b, c));
+    assertThat(a.andAnyOf(b, c)).isEqualTo(a.and(b.or(c)));
   }
 
   @Test
   public void orAllOf() {
-    assertEquals(a.or(b.and(c)), a.orAllOf(b, c));
+    assertThat(a.orAllOf(b, c)).isEqualTo(a.or(b.and(c)));
   }
 
   @Test
   public void not() {
-    assertEquals(a, a.not().not());
+    assertThat(a.not().not()).isEqualTo(a);
   }
 
   @Test
   public void isTrue() {
-    assertEquals(a.eq(true), a.isTrue());
+    assertThat(a.isTrue()).isEqualTo(a.eq(true));
   }
 
   @Test
   public void isFalse() {
-    assertEquals(a.eq(false), a.isFalse());
+    assertThat(a.isFalse()).isEqualTo(a.eq(false));
   }
 }

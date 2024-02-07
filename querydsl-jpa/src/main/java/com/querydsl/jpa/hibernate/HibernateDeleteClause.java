@@ -26,9 +26,9 @@ import com.querydsl.jpa.JPQLTemplates;
 import java.util.HashMap;
 import java.util.Map;
 import org.hibernate.LockMode;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
+import org.hibernate.query.Query;
 
 /**
  * DeleteClause implementation for Hibernate
@@ -74,10 +74,7 @@ public class HibernateDeleteClause implements DeleteClause<HibernateDeleteClause
       query.setLockMode(entry.getKey().toString(), entry.getValue());
     }
     HibernateUtil.setConstants(
-        query,
-        serializer.getConstantToNamedLabel(),
-        serializer.getConstantToNumberedLabel(),
-        queryMixin.getMetadata().getParams());
+        query, serializer.getConstants(), queryMixin.getMetadata().getParams());
     return query.executeUpdate();
   }
 

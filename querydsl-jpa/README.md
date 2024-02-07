@@ -8,7 +8,7 @@ The JPA module provides integration with the JPA 2 persistence API.
 
 ```XML
 <dependency>
-  <groupId>com.querydsl</groupId>
+  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-jpa</artifactId>
   <version>${querydsl.version}</version>
 </dependency>
@@ -38,7 +38,7 @@ And now, configure the Maven APT plugin :
         </executions>
         <dependencies>
           <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
             <version>${querydsl.version}</version>
           </dependency>
@@ -50,7 +50,7 @@ And now, configure the Maven APT plugin :
 </project>
 ```
 
-The JPAAnnotationProcessor finds domain types annotated with the javax.persistence.Entity annotation and generates query types for them.
+The JPAAnnotationProcessor finds domain types annotated with the jakarta.persistence.Entity annotation and generates query types for them.
 
 If you use Hibernate annotations in your domain types you should use the APT processor com.querydsl.apt.hibernate.HibernateAnnotationProcessor instead.
 

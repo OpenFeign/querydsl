@@ -1,11 +1,12 @@
 package com.querydsl.jpa.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "numeric_")
@@ -15,6 +16,7 @@ public class Numeric implements Serializable {
 
   @Id @GeneratedValue private Long id;
 
+  @Column(name = "value_")
   private BigDecimal value;
 
   public Long getId() {

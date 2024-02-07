@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -23,8 +23,8 @@ public class PathBuilderFactoryTest {
   public void create() {
     PathBuilderFactory factory = new PathBuilderFactory("");
     PathBuilder<Object> pathBuilder = factory.create(Object.class);
-    assertEquals("object", pathBuilder.toString());
-    assertEquals(Object.class, pathBuilder.getType());
+    assertThat(pathBuilder.toString()).isEqualTo("object");
+    assertThat(pathBuilder.getType()).isEqualTo(Object.class);
 
     pathBuilder.get("prop", Object.class);
     pathBuilder.get("prop", String.class);
@@ -35,8 +35,8 @@ public class PathBuilderFactoryTest {
   public void create_withSuffix() {
     PathBuilderFactory factory = new PathBuilderFactory("_");
     PathBuilder<Object> pathBuilder = factory.create(Object.class);
-    assertEquals("object_", pathBuilder.toString());
-    assertEquals(Object.class, pathBuilder.getType());
+    assertThat(pathBuilder.toString()).isEqualTo("object_");
+    assertThat(pathBuilder.getType()).isEqualTo(Object.class);
 
     pathBuilder.get("prop", Object.class);
     pathBuilder.get("prop", String.class);

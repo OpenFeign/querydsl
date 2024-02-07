@@ -14,8 +14,11 @@
 package com.querydsl.jpa.hibernate.sql;
 
 import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.jpa.AbstractSQLQuery;
@@ -35,8 +38,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import org.hibernate.*;
-import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.StatelessSession;
+import org.hibernate.query.Query;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -82,14 +86,11 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
   private Query createQuery(boolean forCount) {
     NativeSQLSerializer serializer = (NativeSQLSerializer) serialize(forCount);
     String queryString = serializer.toString();
-    logQuery(queryString, serializer.getConstantToAllLabels());
-    org.hibernate.SQLQuery query = session.createSQLQuery(queryString);
+    logQuery(queryString);
+    org.hibernate.query.NativeQuery query = session.createSQLQuery(queryString);
     // set constants
     HibernateUtil.setConstants(
-        query,
-        serializer.getConstantToNamedLabel(),
-        serializer.getConstantToNumberedLabel(),
-        queryMixin.getMetadata().getParams());
+        query, serializer.getConstants(), queryMixin.getMetadata().getParams());
 
     if (!forCount) {
       Map<Expression<?>, List<String>> aliases = serializer.getAliases();
@@ -166,8 +167,7 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
   public CloseableIterator<T> iterate() {
     try {
       Query query = createQuery();
-      ScrollableResults results = query.scroll(ScrollMode.FORWARD_ONLY);
-      return new ScrollableResultsIterator<T>(results);
+      return new ScrollableResultsIterator<T>(query.getResultList());
     } finally {
       reset();
     }
@@ -203,7 +203,7 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
     }
   }
 
-  protected void logQuery(String queryString, Map<Object, String> parameters) {
+  protected void logQuery(String queryString) {
     if (logger.isLoggable(Level.FINE)) {
       String normalizedQuery = queryString.replace('\n', ' ');
       logger.fine(normalizedQuery);
@@ -246,7 +246,7 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
   /**
    * Set the name of the cache region.
    *
-   * @param cacheRegion the name of a query cache region, or <tt>null</tt> for the default query
+   * @param cacheRegion the name of a query cache region, or {@code null} for the default query
    *     cache
    */
   @SuppressWarnings("unchecked")

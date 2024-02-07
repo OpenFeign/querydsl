@@ -13,11 +13,8 @@
  */
 package com.querydsl.spatial;
 
-import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
-import org.geolatte.geom.Geometry;
 import org.geolatte.geom.GeometryCollection;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * @param <T>
  */
 public abstract class GeometryCollectionExpression<T extends GeometryCollection>
-    extends GeometryExpression<T> {
+    extends AbstractGeometryCollectionExpression<T> {
 
   private static final long serialVersionUID = 8874174644259834690L;
 
@@ -37,28 +34,5 @@ public abstract class GeometryCollectionExpression<T extends GeometryCollection>
 
   public GeometryCollectionExpression(Expression<T> mixin) {
     super(mixin);
-  }
-
-  /**
-   * Returns the number of geometries in this GeometryCollection.
-   *
-   * @return number of geometries
-   */
-  public NumberExpression<Integer> numGeometries() {
-    if (numGeometries == null) {
-      numGeometries = Expressions.numberOperation(Integer.class, SpatialOps.NUM_GEOMETRIES, mixin);
-    }
-    return numGeometries;
-  }
-
-  /**
-   * Returns the Nth geometry in this GeometryCollection.
-   *
-   * @param n one based index
-   * @return matching geometry
-   */
-  public GeometryExpression<Geometry> geometryN(Integer n) {
-    return GeometryExpressions.geometryOperation(
-        SpatialOps.GEOMETRYN, mixin, ConstantImpl.create(n));
   }
 }

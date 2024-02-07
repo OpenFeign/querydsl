@@ -30,7 +30,7 @@ abstract class GTable<R, C, V, M extends Table<R, C, V>>
 
   private static final long serialVersionUID = 7106389414200843920L;
 
-  public GTable(QPair<Pair<R, C>, V> qpair) {
+  GTable(QPair<Pair<R, C>, V> qpair) {
     super(Table.class, qpair);
   }
 
@@ -100,7 +100,7 @@ abstract class GTable<R, C, V, M extends Table<R, C, V>>
       private final Map<GroupCollector<C, U>, GroupCollector<V, W>> valueCollectors =
           new HashMap<GroupCollector<C, U>, GroupCollector<V, W>>();
 
-      public GroupCollectorImpl() {
+      GroupCollectorImpl() {
         this.groupCollector = mixin.createGroupCollector();
       }
 
@@ -153,7 +153,7 @@ abstract class GTable<R, C, V, M extends Table<R, C, V>>
     private final GroupExpression<V, W> valueExpression;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public Mixin(
+    Mixin(
         GroupExpression<R, T> rowExpression,
         GroupExpression<C, U> columnExpression,
         GroupExpression<V, W> valueExpression,

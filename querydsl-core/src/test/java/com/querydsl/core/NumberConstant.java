@@ -46,7 +46,7 @@ public final class NumberConstant<D extends Number & Comparable<?>> extends Numb
 
   private final D constant;
 
-  public NumberConstant(Class<? extends D> type, D constant) {
+  NumberConstant(Class<? extends D> type, D constant) {
     super(ConstantImpl.create(constant));
     this.constant = constant;
   }

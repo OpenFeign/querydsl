@@ -14,7 +14,7 @@
 package com.querydsl.mongodb;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -93,40 +93,40 @@ public class MongodbQueryTest {
 
   @Test
   public void query1() {
-    assertEquals(4L, query(user).fetchCount());
-    assertEquals(4L, query(User.class).fetchCount());
+    assertThat(query(user).fetchCount()).isEqualTo(4L);
+    assertThat(query(User.class).fetchCount()).isEqualTo(4L);
   }
 
   @Test
   public void list_keys() {
     User u =
         where(user.firstName.eq("Jaakko")).fetch(user.firstName, user.mainAddress().street).get(0);
-    assertEquals("Jaakko", u.getFirstName());
-    assertNull(u.getLastName());
-    assertEquals("Aakatu", u.getMainAddress().street);
-    assertNull(u.getMainAddress().postCode);
+    assertThat(u.getFirstName()).isEqualTo("Jaakko");
+    assertThat(u.getLastName()).isNull();
+    assertThat(u.getMainAddress().street).isEqualTo("Aakatu");
+    assertThat(u.getMainAddress().postCode).isNull();
   }
 
   @Test
   public void singleResult_keys() {
     User u = where(user.firstName.eq("Jaakko")).fetchFirst(user.firstName);
-    assertEquals("Jaakko", u.getFirstName());
-    assertNull(u.getLastName());
+    assertThat(u.getFirstName()).isEqualTo("Jaakko");
+    assertThat(u.getLastName()).isNull();
   }
 
   @Test
   public void uniqueResult_keys() {
     User u = where(user.firstName.eq("Jaakko")).fetchOne(user.firstName);
-    assertEquals("Jaakko", u.getFirstName());
-    assertNull(u.getLastName());
+    assertThat(u.getFirstName()).isEqualTo("Jaakko");
+    assertThat(u.getLastName()).isNull();
   }
 
   @Test
   public void list_deep_keys() {
     User u = where(user.firstName.eq("Jaakko")).fetchFirst(user.addresses.any().street);
     for (Address a : u.getAddresses()) {
-      assertNotNull(a.street);
-      assertNull(a.city);
+      assertThat(a.street).isNotNull();
+      assertThat(a.city).isNull();
     }
   }
 
@@ -163,13 +163,16 @@ public class MongodbQueryTest {
     entity.getProperties().put("key", "value");
     ds.save(entity);
 
-    assertTrue(
-        query(mapEntity).where(mapEntity.properties.get("key").isNotNull()).fetchCount() > 0);
-    assertFalse(
-        query(mapEntity).where(mapEntity.properties.get("key2").isNotNull()).fetchCount() > 0);
+    assertThat(query(mapEntity).where(mapEntity.properties.get("key").isNotNull()).fetchCount() > 0)
+        .isTrue();
+    assertThat(
+            query(mapEntity).where(mapEntity.properties.get("key2").isNotNull()).fetchCount() > 0)
+        .isFalse();
 
-    assertTrue(query(mapEntity).where(mapEntity.properties.containsKey("key")).fetchCount() > 0);
-    assertFalse(query(mapEntity).where(mapEntity.properties.containsKey("key2")).fetchCount() > 0);
+    assertThat(query(mapEntity).where(mapEntity.properties.containsKey("key")).fetchCount() > 0)
+        .isTrue();
+    assertThat(query(mapEntity).where(mapEntity.properties.containsKey("key2")).fetchCount() > 0)
+        .isFalse();
   }
 
   @Test
@@ -178,28 +181,33 @@ public class MongodbQueryTest {
     entity.getProperties().put("key", "value");
     ds.save(entity);
 
-    assertFalse(
-        query(mapEntity).where(mapEntity.properties.get("key").isNotNull().not()).fetchCount() > 0);
-    assertTrue(
-        query(mapEntity).where(mapEntity.properties.get("key2").isNotNull().not()).fetchCount()
-            > 0);
+    assertThat(
+            query(mapEntity).where(mapEntity.properties.get("key").isNotNull().not()).fetchCount()
+                > 0)
+        .isFalse();
+    assertThat(
+            query(mapEntity).where(mapEntity.properties.get("key2").isNotNull().not()).fetchCount()
+                > 0)
+        .isTrue();
 
-    assertFalse(
-        query(mapEntity).where(mapEntity.properties.containsKey("key").not()).fetchCount() > 0);
-    assertTrue(
-        query(mapEntity).where(mapEntity.properties.containsKey("key2").not()).fetchCount() > 0);
+    assertThat(
+            query(mapEntity).where(mapEntity.properties.containsKey("key").not()).fetchCount() > 0)
+        .isFalse();
+    assertThat(
+            query(mapEntity).where(mapEntity.properties.containsKey("key2").not()).fetchCount() > 0)
+        .isTrue();
   }
 
   @Test
   public void equals_ignore_case() {
-    assertTrue(where(user.firstName.equalsIgnoreCase("jAaKko")).fetchCount() > 0);
-    assertFalse(where(user.firstName.equalsIgnoreCase("AaKk")).fetchCount() > 0);
+    assertThat(where(user.firstName.equalsIgnoreCase("jAaKko")).fetchCount() > 0).isTrue();
+    assertThat(where(user.firstName.equalsIgnoreCase("AaKk")).fetchCount() > 0).isFalse();
   }
 
   @Test
   public void equals_ignore_case_not() {
-    assertTrue(where(user.firstName.equalsIgnoreCase("jAaKko").not()).fetchCount() > 0);
-    assertTrue(where(user.firstName.equalsIgnoreCase("AaKk").not()).fetchCount() > 0);
+    assertThat(where(user.firstName.equalsIgnoreCase("jAaKko").not()).fetchCount() > 0).isTrue();
+    assertThat(where(user.firstName.equalsIgnoreCase("AaKk").not()).fetchCount() > 0).isTrue();
   }
 
   @Test
@@ -218,25 +226,25 @@ public class MongodbQueryTest {
 
   @Test
   public void exists() {
-    assertTrue(where(user.firstName.eq("Jaakko")).fetchCount() > 0);
-    assertFalse(where(user.firstName.eq("JaakkoX")).fetchCount() > 0);
-    assertTrue(where(user.id.eq(u1.getId())).fetchCount() > 0);
+    assertThat(where(user.firstName.eq("Jaakko")).fetchCount() > 0).isTrue();
+    assertThat(where(user.firstName.eq("JaakkoX")).fetchCount() > 0).isFalse();
+    assertThat(where(user.id.eq(u1.getId())).fetchCount() > 0).isTrue();
   }
 
   @Test
   public void find_by_id() {
-    assertNotNull(where(user.id.eq(u1.getId())).fetchFirst() != null);
+    assertThat(where(user.id.eq(u1.getId())).fetchFirst() != null).isNotNull();
   }
 
   @Test
   public void notExists() {
-    assertFalse(where(user.firstName.eq("Jaakko")).fetchCount() == 0);
-    assertTrue(where(user.firstName.eq("JaakkoX")).fetchCount() == 0);
+    assertThat(where(user.firstName.eq("Jaakko")).fetchCount() == 0).isFalse();
+    assertThat(where(user.firstName.eq("JaakkoX")).fetchCount() == 0).isTrue();
   }
 
   @Test
   public void uniqueResult() {
-    assertEquals("Jantunen", where(user.firstName.eq("Jaakko")).fetchOne().getLastName());
+    assertThat(where(user.firstName.eq("Jaakko")).fetchOne().getLastName()).isEqualTo("Jantunen");
   }
 
   @Test(expected = NonUniqueResultException.class)
@@ -251,14 +259,16 @@ public class MongodbQueryTest {
 
   @Test
   public void longPath() {
-    assertEquals(2, query().where(user.mainAddress().city().name.eq("Helsinki")).fetchCount());
-    assertEquals(2, query().where(user.mainAddress().city().name.eq("Tampere")).fetchCount());
+    assertThat(query().where(user.mainAddress().city().name.eq("Helsinki")).fetchCount())
+        .isEqualTo(2);
+    assertThat(query().where(user.mainAddress().city().name.eq("Tampere")).fetchCount())
+        .isEqualTo(2);
   }
 
   @Test
   public void collectionPath() {
-    assertEquals(1, query().where(user.addresses.any().street.eq("Aakatu1")).fetchCount());
-    assertEquals(0, query().where(user.addresses.any().street.eq("akatu")).fetchCount());
+    assertThat(query().where(user.addresses.any().street.eq("Aakatu1")).fetchCount()).isEqualTo(1);
+    assertThat(query().where(user.addresses.any().street.eq("akatu")).fetchCount()).isEqualTo(0);
   }
 
   @Test
@@ -272,78 +282,86 @@ public class MongodbQueryTest {
     ds.save(d);
     Date end = new Date(current + 2 * dayInMillis);
 
-    assertEquals(d, query(dates).where(dates.date.between(start, end)).fetchFirst());
-    assertEquals(0, query(dates).where(dates.date.between(new Date(0), start)).fetchCount());
+    assertThat(query(dates).where(dates.date.between(start, end)).fetchFirst()).isEqualTo(d);
+    assertThat(query(dates).where(dates.date.between(new Date(0), start)).fetchCount())
+        .isEqualTo(0);
   }
 
   @Test
   public void elemMatch() {
     //      { "addresses" : { "$elemMatch" : { "street" : "Aakatu1"}}}
-    assertEquals(
-        1,
-        query().anyEmbedded(user.addresses, address).on(address.street.eq("Aakatu1")).fetchCount());
-    //      { "addresses" : { "$elemMatch" : { "street" : "Aakatu1" , "postCode" : "00100"}}}
-    assertEquals(
-        1,
-        query()
-            .anyEmbedded(user.addresses, address)
-            .on(address.street.eq("Aakatu1"), address.postCode.eq("00100"))
-            .fetchCount());
+    assertThat(
+            query()
+                .anyEmbedded(user.addresses, address)
+                .on(address.street.eq("Aakatu1"))
+                .fetchCount())
+        .isEqualTo(1);
+    //      { "addresses" : { "$elemMatch" : { "street" : "Aakatu1", "postCode" : "00100"}}}
+    assertThat(
+            query()
+                .anyEmbedded(user.addresses, address)
+                .on(address.street.eq("Aakatu1"), address.postCode.eq("00100"))
+                .fetchCount())
+        .isEqualTo(1);
     //      { "addresses" : { "$elemMatch" : { "street" : "akatu"}}}
-    assertEquals(
-        0,
-        query().anyEmbedded(user.addresses, address).on(address.street.eq("akatu")).fetchCount());
-    //      { "addresses" : { "$elemMatch" : { "street" : "Aakatu1" , "postCode" : "00200"}}}
-    assertEquals(
-        0,
-        query()
-            .anyEmbedded(user.addresses, address)
-            .on(address.street.eq("Aakatu1"), address.postCode.eq("00200"))
-            .fetchCount());
+    assertThat(
+            query()
+                .anyEmbedded(user.addresses, address)
+                .on(address.street.eq("akatu"))
+                .fetchCount())
+        .isEqualTo(0);
+    //      { "addresses" : { "$elemMatch" : { "street" : "Aakatu1", "postCode" : "00200"}}}
+    assertThat(
+            query()
+                .anyEmbedded(user.addresses, address)
+                .on(address.street.eq("Aakatu1"), address.postCode.eq("00200"))
+                .fetchCount())
+        .isEqualTo(0);
   }
 
   @Test
   public void indexedAccess() {
-    assertEquals(1, query().where(user.addresses.get(0).street.eq("Aakatu1")).fetchCount());
-    assertEquals(0, query().where(user.addresses.get(1).street.eq("Aakatu1")).fetchCount());
+    assertThat(query().where(user.addresses.get(0).street.eq("Aakatu1")).fetchCount()).isEqualTo(1);
+    assertThat(query().where(user.addresses.get(1).street.eq("Aakatu1")).fetchCount()).isEqualTo(0);
   }
 
   @Test
   public void count() {
-    assertEquals(4, query().fetchCount());
+    assertThat(query().fetchCount()).isEqualTo(4);
   }
 
   @Test
   public void order() {
     List<User> users = query().orderBy(user.age.asc()).fetch();
-    assertEquals(asList(u1, u2, u3, u4), users);
+    assertThat(users).isEqualTo(asList(u1, u2, u3, u4));
 
     users = query().orderBy(user.age.desc()).fetch();
-    assertEquals(asList(u4, u3, u2, u1), users);
+    assertThat(users).isEqualTo(asList(u4, u3, u2, u1));
   }
 
   @Test
   public void restrict() {
-    assertEquals(asList(u1, u2), query().limit(2).orderBy(user.age.asc()).fetch());
-    assertEquals(asList(u2, u3), query().limit(2).offset(1).orderBy(user.age.asc()).fetch());
+    assertThat(query().limit(2).orderBy(user.age.asc()).fetch()).isEqualTo(asList(u1, u2));
+    assertThat(query().limit(2).offset(1).orderBy(user.age.asc()).fetch())
+        .isEqualTo(asList(u2, u3));
   }
 
   @Test
   public void listResults() {
     QueryResults<User> results = query().limit(2).orderBy(user.age.asc()).fetchResults();
-    assertEquals(4L, results.getTotal());
-    assertEquals(2, results.getResults().size());
+    assertThat(results.getTotal()).isEqualTo(4L);
+    assertThat(results.getResults()).hasSize(2);
 
     results = query().offset(2).orderBy(user.age.asc()).fetchResults();
-    assertEquals(4L, results.getTotal());
-    assertEquals(2, results.getResults().size());
+    assertThat(results.getTotal()).isEqualTo(4L);
+    assertThat(results.getResults()).hasSize(2);
   }
 
   @Test
   public void emptyResults() {
     QueryResults<User> results = query().where(user.firstName.eq("XXX")).fetchResults();
-    assertEquals(0L, results.getTotal());
-    assertEquals(Collections.emptyList(), results.getResults());
+    assertThat(results.getTotal()).isEqualTo(0L);
+    assertThat(results.getResults()).isEqualTo(Collections.emptyList());
   }
 
   @Test
@@ -420,6 +438,28 @@ public class MongodbQueryTest {
   }
 
   @Test
+  public void likeIgnoreCase() {
+    assertQuery(user.firstName.likeIgnoreCase("JAAN"));
+    assertQuery(user.firstName.likeIgnoreCase("Jaan%"), u3, u4);
+    assertQuery(user.firstName.likeIgnoreCase("JAAN%"), u3, u4);
+    assertQuery(user.firstName.likeIgnoreCase("jaan%"), u3, u4);
+
+    assertQuery(user.lastName.likeIgnoreCase("%unen"), u2, u1);
+    assertQuery(user.lastName.likeIgnoreCase("%UNEN"), u2, u1);
+  }
+
+  @Test
+  public void likeIgnoreCase_not() {
+    assertQuery(user.firstName.likeIgnoreCase("Jaan").not(), u3, u4, u2, u1);
+    assertQuery(user.firstName.likeIgnoreCase("Jaan%").not(), u2, u1);
+    assertQuery(user.firstName.likeIgnoreCase("JAAN%").not(), u2, u1);
+    assertQuery(user.firstName.likeIgnoreCase("jaan%").not(), u2, u1);
+
+    assertQuery(user.lastName.likeIgnoreCase("%unen").not(), u3, u4);
+    assertQuery(user.lastName.likeIgnoreCase("%UNEN").not(), u3, u4);
+  }
+
+  @Test
   public void isNotNull() {
     assertQuery(user.firstName.isNotNull(), u3, u4, u2, u1);
   }
@@ -478,17 +518,17 @@ public class MongodbQueryTest {
     Iterator<User> i =
         where(user.firstName.startsWith("A")).orderBy(user.firstName.asc()).iterate();
 
-    assertEquals(a, i.next());
-    assertEquals(b, i.next());
-    assertEquals(c, i.next());
-    assertEquals(false, i.hasNext());
+    assertThat(i.next()).isEqualTo(a);
+    assertThat(i.next()).isEqualTo(b);
+    assertThat(i.next()).isEqualTo(c);
+    assertThat(i.hasNext()).isEqualTo(false);
   }
 
   @Test
   public void uniqueResultAndLimitAndOffset() {
     MorphiaQuery<User> q = query().where(user.firstName.startsWith("Ja")).orderBy(user.age.asc());
-    assertEquals(4, q.fetch().size());
-    assertEquals(u1, q.fetch().get(0));
+    assertThat(q.fetch()).hasSize(4);
+    assertThat(q.fetch().get(0)).isEqualTo(u1);
   }
 
   @Test
@@ -558,7 +598,7 @@ public class MongodbQueryTest {
     for (Predicate predicate : predicates) {
       long count1 = where(predicate).fetchCount();
       long count2 = where(predicate.not()).fetchCount();
-      assertEquals(predicate.toString(), 4, count1 + count2);
+      assertThat(count1 + count2).as(predicate.toString()).isEqualTo(4);
     }
   }
 
@@ -578,8 +618,8 @@ public class MongodbQueryTest {
     i.setCtds(Arrays.asList(ObjectId.get(), ObjectId.get(), ObjectId.get()));
     ds.save(i);
 
-    assertTrue(where(item, item.ctds.contains(i.getCtds().get(0))).fetchCount() > 0);
-    assertTrue(where(item, item.ctds.contains(ObjectId.get())).fetchCount() == 0);
+    assertThat(where(item, item.ctds.contains(i.getCtds().get(0))).fetchCount() > 0).isTrue();
+    assertThat(where(item, item.ctds.contains(ObjectId.get())).fetchCount() == 0).isTrue();
   }
 
   @Test
@@ -588,10 +628,12 @@ public class MongodbQueryTest {
     i.setCtds(Arrays.asList(ObjectId.get(), ObjectId.get(), ObjectId.get()));
     ds.save(i);
 
-    assertTrue(where(item, item.ctds.any().in(i.getCtds())).fetchCount() > 0);
-    assertTrue(
-        where(item, item.ctds.any().in(Arrays.asList(ObjectId.get(), ObjectId.get()))).fetchCount()
-            == 0);
+    assertThat(where(item, item.ctds.any().in(i.getCtds())).fetchCount() > 0).isTrue();
+    assertThat(
+            where(item, item.ctds.any().in(Arrays.asList(ObjectId.get(), ObjectId.get())))
+                    .fetchCount()
+                == 0)
+        .isTrue();
   }
 
   @Test
@@ -608,16 +650,15 @@ public class MongodbQueryTest {
   public void readPreference() {
     MorphiaQuery<User> query = query();
     query.setReadPreference(ReadPreference.primary());
-    assertEquals(4, query.fetchCount());
+    assertThat(query.fetchCount()).isEqualTo(4);
   }
 
   @Test
   public void asDBObject() {
     MorphiaQuery<User> query = query();
     query.where(user.firstName.eq("Bob"), user.lastName.eq("Wilson"));
-    assertEquals(
-        new BasicDBObject().append("firstName", "Bob").append("lastName", "Wilson"),
-        query.asDBObject());
+    assertThat(query.asDBObject())
+        .isEqualTo(new BasicDBObject().append("firstName", "Bob").append("lastName", "Wilson"));
   }
 
   @Test
@@ -627,7 +668,7 @@ public class MongodbQueryTest {
 
     Country fetchedCountry =
         query(Country.class).where(country.defaultLocale.eq(Locale.GERMANY)).fetchOne();
-    assertEquals(germany, fetchedCountry);
+    assertThat(fetchedCountry).isEqualTo(germany);
   }
 
   // TODO
@@ -667,15 +708,15 @@ public class MongodbQueryTest {
     String toString = query.toString();
     List<User> results = query.fetch();
 
-    assertNotNull(toString, results);
+    assertThat(results).as(toString).isNotNull();
     if (expected == null) {
-      assertEquals("Should get empty result", 0, results.size());
+      assertThat(results.size()).as("Should get empty result").isEqualTo(0);
       return;
     }
-    assertEquals(toString, expected.length, results.size());
+    assertThat(results.size()).as(toString).isEqualTo(expected.length);
     int i = 0;
     for (User u : expected) {
-      assertEquals(toString, u, results.get(i++));
+      assertThat(results.get(i++)).as(toString).isEqualTo(u);
     }
   }
 
@@ -697,8 +738,8 @@ public class MongodbQueryTest {
       user.addFriend(u);
     }
     if (!users.isEmpty()) {
-      user.setFriend(users.get(users.size() - 1));
-      user.setEnemy(users.get(users.size() - 1));
+      user.setFriend(users.getLast());
+      user.setEnemy(users.getLast());
     }
     ds.save(user);
     users.add(user);

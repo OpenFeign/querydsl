@@ -14,7 +14,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.selectOne;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
@@ -38,7 +38,7 @@ public class RelationalFunctionCallTest {
     final PathBuilder<String> alias;
     final StringPath token;
 
-    public TokenizeFunction(String alias, String... tokens) {
+    TokenizeFunction(String alias, String... tokens) {
       super(String.class, "tokenize", serializeCollection(tokens));
       this.alias = new PathBuilder<String>(String.class, alias);
       this.token = Expressions.stringPath(this.alias, "token");
@@ -57,7 +57,7 @@ public class RelationalFunctionCallTest {
   public void noArgs() {
     RelationalFunctionCall<String> functionCall =
         SQLExpressions.relationalFunctionCall(String.class, "getElements");
-    assertEquals("getElements()", functionCall.getTemplate().toString());
+    assertThat(functionCall.getTemplate().toString()).isEqualTo("getElements()");
   }
 
   @Test
@@ -65,8 +65,8 @@ public class RelationalFunctionCallTest {
     StringPath str = Expressions.stringPath("str");
     RelationalFunctionCall<String> functionCall =
         SQLExpressions.relationalFunctionCall(String.class, "getElements", "a", str);
-    assertEquals("getElements({0}, {1})", functionCall.getTemplate().toString());
-    assertEquals("a", functionCall.getArg(0));
-    assertEquals(str, functionCall.getArg(1));
+    assertThat(functionCall.getTemplate().toString()).isEqualTo("getElements({0}, {1})");
+    assertThat(functionCall.getArg(0)).isEqualTo("a");
+    assertThat(functionCall.getArg(1)).isEqualTo(str);
   }
 }

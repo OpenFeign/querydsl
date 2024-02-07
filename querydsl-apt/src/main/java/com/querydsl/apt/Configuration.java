@@ -13,11 +13,7 @@
  */
 package com.querydsl.apt;
 
-import com.querydsl.codegen.EntityType;
-import com.querydsl.codegen.QueryTypeFactory;
-import com.querydsl.codegen.Serializer;
-import com.querydsl.codegen.SerializerConfig;
-import com.querydsl.codegen.TypeMappings;
+import com.querydsl.codegen.*;
 import com.querydsl.core.util.Annotations;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
@@ -87,7 +83,7 @@ public interface Configuration {
 
   boolean isUseGetters();
 
-  boolean isValidConstructor(ExecutableElement constructor);
+  boolean isValidConstructor(ExecutableElement constructor, boolean onlyAnnotatedConstructors);
 
   boolean isValidField(VariableElement field);
 
@@ -114,4 +110,6 @@ public interface Configuration {
   boolean isStrictMode();
 
   Function<EntityType, String> getVariableNameFunction();
+
+  Filer getFiler();
 }

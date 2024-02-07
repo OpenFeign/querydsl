@@ -32,9 +32,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.LockMode;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
+import org.hibernate.query.Query;
 
 /**
  * UpdateClause implementation for Hibernate
@@ -87,13 +87,13 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
         values,
         subQuery,
         inserts);
-    Map<Object, String> constants = serializer.getConstantToLabel();
 
     Query query = session.createQuery(serializer.toString());
     for (Map.Entry<Path<?>, LockMode> entry : lockModes.entrySet()) {
       query.setLockMode(entry.getKey().toString(), entry.getValue());
     }
-    HibernateUtil.setConstants(query, constants, queryMixin.getMetadata().getParams());
+    HibernateUtil.setConstants(
+        query, serializer.getConstants(), queryMixin.getMetadata().getParams());
     return query.executeUpdate();
   }
 

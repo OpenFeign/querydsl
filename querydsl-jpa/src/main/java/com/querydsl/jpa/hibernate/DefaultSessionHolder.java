@@ -13,9 +13,9 @@
  */
 package com.querydsl.jpa.hibernate;
 
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 /**
  * {@code DefaultSessionHolder} is the default implementation of the {@link SessionHolder} interface
@@ -31,12 +31,12 @@ public class DefaultSessionHolder implements SessionHolder {
   }
 
   @Override
-  public Query createQuery(String queryString) {
+  public Query<?> createQuery(String queryString) {
     return session.createQuery(queryString);
   }
 
   @Override
-  public SQLQuery createSQLQuery(String queryString) {
-    return session.createSQLQuery(queryString);
+  public NativeQuery<?> createSQLQuery(String queryString) {
+    return session.createNativeQuery(queryString);
   }
 }

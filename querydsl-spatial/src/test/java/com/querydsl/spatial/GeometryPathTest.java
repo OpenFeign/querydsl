@@ -1,6 +1,6 @@
 package com.querydsl.spatial;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.geolatte.geom.*;
 import org.junit.Test;
@@ -10,15 +10,15 @@ public class GeometryPathTest {
   @Test
   public void convert() {
     GeometryPath<Geometry> geometry = new GeometryPath<Geometry>("geometry");
-    assertEquals(
-        new GeometryCollectionPath<GeometryCollection>("geometry"), geometry.asCollection());
-    assertEquals(new LinearRingPath<LinearRing>("geometry"), geometry.asLinearRing());
-    assertEquals(new LineStringPath<LineString>("geometry"), geometry.asLineString());
-    assertEquals(
-        new MultiLineStringPath<MultiLineString>("geometry"), geometry.asMultiLineString());
-    assertEquals(new MultiPointPath<MultiPoint>("geometry"), geometry.asMultiPoint());
-    assertEquals(new MultiPolygonPath<MultiPolygon>("geometry"), geometry.asMultiPolygon());
-    assertEquals(new PointPath<Point>("geometry"), geometry.asPoint());
-    assertEquals(new PolygonPath<Polygon>("geometry"), geometry.asPolygon());
+    assertThat(geometry.asCollection())
+        .isEqualTo(new GeometryCollectionPath<GeometryCollection>("geometry"));
+    assertThat(geometry.asLinearRing()).isEqualTo(new LinearRingPath<LinearRing>("geometry"));
+    assertThat(geometry.asLineString()).isEqualTo(new LineStringPath<LineString>("geometry"));
+    assertThat(geometry.asMultiLineString())
+        .isEqualTo(new MultiLineStringPath<MultiLineString>("geometry"));
+    assertThat(geometry.asMultiPoint()).isEqualTo(new MultiPointPath<MultiPoint>("geometry"));
+    assertThat(geometry.asMultiPolygon()).isEqualTo(new MultiPolygonPath<MultiPolygon>("geometry"));
+    assertThat(geometry.asPoint()).isEqualTo(new PointPath<Point>("geometry"));
+    assertThat(geometry.asPolygon()).isEqualTo(new PolygonPath<Polygon>("geometry"));
   }
 }

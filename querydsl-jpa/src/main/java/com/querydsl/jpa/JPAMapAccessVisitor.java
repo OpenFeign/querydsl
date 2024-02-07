@@ -30,7 +30,7 @@ class JPAMapAccessVisitor extends ReplaceVisitor<Void> {
 
   private final Map<Path<?>, Path<?>> replacements = new HashMap<>();
 
-  public JPAMapAccessVisitor(QueryMetadata metadata, Map<Expression<?>, Path<?>> aliases) {
+  JPAMapAccessVisitor(QueryMetadata metadata, Map<Expression<?>, Path<?>> aliases) {
     this.metadata = metadata;
     this.aliases = aliases;
   }

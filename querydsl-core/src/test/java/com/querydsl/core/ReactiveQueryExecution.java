@@ -50,7 +50,7 @@ public abstract class ReactiveQueryExecution {
 
   private int total;
 
-  public ReactiveQueryExecution(Module module, Target target) {
+  public ReactiveQueryExecution(QuerydslModule module, Target target) {
     projections = new ProjectionsFactory(module, target);
     filters = new FilterFactory(projections, module, target);
     matchers = new MatchingFiltersFactory(module, target);

@@ -13,7 +13,11 @@
  */
 package com.querydsl.core.alias;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ParameterizedExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.util.BeanUtils;
 import com.querydsl.core.util.ReflectionUtils;
 import java.lang.reflect.Array;
@@ -27,17 +31,20 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.implementation.bind.annotation.SuperMethod;
+import net.bytebuddy.implementation.bind.annotation.This;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * {@code PropertyAccessInvocationHandler} is the main InvocationHandler class for the CGLIB alias
- * proxies
+ * {@code PropertyAccessInvocationHandler} is the main InvocationHandler class for the Byte Buddy
+ * alias proxies
  *
  * @author tiwe
  */
-class PropertyAccessInvocationHandler implements MethodInterceptor {
+public class PropertyAccessInvocationHandler {
 
   private static final int RETURN_VALUE = 42;
 
@@ -53,7 +60,7 @@ class PropertyAccessInvocationHandler implements MethodInterceptor {
 
   private final TypeSystem typeSystem;
 
-  public PropertyAccessInvocationHandler(
+  PropertyAccessInvocationHandler(
       Expression<?> host,
       AliasFactory aliasFactory,
       PathFactory pathFactory,
@@ -65,9 +72,12 @@ class PropertyAccessInvocationHandler implements MethodInterceptor {
   }
 
   // CHECKSTYLE:OFF
-  @Override
-  public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy)
-      throws Throwable {
+  @RuntimeType
+  public Object intercept(
+      @This Object proxy,
+      @Origin Method method,
+      @AllArguments Object[] args,
+      @SuperMethod(nullIfImpossible = true) Method methodProxy) {
     // CHECKSTYLE:ON
     Object rv = null;
 

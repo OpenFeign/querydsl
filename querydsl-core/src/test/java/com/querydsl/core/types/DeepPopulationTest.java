@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.types;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
@@ -66,8 +66,8 @@ public class DeepPopulationTest {
         new QBean<Entity1>(Entity1.class, Collections.singletonMap("entity2", entity2Bean));
 
     Entity1 entity1 = FactoryExpressionUtils.wrap(entity1Bean).newInstance("nameX", "idX");
-    assertEquals("nameX", entity1.getEntity2().getName());
-    assertEquals("idX", entity1.getEntity2().getId());
+    assertThat(entity1.getEntity2().getName()).isEqualTo("nameX");
+    assertThat(entity1.getEntity2().getId()).isEqualTo("idX");
   }
 
   @Test
@@ -78,7 +78,7 @@ public class DeepPopulationTest {
     QTuple tupleExpr = new QTuple(entity2Bean);
 
     Tuple tuple = FactoryExpressionUtils.wrap(tupleExpr).newInstance("nameX", "idX");
-    assertEquals("nameX", tuple.get(entity2Bean).getName());
-    assertEquals("idX", tuple.get(entity2Bean).getId());
+    assertThat(tuple.get(entity2Bean).getName()).isEqualTo("nameX");
+    assertThat(tuple.get(entity2Bean).getId()).isEqualTo("idX");
   }
 }

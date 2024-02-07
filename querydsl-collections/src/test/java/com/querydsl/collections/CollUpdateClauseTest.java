@@ -13,7 +13,7 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,8 +30,8 @@ public class CollUpdateClauseTest {
     CollUpdateClause<Cat> updateClause = new CollUpdateClause<Cat>(cat, cats);
     updateClause.where(cat.name.eq("Bob"));
     updateClause.set(cat.name, "Bobby");
-    assertEquals(1, updateClause.execute());
+    assertThat(updateClause.execute()).isEqualTo(1);
 
-    assertEquals("Bobby", cats.get(1).getName());
+    assertThat(cats.get(1).getName()).isEqualTo("Bobby");
   }
 }

@@ -13,46 +13,63 @@
  */
 package com.querydsl.jpa.codegen;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Properties;
 import java.util.Set;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
-import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
+@RunWith(Parameterized.class)
 public class JPADomainExporterTest {
-
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
 
   @Rule public ErrorCollector errors = new ErrorCollector();
 
-  @Test
-  public void test() throws IOException {
+  @Parameters
+  public static Collection<Object[]> generateFiles() throws Exception {
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("h2", new Properties());
-    Path outputFolder = folder.getRoot().toPath();
+    Path outputFolder = Files.createTempDirectory("jpa-exporter-test");
     JPADomainExporter exporter = new JPADomainExporter(outputFolder.toFile(), emf.getMetamodel());
     exporter.execute();
 
-    File origRoot = new File("../querydsl-jpa/target/generated-test-sources/java");
     Set<File> files = exporter.getGeneratedFiles();
-    assertFalse(files.isEmpty());
-    for (File file : files) {
-      Path relativeFile = outputFolder.relativize(file.toPath());
-      Path origFile = origRoot.toPath().resolve(relativeFile);
-      String reference = new String(Files.readAllBytes(origFile), StandardCharsets.UTF_8);
-      String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-      errors.checkThat("Mismatch for " + file.getPath(), content, is(equalTo(reference)));
-    }
+    assertThat(files).isNotEmpty();
+
+    return files.stream()
+        .sorted(Comparator.comparing(File::getName))
+        .map(file -> new Object[] {outputFolder, file})
+        .toList();
+  }
+
+  private File file;
+  private Path outputFolder;
+  private File origRoot =
+      new File("../querydsl-jpa/target/generated-test-sources/test-annotations");
+
+  public JPADomainExporterTest(Path outputFolder, File file) {
+    this.file = file;
+    this.outputFolder = outputFolder;
+  }
+
+  @Test
+  public void test() throws IOException {
+    Path relativeFile = outputFolder.relativize(file.toPath());
+    Path origFile = origRoot.toPath().resolve(relativeFile);
+    String reference = new String(Files.readAllBytes(origFile), StandardCharsets.UTF_8);
+    String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+    assertThat(content).as("Mismatch for " + file.getName() + "\n").isEqualTo(reference);
   }
 }

@@ -20,6 +20,8 @@ public class DB2SuiteTest extends AbstractSuite {
 
   public static class Merge extends MergeBase {}
 
+  public static class MergeUsing extends MergeUsingBase {}
+
   public static class Select extends SelectBase {}
 
   public static class SelectWindowFunctions extends SelectWindowFunctionsBase {}

@@ -20,6 +20,8 @@ import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.codegen.utils.model.Types;
 import com.querydsl.core.util.BeanUtils;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -30,8 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * {@code BeanSerializer} is a {@link Serializer} implementation which serializes {@link EntityType}

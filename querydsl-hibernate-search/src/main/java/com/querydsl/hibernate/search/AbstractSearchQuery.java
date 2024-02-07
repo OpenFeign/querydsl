@@ -15,19 +15,26 @@ package com.querydsl.hibernate.search;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.IteratorAdapter;
-import com.querydsl.core.*;
+import com.querydsl.core.Fetchable;
+import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.SimpleQuery;
 import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.lucene3.LuceneSerializer;
+import com.querydsl.lucene5.LuceneSerializer;
 import java.util.List;
-import org.apache.lucene.search.MatchAllDocsQuery;
 import org.hibernate.Session;
-import org.hibernate.search.FullTextQuery;
-import org.hibernate.search.FullTextSession;
-import org.hibernate.search.Search;
+import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
+import org.hibernate.search.engine.search.query.SearchQuery;
+import org.hibernate.search.engine.search.query.dsl.SearchQueryOptionsStep;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsStep;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 
 /**
  * Abstract base class for Hibernate Search query classes
@@ -44,10 +51,10 @@ public abstract class AbstractSearchQuery<T, Q extends AbstractSearchQuery<T, Q>
 
   private final LuceneSerializer serializer;
 
-  private final FullTextSession session;
+  private final SearchSession session;
 
   @SuppressWarnings("unchecked")
-  public AbstractSearchQuery(FullTextSession session, EntityPath<T> path) {
+  public AbstractSearchQuery(SearchSession session, EntityPath<T> path) {
     this.queryMixin = new QueryMixin<Q>((Q) this);
     this.session = session;
     this.path = path;
@@ -56,42 +63,35 @@ public abstract class AbstractSearchQuery<T, Q extends AbstractSearchQuery<T, Q>
   }
 
   public AbstractSearchQuery(Session session, EntityPath<T> path) {
-    this(Search.getFullTextSession(session), path);
+    this(Search.session(session), path);
   }
 
   @Override
   public long fetchCount() {
-    return createQuery(true).getResultSize();
+    return createQuery(true).fetchTotalHitCount();
   }
 
-  private FullTextQuery createQuery(boolean forCount) {
+  private SearchQuery<T> createQuery(boolean forCount) {
     QueryMetadata metadata = queryMixin.getMetadata();
-    org.apache.lucene.search.Query query;
-    if (metadata.getWhere() != null) {
-      query = serializer.toQuery(metadata.getWhere(), metadata);
-    } else {
-      query = new MatchAllDocsQuery();
-    }
-    FullTextQuery fullTextQuery = session.createFullTextQuery(query, path.getType());
+    Class<T> type = (Class<T>) path.getType();
+    //        org.apache.lucene.search.Query query;
+    //        if (metadata.getWhere() != null) {
+    //            query = serializer.toQuery(metadata.getWhere(), metadata);
+    //        } else {
+    //            query = new MatchAllDocsQuery();
+    //        }
 
-    // order
-    if (!metadata.getOrderBy().isEmpty() && !forCount) {
-      fullTextQuery.setSort(serializer.toSort(metadata.getOrderBy()));
-    }
+    // TODO: implement where clause
 
-    // paging
-    QueryModifiers modifiers = metadata.getModifiers();
-    if (modifiers.isRestricting() && !forCount) {
-      Integer limit = modifiers.getLimitAsInteger();
-      Integer offset = modifiers.getOffsetAsInteger();
-      if (limit != null) {
-        fullTextQuery.setMaxResults(limit);
-      }
-      if (offset != null) {
-        fullTextQuery.setFirstResult(offset);
-      }
-    }
-    return fullTextQuery;
+    SearchQueryOptionsStep<?, T, SearchLoadingOptionsStep, ?, ?> queryStep =
+        session.search(type).where(SearchPredicateFactory::matchAll);
+
+    // TODO: add sorting
+    //        List<OrderSpecifier<?>> orderBy = metadata.getOrderBy();
+    //        if (!orderBy.isEmpty() && !forCount) {
+    //            fullTextQuery.setSort(serializer.toSort(metadata.getOrderBy()));
+    //        }
+    return queryStep.toQuery();
   }
 
   @Override
@@ -102,7 +102,7 @@ public abstract class AbstractSearchQuery<T, Q extends AbstractSearchQuery<T, Q>
   @Override
   @SuppressWarnings("unchecked")
   public CloseableIterator<T> iterate() {
-    return new IteratorAdapter<T>(createQuery(false).iterate());
+    return new IteratorAdapter<T>(fetchAll(createQuery(false)).iterator());
   }
 
   @Override
@@ -113,15 +113,21 @@ public abstract class AbstractSearchQuery<T, Q extends AbstractSearchQuery<T, Q>
   @SuppressWarnings("unchecked")
   @Override
   public List<T> fetch() {
-    return createQuery(false).list();
+    return fetchAll(createQuery(false));
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public QueryResults<T> fetchResults() {
-    FullTextQuery query = createQuery(false);
+    SearchQuery<T> query = createQuery(false);
     return new QueryResults<T>(
-        query.list(), queryMixin.getMetadata().getModifiers(), query.getResultSize());
+        fetchAll(query), queryMixin.getMetadata().getModifiers(), query.fetchTotalHitCount());
+  }
+
+  private List<T> fetchAll(SearchQuery<T> query) {
+    return query.fetchHits(
+        queryMixin.getMetadata().getModifiers().getOffsetAsInteger(),
+        queryMixin.getMetadata().getModifiers().getLimitAsInteger());
   }
 
   @Override
@@ -146,14 +152,14 @@ public abstract class AbstractSearchQuery<T, Q extends AbstractSearchQuery<T, Q>
 
   @Override
   public T fetchFirst() {
-    return limit(1).fetchOne();
+    return limit(1).fetchFirst();
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public T fetchOne() throws NonUniqueResultException {
     try {
-      return (T) createQuery(false).uniqueResult();
+      return (T) createQuery(false).fetchSingleHit();
     } catch (org.hibernate.NonUniqueResultException e) {
       throw new NonUniqueResultException(e);
     }

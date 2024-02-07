@@ -20,9 +20,9 @@ import com.querydsl.core.annotations.QueryType;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringExpression;
+import jakarta.persistence.Entity;
 import java.util.Map;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.persistence.Entity;
 import org.junit.Test;
 
 public class QueryProjectionTest {
@@ -99,5 +99,16 @@ public class QueryProjectionTest {
     new QQueryProjectionTest_DTOWithProjection(stringExpr).newInstance("");
     new QQueryProjectionTest_DTOWithProjection(longExpr, stringExpr).newInstance(0L, "");
     new QQueryProjectionTest_DTOWithProjection(stringExpr, stringExpr).newInstance("", "");
+  }
+
+  @QueryProjection
+  public static record RecordProjection(long param0, String param1) {}
+
+  @Test
+  public void record_case() throws SecurityException, NoSuchMethodException {
+    NumberExpression<Long> longExpr = Expressions.numberPath(Long.class, "x");
+    StringExpression stringExpr = Expressions.stringPath("x");
+
+    new QQueryProjectionTest_RecordProjection(longExpr, stringExpr).newInstance(0L, "");
   }
 }

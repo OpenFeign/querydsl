@@ -19,11 +19,14 @@ public class Comment {
 
   private String text;
 
+  private Double score;
+
   public Comment() {}
 
-  public Comment(Integer id, String text) {
+  public Comment(Integer id, String text, Double score) {
     this.id = id;
     this.text = text;
+    this.score = score;
   }
 
   public Integer getId() {
@@ -42,18 +45,27 @@ public class Comment {
     this.text = text;
   }
 
+  public Double getScore() {
+    return score;
+  }
+
+  public void setScore(Double score) {
+    this.score = score;
+  }
+
   @Override
   public int hashCode() {
-    return 31 * id.hashCode() + text.hashCode();
+    return 31 * id.hashCode() + text.hashCode() + score.hashCode();
   }
 
   @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Comment) {
-      Comment other = (Comment) o;
-      return this.id.equals(other.id) && this.text.equals(other.text);
+    } else if (o instanceof Comment other) {
+      return this.id.equals(other.id)
+          && this.text.equals(other.text)
+          && this.score.equals(other.score);
     } else {
       return false;
     }
@@ -61,6 +73,6 @@ public class Comment {
 
   @Override
   public String toString() {
-    return id + ": " + text;
+    return id + ": " + text + "(score: " + score + ")";
   }
 }

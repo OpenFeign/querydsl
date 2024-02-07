@@ -3,36 +3,32 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.querydsl</groupId>
   <artifactId>querydsl-sql-codegen</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - SQL codegen support</name>
   <description>SQL codegen support for Querydsl</description>
 
   <properties>
-    <ant.version>1.8.1</ant.version>
+    <ant.version>1.10.14</ant.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
-      <version>20.1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-codegen</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -47,13 +43,7 @@
 
     <!-- test -->
     <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
@@ -69,6 +59,12 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
+      <version>${derby.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derbytools</artifactId>
       <version>${derby.version}</version>
       <scope>test</scope>
     </dependency>
@@ -91,16 +87,16 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.oracle</groupId>
-      <artifactId>ojdbc6</artifactId>
-      <version>11.1.0.7.0</version>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <artifactId>ojdbc8</artifactId>
+      <version>${oracle.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
-      <groupId>net.sourceforge.jtds</groupId>
-      <artifactId>jtds</artifactId>
-      <version>${jtds.version}</version>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
+      <version>${mssql.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -126,8 +122,8 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -135,7 +131,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
+      <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -147,7 +143,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
@@ -160,6 +156,11 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <version>2.0.1</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -170,6 +171,7 @@
       </plugin>
 
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptors>
@@ -182,6 +184,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
         <configuration>
           <archive>
             <manifestEntries>
@@ -199,6 +202,7 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
         <executions>
           <execution>
@@ -222,33 +226,6 @@
         </configuration>
       </plugin>
 
-      <!-- 
-      <plugin>
-        <groupId>com.querydsl</groupId>
-        <artifactId>querydsl-maven-plugin</artifactId>
-        <version>${project.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-export</goal>
-            </goals>
-          </execution>            
-        </executions>
-        <configuration>
-          <jdbcDriver>org.apache.derby.jdbc.EmbeddedDriver</jdbcDriver>
-          <jdbcUrl>jdbc:derby:target/demoDB;create=true</jdbcUrl>
-          <packageName>com.querydsl.sql.domain2</packageName>
-          <targetFolder>target/generated-test-sources/java</targetFolder>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>${derby.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-       -->
     </plugins>
   </build>
 

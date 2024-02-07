@@ -6,7 +6,7 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.PathInits;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QABase is a Querydsl query type for ABase */
 @Generated("com.querydsl.codegen.SupertypeSerializer")

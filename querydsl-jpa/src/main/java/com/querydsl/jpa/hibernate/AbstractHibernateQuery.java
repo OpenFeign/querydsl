@@ -14,21 +14,34 @@
 package com.querydsl.jpa.hibernate;
 
 import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryException;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.Path;
-import com.querydsl.jpa.*;
+import com.querydsl.jpa.FactoryExpressionTransformer;
+import com.querydsl.jpa.HQLTemplates;
+import com.querydsl.jpa.JPAQueryBase;
+import com.querydsl.jpa.JPQLSerializer;
+import com.querydsl.jpa.JPQLTemplates;
+import com.querydsl.jpa.ScrollableResultsIterator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import org.hibernate.*;
-import org.hibernate.Query;
+import org.hibernate.FlushMode;
+import org.hibernate.LockMode;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
+import org.hibernate.Session;
+import org.hibernate.StatelessSession;
+import org.hibernate.query.Query;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -94,13 +107,9 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   private Query createQuery(@Nullable QueryModifiers modifiers, boolean forCount) {
     JPQLSerializer serializer = serialize(forCount);
     String queryString = serializer.toString();
-    logQuery(queryString, serializer.getConstantToAllLabels());
+    logQuery(queryString);
     Query query = session.createQuery(queryString);
-    HibernateUtil.setConstants(
-        query,
-        serializer.getConstantToNamedLabel(),
-        serializer.getConstantToNumberedLabel(),
-        getMetadata().getParams());
+    HibernateUtil.setConstants(query, serializer.getConstants(), getMetadata().getParams());
     if (fetchSize > 0) {
       query.setFetchSize(fetchSize);
     }
@@ -123,7 +132,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
       query.setLockMode(entry.getKey().toString(), entry.getValue());
     }
     if (flushMode != null) {
-      query.setFlushMode(flushMode);
+      query.setHibernateFlushMode(flushMode);
     }
 
     if (modifiers != null && modifiers.isRestricting()) {
@@ -147,8 +156,8 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   }
 
   /**
-   * Return the query results as an <tt>Iterator</tt>. If the query contains multiple results pre
-   * row, the results are returned in an instance of <tt>Object[]</tt>.<br>
+   * Return the query results as an {@code Iterator}. If the query contains multiple results pre
+   * row, the results are returned in an instance of {@code Object[]}.<br>
    * <br>
    * Entities returned as results are initialized on demand. The first SQL query returns identifiers
    * only.<br>
@@ -157,7 +166,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   public CloseableIterator<T> iterate() {
     try {
       Query query = createQuery();
-      ScrollableResults results = query.scroll(ScrollMode.FORWARD_ONLY);
+      List results = query.getResultList();
       return new ScrollableResultsIterator<T>(results);
     } finally {
       reset();
@@ -204,7 +213,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
     }
   }
 
-  protected void logQuery(String queryString, Map<Object, String> parameters) {
+  protected void logQuery(String queryString) {
     if (logger.isLoggable(Level.FINE)) {
       String normalizedQuery = queryString.replace('\n', ' ');
       logger.fine(normalizedQuery);
@@ -215,8 +224,8 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   protected void reset() {}
 
   /**
-   * Return the query results as <tt>ScrollableResults</tt>. The scrollability of the returned
-   * results depends upon JDBC driver support for scrollable <tt>ResultSet</tt>s.<br>
+   * Return the query results as {@code ScrollableResults}. The scrollability of the returned
+   * results depends upon JDBC driver support for scrollable {@code ResultSet}s.<br>
    *
    * @param mode scroll mode
    * @return scrollable results
@@ -243,7 +252,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   /**
    * Set the name of the cache region.
    *
-   * @param cacheRegion the name of a query cache region, or <tt>null</tt> for the default query
+   * @param cacheRegion the name of a query cache region, or {@code null} for the default query
    *     cache
    */
   @SuppressWarnings("unchecked")

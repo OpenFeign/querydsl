@@ -2,21 +2,21 @@ package com.querydsl.example.config;
 
 import com.querydsl.example.dao.*;
 import com.querydsl.example.dto.*;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import javax.annotation.Resource;
-import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class TestDataServiceImpl implements TestDataService {
 
-  @Resource CustomerDao customerDao;
-  @Resource OrderDao orderDao;
-  @Resource PersonDao personDao;
-  @Resource ProductDao productDao;
-  @Resource SupplierDao supplierDao;
+  @Autowired CustomerDao customerDao;
+  @Autowired OrderDao orderDao;
+  @Autowired PersonDao personDao;
+  @Autowired ProductDao productDao;
+  @Autowired SupplierDao supplierDao;
 
   @Override
   public void addTestData() {
@@ -83,7 +83,7 @@ public class TestDataServiceImpl implements TestDataService {
     CustomerAddress customerAddress = new CustomerAddress();
     customerAddress.setAddress(address);
     customerAddress.setAddressTypeCode("office");
-    customerAddress.setFromDate(new LocalDate());
+    customerAddress.setFromDate(LocalDate.now());
 
     Customer customer = new Customer();
     customer.setAddresses(Collections.singleton(customerAddress));
@@ -106,12 +106,12 @@ public class TestDataServiceImpl implements TestDataService {
     CustomerPaymentMethod paymentMethod = new CustomerPaymentMethod();
     paymentMethod.setCardNumber("11111111111");
     paymentMethod.setCustomerId(customer.getId());
-    paymentMethod.setFromDate(new LocalDate());
+    paymentMethod.setFromDate(LocalDate.now());
     paymentMethod.setPaymentMethodCode("abc");
 
     Order order = new Order();
     order.setCustomerPaymentMethod(paymentMethod);
-    order.setOrderPlacedDate(new LocalDate());
+    order.setOrderPlacedDate(LocalDate.now());
     order.setOrderProducts(Collections.singleton(orderProduct));
     order.setTotalOrderPrice(13124.00);
     orderDao.save(order);

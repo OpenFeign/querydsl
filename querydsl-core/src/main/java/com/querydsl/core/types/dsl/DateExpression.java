@@ -13,6 +13,7 @@
  */
 package com.querydsl.core.types.dsl;
 
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
@@ -198,5 +199,85 @@ public abstract class DateExpression<T extends Comparable> extends TemporalExpre
       yearWeek = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.YEAR_WEEK, mixin);
     }
     return yearWeek;
+  }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public DateExpression<T> nullif(Expression<T> other) {
+    return Expressions.dateOperation(getType(), Ops.NULLIF, mixin, other);
+  }
+
+  /**
+   * Create a {@code nullif(this, other)} expression
+   *
+   * @param other
+   * @return nullif(this, other)
+   */
+  @Override
+  public DateExpression<T> nullif(T other) {
+    return nullif(ConstantImpl.create(other));
+  }
+
+  /**
+   * Create a {@code coalesce(this, expr)} expression
+   *
+   * @param expr additional argument
+   * @return coalesce
+   */
+  @Override
+  public DateExpression<T> coalesce(Expression<T> expr) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    coalesce.add(expr);
+    return coalesce.asDate();
+  }
+
+  /**
+   * Create a {@code coalesce(this, exprs...)} expression
+   *
+   * @param exprs additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public DateExpression<T> coalesce(Expression<?>... exprs) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (Expression expr : exprs) {
+      coalesce.add(expr);
+    }
+    return coalesce.asDate();
+  }
+
+  /**
+   * Create a {@code coalesce(this, arg)} expression
+   *
+   * @param arg additional argument
+   * @return coalesce
+   */
+  @Override
+  public DateExpression<T> coalesce(T arg) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    coalesce.add(arg);
+    return coalesce.asDate();
+  }
+
+  /**
+   * Create a {@code coalesce(this, args...)} expression
+   *
+   * @param args additional arguments
+   * @return coalesce
+   */
+  @Override
+  @SuppressWarnings("unchecked")
+  public DateExpression<T> coalesce(T... args) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (T arg : args) {
+      coalesce.add(arg);
+    }
+    return coalesce.asDate();
   }
 }

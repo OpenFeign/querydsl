@@ -15,9 +15,11 @@
  */
 package com.querydsl.core;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.assertj.core.api.Assertions.*;
 
 import com.querydsl.core.types.Templates;
+import io.github.classgraph.ClassGraph;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -25,37 +27,38 @@ import java.util.stream.Collectors;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
-import org.reflections.Reflections;
 
 public class TemplatesTestBase {
 
   @Rule public final ErrorCollector errorCollector = new ErrorCollector();
 
-  private final Reflections querydsl =
-      new Reflections(TemplatesTestBase.class.getPackage().getName());
+  private final ClassGraph querydsl =
+      new ClassGraph()
+          .enableClassInfo()
+          .acceptPackages(TemplatesTestBase.class.getPackage().getName());
 
   private final String modulePrefix = getClass().getPackage().getName();
 
   @Test
   public void default_instance() {
-    Set<Class<? extends Templates>> templates = querydsl.getSubTypesOf(Templates.class);
-    Set<Class<? extends Templates>> moduleSpecific =
+    List<Class<?>> templates =
+        querydsl.scan().getSubclasses(Templates.class.getName()).loadClasses();
+    Set<Class<?>> moduleSpecific =
         templates.stream().filter(MODULE_SPECIFIC).collect(Collectors.toSet());
 
-    for (Class<? extends Templates> template : moduleSpecific) {
+    for (Class<?> template : moduleSpecific) {
       try {
         Templates defaultInstance = (Templates) template.getField("DEFAULT").get(null);
-        errorCollector.checkThat(defaultInstance, instanceOf(template));
+        errorCollector.checkSucceeds(() -> assertThat(defaultInstance).isInstanceOf(template));
       } catch (Exception ex) {
         errorCollector.addError(ex);
       }
     }
   }
 
-  private final Predicate<Class<? extends Templates>> objectPredicate =
+  private final Predicate<Class<?>> objectPredicate =
       o -> Pattern.matches("class " + modulePrefix + ".*", o.toString());
-  private final Predicate<Class<? extends Templates>> MODULE_SPECIFIC =
-      objectPredicate.and(topLevelClass);
+  private final Predicate<Class<?>> MODULE_SPECIFIC = objectPredicate.and(topLevelClass);
 
   private static final Predicate<Class<?>> topLevelClass =
       input -> !input.isAnonymousClass() && !input.isMemberClass();

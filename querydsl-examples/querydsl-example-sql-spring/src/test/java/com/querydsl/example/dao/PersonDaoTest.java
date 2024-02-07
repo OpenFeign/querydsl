@@ -1,25 +1,25 @@
 package com.querydsl.example.dao;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.dto.Person;
 import java.util.List;
-import javax.annotation.Resource;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonDaoTest extends AbstractDaoTest {
 
-  @Resource PersonDao personDao;
+  @Autowired PersonDao personDao;
 
   @Test
   public void findAll() {
     List<Person> persons = personDao.findAll();
-    assertFalse(persons.isEmpty());
+    assertThat(persons).isNotEmpty();
   }
 
   @Test
   public void findById() {
-    assertNotNull(personDao.findById(1));
+    assertThat(personDao.findById(1)).isNotNull();
   }
 
   @Test
@@ -33,8 +33,8 @@ public class PersonDaoTest extends AbstractDaoTest {
     Person person = new Person();
     person.setEmail("john@acme.com");
     personDao.save(person);
-    assertNotNull(person.getId());
+    assertThat(person.getId()).isNotNull();
     personDao.delete(person);
-    assertNull(personDao.findById(person.getId()));
+    assertThat(personDao.findById(person.getId())).isNull();
   }
 }

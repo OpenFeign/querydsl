@@ -13,7 +13,7 @@
  */
 package com.querydsl.mongodb;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -21,12 +21,10 @@ import com.mongodb.DBObject;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.*;
-import com.querydsl.mongodb.domain.QAddress;
-import com.querydsl.mongodb.domain.QDummyEntity;
-import com.querydsl.mongodb.domain.QPerson;
-import com.querydsl.mongodb.domain.QUser;
+import com.querydsl.mongodb.domain.*;
 import com.querydsl.mongodb.morphia.MorphiaSerializer;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -72,23 +70,24 @@ public class MongodbSerializerTest {
   @Test
   public void paths() {
     QUser user = QUser.user;
-    assertEquals("user", serializer.visit(user, null));
-    assertEquals("addresses", serializer.visit(user.addresses, null));
-    assertEquals("addresses", serializer.visit(user.addresses.any(), null));
-    assertEquals("addresses.street", serializer.visit(user.addresses.any().street, null));
-    assertEquals("firstName", serializer.visit(user.firstName, null));
+    assertThat(serializer.visit(user, null)).isEqualTo("user");
+    assertThat(serializer.visit(user.addresses, null)).isEqualTo("addresses");
+    assertThat(serializer.visit(user.addresses.any(), null)).isEqualTo("addresses");
+    assertThat(serializer.visit(user.addresses.any().street, null)).isEqualTo("addresses.street");
+    assertThat(serializer.visit(user.firstName, null)).isEqualTo("firstName");
   }
 
   @Test
   public void propertyAnnotation() {
     QDummyEntity entity = QDummyEntity.dummyEntity;
-    assertEquals("prop", serializer.visit(entity.property, null));
+    assertThat(serializer.visit(entity.property, null)).isEqualTo("prop");
   }
 
   @Test
   public void indexedAccess() {
     QUser user = QUser.user;
-    assertEquals("addresses.0.street", serializer.visit(user.addresses.get(0).street, null));
+    assertThat(serializer.visit(user.addresses.get(0).street, null))
+        .isEqualTo("addresses.0.street");
   }
 
   @Test
@@ -118,7 +117,7 @@ public class MongodbSerializerTest {
     assertQuery(gross.eq(1.0D), dbo("gross", 1.0D));
     assertQuery(longField.eq(1L), dbo("longField", 1L));
     assertQuery(shortField.eq((short) 1), dbo("shortField", 1));
-    assertQuery(byteField.eq((byte) 1), dbo("byteField", 1L));
+    assertQuery(byteField.eq((byte) 1), dbo("byteField", (byte) 1));
     assertQuery(floatField.eq(1.0F), dbo("floatField", 1.0F));
 
     assertQuery(date.eq(dateVal), dbo("date", dateVal));
@@ -173,23 +172,25 @@ public class MongodbSerializerTest {
   @Test
   public void orderBy() {
     DBObject orderBy = serializer.toSort(sortList(year.asc()));
-    assertEquals(dbo("year", 1), orderBy);
+    assertThat(orderBy).isEqualTo(dbo("year", 1));
 
     orderBy = serializer.toSort(sortList(year.desc()));
-    assertEquals(dbo("year", -1), orderBy);
+    assertThat(orderBy).isEqualTo(dbo("year", -1));
 
     orderBy = serializer.toSort(sortList(year.desc(), title.asc()));
-    assertEquals(dbo("year", -1).append("title", 1), orderBy);
+    assertThat(orderBy).isEqualTo(dbo("year", -1).append("title", 1));
   }
 
   @Test
   public void regexCases() {
-    assertQuery(title.startsWith("A"), dbo("title", dbo("$regex", "^\\QA\\E")));
+    assertQuery(
+        title.startsWith("A"), dbo("title", dbo("$regex", "^\\QA\\E").append("$options", "")));
     assertQuery(
         title.startsWithIgnoreCase("A"),
         dbo("title", dbo("$regex", "^\\QA\\E").append("$options", "i")));
 
-    assertQuery(title.endsWith("A"), dbo("title", dbo("$regex", "\\QA\\E$")));
+    assertQuery(
+        title.endsWith("A"), dbo("title", dbo("$regex", "\\QA\\E$").append("$options", "")));
     assertQuery(
         title.endsWithIgnoreCase("A"),
         dbo("title", dbo("$regex", "\\QA\\E$").append("$options", "i")));
@@ -198,12 +199,13 @@ public class MongodbSerializerTest {
         title.equalsIgnoreCase("A"),
         dbo("title", dbo("$regex", "^\\QA\\E$").append("$options", "i")));
 
-    assertQuery(title.contains("A"), dbo("title", dbo("$regex", ".*\\QA\\E.*")));
+    assertQuery(
+        title.contains("A"), dbo("title", dbo("$regex", ".*\\QA\\E.*").append("$options", "")));
     assertQuery(
         title.containsIgnoreCase("A"),
         dbo("title", dbo("$regex", ".*\\QA\\E.*").append("$options", "i")));
 
-    assertQuery(title.matches(".*A^"), dbo("title", dbo("$regex", ".*A^")));
+    assertQuery(title.matches(".*A^"), dbo("title", dbo("$regex", ".*A^").append("$options", "")));
   }
 
   @Test
@@ -232,6 +234,21 @@ public class MongodbSerializerTest {
   }
 
   @Test
+  public void all() {
+    QItem item = QItem.item;
+    List<ObjectId> objectIds = new ArrayList<>();
+    ObjectId objectId1 = new ObjectId();
+    ObjectId objectId2 = new ObjectId();
+
+    objectIds.add(objectId1);
+    objectIds.add(objectId2);
+
+    assertQuery(
+        MongodbExpressions.all(item.ctds, objectIds),
+        dbo("ctds", dbo("$all", dblist(objectId1, objectId2))));
+  }
+
+  @Test
   public void not() {
     assertQuery(title.eq("A").not(), dbo("title", dbo("$ne", "A")));
 
@@ -251,11 +268,11 @@ public class MongodbSerializerTest {
   @Test
   public void path() {
     QUser user = QUser.user;
-    assertEquals("firstName", serializer.visit(user.firstName, null));
-    assertEquals("firstName", serializer.visit(user.as(QUser.class).firstName, null));
-    assertEquals("mainAddress.street", serializer.visit(user.mainAddress().street, null));
-    assertEquals(
-        "mainAddress.street", serializer.visit(user.mainAddress().as(QAddress.class).street, null));
+    assertThat(serializer.visit(user.firstName, null)).isEqualTo("firstName");
+    assertThat(serializer.visit(user.as(QUser.class).firstName, null)).isEqualTo("firstName");
+    assertThat(serializer.visit(user.mainAddress().street, null)).isEqualTo("mainAddress.street");
+    assertThat(serializer.visit(user.mainAddress().as(QAddress.class).street, null))
+        .isEqualTo("mainAddress.street");
   }
 
   private List<OrderSpecifier<?>> sortList(OrderSpecifier<?>... order) {
@@ -264,7 +281,7 @@ public class MongodbSerializerTest {
 
   private void assertQuery(Expression<?> e, BasicDBObject expected) {
     BasicDBObject result = (BasicDBObject) serializer.handle(e);
-    assertEquals(expected.toString(), result.toString());
+    assertThat(result.toString()).isEqualTo(expected.toString());
   }
 
   public static BasicDBObject dbo(String key, Object... value) {

@@ -17,8 +17,27 @@ import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.MapExpression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.*;
-import java.util.*;
+import com.querydsl.core.types.dsl.ArrayExpression;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Coalesce;
+import com.querydsl.core.types.dsl.CollectionExpressionBase;
+import com.querydsl.core.types.dsl.ComparableExpression;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.DateTimeExpression;
+import com.querydsl.core.types.dsl.ListExpression;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.MapExpressionBase;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.TemporalExpression;
+import com.querydsl.core.types.dsl.TimeExpression;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * @author tiwe
@@ -27,11 +46,11 @@ public class FilterFactory {
 
   private final ProjectionsFactory projections;
 
-  private final Module module;
+  private final QuerydslModule module;
 
   private final Target target;
 
-  public FilterFactory(ProjectionsFactory projections, Module module, Target target) {
+  public FilterFactory(ProjectionsFactory projections, QuerydslModule module, Target target) {
     this.projections = projections;
     this.module = module;
     this.target = target;
@@ -53,7 +72,7 @@ public class FilterFactory {
     rv.add(expr.contains(knownElement));
     rv.add(expr.isEmpty());
     rv.add(expr.isNotEmpty());
-    if (!module.equals(Module.RDFBEAN)) {
+    if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size().gt(0));
     }
     return Collections.unmodifiableSet(rv);
@@ -62,7 +81,7 @@ public class FilterFactory {
   public <A> Collection<Predicate> array(
       ArrayExpression<A[], A> expr, ArrayExpression<A[], A> other, A knownElement) {
     HashSet<Predicate> rv = new HashSet<Predicate>();
-    if (!module.equals(Module.RDFBEAN)) {
+    if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size().gt(0));
     }
     rv.add(expr.get(0).eq(knownElement));
@@ -107,7 +126,7 @@ public class FilterFactory {
     rv.add(expr.month().eq(other.month()));
     rv.add(expr.year().eq(other.year()));
     rv.add(expr.yearMonth().eq(other.yearMonth()));
-    if (module.equals(Module.SQL) || module.equals(Module.COLLECTIONS)) {
+    if (module.equals(QuerydslModule.SQL) || module.equals(QuerydslModule.COLLECTIONS)) {
       if (target != Target.DERBY) {
         rv.add(expr.yearWeek().eq(other.yearWeek()));
       }
@@ -132,7 +151,7 @@ public class FilterFactory {
 
     rv.add(expr.yearMonth().eq(other.yearMonth()));
 
-    if (module.equals(Module.SQL) || module.equals(Module.COLLECTIONS)) {
+    if (module.equals(QuerydslModule.SQL) || module.equals(QuerydslModule.COLLECTIONS)) {
       if (target != Target.DERBY) {
         rv.add(expr.yearWeek().eq(other.yearWeek()));
       }
@@ -144,7 +163,7 @@ public class FilterFactory {
     rv.add(expr.minute().eq(1));
     rv.add(expr.minute().eq(other.minute()));
 
-    rv.add(expr.second().eq(1));
+    rv.add(expr.second().eq(1f));
     rv.add(expr.second().eq(other.second()));
     return Collections.unmodifiableList(rv);
   }
@@ -176,7 +195,7 @@ public class FilterFactory {
     rv.add(expr.get(knownKey).ne(knownValue));
     rv.add(expr.isEmpty());
     rv.add(expr.isNotEmpty());
-    if (!module.equals(Module.RDFBEAN)) {
+    if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size().gt(0));
     }
     return Collections.unmodifiableSet(rv);
@@ -321,7 +340,7 @@ public class FilterFactory {
     rv.add(expr.notBetween("A", "Z"));
     rv.add(expr.notBetween(other, other));
 
-    if (!target.equals(Target.DERBY) && !module.equals(Module.JDO)) {
+    if (!target.equals(Target.DERBY) && !module.equals(QuerydslModule.JDO)) {
       // https://issues.apache.org/jira/browse/DERBY-4389
       rv.add(new Coalesce<String>(String.class, expr, other).getValue().eq("xxx"));
     }

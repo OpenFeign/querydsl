@@ -3,30 +3,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.querydsl</groupId>
   <artifactId>querydsl-core</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - Core module</name>
   <description>core module for querydsl</description>
-  <url>${project.homepage}</url>
-
-  <scm>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
-  </scm>
 
   <dependencies>
     <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
-      <version>20.1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -34,7 +23,11 @@
       <artifactId>mysema-commons-lang</artifactId>
       <version>${mysema.lang.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>io.github.classgraph</groupId>
+      <artifactId>classgraph</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>io.projectreactor</groupId>
       <artifactId>reactor-core</artifactId>
@@ -43,17 +36,9 @@
 
     <!-- alias dependencies -->
     <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib</artifactId>
-      <version>${cglib.version}</version>
-      <optional>true</optional>
-    </dependency>
-
-    <!-- backwards compatibility -->
-    <dependency>
-      <groupId>org.jvnet.hudson</groupId>
-      <artifactId>annotation-indexer</artifactId>
-      <version>1.2</version>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>${byte-buddy.version}</version>
       <optional>true</optional>
     </dependency>
 
@@ -63,6 +48,12 @@
       <artifactId>jdepend</artifactId>
       <version>2.9.1</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>2.1.1</version>
     </dependency>
   </dependencies>
 
@@ -75,6 +66,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
         <configuration>
           <archive>
             <manifestEntries>
@@ -92,6 +84,7 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
         <executions>
           <execution>
@@ -104,4 +97,5 @@
       </plugin>
     </plugins>
   </build>
+
 </project>

@@ -1,7 +1,8 @@
 package com.querydsl.sql;
 
 import static com.querydsl.core.testutil.Serialization.serialize;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QTuple;
@@ -16,9 +17,9 @@ public class RelationalPathTest {
   public void path() throws ClassNotFoundException, IOException {
     QSurvey survey = QSurvey.survey;
     QSurvey survey2 = serialize(survey);
-    assertEquals(Arrays.asList(survey.all()), Arrays.asList(survey2.all()));
-    assertEquals(survey.getMetadata(), survey2.getMetadata());
-    assertEquals(survey.getMetadata(survey.id), survey2.getMetadata(survey.id));
+    assertThat(Arrays.asList(survey2.all())).isEqualTo(Arrays.asList(survey.all()));
+    assertThat(survey2.getMetadata()).isEqualTo(survey.getMetadata());
+    assertThat(survey2.getMetadata(survey.id)).isEqualTo(survey.getMetadata(survey.id));
   }
 
   @Test

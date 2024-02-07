@@ -16,6 +16,7 @@ package com.querydsl.core.group;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.util.MathUtils;
 import java.math.BigDecimal;
+import java.math.MathContext;
 
 /**
  * GAvg
@@ -27,8 +28,15 @@ public class GAvg<T extends Number> extends AbstractGroupExpression<T, T> {
 
   private static final long serialVersionUID = 3518868612387641383L;
 
+  private final MathContext mathContext;
+
   public GAvg(Expression<T> expr) {
+    this(expr, MathContext.DECIMAL128);
+  }
+
+  GAvg(Expression<T> expr, MathContext mathContext) {
     super((Class) expr.getType(), expr);
+    this.mathContext = mathContext;
   }
 
   @Override
@@ -47,7 +55,7 @@ public class GAvg<T extends Number> extends AbstractGroupExpression<T, T> {
 
       @Override
       public T get() {
-        BigDecimal avg = sum.divide(BigDecimal.valueOf(count));
+        BigDecimal avg = sum.divide(BigDecimal.valueOf(count), mathContext);
         return MathUtils.cast(avg, getType());
       }
     };

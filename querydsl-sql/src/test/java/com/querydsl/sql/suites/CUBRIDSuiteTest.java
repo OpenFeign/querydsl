@@ -3,8 +3,10 @@ package com.querydsl.sql.suites;
 import com.querydsl.core.testutil.CUBRID;
 import com.querydsl.sql.*;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.experimental.categories.Category;
 
+@Ignore
 @Category(CUBRID.class)
 public class CUBRIDSuiteTest extends AbstractSuite {
 

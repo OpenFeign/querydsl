@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.mysql;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.MySQLTemplates;
 import com.querydsl.sql.domain.QSurvey;
@@ -85,10 +85,12 @@ public class MySQLQueryTest {
     query.orderBy(survey.name.asc());
     query.getMetadata().setProjection(survey.name);
 
-    assertEquals(
-        "select survey.NAME from SURVEY survey force index (col1_index) "
-            + "order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            """
+            select survey.NAME from SURVEY survey force index (col1_index) \
+            order by survey.NAME asc\
+            """);
   }
 
   @Test
@@ -99,10 +101,12 @@ public class MySQLQueryTest {
     query.orderBy(survey.name.asc());
     query.getMetadata().setProjection(survey.name);
 
-    assertEquals(
-        "select survey.NAME from SURVEY survey ignore index (col1_index) "
-            + "order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            """
+            select survey.NAME from SURVEY survey ignore index (col1_index) \
+            order by survey.NAME asc\
+            """);
   }
 
   @Test
@@ -113,10 +117,12 @@ public class MySQLQueryTest {
     query.orderBy(survey.name.asc());
     query.getMetadata().setProjection(survey.name);
 
-    assertEquals(
-        "select survey.NAME from SURVEY survey use index (col1_index) "
-            + "order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            """
+            select survey.NAME from SURVEY survey use index (col1_index) \
+            order by survey.NAME asc\
+            """);
   }
 
   @Test
@@ -127,139 +133,137 @@ public class MySQLQueryTest {
     query.orderBy(survey.name.asc());
     query.getMetadata().setProjection(survey.name);
 
-    assertEquals(
-        "select survey.NAME from SURVEY survey use index (col1_index, col2_index) "
-            + "order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            """
+            select survey.NAME from SURVEY survey use index (col1_index, col2_index) \
+            order by survey.NAME asc\
+            """);
   }
 
   @Test
   public void highPriority() {
     query.highPriority();
-    assertEquals(
-        "select high_priority survey.NAME from SURVEY survey order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo("select high_priority survey.NAME from SURVEY survey order by survey.NAME asc");
   }
 
   @Test
   public void straightJoin() {
     query.straightJoin();
-    assertEquals(
-        "select straight_join survey.NAME from SURVEY survey order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo("select straight_join survey.NAME from SURVEY survey order by survey.NAME asc");
   }
 
   @Test
   public void smallResult() {
     query.smallResult();
-    assertEquals(
-        "select sql_small_result survey.NAME from SURVEY survey order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "select sql_small_result survey.NAME from SURVEY survey order by survey.NAME asc");
   }
 
   @Test
   public void bigResult() {
     query.bigResult();
-    assertEquals(
-        "select sql_big_result survey.NAME from SURVEY survey order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo("select sql_big_result survey.NAME from SURVEY survey order by survey.NAME asc");
   }
 
   @Test
   public void bufferResult() {
     query.bufferResult();
-    assertEquals(
-        "select sql_buffer_result survey.NAME from SURVEY survey order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "select sql_buffer_result survey.NAME from SURVEY survey order by survey.NAME asc");
   }
 
   @Test
   public void cache() {
     query.cache();
-    assertEquals(
-        "select sql_cache survey.NAME from SURVEY survey order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo("select sql_cache survey.NAME from SURVEY survey order by survey.NAME asc");
   }
 
   @Test
   public void noCache() {
     query.noCache();
-    assertEquals(
-        "select sql_no_cache survey.NAME from SURVEY survey order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo("select sql_no_cache survey.NAME from SURVEY survey order by survey.NAME asc");
   }
 
   @Test
   public void calcFoundRows() {
     query.calcFoundRows();
-    assertEquals(
-        "select sql_calc_found_rows survey.NAME from SURVEY survey order by survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "select sql_calc_found_rows survey.NAME from SURVEY survey order by survey.NAME asc");
   }
 
   @Test
   public void withRollup() {
     query.groupBy(survey.name);
     query.withRollup();
-    assertEquals(
-        "select survey.NAME from SURVEY survey group by survey.NAME with rollup  order by"
-            + " survey.NAME asc",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "select survey.NAME from SURVEY survey group by survey.NAME with rollup  order by"
+                + " survey.NAME asc");
   }
 
   @Test
   public void forUpdate() {
     query.forUpdate();
-    assertEquals(
-        "select survey.NAME from SURVEY survey order by survey.NAME asc for update",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo("select survey.NAME from SURVEY survey order by survey.NAME asc for update");
   }
 
   @Test
   public void forUpdate_with_limit() {
     query.forUpdate();
     query.limit(2);
-    assertEquals(
-        "select survey.NAME from SURVEY survey order by survey.NAME asc limit ? for update",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "select survey.NAME from SURVEY survey order by survey.NAME asc limit ? for update");
   }
 
   @Test
   public void intoOutfile() {
     query.intoOutfile(new File("target/out"));
-    assertEquals(
-        "select survey.NAME from SURVEY survey "
-            + "order by survey.NAME asc into outfile 'target"
-            + File.separator
-            + "out'",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "select survey.NAME from SURVEY survey "
+                + "order by survey.NAME asc into outfile 'target"
+                + File.separator
+                + "out'");
   }
 
   @Test
   public void intoDumpfile() {
     query.intoDumpfile(new File("target/out"));
-    assertEquals(
-        "select survey.NAME from SURVEY survey "
-            + "order by survey.NAME asc into dumpfile 'target"
-            + File.separator
-            + "out'",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            "select survey.NAME from SURVEY survey "
+                + "order by survey.NAME asc into dumpfile 'target"
+                + File.separator
+                + "out'");
   }
 
   @Test
   public void intoString() {
     query.into("var1");
-    assertEquals(
-        "select survey.NAME from SURVEY survey " + "order by survey.NAME asc into var1",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo("select survey.NAME from SURVEY survey " + "order by survey.NAME asc into var1");
   }
 
   @Test
   public void lockInShareMode() {
     query.lockInShareMode();
-    assertEquals(
-        "select survey.NAME from SURVEY survey " + "order by survey.NAME asc lock in share mode",
-        toString(query));
+    assertThat(toString(query))
+        .isEqualTo(
+            """
+            select survey.NAME from SURVEY survey \
+            order by survey.NAME asc lock in share mode\
+            """);
   }
 
   private String toString(MySQLQuery<?> query) {

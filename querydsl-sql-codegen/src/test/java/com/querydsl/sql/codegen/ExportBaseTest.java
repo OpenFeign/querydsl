@@ -13,9 +13,7 @@
  */
 package com.querydsl.sql.codegen;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.Connections;
 import java.sql.SQLException;
@@ -39,7 +37,7 @@ public abstract class ExportBaseTest {
     exporter.setNamingStrategy(namingStrategy);
     exporter.export(Connections.getConnection().getMetaData());
 
-    assertThat(folder.getRoot().listFiles().length, is(greaterThan(0)));
+    assertThat(folder.getRoot().listFiles().length).isGreaterThan(0);
   }
 
   protected String getSchemaPattern() {

@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * {@code AbstractCollQuery} provides a base class for {@link Collection} query implementations.
+ * {@code AbstractCollQuery} provides a base class for {@code Collection} query implementations.
  *
  * @param <T> result type
  * @param <Q> concrete subtype

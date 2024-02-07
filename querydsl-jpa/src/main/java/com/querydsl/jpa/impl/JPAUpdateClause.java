@@ -24,12 +24,12 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAQueryMixin;
 import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.Query;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.Query;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -63,13 +63,12 @@ public class JPAUpdateClause implements UpdateClause<JPAUpdateClause> {
   public long execute() {
     JPQLSerializer serializer = new JPQLSerializer(templates, entityManager);
     serializer.serializeForUpdate(queryMixin.getMetadata(), updates);
-    Map<Object, String> constants = serializer.getConstantToAllLabels();
 
     Query query = entityManager.createQuery(serializer.toString());
     if (lockMode != null) {
       query.setLockMode(lockMode);
     }
-    JPAUtil.setConstants(query, constants, queryMixin.getMetadata().getParams());
+    JPAUtil.setConstants(query, serializer.getConstants(), queryMixin.getMetadata().getParams());
     return query.executeUpdate();
   }
 

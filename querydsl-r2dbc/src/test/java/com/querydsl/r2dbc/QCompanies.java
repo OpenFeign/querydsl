@@ -9,7 +9,7 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.PrimaryKey;
 import com.querydsl.sql.RelationalPathBase;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /** QCompanies is a Querydsl query type for QCompanies */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

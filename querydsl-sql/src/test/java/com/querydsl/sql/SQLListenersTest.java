@@ -1,19 +1,21 @@
 package com.querydsl.sql;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.sql.dml.SQLInsertBatch;
 import com.querydsl.sql.dml.SQLMergeBatch;
+import com.querydsl.sql.dml.SQLMergeUsingCase;
 import com.querydsl.sql.dml.SQLUpdateBatch;
 import java.util.List;
 import java.util.Map;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 public class SQLListenersTest {
@@ -107,42 +109,42 @@ public class SQLListenersTest {
 
     @Override
     public void preRender(SQLListenerContext context) {
-      assertThat(this.value, CoreMatchers.equalTo(context.getData(key)));
+      assertThat(this.value).isEqualTo(context.getData(key));
     }
 
     @Override
     public void rendered(SQLListenerContext context) {
-      assertThat(this.value, CoreMatchers.equalTo(context.getData(key)));
+      assertThat(this.value).isEqualTo(context.getData(key));
     }
 
     @Override
     public void prePrepare(SQLListenerContext context) {
-      assertThat(this.value, CoreMatchers.equalTo(context.getData(key)));
+      assertThat(this.value).isEqualTo(context.getData(key));
     }
 
     @Override
     public void prepared(SQLListenerContext context) {
-      assertThat(this.value, CoreMatchers.equalTo(context.getData(key)));
+      assertThat(this.value).isEqualTo(context.getData(key));
     }
 
     @Override
     public void preExecute(SQLListenerContext context) {
-      assertThat(this.value, CoreMatchers.equalTo(context.getData(key)));
+      assertThat(this.value).isEqualTo(context.getData(key));
     }
 
     @Override
     public void executed(SQLListenerContext context) {
-      assertThat(this.value, CoreMatchers.equalTo(context.getData(key)));
+      assertThat(this.value).isEqualTo(context.getData(key));
     }
 
     @Override
     public void exception(SQLListenerContext context) {
-      assertThat(this.value, CoreMatchers.equalTo(context.getData(key)));
+      assertThat(this.value).isEqualTo(context.getData(key));
     }
 
     @Override
     public void end(SQLListenerContext context) {
-      assertThat(this.value, CoreMatchers.equalTo(context.getData(key)));
+      assertThat(this.value).isEqualTo(context.getData(key));
     }
 
     @Override
@@ -166,6 +168,14 @@ public class SQLListenersTest {
     @Override
     public void notifyMerges(
         RelationalPath<?> entity, QueryMetadata md, List<SQLMergeBatch> batches) {}
+
+    @Override
+    public void notifyMergeUsing(
+        RelationalPath<?> entity,
+        QueryMetadata md,
+        SimpleExpression<?> usingExpression,
+        Predicate usingOn,
+        List<SQLMergeUsingCase> whens) {}
 
     @Override
     public void notifyInsert(

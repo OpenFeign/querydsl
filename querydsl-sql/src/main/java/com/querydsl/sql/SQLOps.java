@@ -83,7 +83,7 @@ public enum SQLOps implements Operator {
 
   private final Class<?> type;
 
-  private SQLOps(Class<?> type) {
+  SQLOps(Class<?> type) {
     this.type = type;
   }
 

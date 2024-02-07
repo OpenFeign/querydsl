@@ -13,10 +13,7 @@
  */
 package com.querydsl.maven;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.GeneratedAnnotationResolver;
 import java.io.File;
@@ -28,7 +25,7 @@ import org.junit.Test;
 
 public class TestMetadataExportMojoTest {
 
-  private final String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis();
+  private final String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy";
 
   private TestMetadataExportMojo setupMojoWith(MavenProject project) {
     TestMetadataExportMojo mojo = new TestMetadataExportMojo();
@@ -43,6 +40,8 @@ public class TestMetadataExportMojoTest {
     mojo.setPackageName("com.example");
     mojo.setTargetFolder("target/export4");
     mojo.setImports(new String[] {"com.pck1", "com.pck2", "com.Q1", "com.Q2"});
+    mojo.setExportTables(true); // default value
+    mojo.setExportViews(true); // default value
     return mojo;
   }
 
@@ -50,11 +49,14 @@ public class TestMetadataExportMojoTest {
   public void execute() throws Exception {
     MavenProject project = new MavenProject();
     TestMetadataExportMojo mojo = setupMojoWith(project);
+    File target = new File("target/export4").getCanonicalFile();
+    mojo.setTargetFolder(target.getAbsolutePath());
     mojo.execute();
 
     // 'target/export4' seems to conflict with MetadataExportMojoTest.Execute_With_TypeMappings
-    assertEquals(Collections.singletonList("target/export4"), project.getTestCompileSourceRoots());
-    assertTrue(new File("target/export4").exists());
+    assertThat(project.getTestCompileSourceRoots())
+        .isEqualTo(Collections.singletonList(target.getAbsolutePath()));
+    assertThat(target).exists();
   }
 
   @Test
@@ -63,11 +65,10 @@ public class TestMetadataExportMojoTest {
     TestMetadataExportMojo mojo = setupMojoWith(project);
     mojo.execute();
 
-    File sourceFile = new File("target/export4/com/example/QCatalogs.java");
+    File sourceFile = new File("target/export4/com/example/QInformationSchemaCatalogName.java");
     String sourceFileContent = FileUtils.fileRead(sourceFile);
-    assertThat(
-        sourceFileContent,
-        containsString("@" + GeneratedAnnotationResolver.resolveDefault().getSimpleName()));
+    assertThat(sourceFileContent)
+        .contains("@" + GeneratedAnnotationResolver.resolveDefault().getSimpleName());
   }
 
   @Test
@@ -78,8 +79,8 @@ public class TestMetadataExportMojoTest {
     mojo.setGeneratedAnnotationClass(annotationClass.getName());
     mojo.execute();
 
-    File sourceFile = new File("target/export4/com/example/QCatalogs.java");
+    File sourceFile = new File("target/export4/com/example/QInformationSchemaCatalogName.java");
     String sourceFileContent = FileUtils.fileRead(sourceFile);
-    assertThat(sourceFileContent, containsString("@" + annotationClass.getSimpleName()));
+    assertThat(sourceFileContent).contains("@" + annotationClass.getSimpleName());
   }
 }

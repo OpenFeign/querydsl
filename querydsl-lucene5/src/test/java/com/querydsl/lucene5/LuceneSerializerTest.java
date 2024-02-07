@@ -13,14 +13,14 @@
  */
 package com.querydsl.lucene5;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.MatchingFiltersFactory;
-import com.querydsl.core.Module;
 import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QuerydslModule;
 import com.querydsl.core.StringConstant;
 import com.querydsl.core.Target;
 import com.querydsl.core.types.Expression;
@@ -161,15 +161,15 @@ public class LuceneSerializerTest {
   private void testQuery(Expression<?> expr, int expectedHits) throws Exception {
     Query query = serializer.toQuery(expr, metadata);
     TopDocs docs = searcher.search(query, 100);
-    assertEquals(expectedHits, docs.totalHits);
+    assertThat(docs.totalHits).isEqualTo(expectedHits);
   }
 
   private void testQuery(Expression<?> expr, String expectedQuery, int expectedHits)
       throws Exception {
     Query query = serializer.toQuery(expr, metadata);
     TopDocs docs = searcher.search(query, 100);
-    assertEquals(expectedHits, docs.totalHits);
-    assertEquals(expectedQuery, query.toString());
+    assertThat(docs.totalHits).isEqualTo(expectedHits);
+    assertThat(query.toString()).isEqualTo(expectedQuery);
   }
 
   @Test
@@ -692,7 +692,8 @@ public class LuceneSerializerTest {
 
   @Test
   public void various() throws Exception {
-    MatchingFiltersFactory filters = new MatchingFiltersFactory(Module.LUCENE, Target.LUCENE);
+    MatchingFiltersFactory filters =
+        new MatchingFiltersFactory(QuerydslModule.LUCENE, Target.LUCENE);
     for (Predicate filter : filters.string(title, StringConstant.create("jurassic park"))) {
       if (unsupportedOperation(filter)) {
         continue;

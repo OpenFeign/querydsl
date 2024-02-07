@@ -3,19 +3,16 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-r2dbc</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl - R2DBC support</name>
   <description>R2DBC support for Querydsl</description>
 
   <properties>
-    <java.version>1.8</java.version>
     <bridge-method.version>1.13</bridge-method.version>
     <reactor.version>3.3.5.RELEASE</reactor.version>
   </properties>
@@ -51,12 +48,12 @@
     </dependency>
 
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
       <version>${project.version}</version>
       <exclusions>
@@ -82,7 +79,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
@@ -90,7 +87,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-guava</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -114,13 +111,6 @@
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-generator-annprocess</artifactId>
       <version>1.21</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib</artifactId>
-      <version>${cglib.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -155,13 +145,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
@@ -209,34 +192,6 @@
           </systemProperties>
         </configuration>
       </plugin>
-
-      <!--
-            <plugin>
-              <groupId>com.querydsl</groupId>
-              <artifactId>querydsl-maven-plugin</artifactId>
-              <version>${project.version}</version>
-              <executions>
-                <execution>
-                  <goals>
-                    <goal>test-export</goal>
-                  </goals>
-                </execution>
-              </executions>
-              <configuration>
-                <jdbcDriver>org.apache.derby.jdbc.EmbeddedDriver</jdbcDriver>
-                <jdbcUrl>jdbc:derby:target/demoDB;create=true</jdbcUrl>
-                <packageName>com.querydsl.r2dbc.domain2</packageName>
-                <targetFolder>target/generated-test-sources/java</targetFolder>
-              </configuration>
-              <dependencies>
-                <dependency>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derby</artifactId>
-                  <version>${derby.version}</version>
-                </dependency>
-              </dependencies>
-            </plugin>
-             -->
     </plugins>
 
   </build>

@@ -30,19 +30,7 @@ import static com.querydsl.apt.APTOptions.QUERYDSL_USE_FIELDS;
 import static com.querydsl.apt.APTOptions.QUERYDSL_USE_GETTERS;
 import static com.querydsl.apt.APTOptions.QUERYDSL_VARIABLE_NAME_FUNCTION_CLASS;
 
-import com.querydsl.codegen.CodegenModule;
-import com.querydsl.codegen.DefaultVariableNameFunction;
-import com.querydsl.codegen.EmbeddableSerializer;
-import com.querydsl.codegen.EntitySerializer;
-import com.querydsl.codegen.EntityType;
-import com.querydsl.codegen.GeneratedAnnotationResolver;
-import com.querydsl.codegen.ProjectionSerializer;
-import com.querydsl.codegen.QueryTypeFactory;
-import com.querydsl.codegen.Serializer;
-import com.querydsl.codegen.SerializerConfig;
-import com.querydsl.codegen.SimpleSerializerConfig;
-import com.querydsl.codegen.SupertypeSerializer;
-import com.querydsl.codegen.TypeMappings;
+import com.querydsl.codegen.*;
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.core.annotations.Config;
 import com.querydsl.core.annotations.QueryProjection;
@@ -481,9 +469,10 @@ public class DefaultConfiguration implements Configuration {
   }
 
   @Override
-  public boolean isValidConstructor(ExecutableElement constructor) {
+  public boolean isValidConstructor(
+      ExecutableElement constructor, boolean onlyAnnotatedConstructors) {
     return constructor.getModifiers().contains(Modifier.PUBLIC)
-        && constructor.getAnnotation(QueryProjection.class) != null
+        && (!onlyAnnotatedConstructors || constructor.getAnnotation(QueryProjection.class) != null)
         && !constructor.getParameters().isEmpty();
   }
 
@@ -613,5 +602,10 @@ public class DefaultConfiguration implements Configuration {
   @Override
   public Function<EntityType, String> getVariableNameFunction() {
     return variableNameFunction;
+  }
+
+  @Override
+  public Filer getFiler() {
+    return module.get(Filer.class);
   }
 }

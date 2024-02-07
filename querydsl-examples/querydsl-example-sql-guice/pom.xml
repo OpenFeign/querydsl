@@ -3,22 +3,16 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.querydsl</groupId>
+    <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
-    <relativePath>../</relativePath>
+    <version>6.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.querydsl</groupId>
   <artifactId>querydsl-example-sql-guice</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl example - SQL Guice</name>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <failIfNoTests>false</failIfNoTests>
-    <guice.version>3.0</guice.version>
-    <h2.version>1.4.186</h2.version>
+    <guice.version>7.0.0</guice.version>
   </properties>
 
   <dependencies>
@@ -30,23 +24,9 @@
       <version>${guice.version}</version>
     </dependency>
 
-    <!-- logging -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
-
     <!-- persistence -->
     <dependency>
-      <groupId>com.querydsl</groupId>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -60,24 +40,11 @@
       <artifactId>c3p0</artifactId>
       <version>0.9.1.2</version>
     </dependency>
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime.version}</version>
-    </dependency>
 
     <!-- TEST dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-all</artifactId>
-      <version>1.1</version>
-      <scope>test</scope>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
     </dependency>
   </dependencies>
 
@@ -85,16 +52,7 @@
     <finalName>querydsl-example-sql-guice</finalName>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>8</source>
-          <target>8</target>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.querydsl</groupId>
+        <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
         <version>${project.version}</version>
         <configuration>
@@ -120,7 +78,6 @@
           </execution>
         </executions>
       </plugin>
-
     </plugins>
   </build>
 </project>

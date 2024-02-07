@@ -13,9 +13,9 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.jpa.domain.QAnimal;
+import com.querydsl.core.domain.query.QAnimal;
 import com.querydsl.jpa.hibernate.HibernateQueryFactory;
 import java.util.function.Supplier;
 import org.easymock.EasyMock;
@@ -29,32 +29,32 @@ public class HibernateQueryFactoryTest {
 
   @Before
   public void setUp() {
-    Supplier<Session> provider = () -> EasyMock.createNiceMock(Session.class);
+    Supplier<Session> provider = () -> EasyMock.<Session>createNiceMock(Session.class);
     queryFactory = new HibernateQueryFactory(JPQLTemplates.DEFAULT, provider);
   }
 
   @Test
   public void query() {
-    assertNotNull(queryFactory.query());
+    assertThat(queryFactory.query()).isNotNull();
   }
 
   @Test
   public void from() {
-    assertNotNull(queryFactory.from(QAnimal.animal));
+    assertThat(queryFactory.from(QAnimal.animal)).isNotNull();
   }
 
   @Test
   public void delete() {
-    assertNotNull(queryFactory.delete(QAnimal.animal));
+    assertThat(queryFactory.delete(QAnimal.animal)).isNotNull();
   }
 
   @Test
   public void update() {
-    assertNotNull(queryFactory.update(QAnimal.animal));
+    assertThat(queryFactory.update(QAnimal.animal)).isNotNull();
   }
 
   @Test
   public void insert() {
-    assertNotNull(queryFactory.insert(QAnimal.animal));
+    assertThat(queryFactory.insert(QAnimal.animal)).isNotNull();
   }
 }

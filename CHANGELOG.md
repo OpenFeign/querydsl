@@ -16,6 +16,8 @@ A huge thanks goes out to all contributors that made this release possible in th
 * **[@harshtuna](https://github.com/harshtuna)**, for working on NullsLast ordering in `querydsl-collections`;
 * **[@kherrala](https://github.com/kherrala)**, **[@ridoo](https://github.com/ridoo)** and **[@NikitaKochkurov](https://github.com/NikitaKochkurov)** for working on the JTS and GeoLatte upgrade for `querydsl-spatial`;
 * **[@ridoo](https://github.com/ridoo)**, for working on Spatial support in `HibernateDomainExporter` and `JPADomainExporter`;
+* **[@lpandzic](https://github.com/lpandzic)**, for working on codegen support for Java 15 records and general improvements;
+* **[@F43nd1r](https://github.com/F43nd1r)**, for working on Kotlin Code generation, Java 11 support, general improvements and Continuous Integration;
 * **[@jwgmeligmeyling](https://github.com/jwgmeligmeyling)**, **[@Shredder121](https://github.com/Shredder121)**, **[@johnktims](https://github.com/johnktims)**, **[@idosal](https://github.com/idosal)** and **[@robertandrewbain](https://github.com/robertandrewbain)**.
 
 #### New features
@@ -41,6 +43,9 @@ A huge thanks goes out to all contributors that made this release possible in th
 * [#2404](https://github.com/querydsl/querydsl/issues/2404) - Upgrade of JTS / Geolatte in `querydsl-spatial`
 * [#2320](https://github.com/querydsl/querydsl/issues/2320) - Make Spatial support available to `HibernateDomainExporter` and `JPADomainExporter`. 
 * [#2612](https://github.com/querydsl/querydsl/issues/2612) - Support jakarta.* packages for new Jakarta EE releases (available through the`jakarta` classifiers for Maven)
+* [#1376](https://github.com/querydsl/querydsl/issues/1376) - Return typed expression from `nullif` and `coalesce` methods.
+* [#1828](https://github.com/querydsl/querydsl/issues/1828) - Kotlin Codegen support
+* [#2798](https://github.com/querydsl/querydsl/pull/2798) - Java Record support
 
 #### Bugfixes
 
@@ -51,6 +56,10 @@ A huge thanks goes out to all contributors that made this release possible in th
 * [#2663](https://github.com/querydsl/querydsl/issues/2663) - Fix issues with the JPA implementation of `InsertClause`.
 * [#2706](https://github.com/querydsl/querydsl/pull/2706) - Fix a memory leak in `TemplateFactory`.
 * [#2467](https://github.com/querydsl/querydsl/issues/2467) - Prevent `ExtendedBeanSerializer` from generating `toString` method twice
+* [#2326](https://github.com/querydsl/querydsl/issues/2326) - Use JPA indexed parameters instead of HQL's legacy positional parameters
+* [#2816](https://github.com/querydsl/querydsl/issues/2816) - Generated JPA query with incorrect argument binding indexes
+* [#1413](https://github.com/querydsl/querydsl/issues/1413) - Incorrect parameter values with Hibernate custom types
+* [#1429](https://github.com/querydsl/querydsl/issues/1429) - Reusing of constants in JPQL generation causes issues with hibernate query caching
 
 #### Breaking changes
 
@@ -71,7 +80,7 @@ A huge thanks goes out to all contributors that made this release possible in th
 * `AbstractMongodbQuery` now takes a `java.util.function.Function` instead of a `com.google.common.base.Function`.
 * `com.querydsl.codegen.NamingFunction`, `EvaluatorFunction`, `DefaultVariableFunction` now extend `java.util.function.Function` instead of `com.google.common.base.Function`.
 * Any constructor that received a `javax.inject.Provider`, now takes a `java.util.function.Supplier` instead. In most cases you can replace the argument with `provider::get`.
-* This release targets Hibernate 5 in the Hibernate integration. If you need Hibernate 4 dialect specific workarounds, use the `HQLTemplates` instead of the `Hibernate5Templates`.
+* This release targets Hibernate 5.2 in the Hibernate integration. If you need Hibernate 4 dialect specific workarounds, use the `HQLTemplates` instead of the `Hibernate5Templates`.
 * Removal of various deprecated methods.
 * `joda-time:joda-time` is now an optional dependency. If your application relies on `joda-time:joda-time` make sure to specify it as a direct dependency rather than relying on QueryDSL to include it transitively.
 * `com.google.code.findbugs:jsr305` is no longer a dependency. If your application currently relies on QueryDSL shipping JSR305 transitively, you should add JSR305 as a direct dependency to your project.
@@ -84,6 +93,10 @@ A huge thanks goes out to all contributors that made this release possible in th
 * `PGgeometryConverter` in `querydsl-sql-spatial` is removed in favour of `org.geolatte.geom.codec.Wkt`.
 * `JGeometryConverter` in `querydsl-sql-spatial` is removed in favour of `org.geolatte.geom.codec.db.oracle.*`.
 * Removal of `HibernateDomainExporter` in `querysql-jpa-codegen`. `HibernateDomainExporter` only supported Hibernate 4, which QueryDSL no longer actively supports. Instead, use the `JPADomainExporter` with Hibernate.
+* `ComparableExpression#coalesce` (and subtypes) no longer return a mutable `Coalesce` expression, but instead return a typed expression.
+  If you need the Coalesce builder, use `new Coalesce<T>().add(expression)` instead.
+* `getConstantToNamedLabel`, `getConstantToNumberedLabel` and `getConstantToAllLabels` that were temporarily introduced to `SerializerBase` and `JPQLSerializer` 
+  in QueryDSL 4.3.0 to eventually replace `getConstantToLabel` are now removed in favor of `getConstants`.
 
 #### Deprecations
 * `AbstractJPAQuery#fetchResults` and `AbstractJPAQuery#fetchCount` are now deprecated for queries that have multiple group by
@@ -92,15 +105,22 @@ A huge thanks goes out to all contributors that made this release possible in th
   If you want a reliable way of computing the result count for a paginated result for even the most complicated queries,
   we recommend using the [Blaze-Persistence QueryDSL integration](https://persistence.blazebit.com/documentation/1.5/core/manual/en_US/#querydsl-integration).
   `BlazeJPAQuery` properly implements both `fetchResults` and `fetchCount` and even comes with a `page` method.
+* `getConstantToLabel` which was deprecated in QueryDSL 4.3.0 is no longer deprecated.
 
 #### Dependency updates
 
 * `cglib:cglib` to 3.3.0 for Java 8+ support
 * `org.eclipse.jdt.core.compiler:ecj` to 4.6.1 for Java 8+ support
-* `joda-time:joda-time` to 2.10.8 for better interoperability with other frameworks that use more recent versions than QueryDSL.
-* `org.geolatte:geolatte-geom` to 1.4.0 for better interopability with Hibernate Spatial.
+* `joda-time:joda-time` to 2.10.10 for better interoperability with other frameworks that use more recent versions than QueryDSL.
+    `joda-time:joda-time` is also no longer a required dependency and as such is no longer provided transitively to your application.
+    If your application relies on `joda-time:joda-time` being available, make sure to add the dependency to your project. 
+* `org.geolatte:geolatte-geom` to 1.8.1 for better interopability with Hibernate Spatial.
   `querydsl-spatial` is still backwards compatible with older versions of Geolatte, however, `querydsl-sql-spatial` is not and requires 1.4.0 or newer.
 * `com.vividsolutions:jts` to `org.locationtech:jts` for better interopability with Hibernate Spatial.
   `com.vividsolutions:jts` is still supported for `querydsl-spatial` if an older version of `org.geolatte:geolatte-geom` is provided.
 * DataNucleus 5.2.x for Java 8+ support
   * JDO now uses `org.datanucleus:javax.jdo` instead of `javax.jdo:jdo-api`
+* `com.google.guava:guava` is no longer a dependency of QueryDSL  and as such is no longer provided transitively to your application.
+    If your application relies on `com.google.guava:guava` being available, make sure to add the dependency to your project.
+* `com.google.code.findbugs:jsr305` is no longer a dependency of QueryDSL  and as such is no longer provided transitively to your application.
+    If your application relies on `com.google.code.findbugs:jsr305` being available, make sure to add the dependency to your project.

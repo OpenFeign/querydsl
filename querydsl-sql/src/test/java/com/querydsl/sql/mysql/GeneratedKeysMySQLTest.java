@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql.mysql;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.MySQL;
 import com.querydsl.sql.H2Templates;
@@ -53,9 +53,11 @@ public class GeneratedKeysMySQLTest {
   public void test() throws SQLException {
     stmt.execute("drop table if exists GENERATED_KEYS");
     stmt.execute(
-        "create table GENERATED_KEYS("
-            + "ID int AUTO_INCREMENT PRIMARY KEY, "
-            + "NAME varchar(30))");
+        """
+        create table GENERATED_KEYS(\
+        ID int AUTO_INCREMENT PRIMARY KEY, \
+        NAME varchar(30))\
+        """);
 
     QGeneratedKeysEntity entity = new QGeneratedKeysEntity("entity");
     SQLInsertClause insertClause = new SQLInsertClause(conn, new H2Templates(), entity);
@@ -63,14 +65,14 @@ public class GeneratedKeysMySQLTest {
     ResultSetMetaData md = rs.getMetaData();
     System.out.println(md.getColumnName(1));
 
-    assertTrue(rs.next());
-    assertEquals(1, rs.getInt(1));
-    assertFalse(rs.next());
+    assertThat(rs.next()).isTrue();
+    assertThat(rs.getInt(1)).isEqualTo(1);
+    assertThat(rs.next()).isFalse();
 
     insertClause = new SQLInsertClause(conn, new H2Templates(), entity);
     rs = insertClause.set(entity.name, "World").executeWithKeys();
-    assertTrue(rs.next());
-    assertEquals(2, rs.getInt(1));
-    assertFalse(rs.next());
+    assertThat(rs.next()).isTrue();
+    assertThat(rs.getInt(1)).isEqualTo(2);
+    assertThat(rs.next()).isFalse();
   }
 }

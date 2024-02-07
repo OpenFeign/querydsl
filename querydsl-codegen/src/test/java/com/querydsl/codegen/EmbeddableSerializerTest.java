@@ -13,12 +13,14 @@
  */
 package com.querydsl.codegen;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.JavaWriter;
-import com.querydsl.codegen.utils.model.*;
+import com.querydsl.codegen.utils.model.ClassType;
+import com.querydsl.codegen.utils.model.Parameter;
+import com.querydsl.codegen.utils.model.SimpleType;
+import com.querydsl.codegen.utils.model.TypeCategory;
+import com.querydsl.codegen.utils.model.Types;
 import com.querydsl.core.annotations.PropertyType;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -36,14 +38,14 @@ public class EmbeddableSerializerTest {
   private final TypeMappings typeMappings = new JavaTypeMappings();
 
   private final EntitySerializer serializer =
-      new EmbeddableSerializer(typeMappings, Collections.<String>emptySet());
+      new DefaultEmbeddableSerializer(typeMappings, Collections.<String>emptySet());
 
   private final StringWriter writer = new StringWriter();
 
   @Test
   public void properties() throws IOException {
-    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
-    EntityType entityType = new EntityType(type);
+    var type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    var entityType = new EntityType(type);
     entityType.addProperty(
         new Property(entityType, "b", new ClassType(TypeCategory.BOOLEAN, Boolean.class)));
     entityType.addProperty(
@@ -82,22 +84,22 @@ public class EmbeddableSerializerTest {
     categoryToSuperClass.put(TypeCategory.BOOLEAN, "BooleanPath");
 
     for (Map.Entry<TypeCategory, String> entry : categoryToSuperClass.entrySet()) {
-      StringWriter w = new StringWriter();
-      SimpleType type = new SimpleType(entry.getKey(), "Entity", "", "Entity", false, false);
-      EntityType entityType = new EntityType(type);
+      var w = new StringWriter();
+      var type = new SimpleType(entry.getKey(), "Entity", "", "Entity", false, false);
+      var entityType = new EntityType(type);
       typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
       serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(w));
-      assertTrue(
-          entry.getValue() + " is missing from " + w,
-          w.toString().contains("public class QEntity extends " + entry.getValue() + " {"));
+      assertThat(w.toString().contains("public class QEntity extends " + entry.getValue() + " {"))
+          .as(entry.getValue() + " is missing from " + w)
+          .isTrue();
     }
   }
 
   @Test
   public void empty() throws IOException {
-    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
-    EntityType entityType = new EntityType(type);
+    var type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    var entityType = new EntityType(type);
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
@@ -106,42 +108,42 @@ public class EmbeddableSerializerTest {
 
   @Test
   public void no_package() throws IOException {
-    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
-    EntityType entityType = new EntityType(type);
+    var type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    var entityType = new EntityType(type);
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public class QEntity extends BeanPath<Entity> {"));
+    assertThat(writer.toString()).contains("public class QEntity extends BeanPath<Entity> {");
     CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
   @Test
   public void correct_superclass() throws IOException {
-    SimpleType type =
+    var type =
         new SimpleType(
             TypeCategory.ENTITY, "java.util.Locale", "java.util", "Locale", false, false);
-    EntityType entityType = new EntityType(type);
+    var entityType = new EntityType(type);
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public class QLocale extends BeanPath<Locale> {"));
+    assertThat(writer.toString()).contains("public class QLocale extends BeanPath<Locale> {");
     CompileUtils.assertCompiles("QLocale", writer.toString());
   }
 
   @Test
   public void primitive_array() throws IOException {
-    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
-    EntityType entityType = new EntityType(type);
+    var type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    var entityType = new EntityType(type);
     entityType.addProperty(new Property(entityType, "bytes", new ClassType(byte[].class)));
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
 
-    assertTrue(writer.toString().contains("public final SimplePath<byte[]> bytes"));
+    assertThat(writer.toString()).contains("public final SimplePath<byte[]> bytes");
     CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
   @Test
   public void include() throws IOException {
-    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
-    EntityType entityType = new EntityType(type);
+    var type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    var entityType = new EntityType(type);
     entityType.addProperty(
         new Property(entityType, "b", new ClassType(TypeCategory.BOOLEAN, Boolean.class)));
     entityType.addProperty(
@@ -161,7 +163,7 @@ public class EmbeddableSerializerTest {
     entityType.addProperty(
         new Property(entityType, "t", new ClassType(TypeCategory.TIME, Time.class)));
 
-    EntityType subType =
+    var subType =
         new EntityType(new SimpleType(TypeCategory.ENTITY, "Entity2", "", "Entity2", false, false));
     subType.include(new Supertype(type, entityType));
 
@@ -174,63 +176,64 @@ public class EmbeddableSerializerTest {
 
   @Test
   public void superType() throws IOException {
-    EntityType superType =
+    var superType =
         new EntityType(new SimpleType(TypeCategory.ENTITY, "Entity2", "", "Entity2", false, false));
-    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
-    EntityType entityType =
+    var type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    var entityType =
         new EntityType(type, Collections.singleton(new Supertype(superType, superType)));
     typeMappings.register(superType, queryTypeFactory.create(superType));
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public final QEntity2 _super = new QEntity2(this);"));
+    assertThat(writer.toString()).contains("public final QEntity2 _super = new QEntity2(this);");
     // CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
   @Test
   public void delegates() throws IOException {
-    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
-    EntityType entityType = new EntityType(type);
-    Delegate delegate =
+    var type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    var entityType = new EntityType(type);
+    var delegate =
         new Delegate(type, type, "test", Collections.<Parameter>emptyList(), Types.STRING);
     entityType.addDelegate(delegate);
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("return Entity.test(this);"));
+    assertThat(writer.toString()).contains("return Entity.test(this);");
     CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
   @Test
   public void defaultGeneratedAnnotation() throws IOException {
-    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
-    EntityType entityType = new EntityType(type);
+    var type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    var entityType = new EntityType(type);
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    final String generatedSource = writer.toString();
-    assertThat(generatedSource, containsString("import javax.annotation.Generated;"));
-    assertThat(
-        generatedSource,
-        containsString("@Generated(\"com.querydsl.codegen.EmbeddableSerializer\")\npublic class"));
+    final var generatedSource = writer.toString();
+    assertThat(generatedSource)
+        .contains("import %s;".formatted(GeneratedAnnotationResolver.resolveDefault().getName()));
+    assertThat(generatedSource)
+        .containsIgnoringNewLines(
+            "@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")\npublic class");
     CompileUtils.assertCompiles("QEntity", generatedSource);
   }
 
   @Test
   public void customGeneratedAnnotation() throws IOException {
-    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
-    EntityType entityType = new EntityType(type);
+    var type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    var entityType = new EntityType(type);
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
-    new EmbeddableSerializer(
+    new DefaultEmbeddableSerializer(
             typeMappings,
             Collections.<String>emptySet(),
             com.querydsl.core.annotations.Generated.class)
         .serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    String generatedSourceCode = writer.toString();
-    assertThat(
-        generatedSourceCode,
-        containsString("@Generated(\"com.querydsl.codegen.EmbeddableSerializer\")\npublic class"));
+    var generatedSourceCode = writer.toString();
+    assertThat(generatedSourceCode)
+        .containsIgnoringNewLines(
+            "@Generated(\"com.querydsl.codegen.DefaultEmbeddableSerializer\")\npublic class");
     CompileUtils.assertCompiles("QEntity", generatedSourceCode);
   }
 }

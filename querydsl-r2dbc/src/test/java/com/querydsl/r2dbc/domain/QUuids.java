@@ -7,9 +7,9 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.RelationalPathBase;
+import jakarta.annotation.Generated;
 import java.sql.Types;
 import java.util.UUID;
-import javax.annotation.Generated;
 
 /** QUuids is a Querydsl query type for QUuids */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")

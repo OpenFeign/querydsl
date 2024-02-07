@@ -19,7 +19,7 @@ import java.util.List;
 import org.jetbrains.annotations.Range;
 
 /**
- * {@code ListExpression} represents {@link java.util.List} typed expressions
+ * {@code ListExpression} represents {@code java.util.List} typed expressions
  *
  * @author tiwe
  * @param <E> component type

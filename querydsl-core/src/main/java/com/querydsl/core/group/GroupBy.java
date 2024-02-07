@@ -17,6 +17,7 @@ import com.mysema.commons.lang.Pair;
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
+import java.math.MathContext;
 import java.util.*;
 
 /**
@@ -80,7 +81,8 @@ public class GroupBy {
   }
 
   /**
-   * Create a new aggregating avg expression
+   * Create a new aggregating avg expression, uses default MathContext.DECIMAL128 for average
+   * calculation
    *
    * @param expression expression for which the accumulated average value will be used in the group
    *     by projection
@@ -88,6 +90,19 @@ public class GroupBy {
    */
   public static <E extends Number> AbstractGroupExpression<E, E> avg(Expression<E> expression) {
     return new GAvg<E>(expression);
+  }
+
+  /**
+   * Create a new aggregating avg expression with a user-provided MathContext
+   *
+   * @param expression expression for which the accumulated average value will be used in the group
+   *     by projection
+   * @param mathContext mathContext for average calculation
+   * @return wrapper expression
+   */
+  public static <E extends Number> AbstractGroupExpression<E, E> avg(
+      Expression<E> expression, MathContext mathContext) {
+    return new GAvg<E>(expression, mathContext);
   }
 
   /**

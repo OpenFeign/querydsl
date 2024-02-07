@@ -1,9 +1,9 @@
 package com.querydsl.jpa.domain5;
 
 import com.querydsl.core.annotations.QueryInit;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 public class MyEntity extends MyMappedSuperclass {

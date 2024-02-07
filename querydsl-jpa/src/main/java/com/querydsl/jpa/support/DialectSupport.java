@@ -20,16 +20,17 @@ import com.querydsl.jpa.hibernate.HibernateUtil;
 import com.querydsl.sql.SQLTemplates;
 import java.util.HashMap;
 import java.util.Map;
-import org.hibernate.dialect.function.SQLFunction;
-import org.hibernate.dialect.function.SQLFunctionTemplate;
-import org.hibernate.type.Type;
+import org.hibernate.boot.model.FunctionContributions;
+import org.hibernate.query.sqm.function.SqmFunctionRegistry;
+import org.hibernate.type.BasicTypeReference;
+import org.hibernate.type.BasicTypeRegistry;
 
 final class DialectSupport {
 
   private DialectSupport() {}
 
-  public static Map<String, SQLFunction> createFunctions(SQLTemplates templates) {
-    Map<String, SQLFunction> functions = new HashMap<>();
+  public static Map<String, DialectFunctionTemplate> createPatterns(SQLTemplates templates) {
+    Map<String, DialectFunctionTemplate> functions = new HashMap<>();
     functions.put("second", createFunction(templates, Ops.DateTimeOps.SECOND));
     functions.put("minute", createFunction(templates, Ops.DateTimeOps.MINUTE));
     functions.put("hour", createFunction(templates, Ops.DateTimeOps.HOUR));
@@ -40,10 +41,10 @@ final class DialectSupport {
     return functions;
   }
 
-  public static SQLFunction createFunction(SQLTemplates templates, Operator operator) {
+  public static DialectFunctionTemplate createFunction(SQLTemplates templates, Operator operator) {
     Template template = templates.getTemplate(operator);
-    Type type = HibernateUtil.getType(operator.getType());
-    return new SQLFunctionTemplate(type, convert(template));
+    BasicTypeReference<?> type = HibernateUtil.getType(operator.getType());
+    return new DialectFunctionTemplate(convert(template), type);
   }
 
   public static String convert(Template template) {
@@ -62,5 +63,49 @@ final class DialectSupport {
       }
     }
     return builder.toString();
+  }
+
+  public static void extendRegistry(
+      SQLTemplates templates, FunctionContributions functionContributions) {
+    SqmFunctionRegistry functionRegistry = functionContributions.getFunctionRegistry();
+    Map<String, DialectSupport.DialectFunctionTemplate> functions =
+        DialectSupport.createPatterns(templates);
+
+    BasicTypeRegistry basicTypeRegistry =
+        functionContributions.getTypeConfiguration().getBasicTypeRegistry();
+    functions.forEach(
+        (name, template) ->
+            functionRegistry.registerPattern(
+                name, template.pattern(), basicTypeRegistry.resolve(template.type())));
+  }
+
+  public static void extendRegistry(
+      String name,
+      DialectSupport.DialectFunctionTemplate template,
+      FunctionContributions functionContributions) {
+    SqmFunctionRegistry functionRegistry = functionContributions.getFunctionRegistry();
+
+    BasicTypeRegistry basicTypeRegistry =
+        functionContributions.getTypeConfiguration().getBasicTypeRegistry();
+    functionRegistry.registerPattern(
+        name, template.pattern(), basicTypeRegistry.resolve(template.type()));
+  }
+
+  static class DialectFunctionTemplate {
+    private final String pattern;
+    private final BasicTypeReference<?> type;
+
+    DialectFunctionTemplate(String pattern, BasicTypeReference<?> type) {
+      this.pattern = pattern;
+      this.type = type;
+    }
+
+    String pattern() {
+      return pattern;
+    }
+
+    BasicTypeReference<?> type() {
+      return type;
+    }
   }
 }

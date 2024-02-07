@@ -20,7 +20,15 @@ import com.querydsl.core.util.MathUtils;
 import com.querydsl.core.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.Nullable;
 
@@ -177,7 +185,7 @@ public final class CollQueryFunctions {
     return getField(date, Calendar.MONTH) + 1;
   }
 
-  public static int getSecond(Date date) {
+  public static float getSecond(Date date) {
     return getField(date, Calendar.SECOND);
   }
 

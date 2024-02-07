@@ -13,12 +13,12 @@
  */
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
 import org.junit.Test;
 
 public class PropertiesTest {
@@ -95,14 +95,14 @@ public class PropertiesTest {
 
   @Test
   public void customer() {
-    assertNotNull(QPropertiesTest_Customer.customer.name);
-    assertNotNull(QPropertiesTest_Customer.customer.pizzas);
+    assertThat(QPropertiesTest_Customer.customer.name).isNotNull();
+    assertThat(QPropertiesTest_Customer.customer.pizzas).isNotNull();
   }
 
   @Test
   public void pizza() {
-    assertNotNull(QPropertiesTest_Pizza.pizza.orderTime);
-    assertNotNull(QPropertiesTest_Pizza.pizza.customer);
-    assertNotNull(QPropertiesTest_Pizza.pizza.toppings);
+    assertThat(QPropertiesTest_Pizza.pizza.orderTime).isNotNull();
+    assertThat(QPropertiesTest_Pizza.pizza.customer).isNotNull();
+    assertThat(QPropertiesTest_Pizza.pizza.toppings).isNotNull();
   }
 }

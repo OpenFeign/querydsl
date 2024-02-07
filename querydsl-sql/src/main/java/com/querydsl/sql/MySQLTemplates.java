@@ -123,7 +123,7 @@ public class MySQLTemplates extends SQLTemplates {
         "str_to_date(concat(date_format({0},'%Y-%m'),'-1'),'%Y-%m-%d')");
     add(
         Ops.DateTimeOps.TRUNC_WEEK,
-        "str_to_date(concat(date_format({0},'%Y-%u'),'-2'),'%Y-%u-%w')");
+        "str_to_date(concat(date_format({0},'%Y-%u'),'-1'),'%Y-%u-%w')");
     add(Ops.DateTimeOps.TRUNC_DAY, "str_to_date(date_format({0},'%Y-%m-%d'),'%Y-%m-%d')");
     add(Ops.DateTimeOps.TRUNC_HOUR, "str_to_date(date_format({0},'%Y-%m-%d %k'),'%Y-%m-%d %k')");
     add(

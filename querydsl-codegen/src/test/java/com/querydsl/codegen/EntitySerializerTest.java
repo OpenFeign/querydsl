@@ -13,7 +13,7 @@
  */
 package com.querydsl.codegen;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.*;
@@ -34,7 +34,7 @@ public class EntitySerializerTest {
   private final TypeMappings typeMappings = new JavaTypeMappings();
 
   private final EntitySerializer serializer =
-      new EntitySerializer(typeMappings, Collections.<String>emptySet());
+      new DefaultEntitySerializer(typeMappings, Collections.<String>emptySet());
 
   private final StringWriter writer = new StringWriter();
 
@@ -46,10 +46,8 @@ public class EntitySerializerTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(
-        writer
-            .toString()
-            .contains("QEntitySerializerTest_Entity is a Querydsl query type for Entity"));
+    assertThat(writer.toString())
+        .contains("QEntitySerializerTest_Entity is a Querydsl query type for Entity");
     CompileUtils.assertCompiles("QEntitySerializerTest_Entity", writer.toString());
   }
 
@@ -61,12 +59,12 @@ public class EntitySerializerTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(
-        writer
-            .toString()
-            .contains(
-                "public class QEntitySerializerTest_Entity "
-                    + "extends EntityPathBase<EntitySerializerTest.Entity>"));
+    assertThat(writer.toString())
+        .contains(
+            """
+            public class QEntitySerializerTest_Entity \
+            extends EntityPathBase<EntitySerializerTest.Entity>\
+            """);
     CompileUtils.assertCompiles("QEntitySerializerTest_Entity", writer.toString());
   }
 
@@ -77,7 +75,7 @@ public class EntitySerializerTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public class QEntity extends EntityPathBase<Entity> {"));
+    assertThat(writer.toString()).contains("public class QEntity extends EntityPathBase<Entity> {");
     CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
@@ -100,9 +98,10 @@ public class EntitySerializerTest {
       typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
       serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-      assertTrue(
-          entry.toString(),
-          writer.toString().contains("public class QEntity extends " + entry.getValue() + " {"));
+      assertThat(
+              writer.toString().contains("public class QEntity extends " + entry.getValue() + " {"))
+          .as(entry.toString())
+          .isTrue();
     }
   }
 
@@ -115,7 +114,7 @@ public class EntitySerializerTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public class QLocale extends EntityPathBase<Locale> {"));
+    assertThat(writer.toString()).contains("public class QLocale extends EntityPathBase<Locale> {");
     CompileUtils.assertCompiles("QLocale", writer.toString());
   }
 
@@ -126,7 +125,7 @@ public class EntitySerializerTest {
     entityType.addProperty(new Property(entityType, "bytes", new ClassType(byte[].class)));
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public final SimplePath<byte[]> bytes"));
+    assertThat(writer.toString()).contains("public final SimplePath<byte[]> bytes");
     CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
@@ -201,7 +200,7 @@ public class EntitySerializerTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("public final QEntity2 _super = new QEntity2(this);"));
+    assertThat(writer.toString()).contains("public final QEntity2 _super = new QEntity2(this);");
     // CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
@@ -215,7 +214,7 @@ public class EntitySerializerTest {
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertTrue(writer.toString().contains("return Entity.test(this);"));
+    assertThat(writer.toString()).contains("return Entity.test(this);");
     CompileUtils.assertCompiles("QEntity", writer.toString());
   }
 
@@ -226,10 +225,11 @@ public class EntitySerializerTest {
 
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String generatedSourceCode = writer.toString();
-    assertTrue(generatedSourceCode.contains("import javax.annotation.Generated;"));
-    assertTrue(
-        generatedSourceCode.contains(
-            "@Generated(\"com.querydsl.codegen.EntitySerializer\")\npublic class"));
+    assertThat(generatedSourceCode)
+        .contains("import %s;".formatted(GeneratedAnnotationResolver.resolveDefault().getName()));
+    assertThat(generatedSourceCode)
+        .containsIgnoringNewLines(
+            "@Generated(\"com.querydsl.codegen.DefaultEntitySerializer\")\npublic class");
     CompileUtils.assertCompiles("QEntitySerializerTest_Entity", generatedSourceCode);
   }
 
@@ -238,20 +238,19 @@ public class EntitySerializerTest {
     EntityType entityType = new EntityType(new ClassType(Entity.class));
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
 
-    new EntitySerializer(
+    new DefaultEntitySerializer(
             typeMappings,
             Collections.<String>emptySet(),
             com.querydsl.core.annotations.Generated.class)
         .serialize(entityType, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     String generatedSourceCode = writer.toString();
-    assertTrue(
-        generatedSourceCode.contains(
-            "import " + com.querydsl.core.annotations.Generated.class.getName() + ";"));
-    assertTrue(
-        generatedSourceCode.contains(
+    assertThat(generatedSourceCode)
+        .contains("import " + com.querydsl.core.annotations.Generated.class.getName() + ";");
+    assertThat(generatedSourceCode)
+        .containsIgnoringNewLines(
             "@"
                 + com.querydsl.core.annotations.Generated.class.getSimpleName()
-                + "(\"com.querydsl.codegen.EntitySerializer\")\npublic class"));
+                + "(\"com.querydsl.codegen.DefaultEntitySerializer\")\npublic class");
     CompileUtils.assertCompiles("QEntitySerializerTest_Entity", generatedSourceCode);
   }
 }

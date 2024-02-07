@@ -13,19 +13,19 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.Color;
 import com.querydsl.jpa.domain.QCat;
-import com.querydsl.jpa.domain.sql.SAnimal;
+import com.querydsl.jpa.domain.sql.SAnimal_;
 import com.querydsl.jpa.hibernate.sql.HibernateSQLQuery;
 import com.querydsl.jpa.testutil.HibernateTestRunner;
 import com.querydsl.sql.SQLTemplates;
-import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -40,7 +40,7 @@ public class HibernateSQLBase extends AbstractSQLTest implements HibernateTest {
 
   private final SQLTemplates templates = Mode.getSQLTemplates();
 
-  private final SAnimal cat = new SAnimal("cat");
+  private final SAnimal_ cat = new SAnimal_("cat");
 
   private Session session;
 
@@ -69,20 +69,20 @@ public class HibernateSQLBase extends AbstractSQLTest implements HibernateTest {
 
   @Test
   public void entityQueries_createQuery() {
-    SAnimal cat = new SAnimal("cat");
+    SAnimal_ cat = new SAnimal_("cat");
     QCat catEntity = QCat.cat;
 
     Query query = query().from(cat).select(catEntity).createQuery();
-    assertEquals(6, query.list().size());
+    assertThat(query.list()).hasSize(6);
   }
 
   @Test
   @ExcludeIn(Target.MYSQL)
   public void entityQueries_createQuery2() {
-    SAnimal cat = new SAnimal("CAT");
+    SAnimal_ cat = new SAnimal_("CAT");
     QCat catEntity = QCat.cat;
 
     Query query = query().from(cat).select(catEntity).createQuery();
-    assertEquals(6, query.list().size());
+    assertThat(query.list()).hasSize(6);
   }
 }

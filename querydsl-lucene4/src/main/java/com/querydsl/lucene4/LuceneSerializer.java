@@ -23,6 +23,7 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.BytesRefBuilder;
 import org.apache.lucene.util.NumericUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -175,23 +176,27 @@ public class LuceneSerializer {
     if (Integer.class.isInstance(number)
         || Byte.class.isInstance(number)
         || Short.class.isInstance(number)) {
-      BytesRef bytes = new BytesRef(NumericUtils.BUF_SIZE_INT);
+      BytesRefBuilder bytes = new BytesRefBuilder();
+      bytes.setLength(NumericUtils.BUF_SIZE_INT);
       NumericUtils.intToPrefixCoded(number.intValue(), 0, bytes);
-      return bytes;
+      return bytes.toBytesRef();
     } else if (Double.class.isInstance(number) || BigDecimal.class.isInstance(number)) {
-      BytesRef bytes = new BytesRef(NumericUtils.BUF_SIZE_LONG);
+      BytesRefBuilder bytes = new BytesRefBuilder();
+      bytes.setLength(NumericUtils.BUF_SIZE_LONG);
       long l = NumericUtils.doubleToSortableLong(number.doubleValue());
       NumericUtils.longToPrefixCoded(l, 0, bytes);
-      return bytes;
+      return bytes.toBytesRef();
     } else if (Long.class.isInstance(number) || BigInteger.class.isInstance(number)) {
-      BytesRef bytes = new BytesRef(NumericUtils.BUF_SIZE_LONG);
+      BytesRefBuilder bytes = new BytesRefBuilder();
+      bytes.setLength(NumericUtils.BUF_SIZE_LONG);
       NumericUtils.longToPrefixCoded(number.longValue(), 0, bytes);
-      return bytes;
+      return bytes.toBytesRef();
     } else if (Float.class.isInstance(number)) {
-      BytesRef bytes = new BytesRef(NumericUtils.BUF_SIZE_INT);
+      BytesRefBuilder bytes = new BytesRefBuilder();
+      bytes.setLength(NumericUtils.BUF_SIZE_INT);
       int i = NumericUtils.floatToSortableInt(number.floatValue());
       NumericUtils.intToPrefixCoded(i, 0, bytes);
-      return bytes;
+      return bytes.toBytesRef();
     } else {
       throw new IllegalArgumentException("Unsupported numeric type " + number.getClass().getName());
     }

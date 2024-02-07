@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
@@ -35,10 +35,10 @@ public class QueryInit5Test {
   @Test
   public void test() {
     // QChild c = QParent.parent.as(QChild.class)
-    assertNotNull(QQueryInit5Test_Parent.parent.z.entity);
+    assertThat(QQueryInit5Test_Parent.parent.z.entity).isNotNull();
 
     QQueryInit5Test_Child child = QQueryInit5Test_Parent.parent.as(QQueryInit5Test_Child.class);
-    assertNotNull(child.z.entity);
-    assertNotNull(child.y.entity);
+    assertThat(child.z.entity).isNotNull();
+    assertThat(child.y.entity).isNotNull();
   }
 }

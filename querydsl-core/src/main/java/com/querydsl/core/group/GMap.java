@@ -28,7 +28,7 @@ public abstract class GMap<K, V, M extends Map<K, V>>
 
   private static final long serialVersionUID = 7106389414200843920L;
 
-  public GMap(QPair<K, V> qpair) {
+  GMap(QPair<K, V> qpair) {
     super(Map.class, qpair);
   }
 
@@ -105,7 +105,7 @@ public abstract class GMap<K, V, M extends Map<K, V>>
       private final Map<GroupCollector<K, T>, GroupCollector<V, U>> valueCollectors =
           new HashMap<GroupCollector<K, T>, GroupCollector<V, U>>();
 
-      public GroupCollectorImpl() {
+      GroupCollectorImpl() {
         this.groupCollector = mixin.createGroupCollector();
       }
 

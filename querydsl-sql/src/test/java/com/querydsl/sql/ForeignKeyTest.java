@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.domain.Employee;
 import com.querydsl.sql.domain.QEmployee;
@@ -28,15 +28,14 @@ public class ForeignKeyTest {
     QEmployee employee2 = new QEmployee("employee2");
 
     ForeignKey<Employee> foreignKey = new ForeignKey<Employee>(employee, employee.superiorId, "ID");
-    assertEquals("employee.superiorId = employee2.ID", foreignKey.on(employee2).toString());
+    assertThat(foreignKey.on(employee2).toString()).isEqualTo("employee.superiorId = employee2.ID");
 
     foreignKey =
         new ForeignKey<Employee>(
             employee,
             Arrays.asList(employee.superiorId, employee.firstname),
             Arrays.asList("ID", "FN"));
-    assertEquals(
-        "employee.superiorId = employee2.ID && employee.firstname = employee2.FN",
-        foreignKey.on(employee2).toString());
+    assertThat(foreignKey.on(employee2).toString())
+        .isEqualTo("employee.superiorId = employee2.ID && employee.firstname = employee2.FN");
   }
 }

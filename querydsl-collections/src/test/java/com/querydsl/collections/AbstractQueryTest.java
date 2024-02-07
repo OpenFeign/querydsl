@@ -74,7 +74,7 @@ public abstract class AbstractQueryTest {
 
     List<Object> res = new ArrayList<Object>();
 
-    public TestQuery() {
+    TestQuery() {
       super(new DefaultQueryMetadata(), DefaultQueryEngine.getDefault());
     }
 

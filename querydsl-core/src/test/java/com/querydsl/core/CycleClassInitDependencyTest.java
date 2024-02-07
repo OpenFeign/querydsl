@@ -1,13 +1,13 @@
 package com.querydsl.core;
 
 import com.querydsl.core.testutil.ThreadSafety;
+import io.github.classgraph.ClassGraph;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.reflections.util.ClasspathHelper;
 
 public class CycleClassInitDependencyTest {
 
@@ -16,7 +16,7 @@ public class CycleClassInitDependencyTest {
   @BeforeClass
   public static void overrideClassLoader() {
     loader = Thread.currentThread().getContextClassLoader();
-    Collection<URL> urls = ClasspathHelper.forClassLoader();
+    Collection<URL> urls = new ClassGraph().getClasspathURLs();
     ClassLoader cl = URLClassLoader.newInstance(urls.toArray(new URL[0]), null /*no delegation*/);
     Thread.currentThread().setContextClassLoader(cl);
   }
@@ -39,7 +39,7 @@ public class CycleClassInitDependencyTest {
 
     private final String classToLoad;
 
-    public LoadClassRunnable(String classToLoad) {
+    LoadClassRunnable(String classToLoad) {
       this.classToLoad = classToLoad;
     }
 

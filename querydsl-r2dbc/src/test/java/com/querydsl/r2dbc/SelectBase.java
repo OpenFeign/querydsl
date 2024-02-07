@@ -44,7 +44,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   private static final Expression<?>[] NO_EXPRESSIONS = new Expression[0];
 
   private final ReactiveQueryExecution standardTest =
-      new ReactiveQueryExecution(Module.SQL, Connections.getTarget()) {
+      new ReactiveQueryExecution(QuerydslModule.SQL, Connections.getTarget()) {
         @Override
         protected ReactiveFetchable<?> createQuery() {
           return testQuery().from(employee, employee2);
@@ -1744,7 +1744,7 @@ public abstract class SelectBase extends AbstractBaseTest {
             + "from EMPLOYEE e "
             + "group by e.LASTNAME having salarySum > ?";
 
-    NumberExpression<BigDecimal> salarySum = employee.salary.sum().as("salarySum");
+    NumberExpression<BigDecimal> salarySum = employee.salary.sumBigDecimal().as("salarySum");
     query()
         .from(employee)
         .groupBy(employee.lastname)

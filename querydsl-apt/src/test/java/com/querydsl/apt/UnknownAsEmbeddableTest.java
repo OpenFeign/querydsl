@@ -13,7 +13,7 @@
  */
 package com.querydsl.apt;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,18 +31,20 @@ public class UnknownAsEmbeddableTest extends AbstractProcessorTest {
     List<String> classes = getFiles(packagePath);
     process(QuerydslAnnotationProcessor.class, classes, "unknownAsEmbeddable");
 
-    assertTrue(
-        new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEntity.java")
-            .exists());
-    assertTrue(
-        new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType.java")
-            .exists());
-    assertTrue(
-        new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType2.java")
-            .exists());
-    assertTrue(
-        new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType3.java")
-            .exists());
+    assertThat(new File("target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEntity.java"))
+        .exists();
+    assertThat(
+            new File(
+                "target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType.java"))
+        .exists();
+    assertThat(
+            new File(
+                "target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType2.java"))
+        .exists();
+    assertThat(
+            new File(
+                "target/unknownAsEmbeddable/com/querydsl/apt/domain/custom/QEmbeddedType3.java"))
+        .exists();
   }
 
   @Override

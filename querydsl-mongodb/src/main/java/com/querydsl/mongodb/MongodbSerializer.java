@@ -30,6 +30,7 @@ import org.bson.types.ObjectId;
  * Serializes the given Querydsl query to a DBObject query for MongoDB
  *
  * @author laimw
+ * @author sangyong choi
  */
 public abstract class MongodbSerializer implements Visitor<Object, Void> {
 
@@ -180,6 +181,10 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       String regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
       return asDBObject(asDBKey(expr, 0), Pattern.compile(regex));
 
+    } else if (op == Ops.LIKE_IC) {
+      String regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
+      return asDBObject(asDBKey(expr, 0), Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
+
     } else if (op == Ops.BETWEEN) {
       BasicDBObject value = new BasicDBObject("$gte", asDBValue(expr, 1));
       value.append("$lte", asDBValue(expr, 2));
@@ -263,6 +268,12 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
     } else if (op == MongodbOps.NEAR_SPHERE) {
       return asDBObject(asDBKey(expr, 0), asDBObject("$nearSphere", asDBValue(expr, 1)));
 
+    } else if (op == MongodbOps.GEO_INTERSECTS) {
+      return asDBObject(
+          asDBKey(expr, 0),
+          asDBObject("$geoIntersects", asDBObject("$geometry", asDBValue(expr, 1))));
+    } else if (op == MongodbOps.ALL) {
+      return asDBObject(asDBKey(expr, 0), asDBObject("$all", asDBValue(expr, 1)));
     } else if (op == MongodbOps.ELEM_MATCH) {
       return asDBObject(asDBKey(expr, 0), asDBObject("$elemMatch", asDBValue(expr, 1)));
     }

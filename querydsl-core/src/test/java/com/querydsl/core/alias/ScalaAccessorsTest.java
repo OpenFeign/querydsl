@@ -14,7 +14,7 @@
 package com.querydsl.core.alias;
 
 import static com.querydsl.core.alias.Alias.$;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class ScalaAccessorsTest {
   @Test
   public void scalaAccessors() {
     ScalaAccessors scalaAccessors = Alias.alias(ScalaAccessors.class);
-    assertEquals("scalaAccessors.firstName", $(scalaAccessors.firstName()).toString());
-    assertEquals("scalaAccessors.lastName", $(scalaAccessors.lastName()).toString());
+    assertThat($(scalaAccessors.firstName()).toString()).isEqualTo("scalaAccessors.firstName");
+    assertThat($(scalaAccessors.lastName()).toString()).isEqualTo("scalaAccessors.lastName");
   }
 }

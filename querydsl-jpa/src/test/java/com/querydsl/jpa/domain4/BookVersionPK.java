@@ -13,8 +13,8 @@
  */
 package com.querydsl.jpa.domain4;
 
+import jakarta.persistence.Embeddable;
 import java.io.Serializable;
-import javax.persistence.Embeddable;
 
 @Embeddable
 public class BookVersionPK implements Serializable {

@@ -13,7 +13,8 @@
  */
 package com.querydsl.sql;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.sql.domain.QSurvey;
 import java.sql.Connection;
@@ -28,37 +29,37 @@ public class SQLQueryFactoryTest {
 
   @Before
   public void setUp() {
-    Supplier<Connection> provider = () -> EasyMock.createNiceMock(Connection.class);
+    Supplier<Connection> provider = () -> EasyMock.<Connection>createNiceMock(Connection.class);
     queryFactory = new SQLQueryFactory(SQLTemplates.DEFAULT, provider);
   }
 
   @Test
   public void query() {
-    assertNotNull(queryFactory.query());
+    assertThat(queryFactory.query()).isNotNull();
   }
 
   @Test
   public void from() {
-    assertNotNull(queryFactory.from(QSurvey.survey));
+    assertThat(queryFactory.from(QSurvey.survey)).isNotNull();
   }
 
   @Test
   public void delete() {
-    assertNotNull(queryFactory.delete(QSurvey.survey));
+    assertThat(queryFactory.delete(QSurvey.survey)).isNotNull();
   }
 
   @Test
   public void insert() {
-    assertNotNull(queryFactory.insert(QSurvey.survey));
+    assertThat(queryFactory.insert(QSurvey.survey)).isNotNull();
   }
 
   @Test
   public void update() {
-    assertNotNull(queryFactory.update(QSurvey.survey));
+    assertThat(queryFactory.update(QSurvey.survey)).isNotNull();
   }
 
   @Test
   public void merge() {
-    assertNotNull(queryFactory.merge(QSurvey.survey));
+    assertThat(queryFactory.merge(QSurvey.survey)).isNotNull();
   }
 }

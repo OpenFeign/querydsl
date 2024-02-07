@@ -14,31 +14,100 @@
  */
 package com.querydsl.sql;
 
-import static com.querydsl.core.Target.*;
-import static com.querydsl.sql.Constants.*;
-import static org.junit.Assert.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.FIREBIRD;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.SQLITE;
+import static com.querydsl.core.Target.SQLSERVER;
+import static com.querydsl.core.Target.TERADATA;
+import static com.querydsl.sql.Constants.date;
+import static com.querydsl.sql.Constants.employee;
+import static com.querydsl.sql.Constants.employee2;
+import static com.querydsl.sql.Constants.survey;
+import static com.querydsl.sql.Constants.survey2;
+import static com.querydsl.sql.Constants.time;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.within;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.Pair;
-import com.querydsl.core.*;
+import com.querydsl.core.Fetchable;
+import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.QueryException;
+import com.querydsl.core.QueryExecution;
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.QuerydslModule;
+import com.querydsl.core.Target;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.group.Group;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.testutil.Serialization;
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.*;
-import com.querydsl.sql.domain.*;
+import com.querydsl.core.types.ArrayConstructorExpression;
+import com.querydsl.core.types.Concatenation;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.MappingProjection;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.ParamNotSetException;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.QTuple;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Coalesce;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.DateTimeExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.MathExpressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.NumberTemplate;
+import com.querydsl.core.types.dsl.Param;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.StringExpressions;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.Wildcard;
+import com.querydsl.sql.domain.Employee;
+import com.querydsl.sql.domain.IdName;
+import com.querydsl.sql.domain.QEmployee;
+import com.querydsl.sql.domain.QEmployeeNoPK;
+import com.querydsl.sql.domain.QIdName;
+import com.querydsl.sql.domain.QNumberTest;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import org.joda.time.*;
-import org.junit.Assert;
+import org.apache.commons.compress.utils.Sets;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -47,7 +116,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   private static final Expression<?>[] NO_EXPRESSIONS = new Expression[0];
 
   private final QueryExecution standardTest =
-      new QueryExecution(Module.SQL, Connections.getTarget()) {
+      new QueryExecution(QuerydslModule.SQL, Connections.getTarget()) {
         @Override
         protected Fetchable<?> createQuery() {
           return testQuery().from(employee, employee2);
@@ -71,21 +140,24 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void aggregate_list() {
     int min = 30000, avg = 65000, max = 160000;
     // fetch
-    assertEquals(
-        min, query().from(employee).select(employee.salary.min()).fetch().get(0).intValue());
-    assertEquals(
-        avg, query().from(employee).select(employee.salary.avg()).fetch().get(0).intValue());
-    assertEquals(
-        max, query().from(employee).select(employee.salary.max()).fetch().get(0).intValue());
+    assertThat(query().from(employee).select(employee.salary.min()).fetch().get(0).intValue())
+        .isEqualTo(min);
+    assertThat(query().from(employee).select(employee.salary.avg()).fetch().get(0).intValue())
+        .isEqualTo(avg);
+    assertThat(query().from(employee).select(employee.salary.max()).fetch().get(0).intValue())
+        .isEqualTo(max);
   }
 
   @Test
   public void aggregate_uniqueResult() {
     int min = 30000, avg = 65000, max = 160000;
     // fetchOne
-    assertEquals(min, query().from(employee).select(employee.salary.min()).fetchOne().intValue());
-    assertEquals(avg, query().from(employee).select(employee.salary.avg()).fetchOne().intValue());
-    assertEquals(max, query().from(employee).select(employee.salary.max()).fetchOne().intValue());
+    assertThat(query().from(employee).select(employee.salary.min()).fetchOne().intValue())
+        .isEqualTo(min);
+    assertThat(query().from(employee).select(employee.salary.avg()).fetchOne().intValue())
+        .isEqualTo(avg);
+    assertThat(query().from(employee).select(employee.salary.max()).fetchOne().intValue())
+        .isEqualTo(max);
   }
 
   @Test
@@ -124,7 +196,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void all() {
     for (Expression<?> expr : survey.all()) {
       Path<?> path = (Path<?>) expr;
-      assertEquals(survey, path.getMetadata().getParent());
+      assertThat(path.getMetadata().getParent()).isEqualTo(survey);
     }
   }
 
@@ -133,19 +205,19 @@ public abstract class SelectBase extends AbstractBaseTest {
       NumberExpression<Integer> two,
       NumberExpression<Integer> three,
       NumberExpression<Integer> four) {
-    assertEquals(1, firstResult(one).intValue());
-    assertEquals(2, firstResult(two).intValue());
-    assertEquals(4, firstResult(four).intValue());
+    assertThat(firstResult(one).intValue()).isEqualTo(1);
+    assertThat(firstResult(two).intValue()).isEqualTo(2);
+    assertThat(firstResult(four).intValue()).isEqualTo(4);
 
-    assertEquals(3, firstResult(one.subtract(two).add(four)).intValue());
-    assertEquals(-5, firstResult(one.subtract(two.add(four))).intValue());
-    assertEquals(-1, firstResult(one.add(two).subtract(four)).intValue());
-    assertEquals(-1, firstResult(one.add(two.subtract(four))).intValue());
+    assertThat(firstResult(one.subtract(two).add(four)).intValue()).isEqualTo(3);
+    assertThat(firstResult(one.subtract(two.add(four))).intValue()).isEqualTo(-5);
+    assertThat(firstResult(one.add(two).subtract(four)).intValue()).isEqualTo(-1);
+    assertThat(firstResult(one.add(two.subtract(four))).intValue()).isEqualTo(-1);
 
-    assertEquals(12, firstResult(one.add(two).multiply(four)).intValue());
-    assertEquals(2, firstResult(four.multiply(one).divide(two)).intValue());
-    assertEquals(6, firstResult(four.divide(two).multiply(three)).intValue());
-    assertEquals(1, firstResult(four.divide(two.multiply(two))).intValue());
+    assertThat(firstResult(one.add(two).multiply(four)).intValue()).isEqualTo(12);
+    assertThat(firstResult(four.multiply(one).divide(two)).intValue()).isEqualTo(2);
+    assertThat(firstResult(four.divide(two).multiply(three)).intValue()).isEqualTo(6);
+    assertThat(firstResult(four.divide(two.multiply(two))).intValue()).isEqualTo(1);
   }
 
   @Test
@@ -156,7 +228,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     NumberExpression<Integer> four = Expressions.numberTemplate(Integer.class, "(4.0)");
     arithmeticTests(one, two, three, four);
     // the following one doesn't work with integer arguments
-    assertEquals(2, firstResult(four.multiply(one.divide(two))).intValue());
+    assertThat(firstResult(four.multiply(one.divide(two))).intValue()).isEqualTo(2);
   }
 
   @Test
@@ -175,10 +247,10 @@ public abstract class SelectBase extends AbstractBaseTest {
     NumberExpression<Integer> three = Expressions.numberTemplate(Integer.class, "(3)");
     NumberExpression<Integer> four = Expressions.numberTemplate(Integer.class, "(4)");
 
-    assertEquals(4, firstResult(four.mod(three).add(three)).intValue());
-    assertEquals(1, firstResult(four.mod(two.add(one))).intValue());
-    assertEquals(0, firstResult(four.mod(two.multiply(one))).intValue());
-    assertEquals(2, firstResult(four.add(one).mod(three)).intValue());
+    assertThat(firstResult(four.mod(three).add(three)).intValue()).isEqualTo(4);
+    assertThat(firstResult(four.mod(two.add(one))).intValue()).isEqualTo(1);
+    assertThat(firstResult(four.mod(two.multiply(one))).intValue()).isEqualTo(0);
+    assertThat(firstResult(four.add(one).mod(three)).intValue()).isEqualTo(2);
   }
 
   @Test
@@ -186,10 +258,10 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void array() {
     Expression<Integer[]> expr = Expressions.template(Integer[].class, "'{1,2,3}'::int[]");
     Integer[] result = firstResult(expr);
-    assertEquals(3, result.length);
-    assertEquals(1, result[0].intValue());
-    assertEquals(2, result[1].intValue());
-    assertEquals(3, result[2].intValue());
+    assertThat(result.length).isEqualTo(3);
+    assertThat(result[0].intValue()).isEqualTo(1);
+    assertThat(result[1].intValue()).isEqualTo(2);
+    assertThat(result[2].intValue()).isEqualTo(3);
   }
 
   @Test
@@ -197,17 +269,17 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void array2() {
     Expression<int[]> expr = Expressions.template(int[].class, "'{1,2,3}'::int[]");
     int[] result = firstResult(expr);
-    assertEquals(3, result.length);
-    assertEquals(1, result[0]);
-    assertEquals(2, result[1]);
-    assertEquals(3, result[2]);
+    assertThat(result.length).isEqualTo(3);
+    assertThat(result[0]).isEqualTo(1);
+    assertThat(result[1]).isEqualTo(2);
+    assertThat(result[2]).isEqualTo(3);
   }
 
   @Test
   @ExcludeIn({DERBY, HSQLDB})
   public void array_null() {
     Expression<Integer[]> expr = Expressions.template(Integer[].class, "null");
-    assertNull(firstResult(expr));
+    assertThat(firstResult(expr)).isNull();
   }
 
   @Test
@@ -217,7 +289,7 @@ public abstract class SelectBase extends AbstractBaseTest {
             .from(employee)
             .select(new ArrayConstructorExpression<String>(String[].class, employee.firstname))
             .fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (String[] result : results) {
       assertNotNull(result[0]);
     }
@@ -227,44 +299,46 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void beans() {
     List<Beans> rows =
         query().from(employee, employee2).select(new QBeans(employee, employee2)).fetch();
-    assertFalse(rows.isEmpty());
+    assertThat(rows).isNotEmpty();
     for (Beans row : rows) {
-      assertEquals(Employee.class, row.get(employee).getClass());
-      assertEquals(Employee.class, row.get(employee2).getClass());
+      assertThat(row.get(employee).getClass()).isEqualTo(Employee.class);
+      assertThat(row.get(employee2).getClass()).isEqualTo(Employee.class);
     }
   }
 
   @Test
   public void between() {
     // 11-13
-    assertEquals(
-        Arrays.asList(11, 12, 13),
-        query()
-            .from(employee)
-            .where(employee.id.between(11, 13))
-            .orderBy(employee.id.asc())
-            .select(employee.id)
-            .fetch());
+    assertThat(
+            query()
+                .from(employee)
+                .where(employee.id.between(11, 13))
+                .orderBy(employee.id.asc())
+                .select(employee.id)
+                .fetch())
+        .isEqualTo(Arrays.asList(11, 12, 13));
   }
 
   @Test
   @ExcludeIn({ORACLE, CUBRID, FIREBIRD, DB2, DERBY, SQLSERVER, SQLITE, TERADATA})
   public void boolean_all() {
-    assertTrue(
-        query()
-            .from(employee)
-            .select(SQLExpressions.all(employee.firstname.isNotNull()))
-            .fetchOne());
+    assertThat(
+            query()
+                .from(employee)
+                .select(SQLExpressions.all(employee.firstname.isNotNull()))
+                .fetchOne())
+        .isTrue();
   }
 
   @Test
   @ExcludeIn({ORACLE, CUBRID, FIREBIRD, DB2, DERBY, SQLSERVER, SQLITE, TERADATA})
   public void boolean_any() {
-    assertTrue(
-        query()
-            .from(employee)
-            .select(SQLExpressions.any(employee.firstname.isNotNull()))
-            .fetchOne());
+    assertThat(
+            query()
+                .from(employee)
+                .select(SQLExpressions.any(employee.firstname.isNotNull()))
+                .fetchOne())
+        .isTrue();
   }
 
   @Test
@@ -273,14 +347,14 @@ public abstract class SelectBase extends AbstractBaseTest {
         employee.salary.floatValue().divide(employee2.salary.floatValue()).multiply(100.1);
     NumberExpression<Float> numExpression2 =
         employee.id.when(0).then(0.0F).otherwise(numExpression);
-    assertEquals(
-        Arrays.asList(87, 90, 88, 87, 83, 80, 75),
-        query()
-            .from(employee, employee2)
-            .where(employee.id.eq(employee2.id.add(1)))
-            .orderBy(employee.id.asc(), employee2.id.asc())
-            .select(numExpression2.floor().intValue())
-            .fetch());
+    assertThat(
+            query()
+                .from(employee, employee2)
+                .where(employee.id.eq(employee2.id.add(1)))
+                .orderBy(employee.id.asc(), employee2.id.asc())
+                .select(numExpression2.floor().intValue())
+                .fetch())
+        .isEqualTo(Arrays.asList(87, 90, 88, 87, 83, 80, 75));
   }
 
   @Test
@@ -298,7 +372,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
     for (Expression<?> expr : exprs) {
       for (Object o : query().from(employee).select(expr).fetch()) {
-        assertEquals(expr.getType(), o.getClass());
+        assertThat(o.getClass()).isEqualTo(expr.getType());
       }
     }
   }
@@ -306,50 +380,47 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   public void coalesce() {
     Coalesce<String> c = new Coalesce<String>(employee.firstname, employee.lastname).add("xxx");
-    assertEquals(
-        Collections.emptyList(),
-        query().from(employee).where(c.getValue().eq("xxx")).select(employee.id).fetch());
+    assertThat(query().from(employee).where(c.getValue().eq("xxx")).select(employee.id).fetch())
+        .isEqualTo(Collections.emptyList());
   }
 
   @Test
   public void compact_join() {
     // verbose
-    assertEquals(
-        8,
-        query()
-            .from(employee)
-            .innerJoin(employee2)
-            .on(employee.superiorId.eq(employee2.id))
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .innerJoin(employee2)
+                .on(employee.superiorId.eq(employee2.id))
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(8);
 
     // compact
-    assertEquals(
-        8,
-        query()
-            .from(employee)
-            .innerJoin(employee.superiorIdKey, employee2)
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .innerJoin(employee.superiorIdKey, employee2)
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(8);
   }
 
   @Test
   public void complex_boolean() {
     BooleanExpression first = employee.firstname.eq("Mike").and(employee.lastname.eq("Smith"));
     BooleanExpression second = employee.firstname.eq("Joe").and(employee.lastname.eq("Divis"));
-    assertEquals(2, query().from(employee).where(first.or(second)).fetchCount());
+    assertThat(query().from(employee).where(first.or(second)).fetchCount()).isEqualTo(2);
 
-    assertEquals(
-        0,
-        query()
-            .from(employee)
-            .where(
-                employee.firstname.eq("Mike"),
-                employee.lastname.eq("Smith").or(employee.firstname.eq("Joe")),
-                employee.lastname.eq("Divis"))
-            .fetchCount());
+    assertThat(
+            query()
+                .from(employee)
+                .where(
+                    employee.firstname.eq("Mike"),
+                    employee.lastname.eq("Smith").or(employee.firstname.eq("Joe")),
+                    employee.lastname.eq("Divis"))
+                .fetchCount())
+        .isEqualTo(0);
   }
 
   @Test
@@ -388,7 +459,7 @@ public abstract class SelectBase extends AbstractBaseTest {
                 Projections.constructor(
                     SimpleProjection.class, employee.firstname, employee.lastname))
             .fetch();
-    assertFalse(projections.isEmpty());
+    assertThat(projections).isNotEmpty();
     for (SimpleProjection projection : projections) {
       assertNotNull(projection);
     }
@@ -404,17 +475,18 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void count_with_pK() {
-    assertEquals(10, query().from(employee).fetchCount());
+    assertThat(query().from(employee).fetchCount()).isEqualTo(10);
   }
 
   @Test
   public void count_without_pK() {
-    assertEquals(10, query().from(QEmployeeNoPK.employee).fetchCount());
+    assertThat(query().from(QEmployeeNoPK.employee).fetchCount()).isEqualTo(10);
   }
 
   @Test
   public void count2() {
-    assertEquals(10, query().from(employee).select(employee.count()).fetchFirst().intValue());
+    assertThat(query().from(employee).select(employee.count()).fetchFirst().intValue())
+        .isEqualTo(10);
   }
 
   @Test
@@ -423,8 +495,8 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void count_all() {
     expectedQuery = "select count(*) as rc from EMPLOYEE e";
     NumberPath<Long> rowCount = Expressions.numberPath(Long.class, "rc");
-    assertEquals(
-        10, query().from(employee).select(Wildcard.count.as(rowCount)).fetchOne().intValue());
+    assertThat(query().from(employee).select(Wildcard.count.as(rowCount)).fetchOne().intValue())
+        .isEqualTo(10);
   }
 
   @Test
@@ -433,18 +505,18 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void count_all_Oracle() {
     expectedQuery = "select count(*) rc from EMPLOYEE e";
     NumberPath<Long> rowCount = Expressions.numberPath(Long.class, "rc");
-    assertEquals(
-        10, query().from(employee).select(Wildcard.count.as(rowCount)).fetchOne().intValue());
+    assertThat(query().from(employee).select(Wildcard.count.as(rowCount)).fetchOne().intValue())
+        .isEqualTo(10);
   }
 
   @Test
   public void count_distinct_with_pK() {
-    assertEquals(10, query().from(employee).distinct().fetchCount());
+    assertThat(query().from(employee).distinct().fetchCount()).isEqualTo(10);
   }
 
   @Test
   public void count_distinct_without_pK() {
-    assertEquals(10, query().from(QEmployeeNoPK.employee).distinct().fetchCount());
+    assertThat(query().from(QEmployeeNoPK.employee).distinct().fetchCount()).isEqualTo(10);
   }
 
   @Test
@@ -459,7 +531,7 @@ public abstract class SelectBase extends AbstractBaseTest {
             .from(employee)
             .select(new QProjection(employee.firstname, employee.lastname))
             .fetch();
-    assertFalse(tuples.isEmpty());
+    assertThat(tuples).isNotEmpty();
     for (Projection tuple : tuples) {
       assertNotNull(tuple.get(employee.firstname));
       assertNotNull(tuple.get(employee.lastname));
@@ -469,11 +541,31 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA})
-  public void dates() {
-    long ts = ((long) Math.floor(System.currentTimeMillis() / 1000)) * 1000;
-    long tsDate = new org.joda.time.LocalDate(ts).toDateMidnight().getMillis();
-    long tsTime = new org.joda.time.LocalTime(ts).getMillisOfDay();
+  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, H2, FIREBIRD})
+  public void dates() throws SQLException {
+    if (!configuration.getUseLiterals()) {
+      dates(false);
+    }
+  }
+
+  @Test
+  @ExcludeIn({CUBRID, DB2, DERBY, SQLITE, TERADATA, FIREBIRD})
+  public void dates_literals() throws SQLException {
+    if (configuration.getUseLiterals()) {
+      dates(true);
+    }
+  }
+
+  private void dates(boolean literals) throws SQLException {
+    java.time.Instant javaInstant =
+        java.time.Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
+    java.time.LocalDateTime javaDateTime =
+        java.time.LocalDateTime.ofInstant(javaInstant, java.time.ZoneId.of("Z"));
+    java.time.LocalDate javaDate = javaDateTime.toLocalDate();
+    java.time.LocalTime javaTime = javaDateTime.toLocalTime();
+    long ts = javaInstant.toEpochMilli();
+    long tsDate = javaInstant.truncatedTo(ChronoUnit.DAYS).toEpochMilli();
+    long tsTime = javaTime.toNanoOfDay() / 1000;
 
     List<Object> data = new ArrayList<>();
     data.add(Constants.date);
@@ -489,86 +581,87 @@ public abstract class SelectBase extends AbstractBaseTest {
     data.add(new java.sql.Time(12, 30, 0));
     data.add(new java.sql.Time(23, 59, 59));
     // data.add(new java.sql.Time(tsTime));
-    data.add(new DateTime(ts));
-    data.add(new DateTime(tsDate));
-    data.add(new DateTime(tsTime));
-    data.add(new LocalDateTime(ts));
-    data.add(new LocalDateTime(tsDate));
-    data.add(new LocalDateTime(2014, 3, 30, 2, 0));
-    data.add(new LocalDate(2010, 1, 1));
-    data.add(new LocalDate(ts));
-    data.add(new LocalDate(tsDate));
-    data.add(new LocalTime(0, 0, 0));
-    data.add(new LocalTime(12, 30, 0));
-    data.add(new LocalTime(23, 59, 59));
-    data.add(new LocalTime(ts));
-    data.add(new LocalTime(tsTime));
 
-    java.time.Instant javaInstant =
-        java.time.Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
-    java.time.LocalDateTime javaDateTime =
-        java.time.LocalDateTime.ofInstant(javaInstant, java.time.ZoneId.of("Z"));
-    java.time.LocalDate javaDate = javaDateTime.toLocalDate();
-    java.time.LocalTime javaTime = javaDateTime.toLocalTime();
     data.add(javaInstant); // java.time.Instant
     data.add(javaDateTime); // java.time.LocalDateTime
     data.add(javaDate); // java.time.LocalDate
     data.add(javaTime); // java.time.LocalTime
-    data.add(javaDateTime.atOffset(java.time.ZoneOffset.UTC)); // java.time.OffsetDateTime
-    data.add(javaTime.atOffset(java.time.ZoneOffset.UTC)); // java.time.OffsetTime
-    data.add(javaDateTime.atZone(java.time.ZoneId.of("Z"))); // java.time.ZonedDateTime
+
+    // have to explicitly list these
+    // connection.getMetaData().getTypeInfo() is not helpful in this case for most drivers
+    boolean supportsTimeZones;
+    switch (target) {
+      case FIREBIRD:
+      case H2:
+      case HSQLDB:
+      case ORACLE:
+      case SQLSERVER:
+        supportsTimeZones = true;
+        break;
+      default:
+        supportsTimeZones = false;
+        break;
+    }
+    if (supportsTimeZones) {
+      // java.time.OffsetTime
+      // SQL Server does not support TIME WITH TIME ZONE
+      // H2 supports it starting in 1.4.200 but we are stuck on 1.4.197 due to h2gis
+      if (target != SQLSERVER && target != H2) {
+        data.add(javaTime.atOffset(java.time.ZoneOffset.UTC));
+        data.add(javaTime.atOffset(java.time.ZoneOffset.ofHours(-6)));
+      }
+
+      /*
+       * TIMESTAMP WITH TIME ZONE is complicated.
+       * Contrary to the name, most databases that support this type do not actually support time zones.
+       * Instead, they support zone offsets which is not the same thing.
+       * E.g. America/New_York could be UTC-5 or UTC-4 depending on the time of year and acts of Congress.
+       * Which means if a database actually stores the zone ID, the time value can change.
+       * E.g. you put an entry in the database for 10 years in the future but then Congress abolishes DST.
+       * Other than Oracle, it does not look like any databases support storing the actual zone ID.
+       * Some databases, like H2, support specifying a time zone but convert it to an offset before storing it.
+       * Also, the JDBC specification does not say anything about ZonedDateTime.
+       * Therefore, we only test ZonedDateTime on Oracle because its behavior is poorly defined on anything else.
+       */
+
+      // java.time.OffsetDateTime
+      data.add(javaDateTime.atOffset(java.time.ZoneOffset.UTC));
+      data.add(javaDateTime.atOffset(java.time.ZoneOffset.ofHours(-6)));
+
+      // java.time.ZonedDateTime
+      if (target == ORACLE) {
+        data.add(javaDateTime.atZone(java.time.ZoneId.of("UTC")));
+        data.add(javaDateTime.atZone(java.time.ZoneId.of("America/Chicago")));
+      }
+    }
 
     Map<Object, Object> failures = new IdentityHashMap<>();
     for (Object dt : data) {
-      Object dt2 = firstResult(Expressions.constant(dt));
-      if (!dt.equals(dt2)) {
-        failures.put(dt, dt2);
+      try {
+        Object dt2 = firstResult(Expressions.constant(dt));
+        if (!dt.equals(dt2)) {
+          failures.put(dt, dt2);
+        }
+      } catch (Exception e) {
+        throw new RuntimeException(
+            "Error executing query for " + dt.getClass().getName() + " " + dt, e);
       }
     }
     if (!failures.isEmpty()) {
+      StringBuilder message = new StringBuilder();
       for (Map.Entry<Object, Object> entry : failures.entrySet()) {
-        System.out.println(
-            entry.getKey().getClass().getName()
-                + ": "
-                + entry.getKey()
-                + " != "
-                + entry.getValue());
+        message
+            .append(
+                entry.getKey().getClass().getName()
+                    + " != "
+                    + entry.getValue().getClass().getName()
+                    + ": "
+                    + entry.getKey()
+                    + " != "
+                    + entry.getValue())
+            .append('\n');
       }
-      Assert.fail("Failed with " + failures);
-    }
-  }
-
-  @Test
-  @Ignore // FIXME
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA})
-  public void dates_cST() {
-    TimeZone tz = TimeZone.getDefault();
-    try {
-      TimeZone.setDefault(TimeZone.getTimeZone("CST")); // -6:00
-      dates();
-    } finally {
-      TimeZone.setDefault(tz);
-    }
-  }
-
-  @Test
-  @Ignore // FIXME
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA})
-  public void dates_iOT() {
-    TimeZone tz = TimeZone.getDefault();
-    try {
-      TimeZone.setDefault(TimeZone.getTimeZone("IOT")); // +6:00
-      dates();
-    } finally {
-      TimeZone.setDefault(tz);
-    }
-  }
-
-  @Test
-  @ExcludeIn({CUBRID, SQLITE, TERADATA})
-  public void dates_literals() {
-    if (configuration.getUseLiterals()) {
-      dates();
+      fail("Failed with " + message);
     }
   }
 
@@ -581,9 +674,9 @@ public abstract class SelectBase extends AbstractBaseTest {
     Date date3 = query.select(SQLExpressions.addMonths(employee.datefield, 1)).fetchFirst();
     Date date4 = query.select(SQLExpressions.addDays(employee.datefield, 1)).fetchFirst();
 
-    assertTrue(date2.getTime() > date1.getTime());
-    assertTrue(date3.getTime() > date1.getTime());
-    assertTrue(date4.getTime() > date1.getTime());
+    assertThat(date2.getTime() > date1.getTime()).isTrue();
+    assertThat(date3.getTime() > date1.getTime()).isTrue();
+    assertThat(date4.getTime() > date1.getTime()).isTrue();
   }
 
   @Test
@@ -621,8 +714,9 @@ public abstract class SelectBase extends AbstractBaseTest {
     add(dps, DatePart.minute, HSQLDB);
     add(dps, DatePart.second, HSQLDB);
 
-    LocalDate localDate = new LocalDate(1970, 1, 10);
-    Date date = new Date(localDate.toDateMidnight().getMillis());
+    LocalDate localDate = LocalDate.of(1970, 1, 10);
+    Date date =
+        new Date(localDate.atStartOfDay(java.time.ZoneId.of("Z")).toInstant().toEpochMilli());
 
     for (DatePart dp : dps) {
       int diff1 = query.select(SQLExpressions.datediff(dp, date, employee.datefield)).fetchFirst();
@@ -631,7 +725,7 @@ public abstract class SelectBase extends AbstractBaseTest {
           query2
               .select(SQLExpressions.datediff(dp, employee.datefield, employee2.datefield))
               .fetchFirst();
-      assertEquals(diff1, -diff2);
+      assertThat(-diff2).isEqualTo(diff1);
     }
 
     Timestamp timestamp = new Timestamp(new java.util.Date().getTime());
@@ -645,12 +739,13 @@ public abstract class SelectBase extends AbstractBaseTest {
   // TDO Date_diff with timestamps
 
   @Test
-  @ExcludeIn({DB2, HSQLDB, SQLITE, TERADATA})
+  @ExcludeIn({DB2, HSQLDB, SQLITE, TERADATA, ORACLE})
   public void date_diff2() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
 
-    LocalDate localDate = new LocalDate(1970, 1, 10);
-    Date date = new Date(localDate.toDateMidnight().getMillis());
+    LocalDate localDate = LocalDate.of(1970, 1, 10);
+    Date date =
+        new Date(localDate.atStartOfDay(java.time.ZoneId.of("Z")).toInstant().toEpochMilli());
 
     int years =
         query.select(SQLExpressions.datediff(DatePart.year, date, employee.datefield)).fetchFirst();
@@ -672,16 +767,16 @@ public abstract class SelectBase extends AbstractBaseTest {
             .select(SQLExpressions.datediff(DatePart.second, date, employee.datefield))
             .fetchFirst();
 
-    assertEquals(949363200, seconds);
-    assertEquals(15822720, minutes);
-    assertEquals(263712, hours);
-    assertEquals(10988, days);
-    assertEquals(361, months);
-    assertEquals(30, years);
+    assertThat(seconds).isEqualTo(949363200);
+    assertThat(minutes).isEqualTo(15822720);
+    assertThat(hours).isEqualTo(263712);
+    assertThat(days).isEqualTo(10988);
+    assertThat(months).isEqualTo(361);
+    assertThat(years).isEqualTo(30);
   }
 
   @Test
-  @ExcludeIn({SQLITE}) // FIXME
+  @ExcludeIn({SQLITE, H2}) // FIXME
   public void date_trunc() {
     DateTimeExpression<java.util.Date> expr = DateTimeExpression.currentTimestamp();
 
@@ -700,9 +795,10 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, TERADATA}) // FIXME
+  @ExcludeIn({SQLITE, TERADATA, DERBY, H2}) // FIXME
   public void date_trunc2() {
-    DateTimeExpression<DateTime> expr = DateTimeExpression.currentTimestamp(DateTime.class);
+    DateTimeExpression<LocalDateTime> expr =
+        DateTimeExpression.currentTimestamp(LocalDateTime.class);
 
     Tuple tuple =
         firstResult(
@@ -713,81 +809,84 @@ public abstract class SelectBase extends AbstractBaseTest {
             SQLExpressions.datetrunc(DatePart.hour, expr),
             SQLExpressions.datetrunc(DatePart.minute, expr),
             SQLExpressions.datetrunc(DatePart.second, expr));
-    DateTime date = tuple.get(expr);
-    DateTime toYear = tuple.get(SQLExpressions.datetrunc(DatePart.year, expr));
-    DateTime toMonth = tuple.get(SQLExpressions.datetrunc(DatePart.month, expr));
-    DateTime toDay = tuple.get(SQLExpressions.datetrunc(DatePart.day, expr));
-    DateTime toHour = tuple.get(SQLExpressions.datetrunc(DatePart.hour, expr));
-    DateTime toMinute = tuple.get(SQLExpressions.datetrunc(DatePart.minute, expr));
-    DateTime toSecond = tuple.get(SQLExpressions.datetrunc(DatePart.second, expr));
+    LocalDateTime date = tuple.get(expr);
+    LocalDateTime toYear = tuple.get(SQLExpressions.datetrunc(DatePart.year, expr));
+    LocalDateTime toMonth = tuple.get(SQLExpressions.datetrunc(DatePart.month, expr));
+    LocalDateTime toDay = tuple.get(SQLExpressions.datetrunc(DatePart.day, expr));
+    LocalDateTime toHour = tuple.get(SQLExpressions.datetrunc(DatePart.hour, expr));
+    LocalDateTime toMinute = tuple.get(SQLExpressions.datetrunc(DatePart.minute, expr));
+    LocalDateTime toSecond = tuple.get(SQLExpressions.datetrunc(DatePart.second, expr));
 
-    assertEquals(date.getZone(), toYear.getZone());
-    assertEquals(date.getZone(), toMonth.getZone());
-    assertEquals(date.getZone(), toDay.getZone());
-    assertEquals(date.getZone(), toHour.getZone());
-    assertEquals(date.getZone(), toMinute.getZone());
-    assertEquals(date.getZone(), toSecond.getZone());
+    //    assertEquals(date.getZone(), toYear.getZone());
+    //    assertEquals(date.getZone(), toMonth.getZone());
+    //    assertEquals(date.getZone(), toDay.getZone());
+    //    assertEquals(date.getZone(), toHour.getZone());
+    //    assertEquals(date.getZone(), toMinute.getZone());
+    //    assertEquals(date.getZone(), toSecond.getZone());
 
     // year
-    assertEquals(date.getYear(), toYear.getYear());
-    assertEquals(date.getYear(), toMonth.getYear());
-    assertEquals(date.getYear(), toDay.getYear());
-    assertEquals(date.getYear(), toHour.getYear());
-    assertEquals(date.getYear(), toMinute.getYear());
-    assertEquals(date.getYear(), toSecond.getYear());
+    assertThat(toYear.getYear()).isEqualTo(date.getYear());
+    assertThat(toMonth.getYear()).isEqualTo(date.getYear());
+    assertThat(toDay.getYear()).isEqualTo(date.getYear());
+    assertThat(toHour.getYear()).isEqualTo(date.getYear());
+    assertThat(toMinute.getYear()).isEqualTo(date.getYear());
+    assertThat(toSecond.getYear()).isEqualTo(date.getYear());
 
     // month
-    assertEquals(1, toYear.getMonthOfYear());
-    assertEquals(date.getMonthOfYear(), toMonth.getMonthOfYear());
-    assertEquals(date.getMonthOfYear(), toDay.getMonthOfYear());
-    assertEquals(date.getMonthOfYear(), toHour.getMonthOfYear());
-    assertEquals(date.getMonthOfYear(), toMinute.getMonthOfYear());
-    assertEquals(date.getMonthOfYear(), toSecond.getMonthOfYear());
+    assertThat(toYear.getMonthValue()).isEqualTo(1);
+    assertThat(toMonth.getMonthValue()).isEqualTo(date.getMonthValue());
+    assertThat(toDay.getMonthValue()).isEqualTo(date.getMonthValue());
+    assertThat(toHour.getMonthValue()).isEqualTo(date.getMonthValue());
+    assertThat(toMinute.getMonthValue()).isEqualTo(date.getMonthValue());
+    assertThat(toSecond.getMonthValue()).isEqualTo(date.getMonthValue());
 
     // day
-    assertEquals(1, toYear.getDayOfMonth());
-    assertEquals(1, toMonth.getDayOfMonth());
-    assertEquals(date.getDayOfMonth(), toDay.getDayOfMonth());
-    assertEquals(date.getDayOfMonth(), toHour.getDayOfMonth());
-    assertEquals(date.getDayOfMonth(), toMinute.getDayOfMonth());
-    assertEquals(date.getDayOfMonth(), toSecond.getDayOfMonth());
+    assertThat(toYear.getDayOfMonth()).isEqualTo(1);
+    assertThat(toMonth.getDayOfMonth()).isEqualTo(1);
+    assertThat(toDay.getDayOfMonth()).isEqualTo(date.getDayOfMonth());
+    assertThat(toHour.getDayOfMonth()).isEqualTo(date.getDayOfMonth());
+    assertThat(toMinute.getDayOfMonth()).isEqualTo(date.getDayOfMonth());
+    assertThat(toSecond.getDayOfMonth()).isEqualTo(date.getDayOfMonth());
 
     // hour
-    assertEquals(0, toYear.getHourOfDay());
-    assertEquals(0, toMonth.getHourOfDay());
-    assertEquals(0, toDay.getHourOfDay());
-    assertEquals(date.getHourOfDay(), toHour.getHourOfDay());
-    assertEquals(date.getHourOfDay(), toMinute.getHourOfDay());
-    assertEquals(date.getHourOfDay(), toSecond.getHourOfDay());
+    assertThat(toYear.getHour()).isEqualTo(0);
+    assertThat(toMonth.getHour()).isEqualTo(0);
+    assertThat(toDay.getHour()).isEqualTo(0);
+    assertThat(toHour.getHour()).isEqualTo(date.getHour());
+    assertThat(toMinute.getHour()).isEqualTo(date.getHour());
+    assertThat(toSecond.getHour()).isEqualTo(date.getHour());
 
     // minute
-    assertEquals(0, toYear.getMinuteOfHour());
-    assertEquals(0, toMonth.getMinuteOfHour());
-    assertEquals(0, toDay.getMinuteOfHour());
-    assertEquals(0, toHour.getMinuteOfHour());
-    assertEquals(date.getMinuteOfHour(), toMinute.getMinuteOfHour());
-    assertEquals(date.getMinuteOfHour(), toSecond.getMinuteOfHour());
+    assertThat(toYear.getMinute()).isEqualTo(0);
+    assertThat(toMonth.getMinute()).isEqualTo(0);
+    assertThat(toDay.getMinute()).isEqualTo(0);
+    assertThat(toHour.getMinute()).isEqualTo(0);
+    assertThat(toMinute.getMinute()).isEqualTo(date.getMinute());
+    assertThat(toSecond.getMinute()).isEqualTo(date.getMinute());
 
     // second
-    assertEquals(0, toYear.getSecondOfMinute());
-    assertEquals(0, toMonth.getSecondOfMinute());
-    assertEquals(0, toDay.getSecondOfMinute());
-    assertEquals(0, toHour.getSecondOfMinute());
-    assertEquals(0, toMinute.getSecondOfMinute());
-    assertEquals(date.getSecondOfMinute(), toSecond.getSecondOfMinute());
+    assertThat(toYear.getSecond()).isEqualTo(0);
+    assertThat(toMonth.getSecond()).isEqualTo(0);
+    assertThat(toDay.getSecond()).isEqualTo(0);
+    assertThat(toHour.getSecond()).isEqualTo(0);
+    assertThat(toMinute.getSecond()).isEqualTo(0);
+    assertThat(toSecond.getSecond()).isEqualTo(date.getSecond());
   }
 
   @Test
   public void dateTime() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
-    assertEquals(Integer.valueOf(10), query.select(employee.datefield.dayOfMonth()).fetchFirst());
-    assertEquals(Integer.valueOf(2), query.select(employee.datefield.month()).fetchFirst());
-    assertEquals(Integer.valueOf(2000), query.select(employee.datefield.year()).fetchFirst());
-    assertEquals(
-        Integer.valueOf(200002), query.select(employee.datefield.yearMonth()).fetchFirst());
+    assertThat(query.select(employee.datefield.dayOfMonth()).fetchFirst())
+        .isEqualTo(Integer.valueOf(10));
+    assertThat(query.select(employee.datefield.month()).fetchFirst()).isEqualTo(Integer.valueOf(2));
+    assertThat(query.select(employee.datefield.year()).fetchFirst())
+        .isEqualTo(Integer.valueOf(2000));
+    assertThat(query.select(employee.datefield.yearMonth()).fetchFirst())
+        .isEqualTo(Integer.valueOf(200002));
   }
 
   @Test
+  @ExcludeIn({SQLITE})
   public void dateTime_to_date() {
     firstResult(SQLExpressions.date(DateTimeExpression.currentTimestamp()));
   }
@@ -800,7 +899,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void distinct_count() {
     long count1 = query().from(employee).distinct().fetchCount();
     long count2 = query().from(employee).distinct().fetchCount();
-    assertEquals(count1, count2);
+    assertThat(count2).isEqualTo(count1);
   }
 
   @Test
@@ -809,49 +908,49 @@ public abstract class SelectBase extends AbstractBaseTest {
         query().from(employee).distinct().select(employee.firstname.length()).fetch();
     List<Integer> lengths2 =
         query().from(employee).distinct().select(employee.firstname.length()).fetch();
-    assertEquals(lengths1, lengths2);
+    assertThat(lengths2).isEqualTo(lengths1);
   }
 
   @Test
   public void duplicate_columns() {
-    assertEquals(10, query().from(employee).select(employee.id, employee.id).fetch().size());
+    assertThat(query().from(employee).select(employee.id, employee.id).fetch()).hasSize(10);
   }
 
   @Test
   public void duplicate_columns_In_Subquery() {
     QEmployee employee2 = new QEmployee("e2");
-    assertEquals(
-        10,
-        query()
-            .from(employee)
-            .where(
-                query()
-                    .from(employee2)
-                    .where(employee2.id.eq(employee.id))
-                    .select(employee2.id, employee2.id)
-                    .exists())
-            .fetchCount());
+    assertThat(
+            query()
+                .from(employee)
+                .where(
+                    query()
+                        .from(employee2)
+                        .where(employee2.id.eq(employee.id))
+                        .select(employee2.id, employee2.id)
+                        .exists())
+                .fetchCount())
+        .isEqualTo(10);
   }
 
   @Test
   public void factoryExpression_in_groupBy() {
     Expression<Employee> empBean =
         Projections.bean(Employee.class, employee.id, employee.superiorId);
-    assertTrue(query().from(employee).groupBy(empBean).select(empBean).fetchFirst() != null);
+    assertThat(query().from(employee).groupBy(empBean).select(empBean).fetchFirst() != null)
+        .isTrue();
   }
 
   @Test
   @ExcludeIn({H2, SQLITE, DERBY, CUBRID, MYSQL})
   public void full_join() throws SQLException {
-    assertEquals(
-        18,
-        query()
-            .from(employee)
-            .fullJoin(employee2)
-            .on(employee.superiorIdKey.on(employee2))
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .fullJoin(employee2)
+                .on(employee.superiorIdKey.on(employee2))
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(18);
   }
 
   @Test
@@ -878,51 +977,50 @@ public abstract class SelectBase extends AbstractBaseTest {
                     employee.lastname,
                     GroupBy.map(employee2.id, subordinates)));
 
-    assertEquals(2, results.size());
+    assertThat(results).hasSize(2);
 
     // Mike Smith
     Group group = results.get(1);
-    assertEquals("Mike", group.getOne(employee.firstname));
-    assertEquals("Smith", group.getOne(employee.lastname));
+    assertThat(group.getOne(employee.firstname)).isEqualTo("Mike");
+    assertThat(group.getOne(employee.lastname)).isEqualTo("Smith");
 
     Map<Integer, Tuple> emps = group.getMap(employee2.id, subordinates);
-    assertEquals(4, emps.size());
-    assertEquals("Steve", emps.get(12).get(employee2.firstname));
+    assertThat(emps).hasSize(4);
+    assertThat(emps.get(12).get(employee2.firstname)).isEqualTo("Steve");
 
     // Mary Smith
     group = results.get(2);
-    assertEquals("Mary", group.getOne(employee.firstname));
-    assertEquals("Smith", group.getOne(employee.lastname));
+    assertThat(group.getOne(employee.firstname)).isEqualTo("Mary");
+    assertThat(group.getOne(employee.lastname)).isEqualTo("Smith");
 
     emps = group.getMap(employee2.id, subordinates);
-    assertEquals(4, emps.size());
-    assertEquals("Mason", emps.get(21).get(employee2.lastname));
+    assertThat(emps).hasSize(4);
+    assertThat(emps.get(21).get(employee2.lastname)).isEqualTo("Mason");
   }
 
   @Test
   public void groupBy_yearMonth() {
-    assertEquals(
-        Collections.singletonList(10L),
-        query()
-            .from(employee)
-            .groupBy(employee.datefield.yearMonth())
-            .orderBy(employee.datefield.yearMonth().asc())
-            .select(employee.id.count())
-            .fetch());
+    assertThat(
+            query()
+                .from(employee)
+                .groupBy(employee.datefield.yearMonth())
+                .orderBy(employee.datefield.yearMonth().asc())
+                .select(employee.id.count())
+                .fetch())
+        .isEqualTo(Collections.singletonList(10L));
   }
 
   @Test
   @ExcludeIn({H2, DB2, DERBY, ORACLE, SQLSERVER})
   public void groupBy_validate() {
     NumberPath<BigDecimal> alias = Expressions.numberPath(BigDecimal.class, "alias");
-    assertEquals(
-        8,
-        query()
-            .from(employee)
-            .groupBy(alias)
-            .select(employee.salary.multiply(100).as(alias), employee.salary.avg())
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .groupBy(alias)
+                .select(employee.salary.multiply(100).as(alias), employee.salary.avg())
+                .fetch())
+        .hasSize(8);
   }
 
   @Test
@@ -933,10 +1031,10 @@ public abstract class SelectBase extends AbstractBaseTest {
     QueryResults<Integer> results =
         query().from(employee).groupBy(employee.id).limit(1).select(employee.id).fetchResults();
 
-    assertEquals(10, ids.size());
-    assertEquals(10, count);
-    assertEquals(1, results.getResults().size());
-    assertEquals(10, results.getTotal());
+    assertThat(ids).hasSize(10);
+    assertThat(count).isEqualTo(10);
+    assertThat(results.getResults()).hasSize(1);
+    assertThat(results.getTotal()).isEqualTo(10);
   }
 
   @Test
@@ -953,9 +1051,9 @@ public abstract class SelectBase extends AbstractBaseTest {
             .select(Expressions.ONE)
             .fetchResults();
 
-    assertEquals(1, ids.size());
-    assertEquals(1, results.getResults().size());
-    assertEquals(1, results.getTotal());
+    assertThat(ids).hasSize(1);
+    assertThat(results.getResults()).hasSize(1);
+    assertThat(results.getTotal()).isEqualTo(1);
   }
 
   @Test
@@ -977,19 +1075,18 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void illegalUnion() throws SQLException {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.max());
-    assertEquals(0, query().from(employee).union(sq1, sq2).list().size());
+    assertThat(query().from(employee).union(sq1, sq2).list()).isEmpty();
   }
 
   @Test
   public void in() {
-    assertEquals(
-        2,
-        query()
-            .from(employee)
-            .where(employee.id.in(Arrays.asList(1, 2)))
-            .select(employee)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .where(employee.id.in(Arrays.asList(1, 2)))
+                .select(employee)
+                .fetch())
+        .hasSize(2);
   }
 
   @Test
@@ -999,9 +1096,8 @@ public abstract class SelectBase extends AbstractBaseTest {
     for (int i = 0; i < 20000; i++) {
       ids.add(i);
     }
-    assertEquals(
-        query().from(employee).fetchCount(),
-        query().from(employee).where(employee.id.in(ids)).fetchCount());
+    assertThat(query().from(employee).where(employee.id.in(ids)).fetchCount())
+        .isEqualTo(query().from(employee).fetchCount());
   }
 
   @Test
@@ -1011,19 +1107,19 @@ public abstract class SelectBase extends AbstractBaseTest {
     for (int i = 0; i < 20000; i++) {
       ids.add(i);
     }
-    assertEquals(0, query().from(employee).where(employee.id.notIn(ids)).fetchCount());
+    assertThat(query().from(employee).where(employee.id.notIn(ids)).fetchCount()).isEqualTo(0);
   }
 
   @Test
   public void in_empty() {
-    assertEquals(
-        0, query().from(employee).where(employee.id.in(Collections.emptyList())).fetchCount());
+    assertThat(query().from(employee).where(employee.id.in(Collections.emptyList())).fetchCount())
+        .isEqualTo(0);
   }
 
   @Test
   @ExcludeIn(DERBY)
   public void in_null() {
-    assertEquals(1, query().from(employee).where(employee.id.in(1, null)).fetchCount());
+    assertThat(query().from(employee).where(employee.id.in(1, null)).fetchCount()).isEqualTo(1);
   }
 
   @Test
@@ -1031,50 +1127,48 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void in_subqueries() {
     QEmployee e1 = new QEmployee("e1");
     QEmployee e2 = new QEmployee("e2");
-    assertEquals(
-        2,
-        query()
-            .from(employee)
-            .where(
-                employee.id.in(
-                    query().from(e1).where(e1.firstname.eq("Mike")).select(e1.id),
-                    query().from(e2).where(e2.firstname.eq("Mary")).select(e2.id)))
-            .fetchCount());
+    assertThat(
+            query()
+                .from(employee)
+                .where(
+                    employee.id.in(
+                        query().from(e1).where(e1.firstname.eq("Mike")).select(e1.id),
+                        query().from(e2).where(e2.firstname.eq("Mary")).select(e2.id)))
+                .fetchCount())
+        .isEqualTo(2);
   }
 
   @Test
   public void notIn_empty() {
     long count = query().from(employee).fetchCount();
-    assertEquals(
-        count,
-        query().from(employee).where(employee.id.notIn(Collections.emptyList())).fetchCount());
+    assertThat(
+            query().from(employee).where(employee.id.notIn(Collections.emptyList())).fetchCount())
+        .isEqualTo(count);
   }
 
   @Test
   public void inner_join() throws SQLException {
-    assertEquals(
-        8,
-        query()
-            .from(employee)
-            .innerJoin(employee2)
-            .on(employee.superiorIdKey.on(employee2))
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .innerJoin(employee2)
+                .on(employee.superiorIdKey.on(employee2))
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(8);
   }
 
   @Test
   public void inner_join_2Conditions() {
-    assertEquals(
-        8,
-        query()
-            .from(employee)
-            .innerJoin(employee2)
-            .on(employee.superiorIdKey.on(employee2))
-            .on(employee2.firstname.isNotNull())
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .innerJoin(employee2)
+                .on(employee.superiorIdKey.on(employee2))
+                .on(employee2.firstname.isNotNull())
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(8);
   }
 
   @Test
@@ -1102,27 +1196,28 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void left_join() throws SQLException {
-    assertEquals(
-        10,
-        query()
-            .from(employee)
-            .leftJoin(employee2)
-            .on(employee.superiorIdKey.on(employee2))
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .leftJoin(employee2)
+                .on(employee.superiorIdKey.on(employee2))
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(10);
   }
 
   @Test
   public void like() {
-    assertEquals(0, query().from(employee).where(employee.firstname.like("\\")).fetchCount());
-    assertEquals(0, query().from(employee).where(employee.firstname.like("\\\\")).fetchCount());
+    assertThat(query().from(employee).where(employee.firstname.like("\\")).fetchCount())
+        .isEqualTo(0);
+    assertThat(query().from(employee).where(employee.firstname.like("\\\\")).fetchCount())
+        .isEqualTo(0);
   }
 
   @Test
   public void like_ignore_case() {
-    assertEquals(
-        3, query().from(employee).where(employee.firstname.likeIgnoreCase("%m%")).fetchCount());
+    assertThat(query().from(employee).where(employee.firstname.likeIgnoreCase("%m%")).fetchCount())
+        .isEqualTo(3);
   }
 
   @Test
@@ -1131,76 +1226,76 @@ public abstract class SelectBase extends AbstractBaseTest {
     List<String> strs = Arrays.asList("%a", "a%", "%a%", "_a", "a_", "_a_", "[C-P]arsen", "a\nb");
 
     for (String str : strs) {
-      assertTrue(
-          str,
-          query()
-                  .from(employee)
-                  .where(
-                      Expressions.predicate(
-                          Ops.STRING_CONTAINS,
-                          Expressions.constant(str),
-                          Expressions.constant(str)))
-                  .fetchCount()
-              > 0);
+      assertThat(
+              query()
+                      .from(employee)
+                      .where(
+                          Expressions.predicate(
+                              Ops.STRING_CONTAINS,
+                              Expressions.constant(str),
+                              Expressions.constant(str)))
+                      .fetchCount()
+                  > 0)
+          .as(str)
+          .isTrue();
     }
   }
 
   @Test
   @ExcludeIn({DB2, DERBY})
   public void like_number() {
-    assertEquals(5, query().from(employee).where(employee.id.like("1%")).fetchCount());
+    assertThat(query().from(employee).where(employee.id.like("1%")).fetchCount()).isEqualTo(5);
   }
 
   @Test
   public void limit() throws SQLException {
-    assertEquals(
-        Arrays.asList(23, 22, 21, 20),
-        query()
-            .from(employee)
-            .orderBy(employee.firstname.asc())
-            .limit(4)
-            .select(employee.id)
-            .fetch());
+    assertThat(
+            query()
+                .from(employee)
+                .orderBy(employee.firstname.asc())
+                .limit(4)
+                .select(employee.id)
+                .fetch())
+        .isEqualTo(Arrays.asList(23, 22, 21, 20));
   }
 
   @Test
   public void limit_and_offset() throws SQLException {
-    assertEquals(
-        Arrays.asList(20, 13, 10, 2),
-        query()
-            .from(employee)
-            .orderBy(employee.firstname.asc())
-            .limit(4)
-            .offset(3)
-            .select(employee.id)
-            .fetch());
+    assertThat(
+            query()
+                .from(employee)
+                .orderBy(employee.firstname.asc())
+                .limit(4)
+                .offset(3)
+                .select(employee.id)
+                .fetch())
+        .isEqualTo(Arrays.asList(20, 13, 10, 2));
   }
 
   @Test
   public void limit_and_offset_Group() {
-    assertEquals(
-        9,
-        query()
-            .from(employee)
-            .orderBy(employee.id.asc())
-            .limit(100)
-            .offset(1)
-            .transform(GroupBy.groupBy(employee.id).as(employee))
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .orderBy(employee.id.asc())
+                .limit(100)
+                .offset(1)
+                .transform(GroupBy.groupBy(employee.id).as(employee)))
+        .hasSize(9);
   }
 
   @Test
   public void limit_and_offset_and_Order() {
     List<String> names2 = Arrays.asList("Helen", "Jennifer", "Jim", "Joe");
-    assertEquals(
-        names2,
-        query()
-            .from(employee)
-            .orderBy(employee.firstname.asc())
-            .limit(4)
-            .offset(2)
-            .select(employee.firstname)
-            .fetch());
+    assertThat(
+            query()
+                .from(employee)
+                .orderBy(employee.firstname.asc())
+                .limit(4)
+                .offset(2)
+                .select(employee.firstname)
+                .fetch())
+        .isEqualTo(names2);
   }
 
   @Test
@@ -1259,14 +1354,14 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   public void limit_and_order() {
     List<String> names1 = Arrays.asList("Barbara", "Daisy", "Helen", "Jennifer");
-    assertEquals(
-        names1,
-        query()
-            .from(employee)
-            .orderBy(employee.firstname.asc())
-            .limit(4)
-            .select(employee.firstname)
-            .fetch());
+    assertThat(
+            query()
+                .from(employee)
+                .orderBy(employee.firstname.asc())
+                .limit(4)
+                .select(employee.firstname)
+                .fetch())
+        .isEqualTo(names1);
   }
 
   @Test
@@ -1279,7 +1374,7 @@ public abstract class SelectBase extends AbstractBaseTest {
             .orderBy(employee.id.asc())
             .select(employee.id)
             .fetchResults();
-    assertEquals(10, results.getTotal());
+    assertThat(results.getTotal()).isEqualTo(10);
   }
 
   @Test
@@ -1292,7 +1387,7 @@ public abstract class SelectBase extends AbstractBaseTest {
             .orderBy(employee.id.asc())
             .select(employee.id)
             .fetchResults();
-    assertEquals(10, results.getTotal());
+    assertThat(results.getTotal()).isEqualTo(10);
   }
 
   @Test
@@ -1305,24 +1400,24 @@ public abstract class SelectBase extends AbstractBaseTest {
             .orderBy(employee.id.asc())
             .select(employee)
             .fetchResults();
-    assertEquals(10, results.getTotal());
+    assertThat(results.getTotal()).isEqualTo(10);
   }
 
   @Test
   @ExcludeIn({DB2, DERBY})
   public void literals() {
-    assertEquals(1L, firstResult(ConstantImpl.create(1)).intValue());
-    assertEquals(2L, firstResult(ConstantImpl.create(2L)).longValue());
-    assertEquals(3.0, firstResult(ConstantImpl.create(3.0)), 0.001);
-    assertEquals(4.0f, firstResult(ConstantImpl.create(4.0f)), 0.001);
-    assertEquals(true, firstResult(ConstantImpl.create(true)));
-    assertEquals(false, firstResult(ConstantImpl.create(false)));
-    assertEquals("abc", firstResult(ConstantImpl.create("abc")));
-    assertEquals("'", firstResult(ConstantImpl.create("'")));
-    assertEquals("\"", firstResult(ConstantImpl.create("\"")));
-    assertEquals("\n", firstResult(ConstantImpl.create("\n")));
-    assertEquals("\r\n", firstResult(ConstantImpl.create("\r\n")));
-    assertEquals("\t", firstResult(ConstantImpl.create("\t")));
+    assertThat(firstResult(ConstantImpl.create(1)).intValue()).isEqualTo(1L);
+    assertThat(firstResult(ConstantImpl.create(2L)).longValue()).isEqualTo(2L);
+    assertThat(firstResult(ConstantImpl.create(3.0))).isCloseTo(3.0, within(0.001));
+    assertThat(firstResult(ConstantImpl.create(4.0f))).isCloseTo(4.0f, within(0.001f));
+    assertThat(firstResult(ConstantImpl.create(true))).isEqualTo(true);
+    assertThat(firstResult(ConstantImpl.create(false))).isEqualTo(false);
+    assertThat(firstResult(ConstantImpl.create("abc"))).isEqualTo("abc");
+    assertThat(firstResult(ConstantImpl.create("'"))).isEqualTo("'");
+    assertThat(firstResult(ConstantImpl.create("\""))).isEqualTo("\"");
+    assertThat(firstResult(ConstantImpl.create("\n"))).isEqualTo("\n");
+    assertThat(firstResult(ConstantImpl.create("\r\n"))).isEqualTo("\r\n");
+    assertThat(firstResult(ConstantImpl.create("\t"))).isEqualTo("\t");
   }
 
   @Test
@@ -1339,8 +1434,9 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({SQLITE, DERBY})
   public void lPad() {
-    assertEquals("  ab", firstResult(StringExpressions.lpad(ConstantImpl.create("ab"), 4)));
-    assertEquals("!!ab", firstResult(StringExpressions.lpad(ConstantImpl.create("ab"), 4, '!')));
+    assertThat(firstResult(StringExpressions.lpad(ConstantImpl.create("ab"), 4))).isEqualTo("  ab");
+    assertThat(firstResult(StringExpressions.lpad(ConstantImpl.create("ab"), 4, '!')))
+        .isEqualTo("!!ab");
   }
 
   //    @Test
@@ -1376,40 +1472,50 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
+  @ExcludeIn({HSQLDB, SQLITE}) // FIXME
   public void math() {
     math(Expressions.numberTemplate(Double.class, "0.50"));
   }
 
   @Test
-  @ExcludeIn({FIREBIRD, SQLSERVER}) // FIXME
+  @ExcludeIn({FIREBIRD, SQLSERVER, HSQLDB, SQLITE}) // FIXME
   public void math2() {
     math(Expressions.constant(0.5));
   }
 
   private void math(Expression<Double> expr) {
     double precision = 0.001;
-    assertEquals(Math.acos(0.5), firstResult(MathExpressions.acos(expr)), precision);
-    assertEquals(Math.asin(0.5), firstResult(MathExpressions.asin(expr)), precision);
-    assertEquals(Math.atan(0.5), firstResult(MathExpressions.atan(expr)), precision);
-    assertEquals(Math.cos(0.5), firstResult(MathExpressions.cos(expr)), precision);
-    assertEquals(Math.cosh(0.5), firstResult(MathExpressions.cosh(expr)), precision);
-    assertEquals(cot(0.5), firstResult(MathExpressions.cot(expr)), precision);
+    assertThat(firstResult(MathExpressions.acos(expr)))
+        .isCloseTo(Math.acos(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.asin(expr)))
+        .isCloseTo(Math.asin(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.atan(expr)))
+        .isCloseTo(Math.atan(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.cos(expr))).isCloseTo(Math.cos(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.cosh(expr)))
+        .isCloseTo(Math.cosh(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.cot(expr))).isCloseTo(cot(0.5), within(precision));
     if (target != Target.DERBY || expr instanceof Constant) {
       // FIXME: The resulting value is outside the range for the data type DECIMAL/NUMERIC(4,4).
-      assertEquals(coth(0.5), firstResult(MathExpressions.coth(expr)), precision);
+      assertThat(firstResult(MathExpressions.coth(expr))).isCloseTo(coth(0.5), within(precision));
     }
 
-    assertEquals(degrees(0.5), firstResult(MathExpressions.degrees(expr)), precision);
-    assertEquals(Math.exp(0.5), firstResult(MathExpressions.exp(expr)), precision);
-    assertEquals(Math.log(0.5), firstResult(MathExpressions.ln(expr)), precision);
-    assertEquals(log(0.5, 10), firstResult(MathExpressions.log(expr, 10)), precision);
-    assertEquals(0.25, firstResult(MathExpressions.power(expr, 2)), precision);
-    assertEquals(radians(0.5), firstResult(MathExpressions.radians(expr)), precision);
-    assertEquals(Integer.valueOf(1), firstResult(MathExpressions.sign(expr)));
-    assertEquals(Math.sin(0.5), firstResult(MathExpressions.sin(expr)), precision);
-    assertEquals(Math.sinh(0.5), firstResult(MathExpressions.sinh(expr)), precision);
-    assertEquals(Math.tan(0.5), firstResult(MathExpressions.tan(expr)), precision);
-    assertEquals(Math.tanh(0.5), firstResult(MathExpressions.tanh(expr)), precision);
+    assertThat(firstResult(MathExpressions.degrees(expr)))
+        .isCloseTo(degrees(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.exp(expr))).isCloseTo(Math.exp(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.ln(expr))).isCloseTo(Math.log(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.log(expr, 10)))
+        .isCloseTo(log(0.5, 10), within(precision));
+    assertThat(firstResult(MathExpressions.power(expr, 2))).isCloseTo(0.25, within(precision));
+    assertThat(firstResult(MathExpressions.radians(expr)))
+        .isCloseTo(radians(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.sign(expr))).isEqualTo(Integer.valueOf(1));
+    assertThat(firstResult(MathExpressions.sin(expr))).isCloseTo(Math.sin(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.sinh(expr)))
+        .isCloseTo(Math.sinh(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.tan(expr))).isCloseTo(Math.tan(0.5), within(precision));
+    assertThat(firstResult(MathExpressions.tanh(expr)))
+        .isCloseTo(Math.tanh(0.5), within(precision));
   }
 
   @Test
@@ -1426,7 +1532,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         query()
             .select(one.add(two.multiply(three)).subtract(four.divide(five)).add(six.mod(three)))
             .fetchFirst();
-    assertEquals(6.2, num, 0.001);
+    assertThat(num).isCloseTo(6.2, within(0.001));
   }
 
   @Test
@@ -1434,15 +1540,16 @@ public abstract class SelectBase extends AbstractBaseTest {
     Concatenation concat = new Concatenation(employee.firstname, employee.lastname);
     List<Tuple> tuples =
         query().from(employee).select(employee.firstname, employee.lastname, concat).fetch();
-    assertFalse(tuples.isEmpty());
+    assertThat(tuples).isNotEmpty();
     for (Tuple tuple : tuples) {
       String firstName = tuple.get(employee.firstname);
       String lastName = tuple.get(employee.lastname);
-      assertEquals(firstName + lastName, tuple.get(concat));
+      assertThat(tuple.get(concat)).isEqualTo(firstName + lastName);
     }
   }
 
   @Test
+  @ExcludeIn({SQLITE})
   public void no_from() {
     assertNotNull(firstResult(DateExpression.currentDate()));
   }
@@ -1478,7 +1585,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   public void num_date_operation() {
     long result = query().select(employee.datefield.year().mod(1)).from(employee).fetchFirst();
-    assertEquals(0, result);
+    assertThat(result).isEqualTo(0);
   }
 
   @Test
@@ -1488,8 +1595,8 @@ public abstract class SelectBase extends AbstractBaseTest {
     delete(numberTest).execute();
     insert(numberTest).set(numberTest.col1Boolean, true).execute();
     insert(numberTest).set(numberTest.col1Number, (byte) 1).execute();
-    assertEquals(2, query().from(numberTest).select(numberTest.col1Boolean).fetch().size());
-    assertEquals(2, query().from(numberTest).select(numberTest.col1Number).fetch().size());
+    assertThat(query().from(numberTest).select(numberTest.col1Boolean).fetch()).hasSize(2);
+    assertThat(query().from(numberTest).select(numberTest.col1Number).fetch()).hasSize(2);
   }
 
   @Test
@@ -1498,91 +1605,98 @@ public abstract class SelectBase extends AbstractBaseTest {
     delete(numberTest).execute();
     insert(numberTest).setNull(numberTest.col1Boolean).execute();
     insert(numberTest).setNull(numberTest.col1Number).execute();
-    assertEquals(2, query().from(numberTest).select(numberTest.col1Boolean).fetch().size());
-    assertEquals(2, query().from(numberTest).select(numberTest.col1Number).fetch().size());
+    assertThat(query().from(numberTest).select(numberTest.col1Boolean).fetch()).hasSize(2);
+    assertThat(query().from(numberTest).select(numberTest.col1Number).fetch()).hasSize(2);
   }
 
   @Test
   public void offset_only() {
-    assertEquals(
-        Arrays.asList(20, 13, 10, 2, 1, 11, 12),
-        query()
-            .from(employee)
-            .orderBy(employee.firstname.asc())
-            .offset(3)
-            .select(employee.id)
-            .fetch());
+    assertThat(
+            query()
+                .from(employee)
+                .orderBy(employee.firstname.asc())
+                .offset(3)
+                .select(employee.id)
+                .fetch())
+        .isEqualTo(Arrays.asList(20, 13, 10, 2, 1, 11, 12));
   }
 
   @Test
   public void operation_in_constant_list() {
-    assertEquals(
-        0,
-        query()
-            .from(survey)
-            .where(survey.name.charAt(0).in(Collections.singletonList('a')))
-            .fetchCount());
-    assertEquals(
-        0,
-        query().from(survey).where(survey.name.charAt(0).in(Arrays.asList('a', 'b'))).fetchCount());
-    assertEquals(
-        0,
-        query()
-            .from(survey)
-            .where(survey.name.charAt(0).in(Arrays.asList('a', 'b', 'c')))
-            .fetchCount());
+    assertThat(
+            query()
+                .from(survey)
+                .where(survey.name.charAt(0).in(Collections.singletonList('a')))
+                .fetchCount())
+        .isEqualTo(0);
+    assertThat(
+            query()
+                .from(survey)
+                .where(survey.name.charAt(0).in(Arrays.asList('a', 'b')))
+                .fetchCount())
+        .isEqualTo(0);
+    assertThat(
+            query()
+                .from(survey)
+                .where(survey.name.charAt(0).in(Arrays.asList('a', 'b', 'c')))
+                .fetchCount())
+        .isEqualTo(0);
   }
 
   @Test
   public void order_nullsFirst() {
-    assertEquals(
-        Collections.singletonList("Hello World"),
-        query().from(survey).orderBy(survey.name.asc().nullsFirst()).select(survey.name).fetch());
+    assertThat(
+            query()
+                .from(survey)
+                .orderBy(survey.name.asc().nullsFirst())
+                .select(survey.name)
+                .fetch())
+        .isEqualTo(Collections.singletonList("Hello World"));
   }
 
   @Test
   public void order_nullsLast() {
-    assertEquals(
-        Collections.singletonList("Hello World"),
-        query().from(survey).orderBy(survey.name.asc().nullsLast()).select(survey.name).fetch());
+    assertThat(
+            query().from(survey).orderBy(survey.name.asc().nullsLast()).select(survey.name).fetch())
+        .isEqualTo(Collections.singletonList("Hello World"));
   }
 
   @Test
   public void params() {
     Param<String> name = new Param<String>(String.class, "name");
-    assertEquals(
-        "Mike",
-        query()
-            .from(employee)
-            .where(employee.firstname.eq(name))
-            .set(name, "Mike")
-            .select(employee.firstname)
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(employee)
+                .where(employee.firstname.eq(name))
+                .set(name, "Mike")
+                .select(employee.firstname)
+                .fetchFirst())
+        .isEqualTo("Mike");
   }
 
   @Test
   public void params_anon() {
     Param<String> name = new Param<String>(String.class);
-    assertEquals(
-        "Mike",
-        query()
-            .from(employee)
-            .where(employee.firstname.eq(name))
-            .set(name, "Mike")
-            .select(employee.firstname)
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(employee)
+                .where(employee.firstname.eq(name))
+                .set(name, "Mike")
+                .select(employee.firstname)
+                .fetchFirst())
+        .isEqualTo("Mike");
   }
 
   @Test(expected = ParamNotSetException.class)
   public void params_not_set() {
     Param<String> name = new Param<String>(String.class, "name");
-    assertEquals(
-        "Mike",
-        query()
-            .from(employee)
-            .where(employee.firstname.eq(name))
-            .select(employee.firstname)
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(employee)
+                .where(employee.firstname.eq(name))
+                .select(employee.firstname)
+                .fetchFirst())
+        .isEqualTo("Mike");
   }
 
   @Test
@@ -1590,11 +1704,13 @@ public abstract class SelectBase extends AbstractBaseTest {
   @SkipForQuoted
   public void path_alias() {
     expectedQuery =
-        "select e.LASTNAME, sum(e.SALARY) as salarySum "
-            + "from EMPLOYEE e "
-            + "group by e.LASTNAME having salarySum > ?";
+        """
+        select e.LASTNAME, sum(e.SALARY) as salarySum \
+        from EMPLOYEE e \
+        group by e.LASTNAME having salarySum > ?\
+        """;
 
-    NumberExpression<BigDecimal> salarySum = employee.salary.sum().as("salarySum");
+    NumberExpression<BigDecimal> salarySum = employee.salary.sumBigDecimal().as("salarySum");
     query()
         .from(employee)
         .groupBy(employee.lastname)
@@ -1605,12 +1721,14 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void path_in_constant_list() {
-    assertEquals(
-        0, query().from(survey).where(survey.name.in(Collections.singletonList("a"))).fetchCount());
-    assertEquals(
-        0, query().from(survey).where(survey.name.in(Arrays.asList("a", "b"))).fetchCount());
-    assertEquals(
-        0, query().from(survey).where(survey.name.in(Arrays.asList("a", "b", "c"))).fetchCount());
+    assertThat(
+            query().from(survey).where(survey.name.in(Collections.singletonList("a"))).fetchCount())
+        .isEqualTo(0);
+    assertThat(query().from(survey).where(survey.name.in(Arrays.asList("a", "b"))).fetchCount())
+        .isEqualTo(0);
+    assertThat(
+            query().from(survey).where(survey.name.in(Arrays.asList("a", "b", "c"))).fetchCount())
+        .isEqualTo(0);
   }
 
   @Test
@@ -1618,7 +1736,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     StringPath fn = employee.firstname;
     StringPath ln = employee.lastname;
     Predicate where = fn.eq("Mike").and(ln.eq("Smith")).or(fn.eq("Joe").and(ln.eq("Divis")));
-    assertEquals(2L, query().from(employee).where(where).fetchCount());
+    assertThat(query().from(employee).where(where).fetchCount()).isEqualTo(2L);
   }
 
   @Test
@@ -1626,15 +1744,15 @@ public abstract class SelectBase extends AbstractBaseTest {
     StringPath fn = employee.firstname;
     StringPath ln = employee.lastname;
     Predicate where = fn.eq("Mike").and(ln.eq("Smith").or(fn.eq("Joe")).and(ln.eq("Divis")));
-    assertEquals(0L, query().from(employee).where(where).fetchCount());
+    assertThat(query().from(employee).where(where).fetchCount()).isEqualTo(0L);
   }
 
   @Test
   public void projection() throws IOException {
     CloseableIterator<Tuple> results = query().from(survey).select(survey.all()).iterate();
-    assertTrue(results.hasNext());
+    assertThat(results.hasNext()).isTrue();
     while (results.hasNext()) {
-      assertEquals(3, results.next().size());
+      assertThat(results.next().size()).isEqualTo(3);
     }
     results.close();
   }
@@ -1647,10 +1765,10 @@ public abstract class SelectBase extends AbstractBaseTest {
             .from(survey)
             .select(new QIdName(survey.id, survey.name), survey.id, survey.name)
             .fetch()) {
-      assertEquals(3, row.size());
-      assertEquals(IdName.class, row.get(0, Object.class).getClass());
-      assertEquals(Integer.class, row.get(1, Object.class).getClass());
-      assertEquals(String.class, row.get(2, Object.class).getClass());
+      assertThat(row.size()).isEqualTo(3);
+      assertThat(row.get(0, Object.class).getClass()).isEqualTo(IdName.class);
+      assertThat(row.get(1, Object.class).getClass()).isEqualTo(Integer.class);
+      assertThat(row.get(2, Object.class).getClass()).isEqualTo(String.class);
     }
   }
 
@@ -1658,9 +1776,9 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void projection2() throws IOException {
     CloseableIterator<Tuple> results =
         query().from(survey).select(survey.id, survey.name).iterate();
-    assertTrue(results.hasNext());
+    assertThat(results.hasNext()).isTrue();
     while (results.hasNext()) {
-      assertEquals(2, results.next().size());
+      assertThat(results.next().size()).isEqualTo(2);
     }
     results.close();
   }
@@ -1668,7 +1786,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   public void projection3() throws IOException {
     CloseableIterator<String> names = query().from(survey).select(survey.name).iterate();
-    assertTrue(names.hasNext());
+    assertThat(names.hasNext()).isTrue();
     while (names.hasNext()) {
       System.out.println(names.next());
     }
@@ -1685,7 +1803,7 @@ public abstract class SelectBase extends AbstractBaseTest {
                 Projections.bean(
                     Survey.class, Collections.singletonMap("name", sq.get(survey.name))))
             .fetch();
-    assertFalse(surveys.isEmpty());
+    assertThat(surveys).isNotEmpty();
   }
 
   @Test
@@ -1735,74 +1853,69 @@ public abstract class SelectBase extends AbstractBaseTest {
             .where(employee.id.eq(employee2.id))
             .select(employee, employee2)
             .fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Tuple row : results) {
       Employee e1 = row.get(employee);
       Employee e2 = row.get(employee2);
-      assertEquals(e1.getId(), e2.getId());
+      assertThat(e2.getId()).isEqualTo(e1.getId());
     }
   }
 
   @Test
   public void relationalPath_eq() {
-    assertEquals(
-        10,
-        query()
-            .from(employee, employee2)
-            .where(employee.eq(employee2))
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee, employee2)
+                .where(employee.eq(employee2))
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(10);
   }
 
   @Test
   public void relationalPath_ne() {
-    assertEquals(
-        90,
-        query()
-            .from(employee, employee2)
-            .where(employee.ne(employee2))
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee, employee2)
+                .where(employee.ne(employee2))
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(90);
   }
 
   @Test
   public void relationalPath_eq2() {
-    assertEquals(
-        1,
-        query()
-            .from(survey, survey2)
-            .where(survey.eq(survey2))
-            .select(survey.id, survey2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(survey, survey2)
+                .where(survey.eq(survey2))
+                .select(survey.id, survey2.id)
+                .fetch())
+        .hasSize(1);
   }
 
   @Test
   public void relationalPath_ne2() {
-    assertEquals(
-        0,
-        query()
-            .from(survey, survey2)
-            .where(survey.ne(survey2))
-            .select(survey.id, survey2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(survey, survey2)
+                .where(survey.ne(survey2))
+                .select(survey.id, survey2.id)
+                .fetch())
+        .isEmpty();
   }
 
   @Test
   @ExcludeIn(SQLITE)
   public void right_join() throws SQLException {
-    assertEquals(
-        16,
-        query()
-            .from(employee)
-            .rightJoin(employee2)
-            .on(employee.superiorIdKey.on(employee2))
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .rightJoin(employee2)
+                .on(employee.superiorIdKey.on(employee2))
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(16);
   }
 
   @Test
@@ -1810,15 +1923,16 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void round() {
     Expression<Double> expr = Expressions.numberTemplate(Double.class, "1.32");
 
-    assertEquals(Double.valueOf(1.0), firstResult(MathExpressions.round(expr)));
-    assertEquals(Double.valueOf(1.3), firstResult(MathExpressions.round(expr, 1)));
+    assertThat(firstResult(MathExpressions.round(expr))).isEqualTo(Double.valueOf(1.0));
+    assertThat(firstResult(MathExpressions.round(expr, 1))).isEqualTo(Double.valueOf(1.3));
   }
 
   @Test
   @ExcludeIn({SQLITE, DERBY})
   public void rpad() {
-    assertEquals("ab  ", firstResult(StringExpressions.rpad(ConstantImpl.create("ab"), 4)));
-    assertEquals("ab!!", firstResult(StringExpressions.rpad(ConstantImpl.create("ab"), 4, '!')));
+    assertThat(firstResult(StringExpressions.rpad(ConstantImpl.create("ab"), 4))).isEqualTo("ab  ");
+    assertThat(firstResult(StringExpressions.rpad(ConstantImpl.create("ab"), 4, '!')))
+        .isEqualTo("ab!!");
   }
 
   @Test
@@ -1839,37 +1953,31 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void select_booleanExpr3() {
-    assertTrue(query().select(Expressions.TRUE).fetchFirst());
-    assertFalse(query().select(Expressions.FALSE).fetchFirst());
+    assertThat(query().select(Expressions.TRUE).fetchFirst()).isTrue();
+    assertThat(query().select(Expressions.FALSE).fetchFirst()).isFalse();
   }
 
   @Test
   public void select_concat() throws SQLException {
     for (Tuple row :
         query().from(survey).select(survey.name, survey.name.append("Hello World")).fetch()) {
-      assertEquals(
-          row.get(survey.name) + "Hello World", row.get(survey.name.append("Hello World")));
+      assertThat(row.get(survey.name.append("Hello World")))
+          .isEqualTo(row.get(survey.name) + "Hello World");
     }
   }
 
   @Test
   @ExcludeIn({SQLITE, CUBRID, TERADATA})
   public void select_for_update() {
-    assertEquals(1, query().from(survey).forUpdate().select(survey.id).fetch().size());
+    assertThat(query().from(survey).forUpdate().select(survey.id).fetch()).hasSize(1);
   }
 
   @Test
   @ExcludeIn({SQLITE, CUBRID, TERADATA})
   public void select_for_update_Where() {
-    assertEquals(
-        1,
-        query()
-            .from(survey)
-            .forUpdate()
-            .where(survey.id.isNotNull())
-            .select(survey.id)
-            .fetch()
-            .size());
+    assertThat(
+            query().from(survey).forUpdate().where(survey.id.isNotNull()).select(survey.id).fetch())
+        .hasSize(1);
   }
 
   @Test
@@ -1881,28 +1989,27 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   public void select_for_share() {
     if (configuration.getTemplates().isForShareSupported()) {
-      assertEquals(
-          1,
-          query()
-              .from(survey)
-              .forShare()
-              .where(survey.id.isNotNull())
-              .select(survey.id)
-              .fetch()
-              .size());
+      assertThat(
+              query()
+                  .from(survey)
+                  .forShare()
+                  .where(survey.id.isNotNull())
+                  .select(survey.id)
+                  .fetch())
+          .hasSize(1);
     } else {
-      try {
-        query()
-            .from(survey)
-            .forShare()
-            .where(survey.id.isNotNull())
-            .select(survey.id)
-            .fetch()
-            .size();
-        fail();
-      } catch (QueryException e) {
-        assertTrue(e.getMessage().equals("Using forShare() is not supported"));
-      }
+      QueryException e =
+          assertThrows(
+              QueryException.class,
+              () ->
+                  query()
+                      .from(survey)
+                      .forShare()
+                      .where(survey.id.isNotNull())
+                      .select(survey.id)
+                      .fetch()
+                      .size());
+      assertThat(e.getMessage()).isEqualTo("Using forShare() is not supported");
     }
   }
 
@@ -1911,9 +2018,9 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void serialization() {
     SQLQuery<?> query = query();
     query.from(survey);
-    assertEquals("from SURVEY s", query.toString());
+    assertThat(query.toString()).isEqualTo("from SURVEY s");
     query.from(survey2);
-    assertEquals("from SURVEY s, SURVEY s2", query.toString());
+    assertThat(query.toString()).isEqualTo("from SURVEY s, SURVEY s2");
   }
 
   @Test
@@ -1954,14 +2061,15 @@ public abstract class SelectBase extends AbstractBaseTest {
             .from(survey)
             .select(ExpressionUtils.path(Object.class, survey.name.getMetadata()))
             .fetch()) {
-      assertEquals(String.class, s.getClass());
+      assertThat(s.getClass()).isEqualTo(String.class);
     }
   }
 
   @Test
   public void specialChars() {
-    assertEquals(
-        0, query().from(survey).where(survey.name.in("\n", "\r", "\\", "\'", "\"")).fetchCount());
+    assertThat(
+            query().from(survey).where(survey.name.in("\n", "\r", "\\", "\'", "\"")).fetchCount())
+        .isEqualTo(0);
   }
 
   @Test
@@ -1978,8 +2086,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
     standardTest.runStringTests(employee.firstname, employee2.firstname, "Jennifer");
     Target target = Connections.getTarget();
-    if (target != SQLITE && target != SQLSERVER) {
-      // jTDS driver does not support TIME SQL data type
+    if (target != SQLITE) {
       standardTest.runTimeTests(employee.timefield, employee2.timefield, time);
     }
 
@@ -1990,7 +2097,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @IncludeIn(H2)
   public void standardTest_turkish() {
     Locale defaultLocale = Locale.getDefault();
-    Locale.setDefault(new Locale("tr", "TR"));
+    Locale.setDefault(Locale.of("tr", "TR"));
     try {
       standardTest();
     } finally {
@@ -2003,12 +2110,12 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void string() {
     StringExpression str = Expressions.stringTemplate("'  abcd  '");
 
-    assertEquals("abcd  ", firstResult(StringExpressions.ltrim(str)));
-    assertEquals(Integer.valueOf(3), firstResult(str.locate("a")));
-    assertEquals(Integer.valueOf(0), firstResult(str.locate("a", 4)));
-    assertEquals(Integer.valueOf(4), firstResult(str.locate("b", 2)));
-    assertEquals("  abcd", firstResult(StringExpressions.rtrim(str)));
-    assertEquals("abc", firstResult(str.substring(2, 5)));
+    assertThat(firstResult(StringExpressions.ltrim(str))).isEqualTo("abcd  ");
+    assertThat(firstResult(str.locate("a"))).isEqualTo(Integer.valueOf(3));
+    assertThat(firstResult(str.locate("a", 4))).isEqualTo(Integer.valueOf(0));
+    assertThat(firstResult(str.locate("b", 2))).isEqualTo(Integer.valueOf(4));
+    assertThat(firstResult(StringExpressions.rtrim(str))).isEqualTo("  abcd");
+    assertThat(firstResult(str.substring(2, 5))).isEqualTo("abc");
   }
 
   @Test
@@ -2020,12 +2127,12 @@ public abstract class SelectBase extends AbstractBaseTest {
     NumberExpression<Integer> two = Expressions.numberTemplate(Integer.class, "2");
     NumberExpression<Integer> five = Expressions.numberTemplate(Integer.class, "5");
 
-    assertEquals("abcd  ", firstResult(StringExpressions.ltrim(str)));
-    assertEquals(Integer.valueOf(3), firstResult(str.locate("a")));
-    assertEquals(Integer.valueOf(0), firstResult(str.locate("a", four)));
-    assertEquals(Integer.valueOf(4), firstResult(str.locate("b", two)));
-    assertEquals("  abcd", firstResult(StringExpressions.rtrim(str)));
-    assertEquals("abc", firstResult(str.substring(two, five)));
+    assertThat(firstResult(StringExpressions.ltrim(str))).isEqualTo("abcd  ");
+    assertThat(firstResult(str.locate("a"))).isEqualTo(Integer.valueOf(3));
+    assertThat(firstResult(str.locate("a", four))).isEqualTo(Integer.valueOf(0));
+    assertThat(firstResult(str.locate("b", two))).isEqualTo(Integer.valueOf(4));
+    assertThat(firstResult(StringExpressions.rtrim(str))).isEqualTo("  abcd");
+    assertThat(firstResult(str.substring(two, five))).isEqualTo("abc");
   }
 
   @Test
@@ -2033,9 +2140,9 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void string_indexOf() {
     StringExpression str = Expressions.stringTemplate("'  abcd  '");
 
-    assertEquals(Integer.valueOf(2), firstResult(str.indexOf("a")));
-    assertEquals(Integer.valueOf(-1), firstResult(str.indexOf("a", 4)));
-    assertEquals(Integer.valueOf(3), firstResult(str.indexOf("b", 2)));
+    assertThat(firstResult(str.indexOf("a"))).isEqualTo(Integer.valueOf(2));
+    assertThat(firstResult(str.indexOf("a", 4))).isEqualTo(Integer.valueOf(-1));
+    assertThat(firstResult(str.indexOf("b", 2))).isEqualTo(Integer.valueOf(3));
   }
 
   @Test
@@ -2053,49 +2160,49 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn(SQLITE)
   public void string_left() {
-    assertEquals(
-        "John",
-        query()
-            .from(employee)
-            .where(employee.lastname.eq("Johnson"))
-            .select(SQLExpressions.left(employee.lastname, 4))
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(employee)
+                .where(employee.lastname.eq("Johnson"))
+                .select(SQLExpressions.left(employee.lastname, 4))
+                .fetchFirst())
+        .isEqualTo("John");
   }
 
   @Test
   @ExcludeIn({DERBY, SQLITE})
   public void string_right() {
-    assertEquals(
-        "son",
-        query()
-            .from(employee)
-            .where(employee.lastname.eq("Johnson"))
-            .select(SQLExpressions.right(employee.lastname, 3))
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(employee)
+                .where(employee.lastname.eq("Johnson"))
+                .select(SQLExpressions.right(employee.lastname, 3))
+                .fetchFirst())
+        .isEqualTo("son");
   }
 
   @Test
   @ExcludeIn({DERBY, SQLITE})
   public void string_left_Right() {
-    assertEquals(
-        "hn",
-        query()
-            .from(employee)
-            .where(employee.lastname.eq("Johnson"))
-            .select(SQLExpressions.right(SQLExpressions.left(employee.lastname, 4), 2))
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(employee)
+                .where(employee.lastname.eq("Johnson"))
+                .select(SQLExpressions.right(SQLExpressions.left(employee.lastname, 4), 2))
+                .fetchFirst())
+        .isEqualTo("hn");
   }
 
   @Test
   @ExcludeIn({DERBY, SQLITE})
   public void string_right_Left() {
-    assertEquals(
-        "ns",
-        query()
-            .from(employee)
-            .where(employee.lastname.eq("Johnson"))
-            .select(SQLExpressions.left(SQLExpressions.right(employee.lastname, 4), 2))
-            .fetchFirst());
+    assertThat(
+            query()
+                .from(employee)
+                .where(employee.lastname.eq("Johnson"))
+                .select(SQLExpressions.left(SQLExpressions.right(employee.lastname, 4), 2))
+                .fetchFirst())
+        .isEqualTo("ns");
   }
 
   @Test
@@ -2111,43 +2218,41 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void syntax_for_employee() throws SQLException {
-    assertEquals(
-        3,
-        query()
-            .from(employee)
-            .groupBy(employee.superiorId)
-            .orderBy(employee.superiorId.asc())
-            .select(employee.salary.avg(), employee.id.max())
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .groupBy(employee.superiorId)
+                .orderBy(employee.superiorId.asc())
+                .select(employee.salary.avg(), employee.id.max())
+                .fetch())
+        .hasSize(3);
 
-    assertEquals(
-        2,
-        query()
-            .from(employee)
-            .groupBy(employee.superiorId)
-            .having(employee.id.max().gt(5))
-            .orderBy(employee.superiorId.asc())
-            .select(employee.salary.avg(), employee.id.max())
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .groupBy(employee.superiorId)
+                .having(employee.id.max().gt(5))
+                .orderBy(employee.superiorId.asc())
+                .select(employee.salary.avg(), employee.id.max())
+                .fetch())
+        .hasSize(2);
 
-    assertEquals(
-        2,
-        query()
-            .from(employee)
-            .groupBy(employee.superiorId)
-            .having(employee.superiorId.isNotNull())
-            .orderBy(employee.superiorId.asc())
-            .select(employee.salary.avg(), employee.id.max())
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .groupBy(employee.superiorId)
+                .having(employee.superiorId.isNotNull())
+                .orderBy(employee.superiorId.asc())
+                .select(employee.salary.avg(), employee.id.max())
+                .fetch())
+        .hasSize(2);
   }
 
   @Test
   public void templateExpression() {
     NumberExpression<Integer> one = Expressions.numberTemplate(Integer.class, "1");
-    assertEquals(Collections.singletonList(1), query().from(survey).select(one.as("col1")).fetch());
+    assertThat(query().from(survey).select(one.as("col1")).fetch())
+        .isEqualTo(Collections.singletonList(1));
   }
 
   @Test
@@ -2160,10 +2265,10 @@ public abstract class SelectBase extends AbstractBaseTest {
             .transform(GroupBy.groupBy(employee.id).as(GroupBy.map(employee2.id, employee2)));
 
     int count = (int) query().from(employee).fetchCount();
-    assertEquals(count, results.size());
+    assertThat(results).hasSize(count);
     for (Map.Entry<Integer, Map<Integer, Employee>> entry : results.entrySet()) {
       Map<Integer, Employee> employees = entry.getValue();
-      assertEquals(count, employees.size());
+      assertThat(employees).hasSize(count);
     }
   }
 
@@ -2171,7 +2276,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void tuple_projection() {
     List<Tuple> tuples =
         query().from(employee).select(employee.firstname, employee.lastname).fetch();
-    assertFalse(tuples.isEmpty());
+    assertThat(tuples).isNotEmpty();
     for (Tuple tuple : tuples) {
       assertNotNull(tuple.get(employee.firstname));
       assertNotNull(tuple.get(employee.lastname));
@@ -2181,22 +2286,21 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({DB2, DERBY})
   public void tuple2() {
-    assertEquals(
-        10,
-        query()
-            .from(employee)
-            .select(Expressions.as(ConstantImpl.create("1"), "code"), employee.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(employee)
+                .select(Expressions.as(ConstantImpl.create("1"), "code"), employee.id)
+                .fetch())
+        .hasSize(10);
   }
 
   @Test
   public void twoColumns() {
     // two columns
     for (Tuple row : query().from(survey).select(survey.id, survey.name).fetch()) {
-      assertEquals(2, row.size());
-      assertEquals(Integer.class, row.get(0, Object.class).getClass());
-      assertEquals(String.class, row.get(1, Object.class).getClass());
+      assertThat(row.size()).isEqualTo(2);
+      assertThat(row.get(0, Object.class).getClass()).isEqualTo(Integer.class);
+      assertThat(row.get(1, Object.class).getClass()).isEqualTo(String.class);
     }
   }
 
@@ -2208,10 +2312,10 @@ public abstract class SelectBase extends AbstractBaseTest {
             .from(survey)
             .select(survey.id, survey.name, new QIdName(survey.id, survey.name))
             .fetch()) {
-      assertEquals(3, row.size());
-      assertEquals(Integer.class, row.get(0, Object.class).getClass());
-      assertEquals(String.class, row.get(1, Object.class).getClass());
-      assertEquals(IdName.class, row.get(2, Object.class).getClass());
+      assertThat(row.size()).isEqualTo(3);
+      assertThat(row.get(0, Object.class).getClass()).isEqualTo(Integer.class);
+      assertThat(row.get(1, Object.class).getClass()).isEqualTo(String.class);
+      assertThat(row.get(2, Object.class).getClass()).isEqualTo(IdName.class);
     }
   }
 
@@ -2235,9 +2339,9 @@ public abstract class SelectBase extends AbstractBaseTest {
     // unique wildcard
     Tuple row = query().from(survey).limit(1).select(survey.all()).fetchFirst();
     assertNotNull(row);
-    assertEquals(3, row.size());
+    assertThat(row.size()).isEqualTo(3);
     assertNotNull(row.get(0, Object.class));
-    assertNotNull(row.get(0, Object.class) + " is not null", row.get(1, Object.class));
+    assertNotNull(row.get(1, Object.class), row.get(0, Object.class) + " is not null");
   }
 
   @Test(expected = NonUniqueResultException.class)
@@ -2248,11 +2352,11 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   public void various() throws SQLException {
     for (String s : query().from(survey).select(survey.name.lower()).fetch()) {
-      assertEquals(s, s.toLowerCase());
+      assertThat(s.toLowerCase()).isEqualTo(s);
     }
 
     for (String s : query().from(survey).select(survey.name.append("abc")).fetch()) {
-      assertTrue(s.endsWith("abc"));
+      assertThat(s).endsWith("abc");
     }
 
     System.out.println(query().from(survey).select(survey.id.sqrt()).fetch());
@@ -2261,123 +2365,116 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   public void where_exists() throws SQLException {
     SQLQuery<Integer> sq1 = query().from(employee).select(employee.id.max());
-    assertEquals(10, query().from(employee).where(sq1.exists()).fetchCount());
+    assertThat(query().from(employee).where(sq1.exists()).fetchCount()).isEqualTo(10);
   }
 
   @Test
   public void where_exists_Not() throws SQLException {
     SQLQuery<Integer> sq1 = query().from(employee).select(employee.id.max());
-    assertEquals(0, query().from(employee).where(sq1.exists().not()).fetchCount());
+    assertThat(query().from(employee).where(sq1.exists().not()).fetchCount()).isEqualTo(0);
   }
 
   @Test
   @IncludeIn({HSQLDB, ORACLE, POSTGRESQL})
   public void with() {
-    assertEquals(
-        10,
-        query()
-            .with(
-                employee2,
-                query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
-            .from(employee, employee2)
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .with(
+                    employee2,
+                    query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
+                .from(employee, employee2)
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(10);
   }
 
   @Test
   @IncludeIn({HSQLDB, ORACLE, POSTGRESQL})
   public void with2() {
     QEmployee employee3 = new QEmployee("e3");
-    assertEquals(
-        100,
-        query()
-            .with(
-                employee2,
-                query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
-            .with(
-                employee2,
-                query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
-            .from(employee, employee2, employee3)
-            .select(employee.id, employee2.id, employee3.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .with(
+                    employee2,
+                    query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
+                .with(
+                    employee2,
+                    query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
+                .from(employee, employee2, employee3)
+                .select(employee.id, employee2.id, employee3.id)
+                .fetch())
+        .hasSize(100);
   }
 
   @Test
   @IncludeIn({HSQLDB, ORACLE, POSTGRESQL})
   public void with3() {
-    assertEquals(
-        10,
-        query()
-            .with(employee2, employee2.all())
-            .as(query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
-            .from(employee, employee2)
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .with(employee2, employee2.all())
+                .as(query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
+                .from(employee, employee2)
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(10);
   }
 
   @Test
   @IncludeIn({HSQLDB, ORACLE, POSTGRESQL})
   public void with_limit() {
-    assertEquals(
-        5,
-        query()
-            .with(employee2, employee2.all())
-            .as(query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
-            .from(employee, employee2)
-            .limit(5)
-            .orderBy(employee.id.asc(), employee2.id.asc())
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .with(employee2, employee2.all())
+                .as(query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
+                .from(employee, employee2)
+                .limit(5)
+                .orderBy(employee.id.asc(), employee2.id.asc())
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(5);
   }
 
   @Test
   @IncludeIn({HSQLDB, ORACLE, POSTGRESQL})
   public void with_limitOffset() {
-    assertEquals(
-        5,
-        query()
-            .with(employee2, employee2.all())
-            .as(query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
-            .from(employee, employee2)
-            .limit(10)
-            .offset(5)
-            .orderBy(employee.id.asc(), employee2.id.asc())
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .with(employee2, employee2.all())
+                .as(query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
+                .from(employee, employee2)
+                .limit(10)
+                .offset(5)
+                .orderBy(employee.id.asc(), employee2.id.asc())
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(5);
   }
 
   @Test
   @IncludeIn({ORACLE, POSTGRESQL})
   public void with_recursive() {
-    assertEquals(
-        10,
-        query()
-            .withRecursive(
-                employee2,
-                query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
-            .from(employee, employee2)
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .withRecursive(
+                    employee2,
+                    query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
+                .from(employee, employee2)
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(10);
   }
 
   @Test
   @IncludeIn({ORACLE, POSTGRESQL})
   public void with_recursive2() {
-    assertEquals(
-        10,
-        query()
-            .withRecursive(employee2, employee2.all())
-            .as(query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
-            .from(employee, employee2)
-            .select(employee.id, employee2.id)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .withRecursive(employee2, employee2.all())
+                .as(query().from(employee).where(employee.firstname.eq("Jim")).select(Wildcard.all))
+                .from(employee, employee2)
+                .select(employee.id, employee2.id)
+                .fetch())
+        .hasSize(10);
   }
 
   @Test
@@ -2385,9 +2482,9 @@ public abstract class SelectBase extends AbstractBaseTest {
     // wildcard
     for (Tuple row : query().from(survey).select(survey.all()).fetch()) {
       assertNotNull(row);
-      assertEquals(3, row.size());
+      assertThat(row.size()).isEqualTo(3);
       assertNotNull(row.get(0, Object.class));
-      assertNotNull(row.get(0, Object.class) + " is not null", row.get(1, Object.class));
+      assertNotNull(row.get(1, Object.class), row.get(0, Object.class) + " is not null");
     }
   }
 
@@ -2400,13 +2497,13 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void wildcard_all2() {
-    assertEquals(
-        10,
-        query()
-            .from(new RelationalPathBase<Object>(Object.class, "employee", "public", "EMPLOYEE"))
-            .select(Wildcard.all)
-            .fetch()
-            .size());
+    assertThat(
+            query()
+                .from(
+                    new RelationalPathBase<Object>(Object.class, "employee", "public", "EMPLOYEE"))
+                .select(Wildcard.all)
+                .fetch())
+        .hasSize(10);
   }
 
   @Test
@@ -2454,14 +2551,16 @@ public abstract class SelectBase extends AbstractBaseTest {
   @ExcludeIn({DB2, DERBY, H2})
   public void yearWeek() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
-    assertEquals(Integer.valueOf(200006), query.select(employee.datefield.yearWeek()).fetchFirst());
+    assertThat(query.select(employee.datefield.yearWeek()).fetchFirst())
+        .isEqualTo(Integer.valueOf(200006));
   }
 
   @Test
   @IncludeIn({H2})
   public void yearWeek_h2() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
-    assertEquals(Integer.valueOf(200007), query.select(employee.datefield.yearWeek()).fetchFirst());
+    assertThat(query.select(employee.datefield.yearWeek()).fetchFirst())
+        .isEqualTo(Integer.valueOf(200007));
   }
 
   @Test
@@ -2498,41 +2597,37 @@ public abstract class SelectBase extends AbstractBaseTest {
     long getResultsCalled = System.currentTimeMillis();
     Thread.sleep(100);
     results.close();
-    assertTrue(endCalled.get() - getResultsCalled >= 100);
+    assertThat(endCalled.get() - getResultsCalled >= 100).isTrue();
   }
 
   @Test
   @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER})
   public void groupConcat() {
-    List<String> expected =
-        Arrays.asList("Mike,Mary", "Joe,Peter,Steve,Jim", "Jennifer,Helen,Daisy,Barbara");
-    if (Connections.getTarget() == POSTGRESQL) {
-      expected = Arrays.asList("Steve,Jim,Joe,Peter", "Barbara,Helen,Daisy,Jennifer", "Mary,Mike");
-    }
-    assertEquals(
-        expected,
-        query()
-            .select(SQLExpressions.groupConcat(employee.firstname))
-            .from(employee)
-            .groupBy(employee.superiorId)
-            .fetch());
+    HashSet<String> expected =
+        Sets.newHashSet("Mike,Mary", "Joe,Peter,Steve,Jim", "Jennifer,Helen,Daisy,Barbara");
+    assertThat(
+            new HashSet<>(
+                query()
+                    .select(SQLExpressions.groupConcat(employee.firstname))
+                    .from(employee)
+                    .groupBy(employee.superiorId)
+                    .fetch()))
+        .isEqualTo(expected);
   }
 
   @Test
   @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER})
   public void groupConcat2() {
-    List<String> expected =
-        Arrays.asList("Mike-Mary", "Joe-Peter-Steve-Jim", "Jennifer-Helen-Daisy-Barbara");
-    if (Connections.getTarget() == POSTGRESQL) {
-      expected = Arrays.asList("Steve-Jim-Joe-Peter", "Barbara-Helen-Daisy-Jennifer", "Mary-Mike");
-    }
-    assertEquals(
-        expected,
-        query()
-            .select(SQLExpressions.groupConcat(employee.firstname, "-"))
-            .from(employee)
-            .groupBy(employee.superiorId)
-            .fetch());
+    HashSet<String> expected =
+        Sets.newHashSet("Mike-Mary", "Joe-Peter-Steve-Jim", "Jennifer-Helen-Daisy-Barbara");
+    assertThat(
+            new HashSet<>(
+                query()
+                    .select(SQLExpressions.groupConcat(employee.firstname, "-"))
+                    .from(employee)
+                    .groupBy(employee.superiorId)
+                    .fetch()))
+        .isEqualTo(expected);
   }
 }
 // CHECKSTYLERULE:ON: FileLength

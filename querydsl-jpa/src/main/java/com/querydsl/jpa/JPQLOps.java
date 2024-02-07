@@ -32,7 +32,7 @@ public enum JPQLOps implements Operator {
 
   private final Class<?> type;
 
-  private JPQLOps(Class<?> type) {
+  JPQLOps(Class<?> type) {
     this.type = type;
   }
 

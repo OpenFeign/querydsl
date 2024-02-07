@@ -5,7 +5,7 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Type;
@@ -46,10 +46,10 @@ public class ComplexEvaluationTest {
             new Class<?>[] {List.class, List.class},
             Collections.<String, Object>emptyMap());
 
-    List<String> a_ = Arrays.asList("1", "2", "3", "4");
-    List<String> b_ = Arrays.asList("2", "4", "6", "8");
+    List<String> a = Arrays.asList("1", "2", "3", "4");
+    List<String> b = Arrays.asList("2", "4", "6", "8");
 
-    assertEquals(Arrays.asList("2", "4"), evaluator.evaluate(a_, b_));
+    assertThat(evaluator.evaluate(a, b)).isEqualTo(Arrays.asList("2", "4"));
   }
 
   @Test
@@ -74,8 +74,8 @@ public class ComplexEvaluationTest {
     Cat mittens = new Cat("mittens");
     Cat sparkles = new Cat("sparkles");
 
-    List<Cat> a_ = Arrays.asList(fuzzy, spot);
-    List<Cat> b_ = Arrays.asList(mittens, sparkles);
+    List<Cat> a = Arrays.asList(fuzzy, spot);
+    List<Cat> b = Arrays.asList(mittens, sparkles);
 
     ClassType argType = new ClassType(TypeCategory.LIST, List.class, new ClassType(Cat.class));
     @SuppressWarnings("rawtypes") // cannot specify further than List.class
@@ -91,13 +91,13 @@ public class ComplexEvaluationTest {
     Object[][] expResults = {
       {fuzzy, mittens}, {fuzzy, sparkles}, {spot, mittens}, {spot, sparkles}
     };
-    List<Object[]> result = evaluator.evaluate(a_, b_);
-    assertEquals(expResults.length, result.size());
+    List<Object[]> result = evaluator.evaluate(a, b);
+    assertThat(result).hasSize(expResults.length);
 
     for (int i = 0; i < expResults.length; i++) {
-      assertEquals(expResults[i].length, result.get(i).length);
+      assertThat(result.get(i).length).isEqualTo(expResults[i].length);
       for (int j = 0; j < expResults[i].length; j++) {
-        assertEquals(expResults[i][j], result.get(i)[j]);
+        assertThat(result.get(i)[j]).isEqualTo(expResults[i][j]);
       }
     }
   }
@@ -129,10 +129,10 @@ public class ComplexEvaluationTest {
             new Class<?>[] {List.class, List.class},
             Collections.<String, Object>emptyMap());
 
-    List<String> a_ = Arrays.asList("1", "2", "3", "4");
-    List<String> b_ = Arrays.asList("2", "4", "6", "8");
+    List<String> a = Arrays.asList("1", "2", "3", "4");
+    List<String> b = Arrays.asList("2", "4", "6", "8");
 
-    assertEquals(Arrays.asList("2", "4"), evaluator.evaluate(a_, b_));
+    assertThat(evaluator.evaluate(a, b)).isEqualTo(Arrays.asList("2", "4"));
   }
 
   @Test
@@ -160,10 +160,10 @@ public class ComplexEvaluationTest {
             new Class<?>[] {List.class, List.class},
             Collections.<String, Object>emptyMap());
 
-    List<Boolean> a_ = Arrays.asList(true, true, true);
-    List<Boolean> b_ = Arrays.asList(false, false, true);
+    List<Boolean> a = Arrays.asList(true, true, true);
+    List<Boolean> b = Arrays.asList(false, false, true);
 
-    assertEquals(Arrays.asList(true, true, true), evaluator.evaluate(a_, b_));
+    assertThat(evaluator.evaluate(a, b)).isEqualTo(Arrays.asList(true, true, true));
   }
 
   @Test
@@ -193,13 +193,13 @@ public class ComplexEvaluationTest {
             new Class<?>[] {List.class, List.class},
             Collections.<String, Object>emptyMap());
 
-    List<Boolean> a_ = Arrays.asList(true, true, true);
-    List<Boolean> b_ = Arrays.asList(false, false, true);
+    List<Boolean> a = Arrays.asList(true, true, true);
+    List<Boolean> b = Arrays.asList(false, false, true);
 
-    assertEquals(Arrays.asList(true, true, true), evaluator.evaluate(a_, b_));
+    assertThat(evaluator.evaluate(a, b)).isEqualTo(Arrays.asList(true, true, true));
   }
 
-  public static class SuperCat extends Cat {
+  public static final class SuperCat extends Cat {
     private SuperCat(String name) {
       super(name);
     }

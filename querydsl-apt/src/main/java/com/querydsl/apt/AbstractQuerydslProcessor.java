@@ -37,7 +37,6 @@ import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic.Kind;
-import javax.tools.JavaFileObject;
 
 /**
  * {@code AbstractQuerydslProcessor} is the base class for Querydsl annotation processors and
@@ -316,12 +315,20 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   private void processProjectionTypes(Set<TypeElement> elements) {
     Set<Element> visited = new HashSet<Element>();
     for (Element element : getElements(QueryProjection.class)) {
-      Element parent = element.getEnclosingElement();
-      if (!elements.contains(parent) && !visited.contains(parent)) {
-        EntityType model = elementHandler.handleProjectionType((TypeElement) parent);
-        registerTypeElement(model.getFullName(), (TypeElement) parent);
+      if (element.getKind() == ElementKind.CONSTRUCTOR) {
+        Element parent = element.getEnclosingElement();
+        if (!elements.contains(parent) && !visited.contains(parent)) {
+          EntityType model = elementHandler.handleProjectionType((TypeElement) parent, true);
+          registerTypeElement(model.getFullName(), (TypeElement) parent);
+          context.projectionTypes.put(model.getFullName(), model);
+          visited.add(parent);
+        }
+      }
+      if (element.getKind().isClass() && !visited.contains(element)) {
+        EntityType model = elementHandler.handleProjectionType((TypeElement) element, false);
+        registerTypeElement(model.getFullName(), (TypeElement) element);
         context.projectionTypes.put(model.getFullName(), model);
-        visited.add(parent);
+        visited.add(element);
       }
     }
   }
@@ -373,7 +380,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     while (iterator.hasNext()) {
       TypeElement element = iterator.next();
       String name = element.getQualifiedName().toString();
-      if (name.startsWith("java.") || name.startsWith("org.joda.time.")) {
+      if (name.startsWith("java.")) {
         iterator.remove();
       } else {
         boolean annotated = false;
@@ -632,9 +639,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
         }
 
         logInfo("Generating " + className + " for " + elements);
-        JavaFileObject fileObject =
-            processingEnv.getFiler().createSourceFile(className, elements.toArray(new Element[0]));
-        try (Writer writer = fileObject.openWriter()) {
+        try (Writer writer = conf.getFiler().createFile(processingEnv, className, elements)) {
           SerializerConfig serializerConfig = conf.getSerializerConfig(model);
           serializer.serialize(model, serializerConfig, new JavaWriter(writer));
         }

@@ -1,6 +1,6 @@
 package com.querydsl.apt;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +29,8 @@ public class IntegerExtensionsTest extends AbstractProcessorTest {
                     "target", "integerExtensions", "com", "querydsl", "QExampleEntity2.java")),
             StandardCharsets.UTF_8);
     // The superclass' id property is inherited, but can't be assigned to the custom QInteger
-    assertTrue(
-        qtypeContent.contains(
-            "public final ext.java.lang.QInteger id = new ext.java.lang.QInteger(_super.id);"));
+    assertThat(qtypeContent)
+        .contains(
+            "public final ext.java.lang.QInteger id = new ext.java.lang.QInteger(_super.id);");
   }
 }

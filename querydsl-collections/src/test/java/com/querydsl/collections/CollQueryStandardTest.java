@@ -13,14 +13,11 @@
  */
 package com.querydsl.collections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Fetchable;
-import com.querydsl.core.Module;
 import com.querydsl.core.QueryExecution;
+import com.querydsl.core.QuerydslModule;
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ArrayConstructorExpression;
@@ -59,7 +56,7 @@ public class CollQueryStandardTest {
   private static final Expression<?>[] NO_EXPRESSIONS = new Expression[0];
 
   private QueryExecution standardTest =
-      new QueryExecution(Module.COLLECTIONS, Target.MEM) {
+      new QueryExecution(QuerydslModule.COLLECTIONS, Target.MEM) {
         @Override
         protected Fetchable<?> createQuery() {
           return CollQueryFactory.from(cat, data).from(otherCat, data);
@@ -76,7 +73,7 @@ public class CollQueryStandardTest {
 
   @Test
   public void test() {
-    Cat kitten = data.get(0).getKittens().get(0);
+    Cat kitten = data.getFirst().getKittens().get(0);
     standardTest.runArrayTests(cat.kittenArray, otherCat.kittenArray, kitten, new Cat());
     standardTest.runBooleanTests(cat.name.isNull(), otherCat.kittens.isEmpty());
     standardTest.runCollectionTests(cat.kittens, otherCat.kittens, kitten, new Cat());
@@ -99,8 +96,8 @@ public class CollQueryStandardTest {
   public void tupleMultipleFieldsProjection() {
     List<Tuple> tuples = CollQueryFactory.from(cat, data).select(cat.name, cat.birthdate).fetch();
     for (Tuple tuple : tuples) {
-      assertNotNull(tuple.get(cat.name));
-      assertNotNull(tuple.get(cat.birthdate));
+      assertThat(tuple.get(cat.name)).isNotNull();
+      assertThat(tuple.get(cat.birthdate)).isNotNull();
     }
   }
 
@@ -109,8 +106,8 @@ public class CollQueryStandardTest {
     List<Tuple> tuples =
         CollQueryFactory.from(cat, data).select(new Expression<?>[] {cat.name}).fetch();
     for (Tuple tuple : tuples) {
-      assertEquals(1, tuple.size());
-      assertNotNull(tuple.get(cat.name));
+      assertThat(tuple.size()).isEqualTo(1);
+      assertThat(tuple.get(cat.name)).isNotNull();
     }
   }
 
@@ -121,9 +118,9 @@ public class CollQueryStandardTest {
             .select(new Expression<?>[] {Expressions.nullExpression()})
             .fetch();
     for (Tuple tuple : tuples) {
-      assertNotNull(tuple);
-      assertEquals(1, tuple.size()); // THIS FAILS WITH NPE
-      assertNull(tuple.get(Expressions.nullExpression()));
+      assertThat(tuple).isNotNull();
+      assertThat(tuple.size()).isEqualTo(1); // THIS FAILS WITH NPE
+      assertThat(tuple.get(Expressions.<Void>nullExpression())).isNull();
     }
   }
 
@@ -133,9 +130,9 @@ public class CollQueryStandardTest {
     List<Tuple> tuples =
         CollQueryFactory.from(cat, data).select(concat, cat.name, cat.birthdate).fetch();
     for (Tuple tuple : tuples) {
-      assertNotNull(tuple.get(cat.name));
-      assertNotNull(tuple.get(cat.birthdate));
-      assertEquals(tuple.get(cat.name) + tuple.get(cat.name), tuple.get(concat));
+      assertThat(tuple.get(cat.name)).isNotNull();
+      assertThat(tuple.get(cat.birthdate)).isNotNull();
+      assertThat(tuple.get(concat)).isEqualTo(tuple.get(cat.name) + tuple.get(cat.name));
     }
   }
 
@@ -146,9 +143,9 @@ public class CollQueryStandardTest {
         CollQueryFactory.from(cat, data)
             .select(new ArrayConstructorExpression<String>(String[].class, cat.name))
             .fetch();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (String[] result : results) {
-      assertNotNull(result[0]);
+      assertThat(result[0]).isNotNull();
     }
   }
 
@@ -158,46 +155,46 @@ public class CollQueryStandardTest {
         CollQueryFactory.from(cat, data)
             .select(Projections.constructor(Projection.class, cat.name, cat))
             .fetch();
-    assertFalse(projections.isEmpty());
+    assertThat(projections).isNotEmpty();
     for (Projection projection : projections) {
-      assertNotNull(projection);
+      assertThat(projection).isNotNull();
     }
   }
 
   @Test
   public void params() {
     Param<String> name = new Param<String>(String.class, "name");
-    assertEquals(
-        "Bob",
-        CollQueryFactory.from(cat, data)
-            .where(cat.name.eq(name))
-            .set(name, "Bob")
-            .select(cat.name)
-            .fetchOne());
+    assertThat(
+            CollQueryFactory.from(cat, data)
+                .where(cat.name.eq(name))
+                .set(name, "Bob")
+                .select(cat.name)
+                .fetchOne())
+        .isEqualTo("Bob");
   }
 
   @Test
   public void params_anon() {
     Param<String> name = new Param<String>(String.class);
-    assertEquals(
-        "Bob",
-        CollQueryFactory.from(cat, data)
-            .where(cat.name.eq(name))
-            .set(name, "Bob")
-            .select(cat.name)
-            .fetchOne());
+    assertThat(
+            CollQueryFactory.from(cat, data)
+                .where(cat.name.eq(name))
+                .set(name, "Bob")
+                .select(cat.name)
+                .fetchOne())
+        .isEqualTo("Bob");
   }
 
   @Test(expected = ParamNotSetException.class)
   public void params_not_set() {
     Param<String> name = new Param<String>(String.class, "name");
-    assertEquals(
-        "Bob",
-        CollQueryFactory.from(cat, data).where(cat.name.eq(name)).select(cat.name).fetchOne());
+    assertThat(
+            CollQueryFactory.from(cat, data).where(cat.name.eq(name)).select(cat.name).fetchOne())
+        .isEqualTo("Bob");
   }
 
   @Test
   public void limit() {
-    assertEquals(data, CollQueryFactory.from(cat, data).limit(Long.MAX_VALUE).fetch());
+    assertThat(CollQueryFactory.from(cat, data).limit(Long.MAX_VALUE).fetch()).isEqualTo(data);
   }
 }

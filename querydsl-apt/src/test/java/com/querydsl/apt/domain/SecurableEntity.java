@@ -1,6 +1,6 @@
 package com.querydsl.apt.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * This is an example of using system ACL function. Note, field id is required, abstract function

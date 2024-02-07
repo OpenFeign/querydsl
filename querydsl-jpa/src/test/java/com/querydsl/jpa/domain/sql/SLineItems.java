@@ -1,37 +1,39 @@
 package com.querydsl.jpa.domain.sql;
 
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
-import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.sql.ColumnMetadata;
-import javax.annotation.Generated;
+import java.sql.Types;
+import javax.annotation.processing.Generated;
 
 /** SLineItems is a Querydsl query type for SLineItems */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
 public class SLineItems extends com.querydsl.sql.RelationalPathBase<SLineItems> {
 
-  private static final long serialVersionUID = 302253659;
+  private static final long serialVersionUID = -1537004380;
 
   public static final SLineItems LineItems = new SLineItems("LineItems");
 
   public final NumberPath<Integer> _index = createNumber("_index", Integer.class);
 
-  public final NumberPath<Long> lineItemsId = createNumber("lineItemsId", Long.class);
+  public final NumberPath<Long> lineItemsID = createNumber("lineItemsID", Long.class);
 
-  public final NumberPath<Long> order_id = createNumber("order_id", Long.class);
+  public final NumberPath<Long> orderID = createNumber("orderID", Long.class);
 
-  public final com.querydsl.sql.PrimaryKey<SLineItems> primary = createPrimaryKey(_index, order_id);
+  public final com.querydsl.sql.PrimaryKey<SLineItems> primary =
+      createPrimaryKey(orderID, lineItemsID);
 
-  public final com.querydsl.sql.ForeignKey<SOrder> fkb2e400cb968f515 =
-      createForeignKey(order_id, "id");
+  public final com.querydsl.sql.ForeignKey<SOrder_> lineItemsOrderIDFK =
+      createForeignKey(orderID, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SItem> fkb2e400c3d8e44c3 =
-      createForeignKey(lineItemsId, "id");
+  public final com.querydsl.sql.ForeignKey<SItem_> lineItemsLineItemsIDFK =
+      createForeignKey(lineItemsID, "ID");
 
   public SLineItems(String variable) {
-    super(SLineItems.class, forVariable(variable), "", "LineItems");
+    super(SLineItems.class, forVariable(variable), "null", "LineItems");
     addMetadata();
   }
 
@@ -40,23 +42,33 @@ public class SLineItems extends com.querydsl.sql.RelationalPathBase<SLineItems> 
     addMetadata();
   }
 
+  public SLineItems(String variable, String schema) {
+    super(SLineItems.class, forVariable(variable), schema, "LineItems");
+    addMetadata();
+  }
+
   public SLineItems(Path<? extends SLineItems> path) {
-    super(path.getType(), path.getMetadata(), "", "LineItems");
+    super(path.getType(), path.getMetadata(), "null", "LineItems");
     addMetadata();
   }
 
   public SLineItems(PathMetadata metadata) {
-    super(SLineItems.class, metadata, "", "LineItems");
+    super(SLineItems.class, metadata, "null", "LineItems");
     addMetadata();
   }
 
   public void addMetadata() {
     addMetadata(
-        _index, ColumnMetadata.named("_index").withIndex(3).ofType(4).withSize(10).notNull());
+        _index, ColumnMetadata.named("_index").withIndex(3).ofType(Types.INTEGER).withSize(10));
     addMetadata(
-        lineItemsId,
-        ColumnMetadata.named("lineItems_id").withIndex(2).ofType(-5).withSize(19).notNull());
+        lineItemsID,
+        ColumnMetadata.named("lineItems_ID")
+            .withIndex(2)
+            .ofType(Types.BIGINT)
+            .withSize(19)
+            .notNull());
     addMetadata(
-        order_id, ColumnMetadata.named("order__id").withIndex(1).ofType(-5).withSize(19).notNull());
+        orderID,
+        ColumnMetadata.named("Order_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
   }
 }

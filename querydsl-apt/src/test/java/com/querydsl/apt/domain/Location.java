@@ -1,7 +1,7 @@
 package com.querydsl.apt.domain;
 
+import jakarta.persistence.Entity;
 import java.util.Set;
-import javax.persistence.Entity;
 
 @Entity
 public class Location {

@@ -25,7 +25,7 @@ import org.geolatte.geom.MultiPoint;
  * @param <T>
  */
 public abstract class MultiPointExpression<T extends MultiPoint>
-    extends GeometryCollectionExpression<T> {
+    extends AbstractGeometryCollectionExpression<T> {
 
   private static final long serialVersionUID = 7221702165705045865L;
 
