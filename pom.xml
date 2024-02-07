@@ -1,193 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.querydsl</groupId>
-  <artifactId>querydsl-root</artifactId>
-  <version>5.0.0-SNAPSHOT</version>
-    <modules>
-        <module>querydsl-guava</module>
-    </modules>
-    <name>Querydsl</name>
-  <description>parent project for Querydsl modules</description>
-  <url>https://querydsl.github.io/</url>
-  
+
   <parent>
     <groupId>com.querydsl</groupId>
     <artifactId>querydsl-parent</artifactId>
     <version>0.1.0</version>
   </parent>
-  
+  <groupId>com.querydsl</groupId>
+  <artifactId>querydsl-root</artifactId>
+  <version>5.0.0-SNAPSHOT</version>
+
   <packaging>pom</packaging>
+  <name>Querydsl</name>
+  <description>parent project for Querydsl modules</description>
+  <url>https://querydsl.github.io/</url>
 
   <inceptionYear>2007</inceptionYear>
-  
-  <properties>    
-    <failIfNoTests>false</failIfNoTests>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.homepage>http://www.querydsl.com</project.homepage>
-    <project.githubpage>http://github.com/querydsl/querydsl</project.githubpage>
-    <project.checkout>scm:git:git@github.com:querydsl/querydsl.git</project.checkout>
 
-    <!-- default groups to exclude from surefire plugin -->
-    <excludedGroups>
-      com.querydsl.core.testutil.ExternalDatabase,
-      com.querydsl.core.testutil.SlowTest,
-      com.querydsl.core.testutil.Performance,
-      com.querydsl.core.testutil.ReportingOnly
-    </excludedGroups>
-
-    <!-- groups to run with surefire plugin - intended to be overridden on the command line -->
-    <includedGroups></includedGroups>
-    
-    <argLine>-Xms256m -Xmx512m</argLine>
-
-    <!-- SQL deps -->
-    <db2.version>11.5.0.0</db2.version>
-    <derby.version>10.11.1.1</derby.version>
-    <hsqldb.version>2.3.2</hsqldb.version>
-    <h2.version>1.4.197</h2.version>
-    <postgresql.version>42.2.18</postgresql.version>
-    <oracle.version>11.1.0.7.0</oracle.version>
-    <mysql.version>5.1.30</mysql.version>
-    <jtds.version>1.3.1</jtds.version>
-    <cubrid.version>9.3.1.0005</cubrid.version>
-    <sqlite.version>3.7.2</sqlite.version>
-    <teradata.version>13.10.00.35</teradata.version>
-    <firebird.version>2.2.5</firebird.version>
-    <reactor-core.version>3.3.5.RELEASE</reactor-core.version>
-
-    <!-- JPA deps -->
-    <hibernate.version>5.4.8.Final</hibernate.version>
-    <hibernate.validator.version>6.0.18.Final</hibernate.validator.version>
-    <eclipselink.version>2.6.2</eclipselink.version>
-
-    <guava.version>30.0-jre</guava.version>
-    <codegen.version>0.6.8</codegen.version>
-    <mysema.lang.version>0.2.4</mysema.lang.version>
-    <cglib.version>3.3.0</cglib.version>
-    <slf4j.version>1.6.1</slf4j.version>
-    <surefire.version>2.18</surefire.version>
-    <animal-sniffer.version>1.18</animal-sniffer.version>
-    <jodatime.version>2.10.8</jodatime.version>
-    <h2gis.version>1.5.0</h2gis.version>
-    <morphia.version>1.3.2</morphia.version>
-    
-    <!-- Import-Package definitions for maven-bundle-plugin -->
-    <osgi.import.package.root>
-      *
-    </osgi.import.package.root>
-    <osgi.import.package>${osgi.import.package.root}</osgi.import.package>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-library</artifactId>
-        <version>1.3</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <version>3.0</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>cglib</groupId>
-          <artifactId>cglib-nodep</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.reflections</groupId>
-      <artifactId>reflections</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>animal-sniffer-annotations</artifactId>
-      <version>${animal-sniffer.version}</version>
-      <optional>true</optional>
-    </dependency>
-  </dependencies>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.datanucleus</groupId>
-        <artifactId>javax.jdo</artifactId>
-        <version>3.2.0-m13</version>
-      </dependency>
-      <dependency>
-        <groupId>com.vividsolutions</groupId>
-        <artifactId>jts</artifactId>
-        <version>1.13</version>
-      </dependency>
-      <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <version>${h2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>2.0.1.Final</version>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.12</version>
-      </dependency>
-      <dependency>
-        <groupId>org.eclipse.jdt.core.compiler</groupId>
-        <artifactId>ecj</artifactId>
-        <version>4.6.1</version>
-      </dependency>
-      <dependency>
-        <groupId>org.reflections</groupId>
-        <artifactId>reflections</artifactId>
-        <version>0.9.12</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.javassist</groupId>
-        <artifactId>javassist</artifactId>
-        <version>3.26.0-GA</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>${guava.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.geolatte</groupId>
-        <artifactId>geolatte-geom</artifactId>
-        <version>1.4.0</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
-  <scm>
-    <connection>${project.checkout}</connection>
-    <developerConnection>${project.checkout}</developerConnection>
-    <url>${project.githubpage}</url>
-  </scm>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
 
   <developers>
     <developer>
@@ -252,13 +89,190 @@
       </roles>
     </developer>
   </developers>
+  <modules>
+    <module>querydsl-guava</module>
+  </modules>
 
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
+  <scm>
+    <connection>${project.checkout}</connection>
+    <developerConnection>${project.checkout}</developerConnection>
+    <url>${project.githubpage}</url>
+  </scm>
+
+  <properties>
+    <failIfNoTests>false</failIfNoTests>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.homepage>http://www.querydsl.com</project.homepage>
+    <project.githubpage>http://github.com/querydsl/querydsl</project.githubpage>
+    <project.checkout>scm:git:git@github.com:querydsl/querydsl.git</project.checkout>
+
+    <!-- default groups to exclude from surefire plugin -->
+    <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
+      com.querydsl.core.testutil.SlowTest,
+      com.querydsl.core.testutil.Performance,
+      com.querydsl.core.testutil.ReportingOnly</excludedGroups>
+
+    <!-- groups to run with surefire plugin - intended to be overridden on the command line -->
+    <includedGroups></includedGroups>
+
+    <argLine>-Xms256m -Xmx512m</argLine>
+
+    <!-- SQL deps -->
+    <db2.version>11.5.0.0</db2.version>
+    <derby.version>10.11.1.1</derby.version>
+    <hsqldb.version>2.3.2</hsqldb.version>
+    <h2.version>1.4.197</h2.version>
+    <postgresql.version>42.2.18</postgresql.version>
+    <oracle.version>11.1.0.7.0</oracle.version>
+    <mysql.version>5.1.30</mysql.version>
+    <jtds.version>1.3.1</jtds.version>
+    <cubrid.version>9.3.1.0005</cubrid.version>
+    <sqlite.version>3.7.2</sqlite.version>
+    <teradata.version>13.10.00.35</teradata.version>
+    <firebird.version>2.2.5</firebird.version>
+    <reactor-core.version>3.3.5.RELEASE</reactor-core.version>
+
+    <!-- JPA deps -->
+    <hibernate.version>5.4.8.Final</hibernate.version>
+    <hibernate.validator.version>6.0.18.Final</hibernate.validator.version>
+    <eclipselink.version>2.6.2</eclipselink.version>
+
+    <guava.version>30.0-jre</guava.version>
+    <codegen.version>0.6.8</codegen.version>
+    <mysema.lang.version>0.2.4</mysema.lang.version>
+    <cglib.version>3.3.0</cglib.version>
+    <slf4j.version>1.6.1</slf4j.version>
+    <surefire.version>2.18</surefire.version>
+    <animal-sniffer.version>1.18</animal-sniffer.version>
+    <jodatime.version>2.10.8</jodatime.version>
+    <h2gis.version>1.5.0</h2gis.version>
+    <morphia.version>1.3.2</morphia.version>
+
+    <!-- Import-Package definitions for maven-bundle-plugin -->
+    <osgi.import.package.root>*</osgi.import.package.root>
+    <osgi.import.package>${osgi.import.package.root}</osgi.import.package>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>javax.jdo</artifactId>
+        <version>3.2.0-m13</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vividsolutions</groupId>
+        <artifactId>jts</artifactId>
+        <version>1.13</version>
+      </dependency>
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${h2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>2.0.1.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jdt.core.compiler</groupId>
+        <artifactId>ecj</artifactId>
+        <version>4.6.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>0.9.12</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>3.26.0-GA</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geolatte</groupId>
+        <artifactId>geolatte-geom</artifactId>
+        <version>1.4.0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+      <version>1.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>3.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>cglib</groupId>
+          <artifactId>cglib-nodep</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>animal-sniffer-annotations</artifactId>
+      <version>${animal-sniffer.version}</version>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>querydsl</id>
+      <url>http://www.querydsl.com/maven</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>com.springsource.repository.bundles.release</id>
+      <url>http://repository.springsource.com/maven/bundles/release</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>com.springsource.repository.bundles.external</id>
+      <url>http://repository.springsource.com/maven/bundles/external</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <build>
     <pluginManagement>
@@ -295,49 +309,74 @@
           <executions>
             <execution>
               <id>bundle-manifest</id>
-              <phase>process-classes</phase>
               <goals>
                 <goal>manifest</goal>
               </goals>
+              <phase>process-classes</phase>
               <inherited>true</inherited>
               <configuration>
                 <instructions>
-                  <Import-Package>
-                    ${osgi.import.package}
-                  </Import-Package>
+                  <Import-Package>${osgi.import.package}</Import-Package>
                   <Export-Package>com.querydsl.*</Export-Package>
                 </instructions>
               </configuration>
             </execution>
           </executions>
         </plugin>
-      </plugins>      
+      </plugins>
     </pluginManagement>
-    
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>1.4.1</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.semver</groupId>
+            <artifactId>enforcer-rule</artifactId>
+            <version>0.9.33</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>9.0</version>
+          </dependency>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <version>9.0</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <id>enforce-maven</id>
-            <phase>validate</phase>
             <goals>
               <goal>enforce</goal>
             </goals>
+            <phase>validate</phase>
             <configuration>
               <rules>
-                <dependencyConvergence/>
+                <dependencyConvergence></dependencyConvergence>
               </rules>
             </configuration>
           </execution>
           <execution>
             <id>enforce-banned-dependencies</id>
-            <phase>validate</phase>
             <goals>
               <goal>enforce</goal>
             </goals>
+            <phase>validate</phase>
             <configuration>
               <rules>
                 <bannedDependencies>
@@ -384,10 +423,10 @@
           </execution>
           <execution>
             <id>check</id>
-            <phase>verify</phase>
             <goals>
               <goal>enforce</goal>
             </goals>
+            <phase>verify</phase>
             <configuration>
               <rules>
                 <requireBackwardCompatibility implementation="org.semver.enforcer.RequireBackwardCompatibility">
@@ -409,35 +448,8 @@
             </configuration>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.semver</groupId>
-            <artifactId>enforcer-rule</artifactId>
-            <version>0.9.33</version>
-            <exclusions>
-              <exclusion>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-              </exclusion>
-              <exclusion>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-commons</artifactId>
-              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>9.0</version>
-          </dependency>
-          <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-commons</artifactId>
-            <version>9.0</version>
-          </dependency>
-        </dependencies>
       </plugin>
-      <plugin>       
+      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptors>
@@ -530,7 +542,7 @@
             <group>
               <title>Mongodb</title>
               <packages>com.querydsl.mongodb*</packages>
-            </group>            
+            </group>
           </groups>
         </configuration>
       </plugin>
@@ -539,10 +551,10 @@
         <artifactId>maven-pmd-plugin</artifactId>
         <version>3.4</version>
         <configuration>
-          <targetJdk>1.6</targetJdk>   
-          <includeTests>true</includeTests>     
+          <targetJdk>1.6</targetJdk>
+          <includeTests>true</includeTests>
         </configuration>
-      </plugin>      
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -557,13 +569,13 @@
         <version>2.4</version>
         <executions>
           <execution>
-            <phase>package</phase>
-            <goals>            
+            <goals>
               <goal>jar</goal>
             </goals>
+            <phase>package</phase>
           </execution>
         </executions>
-      </plugin>  
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -601,10 +613,10 @@
         <executions>
           <execution>
             <id>ensure-java-1.6-class-library</id>
-            <phase>test</phase>
             <goals>
               <goal>check</goal>
             </goals>
+            <phase>test</phase>
           </execution>
         </executions>
       </plugin>
@@ -612,13 +624,23 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>2.15</version>
+        <configuration>
+          <excludes>**/generated/**/*,**/com/querydsl/codegen/utils/**/*</excludes>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>6.6</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <id>checkstyle</id>
-            <phase>validate</phase>
             <goals>
               <goal>check</goal>
             </goals>
+            <phase>validate</phase>
             <configuration>
               <configLocation>src/main/resources/querydsl_checks_base.xml</configLocation>
               <includeTestSourceDirectory>true</includeTestSourceDirectory>
@@ -627,52 +649,55 @@
           </execution>
           <execution>
             <id>checkstyle-main</id>
-            <phase>validate</phase>
             <goals>
               <goal>check</goal>
             </goals>
+            <phase>validate</phase>
             <configuration>
               <configLocation>src/main/resources/querydsl_checks_main.xml</configLocation>
               <failOnViolation>true</failOnViolation>
             </configuration>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>6.6</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <excludes>**/generated/**/*,**/com/querydsl/codegen/utils/**/*</excludes>
-        </configuration>
       </plugin>
     </plugins>
   </build>
 
-  <repositories>
-    <repository>
-      <id>querydsl</id>
-      <url>http://www.querydsl.com/maven</url>
-    </repository>
-  </repositories>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <configuration>
+          <detectJavaApiLink>true</detectJavaApiLink>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>junit-report-maven-plugin</artifactId>
+        <version>devel</version>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <aggregate>true</aggregate>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>com.springsource.repository.bundles.release</id>
-      <url>http://repository.springsource.com/maven/bundles/release</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>com.springsource.repository.bundles.external</id>
-      <url>http://repository.springsource.com/maven/bundles/external</url>
-    </pluginRepository>
-  </pluginRepositories>
- 
   <profiles>
     <profile>
       <id>all</id>
-      <activation><activeByDefault>true</activeByDefault></activation>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <modules>
         <module>querydsl-core</module>
         <module>querydsl-codegen</module>
@@ -820,25 +845,21 @@
     <profile>
       <id>jenkins</id>
       <properties>
-        <excludedGroups>
-          com.querydsl.core.testutil.Performance,
+        <excludedGroups>com.querydsl.core.testutil.Performance,
 
           com.querydsl.core.testutil.DB2,
           com.querydsl.core.testutil.SQLServer,
-          com.querydsl.core.testutil.Teradata
-        </excludedGroups>
+          com.querydsl.core.testutil.Teradata</excludedGroups>
       </properties>
     </profile>
 
     <profile>
       <id>travis</id>
       <properties>
-        <excludedGroups>
-          com.querydsl.core.testutil.Performance,
+        <excludedGroups>com.querydsl.core.testutil.Performance,
           com.querydsl.core.testutil.ReportingOnly,
 
-          com.querydsl.core.testutil.Teradata
-        </excludedGroups>
+          com.querydsl.core.testutil.Teradata</excludedGroups>
       </properties>
       <build>
         <plugins>
@@ -863,34 +884,5 @@
       </properties>
     </profile>
   </profiles>
-  
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9.1</version>
-        <configuration>
-          <detectJavaApiLink>true</detectJavaApiLink>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>junit-report-maven-plugin</artifactId>
-        <version>devel</version>
-        <configuration>
-          <testFailureIgnore>true</testFailureIgnore>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jxr-plugin</artifactId>
-        <version>2.3</version>
-        <configuration>
-          <aggregate>true</aggregate>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
-  
+
 </project>

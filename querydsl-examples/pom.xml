@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -11,14 +11,9 @@
 
   <groupId>com.querydsl</groupId>
   <artifactId>querydsl-examples</artifactId>
+  <packaging>pom</packaging>
   <name>Querydsl - Examples</name>
   <url>${project.homepage}</url>
-  <packaging>pom</packaging>
-
-  <properties>
-    <checkstyle.skip>true</checkstyle.skip>
-    <enforcer.skip>true</enforcer.skip>
-  </properties>
 
   <modules>
     <module>querydsl-example-sql-spring</module>
@@ -29,60 +24,10 @@
     <module>querydsl-example-r2dbc-sql-codegen</module>
   </modules>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.8</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.4.1</version>
-        <executions>
-          <execution>
-            <id>enforce-banned-dependencies</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <bannedDependencies/>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.semver</groupId>
-            <artifactId>enforcer-rule</artifactId>
-            <version>0.9.33</version>
-            <exclusions>
-              <exclusion>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-              </exclusion>
-              <exclusion>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-commons</artifactId>
-              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>9.0</version>
-          </dependency>
-          <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-commons</artifactId>
-            <version>9.0</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>
+  <properties>
+    <checkstyle.skip>true</checkstyle.skip>
+    <enforcer.skip>true</enforcer.skip>
+  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -110,8 +55,63 @@
       <groupId>com.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
       <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.8</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4.1</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.semver</groupId>
+            <artifactId>enforcer-rule</artifactId>
+            <version>0.9.33</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>9.0</version>
+          </dependency>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <version>9.0</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>enforce-banned-dependencies</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <phase>validate</phase>
+            <configuration>
+              <rules>
+                <bannedDependencies></bannedDependencies>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
