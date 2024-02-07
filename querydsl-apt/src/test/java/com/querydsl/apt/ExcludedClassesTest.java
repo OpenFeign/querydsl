@@ -20,24 +20,25 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.Test;
 
 public class ExcludedClassesTest extends AbstractProcessorTest {
 
-    private static final String packagePath = "src/test/java/com/querydsl/";
+  private static final String packagePath = "src/test/java/com/querydsl/";
 
-    @Test
-    public void process() throws IOException {
-        List<String> classes = getFiles(packagePath);
-        process(QuerydslAnnotationProcessor.class, classes, "excludedClasses");
+  @Test
+  public void process() throws IOException {
+    List<String> classes = getFiles(packagePath);
+    process(QuerydslAnnotationProcessor.class, classes, "excludedClasses");
 
-        assertFalse(new File("target/excludedClasses/com/querydsl/apt/domain/QArrayTest_ArrayTestEntity.java").exists());
-    }
+    assertFalse(
+        new File("target/excludedClasses/com/querydsl/apt/domain/QArrayTest_ArrayTestEntity.java")
+            .exists());
+  }
 
-    @Override
-    protected Collection<String> getAPTOptions() {
-        return Collections.singletonList("-Aquerydsl.excludedClasses=com.querydsl.apt.domain.ArrayTest.ArrayTestEntity");
-    }
-
+  @Override
+  protected Collection<String> getAPTOptions() {
+    return Collections.singletonList(
+        "-Aquerydsl.excludedClasses=com.querydsl.apt.domain.ArrayTest.ArrayTestEntity");
+  }
 }

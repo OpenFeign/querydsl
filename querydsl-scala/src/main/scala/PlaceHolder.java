@@ -11,5 +11,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//hack to generate package javadoc
-public class PlaceHolder { }
+// hack to generate package javadoc
+public class PlaceHolder {}

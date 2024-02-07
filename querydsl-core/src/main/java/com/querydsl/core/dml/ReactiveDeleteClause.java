@@ -5,6 +5,5 @@ package com.querydsl.core.dml;
  *
  * @param <C> concrete subtype
  */
-public interface ReactiveDeleteClause<C extends ReactiveDeleteClause<C>> extends ReactiveDMLClause<C>, ReactiveFilteredClause<C> {
-
-}
+public interface ReactiveDeleteClause<C extends ReactiveDeleteClause<C>>
+    extends ReactiveDMLClause<C>, ReactiveFilteredClause<C> {}

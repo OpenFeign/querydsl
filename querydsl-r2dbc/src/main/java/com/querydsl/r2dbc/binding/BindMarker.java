@@ -7,9 +7,9 @@ package com.querydsl.r2dbc.binding;
  */
 public interface BindMarker {
 
-    String getPlaceholder();
+  String getPlaceholder();
 
-    void bind(BindTarget bindTarget, Object value);
+  void bind(BindTarget bindTarget, Object value);
 
-    void bindNull(BindTarget bindTarget, Class<?> valueType);
+  void bindNull(BindTarget bindTarget, Class<?> valueType);
 }

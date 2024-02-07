@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 /**
  * Declaration of a static delegate method
  *
- * <p>Example :</p>
+ * <p>Example :
  *
  * <pre>
  * {@code @QueryDelegate(User.class)}
@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * <p>This will be then available in the QUser type as an instance method without the first
- * argument:</p>
+ * argument:
  *
  * <pre>
  * User user = new User();
@@ -50,16 +50,12 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @author tiwe
- *
  */
 @Documented
 @Target({METHOD})
 @Retention(RUNTIME)
 public @interface QueryDelegate {
 
-    /**
-     * Target type for delegate expansion
-     */
-    Class<?> value();
-
+  /** Target type for delegate expansion */
+  Class<?> value();
 }

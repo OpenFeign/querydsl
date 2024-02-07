@@ -13,9 +13,7 @@
  */
 package com.querydsl.jpa.domain;
 
-/**
- * The Enum PaymentStatus.
- */
+/** The Enum PaymentStatus. */
 public enum PaymentStatus {
-    AWAITING_APPROVAL
+  AWAITING_APPROVAL
 }

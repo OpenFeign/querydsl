@@ -24,49 +24,48 @@ import java.sql.Types;
  */
 public class BooleanType extends AbstractType<Boolean, Object> {
 
-    public BooleanType() {
-        super(Types.BOOLEAN);
+  public BooleanType() {
+    super(Types.BOOLEAN);
+  }
+
+  public BooleanType(int type) {
+    super(type);
+  }
+
+  @Override
+  public String getLiteral(Boolean value) {
+    return value ? "1" : "0";
+  }
+
+  @Override
+  public Class<Boolean> getReturnedClass() {
+    return Boolean.class;
+  }
+
+  @Override
+  public Class<Object> getDatabaseClass() {
+    return Object.class;
+  }
+
+  @Override
+  protected Boolean fromDbValue(Object value) {
+    if (Byte.class.isAssignableFrom(value.getClass())) {
+      return (Byte) value == 1;
+    }
+    if (Integer.class.isAssignableFrom(value.getClass())) {
+      return (Integer) value == 1;
+    }
+    if (Long.class.isAssignableFrom(value.getClass())) {
+      return (Long) value == 1;
+    }
+    if (BigInteger.class.isAssignableFrom(value.getClass())) {
+      return ((BigInteger) value).longValue() == 1;
+    }
+    // mysql
+    if (ByteBuffer.class.isAssignableFrom(value.getClass())) {
+      return ((ByteBuffer) value).get() == 1;
     }
 
-    public BooleanType(int type) {
-        super(type);
-    }
-
-    @Override
-    public String getLiteral(Boolean value) {
-        return value ? "1" : "0";
-    }
-
-    @Override
-    public Class<Boolean> getReturnedClass() {
-        return Boolean.class;
-    }
-
-    @Override
-    public Class<Object> getDatabaseClass() {
-        return Object.class;
-    }
-
-    @Override
-    protected Boolean fromDbValue(Object value) {
-        if (Byte.class.isAssignableFrom(value.getClass())) {
-            return (Byte) value == 1;
-        }
-        if (Integer.class.isAssignableFrom(value.getClass())) {
-            return (Integer) value == 1;
-        }
-        if (Long.class.isAssignableFrom(value.getClass())) {
-            return (Long) value == 1;
-        }
-        if (BigInteger.class.isAssignableFrom(value.getClass())) {
-            return ((BigInteger) value).longValue() == 1;
-        }
-        //mysql
-        if (ByteBuffer.class.isAssignableFrom(value.getClass())) {
-            return ((ByteBuffer) value).get() == 1;
-        }
-
-        return (Boolean) value;
-    }
-
+    return (Boolean) value;
+  }
 }

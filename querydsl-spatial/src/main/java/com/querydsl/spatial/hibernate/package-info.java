@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Serialization patterns for Hibernate Spatial
- */
+/** Serialization patterns for Hibernate Spatial */
 package com.querydsl.spatial.hibernate;

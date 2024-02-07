@@ -22,32 +22,30 @@ import java.sql.Types;
  * {@code ByteType} maps Byte to Byte on the JDBC level
  *
  * @author tiwe
- *
  */
 public class ByteType extends AbstractType<Byte> {
 
-    public ByteType() {
-        super(Types.TINYINT);
-    }
+  public ByteType() {
+    super(Types.TINYINT);
+  }
 
-    public ByteType(int type) {
-        super(type);
-    }
+  public ByteType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Byte> getReturnedClass() {
-        return Byte.class;
-    }
+  @Override
+  public Class<Byte> getReturnedClass() {
+    return Byte.class;
+  }
 
-    @Override
-    public Byte getValue(ResultSet rs, int startIndex) throws SQLException {
-        byte val = rs.getByte(startIndex);
-        return rs.wasNull() ? null : val;
-    }
+  @Override
+  public Byte getValue(ResultSet rs, int startIndex) throws SQLException {
+    byte val = rs.getByte(startIndex);
+    return rs.wasNull() ? null : val;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Byte value) throws SQLException {
-        st.setByte(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Byte value) throws SQLException {
+    st.setByte(startIndex, value);
+  }
 }

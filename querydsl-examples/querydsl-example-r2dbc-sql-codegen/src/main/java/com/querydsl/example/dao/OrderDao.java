@@ -7,14 +7,13 @@ import reactor.core.publisher.Mono;
 
 public interface OrderDao {
 
-    Mono<Order> findById(long id);
+  Mono<Order> findById(long id);
 
-    Flux<Order> findAll(Predicate... where);
+  Flux<Order> findAll(Predicate... where);
 
-    Mono<Order> save(Order order);
+  Mono<Order> save(Order order);
 
-    Mono<Long> count();
+  Mono<Long> count();
 
-    Mono<Void> delete(Order p);
-
+  Mono<Void> delete(Order p);
 }

@@ -15,60 +15,56 @@ package com.querydsl.sql.spatial;
 
 import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
-import javax.annotation.Generated;
-
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
+import javax.annotation.Generated;
 
-/**
- * QSpatialRefSys is a Querydsl query type for SpatialRefSys
- */
+/** QSpatialRefSys is a Querydsl query type for SpatialRefSys */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
 public class QSpatialRefSys extends RelationalPathSpatial<SpatialRefSys> {
 
-    private static final long serialVersionUID = 1681874658;
+  private static final long serialVersionUID = 1681874658;
 
-    public static final QSpatialRefSys spatialRefSys = new QSpatialRefSys("spatial_ref_sys");
+  public static final QSpatialRefSys spatialRefSys = new QSpatialRefSys("spatial_ref_sys");
 
-    public final StringPath authName = createString("authName");
+  public final StringPath authName = createString("authName");
 
-    public final NumberPath<Integer> authSrid = createNumber("authSrid", Integer.class);
+  public final NumberPath<Integer> authSrid = createNumber("authSrid", Integer.class);
 
-    public final NumberPath<Integer> srid = createNumber("srid", Integer.class);
+  public final NumberPath<Integer> srid = createNumber("srid", Integer.class);
 
-    public final StringPath srtext = createString("srtext");
+  public final StringPath srtext = createString("srtext");
 
-    public final com.querydsl.sql.PrimaryKey<SpatialRefSys> spatialRefSysPkey = createPrimaryKey(srid);
+  public final com.querydsl.sql.PrimaryKey<SpatialRefSys> spatialRefSysPkey =
+      createPrimaryKey(srid);
 
-    public QSpatialRefSys(String variable) {
-        super(SpatialRefSys.class, forVariable(variable), "public", "spatial_ref_sys");
-        addMetadata();
-    }
+  public QSpatialRefSys(String variable) {
+    super(SpatialRefSys.class, forVariable(variable), "public", "spatial_ref_sys");
+    addMetadata();
+  }
 
-    public QSpatialRefSys(String variable, String schema, String table) {
-        super(SpatialRefSys.class, forVariable(variable), schema, table);
-        addMetadata();
-    }
+  public QSpatialRefSys(String variable, String schema, String table) {
+    super(SpatialRefSys.class, forVariable(variable), schema, table);
+    addMetadata();
+  }
 
-    public QSpatialRefSys(Path<? extends SpatialRefSys> path) {
-        super(path.getType(), path.getMetadata(), "public", "spatial_ref_sys");
-        addMetadata();
-    }
+  public QSpatialRefSys(Path<? extends SpatialRefSys> path) {
+    super(path.getType(), path.getMetadata(), "public", "spatial_ref_sys");
+    addMetadata();
+  }
 
-    public QSpatialRefSys(PathMetadata metadata) {
-        super(SpatialRefSys.class, metadata, "public", "spatial_ref_sys");
-        addMetadata();
-    }
+  public QSpatialRefSys(PathMetadata metadata) {
+    super(SpatialRefSys.class, metadata, "public", "spatial_ref_sys");
+    addMetadata();
+  }
 
-    public void addMetadata() {
-        addMetadata(authName, ColumnMetadata.named("auth_name").ofType(12).withSize(256));
-        addMetadata(authSrid, ColumnMetadata.named("auth_srid").ofType(4).withSize(10));
-        addMetadata(srid, ColumnMetadata.named("srid").ofType(4).withSize(10).notNull());
-        addMetadata(srtext, ColumnMetadata.named("srtext").ofType(12).withSize(2048));
-    }
-
+  public void addMetadata() {
+    addMetadata(authName, ColumnMetadata.named("auth_name").ofType(12).withSize(256));
+    addMetadata(authSrid, ColumnMetadata.named("auth_srid").ofType(4).withSize(10));
+    addMetadata(srid, ColumnMetadata.named("srid").ofType(4).withSize(10).notNull());
+    addMetadata(srtext, ColumnMetadata.named("srtext").ofType(12).withSize(2048));
+  }
 }
-

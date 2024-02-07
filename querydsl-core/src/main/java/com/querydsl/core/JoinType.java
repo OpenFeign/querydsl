@@ -19,44 +19,30 @@ package com.querydsl.core;
  * @author tiwe
  */
 public enum JoinType {
-    /**
-     * cross join
-     */
-    DEFAULT(false, false),
-    /**
-     * inner join
-     */
-    INNERJOIN(true, false),
-    /**
-     * join
-     */
-    JOIN(true, false),
-    /**
-     * left join
-     */
-    LEFTJOIN(false, true),
-    /**
-     * right join
-     */
-    RIGHTJOIN(false, true),
-    /**
-     * full join
-     */
-    FULLJOIN(false, true);
+  /** cross join */
+  DEFAULT(false, false),
+  /** inner join */
+  INNERJOIN(true, false),
+  /** join */
+  JOIN(true, false),
+  /** left join */
+  LEFTJOIN(false, true),
+  /** right join */
+  RIGHTJOIN(false, true),
+  /** full join */
+  FULLJOIN(false, true);
+  private final boolean inner, outer;
 
-    private final boolean inner, outer;
+  private JoinType(boolean inner, boolean outer) {
+    this.inner = inner;
+    this.outer = outer;
+  }
 
-    private JoinType(boolean inner, boolean outer) {
-        this.inner = inner;
-        this.outer = outer;
-    }
+  public boolean isInner() {
+    return inner;
+  }
 
-    public boolean isInner() {
-        return inner;
-    }
-
-    public boolean isOuter() {
-        return outer;
-    }
-
+  public boolean isOuter() {
+    return outer;
+  }
 }

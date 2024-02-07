@@ -17,16 +17,14 @@ package com.querydsl.core.types;
  * {@code Constant} represents a general constant expression.
  *
  * @author tiwe
- *
  * @param <T> constant type
  */
 public interface Constant<T> extends Expression<T> {
 
-    /**
-     * Get the wrapped constant
-     *
-     * @return wrapped constant
-     */
-    T getConstant();
-
+  /**
+   * Get the wrapped constant
+   *
+   * @return wrapped constant
+   */
+  T getConstant();
 }

@@ -16,7 +16,6 @@ package com.querydsl.r2dbc.dml;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
-
 import java.util.Map;
 
 /**
@@ -26,21 +25,20 @@ import java.util.Map;
  */
 public class R2DBCUpdateBatch {
 
-    private final QueryMetadata metadata;
+  private final QueryMetadata metadata;
 
-    private final Map<Path<?>, Expression<?>> updates;
+  private final Map<Path<?>, Expression<?>> updates;
 
-    public R2DBCUpdateBatch(QueryMetadata metadata, Map<Path<?>, Expression<?>> updates) {
-        this.metadata = metadata;
-        this.updates = updates;
-    }
+  public R2DBCUpdateBatch(QueryMetadata metadata, Map<Path<?>, Expression<?>> updates) {
+    this.metadata = metadata;
+    this.updates = updates;
+  }
 
-    public QueryMetadata getMetadata() {
-        return metadata;
-    }
+  public QueryMetadata getMetadata() {
+    return metadata;
+  }
 
-    public Map<Path<?>, Expression<?>> getUpdates() {
-        return updates;
-    }
-
+  public Map<Path<?>, Expression<?>> getUpdates() {
+    return updates;
+  }
 }

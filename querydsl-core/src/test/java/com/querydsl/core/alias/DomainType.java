@@ -24,40 +24,39 @@ import java.util.Set;
 
 public interface DomainType {
 
-    String getFirstName();
+  String getFirstName();
 
-    String getLastName();
+  String getLastName();
 
-    int getAge();
+  int getAge();
 
-    List<DomainType> getList();
+  List<DomainType> getList();
 
-    Collection<DomainType> getCollection();
+  Collection<DomainType> getCollection();
 
-    Set<DomainType> getSet();
+  Set<DomainType> getSet();
 
-    Map<String,DomainType> getMap();
+  Map<String, DomainType> getMap();
 
-    BigDecimal getBigDecimal();
+  BigDecimal getBigDecimal();
 
-    BigInteger getBigInteger();
+  BigInteger getBigInteger();
 
-    Byte getByte();
+  Byte getByte();
 
-    Double getDouble();
+  Double getDouble();
 
-    Float getFloat();
+  Float getFloat();
 
-    java.sql.Date getDate();
+  java.sql.Date getDate();
 
-    java.util.Date getDate2();
+  java.util.Date getDate2();
 
-    Short getShort();
+  Short getShort();
 
-    Time getTime();
+  Time getTime();
 
-    Timestamp getTimestamp();
+  Timestamp getTimestamp();
 
-    Gender getGender();
-
+  Gender getGender();
 }

@@ -16,23 +16,21 @@ package com.querydsl.jdo.models.company;
 import com.querydsl.core.annotations.QueryEntity;
 
 /**
- * Organisation that hands out qualifications to employees after taking training
- * courses
+ * Organisation that hands out qualifications to employees after taking training courses
  *
  * @version $Revision: 1.1 $
  */
 @QueryEntity
 public class Organisation {
-    String name;
+  String name;
 
-    public Organisation() {
-    }
+  public Organisation() {}
 
-    public Organisation(String name) {
-        this.name = name;
-    }
+  public Organisation(String name) {
+    this.name = name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 }

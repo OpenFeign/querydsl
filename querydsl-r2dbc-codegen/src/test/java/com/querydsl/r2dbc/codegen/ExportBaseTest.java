@@ -13,49 +13,45 @@
  */
 package com.querydsl.r2dbc.codegen;
 
-import java.sql.SQLException;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 
 import com.querydsl.r2dbc.Configuration;
 import com.querydsl.r2dbc.SQLTemplates;
+import com.querydsl.sql.Connections;
 import com.querydsl.sql.codegen.DefaultNamingStrategy;
 import com.querydsl.sql.codegen.NamingStrategy;
+import java.sql.SQLException;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.querydsl.sql.Connections;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-
 public abstract class ExportBaseTest {
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+  @Rule public TemporaryFolder folder = new TemporaryFolder();
 
-    @Test
-    public void export() throws SQLException {
-        NamingStrategy namingStrategy = new DefaultNamingStrategy();
-        MetaDataExporter exporter = new MetaDataExporter();
-        exporter.setSchemaPattern(getSchemaPattern());
-        exporter.setPackageName("test");
-        exporter.setTargetFolder(folder.getRoot());
-        exporter.setNamingStrategy(namingStrategy);
-        exporter.setConfiguration(new Configuration(SQLTemplates.DEFAULT));
-        exporter.export(Connections.getConnection().getMetaData());
+  @Test
+  public void export() throws SQLException {
+    NamingStrategy namingStrategy = new DefaultNamingStrategy();
+    MetaDataExporter exporter = new MetaDataExporter();
+    exporter.setSchemaPattern(getSchemaPattern());
+    exporter.setPackageName("test");
+    exporter.setTargetFolder(folder.getRoot());
+    exporter.setNamingStrategy(namingStrategy);
+    exporter.setConfiguration(new Configuration(SQLTemplates.DEFAULT));
+    exporter.export(Connections.getConnection().getMetaData());
 
-        assertThat(folder.getRoot().listFiles().length, is(greaterThan(0)));
-    }
+    assertThat(folder.getRoot().listFiles().length, is(greaterThan(0)));
+  }
 
-    protected String getSchemaPattern() {
-        return null;
-    }
+  protected String getSchemaPattern() {
+    return null;
+  }
 
-    @AfterClass
-    public static void tearDownAfterClass() throws SQLException {
-        Connections.close();
-    }
-
+  @AfterClass
+  public static void tearDownAfterClass() throws SQLException {
+    Connections.close();
+  }
 }

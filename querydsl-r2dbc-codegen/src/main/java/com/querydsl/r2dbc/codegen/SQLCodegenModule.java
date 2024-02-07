@@ -23,7 +23,6 @@ import com.querydsl.sql.codegen.DefaultNamingStrategy;
 import com.querydsl.sql.codegen.MetaDataSerializer;
 import com.querydsl.sql.codegen.NamingStrategy;
 import com.querydsl.sql.codegen.SQLQueryTypeFactory;
-
 import java.util.Set;
 
 /**
@@ -33,66 +32,66 @@ import java.util.Set;
  */
 public class SQLCodegenModule extends CodegenModule {
 
-    public static final String BEAN_SERIALIZER = "beanSerializer";
+  public static final String BEAN_SERIALIZER = "beanSerializer";
 
-    public static final String BEAN_SUFFIX = "beanSuffix";
+  public static final String BEAN_SUFFIX = "beanSuffix";
 
-    public static final String BEAN_PREFIX = "beanPrefix";
+  public static final String BEAN_PREFIX = "beanPrefix";
 
-    public static final String BEAN_PACKAGE_NAME = "beanPackageName";
+  public static final String BEAN_PACKAGE_NAME = "beanPackageName";
 
-    public static final String ENTITYPATH_TYPE = "entityPathType";
+  public static final String ENTITYPATH_TYPE = "entityPathType";
 
-    public static final String PACKAGE_NAME = "packageName";
+  public static final String PACKAGE_NAME = "packageName";
 
-    public static final String INNER_CLASSES_FOR_KEYS = "innerClassesForKeys";
+  public static final String INNER_CLASSES_FOR_KEYS = "innerClassesForKeys";
 
-    public static final String SCHEMA_TO_PACKAGE = "schemaToPackage";
+  public static final String SCHEMA_TO_PACKAGE = "schemaToPackage";
 
-    public static final String COLUMN_COMPARATOR = "columnComparator";
+  public static final String COLUMN_COMPARATOR = "columnComparator";
 
-    @Override
-    protected void configure() {
-        super.configure();
-        bind(NamingStrategy.class, DefaultNamingStrategy.class);
-        bind(Configuration.class, new Configuration(SQLTemplates.DEFAULT));
-        bind(Serializer.class, MetaDataSerializer.class);
-        bind(QueryTypeFactory.class, SQLQueryTypeFactory.class);
-        bind(BEAN_SERIALIZER, null);
+  @Override
+  protected void configure() {
+    super.configure();
+    bind(NamingStrategy.class, DefaultNamingStrategy.class);
+    bind(Configuration.class, new Configuration(SQLTemplates.DEFAULT));
+    bind(Serializer.class, MetaDataSerializer.class);
+    bind(QueryTypeFactory.class, SQLQueryTypeFactory.class);
+    bind(BEAN_SERIALIZER, null);
 
-        bind(INNER_CLASSES_FOR_KEYS, false);
-        bind(BEAN_PREFIX, "");
-        bind(BEAN_SUFFIX, "");
-        bind(BEAN_PACKAGE_NAME, "com.example");
-        bind(PACKAGE_NAME, "com.example");
-        bind(BEAN_SERIALIZER, null);
-        bind(SCHEMA_TO_PACKAGE, false);
-        bindInstance(ENTITYPATH_TYPE, RelationalPathBase.class);
-        bind(COLUMN_COMPARATOR, null);
-    }
+    bind(INNER_CLASSES_FOR_KEYS, false);
+    bind(BEAN_PREFIX, "");
+    bind(BEAN_SUFFIX, "");
+    bind(BEAN_PACKAGE_NAME, "com.example");
+    bind(PACKAGE_NAME, "com.example");
+    bind(BEAN_SERIALIZER, null);
+    bind(SCHEMA_TO_PACKAGE, false);
+    bindInstance(ENTITYPATH_TYPE, RelationalPathBase.class);
+    bind(COLUMN_COMPARATOR, null);
+  }
 
-    public String getPrefix() {
-        return get(String.class, PREFIX);
-    }
+  public String getPrefix() {
+    return get(String.class, PREFIX);
+  }
 
-    public String getSuffix() {
-        return get(String.class, SUFFIX);
-    }
+  public String getSuffix() {
+    return get(String.class, SUFFIX);
+  }
 
-    public String getBeanPrefix() {
-        return get(String.class, BEAN_PREFIX);
-    }
+  public String getBeanPrefix() {
+    return get(String.class, BEAN_PREFIX);
+  }
 
-    public String getBeanSuffix() {
-        return get(String.class, BEAN_SUFFIX);
-    }
+  public String getBeanSuffix() {
+    return get(String.class, BEAN_SUFFIX);
+  }
 
-    public String getPackageName() {
-        return get(String.class, PACKAGE_NAME);
-    }
+  public String getPackageName() {
+    return get(String.class, PACKAGE_NAME);
+  }
 
-    @SuppressWarnings("unchecked")
-    public Set<String> getImports() {
-        return get(Set.class, IMPORTS);
-    }
+  @SuppressWarnings("unchecked")
+  public Set<String> getImports() {
+    return get(Set.class, IMPORTS);
+  }
 }

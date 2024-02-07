@@ -20,34 +20,32 @@ import com.querydsl.sql.SQLTemplates;
  * {@code GeoDBTemplates} is a spatial enabled SQL dialect for GeoDB
  *
  * @author tiwe
- *
  */
 public class GeoDBTemplates extends H2Templates {
 
-    @SuppressWarnings("FieldNameHidesFieldInSuperclass") //Intentional
-    public static final GeoDBTemplates DEFAULT = new GeoDBTemplates();
+  @SuppressWarnings("FieldNameHidesFieldInSuperclass") // Intentional
+  public static final GeoDBTemplates DEFAULT = new GeoDBTemplates();
 
-    public static Builder builder() {
-        return new Builder() {
-            @Override
-            protected SQLTemplates build(char escape, boolean quote) {
-                return new GeoDBTemplates(escape, quote);
-            }
-        };
-    }
+  public static Builder builder() {
+    return new Builder() {
+      @Override
+      protected SQLTemplates build(char escape, boolean quote) {
+        return new GeoDBTemplates(escape, quote);
+      }
+    };
+  }
 
-    public GeoDBTemplates() {
-        this('\\', false);
-    }
+  public GeoDBTemplates() {
+    this('\\', false);
+  }
 
-    public GeoDBTemplates(boolean quote) {
-        this('\\', quote);
-    }
+  public GeoDBTemplates(boolean quote) {
+    this('\\', quote);
+  }
 
-    public GeoDBTemplates(char escape, boolean quote) {
-        super(escape, quote);
-        addCustomType(GeoDBWkbType.DEFAULT);
-        add(SpatialTemplatesSupport.getSpatialOps(true));
-    }
-
+  public GeoDBTemplates(char escape, boolean quote) {
+    super(escape, quote);
+    addCustomType(GeoDBWkbType.DEFAULT);
+    add(SpatialTemplatesSupport.getSpatialOps(true));
+  }
 }

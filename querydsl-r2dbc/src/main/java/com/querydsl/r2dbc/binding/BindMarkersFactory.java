@@ -1,6 +1,5 @@
 package com.querydsl.r2dbc.binding;
 
-
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -12,40 +11,42 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface BindMarkersFactory {
 
-    BindMarkers create();
+  BindMarkers create();
 
-    static BindMarkersFactory indexed(String prefix, int beginWith) {
-        if (Objects.isNull(prefix) || prefix.isEmpty()) {
-            throw new IllegalArgumentException("Prefix must not be null!");
-        }
-        return () -> new IndexedBindMarkers(prefix, beginWith);
+  static BindMarkersFactory indexed(String prefix, int beginWith) {
+    if (Objects.isNull(prefix) || prefix.isEmpty()) {
+      throw new IllegalArgumentException("Prefix must not be null!");
+    }
+    return () -> new IndexedBindMarkers(prefix, beginWith);
+  }
+
+  static BindMarkersFactory anonymous(String placeholder) {
+    if (Objects.isNull(placeholder) || placeholder.isEmpty()) {
+      throw new IllegalArgumentException("Placeholder must not be empty!");
     }
 
-    static BindMarkersFactory anonymous(String placeholder) {
-        if (Objects.isNull(placeholder) || placeholder.isEmpty()) {
-            throw new IllegalArgumentException("Placeholder must not be empty!");
-        }
+    return () -> new AnonymousBindMarkers(placeholder);
+  }
 
-        return () -> new AnonymousBindMarkers(placeholder);
+  static BindMarkersFactory named(String prefix, String namePrefix, int maxLength) {
+    return named(prefix, namePrefix, maxLength, Function.identity());
+  }
+
+  static BindMarkersFactory named(
+      String prefix,
+      String namePrefix,
+      int maxLength,
+      Function<String, String> hintFilterFunction) {
+    if (Objects.isNull(prefix) || prefix.isEmpty()) {
+      throw new IllegalArgumentException("Prefix must not be null!");
+    }
+    if (Objects.isNull(namePrefix) || namePrefix.isEmpty()) {
+      throw new IllegalArgumentException("Index prefix must not be null!");
+    }
+    if (Objects.isNull(hintFilterFunction)) {
+      throw new IllegalArgumentException("Hint filter function must not be null!");
     }
 
-    static BindMarkersFactory named(String prefix, String namePrefix, int maxLength) {
-        return named(prefix, namePrefix, maxLength, Function.identity());
-    }
-
-    static BindMarkersFactory named(String prefix, String namePrefix, int maxLength,
-                                    Function<String, String> hintFilterFunction) {
-        if (Objects.isNull(prefix) || prefix.isEmpty()) {
-            throw new IllegalArgumentException("Prefix must not be null!");
-        }
-        if (Objects.isNull(namePrefix) || namePrefix.isEmpty()) {
-            throw new IllegalArgumentException("Index prefix must not be null!");
-        }
-        if (Objects.isNull(hintFilterFunction)) {
-            throw new IllegalArgumentException("Hint filter function must not be null!");
-        }
-
-        return () -> new NamedBindMarkers(prefix, namePrefix, maxLength, hintFilterFunction);
-    }
-
+    return () -> new NamedBindMarkers(prefix, namePrefix, maxLength, hintFilterFunction);
+  }
 }

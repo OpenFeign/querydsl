@@ -16,17 +16,16 @@ package com.querydsl.maven;
 import com.querydsl.sql.codegen.MetaDataExporter;
 
 /**
- * {@code TestMetadataExportMojo} is a goal for {@link MetaDataExporter} usage and is bound to the generated-sources phase
+ * {@code TestMetadataExportMojo} is a goal for {@link MetaDataExporter} usage and is bound to the
+ * generated-sources phase
  *
  * @phase generate-sources
  * @goal sql-test-export
- *
  */
 public class SqlTestMetadataExportMojo extends AbstractSqlMetaDataExportMojo {
 
-    @Override
-    protected boolean isForTest() {
-        return true;
-    }
-
+  @Override
+  protected boolean isForTest() {
+    return true;
+  }
 }

@@ -15,17 +15,6 @@ package com.querydsl.jpa;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.hibernate.LockMode;
-import org.hibernate.Session;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
-
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.Tuple;
@@ -38,131 +27,135 @@ import com.querydsl.jpa.hibernate.DefaultSessionHolder;
 import com.querydsl.jpa.hibernate.HibernateDeleteClause;
 import com.querydsl.jpa.hibernate.HibernateQuery;
 import com.querydsl.jpa.testutil.HibernateTestRunner;
+import java.io.IOException;
+import java.util.List;
+import org.hibernate.LockMode;
+import org.hibernate.Session;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.runner.RunWith;
 
 /**
  * @author tiwe
- *
  */
 @RunWith(HibernateTestRunner.class)
 public class HibernateBase extends AbstractJPATest implements HibernateTest {
 
-    private static final QCat cat = QCat.cat;
+  private static final QCat cat = QCat.cat;
 
-    @Rule
-    @ClassRule
-    public static TestRule jpaProviderRule = new JPAProviderRule();
+  @Rule @ClassRule public static TestRule jpaProviderRule = new JPAProviderRule();
 
-    @Rule
-    @ClassRule
-    public static TestRule targetRule = new TargetRule();
+  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
 
-    private Session session;
+  private Session session;
 
-    @Override
-    protected HibernateQuery<?> query() {
-        return new HibernateQuery<Void>(session, getTemplates());
+  @Override
+  protected HibernateQuery<?> query() {
+    return new HibernateQuery<Void>(session, getTemplates());
+  }
+
+  protected HibernateDeleteClause delete(EntityPath<?> path) {
+    return new HibernateDeleteClause(session, path);
+  }
+
+  @Override
+  protected HibernateQuery<?> testQuery() {
+    return new HibernateQuery<Void>(
+        new DefaultSessionHolder(session), getTemplates(), new DefaultQueryMetadata());
+  }
+
+  protected JPQLTemplates getTemplates() {
+    return HQLTemplates.DEFAULT;
+  }
+
+  @Override
+  public void setSession(Session session) {
+    this.session = session;
+  }
+
+  @Override
+  protected void save(Object entity) {
+    session.save(entity);
+  }
+
+  @Test
+  public void query_exposure() {
+    //        save(new Cat());
+    List<Cat> results = query().from(cat).select(cat).createQuery().list();
+    assertNotNull(results);
+    assertFalse(results.isEmpty());
+  }
+
+  @Test
+  public void delete() {
+    assertEquals(0, delete(QGroup.group).execute());
+  }
+
+  @Test
+  public void with_comment() {
+    query().from(cat).setComment("my comment").select(cat).fetch();
+  }
+
+  @Test
+  public void lockMode() {
+    query().from(cat).setLockMode(cat, LockMode.PESSIMISTIC_WRITE).select(cat).fetch();
+  }
+
+  @Test
+  public void flushMode() {
+    query().from(cat).setFlushMode(org.hibernate.FlushMode.AUTO).select(cat).fetch();
+  }
+
+  @Test
+  public void scroll() throws IOException {
+    CloseableIterator<Cat> cats =
+        new ScrollableResultsIterator<Cat>(query().from(cat).select(cat).createQuery().scroll());
+    assertTrue(cats.hasNext());
+    while (cats.hasNext()) {
+      assertNotNull(cats.next());
     }
+    cats.close();
+  }
 
-    protected HibernateDeleteClause delete(EntityPath<?> path) {
-        return new HibernateDeleteClause(session, path);
+  @Test
+  public void scrollTuple() throws IOException {
+    CloseableIterator<Tuple> rows =
+        new ScrollableResultsIterator<Tuple>(
+            query().from(cat).select(cat.name, cat.birthdate).createQuery().scroll());
+    assertTrue(rows.hasNext());
+    while (rows.hasNext()) {
+      Tuple row = rows.next();
+      assertEquals(2, row.size());
     }
+    rows.close();
+  }
 
-    @Override
-    protected HibernateQuery<?> testQuery() {
-        return new HibernateQuery<Void>(new DefaultSessionHolder(session),
-                getTemplates(), new DefaultQueryMetadata());
+  @SuppressWarnings("unchecked")
+  @Test
+  public void createQuery() {
+    List<Tuple> rows = query().from(cat).select(cat.id, cat.name).createQuery().list();
+    for (Tuple row : rows) {
+      assertEquals(2, row.size());
     }
+  }
 
-    protected JPQLTemplates getTemplates() {
-        return HQLTemplates.DEFAULT;
+  @SuppressWarnings("unchecked")
+  @Test
+  public void createQuery2() {
+    List<Tuple> rows =
+        query().from(cat).select(new Expression[] {cat.id, cat.name}).createQuery().list();
+    for (Tuple row : rows) {
+      assertEquals(2, row.size());
     }
+  }
 
-    @Override
-    public void setSession(Session session) {
-        this.session = session;
+  @Test
+  public void createQuery3() {
+    List<String> rows = query().from(cat).select(cat.name).createQuery().list();
+    for (String row : rows) {
+      assertTrue(row instanceof String);
     }
-
-    @Override
-    protected void save(Object entity) {
-        session.save(entity);
-    }
-
-    @Test
-    public void query_exposure() {
-//        save(new Cat());
-        List<Cat> results = query().from(cat).select(cat).createQuery().list();
-        assertNotNull(results);
-        assertFalse(results.isEmpty());
-    }
-
-    @Test
-    public void delete() {
-        assertEquals(0, delete(QGroup.group).execute());
-    }
-
-    @Test
-    public void with_comment() {
-        query().from(cat).setComment("my comment").select(cat).fetch();
-    }
-
-    @Test
-    public void lockMode() {
-        query().from(cat).setLockMode(cat, LockMode.PESSIMISTIC_WRITE).select(cat).fetch();
-    }
-
-    @Test
-    public void flushMode() {
-        query().from(cat).setFlushMode(org.hibernate.FlushMode.AUTO).select(cat).fetch();
-    }
-
-    @Test
-    public void scroll() throws IOException {
-        CloseableIterator<Cat> cats = new ScrollableResultsIterator<Cat>(query().from(cat)
-                .select(cat).createQuery().scroll());
-        assertTrue(cats.hasNext());
-        while (cats.hasNext()) {
-            assertNotNull(cats.next());
-        }
-        cats.close();
-    }
-
-    @Test
-    public void scrollTuple() throws IOException {
-        CloseableIterator<Tuple> rows = new ScrollableResultsIterator<Tuple>(query()
-                .from(cat)
-                .select(cat.name, cat.birthdate).createQuery().scroll());
-        assertTrue(rows.hasNext());
-        while (rows.hasNext()) {
-            Tuple row = rows.next();
-            assertEquals(2, row.size());
-        }
-        rows.close();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void createQuery() {
-        List<Tuple> rows = query().from(cat).select(cat.id, cat.name).createQuery().list();
-        for (Tuple row : rows) {
-            assertEquals(2, row.size());
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void createQuery2() {
-        List<Tuple> rows = query().from(cat).select(new Expression[]{cat.id, cat.name}).createQuery().list();
-        for (Tuple row : rows) {
-            assertEquals(2, row.size());
-        }
-    }
-
-    @Test
-    public void createQuery3() {
-        List<String> rows = query().from(cat).select(cat.name).createQuery().list();
-        for (String row : rows) {
-            assertTrue(row instanceof String);
-        }
-    }
-
+  }
 }

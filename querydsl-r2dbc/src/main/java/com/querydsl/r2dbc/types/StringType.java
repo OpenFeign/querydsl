@@ -22,17 +22,16 @@ import java.sql.Types;
  */
 public class StringType extends AbstractType<String, String> {
 
-    public StringType() {
-        super(Types.VARCHAR);
-    }
+  public StringType() {
+    super(Types.VARCHAR);
+  }
 
-    public StringType(int type) {
-        super(type);
-    }
+  public StringType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<String> getReturnedClass() {
-        return String.class;
-    }
-
+  @Override
+  public Class<String> getReturnedClass() {
+    return String.class;
+  }
 }

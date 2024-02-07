@@ -13,22 +13,20 @@
  */
 package com.querydsl.sql;
 
-import org.junit.Test;
-
 import com.querydsl.core.TemplatesTestBase;
+import org.junit.Test;
 
 public class TemplatesTest extends TemplatesTestBase {
 
-    @Test
-    public void test() {
-        new DerbyTemplates();
-        new H2Templates();
-        new HSQLDBTemplates();
-        new MySQLTemplates();
-        new OracleTemplates();
-        new PostgreSQLTemplates();
-        new SQLTemplates("\"",'\\',false);
-        new SQLServerTemplates();
-    }
-
+  @Test
+  public void test() {
+    new DerbyTemplates();
+    new H2Templates();
+    new HSQLDBTemplates();
+    new MySQLTemplates();
+    new OracleTemplates();
+    new PostgreSQLTemplates();
+    new SQLTemplates("\"", '\\', false);
+    new SQLServerTemplates();
+  }
 }

@@ -13,73 +13,71 @@
  */
 package com.querydsl.core.types;
 
-import java.util.UUID;
-
 import com.querydsl.core.annotations.Immutable;
+import java.util.UUID;
 
 /**
  * {@code ParamExpressionImpl} defines a parameter in a query with an optional name
  *
  * @author tiwe
- *
  * @param <T> expression type
  */
 @Immutable
 public class ParamExpressionImpl<T> extends ExpressionBase<T> implements ParamExpression<T> {
 
-    private static final long serialVersionUID = -6872502615009012503L;
+  private static final long serialVersionUID = -6872502615009012503L;
 
-    private final String name;
+  private final String name;
 
-    private final boolean anon;
+  private final boolean anon;
 
-    public ParamExpressionImpl(Class<? extends T> type, String name) {
-        super(type);
-        this.name = name;
-        this.anon = false;
+  public ParamExpressionImpl(Class<? extends T> type, String name) {
+    super(type);
+    this.name = name;
+    this.anon = false;
+  }
+
+  public ParamExpressionImpl(Class<? extends T> type) {
+    super(type);
+    this.name = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+    this.anon = true;
+  }
+
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
+
+  @Override
+  public final boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof ParamExpression<?>) {
+      ParamExpression<?> other = (ParamExpression<?>) o;
+      return other.getType().equals(getType())
+          && other.getName().equals(name)
+          && other.isAnon() == anon;
+    } else {
+      return false;
     }
+  }
 
-    public ParamExpressionImpl(Class<? extends T> type) {
-        super(type);
-        this.name = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
-        this.anon = true;
-    }
+  @Override
+  public final String getName() {
+    return name;
+  }
 
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(this, context);
-    }
+  @Override
+  public final boolean isAnon() {
+    return anon;
+  }
 
-    @Override
-    public final boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof ParamExpression<?>) {
-            ParamExpression<?> other = (ParamExpression<?>) o;
-            return other.getType().equals(getType())
-                && other.getName().equals(name)
-                && other.isAnon() == anon;
-        } else {
-            return false;
-        }
+  @Override
+  public final String getNotSetMessage() {
+    if (!anon) {
+      return "The parameter " + name + " needs to be set";
+    } else {
+      return "A parameter of type " + getType().getName() + " was not set";
     }
-
-    @Override
-    public final String getName() {
-        return name;
-    }
-
-    @Override
-    public final boolean isAnon() {
-        return anon;
-    }
-
-    @Override
-    public final String getNotSetMessage() {
-        if (!anon) {
-            return "The parameter " + name + " needs to be set";
-        } else {
-            return "A parameter of type " + getType().getName() + " was not set";
-        }
-    }
+  }
 }

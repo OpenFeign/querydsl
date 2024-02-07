@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface Teradata extends ExternalDatabase {
-}
+public interface Teradata extends ExternalDatabase {}

@@ -16,7 +16,6 @@ package com.querydsl.codegen;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
@@ -30,62 +29,73 @@ import org.reflections.util.FilterBuilder;
  */
 public final class ClassPathUtils {
 
-    /**
-     * Return the classes from the given package and subpackages using the supplied classloader
-     *
-     * @param classLoader classloader to be used
-     * @param pkg package to scan
-     * @return set of found classes
-     * @throws IOException
-     */
-    public static Set<Class<?>> scanPackage(ClassLoader classLoader, Package pkg) throws IOException {
-        return scanPackage(classLoader, pkg.getName());
-    }
+  /**
+   * Return the classes from the given package and subpackages using the supplied classloader
+   *
+   * @param classLoader classloader to be used
+   * @param pkg package to scan
+   * @return set of found classes
+   * @throws IOException
+   */
+  public static Set<Class<?>> scanPackage(ClassLoader classLoader, Package pkg) throws IOException {
+    return scanPackage(classLoader, pkg.getName());
+  }
 
-    /**
-     * Return the classes from the given package and subpackages using the supplied classloader
-     *
-     * @param classLoader classloader to be used
-     * @param pkg package to scan
-     * @return set of found classes
-     * @throws IOException
-     */
-    public static Set<Class<?>> scanPackage(ClassLoader classLoader, String pkg) throws IOException {
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
+  /**
+   * Return the classes from the given package and subpackages using the supplied classloader
+   *
+   * @param classLoader classloader to be used
+   * @param pkg package to scan
+   * @return set of found classes
+   * @throws IOException
+   */
+  public static Set<Class<?>> scanPackage(ClassLoader classLoader, String pkg) throws IOException {
+    Reflections reflections =
+        new Reflections(
+            new ConfigurationBuilder()
                 .addUrls(ClasspathHelper.forPackage(pkg, classLoader))
                 .addClassLoader(classLoader)
-                .filterInputsBy(new FilterBuilder().includePackage(pkg).excludePackage("com.sun.*").excludePackage("com.apple.*"))
+                .filterInputsBy(
+                    new FilterBuilder()
+                        .includePackage(pkg)
+                        .excludePackage("com.sun.*")
+                        .excludePackage("com.apple.*"))
                 .setScanners(new SubTypesScanner(false)));
 
-        Set<Class<?>> classes = new HashSet<Class<?>>();
-        final Set<String> allTypes = reflections.getStore().getAll(SubTypesScanner.class, reflections.getStore().keys(SubTypesScanner.class.getSimpleName()));
-        for (String typeNames : allTypes) {
-            Class<?> clazz = safeClassForName(classLoader, typeNames);
-            if (clazz != null) {
-                classes.add(clazz);
-            }
-        }
-        return classes;
+    Set<Class<?>> classes = new HashSet<Class<?>>();
+    final Set<String> allTypes =
+        reflections
+            .getStore()
+            .getAll(
+                SubTypesScanner.class,
+                reflections.getStore().keys(SubTypesScanner.class.getSimpleName()));
+    for (String typeNames : allTypes) {
+      Class<?> clazz = safeClassForName(classLoader, typeNames);
+      if (clazz != null) {
+        classes.add(clazz);
+      }
     }
+    return classes;
+  }
 
-    /**
-     * Get the class for the given className via the given classLoader
-     *
-     * @param classLoader classloader to be used
-     * @param className fully qualified class name
-     * @return {@code Class} instance matching the class name or null if not found
-     */
-    public static Class<?> safeClassForName(ClassLoader classLoader, String className) {
-        try {
-            if (className.startsWith("com.sun.") || className.startsWith("com.apple.")) {
-                return null;
-            } else {
-                return Class.forName(className, true, classLoader);
-            }
-        } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            return null;
-        }
+  /**
+   * Get the class for the given className via the given classLoader
+   *
+   * @param classLoader classloader to be used
+   * @param className fully qualified class name
+   * @return {@code Class} instance matching the class name or null if not found
+   */
+  public static Class<?> safeClassForName(ClassLoader classLoader, String className) {
+    try {
+      if (className.startsWith("com.sun.") || className.startsWith("com.apple.")) {
+        return null;
+      } else {
+        return Class.forName(className, true, classLoader);
+      }
+    } catch (ClassNotFoundException | NoClassDefFoundError e) {
+      return null;
     }
+  }
 
-    private ClassPathUtils() { }
+  private ClassPathUtils() {}
 }

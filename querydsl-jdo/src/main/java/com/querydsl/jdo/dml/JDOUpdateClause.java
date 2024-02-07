@@ -13,10 +13,6 @@
  */
 package com.querydsl.jdo.dml;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.dml.UpdateClause;
@@ -24,73 +20,72 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@link UpdateClause} implementation for JDO
  *
  * @author tiwe
- *
  */
 public class JDOUpdateClause implements UpdateClause<JDOUpdateClause> {
 
-    private final QueryMetadata metadata = new DefaultQueryMetadata();
+  private final QueryMetadata metadata = new DefaultQueryMetadata();
 
-    private final Map<Path<?>, Expression<?>> updates = new LinkedHashMap<>();
+  private final Map<Path<?>, Expression<?>> updates = new LinkedHashMap<>();
 
-    @Override
-    public long execute() {
-        // TODO : implement
-        throw new UnsupportedOperationException("Not yet implemented");
+  @Override
+  public long execute() {
+    // TODO : implement
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  @Override
+  public JDOUpdateClause set(List<? extends Path<?>> paths, List<?> values) {
+    for (int i = 0; i < paths.size(); i++) {
+      if (values.get(i) != null) {
+        updates.put(paths.get(i), Expressions.constant(values.get(i)));
+      } else {
+        updates.put(paths.get(i), Expressions.nullExpression(paths.get(i)));
+      }
     }
+    return this;
+  }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public JDOUpdateClause set(List<? extends Path<?>> paths, List<?> values) {
-        for (int i = 0; i < paths.size(); i++) {
-            if (values.get(i) != null) {
-                updates.put(paths.get(i), Expressions.constant(values.get(i)));
-            } else {
-                updates.put(paths.get(i), Expressions.nullExpression(paths.get(i)));
-            }
-        }
-        return this;
+  @Override
+  public <T> JDOUpdateClause set(Path<T> path, T value) {
+    if (value != null) {
+      updates.put(path, Expressions.constant(value));
+    } else {
+      updates.put(path, Expressions.nullExpression(path));
     }
+    return this;
+  }
 
-    @Override
-    public <T> JDOUpdateClause set(Path<T> path, T value) {
-        if (value != null) {
-            updates.put(path, Expressions.constant(value));
-        } else {
-            updates.put(path, Expressions.nullExpression(path));
-        }
-        return this;
+  @Override
+  public <T> JDOUpdateClause set(Path<T> path, Expression<? extends T> expression) {
+    updates.put(path, expression);
+    return this;
+  }
+
+  @Override
+  public <T> JDOUpdateClause setNull(Path<T> path) {
+    updates.put(path, Expressions.nullExpression(path));
+    return this;
+  }
+
+  @Override
+  public JDOUpdateClause where(Predicate... o) {
+    for (Predicate p : o) {
+      metadata.addWhere(p);
     }
+    return this;
+  }
 
-
-    @Override
-    public <T> JDOUpdateClause set(Path<T> path, Expression<? extends T> expression) {
-        updates.put(path, expression);
-        return this;
-    }
-
-    @Override
-    public <T> JDOUpdateClause setNull(Path<T> path) {
-        updates.put(path, Expressions.nullExpression(path));
-        return this;
-    }
-
-    @Override
-    public JDOUpdateClause where(Predicate... o) {
-        for (Predicate p : o) {
-            metadata.addWhere(p);
-        }
-        return this;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return updates.isEmpty();
-    }
-
-
+  @Override
+  public boolean isEmpty() {
+    return updates.isEmpty();
+  }
 }

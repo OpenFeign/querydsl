@@ -24,26 +24,25 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
  */
 class AnonymousBindMarkers implements BindMarkers {
 
-    private static final AtomicIntegerFieldUpdater<AnonymousBindMarkers> COUNTER_INCREMENTER = AtomicIntegerFieldUpdater
-            .newUpdater(AnonymousBindMarkers.class, "counter");
+  private static final AtomicIntegerFieldUpdater<AnonymousBindMarkers> COUNTER_INCREMENTER =
+      AtomicIntegerFieldUpdater.newUpdater(AnonymousBindMarkers.class, "counter");
 
-    // access via COUNTER_INCREMENTER
-    @SuppressWarnings("unused")
-    private volatile int counter;
+  // access via COUNTER_INCREMENTER
+  @SuppressWarnings("unused")
+  private volatile int counter;
 
-    private final String placeholder;
+  private final String placeholder;
 
-    AnonymousBindMarkers(String placeholder) {
-        this.counter = 0;
-        this.placeholder = placeholder;
-    }
+  AnonymousBindMarkers(String placeholder) {
+    this.counter = 0;
+    this.placeholder = placeholder;
+  }
 
-    @Override
-    public BindMarker next() {
+  @Override
+  public BindMarker next() {
 
-        int index = COUNTER_INCREMENTER.getAndIncrement(this);
+    int index = COUNTER_INCREMENTER.getAndIncrement(this);
 
-        return new IndexedBindMarker(placeholder, index);
-    }
-
+    return new IndexedBindMarker(placeholder, index);
+  }
 }

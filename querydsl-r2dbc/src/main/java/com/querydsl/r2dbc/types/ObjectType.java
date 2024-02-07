@@ -22,17 +22,16 @@ import java.sql.Types;
  */
 public class ObjectType extends AbstractType<Object, Object> {
 
-    public ObjectType() {
-        super(Types.OTHER);
-    }
+  public ObjectType() {
+    super(Types.OTHER);
+  }
 
-    public ObjectType(int type) {
-        super(type);
-    }
+  public ObjectType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Object> getReturnedClass() {
-        return Object.class;
-    }
-
+  @Override
+  public Class<Object> getReturnedClass() {
+    return Object.class;
+  }
 }

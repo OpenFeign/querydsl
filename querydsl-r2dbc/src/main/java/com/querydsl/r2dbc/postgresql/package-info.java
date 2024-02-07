@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * PostgreSQL support
- */
+/** PostgreSQL support */
 package com.querydsl.r2dbc.postgresql;

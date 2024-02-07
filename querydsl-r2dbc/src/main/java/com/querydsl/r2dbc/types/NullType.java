@@ -2,22 +2,19 @@ package com.querydsl.r2dbc.types;
 
 import java.sql.Types;
 
-/**
- * NullType
- */
+/** NullType */
 public class NullType extends AbstractType<Null, Null> {
 
-    public NullType() {
-        super(Types.NULL);
-    }
+  public NullType() {
+    super(Types.NULL);
+  }
 
-    public NullType(int type) {
-        super(type);
-    }
+  public NullType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Null> getReturnedClass() {
-        return Null.class;
-    }
-
+  @Override
+  public Class<Null> getReturnedClass() {
+    return Null.class;
+  }
 }

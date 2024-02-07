@@ -9,14 +9,13 @@ import com.querydsl.core.types.Predicate;
  */
 public interface ReactiveFilteredClause<C extends ReactiveFilteredClause<C>> {
 
-    /**
-     * Adds the given filter conditions
-     *
-     * <p>Skips null arguments</p>
-     *
-     * @param o filter conditions to be added
-     * @return the current object
-     */
-    C where(Predicate... o);
-
+  /**
+   * Adds the given filter conditions
+   *
+   * <p>Skips null arguments
+   *
+   * @param o filter conditions to be added
+   * @return the current object
+   */
+  C where(Predicate... o);
 }

@@ -13,29 +13,31 @@
  */
 package com.querydsl.r2dbc;
 
+import static org.junit.Assert.assertEquals;
+
 import com.querydsl.r2dbc.domain.Employee;
 import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.sql.ForeignKey;
-import org.junit.Test;
-
 import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class ForeignKeyTest {
 
-    @Test
-    public void on() {
-        QEmployee employee = new QEmployee("employee");
-        QEmployee employee2 = new QEmployee("employee2");
+  @Test
+  public void on() {
+    QEmployee employee = new QEmployee("employee");
+    QEmployee employee2 = new QEmployee("employee2");
 
-        ForeignKey<Employee> foreignKey = new ForeignKey<Employee>(employee, employee.superiorId, "ID");
-        assertEquals("employee.superiorId = employee2.ID", foreignKey.on(employee2).toString());
+    ForeignKey<Employee> foreignKey = new ForeignKey<Employee>(employee, employee.superiorId, "ID");
+    assertEquals("employee.superiorId = employee2.ID", foreignKey.on(employee2).toString());
 
-        foreignKey = new ForeignKey<Employee>(employee,
-                Arrays.asList(employee.superiorId, employee.firstname),
-                Arrays.asList("ID", "FN"));
-        assertEquals("employee.superiorId = employee2.ID && employee.firstname = employee2.FN", foreignKey.on(employee2).toString());
-    }
-
+    foreignKey =
+        new ForeignKey<Employee>(
+            employee,
+            Arrays.asList(employee.superiorId, employee.firstname),
+            Arrays.asList("ID", "FN"));
+    assertEquals(
+        "employee.superiorId = employee2.ID && employee.firstname = employee2.FN",
+        foreignKey.on(employee2).toString());
+  }
 }

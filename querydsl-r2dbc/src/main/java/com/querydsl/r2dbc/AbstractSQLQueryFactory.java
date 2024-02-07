@@ -24,122 +24,121 @@ import com.querydsl.sql.RelationalPath;
 import io.r2dbc.spi.Connection;
 import reactor.core.publisher.Mono;
 
-
 /**
- * {@code AbstractSQLQueryFactory} is the base class for {@link R2DBCCommonQueryFactory} implementations
+ * {@code AbstractSQLQueryFactory} is the base class for {@link R2DBCCommonQueryFactory}
+ * implementations
  *
  * @param <Q> query type
  * @author mc_fish
  */
-public abstract class AbstractSQLQueryFactory<Q extends R2DBCCommonQuery<?>> implements R2DBCCommonQueryFactory<Q,
-        R2DBCDeleteClause, R2DBCUpdateClause, R2DBCInsertClause> {
+public abstract class AbstractSQLQueryFactory<Q extends R2DBCCommonQuery<?>>
+    implements R2DBCCommonQueryFactory<Q, R2DBCDeleteClause, R2DBCUpdateClause, R2DBCInsertClause> {
 
-    protected final Configuration configuration;
+  protected final Configuration configuration;
 
-    protected final R2DBCConnectionProvider connectionProvider;
+  protected final R2DBCConnectionProvider connectionProvider;
 
-    public AbstractSQLQueryFactory(Configuration configuration, R2DBCConnectionProvider connectionProvider) {
-        this.configuration = configuration;
-        this.connectionProvider = connectionProvider;
-    }
+  public AbstractSQLQueryFactory(
+      Configuration configuration, R2DBCConnectionProvider connectionProvider) {
+    this.configuration = configuration;
+    this.connectionProvider = connectionProvider;
+  }
 
-    @Override
-    public final R2DBCDeleteClause delete(RelationalPath<?> path) {
-        return new R2DBCDeleteClause(connectionProvider, configuration, path);
-    }
+  @Override
+  public final R2DBCDeleteClause delete(RelationalPath<?> path) {
+    return new R2DBCDeleteClause(connectionProvider, configuration, path);
+  }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public final Q from(Expression<?> from) {
-        return (Q) query().from(from);
-    }
+  @SuppressWarnings("unchecked")
+  @Override
+  public final Q from(Expression<?> from) {
+    return (Q) query().from(from);
+  }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public final Q from(Expression<?>... args) {
-        return (Q) query().from(args);
-    }
+  @SuppressWarnings("unchecked")
+  @Override
+  public final Q from(Expression<?>... args) {
+    return (Q) query().from(args);
+  }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public final Q from(SubQueryExpression<?> subQuery, Path<?> alias) {
-        return (Q) query().from(subQuery, alias);
-    }
+  @SuppressWarnings("unchecked")
+  @Override
+  public final Q from(SubQueryExpression<?> subQuery, Path<?> alias) {
+    return (Q) query().from(subQuery, alias);
+  }
 
-    @Override
-    public final R2DBCInsertClause insert(RelationalPath<?> path) {
-        return new R2DBCInsertClause(connectionProvider, configuration, path);
-    }
+  @Override
+  public final R2DBCInsertClause insert(RelationalPath<?> path) {
+    return new R2DBCInsertClause(connectionProvider, configuration, path);
+  }
 
+  @Override
+  public final R2DBCUpdateClause update(RelationalPath<?> path) {
+    return new R2DBCUpdateClause(connectionProvider, configuration, path);
+  }
 
-    @Override
-    public final R2DBCUpdateClause update(RelationalPath<?> path) {
-        return new R2DBCUpdateClause(connectionProvider, configuration, path);
-    }
+  public final Configuration getConfiguration() {
+    return configuration;
+  }
 
-    public final Configuration getConfiguration() {
-        return configuration;
-    }
+  public final Mono<Connection> getConnection() {
+    return connectionProvider.getConnection();
+  }
 
-    public final Mono<Connection> getConnection() {
-        return connectionProvider.getConnection();
-    }
+  /**
+   * Create a new SQL query with the given projection
+   *
+   * @param expr projection
+   * @param <T> type of the projection
+   * @return select(expr)
+   */
+  public abstract <T> AbstractR2DBCQuery<T, ?> select(Expression<T> expr);
 
-    /**
-     * Create a new SQL query with the given projection
-     *
-     * @param expr projection
-     * @param <T>  type of the projection
-     * @return select(expr)
-     */
-    public abstract <T> AbstractR2DBCQuery<T, ?> select(Expression<T> expr);
+  /**
+   * Create a new SQL query with the given projection
+   *
+   * @param exprs projection
+   * @return select(exprs)
+   */
+  public abstract AbstractR2DBCQuery<Tuple, ?> select(Expression<?>... exprs);
 
-    /**
-     * Create a new SQL query with the given projection
-     *
-     * @param exprs projection
-     * @return select(exprs)
-     */
-    public abstract AbstractR2DBCQuery<Tuple, ?> select(Expression<?>... exprs);
+  /**
+   * Create a new SQL query with the given projection
+   *
+   * @param expr distinct projection
+   * @param <T> type of the projection
+   * @return select(distinct expr)
+   */
+  public abstract <T> AbstractR2DBCQuery<T, ?> selectDistinct(Expression<T> expr);
 
-    /**
-     * Create a new SQL query with the given projection
-     *
-     * @param expr distinct projection
-     * @param <T>  type of the projection
-     * @return select(distinct expr)
-     */
-    public abstract <T> AbstractR2DBCQuery<T, ?> selectDistinct(Expression<T> expr);
+  /**
+   * Create a new SQL query with the given projection
+   *
+   * @param exprs distinct projection
+   * @return select(distinct exprs)
+   */
+  public abstract AbstractR2DBCQuery<Tuple, ?> selectDistinct(Expression<?>... exprs);
 
-    /**
-     * Create a new SQL query with the given projection
-     *
-     * @param exprs distinct projection
-     * @return select(distinct exprs)
-     */
-    public abstract AbstractR2DBCQuery<Tuple, ?> selectDistinct(Expression<?>... exprs);
+  /**
+   * Create a new SQL query with zero as the projection
+   *
+   * @return select(0)
+   */
+  public abstract AbstractR2DBCQuery<Integer, ?> selectZero();
 
-    /**
-     * Create a new SQL query with zero as the projection
-     *
-     * @return select(0)
-     */
-    public abstract AbstractR2DBCQuery<Integer, ?> selectZero();
+  /**
+   * Create a new SQL query with one as the projection
+   *
+   * @return select(1)
+   */
+  public abstract AbstractR2DBCQuery<Integer, ?> selectOne();
 
-    /**
-     * Create a new SQL query with one as the projection
-     *
-     * @return select(1)
-     */
-    public abstract AbstractR2DBCQuery<Integer, ?> selectOne();
-
-    /**
-     * Create a new SQL query with the given projection and source
-     *
-     * @param expr query source and projection
-     * @param <T>  type of the projection
-     * @return select(expr).from(expr)
-     */
-    public abstract <T> AbstractR2DBCQuery<T, ?> selectFrom(RelationalPath<T> expr);
-
+  /**
+   * Create a new SQL query with the given projection and source
+   *
+   * @param expr query source and projection
+   * @param <T> type of the projection
+   * @return select(expr).from(expr)
+   */
+  public abstract <T> AbstractR2DBCQuery<T, ?> selectFrom(RelationalPath<T> expr);
 }

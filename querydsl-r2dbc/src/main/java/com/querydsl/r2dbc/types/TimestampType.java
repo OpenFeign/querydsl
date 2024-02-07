@@ -24,37 +24,36 @@ import java.time.LocalDateTime;
  */
 public class TimestampType extends AbstractDateTimeType<Timestamp, LocalDateTime> {
 
-    public TimestampType() {
-        super(Types.TIMESTAMP);
-    }
+  public TimestampType() {
+    super(Types.TIMESTAMP);
+  }
 
-    public TimestampType(int type) {
-        super(type);
-    }
+  public TimestampType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getLiteral(Timestamp value) {
-        return dateTimeFormatter.format(value);
-    }
+  @Override
+  public String getLiteral(Timestamp value) {
+    return dateTimeFormatter.format(value);
+  }
 
-    @Override
-    public Class<Timestamp> getReturnedClass() {
-        return Timestamp.class;
-    }
+  @Override
+  public Class<Timestamp> getReturnedClass() {
+    return Timestamp.class;
+  }
 
-    @Override
-    public Class<LocalDateTime> getDatabaseClass() {
-        return LocalDateTime.class;
-    }
+  @Override
+  public Class<LocalDateTime> getDatabaseClass() {
+    return LocalDateTime.class;
+  }
 
-    @Override
-    protected LocalDateTime toDbValue(Timestamp value) {
-        return value.toLocalDateTime();
-    }
+  @Override
+  protected LocalDateTime toDbValue(Timestamp value) {
+    return value.toLocalDateTime();
+  }
 
-    @Override
-    protected Timestamp fromDbValue(LocalDateTime value) {
-        return Timestamp.valueOf(value);
-    }
-
+  @Override
+  protected Timestamp fromDbValue(LocalDateTime value) {
+    return Timestamp.valueOf(value);
+  }
 }

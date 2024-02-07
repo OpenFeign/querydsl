@@ -5,10 +5,9 @@ import org.junit.Test;
 
 public class R2DBCQueryTest {
 
-    @Test(expected = IllegalStateException.class)
-    public void noConnection() {
-        QSurvey survey = QSurvey.survey;
-        R2DBCExpressions.select(survey.id).from(survey).fetch().collectList().block();
-    }
-
+  @Test(expected = IllegalStateException.class)
+  public void noConnection() {
+    QSurvey survey = QSurvey.survey;
+    R2DBCExpressions.select(survey.id).from(survey).fetch().collectList().block();
+  }
 }

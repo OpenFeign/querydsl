@@ -20,238 +20,236 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.TemporalExpression;
+import java.time.LocalDateTime;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.LocalDateTime;
-
 /**
- * {@code LocalDateTimeExpression} represents LocalDateTime expressions
- * The date representation is compatible with the Gregorian calendar.
+ * {@code LocalDateTimeExpression} represents LocalDateTime expressions The date representation is
+ * compatible with the Gregorian calendar.
  *
  * @param <T> expression type
  * @author mc_fish
  */
 public abstract class LocalDateTimeExpression<T extends Comparable> extends TemporalExpression<T> {
 
-    private static class Constants {
-        private static final LocalDateTimeExpression<LocalDateTime> CURRENT_DATE = currentLocalDateTime(LocalDateTime.class);
+  private static class Constants {
+    private static final LocalDateTimeExpression<LocalDateTime> CURRENT_DATE =
+        currentLocalDateTime(LocalDateTime.class);
+  }
+
+  private static final long serialVersionUID = -6879277113694148047L;
+
+  /**
+   * Create an expression representing the current date as a LocalDateTimeExpression instance
+   *
+   * @return current date
+   */
+  public static LocalDateTimeExpression<LocalDateTime> currentLocalDateTime() {
+    return Constants.CURRENT_DATE;
+  }
+
+  /**
+   * Create an expression representing the current date as a LocalDateTimeExpression instance
+   *
+   * @return current date
+   */
+  public static <T extends Comparable> LocalDateTimeExpression<T> currentLocalDateTime(
+      Class<T> cl) {
+    return R2DBCExpressions.localDateTimeOperation(cl, Ops.DateTimeOps.CURRENT_DATE);
+  }
+
+  @Nullable private transient volatile NumberExpression<Integer> dayOfMonth, dayOfWeek, dayOfYear;
+  @Nullable
+  private transient volatile NumberExpression<Integer> hours, minutes, seconds, milliseconds;
+  @Nullable private transient volatile LocalDateTimeExpression<T> min, max;
+  @Nullable
+  private transient volatile NumberExpression<Integer> week, month, year, yearMonth, yearWeek;
+
+  public LocalDateTimeExpression(Expression<T> mixin) {
+    super(mixin);
+  }
+
+  @Override
+  public LocalDateTimeExpression<T> as(Path<T> alias) {
+    return R2DBCExpressions.localDateTimeOperation(getType(), Ops.ALIAS, mixin, alias);
+  }
+
+  @Override
+  public LocalDateTimeExpression<T> as(String alias) {
+    return as(ExpressionUtils.path(getType(), alias));
+  }
+
+  /**
+   * Create a day of month expression (range 1-31)
+   *
+   * @return day of month
+   */
+  public NumberExpression<Integer> dayOfMonth() {
+    if (dayOfMonth == null) {
+      dayOfMonth = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, mixin);
     }
+    return dayOfMonth;
+  }
 
-    private static final long serialVersionUID = -6879277113694148047L;
-
-    /**
-     * Create an expression representing the current date as a LocalDateTimeExpression instance
-     *
-     * @return current date
-     */
-    public static LocalDateTimeExpression<LocalDateTime> currentLocalDateTime() {
-        return Constants.CURRENT_DATE;
+  /**
+   * Create a day of week expression (range 1-7 / SUN-SAT)
+   *
+   * <p>NOT supported in JDOQL and not in Derby
+   *
+   * @return day of week
+   */
+  public NumberExpression<Integer> dayOfWeek() {
+    if (dayOfWeek == null) {
+      dayOfWeek = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_WEEK, mixin);
     }
+    return dayOfWeek;
+  }
 
-    /**
-     * Create an expression representing the current date as a LocalDateTimeExpression instance
-     *
-     * @return current date
-     */
-    public static <T extends Comparable> LocalDateTimeExpression<T> currentLocalDateTime(Class<T> cl) {
-        return R2DBCExpressions.localDateTimeOperation(cl, Ops.DateTimeOps.CURRENT_DATE);
+  /**
+   * Create a day of year expression (range 1-356)
+   *
+   * <p>NOT supported in JDOQL and not in Derby
+   *
+   * @return day of year
+   */
+  public NumberExpression<Integer> dayOfYear() {
+    if (dayOfYear == null) {
+      dayOfYear = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_YEAR, mixin);
     }
+    return dayOfYear;
+  }
 
-    @Nullable
-    private transient volatile NumberExpression<Integer> dayOfMonth, dayOfWeek, dayOfYear;
-
-    @Nullable
-    private transient volatile NumberExpression<Integer> hours, minutes, seconds, milliseconds;
-
-    @Nullable
-    private transient volatile LocalDateTimeExpression<T> min, max;
-
-    @Nullable
-    private transient volatile NumberExpression<Integer> week, month, year, yearMonth, yearWeek;
-
-    public LocalDateTimeExpression(Expression<T> mixin) {
-        super(mixin);
+  /**
+   * Create a hours expression (range 0-23)
+   *
+   * @return hour
+   */
+  public NumberExpression<Integer> hour() {
+    if (hours == null) {
+      hours = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.HOUR, mixin);
     }
+    return hours;
+  }
 
-    @Override
-    public LocalDateTimeExpression<T> as(Path<T> alias) {
-        return R2DBCExpressions.localDateTimeOperation(getType(), Ops.ALIAS, mixin, alias);
+  /**
+   * Get the maximum value of this expression (aggregation)
+   *
+   * @return max(this)
+   */
+  public LocalDateTimeExpression<T> max() {
+    if (max == null) {
+      max = R2DBCExpressions.localDateTimeOperation(getType(), Ops.AggOps.MAX_AGG, mixin);
     }
+    return max;
+  }
 
-    @Override
-    public LocalDateTimeExpression<T> as(String alias) {
-        return as(ExpressionUtils.path(getType(), alias));
+  /**
+   * Create a milliseconds expression (range 0-999)
+   *
+   * <p>Is always 0 in HQL and JDOQL modules
+   *
+   * @return milli seconds
+   */
+  public NumberExpression<Integer> milliSecond() {
+    if (milliseconds == null) {
+      milliseconds = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.MILLISECOND, mixin);
     }
+    return milliseconds;
+  }
 
-    /**
-     * Create a day of month expression (range 1-31)
-     *
-     * @return day of month
-     */
-    public NumberExpression<Integer> dayOfMonth() {
-        if (dayOfMonth == null) {
-            dayOfMonth = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_MONTH, mixin);
-        }
-        return dayOfMonth;
+  /**
+   * Get the minimum value of this expression (aggregation)
+   *
+   * @return min(this)
+   */
+  public LocalDateTimeExpression<T> min() {
+    if (min == null) {
+      min = R2DBCExpressions.localDateTimeOperation(getType(), Ops.AggOps.MIN_AGG, mixin);
     }
+    return min;
+  }
 
-    /**
-     * Create a day of week expression (range 1-7 / SUN-SAT)
-     * <p>NOT supported in JDOQL and not in Derby</p>
-     *
-     * @return day of week
-     */
-    public NumberExpression<Integer> dayOfWeek() {
-        if (dayOfWeek == null) {
-            dayOfWeek = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_WEEK, mixin);
-        }
-        return dayOfWeek;
+  /**
+   * Create a minutes expression (range 0-59)
+   *
+   * @return minute
+   */
+  public NumberExpression<Integer> minute() {
+    if (minutes == null) {
+      minutes = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.MINUTE, mixin);
     }
+    return minutes;
+  }
 
-    /**
-     * Create a day of year expression (range 1-356)
-     * <p>NOT supported in JDOQL and not in Derby</p>
-     *
-     * @return day of year
-     */
-    public NumberExpression<Integer> dayOfYear() {
-        if (dayOfYear == null) {
-            dayOfYear = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.DAY_OF_YEAR, mixin);
-        }
-        return dayOfYear;
+  /**
+   * Create a month expression (range 1-12 / JAN-DEC)
+   *
+   * @return month
+   */
+  public NumberExpression<Integer> month() {
+    if (month == null) {
+      month = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.MONTH, mixin);
     }
+    return month;
+  }
 
-    /**
-     * Create a hours expression (range 0-23)
-     *
-     * @return hour
-     */
-    public NumberExpression<Integer> hour() {
-        if (hours == null) {
-            hours = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.HOUR, mixin);
-        }
-        return hours;
+  /**
+   * Create a seconds expression (range 0-59)
+   *
+   * @return second
+   */
+  public NumberExpression<Integer> second() {
+    if (seconds == null) {
+      seconds = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.SECOND, mixin);
     }
+    return seconds;
+  }
 
-    /**
-     * Get the maximum value of this expression (aggregation)
-     *
-     * @return max(this)
-     */
-    public LocalDateTimeExpression<T> max() {
-        if (max == null) {
-            max = R2DBCExpressions.localDateTimeOperation(getType(), Ops.AggOps.MAX_AGG, mixin);
-        }
-        return max;
+  /**
+   * Create a week expression
+   *
+   * @return week
+   */
+  public NumberExpression<Integer> week() {
+    if (week == null) {
+      week = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.WEEK, mixin);
     }
+    return week;
+  }
 
-    /**
-     * Create a milliseconds expression (range 0-999)
-     * <p>Is always 0 in HQL and JDOQL modules</p>
-     *
-     * @return milli seconds
-     */
-    public NumberExpression<Integer> milliSecond() {
-        if (milliseconds == null) {
-            milliseconds = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.MILLISECOND, mixin);
-        }
-        return milliseconds;
+  /**
+   * Create a year expression
+   *
+   * @return year
+   */
+  public NumberExpression<Integer> year() {
+    if (year == null) {
+      year = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.YEAR, mixin);
     }
+    return year;
+  }
 
-    /**
-     * Get the minimum value of this expression (aggregation)
-     *
-     * @return min(this)
-     */
-    public LocalDateTimeExpression<T> min() {
-        if (min == null) {
-            min = R2DBCExpressions.localDateTimeOperation(getType(), Ops.AggOps.MIN_AGG, mixin);
-        }
-        return min;
+  /**
+   * Create a year / month expression
+   *
+   * @return year month
+   */
+  public NumberExpression<Integer> yearMonth() {
+    if (yearMonth == null) {
+      yearMonth = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.YEAR_MONTH, mixin);
     }
+    return yearMonth;
+  }
 
-    /**
-     * Create a minutes expression (range 0-59)
-     *
-     * @return minute
-     */
-    public NumberExpression<Integer> minute() {
-        if (minutes == null) {
-            minutes = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.MINUTE, mixin);
-        }
-        return minutes;
+  /**
+   * Create a ISO yearweek expression
+   *
+   * @return year week
+   */
+  public NumberExpression<Integer> yearWeek() {
+    if (yearWeek == null) {
+      yearWeek = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.YEAR_WEEK, mixin);
     }
-
-    /**
-     * Create a month expression (range 1-12 / JAN-DEC)
-     *
-     * @return month
-     */
-    public NumberExpression<Integer> month() {
-        if (month == null) {
-            month = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.MONTH, mixin);
-        }
-        return month;
-    }
-
-    /**
-     * Create a seconds expression (range 0-59)
-     *
-     * @return second
-     */
-    public NumberExpression<Integer> second() {
-        if (seconds == null) {
-            seconds = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.SECOND, mixin);
-        }
-        return seconds;
-    }
-
-    /**
-     * Create a week expression
-     *
-     * @return week
-     */
-    public NumberExpression<Integer> week() {
-        if (week == null) {
-            week = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.WEEK, mixin);
-        }
-        return week;
-    }
-
-    /**
-     * Create a year expression
-     *
-     * @return year
-     */
-    public NumberExpression<Integer> year() {
-        if (year == null) {
-            year = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.YEAR, mixin);
-        }
-        return year;
-    }
-
-    /**
-     * Create a year / month expression
-     *
-     * @return year month
-     */
-    public NumberExpression<Integer> yearMonth() {
-        if (yearMonth == null) {
-            yearMonth = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.YEAR_MONTH, mixin);
-        }
-        return yearMonth;
-    }
-
-    /**
-     * Create a ISO yearweek expression
-     *
-     * @return year week
-     */
-    public NumberExpression<Integer> yearWeek() {
-        if (yearWeek == null) {
-            yearWeek = Expressions.numberOperation(Integer.class, Ops.DateTimeOps.YEAR_WEEK, mixin);
-        }
-        return yearWeek;
-    }
-
+    return yearWeek;
+  }
 }

@@ -22,41 +22,41 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
 
 /**
- * {@code CollQueryMixin} extends {@link QueryMixin} to provide normalization logic specific to this module
+ * {@code CollQueryMixin} extends {@link QueryMixin} to provide normalization logic specific to this
+ * module
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class CollQueryMixin<T> extends QueryMixin<T> {
 
-    private static final Predicate ANY = Expressions.booleanTemplate("any");
+  private static final Predicate ANY = Expressions.booleanTemplate("any");
 
-    public CollQueryMixin() { }
+  public CollQueryMixin() {}
 
-    public CollQueryMixin(QueryMetadata metadata) {
-        super(metadata);
+  public CollQueryMixin(QueryMetadata metadata) {
+    super(metadata);
+  }
+
+  public CollQueryMixin(T self, QueryMetadata metadata) {
+    super(self, metadata);
+  }
+
+  @Override
+  protected Predicate convert(Predicate predicate, Role role) {
+    predicate = (Predicate) ExpressionUtils.extract(predicate);
+    if (predicate != null) {
+      Context context = new Context();
+      Predicate transformed = (Predicate) predicate.accept(collectionAnyVisitor, context);
+      for (int i = 0; i < context.paths.size(); i++) {
+        leftJoin(
+            (Path) context.paths.get(i).getMetadata().getParent(),
+            (Path) context.replacements.get(i));
+        on(ANY);
+      }
+      return transformed;
+    } else {
+      return predicate;
     }
-
-    public CollQueryMixin(T self, QueryMetadata metadata) {
-        super(self, metadata);
-    }
-
-    @Override
-    protected Predicate convert(Predicate predicate, Role role) {
-        predicate = (Predicate) ExpressionUtils.extract(predicate);
-        if (predicate != null) {
-            Context context = new Context();
-            Predicate transformed = (Predicate) predicate.accept(collectionAnyVisitor, context);
-            for (int i = 0; i < context.paths.size(); i++) {
-                leftJoin(
-                    (Path) context.paths.get(i).getMetadata().getParent(),
-                    (Path) context.replacements.get(i));
-                on(ANY);
-            }
-            return transformed;
-        } else {
-            return predicate;
-        }
-    }
+  }
 }

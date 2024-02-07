@@ -16,27 +16,48 @@ package com.querydsl.codegen;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.util.Collections;
-
-import org.junit.Test;
-
 import com.querydsl.codegen.utils.model.Parameter;
 import com.querydsl.codegen.utils.model.Types;
+import java.util.Collections;
+import org.junit.Test;
 
 public class DelegateTest {
 
-    @Test
-    public void equals_object() {
-        Delegate delegate = new Delegate(Types.STRING, Types.STRING, "delegate", Collections.<Parameter>emptyList(), Types.STRING);
-        Delegate delegate2 = new Delegate(Types.STRING, Types.STRING, "delegate", Collections.<Parameter>emptyList(), Types.STRING);
-        assertEquals(delegate, delegate2);
-    }
+  @Test
+  public void equals_object() {
+    Delegate delegate =
+        new Delegate(
+            Types.STRING,
+            Types.STRING,
+            "delegate",
+            Collections.<Parameter>emptyList(),
+            Types.STRING);
+    Delegate delegate2 =
+        new Delegate(
+            Types.STRING,
+            Types.STRING,
+            "delegate",
+            Collections.<Parameter>emptyList(),
+            Types.STRING);
+    assertEquals(delegate, delegate2);
+  }
 
-    @Test
-    public void not_equals_object() {
-        Delegate delegate = new Delegate(Types.STRING, Types.STRING, "delegate", Collections.<Parameter>emptyList(), Types.STRING);
-        Delegate delegate2 = new Delegate(Types.STRING, Types.STRING, "delegate2", Collections.<Parameter>emptyList(), Types.STRING);
-        assertFalse(delegate.equals(delegate2));
-    }
-
+  @Test
+  public void not_equals_object() {
+    Delegate delegate =
+        new Delegate(
+            Types.STRING,
+            Types.STRING,
+            "delegate",
+            Collections.<Parameter>emptyList(),
+            Types.STRING);
+    Delegate delegate2 =
+        new Delegate(
+            Types.STRING,
+            Types.STRING,
+            "delegate2",
+            Collections.<Parameter>emptyList(),
+            Types.STRING);
+    assertFalse(delegate.equals(delegate2));
+  }
 }

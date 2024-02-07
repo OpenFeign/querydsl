@@ -18,12 +18,11 @@ import org.junit.Test;
 
 public class TemplatesTest extends TemplatesTestBase {
 
-    @Test
-    public void test() {
-        new H2Templates();
-        new MySQLTemplates();
-        new PostgreSQLTemplates();
-        new SQLServerTemplates();
-    }
-
+  @Test
+  public void test() {
+    new H2Templates();
+    new MySQLTemplates();
+    new PostgreSQLTemplates();
+    new SQLServerTemplates();
+  }
 }

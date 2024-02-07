@@ -13,30 +13,30 @@
  */
 package com.querydsl.sql.dml;
 
-import java.sql.Connection;
-import java.util.function.Supplier;
-
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLTemplates;
+import java.sql.Connection;
+import java.util.function.Supplier;
 
 /**
- * {@code SQLDeleteClause} defines a DELETE clause.
- * If you need to subtype this, use {@link AbstractSQLDeleteClause} instead.
+ * {@code SQLDeleteClause} defines a DELETE clause. If you need to subtype this, use {@link
+ * AbstractSQLDeleteClause} instead.
  *
  * @author tiwe
- *
  */
 public class SQLDeleteClause extends AbstractSQLDeleteClause<SQLDeleteClause> {
-    public SQLDeleteClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
-        super(connection, new Configuration(templates), entity);
-    }
+  public SQLDeleteClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
+    super(connection, new Configuration(templates), entity);
+  }
 
-    public SQLDeleteClause(Connection connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-    }
+  public SQLDeleteClause(
+      Connection connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+  }
 
-    public SQLDeleteClause(Supplier<Connection> connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-    }
+  public SQLDeleteClause(
+      Supplier<Connection> connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+  }
 }

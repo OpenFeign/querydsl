@@ -11,14 +11,12 @@ import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 @EnableR2dbcRepositories
 class R2DBCConfiguration extends AbstractR2dbcConfiguration {
 
-    @Bean
-    public H2ConnectionFactory connectionFactory() {
-        return new H2ConnectionFactory(H2ConnectionConfiguration
-                .builder()
-                .url("mem:testdb;DB_CLOSE_DELAY=-1;INIT=runscript from 'src/main/sql/001_schema.sql'")
-                .username("sa")
-                .build()
-        );
-    }
-
+  @Bean
+  public H2ConnectionFactory connectionFactory() {
+    return new H2ConnectionFactory(
+        H2ConnectionConfiguration.builder()
+            .url("mem:testdb;DB_CLOSE_DELAY=-1;INIT=runscript from 'src/main/sql/001_schema.sql'")
+            .username("sa")
+            .build());
+  }
 }

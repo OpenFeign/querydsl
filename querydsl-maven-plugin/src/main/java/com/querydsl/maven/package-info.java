@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Maven plugins
- */
+/** Maven plugins */
 package com.querydsl.maven;

@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Lucene 4 support
- */
+/** Lucene 4 support */
 package com.querydsl.lucene4;

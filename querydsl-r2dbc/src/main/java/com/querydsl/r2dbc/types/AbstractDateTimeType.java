@@ -13,7 +13,6 @@
  */
 package com.querydsl.r2dbc.types;
 
-
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -28,25 +27,28 @@ import java.util.TimeZone;
  */
 public abstract class AbstractDateTimeType<IN, OUT> extends AbstractType<IN, OUT> {
 
-    private static final Calendar UTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+  private static final Calendar UTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
-    static {
-        UTC.setTimeInMillis(0);
-    }
+  static {
+    UTC.setTimeInMillis(0);
+  }
 
-    protected static Calendar utc() {
-        return (Calendar) UTC.clone();
-    }
+  protected static Calendar utc() {
+    return (Calendar) UTC.clone();
+  }
 
-    protected static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
-    protected static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-    protected static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    protected static final DateTimeFormatter localTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-    protected static final DateTimeFormatter localDateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-    protected static final DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+  protected static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+  protected static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+  protected static final SimpleDateFormat dateTimeFormatter =
+      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  protected static final DateTimeFormatter localTimeFormatter =
+      DateTimeFormatter.ofPattern("HH:mm:ss");
+  protected static final DateTimeFormatter localDateFormatter =
+      DateTimeFormatter.ofPattern("HH:mm:ss");
+  protected static final DateTimeFormatter localDateTimeFormatter =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public AbstractDateTimeType(int type) {
-        super(type);
-    }
-
+  public AbstractDateTimeType(int type) {
+    super(type);
+  }
 }

@@ -18,15 +18,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * The Class AuditLog.
- */
+/** The Class AuditLog. */
 @Entity
 @Table(name = "auditlog_")
 public class AuditLog {
-    @Id
-    int id;
+  @Id int id;
 
-    @ManyToOne
-    Item item;
+  @ManyToOne Item item;
 }

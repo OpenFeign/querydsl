@@ -1,6 +1,6 @@
 /*
  * Copyright 2010, Mysema Ltd
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,23 +14,21 @@
 package com.querydsl.codegen.utils;
 
 /**
- * Evaluator defines an interface for returning a value as a result of
- * evaluating an expression using the given argument array
- * 
+ * Evaluator defines an interface for returning a value as a result of evaluating an expression
+ * using the given argument array
+ *
  * @author tiwe
- * 
  */
 public interface Evaluator<T> {
 
-    /**
-     * @param args
-     * @return
-     */
-    T evaluate(Object... args);
+  /**
+   * @param args
+   * @return
+   */
+  T evaluate(Object... args);
 
-    /**
-     * @return
-     */
-    Class<? extends T> getType();
-
+  /**
+   * @return
+   */
+  Class<? extends T> getType();
 }

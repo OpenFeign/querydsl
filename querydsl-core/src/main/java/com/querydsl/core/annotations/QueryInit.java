@@ -25,16 +25,12 @@ import java.lang.annotation.Target;
  * Defines the paths to be initialized for the annotated property
  *
  * @author tiwe
- *
  */
 @Documented
-@Target({FIELD,METHOD})
+@Target({FIELD, METHOD})
 @Retention(RUNTIME)
 public @interface QueryInit {
 
-    /**
-     * Initialized paths
-     */
-    String[] value();
-
+  /** Initialized paths */
+  String[] value();
 }

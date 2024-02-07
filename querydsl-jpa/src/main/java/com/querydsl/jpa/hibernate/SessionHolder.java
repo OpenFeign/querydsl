@@ -20,24 +20,22 @@ import org.hibernate.SQLQuery;
  * Abstraction for different Hibernate Session signatures
  *
  * @author tiwe
- *
  */
 public interface SessionHolder {
 
-    /**
-     * Create a JPQL query for the given query string
-     *
-     * @param queryString JPQL query string
-     * @return query
-     */
-    Query createQuery(String queryString);
+  /**
+   * Create a JPQL query for the given query string
+   *
+   * @param queryString JPQL query string
+   * @return query
+   */
+  Query createQuery(String queryString);
 
-    /**
-     * Create an SQL query for the given query string
-     *
-     * @param queryString JPQL query string
-     * @return query
-     */
-    SQLQuery createSQLQuery(String queryString);
-
+  /**
+   * Create an SQL query for the given query string
+   *
+   * @param queryString JPQL query string
+   * @return query
+   */
+  SQLQuery createSQLQuery(String queryString);
 }

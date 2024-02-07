@@ -21,24 +21,22 @@ import org.hibernate.StatelessSession;
  * SessionHolder implementation using StatelessSession
  *
  * @author tiwe
- *
  */
 public class StatelessSessionHolder implements SessionHolder {
 
-    private final StatelessSession session;
+  private final StatelessSession session;
 
-    public StatelessSessionHolder(StatelessSession session) {
-        this.session = session;
-    }
+  public StatelessSessionHolder(StatelessSession session) {
+    this.session = session;
+  }
 
-    @Override
-    public Query createQuery(String queryString) {
-        return session.createQuery(queryString);
-    }
+  @Override
+  public Query createQuery(String queryString) {
+    return session.createQuery(queryString);
+  }
 
-    @Override
-    public SQLQuery createSQLQuery(String queryString) {
-        return session.createSQLQuery(queryString);
-    }
-
+  @Override
+  public SQLQuery createSQLQuery(String queryString) {
+    return session.createSQLQuery(queryString);
+  }
 }

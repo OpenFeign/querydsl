@@ -1,17 +1,14 @@
 package com.querydsl.example.dto;
 
-import lombok.Data;
-
 import java.time.LocalDate;
+import lombok.Data;
 
 @Data
 public class CustomerAddress {
 
-    private Address address;
+  private Address address;
 
-    private String addressTypeCode;
+  private String addressTypeCode;
 
-    private LocalDate fromDate, toDate;
-
+  private LocalDate fromDate, toDate;
 }
-

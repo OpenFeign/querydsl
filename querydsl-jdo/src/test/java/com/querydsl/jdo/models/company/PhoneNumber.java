@@ -22,31 +22,30 @@ import com.querydsl.core.annotations.QueryEntity;
  */
 @QueryEntity
 public class PhoneNumber {
-    long id; // PK when using app id
-    String name;
-    String number;
+  long id; // PK when using app id
+  String name;
+  String number;
 
-    public PhoneNumber() {
-    }
+  public PhoneNumber() {}
 
-    public PhoneNumber(String name, String number) {
-        this.name = name;
-        this.number = number;
-    }
+  public PhoneNumber(String name, String number) {
+    this.name = name;
+    this.number = number;
+  }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public long getId() {
-        return id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getNumber() {
-        return number;
-    }
+  public String getNumber() {
+    return number;
+  }
 }

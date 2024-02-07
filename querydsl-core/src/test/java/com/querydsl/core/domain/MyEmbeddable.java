@@ -18,22 +18,21 @@ import com.querydsl.core.annotations.QueryEmbeddable;
 @QueryEmbeddable
 public class MyEmbeddable implements Comparable<MyEmbeddable> {
 
-    private int foo;
+  private int foo;
 
-    public int compareTo(MyEmbeddable individualToCompare) {
-        return -1;
-    }
+  public int compareTo(MyEmbeddable individualToCompare) {
+    return -1;
+  }
 
-    public boolean equals(Object o) {
-        return o == this;
-    }
+  public boolean equals(Object o) {
+    return o == this;
+  }
 
-    public int getFoo() {
-        return foo;
-    }
+  public int getFoo() {
+    return foo;
+  }
 
-    public void setFoo(int foo) {
-        this.foo = foo;
-    }
-
+  public void setFoo(int foo) {
+    this.foo = foo;
+  }
 }

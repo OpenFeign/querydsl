@@ -13,75 +13,71 @@
  */
 package com.querydsl.spatial;
 
-import org.jetbrains.annotations.Nullable;
-
-import org.geolatte.geom.GeometryCollection;
-import org.geolatte.geom.Point;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import org.geolatte.geom.GeometryCollection;
+import org.geolatte.geom.Point;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * A MultiSurface is a 2-dimensional GeometryCollection whose elements are Surfaces, all using coordinates from
- * the same coordinate reference system. The geometric interiors of any two Surfaces in a MultiSurface may not
- * intersect in the full coordinate system. The boundaries of any two coplanar elements in a MultiSurface may
- * intersect, at most, at a finite number of Points. If they were to meet along a curve, they could be merged into a
- * single surface.
+ * A MultiSurface is a 2-dimensional GeometryCollection whose elements are Surfaces, all using
+ * coordinates from the same coordinate reference system. The geometric interiors of any two
+ * Surfaces in a MultiSurface may not intersect in the full coordinate system. The boundaries of any
+ * two coplanar elements in a MultiSurface may intersect, at most, at a finite number of Points. If
+ * they were to meet along a curve, they could be merged into a single surface.
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class MultiSurfaceExpression<T extends GeometryCollection> extends GeometryCollectionExpression<T> {
+public abstract class MultiSurfaceExpression<T extends GeometryCollection>
+    extends GeometryCollectionExpression<T> {
 
-    private static final long serialVersionUID = 4133386816772862010L;
+  private static final long serialVersionUID = 4133386816772862010L;
 
-    @Nullable
-    private transient volatile PointExpression<Point> centroid, pointOnSurface;
+  @Nullable private transient volatile PointExpression<Point> centroid, pointOnSurface;
 
-    @Nullable
-    private transient volatile NumberExpression<Double> area;
+  @Nullable private transient volatile NumberExpression<Double> area;
 
-    public MultiSurfaceExpression(Expression<T> mixin) {
-        super(mixin);
+  public MultiSurfaceExpression(Expression<T> mixin) {
+    super(mixin);
+  }
+
+  /**
+   * The area of this MultiSurface, as measured in the spatial reference system of this
+   * MultiSurface.
+   *
+   * @return area
+   */
+  public NumberExpression<Double> area() {
+    if (area == null) {
+      area = Expressions.numberOperation(Double.class, SpatialOps.AREA, mixin);
     }
+    return area;
+  }
 
-    /**
-     * The area of this MultiSurface, as measured in the spatial reference system of this MultiSurface.
-     *
-     * @return area
-     */
-    public NumberExpression<Double> area() {
-        if (area == null) {
-            area = Expressions.numberOperation(Double.class, SpatialOps.AREA, mixin);
-        }
-        return area;
+  /**
+   * The mathematical centroid for this MultiSurface. The result is not guaranteed to be on this
+   * MultiSurface.
+   *
+   * @return centroid
+   */
+  public PointExpression<Point> centroid() {
+    if (centroid == null) {
+      centroid = GeometryExpressions.pointOperation(SpatialOps.CENTROID, mixin);
     }
+    return centroid;
+  }
 
-    /**
-     * The mathematical centroid for this MultiSurface. The result is not guaranteed to be on
-     * this MultiSurface.
-     *
-     * @return centroid
-     */
-    public PointExpression<Point> centroid() {
-        if (centroid == null) {
-            centroid = GeometryExpressions.pointOperation(SpatialOps.CENTROID, mixin);
-        }
-        return centroid;
+  /**
+   * A Point guaranteed to be on this MultiSurface.
+   *
+   * @return point on surface
+   */
+  public PointExpression<Point> pointOnSurface() {
+    if (pointOnSurface == null) {
+      pointOnSurface = GeometryExpressions.pointOperation(SpatialOps.POINT_ON_SURFACE, mixin);
     }
-
-    /**
-     * A Point guaranteed to be on this MultiSurface.
-     *
-     * @return point on surface
-     */
-    public PointExpression<Point> pointOnSurface() {
-        if (pointOnSurface == null) {
-            pointOnSurface = GeometryExpressions.pointOperation(SpatialOps.POINT_ON_SURFACE, mixin);
-        }
-        return pointOnSurface;
-    }
-
+    return pointOnSurface;
+  }
 }

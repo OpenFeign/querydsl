@@ -19,26 +19,25 @@ import com.querydsl.core.types.Operator;
  * {@code JPQLOps} provides JPQL specific operators
  *
  * @author tiwe
- *
  */
 public enum JPQLOps implements Operator {
-    TREAT(Object.class),
-    INDEX(Integer.class),
-    TYPE(String.class),
-    CAST(Object.class),
-    MEMBER_OF(Boolean.class),
-    NOT_MEMBER_OF(Boolean.class),
-    KEY(Object.class),
-    VALUE(Object.class);
+  TREAT(Object.class),
+  INDEX(Integer.class),
+  TYPE(String.class),
+  CAST(Object.class),
+  MEMBER_OF(Boolean.class),
+  NOT_MEMBER_OF(Boolean.class),
+  KEY(Object.class),
+  VALUE(Object.class);
 
-    private final Class<?> type;
+  private final Class<?> type;
 
-    private JPQLOps(Class<?> type) {
-        this.type = type;
-    }
+  private JPQLOps(Class<?> type) {
+    this.type = type;
+  }
 
-    @Override
-    public Class<?> getType() {
-        return type;
-    }
+  @Override
+  public Class<?> getType() {
+    return type;
+  }
 }

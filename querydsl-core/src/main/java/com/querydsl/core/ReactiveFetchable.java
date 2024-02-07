@@ -11,32 +11,31 @@ import reactor.core.publisher.Mono;
  */
 public interface ReactiveFetchable<T> {
 
-    /**
-     * Get the projection as a typed Flux.
-     *
-     * @return result
-     */
-    Flux<T> fetch();
+  /**
+   * Get the projection as a typed Flux.
+   *
+   * @return result
+   */
+  Flux<T> fetch();
 
-    /**
-     * Get the first result of the projection.
-     *
-     * @return first result
-     */
-    Mono<T> fetchFirst();
+  /**
+   * Get the first result of the projection.
+   *
+   * @return first result
+   */
+  Mono<T> fetchFirst();
 
-    /**
-     * Get the projection as a unique result.
-     *
-     * @return first result
-     */
-    Mono<T> fetchOne();
+  /**
+   * Get the projection as a unique result.
+   *
+   * @return first result
+   */
+  Mono<T> fetchOne();
 
-    /**
-     * Get the count of matched elements
-     *
-     * @return row count
-     */
-    Mono<Long> fetchCount();
-
+  /**
+   * Get the count of matched elements
+   *
+   * @return row count
+   */
+  Mono<Long> fetchCount();
 }

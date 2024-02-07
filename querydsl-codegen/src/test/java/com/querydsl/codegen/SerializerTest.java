@@ -13,81 +13,114 @@
  */
 package com.querydsl.codegen;
 
+import com.querydsl.codegen.utils.JavaWriter;
+import com.querydsl.codegen.utils.StringUtils;
+import com.querydsl.codegen.utils.model.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.querydsl.codegen.utils.JavaWriter;
-import com.querydsl.codegen.utils.StringUtils;
-import com.querydsl.codegen.utils.model.*;
-
 public class SerializerTest {
 
-    private EntityType type;
+  private EntityType type;
 
-    private Writer writer = new StringWriter();
+  private Writer writer = new StringWriter();
 
-    private TypeMappings typeMappings = new JavaTypeMappings();
+  private TypeMappings typeMappings = new JavaTypeMappings();
 
-    @SuppressWarnings("unchecked")
-    @Before
-    public void setUp() {
-        // type
-        Type typeModel = new SimpleType(TypeCategory.ENTITY, "com.querydsl.DomainClass", "com.querydsl", "DomainClass", false, false);
-        type = new EntityType(typeModel);
+  @SuppressWarnings("unchecked")
+  @Before
+  public void setUp() {
+    // type
+    Type typeModel =
+        new SimpleType(
+            TypeCategory.ENTITY,
+            "com.querydsl.DomainClass",
+            "com.querydsl",
+            "DomainClass",
+            false,
+            false);
+    type = new EntityType(typeModel);
 
-        // property
-        type.addProperty(new Property(type, "entityField", type));
-        type.addProperty(new Property(type, "collection", new ClassType(TypeCategory.COLLECTION, Collection.class, typeModel)));
-        type.addProperty(new Property(type, "listField", new ClassType(TypeCategory.LIST, List.class, typeModel)));
-        type.addProperty(new Property(type, "setField", new ClassType(TypeCategory.SET, Set.class, typeModel)));
-        type.addProperty(new Property(type, "arrayField", new ClassType(TypeCategory.ARRAY, String[].class, typeModel)));
-        type.addProperty(new Property(type, "mapField", new ClassType(TypeCategory.MAP, List.class, typeModel, typeModel)));
-        type.addProperty(new Property(type, "superTypeField", new TypeExtends(new ClassType(TypeCategory.MAP, List.class, typeModel, typeModel))));
-        type.addProperty(new Property(type, "extendsTypeField", new TypeSuper(new ClassType(TypeCategory.MAP, List.class, typeModel, typeModel))));
+    // property
+    type.addProperty(new Property(type, "entityField", type));
+    type.addProperty(
+        new Property(
+            type,
+            "collection",
+            new ClassType(TypeCategory.COLLECTION, Collection.class, typeModel)));
+    type.addProperty(
+        new Property(type, "listField", new ClassType(TypeCategory.LIST, List.class, typeModel)));
+    type.addProperty(
+        new Property(type, "setField", new ClassType(TypeCategory.SET, Set.class, typeModel)));
+    type.addProperty(
+        new Property(
+            type, "arrayField", new ClassType(TypeCategory.ARRAY, String[].class, typeModel)));
+    type.addProperty(
+        new Property(
+            type, "mapField", new ClassType(TypeCategory.MAP, List.class, typeModel, typeModel)));
+    type.addProperty(
+        new Property(
+            type,
+            "superTypeField",
+            new TypeExtends(new ClassType(TypeCategory.MAP, List.class, typeModel, typeModel))));
+    type.addProperty(
+        new Property(
+            type,
+            "extendsTypeField",
+            new TypeSuper(new ClassType(TypeCategory.MAP, List.class, typeModel, typeModel))));
 
-        for (Class<?> cl : Arrays.asList(Boolean.class, Comparable.class, Integer.class, Date.class, java.sql.Date.class, java.sql.Time.class)) {
-            Type classType = new ClassType(TypeCategory.get(cl.getName()), cl);
-            type.addProperty(new Property(type, StringUtils.uncapitalize(cl.getSimpleName()), classType));
-        }
-
-        // constructor
-        Parameter firstName = new Parameter("firstName", new ClassType(TypeCategory.STRING, String.class));
-        Parameter lastName = new Parameter("lastName", new ClassType(TypeCategory.STRING, String.class));
-        type.addConstructor(new Constructor(Arrays.asList(firstName, lastName)));
+    for (Class<?> cl :
+        Arrays.asList(
+            Boolean.class,
+            Comparable.class,
+            Integer.class,
+            Date.class,
+            java.sql.Date.class,
+            java.sql.Time.class)) {
+      Type classType = new ClassType(TypeCategory.get(cl.getName()), cl);
+      type.addProperty(new Property(type, StringUtils.uncapitalize(cl.getSimpleName()), classType));
     }
 
-    @Test
-    public void entitySerializer() throws Exception {
-        new EntitySerializer(typeMappings, Collections.<String>emptyList())
-            .serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    }
+    // constructor
+    Parameter firstName =
+        new Parameter("firstName", new ClassType(TypeCategory.STRING, String.class));
+    Parameter lastName =
+        new Parameter("lastName", new ClassType(TypeCategory.STRING, String.class));
+    type.addConstructor(new Constructor(Arrays.asList(firstName, lastName)));
+  }
 
-    @Test
-    public void entitySerializer2() throws Exception {
-        new EntitySerializer(typeMappings,Collections.<String>emptyList())
-            .serialize(type, new SimpleSerializerConfig(true,true,true,true,""), new JavaWriter(writer));
-    }
+  @Test
+  public void entitySerializer() throws Exception {
+    new EntitySerializer(typeMappings, Collections.<String>emptyList())
+        .serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
+  }
 
-    @Test
-    public void embeddableSerializer() throws Exception {
-        new EmbeddableSerializer(typeMappings,Collections.<String>emptyList())
-            .serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    }
+  @Test
+  public void entitySerializer2() throws Exception {
+    new EntitySerializer(typeMappings, Collections.<String>emptyList())
+        .serialize(
+            type, new SimpleSerializerConfig(true, true, true, true, ""), new JavaWriter(writer));
+  }
 
-    @Test
-    public void supertypeSerializer() throws IOException {
-        new SupertypeSerializer(typeMappings,Collections.<String>emptyList())
-            .serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    }
+  @Test
+  public void embeddableSerializer() throws Exception {
+    new EmbeddableSerializer(typeMappings, Collections.<String>emptyList())
+        .serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
+  }
 
-    @Test
-    public void projectionSerializer() throws IOException {
-        new ProjectionSerializer(typeMappings)
-            .serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    }
+  @Test
+  public void supertypeSerializer() throws IOException {
+    new SupertypeSerializer(typeMappings, Collections.<String>emptyList())
+        .serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
+  }
+
+  @Test
+  public void projectionSerializer() throws IOException {
+    new ProjectionSerializer(typeMappings)
+        .serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
+  }
 }

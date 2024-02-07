@@ -1,5 +1,3 @@
 package com.querydsl.apt.domain.p10;
 
-public interface Persistable<T> {
-
-}
+public interface Persistable<T> {}

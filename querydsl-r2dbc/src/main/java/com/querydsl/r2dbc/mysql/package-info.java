@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-
-/**
- * MySQL support
- */
+/** MySQL support */
 package com.querydsl.r2dbc.mysql;

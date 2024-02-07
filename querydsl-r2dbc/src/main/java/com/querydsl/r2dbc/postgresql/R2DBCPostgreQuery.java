@@ -25,59 +25,59 @@ import io.r2dbc.spi.Connection;
 
 /**
  * {@code PostgreSQLQuery} provides Postgres related extensions to SQLQuery.
- * <p>
- * If you need to subtype this, use the base class instead.
+ *
+ * <p>If you need to subtype this, use the base class instead.
  *
  * @param <T> the result type
  */
 public class R2DBCPostgreQuery<T> extends AbstractR2DBCPostgreQuery<T, R2DBCPostgreQuery<T>> {
 
-    public R2DBCPostgreQuery(Connection conn) {
-        this(conn, new Configuration(PostgreSQLTemplates.DEFAULT), new DefaultQueryMetadata());
-    }
+  public R2DBCPostgreQuery(Connection conn) {
+    this(conn, new Configuration(PostgreSQLTemplates.DEFAULT), new DefaultQueryMetadata());
+  }
 
-    public R2DBCPostgreQuery(Connection conn, SQLTemplates templates) {
-        this(conn, new Configuration(templates), new DefaultQueryMetadata());
-    }
+  public R2DBCPostgreQuery(Connection conn, SQLTemplates templates) {
+    this(conn, new Configuration(templates), new DefaultQueryMetadata());
+  }
 
-    public R2DBCPostgreQuery(Connection conn, Configuration configuration) {
-        this(conn, configuration, new DefaultQueryMetadata());
-    }
+  public R2DBCPostgreQuery(Connection conn, Configuration configuration) {
+    this(conn, configuration, new DefaultQueryMetadata());
+  }
 
-    public R2DBCPostgreQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
-        super(conn, configuration, metadata);
-    }
+  public R2DBCPostgreQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
+    super(conn, configuration, metadata);
+  }
 
-    public R2DBCPostgreQuery(R2DBCConnectionProvider connProvider, Configuration configuration, QueryMetadata metadata) {
-        super(connProvider, configuration, metadata);
-    }
+  public R2DBCPostgreQuery(
+      R2DBCConnectionProvider connProvider, Configuration configuration, QueryMetadata metadata) {
+    super(connProvider, configuration, metadata);
+  }
 
-    public R2DBCPostgreQuery(R2DBCConnectionProvider connProvider, Configuration configuration) {
-        super(connProvider, configuration, new DefaultQueryMetadata());
-    }
+  public R2DBCPostgreQuery(R2DBCConnectionProvider connProvider, Configuration configuration) {
+    super(connProvider, configuration, new DefaultQueryMetadata());
+  }
 
+  @Override
+  public R2DBCPostgreQuery<T> clone(Connection conn) {
+    R2DBCPostgreQuery<T> q =
+        new R2DBCPostgreQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    q.clone(this);
+    return q;
+  }
 
-    @Override
-    public R2DBCPostgreQuery<T> clone(Connection conn) {
-        R2DBCPostgreQuery<T> q = new R2DBCPostgreQuery<T>(conn, getConfiguration(), getMetadata().clone());
-        q.clone(this);
-        return q;
-    }
+  @Override
+  public <U> R2DBCPostgreQuery<U> select(Expression<U> expr) {
+    queryMixin.setProjection(expr);
+    @SuppressWarnings("unchecked") // This is the new type
+    R2DBCPostgreQuery<U> newType = (R2DBCPostgreQuery<U>) this;
+    return newType;
+  }
 
-    @Override
-    public <U> R2DBCPostgreQuery<U> select(Expression<U> expr) {
-        queryMixin.setProjection(expr);
-        @SuppressWarnings("unchecked") // This is the new type
-                R2DBCPostgreQuery<U> newType = (R2DBCPostgreQuery<U>) this;
-        return newType;
-    }
-
-    @Override
-    public R2DBCPostgreQuery<Tuple> select(Expression<?>... exprs) {
-        queryMixin.setProjection(exprs);
-        @SuppressWarnings("unchecked") // This is the new type
-                R2DBCPostgreQuery<Tuple> newType = (R2DBCPostgreQuery<Tuple>) this;
-        return newType;
-    }
-
+  @Override
+  public R2DBCPostgreQuery<Tuple> select(Expression<?>... exprs) {
+    queryMixin.setProjection(exprs);
+    @SuppressWarnings("unchecked") // This is the new type
+    R2DBCPostgreQuery<Tuple> newType = (R2DBCPostgreQuery<Tuple>) this;
+    return newType;
+  }
 }

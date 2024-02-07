@@ -1,6 +1,6 @@
 /*
  * Copyright 2010, Mysema Ltd
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,20 +19,65 @@ import java.util.Set;
 
 /**
  * @author tiwe
- *
  */
 public final class ScalaSyntaxUtils {
 
-    private ScalaSyntaxUtils() {}
+  private ScalaSyntaxUtils() {}
 
-    private static final Set<String> reserved = new HashSet<String>(Arrays.asList("abstract", "do",
-            "finally", "import", "object", "return", "trait", "var", "_", ":", "case", "else",
-            "for", "lazy", "override", "sealed", "try", "while", "=", "=>", "<-", "catch",
-            "extends", "forSome", "match", "package", "super", "true", "with", "<:", "class",
-            "false", "if", "new", "private", "this", "type", "yield", "<%", ">:", "def", "final",
-            "implicit", "null", "protected", "throw", "val", "#", "@"));
+  private static final Set<String> reserved =
+      new HashSet<String>(
+          Arrays.asList(
+              "abstract",
+              "do",
+              "finally",
+              "import",
+              "object",
+              "return",
+              "trait",
+              "var",
+              "_",
+              ":",
+              "case",
+              "else",
+              "for",
+              "lazy",
+              "override",
+              "sealed",
+              "try",
+              "while",
+              "=",
+              "=>",
+              "<-",
+              "catch",
+              "extends",
+              "forSome",
+              "match",
+              "package",
+              "super",
+              "true",
+              "with",
+              "<:",
+              "class",
+              "false",
+              "if",
+              "new",
+              "private",
+              "this",
+              "type",
+              "yield",
+              "<%",
+              ">:",
+              "def",
+              "final",
+              "implicit",
+              "null",
+              "protected",
+              "throw",
+              "val",
+              "#",
+              "@"));
 
-    public static boolean isReserved(String token) {
-        return reserved.contains(token);
-    }
+  public static boolean isReserved(String token) {
+    return reserved.contains(token);
+  }
 }

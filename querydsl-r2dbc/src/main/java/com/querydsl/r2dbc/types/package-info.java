@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-
-/**
- * Types for de/serialization to Result and Statement
- */
+/** Types for de/serialization to Result and Statement */
 package com.querydsl.r2dbc.types;

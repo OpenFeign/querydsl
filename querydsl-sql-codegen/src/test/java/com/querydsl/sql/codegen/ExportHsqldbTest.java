@@ -13,18 +13,16 @@
  */
 package com.querydsl.sql.codegen;
 
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
-
 import com.querydsl.core.testutil.HSQLDB;
 import com.querydsl.sql.Connections;
+import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 
 @Category(HSQLDB.class)
 public class ExportHsqldbTest extends ExportBaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        Connections.initHSQL();
-    }
-
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    Connections.initHSQL();
+  }
 }

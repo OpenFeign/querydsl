@@ -13,20 +13,18 @@
  */
 package com.querydsl.r2dbc.codegen;
 
+import com.querydsl.core.testutil.H2;
 import com.querydsl.sql.Connections;
 import com.querydsl.sql.H2Templates;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
 
-import com.querydsl.core.testutil.H2;
-
 @Category(H2.class)
 public class ExportH2Test extends ExportBaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        Connections.initConfiguration(H2Templates.builder().newLineToSingleSpace().build());
-        Connections.initH2();
-    }
-
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    Connections.initConfiguration(H2Templates.builder().newLineToSingleSpace().build());
+    Connections.initH2();
+  }
 }

@@ -13,45 +13,43 @@
  */
 package com.querydsl.apt.domain;
 
-import org.junit.Test;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryType;
 import com.querydsl.core.types.dsl.*;
+import org.junit.Test;
 
 public class QueryTypeTest extends AbstractTest {
 
-    @QueryEntity
-    public static class QueryTypeEntity {
-        @QueryType(PropertyType.SIMPLE)
-        public String stringAsSimple;
+  @QueryEntity
+  public static class QueryTypeEntity {
+    @QueryType(PropertyType.SIMPLE)
+    public String stringAsSimple;
 
-        @QueryType(PropertyType.COMPARABLE)
-        public String stringAsComparable;
+    @QueryType(PropertyType.COMPARABLE)
+    public String stringAsComparable;
 
-        @QueryType(PropertyType.DATE)
-        public String stringAsDate;
+    @QueryType(PropertyType.DATE)
+    public String stringAsDate;
 
-        @QueryType(PropertyType.DATETIME)
-        public String stringAsDateTime;
+    @QueryType(PropertyType.DATETIME)
+    public String stringAsDateTime;
 
-        @QueryType(PropertyType.TIME)
-        public String stringAsTime;
+    @QueryType(PropertyType.TIME)
+    public String stringAsTime;
 
-        @QueryType(PropertyType.NONE)
-        public String stringNotInQuerydsl;
+    @QueryType(PropertyType.NONE)
+    public String stringNotInQuerydsl;
+  }
 
-    }
-
-    @Test
-    public void test() throws SecurityException, NoSuchFieldException {
-        start(QQueryTypeTest_QueryTypeEntity.class, QQueryTypeTest_QueryTypeEntity.queryTypeEntity);
-        match(SimplePath.class, "stringAsSimple");
-        match(ComparablePath.class, "stringAsComparable");
-        match(DatePath.class, "stringAsDate");
-        match(DateTimePath.class, "stringAsDateTime");
-        match(TimePath.class, "stringAsTime");
-        assertMissing("stringNotInQuerydsl");
-    }
+  @Test
+  public void test() throws SecurityException, NoSuchFieldException {
+    start(QQueryTypeTest_QueryTypeEntity.class, QQueryTypeTest_QueryTypeEntity.queryTypeEntity);
+    match(SimplePath.class, "stringAsSimple");
+    match(ComparablePath.class, "stringAsComparable");
+    match(DatePath.class, "stringAsDate");
+    match(DateTimePath.class, "stringAsDateTime");
+    match(TimePath.class, "stringAsTime");
+    assertMissing("stringNotInQuerydsl");
+  }
 }

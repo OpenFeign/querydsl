@@ -13,61 +13,49 @@
  */
 package com.querydsl.codegen;
 
-import java.io.Serializable;
-
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
+import java.io.Serializable;
 
 public class Embedded2Test extends AbstractExporterTest {
 
-    @QuerySupertype
-    public static class EntityCode {
+  @QuerySupertype
+  public static class EntityCode {
 
-        public String code;
+    public String code;
+  }
 
-    }
+  @QuerySupertype
+  public abstract static class AbstractEntity<C extends EntityCode> {
 
-    @QuerySupertype
-    public abstract static class AbstractEntity<C extends EntityCode> {
+    @QueryEmbedded public C code;
+  }
 
-        @QueryEmbedded
-        public C code;
+  @QuerySupertype
+  public static class AbstractMultilingualEntity<C extends EntityCode> extends AbstractEntity<C> {}
 
-    }
+  @QuerySupertype
+  public abstract static class AbstractNamedEntity<C extends EntityCode>
+      extends AbstractMultilingualEntity<C> {
 
-    @QuerySupertype
-    public static class AbstractMultilingualEntity<C extends EntityCode> extends AbstractEntity<C> {
+    public String nameEn;
 
-    }
+    public String nameNl;
+  }
 
-    @QuerySupertype
-    public abstract static class AbstractNamedEntity<C extends EntityCode> extends AbstractMultilingualEntity<C> {
+  @QueryEntity
+  public static class Brand extends AbstractNamedEntity<BrandCode> {
 
-        public String nameEn;
+    public Long id;
+  }
 
-        public String nameNl;
+  public interface Entity<T> extends Serializable {
 
-    }
+    boolean sameIdentityAs(T other);
+  }
 
-    @QueryEntity
-    public static class Brand extends AbstractNamedEntity<BrandCode> {
-
-        public Long id;
-
-    }
-
-    public interface Entity<T> extends Serializable {
-
-        boolean sameIdentityAs(T other);
-
-    }
-
-    @QueryEmbeddable
-    public static class BrandCode extends EntityCode {
-
-    }
-
-
+  @QueryEmbeddable
+  public static class BrandCode extends EntityCode {}
 }

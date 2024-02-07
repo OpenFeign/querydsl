@@ -14,83 +14,79 @@
 
 package com.querydsl.sql;
 
+import com.querydsl.core.annotations.Immutable;
 import java.sql.Statement;
 
-import com.querydsl.core.annotations.Immutable;
-
-/**
- * {@code StatementOptions} holds parameters that should be applied to {@link Statement}s.
- */
+/** {@code StatementOptions} holds parameters that should be applied to {@link Statement}s. */
 @Immutable
 public class StatementOptions {
 
-    public static final StatementOptions DEFAULT = new StatementOptions(null, null, null, null);
+  public static final StatementOptions DEFAULT = new StatementOptions(null, null, null, null);
 
-    private final Integer maxFieldSize;
-    private final Integer maxRows;
-    private final Integer queryTimeout;
-    private final Integer fetchSize;
+  private final Integer maxFieldSize;
+  private final Integer maxRows;
+  private final Integer queryTimeout;
+  private final Integer fetchSize;
 
-    public StatementOptions(Integer maxFieldSize, Integer maxRows, Integer queryTimeout, Integer fetchSize) {
-        this.maxFieldSize = maxFieldSize;
-        this.maxRows = maxRows;
-        this.queryTimeout = queryTimeout;
-        this.fetchSize = fetchSize;
+  public StatementOptions(
+      Integer maxFieldSize, Integer maxRows, Integer queryTimeout, Integer fetchSize) {
+    this.maxFieldSize = maxFieldSize;
+    this.maxRows = maxRows;
+    this.queryTimeout = queryTimeout;
+    this.fetchSize = fetchSize;
+  }
+
+  public Integer getMaxFieldSize() {
+    return maxFieldSize;
+  }
+
+  public Integer getMaxRows() {
+    return maxRows;
+  }
+
+  public Integer getQueryTimeout() {
+    return queryTimeout;
+  }
+
+  public Integer getFetchSize() {
+    return fetchSize;
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  /** Builder for {@link StatementOptions} */
+  public static final class Builder {
+    private Integer maxFieldSize;
+    private Integer maxRows;
+    private Integer queryTimeout;
+    private Integer fetchSize;
+
+    private Builder() {}
+
+    public Builder setMaxFieldSize(Integer maxFieldSize) {
+      this.maxFieldSize = maxFieldSize;
+      return this;
     }
 
-    public Integer getMaxFieldSize() {
-        return maxFieldSize;
+    public Builder setMaxRows(Integer maxRows) {
+      this.maxRows = maxRows;
+      return this;
     }
 
-    public Integer getMaxRows() {
-        return maxRows;
+    public Builder setQueryTimeout(Integer queryTimeout) {
+      this.queryTimeout = queryTimeout;
+      return this;
     }
 
-    public Integer getQueryTimeout() {
-        return queryTimeout;
+    public Builder setFetchSize(Integer fetchSize) {
+      this.fetchSize = fetchSize;
+      return this;
     }
 
-    public Integer getFetchSize() {
-        return fetchSize;
+    public StatementOptions build() {
+      return new StatementOptions(maxFieldSize, maxRows, queryTimeout, fetchSize);
     }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    /**
-     * Builder for {@link StatementOptions}
-     */
-    public static final class Builder {
-        private Integer maxFieldSize;
-        private Integer maxRows;
-        private Integer queryTimeout;
-        private Integer fetchSize;
-
-        private Builder() { }
-
-        public Builder setMaxFieldSize(Integer maxFieldSize) {
-            this.maxFieldSize = maxFieldSize;
-            return this;
-        }
-
-        public Builder setMaxRows(Integer maxRows) {
-            this.maxRows = maxRows;
-            return this;
-        }
-
-        public Builder setQueryTimeout(Integer queryTimeout) {
-            this.queryTimeout = queryTimeout;
-            return this;
-        }
-
-        public Builder setFetchSize(Integer fetchSize) {
-            this.fetchSize = fetchSize;
-            return this;
-        }
-
-        public StatementOptions build() {
-            return new StatementOptions(maxFieldSize, maxRows, queryTimeout, fetchSize);
-        }
-    }
+  }
 }

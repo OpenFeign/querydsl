@@ -14,26 +14,22 @@
 package com.querydsl.r2dbc.support;
 
 /**
- * A {@code SQLExceptionWrapper} is used to accommodate for
- * Java™ 7's suppressed exceptions.
+ * A {@code SQLExceptionWrapper} is used to accommodate for Java™ 7's suppressed exceptions.
  *
- * <p>
- * When Java™ 6 is used, a fallback {@code SQLExceptionWrapper}
- * that produces similar output is used instead.
- * </p>
+ * <p>When Java™ 6 is used, a fallback {@code SQLExceptionWrapper} that produces similar output is
+ * used instead.
  *
  * @author Shredder121
  */
 public abstract class AbstractR2DBCExceptionWrapper {
 
-    public static final AbstractR2DBCExceptionWrapper INSTANCE;
+  public static final AbstractR2DBCExceptionWrapper INSTANCE;
 
-    static {
-        INSTANCE = new R2DBCSQLExceptionWrapper();
-    }
+  static {
+    INSTANCE = new R2DBCSQLExceptionWrapper();
+  }
 
-    public abstract RuntimeException wrap(Throwable exception);
+  public abstract RuntimeException wrap(Throwable exception);
 
-    public abstract RuntimeException wrap(String message, Throwable exception);
-
+  public abstract RuntimeException wrap(String message, Throwable exception);
 }

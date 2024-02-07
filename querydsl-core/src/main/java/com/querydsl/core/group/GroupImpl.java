@@ -13,11 +13,10 @@
  */
 package com.querydsl.core.group;
 
-import java.util.*;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.Ops;
+import java.util.*;
 
 /**
  * Default implementation of the Group interface
@@ -27,109 +26,110 @@ import com.querydsl.core.types.Ops;
  */
 public class GroupImpl implements Group {
 
-    private final Map<Expression<?>, GroupCollector<?, ?>> groupCollectorMap = new LinkedHashMap<Expression<?>, GroupCollector<?, ?>>();
+  private final Map<Expression<?>, GroupCollector<?, ?>> groupCollectorMap =
+      new LinkedHashMap<Expression<?>, GroupCollector<?, ?>>();
 
-    private final List<GroupExpression<?, ?>> groupExpressions;
+  private final List<GroupExpression<?, ?>> groupExpressions;
 
-    private final List<GroupCollector<?, ?>> groupCollectors = new ArrayList<GroupCollector<?, ?>>();
+  private final List<GroupCollector<?, ?>> groupCollectors = new ArrayList<GroupCollector<?, ?>>();
 
-    private final List<QPair<?, ?>> maps;
+  private final List<QPair<?, ?>> maps;
 
-    public GroupImpl(List<GroupExpression<?, ?>> columnDefinitions, List<QPair<?, ?>> maps) {
-        this.groupExpressions = columnDefinitions;
-        this.maps = maps;
-        for (GroupExpression<?, ?> coldef : columnDefinitions) {
-            GroupCollector<?, ?> collector = groupCollectorMap.get(coldef.getExpression());
-            if (collector == null) {
-                collector = coldef.createGroupCollector();
-                Expression<?> coldefExpr = coldef.getExpression();
-                groupCollectorMap.put(coldefExpr, collector);
-                if (coldefExpr instanceof Operation && ((Operation) coldefExpr).getOperator() == Ops.ALIAS) {
-                    groupCollectorMap.put(((Operation) coldefExpr).getArg(1), collector);
-                }
-            }
-            groupCollectors.add(collector);
+  public GroupImpl(List<GroupExpression<?, ?>> columnDefinitions, List<QPair<?, ?>> maps) {
+    this.groupExpressions = columnDefinitions;
+    this.maps = maps;
+    for (GroupExpression<?, ?> coldef : columnDefinitions) {
+      GroupCollector<?, ?> collector = groupCollectorMap.get(coldef.getExpression());
+      if (collector == null) {
+        collector = coldef.createGroupCollector();
+        Expression<?> coldefExpr = coldef.getExpression();
+        groupCollectorMap.put(coldefExpr, collector);
+        if (coldefExpr instanceof Operation
+            && ((Operation) coldefExpr).getOperator() == Ops.ALIAS) {
+          groupCollectorMap.put(((Operation) coldefExpr).getArg(1), collector);
         }
+      }
+      groupCollectors.add(collector);
     }
+  }
 
-    @SuppressWarnings("unchecked")
-    public void add(Object[] row) {
-        int i = 0;
-        for (GroupCollector groupCollector : groupCollectors) {
-            groupCollector.add(row[i]);
-            i++;
-        }
+  @SuppressWarnings("unchecked")
+  public void add(Object[] row) {
+    int i = 0;
+    for (GroupCollector groupCollector : groupCollectors) {
+      groupCollector.add(row[i]);
+      i++;
     }
+  }
 
-    @SuppressWarnings("unchecked")
-    private <T, R> R get(Expression<T> expr) {
-        GroupCollector<T, R> col = (GroupCollector<T, R>) groupCollectorMap.get(expr);
-        if (col != null) {
-            return col.get();
-        }
-        throw new NoSuchElementException(expr.toString());
+  @SuppressWarnings("unchecked")
+  private <T, R> R get(Expression<T> expr) {
+    GroupCollector<T, R> col = (GroupCollector<T, R>) groupCollectorMap.get(expr);
+    if (col != null) {
+      return col.get();
     }
+    throw new NoSuchElementException(expr.toString());
+  }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T, R> R getGroup(GroupExpression<T, R> definition) {
-        for (GroupExpression<?, ?> def : groupExpressions) {
-            if (def.equals(definition)) {
-                return (R) groupCollectorMap.get(def.getExpression()).get();
-            }
-        }
-        throw new NoSuchElementException(definition.toString());
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T, R> R getGroup(GroupExpression<T, R> definition) {
+    for (GroupExpression<?, ?> def : groupExpressions) {
+      if (def.equals(definition)) {
+        return (R) groupCollectorMap.get(def.getExpression()).get();
+      }
     }
+    throw new NoSuchElementException(definition.toString());
+  }
 
-    @Override
-    public <T> List<T> getList(Expression<T> expr) {
-        return this.get(expr);
+  @Override
+  public <T> List<T> getList(Expression<T> expr) {
+    return this.get(expr);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <K, V> Map<K, V> getMap(Expression<K> key, Expression<V> value) {
+    for (QPair<?, ?> pair : maps) {
+      if (pair.equals(key, value)) {
+        return (Map<K, V>) groupCollectorMap.get(pair).get();
+      }
     }
+    throw new NoSuchElementException("GMap(" + key + ", " + value + ")");
+  }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <K, V> Map<K, V> getMap(Expression<K> key, Expression<V> value) {
-        for (QPair<?, ?> pair : maps) {
-            if (pair.equals(key, value)) {
-                return (Map<K, V>) groupCollectorMap.get(pair).get();
-            }
-        }
-        throw new NoSuchElementException("GMap(" + key + ", " + value + ")");
+  @SuppressWarnings("unchecked")
+  @Override
+  public <K, V> SortedMap<K, V> getSortedMap(Expression<K> key, Expression<V> value) {
+    for (QPair<?, ?> pair : maps) {
+      if (pair.equals(key, value)) {
+        return (SortedMap<K, V>) groupCollectorMap.get(pair).get();
+      }
     }
+    throw new NoSuchElementException("GMap(" + key + ", " + value + ")");
+  }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <K, V> SortedMap<K, V> getSortedMap(Expression<K> key, Expression<V> value) {
-        for (QPair<?, ?> pair : maps) {
-            if (pair.equals(key, value)) {
-                return (SortedMap<K, V>) groupCollectorMap.get(pair).get();
-            }
-        }
-        throw new NoSuchElementException("GMap(" + key + ", " + value + ")");
+  @Override
+  public <T> T getOne(Expression<T> expr) {
+    return this.get(expr);
+  }
+
+  @Override
+  public <T> Set<T> getSet(Expression<T> expr) {
+    return this.get(expr);
+  }
+
+  @Override
+  public <T> SortedSet<T> getSortedSet(Expression<T> expr) {
+    return this.get(expr);
+  }
+
+  @Override
+  public Object[] toArray() {
+    List<Object> arr = new ArrayList<Object>(groupCollectors.size());
+    for (GroupCollector<?, ?> col : groupCollectors) {
+      arr.add(col.get());
     }
-
-    @Override
-    public <T> T getOne(Expression<T> expr) {
-        return this.get(expr);
-    }
-
-    @Override
-    public <T> Set<T> getSet(Expression<T> expr) {
-        return this.get(expr);
-    }
-
-    @Override
-    public <T> SortedSet<T> getSortedSet(Expression<T> expr) {
-        return this.get(expr);
-    }
-
-    @Override
-    public Object[] toArray() {
-        List<Object> arr = new ArrayList<Object>(groupCollectors.size());
-        for (GroupCollector<?, ?> col : groupCollectors) {
-            arr.add(col.get());
-        }
-        return arr.toArray();
-    }
-
+    return arr.toArray();
+  }
 }

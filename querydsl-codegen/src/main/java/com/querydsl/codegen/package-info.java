@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Code generations models and serializers
- */
+/** Code generations models and serializers */
 package com.querydsl.codegen;

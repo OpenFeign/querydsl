@@ -13,6 +13,8 @@
  */
 package com.querydsl.r2dbc.postgresql;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.querydsl.r2dbc.R2DBCConnectionProvider;
 import com.querydsl.r2dbc.SQLTemplates;
 import com.querydsl.r2dbc.domain.QSurvey;
@@ -22,46 +24,44 @@ import org.junit.Before;
 import org.junit.Test;
 import reactor.core.publisher.Mono;
 
-import static org.junit.Assert.assertNotNull;
-
 public class R2DBCPostgreQueryFactoryTest {
 
-    private R2DBCPostgreQueryFactory queryFactory;
+  private R2DBCPostgreQueryFactory queryFactory;
 
-    @Before
-    public void setUp() {
-        R2DBCConnectionProvider provider = new R2DBCConnectionProvider() {
-            @Override
-            public Mono<Connection> getConnection() {
-                return Mono.just(EasyMock.createNiceMock(Connection.class));
-            }
+  @Before
+  public void setUp() {
+    R2DBCConnectionProvider provider =
+        new R2DBCConnectionProvider() {
+          @Override
+          public Mono<Connection> getConnection() {
+            return Mono.just(EasyMock.createNiceMock(Connection.class));
+          }
         };
-        queryFactory = new R2DBCPostgreQueryFactory(SQLTemplates.DEFAULT, provider);
-    }
+    queryFactory = new R2DBCPostgreQueryFactory(SQLTemplates.DEFAULT, provider);
+  }
 
-    @Test
-    public void query() {
-        assertNotNull(queryFactory.query());
-    }
+  @Test
+  public void query() {
+    assertNotNull(queryFactory.query());
+  }
 
-    @Test
-    public void from() {
-        assertNotNull(queryFactory.from(QSurvey.survey));
-    }
+  @Test
+  public void from() {
+    assertNotNull(queryFactory.from(QSurvey.survey));
+  }
 
-    @Test
-    public void delete() {
-        assertNotNull(queryFactory.delete(QSurvey.survey));
-    }
+  @Test
+  public void delete() {
+    assertNotNull(queryFactory.delete(QSurvey.survey));
+  }
 
-    @Test
-    public void insert() {
-        assertNotNull(queryFactory.insert(QSurvey.survey));
-    }
+  @Test
+  public void insert() {
+    assertNotNull(queryFactory.insert(QSurvey.survey));
+  }
 
-    @Test
-    public void update() {
-        assertNotNull(queryFactory.update(QSurvey.survey));
-    }
-
+  @Test
+  public void update() {
+    assertNotNull(queryFactory.update(QSurvey.survey));
+  }
 }

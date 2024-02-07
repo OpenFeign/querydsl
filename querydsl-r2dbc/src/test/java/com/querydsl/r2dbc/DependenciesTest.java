@@ -13,31 +13,29 @@
  */
 package com.querydsl.r2dbc;
 
+import static org.junit.Assert.assertFalse;
+
+import java.io.IOException;
 import jdepend.framework.JDepend;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.IOException;
-
-import static org.junit.Assert.assertFalse;
-
 public class DependenciesTest {
 
-    @Test
-    @Ignore
-    public void test() throws IOException {
-        JDepend jdepend = new JDepend();
-        jdepend.addDirectory("target/classes/com/querydsl/r2dbc");
-        jdepend.addDirectory("target/classes/com/querydsl/r2dbc/ddl");
-        jdepend.addDirectory("target/classes/com/querydsl/r2dbc/dml");
-        jdepend.addDirectory("target/classes/com/querydsl/r2dbc/mssql");
-        jdepend.addDirectory("target/classes/com/querydsl/r2dbc/mysql");
-        jdepend.addDirectory("target/classes/com/querydsl/r2dbc/postgresql");
-        jdepend.addDirectory("target/classes/com/querydsl/r2dbc/support");
-        jdepend.addDirectory("target/classes/com/querydsl/r2dbc/types");
+  @Test
+  @Ignore
+  public void test() throws IOException {
+    JDepend jdepend = new JDepend();
+    jdepend.addDirectory("target/classes/com/querydsl/r2dbc");
+    jdepend.addDirectory("target/classes/com/querydsl/r2dbc/ddl");
+    jdepend.addDirectory("target/classes/com/querydsl/r2dbc/dml");
+    jdepend.addDirectory("target/classes/com/querydsl/r2dbc/mssql");
+    jdepend.addDirectory("target/classes/com/querydsl/r2dbc/mysql");
+    jdepend.addDirectory("target/classes/com/querydsl/r2dbc/postgresql");
+    jdepend.addDirectory("target/classes/com/querydsl/r2dbc/support");
+    jdepend.addDirectory("target/classes/com/querydsl/r2dbc/types");
 
-        jdepend.analyze();
-        assertFalse(jdepend.containsCycles());
-    }
-
+    jdepend.analyze();
+    assertFalse(jdepend.containsCycles());
+  }
 }

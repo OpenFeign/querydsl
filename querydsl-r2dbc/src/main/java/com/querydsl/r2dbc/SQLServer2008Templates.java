@@ -13,9 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-
 import com.querydsl.sql.Keywords;
-
 import java.util.Set;
 
 /**
@@ -25,32 +23,31 @@ import java.util.Set;
  */
 public class SQLServer2008Templates extends SQLServer2005Templates {
 
-    @SuppressWarnings("FieldNameHidesFieldInSuperclass") //Intentional
-    public static final SQLServer2008Templates DEFAULT = new SQLServer2008Templates();
+  @SuppressWarnings("FieldNameHidesFieldInSuperclass") // Intentional
+  public static final SQLServer2008Templates DEFAULT = new SQLServer2008Templates();
 
-    public static Builder builder() {
-        return new Builder() {
-            @Override
-            protected SQLTemplates build(char escape, boolean quote) {
-                return new SQLServer2008Templates(escape, quote);
-            }
-        };
-    }
+  public static Builder builder() {
+    return new Builder() {
+      @Override
+      protected SQLTemplates build(char escape, boolean quote) {
+        return new SQLServer2008Templates(escape, quote);
+      }
+    };
+  }
 
-    public SQLServer2008Templates() {
-        this(Keywords.SQLSERVER2008, '\\', false);
-    }
+  public SQLServer2008Templates() {
+    this(Keywords.SQLSERVER2008, '\\', false);
+  }
 
-    public SQLServer2008Templates(boolean quote) {
-        this(Keywords.SQLSERVER2008, '\\', quote);
-    }
+  public SQLServer2008Templates(boolean quote) {
+    this(Keywords.SQLSERVER2008, '\\', quote);
+  }
 
-    public SQLServer2008Templates(char escape, boolean quote) {
-        this(Keywords.SQLSERVER2008, escape, quote);
-    }
+  public SQLServer2008Templates(char escape, boolean quote) {
+    this(Keywords.SQLSERVER2008, escape, quote);
+  }
 
-    protected SQLServer2008Templates(Set<String> keywords, char escape, boolean quote) {
-        super(keywords, escape, quote);
-    }
-
+  protected SQLServer2008Templates(Set<String> keywords, char escape, boolean quote) {
+    super(keywords, escape, quote);
+  }
 }

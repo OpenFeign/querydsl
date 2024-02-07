@@ -22,32 +22,30 @@ import java.sql.Types;
  * {@code LongType} maps Long to Long on the JDBC level
  *
  * @author tiwe
- *
  */
 public class LongType extends AbstractType<Long> {
 
-    public LongType() {
-        super(Types.BIGINT);
-    }
+  public LongType() {
+    super(Types.BIGINT);
+  }
 
-    public LongType(int type) {
-        super(type);
-    }
+  public LongType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Long> getReturnedClass() {
-        return Long.class;
-    }
+  @Override
+  public Class<Long> getReturnedClass() {
+    return Long.class;
+  }
 
-    @Override
-    public Long getValue(ResultSet rs, int startIndex) throws SQLException {
-        long val = rs.getLong(startIndex);
-        return rs.wasNull() ? null : val;
-    }
+  @Override
+  public Long getValue(ResultSet rs, int startIndex) throws SQLException {
+    long val = rs.getLong(startIndex);
+    return rs.wasNull() ? null : val;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Long value) throws SQLException {
-        st.setLong(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Long value) throws SQLException {
+    st.setLong(startIndex, value);
+  }
 }

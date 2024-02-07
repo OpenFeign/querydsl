@@ -13,62 +13,39 @@
  */
 package com.querydsl.core.annotations;
 
-
 /**
  * {@code PropertyType} defines the Path type to be used for a Domain property
  *
  * @author tiwe
- *
  */
 public enum PropertyType {
-    /**
-     * Comparable
-     */
-    COMPARABLE,
+  /** Comparable */
+  COMPARABLE,
 
-    /**
-     * Enum
-     */
-    ENUM,
+  /** Enum */
+  ENUM,
 
-    /**
-     * Date
-     */
-    DATE,
+  /** Date */
+  DATE,
 
-    /**
-     * Datetime
-     */
-    DATETIME,
+  /** Datetime */
+  DATETIME,
 
-    /**
-     * None
-     */
-    NONE,
+  /** None */
+  NONE,
 
-    /**
-     * Numeric
-     */
-    NUMERIC,
+  /** Numeric */
+  NUMERIC,
 
-    /**
-     * Simple
-     */
-    SIMPLE,
+  /** Simple */
+  SIMPLE,
 
-    /**
-     * String
-     */
-    STRING,
+  /** String */
+  STRING,
 
-    /**
-     * Time
-     */
-    TIME,
+  /** Time */
+  TIME,
 
-    /**
-     * Entity
-     */
-    ENTITY,
-
+  /** Entity */
+  ENTITY,
 }

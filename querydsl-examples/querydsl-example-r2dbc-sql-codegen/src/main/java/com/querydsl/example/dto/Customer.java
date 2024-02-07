@@ -1,19 +1,16 @@
 package com.querydsl.example.dto;
 
-import lombok.Data;
-
 import java.util.Set;
+import lombok.Data;
 
 @Data
 public class Customer {
 
-    private Long id;
+  private Long id;
 
-    private Person contactPerson;
+  private Person contactPerson;
 
-    private String name;
+  private String name;
 
-    private Set<CustomerAddress> addresses;
-
+  private Set<CustomerAddress> addresses;
 }
-

@@ -16,24 +16,23 @@
 package com.querydsl.codegen;
 
 import com.querydsl.codegen.utils.StringUtils;
-
-import javax.lang.model.SourceVersion;
 import java.util.function.Function;
+import javax.lang.model.SourceVersion;
 
 /**
- * Default variable name generation strategy which un-capitalizes the first letter of the class name.
- *
+ * Default variable name generation strategy which un-capitalizes the first letter of the class
+ * name.
  */
 public final class DefaultVariableNameFunction implements Function<EntityType, String> {
 
-    public static final DefaultVariableNameFunction INSTANCE = new DefaultVariableNameFunction();
+  public static final DefaultVariableNameFunction INSTANCE = new DefaultVariableNameFunction();
 
-    @Override
-    public String apply(EntityType entity) {
-        String uncapSimpleName = StringUtils.uncapitalize(entity.getInnerType().getSimpleName());
-        if (SourceVersion.isKeyword(uncapSimpleName)) {
-            uncapSimpleName = uncapSimpleName + "$";
-        }
-        return uncapSimpleName;
+  @Override
+  public String apply(EntityType entity) {
+    String uncapSimpleName = StringUtils.uncapitalize(entity.getInnerType().getSimpleName());
+    if (SourceVersion.isKeyword(uncapSimpleName)) {
+      uncapSimpleName = uncapSimpleName + "$";
     }
+    return uncapSimpleName;
+  }
 }

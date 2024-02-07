@@ -26,56 +26,55 @@ import com.querydsl.sql.RelationalPath;
  */
 public class R2DBCServerQueryFactory extends AbstractR2DBCQueryFactory<R2DBCSQLServerQuery<?>> {
 
-    public R2DBCServerQueryFactory(Configuration configuration, R2DBCConnectionProvider connection) {
-        super(configuration, connection);
-    }
+  public R2DBCServerQueryFactory(Configuration configuration, R2DBCConnectionProvider connection) {
+    super(configuration, connection);
+  }
 
-    public R2DBCServerQueryFactory(R2DBCConnectionProvider connection) {
-        this(new Configuration(new SQLServerTemplates()), connection);
-    }
+  public R2DBCServerQueryFactory(R2DBCConnectionProvider connection) {
+    this(new Configuration(new SQLServerTemplates()), connection);
+  }
 
-    public R2DBCServerQueryFactory(SQLTemplates templates, R2DBCConnectionProvider connection) {
-        this(new Configuration(templates), connection);
-    }
+  public R2DBCServerQueryFactory(SQLTemplates templates, R2DBCConnectionProvider connection) {
+    this(new Configuration(templates), connection);
+  }
 
-    @Override
-    public R2DBCSQLServerQuery<?> query() {
-        return new R2DBCSQLServerQuery<Void>(connection, configuration);
-    }
+  @Override
+  public R2DBCSQLServerQuery<?> query() {
+    return new R2DBCSQLServerQuery<Void>(connection, configuration);
+  }
 
-    @Override
-    public <T> R2DBCSQLServerQuery<T> select(Expression<T> expr) {
-        return query().select(expr);
-    }
+  @Override
+  public <T> R2DBCSQLServerQuery<T> select(Expression<T> expr) {
+    return query().select(expr);
+  }
 
-    @Override
-    public R2DBCSQLServerQuery<Tuple> select(Expression<?>... exprs) {
-        return query().select(exprs);
-    }
+  @Override
+  public R2DBCSQLServerQuery<Tuple> select(Expression<?>... exprs) {
+    return query().select(exprs);
+  }
 
-    @Override
-    public <T> R2DBCSQLServerQuery<T> selectDistinct(Expression<T> expr) {
-        return query().select(expr).distinct();
-    }
+  @Override
+  public <T> R2DBCSQLServerQuery<T> selectDistinct(Expression<T> expr) {
+    return query().select(expr).distinct();
+  }
 
-    @Override
-    public R2DBCSQLServerQuery<Tuple> selectDistinct(Expression<?>... exprs) {
-        return query().select(exprs).distinct();
-    }
+  @Override
+  public R2DBCSQLServerQuery<Tuple> selectDistinct(Expression<?>... exprs) {
+    return query().select(exprs).distinct();
+  }
 
-    @Override
-    public R2DBCSQLServerQuery<Integer> selectZero() {
-        return select(Expressions.ZERO);
-    }
+  @Override
+  public R2DBCSQLServerQuery<Integer> selectZero() {
+    return select(Expressions.ZERO);
+  }
 
-    @Override
-    public R2DBCSQLServerQuery<Integer> selectOne() {
-        return select(Expressions.ONE);
-    }
+  @Override
+  public R2DBCSQLServerQuery<Integer> selectOne() {
+    return select(Expressions.ONE);
+  }
 
-    @Override
-    public <T> R2DBCSQLServerQuery<T> selectFrom(RelationalPath<T> expr) {
-        return select(expr).from(expr);
-    }
-
+  @Override
+  public <T> R2DBCSQLServerQuery<T> selectFrom(RelationalPath<T> expr) {
+    return select(expr).from(expr);
+  }
 }

@@ -13,6 +13,8 @@
  */
 package com.querydsl.r2dbc;
 
+import static org.junit.Assert.assertEquals;
+
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Operation;
@@ -22,54 +24,51 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.sql.SQLOps;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
-
 public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
 
-    @Override
-    @Test
-    public void noFrom() {
-        query.getMetadata().setProjection(Expressions.ONE);
-        assertEquals("select 1", query.toString());
-    }
+  @Override
+  @Test
+  public void noFrom() {
+    query.getMetadata().setProjection(Expressions.ONE);
+    assertEquals("select 1", query.toString());
+  }
 
-    @Override
-    protected SQLTemplates createTemplates() {
-        return new SQLServerTemplates();
-    }
+  @Override
+  protected SQLTemplates createTemplates() {
+    return new SQLServerTemplates();
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    @Override
-    public void union() {
-        NumberExpression<Integer> one = Expressions.ONE;
-        NumberExpression<Integer> two = Expressions.TWO;
-        NumberExpression<Integer> three = Expressions.THREE;
-        Path<Integer> col1 = Expressions.path(Integer.class, "col1");
-        Union union = query.union(
-                R2DBCExpressions.select(one.as(col1)),
-                R2DBCExpressions.select(two),
-                R2DBCExpressions.select(three));
-        assertEquals(
-                "(select 1 as col1)\n" +
-                        "union\n" +
-                        "(select 2)\n" +
-                        "union\n" +
-                        "(select 3)", union.toString());
-    }
+  @SuppressWarnings("unchecked")
+  @Test
+  @Override
+  public void union() {
+    NumberExpression<Integer> one = Expressions.ONE;
+    NumberExpression<Integer> two = Expressions.TWO;
+    NumberExpression<Integer> three = Expressions.THREE;
+    Path<Integer> col1 = Expressions.path(Integer.class, "col1");
+    Union union =
+        query.union(
+            R2DBCExpressions.select(one.as(col1)),
+            R2DBCExpressions.select(two),
+            R2DBCExpressions.select(three));
+    assertEquals(
+        "(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)",
+        union.toString());
+  }
 
-    @Test
-    public void limit() {
-        query.from(survey1).limit(5);
-        query.getMetadata().setProjection(survey1.id);
-        assertEquals("select top 5 survey1.ID from SURVEY survey1", query.toString());
-    }
+  @Test
+  public void limit() {
+    query.from(survey1).limit(5);
+    query.getMetadata().setProjection(survey1.id);
+    assertEquals("select top 5 survey1.ID from SURVEY survey1", query.toString());
+  }
 
-    @Test
-    public void nextVal() {
-        Operation<String> nextval = ExpressionUtils.operation(String.class, SQLOps.NEXTVAL, ConstantImpl.create("myseq"));
-        assertEquals("myseq.nextval", new SQLSerializer(new Configuration(new SQLServerTemplates())).handle(nextval).toString());
-    }
-
+  @Test
+  public void nextVal() {
+    Operation<String> nextval =
+        ExpressionUtils.operation(String.class, SQLOps.NEXTVAL, ConstantImpl.create("myseq"));
+    assertEquals(
+        "myseq.nextval",
+        new SQLSerializer(new Configuration(new SQLServerTemplates())).handle(nextval).toString());
+  }
 }

@@ -15,35 +15,33 @@
  */
 package com.querydsl.mongodb.document;
 
-import java.util.Collection;
-
 import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.mongodb.MongodbOps;
+import java.util.Collection;
 
 /**
  * {@code AnyEmbeddedBuilder} is a builder for constraints on embedded objects
  *
  * @param <Q> query type
- *
  * @author Mark Paluch
  */
 public class AnyEmbeddedBuilder<Q extends AbstractMongodbQuery<Q>> {
 
-    private final QueryMixin<Q> queryMixin;
+  private final QueryMixin<Q> queryMixin;
 
-    private final Path<? extends Collection<?>> collection;
+  private final Path<? extends Collection<?>> collection;
 
-    public AnyEmbeddedBuilder(QueryMixin<Q> queryMixin,
-            Path<? extends Collection<?>> collection) {
-        this.queryMixin = queryMixin;
-        this.collection = collection;
-    }
+  public AnyEmbeddedBuilder(QueryMixin<Q> queryMixin, Path<? extends Collection<?>> collection) {
+    this.queryMixin = queryMixin;
+    this.collection = collection;
+  }
 
-    public Q on(Predicate... conditions) {
-        return queryMixin.where(ExpressionUtils.predicate(
-                MongodbOps.ELEM_MATCH, collection, ExpressionUtils.allOf(conditions)));
-    }
+  public Q on(Predicate... conditions) {
+    return queryMixin.where(
+        ExpressionUtils.predicate(
+            MongodbOps.ELEM_MATCH, collection, ExpressionUtils.allOf(conditions)));
+  }
 }

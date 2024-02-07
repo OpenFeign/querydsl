@@ -5,14 +5,13 @@ import com.querydsl.core.annotations.QueryEntity;
 @QueryEntity
 public class Company {
 
-    private CompanyPK key;
+  private CompanyPK key;
 
-    public CompanyPK getKey() {
-        return key;
-    }
+  public CompanyPK getKey() {
+    return key;
+  }
 
-    public void setKey(final CompanyPK aKey) {
-        this.key = aKey;
-    }
-
+  public void setKey(final CompanyPK aKey) {
+    this.key = aKey;
+  }
 }

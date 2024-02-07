@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface Firebird extends ExternalDatabase {
-}
+public interface Firebird extends ExternalDatabase {}

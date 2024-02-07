@@ -13,48 +13,45 @@
  */
 package com.querydsl.jpa.impl;
 
-import java.util.Map;
-
-import javax.persistence.Parameter;
-import javax.persistence.Query;
-
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.dsl.Param;
 import com.querydsl.core.util.MathUtils;
+import java.util.Map;
+import javax.persistence.Parameter;
+import javax.persistence.Query;
 
 /**
  * JPAUtil provides static utility methods for JPA
  *
  * @author tiwe
- *
  */
 public final class JPAUtil {
 
-    private JPAUtil() { }
+  private JPAUtil() {}
 
-    public static void setConstants(Query query, Map<Object,String> constants, Map<ParamExpression<?>, Object> params) {
-        boolean hasParameters = !query.getParameters().isEmpty();
-        for (Map.Entry<Object,String> entry : constants.entrySet()) {
-            String key = entry.getValue();
-            Object val = entry.getKey();
-            if (Param.class.isInstance(val)) {
-                val = params.get(val);
-                if (val == null) {
-                    throw new ParamNotSetException((Param<?>) entry.getKey());
-                }
-            }
-            if (hasParameters) {
-                Parameter parameter = query.getParameter(Integer.parseInt(key));
-                Class parameterType = parameter != null ? parameter.getParameterType() : null;
-                if (parameterType != null && !parameterType.isInstance(val)) {
-                    if (val instanceof Number && Number.class.isAssignableFrom(parameterType)) {
-                        val = MathUtils.cast((Number) val, parameterType);
-                    }
-                }
-            }
-            query.setParameter(Integer.parseInt(key), val);
+  public static void setConstants(
+      Query query, Map<Object, String> constants, Map<ParamExpression<?>, Object> params) {
+    boolean hasParameters = !query.getParameters().isEmpty();
+    for (Map.Entry<Object, String> entry : constants.entrySet()) {
+      String key = entry.getValue();
+      Object val = entry.getKey();
+      if (Param.class.isInstance(val)) {
+        val = params.get(val);
+        if (val == null) {
+          throw new ParamNotSetException((Param<?>) entry.getKey());
         }
+      }
+      if (hasParameters) {
+        Parameter parameter = query.getParameter(Integer.parseInt(key));
+        Class parameterType = parameter != null ? parameter.getParameterType() : null;
+        if (parameterType != null && !parameterType.isInstance(val)) {
+          if (val instanceof Number && Number.class.isAssignableFrom(parameterType)) {
+            val = MathUtils.cast((Number) val, parameterType);
+          }
+        }
+      }
+      query.setParameter(Integer.parseInt(key), val);
     }
-
+  }
 }

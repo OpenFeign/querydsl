@@ -15,9 +15,8 @@ package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Clob;
 import io.r2dbc.spi.Row;
-import reactor.core.publisher.Mono;
-
 import java.sql.Types;
+import reactor.core.publisher.Mono;
 
 /**
  * {@code StringAsObjectType} maps String to String on the JDBC level
@@ -26,44 +25,43 @@ import java.sql.Types;
  */
 public class StringAsObjectType extends AbstractType<CharSequence, Clob> {
 
-    public static final StringAsObjectType DEFAULT = new StringAsObjectType();
+  public static final StringAsObjectType DEFAULT = new StringAsObjectType();
 
-    public StringAsObjectType() {
-        super(Types.VARCHAR);
+  public StringAsObjectType() {
+    super(Types.VARCHAR);
+  }
+
+  public StringAsObjectType(int type) {
+    super(type);
+  }
+
+  @Override
+  public String getValue(Row row, int startIndex) {
+    Object o = row.get(startIndex);
+    if (o instanceof String) {
+      return (String) o;
+      //        } else if (o instanceof Clob) {
+      //            Clob clob = (Clob) o;
+      //            return clob.stream();
+    } else if (o != null) {
+      return o.toString();
+    } else {
+      return null;
     }
+  }
 
-    public StringAsObjectType(int type) {
-        super(type);
-    }
+  @Override
+  public Class<CharSequence> getReturnedClass() {
+    return CharSequence.class;
+  }
 
-    @Override
-    public String getValue(Row row, int startIndex) {
-        Object o = row.get(startIndex);
-        if (o instanceof String) {
-            return (String) o;
-//        } else if (o instanceof Clob) {
-//            Clob clob = (Clob) o;
-//            return clob.stream();
-        } else if (o != null) {
-            return o.toString();
-        } else {
-            return null;
-        }
-    }
+  @Override
+  protected Clob toDbValue(CharSequence value) {
+    return Clob.from(Mono.just(value));
+  }
 
-    @Override
-    public Class<CharSequence> getReturnedClass() {
-        return CharSequence.class;
-    }
-
-    @Override
-    protected Clob toDbValue(CharSequence value) {
-        return Clob.from(Mono.just(value));
-    }
-
-    @Override
-    public Class<Clob> getDatabaseClass() {
-        return Clob.class;
-    }
-
+  @Override
+  public Class<Clob> getDatabaseClass() {
+    return Clob.class;
+  }
 }

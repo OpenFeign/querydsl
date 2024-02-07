@@ -22,21 +22,21 @@ import java.util.List;
  */
 public interface R2DBCExceptionTranslator {
 
-    /**
-     * Translate the given SQLException
-     *
-     * @param sql      SQL string
-     * @param bindings binding
-     * @param e        SQLException to translate
-     * @return translated exception
-     */
-    RuntimeException translate(String sql, List<Object> bindings, Throwable e);
+  /**
+   * Translate the given SQLException
+   *
+   * @param sql SQL string
+   * @param bindings binding
+   * @param e SQLException to translate
+   * @return translated exception
+   */
+  RuntimeException translate(String sql, List<Object> bindings, Throwable e);
 
-    /**
-     * Translate the given SQLException
-     *
-     * @param e SQLException to translate
-     * @return translated exception
-     */
-    RuntimeException translate(Throwable e);
+  /**
+   * Translate the given SQLException
+   *
+   * @param e SQLException to translate
+   * @return translated exception
+   */
+  RuntimeException translate(Throwable e);
 }

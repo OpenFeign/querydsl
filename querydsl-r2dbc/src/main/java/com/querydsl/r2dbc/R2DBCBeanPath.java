@@ -27,61 +27,63 @@ import org.jetbrains.annotations.Nullable;
  */
 public class R2DBCBeanPath<T> extends BeanPath<T> {
 
-    private static final long serialVersionUID = -1845524024957822731L;
+  private static final long serialVersionUID = -1845524024957822731L;
 
-    public R2DBCBeanPath(Class<? extends T> type, String variable) {
-        super(type, variable);
-    }
+  public R2DBCBeanPath(Class<? extends T> type, String variable) {
+    super(type, variable);
+  }
 
-    public R2DBCBeanPath(Class<? extends T> type, Path<?> parent, String property) {
-        super(type, parent, property);
-    }
+  public R2DBCBeanPath(Class<? extends T> type, Path<?> parent, String property) {
+    super(type, parent, property);
+  }
 
-    public R2DBCBeanPath(Class<? extends T> type, PathMetadata metadata) {
-        super(type, metadata);
-    }
+  public R2DBCBeanPath(Class<? extends T> type, PathMetadata metadata) {
+    super(type, metadata);
+  }
 
-    public R2DBCBeanPath(Class<? extends T> type, PathMetadata metadata, @Nullable PathInits inits) {
-        super(type, metadata, inits);
-    }
+  public R2DBCBeanPath(Class<? extends T> type, PathMetadata metadata, @Nullable PathInits inits) {
+    super(type, metadata, inits);
+  }
 
-    /**
-     * Create a new Date path
-     *
-     * @param <A>
-     * @param property property name
-     * @param type     property type
-     * @return property path
-     */
-    @SuppressWarnings("unchecked")
-    protected <A extends Comparable> LocalDatePath<A> createLocalDate(String property, Class<? super A> type) {
-        return add(new LocalDatePath<A>((Class) type, forProperty(property)));
-    }
+  /**
+   * Create a new Date path
+   *
+   * @param <A>
+   * @param property property name
+   * @param type property type
+   * @return property path
+   */
+  @SuppressWarnings("unchecked")
+  protected <A extends Comparable> LocalDatePath<A> createLocalDate(
+      String property, Class<? super A> type) {
+    return add(new LocalDatePath<A>((Class) type, forProperty(property)));
+  }
 
-    /**
-     * Create a new DateTime path
-     *
-     * @param <A>
-     * @param property property name
-     * @param type     property type
-     * @return property path
-     */
-    @SuppressWarnings("unchecked")
-    protected <A extends Comparable> LocalDateTimePath<A> createLocalDateTime(String property, Class<? super A> type) {
-        return add(new LocalDateTimePath<A>((Class) type, forProperty(property)));
-    }
+  /**
+   * Create a new DateTime path
+   *
+   * @param <A>
+   * @param property property name
+   * @param type property type
+   * @return property path
+   */
+  @SuppressWarnings("unchecked")
+  protected <A extends Comparable> LocalDateTimePath<A> createLocalDateTime(
+      String property, Class<? super A> type) {
+    return add(new LocalDateTimePath<A>((Class) type, forProperty(property)));
+  }
 
-    /**
-     * Create a new Time path
-     *
-     * @param <A>
-     * @param property property name
-     * @param type     property type
-     * @return property path
-     */
-    @SuppressWarnings("unchecked")
-    protected <A extends Comparable> LocalTimePath<A> createLocalTime(String property, Class<? super A> type) {
-        return add(new LocalTimePath<A>((Class) type, forProperty(property)));
-    }
-
+  /**
+   * Create a new Time path
+   *
+   * @param <A>
+   * @param property property name
+   * @param type property type
+   * @return property path
+   */
+  @SuppressWarnings("unchecked")
+  protected <A extends Comparable> LocalTimePath<A> createLocalTime(
+      String property, Class<? super A> type) {
+    return add(new LocalTimePath<A>((Class) type, forProperty(property)));
+  }
 }

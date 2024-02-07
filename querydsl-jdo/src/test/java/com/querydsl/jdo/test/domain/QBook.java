@@ -20,41 +20,38 @@ import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 
-/**
- * QBook is a Querydsl query type for Book
- *
- */
+/** QBook is a Querydsl query type for Book */
 @SuppressWarnings("serial")
 public class QBook extends EntityPathBase<com.querydsl.jdo.test.domain.Book> {
 
-    public static final QBook book = new QBook("book");
+  public static final QBook book = new QBook("book");
 
-    public final StringPath author = createString("author");
+  public final StringPath author = createString("author");
 
-    public final StringPath description = createString("description");
+  public final StringPath description = createString("description");
 
-    public final StringPath isbn = createString("isbn");
+  public final StringPath isbn = createString("isbn");
 
-    public final StringPath name = createString("name");
+  public final StringPath name = createString("name");
 
-    public final StringPath publisher = createString("publisher");
+  public final StringPath publisher = createString("publisher");
 
-    public final DateTimePath<java.util.Date> publicationDate = createDateTime("publicationDate",java.util.Date.class);
+  public final DateTimePath<java.util.Date> publicationDate =
+      createDateTime("publicationDate", java.util.Date.class);
 
-    public final NumberPath<Integer> amount = createNumber("amount",Integer.class);
+  public final NumberPath<Integer> amount = createNumber("amount", Integer.class);
 
-    public final NumberPath<Double> price = createNumber("price",Double.class);
+  public final NumberPath<Double> price = createNumber("price", Double.class);
 
-    public QBook(String path) {
-          this(com.querydsl.jdo.test.domain.Book.class, path);
-    }
+  public QBook(String path) {
+    this(com.querydsl.jdo.test.domain.Book.class, path);
+  }
 
-    public QBook(Class<? extends com.querydsl.jdo.test.domain.Book> cl, String path) {
-          super(cl, PathMetadataFactory.forVariable(path));
-    }
+  public QBook(Class<? extends com.querydsl.jdo.test.domain.Book> cl, String path) {
+    super(cl, PathMetadataFactory.forVariable(path));
+  }
 
-    public QBook(PathMetadata metadata) {
-         super(com.querydsl.jdo.test.domain.Book.class, metadata);
-    }
-
+  public QBook(PathMetadata metadata) {
+    super(com.querydsl.jdo.test.domain.Book.class, metadata);
+  }
 }

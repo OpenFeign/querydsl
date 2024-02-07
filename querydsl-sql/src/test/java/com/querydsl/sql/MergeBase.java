@@ -18,15 +18,6 @@ import static com.querydsl.sql.Constants.survey;
 import static com.querydsl.sql.Constants.survey2;
 import static org.junit.Assert.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.types.ExpressionUtils;
@@ -34,214 +25,231 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.dml.SQLMergeClause;
 import com.querydsl.sql.domain.QSurvey;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public abstract class MergeBase extends AbstractBaseTest {
 
-    private void reset() throws SQLException {
-        delete(survey).execute();
-        insert(survey).values(1, "Hello World", "Hello").execute();
-    }
+  private void reset() throws SQLException {
+    delete(survey).execute();
+    insert(survey).values(1, "Hello World", "Hello").execute();
+  }
 
-    @Before
-    public void setUp() throws SQLException {
-        reset();
-    }
+  @Before
+  public void setUp() throws SQLException {
+    reset();
+  }
 
-    @After
-    public void tearDown() throws SQLException {
-        reset();
-    }
+  @After
+  public void tearDown() throws SQLException {
+    reset();
+  }
 
-    @Test
-    @ExcludeIn({H2, CUBRID, SQLSERVER})
-    public void merge_with_keys() throws SQLException {
-        ResultSet rs = merge(survey).keys(survey.id)
-                .set(survey.id, 7)
-                .set(survey.name, "Hello World").executeWithKeys();
-        assertTrue(rs.next());
-        assertTrue(rs.getObject(1) != null);
-        rs.close();
-    }
+  @Test
+  @ExcludeIn({H2, CUBRID, SQLSERVER})
+  public void merge_with_keys() throws SQLException {
+    ResultSet rs =
+        merge(survey)
+            .keys(survey.id)
+            .set(survey.id, 7)
+            .set(survey.name, "Hello World")
+            .executeWithKeys();
+    assertTrue(rs.next());
+    assertTrue(rs.getObject(1) != null);
+    rs.close();
+  }
 
-    @Test
-    @ExcludeIn({H2, CUBRID, SQLSERVER})
-    public void merge_with_keys_listener() throws SQLException {
-        final AtomicBoolean result = new AtomicBoolean();
-        SQLListener listener = new SQLBaseListener() {
-            @Override
-            public void end(SQLListenerContext context) {
-                result.set(true);
-            }
+  @Test
+  @ExcludeIn({H2, CUBRID, SQLSERVER})
+  public void merge_with_keys_listener() throws SQLException {
+    final AtomicBoolean result = new AtomicBoolean();
+    SQLListener listener =
+        new SQLBaseListener() {
+          @Override
+          public void end(SQLListenerContext context) {
+            result.set(true);
+          }
         };
-        SQLMergeClause clause = merge(survey).keys(survey.id)
-                .set(survey.id, 7)
-                .set(survey.name, "Hello World");
-        clause.addListener(listener);
-        ResultSet rs = clause.executeWithKeys();
-        assertTrue(rs.next());
-        assertTrue(rs.getObject(1) != null);
-        rs.close();
-        assertTrue(result.get());
-    }
+    SQLMergeClause clause =
+        merge(survey).keys(survey.id).set(survey.id, 7).set(survey.name, "Hello World");
+    clause.addListener(listener);
+    ResultSet rs = clause.executeWithKeys();
+    assertTrue(rs.next());
+    assertTrue(rs.getObject(1) != null);
+    rs.close();
+    assertTrue(result.get());
+  }
 
-    @Test
-    @IncludeIn(H2)
-    public void merge_with_keys_and_subQuery() {
-        assertEquals(1, insert(survey).set(survey.id, 6).set(survey.name, "H").execute());
+  @Test
+  @IncludeIn(H2)
+  public void merge_with_keys_and_subQuery() {
+    assertEquals(1, insert(survey).set(survey.id, 6).set(survey.name, "H").execute());
 
-        // keys + subquery
-        QSurvey survey2 = new QSurvey("survey2");
-        assertEquals(2, merge(survey).keys(survey.id).select(
-                query().from(survey2).select(survey2.id.add(1), survey2.name, survey2.name2)).execute());
-    }
-
-    @Test
-    @IncludeIn(H2)
-    public void merge_with_keys_and_values() {
-        // NOTE : doesn't work with composite merge implementation
-        // keys + values
-        assertEquals(1, merge(survey).keys(survey.id).values(5, "Hello World", "Hello").execute());
-    }
-
-    @Test
-    public void merge_with_keys_columns_and_values() {
-        // keys + columns + values
-        assertEquals(1, merge(survey).keys(survey.id)
-            .set(survey.id, 5)
-            .set(survey.name, "Hello World").execute());
-    }
-
-    @Test
-    public void merge_with_keys_columns_and_values_using_null() {
-        // keys + columns + values
-        assertEquals(1, merge(survey).keys(survey.id)
-            .set(survey.id, 5)
-            .set(survey.name, (String) null).execute());
-    }
-
-    @Test
-    @ExcludeIn({CUBRID, DB2, DERBY, POSTGRESQL, SQLSERVER, TERADATA})
-    public void merge_with_keys_Null_Id() throws SQLException {
-        ResultSet rs = merge(survey).keys(survey.id)
-                .setNull(survey.id)
-                .set(survey.name, "Hello World").executeWithKeys();
-        assertTrue(rs.next());
-        assertTrue(rs.getObject(1) != null);
-        rs.close();
-    }
-
-    @Test
-    @ExcludeIn({H2, CUBRID, SQLSERVER})
-    public void merge_with_keys_Projected() throws SQLException {
-        assertNotNull(merge(survey).keys(survey.id)
-                .set(survey.id, 8)
-                .set(survey.name, "Hello you").executeWithKey(survey.id));
-    }
-
-    @Test
-    @ExcludeIn({H2, CUBRID, SQLSERVER})
-    public void merge_with_keys_Projected2() throws SQLException {
-        Path<Object> idPath = ExpressionUtils.path(Object.class, "id");
-        Object id = merge(survey).keys(survey.id)
-                .set(survey.id, 9)
-                .set(survey.name, "Hello you").executeWithKey(idPath);
-        assertNotNull(id);
-    }
-
-    @Test
-    @IncludeIn(H2)
-    public void mergeBatch() {
-        SQLMergeClause merge = merge(survey)
+    // keys + subquery
+    QSurvey survey2 = new QSurvey("survey2");
+    assertEquals(
+        2,
+        merge(survey)
             .keys(survey.id)
-            .set(survey.id, 5)
-            .set(survey.name, "5")
-            .addBatch();
-        assertEquals(1, merge.getBatchCount());
-        assertFalse(merge.isEmpty());
+            .select(query().from(survey2).select(survey2.id.add(1), survey2.name, survey2.name2))
+            .execute());
+  }
 
-        merge
+  @Test
+  @IncludeIn(H2)
+  public void merge_with_keys_and_values() {
+    // NOTE : doesn't work with composite merge implementation
+    // keys + values
+    assertEquals(1, merge(survey).keys(survey.id).values(5, "Hello World", "Hello").execute());
+  }
+
+  @Test
+  public void merge_with_keys_columns_and_values() {
+    // keys + columns + values
+    assertEquals(
+        1,
+        merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, "Hello World").execute());
+  }
+
+  @Test
+  public void merge_with_keys_columns_and_values_using_null() {
+    // keys + columns + values
+    assertEquals(
+        1,
+        merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, (String) null).execute());
+  }
+
+  @Test
+  @ExcludeIn({CUBRID, DB2, DERBY, POSTGRESQL, SQLSERVER, TERADATA})
+  public void merge_with_keys_Null_Id() throws SQLException {
+    ResultSet rs =
+        merge(survey)
             .keys(survey.id)
-            .set(survey.id, 6)
-            .set(survey.name, "6")
-            .addBatch();
+            .setNull(survey.id)
+            .set(survey.name, "Hello World")
+            .executeWithKeys();
+    assertTrue(rs.next());
+    assertTrue(rs.getObject(1) != null);
+    rs.close();
+  }
 
-        assertEquals(2, merge.getBatchCount());
-        assertEquals(2, merge.execute());
+  @Test
+  @ExcludeIn({H2, CUBRID, SQLSERVER})
+  public void merge_with_keys_Projected() throws SQLException {
+    assertNotNull(
+        merge(survey)
+            .keys(survey.id)
+            .set(survey.id, 8)
+            .set(survey.name, "Hello you")
+            .executeWithKey(survey.id));
+  }
 
-        assertEquals(1L, query().from(survey).where(survey.name.eq("5")).fetchCount());
-        assertEquals(1L, query().from(survey).where(survey.name.eq("6")).fetchCount());
-    }
+  @Test
+  @ExcludeIn({H2, CUBRID, SQLSERVER})
+  public void merge_with_keys_Projected2() throws SQLException {
+    Path<Object> idPath = ExpressionUtils.path(Object.class, "id");
+    Object id =
+        merge(survey)
+            .keys(survey.id)
+            .set(survey.id, 9)
+            .set(survey.name, "Hello you")
+            .executeWithKey(idPath);
+    assertNotNull(id);
+  }
 
-    @Test
-    @IncludeIn(H2)
-    public void mergeBatch_templates() {
-        SQLMergeClause merge = merge(survey)
+  @Test
+  @IncludeIn(H2)
+  public void mergeBatch() {
+    SQLMergeClause merge =
+        merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, "5").addBatch();
+    assertEquals(1, merge.getBatchCount());
+    assertFalse(merge.isEmpty());
+
+    merge.keys(survey.id).set(survey.id, 6).set(survey.name, "6").addBatch();
+
+    assertEquals(2, merge.getBatchCount());
+    assertEquals(2, merge.execute());
+
+    assertEquals(1L, query().from(survey).where(survey.name.eq("5")).fetchCount());
+    assertEquals(1L, query().from(survey).where(survey.name.eq("6")).fetchCount());
+  }
+
+  @Test
+  @IncludeIn(H2)
+  public void mergeBatch_templates() {
+    SQLMergeClause merge =
+        merge(survey)
             .keys(survey.id)
             .set(survey.id, 5)
             .set(survey.name, Expressions.stringTemplate("'5'"))
             .addBatch();
 
-        merge
-            .keys(survey.id)
-            .set(survey.id, 6)
-            .set(survey.name, Expressions.stringTemplate("'6'"))
-            .addBatch();
+    merge
+        .keys(survey.id)
+        .set(survey.id, 6)
+        .set(survey.name, Expressions.stringTemplate("'6'"))
+        .addBatch();
 
-        assertEquals(2, merge.execute());
+    assertEquals(2, merge.execute());
 
-        assertEquals(1L, query().from(survey).where(survey.name.eq("5")).fetchCount());
-        assertEquals(1L, query().from(survey).where(survey.name.eq("6")).fetchCount());
-    }
+    assertEquals(1L, query().from(survey).where(survey.name.eq("5")).fetchCount());
+    assertEquals(1L, query().from(survey).where(survey.name.eq("6")).fetchCount());
+  }
 
-
-    @Test
-    @IncludeIn(H2)
-    public void mergeBatch_with_subquery() {
-        SQLMergeClause merge = merge(survey)
+  @Test
+  @IncludeIn(H2)
+  public void mergeBatch_with_subquery() {
+    SQLMergeClause merge =
+        merge(survey)
             .keys(survey.id)
             .columns(survey.id, survey.name)
             .select(query().from(survey2).select(survey2.id.add(20), survey2.name))
             .addBatch();
 
+    merge(survey)
+        .keys(survey.id)
+        .columns(survey.id, survey.name)
+        .select(query().from(survey2).select(survey2.id.add(40), survey2.name))
+        .addBatch();
+
+    assertEquals(1, merge.execute());
+  }
+
+  @Test
+  @IncludeIn(H2)
+  public void merge_with_templateExpression_in_batch() {
+    SQLMergeClause merge =
         merge(survey)
             .keys(survey.id)
-            .columns(survey.id, survey.name)
-            .select(query().from(survey2).select(survey2.id.add(40), survey2.name))
+            .set(survey.id, 5)
+            .set(survey.name, Expressions.stringTemplate("'5'"))
             .addBatch();
 
-        assertEquals(1, merge.execute());
-    }
+    assertEquals(1, merge.execute());
+  }
 
-    @Test
-    @IncludeIn(H2)
-    public void merge_with_templateExpression_in_batch() {
-        SQLMergeClause merge = merge(survey)
-                .keys(survey.id)
-                .set(survey.id, 5)
-                .set(survey.name, Expressions.stringTemplate("'5'"))
-                .addBatch();
-
-        assertEquals(1, merge.execute());
-    }
-
-    @Test
-    public void merge_listener() {
-        final AtomicInteger calls = new AtomicInteger(0);
-        SQLListener listener = new SQLBaseListener() {
-            @Override
-            public void end(SQLListenerContext context) {
-                if (context.getData(AbstractSQLQuery.PARENT_CONTEXT) == null) {
-                    calls.incrementAndGet();
-                }
+  @Test
+  public void merge_listener() {
+    final AtomicInteger calls = new AtomicInteger(0);
+    SQLListener listener =
+        new SQLBaseListener() {
+          @Override
+          public void end(SQLListenerContext context) {
+            if (context.getData(AbstractSQLQuery.PARENT_CONTEXT) == null) {
+              calls.incrementAndGet();
             }
+          }
         };
 
-        SQLMergeClause clause = merge(survey).keys(survey.id)
-                .set(survey.id, 5)
-                .set(survey.name, "Hello World");
-        clause.addListener(listener);
-        assertEquals(1, clause.execute());
-        assertEquals(1, calls.intValue());
-    }
-
+    SQLMergeClause clause =
+        merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, "Hello World");
+    clause.addListener(listener);
+    assertEquals(1, clause.execute());
+    assertEquals(1, calls.intValue());
+  }
 }

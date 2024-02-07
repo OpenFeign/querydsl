@@ -22,32 +22,29 @@ import java.sql.Types;
  * {@code ObjectType} maps Object to Object on the JDBC level
  *
  * @author tiwe
- *
  */
 public class ObjectType extends AbstractType<Object> {
 
-    public ObjectType() {
-        super(Types.OTHER);
-    }
+  public ObjectType() {
+    super(Types.OTHER);
+  }
 
-    public ObjectType(int type) {
-        super(type);
-    }
+  public ObjectType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Object getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getObject(startIndex);
-    }
+  @Override
+  public Object getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getObject(startIndex);
+  }
 
-    @Override
-    public Class<Object> getReturnedClass() {
-        return Object.class;
-    }
+  @Override
+  public Class<Object> getReturnedClass() {
+    return Object.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Object value)
-            throws SQLException {
-        st.setObject(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Object value) throws SQLException {
+    st.setObject(startIndex, value);
+  }
 }

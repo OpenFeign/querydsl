@@ -14,7 +14,8 @@
 package com.querydsl.jpa.domain;
 
 public enum JobFunction {
-
-    MANAGER, CODER, CONSULTANT, CONTROLLER;
-
+  MANAGER,
+  CODER,
+  CONSULTANT,
+  CONTROLLER;
 }

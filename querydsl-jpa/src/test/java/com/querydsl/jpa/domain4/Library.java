@@ -14,7 +14,6 @@
 package com.querydsl.jpa.domain4;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
 
 @Entity
@@ -22,18 +21,17 @@ import javax.persistence.*;
 @Access(AccessType.PROPERTY)
 public class Library implements Serializable {
 
-    private static final long serialVersionUID = 6360420736014459567L;
+  private static final long serialVersionUID = 6360420736014459567L;
 
-    private Long identity;
+  private Long identity;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long getIdentity() {
-        return identity;
-    }
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  public Long getIdentity() {
+    return identity;
+  }
 
-    public void setIdentity(Long identity) {
-        this.identity = identity;
-    }
-
+  public void setIdentity(Long identity) {
+    this.identity = identity;
+  }
 }

@@ -19,28 +19,27 @@ import java.util.Set;
 
 public class DummyEntity {
 
-    private DummyEntity other;
+  private DummyEntity other;
 
-    private List<DummyEntity> list;
+  private List<DummyEntity> list;
 
-    private Set<DummyEntity> set;
+  private Set<DummyEntity> set;
 
-    private Map<String,DummyEntity> map;
+  private Map<String, DummyEntity> map;
 
-    public List<DummyEntity> getList() {
-        return list;
-    }
+  public List<DummyEntity> getList() {
+    return list;
+  }
 
-    public Set<DummyEntity> getSet() {
-        return set;
-    }
+  public Set<DummyEntity> getSet() {
+    return set;
+  }
 
-    public Map<String, DummyEntity> getMap() {
-        return map;
-    }
+  public Map<String, DummyEntity> getMap() {
+    return map;
+  }
 
-    public DummyEntity getOther() {
-        return other;
-    }
-
+  public DummyEntity getOther() {
+    return other;
+  }
 }

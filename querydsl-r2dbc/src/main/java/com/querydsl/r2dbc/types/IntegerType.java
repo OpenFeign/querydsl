@@ -22,27 +22,26 @@ import java.sql.Types;
  */
 public class IntegerType extends AbstractType<Integer, Number> {
 
-    public IntegerType() {
-        super(Types.INTEGER);
-    }
+  public IntegerType() {
+    super(Types.INTEGER);
+  }
 
-    public IntegerType(int type) {
-        super(type);
-    }
+  public IntegerType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Integer> getReturnedClass() {
-        return Integer.class;
-    }
+  @Override
+  public Class<Integer> getReturnedClass() {
+    return Integer.class;
+  }
 
-    @Override
-    public Class<Number> getDatabaseClass() {
-        return Number.class;
-    }
+  @Override
+  public Class<Number> getDatabaseClass() {
+    return Number.class;
+  }
 
-    @Override
-    protected Integer fromDbValue(Number value) {
-        return value.intValue();
-    }
-
+  @Override
+  protected Integer fromDbValue(Number value) {
+    return value.intValue();
+  }
 }

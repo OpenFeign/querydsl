@@ -4,6 +4,4 @@ import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.domain2.AImpl;
 
 @QueryEntity
-public class BImpl extends AImpl {
-
-}
+public class BImpl extends AImpl {}

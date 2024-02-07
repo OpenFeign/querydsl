@@ -14,7 +14,6 @@
 package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Row;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Types;
@@ -26,37 +25,36 @@ import java.sql.Types;
  */
 public class URLType extends AbstractType<URL, String> {
 
-    public URLType() {
-        super(Types.VARCHAR);
-    }
+  public URLType() {
+    super(Types.VARCHAR);
+  }
 
-    public URLType(int type) {
-        super(type);
-    }
+  public URLType(int type) {
+    super(type);
+  }
 
-    @Override
-    public URL getValue(Row row, int startIndex) {
-        String val = row.get(startIndex, String.class);
-        try {
-            return val != null ? new URL(val) : null;
-        } catch (MalformedURLException e) {
-            return null;
-        }
+  @Override
+  public URL getValue(Row row, int startIndex) {
+    String val = row.get(startIndex, String.class);
+    try {
+      return val != null ? new URL(val) : null;
+    } catch (MalformedURLException e) {
+      return null;
     }
+  }
 
-    @Override
-    public Class<URL> getReturnedClass() {
-        return URL.class;
-    }
+  @Override
+  public Class<URL> getReturnedClass() {
+    return URL.class;
+  }
 
-    @Override
-    protected String toDbValue(URL value) {
-        return value.toString();
-    }
+  @Override
+  protected String toDbValue(URL value) {
+    return value.toString();
+  }
 
-    @Override
-    public Class<String> getDatabaseClass() {
-        return String.class;
-    }
-
+  @Override
+  public Class<String> getDatabaseClass() {
+    return String.class;
+  }
 }

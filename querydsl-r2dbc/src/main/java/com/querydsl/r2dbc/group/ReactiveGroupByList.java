@@ -22,11 +22,10 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.Projections;
-import reactor.core.publisher.Flux;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import reactor.core.publisher.Flux;
 
 /**
  * Provides aggregated results as a list
@@ -37,52 +36,53 @@ import java.util.Objects;
  */
 public class ReactiveGroupByList<K, V> extends ReactiveAbstractGroupByTransformer<K, V> {
 
-    ReactiveGroupByList(Expression<K> key, Expression<?>... expressions) {
-        super(key, expressions);
+  ReactiveGroupByList(Expression<K> key, Expression<?>... expressions) {
+    super(key, expressions);
+  }
+
+  @Override
+  public Flux<V> transform(ReactiveFetchableQuery<?, ?> query) {
+    // create groups
+    FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
+    boolean hasGroups = false;
+    for (Expression<?> e : expr.getArgs()) {
+      hasGroups |= e instanceof GroupExpression;
     }
-
-    @Override
-    public Flux<V> transform(ReactiveFetchableQuery<?, ?> query) {
-        // create groups
-        FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-        boolean hasGroups = false;
-        for (Expression<?> e : expr.getArgs()) {
-            hasGroups |= e instanceof GroupExpression;
-        }
-        if (hasGroups) {
-            expr = withoutGroupExpressions(expr);
-        }
-        final Flux<Tuple> result = query.select(expr).fetch();
-
-        return result
-                .collectList()
-                .flatMapMany(tuples -> {
-                    List<V> list = new ArrayList<>();
-                    GroupImpl group = null;
-                    K groupId = null;
-
-                    for (Tuple tuple : tuples) {
-                        K[] row = (K[]) tuple.toArray();
-                        if (group == null) {
-                            group = new GroupImpl(groupExpressions, maps);
-                            groupId = row[0];
-                        } else if (!Objects.equals(groupId, row[0])) {
-                            list.add(transform(group));
-                            group = new GroupImpl(groupExpressions, maps);
-                            groupId = row[0];
-                        }
-                        group.add(row);
-                    }
-                    if (group != null) {
-                        list.add(transform(group));
-                    }
-
-                    return Flux.fromIterable(list);
-                });
+    if (hasGroups) {
+      expr = withoutGroupExpressions(expr);
     }
+    final Flux<Tuple> result = query.select(expr).fetch();
 
-    @SuppressWarnings("unchecked")
-    protected V transform(Group group) {
-        return (V) group;
-    }
+    return result
+        .collectList()
+        .flatMapMany(
+            tuples -> {
+              List<V> list = new ArrayList<>();
+              GroupImpl group = null;
+              K groupId = null;
+
+              for (Tuple tuple : tuples) {
+                K[] row = (K[]) tuple.toArray();
+                if (group == null) {
+                  group = new GroupImpl(groupExpressions, maps);
+                  groupId = row[0];
+                } else if (!Objects.equals(groupId, row[0])) {
+                  list.add(transform(group));
+                  group = new GroupImpl(groupExpressions, maps);
+                  groupId = row[0];
+                }
+                group.add(row);
+              }
+              if (group != null) {
+                list.add(transform(group));
+              }
+
+              return Flux.fromIterable(list);
+            });
+  }
+
+  @SuppressWarnings("unchecked")
+  protected V transform(Group group) {
+    return (V) group;
+  }
 }

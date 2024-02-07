@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * JDO support
- */
+/** JDO support */
 package com.querydsl.jdo;

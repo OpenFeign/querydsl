@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * APT extension for registering spatial types.
- */
+/** APT extension for registering spatial types. */
 package com.querydsl.spatial.apt;

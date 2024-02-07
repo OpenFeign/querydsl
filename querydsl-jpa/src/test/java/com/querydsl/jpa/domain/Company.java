@@ -14,38 +14,35 @@
 package com.querydsl.jpa.domain;
 
 import java.util.List;
-
 import javax.persistence.*;
-
 import org.batoo.jpa.annotations.Index;
 
-/**
- * The Class Company.
- */
+/** The Class Company. */
 @Entity
 @Table(name = "company_")
 public class Company {
 
-    public enum Rating { A, AA, AAA }
+  public enum Rating {
+    A,
+    AA,
+    AAA
+  }
 
-    @Enumerated
-    public Rating ratingOrdinal;
+  @Enumerated public Rating ratingOrdinal;
 
-    @Enumerated(EnumType.STRING)
-    public Rating ratingString;
+  @Enumerated(EnumType.STRING)
+  public Rating ratingString;
 
-    @ManyToOne
-    public Employee ceo;
+  @ManyToOne public Employee ceo;
 
-    @OneToMany
-    @Index(name = "_index")
-    public List<Department> departments;
+  @OneToMany
+  @Index(name = "_index")
+  public List<Department> departments;
 
-    @Id
-    public int id;
+  @Id public int id;
 
-    public String name;
+  public String name;
 
-    @Column(name = "official_name")
-    public String officialName;
+  @Column(name = "official_name")
+  public String officialName;
 }

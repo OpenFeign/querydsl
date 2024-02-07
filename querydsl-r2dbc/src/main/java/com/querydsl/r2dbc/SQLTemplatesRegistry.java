@@ -14,64 +14,60 @@
 package com.querydsl.r2dbc;
 
 import com.querydsl.sql.Keywords;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-/**
- * {@code SQLTemplatesRegistry} is a registry for SQLTemplates instances
- */
+/** {@code SQLTemplatesRegistry} is a registry for SQLTemplates instances */
 public class SQLTemplatesRegistry {
 
-    /**
-     * Get the SQLTemplates instance that matches best the SQL engine of the
-     * given database metadata
-     *
-     * @param md database metadata
-     * @return templates
-     * @throws SQLException
-     */
-    public SQLTemplates getTemplates(DatabaseMetaData md) throws SQLException {
-        return getBuilder(md).build();
-    }
+  /**
+   * Get the SQLTemplates instance that matches best the SQL engine of the given database metadata
+   *
+   * @param md database metadata
+   * @return templates
+   * @throws SQLException
+   */
+  public SQLTemplates getTemplates(DatabaseMetaData md) throws SQLException {
+    return getBuilder(md).build();
+  }
 
-    /**
-     * Get a SQLTemplates.Builder instance that matches best the SQL engine of the
-     * given database metadata
-     *
-     * @param md database metadata
-     * @return templates
-     * @throws SQLException
-     */
-    public SQLTemplates.Builder getBuilder(DatabaseMetaData md) throws SQLException {
-        String name = md.getDatabaseProductName().toLowerCase();
-        if (name.equals("h2")) {
-            return H2Templates.builder();
-        } else if (name.equals("mysql")) {
-            return MySQLTemplates.builder();
-        } else if (name.equals("postgresql")) {
-            return PostgreSQLTemplates.builder();
-        } else if (name.equals("microsoft sql server")) {
-            switch (md.getDatabaseMajorVersion()) {
-                case 13:
-                case 12:
-                case 11:
-                    return SQLServer2012Templates.builder();
-                case 10:
-                    return SQLServer2008Templates.builder();
-                case 9:
-                    return SQLServer2005Templates.builder();
-                default:
-                    return SQLServerTemplates.builder();
-            }
-        } else {
-            return new SQLTemplates.Builder() {
-                @Override
-                protected SQLTemplates build(char escape, boolean quote) {
-                    return new SQLTemplates(Keywords.DEFAULT, "\"", escape, quote, false, SQLTemplates.ANONYMOUS);
-                }
-            };
+  /**
+   * Get a SQLTemplates.Builder instance that matches best the SQL engine of the given database
+   * metadata
+   *
+   * @param md database metadata
+   * @return templates
+   * @throws SQLException
+   */
+  public SQLTemplates.Builder getBuilder(DatabaseMetaData md) throws SQLException {
+    String name = md.getDatabaseProductName().toLowerCase();
+    if (name.equals("h2")) {
+      return H2Templates.builder();
+    } else if (name.equals("mysql")) {
+      return MySQLTemplates.builder();
+    } else if (name.equals("postgresql")) {
+      return PostgreSQLTemplates.builder();
+    } else if (name.equals("microsoft sql server")) {
+      switch (md.getDatabaseMajorVersion()) {
+        case 13:
+        case 12:
+        case 11:
+          return SQLServer2012Templates.builder();
+        case 10:
+          return SQLServer2008Templates.builder();
+        case 9:
+          return SQLServer2005Templates.builder();
+        default:
+          return SQLServerTemplates.builder();
+      }
+    } else {
+      return new SQLTemplates.Builder() {
+        @Override
+        protected SQLTemplates build(char escape, boolean quote) {
+          return new SQLTemplates(
+              Keywords.DEFAULT, "\"", escape, quote, false, SQLTemplates.ANONYMOUS);
         }
+      };
     }
-
+  }
 }

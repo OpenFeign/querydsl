@@ -13,6 +13,8 @@
  */
 package com.querydsl.r2dbc;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.querydsl.r2dbc.domain.QSurvey;
 import io.r2dbc.spi.Connection;
 import org.easymock.EasyMock;
@@ -20,41 +22,38 @@ import org.junit.Before;
 import org.junit.Test;
 import reactor.core.publisher.Mono;
 
-import static org.junit.Assert.assertNotNull;
-
 public class R2DBCQueryFactoryTest {
 
-    private R2DBCQueryFactory queryFactory;
+  private R2DBCQueryFactory queryFactory;
 
-    @Before
-    public void setUp() {
-        R2DBCConnectionProvider provider = () -> Mono.just(EasyMock.createNiceMock(Connection.class));
-        queryFactory = new R2DBCQueryFactory(SQLTemplates.DEFAULT, provider);
-    }
+  @Before
+  public void setUp() {
+    R2DBCConnectionProvider provider = () -> Mono.just(EasyMock.createNiceMock(Connection.class));
+    queryFactory = new R2DBCQueryFactory(SQLTemplates.DEFAULT, provider);
+  }
 
-    @Test
-    public void query() {
-        assertNotNull(queryFactory.query());
-    }
+  @Test
+  public void query() {
+    assertNotNull(queryFactory.query());
+  }
 
-    @Test
-    public void from() {
-        assertNotNull(queryFactory.from(QSurvey.survey));
-    }
+  @Test
+  public void from() {
+    assertNotNull(queryFactory.from(QSurvey.survey));
+  }
 
-    @Test
-    public void delete() {
-        assertNotNull(queryFactory.delete(QSurvey.survey));
-    }
+  @Test
+  public void delete() {
+    assertNotNull(queryFactory.delete(QSurvey.survey));
+  }
 
-    @Test
-    public void insert() {
-        assertNotNull(queryFactory.insert(QSurvey.survey));
-    }
+  @Test
+  public void insert() {
+    assertNotNull(queryFactory.insert(QSurvey.survey));
+  }
 
-    @Test
-    public void update() {
-        assertNotNull(queryFactory.update(QSurvey.survey));
-    }
-
+  @Test
+  public void update() {
+    assertNotNull(queryFactory.update(QSurvey.survey));
+  }
 }

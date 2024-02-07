@@ -19,10 +19,9 @@ import org.junit.Test;
 
 public class PredicateTemplateTest {
 
-    @Test
-    public void not() {
-        PredicateTemplate template = ExpressionUtils.predicateTemplate("XXX");
-        assertEquals("!XXX", template.not().toString());
-    }
-
+  @Test
+  public void not() {
+    PredicateTemplate template = ExpressionUtils.predicateTemplate("XXX");
+    assertEquals("!XXX", template.not().toString());
+  }
 }

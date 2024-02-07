@@ -22,39 +22,37 @@ import com.querydsl.core.types.Path;
  * {@code EnumExpression} represents Enum typed expressions
  *
  * @author tiwe
- *
  * @param <T> expression type
  */
 public abstract class EnumExpression<T extends Enum<T>> extends LiteralExpression<T> {
 
-    private static final long serialVersionUID = 8819222316513862829L;
+  private static final long serialVersionUID = 8819222316513862829L;
 
-    private transient volatile NumberExpression<Integer> ordinal;
+  private transient volatile NumberExpression<Integer> ordinal;
 
-    public EnumExpression(Expression<T> mixin) {
-        super(mixin);
+  public EnumExpression(Expression<T> mixin) {
+    super(mixin);
+  }
+
+  @Override
+  public EnumExpression<T> as(Path<T> alias) {
+    return Expressions.enumOperation(getType(), Ops.ALIAS, mixin, alias);
+  }
+
+  @Override
+  public EnumExpression<T> as(String alias) {
+    return as(ExpressionUtils.path(getType(), alias));
+  }
+
+  /**
+   * Get the ordinal of this enum
+   *
+   * @return ordinal number
+   */
+  public NumberExpression<Integer> ordinal() {
+    if (ordinal == null) {
+      ordinal = Expressions.numberOperation(Integer.class, Ops.ORDINAL, mixin);
     }
-
-    @Override
-    public EnumExpression<T> as(Path<T> alias) {
-        return Expressions.enumOperation(getType(),Ops.ALIAS, mixin, alias);
-    }
-
-    @Override
-    public EnumExpression<T> as(String alias) {
-        return as(ExpressionUtils.path(getType(), alias));
-    }
-
-    /**
-     * Get the ordinal of this enum
-     *
-     * @return ordinal number
-     */
-    public NumberExpression<Integer> ordinal() {
-        if (ordinal == null) {
-            ordinal = Expressions.numberOperation(Integer.class, Ops.ORDINAL, mixin);
-        }
-        return ordinal;
-    }
-
+    return ordinal;
+  }
 }

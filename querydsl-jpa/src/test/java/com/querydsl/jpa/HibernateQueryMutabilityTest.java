@@ -15,51 +15,52 @@ package com.querydsl.jpa;
 
 import static org.junit.Assert.assertEquals;
 
+import com.querydsl.core.QueryMutability;
+import com.querydsl.jpa.domain.QCat;
+import com.querydsl.jpa.hibernate.HibernateQuery;
+import com.querydsl.jpa.testutil.HibernateTestRunner;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-
 import org.hibernate.Session;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.querydsl.core.QueryMutability;
-import com.querydsl.jpa.domain.QCat;
-import com.querydsl.jpa.hibernate.HibernateQuery;
-import com.querydsl.jpa.testutil.HibernateTestRunner;
-
 @Ignore
 @RunWith(HibernateTestRunner.class)
 public class HibernateQueryMutabilityTest implements HibernateTest {
 
-    private Session session;
+  private Session session;
 
-    protected HibernateQuery<?> query() {
-        return new HibernateQuery<Void>(session);
-    }
+  protected HibernateQuery<?> query() {
+    return new HibernateQuery<Void>(session);
+  }
 
-    @Override
-    public void setSession(Session session) {
-        this.session = session;
-    }
+  @Override
+  public void setSession(Session session) {
+    this.session = session;
+  }
 
-    @Test
-    public void test() throws SecurityException, IllegalArgumentException,
-            NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException, IOException {
-        QCat cat = QCat.cat;
-        HibernateQuery<?> query = query().from(cat);
-        new QueryMutability(query).test(cat, cat.name);
-    }
+  @Test
+  public void test()
+      throws SecurityException,
+          IllegalArgumentException,
+          NoSuchMethodException,
+          IllegalAccessException,
+          InvocationTargetException,
+          IOException {
+    QCat cat = QCat.cat;
+    HibernateQuery<?> query = query().from(cat);
+    new QueryMutability(query).test(cat, cat.name);
+  }
 
-    @Test
-    public void clone_() {
-        QCat cat = QCat.cat;
-        HibernateQuery<?> query = query().from(cat).where(cat.name.isNotNull());
-        HibernateQuery<?> query2 = query.clone(session);
-        assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
-        assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
-        query2.select(cat).fetch();
-    }
-
+  @Test
+  public void clone_() {
+    QCat cat = QCat.cat;
+    HibernateQuery<?> query = query().from(cat).where(cat.name.isNotNull());
+    HibernateQuery<?> query2 = query.clone(session);
+    assertEquals(query.getMetadata().getJoins(), query2.getMetadata().getJoins());
+    assertEquals(query.getMetadata().getWhere(), query2.getMetadata().getWhere());
+    query2.select(cat).fetch();
+  }
 }

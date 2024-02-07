@@ -22,27 +22,26 @@ import java.sql.Types;
  */
 public class ShortType extends AbstractType<Short, Number> {
 
-    public ShortType() {
-        super(Types.SMALLINT);
-    }
+  public ShortType() {
+    super(Types.SMALLINT);
+  }
 
-    public ShortType(int type) {
-        super(type);
-    }
+  public ShortType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Short> getReturnedClass() {
-        return Short.class;
-    }
+  @Override
+  public Class<Short> getReturnedClass() {
+    return Short.class;
+  }
 
-    @Override
-    public Class<Number> getDatabaseClass() {
-        return Number.class;
-    }
+  @Override
+  public Class<Number> getDatabaseClass() {
+    return Number.class;
+  }
 
-    @Override
-    protected Short fromDbValue(Number value) {
-        return value.shortValue();
-    }
-
+  @Override
+  protected Short fromDbValue(Number value) {
+    return value.shortValue();
+  }
 }

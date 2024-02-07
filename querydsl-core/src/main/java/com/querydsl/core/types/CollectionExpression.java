@@ -19,11 +19,9 @@ import java.util.Collection;
  * {@code CollectionExpression} represents {@link java.util.Collection} typed expressions
  *
  * @author tiwe
- *
  * @param <T> expression type
  * @param <E> element type
  * @see java.util.Collection
  */
-public interface CollectionExpression<T extends Collection<E>, E> extends ParameterizedExpression<T> {
-
-}
+public interface CollectionExpression<T extends Collection<E>, E>
+    extends ParameterizedExpression<T> {}

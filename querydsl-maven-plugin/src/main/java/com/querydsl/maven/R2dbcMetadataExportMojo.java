@@ -16,17 +16,16 @@ package com.querydsl.maven;
 import com.querydsl.r2dbc.codegen.MetaDataExporter;
 
 /**
- * {@code R2DBCMetadataExportMojo} is a goal for {@link MetaDataExporter} execution.
- * It is executed by default in the {@code generate-sources} phase.
+ * {@code R2DBCMetadataExportMojo} is a goal for {@link MetaDataExporter} execution. It is executed
+ * by default in the {@code generate-sources} phase.
  *
  * @phase generate-sources
  * @goal r2dbc-export
- *
  */
 public class R2dbcMetadataExportMojo extends AbstractR2dbcMetaDataExportMojo {
 
-    @Override
-    protected boolean isForTest() {
-        return false;
-    }
+  @Override
+  protected boolean isForTest() {
+    return false;
+  }
 }

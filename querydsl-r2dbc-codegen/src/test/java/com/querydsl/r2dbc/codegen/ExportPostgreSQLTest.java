@@ -22,11 +22,11 @@ import org.junit.experimental.categories.Category;
 @Category(PostgreSQL.class)
 public class ExportPostgreSQLTest extends ExportBaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        Connections.initConfiguration(PostgreSQLTemplates.builder().quote().newLineToSingleSpace().build());
-        Connections.getConfiguration().setUseLiterals(true);
-        Connections.initPostgreSQL();
-    }
-
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    Connections.initConfiguration(
+        PostgreSQLTemplates.builder().quote().newLineToSingleSpace().build());
+    Connections.getConfiguration().setUseLiterals(true);
+    Connections.initPostgreSQL();
+  }
 }

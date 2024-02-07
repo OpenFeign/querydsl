@@ -1,15 +1,14 @@
 package test;
-import java.math.BigDecimal;
 
 import com.mysema.query.annotations.QueryEntity;
-
+import java.math.BigDecimal;
 
 @QueryEntity
 public class Test {
 
-    private String property;
+  private String property;
 
-    private int intProperty;
+  private int intProperty;
 
-    private BigDecimal bigDecimal;
+  private BigDecimal bigDecimal;
 }

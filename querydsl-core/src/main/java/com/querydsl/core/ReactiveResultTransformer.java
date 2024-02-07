@@ -13,12 +13,11 @@
  */
 package com.querydsl.core;
 
-
 import org.reactivestreams.Publisher;
 
 /**
- * Executes query on a {@link ReactiveFetchableQuery} and transforms results into T. This can be used for example
- * to group projected columns or to filter out duplicate results.
+ * Executes query on a {@link ReactiveFetchableQuery} and transforms results into T. This can be
+ * used for example to group projected columns or to filter out duplicate results.
  *
  * @param <T> Transformations target type
  * @author sasa
@@ -26,12 +25,11 @@ import org.reactivestreams.Publisher;
  */
 public interface ReactiveResultTransformer<T> {
 
-    /**
-     * Execute the given query and transform the results
-     *
-     * @param query query to be used for execution
-     * @return transformed results
-     */
-    Publisher<T> transform(ReactiveFetchableQuery<?, ?> query);
-
+  /**
+   * Execute the given query and transform the results
+   *
+   * @param query query to be used for execution
+   * @return transformed results
+   */
+  Publisher<T> transform(ReactiveFetchableQuery<?, ?> query);
 }

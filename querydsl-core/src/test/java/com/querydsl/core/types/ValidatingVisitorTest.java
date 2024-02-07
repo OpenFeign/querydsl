@@ -13,61 +13,58 @@
  */
 package com.querydsl.core.types;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Param;
+import java.util.HashSet;
+import java.util.Set;
+import org.junit.Before;
+import org.junit.Test;
 
 @SuppressWarnings("unchecked")
 public class ValidatingVisitorTest {
 
-    private final Set<Expression<?>> known = new HashSet<Expression<?>>();
+  private final Set<Expression<?>> known = new HashSet<Expression<?>>();
 
-    private final ValidatingVisitor validator = ValidatingVisitor.DEFAULT;
+  private final ValidatingVisitor validator = ValidatingVisitor.DEFAULT;
 
-    @Before
-    public void setUp() {
-        known.add(ExpressionUtils.path(Object.class, "path"));
-    }
+  @Before
+  public void setUp() {
+    known.add(ExpressionUtils.path(Object.class, "path"));
+  }
 
-    @Test
-    public void visitConstantOfQVoid() {
-        validator.visit(ConstantImpl.create("XXX"), known);
-    }
+  @Test
+  public void visitConstantOfQVoid() {
+    validator.visit(ConstantImpl.create("XXX"), known);
+  }
 
-    @Test
-    public void visitFactoryExpressionOfQVoid() {
-        validator.visit(new QBean(Object.class, ExpressionUtils.path(String.class, "path")), known);
-    }
+  @Test
+  public void visitFactoryExpressionOfQVoid() {
+    validator.visit(new QBean(Object.class, ExpressionUtils.path(String.class, "path")), known);
+  }
 
-    @Test
-    public void visitOperationOfQVoid() {
-        validator.visit((Operation) Expressions.path(Object.class, "path").isNull(), known);
-    }
+  @Test
+  public void visitOperationOfQVoid() {
+    validator.visit((Operation) Expressions.path(Object.class, "path").isNull(), known);
+  }
 
-    @Test
-    public void visitParamExpressionOfQVoid() {
-        validator.visit(new Param(Object.class, "prop"), known);
-    }
+  @Test
+  public void visitParamExpressionOfQVoid() {
+    validator.visit(new Param(Object.class, "prop"), known);
+  }
 
-    @Test
-    public void visitPathOfQVoid() {
-        validator.visit(ExpressionUtils.path(Object.class, "path"), known);
-    }
+  @Test
+  public void visitPathOfQVoid() {
+    validator.visit(ExpressionUtils.path(Object.class, "path"), known);
+  }
 
-    @Test
-    public void visitSubQueryExpressionOfQVoid() {
-        validator.visit(new SubQueryExpressionImpl(Object.class, new DefaultQueryMetadata()), known);
-    }
+  @Test
+  public void visitSubQueryExpressionOfQVoid() {
+    validator.visit(new SubQueryExpressionImpl(Object.class, new DefaultQueryMetadata()), known);
+  }
 
-    @Test
-    public void visitTemplateExpressionOfQVoid() {
-        validator.visit((TemplateExpression) Expressions.template(Object.class, "XXX"), known);
-    }
-
+  @Test
+  public void visitTemplateExpressionOfQVoid() {
+    validator.visit((TemplateExpression) Expressions.template(Object.class, "XXX"), known);
+  }
 }

@@ -19,107 +19,116 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.sql.Time;
-
 import org.junit.Test;
 
 public class CaseForEqBuilderTest {
 
-    public enum EnumExample { A, B }
+  public enum EnumExample {
+    A,
+    B
+  }
 
-    public static class Customer {
-        private long annualSpending;
-        public long getAnnualSpending() {
-            return annualSpending;
-        }
+  public static class Customer {
+    private long annualSpending;
+
+    public long getAnnualSpending() {
+      return annualSpending;
     }
+  }
 
-    @Test
-    public void numberTyped() {
-        Customer c = alias(Customer.class, "customer");
+  @Test
+  public void numberTyped() {
+    Customer c = alias(Customer.class, "customer");
 
-        NumberExpression<Integer> cases = $(c.getAnnualSpending())
-            .when(1000L).then(1)
-            .when(2000L).then(2)
-            .when(5000L).then(3)
+    NumberExpression<Integer> cases =
+        $(c.getAnnualSpending())
+            .when(1000L)
+            .then(1)
+            .when(2000L)
+            .then(2)
+            .when(5000L)
+            .then(3)
             .otherwise(4);
 
-        assertEquals(
-                "case customer.annualSpending " +
-                "when 1000 then 1 " +
-                "when 2000 then 2 " +
-                "when 5000 then 3 " +
-                "else 4 " +
-                "end", cases.toString());
-    }
+    assertEquals(
+        "case customer.annualSpending "
+            + "when 1000 then 1 "
+            + "when 2000 then 2 "
+            + "when 5000 then 3 "
+            + "else 4 "
+            + "end",
+        cases.toString());
+  }
 
-    @Test
-    public void stringTyped() {
-        Customer c = alias(Customer.class, "customer");
+  @Test
+  public void stringTyped() {
+    Customer c = alias(Customer.class, "customer");
 
-        StringExpression cases = $(c.getAnnualSpending())
-            .when(1000L).then("bronze")
-            .when(2000L).then("silver")
-            .when(5000L).then("gold")
+    StringExpression cases =
+        $(c.getAnnualSpending())
+            .when(1000L)
+            .then("bronze")
+            .when(2000L)
+            .then("silver")
+            .when(5000L)
+            .then("gold")
             .otherwise("platinum");
 
-        assertNotNull(cases);
+    assertNotNull(cases);
+  }
 
-    }
+  @Test
+  public void booleanTyped() {
+    Customer c = alias(Customer.class, "customer");
 
-    @Test
-    public void booleanTyped() {
-        Customer c = alias(Customer.class, "customer");
+    BooleanExpression cases = $(c.getAnnualSpending()).when(1000L).then(true).otherwise(false);
 
-        BooleanExpression cases = $(c.getAnnualSpending())
-            .when(1000L).then(true)
-            .otherwise(false);
+    assertNotNull(cases);
+  }
 
-        assertNotNull(cases);
-    }
+  @Test
+  public void dateType() {
+    Customer c = alias(Customer.class, "customer");
 
-    @Test
-    public void dateType() {
-        Customer c = alias(Customer.class, "customer");
+    DateExpression<java.sql.Date> cases =
+        $(c.getAnnualSpending())
+            .when(1000L)
+            .then(new java.sql.Date(0))
+            .otherwise(new java.sql.Date(0));
 
-        DateExpression<java.sql.Date> cases = $(c.getAnnualSpending())
-                .when(1000L).then(new java.sql.Date(0))
-                .otherwise(new java.sql.Date(0));
+    assertNotNull(cases);
+  }
 
-        assertNotNull(cases);
-    }
+  @Test
+  public void dateTimeType() {
+    Customer c = alias(Customer.class, "customer");
 
-    @Test
-    public void dateTimeType() {
-        Customer c = alias(Customer.class, "customer");
+    DateTimeExpression<java.util.Date> cases =
+        $(c.getAnnualSpending())
+            .when(1000L)
+            .then(new java.util.Date(0))
+            .otherwise(new java.util.Date(0));
 
-        DateTimeExpression<java.util.Date> cases = $(c.getAnnualSpending())
-                .when(1000L).then(new java.util.Date(0))
-                .otherwise(new java.util.Date(0));
+    assertNotNull(cases);
+  }
 
-        assertNotNull(cases);
-    }
+  @Test
+  public void timeType() {
+    Customer c = alias(Customer.class, "customer");
 
-    @Test
-    public void timeType() {
-        Customer c = alias(Customer.class, "customer");
+    TimeExpression<Time> cases =
+        $(c.getAnnualSpending()).when(1000L).then(new Time(0)).otherwise(new Time(0));
 
-        TimeExpression<Time> cases = $(c.getAnnualSpending())
-                .when(1000L).then(new Time(0))
-                .otherwise(new Time(0));
+    assertNotNull(cases);
+  }
 
-        assertNotNull(cases);
-    }
+  @Test
+  public void enumType() {
+    Customer c = alias(Customer.class, "customer");
 
-    @Test
-    public void enumType() {
-        Customer c = alias(Customer.class, "customer");
+    EnumExpression<EnumExample> cases =
+        $(c.getAnnualSpending()).when(1000L).then(EnumExample.A).otherwise(EnumExample.B);
 
-        EnumExpression<EnumExample> cases = $(c.getAnnualSpending())
-                .when(1000L).then(EnumExample.A)
-                .otherwise(EnumExample.B);
-
-        assertNotNull(cases);
-    }
-
-
+    assertNotNull(cases);
+  }
 }

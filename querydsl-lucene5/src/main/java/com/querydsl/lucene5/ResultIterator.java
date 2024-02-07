@@ -15,74 +15,70 @@ package com.querydsl.lucene5;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.QueryException;
+import java.io.IOException;
+import java.util.Set;
+import java.util.function.Function;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.util.Set;
-import java.util.function.Function;
-
 /**
- * {@code ResultIterator} is a {@link CloseableIterator} implementation for
- * Lucene query results
+ * {@code ResultIterator} is a {@link CloseableIterator} implementation for Lucene query results
  *
  * @author tiwe
- *
  * @param <T>
  */
 public final class ResultIterator<T> implements CloseableIterator<T> {
 
-    private final ScoreDoc[] scoreDocs;
+  private final ScoreDoc[] scoreDocs;
 
-    private int cursor;
+  private int cursor;
 
-    private final IndexSearcher searcher;
+  private final IndexSearcher searcher;
 
-    @Nullable
-    private final Set<String> fieldsToLoad;
+  @Nullable private final Set<String> fieldsToLoad;
 
-    private final Function<Document, T> transformer;
+  private final Function<Document, T> transformer;
 
-    public ResultIterator(ScoreDoc[] scoreDocs, int offset,
-            IndexSearcher searcher, @Nullable Set<String> fieldsToLoad,
-            Function<Document, T> transformer) {
-        this.scoreDocs = scoreDocs.clone();
-        this.cursor = offset;
-        this.searcher = searcher;
-        this.fieldsToLoad = fieldsToLoad;
-        this.transformer = transformer;
+  public ResultIterator(
+      ScoreDoc[] scoreDocs,
+      int offset,
+      IndexSearcher searcher,
+      @Nullable Set<String> fieldsToLoad,
+      Function<Document, T> transformer) {
+    this.scoreDocs = scoreDocs.clone();
+    this.cursor = offset;
+    this.searcher = searcher;
+    this.fieldsToLoad = fieldsToLoad;
+    this.transformer = transformer;
+  }
+
+  @Override
+  public boolean hasNext() {
+    return cursor != scoreDocs.length;
+  }
+
+  @Override
+  public T next() {
+    try {
+      Document document;
+      if (fieldsToLoad != null) {
+        document = searcher.doc(scoreDocs[cursor++].doc, fieldsToLoad);
+      } else {
+        document = searcher.doc(scoreDocs[cursor++].doc);
+      }
+      return transformer.apply(document);
+    } catch (IOException e) {
+      throw new QueryException(e);
     }
+  }
 
-    @Override
-    public boolean hasNext() {
-        return cursor != scoreDocs.length;
-    }
+  @Override
+  public void remove() {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public T next() {
-        try {
-            Document document;
-            if (fieldsToLoad != null) {
-                document = searcher.doc(scoreDocs[cursor++].doc, fieldsToLoad);
-            } else {
-                document = searcher.doc(scoreDocs[cursor++].doc);
-            }
-            return transformer.apply(document);
-        } catch (IOException e) {
-            throw new QueryException(e);
-        }
-    }
-
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void close() {
-
-    }
-
+  @Override
+  public void close() {}
 }

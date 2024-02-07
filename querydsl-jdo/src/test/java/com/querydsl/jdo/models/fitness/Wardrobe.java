@@ -13,10 +13,9 @@
  */
 package com.querydsl.jdo.models.fitness;
 
+import com.querydsl.core.annotations.QueryEntity;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.querydsl.core.annotations.QueryEntity;
 
 /**
  * Container for clothes in a Gym.
@@ -25,43 +24,43 @@ import com.querydsl.core.annotations.QueryEntity;
  */
 @QueryEntity
 public class Wardrobe {
+  // this must be initialized in the constructor. don't change it
+  private List<Cloth> clothes;
+  private String model;
+  private Gym gym;
+  private String stringKey;
+  private String stringValue;
+
+  public Wardrobe() {
     // this must be initialized in the constructor. don't change it
-    private List<Cloth> clothes;
-    private String model;
-    private Gym gym;
-    private String stringKey;
-    private String stringValue;
+    clothes = new ArrayList<Cloth>();
+  }
 
-    public Wardrobe() {
-        // this must be initialized in the constructor. don't change it
-        clothes = new ArrayList<Cloth>();
-    }
+  public List<Cloth> getClothes() {
+    return clothes;
+  }
 
-    public List<Cloth> getClothes() {
-        return clothes;
-    }
+  public void setClothes(ArrayList<Cloth> clothes) {
+    this.clothes = clothes;
+  }
 
-    public void setClothes(ArrayList<Cloth> clothes) {
-        this.clothes = clothes;
-    }
+  public String getModel() {
+    return model;
+  }
 
-    public String getModel() {
-        return model;
-    }
+  public void setModel(String model) {
+    this.model = model;
+  }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
+  public Gym getGym() {
+    return gym;
+  }
 
-    public Gym getGym() {
-        return gym;
-    }
+  public String getStringKey() {
+    return stringKey;
+  }
 
-    public String getStringKey() {
-        return stringKey;
-    }
-
-    public String getStringValue() {
-        return stringValue;
-    }
+  public String getStringValue() {
+    return stringValue;
+  }
 }

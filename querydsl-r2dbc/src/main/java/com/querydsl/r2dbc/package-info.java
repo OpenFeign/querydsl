@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * R2DBC support
- */
+/** R2DBC support */
 package com.querydsl.r2dbc;

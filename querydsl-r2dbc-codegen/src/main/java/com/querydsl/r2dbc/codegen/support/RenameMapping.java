@@ -14,7 +14,6 @@
 package com.querydsl.r2dbc.codegen.support;
 
 import com.querydsl.r2dbc.Configuration;
-
 import java.util.Arrays;
 
 /**
@@ -24,90 +23,91 @@ import java.util.Arrays;
  */
 public class RenameMapping implements Mapping {
 
-    private String fromSchema, fromTable, fromColumn;
+  private String fromSchema, fromTable, fromColumn;
+  private String toSchema, toTable, toColumn;
 
-    private String toSchema, toTable, toColumn;
-
-    @Override
-    public void apply(Configuration configuration) {
-        if (fromSchema != null) {
-            if (fromTable != null && fromColumn != null && toColumn != null) {
-                configuration.registerColumnOverride(fromSchema, fromTable, fromColumn, toColumn);
-            } else if (fromTable != null && toTable != null) {
-                if (toSchema != null) {
-                    configuration.registerTableOverride(fromSchema, fromTable, toSchema, toTable);
-                } else {
-                    configuration.registerTableOverride(fromSchema, fromTable, toTable);
-                }
-            } else if (toSchema != null) {
-                configuration.registerSchemaOverride(fromSchema, toSchema);
-            } else {
-                insufficientArgs();
-            }
-        } else if (fromTable != null) {
-            if (fromColumn != null && toColumn != null) {
-                configuration.registerColumnOverride(fromTable, fromColumn, toColumn);
-            } else if (toTable != null) {
-                configuration.registerTableOverride(fromTable, toTable);
-            } else {
-                insufficientArgs();
-            }
+  @Override
+  public void apply(Configuration configuration) {
+    if (fromSchema != null) {
+      if (fromTable != null && fromColumn != null && toColumn != null) {
+        configuration.registerColumnOverride(fromSchema, fromTable, fromColumn, toColumn);
+      } else if (fromTable != null && toTable != null) {
+        if (toSchema != null) {
+          configuration.registerTableOverride(fromSchema, fromTable, toSchema, toTable);
         } else {
-            insufficientArgs();
+          configuration.registerTableOverride(fromSchema, fromTable, toTable);
         }
+      } else if (toSchema != null) {
+        configuration.registerSchemaOverride(fromSchema, toSchema);
+      } else {
+        insufficientArgs();
+      }
+    } else if (fromTable != null) {
+      if (fromColumn != null && toColumn != null) {
+        configuration.registerColumnOverride(fromTable, fromColumn, toColumn);
+      } else if (toTable != null) {
+        configuration.registerTableOverride(fromTable, toTable);
+      } else {
+        insufficientArgs();
+      }
+    } else {
+      insufficientArgs();
     }
+  }
 
-    private void insufficientArgs() {
-        throw new IllegalArgumentException("Insufficient args " +
-                Arrays.asList(fromSchema, fromTable, fromColumn) + " to " +
-                Arrays.asList(toSchema, toTable, toColumn));
-    }
+  private void insufficientArgs() {
+    throw new IllegalArgumentException(
+        "Insufficient args "
+            + Arrays.asList(fromSchema, fromTable, fromColumn)
+            + " to "
+            + Arrays.asList(toSchema, toTable, toColumn));
+  }
 
-    public String getFromSchema() {
-        return fromSchema;
-    }
+  public String getFromSchema() {
+    return fromSchema;
+  }
 
-    public void setFromSchema(String fromSchema) {
-        this.fromSchema = fromSchema;
-    }
+  public void setFromSchema(String fromSchema) {
+    this.fromSchema = fromSchema;
+  }
 
-    public String getFromTable() {
-        return fromTable;
-    }
+  public String getFromTable() {
+    return fromTable;
+  }
 
-    public void setFromTable(String fromTable) {
-        this.fromTable = fromTable;
-    }
+  public void setFromTable(String fromTable) {
+    this.fromTable = fromTable;
+  }
 
-    public String getFromColumn() {
-        return fromColumn;
-    }
+  public String getFromColumn() {
+    return fromColumn;
+  }
 
-    public void setFromColumn(String fromColumn) {
-        this.fromColumn = fromColumn;
-    }
+  public void setFromColumn(String fromColumn) {
+    this.fromColumn = fromColumn;
+  }
 
-    public String getToSchema() {
-        return toSchema;
-    }
+  public String getToSchema() {
+    return toSchema;
+  }
 
-    public void setToSchema(String toSchema) {
-        this.toSchema = toSchema;
-    }
+  public void setToSchema(String toSchema) {
+    this.toSchema = toSchema;
+  }
 
-    public String getToTable() {
-        return toTable;
-    }
+  public String getToTable() {
+    return toTable;
+  }
 
-    public void setToTable(String toTable) {
-        this.toTable = toTable;
-    }
+  public void setToTable(String toTable) {
+    this.toTable = toTable;
+  }
 
-    public String getToColumn() {
-        return toColumn;
-    }
+  public String getToColumn() {
+    return toColumn;
+  }
 
-    public void setToColumn(String toColumn) {
-        this.toColumn = toColumn;
-    }
+  public void setToColumn(String toColumn) {
+    this.toColumn = toColumn;
+  }
 }

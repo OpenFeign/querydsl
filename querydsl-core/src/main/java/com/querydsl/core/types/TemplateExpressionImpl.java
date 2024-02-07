@@ -13,75 +13,70 @@
  */
 package com.querydsl.core.types;
 
+import com.querydsl.core.annotations.Immutable;
+import com.querydsl.core.util.CollectionUtils;
 import java.util.Arrays;
 import java.util.List;
-
-import com.querydsl.core.annotations.Immutable;
-
-import com.querydsl.core.util.CollectionUtils;
 import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * Default implementation of the {@link TemplateExpression} interface
  *
  * @author tiwe
- *
  * @param <T> expression type
  */
 @Immutable
 public class TemplateExpressionImpl<T> extends ExpressionBase<T> implements TemplateExpression<T> {
 
-    private static final long serialVersionUID = 6951623726800809083L;
+  private static final long serialVersionUID = 6951623726800809083L;
 
-    @Unmodifiable
-    private final List<?> args;
+  @Unmodifiable private final List<?> args;
 
-    private final Template template;
+  private final Template template;
 
-    protected TemplateExpressionImpl(Class<? extends T> type, Template template, Object... args) {
-        this(type, template, Arrays.asList(args));
+  protected TemplateExpressionImpl(Class<? extends T> type, Template template, Object... args) {
+    this(type, template, Arrays.asList(args));
+  }
+
+  protected TemplateExpressionImpl(Class<? extends T> type, Template template, List<?> args) {
+    super(type);
+    this.args = CollectionUtils.unmodifiableList(args);
+    this.template = template;
+  }
+
+  @Override
+  public final Object getArg(int index) {
+    return getArgs().get(index);
+  }
+
+  @Override
+  @Unmodifiable
+  public final List<?> getArgs() {
+    return args;
+  }
+
+  @Override
+  public final Template getTemplate() {
+    return template;
+  }
+
+  @Override
+  public final boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    } else if (o instanceof TemplateExpression) {
+      TemplateExpression<?> c = (TemplateExpression<?>) o;
+      return c.getTemplate().equals(template)
+          && c.getType().equals(getType())
+          && c.getArgs().equals(args);
+
+    } else {
+      return false;
     }
+  }
 
-    protected TemplateExpressionImpl(Class<? extends T> type, Template template, List<?> args) {
-        super(type);
-        this.args = CollectionUtils.unmodifiableList(args);
-        this.template = template;
-    }
-
-    @Override
-    public final Object getArg(int index) {
-        return getArgs().get(index);
-    }
-
-    @Override
-    @Unmodifiable
-    public final List<?> getArgs() {
-        return args;
-    }
-
-    @Override
-    public final Template getTemplate() {
-        return template;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-       if (o == this) {
-           return true;
-       } else if (o instanceof TemplateExpression) {
-           TemplateExpression<?> c = (TemplateExpression<?>) o;
-           return c.getTemplate().equals(template)
-               && c.getType().equals(getType())
-               && c.getArgs().equals(args);
-
-       } else {
-           return false;
-       }
-    }
-
-    @Override
-    public final <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
-    }
-
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
 }

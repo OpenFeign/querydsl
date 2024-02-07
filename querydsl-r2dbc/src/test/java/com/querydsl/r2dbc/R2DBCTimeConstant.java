@@ -18,57 +18,56 @@ import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.NumberExpression;
-
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
 
 /**
  * @author mc_fish
  */
-public final class R2DBCTimeConstant<D extends LocalTime> extends LocalTimeExpression<D> implements Constant<D> {
+public final class R2DBCTimeConstant<D extends LocalTime> extends LocalTimeExpression<D>
+    implements Constant<D> {
 
-    private static final long serialVersionUID = -7835941761930555480L;
+  private static final long serialVersionUID = -7835941761930555480L;
 
-    public static <D extends LocalTime> LocalTimeExpression<D> create(D time) {
-        return new R2DBCTimeConstant<D>(time);
-    }
+  public static <D extends LocalTime> LocalTimeExpression<D> create(D time) {
+    return new R2DBCTimeConstant<D>(time);
+  }
 
-    private final D time;
+  private final D time;
 
-    @SuppressWarnings("unchecked")
-    public R2DBCTimeConstant(D time) {
-        super(ConstantImpl.create(time));
-        this.time = (D) time;
-    }
+  @SuppressWarnings("unchecked")
+  public R2DBCTimeConstant(D time) {
+    super(ConstantImpl.create(time));
+    this.time = (D) time;
+  }
 
-    @Override
-    public <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
-    }
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
 
-    @Override
-    public NumberExpression<Integer> hour() {
-        return NumberConstant.create(time.get(ChronoField.HOUR_OF_DAY));
-    }
+  @Override
+  public NumberExpression<Integer> hour() {
+    return NumberConstant.create(time.get(ChronoField.HOUR_OF_DAY));
+  }
 
-    @Override
-    public NumberExpression<Integer> minute() {
-        return NumberConstant.create(time.get(ChronoField.MINUTE_OF_HOUR));
-    }
+  @Override
+  public NumberExpression<Integer> minute() {
+    return NumberConstant.create(time.get(ChronoField.MINUTE_OF_HOUR));
+  }
 
-    @Override
-    public NumberExpression<Integer> second() {
-        return NumberConstant.create(time.get(ChronoField.SECOND_OF_MINUTE));
-    }
+  @Override
+  public NumberExpression<Integer> second() {
+    return NumberConstant.create(time.get(ChronoField.SECOND_OF_MINUTE));
+  }
 
-    @Override
-    public NumberExpression<Integer> milliSecond() {
-        return NumberConstant.create(time.get(ChronoField.MILLI_OF_SECOND));
-    }
+  @Override
+  public NumberExpression<Integer> milliSecond() {
+    return NumberConstant.create(time.get(ChronoField.MILLI_OF_SECOND));
+  }
 
-    @Override
-    public D getConstant() {
-        return time;
-    }
-
+  @Override
+  public D getConstant() {
+    return time;
+  }
 }

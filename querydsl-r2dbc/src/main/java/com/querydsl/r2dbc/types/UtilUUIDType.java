@@ -23,36 +23,35 @@ import java.util.UUID;
  */
 public class UtilUUIDType extends AbstractType<UUID, Object> {
 
-    public UtilUUIDType() {
-        this(Types.VARCHAR);
+  public UtilUUIDType() {
+    this(Types.VARCHAR);
+  }
+
+  public UtilUUIDType(int type) {
+    super(type);
+  }
+
+  @Override
+  public Class<UUID> getReturnedClass() {
+    return UUID.class;
+  }
+
+  @Override
+  public Class<Object> getDatabaseClass() {
+    return Object.class;
+  }
+
+  @Override
+  protected String toDbValue(UUID value) {
+    return value.toString();
+  }
+
+  @Override
+  protected UUID fromDbValue(Object value) {
+    if (String.class.isAssignableFrom(value.getClass())) {
+      return UUID.fromString((String) value);
     }
 
-    public UtilUUIDType(int type) {
-        super(type);
-    }
-
-    @Override
-    public Class<UUID> getReturnedClass() {
-        return UUID.class;
-    }
-
-    @Override
-    public Class<Object> getDatabaseClass() {
-        return Object.class;
-    }
-
-    @Override
-    protected String toDbValue(UUID value) {
-        return value.toString();
-    }
-
-    @Override
-    protected UUID fromDbValue(Object value) {
-        if (String.class.isAssignableFrom(value.getClass())) {
-            return UUID.fromString((String) value);
-        }
-
-        return (UUID) value;
-    }
-
+    return (UUID) value;
+  }
 }

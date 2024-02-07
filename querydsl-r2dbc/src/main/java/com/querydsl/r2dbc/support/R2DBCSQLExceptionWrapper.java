@@ -14,49 +14,47 @@
 package com.querydsl.r2dbc.support;
 
 import com.querydsl.core.QueryException;
-
 import java.sql.SQLException;
 
 /**
- * A {@link AbstractR2DBCExceptionWrapper} that adds the additional
- * {@code SQLException}s as suppressed exceptions.
+ * A {@link AbstractR2DBCExceptionWrapper} that adds the additional {@code SQLException}s as
+ * suppressed exceptions.
  *
  * @author Shredder121
  */
 class R2DBCSQLExceptionWrapper extends AbstractR2DBCExceptionWrapper {
 
-    @Override
-    public RuntimeException wrap(Throwable exception) {
-        if (!SQLException.class.isAssignableFrom(exception.getClass())) {
-            return new QueryException(exception);
-        }
-
-        SQLException sqlException = (SQLException) exception;
-
-        QueryException rv = new QueryException(sqlException);
-        SQLException linkedException = sqlException.getNextException();
-        while (linkedException != null) {
-            rv.addSuppressed(linkedException);
-            linkedException = linkedException.getNextException();
-        }
-        return rv;
+  @Override
+  public RuntimeException wrap(Throwable exception) {
+    if (!SQLException.class.isAssignableFrom(exception.getClass())) {
+      return new QueryException(exception);
     }
 
-    @Override
-    public RuntimeException wrap(String message, Throwable exception) {
-        if (!SQLException.class.isAssignableFrom(exception.getClass())) {
-            return new QueryException(message, exception);
-        }
+    SQLException sqlException = (SQLException) exception;
 
-        SQLException sqlException = (SQLException) exception;
+    QueryException rv = new QueryException(sqlException);
+    SQLException linkedException = sqlException.getNextException();
+    while (linkedException != null) {
+      rv.addSuppressed(linkedException);
+      linkedException = linkedException.getNextException();
+    }
+    return rv;
+  }
 
-        QueryException rv = new QueryException(message, sqlException);
-        SQLException linkedException = sqlException.getNextException();
-        while (linkedException != null) {
-            rv.addSuppressed(linkedException);
-            linkedException = linkedException.getNextException();
-        }
-        return rv;
+  @Override
+  public RuntimeException wrap(String message, Throwable exception) {
+    if (!SQLException.class.isAssignableFrom(exception.getClass())) {
+      return new QueryException(message, exception);
     }
 
+    SQLException sqlException = (SQLException) exception;
+
+    QueryException rv = new QueryException(message, sqlException);
+    SQLException linkedException = sqlException.getNextException();
+    while (linkedException != null) {
+      rv.addSuppressed(linkedException);
+      linkedException = linkedException.getNextException();
+    }
+    return rv;
+  }
 }

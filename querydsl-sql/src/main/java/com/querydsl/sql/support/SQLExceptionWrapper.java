@@ -16,17 +16,15 @@ package com.querydsl.sql.support;
 import java.sql.SQLException;
 
 /**
- * A {@code SQLExceptionWrapper} is used to accommodate for
- * Java™ 7's suppressed exceptions.
+ * A {@code SQLExceptionWrapper} is used to accommodate for Java™ 7's suppressed exceptions.
  *
  * @author Shredder121
  */
 public abstract class SQLExceptionWrapper {
 
-    public static final SQLExceptionWrapper INSTANCE = new JavaSE7SQLExceptionWrapper();
+  public static final SQLExceptionWrapper INSTANCE = new JavaSE7SQLExceptionWrapper();
 
-    public abstract RuntimeException wrap(SQLException exception);
+  public abstract RuntimeException wrap(SQLException exception);
 
-    public abstract RuntimeException wrap(String message, SQLException exception);
-
+  public abstract RuntimeException wrap(String message, SQLException exception);
 }

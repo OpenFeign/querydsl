@@ -13,89 +13,88 @@
  */
 package com.querydsl.core.types.dsl;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.types.ExpressionException;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code CollectionPath} is a base class for collection typed paths
  *
  * @author tiwe
- *
  * @param <C> collection type
  * @param <E> component type
  * @param <Q> expression type for {@code any()} results
  */
-public abstract class CollectionPathBase<C extends Collection<E>, E, Q extends SimpleExpression<? super E>>
+public abstract class CollectionPathBase<
+        C extends Collection<E>, E, Q extends SimpleExpression<? super E>>
     extends CollectionExpressionBase<C, E> implements Path<C> {
 
-    private static final long serialVersionUID = -9004995667633601298L;
+  private static final long serialVersionUID = -9004995667633601298L;
 
-    @Nullable
-    private transient volatile Constructor<?> constructor;
+  @Nullable private transient volatile Constructor<?> constructor;
 
-    private transient volatile boolean usePathInits = false;
+  private transient volatile boolean usePathInits = false;
 
-    private final PathInits inits;
+  private final PathInits inits;
 
-    public CollectionPathBase(PathImpl<C> mixin, PathInits inits) {
-        super(mixin);
-        this.inits = inits;
-    }
+  public CollectionPathBase(PathImpl<C> mixin, PathInits inits) {
+    super(mixin);
+    this.inits = inits;
+  }
 
-    /**
-     * Create a path that matches any element in this collection
-     *
-     * @return path expression
-     */
-    public abstract Q any();
+  /**
+   * Create a path that matches any element in this collection
+   *
+   * @return path expression
+   */
+  public abstract Q any();
 
-    @SuppressWarnings("unchecked")
-    protected Q newInstance(Class<Q> queryType, PathMetadata pm) {
-        try {
-            if (constructor == null) {
-                if (Constants.isTyped(queryType)) {
-                    try {
-                        constructor = queryType.getDeclaredConstructor(Class.class, PathMetadata.class, PathInits.class);
-                        usePathInits = true;
-                    } catch (NoSuchMethodException e) {
-                        constructor = queryType.getDeclaredConstructor(Class.class, PathMetadata.class);
-                    }
-                } else {
-                    try {
-                        constructor = queryType.getDeclaredConstructor(PathMetadata.class, PathInits.class);
-                        usePathInits = true;
-                    } catch (NoSuchMethodException e) {
-                        constructor = queryType.getDeclaredConstructor(PathMetadata.class);
-                    }
-                }
-                constructor.setAccessible(true);
-            }
-            if (Constants.isTyped(queryType)) {
-                if (usePathInits) {
-                    return (Q) constructor.newInstance(getElementType(), pm, inits);
-                } else {
-                    return (Q) constructor.newInstance(getElementType(), pm);
-                }
-
-            } else {
-                if (usePathInits) {
-                    return (Q) constructor.newInstance(pm, inits);
-                } else {
-                    return (Q) constructor.newInstance(pm);
-                }
-            }
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
-            throw new ExpressionException(e);
+  @SuppressWarnings("unchecked")
+  protected Q newInstance(Class<Q> queryType, PathMetadata pm) {
+    try {
+      if (constructor == null) {
+        if (Constants.isTyped(queryType)) {
+          try {
+            constructor =
+                queryType.getDeclaredConstructor(Class.class, PathMetadata.class, PathInits.class);
+            usePathInits = true;
+          } catch (NoSuchMethodException e) {
+            constructor = queryType.getDeclaredConstructor(Class.class, PathMetadata.class);
+          }
+        } else {
+          try {
+            constructor = queryType.getDeclaredConstructor(PathMetadata.class, PathInits.class);
+            usePathInits = true;
+          } catch (NoSuchMethodException e) {
+            constructor = queryType.getDeclaredConstructor(PathMetadata.class);
+          }
+        }
+        constructor.setAccessible(true);
+      }
+      if (Constants.isTyped(queryType)) {
+        if (usePathInits) {
+          return (Q) constructor.newInstance(getElementType(), pm, inits);
+        } else {
+          return (Q) constructor.newInstance(getElementType(), pm);
         }
 
+      } else {
+        if (usePathInits) {
+          return (Q) constructor.newInstance(pm, inits);
+        } else {
+          return (Q) constructor.newInstance(pm);
+        }
+      }
+    } catch (NoSuchMethodException
+        | InvocationTargetException
+        | IllegalAccessException
+        | InstantiationException e) {
+      throw new ExpressionException(e);
     }
-
+  }
 }

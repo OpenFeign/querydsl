@@ -16,96 +16,93 @@ package com.querydsl.core.types;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import com.querydsl.core.types.dsl.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.querydsl.core.types.dsl.*;
-
-
 public class QBeanFieldAccessTest {
 
-    public static class Entity {
+  public static class Entity {
 
-        String name;
+    String name;
 
-        String name2;
+    String name2;
 
-        int age;
+    int age;
 
-        boolean married;
-    }
+    boolean married;
+  }
 
-    private PathBuilder<Entity> entity;
+  private PathBuilder<Entity> entity;
 
-    private StringPath name, name2;
+  private StringPath name, name2;
 
-    private NumberPath<Integer> age;
+  private NumberPath<Integer> age;
 
-    private BooleanPath married;
+  private BooleanPath married;
 
-    @Before
-    public void setUp() {
-        entity = new PathBuilderFactory().create(Entity.class);
-        name = entity.getString("name");
-        name2 = entity.getString("name2");
-        age = entity.getNumber("age", Integer.class);
-        married = entity.getBoolean("married");
-    }
+  @Before
+  public void setUp() {
+    entity = new PathBuilderFactory().create(Entity.class);
+    name = entity.getString("name");
+    name2 = entity.getString("name2");
+    age = entity.getNumber("age", Integer.class);
+    married = entity.getBoolean("married");
+  }
 
-    @Test
-    public void with_class_and_exprs_using_fields() {
-        QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, name, age, married);
-        Entity bean = beanProjection.newInstance("Fritz", 30, true);
-        assertEquals("Fritz", bean.name);
-        assertEquals(30, bean.age);
-        assertEquals(true, bean.married);
-    }
+  @Test
+  public void with_class_and_exprs_using_fields() {
+    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, name, age, married);
+    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    assertEquals("Fritz", bean.name);
+    assertEquals(30, bean.age);
+    assertEquals(true, bean.married);
+  }
 
-    @Test
-    public void with_path_and_exprs_using_fields() {
-        QBean<Entity> beanProjection = Projections.fields(entity, name, age, married);
-        Entity bean = beanProjection.newInstance("Fritz", 30, true);
-        assertEquals("Fritz", bean.name);
-        assertEquals(30, bean.age);
-        assertEquals(true, bean.married);
-    }
+  @Test
+  public void with_path_and_exprs_using_fields() {
+    QBean<Entity> beanProjection = Projections.fields(entity, name, age, married);
+    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    assertEquals("Fritz", bean.name);
+    assertEquals(30, bean.age);
+    assertEquals(true, bean.married);
+  }
 
-    @Test
-    public void with_class_and_map_using_fields() {
-        Map<String,Expression<?>> bindings = new LinkedHashMap<String,Expression<?>>();
-        bindings.put("name", name);
-        bindings.put("age", age);
-        bindings.put("married", married);
-        QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, bindings);
-        Entity bean = beanProjection.newInstance("Fritz", 30, true);
-        assertEquals("Fritz", bean.name);
-        assertEquals(30, bean.age);
-        assertEquals(true, bean.married);
-    }
+  @Test
+  public void with_class_and_map_using_fields() {
+    Map<String, Expression<?>> bindings = new LinkedHashMap<String, Expression<?>>();
+    bindings.put("name", name);
+    bindings.put("age", age);
+    bindings.put("married", married);
+    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, bindings);
+    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    assertEquals("Fritz", bean.name);
+    assertEquals(30, bean.age);
+    assertEquals(true, bean.married);
+  }
 
-    @Test
-    public void with_class_and_alias_using_fields() {
-        StringPath name2 = Expressions.stringPath("name2");
-        QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, name.as(name2), age, married);
-        Entity bean = beanProjection.newInstance("Fritz", 30, true);
-        assertNull(bean.name);
-        assertEquals("Fritz", bean.name2);
-        assertEquals(30, bean.age);
-        assertEquals(true, bean.married);
-    }
+  @Test
+  public void with_class_and_alias_using_fields() {
+    StringPath name2 = Expressions.stringPath("name2");
+    QBean<Entity> beanProjection =
+        new QBean<Entity>(Entity.class, true, name.as(name2), age, married);
+    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    assertNull(bean.name);
+    assertEquals("Fritz", bean.name2);
+    assertEquals(30, bean.age);
+    assertEquals(true, bean.married);
+  }
 
-    @Test
-    public void with_nested_factoryExpression() {
-        Map<String,Expression<?>> bindings = new LinkedHashMap<String,Expression<?>>();
-        bindings.put("age", age);
-        bindings.put("name", new Concatenation(name, name2));
-        QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, bindings);
-        FactoryExpression<Entity> wrappedProjection = FactoryExpressionUtils.wrap(beanProjection);
-        Entity bean = wrappedProjection.newInstance(30, "Fri","tz");
-        assertEquals("Fritz", bean.name);
-
-    }
+  @Test
+  public void with_nested_factoryExpression() {
+    Map<String, Expression<?>> bindings = new LinkedHashMap<String, Expression<?>>();
+    bindings.put("age", age);
+    bindings.put("name", new Concatenation(name, name2));
+    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, bindings);
+    FactoryExpression<Entity> wrappedProjection = FactoryExpressionUtils.wrap(beanProjection);
+    Entity bean = wrappedProjection.newInstance(30, "Fri", "tz");
+    assertEquals("Fritz", bean.name);
+  }
 }

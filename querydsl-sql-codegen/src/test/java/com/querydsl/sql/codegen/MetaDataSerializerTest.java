@@ -18,171 +18,164 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.Assert.assertThat;
 
+import com.querydsl.codegen.BeanSerializer;
+import com.querydsl.codegen.utils.SimpleCompiler;
+import com.querydsl.sql.AbstractJDBCTest;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.SQLTemplates;
+import com.querydsl.sql.types.AbstractType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
-
 import javax.tools.JavaCompiler;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.querydsl.codegen.utils.SimpleCompiler;
-import com.querydsl.codegen.BeanSerializer;
-import com.querydsl.sql.AbstractJDBCTest;
-import com.querydsl.sql.Configuration;
-import com.querydsl.sql.SQLTemplates;
-import com.querydsl.sql.types.AbstractType;
-
 public class MetaDataSerializerTest extends AbstractJDBCTest {
-    public static class CustomNumber { }
+  public static class CustomNumber {}
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+  @Rule public TemporaryFolder folder = new TemporaryFolder();
 
-    @Override
-    @Before
-    public void setUp() throws SQLException, ClassNotFoundException {
-        super.setUp();
-        statement.execute("drop table employee if exists");
-        statement.execute("drop table survey if exists");
-        statement.execute("drop table date_test if exists");
-        statement.execute("drop table date_time_test if exists");
-        statement.execute("drop table spaces if exists");
+  @Override
+  @Before
+  public void setUp() throws SQLException, ClassNotFoundException {
+    super.setUp();
+    statement.execute("drop table employee if exists");
+    statement.execute("drop table survey if exists");
+    statement.execute("drop table date_test if exists");
+    statement.execute("drop table date_time_test if exists");
+    statement.execute("drop table spaces if exists");
 
-        // survey
-        statement.execute("create table survey (id int, name varchar(30), "
-                + "CONSTRAINT PK_survey PRIMARY KEY (id, name))");
+    // survey
+    statement.execute(
+        "create table survey (id int, name varchar(30), "
+            + "CONSTRAINT PK_survey PRIMARY KEY (id, name))");
 
-        // date_test
-        statement.execute("create table date_test (d date)");
+    // date_test
+    statement.execute("create table date_test (d date)");
 
-        // date_time
-        statement.execute("create table date_time_test (dt datetime)");
+    // date_time
+    statement.execute("create table date_time_test (dt datetime)");
 
-        // spaces
-        statement.execute("create table spaces (\"spaces  \n 1\" date)");
+    // spaces
+    statement.execute("create table spaces (\"spaces  \n 1\" date)");
 
-        // employee
-        statement.execute("create table employee("
-                + "id INT, "
-                + "firstname VARCHAR(50), "
-                + "lastname VARCHAR(50), "
-                + "salary DECIMAL(10, 2), "
-                + "datefield DATE, "
-                + "timefield TIME, "
-                + "superior_id int, "
-                + "survey_id int, "
-                + "\"123abc\" int,"
-                + "survey_name varchar(30), "
-                + "CONSTRAINT PK_employee PRIMARY KEY (id), "
-                + "CONSTRAINT FK_survey FOREIGN KEY (survey_id, survey_name) REFERENCES survey(id,name), "
-                + "CONSTRAINT FK_superior FOREIGN KEY (superior_id) REFERENCES employee(id))");
+    // employee
+    statement.execute(
+        "create table employee(id INT, firstname VARCHAR(50), lastname VARCHAR(50), salary"
+            + " DECIMAL(10, 2), datefield DATE, timefield TIME, superior_id int, survey_id int,"
+            + " \"123abc\" int,survey_name varchar(30), CONSTRAINT PK_employee PRIMARY KEY (id),"
+            + " CONSTRAINT FK_survey FOREIGN KEY (survey_id, survey_name) REFERENCES"
+            + " survey(id,name), CONSTRAINT FK_superior FOREIGN KEY (superior_id) REFERENCES"
+            + " employee(id))");
+  }
+
+  @Test
+  public void normal_serialization() throws SQLException {
+    String namePrefix = "Q";
+    NamingStrategy namingStrategy = new DefaultNamingStrategy();
+    // customization of serialization
+    MetaDataExporter exporter = new MetaDataExporter();
+    exporter.setBeanSerializerClass(BeanSerializer.class);
+    exporter.setNamePrefix(namePrefix);
+    exporter.setPackageName("test");
+    exporter.setTargetFolder(folder.getRoot());
+    exporter.setNamingStrategy(namingStrategy);
+    exporter.export(connection.getMetaData());
+
+    compile(exporter);
+
+    // validation of output
+    try {
+      //
+      assertFileContainsInOrder(
+          "test/QSurvey.java",
+          "import javax.annotation.Generated;",
+          "@Generated(\"com.querydsl.sql.codegen.MetaDataSerializer\")\npublic class QSurvey",
+          // variable + schema constructor
+          "    public QSurvey(String variable, String schema) {\n"
+              + "        super(Survey.class, forVariable(variable), schema, \"SURVEY\");\n"
+              + "        addMetadata();\n"
+              + "    }");
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
     }
+  }
 
-    @Test
-    public void normal_serialization() throws SQLException {
-        String namePrefix = "Q";
-        NamingStrategy namingStrategy = new DefaultNamingStrategy();
-        // customization of serialization
-        MetaDataExporter exporter = new MetaDataExporter();
-        exporter.setBeanSerializerClass(BeanSerializer.class);
-        exporter.setNamePrefix(namePrefix);
-        exporter.setPackageName("test");
-        exporter.setTargetFolder(folder.getRoot());
-        exporter.setNamingStrategy(namingStrategy);
-        exporter.export(connection.getMetaData());
+  @Test
+  public void customized_serialization() throws SQLException {
+    String namePrefix = "Q";
+    Configuration conf = new Configuration(SQLTemplates.DEFAULT);
+    conf.register(
+        "EMPLOYEE",
+        "ID",
+        new AbstractType<CustomNumber>(0) {
+          @Override
+          public Class<CustomNumber> getReturnedClass() {
+            return CustomNumber.class;
+          }
 
-        compile(exporter);
+          @Override
+          public CustomNumber getValue(ResultSet rs, int startIndex) throws SQLException {
+            throw new UnsupportedOperationException();
+          }
 
-        // validation of output
-        try {
-            //
-            assertFileContainsInOrder("test/QSurvey.java",
-                    "import javax.annotation.Generated;",
-                    "@Generated(\"com.querydsl.sql.codegen.MetaDataSerializer\")\npublic class QSurvey",
-                    // variable + schema constructor
-                    "    public QSurvey(String variable, String schema) {\n"
-                    + "        super(Survey.class, forVariable(variable), schema, \"SURVEY\");\n"
-                    + "        addMetadata();\n"
-                    + "    }"
-            );
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Test
-    public void customized_serialization() throws SQLException {
-        String namePrefix = "Q";
-        Configuration conf = new Configuration(SQLTemplates.DEFAULT);
-        conf.register("EMPLOYEE", "ID", new AbstractType<CustomNumber>(0) {
-            @Override
-            public Class<CustomNumber> getReturnedClass() {
-                return CustomNumber.class;
-            }
-
-            @Override
-            public CustomNumber getValue(ResultSet rs, int startIndex) throws SQLException {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public void setValue(PreparedStatement st, int startIndex, CustomNumber value) throws SQLException {
-                throw new UnsupportedOperationException();
-            }
+          @Override
+          public void setValue(PreparedStatement st, int startIndex, CustomNumber value)
+              throws SQLException {
+            throw new UnsupportedOperationException();
+          }
         });
-        NamingStrategy namingStrategy = new DefaultNamingStrategy();
-        // customization of serialization
-        MetaDataExporter exporter = new MetaDataExporter();
-        exporter.setBeanSerializerClass(BeanSerializer.class);
-        exporter.setNamePrefix(namePrefix);
-        exporter.setPackageName("test");
-        exporter.setTargetFolder(folder.getRoot());
-        exporter.setNamingStrategy(namingStrategy);
-        exporter.setConfiguration(conf);
-        exporter.setGeneratedAnnotationClass("com.querydsl.core.annotations.Generated");
-        exporter.export(connection.getMetaData());
+    NamingStrategy namingStrategy = new DefaultNamingStrategy();
+    // customization of serialization
+    MetaDataExporter exporter = new MetaDataExporter();
+    exporter.setBeanSerializerClass(BeanSerializer.class);
+    exporter.setNamePrefix(namePrefix);
+    exporter.setPackageName("test");
+    exporter.setTargetFolder(folder.getRoot());
+    exporter.setNamingStrategy(namingStrategy);
+    exporter.setConfiguration(conf);
+    exporter.setGeneratedAnnotationClass("com.querydsl.core.annotations.Generated");
+    exporter.export(connection.getMetaData());
 
-        compile(exporter);
+    compile(exporter);
 
-        // validation of output
-        try {
-            //
-            assertFileContainsInOrder("test/QSurvey.java",
-                    "import com.querydsl.core.annotations.Generated;",
-                    "@Generated(\"com.querydsl.sql.codegen.MetaDataSerializer\")\npublic class QSurvey",
-                    // variable + schema constructor
-                    "    public QSurvey(String variable, String schema) {\n"
-                    + "        super(Survey.class, forVariable(variable), schema, \"SURVEY\");\n"
-                    + "        addMetadata();\n"
-                    + "    }"
-            );
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+    // validation of output
+    try {
+      //
+      assertFileContainsInOrder(
+          "test/QSurvey.java",
+          "import com.querydsl.core.annotations.Generated;",
+          "@Generated(\"com.querydsl.sql.codegen.MetaDataSerializer\")\npublic class QSurvey",
+          // variable + schema constructor
+          "    public QSurvey(String variable, String schema) {\n"
+              + "        super(Survey.class, forVariable(variable), schema, \"SURVEY\");\n"
+              + "        addMetadata();\n"
+              + "    }");
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
     }
+  }
 
-    private void compile(MetaDataExporter exporter) {
-        JavaCompiler compiler = new SimpleCompiler();
-        Set<String> classes = exporter.getClasses();
-        int compilationResult = compiler.run(null, null, null, classes.toArray(new String[0]));
-        if (compilationResult == 0) {
-            System.out.println("Compilation is successful");
-        } else {
-            Assert.fail("Compilation Failed");
-        }
+  private void compile(MetaDataExporter exporter) {
+    JavaCompiler compiler = new SimpleCompiler();
+    Set<String> classes = exporter.getClasses();
+    int compilationResult = compiler.run(null, null, null, classes.toArray(new String[0]));
+    if (compilationResult == 0) {
+      System.out.println("Compilation is successful");
+    } else {
+      Assert.fail("Compilation Failed");
     }
+  }
 
-    private void assertFileContainsInOrder(String path, String... methods) throws IOException {
-        String content = new String(Files.readAllBytes(folder.getRoot().toPath().resolve(path)), UTF_8);
-        assertThat(content, stringContainsInOrder(asList(methods)));
-    }
-
+  private void assertFileContainsInOrder(String path, String... methods) throws IOException {
+    String content = new String(Files.readAllBytes(folder.getRoot().toPath().resolve(path)), UTF_8);
+    assertThat(content, stringContainsInOrder(asList(methods)));
+  }
 }

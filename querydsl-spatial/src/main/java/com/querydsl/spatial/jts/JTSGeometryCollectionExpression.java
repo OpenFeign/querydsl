@@ -13,8 +13,6 @@
  */
 package com.querydsl.spatial.jts;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -22,45 +20,46 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.spatial.SpatialOps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * A Geometry collection is a geometric object that is a collection of some number of geometric objects.
+ * A Geometry collection is a geometric object that is a collection of some number of geometric
+ * objects.
  *
  * @author tiwe
- *
  * @param <T>
  */
-public abstract class JTSGeometryCollectionExpression<T extends GeometryCollection> extends JTSGeometryExpression<T> {
+public abstract class JTSGeometryCollectionExpression<T extends GeometryCollection>
+    extends JTSGeometryExpression<T> {
 
-    private static final long serialVersionUID = 8874174644259834690L;
+  private static final long serialVersionUID = 8874174644259834690L;
 
-    @Nullable
-    private transient volatile NumberExpression<Integer> numGeometries;
+  @Nullable private transient volatile NumberExpression<Integer> numGeometries;
 
-    public JTSGeometryCollectionExpression(Expression<T> mixin) {
-        super(mixin);
+  public JTSGeometryCollectionExpression(Expression<T> mixin) {
+    super(mixin);
+  }
+
+  /**
+   * Returns the number of geometries in this GeometryCollection.
+   *
+   * @return numbers of geometries
+   */
+  public NumberExpression<Integer> numGeometries() {
+    if (numGeometries == null) {
+      numGeometries = Expressions.numberOperation(Integer.class, SpatialOps.NUM_GEOMETRIES, mixin);
     }
+    return numGeometries;
+  }
 
-    /**
-     * Returns the number of geometries in this GeometryCollection.
-     *
-     * @return numbers of geometries
-     */
-    public NumberExpression<Integer> numGeometries() {
-        if (numGeometries == null) {
-            numGeometries = Expressions.numberOperation(Integer.class, SpatialOps.NUM_GEOMETRIES, mixin);
-        }
-        return numGeometries;
-    }
-
-    /**
-     * Returns the Nth geometry in this GeometryCollection.
-     *
-     * @param n one based index
-     * @return matching geometry
-     */
-    public JTSGeometryExpression<Geometry> geometryN(Integer n) {
-        return JTSGeometryExpressions.geometryOperation(SpatialOps.GEOMETRYN, mixin, ConstantImpl.create(n));
-    }
-
+  /**
+   * Returns the Nth geometry in this GeometryCollection.
+   *
+   * @param n one based index
+   * @return matching geometry
+   */
+  public JTSGeometryExpression<Geometry> geometryN(Integer n) {
+    return JTSGeometryExpressions.geometryOperation(
+        SpatialOps.GEOMETRYN, mixin, ConstantImpl.create(n));
+  }
 }

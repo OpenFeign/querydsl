@@ -13,6 +13,9 @@
  */
 package com.querydsl.r2dbc.types;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import com.mysema.commons.lang.Pair;
 import com.querydsl.r2dbc.binding.BindMarker;
 import com.querydsl.r2dbc.binding.BindMarkersFactory;
@@ -22,9 +25,6 @@ import io.r2dbc.spi.Blob;
 import io.r2dbc.spi.Clob;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.Statement;
-import org.easymock.EasyMock;
-import org.junit.Test;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -38,109 +38,111 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.easymock.EasyMock;
+import org.junit.Test;
 
 public class TypeTest implements InvocationHandler {
 
-    public enum Gender {
-        MALE, FEMALE
-    }
+  public enum Gender {
+    MALE,
+    FEMALE
+  }
 
-    private Object value;
+  private Object value;
 
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.getName().equals("wasNull")) {
-            return value == null;
-        } else if (method.getName().startsWith("get")) {
-            if (method.getReturnType().isPrimitive() && value == null) {
-                Class<?> rt = method.getReturnType();
-                if (rt == Byte.TYPE) {
-                    return (byte) 0;
-                } else if (rt == Short.TYPE) {
-                    return (short) 0;
-                } else if (rt == Integer.TYPE) {
-                    return 0;
-                } else if (rt == Long.TYPE) {
-                    return 0L;
-                } else if (rt == Float.TYPE) {
-                    return 0.0f;
-                } else if (rt == Double.TYPE) {
-                    return 0.0;
-                } else if (rt == Boolean.TYPE) {
-                    return Boolean.FALSE;
-                } else if (rt == Character.TYPE) {
-                    return (char) 0;
-                }
-            }
-            return value;
-        } else {
-            value = args[1];
-            return null;
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    if (method.getName().equals("wasNull")) {
+      return value == null;
+    } else if (method.getName().startsWith("get")) {
+      if (method.getReturnType().isPrimitive() && value == null) {
+        Class<?> rt = method.getReturnType();
+        if (rt == Byte.TYPE) {
+          return (byte) 0;
+        } else if (rt == Short.TYPE) {
+          return (short) 0;
+        } else if (rt == Integer.TYPE) {
+          return 0;
+        } else if (rt == Long.TYPE) {
+          return 0L;
+        } else if (rt == Float.TYPE) {
+          return 0.0f;
+        } else if (rt == Double.TYPE) {
+          return 0.0;
+        } else if (rt == Boolean.TYPE) {
+          return Boolean.FALSE;
+        } else if (rt == Character.TYPE) {
+          return (char) 0;
         }
+      }
+      return value;
+    } else {
+      value = args[1];
+      return null;
     }
+  }
 
-    private final Row resultSet = (Row) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{Row.class}, this);
+  private final Row resultSet =
+      (Row) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[] {Row.class}, this);
 
-    private final Statement statement = (Statement) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{io.r2dbc.spi.Statement.class}, this);
+  private final Statement statement =
+      (Statement)
+          Proxy.newProxyInstance(
+              getClass().getClassLoader(), new Class<?>[] {io.r2dbc.spi.Statement.class}, this);
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void test() throws MalformedURLException {
-        List<Pair<?, ?>> valueAndType = new ArrayList<Pair<?, ?>>();
-        valueAndType.add(Pair.of(new BigDecimal("1"), new BigDecimalType()));
-        valueAndType.add(Pair.of(new BigInteger("2"), new BigIntegerType()));
-        valueAndType.add(Pair.of(new BigDecimal("1.0"), new BigDecimalAsDoubleType()));
-        valueAndType.add(Pair.of(new BigInteger("2"), new BigIntegerAsLongType()));
-        //valueAndType.add(Pair.of(Boolean.TRUE,         new BooleanType()));
-        valueAndType.add(Pair.of((byte) 1, new ByteType()));
-        valueAndType.add(Pair.of(new byte[0], new BytesType()));
-//        valueAndType.add(Pair.of(Calendar.getInstance(), new CalendarType()));
-        valueAndType.add(Pair.of('c', new CharacterType()));
-        valueAndType.add(Pair.of(Currency.getInstance("EUR"), new CurrencyType()));
-        valueAndType.add(Pair.of(new java.sql.Date(-3600000), new DateType()));
-        valueAndType.add(Pair.of(1.0, new DoubleType()));
-        valueAndType.add(Pair.of(1.0f, new FloatType()));
-        valueAndType.add(Pair.of(1, new IntegerType()));
-        valueAndType.add(Pair.of(true, new NumericBooleanType()));
-        valueAndType.add(Pair.of(1L, new LongType()));
-        valueAndType.add(Pair.of(new Object(), new ObjectType()));
-        valueAndType.add(Pair.of((short) 1, new ShortType()));
-        valueAndType.add(Pair.of("", new StringType()));
-        valueAndType.add(Pair.of(true, new TrueFalseType()));
-        valueAndType.add(Pair.of(true, new YesNoType()));
-        valueAndType.add(Pair.of(new Timestamp(-3600000), new TimestampType()));
-        valueAndType.add(Pair.of(new Time(-3600000), new TimeType()));
-        valueAndType.add(Pair.of(new URL("http://www.mysema.com"), new URLType()));
-        valueAndType.add(Pair.of(new java.util.Date(), new UtilDateType()));
+  @SuppressWarnings("unchecked")
+  @Test
+  public void test() throws MalformedURLException {
+    List<Pair<?, ?>> valueAndType = new ArrayList<Pair<?, ?>>();
+    valueAndType.add(Pair.of(new BigDecimal("1"), new BigDecimalType()));
+    valueAndType.add(Pair.of(new BigInteger("2"), new BigIntegerType()));
+    valueAndType.add(Pair.of(new BigDecimal("1.0"), new BigDecimalAsDoubleType()));
+    valueAndType.add(Pair.of(new BigInteger("2"), new BigIntegerAsLongType()));
+    // valueAndType.add(Pair.of(Boolean.TRUE,         new BooleanType()));
+    valueAndType.add(Pair.of((byte) 1, new ByteType()));
+    valueAndType.add(Pair.of(new byte[0], new BytesType()));
+    //        valueAndType.add(Pair.of(Calendar.getInstance(), new CalendarType()));
+    valueAndType.add(Pair.of('c', new CharacterType()));
+    valueAndType.add(Pair.of(Currency.getInstance("EUR"), new CurrencyType()));
+    valueAndType.add(Pair.of(new java.sql.Date(-3600000), new DateType()));
+    valueAndType.add(Pair.of(1.0, new DoubleType()));
+    valueAndType.add(Pair.of(1.0f, new FloatType()));
+    valueAndType.add(Pair.of(1, new IntegerType()));
+    valueAndType.add(Pair.of(true, new NumericBooleanType()));
+    valueAndType.add(Pair.of(1L, new LongType()));
+    valueAndType.add(Pair.of(new Object(), new ObjectType()));
+    valueAndType.add(Pair.of((short) 1, new ShortType()));
+    valueAndType.add(Pair.of("", new StringType()));
+    valueAndType.add(Pair.of(true, new TrueFalseType()));
+    valueAndType.add(Pair.of(true, new YesNoType()));
+    valueAndType.add(Pair.of(new Timestamp(-3600000), new TimestampType()));
+    valueAndType.add(Pair.of(new Time(-3600000), new TimeType()));
+    valueAndType.add(Pair.of(new URL("http://www.mysema.com"), new URLType()));
+    valueAndType.add(Pair.of(new java.util.Date(), new UtilDateType()));
 
-//        valueAndType.add(Pair.of(new DateTime(), new DateTimeType()));
-//        valueAndType.add(Pair.of(new LocalDateTime(), new LocalDateTimeType()));
-//        valueAndType.add(Pair.of(new LocalDate(), new LocalDateType()));
-//        valueAndType.add(Pair.of(new LocalTime(), new LocalTimeType()));
+    //        valueAndType.add(Pair.of(new DateTime(), new DateTimeType()));
+    //        valueAndType.add(Pair.of(new LocalDateTime(), new LocalDateTimeType()));
+    //        valueAndType.add(Pair.of(new LocalDate(), new LocalDateType()));
+    //        valueAndType.add(Pair.of(new LocalTime(), new LocalTimeType()));
 
-        valueAndType.add(Pair.of(Gender.MALE, new EnumByNameType<Gender>(Gender.class)));
-        valueAndType.add(Pair.of(Gender.MALE, new EnumByOrdinalType<Gender>(Gender.class)));
+    valueAndType.add(Pair.of(Gender.MALE, new EnumByNameType<Gender>(Gender.class)));
+    valueAndType.add(Pair.of(Gender.MALE, new EnumByOrdinalType<Gender>(Gender.class)));
 
-        valueAndType.add(Pair.of(EasyMock.createNiceMock(Blob.class), new BlobType()));
-        valueAndType.add(Pair.of(EasyMock.createNiceMock(Clob.class), new ClobType()));
+    valueAndType.add(Pair.of(EasyMock.createNiceMock(Blob.class), new BlobType()));
+    valueAndType.add(Pair.of(EasyMock.createNiceMock(Clob.class), new ClobType()));
 
-        valueAndType.add(Pair.of(UUID.randomUUID(), new UtilUUIDType()));
-//        valueAndType.add(Pair.of(UUID.randomUUID(), new UtilUUIDType(false)));
-        BindMarker bindMarker = BindMarkersFactory.anonymous("?").create().next();
+    valueAndType.add(Pair.of(UUID.randomUUID(), new UtilUUIDType()));
+    //        valueAndType.add(Pair.of(UUID.randomUUID(), new UtilUUIDType(false)));
+    BindMarker bindMarker = BindMarkersFactory.anonymous("?").create().next();
 
-        for (Pair pair : valueAndType) {
-            BindTarget bindTarget = new StatementWrapper(statement);
+    for (Pair pair : valueAndType) {
+      BindTarget bindTarget = new StatementWrapper(statement);
 
-            value = null;
-            Type type = (Type) pair.getSecond();
-            assertNull(type.toString(), type.getValue(resultSet, 0));
-            type.setValue(bindMarker, bindTarget, pair.getFirst());
-            assertEquals(type.toString(), pair.getFirst(), type.getValue(resultSet, 0));
-        }
+      value = null;
+      Type type = (Type) pair.getSecond();
+      assertNull(type.toString(), type.getValue(resultSet, 0));
+      type.setValue(bindMarker, bindTarget, pair.getFirst());
+      assertEquals(type.toString(), pair.getFirst(), type.getValue(resultSet, 0));
     }
-
-
+  }
 }

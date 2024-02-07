@@ -28,55 +28,55 @@ import reactor.core.publisher.Mono;
  */
 public class ExtendedR2DBCQuery<T> extends AbstractR2DBCQuery<T, ExtendedR2DBCQuery<T>> {
 
-    public ExtendedR2DBCQuery(SQLTemplates templates) {
-        super((Connection) null, new Configuration(templates), new DefaultQueryMetadata());
-    }
+  public ExtendedR2DBCQuery(SQLTemplates templates) {
+    super((Connection) null, new Configuration(templates), new DefaultQueryMetadata());
+  }
 
-    public ExtendedR2DBCQuery(Connection conn, SQLTemplates templates) {
-        super(conn, new Configuration(templates), new DefaultQueryMetadata());
-    }
+  public ExtendedR2DBCQuery(Connection conn, SQLTemplates templates) {
+    super(conn, new Configuration(templates), new DefaultQueryMetadata());
+  }
 
-    public ExtendedR2DBCQuery(Connection conn, Configuration configuration) {
-        super(conn, configuration, new DefaultQueryMetadata());
-    }
+  public ExtendedR2DBCQuery(Connection conn, Configuration configuration) {
+    super(conn, configuration, new DefaultQueryMetadata());
+  }
 
-    public ExtendedR2DBCQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
-        super(conn, configuration, metadata);
-    }
+  public ExtendedR2DBCQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
+    super(conn, configuration, metadata);
+  }
 
-    public <RT> Mono<RT> uniqueResult(Class<RT> type, Expression<?>... exprs) {
-        return select(createProjection(type, exprs)).fetchOne();
-    }
+  public <RT> Mono<RT> uniqueResult(Class<RT> type, Expression<?>... exprs) {
+    return select(createProjection(type, exprs)).fetchOne();
+  }
 
-    public <RT> Flux<RT> list(Class<RT> type, Expression<?>... exprs) {
-        return select(createProjection(type, exprs)).fetch();
-    }
+  public <RT> Flux<RT> list(Class<RT> type, Expression<?>... exprs) {
+    return select(createProjection(type, exprs)).fetch();
+  }
 
-    private <T> FactoryExpression<T> createProjection(Class<T> type, Expression<?>... exprs) {
-        return Projections.bean(type, exprs);
-    }
+  private <T> FactoryExpression<T> createProjection(Class<T> type, Expression<?>... exprs) {
+    return Projections.bean(type, exprs);
+  }
 
-    @Override
-    public ExtendedR2DBCQuery<T> clone(Connection connection) {
-        ExtendedR2DBCQuery<T> query = new ExtendedR2DBCQuery<T>(connection, getConfiguration(), getMetadata().clone());
-        query.clone(this);
-        return query;
-    }
+  @Override
+  public ExtendedR2DBCQuery<T> clone(Connection connection) {
+    ExtendedR2DBCQuery<T> query =
+        new ExtendedR2DBCQuery<T>(connection, getConfiguration(), getMetadata().clone());
+    query.clone(this);
+    return query;
+  }
 
-    @Override
-    public <U> ExtendedR2DBCQuery<U> select(Expression<U> expr) {
-        queryMixin.setProjection(expr);
-        @SuppressWarnings("unchecked") // This is the new type
-                ExtendedR2DBCQuery<U> newType = (ExtendedR2DBCQuery<U>) this;
-        return newType;
-    }
+  @Override
+  public <U> ExtendedR2DBCQuery<U> select(Expression<U> expr) {
+    queryMixin.setProjection(expr);
+    @SuppressWarnings("unchecked") // This is the new type
+    ExtendedR2DBCQuery<U> newType = (ExtendedR2DBCQuery<U>) this;
+    return newType;
+  }
 
-    @Override
-    public ExtendedR2DBCQuery<Tuple> select(Expression<?>... exprs) {
-        queryMixin.setProjection(exprs);
-        @SuppressWarnings("unchecked") // This is the new type
-                ExtendedR2DBCQuery<Tuple> newType = (ExtendedR2DBCQuery<Tuple>) this;
-        return newType;
-    }
-
+  @Override
+  public ExtendedR2DBCQuery<Tuple> select(Expression<?>... exprs) {
+    queryMixin.setProjection(exprs);
+    @SuppressWarnings("unchecked") // This is the new type
+    ExtendedR2DBCQuery<Tuple> newType = (ExtendedR2DBCQuery<Tuple>) this;
+    return newType;
+  }
 }

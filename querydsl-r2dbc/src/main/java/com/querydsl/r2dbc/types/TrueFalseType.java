@@ -14,9 +14,8 @@
 package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Row;
-import org.jetbrains.annotations.Nullable;
-
 import java.sql.Types;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code TrueFalseType} maps Boolean to 'T'/'F' on the JDBC level
@@ -25,34 +24,33 @@ import java.sql.Types;
  */
 public class TrueFalseType extends AbstractType<Boolean, String> {
 
-    public TrueFalseType() {
-        super(Types.VARCHAR);
-    }
+  public TrueFalseType() {
+    super(Types.VARCHAR);
+  }
 
-    public TrueFalseType(int type) {
-        super(type);
-    }
+  public TrueFalseType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Boolean> getReturnedClass() {
-        return Boolean.class;
-    }
+  @Override
+  public Class<Boolean> getReturnedClass() {
+    return Boolean.class;
+  }
 
-    @Override
-    @Nullable
-    public Boolean getValue(Row row, int startIndex) {
-        String val = row.get(startIndex, String.class);
-        return val != null ? val.equalsIgnoreCase("T") : null;
-    }
+  @Override
+  @Nullable
+  public Boolean getValue(Row row, int startIndex) {
+    String val = row.get(startIndex, String.class);
+    return val != null ? val.equalsIgnoreCase("T") : null;
+  }
 
-    @Override
-    protected String toDbValue(Boolean value) {
-        return value ? "T" : "F";
-    }
+  @Override
+  protected String toDbValue(Boolean value) {
+    return value ? "T" : "F";
+  }
 
-    @Override
-    public Class<String> getDatabaseClass() {
-        return String.class;
-    }
-
+  @Override
+  public Class<String> getDatabaseClass() {
+    return String.class;
+  }
 }

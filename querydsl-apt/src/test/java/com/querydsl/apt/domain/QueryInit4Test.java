@@ -2,76 +2,68 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.sql.Date;
-import java.util.Set;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
+import java.sql.Date;
+import java.util.Set;
+import org.junit.Test;
 
 public class QueryInit4Test {
 
-    @QueryEntity
-    public static class Organization {
+  @QueryEntity
+  public static class Organization {}
 
-    }
+  @QueryEntity
+  public static class Application {}
 
-    @QueryEntity
-    public static class Application {
+  @QueryEntity
+  public static class Tenant {
+    Long id;
 
-    }
+    String tenantBusinessKey;
 
-    @QueryEntity
-    public static class Tenant {
-        Long id;
+    String sourceSystemKey;
 
-        String tenantBusinessKey;
+    String tenantName;
 
-        String sourceSystemKey;
+    @QueryInit({"user.primaryTenant", "tenant"})
+    Set<UserTenantApplication> userTenantApplications;
 
-        String tenantName;
+    Set<Organization> organizations;
 
-        @QueryInit({"user.primaryTenant", "tenant"})
-        Set<UserTenantApplication> userTenantApplications;
+    Date lastModifiedDate;
 
-        Set<Organization> organizations;
+    Long lastModifiedUserId;
+  }
 
-        Date lastModifiedDate;
+  @QueryEntity
+  public static class UserTenantApplication {
 
-        Long lastModifiedUserId;
-    }
+    User user;
 
-    @QueryEntity
-    public static class UserTenantApplication {
+    Tenant tenant;
 
-        User user;
+    Application application;
 
-        Tenant tenant;
+    Date lastModifiedDate;
 
-        Application application;
+    Long lastModifiedUserId;
+  }
 
-        Date lastModifiedDate;
+  @QueryEntity
+  public static class User {
+    Long id;
 
-        Long lastModifiedUserId;
-    }
+    Tenant primaryTenant;
 
-    @QueryEntity
-    public static class User {
-        Long id;
+    Set<UserTenantApplication> userTenantApplications;
+  }
 
-        Tenant primaryTenant;
-
-        Set<UserTenantApplication> userTenantApplications;
-
-    }
-
-    @Test
-    public void test() {
-        QQueryInit4Test_Tenant tenant = QQueryInit4Test_Tenant.tenant;
-        assertNotNull(tenant.userTenantApplications.any().user.id);
-        assertNotNull(tenant.userTenantApplications.any().tenant.id);
-        assertNotNull(tenant.userTenantApplications.any().user.primaryTenant.id);
-    }
-
+  @Test
+  public void test() {
+    QQueryInit4Test_Tenant tenant = QQueryInit4Test_Tenant.tenant;
+    assertNotNull(tenant.userTenantApplications.any().user.id);
+    assertNotNull(tenant.userTenantApplications.any().tenant.id);
+    assertNotNull(tenant.userTenantApplications.any().user.primaryTenant.id);
+  }
 }

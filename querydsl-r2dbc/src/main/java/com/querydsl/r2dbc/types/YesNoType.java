@@ -14,9 +14,8 @@
 package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Row;
-import org.jetbrains.annotations.Nullable;
-
 import java.sql.Types;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code YesNoType} maps Boolean to 'Y'/'N' on the JDBC level
@@ -25,34 +24,33 @@ import java.sql.Types;
  */
 public class YesNoType extends AbstractType<Boolean, String> {
 
-    public YesNoType() {
-        super(Types.VARCHAR);
-    }
+  public YesNoType() {
+    super(Types.VARCHAR);
+  }
 
-    public YesNoType(int type) {
-        super(type);
-    }
+  public YesNoType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Boolean> getReturnedClass() {
-        return Boolean.class;
-    }
+  @Override
+  public Class<Boolean> getReturnedClass() {
+    return Boolean.class;
+  }
 
-    @Override
-    @Nullable
-    public Boolean getValue(Row row, int startIndex) {
-        String val = row.get(startIndex, String.class);
-        return val != null ? val.equalsIgnoreCase("Y") : null;
-    }
+  @Override
+  @Nullable
+  public Boolean getValue(Row row, int startIndex) {
+    String val = row.get(startIndex, String.class);
+    return val != null ? val.equalsIgnoreCase("Y") : null;
+  }
 
-    @Override
-    protected String toDbValue(Boolean value) {
-        return value ? "Y" : "N";
-    }
+  @Override
+  protected String toDbValue(Boolean value) {
+    return value ? "Y" : "N";
+  }
 
-    @Override
-    public Class<String> getDatabaseClass() {
-        return String.class;
-    }
-
+  @Override
+  public Class<String> getDatabaseClass() {
+    return String.class;
+  }
 }

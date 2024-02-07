@@ -13,39 +13,36 @@
  */
 package com.querydsl.hibernate.search;
 
+import com.querydsl.core.types.EntityPath;
 import org.hibernate.Session;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
-
-import com.querydsl.core.types.EntityPath;
 
 /**
  * {@code SearchQuery} is a Query implementation for Hibernate Search
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class SearchQuery<T> extends AbstractSearchQuery<T, SearchQuery<T>> {
 
-    /**
-     * Create a new SearchQuery instance
-     *
-     * @param session session
-     * @param path query source
-     */
-    public SearchQuery(FullTextSession session, EntityPath<T> path) {
-        super(session, path);
-    }
+  /**
+   * Create a new SearchQuery instance
+   *
+   * @param session session
+   * @param path query source
+   */
+  public SearchQuery(FullTextSession session, EntityPath<T> path) {
+    super(session, path);
+  }
 
-    /**
-     * Create a new SearchQuery instance
-     *
-     * @param session session
-     * @param path query source
-     */
-    public SearchQuery(Session session, EntityPath<T> path) {
-        this(Search.getFullTextSession(session), path);
-    }
-
+  /**
+   * Create a new SearchQuery instance
+   *
+   * @param session session
+   * @param path query source
+   */
+  public SearchQuery(Session session, EntityPath<T> path) {
+    this(Search.getFullTextSession(session), path);
+  }
 }

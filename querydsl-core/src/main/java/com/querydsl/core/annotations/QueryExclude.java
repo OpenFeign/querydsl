@@ -25,11 +25,8 @@ import java.lang.annotation.Target;
  * Marks the annotated classes and packages to be excluded from source generation
  *
  * @author tiwe
- *
  */
 @Documented
 @Target({TYPE, PACKAGE})
 @Retention(RUNTIME)
-public @interface QueryExclude {
-
-}
+public @interface QueryExclude {}

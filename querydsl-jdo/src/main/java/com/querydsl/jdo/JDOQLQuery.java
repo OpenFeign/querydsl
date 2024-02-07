@@ -13,76 +13,69 @@
  */
 package com.querydsl.jdo;
 
-import java.io.Closeable;
-
-import javax.jdo.PersistenceManager;
-
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Query;
 import com.querydsl.core.support.ExtendedSubQuery;
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
+import java.io.Closeable;
+import javax.jdo.PersistenceManager;
 
 /**
  * Query interface for JDOQL queries
  *
  * @author tiwe
- *
  * @param <T> result type
  */
-public interface JDOQLQuery<T> extends FetchableQuery<T, JDOQLQuery<T>>, Query<JDOQLQuery<T>>, ExtendedSubQuery<T>, Closeable {
+public interface JDOQLQuery<T>
+    extends FetchableQuery<T, JDOQLQuery<T>>, Query<JDOQLQuery<T>>, ExtendedSubQuery<T>, Closeable {
 
-    /**
-     * Add query sources
-     *
-     * @param sources sources
-     * @return the current object
-     */
-    JDOQLQuery<T> from(EntityPath<?>... sources);
+  /**
+   * Add query sources
+   *
+   * @param sources sources
+   * @return the current object
+   */
+  JDOQLQuery<T> from(EntityPath<?>... sources);
 
-    /**
-     * Add query sources
-     *
-     * @param path source
-     * @param alias alias
-     * @param <U>
-     * @return the current object
-     */
-    <U> JDOQLQuery<T> from(CollectionExpression<?, U> path, Path<U> alias);
+  /**
+   * Add query sources
+   *
+   * @param path source
+   * @param alias alias
+   * @param <U>
+   * @return the current object
+   */
+  <U> JDOQLQuery<T> from(CollectionExpression<?, U> path, Path<U> alias);
 
-    /**
-     * Clone the state of the query for the given PersistenceManager
-     *
-     * @param persistenceManager persistence manager
-     * @return cloned query
-     */
-    JDOQLQuery<T> clone(PersistenceManager persistenceManager);
+  /**
+   * Clone the state of the query for the given PersistenceManager
+   *
+   * @param persistenceManager persistence manager
+   * @return cloned query
+   */
+  JDOQLQuery<T> clone(PersistenceManager persistenceManager);
 
-    /**
-     * Add the fetch group to the set of active fetch groups.
-     *
-     * @param fetchGroupName fetch group name
-     * @return the current object
-     */
-    JDOQLQuery<T> addFetchGroup(String fetchGroupName);
+  /**
+   * Add the fetch group to the set of active fetch groups.
+   *
+   * @param fetchGroupName fetch group name
+   * @return the current object
+   */
+  JDOQLQuery<T> addFetchGroup(String fetchGroupName);
 
-    /**
-     * Set the maximum fetch depth when fetching.
-     * A value of 0 has no meaning and will throw a JDOUserException.
-     * A value of -1 means that no limit is placed on fetching.
-     * A positive integer will result in that number of references from the
-     * initial object to be fetched.
-     *
-     * @param maxFetchDepth max fetch depth
-     * @return the current object
-     */
-    JDOQLQuery<T> setMaxFetchDepth(int maxFetchDepth);
+  /**
+   * Set the maximum fetch depth when fetching. A value of 0 has no meaning and will throw a
+   * JDOUserException. A value of -1 means that no limit is placed on fetching. A positive integer
+   * will result in that number of references from the initial object to be fetched.
+   *
+   * @param maxFetchDepth max fetch depth
+   * @return the current object
+   */
+  JDOQLQuery<T> setMaxFetchDepth(int maxFetchDepth);
 
-    /**
-     * Close the query and related resources
-     */
-    @Override
-    void close();
-
+  /** Close the query and related resources */
+  @Override
+  void close();
 }

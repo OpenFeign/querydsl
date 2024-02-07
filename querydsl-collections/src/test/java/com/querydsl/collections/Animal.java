@@ -13,100 +13,98 @@
  */
 package com.querydsl.collections;
 
-import java.util.Date;
-
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryType;
+import java.util.Date;
 
 @QueryEntity
 public class Animal {
 
-    protected boolean alive;
+  protected boolean alive;
 
-    protected java.util.Date birthdate = new java.util.Date();
+  protected java.util.Date birthdate = new java.util.Date();
 
-    @QueryType(PropertyType.SIMPLE)
-    private Date dateAsSimple;
+  @QueryType(PropertyType.SIMPLE)
+  private Date dateAsSimple;
 
-    protected int bodyWeight, weight, toes;
+  protected int bodyWeight, weight, toes;
 
-    protected Color color;
+  protected Color color;
 
-    protected int id;
+  protected int id;
 
-    protected String name;
+  protected String name;
 
-    public java.util.Date getBirthdate() {
-        return birthdate;
-    }
+  public java.util.Date getBirthdate() {
+    return birthdate;
+  }
 
-    public int getBodyWeight() {
-        return bodyWeight;
-    }
+  public int getBodyWeight() {
+    return bodyWeight;
+  }
 
-    public Color getColor() {
-        return color;
-    }
+  public Color getColor() {
+    return color;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public int getToes() {
-        return toes;
-    }
+  public int getToes() {
+    return toes;
+  }
 
-    public int getWeight() {
-        return weight;
-    }
+  public int getWeight() {
+    return weight;
+  }
 
-    public boolean isAlive() {
-        return alive;
-    }
+  public boolean isAlive() {
+    return alive;
+  }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
+  public void setAlive(boolean alive) {
+    this.alive = alive;
+  }
 
-    public void setBirthdate(java.util.Date birthdate) {
-        this.birthdate = new Date(birthdate.getTime());
-    }
+  public void setBirthdate(java.util.Date birthdate) {
+    this.birthdate = new Date(birthdate.getTime());
+  }
 
-    public void setBodyWeight(int bodyWeight) {
-        this.bodyWeight = bodyWeight;
-    }
+  public void setBodyWeight(int bodyWeight) {
+    this.bodyWeight = bodyWeight;
+  }
 
-    public void setWeight(int weight) {
-        this.weight = weight;
-    }
+  public void setWeight(int weight) {
+    this.weight = weight;
+  }
 
-    public void setToes(int toes) {
-        this.toes = toes;
-    }
+  public void setToes(int toes) {
+    this.toes = toes;
+  }
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
+  public void setColor(Color color) {
+    this.color = color;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Date getDateAsSimple() {
-        return dateAsSimple;
-    }
+  public Date getDateAsSimple() {
+    return dateAsSimple;
+  }
 
-    public void setDateAsSimple(Date dateAsSimple) {
-        this.dateAsSimple = new Date(dateAsSimple.getTime());
-    }
-
+  public void setDateAsSimple(Date dateAsSimple) {
+    this.dateAsSimple = new Date(dateAsSimple.getTime());
+  }
 }

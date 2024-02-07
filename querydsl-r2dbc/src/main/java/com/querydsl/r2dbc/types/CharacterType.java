@@ -14,7 +14,6 @@
 package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Row;
-
 import java.sql.Types;
 
 /**
@@ -24,42 +23,41 @@ import java.sql.Types;
  */
 public class CharacterType extends AbstractType<Character, String> {
 
-    public CharacterType() {
-        super(Types.CHAR);
+  public CharacterType() {
+    super(Types.CHAR);
+  }
+
+  public CharacterType(int type) {
+    super(type);
+  }
+
+  @Override
+  public Character getValue(Row row, int startIndex) {
+    Object val = row.get(startIndex);
+    if (val instanceof Character) {
+      return (Character) val;
     }
 
-    public CharacterType(int type) {
-        super(type);
-    }
+    return val == null ? null : ((String) val).charAt(0);
+  }
 
-    @Override
-    public Character getValue(Row row, int startIndex) {
-        Object val = row.get(startIndex);
-        if (val instanceof Character) {
-            return (Character) val;
-        }
+  @Override
+  public Class<Character> getReturnedClass() {
+    return Character.class;
+  }
 
-        return val == null ? null : ((String) val).charAt(0);
-    }
+  @Override
+  public Class<String> getDatabaseClass() {
+    return String.class;
+  }
 
-    @Override
-    public Class<Character> getReturnedClass() {
-        return Character.class;
-    }
+  @Override
+  protected Character fromDbValue(String value) {
+    return value.charAt(0);
+  }
 
-    @Override
-    public Class<String> getDatabaseClass() {
-        return String.class;
-    }
-
-    @Override
-    protected Character fromDbValue(String value) {
-        return value.charAt(0);
-    }
-
-    @Override
-    protected String toDbValue(Character value) {
-        return value.toString();
-    }
-
+  @Override
+  protected String toDbValue(Character value) {
+    return value.toString();
+  }
 }

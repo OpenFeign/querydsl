@@ -1,4 +1,3 @@
 package com.applejuice;
 
-public class ShouldBeLoaded {
-}
+public class ShouldBeLoaded {}

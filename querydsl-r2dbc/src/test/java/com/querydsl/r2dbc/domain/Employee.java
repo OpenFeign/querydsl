@@ -17,93 +17,90 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 
-//@Schema("PUBLIC")
-//@Table("EMPLOYEE")
+// @Schema("PUBLIC")
+// @Table("EMPLOYEE")
 public class Employee {
 
-    //@Column("ID")
-    private Integer id;
+  // @Column("ID")
+  private Integer id;
 
-    //@Column("FIRSTNAME")
-    private String firstname;
+  // @Column("FIRSTNAME")
+  private String firstname;
 
-    //@Column("LASTNAME")
-    private String lastname;
+  // @Column("LASTNAME")
+  private String lastname;
 
-    //@Column("SALARY")
-    private BigDecimal salary;
+  // @Column("SALARY")
+  private BigDecimal salary;
 
-    //@Column("DATEFIELD")
-    private Date datefield;
+  // @Column("DATEFIELD")
+  private Date datefield;
 
-    //@Column("TIMEFIELD")
-    private Time timefield;
+  // @Column("TIMEFIELD")
+  private Time timefield;
 
-    //@Column("SUPERIOR_ID")
-    private Integer superiorId;
+  // @Column("SUPERIOR_ID")
+  private Integer superiorId;
 
-    public Employee() {
-    }
+  public Employee() {}
 
-    public Employee(int id) {
-        this.id = id;
-    }
+  public Employee(int id) {
+    this.id = id;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public String getFirstname() {
-        return firstname;
-    }
+  public String getFirstname() {
+    return firstname;
+  }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
+  public void setFirstname(String firstname) {
+    this.firstname = firstname;
+  }
 
-    public String getLastname() {
-        return lastname;
-    }
+  public String getLastname() {
+    return lastname;
+  }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
+  public void setLastname(String lastname) {
+    this.lastname = lastname;
+  }
 
-    public BigDecimal getSalary() {
-        return salary;
-    }
+  public BigDecimal getSalary() {
+    return salary;
+  }
 
-    public void setSalary(BigDecimal salary) {
-        this.salary = salary;
-    }
+  public void setSalary(BigDecimal salary) {
+    this.salary = salary;
+  }
 
-    public Date getDatefield() {
-        return new Date(datefield.getTime());
-    }
+  public Date getDatefield() {
+    return new Date(datefield.getTime());
+  }
 
-    public void setDatefield(Date datefield) {
-        this.datefield = new Date(datefield.getTime());
-    }
+  public void setDatefield(Date datefield) {
+    this.datefield = new Date(datefield.getTime());
+  }
 
-    public Time getTimefield() {
-        return timefield;
-    }
+  public Time getTimefield() {
+    return timefield;
+  }
 
-    public void setTimefield(Time timefield) {
-        this.timefield = timefield;
-    }
+  public void setTimefield(Time timefield) {
+    this.timefield = timefield;
+  }
 
-    public Integer getSuperiorId() {
-        return superiorId;
-    }
+  public Integer getSuperiorId() {
+    return superiorId;
+  }
 
-    public void setSuperiorId(Integer superiorId) {
-        this.superiorId = superiorId;
-    }
-
-
+  public void setSuperiorId(Integer superiorId) {
+    this.superiorId = superiorId;
+  }
 }

@@ -22,34 +22,33 @@ import com.querydsl.core.annotations.QueryEntity;
  */
 @QueryEntity
 public class Account {
-    private long id; // PK if app id
-    private String username;
-    private boolean enabled;
+  private long id; // PK if app id
+  private String username;
+  private boolean enabled;
 
-    public Account() {
-    }
+  public Account() {}
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public long getId() {
-        return id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public boolean getEnabled() {
-        return enabled;
-    }
+  public boolean getEnabled() {
+    return enabled;
+  }
 
-    public void setEnabled(boolean b) {
-        enabled = b;
-    }
+  public void setEnabled(boolean b) {
+    enabled = b;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public void setUsername(String s) {
-        username = s;
-    }
+  public void setUsername(String s) {
+    username = s;
+  }
 }

@@ -15,67 +15,80 @@ package com.querydsl.codegen;
 
 import static org.junit.Assert.assertTrue;
 
+import com.querydsl.codegen.utils.JavaWriter;
+import com.querydsl.codegen.utils.StringUtils;
+import com.querydsl.codegen.utils.model.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Date;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.querydsl.codegen.utils.JavaWriter;
-import com.querydsl.codegen.utils.StringUtils;
-import com.querydsl.codegen.utils.model.*;
-
 public class GroovyBeanSerializerTest {
 
-    private Type typeModel;
+  private Type typeModel;
 
-    private EntityType type;
+  private EntityType type;
 
-    private final Writer writer = new StringWriter();
+  private final Writer writer = new StringWriter();
 
-    @Before
-    public void setUp() {
-        typeModel = new SimpleType(TypeCategory.ENTITY, "com.querydsl.DomainClass", "com.querydsl", "DomainClass", false,false);
-        type = new EntityType(typeModel);
+  @Before
+  public void setUp() {
+    typeModel =
+        new SimpleType(
+            TypeCategory.ENTITY,
+            "com.querydsl.DomainClass",
+            "com.querydsl",
+            "DomainClass",
+            false,
+            false);
+    type = new EntityType(typeModel);
+  }
+
+  @Test
+  public void properties() throws IOException {
+    // property
+    type.addProperty(new Property(type, "entityField", type));
+    type.addProperty(new Property(type, "collection", new SimpleType(Types.COLLECTION, typeModel)));
+    type.addProperty(new Property(type, "listField", new SimpleType(Types.LIST, typeModel)));
+    type.addProperty(new Property(type, "setField", new SimpleType(Types.SET, typeModel)));
+    type.addProperty(
+        new Property(type, "arrayField", new ClassType(TypeCategory.ARRAY, String[].class)));
+    type.addProperty(
+        new Property(type, "mapField", new SimpleType(Types.MAP, typeModel, typeModel)));
+
+    for (Class<?> cl :
+        Arrays.<Class<?>>asList(
+            Boolean.class,
+            Comparable.class,
+            Integer.class,
+            Date.class,
+            java.sql.Date.class,
+            java.sql.Time.class)) {
+      Type classType = new ClassType(TypeCategory.get(cl.getName()), cl);
+      type.addProperty(new Property(type, StringUtils.uncapitalize(cl.getSimpleName()), classType));
     }
 
-    @Test
-    public void properties() throws IOException {
-        // property
-        type.addProperty(new Property(type, "entityField", type));
-        type.addProperty(new Property(type, "collection", new SimpleType(Types.COLLECTION, typeModel)));
-        type.addProperty(new Property(type, "listField", new SimpleType(Types.LIST, typeModel)));
-        type.addProperty(new Property(type, "setField", new SimpleType(Types.SET, typeModel)));
-        type.addProperty(new Property(type, "arrayField", new ClassType(TypeCategory.ARRAY, String[].class)));
-        type.addProperty(new Property(type, "mapField", new SimpleType(Types.MAP, typeModel, typeModel)));
-
-        for (Class<?> cl : Arrays.<Class<?>>asList(Boolean.class, Comparable.class, Integer.class,
-                Date.class, java.sql.Date.class, java.sql.Time.class)) {
-            Type classType = new ClassType(TypeCategory.get(cl.getName()), cl);
-            type.addProperty(new Property(type, StringUtils.uncapitalize(cl.getSimpleName()), classType));
-        }
-
-        GroovyBeanSerializer serializer = new GroovyBeanSerializer();
-        serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-        String str = writer.toString();
-        //System.err.println(str);
-        for (String prop : Arrays.asList(
-                "String[] arrayField;",
-                "Boolean boolean$;",
-                "Collection<DomainClass> collection;",
-                "Comparable comparable;",
-                "java.util.Date date;",
-                "DomainClass entityField;",
-                "Integer integer;",
-                "List<DomainClass> listField;",
-                "Map<DomainClass, DomainClass> mapField;",
-                "Set<DomainClass> setField;",
-                "java.sql.Time time;")) {
-            assertTrue(prop + " was not contained", str.contains(prop));
-        }
+    GroovyBeanSerializer serializer = new GroovyBeanSerializer();
+    serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
+    String str = writer.toString();
+    // System.err.println(str);
+    for (String prop :
+        Arrays.asList(
+            "String[] arrayField;",
+            "Boolean boolean$;",
+            "Collection<DomainClass> collection;",
+            "Comparable comparable;",
+            "java.util.Date date;",
+            "DomainClass entityField;",
+            "Integer integer;",
+            "List<DomainClass> listField;",
+            "Map<DomainClass, DomainClass> mapField;",
+            "Set<DomainClass> setField;",
+            "java.sql.Time time;")) {
+      assertTrue(prop + " was not contained", str.contains(prop));
     }
-
+  }
 }

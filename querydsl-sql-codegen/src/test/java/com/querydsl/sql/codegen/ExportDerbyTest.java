@@ -13,18 +13,16 @@
  */
 package com.querydsl.sql.codegen;
 
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
-
 import com.querydsl.core.testutil.Derby;
 import com.querydsl.sql.Connections;
+import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 
 @Category(Derby.class)
 public class ExportDerbyTest extends ExportBaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        Connections.initDerby();
-    }
-
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    Connections.initDerby();
+  }
 }

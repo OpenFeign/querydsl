@@ -1,7 +1,6 @@
 package com.querydsl.core.dml;
 
 import com.querydsl.core.types.Path;
-
 import java.util.List;
 
 /**
@@ -9,15 +8,15 @@ import java.util.List;
  *
  * @param <C> concrete subtype
  */
-public interface ReactiveUpdateClause<C extends ReactiveUpdateClause<C>> extends ReactiveStoreClause<C>, ReactiveFilteredClause<C> {
+public interface ReactiveUpdateClause<C extends ReactiveUpdateClause<C>>
+    extends ReactiveStoreClause<C>, ReactiveFilteredClause<C> {
 
-    /**
-     * Set the paths to be updated
-     *
-     * @param paths  paths to be updated
-     * @param values values to be set
-     * @return the current object
-     */
-    C set(List<? extends Path<?>> paths, List<?> values);
-
+  /**
+   * Set the paths to be updated
+   *
+   * @param paths paths to be updated
+   * @param values values to be set
+   * @return the current object
+   */
+  C set(List<? extends Path<?>> paths, List<?> values);
 }

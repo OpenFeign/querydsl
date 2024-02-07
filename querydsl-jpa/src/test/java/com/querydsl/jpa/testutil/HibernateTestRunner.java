@@ -13,12 +13,16 @@
  */
 package com.querydsl.jpa.testutil;
 
+import static org.junit.Assert.assertTrue;
+
+import com.querydsl.jpa.HibernateTest;
+import com.querydsl.jpa.Mode;
+import com.querydsl.jpa.domain.Domain;
 import java.io.InputStream;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -33,115 +37,111 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
-import com.querydsl.jpa.HibernateTest;
-import com.querydsl.jpa.Mode;
-import com.querydsl.jpa.domain.Domain;
-
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author tiwe
- *
  */
 public class HibernateTestRunner extends BlockJUnit4ClassRunner {
 
-    private SessionFactory sessionFactory;
+  private SessionFactory sessionFactory;
 
-    private Session session;
+  private Session session;
 
-    private boolean isDerby = false;
+  private boolean isDerby = false;
 
-    public HibernateTestRunner(Class<?> klass) throws InitializationError {
-        super(klass);
-    }
+  public HibernateTestRunner(Class<?> klass) throws InitializationError {
+    super(klass);
+  }
 
-    @Override
-    protected List<MethodRule> rules(Object test) {
-        assertTrue(String.format("In order to use the %s for %s, it should (directly or indirectly) implement %s",
-                HibernateTestRunner.class.getSimpleName(), test.getClass(), HibernateTest.class), test instanceof HibernateTest);
+  @Override
+  protected List<MethodRule> rules(Object test) {
+    assertTrue(
+        String.format(
+            "In order to use the %s for %s, it should (directly or indirectly) implement %s",
+            HibernateTestRunner.class.getSimpleName(), test.getClass(), HibernateTest.class),
+        test instanceof HibernateTest);
 
-        List<MethodRule> rules = super.rules(test);
-        rules.add(new MethodRule() {
-            @Override
-            public Statement apply(final Statement base, FrameworkMethod method, final Object target) {
-                return new Statement() {
-                    @Override
-                    public void evaluate() throws Throwable {
-                        ((HibernateTest) target).setSession(session);
-                        base.evaluate();
-                    }
-                };
-            }
-
+    List<MethodRule> rules = super.rules(test);
+    rules.add(
+        new MethodRule() {
+          @Override
+          public Statement apply(
+              final Statement base, FrameworkMethod method, final Object target) {
+            return new Statement() {
+              @Override
+              public void evaluate() throws Throwable {
+                ((HibernateTest) target).setSession(session);
+                base.evaluate();
+              }
+            };
+          }
         });
-        return rules;
+    return rules;
+  }
+
+  @Override
+  public void run(final RunNotifier notifier) {
+    try {
+      start();
+      super.run(notifier);
+    } catch (Exception e) {
+      e.printStackTrace();
+      Failure failure =
+          new Failure(Description.createSuiteDescription(getTestClass().getJavaClass()), e);
+      notifier.fireTestFailure(failure);
+    } finally {
+      shutdown();
+    }
+  }
+
+  private void start() throws Exception {
+    Configuration cfg = new Configuration();
+    for (Class<?> cl : Domain.classes) {
+      cfg.addAnnotatedClass(cl);
+    }
+    String mode = Mode.mode.get() + ".properties";
+    isDerby = mode.contains("derby");
+    if (isDerby) {
+      Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+    }
+    Properties props = new Properties();
+    InputStream is = HibernateTestRunner.class.getResourceAsStream(mode);
+    if (is == null) {
+      throw new IllegalArgumentException("No configuration available at classpath:" + mode);
+    }
+    props.load(is);
+    ServiceRegistry serviceRegistry =
+        new StandardServiceRegistryBuilder().applySettings(props).build();
+    cfg.setProperties(props);
+    sessionFactory = cfg.buildSessionFactory(serviceRegistry);
+    session = sessionFactory.openSession();
+    session.beginTransaction();
+  }
+
+  private void shutdown() {
+    if (session != null) {
+      try {
+        session.getTransaction().rollback();
+      } finally {
+        session.close();
+        session = null;
+      }
     }
 
-    @Override
-    public void run(final RunNotifier notifier) {
-        try {
-            start();
-            super.run(notifier);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Failure failure = new Failure(Description.createSuiteDescription(getTestClass().getJavaClass()), e);
-            notifier.fireTestFailure(failure);
-        } finally {
-            shutdown();
-        }
+    if (sessionFactory != null) {
+      sessionFactory.getCache().evictEntityRegions();
+      sessionFactory.close();
+      sessionFactory = null;
     }
 
-    private void start() throws Exception {
-        Configuration cfg = new Configuration();
-        for (Class<?> cl : Domain.classes) {
-            cfg.addAnnotatedClass(cl);
+    // clean shutdown of derby
+    if (isDerby) {
+      try {
+        DriverManager.getConnection("jdbc:derby:;shutdown=true");
+      } catch (SQLException e) {
+        if (!e.getMessage().equals("Derby system shutdown.")) {
+          throw new RuntimeException(e);
         }
-        String mode = Mode.mode.get() + ".properties";
-        isDerby = mode.contains("derby");
-        if (isDerby) {
-            Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
-        }
-        Properties props = new Properties();
-        InputStream is = HibernateTestRunner.class.getResourceAsStream(mode);
-        if (is == null) {
-            throw new IllegalArgumentException("No configuration available at classpath:" + mode);
-        }
-        props.load(is);
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-            .applySettings(props)
-            .build();
-        cfg.setProperties(props);
-        sessionFactory = cfg.buildSessionFactory(serviceRegistry);
-        session = sessionFactory.openSession();
-        session.beginTransaction();
+      }
     }
-
-    private void shutdown() {
-        if (session != null) {
-            try {
-                session.getTransaction().rollback();
-            } finally {
-                session.close();
-                session = null;
-            }
-        }
-
-        if (sessionFactory != null) {
-            sessionFactory.getCache().evictEntityRegions();
-            sessionFactory.close();
-            sessionFactory = null;
-        }
-
-        // clean shutdown of derby
-        if (isDerby) {
-            try {
-                DriverManager.getConnection("jdbc:derby:;shutdown=true");
-            } catch (SQLException e) {
-                if (!e.getMessage().equals("Derby system shutdown.")) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
-
+  }
 }

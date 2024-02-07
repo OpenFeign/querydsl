@@ -22,92 +22,89 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.Test;
-
 
 public class StringTest {
 
-    private static class DummyTemplates extends Templates {
+  private static class DummyTemplates extends Templates {}
 
+  @SuppressWarnings("unchecked")
+  @Test
+  public void patternAvailability() throws IllegalArgumentException, IllegalAccessException {
+    Templates ops = new DummyTemplates();
+    Set<Field> missing = new HashSet<Field>();
+    for (Field field : Ops.class.getFields()) {
+      if (field.getType().equals(Operator.class)) {
+        Operator op = (Operator) field.get(null);
+        if (ops.getTemplate(op) == null) {
+          missing.add(field);
+        }
+      }
+    }
+    for (Class<?> cl : Ops.class.getClasses()) {
+      for (Field field : cl.getFields()) {
+        if (field.getType().equals(Operator.class)) {
+          Operator op = (Operator) field.get(null);
+          if (ops.getTemplate(op) == null) {
+            missing.add(field);
+          }
+        }
+      }
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void patternAvailability() throws IllegalArgumentException, IllegalAccessException {
-        Templates ops = new DummyTemplates();
-        Set<Field> missing = new HashSet<Field>();
-        for (Field field : Ops.class.getFields()) {
-            if (field.getType().equals(Operator.class)) {
-                Operator op = (Operator) field.get(null);
-                if (ops.getTemplate(op) == null) {
-                    missing.add(field);
-                }
-            }
-        }
-        for (Class<?> cl : Ops.class.getClasses()) {
-            for (Field field : cl.getFields()) {
-                if (field.getType().equals(Operator.class)) {
-                    Operator op = (Operator) field.get(null);
-                    if (ops.getTemplate(op) == null) {
-                        missing.add(field);
-                    }
-                }
-            }
-        }
+    if (!missing.isEmpty()) {
+      for (Field field : missing) {
+        System.err.println(field.getName());
+      }
+      fail();
+    }
+  }
 
-        if (!missing.isEmpty()) {
-            for (Field field : missing) {
-                System.err.println(field.getName());
-            }
-            fail();
-        }
+  @SuppressWarnings("unchecked")
+  @Test
+  public void toString_() {
+    SomeType alias = alias(SomeType.class, "alias");
+
+    // Path toString
+    assertEquals("alias.name", $(alias.getName()).toString());
+    assertEquals("alias.ref.name", $(alias.getRef().getName()).toString());
+    assertEquals("alias.refs.get(0)", $(alias.getRefs().get(0)).toString());
+
+    // Operation toString
+    assertEquals("lower(alias.name)", $(alias.getName()).lower().toString());
+
+    // ConstructorExpression
+    ConstructorExpression<SomeType> someType =
+        new ConstructorExpression<SomeType>(
+            SomeType.class, new Class<?>[] {SomeType.class}, $(alias));
+    assertEquals("new SomeType(alias)", someType.toString());
+
+    // ArrayConstructorExpression
+    ArrayConstructorExpression<SomeType> someTypeArray =
+        new ArrayConstructorExpression<SomeType>(SomeType[].class, $(alias));
+    assertEquals("new SomeType[](alias)", someTypeArray.toString());
+  }
+
+  public static class SomeType {
+
+    public SomeType() {}
+
+    public SomeType(SomeType st) {}
+
+    public String getName() {
+      return "";
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void toString_() {
-        SomeType alias = alias(SomeType.class, "alias");
-
-        // Path toString
-        assertEquals("alias.name", $(alias.getName()).toString());
-        assertEquals("alias.ref.name", $(alias.getRef().getName()).toString());
-        assertEquals("alias.refs.get(0)", $(alias.getRefs().get(0)).toString());
-
-        // Operation toString
-        assertEquals("lower(alias.name)", $(alias.getName()).lower().toString());
-
-        // ConstructorExpression
-        ConstructorExpression<SomeType> someType = new ConstructorExpression<SomeType>(SomeType.class, new Class<?>[]{SomeType.class}, $(alias));
-        assertEquals("new SomeType(alias)", someType.toString());
-
-        // ArrayConstructorExpression
-        ArrayConstructorExpression<SomeType> someTypeArray = new ArrayConstructorExpression<SomeType>(SomeType[].class,$(alias));
-        assertEquals("new SomeType[](alias)", someTypeArray.toString());
+    public SomeType getRef() {
+      return null;
     }
 
-
-    public static class SomeType {
-
-        public SomeType() { }
-
-        public SomeType(SomeType st) { }
-
-        public String getName() {
-            return "";
-        }
-
-        public SomeType getRef() {
-            return null;
-        }
-
-        public List<SomeType> getRefs() {
-            return null;
-        }
-
-        public int getAmount() {
-            return 0;
-        }
+    public List<SomeType> getRefs() {
+      return null;
     }
 
+    public int getAmount() {
+      return 0;
+    }
+  }
 }

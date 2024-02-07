@@ -14,7 +14,6 @@
 package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
-
 import java.util.*;
 
 /**
@@ -25,59 +24,60 @@ import java.util.*;
  */
 public abstract class GSet<T, S extends Set<T>> extends AbstractGroupExpression<T, S> {
 
-    private static final long serialVersionUID = -1575808026237160843L;
+  private static final long serialVersionUID = -1575808026237160843L;
 
-    public static <U> GSet<U, Set<U>> createLinked(Expression<U> expr) {
-        return new GSet<U, Set<U>>(expr) {
-            @Override
-            protected Set<U> createSet() {
-                return new LinkedHashSet<U>();
-            }
-        };
-    }
+  public static <U> GSet<U, Set<U>> createLinked(Expression<U> expr) {
+    return new GSet<U, Set<U>>(expr) {
+      @Override
+      protected Set<U> createSet() {
+        return new LinkedHashSet<U>();
+      }
+    };
+  }
 
-    public static <U extends Comparable<? super U>> GSet<U, SortedSet<U>> createSorted(Expression<U> expr) {
-        return new GSet<U, SortedSet<U>>(expr) {
-            @Override
-            protected SortedSet<U> createSet() {
-                return new TreeSet<U>();
-            }
-        };
-    }
+  public static <U extends Comparable<? super U>> GSet<U, SortedSet<U>> createSorted(
+      Expression<U> expr) {
+    return new GSet<U, SortedSet<U>>(expr) {
+      @Override
+      protected SortedSet<U> createSet() {
+        return new TreeSet<U>();
+      }
+    };
+  }
 
-    public static <U> GSet<U, SortedSet<U>> createSorted(Expression<U> expr, final Comparator<? super U> comparator) {
-        return new GSet<U, SortedSet<U>>(expr) {
-            @Override
-            protected SortedSet<U> createSet() {
-                return new TreeSet<U>(comparator);
-            }
-        };
-    }
+  public static <U> GSet<U, SortedSet<U>> createSorted(
+      Expression<U> expr, final Comparator<? super U> comparator) {
+    return new GSet<U, SortedSet<U>>(expr) {
+      @Override
+      protected SortedSet<U> createSet() {
+        return new TreeSet<U>(comparator);
+      }
+    };
+  }
 
-    public GSet(Expression<T> expr) {
-        super(Set.class, expr);
-    }
+  public GSet(Expression<T> expr) {
+    super(Set.class, expr);
+  }
 
-    protected abstract S createSet();
+  protected abstract S createSet();
 
-    @Override
-    public GroupCollector<T, S> createGroupCollector() {
-        return new GroupCollector<T, S>() {
+  @Override
+  public GroupCollector<T, S> createGroupCollector() {
+    return new GroupCollector<T, S>() {
 
-            private final S set = createSet();
+      private final S set = createSet();
 
-            @Override
-            public void add(T o) {
-                if (o != null) {
-                    set.add(o);
-                }
-            }
+      @Override
+      public void add(T o) {
+        if (o != null) {
+          set.add(o);
+        }
+      }
 
-            @Override
-            public S get() {
-                return set;
-            }
-
-        };
-    }
+      @Override
+      public S get() {
+        return set;
+      }
+    };
+  }
 }

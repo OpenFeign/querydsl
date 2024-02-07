@@ -22,52 +22,59 @@ import com.querydsl.core.types.dsl.Expressions;
  * Mongodb specific operations
  *
  * @author tiwe
- *
  */
 public final class MongodbExpressions {
 
-    private MongodbExpressions() { }
+  private MongodbExpressions() {}
 
-    /**
-     * Finds the closest points relative to the given location and orders the results with decreasing proximity
-     *
-     * @param expr location
-     * @param latVal latitude
-     * @param longVal longitude
-     * @return predicate
-     */
-    public static BooleanExpression near(Expression<Double[]> expr, double latVal, double longVal) {
-        return Expressions.booleanOperation(MongodbOps.NEAR, expr, ConstantImpl.create(new Double[]{latVal, longVal}));
-    }
+  /**
+   * Finds the closest points relative to the given location and orders the results with decreasing
+   * proximity
+   *
+   * @param expr location
+   * @param latVal latitude
+   * @param longVal longitude
+   * @return predicate
+   */
+  public static BooleanExpression near(Expression<Double[]> expr, double latVal, double longVal) {
+    return Expressions.booleanOperation(
+        MongodbOps.NEAR, expr, ConstantImpl.create(new Double[] {latVal, longVal}));
+  }
 
-    /**
-     * Finds the closest points relative to the given location on a sphere and orders the results with decreasing proximity
-     *
-     * @param expr location
-     * @param latVal latitude
-     * @param longVal longitude
-     * @return predicate
-     */
-    public static BooleanExpression nearSphere(Expression<Double[]> expr, double latVal, double longVal) {
-        return Expressions.booleanOperation(MongodbOps.NEAR_SPHERE, expr, ConstantImpl.create(new Double[]{latVal, longVal}));
-    }
+  /**
+   * Finds the closest points relative to the given location on a sphere and orders the results with
+   * decreasing proximity
+   *
+   * @param expr location
+   * @param latVal latitude
+   * @param longVal longitude
+   * @return predicate
+   */
+  public static BooleanExpression nearSphere(
+      Expression<Double[]> expr, double latVal, double longVal) {
+    return Expressions.booleanOperation(
+        MongodbOps.NEAR_SPHERE, expr, ConstantImpl.create(new Double[] {latVal, longVal}));
+  }
 
-    /**
-     * Finds points within bounds of the rectangle
-     *
-     * @param blLatVal bottom left latitude
-     * @param blLongVal bottom left longitude
-     * @param urLatVal upper right latitude
-     * @param urLongVal upper right longitude
-     * @return predicate
-     */
-    public static BooleanExpression withinBox(Expression<Double[]> expr, double blLongVal, double blLatVal, double urLongVal, double urLatVal) {
-        return Expressions.booleanOperation(
-                MongodbOps.GEO_WITHIN_BOX,
-                expr,
-                ConstantImpl.create(new Double[]{blLongVal, blLatVal}),
-                ConstantImpl.create(new Double[]{urLongVal, urLatVal})
-        );
-    }
-
+  /**
+   * Finds points within bounds of the rectangle
+   *
+   * @param blLatVal bottom left latitude
+   * @param blLongVal bottom left longitude
+   * @param urLatVal upper right latitude
+   * @param urLongVal upper right longitude
+   * @return predicate
+   */
+  public static BooleanExpression withinBox(
+      Expression<Double[]> expr,
+      double blLongVal,
+      double blLatVal,
+      double urLongVal,
+      double urLatVal) {
+    return Expressions.booleanOperation(
+        MongodbOps.GEO_WITHIN_BOX,
+        expr,
+        ConstantImpl.create(new Double[] {blLongVal, blLatVal}),
+        ConstantImpl.create(new Double[] {urLongVal, urLatVal}));
+  }
 }

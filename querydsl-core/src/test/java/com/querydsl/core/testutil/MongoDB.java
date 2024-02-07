@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface MongoDB extends ExternalDatabase {
-}
+public interface MongoDB extends ExternalDatabase {}

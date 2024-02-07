@@ -7,14 +7,13 @@ import reactor.core.publisher.Mono;
 
 public interface SupplierDao {
 
-    Mono<Supplier> findById(long id);
+  Mono<Supplier> findById(long id);
 
-    Flux<Supplier> findAll(Predicate... where);
+  Flux<Supplier> findAll(Predicate... where);
 
-    Mono<Supplier> save(Supplier s);
+  Mono<Supplier> save(Supplier s);
 
-    Mono<Long> count();
+  Mono<Long> count();
 
-    Mono<Void> delete(Supplier s);
-
+  Mono<Void> delete(Supplier s);
 }

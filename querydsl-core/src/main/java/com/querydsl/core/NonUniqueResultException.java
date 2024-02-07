@@ -14,26 +14,24 @@
 package com.querydsl.core;
 
 /**
- * {@code NonUniqueResultException} is thrown for query results where one result row is expected, but multiple
- * are retrieved.
+ * {@code NonUniqueResultException} is thrown for query results where one result row is expected,
+ * but multiple are retrieved.
  *
  * @author tiwe
- *
  */
 public class NonUniqueResultException extends QueryException {
 
-    private static final long serialVersionUID = -1757423191400510323L;
+  private static final long serialVersionUID = -1757423191400510323L;
 
-    public NonUniqueResultException() {
-        super("Only one result is allowed for fetchOne calls");
-    }
+  public NonUniqueResultException() {
+    super("Only one result is allowed for fetchOne calls");
+  }
 
-    public NonUniqueResultException(String message) {
-        super(message);
-    }
+  public NonUniqueResultException(String message) {
+    super(message);
+  }
 
-    public NonUniqueResultException(Exception e) {
-        super(e);
-    }
-
+  public NonUniqueResultException(Exception e) {
+    super(e);
+  }
 }

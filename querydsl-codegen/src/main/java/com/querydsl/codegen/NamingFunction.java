@@ -22,5 +22,4 @@ import java.util.function.Function;
  *
  * @author Shredder121
  */
-public interface NamingFunction extends Function<EntityType, String> {
-}
+public interface NamingFunction extends Function<EntityType, String> {}

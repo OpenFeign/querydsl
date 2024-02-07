@@ -23,17 +23,16 @@ import java.sql.Types;
  */
 public class BigDecimalType extends AbstractType<BigDecimal, BigDecimal> {
 
-    public BigDecimalType() {
-        super(Types.DECIMAL);
-    }
+  public BigDecimalType() {
+    super(Types.DECIMAL);
+  }
 
-    public BigDecimalType(int type) {
-        super(type);
-    }
+  public BigDecimalType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<BigDecimal> getReturnedClass() {
-        return BigDecimal.class;
-    }
-
+  @Override
+  public Class<BigDecimal> getReturnedClass() {
+    return BigDecimal.class;
+  }
 }

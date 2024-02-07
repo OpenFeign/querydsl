@@ -23,51 +23,49 @@ import java.util.UUID;
  * {@code UtilUUIDType} maps UUID to String on the JDBC level
  *
  * @author tiwe
- *
  */
 public class UtilUUIDType extends AbstractType<UUID> {
 
-    private final boolean asString;
+  private final boolean asString;
 
-    public UtilUUIDType() {
-        this(Types.OTHER, true);
+  public UtilUUIDType() {
+    this(Types.OTHER, true);
+  }
+
+  public UtilUUIDType(boolean asString) {
+    this(Types.OTHER, asString);
+  }
+
+  public UtilUUIDType(int type) {
+    this(type, true);
+  }
+
+  public UtilUUIDType(int type, boolean asString) {
+    super(type);
+    this.asString = asString;
+  }
+
+  @Override
+  public UUID getValue(ResultSet rs, int startIndex) throws SQLException {
+    if (asString) {
+      String str = rs.getString(startIndex);
+      return str != null ? UUID.fromString(str) : null;
+    } else {
+      return (UUID) rs.getObject(startIndex);
     }
+  }
 
-    public UtilUUIDType(boolean asString) {
-        this(Types.OTHER, asString);
+  @Override
+  public Class<UUID> getReturnedClass() {
+    return UUID.class;
+  }
+
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, UUID value) throws SQLException {
+    if (asString) {
+      st.setString(startIndex, value.toString());
+    } else {
+      st.setObject(startIndex, value);
     }
-
-    public UtilUUIDType(int type) {
-        this(type, true);
-    }
-
-    public UtilUUIDType(int type, boolean asString) {
-        super(type);
-        this.asString = asString;
-    }
-
-    @Override
-    public UUID getValue(ResultSet rs, int startIndex) throws SQLException {
-        if (asString) {
-            String str = rs.getString(startIndex);
-            return str != null ? UUID.fromString(str) : null;
-        } else {
-            return (UUID) rs.getObject(startIndex);
-        }
-    }
-
-    @Override
-    public Class<UUID> getReturnedClass() {
-        return UUID.class;
-    }
-
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, UUID value) throws SQLException {
-        if (asString) {
-            st.setString(startIndex, value.toString());
-        } else {
-            st.setObject(startIndex, value);
-        }
-
-    }
+  }
 }

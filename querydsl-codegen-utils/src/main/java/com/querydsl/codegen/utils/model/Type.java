@@ -1,6 +1,6 @@
 /*
  * Copyright 2010, Mysema Ltd
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,36 +21,35 @@ import java.util.Set;
  */
 public interface Type {
 
-    Type as(TypeCategory category);
+  Type as(TypeCategory category);
 
-    Type asArrayType();
+  Type asArrayType();
 
-    Type getComponentType();
+  Type getComponentType();
 
-    Type getEnclosingType();
+  Type getEnclosingType();
 
-    TypeCategory getCategory();
+  TypeCategory getCategory();
 
-    String getFullName();
+  String getFullName();
 
-    String getGenericName(boolean asArgType);
+  String getGenericName(boolean asArgType);
 
-    String getGenericName(boolean asArgType, Set<String> packages, Set<String> classes);
+  String getGenericName(boolean asArgType, Set<String> packages, Set<String> classes);
 
-    Class<?> getJavaClass();
+  Class<?> getJavaClass();
 
-    String getPackageName();
+  String getPackageName();
 
-    List<Type> getParameters();
+  List<Type> getParameters();
 
-    String getRawName(Set<String> packages, Set<String> classes);
+  String getRawName(Set<String> packages, Set<String> classes);
 
-    String getSimpleName();
+  String getSimpleName();
 
-    boolean isFinal();
+  boolean isFinal();
 
-    boolean isPrimitive();
+  boolean isPrimitive();
 
-    boolean isMember();
-
+  boolean isMember();
 }

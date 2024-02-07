@@ -13,6 +13,10 @@
  */
 package com.querydsl.r2dbc;
 
+import static com.querydsl.core.Target.*;
+import static com.querydsl.r2dbc.Constants.survey;
+import static org.junit.Assert.assertEquals;
+
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.types.Path;
@@ -22,194 +26,212 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.r2dbc.dml.R2DBCUpdateClause;
 import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.r2dbc.domain.QSurvey;
+import java.util.Collections;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.List;
-
-import static com.querydsl.core.Target.*;
-import static com.querydsl.r2dbc.Constants.survey;
-import static org.junit.Assert.assertEquals;
-
 public abstract class UpdateBase extends AbstractBaseTest {
 
-    protected void reset() {
-        delete(survey).execute().block();
-        insert(survey).values(1, "Hello World", "Hello").execute().block();
-    }
+  protected void reset() {
+    delete(survey).execute().block();
+    insert(survey).values(1, "Hello World", "Hello").execute().block();
+  }
 
-    @Before
-    public void setUp() {
-        reset();
-    }
+  @Before
+  public void setUp() {
+    reset();
+  }
 
-    @After
-    public void tearDown() {
-        reset();
-    }
+  @After
+  public void tearDown() {
+    reset();
+  }
 
-    @Test
-    public void update() {
-        // original state
-        long count = query().from(survey).fetchCount().block();
-        assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+  @Test
+  public void update() {
+    // original state
+    long count = query().from(survey).fetchCount().block();
+    assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
 
-        // update call with 0 update count
-        assertEquals(0, (long) update(survey).where(survey.name.eq("XXX")).set(survey.name, "S").execute().block());
-        assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+    // update call with 0 update count
+    assertEquals(
+        0,
+        (long) update(survey).where(survey.name.eq("XXX")).set(survey.name, "S").execute().block());
+    assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
 
-        // update call with full update count
-        assertEquals(count, (long) update(survey).set(survey.name, "S").execute().block());
-        assertEquals(count, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
-    }
+    // update call with full update count
+    assertEquals(count, (long) update(survey).set(survey.name, "S").execute().block());
+    assertEquals(
+        count, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+  }
 
-    @Test
-    @IncludeIn({CUBRID, H2, MYSQL, ORACLE, SQLSERVER})
-    public void update_limit() {
-        assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
-        assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
+  @Test
+  @IncludeIn({CUBRID, H2, MYSQL, ORACLE, SQLSERVER})
+  public void update_limit() {
+    assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
+    assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
 
-        assertEquals(2, (long) update(survey).set(survey.name, "S").limit(2).execute().block());
-    }
+    assertEquals(2, (long) update(survey).set(survey.name, "S").limit(2).execute().block());
+  }
 
-    @Test
-    public void update2() {
-        List<Path<?>> paths = Collections.singletonList(survey.name);
-        List<?> values = Collections.singletonList("S");
+  @Test
+  public void update2() {
+    List<Path<?>> paths = Collections.singletonList(survey.name);
+    List<?> values = Collections.singletonList("S");
 
-        // original state
-        long count = query().from(survey).fetchCount().block();
-        assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+    // original state
+    long count = query().from(survey).fetchCount().block();
+    assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
 
-        // update call with 0 update count
-        assertEquals(0, (long) update(survey).where(survey.name.eq("XXX")).set(paths, values).execute().block());
-        assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+    // update call with 0 update count
+    assertEquals(
+        0, (long) update(survey).where(survey.name.eq("XXX")).set(paths, values).execute().block());
+    assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
 
-        // update call with full update count
-        assertEquals(count, (long) update(survey).set(paths, values).execute().block());
-        assertEquals(count, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+    // update call with full update count
+    assertEquals(count, (long) update(survey).set(paths, values).execute().block());
+    assertEquals(
+        count, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+  }
 
-    }
+  @Test
+  public void update3() {
+    assertEquals(
+        1, (long) update(survey).set(survey.name, survey.name.append("X")).execute().block());
+  }
 
-    @Test
-    public void update3() {
-        assertEquals(1, (long) update(survey).set(survey.name, survey.name.append("X")).execute().block());
-    }
+  @Test
+  public void update4() {
+    assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
+    assertEquals(
+        1,
+        (long) update(survey).set(survey.name, "AA").where(survey.name.eq("A")).execute().block());
+  }
 
-    @Test
-    public void update4() {
-        assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
-        assertEquals(1, (long) update(survey).set(survey.name, "AA").where(survey.name.eq("A")).execute().block());
-    }
+  @Test
+  public void update5() {
+    assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
+    assertEquals(
+        1,
+        (long) update(survey).set(survey.name, "BB").where(survey.name.eq("B")).execute().block());
+  }
 
-    @Test
-    public void update5() {
-        assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
-        assertEquals(1, (long) update(survey).set(survey.name, "BB").where(survey.name.eq("B")).execute().block());
-    }
+  @Test
+  public void setNull() {
+    List<Path<?>> paths = Collections.singletonList(survey.name);
+    List<?> values = Collections.singletonList(null);
+    long count = query().from(survey).fetchCount().block();
+    assertEquals(count, (long) update(survey).set(paths, values).execute().block());
+  }
 
-    @Test
-    public void setNull() {
-        List<Path<?>> paths = Collections.singletonList(survey.name);
-        List<?> values = Collections.singletonList(null);
-        long count = query().from(survey).fetchCount().block();
-        assertEquals(count, (long) update(survey).set(paths, values).execute().block());
-    }
+  @Test
+  public void setNull2() {
+    long count = query().from(survey).fetchCount().block();
+    assertEquals(count, (long) update(survey).set(survey.name, (String) null).execute().block());
+  }
 
-    @Test
-    public void setNull2() {
-        long count = query().from(survey).fetchCount().block();
-        assertEquals(count, (long) update(survey).set(survey.name, (String) null).execute().block());
-    }
+  @Test
+  @SkipForQuoted
+  @ExcludeIn({DB2, DERBY})
+  public void setNullEmptyRootPath() {
+    StringPath name = Expressions.stringPath("name");
+    long count = query().from(survey).fetchCount().block();
+    assertEquals(count, (long) execute(update(survey).setNull(name)).block());
+  }
 
-    @Test
-    @SkipForQuoted
-    @ExcludeIn({DB2, DERBY})
-    public void setNullEmptyRootPath() {
-        StringPath name = Expressions.stringPath("name");
-        long count = query().from(survey).fetchCount().block();
-        assertEquals(count, (long) execute(update(survey).setNull(name)).block());
-    }
+  @Test
+  public void batch() {
+    assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
+    assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
 
-    @Test
-    public void batch() {
-        assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
-        assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
+    R2DBCUpdateClause update = update(survey);
+    update.set(survey.name, "AA").where(survey.name.eq("A")).addBatch();
+    assertEquals(1, update.getBatchCount());
+    update.set(survey.name, "BB").where(survey.name.eq("B")).addBatch();
+    assertEquals(2, update.getBatchCount());
+    assertEquals(2, (long) update.execute().block());
+  }
 
-        R2DBCUpdateClause update = update(survey);
-        update.set(survey.name, "AA").where(survey.name.eq("A")).addBatch();
-        assertEquals(1, update.getBatchCount());
-        update.set(survey.name, "BB").where(survey.name.eq("B")).addBatch();
-        assertEquals(2, update.getBatchCount());
-        assertEquals(2, (long) update.execute().block());
-    }
+  @Test
+  public void batch_templates() {
+    assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
+    assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
 
-    @Test
-    public void batch_templates() {
-        assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
-        assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
+    R2DBCUpdateClause update = update(survey);
+    update
+        .set(survey.name, "AA")
+        .where(survey.name.eq(Expressions.stringTemplate("'A'")))
+        .addBatch();
+    update
+        .set(survey.name, "BB")
+        .where(survey.name.eq(Expressions.stringTemplate("'B'")))
+        .addBatch();
+    assertEquals(2, (long) update.execute().block());
+  }
 
-        R2DBCUpdateClause update = update(survey);
-        update.set(survey.name, "AA").where(survey.name.eq(Expressions.stringTemplate("'A'"))).addBatch();
-        update.set(survey.name, "BB").where(survey.name.eq(Expressions.stringTemplate("'B'"))).addBatch();
-        assertEquals(2, (long) update.execute().block());
-    }
+  @Test
+  public void update_with_subQuery_exists() {
+    QSurvey survey1 = new QSurvey("s1");
+    QEmployee employee = new QEmployee("e");
+    R2DBCUpdateClause update = update(survey1);
+    update.set(survey1.name, "AA");
+    update.where(
+        R2DBCExpressions.selectOne().from(employee).where(survey1.id.eq(employee.id)).exists());
+    assertEquals(1, (long) update.execute().block());
+  }
 
-    @Test
-    public void update_with_subQuery_exists() {
-        QSurvey survey1 = new QSurvey("s1");
-        QEmployee employee = new QEmployee("e");
-        R2DBCUpdateClause update = update(survey1);
-        update.set(survey1.name, "AA");
-        update.where(R2DBCExpressions.selectOne().from(employee).where(survey1.id.eq(employee.id)).exists());
-        assertEquals(1, (long) update.execute().block());
-    }
+  @Test
+  public void update_with_subQuery_exists_Params() {
+    QSurvey survey1 = new QSurvey("s1");
+    QEmployee employee = new QEmployee("e");
 
-    @Test
-    public void update_with_subQuery_exists_Params() {
-        QSurvey survey1 = new QSurvey("s1");
-        QEmployee employee = new QEmployee("e");
+    Param<Integer> param = new Param<Integer>(Integer.class, "param");
+    R2DBCQuery<?> sq = query().from(employee).where(employee.id.eq(param));
+    sq.set(param, -12478923);
 
-        Param<Integer> param = new Param<Integer>(Integer.class, "param");
-        R2DBCQuery<?> sq = query().from(employee).where(employee.id.eq(param));
-        sq.set(param, -12478923);
+    R2DBCUpdateClause update = update(survey1);
+    update.set(survey1.name, "AA");
+    update.where(sq.exists());
+    assertEquals(0, (long) update.execute().block());
+  }
 
-        R2DBCUpdateClause update = update(survey1);
-        update.set(survey1.name, "AA");
-        update.where(sq.exists());
-        assertEquals(0, (long) update.execute().block());
-    }
+  @Test
+  public void update_with_subQuery_exists2() {
+    QSurvey survey1 = new QSurvey("s1");
+    QEmployee employee = new QEmployee("e");
+    R2DBCUpdateClause update = update(survey1);
+    update.set(survey1.name, "AA");
+    update.where(
+        R2DBCExpressions.selectOne()
+            .from(employee)
+            .where(survey1.name.eq(employee.lastname))
+            .exists());
+    assertEquals(0, (long) update.execute().block());
+  }
 
-    @Test
-    public void update_with_subQuery_exists2() {
-        QSurvey survey1 = new QSurvey("s1");
-        QEmployee employee = new QEmployee("e");
-        R2DBCUpdateClause update = update(survey1);
-        update.set(survey1.name, "AA");
-        update.where(R2DBCExpressions.selectOne().from(employee).where(survey1.name.eq(employee.lastname)).exists());
-        assertEquals(0, (long) update.execute().block());
-    }
+  @Test
+  public void update_with_subQuery_notExists() {
+    QSurvey survey1 = new QSurvey("s1");
+    QEmployee employee = new QEmployee("e");
+    R2DBCUpdateClause update = update(survey1);
+    update.set(survey1.name, "AA");
+    update.where(query().from(employee).where(survey1.id.eq(employee.id)).notExists());
+    assertEquals(0, (long) update.execute().block());
+  }
 
-    @Test
-    public void update_with_subQuery_notExists() {
-        QSurvey survey1 = new QSurvey("s1");
-        QEmployee employee = new QEmployee("e");
-        R2DBCUpdateClause update = update(survey1);
-        update.set(survey1.name, "AA");
-        update.where(query().from(employee).where(survey1.id.eq(employee.id)).notExists());
-        assertEquals(0, (long) update.execute().block());
-    }
-
-    @Test
-    @ExcludeIn(TERADATA)
-    public void update_with_templateExpression_in_batch() {
-        assertEquals(1L, (long) update(survey)
+  @Test
+  @ExcludeIn(TERADATA)
+  public void update_with_templateExpression_in_batch() {
+    assertEquals(
+        1L,
+        (long)
+            update(survey)
                 .set(survey.id, 3)
                 .set(survey.name, Expressions.stringTemplate("'Hello'"))
                 .addBatch()
-                .execute().block());
-    }
-
+                .execute()
+                .block());
+  }
 }

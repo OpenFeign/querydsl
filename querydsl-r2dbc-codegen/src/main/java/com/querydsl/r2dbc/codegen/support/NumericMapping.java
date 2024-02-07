@@ -22,40 +22,40 @@ import com.querydsl.r2dbc.Configuration;
  */
 public class NumericMapping implements Mapping {
 
-    private int total, decimal;
+  private int total, decimal;
 
-    private String javaType;
+  private String javaType;
 
-    @Override
-    public void apply(Configuration configuration) {
-        try {
-            configuration.registerNumeric(total, decimal, Class.forName(javaType));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+  @Override
+  public void apply(Configuration configuration) {
+    try {
+      configuration.registerNumeric(total, decimal, Class.forName(javaType));
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    public int getTotal() {
-        return total;
-    }
+  public int getTotal() {
+    return total;
+  }
 
-    public void setTotal(int total) {
-        this.total = total;
-    }
+  public void setTotal(int total) {
+    this.total = total;
+  }
 
-    public int getDecimal() {
-        return decimal;
-    }
+  public int getDecimal() {
+    return decimal;
+  }
 
-    public void setDecimal(int decimal) {
-        this.decimal = decimal;
-    }
+  public void setDecimal(int decimal) {
+    this.decimal = decimal;
+  }
 
-    public String getJavaType() {
-        return javaType;
-    }
+  public String getJavaType() {
+    return javaType;
+  }
 
-    public void setJavaType(String javaType) {
-        this.javaType = javaType;
-    }
+  public void setJavaType(String javaType) {
+    this.javaType = javaType;
+  }
 }

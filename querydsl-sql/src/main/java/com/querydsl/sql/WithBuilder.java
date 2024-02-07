@@ -22,23 +22,21 @@ import com.querydsl.core.types.ExpressionUtils;
  * {@code WithBuilder} is a builder for common table expressions
  *
  * @author tiwe
- *
  * @param <R>
  */
 public class WithBuilder<R> {
 
-    private final QueryMixin<R> queryMixin;
+  private final QueryMixin<R> queryMixin;
 
-    private final Expression<?> alias;
+  private final Expression<?> alias;
 
-    public WithBuilder(QueryMixin<R> queryMixin, Expression<?> alias) {
-        this.queryMixin = queryMixin;
-        this.alias = alias;
-    }
+  public WithBuilder(QueryMixin<R> queryMixin, Expression<?> alias) {
+    this.queryMixin = queryMixin;
+    this.alias = alias;
+  }
 
-    public R as(Expression<?> expr) {
-        Expression<?> flag = ExpressionUtils.operation(alias.getType(), SQLOps.WITH_ALIAS, alias, expr);
-        return queryMixin.addFlag(new QueryFlag(QueryFlag.Position.WITH, flag));
-    }
-
+  public R as(Expression<?> expr) {
+    Expression<?> flag = ExpressionUtils.operation(alias.getType(), SQLOps.WITH_ALIAS, alias, expr);
+    return queryMixin.addFlag(new QueryFlag(QueryFlag.Position.WITH, flag));
+  }
 }

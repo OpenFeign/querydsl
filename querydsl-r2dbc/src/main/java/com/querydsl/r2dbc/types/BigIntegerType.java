@@ -23,17 +23,16 @@ import java.sql.Types;
  */
 public class BigIntegerType extends AbstractType<BigInteger, BigInteger> {
 
-    public BigIntegerType() {
-        super(Types.NUMERIC);
-    }
+  public BigIntegerType() {
+    super(Types.NUMERIC);
+  }
 
-    public BigIntegerType(int type) {
-        super(type);
-    }
+  public BigIntegerType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<BigInteger> getReturnedClass() {
-        return BigInteger.class;
-    }
-
+  @Override
+  public Class<BigInteger> getReturnedClass() {
+    return BigInteger.class;
+  }
 }

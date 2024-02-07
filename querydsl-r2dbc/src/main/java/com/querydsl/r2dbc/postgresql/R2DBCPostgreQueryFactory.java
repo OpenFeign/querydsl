@@ -26,57 +26,55 @@ import com.querydsl.sql.RelationalPath;
  */
 public class R2DBCPostgreQueryFactory extends AbstractR2DBCQueryFactory<R2DBCPostgreQuery<?>> {
 
-    public R2DBCPostgreQueryFactory(Configuration configuration, R2DBCConnectionProvider connection) {
-        super(configuration, connection);
-    }
+  public R2DBCPostgreQueryFactory(Configuration configuration, R2DBCConnectionProvider connection) {
+    super(configuration, connection);
+  }
 
-    public R2DBCPostgreQueryFactory(R2DBCConnectionProvider connection) {
-        this(new Configuration(new PostgreSQLTemplates()), connection);
-    }
+  public R2DBCPostgreQueryFactory(R2DBCConnectionProvider connection) {
+    this(new Configuration(new PostgreSQLTemplates()), connection);
+  }
 
-    public R2DBCPostgreQueryFactory(SQLTemplates templates, R2DBCConnectionProvider connection) {
-        this(new Configuration(templates), connection);
-    }
+  public R2DBCPostgreQueryFactory(SQLTemplates templates, R2DBCConnectionProvider connection) {
+    this(new Configuration(templates), connection);
+  }
 
-    @Override
-    public R2DBCPostgreQuery<?> query() {
-        return new R2DBCPostgreQuery<Void>(connection, configuration);
-    }
+  @Override
+  public R2DBCPostgreQuery<?> query() {
+    return new R2DBCPostgreQuery<Void>(connection, configuration);
+  }
 
-    @Override
-    public <T> R2DBCPostgreQuery<T> select(Expression<T> expr) {
-        return query().select(expr);
-    }
+  @Override
+  public <T> R2DBCPostgreQuery<T> select(Expression<T> expr) {
+    return query().select(expr);
+  }
 
-    @Override
-    public R2DBCPostgreQuery<Tuple> select(Expression<?>... exprs) {
-        return query().select(exprs);
-    }
+  @Override
+  public R2DBCPostgreQuery<Tuple> select(Expression<?>... exprs) {
+    return query().select(exprs);
+  }
 
-    @Override
-    public <T> R2DBCPostgreQuery<T> selectDistinct(Expression<T> expr) {
-        return query().select(expr).distinct();
-    }
+  @Override
+  public <T> R2DBCPostgreQuery<T> selectDistinct(Expression<T> expr) {
+    return query().select(expr).distinct();
+  }
 
-    @Override
-    public R2DBCPostgreQuery<Tuple> selectDistinct(Expression<?>... exprs) {
-        return query().select(exprs).distinct();
-    }
+  @Override
+  public R2DBCPostgreQuery<Tuple> selectDistinct(Expression<?>... exprs) {
+    return query().select(exprs).distinct();
+  }
 
-    @Override
-    public R2DBCPostgreQuery<Integer> selectZero() {
-        return select(Expressions.ZERO);
-    }
+  @Override
+  public R2DBCPostgreQuery<Integer> selectZero() {
+    return select(Expressions.ZERO);
+  }
 
-    @Override
-    public R2DBCPostgreQuery<Integer> selectOne() {
-        return select(Expressions.ONE);
-    }
+  @Override
+  public R2DBCPostgreQuery<Integer> selectOne() {
+    return select(Expressions.ONE);
+  }
 
-    @Override
-    public <T> R2DBCPostgreQuery<T> selectFrom(RelationalPath<T> expr) {
-        return select(expr).from(expr);
-    }
-
-
+  @Override
+  public <T> R2DBCPostgreQuery<T> selectFrom(RelationalPath<T> expr) {
+    return select(expr).from(expr);
+  }
 }

@@ -17,19 +17,18 @@ import reactor.core.publisher.Mono;
  */
 public class DropTableClause {
 
-    private final Connection connection;
+  private final Connection connection;
 
-    private final String table;
+  private final String table;
 
-    public DropTableClause(Connection connection, Configuration c, String table) {
-        this.connection = connection;
-        this.table = c.getTemplates().quoteIdentifier(table);
-    }
+  public DropTableClause(Connection connection, Configuration c, String table) {
+    this.connection = connection;
+    this.table = c.getTemplates().quoteIdentifier(table);
+  }
 
-    @SuppressWarnings("SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE")
-    public Mono<Void> execute() {
-        Statement statement = connection.createStatement("DROP TABLE IF EXISTS " + table);
-        return Mono.from(statement.execute()).then();
-    }
-
+  @SuppressWarnings("SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE")
+  public Mono<Void> execute() {
+    Statement statement = connection.createStatement("DROP TABLE IF EXISTS " + table);
+    return Mono.from(statement.execute()).then();
+  }
 }

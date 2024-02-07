@@ -15,8 +15,6 @@ package com.querydsl.sql;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Projections;
@@ -24,74 +22,80 @@ import com.querydsl.core.types.QBean;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
+import org.junit.Test;
 
 public class QBean2Test {
 
-//    @Table("PERSON")
-    public static class QPerson extends RelationalPathBase<QPerson> {
-        private static final long serialVersionUID = 609527362;
-        public static final QPerson person = new QPerson("PERSON");
-        public final StringPath firstName = createString("firstName");
-        public final NumberPath<Integer> id = createNumber("id", Integer.class);
-        public final StringPath lastName = createString("lastName");
+  //    @Table("PERSON")
+  public static class QPerson extends RelationalPathBase<QPerson> {
+    private static final long serialVersionUID = 609527362;
+    public static final QPerson person = new QPerson("PERSON");
+    public final StringPath firstName = createString("firstName");
+    public final NumberPath<Integer> id = createNumber("id", Integer.class);
+    public final StringPath lastName = createString("lastName");
 
-        public QPerson(String variable) {
-           super(QPerson.class, PathMetadataFactory.forVariable(variable), "", "PERSON");
-           addMetadata();
-        }
-
-        public QPerson(BeanPath<? extends QPerson> entity) {
-            super(entity.getType(), entity.getMetadata(), "", "PERSON");
-            addMetadata();
-        }
-
-        public QPerson(PathMetadata metadata) {
-            super(QPerson.class, metadata, "", "PERSON");
-            addMetadata();
-        }
-
-        public void addMetadata() {
-            addMetadata(firstName, ColumnMetadata.named("FIRST_NAME"));
-            addMetadata(lastName, ColumnMetadata.named("LAST_NAME"));
-            addMetadata(id, ColumnMetadata.named("ID"));
-        }
-
+    public QPerson(String variable) {
+      super(QPerson.class, PathMetadataFactory.forVariable(variable), "", "PERSON");
+      addMetadata();
     }
 
-    public static class Person {
-        private int id;
-        private String firstName;
-        private String lastName;
-        public int getId() {
-            return id;
-        }
-        public void setId(int id) {
-            this.id = id;
-        }
-        public String getFirstName() {
-            return firstName;
-        }
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-        public String getLastName() {
-            return lastName;
-        }
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
+    public QPerson(BeanPath<? extends QPerson> entity) {
+      super(entity.getType(), entity.getMetadata(), "", "PERSON");
+      addMetadata();
     }
 
-    @Test
-    public void newInstance() {
-        QPerson p = QPerson.person;
-        QBean<Person> projection = Projections.bean(Person.class, p.id, p.firstName.as("firstName"), p.lastName.as("lastName"));
-
-        Person person = projection.newInstance(3, "John", "Doe");
-        assertEquals(3,      person.getId());
-        assertEquals("John", person.getFirstName());
-        assertEquals("Doe",  person.getLastName());
+    public QPerson(PathMetadata metadata) {
+      super(QPerson.class, metadata, "", "PERSON");
+      addMetadata();
     }
 
+    public void addMetadata() {
+      addMetadata(firstName, ColumnMetadata.named("FIRST_NAME"));
+      addMetadata(lastName, ColumnMetadata.named("LAST_NAME"));
+      addMetadata(id, ColumnMetadata.named("ID"));
+    }
+  }
+
+  public static class Person {
+    private int id;
+    private String firstName;
+    private String lastName;
+
+    public int getId() {
+      return id;
+    }
+
+    public void setId(int id) {
+      this.id = id;
+    }
+
+    public String getFirstName() {
+      return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+      this.firstName = firstName;
+    }
+
+    public String getLastName() {
+      return lastName;
+    }
+
+    public void setLastName(String lastName) {
+      this.lastName = lastName;
+    }
+  }
+
+  @Test
+  public void newInstance() {
+    QPerson p = QPerson.person;
+    QBean<Person> projection =
+        Projections.bean(
+            Person.class, p.id, p.firstName.as("firstName"), p.lastName.as("lastName"));
+
+    Person person = projection.newInstance(3, "John", "Doe");
+    assertEquals(3, person.getId());
+    assertEquals("John", person.getFirstName());
+    assertEquals("Doe", person.getLastName());
+  }
 }

@@ -19,11 +19,8 @@ import java.util.Map;
  * {@code MapExpression} represents {@link java.util.Map} typed expressions
  *
  * @author tiwe
- *
  * @param <K> key type
  * @param <V> value type
  * @see java.util.Map
  */
-public interface MapExpression<K, V> extends ParameterizedExpression<Map<K,V>> {
-
-}
+public interface MapExpression<K, V> extends ParameterizedExpression<Map<K, V>> {}

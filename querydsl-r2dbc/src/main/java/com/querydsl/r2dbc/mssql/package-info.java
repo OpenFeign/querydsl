@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-
-/**
- * SQL Server support
- */
+/** SQL Server support */
 package com.querydsl.r2dbc.mssql;

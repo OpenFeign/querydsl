@@ -16,7 +16,6 @@ package com.querydsl.r2dbc.types;
 import com.querydsl.r2dbc.binding.BindMarker;
 import com.querydsl.r2dbc.binding.BindTarget;
 import io.r2dbc.spi.Row;
-
 import java.math.BigDecimal;
 import java.sql.Types;
 
@@ -27,30 +26,29 @@ import java.sql.Types;
  */
 public class BigDecimalAsDoubleType extends AbstractType<BigDecimal, BigDecimal> {
 
-    public static final BigDecimalAsDoubleType DEFAULT = new BigDecimalAsDoubleType();
+  public static final BigDecimalAsDoubleType DEFAULT = new BigDecimalAsDoubleType();
 
-    public BigDecimalAsDoubleType() {
-        super(Types.DOUBLE);
-    }
+  public BigDecimalAsDoubleType() {
+    super(Types.DOUBLE);
+  }
 
-    public BigDecimalAsDoubleType(int type) {
-        super(type);
-    }
+  public BigDecimalAsDoubleType(int type) {
+    super(type);
+  }
 
-    @Override
-    public BigDecimal getValue(Row row, int startIndex) {
-        Double val = row.get(startIndex, Double.class);
-        return val == null ? null : BigDecimal.valueOf(val);
-    }
+  @Override
+  public BigDecimal getValue(Row row, int startIndex) {
+    Double val = row.get(startIndex, Double.class);
+    return val == null ? null : BigDecimal.valueOf(val);
+  }
 
-    @Override
-    public Class<BigDecimal> getReturnedClass() {
-        return BigDecimal.class;
-    }
+  @Override
+  public Class<BigDecimal> getReturnedClass() {
+    return BigDecimal.class;
+  }
 
-    @Override
-    public void setValue(BindMarker bindMarker, BindTarget bindTarget, BigDecimal value) {
-        bindMarker.bind(bindTarget, value.doubleValue());
-    }
-
+  @Override
+  public void setValue(BindMarker bindMarker, BindTarget bindTarget, BigDecimal value) {
+    bindMarker.bind(bindTarget, value.doubleValue());
+  }
 }

@@ -16,7 +16,6 @@ package com.querydsl.r2dbc;
 import com.querydsl.core.QueryException;
 import com.querydsl.r2dbc.support.AbstractR2DBCExceptionWrapper;
 import com.querydsl.sql.SQLExceptionTranslator;
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -27,39 +26,38 @@ import java.util.List;
  */
 public final class DefaultR2DBCExceptionTranslator implements R2DBCExceptionTranslator {
 
-    public static final R2DBCExceptionTranslator DEFAULT = new DefaultR2DBCExceptionTranslator();
+  public static final R2DBCExceptionTranslator DEFAULT = new DefaultR2DBCExceptionTranslator();
 
-    private static final AbstractR2DBCExceptionWrapper WRAPPER = AbstractR2DBCExceptionWrapper.INSTANCE;
+  private static final AbstractR2DBCExceptionWrapper WRAPPER =
+      AbstractR2DBCExceptionWrapper.INSTANCE;
 
-    @Override
-    public RuntimeException translate(Throwable e) {
-        if (containsAdditionalExceptions(e)) {
-            return WRAPPER.wrap(e);
-        } else {
-            return new QueryException(e);
-        }
+  @Override
+  public RuntimeException translate(Throwable e) {
+    if (containsAdditionalExceptions(e)) {
+      return WRAPPER.wrap(e);
+    } else {
+      return new QueryException(e);
+    }
+  }
+
+  @Override
+  public RuntimeException translate(String sql, List<Object> bindings, Throwable e) {
+    String message = "Caught " + e.getClass().getSimpleName() + " for " + sql;
+    if (containsAdditionalExceptions(e)) {
+      return WRAPPER.wrap(message, e);
+    } else {
+      return new QueryException(message, e);
+    }
+  }
+
+  private static boolean containsAdditionalExceptions(Throwable e) {
+    if (!SQLException.class.isAssignableFrom(e.getClass())) {
+      return false;
     }
 
-    @Override
-    public RuntimeException translate(String sql, List<Object> bindings, Throwable e) {
-        String message = "Caught " + e.getClass().getSimpleName()
-                + " for " + sql;
-        if (containsAdditionalExceptions(e)) {
-            return WRAPPER.wrap(message, e);
-        } else {
-            return new QueryException(message, e);
-        }
-    }
+    SQLException sqlException = (SQLException) e;
+    return sqlException.getNextException() != null;
+  }
 
-    private static boolean containsAdditionalExceptions(Throwable e) {
-        if (!SQLException.class.isAssignableFrom(e.getClass())) {
-            return false;
-        }
-
-        SQLException sqlException = (SQLException) e;
-        return sqlException.getNextException() != null;
-    }
-
-    private DefaultR2DBCExceptionTranslator() {
-    }
+  private DefaultR2DBCExceptionTranslator() {}
 }

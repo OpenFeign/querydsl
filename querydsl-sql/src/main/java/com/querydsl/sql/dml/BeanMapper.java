@@ -13,57 +13,53 @@
  */
 package com.querydsl.sql.dml;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.querydsl.core.types.Path;
 import com.querydsl.core.util.BeanMap;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.types.Null;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- * Creates the mapping by inspecting object via bean inspection.
- * Given bean doesn't need to have @Column metadata, but the fields need to have the same
- * name as in the given relational path.
+ * Creates the mapping by inspecting object via bean inspection. Given bean doesn't need to
+ * have @Column metadata, but the fields need to have the same name as in the given relational path.
  *
  * @author tiwe
- *
  */
 public class BeanMapper extends AbstractMapper<Object> {
 
-    public static final BeanMapper DEFAULT = new BeanMapper(false);
+  public static final BeanMapper DEFAULT = new BeanMapper(false);
 
-    public static final BeanMapper WITH_NULL_BINDINGS = new BeanMapper(true);
+  public static final BeanMapper WITH_NULL_BINDINGS = new BeanMapper(true);
 
-    private final boolean withNullBindings;
+  private final boolean withNullBindings;
 
-    public BeanMapper() {
-        this(false);
-    }
+  public BeanMapper() {
+    this(false);
+  }
 
-    public BeanMapper(boolean withNullBindings) {
-        this.withNullBindings = withNullBindings;
-    }
+  public BeanMapper(boolean withNullBindings) {
+    this.withNullBindings = withNullBindings;
+  }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    public Map<Path<?>, Object> createMap(RelationalPath<?> entity, Object bean) {
-        Map<Path<?>, Object> values = new LinkedHashMap<>();
-        Map<String, Object> map = new BeanMap(bean);
-        Map<String, Path<?>> columns = getColumns(entity);
-        // populate in column order
-        for (Map.Entry<String, Path<?>> entry : columns.entrySet()) {
-            Path<?> path = entry.getValue();
-            if (map.containsKey(entry.getKey())) {
-                Object value = map.get(entry.getKey());
-                if (value != null) {
-                    values.put(path, value);
-                } else if (withNullBindings && !isPrimaryKeyColumn(entity, path)) {
-                    values.put(path, Null.DEFAULT);
-                }
-            }
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  @Override
+  public Map<Path<?>, Object> createMap(RelationalPath<?> entity, Object bean) {
+    Map<Path<?>, Object> values = new LinkedHashMap<>();
+    Map<String, Object> map = new BeanMap(bean);
+    Map<String, Path<?>> columns = getColumns(entity);
+    // populate in column order
+    for (Map.Entry<String, Path<?>> entry : columns.entrySet()) {
+      Path<?> path = entry.getValue();
+      if (map.containsKey(entry.getKey())) {
+        Object value = map.get(entry.getKey());
+        if (value != null) {
+          values.put(path, value);
+        } else if (withNullBindings && !isPrimaryKeyColumn(entity, path)) {
+          values.put(path, Null.DEFAULT);
         }
-        return values;
+      }
     }
-
+    return values;
+  }
 }

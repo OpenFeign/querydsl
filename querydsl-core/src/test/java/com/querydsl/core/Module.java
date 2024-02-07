@@ -15,32 +15,18 @@ package com.querydsl.core;
 
 /**
  * @author tiwe
- *
  */
 public enum Module {
-    /**
-     *
-     */
-    COLLECTIONS,
-    /**
-     *
-     */
-    JPA,
-    /**
-     *
-     */
-    JDO,
-    /**
-     *
-     */
-    RDFBEAN,
-    /**
-     *
-     */
-    SQL,
-    /**
-     *
-     */
-    LUCENE;
-
+  /** */
+  COLLECTIONS,
+  /** */
+  JPA,
+  /** */
+  JDO,
+  /** */
+  RDFBEAN,
+  /** */
+  SQL,
+  /** */
+  LUCENE;
 }

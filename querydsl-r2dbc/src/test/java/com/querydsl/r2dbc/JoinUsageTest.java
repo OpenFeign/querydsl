@@ -19,11 +19,10 @@ import org.junit.Test;
 
 public class JoinUsageTest {
 
-    @Test(expected = IllegalStateException.class)
-    @Ignore
-    public void join_already_declared() {
-        QSurvey survey = QSurvey.survey;
-        R2DBCExpressions.selectFrom(survey).fullJoin(survey);
-    }
-
+  @Test(expected = IllegalStateException.class)
+  @Ignore
+  public void join_already_declared() {
+    QSurvey survey = QSurvey.survey;
+    R2DBCExpressions.selectFrom(survey).fullJoin(survey);
+  }
 }

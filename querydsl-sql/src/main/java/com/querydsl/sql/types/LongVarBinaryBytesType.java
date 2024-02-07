@@ -19,12 +19,10 @@ import java.sql.Types;
  * {@code LongVarBinaryBytesType} uses {@code LONGVARBINARY} as the JDBC type
  *
  * @author tiwe
- *
  */
 public class LongVarBinaryBytesType extends BytesType {
 
-    public LongVarBinaryBytesType() {
-        super(Types.LONGVARBINARY);
-    }
-
+  public LongVarBinaryBytesType() {
+    super(Types.LONGVARBINARY);
+  }
 }

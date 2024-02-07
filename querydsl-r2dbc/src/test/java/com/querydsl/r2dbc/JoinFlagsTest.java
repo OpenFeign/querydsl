@@ -13,6 +13,8 @@
  */
 package com.querydsl.r2dbc;
 
+import static org.junit.Assert.assertEquals;
+
 import com.querydsl.core.JoinFlag;
 import com.querydsl.r2dbc.domain.QSurvey;
 import io.r2dbc.spi.Connection;
@@ -20,82 +22,73 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 public class JoinFlagsTest {
 
-    private Connection connection = EasyMock.createMock(Connection.class);
+  private Connection connection = EasyMock.createMock(Connection.class);
 
-    private QSurvey s1, s2, s3, s4, s5, s6;
+  private QSurvey s1, s2, s3, s4, s5, s6;
 
-    private R2DBCQuery query;
+  private R2DBCQuery query;
 
-    @SuppressWarnings("unchecked")
-    @Before
-    public void setUp() {
-        s1 = new QSurvey("s");
-        s2 = new QSurvey("s2");
-        s3 = new QSurvey("s3");
-        s4 = new QSurvey("s4");
-        s5 = new QSurvey("s5");
-        s6 = new QSurvey("s6");
-        query = new R2DBCQuery(connection, SQLTemplates.DEFAULT);
-        query.from(s1);
-    }
+  @SuppressWarnings("unchecked")
+  @Before
+  public void setUp() {
+    s1 = new QSurvey("s");
+    s2 = new QSurvey("s2");
+    s3 = new QSurvey("s3");
+    s4 = new QSurvey("s4");
+    s5 = new QSurvey("s5");
+    s6 = new QSurvey("s6");
+    query = new R2DBCQuery(connection, SQLTemplates.DEFAULT);
+    query.from(s1);
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void joinFlags_beforeCondition() {
-        query.innerJoin(s2).on(s1.eq(s2));
-        query.addJoinFlag(" a ", JoinFlag.Position.BEFORE_CONDITION);
+  @SuppressWarnings("unchecked")
+  @Test
+  public void joinFlags_beforeCondition() {
+    query.innerJoin(s2).on(s1.eq(s2));
+    query.addJoinFlag(" a ", JoinFlag.Position.BEFORE_CONDITION);
 
-        assertEquals("from SURVEY s\n" +
-                "inner join SURVEY s2 a \n" +
-                "on s.ID = s2.ID", query.toString());
-    }
+    assertEquals(
+        "from SURVEY s\n" + "inner join SURVEY s2 a \n" + "on s.ID = s2.ID", query.toString());
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void joinFlags_beforeTarget() {
-        query.innerJoin(s3).on(s1.eq(s3));
-        query.addJoinFlag(" b ", JoinFlag.Position.BEFORE_TARGET);
+  @SuppressWarnings("unchecked")
+  @Test
+  public void joinFlags_beforeTarget() {
+    query.innerJoin(s3).on(s1.eq(s3));
+    query.addJoinFlag(" b ", JoinFlag.Position.BEFORE_TARGET);
 
-        assertEquals("from SURVEY s\n" +
-                "inner join  b SURVEY s3\n" +
-                "on s.ID = s3.ID", query.toString());
-    }
+    assertEquals(
+        "from SURVEY s\n" + "inner join  b SURVEY s3\n" + "on s.ID = s3.ID", query.toString());
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void joinFlags_end() {
-        query.innerJoin(s4).on(s1.eq(s4));
-        query.addJoinFlag(" c ", JoinFlag.Position.END);
+  @SuppressWarnings("unchecked")
+  @Test
+  public void joinFlags_end() {
+    query.innerJoin(s4).on(s1.eq(s4));
+    query.addJoinFlag(" c ", JoinFlag.Position.END);
 
-        assertEquals("from SURVEY s\n" +
-                "inner join SURVEY s4\n" +
-                "on s.ID = s4.ID c", query.toString());
-    }
+    assertEquals(
+        "from SURVEY s\n" + "inner join SURVEY s4\n" + "on s.ID = s4.ID c", query.toString());
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void joinFlags_override() {
-        query.innerJoin(s5).on(s1.eq(s5));
-        query.addJoinFlag(" d ", JoinFlag.Position.OVERRIDE);
+  @SuppressWarnings("unchecked")
+  @Test
+  public void joinFlags_override() {
+    query.innerJoin(s5).on(s1.eq(s5));
+    query.addJoinFlag(" d ", JoinFlag.Position.OVERRIDE);
 
-        assertEquals("from SURVEY s d SURVEY s5\n" +
-                "on s.ID = s5.ID", query.toString());
-    }
+    assertEquals("from SURVEY s d SURVEY s5\n" + "on s.ID = s5.ID", query.toString());
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void joinFlags_start() {
-        query.innerJoin(s6).on(s1.eq(s6));
-        query.addJoinFlag(" e ", JoinFlag.Position.START);
+  @SuppressWarnings("unchecked")
+  @Test
+  public void joinFlags_start() {
+    query.innerJoin(s6).on(s1.eq(s6));
+    query.addJoinFlag(" e ", JoinFlag.Position.START);
 
-        assertEquals("from SURVEY s e \n" +
-                "inner join SURVEY s6\n" +
-                "on s.ID = s6.ID", query.toString());
-    }
-
-
+    assertEquals(
+        "from SURVEY s e \n" + "inner join SURVEY s6\n" + "on s.ID = s6.ID", query.toString());
+  }
 }

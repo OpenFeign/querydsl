@@ -14,20 +14,18 @@
 package com.querydsl.r2dbc;
 
 import io.r2dbc.spi.Blob;
-import org.reactivestreams.Publisher;
-
 import java.nio.ByteBuffer;
+import org.reactivestreams.Publisher;
 
 public class DummyBlob implements Blob {
 
+  @Override
+  public Publisher<ByteBuffer> stream() {
+    return null;
+  }
 
-    @Override
-    public Publisher<ByteBuffer> stream() {
-        return null;
-    }
-
-    @Override
-    public Publisher<Void> discard() {
-        return null;
-    }
+  @Override
+  public Publisher<Void> discard() {
+    return null;
+  }
 }

@@ -15,99 +15,96 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.domain.QCat;
+import org.junit.Test;
 
 public class MathTest extends AbstractQueryTest {
 
-    @Test
-    public void test() {
-        NumberPath<Double> path = QCat.cat.bodyWeight;
-        assertToString("(cat.bodyWeight - sum(cat.bodyWeight)) * cat.bodyWeight", path.subtract(path.sum()).multiply(path));
-    }
+  @Test
+  public void test() {
+    NumberPath<Double> path = QCat.cat.bodyWeight;
+    assertToString(
+        "(cat.bodyWeight - sum(cat.bodyWeight)) * cat.bodyWeight",
+        path.subtract(path.sum()).multiply(path));
+  }
 
-    @Test
-    public void add() {
-        assertToString("cat.bodyWeight + ?1", cat.bodyWeight.add(10));
-    }
+  @Test
+  public void add() {
+    assertToString("cat.bodyWeight + ?1", cat.bodyWeight.add(10));
+  }
 
-    @Test
-    public void subtract() {
-        assertToString("cat.bodyWeight - ?1", cat.bodyWeight.subtract(10));
-    }
+  @Test
+  public void subtract() {
+    assertToString("cat.bodyWeight - ?1", cat.bodyWeight.subtract(10));
+  }
 
-    @Test
-    public void multiply() {
-        assertToString("cat.bodyWeight * ?1", cat.bodyWeight.multiply(10));
-    }
+  @Test
+  public void multiply() {
+    assertToString("cat.bodyWeight * ?1", cat.bodyWeight.multiply(10));
+  }
 
-    @Test
-    public void divide() {
-        assertToString("cat.bodyWeight / ?1", cat.bodyWeight.divide(10));
-    }
+  @Test
+  public void divide() {
+    assertToString("cat.bodyWeight / ?1", cat.bodyWeight.divide(10));
+  }
 
-    @Test
-    public void add_and_compare() {
-        assertToString("cat.bodyWeight + ?1 < ?1", cat.bodyWeight.add(10.0).lt(10.0));
-    }
+  @Test
+  public void add_and_compare() {
+    assertToString("cat.bodyWeight + ?1 < ?1", cat.bodyWeight.add(10.0).lt(10.0));
+  }
 
-    @Test
-    public void subtract_and_compare() {
-        assertToString("cat.bodyWeight - ?1 < ?1", cat.bodyWeight.subtract(10.0).lt(10.0));
-    }
+  @Test
+  public void subtract_and_compare() {
+    assertToString("cat.bodyWeight - ?1 < ?1", cat.bodyWeight.subtract(10.0).lt(10.0));
+  }
 
-    @Test
-    public void multiply_and_compare() {
-        assertToString("cat.bodyWeight * ?1 < ?1", cat.bodyWeight.multiply(10.0).lt(10.0));
-    }
+  @Test
+  public void multiply_and_compare() {
+    assertToString("cat.bodyWeight * ?1 < ?1", cat.bodyWeight.multiply(10.0).lt(10.0));
+  }
 
-    @Test
-    public void divide_and_compare() {
-        assertToString("cat.bodyWeight / ?1 < ?2", cat.bodyWeight.divide(10.0).lt(20.0));
-    }
+  @Test
+  public void divide_and_compare() {
+    assertToString("cat.bodyWeight / ?1 < ?2", cat.bodyWeight.divide(10.0).lt(20.0));
+  }
 
-    @Test
-    public void add_and_multiply() {
-        assertToString("(cat.bodyWeight + ?1) * ?2", cat.bodyWeight.add(10).multiply(20));
-    }
+  @Test
+  public void add_and_multiply() {
+    assertToString("(cat.bodyWeight + ?1) * ?2", cat.bodyWeight.add(10).multiply(20));
+  }
 
-    @Test
-    public void subtract_and_multiply() {
-        assertToString("(cat.bodyWeight - ?1) * ?2", cat.bodyWeight.subtract(10).multiply(20));
-    }
+  @Test
+  public void subtract_and_multiply() {
+    assertToString("(cat.bodyWeight - ?1) * ?2", cat.bodyWeight.subtract(10).multiply(20));
+  }
 
+  @Test
+  public void multiply_and_add() {
+    assertToString("cat.bodyWeight * ?1 + ?2", cat.bodyWeight.multiply(10).add(20));
+  }
 
-    @Test
-    public void multiply_and_add() {
-        assertToString("cat.bodyWeight * ?1 + ?2", cat.bodyWeight.multiply(10).add(20));
-    }
+  @Test
+  public void multiply_and_subtract() {
+    assertToString("cat.bodyWeight * ?1 - ?2", cat.bodyWeight.multiply(10).subtract(20));
+  }
 
+  @Test
+  public void arithmetic_and_arithmetic2() {
+    QCat c1 = new QCat("c1");
+    QCat c2 = new QCat("c2");
+    QCat c3 = new QCat("c3");
+    assertToString("c1.id + c2.id * c3.id", c1.id.add(c2.id.multiply(c3.id)));
+    assertToString("c1.id * (c2.id + c3.id)", c1.id.multiply(c2.id.add(c3.id)));
+    assertToString("(c1.id + c2.id) * c3.id", c1.id.add(c2.id).multiply(c3.id));
+  }
 
-    @Test
-    public void multiply_and_subtract() {
-        assertToString("cat.bodyWeight * ?1 - ?2", cat.bodyWeight.multiply(10).subtract(20));
-    }
-
-
-    @Test
-    public void arithmetic_and_arithmetic2() {
-        QCat c1 = new QCat("c1");
-        QCat c2 = new QCat("c2");
-        QCat c3 = new QCat("c3");
-        assertToString("c1.id + c2.id * c3.id", c1.id.add(c2.id.multiply(c3.id)));
-        assertToString("c1.id * (c2.id + c3.id)", c1.id.multiply(c2.id.add(c3.id)));
-        assertToString("(c1.id + c2.id) * c3.id", c1.id.add(c2.id).multiply(c3.id));
-    }
-
-    @Test
-    public void mathematicalOperations() {
-        // mathematical operators +, -, *, /
-        cat.bodyWeight.add(kitten.bodyWeight);
-        cat.bodyWeight.subtract(kitten.bodyWeight);
-        cat.bodyWeight.multiply(kitten.bodyWeight);
-        cat.bodyWeight.divide(kitten.bodyWeight);
-    }
-
+  @Test
+  public void mathematicalOperations() {
+    // mathematical operators +, -, *, /
+    cat.bodyWeight.add(kitten.bodyWeight);
+    cat.bodyWeight.subtract(kitten.bodyWeight);
+    cat.bodyWeight.multiply(kitten.bodyWeight);
+    cat.bodyWeight.divide(kitten.bodyWeight);
+  }
 }

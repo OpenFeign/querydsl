@@ -27,26 +27,29 @@ import io.r2dbc.spi.Connection;
  * @param <C> the concrete subtype
  * @author mc_fish
  */
-public abstract class AbstractR2DBCSQLServerQuery<T, C extends AbstractR2DBCSQLServerQuery<T, C>> extends AbstractR2DBCQuery<T, C> {
-    public AbstractR2DBCSQLServerQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
-        super(conn, configuration, metadata);
-    }
+public abstract class AbstractR2DBCSQLServerQuery<T, C extends AbstractR2DBCSQLServerQuery<T, C>>
+    extends AbstractR2DBCQuery<T, C> {
+  public AbstractR2DBCSQLServerQuery(
+      Connection conn, Configuration configuration, QueryMetadata metadata) {
+    super(conn, configuration, metadata);
+  }
 
-    public AbstractR2DBCSQLServerQuery(R2DBCConnectionProvider connProvider, Configuration configuration, QueryMetadata metadata) {
-        super(connProvider, configuration, metadata);
-    }
+  public AbstractR2DBCSQLServerQuery(
+      R2DBCConnectionProvider connProvider, Configuration configuration, QueryMetadata metadata) {
+    super(connProvider, configuration, metadata);
+  }
 
-    /**
-     * Set the table hints
-     *
-     * @param tableHints table hints
-     * @return the current object
-     */
-    public C tableHints(SQLServerTableHints... tableHints) {
-        if (tableHints.length > 0) {
-            String hints = SQLServerGrammar.tableHints(tableHints);
-            addJoinFlag(hints, JoinFlag.Position.BEFORE_CONDITION);
-        }
-        return (C) this;
+  /**
+   * Set the table hints
+   *
+   * @param tableHints table hints
+   * @return the current object
+   */
+  public C tableHints(SQLServerTableHints... tableHints) {
+    if (tableHints.length > 0) {
+      String hints = SQLServerGrammar.tableHints(tableHints);
+      addJoinFlag(hints, JoinFlag.Position.BEFORE_CONDITION);
     }
+    return (C) this;
+  }
 }

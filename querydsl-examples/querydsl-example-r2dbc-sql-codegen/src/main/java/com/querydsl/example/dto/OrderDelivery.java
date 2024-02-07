@@ -1,15 +1,12 @@
 package com.querydsl.example.dto;
 
-import lombok.Data;
-
 import java.time.LocalDate;
+import lombok.Data;
 
 @Data
 public class OrderDelivery {
 
-    private String deliveryStatusCode;
+  private String deliveryStatusCode;
 
-    private LocalDate reportedDate;
-
+  private LocalDate reportedDate;
 }
-

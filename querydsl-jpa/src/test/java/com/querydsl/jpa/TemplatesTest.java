@@ -17,6 +17,4 @@ package com.querydsl.jpa;
 
 import com.querydsl.core.TemplatesTestBase;
 
-public class TemplatesTest extends TemplatesTestBase {
-
-}
+public class TemplatesTest extends TemplatesTestBase {}

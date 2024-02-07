@@ -24,22 +24,24 @@ import io.r2dbc.spi.Connection;
  * {@code MySQLReplaceClause} is a REPLACE INTO clause
  *
  * <p>REPLACE works exactly like INSERT, except that if an old row in the table has the same value
- * as a new row for a PRIMARY KEY or a UNIQUE index, the old row is deleted before the new row is inserted.</p>
+ * as a new row for a PRIMARY KEY or a UNIQUE index, the old row is deleted before the new row is
+ * inserted.
  *
  * @author mc_fish
  */
 public class R2DBCMyReplaceClause extends R2DBCInsertClause {
 
-    protected static final String REPLACE_INTO = "replace into ";
+  protected static final String REPLACE_INTO = "replace into ";
 
-    public R2DBCMyReplaceClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
-        super(connection, templates, entity);
-        addFlag(Position.START_OVERRIDE, REPLACE_INTO);
-    }
+  public R2DBCMyReplaceClause(
+      Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
+    super(connection, templates, entity);
+    addFlag(Position.START_OVERRIDE, REPLACE_INTO);
+  }
 
-    public R2DBCMyReplaceClause(Connection connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-        addFlag(Position.START_OVERRIDE, REPLACE_INTO);
-    }
-
+  public R2DBCMyReplaceClause(
+      Connection connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+    addFlag(Position.START_OVERRIDE, REPLACE_INTO);
+  }
 }

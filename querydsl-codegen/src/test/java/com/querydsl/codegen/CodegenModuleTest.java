@@ -16,41 +16,39 @@ package com.querydsl.codegen;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import javax.annotation.Generated;
-
-import org.junit.Test;
-
 import java.lang.annotation.Annotation;
+import javax.annotation.Generated;
+import org.junit.Test;
 
 public class CodegenModuleTest {
 
-    private final CodegenModule module = new CodegenModule();
+  private final CodegenModule module = new CodegenModule();
 
-    @Test
-    public void defaultPrefix() {
-        assertEquals("Q", module.get(String.class, CodegenModule.PREFIX));
-    }
+  @Test
+  public void defaultPrefix() {
+    assertEquals("Q", module.get(String.class, CodegenModule.PREFIX));
+  }
 
-    @Test
-    public void typeMappings() {
-        assertNotNull(module.get(TypeMappings.class));
-    }
+  @Test
+  public void typeMappings() {
+    assertNotNull(module.get(TypeMappings.class));
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void get_with_unknown_key() {
-        module.get(String.class, "XXX");
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void get_with_unknown_key() {
+    module.get(String.class, "XXX");
+  }
 
-    @Test
-    public void defaultGeneratedClass() {
-        Class<? extends Annotation> o = module.get(Class.class, CodegenModule.GENERATED_ANNOTATION_CLASS);
-        assertEquals(o, Generated.class);
-    }
+  @Test
+  public void defaultGeneratedClass() {
+    Class<? extends Annotation> o =
+        module.get(Class.class, CodegenModule.GENERATED_ANNOTATION_CLASS);
+    assertEquals(o, Generated.class);
+  }
 
-    @Test
-    public void javadocSuffixForBeanSerializerOverloadedConstructorInjection() {
-        String o = module.get(String.class, CodegenModule.JAVADOC_SUFFIX);
-        assertEquals(o, BeanSerializer.DEFAULT_JAVADOC_SUFFIX);
-    }
-
+  @Test
+  public void javadocSuffixForBeanSerializerOverloadedConstructorInjection() {
+    String o = module.get(String.class, CodegenModule.JAVADOC_SUFFIX);
+    assertEquals(o, BeanSerializer.DEFAULT_JAVADOC_SUFFIX);
+  }
 }

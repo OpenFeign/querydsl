@@ -8,9 +8,9 @@ package com.querydsl.r2dbc.binding;
 @FunctionalInterface
 public interface BindMarkers {
 
-    BindMarker next();
+  BindMarker next();
 
-    default BindMarker next(String hint) {
-        return next();
-    }
+  default BindMarker next(String hint) {
+    return next();
+  }
 }

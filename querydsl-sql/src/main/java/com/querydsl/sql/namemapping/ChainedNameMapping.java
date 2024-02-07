@@ -14,49 +14,47 @@
 package com.querydsl.sql.namemapping;
 
 import com.querydsl.sql.SchemaAndTable;
-
 import java.util.Optional;
 
 /**
- * A {@link NameMapping} implementation that accepts zero or more
- * {@link NameMapping}s and returns the first non-null mapping result.
+ * A {@link NameMapping} implementation that accepts zero or more {@link NameMapping}s and returns
+ * the first non-null mapping result.
  */
 public class ChainedNameMapping implements NameMapping {
 
-    private NameMapping[] nameMappings;
+  private NameMapping[] nameMappings;
 
-    public ChainedNameMapping(NameMapping... nameMappings) {
-        if (nameMappings == null) {
-            throw new NullPointerException("Name mapping array must not be null");
-        }
-        for (NameMapping nameMapping : nameMappings) {
-            if (nameMapping == null) {
-                throw new NullPointerException("Name mapping array must not contain null element");
-            }
-        }
-        this.nameMappings = nameMappings.clone();
+  public ChainedNameMapping(NameMapping... nameMappings) {
+    if (nameMappings == null) {
+      throw new NullPointerException("Name mapping array must not be null");
     }
-
-    @Override
-    public Optional<String> getColumnOverride(SchemaAndTable key, String column) {
-        for (NameMapping nameMapping : nameMappings) {
-            Optional<String> overriddenColumnName = nameMapping.getColumnOverride(key, column);
-            if (overriddenColumnName.isPresent()) {
-                return overriddenColumnName;
-            }
-        }
-        return Optional.empty();
+    for (NameMapping nameMapping : nameMappings) {
+      if (nameMapping == null) {
+        throw new NullPointerException("Name mapping array must not contain null element");
+      }
     }
+    this.nameMappings = nameMappings.clone();
+  }
 
-    @Override
-    public Optional<SchemaAndTable> getOverride(SchemaAndTable key) {
-        for (NameMapping nameMapping : nameMappings) {
-            Optional<SchemaAndTable> overridden = nameMapping.getOverride(key);
-            if (overridden.isPresent()) {
-                return overridden;
-            }
-        }
-        return Optional.empty();
+  @Override
+  public Optional<String> getColumnOverride(SchemaAndTable key, String column) {
+    for (NameMapping nameMapping : nameMappings) {
+      Optional<String> overriddenColumnName = nameMapping.getColumnOverride(key, column);
+      if (overriddenColumnName.isPresent()) {
+        return overriddenColumnName;
+      }
     }
+    return Optional.empty();
+  }
 
+  @Override
+  public Optional<SchemaAndTable> getOverride(SchemaAndTable key) {
+    for (NameMapping nameMapping : nameMappings) {
+      Optional<SchemaAndTable> overridden = nameMapping.getOverride(key);
+      if (overridden.isPresent()) {
+        return overridden;
+      }
+    }
+    return Optional.empty();
+  }
 }

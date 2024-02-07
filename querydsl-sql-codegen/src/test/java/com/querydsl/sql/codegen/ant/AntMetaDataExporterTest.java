@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.junit.BeforeClass;
@@ -28,86 +27,85 @@ import org.junit.Test;
 
 public class AntMetaDataExporterTest {
 
-    private static final String url = "jdbc:h2:./target/dbs/h2_AntMetaDataExporterTest";
+  private static final String url = "jdbc:h2:./target/dbs/h2_AntMetaDataExporterTest";
 
-    @BeforeClass
-    public static void setUp() throws SQLException {
-        try (Connection conn = DriverManager.getConnection(url, "sa", "")) {
-            try (Statement stmt = conn.createStatement()) {
-                stmt.execute("drop table test if exists");
-                stmt.execute("create table test (id int)");
-            }
-        }
+  @BeforeClass
+  public static void setUp() throws SQLException {
+    try (Connection conn = DriverManager.getConnection(url, "sa", "")) {
+      try (Statement stmt = conn.createStatement()) {
+        stmt.execute("drop table test if exists");
+        stmt.execute("create table test (id int)");
+      }
     }
+  }
 
-    @Test
-    public void execute() {
-        AntMetaDataExporter exporter = new AntMetaDataExporter();
-        exporter.setJdbcDriver("org.h2.Driver");
-        exporter.setJdbcUser("sa");
-        exporter.setJdbcUrl(url);
-        exporter.setPackageName("test");
-        exporter.setTargetFolder("target/AntMetaDataExporterTest");
-        exporter.execute();
+  @Test
+  public void execute() {
+    AntMetaDataExporter exporter = new AntMetaDataExporter();
+    exporter.setJdbcDriver("org.h2.Driver");
+    exporter.setJdbcUser("sa");
+    exporter.setJdbcUrl(url);
+    exporter.setPackageName("test");
+    exporter.setTargetFolder("target/AntMetaDataExporterTest");
+    exporter.execute();
 
-        assertTrue(new File("target/AntMetaDataExporterTest").exists());
-        assertTrue(new File("target/AntMetaDataExporterTest/test/QTest.java").exists());
-    }
+    assertTrue(new File("target/AntMetaDataExporterTest").exists());
+    assertTrue(new File("target/AntMetaDataExporterTest/test/QTest.java").exists());
+  }
 
-    @Test
-    public void execute_with_beans() {
-        AntMetaDataExporter exporter = new AntMetaDataExporter();
-        exporter.setJdbcDriver("org.h2.Driver");
-        exporter.setJdbcUser("sa");
-        exporter.setJdbcUrl(url);
-        exporter.setPackageName("test");
-        exporter.setTargetFolder("target/AntMetaDataExporterTest2");
-        exporter.setExportBeans(true);
-        exporter.setNamePrefix("Q");
-        exporter.setNameSuffix("");
-        exporter.setBeanPrefix("");
-        exporter.setBeanSuffix("Bean");
-        exporter.execute();
+  @Test
+  public void execute_with_beans() {
+    AntMetaDataExporter exporter = new AntMetaDataExporter();
+    exporter.setJdbcDriver("org.h2.Driver");
+    exporter.setJdbcUser("sa");
+    exporter.setJdbcUrl(url);
+    exporter.setPackageName("test");
+    exporter.setTargetFolder("target/AntMetaDataExporterTest2");
+    exporter.setExportBeans(true);
+    exporter.setNamePrefix("Q");
+    exporter.setNameSuffix("");
+    exporter.setBeanPrefix("");
+    exporter.setBeanSuffix("Bean");
+    exporter.execute();
 
-        assertTrue(new File("target/AntMetaDataExporterTest2").exists());
-        assertTrue(new File("target/AntMetaDataExporterTest2/test/QTest.java").exists());
-        assertTrue(new File("target/AntMetaDataExporterTest2/test/TestBean.java").exists());
-    }
+    assertTrue(new File("target/AntMetaDataExporterTest2").exists());
+    assertTrue(new File("target/AntMetaDataExporterTest2/test/QTest.java").exists());
+    assertTrue(new File("target/AntMetaDataExporterTest2/test/TestBean.java").exists());
+  }
 
+  @Test
+  public void execute_with_import() {
+    AntMetaDataExporter exporter = new AntMetaDataExporter();
+    exporter.setJdbcDriver("org.h2.Driver");
+    exporter.setJdbcUser("sa");
+    exporter.setJdbcUrl(url);
+    exporter.setPackageName("test");
+    exporter.setTargetFolder("target/AntMetaDataExporterTest3");
+    exporter.setExportBeans(true);
+    exporter.setNamePrefix("Q");
+    exporter.setNameSuffix("");
+    exporter.setBeanPrefix("");
+    exporter.setBeanSuffix("Bean");
+    exporter.setImports(new String[] {"com.pck1", "com.pck2", "com.Q1", "com.Q2"});
+    exporter.execute();
 
-    @Test
-    public void execute_with_import() {
-        AntMetaDataExporter exporter = new AntMetaDataExporter();
-        exporter.setJdbcDriver("org.h2.Driver");
-        exporter.setJdbcUser("sa");
-        exporter.setJdbcUrl(url);
-        exporter.setPackageName("test");
-        exporter.setTargetFolder("target/AntMetaDataExporterTest3");
-        exporter.setExportBeans(true);
-        exporter.setNamePrefix("Q");
-        exporter.setNameSuffix("");
-        exporter.setBeanPrefix("");
-        exporter.setBeanSuffix("Bean");
-        exporter.setImports(new String[]{"com.pck1" , "com.pck2" , "com.Q1" , "com.Q2"});
-        exporter.execute();
+    assertTrue(new File("target/AntMetaDataExporterTest3").exists());
+    assertTrue(new File("target/AntMetaDataExporterTest3/test/QTest.java").exists());
+    assertTrue(new File("target/AntMetaDataExporterTest3/test/TestBean.java").exists());
+  }
 
-        assertTrue(new File("target/AntMetaDataExporterTest3").exists());
-        assertTrue(new File("target/AntMetaDataExporterTest3/test/QTest.java").exists());
-        assertTrue(new File("target/AntMetaDataExporterTest3/test/TestBean.java").exists());
-    }
+  @Test
+  public void execute_inside_ant() {
+    File buildFile = new File(getClass().getResource("/build.xml").getFile());
+    Project p = new Project();
+    p.setUserProperty("ant.file", buildFile.getAbsolutePath());
+    p.init();
+    ProjectHelper helper = ProjectHelper.getProjectHelper();
+    p.addReference("ant.projectHelper", helper);
+    helper.parse(p, buildFile);
+    p.executeTarget(p.getDefaultTarget());
 
-    @Test
-    public void execute_inside_ant() {
-        File buildFile = new File(getClass().getResource("/build.xml").getFile());
-        Project p = new Project();
-        p.setUserProperty("ant.file", buildFile.getAbsolutePath());
-        p.init();
-        ProjectHelper helper = ProjectHelper.getProjectHelper();
-        p.addReference("ant.projectHelper", helper);
-        helper.parse(p, buildFile);
-        p.executeTarget(p.getDefaultTarget());
-
-        assertTrue(new File("target/AntMetaDataExporterTest4").exists());
-        assertTrue(new File("target/AntMetaDataExporterTest4/test/QTest.java").exists());
-    }
+    assertTrue(new File("target/AntMetaDataExporterTest4").exists());
+    assertTrue(new File("target/AntMetaDataExporterTest4/test/QTest.java").exists());
+  }
 }

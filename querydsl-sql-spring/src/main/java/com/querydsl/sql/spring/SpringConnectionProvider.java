@@ -15,37 +15,34 @@ package com.querydsl.sql.spring;
 
 import java.sql.Connection;
 import java.util.function.Supplier;
-
 import javax.sql.DataSource;
-
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
 /**
- * {@code SpringConnectionProvider} is a Provider implementation which provides a transactionally bound connection
+ * {@code SpringConnectionProvider} is a Provider implementation which provides a transactionally
+ * bound connection
  *
- * <p>Usage example</p>
- * <pre>
- * {@code
+ * <p>Usage example
+ *
+ * <pre>{@code
  * Provider<Connection> provider = new SpringConnectionProvider(dataSource());
  * SQLQueryFactory queryFactory = SQLQueryFactory(configuration, provider);
- * }
- * </pre>
+ * }</pre>
  */
 public class SpringConnectionProvider implements Supplier<Connection> {
 
-    private final DataSource dataSource;
+  private final DataSource dataSource;
 
-    public SpringConnectionProvider(DataSource dataSource) {
-        this.dataSource = dataSource;
+  public SpringConnectionProvider(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
+
+  @Override
+  public Connection get() {
+    Connection connection = DataSourceUtils.getConnection(dataSource);
+    if (!DataSourceUtils.isConnectionTransactional(connection, dataSource)) {
+      throw new IllegalStateException("Connection is not transactional");
     }
-
-    @Override
-    public Connection get() {
-        Connection connection = DataSourceUtils.getConnection(dataSource);
-        if (!DataSourceUtils.isConnectionTransactional(connection, dataSource)) {
-            throw new IllegalStateException("Connection is not transactional");
-        }
-        return connection;
-    }
-
+    return connection;
+  }
 }

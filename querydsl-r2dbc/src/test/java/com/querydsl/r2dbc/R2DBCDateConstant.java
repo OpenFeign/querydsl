@@ -18,72 +18,71 @@ import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.NumberExpression;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
 
 /**
  * @author mc_fish
  */
-public final class R2DBCDateConstant<D extends LocalDate> extends LocalDateExpression<D> implements Constant<D> {
+public final class R2DBCDateConstant<D extends LocalDate> extends LocalDateExpression<D>
+    implements Constant<D> {
 
-    private static final long serialVersionUID = -5745611667058255826L;
+  private static final long serialVersionUID = -5745611667058255826L;
 
-    public static <D extends LocalDate> LocalDateExpression<D> create(D date) {
-        return new R2DBCDateConstant<D>(date);
-    }
+  public static <D extends LocalDate> LocalDateExpression<D> create(D date) {
+    return new R2DBCDateConstant<D>(date);
+  }
 
-    private final D date;
+  private final D date;
 
-    @SuppressWarnings("unchecked")
-    public R2DBCDateConstant(D date) {
-        super(ConstantImpl.create(date));
-        this.date = (D) date;
-    }
+  @SuppressWarnings("unchecked")
+  public R2DBCDateConstant(D date) {
+    super(ConstantImpl.create(date));
+    this.date = (D) date;
+  }
 
-    @Override
-    public <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
-    }
+  @Override
+  public <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(this, context);
+  }
 
-    @Override
-    public NumberExpression<Integer> dayOfMonth() {
-        return NumberConstant.create(date.get(ChronoField.DAY_OF_MONTH));
-    }
+  @Override
+  public NumberExpression<Integer> dayOfMonth() {
+    return NumberConstant.create(date.get(ChronoField.DAY_OF_MONTH));
+  }
 
-    @Override
-    public NumberExpression<Integer> month() {
-        return NumberConstant.create(date.get(ChronoField.MONTH_OF_YEAR));
-    }
+  @Override
+  public NumberExpression<Integer> month() {
+    return NumberConstant.create(date.get(ChronoField.MONTH_OF_YEAR));
+  }
 
-    @Override
-    public NumberExpression<Integer> year() {
-        return NumberConstant.create(date.get(ChronoField.YEAR));
-    }
+  @Override
+  public NumberExpression<Integer> year() {
+    return NumberConstant.create(date.get(ChronoField.YEAR));
+  }
 
-    @Override
-    public NumberExpression<Integer> yearMonth() {
-        return NumberConstant.create(date.get(ChronoField.PROLEPTIC_MONTH));
-    }
+  @Override
+  public NumberExpression<Integer> yearMonth() {
+    return NumberConstant.create(date.get(ChronoField.PROLEPTIC_MONTH));
+  }
 
-    @Override
-    public NumberExpression<Integer> dayOfWeek() {
-        return NumberConstant.create(date.get(ChronoField.DAY_OF_WEEK));
-    }
+  @Override
+  public NumberExpression<Integer> dayOfWeek() {
+    return NumberConstant.create(date.get(ChronoField.DAY_OF_WEEK));
+  }
 
-    @Override
-    public NumberExpression<Integer> dayOfYear() {
-        return NumberConstant.create(date.get(ChronoField.DAY_OF_YEAR));
-    }
+  @Override
+  public NumberExpression<Integer> dayOfYear() {
+    return NumberConstant.create(date.get(ChronoField.DAY_OF_YEAR));
+  }
 
-    @Override
-    public NumberExpression<Integer> week() {
-        return NumberConstant.create(date.get(ChronoField.ALIGNED_WEEK_OF_YEAR));
-    }
+  @Override
+  public NumberExpression<Integer> week() {
+    return NumberConstant.create(date.get(ChronoField.ALIGNED_WEEK_OF_YEAR));
+  }
 
-    @Override
-    public D getConstant() {
-        return date;
-    }
-
+  @Override
+  public D getConstant() {
+    return date;
+  }
 }

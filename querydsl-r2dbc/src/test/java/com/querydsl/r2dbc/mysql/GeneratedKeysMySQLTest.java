@@ -13,57 +13,62 @@
  */
 package com.querydsl.r2dbc.mysql;
 
+import static org.junit.Assert.assertEquals;
+
 import com.querydsl.core.testutil.MySQL;
 import com.querydsl.r2dbc.Connections;
 import com.querydsl.r2dbc.H2Templates;
 import com.querydsl.r2dbc.QGeneratedKeysEntity;
 import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import io.r2dbc.spi.Connection;
+import java.util.Collection;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import reactor.core.publisher.Mono;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
-
 @Category(MySQL.class)
 public class GeneratedKeysMySQLTest {
 
-    private Connection conn;
+  private Connection conn;
 
-    @Before
-    public void setUp() {
-        conn = Connections.getMySQL().getConnection().block();
-    }
+  @Before
+  public void setUp() {
+    conn = Connections.getMySQL().getConnection().block();
+  }
 
-    @Test
-    @Ignore("currently not supported")
-    public void test() {
-        Mono.from(conn.createStatement("drop table if exists GENERATED_KEYS").execute()).block();
-        Mono.from(conn.createStatement("create table GENERATED_KEYS(" +
-                "ID int AUTO_INCREMENT PRIMARY KEY, " +
-                "NAME varchar(30))").execute()).block();
+  @Test
+  @Ignore("currently not supported")
+  public void test() {
+    Mono.from(conn.createStatement("drop table if exists GENERATED_KEYS").execute()).block();
+    Mono.from(
+            conn.createStatement(
+                    "create table GENERATED_KEYS("
+                        + "ID int AUTO_INCREMENT PRIMARY KEY, "
+                        + "NAME varchar(30))")
+                .execute())
+        .block();
 
-        QGeneratedKeysEntity entity = new QGeneratedKeysEntity("entity");
-        R2DBCInsertClause insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
-        Collection<Integer> key = insertClause.set(entity.name, "Hello").executeWithKeys(entity.id).collectList().block();
+    QGeneratedKeysEntity entity = new QGeneratedKeysEntity("entity");
+    R2DBCInsertClause insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
+    Collection<Integer> key =
+        insertClause.set(entity.name, "Hello").executeWithKeys(entity.id).collectList().block();
 
-        assertEquals(1, key.size());
+    assertEquals(1, key.size());
 
-        insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
-        key = insertClause.set(entity.name, "World").executeWithKeys(entity.id).collectList().block();
-        assertEquals(2, key.size());
+    insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
+    key = insertClause.set(entity.name, "World").executeWithKeys(entity.id).collectList().block();
+    assertEquals(2, key.size());
 
-        insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
-        assertEquals(3, (long) insertClause.set(entity.name, "World").executeWithKey(entity.id).block());
+    insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
+    assertEquals(
+        3, (long) insertClause.set(entity.name, "World").executeWithKey(entity.id).block());
 
-        insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
-        assertEquals(Collections.singletonList(4), insertClause.set(entity.name, "World").executeWithKeys(entity.id));
-
-    }
-
+    insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
+    assertEquals(
+        Collections.singletonList(4),
+        insertClause.set(entity.name, "World").executeWithKeys(entity.id));
+  }
 }

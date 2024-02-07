@@ -14,7 +14,6 @@
 package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Row;
-
 import java.sql.Types;
 
 /**
@@ -25,36 +24,35 @@ import java.sql.Types;
  */
 public class EnumByNameType<T extends Enum<T>> extends AbstractType<T, String> {
 
-    private final Class<T> type;
+  private final Class<T> type;
 
-    public EnumByNameType(Class<T> type) {
-        this(Types.VARCHAR, type);
-    }
+  public EnumByNameType(Class<T> type) {
+    this(Types.VARCHAR, type);
+  }
 
-    public EnumByNameType(int jdbcType, Class<T> type) {
-        super(jdbcType);
-        this.type = type;
-    }
+  public EnumByNameType(int jdbcType, Class<T> type) {
+    super(jdbcType);
+    this.type = type;
+  }
 
-    @Override
-    public Class<T> getReturnedClass() {
-        return type;
-    }
+  @Override
+  public Class<T> getReturnedClass() {
+    return type;
+  }
 
-    @Override
-    public T getValue(Row row, int startIndex) {
-        String val = row.get(startIndex, String.class);
-        return val != null ? Enum.valueOf(type, val) : null;
-    }
+  @Override
+  public T getValue(Row row, int startIndex) {
+    String val = row.get(startIndex, String.class);
+    return val != null ? Enum.valueOf(type, val) : null;
+  }
 
-    @Override
-    protected String toDbValue(T value) {
-        return value.name();
-    }
+  @Override
+  protected String toDbValue(T value) {
+    return value.name();
+  }
 
-    @Override
-    public Class<String> getDatabaseClass() {
-        return String.class;
-    }
-
+  @Override
+  public Class<String> getDatabaseClass() {
+    return String.class;
+  }
 }

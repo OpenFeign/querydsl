@@ -17,22 +17,21 @@ import com.querydsl.core.annotations.QueryProjection;
 
 public class IdName {
 
-    private int id;
+  private int id;
 
-    private String name;
+  private String name;
 
-    @QueryProjection
-    public IdName(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+  @QueryProjection
+  public IdName(int id, String name) {
+    this.id = id;
+    this.name = name;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
-
+  public String getName() {
+    return name;
+  }
 }

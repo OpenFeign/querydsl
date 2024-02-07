@@ -13,79 +13,79 @@
  */
 package com.querydsl.jpa;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.ReplaceVisitor;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
+import java.util.HashMap;
+import java.util.Map;
+import org.jetbrains.annotations.Nullable;
 
 class JPAListAccessVisitor extends ReplaceVisitor<Void> {
 
-    private final QueryMetadata metadata;
+  private final QueryMetadata metadata;
 
-    private final Map<Expression<?>, Path<?>> aliases;
+  private final Map<Expression<?>, Path<?>> aliases;
 
-    private final Map<Path<?>, Path<?>> replacements = new HashMap<>();
+  private final Map<Path<?>, Path<?>> replacements = new HashMap<>();
 
-    public JPAListAccessVisitor(QueryMetadata metadata, Map<Expression<?>, Path<?>> aliases) {
-        this.metadata = metadata;
-        this.aliases = aliases;
+  public JPAListAccessVisitor(QueryMetadata metadata, Map<Expression<?>, Path<?>> aliases) {
+    this.metadata = metadata;
+    this.aliases = aliases;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Expression<?> visit(Path<?> expr, @Nullable Void context) {
+    expr = (Path<?>) super.visit(expr, null);
+    PathMetadata pathMetadata = expr.getMetadata();
+    if (pathMetadata.getPathType() == PathType.LISTVALUE
+        || pathMetadata.getPathType() == PathType.LISTVALUE_CONSTANT) {
+      Path<?> replacement = replacements.get(expr);
+      if (replacement == null) {
+        // join parent as path123 on index(path123) = ...
+        Path parent = shorten(pathMetadata.getParent(), true);
+        replacement =
+            ExpressionUtils.path(
+                expr.getType(), ExpressionUtils.createRootVariable(parent, replacements.size()));
+        metadata.addJoin(JoinType.LEFTJOIN, ExpressionUtils.as(parent, replacement));
+        metadata.addJoinCondition(
+            ExpressionUtils.eq(
+                (Expression) Expressions.operation(Integer.class, JPQLOps.INDEX, replacement),
+                ExpressionUtils.toExpression(pathMetadata.getElement())));
+        replacements.put(expr, replacement);
+      }
+      return replacement;
+    } else {
+      return super.visit(expr, context);
     }
+  }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public Expression<?> visit(Path<?> expr, @Nullable Void context) {
-        expr = (Path<?>) super.visit(expr, null);
-        PathMetadata pathMetadata = expr.getMetadata();
-        if (pathMetadata.getPathType() == PathType.LISTVALUE
-                || pathMetadata.getPathType() == PathType.LISTVALUE_CONSTANT) {
-            Path<?> replacement = replacements.get(expr);
-            if (replacement == null) {
-                // join parent as path123 on index(path123) = ...
-                Path parent = shorten(pathMetadata.getParent(), true);
-                replacement = ExpressionUtils.path(expr.getType(),
-                        ExpressionUtils.createRootVariable(parent, replacements.size()));
-                metadata.addJoin(JoinType.LEFTJOIN, ExpressionUtils.as(parent, replacement));
-                metadata.addJoinCondition(ExpressionUtils.eq(
-                        (Expression) Expressions.operation(Integer.class, JPQLOps.INDEX, replacement),
-                        ExpressionUtils.toExpression(pathMetadata.getElement())));
-                replacements.put(expr, replacement);
-            }
-            return replacement;
-        } else {
-            return super.visit(expr, context);
-        }
+  /** Shorten the parent path to a length of max 2 elements */
+  private Path<?> shorten(Path<?> path, boolean outer) {
+    if (aliases.containsKey(path)) {
+      return aliases.get(path);
+    } else if (path.getMetadata().isRoot()) {
+      return path;
+    } else if (path.getMetadata().getParent().getMetadata().isRoot() && outer) {
+      return path;
+    } else {
+      Class<?> type = JPAQueryMixin.getElementTypeOrType(path);
+      Path<?> parent = shorten(path.getMetadata().getParent(), false);
+      Path oldPath =
+          ExpressionUtils.path(
+              path.getType(),
+              new PathMetadata(
+                  parent, path.getMetadata().getElement(), path.getMetadata().getPathType()));
+      if (oldPath.getMetadata().getParent().getMetadata().isRoot() && outer) {
+        return oldPath;
+      } else {
+        Path newPath = ExpressionUtils.path(type, ExpressionUtils.createRootVariable(oldPath));
+        aliases.put(path, newPath);
+        metadata.addJoin(JoinType.LEFTJOIN, ExpressionUtils.as(oldPath, newPath));
+        return newPath;
+      }
     }
-
-    /**
-     * Shorten the parent path to a length of max 2 elements
-     */
-    private Path<?> shorten(Path<?> path, boolean outer) {
-        if (aliases.containsKey(path)) {
-            return aliases.get(path);
-        } else if (path.getMetadata().isRoot()) {
-            return path;
-        } else if (path.getMetadata().getParent().getMetadata().isRoot() && outer) {
-            return path;
-        } else {
-            Class<?> type = JPAQueryMixin.getElementTypeOrType(path);
-            Path<?> parent = shorten(path.getMetadata().getParent(), false);
-            Path oldPath = ExpressionUtils.path(path.getType(),
-                    new PathMetadata(parent, path.getMetadata().getElement(), path.getMetadata().getPathType()));
-            if (oldPath.getMetadata().getParent().getMetadata().isRoot() && outer) {
-                return oldPath;
-            } else {
-                Path newPath = ExpressionUtils.path(type, ExpressionUtils.createRootVariable(oldPath));
-                aliases.put(path, newPath);
-                metadata.addJoin(JoinType.LEFTJOIN, ExpressionUtils.as(oldPath, newPath));
-                return newPath;
-            }
-        }
-    }
-
+  }
 }

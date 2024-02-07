@@ -13,24 +13,22 @@
  */
 package com.querydsl.sql;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.types.Expression;
+import org.jetbrains.annotations.Nullable;
 
 public interface Projection {
 
-    @Nullable
-    <T> T get(Expression<T> expr);
+  @Nullable
+  <T> T get(Expression<T> expr);
 
-    @Nullable
-    <T> T get(int index, Class<T> type);
+  @Nullable
+  <T> T get(int index, Class<T> type);
 
-    @Nullable
-    <T> Expression<T> getExpr(Expression<T> expr);
+  @Nullable
+  <T> Expression<T> getExpr(Expression<T> expr);
 
-    @Nullable
-    <T> Expression<T> getExpr(int index, Class<T> type);
+  @Nullable
+  <T> Expression<T> getExpr(int index, Class<T> type);
 
-    Object[] toArray();
-
+  Object[] toArray();
 }

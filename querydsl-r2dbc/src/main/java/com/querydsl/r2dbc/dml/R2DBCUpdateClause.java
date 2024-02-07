@@ -20,19 +20,22 @@ import com.querydsl.sql.RelationalPath;
 import io.r2dbc.spi.Connection;
 
 /**
- * Defines an UPDATE clause.
- * If you need to subtype this, use {@link AbstractR2DBCUpdateClause} instead.
+ * Defines an UPDATE clause. If you need to subtype this, use {@link AbstractR2DBCUpdateClause}
+ * instead.
  */
 public class R2DBCUpdateClause extends AbstractR2DBCUpdateClause<R2DBCUpdateClause> {
-    public R2DBCUpdateClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
-        super(connection, new Configuration(templates), entity);
-    }
+  public R2DBCUpdateClause(
+      Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
+    super(connection, new Configuration(templates), entity);
+  }
 
-    public R2DBCUpdateClause(Connection connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-    }
+  public R2DBCUpdateClause(
+      Connection connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+  }
 
-    public R2DBCUpdateClause(R2DBCConnectionProvider connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-    }
+  public R2DBCUpdateClause(
+      R2DBCConnectionProvider connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+  }
 }

@@ -14,7 +14,6 @@
 package com.querydsl.sql.codegen.support;
 
 import java.lang.annotation.Annotation;
-
 import javax.validation.Payload;
 import javax.validation.constraints.NotNull;
 
@@ -22,29 +21,27 @@ import javax.validation.constraints.NotNull;
  * {@code NotNullImpl} is an implementation of the {@link NotNull} interface
  *
  * @author tiwe
- *
  */
 @SuppressWarnings("all")
 public class NotNullImpl implements NotNull {
 
-    @Override
-    public Class<?>[] groups() {
-        return new Class[0];
-    }
+  @Override
+  public Class<?>[] groups() {
+    return new Class[0];
+  }
 
-    @Override
-    public String message() {
-        return "{javax.validation.constraints.NotNull.message}";
-    }
+  @Override
+  public String message() {
+    return "{javax.validation.constraints.NotNull.message}";
+  }
 
-    @Override
-    public Class<? extends Annotation> annotationType() {
-        return NotNull.class;
-    }
+  @Override
+  public Class<? extends Annotation> annotationType() {
+    return NotNull.class;
+  }
 
-    @Override
-    public Class<? extends Payload>[] payload() {
-        return new Class[0];
-    }
-
+  @Override
+  public Class<? extends Payload>[] payload() {
+    return new Class[0];
+  }
 }

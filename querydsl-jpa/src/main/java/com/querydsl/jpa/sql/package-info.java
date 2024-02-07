@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Native queries for JPA
- */
+/** Native queries for JPA */
 package com.querydsl.jpa.sql;

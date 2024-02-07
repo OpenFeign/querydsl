@@ -18,16 +18,13 @@ import com.querydsl.core.annotations.QueryEmbeddable;
 @QueryEmbeddable
 public class ExampleEmbeddable {
 
-    private String property;
+  private String property;
 
-    public String getProperty() {
-        return property;
-    }
+  public String getProperty() {
+    return property;
+  }
 
-    public void setProperty(String property) {
-        this.property = property;
-    }
-
-
-
+  public void setProperty(String property) {
+    this.property = property;
+  }
 }

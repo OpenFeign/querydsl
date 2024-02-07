@@ -15,6 +15,4 @@ package com.querydsl.r2dbc;
 
 import com.querydsl.r2dbc.types.StringType;
 
-public class EncryptedString extends StringType {
-
-}
+public class EncryptedString extends StringType {}

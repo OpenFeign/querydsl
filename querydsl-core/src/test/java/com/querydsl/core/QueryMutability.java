@@ -13,53 +13,54 @@
  */
 package com.querydsl.core;
 
+import com.querydsl.core.types.Expression;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import com.querydsl.core.types.Expression;
-
 public final class QueryMutability {
 
-    private final FetchableQuery<?,?> query;
+  private final FetchableQuery<?, ?> query;
 
-    public QueryMutability(FetchableQuery<?,?> query) throws SecurityException,
-            NoSuchMethodException, IllegalArgumentException,
-            IllegalAccessException, InvocationTargetException {
-        this.query = query;
-    }
+  public QueryMutability(FetchableQuery<?, ?> query)
+      throws SecurityException,
+          NoSuchMethodException,
+          IllegalArgumentException,
+          IllegalAccessException,
+          InvocationTargetException {
+    this.query = query;
+  }
 
-    public void test(Expression<?> p1, Expression<?> p2) throws IOException {
-        System.err.println("fetchCount");
-        query.select(p1).fetchCount();
+  public void test(Expression<?> p1, Expression<?> p2) throws IOException {
+    System.err.println("fetchCount");
+    query.select(p1).fetchCount();
 
-        System.err.println("countDistinct");
-        query.select(p1).distinct().fetchCount();
+    System.err.println("countDistinct");
+    query.select(p1).distinct().fetchCount();
 
-        System.err.println("iterate");
-        query.select(p1).iterate();
-        query.select(p1, p2).iterate();
+    System.err.println("iterate");
+    query.select(p1).iterate();
+    query.select(p1, p2).iterate();
 
-        System.err.println("iterateDistinct");
-        query.select(p1).distinct().iterate();
-        query.select(p1, p2).distinct().iterate();
+    System.err.println("iterateDistinct");
+    query.select(p1).distinct().iterate();
+    query.select(p1, p2).distinct().iterate();
 
-        System.err.println("list");
-        query.select(p1).fetch();
-        query.select(p1, p2).fetch();
+    System.err.println("list");
+    query.select(p1).fetch();
+    query.select(p1, p2).fetch();
 
-        System.err.println("distinct fetch");
-        query.select(p1).distinct().fetch();
-        query.select(p2).distinct().fetch();
+    System.err.println("distinct fetch");
+    query.select(p1).distinct().fetch();
+    query.select(p2).distinct().fetch();
 
-        System.err.println("fetchResults");
-        query.select(p1).fetchResults();
+    System.err.println("fetchResults");
+    query.select(p1).fetchResults();
 
-        System.err.println("distinct fetchResults");
-        query.select(p1).distinct().fetchResults();
+    System.err.println("distinct fetchResults");
+    query.select(p1).distinct().fetchResults();
 
-        System.err.println("fetchOne");
-        query.select(p1).fetchOne();
-        query.select(p1,p2).fetchOne();
-    }
-
+    System.err.println("fetchOne");
+    query.select(p1).fetchOne();
+    query.select(p1, p2).fetchOne();
+  }
 }

@@ -15,28 +15,24 @@ package com.querydsl.jpa;
 
 import com.querydsl.core.types.Ops;
 
-/**
- * {@code BatooTemplates} extends {@link JPQLTemplates} with Batoo specific extensions
- *
- */
+/** {@code BatooTemplates} extends {@link JPQLTemplates} with Batoo specific extensions */
 public class BatooTemplates extends JPQLTemplates {
 
-    public static final BatooTemplates DEFAULT = new BatooTemplates();
+  public static final BatooTemplates DEFAULT = new BatooTemplates();
 
-    public BatooTemplates() {
-        this(DEFAULT_ESCAPE);
-    }
+  public BatooTemplates() {
+    this(DEFAULT_ESCAPE);
+  }
 
-    public BatooTemplates(char escape) {
-        super(escape);
-        add(JPQLOps.CAST, "cast({0} as {1s})");
-        add(Ops.STRING_CAST, "cast({0} as varchar)");
-        add(Ops.NUMCAST, "cast({0} as {1s})");
-    }
+  public BatooTemplates(char escape) {
+    super(escape);
+    add(JPQLOps.CAST, "cast({0} as {1s})");
+    add(Ops.STRING_CAST, "cast({0} as varchar)");
+    add(Ops.NUMCAST, "cast({0} as {1s})");
+  }
 
-    @Override
-    public boolean isPathInEntitiesSupported() {
-        return false;
-    }
-
+  @Override
+  public boolean isPathInEntitiesSupported() {
+    return false;
+  }
 }

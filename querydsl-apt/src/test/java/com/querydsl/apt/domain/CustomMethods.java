@@ -15,7 +15,5 @@ package com.querydsl.apt.domain;
 
 public class CustomMethods {
 
-    public static class Point {
-
-    }
+  public static class Point {}
 }

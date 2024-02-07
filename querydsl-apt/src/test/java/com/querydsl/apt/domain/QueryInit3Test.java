@@ -15,33 +15,31 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
+import java.util.List;
+import java.util.Map;
+import org.junit.Test;
 
 public class QueryInit3Test {
 
-    @QueryEntity
-    public static class Entity {
+  @QueryEntity
+  public static class Entity {
 
-        @QueryInit("*.*")
-        Entity prop1;
+    @QueryInit("*.*")
+    Entity prop1;
 
-        @QueryInit("*")
-        Entity prop2;
+    @QueryInit("*")
+    Entity prop2;
 
-        List<Entity> entityList;
+    List<Entity> entityList;
 
-        Map<String,Entity> entityMap;
-    }
+    Map<String, Entity> entityMap;
+  }
 
-    @Test
-    public void test() {
-        assertEquals("entity.prop1.prop2.prop1", QQueryInit3Test_Entity.entity.prop1.prop2.prop1.toString());
-    }
-
+  @Test
+  public void test() {
+    assertEquals(
+        "entity.prop1.prop2.prop1", QQueryInit3Test_Entity.entity.prop1.prop2.prop1.toString());
+  }
 }

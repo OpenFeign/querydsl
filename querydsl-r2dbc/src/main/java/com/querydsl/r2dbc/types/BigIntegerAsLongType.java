@@ -16,7 +16,6 @@ package com.querydsl.r2dbc.types;
 import com.querydsl.r2dbc.binding.BindMarker;
 import com.querydsl.r2dbc.binding.BindTarget;
 import io.r2dbc.spi.Row;
-
 import java.math.BigInteger;
 import java.sql.Types;
 
@@ -27,30 +26,29 @@ import java.sql.Types;
  */
 public class BigIntegerAsLongType extends AbstractType<BigInteger, BigInteger> {
 
-    public static final BigIntegerAsLongType DEFAULT = new BigIntegerAsLongType();
+  public static final BigIntegerAsLongType DEFAULT = new BigIntegerAsLongType();
 
-    public BigIntegerAsLongType() {
-        super(Types.NUMERIC);
-    }
+  public BigIntegerAsLongType() {
+    super(Types.NUMERIC);
+  }
 
-    public BigIntegerAsLongType(int type) {
-        super(type);
-    }
+  public BigIntegerAsLongType(int type) {
+    super(type);
+  }
 
-    @Override
-    public BigInteger getValue(Row row, int startIndex) {
-        Long val = row.get(startIndex, Long.class);
-        return val == null ? null : BigInteger.valueOf(val);
-    }
+  @Override
+  public BigInteger getValue(Row row, int startIndex) {
+    Long val = row.get(startIndex, Long.class);
+    return val == null ? null : BigInteger.valueOf(val);
+  }
 
-    @Override
-    public Class<BigInteger> getReturnedClass() {
-        return BigInteger.class;
-    }
+  @Override
+  public Class<BigInteger> getReturnedClass() {
+    return BigInteger.class;
+  }
 
-    @Override
-    public void setValue(BindMarker bindMarker, BindTarget bindTarget, BigInteger value) {
-        bindMarker.bind(bindTarget, value.longValue());
-    }
-
+  @Override
+  public void setValue(BindMarker bindMarker, BindTarget bindTarget, BigInteger value) {
+    bindMarker.bind(bindTarget, value.longValue());
+  }
 }

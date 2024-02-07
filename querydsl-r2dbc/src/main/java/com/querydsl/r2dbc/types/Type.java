@@ -20,8 +20,8 @@ import io.r2dbc.spi.Row;
 /**
  * Defines the de/serialization of a typed Java object from a Result or to a Statement
  *
- * <p>getValue(Result, int) is used for extraction and setValue(Statement, int, T) is
- * used for population</p>
+ * <p>getValue(Result, int) is used for extraction and setValue(Statement, int, T) is used for
+ * population
  *
  * @param <IN>
  * @param <OUT>
@@ -29,51 +29,50 @@ import io.r2dbc.spi.Row;
  */
 public interface Type<IN, OUT> {
 
-    /**
-     * Get the SQL supported SQL types
-     *
-     * @return sql types
-     */
-    int[] getSQLTypes();
+  /**
+   * Get the SQL supported SQL types
+   *
+   * @return sql types
+   */
+  int[] getSQLTypes();
 
-    /**
-     * Get the returned type
-     *
-     * @return returned class
-     */
-    Class<IN> getReturnedClass();
+  /**
+   * Get the returned type
+   *
+   * @return returned class
+   */
+  Class<IN> getReturnedClass();
 
-    /**
-     * Get the database type
-     *
-     * @return database class
-     */
-    Class<OUT> getDatabaseClass();
+  /**
+   * Get the database type
+   *
+   * @return database class
+   */
+  Class<OUT> getDatabaseClass();
 
-    /**
-     * Get the literal representation
-     *
-     * @param value value
-     * @return literal representation
-     */
-    String getLiteral(IN value);
+  /**
+   * Get the literal representation
+   *
+   * @param value value
+   * @return literal representation
+   */
+  String getLiteral(IN value);
 
-    /**
-     * Get the object from the result set
-     *
-     * @param row        result set
-     * @param startIndex column index in result set
-     * @return value
-     */
-    IN getValue(Row row, int startIndex);
+  /**
+   * Get the object from the result set
+   *
+   * @param row result set
+   * @param startIndex column index in result set
+   * @return value
+   */
+  IN getValue(Row row, int startIndex);
 
-    /**
-     * Set the object to the statement
-     *
-     * @param bindMarker column index in statement
-     * @param bindTarget bindTarget
-     * @param value      value to be set
-     */
-    void setValue(BindMarker bindMarker, BindTarget bindTarget, IN value);
-
+  /**
+   * Set the object to the statement
+   *
+   * @param bindMarker column index in statement
+   * @param bindTarget bindTarget
+   * @param value value to be set
+   */
+  void setValue(BindMarker bindMarker, BindTarget bindTarget, IN value);
 }

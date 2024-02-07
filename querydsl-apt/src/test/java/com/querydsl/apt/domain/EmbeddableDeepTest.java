@@ -14,80 +14,70 @@
 package com.querydsl.apt.domain;
 
 import java.io.Serializable;
-
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
-
 import org.junit.Ignore;
 
 @Ignore
 @SuppressWarnings("serial")
 public class EmbeddableDeepTest {
 
-    public enum SomeType {
-        a, b;
-    }
+  public enum SomeType {
+    a,
+    b;
+  }
 
-    @MappedSuperclass
-    public abstract static class AValueObject implements Cloneable, Serializable {
+  @MappedSuperclass
+  public abstract static class AValueObject implements Cloneable, Serializable {}
 
-    }
+  @MappedSuperclass
+  public abstract static class AEntity extends AValueObject {}
 
-    @MappedSuperclass
-    public abstract static class AEntity extends AValueObject {
+  // JPA
 
-    }
+  @Entity
+  public static class A extends AEntity {
 
-    // JPA
+    @Embedded B b;
+  }
 
-    @Entity
-    public static class A extends AEntity {
+  @Embeddable
+  public static class B extends AValueObject {
 
-        @Embedded
-        B b;
+    @Embedded C c;
+  }
 
-    }
+  @Embeddable
+  public static class C extends AValueObject {
 
-    @Embeddable
-    public static class B extends AValueObject {
+    SomeType someType;
+  }
 
-        @Embedded
-        C c;
+  // plain
 
-    }
-
-    @Embeddable
-    public static class C extends AValueObject {
-
-        SomeType someType;
-
-    }
-
-    // plain
-
-//    @QueryEntity
-//    public class AA extends AValueObject {
-//
-//        @QueryEmbedded
-//        BB b;
-//
-//    }
-//
-//    @QueryEmbeddable
-//    public class BB extends AValueObject {
-//
-//        @QueryEmbedded
-//        CC c;
-//
-//    }
-//
-//    @QueryEmbeddable
-//    public class CC extends AValueObject {
-//
-//        SomeType someType;
-//
-//    }
+  //    @QueryEntity
+  //    public class AA extends AValueObject {
+  //
+  //        @QueryEmbedded
+  //        BB b;
+  //
+  //    }
+  //
+  //    @QueryEmbeddable
+  //    public class BB extends AValueObject {
+  //
+  //        @QueryEmbedded
+  //        CC c;
+  //
+  //    }
+  //
+  //    @QueryEmbeddable
+  //    public class CC extends AValueObject {
+  //
+  //        SomeType someType;
+  //
+  //    }
 
 }

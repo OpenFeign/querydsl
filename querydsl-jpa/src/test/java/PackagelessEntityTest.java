@@ -15,20 +15,18 @@
 import static com.querydsl.jpa.JPAExpressions.select;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPQLQuery;
-
+import org.junit.Test;
 
 public class PackagelessEntityTest {
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void packageLess_path() {
-        PathBuilder<PackagelessEntityTest> builder = new PathBuilder(PackagelessEntityTest.class,"entity");
-        JPQLQuery<?> query = select(builder).from(builder);
-        assertEquals("select entity\nfrom PackagelessEntityTest entity", query.toString());
-    }
-
+  @SuppressWarnings("unchecked")
+  @Test
+  public void packageLess_path() {
+    PathBuilder<PackagelessEntityTest> builder =
+        new PathBuilder(PackagelessEntityTest.class, "entity");
+    JPQLQuery<?> query = select(builder).from(builder);
+    assertEquals("select entity\nfrom PackagelessEntityTest entity", query.toString());
+  }
 }

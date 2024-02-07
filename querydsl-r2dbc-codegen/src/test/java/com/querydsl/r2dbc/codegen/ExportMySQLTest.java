@@ -13,18 +13,16 @@
  */
 package com.querydsl.r2dbc.codegen;
 
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
-
 import com.querydsl.core.testutil.MySQL;
 import com.querydsl.sql.Connections;
+import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 
 @Category(MySQL.class)
 public class ExportMySQLTest extends ExportBaseTest {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        Connections.initMySQL();
-    }
-
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    Connections.initMySQL();
+  }
 }

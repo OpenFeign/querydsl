@@ -22,11 +22,10 @@ import com.querydsl.r2dbc.Configuration;
  */
 public interface Mapping {
 
-    /**
-     * Apply the customization to the passed in configuration.
-     *
-     * @param configuration the configuration to apply the customization to
-     */
-    void apply(Configuration configuration);
-
+  /**
+   * Apply the customization to the passed in configuration.
+   *
+   * @param configuration the configuration to apply the customization to
+   */
+  void apply(Configuration configuration);
 }

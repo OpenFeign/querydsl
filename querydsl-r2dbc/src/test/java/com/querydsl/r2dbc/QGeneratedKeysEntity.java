@@ -19,22 +19,21 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.RelationalPathBase;
 
-//@Table("GENERATED_KEYS")
+// @Table("GENERATED_KEYS")
 public class QGeneratedKeysEntity extends RelationalPathBase<QGeneratedKeysEntity> {
 
-    private static final long serialVersionUID = 2002306246819687158L;
+  private static final long serialVersionUID = 2002306246819687158L;
 
-    public final NumberPath<Integer> id = createNumber("id", Integer.class);
+  public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
-    public final StringPath name = createString("name");
+  public final StringPath name = createString("name");
 
-    public QGeneratedKeysEntity(String name) {
-        super(QGeneratedKeysEntity.class, PathMetadataFactory.forVariable(name), "", "GENERATED_KEYS");
-    }
+  public QGeneratedKeysEntity(String name) {
+    super(QGeneratedKeysEntity.class, PathMetadataFactory.forVariable(name), "", "GENERATED_KEYS");
+  }
 
-    protected void addMetadata() {
-        addMetadata(id, ColumnMetadata.named("ID"));
-        addMetadata(name, ColumnMetadata.named("NAME"));
-    }
-
+  protected void addMetadata() {
+    addMetadata(id, ColumnMetadata.named("ID"));
+    addMetadata(name, ColumnMetadata.named("NAME"));
+  }
 }

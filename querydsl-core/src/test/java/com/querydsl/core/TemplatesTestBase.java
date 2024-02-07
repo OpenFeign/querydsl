@@ -17,46 +17,46 @@ package com.querydsl.core;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 
+import com.querydsl.core.types.Templates;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.reflections.Reflections;
 
-import com.querydsl.core.types.Templates;
-
 public class TemplatesTestBase {
 
-    @Rule
-    public final ErrorCollector errorCollector = new ErrorCollector();
+  @Rule public final ErrorCollector errorCollector = new ErrorCollector();
 
-    private final Reflections querydsl = new Reflections(
-            TemplatesTestBase.class.getPackage().getName());
+  private final Reflections querydsl =
+      new Reflections(TemplatesTestBase.class.getPackage().getName());
 
-    private final String modulePrefix = getClass().getPackage().getName();
+  private final String modulePrefix = getClass().getPackage().getName();
 
-    @Test
-    public void default_instance() {
-        Set<Class<? extends Templates>> templates = querydsl.getSubTypesOf(Templates.class);
-        Set<Class<? extends Templates>> moduleSpecific = templates.stream().filter(MODULE_SPECIFIC).collect(Collectors.toSet());
+  @Test
+  public void default_instance() {
+    Set<Class<? extends Templates>> templates = querydsl.getSubTypesOf(Templates.class);
+    Set<Class<? extends Templates>> moduleSpecific =
+        templates.stream().filter(MODULE_SPECIFIC).collect(Collectors.toSet());
 
-        for (Class<? extends Templates> template : moduleSpecific) {
-            try {
-                Templates defaultInstance = (Templates) template.getField("DEFAULT").get(null);
-                errorCollector.checkThat(defaultInstance, instanceOf(template));
-            } catch (Exception ex) {
-                errorCollector.addError(ex);
-            }
-        }
+    for (Class<? extends Templates> template : moduleSpecific) {
+      try {
+        Templates defaultInstance = (Templates) template.getField("DEFAULT").get(null);
+        errorCollector.checkThat(defaultInstance, instanceOf(template));
+      } catch (Exception ex) {
+        errorCollector.addError(ex);
+      }
     }
+  }
 
-    private final Predicate<Class<? extends Templates>> objectPredicate = o -> Pattern.matches("class " + modulePrefix + ".*", o.toString());
-    private final Predicate<Class<? extends Templates>> MODULE_SPECIFIC = objectPredicate.and(topLevelClass);
+  private final Predicate<Class<? extends Templates>> objectPredicate =
+      o -> Pattern.matches("class " + modulePrefix + ".*", o.toString());
+  private final Predicate<Class<? extends Templates>> MODULE_SPECIFIC =
+      objectPredicate.and(topLevelClass);
 
-    private static final Predicate<Class<?>> topLevelClass = input -> !input.isAnonymousClass()
-            && !input.isMemberClass();
+  private static final Predicate<Class<?>> topLevelClass =
+      input -> !input.isAnonymousClass() && !input.isMemberClass();
 }

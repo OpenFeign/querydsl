@@ -13,10 +13,9 @@
  */
 package com.querydsl.jdo.models.fitness;
 
+import com.querydsl.core.annotations.QueryEntity;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.querydsl.core.annotations.QueryEntity;
 
 /**
  * Gymnasium.
@@ -25,161 +24,159 @@ import com.querydsl.core.annotations.QueryEntity;
  */
 @QueryEntity
 public class Gym {
-    private Map<String, String> codes;
-    private String location;
-    private String name;
+  private Map<String, String> codes;
+  private String location;
+  private String name;
 
+  // this must be initialized in the constructor. don't change it
+  private Map<String, Wardrobe> wardrobes; // store Wardrobe in values
+  private Map<Wardrobe, String> wardrobes2; // store Wardrobe in keys
+  private Map<String, Wardrobe> wardrobesInverse; // store Wardrobe in values
+  private Map<Wardrobe, String> wardrobesInverse2; // store Wardrobe in keys
+
+  private Map<String, GymEquipment> equipments; // store Equipments in values
+  private Map<GymEquipment, String> equipments2; // store Equipments in keys
+  private Map<String, GymEquipment> equipmentsInverse; // store Equipments in
+  // values
+  private Map<GymEquipment, String> equipmentsInverse2; // store Equipments in
+  // keys
+
+  private Map<String, Gym> partners; // store Gym in values
+  private Map<Gym, String> partners2; // store Gym in keys
+  private Map<String, Gym> partnersInverse; // store Gym in values
+  private Map<Gym, String> partnersInverse2; // store Gym in keys
+
+  private Gym gym;
+  private Gym gym2;
+  private String stringKey;
+  private String stringValue;
+
+  public Gym() {
     // this must be initialized in the constructor. don't change it
-    private Map<String, Wardrobe> wardrobes; // store Wardrobe in values
-    private Map<Wardrobe, String> wardrobes2; // store Wardrobe in keys
-    private Map<String, Wardrobe> wardrobesInverse; // store Wardrobe in values
-    private Map<Wardrobe, String> wardrobesInverse2; // store Wardrobe in keys
+    wardrobes = new HashMap<String, Wardrobe>();
+    equipments = new HashMap<String, GymEquipment>();
+    partners = new HashMap<String, Gym>();
+    wardrobes2 = new HashMap<Wardrobe, String>();
+    equipments2 = new HashMap<GymEquipment, String>();
+    partners2 = new HashMap<Gym, String>();
+    wardrobesInverse = new HashMap<String, Wardrobe>();
+    equipmentsInverse = new HashMap<String, GymEquipment>();
+    partnersInverse = new HashMap<String, Gym>();
+    wardrobesInverse2 = new HashMap<Wardrobe, String>();
+    equipmentsInverse2 = new HashMap<GymEquipment, String>();
+    partnersInverse2 = new HashMap<Gym, String>();
+    codes = new HashMap<String, String>();
+  }
 
-    private Map<String, GymEquipment> equipments; // store Equipments in values
-    private Map<GymEquipment, String> equipments2; // store Equipments in keys
-    private Map<String, GymEquipment> equipmentsInverse; // store Equipments in
-                                                         // values
-    private Map<GymEquipment, String> equipmentsInverse2; // store Equipments in
-                                                          // keys
+  /**
+   * @return Returns the location.
+   */
+  public String getLocation() {
+    return location;
+  }
 
-    private Map<String, Gym> partners; // store Gym in values
-    private Map<Gym, String> partners2; // store Gym in keys
-    private Map<String, Gym> partnersInverse; // store Gym in values
-    private Map<Gym, String> partnersInverse2; // store Gym in keys
+  /**
+   * @param location The location to set.
+   */
+  public void setLocation(String location) {
+    this.location = location;
+  }
 
-    private Gym gym;
-    private Gym gym2;
-    private String stringKey;
-    private String stringValue;
+  /**
+   * @return Returns the wardrobes.
+   */
+  public Map<String, Wardrobe> getWardrobes() {
+    return wardrobes;
+  }
 
-    public Gym() {
-        // this must be initialized in the constructor. don't change it
-        wardrobes = new HashMap<String, Wardrobe>();
-        equipments = new HashMap<String, GymEquipment>();
-        partners = new HashMap<String, Gym>();
-        wardrobes2 = new HashMap<Wardrobe, String>();
-        equipments2 = new HashMap<GymEquipment, String>();
-        partners2 = new HashMap<Gym, String>();
-        wardrobesInverse = new HashMap<String, Wardrobe>();
-        equipmentsInverse = new HashMap<String, GymEquipment>();
-        partnersInverse = new HashMap<String, Gym>();
-        wardrobesInverse2 = new HashMap<Wardrobe, String>();
-        equipmentsInverse2 = new HashMap<GymEquipment, String>();
-        partnersInverse2 = new HashMap<Gym, String>();
-        codes = new HashMap<String, String>();
-    }
+  /**
+   * @param wardrobes The wardrobes to set.
+   */
+  public void setWardrobes(Map<String, Wardrobe> wardrobes) {
+    this.wardrobes = wardrobes;
+  }
 
-    /**
-     * @return Returns the location.
-     */
-    public String getLocation() {
-        return location;
-    }
+  public Map<String, GymEquipment> getEquipments() {
+    return equipments;
+  }
 
-    /**
-     * @param location
-     *            The location to set.
-     */
-    public void setLocation(String location) {
-        this.location = location;
-    }
+  public void setEquipments(Map<String, GymEquipment> equipments) {
+    this.equipments = equipments;
+  }
 
-    /**
-     * @return Returns the wardrobes.
-     */
-    public Map<String, Wardrobe> getWardrobes() {
-        return wardrobes;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    /**
-     * @param wardrobes
-     *            The wardrobes to set.
-     */
-    public void setWardrobes(Map<String, Wardrobe> wardrobes) {
-        this.wardrobes = wardrobes;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Map<String, GymEquipment> getEquipments() {
-        return equipments;
-    }
+  public void setPartners(Map<String, Gym> partners) {
+    this.partners = partners;
+  }
 
-    public void setEquipments(Map<String, GymEquipment> equipments) {
-        this.equipments = equipments;
-    }
+  public Map<String, Gym> getPartners() {
+    return partners;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public Map<Gym, String> getPartners2() {
+    return partners2;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public Map<GymEquipment, String> getEquipments2() {
+    return equipments2;
+  }
 
-    public void setPartners(Map<String, Gym> partners) {
-        this.partners = partners;
-    }
+  public Map<Wardrobe, String> getWardrobes2() {
+    return wardrobes2;
+  }
 
-    public Map<String, Gym> getPartners() {
-        return partners;
-    }
+  public Map<String, Wardrobe> getWardrobesInverse() {
+    return wardrobesInverse;
+  }
 
-    public Map<Gym, String> getPartners2() {
-        return partners2;
-    }
+  public Map<Wardrobe, String> getWardrobesInverse2() {
+    return wardrobesInverse2;
+  }
 
-    public Map<GymEquipment, String> getEquipments2() {
-        return equipments2;
-    }
+  public Map<String, GymEquipment> getEquipmentsInverse() {
+    return equipmentsInverse;
+  }
 
-    public Map<Wardrobe, String> getWardrobes2() {
-        return wardrobes2;
-    }
+  public Map<GymEquipment, String> getEquipmentsInverse2() {
+    return equipmentsInverse2;
+  }
 
-    public Map<String, Wardrobe> getWardrobesInverse() {
-        return wardrobesInverse;
-    }
+  public Map<String, Gym> getPartnersInverse() {
+    return partnersInverse;
+  }
 
-    public Map<Wardrobe, String> getWardrobesInverse2() {
-        return wardrobesInverse2;
-    }
+  public Map<Gym, String> getPartnersInverse2() {
+    return partnersInverse2;
+  }
 
-    public Map<String, GymEquipment> getEquipmentsInverse() {
-        return equipmentsInverse;
-    }
+  public Gym getGym() {
+    return gym;
+  }
 
-    public Map<GymEquipment, String> getEquipmentsInverse2() {
-        return equipmentsInverse2;
-    }
+  public Gym getGym2() {
+    return gym2;
+  }
 
-    public Map<String, Gym> getPartnersInverse() {
-        return partnersInverse;
-    }
+  public String getStringKey() {
+    return stringKey;
+  }
 
-    public Map<Gym, String> getPartnersInverse2() {
-        return partnersInverse2;
-    }
+  public String getStringValue() {
+    return stringValue;
+  }
 
-    public Gym getGym() {
-        return gym;
-    }
+  public Map<String, String> getCodes() {
+    return codes;
+  }
 
-    public Gym getGym2() {
-        return gym2;
-    }
-
-    public String getStringKey() {
-        return stringKey;
-    }
-
-    public String getStringValue() {
-        return stringValue;
-    }
-
-    public Map<String, String> getCodes() {
-        return codes;
-    }
-
-    public void setCodes(Map<String, String> codes) {
-        this.codes = codes;
-    }
+  public void setCodes(Map<String, String> codes) {
+    this.codes = codes;
+  }
 }

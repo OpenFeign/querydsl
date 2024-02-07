@@ -15,85 +15,76 @@ package com.querydsl.apt.domain;
 
 import static org.junit.Assert.assertEquals;
 
+import com.querydsl.core.types.dsl.NumberPath;
 import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.querydsl.core.types.dsl.NumberPath;
 
 @SuppressWarnings({"rawtypes", "serial", "unchecked"})
 public class AbstractClassesTest {
 
-    public interface Archetype<PK extends Serializable, DO extends Serializable> extends Serializable, Comparable<DO>  {
+  public interface Archetype<PK extends Serializable, DO extends Serializable>
+      extends Serializable, Comparable<DO> {}
 
+  @MappedSuperclass
+  public abstract static class BaseArchetype<PK extends Serializable, DO extends Serializable>
+      implements Archetype<PK, DO> {
+
+    @Id @GeneratedValue PK id;
+    String name;
+    String description;
+
+    public BaseArchetype() {}
+
+    public int compareTo(BaseArchetype o) {
+      return 0;
     }
 
+    public boolean equals(Object o) {
+      return o == this;
+    }
+  }
 
-    @MappedSuperclass
-    public abstract static class BaseArchetype<PK extends Serializable, DO extends Serializable> implements Archetype<PK, DO> {
+  @Entity
+  public static class Grant<P extends Party, S extends Party> extends BaseArchetype<P, S> {
 
-        @Id
-        @GeneratedValue
-        PK id;
-        String name;
-        String description;
-
-        public BaseArchetype() { }
-
-        public int compareTo(BaseArchetype o) {
-            return 0;
-        }
-
-        public boolean equals(Object o) {
-            return o == this;
-        }
+    public int compareTo(S o) {
+      return 0;
     }
 
-    @Entity
-    public static class Grant<P extends Party, S extends Party> extends BaseArchetype<P, S> {
+    public boolean equals(Object o) {
+      return o == this;
+    }
+  }
 
-        public int compareTo(S o) {
-            return 0;
-        }
+  @Entity
+  public static class Party extends BaseArchetype<Long, Party> {
 
-        public boolean equals(Object o) {
-            return o == this;
-        }
+    public Party() {}
 
+    public int compareTo(Party o) {
+      return 0;
     }
 
-    @Entity
-    public static class Party extends BaseArchetype<Long, Party> {
-
-        public Party() {
-        }
-
-        public int compareTo(Party o) {
-            return 0;
-        }
-
-        public boolean equals(Object o) {
-            return o == this;
-        }
-
+    public boolean equals(Object o) {
+      return o == this;
     }
+  }
 
-    @Test
-    public void grant_id_type() {
-        Assert.assertEquals(QAbstractClassesTest_Party.class, QAbstractClassesTest_Grant.grant.id.getClass());
-        assertEquals(Party.class, QAbstractClassesTest_Grant.grant.id.getType());
-    }
+  @Test
+  public void grant_id_type() {
+    Assert.assertEquals(
+        QAbstractClassesTest_Party.class, QAbstractClassesTest_Grant.grant.id.getClass());
+    assertEquals(Party.class, QAbstractClassesTest_Grant.grant.id.getType());
+  }
 
-    @Test
-    public void party_id_type() {
-        assertEquals(NumberPath.class, QAbstractClassesTest_Party.party.id.getClass());
-        assertEquals(Long.class, QAbstractClassesTest_Party.party.id.getType());
-    }
-
+  @Test
+  public void party_id_type() {
+    assertEquals(NumberPath.class, QAbstractClassesTest_Party.party.id.getClass());
+    assertEquals(Long.class, QAbstractClassesTest_Party.party.id.getType());
+  }
 }

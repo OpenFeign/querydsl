@@ -22,27 +22,26 @@ import java.sql.Types;
  */
 public class FloatType extends AbstractType<Float, Number> {
 
-    public FloatType() {
-        super(Types.FLOAT);
-    }
+  public FloatType() {
+    super(Types.FLOAT);
+  }
 
-    public FloatType(int type) {
-        super(type);
-    }
+  public FloatType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Float> getReturnedClass() {
-        return Float.class;
-    }
+  @Override
+  public Class<Float> getReturnedClass() {
+    return Float.class;
+  }
 
-    @Override
-    public Class<Number> getDatabaseClass() {
-        return Number.class;
-    }
+  @Override
+  public Class<Number> getDatabaseClass() {
+    return Number.class;
+  }
 
-    @Override
-    protected Float fromDbValue(Number value) {
-        return value.floatValue();
-    }
-
+  @Override
+  protected Float fromDbValue(Number value) {
+    return value.floatValue();
+  }
 }

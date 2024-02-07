@@ -13,6 +13,8 @@
  */
 package com.querydsl.r2dbc;
 
+import static org.junit.Assert.assertEquals;
+
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.Target;
@@ -22,6 +24,7 @@ import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import com.querydsl.r2dbc.dml.R2DBCUpdateClause;
 import com.querydsl.sql.RelationalPath;
 import io.r2dbc.spi.Connection;
+import java.util.List;
 import org.jetbrains.annotations.Nullable;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -32,113 +35,102 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
 public abstract class AbstractBaseTest {
 
-    protected static final Logger logger = LoggerFactory.getLogger(AbstractBaseTest.class);
+  protected static final Logger logger = LoggerFactory.getLogger(AbstractBaseTest.class);
 
-    protected final class TestQuery<T> extends R2DBCQuery<T> {
+  protected final class TestQuery<T> extends R2DBCQuery<T> {
 
-        private TestQuery(Connection conn, Configuration configuration) {
-            super(conn, configuration);
+    private TestQuery(Connection conn, Configuration configuration) {
+      super(conn, configuration);
+    }
+
+    private TestQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
+      super(conn, configuration, metadata);
+    }
+
+    @Override
+    protected SQLSerializer serialize(boolean countRow) {
+      SQLSerializer serializer = super.serialize(countRow);
+      String rv = serializer.toString();
+      if (expectedQuery != null) {
+        assertEquals(expectedQuery, rv.replace('\n', ' '));
+        expectedQuery = null;
+      }
+      logger.debug(rv);
+      return serializer;
+    }
+
+    public TestQuery<T> clone(Connection conn) {
+      TestQuery<T> q = new TestQuery<T>(conn, getConfiguration(), getMetadata().clone());
+      q.union = union;
+      q.unionAll = unionAll;
+      q.firstUnionSubQuery = firstUnionSubQuery;
+      return q;
+    }
+  }
+
+  protected Connection connection = Connections.getConnection();
+
+  protected Target target = Connections.getTarget();
+
+  protected Configuration configuration = Connections.getConfiguration();
+
+  @Nullable protected String expectedQuery;
+
+  @Rule public MethodRule skipForQuotedRule = new SkipForQuotedRule(configuration);
+
+  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
+
+  protected <T> void add(List<T> list, T arg, Target... exclusions) {
+    if (exclusions.length > 0) {
+      for (Target t : exclusions) {
+        if (t.equals(target)) {
+          return;
         }
-
-        private TestQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
-            super(conn, configuration, metadata);
-        }
-
-        @Override
-        protected SQLSerializer serialize(boolean countRow) {
-            SQLSerializer serializer = super.serialize(countRow);
-            String rv = serializer.toString();
-            if (expectedQuery != null) {
-                assertEquals(expectedQuery, rv.replace('\n', ' '));
-                expectedQuery = null;
-            }
-            logger.debug(rv);
-            return serializer;
-        }
-
-        public TestQuery<T> clone(Connection conn) {
-            TestQuery<T> q = new TestQuery<T>(conn, getConfiguration(), getMetadata().clone());
-            q.union = union;
-            q.unionAll = unionAll;
-            q.firstUnionSubQuery = firstUnionSubQuery;
-            return q;
-        }
-
+      }
     }
+    list.add(arg);
+  }
 
-    protected Connection connection = Connections.getConnection();
+  protected R2DBCUpdateClause update(RelationalPath<?> e) {
+    R2DBCUpdateClause sqlUpdateClause = new R2DBCUpdateClause(connection, configuration, e);
+    return sqlUpdateClause;
+  }
 
-    protected Target target = Connections.getTarget();
+  protected R2DBCInsertClause insert(RelationalPath<?> e) {
+    R2DBCInsertClause sqlInsertClause = new R2DBCInsertClause(connection, configuration, e);
+    return sqlInsertClause;
+  }
 
-    protected Configuration configuration = Connections.getConfiguration();
+  protected R2DBCInsertClause insert(RelationalPath<?> e, R2DBCQuery<?> sq) {
+    R2DBCInsertClause sqlInsertClause = new R2DBCInsertClause(connection, configuration, e, sq);
+    return sqlInsertClause;
+  }
 
-    @Nullable
-    protected String expectedQuery;
+  protected R2DBCDeleteClause delete(RelationalPath<?> e) {
+    R2DBCDeleteClause sqlDeleteClause = new R2DBCDeleteClause(connection, configuration, e);
+    return sqlDeleteClause;
+  }
 
-    @Rule
-    public MethodRule skipForQuotedRule = new SkipForQuotedRule(configuration);
+  protected ExtendedR2DBCQuery<?> extQuery() {
+    ExtendedR2DBCQuery<?> extendedR2DBCQuery =
+        new ExtendedR2DBCQuery<Void>(connection, configuration);
+    return extendedR2DBCQuery;
+  }
 
-    @Rule
-    @ClassRule
-    public static TestRule targetRule = new TargetRule();
+  protected R2DBCQuery<?> query() {
+    R2DBCQuery<Void> testQuery = new TestQuery<Void>(connection, configuration);
+    return testQuery;
+  }
 
-    protected <T> void add(List<T> list, T arg, Target... exclusions) {
-        if (exclusions.length > 0) {
-            for (Target t : exclusions) {
-                if (t.equals(target)) {
-                    return;
-                }
-            }
-        }
-        list.add(arg);
-    }
+  protected TestQuery<?> testQuery() {
+    TestQuery<Void> testQuery =
+        new TestQuery<Void>(connection, configuration, new DefaultQueryMetadata());
+    return testQuery;
+  }
 
-    protected R2DBCUpdateClause update(RelationalPath<?> e) {
-        R2DBCUpdateClause sqlUpdateClause = new R2DBCUpdateClause(connection, configuration, e);
-        return sqlUpdateClause;
-    }
-
-    protected R2DBCInsertClause insert(RelationalPath<?> e) {
-        R2DBCInsertClause sqlInsertClause = new R2DBCInsertClause(connection, configuration, e);
-        return sqlInsertClause;
-    }
-
-    protected R2DBCInsertClause insert(RelationalPath<?> e, R2DBCQuery<?> sq) {
-        R2DBCInsertClause sqlInsertClause = new R2DBCInsertClause(connection, configuration, e, sq);
-        return sqlInsertClause;
-    }
-
-    protected R2DBCDeleteClause delete(RelationalPath<?> e) {
-        R2DBCDeleteClause sqlDeleteClause = new R2DBCDeleteClause(connection, configuration, e);
-        return sqlDeleteClause;
-    }
-
-    protected ExtendedR2DBCQuery<?> extQuery() {
-        ExtendedR2DBCQuery<?> extendedR2DBCQuery = new ExtendedR2DBCQuery<Void>(connection, configuration);
-        return extendedR2DBCQuery;
-    }
-
-    protected R2DBCQuery<?> query() {
-        R2DBCQuery<Void> testQuery = new TestQuery<Void>(connection, configuration);
-        return testQuery;
-    }
-
-    protected TestQuery<?> testQuery() {
-        TestQuery<Void> testQuery = new TestQuery<Void>(connection, configuration, new DefaultQueryMetadata());
-        return testQuery;
-    }
-
-    protected Mono<Long> execute(ReactiveDMLClause<?>... clauses) {
-        return Flux
-                .fromArray(clauses)
-                .flatMap(ReactiveDMLClause::execute)
-                .reduce(0L, Long::sum);
-    }
-
+  protected Mono<Long> execute(ReactiveDMLClause<?>... clauses) {
+    return Flux.fromArray(clauses).flatMap(ReactiveDMLClause::execute).reduce(0L, Long::sum);
+  }
 }

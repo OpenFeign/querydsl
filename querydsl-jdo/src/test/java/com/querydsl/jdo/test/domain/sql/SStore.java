@@ -23,38 +23,35 @@ import com.querydsl.sql.ForeignKey;
 import com.querydsl.sql.PrimaryKey;
 import com.querydsl.sql.RelationalPathBase;
 
-
-/**
- * SStore is a Querydsl query type for SStore
- */
-//@Table(value="STORE")
+/** SStore is a Querydsl query type for SStore */
+// @Table(value="STORE")
 public class SStore extends RelationalPathBase<SStore> {
 
-    private static final long serialVersionUID = -1302810257;
+  private static final long serialVersionUID = -1302810257;
 
-    public static final SStore store = new SStore("STORE");
+  public static final SStore store = new SStore("STORE");
 
-    public final StringPath name = createString("NAME");
+  public final StringPath name = createString("NAME");
 
-    public final NumberPath<Long> storeId = createNumber("STORE_ID", Long.class);
+  public final NumberPath<Long> storeId = createNumber("STORE_ID", Long.class);
 
-    public final PrimaryKey<SStore> sysIdx51 = createPrimaryKey(storeId);
+  public final PrimaryKey<SStore> sysIdx51 = createPrimaryKey(storeId);
 
-    public final ForeignKey<SStoreProductsbyname> _storeProductsbynameFk1 = new ForeignKey<SStoreProductsbyname>(this, storeId, "STORE_ID_OID");
+  public final ForeignKey<SStoreProductsbyname> _storeProductsbynameFk1 =
+      new ForeignKey<SStoreProductsbyname>(this, storeId, "STORE_ID_OID");
 
-    public final ForeignKey<SStoreProducts> _storeProductsFk1 = new ForeignKey<SStoreProducts>(this, storeId, "STORE_ID_OID");
+  public final ForeignKey<SStoreProducts> _storeProductsFk1 =
+      new ForeignKey<SStoreProducts>(this, storeId, "STORE_ID_OID");
 
-    public SStore(String variable) {
-        super(SStore.class, forVariable(variable), "", "STORE");
-    }
+  public SStore(String variable) {
+    super(SStore.class, forVariable(variable), "", "STORE");
+  }
 
-    public SStore(BeanPath<? extends SStore> entity) {
-        super(entity.getType(),entity.getMetadata(), "", "STORE");
-    }
+  public SStore(BeanPath<? extends SStore> entity) {
+    super(entity.getType(), entity.getMetadata(), "", "STORE");
+  }
 
-    public SStore(PathMetadata metadata) {
-        super(SStore.class, metadata, "", "STORE");
-    }
-
+  public SStore(PathMetadata metadata) {
+    super(SStore.class, metadata, "", "STORE");
+  }
 }
-

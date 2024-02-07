@@ -12,8 +12,5 @@
  * limitations under the License.
  */
 
-
-/**
- * DML operations support
- */
+/** DML operations support */
 package com.querydsl.r2dbc.group;

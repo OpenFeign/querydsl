@@ -16,25 +16,21 @@ package com.querydsl.jdo;
 import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
-
+import jdepend.framework.JDepend;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import jdepend.framework.JDepend;
-
 public class DependenciesTest {
 
-    @Test
-    @Ignore
-    public void test() throws IOException {
-        JDepend jdepend = new JDepend();
-        jdepend.addDirectory("target/classes/com/querydsl/jdo");
-        jdepend.addDirectory("target/classes/com/querydsl/jdo/dml");
-        jdepend.addDirectory("target/classes/com/querydsl/jdo/sql");
+  @Test
+  @Ignore
+  public void test() throws IOException {
+    JDepend jdepend = new JDepend();
+    jdepend.addDirectory("target/classes/com/querydsl/jdo");
+    jdepend.addDirectory("target/classes/com/querydsl/jdo/dml");
+    jdepend.addDirectory("target/classes/com/querydsl/jdo/sql");
 
-        jdepend.analyze();
-        assertFalse(jdepend.containsCycles());
-
-    }
-
+    jdepend.analyze();
+    assertFalse(jdepend.containsCycles());
+  }
 }

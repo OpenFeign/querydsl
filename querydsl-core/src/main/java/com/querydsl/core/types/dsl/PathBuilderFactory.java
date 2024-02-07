@@ -13,49 +13,46 @@
  */
 package com.querydsl.core.types.dsl;
 
+import com.querydsl.core.util.StringUtils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.querydsl.core.util.StringUtils;
 
 /**
  * {@code PathBuilderFactory} is a factory class for PathBuilder creation
  *
  * @author tiwe
- *
  */
 public final class PathBuilderFactory {
 
-    private final Map<Class<?>, PathBuilder<?>> paths = new ConcurrentHashMap<>();
+  private final Map<Class<?>, PathBuilder<?>> paths = new ConcurrentHashMap<>();
 
-    private final String suffix;
+  private final String suffix;
 
-    public PathBuilderFactory() {
-        this("");
+  public PathBuilderFactory() {
+    this("");
+  }
+
+  public PathBuilderFactory(String suffix) {
+    this.suffix = suffix;
+  }
+
+  /**
+   * Create a new PathBuilder instance for the given type
+   *
+   * @param type type of expression
+   * @return new PathBuilder instance
+   */
+  @SuppressWarnings("unchecked")
+  public <T> PathBuilder<T> create(Class<T> type) {
+    PathBuilder<T> rv = (PathBuilder<T>) paths.get(type);
+    if (rv == null) {
+      rv = new PathBuilder<T>(type, variableName(type));
+      paths.put(type, rv);
     }
+    return rv;
+  }
 
-    public PathBuilderFactory(String suffix) {
-        this.suffix = suffix;
-    }
-
-    /**
-     * Create a new PathBuilder instance for the given type
-     *
-     * @param type type of expression
-     * @return new PathBuilder instance
-     */
-    @SuppressWarnings("unchecked")
-    public <T> PathBuilder<T> create(Class<T> type) {
-        PathBuilder<T> rv = (PathBuilder<T>) paths.get(type);
-        if (rv == null) {
-            rv = new PathBuilder<T>(type, variableName(type));
-            paths.put(type, rv);
-        }
-        return rv;
-    }
-
-    private String variableName(Class<?> type) {
-        return StringUtils.uncapitalize(type.getSimpleName()) + suffix;
-    }
-
+  private String variableName(Class<?> type) {
+    return StringUtils.uncapitalize(type.getSimpleName()) + suffix;
+  }
 }

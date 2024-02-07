@@ -13,216 +13,225 @@
  */
 package com.querydsl.core;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.MapExpression;
 import com.querydsl.core.types.dsl.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * @author tiwe
- *
  */
 public class ProjectionsFactory {
 
-    private final Module module;
+  private final Module module;
 
-    private final Target target;
+  private final Target target;
 
-    public ProjectionsFactory(Module module, Target target) {
-        this.module = module;
-        this.target = target;
+  public ProjectionsFactory(Module module, Target target) {
+    this.module = module;
+    this.target = target;
+  }
+
+  public <A> Collection<Expression<?>> array(
+      ArrayExpression<A[], A> expr, ArrayExpression<A[], A> other, A knownElement) {
+    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    if (!module.equals(Module.RDFBEAN)) {
+      rv.add(expr.size());
+    }
+    return Collections.unmodifiableSet(rv);
+  }
+
+  public <A> Collection<Expression<?>> collection(
+      CollectionExpressionBase<?, A> expr, CollectionExpression<?, A> other, A knownElement) {
+    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    if (!module.equals(Module.RDFBEAN)) {
+      rv.add(expr.size());
+    }
+    return Collections.unmodifiableSet(rv);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <A extends Comparable> Collection<Expression<?>> date(
+      DateExpression<A> expr, DateExpression<A> other, A knownValue) {
+    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    rv.add(expr.dayOfMonth());
+    rv.add(expr.month());
+    rv.add(expr.year());
+    rv.add(expr.yearMonth());
+
+    if (module != Module.COLLECTIONS && module != Module.RDFBEAN) {
+      rv.add(expr.min());
+      rv.add(expr.max());
     }
 
-    public <A> Collection<Expression<?>> array(ArrayExpression<A[], A> expr, ArrayExpression<A[], A> other, A knownElement) {
-        HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
-        if (!module.equals(Module.RDFBEAN)) {
-            rv.add(expr.size());
-        }
-        return Collections.unmodifiableSet(rv);
+    return Collections.unmodifiableSet(rv);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <A extends Comparable> Collection<Expression<?>> dateTime(
+      DateTimeExpression<A> expr, DateTimeExpression<A> other, A knownValue) {
+    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    rv.add(expr.dayOfMonth());
+    rv.add(expr.month());
+    rv.add(expr.year());
+    rv.add(expr.yearMonth());
+    rv.add(expr.hour());
+    rv.add(expr.minute());
+    rv.add(expr.second());
+
+    if (module != Module.COLLECTIONS && module != Module.RDFBEAN) {
+      rv.add(expr.min());
+      rv.add(expr.max());
     }
 
-    public <A> Collection<Expression<?>> collection(CollectionExpressionBase<?,A> expr, CollectionExpression<?,A> other, A knownElement) {
-        HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
-        if (!module.equals(Module.RDFBEAN)) {
-            rv.add(expr.size());
-        }
-        return Collections.unmodifiableSet(rv);
+    return Collections.unmodifiableSet(rv);
+  }
+
+  public <A, Q extends SimpleExpression<A>> Collection<Expression<?>> list(
+      ListPath<A, Q> expr, ListExpression<A, Q> other, A knownElement) {
+    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    rv.add(expr.get(0));
+    if (!module.equals(Module.RDFBEAN)) {
+      rv.add(expr.size());
+    }
+    return Collections.unmodifiableSet(rv);
+  }
+
+  public <K, V> Collection<Expression<?>> map(
+      MapExpressionBase<K, V, ?> expr, MapExpression<K, V> other, K knownKey, V knownValue) {
+    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    rv.add(expr.get(knownKey));
+    if (!module.equals(Module.RDFBEAN)) {
+      rv.add(expr.size());
+    }
+    return Collections.unmodifiableSet(rv);
+  }
+
+  public <A extends Number & Comparable<A>> Collection<NumberExpression<?>> numeric(
+      NumberExpression<A> expr, NumberExpression<A> other, A knownValue, boolean forFilter) {
+    HashSet<NumberExpression<?>> rv = new HashSet<NumberExpression<?>>();
+    rv.addAll(numeric(expr, other, forFilter));
+    rv.addAll(numeric(expr, NumberConstant.create(knownValue), forFilter));
+    return Collections.unmodifiableSet(rv);
+  }
+
+  @SuppressWarnings("unchecked")
+  private <A extends Number & Comparable<A>> Collection<NumberExpression<?>> numeric(
+      NumberExpression<A> expr, NumberExpression<?> other, boolean forFilter) {
+    HashSet<NumberExpression<?>> rv = new HashSet<NumberExpression<?>>();
+    rv.add(expr.abs());
+    rv.add(expr.add(other));
+    rv.add(expr.divide(other));
+
+    if (target != Target.HSQLDB) {
+      rv.add(expr.negate());
     }
 
-    @SuppressWarnings("unchecked")
-    public <A extends Comparable> Collection<Expression<?>> date(DateExpression<A> expr, DateExpression<A> other, A knownValue) {
-        HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
-        rv.add(expr.dayOfMonth());
-        rv.add(expr.month());
-        rv.add(expr.year());
-        rv.add(expr.yearMonth());
+    rv.add(expr.multiply(other));
+    rv.add(expr.sqrt());
+    rv.add(expr.subtract(other));
 
-        if (module != Module.COLLECTIONS && module != Module.RDFBEAN) {
-            rv.add(expr.min());
-            rv.add(expr.max());
-        }
-
-        return Collections.unmodifiableSet(rv);
+    if (!forFilter && module != Module.COLLECTIONS && module != Module.RDFBEAN) {
+      rv.add(expr.min());
+      rv.add(expr.max());
+      rv.add(expr.avg());
+      rv.add(expr.count());
+      rv.add(expr.countDistinct());
     }
 
-    @SuppressWarnings("unchecked")
-    public <A extends Comparable> Collection<Expression<?>> dateTime(DateTimeExpression<A> expr, DateTimeExpression<A> other, A knownValue) {
-        HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
-        rv.add(expr.dayOfMonth());
-        rv.add(expr.month());
-        rv.add(expr.year());
-        rv.add(expr.yearMonth());
-        rv.add(expr.hour());
-        rv.add(expr.minute());
-        rv.add(expr.second());
+    if (!(other instanceof Constant<?> || module == Module.JDO || module == Module.RDFBEAN)) {
+      CaseBuilder cases = new CaseBuilder();
+      rv.add(
+          NumberConstant.create(1)
+              .add(
+                  cases
+                      .when(expr.gt(10))
+                      .then(expr)
+                      .when(expr.between(0, 10))
+                      .then((NumberExpression<A>) other)
+                      .otherwise((NumberExpression<A>) other)));
 
-        if (module != Module.COLLECTIONS && module != Module.RDFBEAN) {
-            rv.add(expr.min());
-            rv.add(expr.max());
-        }
-
-        return Collections.unmodifiableSet(rv);
+      rv.add(
+          expr.when((NumberExpression<A>) other).then(expr).otherwise((NumberExpression<A>) other));
     }
 
-    public <A,Q extends SimpleExpression<A>> Collection<Expression<?>> list(ListPath<A,Q> expr, ListExpression<A,Q> other, A knownElement) {
-        HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
-        rv.add(expr.get(0));
-        if (!module.equals(Module.RDFBEAN)) {
-            rv.add(expr.size());
-        }
-        return Collections.unmodifiableSet(rv);
+    return Collections.unmodifiableSet(rv);
+  }
+
+  public <A extends Number & Comparable<A>> Collection<NumberExpression<?>> numericCasts(
+      NumberExpression<A> expr, NumberExpression<A> other, A knownValue) {
+    if (!target.equals(Target.MYSQL)) {
+      HashSet<NumberExpression<?>> rv = new HashSet<NumberExpression<?>>();
+      rv.add(expr.byteValue());
+      rv.add(expr.doubleValue());
+      rv.add(expr.floatValue());
+      rv.add(expr.intValue());
+      rv.add(expr.longValue());
+      rv.add(expr.shortValue());
+      return Collections.unmodifiableSet(rv);
+    } else {
+      return Collections.emptySet();
+    }
+  }
+
+  public Collection<SimpleExpression<String>> string(
+      StringExpression expr, StringExpression other, String knownValue) {
+    HashSet<SimpleExpression<String>> rv = new HashSet<SimpleExpression<String>>();
+    rv.addAll(stringProjections(expr, other));
+    rv.addAll(stringProjections(expr, StringConstant.create(knownValue)));
+    return rv;
+  }
+
+  @SuppressWarnings("unchecked")
+  public Collection<SimpleExpression<String>> stringProjections(
+      StringExpression expr, StringExpression other) {
+    HashSet<SimpleExpression<String>> rv = new HashSet<SimpleExpression<String>>();
+
+    rv.add(expr.append("Hello"));
+    rv.add(expr.append(other));
+
+    rv.add(expr.concat(other));
+    rv.add(expr.concat("Hello"));
+
+    rv.add(expr.lower());
+
+    rv.add(expr.prepend("Hello"));
+    rv.add(expr.prepend(other));
+
+    rv.add(expr.stringValue());
+
+    rv.add(expr.substring(1));
+    rv.add(expr.substring(0, 1));
+
+    if (!(other instanceof Constant<?> || module == Module.JDO || module == Module.RDFBEAN)) {
+      CaseBuilder cases = new CaseBuilder();
+      rv.add(cases.when(expr.eq("A")).then(other).when(expr.eq("B")).then(expr).otherwise(other));
+
+      rv.add(expr.when("A").then(other).when("B").then(expr).otherwise(other));
     }
 
-    public <K,V> Collection<Expression<?>> map(MapExpressionBase<K,V,?> expr, MapExpression<K,V> other, K knownKey, V knownValue) {
-        HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
-        rv.add(expr.get(knownKey));
-        if (!module.equals(Module.RDFBEAN)) {
-            rv.add(expr.size());
-        }
-        return Collections.unmodifiableSet(rv);
+    rv.add(expr.trim());
+
+    rv.add(expr.upper());
+
+    if (module != Module.JDO) {
+      rv.add(expr.nullif("xxx"));
     }
 
-    public <A extends Number & Comparable<A>> Collection<NumberExpression<?>> numeric(NumberExpression<A> expr, NumberExpression<A> other, A knownValue, boolean forFilter) {
-        HashSet<NumberExpression<?>> rv = new HashSet<NumberExpression<?>>();
-        rv.addAll(numeric(expr, other, forFilter));
-        rv.addAll(numeric(expr, NumberConstant.create(knownValue), forFilter));
-        return Collections.unmodifiableSet(rv);
-    }
+    return Collections.unmodifiableSet(rv);
+  }
 
-    @SuppressWarnings("unchecked")
-    private <A extends Number & Comparable<A>> Collection<NumberExpression<?>> numeric(NumberExpression<A> expr, NumberExpression<?> other, boolean forFilter) {
-        HashSet<NumberExpression<?>> rv = new HashSet<NumberExpression<?>>();
-        rv.add(expr.abs());
-        rv.add(expr.add(other));
-        rv.add(expr.divide(other));
-
-        if (target != Target.HSQLDB) {
-            rv.add(expr.negate());
-        }
-
-        rv.add(expr.multiply(other));
-        rv.add(expr.sqrt());
-        rv.add(expr.subtract(other));
-
-        if (!forFilter && module != Module.COLLECTIONS && module != Module.RDFBEAN) {
-            rv.add(expr.min());
-            rv.add(expr.max());
-            rv.add(expr.avg());
-            rv.add(expr.count());
-            rv.add(expr.countDistinct());
-        }
-
-        if (!(other instanceof Constant<?> || module == Module.JDO || module == Module.RDFBEAN)) {
-            CaseBuilder cases = new CaseBuilder();
-            rv.add(NumberConstant.create(1).add(cases
-                .when(expr.gt(10)).then(expr)
-                .when(expr.between(0, 10)).then((NumberExpression<A>) other)
-                .otherwise((NumberExpression<A>) other)));
-
-            rv.add(expr
-                    .when((NumberExpression<A>) other).then(expr)
-                    .otherwise((NumberExpression<A>) other));
-        }
-
-        return Collections.unmodifiableSet(rv);
-    }
-
-    public <A extends Number & Comparable<A>> Collection<NumberExpression<?>> numericCasts(NumberExpression<A> expr, NumberExpression<A> other, A knownValue) {
-        if (!target.equals(Target.MYSQL)) {
-            HashSet<NumberExpression<?>> rv = new HashSet<NumberExpression<?>>();
-            rv.add(expr.byteValue());
-            rv.add(expr.doubleValue());
-            rv.add(expr.floatValue());
-            rv.add(expr.intValue());
-            rv.add(expr.longValue());
-            rv.add(expr.shortValue());
-            return Collections.unmodifiableSet(rv);
-        } else {
-            return Collections.emptySet();
-        }
-    }
-
-    public Collection<SimpleExpression<String>> string(StringExpression expr, StringExpression other, String knownValue) {
-        HashSet<SimpleExpression<String>> rv = new HashSet<SimpleExpression<String>>();
-        rv.addAll(stringProjections(expr, other));
-        rv.addAll(stringProjections(expr, StringConstant.create(knownValue)));
-        return rv;
-    }
-
-    @SuppressWarnings("unchecked")
-    public Collection<SimpleExpression<String>> stringProjections(StringExpression expr, StringExpression other) {
-        HashSet<SimpleExpression<String>> rv = new HashSet<SimpleExpression<String>>();
-
-        rv.add(expr.append("Hello"));
-        rv.add(expr.append(other));
-
-        rv.add(expr.concat(other));
-        rv.add(expr.concat("Hello"));
-
-        rv.add(expr.lower());
-
-        rv.add(expr.prepend("Hello"));
-        rv.add(expr.prepend(other));
-
-        rv.add(expr.stringValue());
-
-        rv.add(expr.substring(1));
-        rv.add(expr.substring(0, 1));
-
-        if (!(other instanceof Constant<?> || module == Module.JDO || module == Module.RDFBEAN)) {
-            CaseBuilder cases = new CaseBuilder();
-            rv.add(cases.when(expr.eq("A")).then(other)
-                        .when(expr.eq("B")).then(expr)
-                        .otherwise(other));
-
-            rv.add(expr.when("A").then(other)
-                       .when("B").then(expr)
-                       .otherwise(other));
-        }
-
-        rv.add(expr.trim());
-
-        rv.add(expr.upper());
-
-        if (module != Module.JDO) {
-            rv.add(expr.nullif("xxx"));
-        }
-
-        return Collections.unmodifiableSet(rv);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <A extends Comparable> Collection<Expression<?>> time(TimeExpression<A> expr, TimeExpression<A> other, A knownValue) {
-        HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
-        rv.add(expr.hour());
-        rv.add(expr.minute());
-        rv.add(expr.second());
-        return Collections.unmodifiableSet(rv);
-    }
-
+  @SuppressWarnings("unchecked")
+  public <A extends Comparable> Collection<Expression<?>> time(
+      TimeExpression<A> expr, TimeExpression<A> other, A knownValue) {
+    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    rv.add(expr.hour());
+    rv.add(expr.minute());
+    rv.add(expr.second());
+    return Collections.unmodifiableSet(rv);
+  }
 }

@@ -22,27 +22,26 @@ import java.sql.Types;
  */
 public class LongType extends AbstractType<Long, Number> {
 
-    public LongType() {
-        super(Types.BIGINT);
-    }
+  public LongType() {
+    super(Types.BIGINT);
+  }
 
-    public LongType(int type) {
-        super(type);
-    }
+  public LongType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Long> getReturnedClass() {
-        return Long.class;
-    }
+  @Override
+  public Class<Long> getReturnedClass() {
+    return Long.class;
+  }
 
-    @Override
-    public Class<Number> getDatabaseClass() {
-        return Number.class;
-    }
+  @Override
+  public Class<Number> getDatabaseClass() {
+    return Number.class;
+  }
 
-    @Override
-    protected Long fromDbValue(Number value) {
-        return value.longValue();
-    }
-
+  @Override
+  protected Long fromDbValue(Number value) {
+    return value.longValue();
+  }
 }

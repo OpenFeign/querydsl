@@ -13,105 +13,101 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.Ops;
-import org.jetbrains.annotations.Nullable;
-
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code ComparableExpressionBase} represents comparable expressions
  *
  * @author tiwe
- *
  * @param <T> Java type
  * @see java.lang.Comparable
  */
 public abstract class ComparableExpressionBase<T extends Comparable> extends SimpleExpression<T> {
 
-    private static final long serialVersionUID = 1460921109546656911L;
+  private static final long serialVersionUID = 1460921109546656911L;
 
-    @Nullable
-    private transient volatile OrderSpecifier<T> asc, desc;
+  @Nullable private transient volatile OrderSpecifier<T> asc, desc;
 
-    public ComparableExpressionBase(Expression<T> mixin) {
-        super(mixin);
+  public ComparableExpressionBase(Expression<T> mixin) {
+    super(mixin);
+  }
+
+  /**
+   * Create an OrderSpecifier for ascending order of this expression
+   *
+   * @return ascending order by this
+   */
+  public OrderSpecifier<T> asc() {
+    if (asc == null) {
+      asc = new OrderSpecifier<T>(Order.ASC, mixin);
     }
+    return asc;
+  }
 
-    /**
-     * Create an OrderSpecifier for ascending order of this expression
-     *
-     * @return ascending order by this
-     */
-    public OrderSpecifier<T> asc() {
-        if (asc == null) {
-            asc = new OrderSpecifier<T>(Order.ASC, mixin);
-        }
-        return asc;
+  /**
+   * Create a {@code coalesce(this, exprs...)} expression
+   *
+   * @param exprs additional arguments
+   * @return coalesce
+   */
+  @SuppressWarnings("unchecked")
+  public Coalesce<T> coalesce(Expression<?>... exprs) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (Expression expr : exprs) {
+      coalesce.add(expr);
     }
+    return coalesce;
+  }
 
-    /**
-     * Create a {@code coalesce(this, exprs...)} expression
-     *
-     * @param exprs additional arguments
-     * @return coalesce
-     */
-    @SuppressWarnings("unchecked")
-    public Coalesce<T> coalesce(Expression<?>...exprs) {
-        Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
-        for (Expression expr : exprs) {
-            coalesce.add(expr);
-        }
-        return coalesce;
+  /**
+   * Create a {@code coalesce(this, args...)} expression
+   *
+   * @param args additional arguments
+   * @return coalesce
+   */
+  public Coalesce<T> coalesce(T... args) {
+    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    for (T arg : args) {
+      coalesce.add(arg);
     }
+    return coalesce;
+  }
 
-    /**
-     * Create a {@code coalesce(this, args...)} expression
-     *
-     * @param args additional arguments
-     * @return coalesce
-     */
-    public Coalesce<T> coalesce(T... args) {
-        Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
-        for (T arg : args) {
-            coalesce.add(arg);
-        }
-        return coalesce;
+  /**
+   * Create an OrderSpecifier for descending order of this expression
+   *
+   * @return descending order by this
+   */
+  public OrderSpecifier<T> desc() {
+    if (desc == null) {
+      desc = new OrderSpecifier<T>(Order.DESC, mixin);
     }
+    return desc;
+  }
 
-    /**
-     * Create an OrderSpecifier for descending order of this expression
-     *
-     * @return descending order by this
-     */
-    public OrderSpecifier<T> desc() {
-        if (desc == null) {
-            desc = new OrderSpecifier<T>(Order.DESC, mixin);
-        }
-        return desc;
-    }
+  /**
+   * Create a {@code min(this)} expression
+   *
+   * <p>Get the minimum value of this expression (aggregation)
+   *
+   * @return min(this)
+   */
+  public ComparableExpressionBase<T> min() {
+    return Expressions.comparableOperation(getType(), Ops.AggOps.MIN_AGG, mixin);
+  }
 
-    /**
-     * Create a {@code min(this)} expression
-     *
-     * <p>Get the minimum value of this expression (aggregation)</p>
-     *
-     * @return min(this)
-     */
-    public ComparableExpressionBase<T> min() {
-        return Expressions.comparableOperation(getType(), Ops.AggOps.MIN_AGG, mixin);
-    }
-
-    /**
-     * Create a {@code max(this)} expression
-     *
-     * <p>Get the maximum value of this expression (aggregation)</p>
-     *
-     * @return max(this)
-     */
-    public ComparableExpressionBase<T> max() {
-        return Expressions.comparableOperation(getType(), Ops.AggOps.MAX_AGG, mixin);
-    }
-
+  /**
+   * Create a {@code max(this)} expression
+   *
+   * <p>Get the maximum value of this expression (aggregation)
+   *
+   * @return max(this)
+   */
+  public ComparableExpressionBase<T> max() {
+    return Expressions.comparableOperation(getType(), Ops.AggOps.MAX_AGG, mixin);
+  }
 }

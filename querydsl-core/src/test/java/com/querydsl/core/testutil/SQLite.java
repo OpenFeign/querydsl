@@ -14,5 +14,4 @@
 
 package com.querydsl.core.testutil;
 
-public interface SQLite extends EmbeddedDatabase {
-}
+public interface SQLite extends EmbeddedDatabase {}

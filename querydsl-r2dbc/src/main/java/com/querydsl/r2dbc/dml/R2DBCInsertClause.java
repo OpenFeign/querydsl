@@ -21,34 +21,48 @@ import com.querydsl.sql.RelationalPath;
 import io.r2dbc.spi.Connection;
 
 /**
- * SQLInsertClause defines an INSERT INTO clause
- * If you need to subtype this, use {@link AbstractR2DBCInsertClause} instead.
+ * SQLInsertClause defines an INSERT INTO clause If you need to subtype this, use {@link
+ * AbstractR2DBCInsertClause} instead.
  *
  * @author mc_fish
  */
 public class R2DBCInsertClause extends AbstractR2DBCInsertClause<R2DBCInsertClause> {
-    public R2DBCInsertClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
-        this(connection, new Configuration(templates), entity);
-    }
+  public R2DBCInsertClause(
+      Connection connection, SQLTemplates templates, RelationalPath<?> entity) {
+    this(connection, new Configuration(templates), entity);
+  }
 
-    public R2DBCInsertClause(Connection connection, SQLTemplates templates, RelationalPath<?> entity, R2DBCQuery<?> subQuery) {
-        this(connection, new Configuration(templates), entity, subQuery);
-    }
+  public R2DBCInsertClause(
+      Connection connection,
+      SQLTemplates templates,
+      RelationalPath<?> entity,
+      R2DBCQuery<?> subQuery) {
+    this(connection, new Configuration(templates), entity, subQuery);
+  }
 
-    public R2DBCInsertClause(Connection connection, Configuration configuration, RelationalPath<?> entity, R2DBCQuery<?> subQuery) {
-        super(connection, configuration, entity, subQuery);
-    }
+  public R2DBCInsertClause(
+      Connection connection,
+      Configuration configuration,
+      RelationalPath<?> entity,
+      R2DBCQuery<?> subQuery) {
+    super(connection, configuration, entity, subQuery);
+  }
 
-    public R2DBCInsertClause(Connection connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-    }
+  public R2DBCInsertClause(
+      Connection connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+  }
 
-    public R2DBCInsertClause(R2DBCConnectionProvider connection, Configuration configuration, RelationalPath<?> entity, R2DBCQuery<?> subQuery) {
-        super(connection, configuration, entity, subQuery);
-    }
+  public R2DBCInsertClause(
+      R2DBCConnectionProvider connection,
+      Configuration configuration,
+      RelationalPath<?> entity,
+      R2DBCQuery<?> subQuery) {
+    super(connection, configuration, entity, subQuery);
+  }
 
-    public R2DBCInsertClause(R2DBCConnectionProvider connection, Configuration configuration, RelationalPath<?> entity) {
-        super(connection, configuration, entity);
-    }
-
+  public R2DBCInsertClause(
+      R2DBCConnectionProvider connection, Configuration configuration, RelationalPath<?> entity) {
+    super(connection, configuration, entity);
+  }
 }

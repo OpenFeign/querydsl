@@ -13,59 +13,51 @@
  */
 package com.querydsl.jpa;
 
+import antlr.RecognitionException;
+import antlr.TokenStreamException;
+import com.querydsl.jpa.impl.JPAProvider;
+import com.querydsl.jpa.impl.JPAUtil;
+import com.querydsl.jpa.testutil.JPATestRunner;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
-import com.querydsl.jpa.impl.JPAProvider;
-import com.querydsl.jpa.impl.JPAUtil;
-import com.querydsl.jpa.testutil.JPATestRunner;
-
-import antlr.RecognitionException;
-import antlr.TokenStreamException;
-
 @RunWith(JPATestRunner.class)
 public class JPAIntegrationBase extends ParsingTest implements JPATest {
 
-    @Rule
-    @ClassRule
-    public static TestRule targetRule = new TargetRule();
+  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
 
-    @Rule
-    @ClassRule
-    public static TestRule hibernateOnly = new JPAProviderRule();
+  @Rule @ClassRule public static TestRule hibernateOnly = new JPAProviderRule();
 
-    private EntityManager em;
+  private EntityManager em;
 
-    private JPQLTemplates templates;
+  private JPQLTemplates templates;
 
-    @Override
-    protected QueryHelper<?> query() {
-        return new QueryHelper<Void>(templates) {
-            @Override
-            public void parse() throws RecognitionException, TokenStreamException {
-                JPQLSerializer serializer = new JPQLSerializer(templates);
-                serializer.serialize(getMetadata(), false, null);
-                Query query = em.createQuery(serializer.toString());
-                JPAUtil.setConstants(query, serializer.getConstantToAllLabels(), getMetadata().getParams());
-                try {
-                    query.getResultList();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            }
-        };
-    }
+  @Override
+  protected QueryHelper<?> query() {
+    return new QueryHelper<Void>(templates) {
+      @Override
+      public void parse() throws RecognitionException, TokenStreamException {
+        JPQLSerializer serializer = new JPQLSerializer(templates);
+        serializer.serialize(getMetadata(), false, null);
+        Query query = em.createQuery(serializer.toString());
+        JPAUtil.setConstants(query, serializer.getConstantToAllLabels(), getMetadata().getParams());
+        try {
+          query.getResultList();
+        } catch (Exception e) {
+          e.printStackTrace();
+          throw new RuntimeException(e);
+        }
+      }
+    };
+  }
 
-    @Override
-    public void setEntityManager(EntityManager em) {
-        this.em = em;
-        this.templates = JPAProvider.getTemplates(em);
-    }
-
+  @Override
+  public void setEntityManager(EntityManager em) {
+    this.em = em;
+    this.templates = JPAProvider.getTemplates(em);
+  }
 }

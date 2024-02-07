@@ -20,39 +20,37 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.PrimaryKey;
 import com.querydsl.sql.RelationalPathBase;
-
 import java.sql.Types;
 
-//@Schema("PUBLIC")
-//@Table("SURVEY")
+// @Schema("PUBLIC")
+// @Table("SURVEY")
 public class QSurvey extends RelationalPathBase<QSurvey> {
 
-    private static final long serialVersionUID = -7427577079709192842L;
+  private static final long serialVersionUID = -7427577079709192842L;
 
-    public static final QSurvey survey = new QSurvey("SURVEY");
+  public static final QSurvey survey = new QSurvey("SURVEY");
 
-    public final StringPath name = createString("name");
+  public final StringPath name = createString("name");
 
-    public final StringPath name2 = createString("name2");
+  public final StringPath name2 = createString("name2");
 
-    public final NumberPath<Integer> id = createNumber("id", Integer.class);
+  public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
-    public final PrimaryKey<QSurvey> idKey = createPrimaryKey(id);
+  public final PrimaryKey<QSurvey> idKey = createPrimaryKey(id);
 
-    public QSurvey(String path) {
-        super(QSurvey.class, PathMetadataFactory.forVariable(path), "PUBLIC", "SURVEY");
-        addMetadata();
-    }
+  public QSurvey(String path) {
+    super(QSurvey.class, PathMetadataFactory.forVariable(path), "PUBLIC", "SURVEY");
+    addMetadata();
+  }
 
-    public QSurvey(PathMetadata metadata) {
-        super(QSurvey.class, metadata, "PUBLIC", "SURVEY");
-        addMetadata();
-    }
+  public QSurvey(PathMetadata metadata) {
+    super(QSurvey.class, metadata, "PUBLIC", "SURVEY");
+    addMetadata();
+  }
 
-    protected void addMetadata() {
-        addMetadata(name, ColumnMetadata.named("NAME").ofType(Types.VARCHAR));
-        addMetadata(name2, ColumnMetadata.named("NAME2").ofType(Types.VARCHAR));
-        addMetadata(id, ColumnMetadata.named("ID").ofType(Types.INTEGER));
-    }
-
+  protected void addMetadata() {
+    addMetadata(name, ColumnMetadata.named("NAME").ofType(Types.VARCHAR));
+    addMetadata(name2, ColumnMetadata.named("NAME2").ofType(Types.VARCHAR));
+    addMetadata(id, ColumnMetadata.named("ID").ofType(Types.INTEGER));
+  }
 }

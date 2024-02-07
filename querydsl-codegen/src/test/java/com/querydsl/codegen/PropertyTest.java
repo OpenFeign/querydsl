@@ -15,33 +15,44 @@ package com.querydsl.codegen;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collections;
-
-import org.junit.Test;
-
 import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
+import java.util.Collections;
+import org.junit.Test;
 
 public class PropertyTest {
 
-    @Test
-    public void equals_and_hashCode() {
-        Type typeModel = new SimpleType(TypeCategory.ENTITY, "com.querydsl.DomainClass", "com.querydsl", "DomainClass", false,false);
-        EntityType type = new EntityType(typeModel);
-        Property p1 = new Property(type, "property", type, Collections.<String>emptyList());
-        Property p2 = new Property(type, "property", type, Collections.<String>emptyList());
-        assertEquals(p1, p1);
-        assertEquals(p1, p2);
-        assertEquals(p1.hashCode(), p2.hashCode());
-    }
+  @Test
+  public void equals_and_hashCode() {
+    Type typeModel =
+        new SimpleType(
+            TypeCategory.ENTITY,
+            "com.querydsl.DomainClass",
+            "com.querydsl",
+            "DomainClass",
+            false,
+            false);
+    EntityType type = new EntityType(typeModel);
+    Property p1 = new Property(type, "property", type, Collections.<String>emptyList());
+    Property p2 = new Property(type, "property", type, Collections.<String>emptyList());
+    assertEquals(p1, p1);
+    assertEquals(p1, p2);
+    assertEquals(p1.hashCode(), p2.hashCode());
+  }
 
-    @Test
-    public void escapedName() {
-        Type typeModel = new SimpleType(TypeCategory.ENTITY, "com.querydsl.DomainClass", "com.querydsl", "DomainClass", false,false);
-        EntityType type = new EntityType(typeModel);
-        Property property = new Property(type, "boolean", type, Collections.<String>emptyList());
-        assertEquals("boolean$", property.getEscapedName());
-    }
-
+  @Test
+  public void escapedName() {
+    Type typeModel =
+        new SimpleType(
+            TypeCategory.ENTITY,
+            "com.querydsl.DomainClass",
+            "com.querydsl",
+            "DomainClass",
+            false,
+            false);
+    EntityType type = new EntityType(typeModel);
+    Property property = new Property(type, "boolean", type, Collections.<String>emptyList());
+    assertEquals("boolean$", property.getEscapedName());
+  }
 }

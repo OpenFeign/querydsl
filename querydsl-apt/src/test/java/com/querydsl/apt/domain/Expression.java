@@ -3,6 +3,4 @@ package com.querydsl.apt.domain;
 import javax.persistence.Entity;
 
 @Entity
-public class Expression {
-
-}
+public class Expression {}

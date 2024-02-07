@@ -13,74 +13,72 @@
  */
 package com.querydsl.jpa;
 
+import com.mysema.commons.lang.CloseableIterator;
+import com.querydsl.core.types.FactoryExpression;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Iterator;
 
-import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.types.FactoryExpression;
-
 /**
- * {@code TransformingIterator} is a CloseableIterator adapter that transforms via a {@link FactoryExpression} instance
+ * {@code TransformingIterator} is a CloseableIterator adapter that transforms via a {@link
+ * FactoryExpression} instance
  *
  * @author tiwe
- *
  * @param <T>
  */
 public class TransformingIterator<T> implements CloseableIterator<T> {
 
-    private final Iterator<T> iterator;
+  private final Iterator<T> iterator;
 
-    private final Closeable closeable;
+  private final Closeable closeable;
 
-    private final FactoryExpression<?> projection;
+  private final FactoryExpression<?> projection;
 
-    public TransformingIterator(Iterator<T> iterator, FactoryExpression<?> projection) {
-        this.iterator = iterator;
-        this.projection = projection;
-        this.closeable = iterator instanceof Closeable ? (Closeable) iterator : null;
+  public TransformingIterator(Iterator<T> iterator, FactoryExpression<?> projection) {
+    this.iterator = iterator;
+    this.projection = projection;
+    this.closeable = iterator instanceof Closeable ? (Closeable) iterator : null;
+  }
+
+  public TransformingIterator(
+      Iterator<T> iterator, Closeable closeable, FactoryExpression<?> projection) {
+    this.iterator = iterator;
+    this.projection = projection;
+    this.closeable = closeable;
+  }
+
+  @Override
+  public boolean hasNext() {
+    return iterator.hasNext();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public T next() {
+    Object result = iterator.next();
+    if (result != null) {
+      if (!result.getClass().isArray()) {
+        result = new Object[] {result};
+      }
+      return (T) projection.newInstance((Object[]) result);
+    } else {
+      return null;
     }
+  }
 
-    public TransformingIterator(Iterator<T> iterator, Closeable closeable, FactoryExpression<?> projection) {
-        this.iterator = iterator;
-        this.projection = projection;
-        this.closeable = closeable;
+  @Override
+  public void remove() {
+    iterator.remove();
+  }
+
+  @Override
+  public void close() {
+    if (closeable != null) {
+      try {
+        closeable.close();
+      } catch (IOException e) {
+        throw new RuntimeException(e.getMessage(), e);
+      }
     }
-
-    @Override
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public T next() {
-        Object result = iterator.next();
-        if (result != null) {
-            if (!result.getClass().isArray()) {
-                result = new Object[]{result};
-            }
-            return (T) projection.newInstance((Object[]) result);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void remove() {
-        iterator.remove();
-    }
-
-    @Override
-    public void close() {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        }
-    }
-
-
+  }
 }

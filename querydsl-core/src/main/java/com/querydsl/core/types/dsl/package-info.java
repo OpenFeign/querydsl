@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * DSL expression types
- */
+/** DSL expression types */
 package com.querydsl.core.types.dsl;

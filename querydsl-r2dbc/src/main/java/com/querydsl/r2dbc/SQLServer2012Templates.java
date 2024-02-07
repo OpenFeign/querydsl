@@ -23,7 +23,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.Keywords;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLOps;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -34,111 +33,122 @@ import java.util.Set;
  */
 public class SQLServer2012Templates extends SQLServerTemplates {
 
-    @SuppressWarnings("FieldNameHidesFieldInSuperclass") //Intentional
-    public static final SQLServer2012Templates DEFAULT = new SQLServer2012Templates();
+  @SuppressWarnings("FieldNameHidesFieldInSuperclass") // Intentional
+  public static final SQLServer2012Templates DEFAULT = new SQLServer2012Templates();
 
-    private String topTemplate = "top {0s} ";
+  private String topTemplate = "top {0s} ";
 
-    private String limitOffsetTemplate = "\noffset {1} rows fetch next {0} rows only";
+  private String limitOffsetTemplate = "\noffset {1} rows fetch next {0} rows only";
 
-    private String offsetTemplate = "\noffset {0} rows";
+  private String offsetTemplate = "\noffset {0} rows";
 
-    public static Builder builder() {
-        return new Builder() {
-            @Override
-            protected SQLTemplates build(char escape, boolean quote) {
-                return new SQLServer2012Templates(escape, quote);
-            }
-        };
+  public static Builder builder() {
+    return new Builder() {
+      @Override
+      protected SQLTemplates build(char escape, boolean quote) {
+        return new SQLServer2012Templates(escape, quote);
+      }
+    };
+  }
+
+  public SQLServer2012Templates() {
+    this(Keywords.SQLSERVER2012, '\\', false);
+  }
+
+  public SQLServer2012Templates(boolean quote) {
+    this(Keywords.SQLSERVER2012, '\\', quote);
+  }
+
+  public SQLServer2012Templates(char escape, boolean quote) {
+    this(Keywords.SQLSERVER2012, escape, quote);
+  }
+
+  protected SQLServer2012Templates(Set<String> keywords, char escape, boolean quote) {
+    super(keywords, escape, quote);
+    add(SQLOps.NEXTVAL, "next value for {0s}");
+  }
+
+  @Override
+  public void serialize(QueryMetadata metadata, boolean forCountRow, SQLSerializer context) {
+    if (!forCountRow
+        && metadata.getModifiers().isRestricting()
+        && metadata.getOrderBy().isEmpty()
+        && !metadata.getJoins().isEmpty()) {
+      metadata = metadata.clone();
+      QueryModifiers mod = metadata.getModifiers();
+      // use top if order by is empty
+      if (mod.getOffset() == null) {
+        // select top ...
+        metadata.addFlag(
+            new QueryFlag(
+                Position.AFTER_SELECT,
+                Expressions.template(Integer.class, topTemplate, mod.getLimit())));
+      } else {
+        // order by first column
+        metadata.addOrderBy(Expressions.ONE.asc());
+      }
+    }
+    context.serializeForQuery(metadata, forCountRow);
+
+    if (!metadata.getFlags().isEmpty()) {
+      context.serialize(Position.END, metadata.getFlags());
+    }
+  }
+
+  @Override
+  public void serializeDelete(
+      QueryMetadata metadata, RelationalPath<?> entity, SQLSerializer context) {
+    // limit
+    QueryModifiers mod = metadata.getModifiers();
+    if (mod.isRestricting()) {
+      metadata = metadata.clone();
+      metadata.addFlag(
+          new QueryFlag(
+              Position.AFTER_SELECT,
+              Expressions.template(Integer.class, topTemplate, mod.getLimit())));
     }
 
-    public SQLServer2012Templates() {
-        this(Keywords.SQLSERVER2012, '\\', false);
+    context.serializeForDelete(metadata, entity);
+
+    if (!metadata.getFlags().isEmpty()) {
+      context.serialize(Position.END, metadata.getFlags());
+    }
+  }
+
+  @Override
+  public void serializeUpdate(
+      QueryMetadata metadata,
+      RelationalPath<?> entity,
+      Map<Path<?>, Expression<?>> updates,
+      SQLSerializer context) {
+    // limit
+    QueryModifiers mod = metadata.getModifiers();
+    if (mod.isRestricting()) {
+      metadata = metadata.clone();
+      metadata.addFlag(
+          new QueryFlag(
+              Position.AFTER_SELECT,
+              Expressions.template(Integer.class, topTemplate, mod.getLimit())));
     }
 
-    public SQLServer2012Templates(boolean quote) {
-        this(Keywords.SQLSERVER2012, '\\', quote);
+    context.serializeForUpdate(metadata, entity, updates);
+
+    if (!metadata.getFlags().isEmpty()) {
+      context.serialize(Position.END, metadata.getFlags());
     }
+  }
 
-    public SQLServer2012Templates(char escape, boolean quote) {
-        this(Keywords.SQLSERVER2012, escape, quote);
+  @Override
+  protected void serializeModifiers(QueryMetadata metadata, SQLSerializer context) {
+    if (!metadata.getOrderBy().isEmpty()) {
+      QueryModifiers mod = metadata.getModifiers();
+      if (mod.getLimit() == null) {
+        context.handle(offsetTemplate, mod.getOffset());
+      } else if (mod.getOffset() == null) {
+        context.handle(limitOffsetTemplate, mod.getLimit(), 0);
+      } else {
+        context.handle(limitOffsetTemplate, mod.getLimit(), mod.getOffset());
+      }
     }
-
-    protected SQLServer2012Templates(Set<String> keywords, char escape, boolean quote) {
-        super(keywords, escape, quote);
-        add(SQLOps.NEXTVAL, "next value for {0s}");
-    }
-
-    @Override
-    public void serialize(QueryMetadata metadata, boolean forCountRow, SQLSerializer context) {
-        if (!forCountRow && metadata.getModifiers().isRestricting() && metadata.getOrderBy().isEmpty()
-                && !metadata.getJoins().isEmpty()) {
-            metadata = metadata.clone();
-            QueryModifiers mod = metadata.getModifiers();
-            // use top if order by is empty
-            if (mod.getOffset() == null) {
-                // select top ...
-                metadata.addFlag(new QueryFlag(Position.AFTER_SELECT,
-                        Expressions.template(Integer.class, topTemplate, mod.getLimit())));
-            } else {
-                // order by first column
-                metadata.addOrderBy(Expressions.ONE.asc());
-            }
-        }
-        context.serializeForQuery(metadata, forCountRow);
-
-        if (!metadata.getFlags().isEmpty()) {
-            context.serialize(Position.END, metadata.getFlags());
-        }
-    }
-
-    @Override
-    public void serializeDelete(QueryMetadata metadata, RelationalPath<?> entity, SQLSerializer context) {
-        // limit
-        QueryModifiers mod = metadata.getModifiers();
-        if (mod.isRestricting()) {
-            metadata = metadata.clone();
-            metadata.addFlag(new QueryFlag(Position.AFTER_SELECT,
-                    Expressions.template(Integer.class, topTemplate, mod.getLimit())));
-        }
-
-        context.serializeForDelete(metadata, entity);
-
-        if (!metadata.getFlags().isEmpty()) {
-            context.serialize(Position.END, metadata.getFlags());
-        }
-    }
-
-    @Override
-    public void serializeUpdate(QueryMetadata metadata, RelationalPath<?> entity,
-                                Map<Path<?>, Expression<?>> updates, SQLSerializer context) {
-        // limit
-        QueryModifiers mod = metadata.getModifiers();
-        if (mod.isRestricting()) {
-            metadata = metadata.clone();
-            metadata.addFlag(new QueryFlag(Position.AFTER_SELECT,
-                    Expressions.template(Integer.class, topTemplate, mod.getLimit())));
-        }
-
-        context.serializeForUpdate(metadata, entity, updates);
-
-        if (!metadata.getFlags().isEmpty()) {
-            context.serialize(Position.END, metadata.getFlags());
-        }
-    }
-
-    @Override
-    protected void serializeModifiers(QueryMetadata metadata, SQLSerializer context) {
-        if (!metadata.getOrderBy().isEmpty()) {
-            QueryModifiers mod = metadata.getModifiers();
-            if (mod.getLimit() == null) {
-                context.handle(offsetTemplate, mod.getOffset());
-            } else if (mod.getOffset() == null) {
-                context.handle(limitOffsetTemplate, mod.getLimit(), 0);
-            } else {
-                context.handle(limitOffsetTemplate, mod.getLimit(), mod.getOffset());
-            }
-        }
-    }
-
+  }
 }

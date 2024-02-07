@@ -13,13 +13,23 @@
  */
 package com.querydsl.jpa;
 
-import static org.junit.Assert.assertEquals;
 import static com.querydsl.jpa.Constants.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import antlr.RecognitionException;
+import antlr.TokenStreamException;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.jpa.domain.Cat;
+import com.querydsl.jpa.domain.QCat;
+import com.querydsl.jpa.hibernate.HibernateDeleteClause;
+import com.querydsl.jpa.hibernate.HibernateInsertClause;
+import com.querydsl.jpa.hibernate.HibernateQuery;
+import com.querydsl.jpa.hibernate.HibernateUpdateClause;
+import com.querydsl.jpa.hibernate.HibernateUtil;
+import com.querydsl.jpa.testutil.HibernateTestRunner;
 import java.util.Arrays;
 import java.util.List;
-
 import org.hibernate.Query;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
@@ -27,197 +37,180 @@ import org.hibernate.Session;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.jpa.domain.Cat;
-import com.querydsl.jpa.domain.QCat;
-import com.querydsl.jpa.hibernate.HibernateDeleteClause;
-import com.querydsl.jpa.hibernate.HibernateQuery;
-import com.querydsl.jpa.hibernate.HibernateInsertClause;
-import com.querydsl.jpa.hibernate.HibernateUpdateClause;
-import com.querydsl.jpa.hibernate.HibernateUtil;
-import com.querydsl.jpa.testutil.HibernateTestRunner;
-
-import antlr.RecognitionException;
-import antlr.TokenStreamException;
-
 @RunWith(HibernateTestRunner.class)
 public class IntegrationBase extends ParsingTest implements HibernateTest {
 
-    private Session session;
+  private Session session;
 
-    @Override
-    protected QueryHelper<?> query() {
-        return new QueryHelper<Void>(HQLTemplates.DEFAULT) {
-            @Override
-            public void parse() throws RecognitionException, TokenStreamException {
-                try {
-                    System.out.println("query : " + toString().replace('\n', ' '));
-                    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
-                    serializer.serialize(getMetadata(), false, null);
-                    Query query = session.createQuery(serializer.toString());
-                    HibernateUtil.setConstants(query, serializer.getConstantToNamedLabel(),
-                            serializer.getConstantToNumberedLabel(), getMetadata().getParams());
-                    query.list();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                } finally {
-                    System.out.println();
-                }
-            }
-        };
-    }
-
-    @Override
-    @Test
-    public void groupBy() throws Exception {
-        // NOTE : commented out, because HQLSDB doesn't support these queries
-    }
-
-    @Override
-    @Test
-    public void groupBy_2() throws Exception {
-        // NOTE : commented out, because HQLSDB doesn't support these queries
-    }
-
-    @Override
-    @Test
-    public void orderBy() throws Exception {
-        // NOTE : commented out, because HQLSDB doesn't support these queries
-    }
-
-    @Override
-    @Test
-    public void docoExamples910() throws Exception {
-        // NOTE : commented out, because HQLSDB doesn't support these queries
-    }
-
-    private HibernateDeleteClause delete(EntityPath<?> entity) {
-        return new HibernateDeleteClause(session, entity);
-    }
-
-    private HibernateUpdateClause update(EntityPath<?> entity) {
-        return new HibernateUpdateClause(session, entity);
-    }
-
-    private HibernateInsertClause insert(EntityPath<?> entity) {
-        return new HibernateInsertClause(session, entity);
-    }
-
-
-    @Test
-    public void scroll() {
-        session.save(new Cat("Bob",10));
-        session.save(new Cat("Steve",11));
-
-        QCat cat = QCat.cat;
-        HibernateQuery<?> query = new HibernateQuery<Void>(session);
-        ScrollableResults results = query.from(cat).select(cat).scroll(ScrollMode.SCROLL_INSENSITIVE);
-        while (results.next()) {
-            assertNotNull(results.get(0));
+  @Override
+  protected QueryHelper<?> query() {
+    return new QueryHelper<Void>(HQLTemplates.DEFAULT) {
+      @Override
+      public void parse() throws RecognitionException, TokenStreamException {
+        try {
+          System.out.println("query : " + toString().replace('\n', ' '));
+          JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+          serializer.serialize(getMetadata(), false, null);
+          Query query = session.createQuery(serializer.toString());
+          HibernateUtil.setConstants(
+              query,
+              serializer.getConstantToNamedLabel(),
+              serializer.getConstantToNumberedLabel(),
+              getMetadata().getParams());
+          query.list();
+        } catch (Exception e) {
+          e.printStackTrace();
+          throw new RuntimeException(e);
+        } finally {
+          System.out.println();
         }
-        results.close();
+      }
+    };
+  }
+
+  @Override
+  @Test
+  public void groupBy() throws Exception {
+    // NOTE : commented out, because HQLSDB doesn't support these queries
+  }
+
+  @Override
+  @Test
+  public void groupBy_2() throws Exception {
+    // NOTE : commented out, because HQLSDB doesn't support these queries
+  }
+
+  @Override
+  @Test
+  public void orderBy() throws Exception {
+    // NOTE : commented out, because HQLSDB doesn't support these queries
+  }
+
+  @Override
+  @Test
+  public void docoExamples910() throws Exception {
+    // NOTE : commented out, because HQLSDB doesn't support these queries
+  }
+
+  private HibernateDeleteClause delete(EntityPath<?> entity) {
+    return new HibernateDeleteClause(session, entity);
+  }
+
+  private HibernateUpdateClause update(EntityPath<?> entity) {
+    return new HibernateUpdateClause(session, entity);
+  }
+
+  private HibernateInsertClause insert(EntityPath<?> entity) {
+    return new HibernateInsertClause(session, entity);
+  }
+
+  @Test
+  public void scroll() {
+    session.save(new Cat("Bob", 10));
+    session.save(new Cat("Steve", 11));
+
+    QCat cat = QCat.cat;
+    HibernateQuery<?> query = new HibernateQuery<Void>(session);
+    ScrollableResults results = query.from(cat).select(cat).scroll(ScrollMode.SCROLL_INSENSITIVE);
+    while (results.next()) {
+      assertNotNull(results.get(0));
     }
+    results.close();
+  }
 
-    @Test
-    public void insert() {
-        session.save(new Cat("Bob",10));
+  @Test
+  public void insert() {
+    session.save(new Cat("Bob", 10));
 
-        QCat cat = QCat.cat;
-        long amount = insert(cat)
+    QCat cat = QCat.cat;
+    long amount = insert(cat).set(cat.name, "Bobby").set(cat.alive, false).execute();
+    assertEquals(1, amount);
+
+    assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
+  }
+
+  @Test
+  public void insert2() {
+    session.save(new Cat("Bob", 10));
+
+    QCat cat = QCat.cat;
+    long amount = insert(cat).columns(cat.name, cat.alive).values("Bobby", false).execute();
+    assertEquals(1, amount);
+
+    assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
+  }
+
+  @Test
+  public void insert3() {
+    session.save(new Cat("Bob", 10));
+
+    QCat cat = QCat.cat;
+    QCat bob = new QCat("Bob");
+
+    long amount =
+        insert(cat)
+            .columns(cat.name, cat.alive)
+            .select(JPAExpressions.select(bob.name, bob.alive).from(bob))
+            .execute();
+    assertEquals(1, amount);
+
+    assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
+  }
+
+  @Test
+  public void update() {
+    session.save(new Cat("Bob", 10));
+    session.save(new Cat("Steve", 11));
+
+    QCat cat = QCat.cat;
+    long amount =
+        update(cat)
+            .where(cat.name.eq("Bob"))
             .set(cat.name, "Bobby")
             .set(cat.alive, false)
             .execute();
-        assertEquals(1, amount);
+    assertEquals(1, amount);
 
-        assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
-    }
+    assertEquals(0L, query().from(cat).where(cat.name.eq("Bob")).fetchCount());
+  }
 
-    @Test
-    public void insert2() {
-        session.save(new Cat("Bob",10));
+  @Test
+  public void update_with_null() {
+    session.save(new Cat("Bob", 10));
+    session.save(new Cat("Steve", 11));
 
-        QCat cat = QCat.cat;
-        long amount = insert(cat).columns(cat.name, cat.alive)
-            .values("Bobby", false)
-            .execute();
-        assertEquals(1, amount);
-
-        assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
-    }
-
-    @Test
-    public void insert3() {
-        session.save(new Cat("Bob",10));
-
-        QCat cat = QCat.cat;
-        QCat bob = new QCat("Bob");
-
-        long amount = insert(cat)
-                .columns(cat.name, cat.alive)
-                .select(JPAExpressions.select(bob.name, bob.alive).from(bob))
-                .execute();
-        assertEquals(1, amount);
-
-        assertEquals(1L, query().from(cat).where(cat.name.eq("Bobby")).fetchCount());
-    }
-
-    @Test
-    public void update() {
-        session.save(new Cat("Bob",10));
-        session.save(new Cat("Steve",11));
-
-        QCat cat = QCat.cat;
-        long amount = update(cat).where(cat.name.eq("Bob"))
-            .set(cat.name, "Bobby")
-            .set(cat.alive, false)
-            .execute();
-        assertEquals(1, amount);
-
-        assertEquals(0L, query().from(cat).where(cat.name.eq("Bob")).fetchCount());
-    }
-
-    @Test
-    public void update_with_null() {
-        session.save(new Cat("Bob",10));
-        session.save(new Cat("Steve",11));
-
-        QCat cat = QCat.cat;
-        long amount = update(cat).where(cat.name.eq("Bob"))
+    QCat cat = QCat.cat;
+    long amount =
+        update(cat)
+            .where(cat.name.eq("Bob"))
             .set(cat.name, (String) null)
             .set(cat.alive, false)
             .execute();
-        assertEquals(1, amount);
+    assertEquals(1, amount);
+  }
+
+  @Test
+  public void delete() {
+    session.save(new Cat("Bob", 10));
+    session.save(new Cat("Steve", 11));
+
+    QCat cat = QCat.cat;
+    long amount = delete(cat).where(cat.name.eq("Bob")).execute();
+    assertEquals(1, amount);
+  }
+
+  @Test
+  public void collection() throws Exception {
+    List<Cat> cats = Arrays.asList(new Cat("Bob", 10), new Cat("Steve", 11));
+    for (Cat cat : cats) {
+      session.save(cat);
     }
 
-    @Test
-    public void delete() {
-        session.save(new Cat("Bob",10));
-        session.save(new Cat("Steve",11));
+    query().from(cat).innerJoin(cat.kittens, kitten).where(kitten.in(cats)).parse();
+  }
 
-        QCat cat = QCat.cat;
-        long amount = delete(cat).where(cat.name.eq("Bob"))
-            .execute();
-        assertEquals(1, amount);
-    }
-
-    @Test
-    public void collection() throws Exception {
-        List<Cat> cats = Arrays.asList(new Cat("Bob",10), new Cat("Steve",11));
-        for (Cat cat : cats) {
-            session.save(cat);
-        }
-
-        query().from(cat)
-            .innerJoin(cat.kittens, kitten)
-            .where(kitten.in(cats))
-            .parse();
-
-    }
-
-    @Override
-    public void setSession(Session session) {
-        this.session = session;
-    }
-
+  @Override
+  public void setSession(Session session) {
+    this.session = session;
+  }
 }

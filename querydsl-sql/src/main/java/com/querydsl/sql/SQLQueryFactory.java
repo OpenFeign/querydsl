@@ -13,100 +13,95 @@
  */
 package com.querydsl.sql;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.function.Supplier;
-
-import javax.sql.DataSource;
-
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.function.Supplier;
+import javax.sql.DataSource;
 
 /**
  * Factory class for query and DML clause creation
  *
  * @author tiwe
- *
  */
 public class SQLQueryFactory extends AbstractSQLQueryFactory<SQLQuery<?>> {
 
-    static class DataSourceProvider implements Supplier<Connection> {
+  static class DataSourceProvider implements Supplier<Connection> {
 
-        private final DataSource ds;
+    private final DataSource ds;
 
-        public DataSourceProvider(DataSource ds) {
-            this.ds = ds;
-        }
-
-        @Override
-        public Connection get() {
-            try {
-                return ds.getConnection();
-            } catch (SQLException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        }
-
-    }
-
-    public SQLQueryFactory(SQLTemplates templates, Supplier<Connection> connection) {
-        this(new Configuration(templates), connection);
-    }
-
-    public SQLQueryFactory(Configuration configuration, Supplier<Connection> connProvider) {
-        super(configuration, connProvider);
-    }
-
-    public SQLQueryFactory(Configuration configuration, DataSource dataSource) {
-        this(configuration, dataSource, true);
-    }
-
-    public SQLQueryFactory(Configuration configuration, DataSource dataSource, boolean release) {
-        super(configuration, new DataSourceProvider(dataSource));
-        if (release) {
-            configuration.addListener(SQLCloseListener.DEFAULT);
-        }
+    public DataSourceProvider(DataSource ds) {
+      this.ds = ds;
     }
 
     @Override
-    public SQLQuery<?> query() {
-        return new SQLQuery<Void>(connection, configuration);
+    public Connection get() {
+      try {
+        return ds.getConnection();
+      } catch (SQLException e) {
+        throw new RuntimeException(e.getMessage(), e);
+      }
     }
+  }
 
-    @Override
-    public <T> SQLQuery<T> select(Expression<T> expr) {
-        return query().select(expr);
+  public SQLQueryFactory(SQLTemplates templates, Supplier<Connection> connection) {
+    this(new Configuration(templates), connection);
+  }
+
+  public SQLQueryFactory(Configuration configuration, Supplier<Connection> connProvider) {
+    super(configuration, connProvider);
+  }
+
+  public SQLQueryFactory(Configuration configuration, DataSource dataSource) {
+    this(configuration, dataSource, true);
+  }
+
+  public SQLQueryFactory(Configuration configuration, DataSource dataSource, boolean release) {
+    super(configuration, new DataSourceProvider(dataSource));
+    if (release) {
+      configuration.addListener(SQLCloseListener.DEFAULT);
     }
+  }
 
-    @Override
-    public SQLQuery<Tuple> select(Expression<?>... exprs) {
-        return query().select(exprs);
-    }
+  @Override
+  public SQLQuery<?> query() {
+    return new SQLQuery<Void>(connection, configuration);
+  }
 
-    @Override
-    public <T> SQLQuery<T> selectDistinct(Expression<T> expr) {
-        return query().select(expr).distinct();
-    }
+  @Override
+  public <T> SQLQuery<T> select(Expression<T> expr) {
+    return query().select(expr);
+  }
 
-    @Override
-    public SQLQuery<Tuple> selectDistinct(Expression<?>... exprs) {
-        return query().select(exprs).distinct();
-    }
+  @Override
+  public SQLQuery<Tuple> select(Expression<?>... exprs) {
+    return query().select(exprs);
+  }
 
-    @Override
-    public SQLQuery<Integer> selectZero() {
-        return select(Expressions.ZERO);
-    }
+  @Override
+  public <T> SQLQuery<T> selectDistinct(Expression<T> expr) {
+    return query().select(expr).distinct();
+  }
 
-    @Override
-    public SQLQuery<Integer> selectOne() {
-        return select(Expressions.ONE);
-    }
+  @Override
+  public SQLQuery<Tuple> selectDistinct(Expression<?>... exprs) {
+    return query().select(exprs).distinct();
+  }
 
-    @Override
-    public <T> SQLQuery<T> selectFrom(RelationalPath<T> expr) {
-        return select(expr).from(expr);
-    }
+  @Override
+  public SQLQuery<Integer> selectZero() {
+    return select(Expressions.ZERO);
+  }
 
+  @Override
+  public SQLQuery<Integer> selectOne() {
+    return select(Expressions.ONE);
+  }
+
+  @Override
+  public <T> SQLQuery<T> selectFrom(RelationalPath<T> expr) {
+    return select(expr).from(expr);
+  }
 }

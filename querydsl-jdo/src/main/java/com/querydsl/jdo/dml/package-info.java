@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * DML operations support
- */
+/** DML operations support */
 package com.querydsl.jdo.dml;

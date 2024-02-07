@@ -13,53 +13,51 @@
  */
 package com.querydsl.sql;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Projections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * {@code RelationalPathUtils} provides static utility methods for {@link RelationalPath} instances
  *
  * @author tiwe
- *
  */
 @SuppressWarnings("unchecked")
 public final class RelationalPathUtils {
 
-    public static <T> FactoryExpression<T> createProjection(RelationalPath<T> path) {
-        if (path.getType().equals(path.getClass())) {
-            throw new IllegalArgumentException("RelationalPath based projection can only be used with generated Bean types");
-        }
-        try {
-            // ensure that empty constructor is available
-            path.getType().getConstructor();
-            return createBeanProjection(path);
-        } catch (NoSuchMethodException e) {
-            // fallback to constructor projection
-            return createConstructorProjection(path);
-        }
+  public static <T> FactoryExpression<T> createProjection(RelationalPath<T> path) {
+    if (path.getType().equals(path.getClass())) {
+      throw new IllegalArgumentException(
+          "RelationalPath based projection can only be used with generated Bean types");
     }
-
-    private static <T> FactoryExpression<T> createConstructorProjection(RelationalPath<T> path) {
-        Expression<?>[] exprs = path.getColumns().toArray(new Expression[0]);
-        return Projections.<T>constructor((Class) path.getType(), exprs);
+    try {
+      // ensure that empty constructor is available
+      path.getType().getConstructor();
+      return createBeanProjection(path);
+    } catch (NoSuchMethodException e) {
+      // fallback to constructor projection
+      return createConstructorProjection(path);
     }
+  }
 
-    private static <T> FactoryExpression<T> createBeanProjection(RelationalPath<T> path) {
-        Map<String,Expression<?>> bindings = new LinkedHashMap<String,Expression<?>>();
-        for (Path<?> column : path.getColumns()) {
-            bindings.put(column.getMetadata().getName(), column);
-        }
-        if (bindings.isEmpty()) {
-            throw new IllegalArgumentException("No bindings could be derived from " + path);
-        }
-        return Projections.<T>fields((Class) path.getType(), bindings);
+  private static <T> FactoryExpression<T> createConstructorProjection(RelationalPath<T> path) {
+    Expression<?>[] exprs = path.getColumns().toArray(new Expression[0]);
+    return Projections.<T>constructor((Class) path.getType(), exprs);
+  }
+
+  private static <T> FactoryExpression<T> createBeanProjection(RelationalPath<T> path) {
+    Map<String, Expression<?>> bindings = new LinkedHashMap<String, Expression<?>>();
+    for (Path<?> column : path.getColumns()) {
+      bindings.put(column.getMetadata().getName(), column);
     }
+    if (bindings.isEmpty()) {
+      throw new IllegalArgumentException("No bindings could be derived from " + path);
+    }
+    return Projections.<T>fields((Class) path.getType(), bindings);
+  }
 
-    private RelationalPathUtils() { }
-
+  private RelationalPathUtils() {}
 }

@@ -13,19 +13,6 @@
  */
 package com.querydsl.jdo.sql;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.jetbrains.annotations.Nullable;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.IteratorAdapter;
 import com.querydsl.core.*;
@@ -36,208 +23,218 @@ import com.querydsl.sql.Configuration;
 import com.querydsl.sql.ProjectableSQLQuery;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.SQLSerializer;
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Base class for JDO-based {@link SQLQuery} implementations
  *
  * @author tiwe
- *
  * @param <T> result type
  * @param <Q> concrete subclass
  */
 @SuppressWarnings("rawtypes")
-public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>> extends ProjectableSQLQuery<T, Q> {
+public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
+    extends ProjectableSQLQuery<T, Q> {
 
-    private static final Logger logger = Logger.getLogger(JDOSQLQuery.class.getName());
+  private static final Logger logger = Logger.getLogger(JDOSQLQuery.class.getName());
 
-    private final Closeable closeable = new Closeable() {
+  private final Closeable closeable =
+      new Closeable() {
         @Override
         public void close() throws IOException {
-            AbstractSQLQuery.this.close();
+          AbstractSQLQuery.this.close();
         }
-    };
+      };
 
-    protected final boolean detach;
+  protected final boolean detach;
 
-    private List<Object> orderedConstants = new ArrayList<Object>();
+  private List<Object> orderedConstants = new ArrayList<Object>();
 
-    @Nullable
-    protected final PersistenceManager persistenceManager;
+  @Nullable protected final PersistenceManager persistenceManager;
 
-    protected List<Query> queries = new ArrayList<Query>(2);
+  protected List<Query> queries = new ArrayList<Query>(2);
 
-    @Nullable
-    protected FactoryExpression<?> projection;
+  @Nullable protected FactoryExpression<?> projection;
 
-    protected final QueryMixin<Q> queryMixin;
+  protected final QueryMixin<Q> queryMixin;
 
-    @SuppressWarnings("unchecked")
-    public AbstractSQLQuery(QueryMetadata metadata, Configuration conf, PersistenceManager persistenceManager,
-                            boolean detach) {
-        super(new QueryMixin<Q>(metadata, false), conf);
-        this.queryMixin = super.queryMixin;
-        this.queryMixin.setSelf((Q) this);
-        this.persistenceManager = persistenceManager;
-        this.detach = detach;
+  @SuppressWarnings("unchecked")
+  public AbstractSQLQuery(
+      QueryMetadata metadata,
+      Configuration conf,
+      PersistenceManager persistenceManager,
+      boolean detach) {
+    super(new QueryMixin<Q>(metadata, false), conf);
+    this.queryMixin = super.queryMixin;
+    this.queryMixin.setSelf((Q) this);
+    this.persistenceManager = persistenceManager;
+    this.detach = detach;
+  }
+
+  /** Close the query and related resources */
+  public void close() {
+    for (Query query : queries) {
+      query.closeAll();
+    }
+  }
+
+  @Override
+  public long fetchCount() {
+    Query query = createQuery(true);
+    query.setUnique(true);
+    Long rv = (Long) execute(query, true);
+    if (rv != null) {
+      return rv;
+    } else {
+      throw new QueryException("Query returned null");
+    }
+  }
+
+  private Query createQuery(boolean forCount) {
+    SQLSerializer serializer = new SQLSerializer(configuration);
+    if (union != null) {
+      serializer.serializeUnion(union, queryMixin.getMetadata(), unionAll);
+    } else {
+      serializer.serialize(queryMixin.getMetadata(), forCount);
     }
 
-    /**
-     * Close the query and related resources
-     */
-    public void close() {
-        for (Query query : queries) {
-            query.closeAll();
-        }
+    // create Query
+    if (logger.isLoggable(Level.FINE)) {
+      logger.fine(serializer.toString());
+    }
+    Query query = persistenceManager.newQuery("javax.jdo.query.SQL", serializer.toString());
+    orderedConstants = serializer.getConstants();
+    queries.add(query);
+
+    if (!forCount) {
+      Expression<?> projection = queryMixin.getMetadata().getProjection();
+      if (projection instanceof FactoryExpression) {
+        this.projection = (FactoryExpression<?>) projection;
+      }
+    } else {
+      query.setResultClass(Long.class);
     }
 
-    @Override
-    public long fetchCount() {
-        Query query = createQuery(true);
-        query.setUnique(true);
-        Long rv = (Long) execute(query, true);
-        if (rv != null) {
-            return rv;
-        } else {
-            throw new QueryException("Query returned null");
-        }
+    return query;
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> T detach(T results) {
+    if (results instanceof Collection) {
+      return (T) persistenceManager.detachCopyAll(results);
+    } else {
+      return persistenceManager.detachCopy(results);
     }
+  }
 
-    private Query createQuery(boolean forCount) {
-        SQLSerializer serializer = new SQLSerializer(configuration);
-        if (union != null) {
-            serializer.serializeUnion(union, queryMixin.getMetadata(), unionAll);
-        } else {
-            serializer.serialize(queryMixin.getMetadata(), forCount);
-        }
-
-
-        // create Query
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine(serializer.toString());
-        }
-        Query query = persistenceManager.newQuery("javax.jdo.query.SQL", serializer.toString());
-        orderedConstants = serializer.getConstants();
-        queries.add(query);
-
-        if (!forCount) {
-            Expression<?> projection = queryMixin.getMetadata().getProjection();
-            if (projection instanceof FactoryExpression) {
-                this.projection = (FactoryExpression<?>) projection;
-            }
-        } else {
-            query.setResultClass(Long.class);
-        }
-
-        return query;
+  private Object project(FactoryExpression<?> expr, Object row) {
+    if (row == null) {
+      return null;
+    } else if (row.getClass().isArray()) {
+      return expr.newInstance((Object[]) row);
+    } else {
+      return expr.newInstance(row);
     }
+  }
 
-    @SuppressWarnings("unchecked")
-    private <T> T detach(T results) {
-        if (results instanceof Collection) {
-            return (T) persistenceManager.detachCopyAll(results);
-        } else {
-            return persistenceManager.detachCopy(results);
-        }
+  @SuppressWarnings("unchecked")
+  private Object execute(Query query, boolean forCount) {
+    Object rv;
+    if (!orderedConstants.isEmpty()) {
+      rv = query.executeWithArray(orderedConstants.toArray());
+    } else {
+      rv = query.execute();
     }
+    if (isDetach()) {
+      rv = detach(rv);
+    }
+    if (projection != null && !forCount) {
+      if (rv instanceof List) {
+        List<?> original = (List<?>) rv;
+        rv = new ArrayList<>();
+        for (Object o : original) {
+          ((List) rv).add(project(projection, o));
+        }
+      } else {
+        rv = project(projection, rv);
+      }
+    }
+    return rv;
+  }
 
-    private Object project(FactoryExpression<?> expr, Object row) {
-        if (row == null) {
-            return null;
-        } else if (row.getClass().isArray()) {
-            return expr.newInstance((Object[]) row);
-        } else {
-            return expr.newInstance(row);
-        }
-    }
+  public boolean isDetach() {
+    return detach;
+  }
 
-    @SuppressWarnings("unchecked")
-    private Object execute(Query query, boolean forCount) {
-        Object rv;
-        if (!orderedConstants.isEmpty()) {
-            rv = query.executeWithArray(orderedConstants.toArray());
-        } else {
-            rv = query.execute();
-        }
-        if (isDetach()) {
-            rv = detach(rv);
-        }
-        if (projection != null && !forCount) {
-            if (rv instanceof List) {
-                List<?> original = (List<?>) rv;
-                rv = new ArrayList<>();
-                for (Object o : original) {
-                    ((List) rv).add(project(projection, o));
-                }
-            } else {
-                rv = project(projection, rv);
-            }
-        }
-        return rv;
-    }
+  @Override
+  public CloseableIterator<T> iterate() {
+    return new IteratorAdapter<T>(fetch().iterator(), closeable);
+  }
 
-    public boolean isDetach() {
-        return detach;
-    }
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<T> fetch() {
+    Object rv = execute(createQuery(false), false);
+    return rv instanceof List ? (List<T>) rv : Collections.singletonList((T) rv);
+  }
 
-    @Override
-    public CloseableIterator<T> iterate() {
-        return new IteratorAdapter<T>(fetch().iterator(), closeable);
+  @Override
+  @SuppressWarnings("unchecked")
+  public QueryResults<T> fetchResults() {
+    Query countQuery = createQuery(true);
+    countQuery.setUnique(true);
+    long total = (Long) execute(countQuery, true);
+    if (total > 0) {
+      QueryModifiers modifiers = queryMixin.getMetadata().getModifiers();
+      Query query = createQuery(false);
+      return new QueryResults<T>((List<T>) execute(query, false), modifiers, total);
+    } else {
+      return QueryResults.emptyResults();
     }
+  }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<T> fetch() {
-        Object rv = execute(createQuery(false), false);
-        return rv instanceof List ? (List<T>) rv : Collections.singletonList((T) rv);
+  @Override
+  public String toString() {
+    if (!queryMixin.getMetadata().getJoins().isEmpty()) {
+      SQLSerializer serializer = new SQLSerializer(configuration);
+      serializer.serialize(queryMixin.getMetadata(), false);
+      return serializer.toString().trim();
+    } else {
+      return super.toString();
     }
+  }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public QueryResults<T> fetchResults() {
-        Query countQuery = createQuery(true);
-        countQuery.setUnique(true);
-        long total = (Long) execute(countQuery, true);
-        if (total > 0) {
-            QueryModifiers modifiers = queryMixin.getMetadata().getModifiers();
-            Query query = createQuery(false);
-            return new QueryResults<T>((List<T>) execute(query, false), modifiers, total);
-        } else {
-            return QueryResults.emptyResults();
+  @SuppressWarnings("unchecked")
+  @Override
+  @Nullable
+  public T fetchOne() throws NonUniqueResultException {
+    if (getMetadata().getModifiers().getLimit() == null) {
+      limit(2);
+    }
+    Query query = createQuery(false);
+    Object rv = execute(query, false);
+    if (rv instanceof List) {
+      List<?> list = (List<?>) rv;
+      if (!list.isEmpty()) {
+        if (list.size() > 1) {
+          throw new NonUniqueResultException();
         }
+        return (T) list.get(0);
+      } else {
+        return null;
+      }
+    } else {
+      return (T) rv;
     }
-
-    @Override
-    public String toString() {
-        if (!queryMixin.getMetadata().getJoins().isEmpty()) {
-            SQLSerializer serializer = new SQLSerializer(configuration);
-            serializer.serialize(queryMixin.getMetadata(), false);
-            return serializer.toString().trim();
-        } else {
-            return super.toString();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    @Nullable
-    public T fetchOne() throws NonUniqueResultException {
-        if (getMetadata().getModifiers().getLimit() == null) {
-            limit(2);
-        }
-        Query query = createQuery(false);
-        Object rv = execute(query, false);
-        if (rv instanceof List) {
-            List<?> list = (List<?>) rv;
-            if (!list.isEmpty()) {
-                if (list.size() > 1) {
-                    throw new NonUniqueResultException();
-                }
-                return (T) list.get(0);
-            } else {
-                return null;
-            }
-        } else {
-            return (T) rv;
-        }
-    }
+  }
 }

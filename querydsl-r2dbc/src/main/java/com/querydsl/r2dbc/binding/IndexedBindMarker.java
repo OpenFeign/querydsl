@@ -15,37 +15,34 @@
  */
 package com.querydsl.r2dbc.binding;
 
-/**
- * A single indexed bind marker.
- */
+/** A single indexed bind marker. */
 class IndexedBindMarker implements BindMarker {
 
-    private final String placeholder;
+  private final String placeholder;
 
-    private final int index;
+  private final int index;
 
-    IndexedBindMarker(String placeholder, int index) {
-        this.placeholder = placeholder;
-        this.index = index;
-    }
+  IndexedBindMarker(String placeholder, int index) {
+    this.placeholder = placeholder;
+    this.index = index;
+  }
 
-    @Override
-    public String getPlaceholder() {
-        return placeholder;
-    }
+  @Override
+  public String getPlaceholder() {
+    return placeholder;
+  }
 
-    @Override
-    public void bind(BindTarget target, Object value) {
-        target.bind(this.index, value);
-    }
+  @Override
+  public void bind(BindTarget target, Object value) {
+    target.bind(this.index, value);
+  }
 
-    @Override
-    public void bindNull(BindTarget target, Class<?> valueType) {
-        target.bindNull(this.index, valueType);
-    }
+  @Override
+  public void bindNull(BindTarget target, Class<?> valueType) {
+    target.bindNull(this.index, valueType);
+  }
 
-    public int getIndex() {
-        return index;
-    }
-
+  public int getIndex() {
+    return index;
+  }
 }

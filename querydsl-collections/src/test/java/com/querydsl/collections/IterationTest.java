@@ -19,44 +19,50 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 
 public class IterationTest {
 
-    public static class Data {
+  public static class Data {
 
-        private String data = "data";
+    private String data = "data";
 
-        public String getData() {
-            return data;
-        }
-
+    public String getData() {
+      return data;
     }
+  }
 
-    private List<Data> allData = Arrays.asList(new Data(), new Data());
+  private List<Data> allData = Arrays.asList(new Data(), new Data());
 
-    private Data lt = alias(Data.class,"Data");
+  private Data lt = alias(Data.class, "Data");
 
-    private List<String> expected = Arrays.asList("data","data");
+  private List<String> expected = Arrays.asList("data", "data");
 
-    @Test
-    public void test() {
-        assertEquals(expected, CollQueryFactory.from($(lt), allData).select($(lt.getData())).fetch());
-    }
+  @Test
+  public void test() {
+    assertEquals(expected, CollQueryFactory.from($(lt), allData).select($(lt.getData())).fetch());
+  }
 
-    @Test
-    public void test2() {
-        assertEquals(expected, CollQueryFactory.<Data> from($(lt), Arrays.<Data> asList(allData.toArray(new Data[0]))).select($(lt.getData())).fetch());
-    }
+  @Test
+  public void test2() {
+    assertEquals(
+        expected,
+        CollQueryFactory.<Data>from($(lt), Arrays.<Data>asList(allData.toArray(new Data[0])))
+            .select($(lt.getData()))
+            .fetch());
+  }
 
-    @Test
-    public void test3() {
-        assertEquals(expected, CollQueryFactory.from(lt, allData).select($(lt.getData())).fetch());
-    }
+  @Test
+  public void test3() {
+    assertEquals(expected, CollQueryFactory.from(lt, allData).select($(lt.getData())).fetch());
+  }
 
-    @Test
-    public void test4() {
-        assertEquals(expected, CollQueryFactory.<Data> from(lt, Arrays.<Data> asList(allData.toArray(new Data[0]))).select($(lt.getData())).fetch());
-    }
+  @Test
+  public void test4() {
+    assertEquals(
+        expected,
+        CollQueryFactory.<Data>from(lt, Arrays.<Data>asList(allData.toArray(new Data[0])))
+            .select($(lt.getData()))
+            .fetch());
+  }
 }

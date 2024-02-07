@@ -22,31 +22,30 @@ import com.querydsl.core.annotations.QueryEntity;
  */
 @QueryEntity
 public class Project {
-    String name; // PK when app id
-    long budget;
+  String name; // PK when app id
+  long budget;
 
-    public Project() {
-    }
+  public Project() {}
 
-    public Project(String name, long budget) {
-        super();
-        this.name = name;
-        this.budget = budget;
-    }
+  public Project(String name, long budget) {
+    super();
+    this.name = name;
+    this.budget = budget;
+  }
 
-    public long getBudget() {
-        return budget;
-    }
+  public long getBudget() {
+    return budget;
+  }
 
-    public void setBudget(long budget) {
-        this.budget = budget;
-    }
+  public void setBudget(long budget) {
+    this.budget = budget;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 }

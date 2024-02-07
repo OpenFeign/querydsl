@@ -9,11 +9,10 @@ import reactor.core.publisher.Mono;
  */
 public interface ReactiveDMLClause<C extends ReactiveDMLClause<C>> {
 
-    /**
-     * Execute the clause and return the amount of affected rows
-     *
-     * @return amount of affected rows or empty if not available
-     */
-    Mono<Long> execute();
-
+  /**
+   * Execute the clause and return the amount of affected rows
+   *
+   * @return amount of affected rows or empty if not available
+   */
+  Mono<Long> execute();
 }

@@ -22,88 +22,83 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.util.PrimitiveUtils;
-
 import java.lang.reflect.AnnotatedElement;
-
-import org.jetbrains.annotations.Range;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 /**
  * {@code ArrayPath} represents an array typed path
  *
  * @author tiwe
- *
  * @param <A> array type
  * @param <E> array element type
  */
 public class ArrayPath<A, E> extends SimpleExpression<A> implements Path<A>, ArrayExpression<A, E> {
 
-    private static final long serialVersionUID = 7795049264874048226L;
+  private static final long serialVersionUID = 7795049264874048226L;
 
-    private final Class<E> componentType;
+  private final Class<E> componentType;
 
-    private final PathImpl<A> pathMixin;
+  private final PathImpl<A> pathMixin;
 
-    @Nullable
-    private transient volatile NumberExpression<Integer> size;
+  @Nullable private transient volatile NumberExpression<Integer> size;
 
-    protected ArrayPath(Class<? super A> type, String variable) {
-        this(type, PathMetadataFactory.forVariable(variable));
+  protected ArrayPath(Class<? super A> type, String variable) {
+    this(type, PathMetadataFactory.forVariable(variable));
+  }
+
+  protected ArrayPath(Class<? super A> type, Path<?> parent, String property) {
+    this(type, PathMetadataFactory.forProperty(parent, property));
+  }
+
+  @SuppressWarnings("unchecked")
+  protected ArrayPath(Class<? super A> type, PathMetadata metadata) {
+    super(ExpressionUtils.path((Class) type, metadata));
+    this.pathMixin = (PathImpl<A>) mixin;
+    this.componentType = PrimitiveUtils.wrap((Class<E>) type.getComponentType());
+  }
+
+  @Override
+  public final <R, C> R accept(Visitor<R, C> v, C context) {
+    return v.visit(pathMixin, context);
+  }
+
+  @Override
+  public SimplePath<E> get(Expression<Integer> index) {
+    PathMetadata md = PathMetadataFactory.forArrayAccess(pathMixin, index);
+    return Expressions.path(componentType, md);
+  }
+
+  @Override
+  public SimplePath<E> get(@Range(from = 0, to = Integer.MAX_VALUE) int index) {
+    PathMetadata md = PathMetadataFactory.forArrayAccess(pathMixin, index);
+    return Expressions.path(componentType, md);
+  }
+
+  public Class<E> getElementType() {
+    return componentType;
+  }
+
+  @Override
+  public PathMetadata getMetadata() {
+    return pathMixin.getMetadata();
+  }
+
+  @Override
+  public Path<?> getRoot() {
+    return pathMixin.getRoot();
+  }
+
+  @Override
+  public AnnotatedElement getAnnotatedElement() {
+    return pathMixin.getAnnotatedElement();
+  }
+
+  @Override
+  public NumberExpression<Integer> size() {
+    if (size == null) {
+      size = Expressions.numberOperation(Integer.class, Ops.ARRAY_SIZE, pathMixin);
     }
-
-    protected ArrayPath(Class<? super A> type, Path<?> parent, String property) {
-        this(type, PathMetadataFactory.forProperty(parent, property));
-    }
-
-    @SuppressWarnings("unchecked")
-    protected ArrayPath(Class<? super A> type, PathMetadata metadata) {
-        super(ExpressionUtils.path((Class) type, metadata));
-        this.pathMixin = (PathImpl<A>) mixin;
-        this.componentType = PrimitiveUtils.wrap((Class<E>) type.getComponentType());
-    }
-
-    @Override
-    public final <R,C> R accept(Visitor<R,C> v, C context) {
-        return v.visit(pathMixin, context);
-    }
-
-    @Override
-    public SimplePath<E> get(Expression<Integer> index) {
-        PathMetadata md = PathMetadataFactory.forArrayAccess(pathMixin, index);
-        return Expressions.path(componentType, md);
-    }
-
-    @Override
-    public SimplePath<E> get(@Range(from = 0, to = Integer.MAX_VALUE) int index) {
-        PathMetadata md = PathMetadataFactory.forArrayAccess(pathMixin, index);
-        return Expressions.path(componentType, md);
-    }
-
-    public Class<E> getElementType() {
-        return componentType;
-    }
-
-    @Override
-    public PathMetadata getMetadata() {
-        return pathMixin.getMetadata();
-    }
-
-    @Override
-    public Path<?> getRoot() {
-        return pathMixin.getRoot();
-    }
-
-    @Override
-    public AnnotatedElement getAnnotatedElement() {
-        return pathMixin.getAnnotatedElement();
-    }
-
-    @Override
-    public NumberExpression<Integer> size() {
-        if (size == null) {
-            size = Expressions.numberOperation(Integer.class, Ops.ARRAY_SIZE, pathMixin);
-        }
-        return size;
-    }
-
+    return size;
+  }
 }

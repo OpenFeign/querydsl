@@ -22,32 +22,30 @@ import java.sql.Types;
  * {@code IntegerType} maps Integer to Integer on the JDBC level
  *
  * @author tiwe
- *
  */
 public class IntegerType extends AbstractType<Integer> {
 
-    public IntegerType() {
-        super(Types.INTEGER);
-    }
+  public IntegerType() {
+    super(Types.INTEGER);
+  }
 
-    public IntegerType(int type) {
-        super(type);
-    }
+  public IntegerType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Integer> getReturnedClass() {
-        return Integer.class;
-    }
+  @Override
+  public Class<Integer> getReturnedClass() {
+    return Integer.class;
+  }
 
-    @Override
-    public Integer getValue(ResultSet rs, int startIndex) throws SQLException {
-        int val = rs.getInt(startIndex);
-        return rs.wasNull() ? null : val;
-    }
+  @Override
+  public Integer getValue(ResultSet rs, int startIndex) throws SQLException {
+    int val = rs.getInt(startIndex);
+    return rs.wasNull() ? null : val;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Integer value) throws SQLException {
-        st.setInt(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Integer value) throws SQLException {
+    st.setInt(startIndex, value);
+  }
 }

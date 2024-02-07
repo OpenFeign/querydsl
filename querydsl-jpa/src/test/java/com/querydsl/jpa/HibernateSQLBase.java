@@ -15,15 +15,6 @@ package com.querydsl.jpa;
 
 import static org.junit.Assert.assertEquals;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
-
 import com.querydsl.core.Target;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.jpa.domain.Cat;
@@ -33,61 +24,65 @@ import com.querydsl.jpa.domain.sql.SAnimal;
 import com.querydsl.jpa.hibernate.sql.HibernateSQLQuery;
 import com.querydsl.jpa.testutil.HibernateTestRunner;
 import com.querydsl.sql.SQLTemplates;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.runner.RunWith;
 
 @RunWith(HibernateTestRunner.class)
 public class HibernateSQLBase extends AbstractSQLTest implements HibernateTest {
 
-    @Rule
-    @ClassRule
-    public static TestRule targetRule = new TargetRule();
+  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
 
-    private final SQLTemplates templates = Mode.getSQLTemplates();
+  private final SQLTemplates templates = Mode.getSQLTemplates();
 
-    private final SAnimal cat = new SAnimal("cat");
+  private final SAnimal cat = new SAnimal("cat");
 
-    private Session session;
+  private Session session;
 
-    @Override
-    protected HibernateSQLQuery<?> query() {
-        return new HibernateSQLQuery<Void>(session, templates);
+  @Override
+  protected HibernateSQLQuery<?> query() {
+    return new HibernateSQLQuery<Void>(session, templates);
+  }
+
+  @Override
+  public void setSession(Session session) {
+    this.session = session;
+  }
+
+  @Before
+  public void setUp() {
+    if (query().from(cat).fetchCount() == 0) {
+      session.save(new Cat("Beck", 1, Color.BLACK));
+      session.save(new Cat("Kate", 2, Color.BLACK));
+      session.save(new Cat("Kitty", 3, Color.BLACK));
+      session.save(new Cat("Bobby", 4, Color.BLACK));
+      session.save(new Cat("Harold", 5, Color.BLACK));
+      session.save(new Cat("Tim", 6, Color.BLACK));
+      session.flush();
     }
+  }
 
-    @Override
-    public void setSession(Session session) {
-        this.session = session;
-    }
+  @Test
+  public void entityQueries_createQuery() {
+    SAnimal cat = new SAnimal("cat");
+    QCat catEntity = QCat.cat;
 
-    @Before
-    public void setUp() {
-        if (query().from(cat).fetchCount() == 0) {
-            session.save(new Cat("Beck", 1, Color.BLACK));
-            session.save(new Cat("Kate", 2, Color.BLACK));
-            session.save(new Cat("Kitty", 3, Color.BLACK));
-            session.save(new Cat("Bobby", 4, Color.BLACK));
-            session.save(new Cat("Harold", 5, Color.BLACK));
-            session.save(new Cat("Tim", 6, Color.BLACK));
-            session.flush();
-        }
-    }
+    Query query = query().from(cat).select(catEntity).createQuery();
+    assertEquals(6, query.list().size());
+  }
 
-    @Test
-    public void entityQueries_createQuery() {
-        SAnimal cat = new SAnimal("cat");
-        QCat catEntity = QCat.cat;
+  @Test
+  @ExcludeIn(Target.MYSQL)
+  public void entityQueries_createQuery2() {
+    SAnimal cat = new SAnimal("CAT");
+    QCat catEntity = QCat.cat;
 
-        Query query = query().from(cat).select(catEntity).createQuery();
-        assertEquals(6, query.list().size());
-    }
-
-    @Test
-    @ExcludeIn(Target.MYSQL)
-    public void entityQueries_createQuery2() {
-        SAnimal cat = new SAnimal("CAT");
-        QCat catEntity = QCat.cat;
-
-        Query query = query().from(cat).select(catEntity).createQuery();
-        assertEquals(6, query.list().size());
-    }
-
-
+    Query query = query().from(cat).select(catEntity).createQuery();
+    assertEquals(6, query.list().size());
+  }
 }

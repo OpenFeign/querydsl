@@ -16,22 +16,20 @@ package com.querydsl.sql;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
-
 import org.junit.Test;
 
 public class SQLTypeMappingTest {
 
-    @Test
-    public void get() throws IllegalArgumentException, IllegalAccessException {
-        JDBCTypeMapping mapping = new JDBCTypeMapping();
-        for (Field field : java.sql.Types.class.getFields()) {
-            if (field.getType().equals(int.class)) {
-                int val = field.getInt(null);
-                if (mapping.get(val,0,0) == null) {
-                    fail("Got no value for " + field.getName() + " (" + val + ")");
-                }
-            }
+  @Test
+  public void get() throws IllegalArgumentException, IllegalAccessException {
+    JDBCTypeMapping mapping = new JDBCTypeMapping();
+    for (Field field : java.sql.Types.class.getFields()) {
+      if (field.getType().equals(int.class)) {
+        int val = field.getInt(null);
+        if (mapping.get(val, 0, 0) == null) {
+          fail("Got no value for " + field.getName() + " (" + val + ")");
         }
+      }
     }
-
+  }
 }

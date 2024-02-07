@@ -14,11 +14,10 @@
 package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Row;
-import org.jetbrains.annotations.Nullable;
-
 import java.sql.Types;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code LocaleType} maps Locale to String on the JDBC level
@@ -27,49 +26,48 @@ import java.util.regex.Pattern;
  */
 public class LocaleType extends AbstractType<Locale, String> {
 
-    private static final Pattern LOCALE = Pattern.compile("[_#-]+");
+  private static final Pattern LOCALE = Pattern.compile("[_#-]+");
 
-    public LocaleType() {
-        super(Types.VARCHAR);
+  public LocaleType() {
+    super(Types.VARCHAR);
+  }
+
+  public LocaleType(int type) {
+    super(type);
+  }
+
+  @Override
+  public Class<Locale> getReturnedClass() {
+    return Locale.class;
+  }
+
+  @Override
+  @Nullable
+  public Locale getValue(Row row, int startIndex) {
+    String val = row.get(startIndex, String.class);
+    return val != null ? toLocale(val) : null;
+  }
+
+  public static Locale toLocale(String val) {
+    String[] tokens = LOCALE.split(val);
+    switch (tokens.length) {
+      case 1:
+        return new Locale(tokens[0]);
+      case 2:
+        return new Locale(tokens[0], tokens[1]);
+      case 3:
+        return new Locale(tokens[0], tokens[1], tokens[2]);
     }
+    return null;
+  }
 
-    public LocaleType(int type) {
-        super(type);
-    }
+  @Override
+  protected String toDbValue(Locale value) {
+    return value.toString();
+  }
 
-    @Override
-    public Class<Locale> getReturnedClass() {
-        return Locale.class;
-    }
-
-    @Override
-    @Nullable
-    public Locale getValue(Row row, int startIndex) {
-        String val = row.get(startIndex, String.class);
-        return val != null ? toLocale(val) : null;
-    }
-
-    public static Locale toLocale(String val) {
-        String[] tokens = LOCALE.split(val);
-        switch (tokens.length) {
-            case 1:
-                return new Locale(tokens[0]);
-            case 2:
-                return new Locale(tokens[0], tokens[1]);
-            case 3:
-                return new Locale(tokens[0], tokens[1], tokens[2]);
-        }
-        return null;
-    }
-
-    @Override
-    protected String toDbValue(Locale value) {
-        return value.toString();
-    }
-
-    @Override
-    public Class<String> getDatabaseClass() {
-        return String.class;
-    }
-
+  @Override
+  public Class<String> getDatabaseClass() {
+    return String.class;
+  }
 }

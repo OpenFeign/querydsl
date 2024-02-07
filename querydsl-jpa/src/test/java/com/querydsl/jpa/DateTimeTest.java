@@ -15,55 +15,52 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.*;
 
-import java.util.Date;
-
-import org.junit.Test;
-
 import com.querydsl.core.types.dsl.DateExpression;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.TimeExpression;
+import java.util.Date;
+import org.junit.Test;
 
 public class DateTimeTest extends AbstractQueryTest {
 
-    @Test
-    public void currentDate() {
-        assertToString("current_date", DateExpression.currentDate());
-    }
+  @Test
+  public void currentDate() {
+    assertToString("current_date", DateExpression.currentDate());
+  }
 
-    @Test
-    public void currentDate2() {
-        assertToString("current_date", DateTimeExpression.currentDate());
-    }
+  @Test
+  public void currentDate2() {
+    assertToString("current_date", DateTimeExpression.currentDate());
+  }
 
-    @Test
-    public void currentTime() {
-        assertToString("current_time", TimeExpression.currentTime());
-    }
+  @Test
+  public void currentTime() {
+    assertToString("current_time", TimeExpression.currentTime());
+  }
 
-    @Test
-    public void currentTimestamp() {
-        assertToString("current_timestamp", DateTimeExpression.currentTimestamp());
-    }
+  @Test
+  public void currentTimestamp() {
+    assertToString("current_timestamp", DateTimeExpression.currentTimestamp());
+  }
 
-    @Test
-    public void dayOfMonth() {
-        assertToString("day(date)", Expressions.datePath(Date.class, "date").dayOfMonth());
-    }
+  @Test
+  public void dayOfMonth() {
+    assertToString("day(date)", Expressions.datePath(Date.class, "date").dayOfMonth());
+  }
 
-    @Test
-    public void dayOfMonth2() {
-        assertToString("day(date)", Expressions.dateTimePath(Date.class, "date").dayOfMonth());
-    }
+  @Test
+  public void dayOfMonth2() {
+    assertToString("day(date)", Expressions.dateTimePath(Date.class, "date").dayOfMonth());
+  }
 
-    @Test
-    public void dateOperations2() {
-//        catalog.effectiveDate.second();
-//        catalog.effectiveDate.minute();
-//        catalog.effectiveDate.hour();
-        catalog.effectiveDate.dayOfMonth();
-        catalog.effectiveDate.month();
-        catalog.effectiveDate.year();
-    }
-
+  @Test
+  public void dateOperations2() {
+    //        catalog.effectiveDate.second();
+    //        catalog.effectiveDate.minute();
+    //        catalog.effectiveDate.hour();
+    catalog.effectiveDate.dayOfMonth();
+    catalog.effectiveDate.month();
+    catalog.effectiveDate.year();
+  }
 }

@@ -22,17 +22,16 @@ import java.sql.Types;
  */
 public class BytesType extends AbstractType<byte[], byte[]> {
 
-    public BytesType() {
-        super(Types.BLOB);
-    }
+  public BytesType() {
+    super(Types.BLOB);
+  }
 
-    public BytesType(int type) {
-        super(type);
-    }
+  public BytesType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<byte[]> getReturnedClass() {
-        return byte[].class;
-    }
-
+  @Override
+  public Class<byte[]> getReturnedClass() {
+    return byte[].class;
+  }
 }

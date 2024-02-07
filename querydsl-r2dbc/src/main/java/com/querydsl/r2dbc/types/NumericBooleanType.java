@@ -14,9 +14,8 @@
 package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Row;
-import org.jetbrains.annotations.Nullable;
-
 import java.sql.Types;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code NumericBooleanType} maps Boolean to 1/0 (Integer) on the JDBC level
@@ -25,41 +24,40 @@ import java.sql.Types;
  */
 public class NumericBooleanType extends AbstractType<Boolean, Integer> {
 
-    public static final NumericBooleanType DEFAULT = new NumericBooleanType();
+  public static final NumericBooleanType DEFAULT = new NumericBooleanType();
 
-    public NumericBooleanType() {
-        super(Types.INTEGER);
-    }
+  public NumericBooleanType() {
+    super(Types.INTEGER);
+  }
 
-    public NumericBooleanType(int type) {
-        super(type);
-    }
+  public NumericBooleanType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Boolean> getReturnedClass() {
-        return Boolean.class;
-    }
+  @Override
+  public Class<Boolean> getReturnedClass() {
+    return Boolean.class;
+  }
 
-    @Override
-    public String getLiteral(Boolean value) {
-        return value ? "1" : "0";
-    }
+  @Override
+  public String getLiteral(Boolean value) {
+    return value ? "1" : "0";
+  }
 
-    @Override
-    @Nullable
-    public Boolean getValue(Row row, int startIndex) {
-        Number num = row.get(startIndex, Number.class);
-        return num != null ? num.intValue() == 1 : null;
-    }
+  @Override
+  @Nullable
+  public Boolean getValue(Row row, int startIndex) {
+    Number num = row.get(startIndex, Number.class);
+    return num != null ? num.intValue() == 1 : null;
+  }
 
-    @Override
-    protected Integer toDbValue(Boolean value) {
-        return value ? 1 : 0;
-    }
+  @Override
+  protected Integer toDbValue(Boolean value) {
+    return value ? 1 : 0;
+  }
 
-    @Override
-    public Class<Integer> getDatabaseClass() {
-        return Integer.class;
-    }
-
+  @Override
+  public Class<Integer> getDatabaseClass() {
+    return Integer.class;
+  }
 }

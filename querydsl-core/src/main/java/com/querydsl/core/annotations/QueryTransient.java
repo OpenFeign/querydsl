@@ -22,15 +22,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Annotate fields and getters that should be skipped in APT based code generation
- * with this annotation
+ * Annotate fields and getters that should be skipped in APT based code generation with this
+ * annotation
  *
  * @author tiwe
- *
  */
 @Documented
-@Target({FIELD,METHOD})
+@Target({FIELD, METHOD})
 @Retention(RUNTIME)
-public @interface QueryTransient {
-
-}
+public @interface QueryTransient {}

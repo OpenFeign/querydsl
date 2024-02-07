@@ -20,14 +20,12 @@ import com.querydsl.core.types.dsl.StringOperation;
  * {@code TermElement} represents the embedded String as a term
  *
  * @author tiwe
- *
  */
 public class TermElement extends StringOperation {
 
-    private static final long serialVersionUID = 2350215644019186076L;
+  private static final long serialVersionUID = 2350215644019186076L;
 
-    public TermElement(String str) {
-        super(LuceneOps.TERM, ConstantImpl.create(str));
-    }
-
+  public TermElement(String str) {
+    super(LuceneOps.TERM, ConstantImpl.create(str));
+  }
 }

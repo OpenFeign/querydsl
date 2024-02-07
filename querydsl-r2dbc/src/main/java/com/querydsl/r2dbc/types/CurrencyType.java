@@ -14,10 +14,9 @@
 package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Row;
-import org.jetbrains.annotations.Nullable;
-
 import java.sql.Types;
 import java.util.Currency;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code CurrencyType} maps Currency to String on the JDBC level
@@ -26,34 +25,33 @@ import java.util.Currency;
  */
 public class CurrencyType extends AbstractType<Currency, String> {
 
-    public CurrencyType() {
-        super(Types.VARCHAR);
-    }
+  public CurrencyType() {
+    super(Types.VARCHAR);
+  }
 
-    public CurrencyType(int type) {
-        super(type);
-    }
+  public CurrencyType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Currency> getReturnedClass() {
-        return Currency.class;
-    }
+  @Override
+  public Class<Currency> getReturnedClass() {
+    return Currency.class;
+  }
 
-    @Override
-    @Nullable
-    public Currency getValue(Row row, int startIndex) {
-        String val = row.get(startIndex, String.class);
-        return val != null ? Currency.getInstance(val) : null;
-    }
+  @Override
+  @Nullable
+  public Currency getValue(Row row, int startIndex) {
+    String val = row.get(startIndex, String.class);
+    return val != null ? Currency.getInstance(val) : null;
+  }
 
-    @Override
-    protected String toDbValue(Currency value) {
-        return value.getCurrencyCode();
-    }
+  @Override
+  protected String toDbValue(Currency value) {
+    return value.getCurrencyCode();
+  }
 
-    @Override
-    public Class<String> getDatabaseClass() {
-        return String.class;
-    }
-
+  @Override
+  public Class<String> getDatabaseClass() {
+    return String.class;
+  }
 }

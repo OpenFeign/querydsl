@@ -10,51 +10,50 @@ package com.querydsl.r2dbc.ddl;
  */
 public class ColumnData {
 
-    private final String name;
+  private final String name;
 
-    private final String type;
+  private final String type;
 
-    private boolean nullAllowed = true;
+  private boolean nullAllowed = true;
 
-    private boolean autoIncrement;
+  private boolean autoIncrement;
 
-    private Integer size;
+  private Integer size;
 
-    public ColumnData(String name, String type) {
-        this.name = name;
-        this.type = type;
-    }
+  public ColumnData(String name, String type) {
+    this.name = name;
+    this.type = type;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public boolean isNullAllowed() {
-        return nullAllowed;
-    }
+  public boolean isNullAllowed() {
+    return nullAllowed;
+  }
 
-    public void setNullAllowed(boolean nullAllowed) {
-        this.nullAllowed = nullAllowed;
-    }
+  public void setNullAllowed(boolean nullAllowed) {
+    this.nullAllowed = nullAllowed;
+  }
 
-    public void setSize(Integer size) {
-        this.size = size;
-    }
+  public void setSize(Integer size) {
+    this.size = size;
+  }
 
-    public Integer getSize() {
-        return size;
-    }
+  public Integer getSize() {
+    return size;
+  }
 
-    public boolean isAutoIncrement() {
-        return autoIncrement;
-    }
+  public boolean isAutoIncrement() {
+    return autoIncrement;
+  }
 
-    public void setAutoIncrement(boolean autoIncrement) {
-        this.autoIncrement = autoIncrement;
-    }
-
+  public void setAutoIncrement(boolean autoIncrement) {
+    this.autoIncrement = autoIncrement;
+  }
 }

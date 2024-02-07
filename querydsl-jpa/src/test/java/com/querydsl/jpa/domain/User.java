@@ -18,17 +18,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * The Class User.
- */
+/** The Class User. */
 @Entity
 @Table(name = "user_")
 public class User {
-    @ManyToOne
-    Company company;
+  @ManyToOne Company company;
 
-    @Id
-    long id;
+  @Id long id;
 
-    String userName, firstName, lastName;
+  String userName, firstName, lastName;
 }

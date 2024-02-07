@@ -14,7 +14,6 @@
 package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Clob;
-
 import java.sql.Types;
 
 /**
@@ -24,17 +23,16 @@ import java.sql.Types;
  */
 public class ClobType extends AbstractType<Clob, Clob> {
 
-    public ClobType() {
-        super(Types.CLOB);
-    }
+  public ClobType() {
+    super(Types.CLOB);
+  }
 
-    public ClobType(int type) {
-        super(type);
-    }
+  public ClobType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Clob> getReturnedClass() {
-        return Clob.class;
-    }
-
+  @Override
+  public Class<Clob> getReturnedClass() {
+    return Clob.class;
+  }
 }

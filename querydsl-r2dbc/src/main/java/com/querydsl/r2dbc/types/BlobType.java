@@ -14,9 +14,7 @@
 package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Blob;
-
 import java.sql.Types;
-
 
 /**
  * {@code BlobType} maps Blob to Blob on the JDBC level
@@ -25,17 +23,16 @@ import java.sql.Types;
  */
 public class BlobType extends AbstractType<Blob, Blob> {
 
-    public BlobType() {
-        super(Types.BLOB);
-    }
+  public BlobType() {
+    super(Types.BLOB);
+  }
 
-    public BlobType(int type) {
-        super(type);
-    }
+  public BlobType(int type) {
+    super(type);
+  }
 
-    @Override
-    public Class<Blob> getReturnedClass() {
-        return Blob.class;
-    }
-
+  @Override
+  public Class<Blob> getReturnedClass() {
+    return Blob.class;
+  }
 }

@@ -13,10 +13,9 @@
  */
 package com.querydsl.maven;
 
-import javax.persistence.*;
-
 import com.querydsl.codegen.GenericExporter;
 import com.querydsl.codegen.PropertyHandling;
+import javax.persistence.*;
 
 /**
  * {@code JPAExporterMojo} calls {@link GenericExporter} using the classpath of the module
@@ -27,17 +26,17 @@ import com.querydsl.codegen.PropertyHandling;
  */
 public class JPAExporterMojo extends AbstractExporterMojo {
 
-    @Override
-    protected void configure(GenericExporter exporter) {
-        super.configure(exporter);
-        exporter.setEmbeddableAnnotation(Embeddable.class);
-        exporter.setEmbeddedAnnotation(Embedded.class);
-        exporter.setEntityAnnotation(Entity.class);
-        exporter.setSkipAnnotation(Transient.class);
-        exporter.setSupertypeAnnotation(MappedSuperclass.class);
-        exporter.setPropertyHandling(PropertyHandling.JPA);
+  @Override
+  protected void configure(GenericExporter exporter) {
+    super.configure(exporter);
+    exporter.setEmbeddableAnnotation(Embeddable.class);
+    exporter.setEmbeddedAnnotation(Embedded.class);
+    exporter.setEntityAnnotation(Entity.class);
+    exporter.setSkipAnnotation(Transient.class);
+    exporter.setSupertypeAnnotation(MappedSuperclass.class);
+    exporter.setPropertyHandling(PropertyHandling.JPA);
 
-        // AnnotationHelpers to process specific JPA annotations
-        exporter.addAnnotationHelper(JPATemporalAnnotationHelper.INSTANCE);
-    }
+    // AnnotationHelpers to process specific JPA annotations
+    exporter.addAnnotationHelper(JPATemporalAnnotationHelper.INSTANCE);
+  }
 }

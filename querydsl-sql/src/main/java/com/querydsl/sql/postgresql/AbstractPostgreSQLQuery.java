@@ -13,9 +13,6 @@
  */
 package com.querydsl.sql.postgresql;
 
-import java.sql.Connection;
-import java.util.function.Supplier;
-
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
@@ -26,73 +23,77 @@ import com.querydsl.sql.AbstractSQLQuery;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLQuery;
+import java.sql.Connection;
+import java.util.function.Supplier;
 
 /**
  * {@code PostgreSQLQuery} provides PostgreSQL related extensions to SQLQuery
  *
  * @param <T> result type
  * @param <C> the concrete subtype
- *
  * @see SQLQuery
  * @author tiwe
  */
-public abstract class AbstractPostgreSQLQuery<T, C extends AbstractPostgreSQLQuery<T, C>> extends AbstractSQLQuery<T, C> {
-    public AbstractPostgreSQLQuery(Connection conn, Configuration configuration, QueryMetadata metadata) {
-        super(conn, configuration, metadata);
-    }
+public abstract class AbstractPostgreSQLQuery<T, C extends AbstractPostgreSQLQuery<T, C>>
+    extends AbstractSQLQuery<T, C> {
+  public AbstractPostgreSQLQuery(
+      Connection conn, Configuration configuration, QueryMetadata metadata) {
+    super(conn, configuration, metadata);
+  }
 
-    public AbstractPostgreSQLQuery(Supplier<Connection> connProvider, Configuration configuration, QueryMetadata metadata) {
-        super(connProvider, configuration, metadata);
-    }
+  public AbstractPostgreSQLQuery(
+      Supplier<Connection> connProvider, Configuration configuration, QueryMetadata metadata) {
+    super(connProvider, configuration, metadata);
+  }
 
-    /**
-     * FOR SHARE causes the rows retrieved by the SELECT statement to be locked as though for update.
-     *
-     * @return the current object
-     */
-    public C forShare() {
-        // global forShare support was added later, delegating to super implementation
-        return super.forShare();
-    }
+  /**
+   * FOR SHARE causes the rows retrieved by the SELECT statement to be locked as though for update.
+   *
+   * @return the current object
+   */
+  public C forShare() {
+    // global forShare support was added later, delegating to super implementation
+    return super.forShare();
+  }
 
-    /**
-     * With NOWAIT, the statement reports an error, rather than waiting, if a selected row cannot
-     * be locked immediately.
-     *
-     * @return the current object
-     */
-    public C noWait() {
-        QueryFlag noWaitFlag = configuration.getTemplates().getNoWaitFlag();
-        return addFlag(noWaitFlag);
-    }
+  /**
+   * With NOWAIT, the statement reports an error, rather than waiting, if a selected row cannot be
+   * locked immediately.
+   *
+   * @return the current object
+   */
+  public C noWait() {
+    QueryFlag noWaitFlag = configuration.getTemplates().getNoWaitFlag();
+    return addFlag(noWaitFlag);
+  }
 
-    /**
-     * FOR UPDATE / FOR SHARE OF tables
-     *
-     * @param paths tables
-     * @return the current object
-     */
-    public C of(RelationalPath<?>... paths) {
-        StringBuilder builder = new StringBuilder(" of ");
-        for (RelationalPath<?> path : paths) {
-            if (builder.length() > 4) {
-                builder.append(", ");
-            }
-            builder.append(getConfiguration().getTemplates().quoteIdentifier(path.getTableName()));
-        }
-        return addFlag(Position.END, builder.toString());
+  /**
+   * FOR UPDATE / FOR SHARE OF tables
+   *
+   * @param paths tables
+   * @return the current object
+   */
+  public C of(RelationalPath<?>... paths) {
+    StringBuilder builder = new StringBuilder(" of ");
+    for (RelationalPath<?> path : paths) {
+      if (builder.length() > 4) {
+        builder.append(", ");
+      }
+      builder.append(getConfiguration().getTemplates().quoteIdentifier(path.getTableName()));
     }
+    return addFlag(Position.END, builder.toString());
+  }
 
-    /**
-     * adds a DISTINCT ON clause
-     *
-     * @param exprs
-     * @return
-     */
-    public C distinctOn(Expression<?>... exprs) {
-        return addFlag(Position.AFTER_SELECT,
-            Expressions.template(Object.class, "distinct on({0}) ",
-            ExpressionUtils.list(Object.class, exprs)));
-    }
-
+  /**
+   * adds a DISTINCT ON clause
+   *
+   * @param exprs
+   * @return
+   */
+  public C distinctOn(Expression<?>... exprs) {
+    return addFlag(
+        Position.AFTER_SELECT,
+        Expressions.template(
+            Object.class, "distinct on({0}) ", ExpressionUtils.list(Object.class, exprs)));
+  }
 }

@@ -7,14 +7,13 @@ import reactor.core.publisher.Mono;
 
 public interface CustomerDao {
 
-    Mono<Customer> findById(long id);
+  Mono<Customer> findById(long id);
 
-    Flux<Customer> findAll(Predicate... where);
+  Flux<Customer> findAll(Predicate... where);
 
-    Mono<Customer> save(Customer c);
+  Mono<Customer> save(Customer c);
 
-    Mono<Long> count();
+  Mono<Long> count();
 
-    Mono<Void> delete(Customer p);
-
+  Mono<Void> delete(Customer p);
 }

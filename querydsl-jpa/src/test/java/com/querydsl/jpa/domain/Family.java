@@ -15,13 +15,9 @@ package com.querydsl.jpa.domain;
 
 import com.querydsl.core.annotations.QueryProjection;
 
-/**
- * The Class Family.
- */
+/** The Class Family. */
 public class Family {
 
-    @QueryProjection
-    public Family(Cat mother, Cat mate, Cat offspr) {
-
-    }
+  @QueryProjection
+  public Family(Cat mother, Cat mate, Cat offspr) {}
 }

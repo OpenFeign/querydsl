@@ -12,7 +12,5 @@
  * limitations under the License.
  */
 
-/**
- * Aggregating post processing functionality
- */
+/** Aggregating post processing functionality */
 package com.querydsl.core.group;

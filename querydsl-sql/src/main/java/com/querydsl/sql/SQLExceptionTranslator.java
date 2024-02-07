@@ -20,25 +20,24 @@ import java.util.List;
  * {@code SQLExceptionTranslator} translate SQLExceptions to runtime exceptions
  *
  * @author tiwe
- *
  */
 public interface SQLExceptionTranslator {
 
-    /**
-     * Translate the given SQLException
-     *
-     * @param sql SQL string
-     * @param bindings binding
-     * @param e SQLException to translate
-     * @return translated exception
-     */
-    RuntimeException translate(String sql, List<Object> bindings, SQLException e);
+  /**
+   * Translate the given SQLException
+   *
+   * @param sql SQL string
+   * @param bindings binding
+   * @param e SQLException to translate
+   * @return translated exception
+   */
+  RuntimeException translate(String sql, List<Object> bindings, SQLException e);
 
-    /**
-     * Translate the given SQLException
-     *
-     * @param e SQLException to translate
-     * @return translated exception
-     */
-    RuntimeException translate(SQLException e);
+  /**
+   * Translate the given SQLException
+   *
+   * @param e SQLException to translate
+   * @return translated exception
+   */
+  RuntimeException translate(SQLException e);
 }

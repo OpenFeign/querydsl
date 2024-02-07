@@ -19,59 +19,57 @@ import java.util.List;
  * Extracts the first path that occurs in an expression via breadth first search
  *
  * @author tiwe
- *
  */
-public final class PathExtractor implements Visitor<Path<?>,Void> {
+public final class PathExtractor implements Visitor<Path<?>, Void> {
 
-    public static final PathExtractor DEFAULT = new PathExtractor();
+  public static final PathExtractor DEFAULT = new PathExtractor();
 
-    private PathExtractor() { }
+  private PathExtractor() {}
 
-    @Override
-    public Path<?> visit(Constant<?> expr, Void context) {
-        return null;
-    }
+  @Override
+  public Path<?> visit(Constant<?> expr, Void context) {
+    return null;
+  }
 
-    @Override
-    public Path<?> visit(FactoryExpression<?> expr, Void context) {
-        return visit(expr.getArgs());
-    }
+  @Override
+  public Path<?> visit(FactoryExpression<?> expr, Void context) {
+    return visit(expr.getArgs());
+  }
 
-    @Override
-    public Path<?> visit(Operation<?> expr, Void context) {
-        return visit(expr.getArgs());
-    }
+  @Override
+  public Path<?> visit(Operation<?> expr, Void context) {
+    return visit(expr.getArgs());
+  }
 
-    @Override
-    public Path<?> visit(ParamExpression<?> expr, Void context) {
-        return null;
-    }
+  @Override
+  public Path<?> visit(ParamExpression<?> expr, Void context) {
+    return null;
+  }
 
-    @Override
-    public Path<?> visit(Path<?> expr, Void context) {
-        return expr;
-    }
+  @Override
+  public Path<?> visit(Path<?> expr, Void context) {
+    return expr;
+  }
 
-    @Override
-    public Path<?> visit(SubQueryExpression<?> expr, Void context) {
-        return null;
-    }
+  @Override
+  public Path<?> visit(SubQueryExpression<?> expr, Void context) {
+    return null;
+  }
 
-    @Override
-    public Path<?> visit(TemplateExpression<?> expr, Void context) {
-        return visit(expr.getArgs());
-    }
+  @Override
+  public Path<?> visit(TemplateExpression<?> expr, Void context) {
+    return visit(expr.getArgs());
+  }
 
-    private Path<?> visit(List<?> exprs) {
-        for (Object e : exprs) {
-            if (e instanceof Expression) {
-                Path<?> path = ((Expression<?>) e).accept(this, null);
-                if (path != null) {
-                    return path;
-                }
-            }
+  private Path<?> visit(List<?> exprs) {
+    for (Object e : exprs) {
+      if (e instanceof Expression) {
+        Path<?> path = ((Expression<?>) e).accept(this, null);
+        if (path != null) {
+          return path;
         }
-        return null;
+      }
     }
-
+    return null;
+  }
 }

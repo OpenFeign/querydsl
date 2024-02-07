@@ -13,9 +13,6 @@
  */
 package com.querydsl.jdo.sql;
 
-import org.jetbrains.annotations.Nullable;
-import javax.jdo.PersistenceManager;
-
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.Tuple;
@@ -24,58 +21,60 @@ import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.SQLSerializer;
 import com.querydsl.sql.SQLTemplates;
+import javax.jdo.PersistenceManager;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * {@code JDOSQLQuery} is a {@link SQLQuery} implementation that uses JDO's SQL query functionality
  * to execute queries
  *
  * @author tiwe
- *
  * @param <T> result type
- *
  */
 public final class JDOSQLQuery<T> extends AbstractSQLQuery<T, JDOSQLQuery<T>> {
 
-    public JDOSQLQuery(@Nullable PersistenceManager persistenceManager, SQLTemplates templates) {
-        this(persistenceManager, new Configuration(templates), new DefaultQueryMetadata(), false);
-    }
+  public JDOSQLQuery(@Nullable PersistenceManager persistenceManager, SQLTemplates templates) {
+    this(persistenceManager, new Configuration(templates), new DefaultQueryMetadata(), false);
+  }
 
-    public JDOSQLQuery(@Nullable PersistenceManager persistenceManager, Configuration configuration) {
-        this(persistenceManager, configuration, new DefaultQueryMetadata(), false);
-    }
+  public JDOSQLQuery(@Nullable PersistenceManager persistenceManager, Configuration configuration) {
+    this(persistenceManager, configuration, new DefaultQueryMetadata(), false);
+  }
 
-    public JDOSQLQuery(
-            @Nullable PersistenceManager persistenceManager,
-            Configuration configuration,
-            QueryMetadata metadata, boolean detach) {
-        super(metadata, configuration, persistenceManager, detach);
-    }
+  public JDOSQLQuery(
+      @Nullable PersistenceManager persistenceManager,
+      Configuration configuration,
+      QueryMetadata metadata,
+      boolean detach) {
+    super(metadata, configuration, persistenceManager, detach);
+  }
 
-    @Override
-    public JDOSQLQuery<T> clone() {
-        JDOSQLQuery<T> query = new JDOSQLQuery<T>(persistenceManager, configuration, getMetadata().clone(), detach);
-        query.clone(this);
-        return query;
-    }
+  @Override
+  public JDOSQLQuery<T> clone() {
+    JDOSQLQuery<T> query =
+        new JDOSQLQuery<T>(persistenceManager, configuration, getMetadata().clone(), detach);
+    query.clone(this);
+    return query;
+  }
 
-    @Override
-    protected SQLSerializer createSerializer() {
-        return new SQLSerializer(configuration);
-    }
+  @Override
+  protected SQLSerializer createSerializer() {
+    return new SQLSerializer(configuration);
+  }
 
-    @Override
-    public <U> JDOSQLQuery<U> select(Expression<U> expr) {
-        queryMixin.setProjection(expr);
-        @SuppressWarnings("unchecked") // This is the new type
-        JDOSQLQuery<U> newType = (JDOSQLQuery<U>) this;
-        return newType;
-    }
+  @Override
+  public <U> JDOSQLQuery<U> select(Expression<U> expr) {
+    queryMixin.setProjection(expr);
+    @SuppressWarnings("unchecked") // This is the new type
+    JDOSQLQuery<U> newType = (JDOSQLQuery<U>) this;
+    return newType;
+  }
 
-    @Override
-    public JDOSQLQuery<Tuple> select(Expression<?>... exprs) {
-        queryMixin.setProjection(exprs);
-        @SuppressWarnings("unchecked") // This is the new type
-        JDOSQLQuery<Tuple> newType = (JDOSQLQuery<Tuple>) this;
-        return newType;
-    }
+  @Override
+  public JDOSQLQuery<Tuple> select(Expression<?>... exprs) {
+    queryMixin.setProjection(exprs);
+    @SuppressWarnings("unchecked") // This is the new type
+    JDOSQLQuery<Tuple> newType = (JDOSQLQuery<Tuple>) this;
+    return newType;
+  }
 }

@@ -19,36 +19,34 @@ import java.sql.*;
  * {@code TimeType} maps Time to Time on the JDBC level
  *
  * @author tiwe
- *
  */
 public class TimeType extends AbstractDateTimeType<Time> {
 
-    public TimeType() {
-        super(Types.TIME);
-    }
+  public TimeType() {
+    super(Types.TIME);
+  }
 
-    public TimeType(int type) {
-        super(type);
-    }
+  public TimeType(int type) {
+    super(type);
+  }
 
-    @Override
-    public String getLiteral(Time value) {
-        return timeFormatter.format(value.toLocalTime());
-    }
+  @Override
+  public String getLiteral(Time value) {
+    return timeFormatter.format(value.toLocalTime());
+  }
 
-    @Override
-    public Time getValue(ResultSet rs, int startIndex) throws SQLException {
-        return rs.getTime(startIndex);
-    }
+  @Override
+  public Time getValue(ResultSet rs, int startIndex) throws SQLException {
+    return rs.getTime(startIndex);
+  }
 
-    @Override
-    public Class<Time> getReturnedClass() {
-        return Time.class;
-    }
+  @Override
+  public Class<Time> getReturnedClass() {
+    return Time.class;
+  }
 
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Time value) throws SQLException {
-        st.setTime(startIndex, value);
-    }
-
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Time value) throws SQLException {
+    st.setTime(startIndex, value);
+  }
 }

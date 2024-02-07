@@ -15,39 +15,35 @@ package com.querydsl.jdo;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.querydsl.jdo.test.domain.QProduct;
+import java.util.function.Supplier;
 import javax.jdo.PersistenceManager;
-
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.querydsl.jdo.test.domain.QProduct;
-
-import java.util.function.Supplier;
-
 public class JDOQueryFactoryTest {
 
-    private JDOQueryFactory queryFactory;
+  private JDOQueryFactory queryFactory;
 
-    @Before
-    public void setUp() {
-        Supplier<PersistenceManager> provider = () -> EasyMock.createNiceMock(PersistenceManager.class);
-        queryFactory = new JDOQueryFactory(provider);
-    }
+  @Before
+  public void setUp() {
+    Supplier<PersistenceManager> provider = () -> EasyMock.createNiceMock(PersistenceManager.class);
+    queryFactory = new JDOQueryFactory(provider);
+  }
 
-    @Test
-    public void query() {
-        assertNotNull(queryFactory.query());
-    }
+  @Test
+  public void query() {
+    assertNotNull(queryFactory.query());
+  }
 
-    @Test
-    public void from() {
-        assertNotNull(queryFactory.from(QProduct.product));
-    }
+  @Test
+  public void from() {
+    assertNotNull(queryFactory.from(QProduct.product));
+  }
 
-    @Test
-    public void delete() {
-        assertNotNull(queryFactory.delete(QProduct.product));
-    }
-
+  @Test
+  public void delete() {
+    assertNotNull(queryFactory.delete(QProduct.product));
+  }
 }

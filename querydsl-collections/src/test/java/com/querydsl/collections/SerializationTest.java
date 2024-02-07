@@ -13,150 +13,155 @@
  */
 package com.querydsl.collections;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QTuple;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class SerializationTest extends AbstractQueryTest {
 
-    // TODO : order
+  // TODO : order
 
-    // TODO : subqueries
+  // TODO : subqueries
 
-    private QTuple tuple = Projections.tuple(cat, otherCat);
+  private QTuple tuple = Projections.tuple(cat, otherCat);
 
-    @Test
-    public void oneSource_list() {
-        query().from(cat, cats).select(cat).fetch();
+  @Test
+  public void oneSource_list() {
+    query().from(cat, cats).select(cat).fetch();
+  }
+
+  public List<Cat> oneSource_list(List<Cat> cats) {
+    return cats;
+  }
+
+  @Test
+  public void twoSources_list() {
+    query().from(cat, cats).from(otherCat, cats).select(cat).fetch();
+  }
+
+  public List<Cat> twoSources_list(List<Cat> cats, List<Cat> otherCats) {
+    return cats;
+  }
+
+  @Test
+  public void oneSource_filteredList() {
+    query().from(cat, cats).where(cat.name.eq("Kitty")).select(cat).fetch();
+  }
+
+  public List<Cat> oneSource_filteredList(List<Cat> cats) {
+    List<Cat> rv = new ArrayList<Cat>();
+    for (Cat cat : cats) { // from
+      if (cat.getName().equals("Kitty")) { // where
+        rv.add(cat); // list
+      }
     }
+    return rv;
+  }
 
-    public List<Cat> oneSource_list(List<Cat> cats) {
-        return cats;
+  @Test
+  public void oneSource_projectedList() {
+    query().from(cat, cats).select(cat.name).fetch();
+  }
+
+  public List<String> oneSource_projectedList(List<Cat> cats) {
+    List<String> rv = new ArrayList<String>();
+    for (Cat cat : cats) { // from
+      rv.add(cat.getName()); // list
     }
+    return rv;
+  }
 
-    @Test
-    public void twoSources_list() {
-        query().from(cat,cats).from(otherCat, cats).select(cat).fetch();
+  @Test
+  public void oneSource_filtered_projectedList() {
+    query().from(cat, cats).where(cat.name.eq("Kitty")).select(cat.name).fetch();
+  }
+
+  public List<String> oneSource_filtered_projectedList(List<Cat> cats) {
+    List<String> rv = new ArrayList<String>();
+    for (Cat cat : cats) { // from
+      if (cat.getName().equals("Kitty")) { // where
+        rv.add(cat.getName()); // list
+      }
     }
+    return rv;
+  }
 
-    public List<Cat> twoSources_list(List<Cat> cats, List<Cat> otherCats) {
-        return cats;
+  @Test
+  public void oneSource_filtered_projectedUnique() {
+    query().from(cat, cats).where(cat.name.eq("Kitty")).select(cat.name).fetchOne();
+  }
+
+  public String oneSource_filtered_projectedUnique(List<Cat> cats) {
+    for (Cat cat : cats) { // from
+      if (cat.getName().equals("Kitty")) { // where
+        return cat.getName(); // unique
+      }
     }
+    throw new IllegalArgumentException();
+  }
 
-    @Test
-    public void oneSource_filteredList() {
-        query().from(cat, cats).where(cat.name.eq("Kitty")).select(cat).fetch();
-    }
+  @Test
+  @Ignore
+  public void join_list() {
+    query()
+        .from(cat, cats)
+        .innerJoin(cat.kittens, kitten)
+        .where(kitten.name.eq("Kitty"))
+        .select(cat)
+        .fetch();
+  }
 
-    public List<Cat> oneSource_filteredList(List<Cat> cats) {
-        List<Cat> rv = new ArrayList<Cat>();
-        for (Cat cat : cats) {                   // from
-            if (cat.getName().equals("Kitty")) { // where
-                rv.add(cat);                     // list
-            }
+  public List<Cat> join_list(List<Cat> cats) {
+    List<Cat> rv = new ArrayList<Cat>();
+    for (Cat cat : cats) { // from
+      for (Cat kitten : cat.getKittens()) { // inner join
+        if (kitten.getName().equals("Kitty")) { // where
+          rv.add(cat); // list
         }
-        return rv;
+      }
     }
+    return rv;
+  }
 
-    @Test
-    public void oneSource_projectedList() {
-        query().from(cat, cats).select(cat.name).fetch();
-    }
+  public List<Object[]> pairs(List<Cat> cats, List<Cat> otherCats) {
+    query()
+        .from(cat, cats)
+        .from(otherCat, otherCats)
+        .where(cat.name.eq(otherCat.name))
+        .select(cat, otherCat)
+        .fetch();
 
-    public List<String> oneSource_projectedList(List<Cat> cats) {
-        List<String> rv = new ArrayList<String>();
-        for (Cat cat : cats) {                   // from
-            rv.add(cat.getName());               // list
+    List<Object[]> rv = new ArrayList<Object[]>();
+    for (Cat cat : cats) { // from
+      for (Cat otherCat : otherCats) { // from
+        if (cat.getName().equals(otherCat.getName())) { // where
+          rv.add(new Object[] {cat, otherCat}); // list
         }
-        return rv;
+      }
     }
+    return rv;
+  }
 
-    @Test
-    public void oneSource_filtered_projectedList() {
-        query().from(cat, cats).where(cat.name.eq("Kitty")).select(cat.name).fetch();
-    }
+  public List<Tuple> pairsAsTuple(List<Cat> cats, List<Cat> otherCats) {
+    query()
+        .from(cat, cats)
+        .from(otherCat, cats)
+        .where(cat.name.eq(otherCat.name))
+        .select(Projections.tuple(cat, otherCat))
+        .fetch();
 
-    public List<String> oneSource_filtered_projectedList(List<Cat> cats) {
-        List<String> rv = new ArrayList<String>();
-        for (Cat cat : cats) {                   // from
-            if (cat.getName().equals("Kitty")) { // where
-                rv.add(cat.getName());           // list
-            }
+    List<Tuple> rv = new ArrayList<Tuple>();
+    for (Cat cat : cats) { // from
+      for (Cat otherCat : otherCats) { // from
+        if (cat.getName().equals(otherCat.getName())) { // where
+          rv.add(tuple.newInstance(cat, otherCat)); // list
         }
-        return rv;
+      }
     }
-
-    @Test
-    public void oneSource_filtered_projectedUnique() {
-        query().from(cat, cats).where(cat.name.eq("Kitty")).select(cat.name).fetchOne();
-    }
-
-    public String oneSource_filtered_projectedUnique(List<Cat> cats) {
-        for (Cat cat : cats) {                   // from
-            if (cat.getName().equals("Kitty")) { // where
-                return cat.getName();            // unique
-            }
-        }
-        throw new IllegalArgumentException();
-    }
-
-    @Test
-    @Ignore
-    public void join_list() {
-        query().from(cat, cats)
-               .innerJoin(cat.kittens, kitten).where(kitten.name.eq("Kitty"))
-               .select(cat).fetch();
-    }
-
-    public List<Cat> join_list(List<Cat> cats) {
-        List<Cat> rv = new ArrayList<Cat>();
-        for (Cat cat : cats) {                          // from
-            for (Cat kitten : cat.getKittens()) {       // inner join
-                if (kitten.getName().equals("Kitty")) { // where
-                    rv.add(cat);                        // list
-                }
-            }
-        }
-        return rv;
-    }
-
-    public List<Object[]> pairs(List<Cat> cats, List<Cat> otherCats) {
-        query().from(cat, cats)
-               .from(otherCat, otherCats)
-               .where(cat.name.eq(otherCat.name))
-               .select(cat, otherCat).fetch();
-
-        List<Object[]> rv = new ArrayList<Object[]>();
-        for (Cat cat : cats) {                                  // from
-            for (Cat otherCat : otherCats) {                    // from
-                if (cat.getName().equals(otherCat.getName())) { // where
-                    rv.add(new Object[]{cat,otherCat});         // list
-                }
-            }
-        }
-        return rv;
-    }
-
-    public List<Tuple> pairsAsTuple(List<Cat> cats, List<Cat> otherCats) {
-        query().from(cat, cats).from(otherCat, cats)
-               .where(cat.name.eq(otherCat.name))
-               .select(Projections.tuple(cat, otherCat)).fetch();
-
-        List<Tuple> rv = new ArrayList<Tuple>();
-        for (Cat cat : cats) {                                  // from
-            for (Cat otherCat : otherCats) {                    // from
-                if (cat.getName().equals(otherCat.getName())) { // where
-                    rv.add(tuple.newInstance(cat, otherCat));   // list
-                }
-            }
-        }
-        return rv;
-    }
-
+    return rv;
+  }
 }

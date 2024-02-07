@@ -13,41 +13,40 @@ import java.time.temporal.Temporal;
  */
 public class TimeType extends AbstractDateTimeType<Time, Temporal> {
 
-    public TimeType() {
-        super(Types.TIME);
+  public TimeType() {
+    super(Types.TIME);
+  }
+
+  public TimeType(int type) {
+    super(type);
+  }
+
+  @Override
+  public String getLiteral(Time value) {
+    return timeFormatter.format(value);
+  }
+
+  @Override
+  public Class<Time> getReturnedClass() {
+    return Time.class;
+  }
+
+  @Override
+  public Class<Temporal> getDatabaseClass() {
+    return Temporal.class;
+  }
+
+  @Override
+  protected LocalTime toDbValue(Time value) {
+    return value.toLocalTime();
+  }
+
+  @Override
+  protected Time fromDbValue(Temporal value) {
+    if (LocalDateTime.class.isAssignableFrom(value.getClass())) {
+      return Time.valueOf(((LocalDateTime) value).toLocalTime());
     }
 
-    public TimeType(int type) {
-        super(type);
-    }
-
-    @Override
-    public String getLiteral(Time value) {
-        return timeFormatter.format(value);
-    }
-
-    @Override
-    public Class<Time> getReturnedClass() {
-        return Time.class;
-    }
-
-    @Override
-    public Class<Temporal> getDatabaseClass() {
-        return Temporal.class;
-    }
-
-    @Override
-    protected LocalTime toDbValue(Time value) {
-        return value.toLocalTime();
-    }
-
-    @Override
-    protected Time fromDbValue(Temporal value) {
-        if (LocalDateTime.class.isAssignableFrom(value.getClass())) {
-            return Time.valueOf(((LocalDateTime) value).toLocalTime());
-        }
-
-        return Time.valueOf((LocalTime) value);
-    }
-
+    return Time.valueOf((LocalTime) value);
+  }
 }

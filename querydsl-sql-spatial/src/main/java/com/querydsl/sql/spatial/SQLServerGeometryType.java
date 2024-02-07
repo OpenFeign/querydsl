@@ -13,60 +13,56 @@
  */
 package com.querydsl.sql.spatial;
 
+import com.querydsl.sql.types.AbstractType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
+import org.geolatte.geom.Geometry;
+import org.geolatte.geom.codec.Wkt;
 import org.geolatte.geom.codec.db.sqlserver.Decoders;
 import org.geolatte.geom.codec.db.sqlserver.Encoders;
 import org.jetbrains.annotations.Nullable;
 
-import org.geolatte.geom.Geometry;
-import org.geolatte.geom.codec.Wkt;
-
-import com.querydsl.sql.types.AbstractType;
-
 class SQLServerGeometryType extends AbstractType<Geometry> {
 
-    public static final SQLServerGeometryType DEFAULT = new SQLServerGeometryType();
+  public static final SQLServerGeometryType DEFAULT = new SQLServerGeometryType();
 
-    private static final int DEFAULT_SRID = 4326;
+  private static final int DEFAULT_SRID = 4326;
 
-    public SQLServerGeometryType() {
-        super(Types.BLOB);
+  public SQLServerGeometryType() {
+    super(Types.BLOB);
+  }
+
+  @Override
+  public Class<Geometry> getReturnedClass() {
+    return Geometry.class;
+  }
+
+  @Override
+  @Nullable
+  public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
+    byte[] bytes = rs.getBytes(startIndex);
+    if (bytes != null) {
+      return Decoders.decode(bytes);
+    } else {
+      return null;
     }
+  }
 
-    @Override
-    public Class<Geometry> getReturnedClass() {
-        return Geometry.class;
+  @Override
+  public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
+    byte[] bytes = Encoders.encode(value);
+    st.setBytes(startIndex, bytes);
+  }
+
+  @Override
+  public String getLiteral(Geometry geometry) {
+    String str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry);
+    if (geometry.getSRID() > -1) {
+      return "geometry::STGeomFromText('" + str + "', " + geometry.getSRID() + ")";
+    } else {
+      return "geometry::STGeomFromText('" + str + "', " + DEFAULT_SRID + ")";
     }
-
-    @Override
-    @Nullable
-    public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
-        byte[] bytes = rs.getBytes(startIndex);
-        if (bytes != null) {
-            return Decoders.decode(bytes);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
-        byte[] bytes = Encoders.encode(value);
-        st.setBytes(startIndex, bytes);
-    }
-
-    @Override
-    public String getLiteral(Geometry geometry) {
-        String str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry);
-        if (geometry.getSRID() > -1) {
-            return "geometry::STGeomFromText('" + str + "', " + geometry.getSRID() + ")";
-        } else {
-            return "geometry::STGeomFromText('" + str + "', " + DEFAULT_SRID + ")";
-        }
-    }
-
+  }
 }

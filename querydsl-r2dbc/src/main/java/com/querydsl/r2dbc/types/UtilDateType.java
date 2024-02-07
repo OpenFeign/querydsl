@@ -25,48 +25,48 @@ import java.util.Date;
  */
 public class UtilDateType extends AbstractDateTimeType<Date, Temporal> {
 
-    public UtilDateType() {
-        super(Types.TIMESTAMP);
+  public UtilDateType() {
+    super(Types.TIMESTAMP);
+  }
+
+  public UtilDateType(int type) {
+    super(type);
+  }
+
+  @Override
+  public String getLiteral(Date value) {
+    return dateTimeFormatter.format(value);
+  }
+
+  @Override
+  public Class<Date> getReturnedClass() {
+    return Date.class;
+  }
+
+  @Override
+  public Class<Temporal> getDatabaseClass() {
+    return Temporal.class;
+  }
+
+  @Override
+  protected LocalDateTime toDbValue(Date value) {
+    return LocalDateTime.ofInstant(value.toInstant(), ZoneOffset.systemDefault());
+  }
+
+  @Override
+  protected Date fromDbValue(Temporal value) {
+    if (LocalDate.class.isAssignableFrom(value.getClass())) {
+      Instant instant =
+          ((LocalDate) value).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant();
+      return Date.from(instant);
     }
 
-    public UtilDateType(int type) {
-        super(type);
+    if (LocalDateTime.class.isAssignableFrom(value.getClass())) {
+      Instant instant = ((LocalDateTime) value).atZone(ZoneId.systemDefault()).toInstant();
+      return Date.from(instant);
     }
 
-    @Override
-    public String getLiteral(Date value) {
-        return dateTimeFormatter.format(value);
-    }
-
-    @Override
-    public Class<Date> getReturnedClass() {
-        return Date.class;
-    }
-
-    @Override
-    public Class<Temporal> getDatabaseClass() {
-        return Temporal.class;
-    }
-
-    @Override
-    protected LocalDateTime toDbValue(Date value) {
-        return LocalDateTime.ofInstant(value.toInstant(), ZoneOffset.systemDefault());
-    }
-
-    @Override
-    protected Date fromDbValue(Temporal value) {
-        if (LocalDate.class.isAssignableFrom(value.getClass())) {
-            Instant instant = ((LocalDate) value).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant();
-            return Date.from(instant);
-        }
-
-        if (LocalDateTime.class.isAssignableFrom(value.getClass())) {
-            Instant instant = ((LocalDateTime) value).atZone(ZoneId.systemDefault()).toInstant();
-            return Date.from(instant);
-        }
-
-        Instant instant = Instant.from(value);
-        return Date.from(instant);
-    }
-
+    Instant instant = Instant.from(value);
+    return Date.from(instant);
+  }
 }

@@ -26,48 +26,47 @@ import io.r2dbc.spi.Row;
  */
 public abstract class AbstractType<IN, OUT> implements Type<IN, OUT> {
 
-    private final int type;
+  private final int type;
 
-    public AbstractType(int type) {
-        this.type = type;
+  public AbstractType(int type) {
+    this.type = type;
+  }
+
+  @Override
+  public final int[] getSQLTypes() {
+    return new int[] {type};
+  }
+
+  @Override
+  public String getLiteral(IN value) {
+    return value.toString();
+  }
+
+  @Override
+  public IN getValue(Row row, int startIndex) {
+    OUT value = row.get(startIndex, getDatabaseClass());
+    if (value == null) {
+      return null;
     }
 
-    @Override
-    public final int[] getSQLTypes() {
-        return new int[]{type};
-    }
+    return fromDbValue(value);
+  }
 
-    @Override
-    public String getLiteral(IN value) {
-        return value.toString();
-    }
+  @Override
+  public void setValue(BindMarker bindMarker, BindTarget bindTarget, IN value) {
+    bindMarker.bind(bindTarget, toDbValue(value));
+  }
 
-    @Override
-    public IN getValue(Row row, int startIndex) {
-        OUT value = row.get(startIndex, getDatabaseClass());
-        if (value == null) {
-            return null;
-        }
+  @Override
+  public Class<OUT> getDatabaseClass() {
+    return (Class<OUT>) getReturnedClass();
+  }
 
-        return fromDbValue(value);
-    }
+  protected OUT toDbValue(IN value) {
+    return (OUT) value;
+  }
 
-    @Override
-    public void setValue(BindMarker bindMarker, BindTarget bindTarget, IN value) {
-        bindMarker.bind(bindTarget, toDbValue(value));
-    }
-
-    @Override
-    public Class<OUT> getDatabaseClass() {
-        return (Class<OUT>) getReturnedClass();
-    }
-
-    protected OUT toDbValue(IN value) {
-        return (OUT) value;
-    }
-
-    protected IN fromDbValue(OUT value) {
-        return (IN) value;
-    }
-
+  protected IN fromDbValue(OUT value) {
+    return (IN) value;
+  }
 }

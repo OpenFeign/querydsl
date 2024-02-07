@@ -7,10 +7,7 @@ import javax.persistence.ManyToOne;
 @Entity(name = "Child2")
 public class Child {
 
-    @Id
-    int id;
+  @Id int id;
 
-    @ManyToOne
-    Parent parent;
-
+  @ManyToOne Parent parent;
 }

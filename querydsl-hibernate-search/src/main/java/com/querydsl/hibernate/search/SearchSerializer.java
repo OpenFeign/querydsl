@@ -13,40 +13,38 @@
  */
 package com.querydsl.hibernate.search;
 
-import org.hibernate.search.annotations.Field;
-
 import com.querydsl.core.types.Path;
 import com.querydsl.lucene3.LuceneSerializer;
+import org.hibernate.search.annotations.Field;
 
 /**
- * {@code SearchSerializer} extends the {@link LuceneSerializer} to use {@link Field} annotation data from paths
+ * {@code SearchSerializer} extends the {@link LuceneSerializer} to use {@link Field} annotation
+ * data from paths
  *
  * @author tiwe
- *
  */
 public class SearchSerializer extends LuceneSerializer {
 
-    public static final SearchSerializer DEFAULT = new SearchSerializer(false,true);
+  public static final SearchSerializer DEFAULT = new SearchSerializer(false, true);
 
-    /**
-     * Create a new SearchSerializer instance
-     *
-     * @param lowerCase lowercase names
-     * @param splitTerms split terms
-     */
-    public SearchSerializer(boolean lowerCase, boolean splitTerms) {
-        super(lowerCase, splitTerms);
+  /**
+   * Create a new SearchSerializer instance
+   *
+   * @param lowerCase lowercase names
+   * @param splitTerms split terms
+   */
+  public SearchSerializer(boolean lowerCase, boolean splitTerms) {
+    super(lowerCase, splitTerms);
+  }
+
+  @Override
+  public String toField(Path<?> path) {
+    if (path.getAnnotatedElement() != null) {
+      Field fieldAnn = path.getAnnotatedElement().getAnnotation(Field.class);
+      if (fieldAnn != null && fieldAnn.name().length() > 0) {
+        return fieldAnn.name();
+      }
     }
-
-    @Override
-    public String toField(Path<?> path) {
-        if (path.getAnnotatedElement() != null) {
-            Field fieldAnn = path.getAnnotatedElement().getAnnotation(Field.class);
-            if (fieldAnn != null && fieldAnn.name().length() > 0) {
-                return fieldAnn.name();
-            }
-        }
-        return super.toField(path);
-    }
-
+    return super.toField(path);
+  }
 }

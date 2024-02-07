@@ -6,21 +6,20 @@ import javax.persistence.Persistence;
 
 public final class Teradata {
 
-    private Teradata() { }
+  private Teradata() {}
 
-    public static void main(String[] args) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("teradata");
-        try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            try {
-                entityManager.getTransaction().begin();
-                entityManager.getTransaction().commit();
-            } finally {
-                entityManager.close();
-            }
-        } finally {
-            entityManagerFactory.close();
-        }
+  public static void main(String[] args) {
+    EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("teradata");
+    try {
+      EntityManager entityManager = entityManagerFactory.createEntityManager();
+      try {
+        entityManager.getTransaction().begin();
+        entityManager.getTransaction().commit();
+      } finally {
+        entityManager.close();
+      }
+    } finally {
+      entityManagerFactory.close();
     }
-
+  }
 }

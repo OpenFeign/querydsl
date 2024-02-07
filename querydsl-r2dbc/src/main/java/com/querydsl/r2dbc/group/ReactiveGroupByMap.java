@@ -22,12 +22,11 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.Projections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Provides aggregated results as a map
@@ -39,46 +38,47 @@ import java.util.Map;
 @IgnoreJRERequirement
 public class ReactiveGroupByMap<K, V> extends ReactiveAbstractGroupByTransformer<K, Map<K, V>> {
 
-    ReactiveGroupByMap(Expression<K> key, Expression<?>... expressions) {
-        super(key, expressions);
+  ReactiveGroupByMap(Expression<K> key, Expression<?>... expressions) {
+    super(key, expressions);
+  }
+
+  @Override
+  public Mono<Map<K, V>> transform(ReactiveFetchableQuery<?, ?> query) {
+    final Map<K, Group> groups = new LinkedHashMap<K, Group>();
+
+    // create groups
+    FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
+    boolean hasGroups = false;
+    for (Expression<?> e : expr.getArgs()) {
+      hasGroups |= e instanceof GroupExpression;
     }
-
-    @Override
-    public Mono<Map<K, V>> transform(ReactiveFetchableQuery<?, ?> query) {
-        final Map<K, Group> groups = new LinkedHashMap<K, Group>();
-
-        // create groups
-        FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-        boolean hasGroups = false;
-        for (Expression<?> e : expr.getArgs()) {
-            hasGroups |= e instanceof GroupExpression;
-        }
-        if (hasGroups) {
-            expr = withoutGroupExpressions(expr);
-        }
-        Flux<Tuple> result = query.select(expr).fetch();
-
-        return result
-                .collectList()
-                .map(tupels -> {
-                    tupels.forEach(tuple -> {
-                        K[] row = (K[]) tuple.toArray();
-                        K groupId = row[0];
-                        GroupImpl group = (GroupImpl) groups.get(groupId);
-                        if (group == null) {
-                            group = new GroupImpl(groupExpressions, maps);
-                            groups.put(groupId, group);
-                        }
-                        group.add(row);
-                    });
-
-                    return transform(groups);
-                });
+    if (hasGroups) {
+      expr = withoutGroupExpressions(expr);
     }
+    Flux<Tuple> result = query.select(expr).fetch();
 
-    @SuppressWarnings("unchecked")
-    protected Map<K, V> transform(Map<K, Group> groups) {
-        return (Map<K, V>) groups;
-    }
+    return result
+        .collectList()
+        .map(
+            tupels -> {
+              tupels.forEach(
+                  tuple -> {
+                    K[] row = (K[]) tuple.toArray();
+                    K groupId = row[0];
+                    GroupImpl group = (GroupImpl) groups.get(groupId);
+                    if (group == null) {
+                      group = new GroupImpl(groupExpressions, maps);
+                      groups.put(groupId, group);
+                    }
+                    group.add(row);
+                  });
 
+              return transform(groups);
+            });
+  }
+
+  @SuppressWarnings("unchecked")
+  protected Map<K, V> transform(Map<K, Group> groups) {
+    return (Map<K, V>) groups;
+  }
 }

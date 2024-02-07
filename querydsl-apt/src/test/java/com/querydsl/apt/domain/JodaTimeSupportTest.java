@@ -13,52 +13,52 @@
  */
 package com.querydsl.apt.domain;
 
-import org.joda.time.*;
-import org.junit.Test;
-
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.ComparablePath;
 import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.TimePath;
+import org.joda.time.*;
+import org.junit.Test;
 
 public class JodaTimeSupportTest extends AbstractTest {
 
-    @QueryEntity
-    public static class JodaTimeSupport {
+  @QueryEntity
+  public static class JodaTimeSupport {
 
-        DateMidnight dateMidnight;
+    DateMidnight dateMidnight;
 
-        DateTime dateTime;
+    DateTime dateTime;
 
-        Instant instant;
+    Instant instant;
 
-        LocalDate localDate;
+    LocalDate localDate;
 
-        LocalDateTime localDateTime;
+    LocalDateTime localDateTime;
 
-        LocalTime localTime;
+    LocalTime localTime;
 
-        Partial partial;
+    Partial partial;
+  }
 
-    }
-
-    @Test
-    public void test() throws IllegalAccessException, NoSuchFieldException {
-        start(QJodaTimeSupportTest_JodaTimeSupport.class, QJodaTimeSupportTest_JodaTimeSupport.jodaTimeSupport);
-        match(DateTimePath.class, "dateMidnight");
-        matchType(DateMidnight.class, "dateMidnight");
-        match(DateTimePath.class, "dateTime");
-        matchType(DateTime.class, "dateTime");
-        match(DateTimePath.class, "instant");
-        matchType(Instant.class, "instant");
-        match(DatePath.class, "localDate");
-        matchType(LocalDate.class, "localDate");
-        match(DateTimePath.class, "localDateTime");
-        matchType(LocalDateTime.class, "localDateTime");
-        match(TimePath.class, "localTime");
-        matchType(LocalTime.class, "localTime");
-        match(ComparablePath.class, "partial");
-        matchType(Partial.class, "partial");
-    }
+  @Test
+  public void test() throws IllegalAccessException, NoSuchFieldException {
+    start(
+        QJodaTimeSupportTest_JodaTimeSupport.class,
+        QJodaTimeSupportTest_JodaTimeSupport.jodaTimeSupport);
+    match(DateTimePath.class, "dateMidnight");
+    matchType(DateMidnight.class, "dateMidnight");
+    match(DateTimePath.class, "dateTime");
+    matchType(DateTime.class, "dateTime");
+    match(DateTimePath.class, "instant");
+    matchType(Instant.class, "instant");
+    match(DatePath.class, "localDate");
+    matchType(LocalDate.class, "localDate");
+    match(DateTimePath.class, "localDateTime");
+    matchType(LocalDateTime.class, "localDateTime");
+    match(TimePath.class, "localTime");
+    matchType(LocalTime.class, "localTime");
+    match(ComparablePath.class, "partial");
+    matchType(Partial.class, "partial");
+  }
 }
