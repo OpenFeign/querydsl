@@ -72,7 +72,6 @@
     <module>querydsl-codegen-utils</module>
     <module>querydsl-apt</module>
     <module>querydsl-maven-plugin</module>
-    <module>querydsl-gradle-plugin</module>
 
     <module>querydsl-collections</module>
     <module>querydsl-guava</module>
