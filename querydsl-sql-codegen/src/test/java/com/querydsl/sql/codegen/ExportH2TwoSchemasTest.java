@@ -43,12 +43,12 @@ public class ExportH2TwoSchemasTest {
 
   @Test
   public void export() throws SQLException, MalformedURLException, IOException {
-    NamingStrategy namingStrategy = new DefaultNamingStrategy();
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern(null);
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setNamingStrategy(namingStrategy);
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern(null);
+    config.setPackageName("test");
+    config.setTargetFolder(folder.getRoot());
+
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(Connections.getConnection().getMetaData());
 
     String contents =

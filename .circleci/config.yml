@@ -143,8 +143,6 @@ jobs:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
             - querydsl-dependencies-
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: 'Test'
           command: |

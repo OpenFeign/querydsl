@@ -14,23 +14,27 @@
 package com.querydsl.maven;
 
 import com.querydsl.codegen.BeanSerializer;
-import com.querydsl.codegen.utils.model.SimpleType;
+import com.querydsl.codegen.Property;
+import com.querydsl.codegen.Serializer;
 import com.querydsl.core.util.StringUtils;
-import com.querydsl.sql.Configuration;
-import com.querydsl.sql.SQLTemplates;
-import com.querydsl.sql.codegen.DefaultNamingStrategy;
 import com.querydsl.sql.codegen.MetaDataExporter;
+import com.querydsl.sql.codegen.MetadataExporterConfig;
 import com.querydsl.sql.codegen.NamingStrategy;
+import com.querydsl.sql.codegen.support.CustomType;
 import com.querydsl.sql.codegen.support.NumericMapping;
 import com.querydsl.sql.codegen.support.RenameMapping;
 import com.querydsl.sql.codegen.support.TypeMapping;
-import com.querydsl.sql.types.Type;
 import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -45,7 +49,8 @@ import org.apache.maven.wagon.authentication.AuthenticationInfo;
  *
  * @author tiwe
  */
-public abstract class AbstractMetaDataExportMojo extends AbstractMojo {
+public abstract class AbstractMetaDataExportMojo extends AbstractMojo
+    implements MetadataExporterConfig {
 
   /** maven project */
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
@@ -219,10 +224,6 @@ public abstract class AbstractMetaDataExportMojo extends AbstractMojo {
   /** override default column order (default: alphabetical) */
   @Parameter private String columnComparatorClass;
 
-  /** switch to enable spatial type support */
-  @Parameter(defaultValue = "false")
-  private boolean spatial;
-
   /**
    * Comma-separated list of table types to export (allowable values will depend on JDBC driver).
    * Allows for arbitrary set of types to be exported, e.g.: "TABLE, MATERIALIZED VIEW". The
@@ -267,13 +268,6 @@ public abstract class AbstractMetaDataExportMojo extends AbstractMojo {
     }
 
     try {
-      Configuration configuration = new Configuration(SQLTemplates.DEFAULT);
-      NamingStrategy namingStrategy;
-      if (namingStrategyClass != null) {
-        namingStrategy = (NamingStrategy) Class.forName(namingStrategyClass).newInstance();
-      } else {
-        namingStrategy = new DefaultNamingStrategy();
-      }
 
       // defaults for Scala
       if (createScalaSources) {
@@ -285,110 +279,7 @@ public abstract class AbstractMetaDataExportMojo extends AbstractMojo {
         }
       }
 
-      MetaDataExporter exporter = new MetaDataExporter();
-      exporter.setNamePrefix(emptyIfSetToBlank(namePrefix));
-      exporter.setNameSuffix(StringUtils.nullToEmpty(nameSuffix));
-      exporter.setBeanPrefix(StringUtils.nullToEmpty(beanPrefix));
-      exporter.setBeanSuffix(StringUtils.nullToEmpty(beanSuffix));
-      if (beansTargetFolder != null) {
-        exporter.setBeansTargetFolder(new File(beansTargetFolder));
-      }
-      exporter.setCreateScalaSources(createScalaSources);
-      exporter.setPackageName(packageName);
-      exporter.setBeanPackageName(beanPackageName);
-      exporter.setInnerClassesForKeys(innerClassesForKeys);
-      exporter.setTargetFolder(new File(targetFolder));
-      exporter.setNamingStrategy(namingStrategy);
-      exporter.setCatalogPattern(catalogPattern);
-      exporter.setSchemaPattern(processBlankValues(schemaPattern));
-      exporter.setTableNamePattern(tableNamePattern);
-      exporter.setColumnAnnotations(columnAnnotations);
-      exporter.setValidationAnnotations(validationAnnotations);
-      exporter.setSchemaToPackage(schemaToPackage);
-      exporter.setLowerCase(lowerCase);
-      exporter.setExportTables(exportTables);
-      exporter.setExportViews(exportViews);
-      exporter.setExportAll(exportAll);
-      exporter.setTableTypesToExport(tableTypesToExport);
-      exporter.setExportPrimaryKeys(exportPrimaryKeys);
-      exporter.setExportForeignKeys(exportForeignKeys);
-      exporter.setExportDirectForeignKeys(exportDirectForeignKeys);
-      exporter.setExportInverseForeignKeys(exportInverseForeignKeys);
-      exporter.setSpatial(spatial);
-      exporter.setGeneratedAnnotationClass(generatedAnnotationClass);
-
-      if (imports != null && imports.length > 0) {
-        exporter.setImports(imports);
-      }
-
-      if (serializerClass != null) {
-        try {
-          exporter.setSerializerClass((Class) Class.forName(serializerClass));
-        } catch (ClassNotFoundException e) {
-          getLog().error(e);
-          throw new MojoExecutionException(e.getMessage(), e);
-        }
-      }
-      if (exportBeans) {
-        if (beanSerializerClass != null) {
-          exporter.setBeanSerializerClass((Class) Class.forName(beanSerializerClass));
-        } else {
-          BeanSerializer serializer = new BeanSerializer();
-          if (beanInterfaces != null) {
-            for (String iface : beanInterfaces) {
-              int sepIndex = iface.lastIndexOf('.');
-              if (sepIndex < 0) {
-                serializer.addInterface(new SimpleType(iface));
-              } else {
-                String packageName = iface.substring(0, sepIndex);
-                String simpleName = iface.substring(sepIndex + 1);
-                serializer.addInterface(new SimpleType(iface, packageName, simpleName));
-              }
-            }
-          }
-          serializer.setAddFullConstructor(beanAddFullConstructor);
-          serializer.setAddToString(beanAddToString);
-          serializer.setPrintSupertype(beanPrintSupertype);
-          exporter.setBeanSerializer(serializer);
-        }
-      }
-      String sourceEncoding = (String) project.getProperties().get("project.build.sourceEncoding");
-      if (sourceEncoding != null) {
-        exporter.setSourceEncoding(sourceEncoding);
-      }
-
-      if (customTypes != null) {
-        for (String cl : customTypes) {
-          configuration.register((Type<?>) Class.forName(cl).newInstance());
-        }
-      }
-      if (typeMappings != null) {
-        for (TypeMapping mapping : typeMappings) {
-          mapping.apply(configuration);
-        }
-      }
-      if (numericMappings != null) {
-        for (NumericMapping mapping : numericMappings) {
-          mapping.apply(configuration);
-        }
-      }
-      if (renameMappings != null) {
-        for (RenameMapping mapping : renameMappings) {
-          mapping.apply(configuration);
-        }
-      }
-
-      if (columnComparatorClass != null) {
-        try {
-          exporter.setColumnComparatorClass(
-              (Class) Class.forName(this.columnComparatorClass).asSubclass(Comparator.class));
-        } catch (ClassNotFoundException e) {
-          getLog().error(e);
-          throw new MojoExecutionException(e.getMessage(), e);
-        }
-      }
-
-      exporter.setConfiguration(configuration);
+      MetaDataExporter exporter = new MetaDataExporter(this);
 
       Class.forName(jdbcDriver);
       String user;
@@ -415,10 +306,7 @@ public abstract class AbstractMetaDataExportMojo extends AbstractMojo {
       try (Connection conn = DriverManager.getConnection(jdbcUrl, user, password)) {
         exporter.export(conn.getMetaData());
       }
-    } catch (ClassNotFoundException
-        | IllegalAccessException
-        | InstantiationException
-        | SQLException e) {
+    } catch (ClassNotFoundException | SQLException e) {
       throw new MojoExecutionException(e.getMessage(), e);
     }
   }
@@ -584,4 +472,260 @@ public abstract class AbstractMetaDataExportMojo extends AbstractMojo {
   private static final Pattern BLANK_VALUE_PATTERN =
       Pattern.compile("(^|,)BLANK(,|$)", Pattern.CASE_INSENSITIVE);
   private static final String BLANK_VALUE_REPLACEMENT = "$1$2";
+
+  @Override
+  public String getNamePrefix() {
+    return emptyIfSetToBlank(namePrefix);
+  }
+
+  @Override
+  public String getNameSuffix() {
+    return StringUtils.nullToEmpty(nameSuffix);
+  }
+
+  @Override
+  public String getBeanPrefix() {
+    return StringUtils.nullToEmpty(beanPrefix);
+  }
+
+  @Override
+  public String getBeanSuffix() {
+    return StringUtils.nullToEmpty(beanSuffix);
+  }
+
+  @Override
+  public File getBeansTargetFolder() {
+    if (beansTargetFolder != null) {
+      return new File(beansTargetFolder);
+    }
+    return null;
+  }
+
+  @Override
+  public File getTargetFolder() {
+    return new File(targetFolder);
+  }
+
+  @Override
+  public boolean isCreateScalaSources() {
+    return createScalaSources;
+  }
+
+  @Override
+  public String getPackageName() {
+    return packageName;
+  }
+
+  @Override
+  public String getBeanPackageName() {
+    return beanPackageName;
+  }
+
+  @Override
+  public boolean isInnerClassesForKeys() {
+    return innerClassesForKeys;
+  }
+
+  @Override
+  public Class<? extends NamingStrategy> getNamingStrategyClass() {
+    if (namingStrategyClass == null) {
+      return null;
+    }
+    try {
+      return (Class<? extends NamingStrategy>) Class.forName(namingStrategyClass);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public String getSchemaPattern() {
+    return processBlankValues(schemaPattern);
+  }
+
+  @Override
+  public String getCatalogPattern() {
+    return catalogPattern;
+  }
+
+  @Override
+  public String getTableNamePattern() {
+    return tableNamePattern;
+  }
+
+  @Override
+  public boolean isColumnAnnotations() {
+    return columnAnnotations;
+  }
+
+  @Override
+  public boolean isValidationAnnotations() {
+    return validationAnnotations;
+  }
+
+  @Override
+  public boolean isSchemaToPackage() {
+    return schemaToPackage;
+  }
+
+  @Override
+  public boolean isLowerCase() {
+    return lowerCase;
+  }
+
+  @Override
+  public boolean isExportTables() {
+    return exportTables;
+  }
+
+  @Override
+  public boolean isExportViews() {
+    return exportViews;
+  }
+
+  @Override
+  public boolean isExportAll() {
+    return exportAll;
+  }
+
+  @Override
+  public boolean isExportPrimaryKeys() {
+    return exportPrimaryKeys;
+  }
+
+  @Override
+  public boolean isExportForeignKeys() {
+    return exportForeignKeys;
+  }
+
+  @Override
+  public boolean isExportDirectForeignKeys() {
+    return exportDirectForeignKeys;
+  }
+
+  @Override
+  public boolean isExportInverseForeignKeys() {
+    return exportInverseForeignKeys;
+  }
+
+  @Override
+  public Charset getSourceEncoding() {
+    String sourceEncoding = (String) project.getProperties().get("project.build.sourceEncoding");
+    if (sourceEncoding != null) {
+      return Charset.forName(sourceEncoding);
+    }
+
+    return StandardCharsets.UTF_8;
+  }
+
+  @Override
+  public String getTableTypesToExport() {
+    return tableTypesToExport;
+  }
+
+  @Override
+  public List<String> getImports() {
+    if (imports == null) {
+      return null;
+    }
+    return Arrays.asList(imports);
+  }
+
+  @Override
+  public String getGeneratedAnnotationClass() {
+    return generatedAnnotationClass;
+  }
+
+  @Override
+  public Class<? extends BeanSerializer> getBeanSerializerClass() {
+    if (exportBeans && beanSerializerClass != null) {
+      try {
+        return (Class<? extends BeanSerializer>) Class.forName(beanSerializerClass);
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public boolean isExportBeans() {
+    return exportBeans;
+  }
+
+  @Override
+  public String[] getBeanInterfaces() {
+    return beanInterfaces;
+  }
+
+  @Override
+  public boolean isBeanAddToString() {
+    return beanAddToString;
+  }
+
+  @Override
+  public boolean isBeanAddFullConstructor() {
+    return beanAddFullConstructor;
+  }
+
+  @Override
+  public boolean isBeanPrintSupertype() {
+    return beanPrintSupertype;
+  }
+
+  @Override
+  public List<CustomType> getCustomTypes() {
+    if (customTypes == null) {
+      return null;
+    }
+    return Arrays.stream(customTypes).map(CustomType::new).collect(Collectors.toList());
+  }
+
+  @Override
+  public List<TypeMapping> getTypeMappings() {
+    if (typeMappings == null) {
+      return null;
+    }
+    return Arrays.stream(typeMappings).collect(Collectors.toList());
+  }
+
+  @Override
+  public List<NumericMapping> getNumericMappings() {
+    if (numericMappings == null) {
+      return null;
+    }
+    return Arrays.stream(numericMappings).collect(Collectors.toList());
+  }
+
+  @Override
+  public List<RenameMapping> getRenameMappings() {
+    if (renameMappings == null) {
+      return null;
+    }
+    return Arrays.stream(renameMappings).collect(Collectors.toList());
+  }
+
+  @Override
+  public Class<? extends Comparator<Property>> getColumnComparatorClass() {
+    if (columnComparatorClass == null) {
+      return null;
+    }
+    try {
+      return (Class<? extends Comparator<Property>>) Class.forName(columnComparatorClass);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public Class<? extends Serializer> getSerializerClass() {
+    if (serializerClass == null) {
+      return null;
+    }
+    try {
+      return (Class<? extends Serializer>) Class.forName(serializerClass);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
