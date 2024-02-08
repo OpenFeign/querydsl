@@ -48,10 +48,12 @@ public class Generic2Test {
     Type type = factory.getEntityType(AbstractCollectionAttribute.class);
     assertThat(type.getGenericName(false))
         .isEqualTo(
-            "com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute<? extends java.util.Collection<?>>");
+            "com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute<? extends"
+                + " java.util.Collection<?>>");
     assertThat(type.getGenericName(true))
         .isEqualTo(
-            "com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute<? extends java.util.Collection<?>>");
+            "com.querydsl.codegen.Generic2Test.AbstractCollectionAttribute<? extends"
+                + " java.util.Collection<?>>");
   }
 
   @Test

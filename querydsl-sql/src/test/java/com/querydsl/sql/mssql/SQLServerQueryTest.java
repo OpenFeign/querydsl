@@ -55,7 +55,8 @@ public class SQLServerQueryTest {
         .where(survey.name.isNull());
     assertThat(query.toString())
         .isEqualTo(
-            "from SURVEY SURVEY with (NOWAIT), SURVEY survey2 with (NOLOCK)\nwhere SURVEY.NAME is null");
+            "from SURVEY SURVEY with (NOWAIT), SURVEY survey2 with (NOLOCK)\n"
+                + "where SURVEY.NAME is null");
   }
 
   @Test
@@ -71,7 +72,9 @@ public class SQLServerQueryTest {
         .on(employee1.superiorId.eq(employee2.id));
     assertThat(query.toString())
         .isEqualTo(
-            "from EMPLOYEE EMPLOYEE with (NOLOCK)\njoin EMPLOYEE employee2 with (NOLOCK)\non EMPLOYEE.SUPERIOR_ID = employee2.ID");
+            "from EMPLOYEE EMPLOYEE with (NOLOCK)\n"
+                + "join EMPLOYEE employee2 with (NOLOCK)\n"
+                + "on EMPLOYEE.SUPERIOR_ID = employee2.ID");
   }
 
   @Test
@@ -87,6 +90,8 @@ public class SQLServerQueryTest {
         .on(employee1.superiorId.eq(employee2.id));
     assertThat(query.toString())
         .isEqualTo(
-            "from EMPLOYEE EMPLOYEE with (NOLOCK, READUNCOMMITTED)\njoin EMPLOYEE employee2 with (NOLOCK, READUNCOMMITTED)\non EMPLOYEE.SUPERIOR_ID = employee2.ID");
+            "from EMPLOYEE EMPLOYEE with (NOLOCK, READUNCOMMITTED)\n"
+                + "join EMPLOYEE employee2 with (NOLOCK, READUNCOMMITTED)\n"
+                + "on EMPLOYEE.SUPERIOR_ID = employee2.ID");
   }
 }

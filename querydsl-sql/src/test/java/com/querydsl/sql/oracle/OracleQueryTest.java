@@ -54,7 +54,8 @@ public class OracleQueryTest {
     query.connectByNocyclePrior(survey.name.isNull());
     assertThat(toString(query))
         .isEqualTo(
-            "from SURVEY survey connect by nocycle prior survey.NAME is null order by survey.NAME asc");
+            "from SURVEY survey connect by nocycle prior survey.NAME is null order by survey.NAME"
+                + " asc");
   }
 
   @Test

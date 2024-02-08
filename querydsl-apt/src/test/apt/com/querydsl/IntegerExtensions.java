@@ -6,8 +6,9 @@ import com.querydsl.core.types.dsl.NumberPath;
 
 public class IntegerExtensions {
 
-    @QueryDelegate(Integer.class)
-    public static NumberExpression<Integer> difference(NumberPath<Integer> left, NumberExpression<Integer> right) {
-        return right.subtract(left);
-    }
+  @QueryDelegate(Integer.class)
+  public static NumberExpression<Integer> difference(
+      NumberPath<Integer> left, NumberExpression<Integer> right) {
+    return right.subtract(left);
+  }
 }

@@ -206,7 +206,8 @@ public class MySQLQueryTest {
     query.withRollup();
     assertThat(toString(query))
         .isEqualTo(
-            "select survey.NAME from SURVEY survey group by survey.NAME with rollup  order by survey.NAME asc");
+            "select survey.NAME from SURVEY survey group by survey.NAME with rollup  order by"
+                + " survey.NAME asc");
   }
 
   @Test

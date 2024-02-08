@@ -103,7 +103,8 @@ public class LuceneQueryTest {
         createDocument(
             "The Lord of the Rings",
             "John R. R. Tolkien",
-            "One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkness bind them",
+            "One Ring to rule them all, One Ring to find them, One Ring to bring them all and in"
+                + " the darkness bind them",
             1954,
             89.00));
     writer.addDocument(

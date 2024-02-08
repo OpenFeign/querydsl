@@ -15,6 +15,8 @@ public class CoalesceTest {
             QCompanies.companies.name);
     assertThat(SQLExpressions.select(coalesce).toString())
         .isEqualTo(
-            "select coalesce((select COMPANIES.NAME\nfrom COMPANIES COMPANIES), COMPANIES.NAME)\nfrom dual");
+            "select coalesce((select COMPANIES.NAME\n"
+                + "from COMPANIES COMPANIES), COMPANIES.NAME)\n"
+                + "from dual");
   }
 }

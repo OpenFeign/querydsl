@@ -30,6 +30,9 @@ public class MapOperationsTest extends AbstractQueryTest {
                 .groupBy(show.acts.get("A"))
                 .toString())
         .isEqualTo(
-            "select show_acts_0\nfrom Show show\n  left join show.acts as show_acts_0 on key(show_acts_0) = ?1\ngroup by show_acts_0");
+            "select show_acts_0\n"
+                + "from Show show\n"
+                + "  left join show.acts as show_acts_0 on key(show_acts_0) = ?1\n"
+                + "group by show_acts_0");
   }
 }

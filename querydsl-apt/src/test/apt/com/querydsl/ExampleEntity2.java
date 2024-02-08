@@ -5,5 +5,5 @@ import com.querydsl.core.domain.AbstractEntity;
 
 @QueryEntity
 public class ExampleEntity2 extends AbstractEntity<ExampleEntity2> {
-// id inherited
+  // id inherited
 }

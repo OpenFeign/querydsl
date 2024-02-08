@@ -111,7 +111,8 @@ public class MetaDataExporterTest {
 
       // multi key
       stmt.execute(
-          "create table multikey(id INT, id2 VARCHAR, id3 INT, CONSTRAINT pk_multikey PRIMARY KEY (id, id2, id3) )");
+          "create table multikey(id INT, id2 VARCHAR, id3 INT, CONSTRAINT pk_multikey PRIMARY KEY"
+              + " (id, id2, id3) )");
 
       //  M_PRODUCT_BOM_ID
       stmt.execute(
@@ -407,10 +408,12 @@ public class MetaDataExporterTest {
     try {
       stmt.execute("CREATE DATABASE IF NOT EXISTS catalog_test_one");
       stmt.execute(
-          "CREATE TABLE IF NOT EXISTS catalog_test_one.test_catalog_table_one(id INT PRIMARY KEY, foo VARCHAR(32) NOT NULL)");
+          "CREATE TABLE IF NOT EXISTS catalog_test_one.test_catalog_table_one(id INT PRIMARY KEY,"
+              + " foo VARCHAR(32) NOT NULL)");
       stmt.execute("CREATE DATABASE IF NOT EXISTS catalog_test_two");
       stmt.execute(
-          "CREATE TABLE IF NOT EXISTS catalog_test_two.test_catalog_table_two(id INT PRIMARY KEY, foo VARCHAR(32) NOT NULL)");
+          "CREATE TABLE IF NOT EXISTS catalog_test_two.test_catalog_table_two(id INT PRIMARY KEY,"
+              + " foo VARCHAR(32) NOT NULL)");
 
       MetaDataExporter exporter = new MetaDataExporter();
       exporter.setSchemaPattern("PUBLIC");

@@ -97,7 +97,8 @@ public class WindowFunctionTest {
             "sum(path) over (order by path asc rows between current row and unbounded following)");
     assertThat(toString(wf.rows().between().preceding(intPath).following(intPath)))
         .isEqualTo(
-            "sum(path) over (order by path asc rows between preceding intPath and following intPath)");
+            "sum(path) over (order by path asc rows between preceding intPath and following"
+                + " intPath)");
     assertThat(toString(wf.rows().between().preceding(1).following(3)))
         .isEqualTo("sum(path) over (order by path asc rows between preceding ? and following ?)");
   }
