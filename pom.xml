@@ -156,7 +156,7 @@
     <mongodb.version>3.12.14</mongodb.version>
 
     <!-- JPA deps -->
-    <hibernate.version>6.4.3.Final</hibernate.version>
+    <hibernate.version>6.4.4.Final</hibernate.version>
     <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
     <eclipselink.version>4.0.2</eclipselink.version>
     <jpa.version>3.1.0</jpa.version>
