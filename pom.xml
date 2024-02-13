@@ -647,10 +647,94 @@
                   <include>io.github.openfeign.querydsl:*</include>
                 </includes>
                 <excludes>
+                  <exclude>*:querydsl-examples</exclude>
                   <exclude>*:querydsl-example-*</exclude>
-                  <exclude>*:querydsl-benchmark</exclude>
+                  <exclude>*:querydsl-jpa-spring</exclude>
                 </excludes>
               </modules>
+
+              <extraDependencies>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>genaral</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>hibernate</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jakarta</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jdo</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jpa</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>morphia</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>roo</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>general-one</classifier>
+                </dependency>
+
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-jpa</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt-one-jar</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-jpa</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt-hibernate-one-jar</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-jpa</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt</classifier>
+                </dependency>
+
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-mongodb</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt-one-jar</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-mongodb</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt</classifier>
+                </dependency>
+              </extraDependencies>
             </bom>
           </boms>
         </configuration>
