@@ -7,7 +7,6 @@ package com.querydsl.sql.ddl;
 
 import com.querydsl.core.QueryException;
 import com.querydsl.sql.Configuration;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,36 +15,34 @@ import java.sql.Statement;
  * DropTableClause defines a DROP TABLE clause
  *
  * @author tiwe
- *
  */
 public class DropTableClause {
 
-    private final Connection connection;
+  private final Connection connection;
 
-    private final String table;
+  private final String table;
 
-    public DropTableClause(Connection conn, Configuration c, String table) {
-        this.connection = conn;
-        this.table = c.getTemplates().quoteIdentifier(table);
-    }
+  public DropTableClause(Connection conn, Configuration c, String table) {
+    this.connection = conn;
+    this.table = c.getTemplates().quoteIdentifier(table);
+  }
 
-    @SuppressWarnings("SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE")
-    public void execute() {
-        Statement stmt = null;
+  @SuppressWarnings("SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE")
+  public void execute() {
+    Statement stmt = null;
+    try {
+      stmt = connection.createStatement();
+      stmt.execute("DROP TABLE " + table);
+    } catch (SQLException e) {
+      // do not rethrow
+    } finally {
+      if (stmt != null) {
         try {
-            stmt = connection.createStatement();
-            stmt.execute("DROP TABLE " + table);
+          stmt.close();
         } catch (SQLException e) {
-            // do not rethrow
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    throw new QueryException(e);
-                }
-            }
+          throw new QueryException(e);
         }
+      }
     }
-
+  }
 }
