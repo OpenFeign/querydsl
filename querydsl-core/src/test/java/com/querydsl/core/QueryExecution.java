@@ -245,7 +245,7 @@ public abstract class QueryExecution {
       for (String e : errors) {
         buffer.append(e).append("\n");
       }
-      fail("", buffer.toString());
+      fail(buffer.toString());
     } else {
       System.out.println("Success with " + total + " tests");
     }

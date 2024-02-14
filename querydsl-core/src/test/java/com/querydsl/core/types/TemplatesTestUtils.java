@@ -18,17 +18,17 @@ public final class TemplatesTestUtils {
       String str = template.toString();
       int precedence = templates.getPrecedence(op);
       if (str.contains(" like ") && precedence != likePrecedence) {
-        fail("", "Unexpected precedence for " + op + " with template " + template);
+        fail("Unexpected precedence for " + op + " with template " + template);
       } else if (!str.contains("(") && !str.contains(".") && precedence < 0) {
-        fail("", "Unexpected precedence for " + op + " with template " + template);
+        fail("Unexpected precedence for " + op + " with template " + template);
       } else if (str.matches(".*[<>] ?\\-?\\d")) {
         if (precedence != Templates.Precedence.COMPARISON) {
-          fail("", "Unsafe pattern for " + op + " with template " + template);
+          fail("Unsafe pattern for " + op + " with template " + template);
         }
       } else if (str.matches(".*[\\+\\-] ?\\-?\\d")) {
         if (precedence != Templates.Precedence.ARITH_LOW
             && precedence != Templates.Precedence.ARITH_HIGH) {
-          fail("", "Unsafe pattern for " + op + " with template " + template);
+          fail("Unsafe pattern for " + op + " with template " + template);
         }
       }
     }
