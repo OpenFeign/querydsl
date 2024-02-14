@@ -37,7 +37,7 @@ public final class CompileUtils {
             null,
             Collections.singletonList(javaFileObject));
     if (!task.call()) {
-      fail("", "Compilation of " + source + " failed.\n" + out.toString());
+      fail("Compilation of " + source + " failed.\n" + out.toString());
     }
   }
 }

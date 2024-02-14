@@ -68,7 +68,7 @@ public class SignatureTest {
       System.err.println(error);
     }
     if (!errors.isEmpty()) {
-      fail("", "Got " + errors.size() + " errors");
+      fail("Got " + errors.size() + " errors");
     }
   }
 }

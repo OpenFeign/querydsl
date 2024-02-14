@@ -83,7 +83,7 @@ public class QueryMetadaSerializationTest {
       Class<?> clazz = classes.pop();
       checked.add(clazz);
       if (!Serializable.class.isAssignableFrom(clazz) && !clazz.isPrimitive()) {
-        fail("", clazz.getName() + " is not serializable");
+        fail(clazz.getName() + " is not serializable");
       }
       for (Field field : clazz.getDeclaredFields()) {
         if (Modifier.isTransient(field.getModifiers())) {

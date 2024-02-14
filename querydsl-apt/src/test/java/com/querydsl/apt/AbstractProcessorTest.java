@@ -49,7 +49,7 @@ public abstract class AbstractProcessorTest {
     File out = new File("target/" + target);
     FileUtils.delete(out);
     if (!out.mkdirs()) {
-      fail("", "Creation of " + out.getPath() + " failed");
+      fail("Creation of " + out.getPath() + " failed");
     }
     compile(processorClass, classes, target);
   }
@@ -75,7 +75,7 @@ public abstract class AbstractProcessorTest {
     //        Processor.elementCache.clear();
     if (compilationResult != 0) {
       System.err.println(compiler.getClass().getName());
-      fail("", "Compilation Failed:\n " + new String(err.toByteArray(), "UTF-8"));
+      fail("Compilation Failed:\n " + new String(err.toByteArray(), "UTF-8"));
     }
   }
 
