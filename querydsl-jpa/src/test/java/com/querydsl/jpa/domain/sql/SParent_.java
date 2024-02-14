@@ -17,11 +17,11 @@ public class SParent_ extends com.querydsl.sql.RelationalPathBase<SParent_> {
 
   public static final SParent_ parent_ = new SParent_("parent_");
 
-  public final StringPath childname = createString("childname");
-
   public final NumberPath<Long> id = createNumber("id", Long.class);
 
   public final StringPath name = createString("name");
+
+  public final StringPath childname = createString("childname");
 
   public final com.querydsl.sql.PrimaryKey<SParent_> primary = createPrimaryKey(id);
 
@@ -52,11 +52,11 @@ public class SParent_ extends com.querydsl.sql.RelationalPathBase<SParent_> {
 
   public void addMetadata() {
     addMetadata(
-        childname,
-        ColumnMetadata.named("CHILDNAME").withIndex(3).ofType(Types.VARCHAR).withSize(255));
-    addMetadata(
         id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         name, ColumnMetadata.named("NAME").withIndex(2).ofType(Types.VARCHAR).withSize(255));
+    addMetadata(
+        childname,
+        ColumnMetadata.named("CHILDNAME").withIndex(3).ofType(Types.VARCHAR).withSize(255));
   }
 }

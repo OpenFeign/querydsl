@@ -17,15 +17,15 @@ public class SUser_ extends com.querydsl.sql.RelationalPathBase<SUser_> {
 
   public static final SUser_ user_ = new SUser_("user_");
 
-  public final NumberPath<Integer> companyId = createNumber("companyId", Integer.class);
+  public final NumberPath<Long> id = createNumber("id", Long.class);
 
   public final StringPath firstname = createString("firstname");
-
-  public final NumberPath<Long> id = createNumber("id", Long.class);
 
   public final StringPath lastname = createString("lastname");
 
   public final StringPath username = createString("username");
+
+  public final NumberPath<Integer> companyId = createNumber("companyId", Integer.class);
 
   public final com.querydsl.sql.PrimaryKey<SUser_> primary = createPrimaryKey(id);
 
@@ -62,18 +62,18 @@ public class SUser_ extends com.querydsl.sql.RelationalPathBase<SUser_> {
 
   public void addMetadata() {
     addMetadata(
-        companyId,
-        ColumnMetadata.named("COMPANY_ID").withIndex(5).ofType(Types.INTEGER).withSize(10));
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         firstname,
         ColumnMetadata.named("FIRSTNAME").withIndex(2).ofType(Types.VARCHAR).withSize(255));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         lastname,
         ColumnMetadata.named("LASTNAME").withIndex(3).ofType(Types.VARCHAR).withSize(255));
     addMetadata(
         username,
         ColumnMetadata.named("USERNAME").withIndex(4).ofType(Types.VARCHAR).withSize(255));
+    addMetadata(
+        companyId,
+        ColumnMetadata.named("COMPANY_ID").withIndex(5).ofType(Types.INTEGER).withSize(10));
   }
 }

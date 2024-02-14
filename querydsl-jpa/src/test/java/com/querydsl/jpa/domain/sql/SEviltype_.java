@@ -17,13 +17,15 @@ public class SEviltype_ extends com.querydsl.sql.RelationalPathBase<SEviltype_> 
 
   public static final SEviltype_ eviltype_ = new SEviltype_("eviltype_");
 
+  public final NumberPath<Integer> id = createNumber("id", Integer.class);
+
   public final NumberPath<Integer> _asc = createNumber("_asc", Integer.class);
 
   public final NumberPath<Integer> _desc = createNumber("_desc", Integer.class);
 
-  public final NumberPath<Integer> getclassId = createNumber("getclassId", Integer.class);
-
   public final NumberPath<Integer> getId = createNumber("getId", Integer.class);
+
+  public final NumberPath<Integer> getclassId = createNumber("getclassId", Integer.class);
 
   public final NumberPath<Integer> getmetadataId = createNumber("getmetadataId", Integer.class);
 
@@ -31,15 +33,13 @@ public class SEviltype_ extends com.querydsl.sql.RelationalPathBase<SEviltype_> 
 
   public final NumberPath<Integer> hashcodeId = createNumber("hashcodeId", Integer.class);
 
-  public final NumberPath<Integer> id = createNumber("id", Integer.class);
-
   public final NumberPath<Integer> isnotnullId = createNumber("isnotnullId", Integer.class);
 
   public final NumberPath<Integer> isnullId = createNumber("isnullId", Integer.class);
 
-  public final NumberPath<Integer> notifyallId = createNumber("notifyallId", Integer.class);
-
   public final NumberPath<Integer> notifyId = createNumber("notifyId", Integer.class);
+
+  public final NumberPath<Integer> notifyallId = createNumber("notifyallId", Integer.class);
 
   public final NumberPath<Integer> tostringId = createNumber("tostringId", Integer.class);
 
@@ -151,14 +151,16 @@ public class SEviltype_ extends com.querydsl.sql.RelationalPathBase<SEviltype_> 
   }
 
   public void addMetadata() {
+    addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
     addMetadata(_asc, ColumnMetadata.named("_asc").withIndex(2).ofType(Types.INTEGER).withSize(10));
     addMetadata(
         _desc, ColumnMetadata.named("_desc").withIndex(3).ofType(Types.INTEGER).withSize(10));
     addMetadata(
+        getId, ColumnMetadata.named("GET_ID").withIndex(4).ofType(Types.INTEGER).withSize(10));
+    addMetadata(
         getclassId,
         ColumnMetadata.named("GETCLASS_ID").withIndex(5).ofType(Types.INTEGER).withSize(10));
-    addMetadata(
-        getId, ColumnMetadata.named("GET_ID").withIndex(4).ofType(Types.INTEGER).withSize(10));
     addMetadata(
         getmetadataId,
         ColumnMetadata.named("GETMETADATA_ID").withIndex(6).ofType(Types.INTEGER).withSize(10));
@@ -169,19 +171,17 @@ public class SEviltype_ extends com.querydsl.sql.RelationalPathBase<SEviltype_> 
         hashcodeId,
         ColumnMetadata.named("HASHCODE_ID").withIndex(8).ofType(Types.INTEGER).withSize(10));
     addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
-    addMetadata(
         isnotnullId,
         ColumnMetadata.named("ISNOTNULL_ID").withIndex(9).ofType(Types.INTEGER).withSize(10));
     addMetadata(
         isnullId,
         ColumnMetadata.named("ISNULL_ID").withIndex(10).ofType(Types.INTEGER).withSize(10));
     addMetadata(
-        notifyallId,
-        ColumnMetadata.named("NOTIFYALL_ID").withIndex(12).ofType(Types.INTEGER).withSize(10));
-    addMetadata(
         notifyId,
         ColumnMetadata.named("NOTIFY_ID").withIndex(11).ofType(Types.INTEGER).withSize(10));
+    addMetadata(
+        notifyallId,
+        ColumnMetadata.named("NOTIFYALL_ID").withIndex(12).ofType(Types.INTEGER).withSize(10));
     addMetadata(
         tostringId,
         ColumnMetadata.named("TOSTRING_ID").withIndex(13).ofType(Types.INTEGER).withSize(10));

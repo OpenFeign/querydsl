@@ -19,9 +19,9 @@ public class SUserprop_categoryprop_
   public static final SUserprop_categoryprop_ userprop_categoryprop_ =
       new SUserprop_categoryprop_("userprop__categoryprop_");
 
-  public final NumberPath<Long> propertiesID = createNumber("propertiesID", Long.class);
-
   public final NumberPath<Long> userPropID = createNumber("userPropID", Long.class);
+
+  public final NumberPath<Long> propertiesID = createNumber("propertiesID", Long.class);
 
   public final com.querydsl.sql.PrimaryKey<SUserprop_categoryprop_> primary =
       createPrimaryKey(userPropID, propertiesID);
@@ -59,16 +59,16 @@ public class SUserprop_categoryprop_
 
   public void addMetadata() {
     addMetadata(
-        propertiesID,
-        ColumnMetadata.named("properties_ID")
-            .withIndex(2)
+        userPropID,
+        ColumnMetadata.named("UserProp_ID")
+            .withIndex(1)
             .ofType(Types.BIGINT)
             .withSize(19)
             .notNull());
     addMetadata(
-        userPropID,
-        ColumnMetadata.named("UserProp_ID")
-            .withIndex(1)
+        propertiesID,
+        ColumnMetadata.named("properties_ID")
+            .withIndex(2)
             .ofType(Types.BIGINT)
             .withSize(19)
             .notNull());

@@ -17,10 +17,10 @@ public class SCatalog_ extends com.querydsl.sql.RelationalPathBase<SCatalog_> {
 
   public static final SCatalog_ catalog_ = new SCatalog_("catalog_");
 
+  public final NumberPath<Integer> id = createNumber("id", Integer.class);
+
   public final DatePath<java.sql.Date> effectivedate =
       createDate("effectivedate", java.sql.Date.class);
-
-  public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
   public final com.querydsl.sql.PrimaryKey<SCatalog_> primary = createPrimaryKey(id);
 
@@ -54,9 +54,9 @@ public class SCatalog_ extends com.querydsl.sql.RelationalPathBase<SCatalog_> {
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
+    addMetadata(
         effectivedate,
         ColumnMetadata.named("EFFECTIVEDATE").withIndex(2).ofType(Types.DATE).withSize(10));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
   }
 }

@@ -9,13 +9,13 @@ import com.querydsl.sql.ColumnMetadata;
 import java.sql.Types;
 import javax.annotation.processing.Generated;
 
-/** SCompany_ is a Querydsl query type for SCompany_ */
+/** SCompany is a Querydsl query type for SCompany */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
-public class SCompany_ extends com.querydsl.sql.RelationalPathBase<SCompany_> {
+public class SCompany extends com.querydsl.sql.RelationalPathBase<SCompany> {
 
-  private static final long serialVersionUID = -590751734;
+  private static final long serialVersionUID = -434698507;
 
-  public static final SCompany_ company_ = new SCompany_("company_");
+  public static final SCompany company = new SCompany("company");
 
   public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
@@ -29,45 +29,36 @@ public class SCompany_ extends com.querydsl.sql.RelationalPathBase<SCompany_> {
 
   public final NumberPath<Integer> ceoId = createNumber("ceoId", Integer.class);
 
-  public final com.querydsl.sql.PrimaryKey<SCompany_> primary = createPrimaryKey(id);
+  public final com.querydsl.sql.PrimaryKey<SCompany> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SEmployee_> company_CEOIDFK =
+  public final com.querydsl.sql.ForeignKey<SEmployee_> companyCEOIDFK =
       createForeignKey(ceoId, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SCompany_department_> _company_department_CompanyIDFK =
+  public final com.querydsl.sql.ForeignKey<SCompanyDepartment_> _companyDepartment_CompanyIDFK =
       createInvForeignKey(id, "Company_ID");
 
-  public final com.querydsl.sql.ForeignKey<SDepartment_> _department_COMPANYIDFK =
-      createInvForeignKey(id, "COMPANY_ID");
-
-  public final com.querydsl.sql.ForeignKey<SEmployee_> _employee_COMPANYIDFK =
-      createInvForeignKey(id, "COMPANY_ID");
-
-  public final com.querydsl.sql.ForeignKey<SUser_> _user_COMPANYIDFK =
-      createInvForeignKey(id, "COMPANY_ID");
-
-  public SCompany_(String variable) {
-    super(SCompany_.class, forVariable(variable), "null", "company_");
+  public SCompany(String variable) {
+    super(SCompany.class, forVariable(variable), "null", "company");
     addMetadata();
   }
 
-  public SCompany_(String variable, String schema, String table) {
-    super(SCompany_.class, forVariable(variable), schema, table);
+  public SCompany(String variable, String schema, String table) {
+    super(SCompany.class, forVariable(variable), schema, table);
     addMetadata();
   }
 
-  public SCompany_(String variable, String schema) {
-    super(SCompany_.class, forVariable(variable), schema, "company_");
+  public SCompany(String variable, String schema) {
+    super(SCompany.class, forVariable(variable), schema, "company");
     addMetadata();
   }
 
-  public SCompany_(Path<? extends SCompany_> path) {
-    super(path.getType(), path.getMetadata(), "null", "company_");
+  public SCompany(Path<? extends SCompany> path) {
+    super(path.getType(), path.getMetadata(), "null", "company");
     addMetadata();
   }
 
-  public SCompany_(PathMetadata metadata) {
-    super(SCompany_.class, metadata, "null", "company_");
+  public SCompany(PathMetadata metadata) {
+    super(SCompany.class, metadata, "null", "company");
     addMetadata();
   }
 

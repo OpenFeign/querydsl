@@ -17,9 +17,9 @@ public class SStore_customer_ extends com.querydsl.sql.RelationalPathBase<SStore
 
   public static final SStore_customer_ store_customer_ = new SStore_customer_("store__customer_");
 
-  public final NumberPath<Integer> customersID = createNumber("customersID", Integer.class);
-
   public final NumberPath<Long> storeID = createNumber("storeID", Long.class);
+
+  public final NumberPath<Integer> customersID = createNumber("customersID", Integer.class);
 
   public final com.querydsl.sql.PrimaryKey<SStore_customer_> primary =
       createPrimaryKey(storeID, customersID);
@@ -57,14 +57,14 @@ public class SStore_customer_ extends com.querydsl.sql.RelationalPathBase<SStore
 
   public void addMetadata() {
     addMetadata(
+        storeID,
+        ColumnMetadata.named("Store_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         customersID,
         ColumnMetadata.named("customers_ID")
             .withIndex(2)
             .ofType(Types.INTEGER)
             .withSize(10)
             .notNull());
-    addMetadata(
-        storeID,
-        ColumnMetadata.named("Store_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
   }
 }

@@ -17,9 +17,9 @@ public class SLineItems2 extends com.querydsl.sql.RelationalPathBase<SLineItems2
 
   public static final SLineItems2 LineItems2 = new SLineItems2("LineItems2");
 
-  public final NumberPath<Long> lineItemsMapID = createNumber("lineItemsMapID", Long.class);
-
   public final NumberPath<Long> orderID = createNumber("orderID", Long.class);
+
+  public final NumberPath<Long> lineItemsMapID = createNumber("lineItemsMapID", Long.class);
 
   public final com.querydsl.sql.PrimaryKey<SLineItems2> primary =
       createPrimaryKey(orderID, lineItemsMapID);
@@ -57,14 +57,14 @@ public class SLineItems2 extends com.querydsl.sql.RelationalPathBase<SLineItems2
 
   public void addMetadata() {
     addMetadata(
+        orderID,
+        ColumnMetadata.named("Order_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         lineItemsMapID,
         ColumnMetadata.named("lineItemsMap_ID")
             .withIndex(2)
             .ofType(Types.BIGINT)
             .withSize(19)
             .notNull());
-    addMetadata(
-        orderID,
-        ColumnMetadata.named("Order_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
   }
 }

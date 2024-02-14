@@ -17,9 +17,9 @@ public class SEntity1 extends com.querydsl.sql.RelationalPathBase<SEntity1> {
 
   public static final SEntity1 entity1 = new SEntity1("ENTITY1");
 
-  public final StringPath dtype = createString("dtype");
-
   public final NumberPath<Integer> id = createNumber("id", Integer.class);
+
+  public final StringPath dtype = createString("dtype");
 
   public final StringPath property = createString("property");
 
@@ -54,9 +54,9 @@ public class SEntity1 extends com.querydsl.sql.RelationalPathBase<SEntity1> {
 
   public void addMetadata() {
     addMetadata(
-        dtype, ColumnMetadata.named("DTYPE").withIndex(2).ofType(Types.VARCHAR).withSize(31));
-    addMetadata(
         id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
+    addMetadata(
+        dtype, ColumnMetadata.named("DTYPE").withIndex(2).ofType(Types.VARCHAR).withSize(31));
     addMetadata(
         property,
         ColumnMetadata.named("PROPERTY").withIndex(3).ofType(Types.VARCHAR).withSize(255));

@@ -17,11 +17,11 @@ public class SLineItems extends com.querydsl.sql.RelationalPathBase<SLineItems> 
 
   public static final SLineItems LineItems = new SLineItems("LineItems");
 
-  public final NumberPath<Integer> _index = createNumber("_index", Integer.class);
+  public final NumberPath<Long> orderID = createNumber("orderID", Long.class);
 
   public final NumberPath<Long> lineItemsID = createNumber("lineItemsID", Long.class);
 
-  public final NumberPath<Long> orderID = createNumber("orderID", Long.class);
+  public final NumberPath<Integer> _index = createNumber("_index", Integer.class);
 
   public final com.querydsl.sql.PrimaryKey<SLineItems> primary =
       createPrimaryKey(orderID, lineItemsID);
@@ -59,7 +59,8 @@ public class SLineItems extends com.querydsl.sql.RelationalPathBase<SLineItems> 
 
   public void addMetadata() {
     addMetadata(
-        _index, ColumnMetadata.named("_index").withIndex(3).ofType(Types.INTEGER).withSize(10));
+        orderID,
+        ColumnMetadata.named("Order_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         lineItemsID,
         ColumnMetadata.named("lineItems_ID")
@@ -68,7 +69,6 @@ public class SLineItems extends com.querydsl.sql.RelationalPathBase<SLineItems> 
             .withSize(19)
             .notNull());
     addMetadata(
-        orderID,
-        ColumnMetadata.named("Order_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+        _index, ColumnMetadata.named("_index").withIndex(3).ofType(Types.INTEGER).withSize(10));
   }
 }

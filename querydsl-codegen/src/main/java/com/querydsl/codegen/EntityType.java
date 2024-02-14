@@ -20,6 +20,7 @@ import com.querydsl.codegen.utils.model.TypeAdapter;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -45,7 +46,7 @@ public class EntityType extends TypeAdapter implements Comparable<EntityType> {
 
   private final Set<Property> properties = new LinkedHashSet<>();
 
-  private final Set<String> propertyNames = new HashSet<String>();
+  private final Set<String> propertyNames = new LinkedHashSet<String>();
 
   private final Set<String> escapedPropertyNames = new HashSet<String>();
 
@@ -182,7 +183,7 @@ public class EntityType extends TypeAdapter implements Comparable<EntityType> {
   }
 
   public Set<Property> getProperties() {
-    return properties;
+    return Collections.unmodifiableSet(properties);
   }
 
   @Nullable

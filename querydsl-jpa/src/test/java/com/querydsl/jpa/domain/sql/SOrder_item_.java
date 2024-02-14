@@ -17,11 +17,11 @@ public class SOrder_item_ extends com.querydsl.sql.RelationalPathBase<SOrder_ite
 
   public static final SOrder_item_ order_item_ = new SOrder_item_("order__item_");
 
-  public final NumberPath<Integer> _index = createNumber("_index", Integer.class);
+  public final NumberPath<Long> orderID = createNumber("orderID", Long.class);
 
   public final NumberPath<Long> itemsID = createNumber("itemsID", Long.class);
 
-  public final NumberPath<Long> orderID = createNumber("orderID", Long.class);
+  public final NumberPath<Integer> _index = createNumber("_index", Integer.class);
 
   public final com.querydsl.sql.PrimaryKey<SOrder_item_> primary =
       createPrimaryKey(orderID, itemsID);
@@ -59,12 +59,12 @@ public class SOrder_item_ extends com.querydsl.sql.RelationalPathBase<SOrder_ite
 
   public void addMetadata() {
     addMetadata(
-        _index, ColumnMetadata.named("_index").withIndex(3).ofType(Types.INTEGER).withSize(10));
+        orderID,
+        ColumnMetadata.named("Order_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         itemsID,
         ColumnMetadata.named("items_ID").withIndex(2).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
-        orderID,
-        ColumnMetadata.named("Order_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+        _index, ColumnMetadata.named("_index").withIndex(3).ofType(Types.INTEGER).withSize(10));
   }
 }

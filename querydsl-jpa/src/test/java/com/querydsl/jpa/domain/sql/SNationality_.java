@@ -17,9 +17,9 @@ public class SNationality_ extends com.querydsl.sql.RelationalPathBase<SNational
 
   public static final SNationality_ nationality_ = new SNationality_("nationality_");
 
-  public final NumberPath<Integer> calendarId = createNumber("calendarId", Integer.class);
-
   public final NumberPath<Long> id = createNumber("id", Long.class);
+
+  public final NumberPath<Integer> calendarId = createNumber("calendarId", Integer.class);
 
   public final com.querydsl.sql.PrimaryKey<SNationality_> primary = createPrimaryKey(id);
 
@@ -56,9 +56,9 @@ public class SNationality_ extends com.querydsl.sql.RelationalPathBase<SNational
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         calendarId,
         ColumnMetadata.named("CALENDAR_ID").withIndex(2).ofType(Types.INTEGER).withSize(10));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
   }
 }

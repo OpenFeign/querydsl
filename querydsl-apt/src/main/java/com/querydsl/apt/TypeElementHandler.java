@@ -29,8 +29,8 @@ import com.querydsl.core.util.BeanUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,10 +71,10 @@ public class TypeElementHandler {
     EntityType entityType = typeFactory.getEntityType(element.asType(), true);
     List<? extends Element> elements = element.getEnclosedElements();
     VisitorConfig config = configuration.getConfig(element, elements);
-    Set<String> blockedProperties = new HashSet<String>();
-    Map<String, TypeMirror> propertyTypes = new HashMap<String, TypeMirror>();
-    Map<String, TypeMirror> fixedTypes = new HashMap<String, TypeMirror>();
-    Map<String, Annotations> propertyAnnotations = new HashMap<String, Annotations>();
+    Set<String> blockedProperties = new LinkedHashSet<String>();
+    Map<String, TypeMirror> propertyTypes = new LinkedHashMap<String, TypeMirror>();
+    Map<String, TypeMirror> fixedTypes = new LinkedHashMap<String, TypeMirror>();
+    Map<String, Annotations> propertyAnnotations = new LinkedHashMap<String, Annotations>();
 
     // constructors
     if (config.visitConstructors()) {

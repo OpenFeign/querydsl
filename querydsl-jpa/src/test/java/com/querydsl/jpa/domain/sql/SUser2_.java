@@ -17,6 +17,8 @@ public class SUser2_ extends com.querydsl.sql.RelationalPathBase<SUser2_> {
 
   public static final SUser2_ user2_ = new SUser2_("user2_");
 
+  public final NumberPath<Long> id = createNumber("id", Long.class);
+
   public final NumberPath<Double> createdby = createNumber("createdby", Double.class);
 
   public final DateTimePath<java.sql.Timestamp> creationdate =
@@ -26,8 +28,6 @@ public class SUser2_ extends com.querydsl.sql.RelationalPathBase<SUser2_> {
       createDateTime("deletedate", java.sql.Timestamp.class);
 
   public final NumberPath<Double> deletedby = createNumber("deletedby", Double.class);
-
-  public final NumberPath<Long> id = createNumber("id", Long.class);
 
   public final DateTimePath<java.sql.Timestamp> modificationdate =
       createDateTime("modificationdate", java.sql.Timestamp.class);
@@ -76,6 +76,8 @@ public class SUser2_ extends com.querydsl.sql.RelationalPathBase<SUser2_> {
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         createdby,
         ColumnMetadata.named("CREATEDBY").withIndex(2).ofType(Types.DOUBLE).withSize(22));
     addMetadata(
@@ -87,8 +89,6 @@ public class SUser2_ extends com.querydsl.sql.RelationalPathBase<SUser2_> {
     addMetadata(
         deletedby,
         ColumnMetadata.named("DELETEDBY").withIndex(5).ofType(Types.DOUBLE).withSize(22));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         modificationdate,
         ColumnMetadata.named("MODIFICATIONDATE").withIndex(6).ofType(Types.TIMESTAMP).withSize(19));

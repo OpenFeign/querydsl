@@ -17,9 +17,9 @@ public class SDocumentprop_ extends com.querydsl.sql.RelationalPathBase<SDocumen
 
   public static final SDocumentprop_ documentprop_ = new SDocumentprop_("documentprop_");
 
-  public final NumberPath<Double> documentid = createNumber("documentid", Double.class);
-
   public final NumberPath<Long> id = createNumber("id", Long.class);
+
+  public final NumberPath<Double> documentid = createNumber("documentid", Double.class);
 
   public final StringPath propname = createString("propname");
 
@@ -56,10 +56,10 @@ public class SDocumentprop_ extends com.querydsl.sql.RelationalPathBase<SDocumen
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         documentid,
         ColumnMetadata.named("DOCUMENTID").withIndex(2).ofType(Types.DOUBLE).withSize(22));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         propname,
         ColumnMetadata.named("PROPNAME").withIndex(3).ofType(Types.VARCHAR).withSize(255));

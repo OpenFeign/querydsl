@@ -17,9 +17,9 @@ public class SFoo_ extends com.querydsl.sql.RelationalPathBase<SFoo_> {
 
   public static final SFoo_ foo_ = new SFoo_("foo_");
 
-  public final StringPath bar = createString("bar");
-
   public final NumberPath<Integer> id = createNumber("id", Integer.class);
+
+  public final StringPath bar = createString("bar");
 
   public final DatePath<java.sql.Date> startdate = createDate("startdate", java.sql.Date.class);
 
@@ -54,9 +54,9 @@ public class SFoo_ extends com.querydsl.sql.RelationalPathBase<SFoo_> {
   }
 
   public void addMetadata() {
-    addMetadata(bar, ColumnMetadata.named("BAR").withIndex(2).ofType(Types.VARCHAR).withSize(255));
     addMetadata(
         id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
+    addMetadata(bar, ColumnMetadata.named("BAR").withIndex(2).ofType(Types.VARCHAR).withSize(255));
     addMetadata(
         startdate, ColumnMetadata.named("STARTDATE").withIndex(3).ofType(Types.DATE).withSize(10));
   }

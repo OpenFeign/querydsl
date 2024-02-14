@@ -17,6 +17,8 @@ public class SUserprop_ extends com.querydsl.sql.RelationalPathBase<SUserprop_> 
 
   public static final SUserprop_ userprop_ = new SUserprop_("userprop_");
 
+  public final NumberPath<Long> id = createNumber("id", Long.class);
+
   public final StringPath categorydescription = createString("categorydescription");
 
   public final StringPath categoryname = createString("categoryname");
@@ -30,8 +32,6 @@ public class SUserprop_ extends com.querydsl.sql.RelationalPathBase<SUserprop_> 
       createDateTime("deletedate", java.sql.Timestamp.class);
 
   public final NumberPath<Double> deletedby = createNumber("deletedby", Double.class);
-
-  public final NumberPath<Long> id = createNumber("id", Long.class);
 
   public final DateTimePath<java.sql.Timestamp> modificationdate =
       createDateTime("modificationdate", java.sql.Timestamp.class);
@@ -76,6 +76,8 @@ public class SUserprop_ extends com.querydsl.sql.RelationalPathBase<SUserprop_> 
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         categorydescription,
         ColumnMetadata.named("CATEGORYDESCRIPTION")
             .withIndex(2)
@@ -96,8 +98,6 @@ public class SUserprop_ extends com.querydsl.sql.RelationalPathBase<SUserprop_> 
     addMetadata(
         deletedby,
         ColumnMetadata.named("DELETEDBY").withIndex(7).ofType(Types.DOUBLE).withSize(22));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         modificationdate,
         ColumnMetadata.named("MODIFICATIONDATE").withIndex(8).ofType(Types.TIMESTAMP).withSize(19));

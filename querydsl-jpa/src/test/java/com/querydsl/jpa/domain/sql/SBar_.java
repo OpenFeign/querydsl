@@ -17,9 +17,9 @@ public class SBar_ extends com.querydsl.sql.RelationalPathBase<SBar_> {
 
   public static final SBar_ bar_ = new SBar_("bar_");
 
-  public final DatePath<java.sql.Date> date = createDate("date", java.sql.Date.class);
-
   public final NumberPath<Integer> id = createNumber("id", Integer.class);
+
+  public final DatePath<java.sql.Date> date = createDate("date", java.sql.Date.class);
 
   public final com.querydsl.sql.PrimaryKey<SBar_> primary = createPrimaryKey(id);
 
@@ -49,8 +49,8 @@ public class SBar_ extends com.querydsl.sql.RelationalPathBase<SBar_> {
   }
 
   public void addMetadata() {
-    addMetadata(date, ColumnMetadata.named("DATE").withIndex(2).ofType(Types.DATE).withSize(10));
     addMetadata(
         id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
+    addMetadata(date, ColumnMetadata.named("DATE").withIndex(2).ofType(Types.DATE).withSize(10));
   }
 }

@@ -17,17 +17,17 @@ public class SItem_ extends com.querydsl.sql.RelationalPathBase<SItem_> {
 
   public static final SItem_ item_ = new SItem_("item_");
 
-  public final NumberPath<Long> currentstatusId = createNumber("currentstatusId", Long.class);
+  public final NumberPath<Long> id = createNumber("id", Long.class);
 
   public final StringPath dtype = createString("dtype");
 
-  public final NumberPath<Long> id = createNumber("id", Long.class);
+  public final NumberPath<Long> productId = createNumber("productId", Long.class);
 
   public final StringPath name = createString("name");
 
   public final NumberPath<Integer> paymentstatus = createNumber("paymentstatus", Integer.class);
 
-  public final NumberPath<Long> productId = createNumber("productId", Long.class);
+  public final NumberPath<Long> currentstatusId = createNumber("currentstatusId", Long.class);
 
   public final NumberPath<Long> statusId = createNumber("statusId", Long.class);
 
@@ -90,20 +90,20 @@ public class SItem_ extends com.querydsl.sql.RelationalPathBase<SItem_> {
 
   public void addMetadata() {
     addMetadata(
-        currentstatusId,
-        ColumnMetadata.named("CURRENTSTATUS_ID").withIndex(6).ofType(Types.BIGINT).withSize(19));
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         dtype, ColumnMetadata.named("DTYPE").withIndex(2).ofType(Types.VARCHAR).withSize(31));
     addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+        productId,
+        ColumnMetadata.named("PRODUCT_ID").withIndex(3).ofType(Types.BIGINT).withSize(19));
     addMetadata(
         name, ColumnMetadata.named("NAME").withIndex(4).ofType(Types.VARCHAR).withSize(255));
     addMetadata(
         paymentstatus,
         ColumnMetadata.named("PAYMENTSTATUS").withIndex(5).ofType(Types.INTEGER).withSize(10));
     addMetadata(
-        productId,
-        ColumnMetadata.named("PRODUCT_ID").withIndex(3).ofType(Types.BIGINT).withSize(19));
+        currentstatusId,
+        ColumnMetadata.named("CURRENTSTATUS_ID").withIndex(6).ofType(Types.BIGINT).withSize(19));
     addMetadata(
         statusId, ColumnMetadata.named("STATUS_ID").withIndex(7).ofType(Types.BIGINT).withSize(19));
   }

@@ -17,9 +17,9 @@ public class SName_ extends com.querydsl.sql.RelationalPathBase<SName_> {
 
   public static final SName_ name_ = new SName_("name_");
 
-  public final StringPath firstname = createString("firstname");
-
   public final NumberPath<Long> id = createNumber("id", Long.class);
+
+  public final StringPath firstname = createString("firstname");
 
   public final StringPath lastname = createString("lastname");
 
@@ -57,10 +57,10 @@ public class SName_ extends com.querydsl.sql.RelationalPathBase<SName_> {
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         firstname,
         ColumnMetadata.named("FIRSTNAME").withIndex(2).ofType(Types.VARCHAR).withSize(255));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         lastname,
         ColumnMetadata.named("LASTNAME").withIndex(3).ofType(Types.VARCHAR).withSize(255));

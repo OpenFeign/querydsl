@@ -17,9 +17,9 @@ public class SCategoryprop_ extends com.querydsl.sql.RelationalPathBase<SCategor
 
   public static final SCategoryprop_ categoryprop_ = new SCategoryprop_("categoryprop_");
 
-  public final NumberPath<Long> categoryid = createNumber("categoryid", Long.class);
-
   public final NumberPath<Long> id = createNumber("id", Long.class);
+
+  public final NumberPath<Long> categoryid = createNumber("categoryid", Long.class);
 
   public final StringPath propname = createString("propname");
 
@@ -60,10 +60,10 @@ public class SCategoryprop_ extends com.querydsl.sql.RelationalPathBase<SCategor
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         categoryid,
         ColumnMetadata.named("CATEGORYID").withIndex(2).ofType(Types.BIGINT).withSize(19));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         propname,
         ColumnMetadata.named("PROPNAME").withIndex(3).ofType(Types.VARCHAR).withSize(255));

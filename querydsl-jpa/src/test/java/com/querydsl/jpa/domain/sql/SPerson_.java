@@ -17,9 +17,9 @@ public class SPerson_ extends com.querydsl.sql.RelationalPathBase<SPerson_> {
 
   public static final SPerson_ person_ = new SPerson_("person_");
 
-  public final DatePath<java.sql.Date> birthday = createDate("birthday", java.sql.Date.class);
-
   public final NumberPath<Long> i = createNumber("i", Long.class);
+
+  public final DatePath<java.sql.Date> birthday = createDate("birthday", java.sql.Date.class);
 
   public final StringPath name = createString("name");
 
@@ -65,9 +65,9 @@ public class SPerson_ extends com.querydsl.sql.RelationalPathBase<SPerson_> {
 
   public void addMetadata() {
     addMetadata(
-        birthday, ColumnMetadata.named("BIRTHDAY").withIndex(2).ofType(Types.DATE).withSize(10));
-    addMetadata(
         i, ColumnMetadata.named("I").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
+        birthday, ColumnMetadata.named("BIRTHDAY").withIndex(2).ofType(Types.DATE).withSize(10));
     addMetadata(
         name, ColumnMetadata.named("NAME").withIndex(3).ofType(Types.VARCHAR).withSize(255));
     addMetadata(

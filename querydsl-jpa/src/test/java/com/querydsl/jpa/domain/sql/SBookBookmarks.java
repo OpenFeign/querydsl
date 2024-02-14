@@ -18,15 +18,15 @@ public class SBookBookmarks extends com.querydsl.sql.RelationalPathBase<SBookBoo
 
   public static final SBookBookmarks bookBookmarks = new SBookBookmarks("book_bookmarks");
 
-  public final NumberPath<Long> bookidIdentity = createNumber("bookidIdentity", Long.class);
-
-  public final NumberPath<Integer> bookMarksORDER = createNumber("bookMarksORDER", Integer.class);
-
   public final StringPath comment = createString("comment");
+
+  public final NumberPath<Long> page = createNumber("page", Long.class);
 
   public final NumberPath<Long> libraryIdentity = createNumber("libraryIdentity", Long.class);
 
-  public final NumberPath<Long> page = createNumber("page", Long.class);
+  public final NumberPath<Long> bookidIdentity = createNumber("bookidIdentity", Long.class);
+
+  public final NumberPath<Integer> bookMarksORDER = createNumber("bookMarksORDER", Integer.class);
 
   public final com.querydsl.sql.ForeignKey<SBookversion_> bookBookmarksBOOKIDIDENTITYFK =
       createForeignKey(
@@ -60,16 +60,16 @@ public class SBookBookmarks extends com.querydsl.sql.RelationalPathBase<SBookBoo
 
   public void addMetadata() {
     addMetadata(
+        comment, ColumnMetadata.named("COMMENT").withIndex(1).ofType(Types.VARCHAR).withSize(255));
+    addMetadata(page, ColumnMetadata.named("PAGE").withIndex(2).ofType(Types.BIGINT).withSize(19));
+    addMetadata(
+        libraryIdentity,
+        ColumnMetadata.named("LIBRARY_IDENTITY").withIndex(3).ofType(Types.BIGINT).withSize(19));
+    addMetadata(
         bookidIdentity,
         ColumnMetadata.named("BOOKID_IDENTITY").withIndex(4).ofType(Types.BIGINT).withSize(19));
     addMetadata(
         bookMarksORDER,
         ColumnMetadata.named("bookMarks_ORDER").withIndex(5).ofType(Types.INTEGER).withSize(10));
-    addMetadata(
-        comment, ColumnMetadata.named("COMMENT").withIndex(1).ofType(Types.VARCHAR).withSize(255));
-    addMetadata(
-        libraryIdentity,
-        ColumnMetadata.named("LIBRARY_IDENTITY").withIndex(3).ofType(Types.BIGINT).withSize(19));
-    addMetadata(page, ColumnMetadata.named("PAGE").withIndex(2).ofType(Types.BIGINT).withSize(19));
   }
 }

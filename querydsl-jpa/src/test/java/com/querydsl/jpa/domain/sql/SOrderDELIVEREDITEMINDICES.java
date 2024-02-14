@@ -19,12 +19,12 @@ public class SOrderDELIVEREDITEMINDICES
   public static final SOrderDELIVEREDITEMINDICES OrderDELIVEREDITEMINDICES =
       new SOrderDELIVEREDITEMINDICES("Order_DELIVEREDITEMINDICES");
 
-  public final NumberPath<Integer> _index = createNumber("_index", Integer.class);
+  public final NumberPath<Long> orderID = createNumber("orderID", Long.class);
 
   public final NumberPath<Integer> delivereditemindices =
       createNumber("delivereditemindices", Integer.class);
 
-  public final NumberPath<Long> orderID = createNumber("orderID", Long.class);
+  public final NumberPath<Integer> _index = createNumber("_index", Integer.class);
 
   public final com.querydsl.sql.ForeignKey<SOrder_> orderDELIVEREDITEMINDICESOrderIDFK =
       createForeignKey(orderID, "ID");
@@ -64,7 +64,7 @@ public class SOrderDELIVEREDITEMINDICES
 
   public void addMetadata() {
     addMetadata(
-        _index, ColumnMetadata.named("_index").withIndex(3).ofType(Types.INTEGER).withSize(10));
+        orderID, ColumnMetadata.named("Order_ID").withIndex(1).ofType(Types.BIGINT).withSize(19));
     addMetadata(
         delivereditemindices,
         ColumnMetadata.named("DELIVEREDITEMINDICES")
@@ -72,6 +72,6 @@ public class SOrderDELIVEREDITEMINDICES
             .ofType(Types.INTEGER)
             .withSize(10));
     addMetadata(
-        orderID, ColumnMetadata.named("Order_ID").withIndex(1).ofType(Types.BIGINT).withSize(19));
+        _index, ColumnMetadata.named("_index").withIndex(3).ofType(Types.INTEGER).withSize(10));
   }
 }

@@ -18,9 +18,9 @@ public class SCategory_category_ extends com.querydsl.sql.RelationalPathBase<SCa
   public static final SCategory_category_ category_category_ =
       new SCategory_category_("category__category_");
 
-  public final NumberPath<Long> childId = createNumber("childId", Long.class);
-
   public final NumberPath<Long> parentId = createNumber("parentId", Long.class);
+
+  public final NumberPath<Long> childId = createNumber("childId", Long.class);
 
   public final com.querydsl.sql.PrimaryKey<SCategory_category_> primary =
       createPrimaryKey(childId, parentId);
@@ -58,10 +58,10 @@ public class SCategory_category_ extends com.querydsl.sql.RelationalPathBase<SCa
 
   public void addMetadata() {
     addMetadata(
-        childId,
-        ColumnMetadata.named("childId").withIndex(2).ofType(Types.BIGINT).withSize(19).notNull());
-    addMetadata(
         parentId,
         ColumnMetadata.named("parentId").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
+        childId,
+        ColumnMetadata.named("childId").withIndex(2).ofType(Types.BIGINT).withSize(19).notNull());
   }
 }

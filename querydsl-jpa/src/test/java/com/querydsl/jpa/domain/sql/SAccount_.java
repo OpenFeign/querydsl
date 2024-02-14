@@ -19,9 +19,9 @@ public class SAccount_ extends com.querydsl.sql.RelationalPathBase<SAccount_> {
 
   public final NumberPath<Long> id = createNumber("id", Long.class);
 
-  public final NumberPath<Long> ownerI = createNumber("ownerI", Long.class);
-
   public final StringPath somedata = createString("somedata");
+
+  public final NumberPath<Long> ownerI = createNumber("ownerI", Long.class);
 
   public final com.querydsl.sql.PrimaryKey<SAccount_> primary = createPrimaryKey(id);
 
@@ -57,9 +57,9 @@ public class SAccount_ extends com.querydsl.sql.RelationalPathBase<SAccount_> {
     addMetadata(
         id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
-        ownerI, ColumnMetadata.named("OWNER_I").withIndex(3).ofType(Types.BIGINT).withSize(19));
-    addMetadata(
         somedata,
         ColumnMetadata.named("SOMEDATA").withIndex(2).ofType(Types.VARCHAR).withSize(255));
+    addMetadata(
+        ownerI, ColumnMetadata.named("OWNER_I").withIndex(3).ofType(Types.BIGINT).withSize(19));
   }
 }

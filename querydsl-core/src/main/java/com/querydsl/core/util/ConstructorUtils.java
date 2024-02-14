@@ -22,9 +22,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -212,7 +212,7 @@ public final class ConstructorUtils {
 
     PrimitiveTransformer(Constructor<?> constructor) {
       super(constructor);
-      Set<Integer> builder = new TreeSet<>();
+      Set<Integer> builder = new LinkedHashSet<>();
       Class<?>[] parameterTypes = constructor.getParameterTypes();
       for (int location = 0; location < parameterTypes.length; location++) {
         Class<?> parameterType = parameterTypes[location];

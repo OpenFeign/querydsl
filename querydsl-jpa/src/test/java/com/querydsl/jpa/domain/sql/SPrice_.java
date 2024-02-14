@@ -17,9 +17,9 @@ public class SPrice_ extends com.querydsl.sql.RelationalPathBase<SPrice_> {
 
   public static final SPrice_ price_ = new SPrice_("price_");
 
-  public final NumberPath<Long> amount = createNumber("amount", Long.class);
-
   public final NumberPath<Long> id = createNumber("id", Long.class);
+
+  public final NumberPath<Long> amount = createNumber("amount", Long.class);
 
   public final NumberPath<Long> productId = createNumber("productId", Long.class);
 
@@ -58,9 +58,9 @@ public class SPrice_ extends com.querydsl.sql.RelationalPathBase<SPrice_> {
 
   public void addMetadata() {
     addMetadata(
-        amount, ColumnMetadata.named("AMOUNT").withIndex(2).ofType(Types.BIGINT).withSize(19));
-    addMetadata(
         id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
+        amount, ColumnMetadata.named("AMOUNT").withIndex(2).ofType(Types.BIGINT).withSize(19));
     addMetadata(
         productId,
         ColumnMetadata.named("PRODUCT_ID").withIndex(3).ofType(Types.BIGINT).withSize(19));

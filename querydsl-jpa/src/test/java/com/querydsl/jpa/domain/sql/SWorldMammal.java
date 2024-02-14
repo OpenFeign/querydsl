@@ -17,9 +17,9 @@ public class SWorldMammal extends com.querydsl.sql.RelationalPathBase<SWorldMamm
 
   public static final SWorldMammal worldMammal = new SWorldMammal("WORLD_MAMMAL");
 
-  public final NumberPath<Long> mammalsID = createNumber("mammalsID", Long.class);
-
   public final NumberPath<Long> worldID = createNumber("worldID", Long.class);
+
+  public final NumberPath<Long> mammalsID = createNumber("mammalsID", Long.class);
 
   public final com.querydsl.sql.PrimaryKey<SWorldMammal> primary =
       createPrimaryKey(worldID, mammalsID);
@@ -57,14 +57,14 @@ public class SWorldMammal extends com.querydsl.sql.RelationalPathBase<SWorldMamm
 
   public void addMetadata() {
     addMetadata(
+        worldID,
+        ColumnMetadata.named("World_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         mammalsID,
         ColumnMetadata.named("mammals_ID")
             .withIndex(2)
             .ofType(Types.BIGINT)
             .withSize(19)
             .notNull());
-    addMetadata(
-        worldID,
-        ColumnMetadata.named("World_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
   }
 }

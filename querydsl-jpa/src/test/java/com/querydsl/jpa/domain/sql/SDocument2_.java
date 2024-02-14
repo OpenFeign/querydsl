@@ -17,6 +17,8 @@ public class SDocument2_ extends com.querydsl.sql.RelationalPathBase<SDocument2_
 
   public static final SDocument2_ document2_ = new SDocument2_("document2_");
 
+  public final NumberPath<Long> id = createNumber("id", Long.class);
+
   public final NumberPath<Double> createdby = createNumber("createdby", Double.class);
 
   public final DateTimePath<java.sql.Timestamp> creationdate =
@@ -38,8 +40,6 @@ public class SDocument2_ extends com.querydsl.sql.RelationalPathBase<SDocument2_
   public final NumberPath<Double> documentversion = createNumber("documentversion", Double.class);
 
   public final NumberPath<Double> entryid = createNumber("entryid", Double.class);
-
-  public final NumberPath<Long> id = createNumber("id", Long.class);
 
   public final DateTimePath<java.sql.Timestamp> modificationdate =
       createDateTime("modificationdate", java.sql.Timestamp.class);
@@ -75,6 +75,8 @@ public class SDocument2_ extends com.querydsl.sql.RelationalPathBase<SDocument2_
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         createdby,
         ColumnMetadata.named("CREATEDBY").withIndex(2).ofType(Types.DOUBLE).withSize(22));
     addMetadata(
@@ -103,8 +105,6 @@ public class SDocument2_ extends com.querydsl.sql.RelationalPathBase<SDocument2_
         ColumnMetadata.named("DOCUMENTVERSION").withIndex(10).ofType(Types.DOUBLE).withSize(22));
     addMetadata(
         entryid, ColumnMetadata.named("ENTRYID").withIndex(11).ofType(Types.DOUBLE).withSize(22));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         modificationdate,
         ColumnMetadata.named("MODIFICATIONDATE")

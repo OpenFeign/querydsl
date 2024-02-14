@@ -17,10 +17,10 @@ public class SMyentity extends com.querydsl.sql.RelationalPathBase<SMyentity> {
 
   public static final SMyentity myentity = new SMyentity("MYENTITY");
 
+  public final NumberPath<Integer> id = createNumber("id", Integer.class);
+
   public final NumberPath<Integer> attributewithinitproblemId =
       createNumber("attributewithinitproblemId", Integer.class);
-
-  public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
   public final com.querydsl.sql.PrimaryKey<SMyentity> primary = createPrimaryKey(id);
 
@@ -54,12 +54,12 @@ public class SMyentity extends com.querydsl.sql.RelationalPathBase<SMyentity> {
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
+    addMetadata(
         attributewithinitproblemId,
         ColumnMetadata.named("ATTRIBUTEWITHINITPROBLEM_ID")
             .withIndex(2)
             .ofType(Types.INTEGER)
             .withSize(10));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
   }
 }

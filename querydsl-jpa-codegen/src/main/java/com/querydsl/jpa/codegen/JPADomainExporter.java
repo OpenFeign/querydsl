@@ -21,12 +21,18 @@ import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import jakarta.persistence.Temporal;
-import jakarta.persistence.metamodel.*;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.EmbeddableType;
+import jakarta.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.MapAttribute;
+import jakarta.persistence.metamodel.MappedSuperclassType;
+import jakarta.persistence.metamodel.Metamodel;
+import jakarta.persistence.metamodel.PluralAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
 import java.nio.charset.Charset;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 import org.hibernate.MappingException;
@@ -159,7 +165,7 @@ public class JPADomainExporter extends AbstractDomainExporter {
   protected void collectTypes()
       throws IOException, XMLStreamException, ClassNotFoundException, NoSuchMethodException {
 
-    Map<ManagedType<?>, EntityType> types = new HashMap<>();
+    Map<ManagedType<?>, EntityType> types = new LinkedHashMap<>();
     for (ManagedType<?> managedType : metamodel.getManagedTypes()) {
       if (managedType instanceof MappedSuperclassType) {
         types.put(managedType, createSuperType(managedType.getJavaType()));

@@ -17,19 +17,19 @@ public class SEmployee extends com.querydsl.sql.RelationalPathBase<SEmployee> {
 
   public static final SEmployee employee = new SEmployee("EMPLOYEE");
 
-  public final DatePath<java.sql.Date> datefield = createDate("datefield", java.sql.Date.class);
+  public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
   public final StringPath firstname = createString("firstname");
-
-  public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
   public final StringPath lastname = createString("lastname");
 
   public final NumberPath<Long> salary = createNumber("salary", Long.class);
 
-  public final NumberPath<Integer> superiorId = createNumber("superiorId", Integer.class);
+  public final DatePath<java.sql.Date> datefield = createDate("datefield", java.sql.Date.class);
 
   public final TimePath<java.sql.Time> timefield = createTime("timefield", java.sql.Time.class);
+
+  public final NumberPath<Integer> superiorId = createNumber("superiorId", Integer.class);
 
   public final com.querydsl.sql.PrimaryKey<SEmployee> primary = createPrimaryKey(id);
 
@@ -66,20 +66,20 @@ public class SEmployee extends com.querydsl.sql.RelationalPathBase<SEmployee> {
 
   public void addMetadata() {
     addMetadata(
-        datefield, ColumnMetadata.named("DATEFIELD").withIndex(5).ofType(Types.DATE).withSize(10));
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
     addMetadata(
         firstname,
         ColumnMetadata.named("FIRSTNAME").withIndex(2).ofType(Types.VARCHAR).withSize(50));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
     addMetadata(
         lastname, ColumnMetadata.named("LASTNAME").withIndex(3).ofType(Types.VARCHAR).withSize(50));
     addMetadata(
         salary, ColumnMetadata.named("SALARY").withIndex(4).ofType(Types.DECIMAL).withSize(10));
     addMetadata(
-        superiorId,
-        ColumnMetadata.named("SUPERIOR_ID").withIndex(7).ofType(Types.INTEGER).withSize(10));
+        datefield, ColumnMetadata.named("DATEFIELD").withIndex(5).ofType(Types.DATE).withSize(10));
     addMetadata(
         timefield, ColumnMetadata.named("TIMEFIELD").withIndex(6).ofType(Types.TIME).withSize(8));
+    addMetadata(
+        superiorId,
+        ColumnMetadata.named("SUPERIOR_ID").withIndex(7).ofType(Types.INTEGER).withSize(10));
   }
 }

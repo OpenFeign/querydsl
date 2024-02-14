@@ -19,9 +19,9 @@ public class SKittens extends com.querydsl.sql.RelationalPathBase<SKittens> {
 
   public final NumberPath<Integer> catId = createNumber("catId", Integer.class);
 
-  public final NumberPath<Integer> ind = createNumber("ind", Integer.class);
-
   public final NumberPath<Integer> kittenId = createNumber("kittenId", Integer.class);
+
+  public final NumberPath<Integer> ind = createNumber("ind", Integer.class);
 
   public final com.querydsl.sql.PrimaryKey<SKittens> primary = createPrimaryKey(catId, kittenId);
 
@@ -59,7 +59,6 @@ public class SKittens extends com.querydsl.sql.RelationalPathBase<SKittens> {
     addMetadata(
         catId,
         ColumnMetadata.named("cat_id").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
-    addMetadata(ind, ColumnMetadata.named("ind").withIndex(3).ofType(Types.INTEGER).withSize(10));
     addMetadata(
         kittenId,
         ColumnMetadata.named("kitten_id")
@@ -67,5 +66,6 @@ public class SKittens extends com.querydsl.sql.RelationalPathBase<SKittens> {
             .ofType(Types.INTEGER)
             .withSize(10)
             .notNull());
+    addMetadata(ind, ColumnMetadata.named("ind").withIndex(3).ofType(Types.INTEGER).withSize(10));
   }
 }

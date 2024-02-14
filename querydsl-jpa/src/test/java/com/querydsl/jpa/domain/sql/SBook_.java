@@ -17,13 +17,13 @@ public class SBook_ extends com.querydsl.sql.RelationalPathBase<SBook_> {
 
   public static final SBook_ book_ = new SBook_("book_");
 
-  public final NumberPath<Long> authorId = createNumber("authorId", Long.class);
+  public final NumberPath<Long> id = createNumber("id", Long.class);
 
   public final StringPath dtype = createString("dtype");
 
-  public final NumberPath<Long> id = createNumber("id", Long.class);
-
   public final StringPath title = createString("title");
+
+  public final NumberPath<Long> authorId = createNumber("authorId", Long.class);
 
   public final com.querydsl.sql.PrimaryKey<SBook_> primary = createPrimaryKey(id);
 
@@ -57,12 +57,12 @@ public class SBook_ extends com.querydsl.sql.RelationalPathBase<SBook_> {
 
   public void addMetadata() {
     addMetadata(
-        authorId, ColumnMetadata.named("AUTHOR_ID").withIndex(4).ofType(Types.BIGINT).withSize(19));
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         dtype, ColumnMetadata.named("DTYPE").withIndex(2).ofType(Types.VARCHAR).withSize(31));
     addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
-    addMetadata(
         title, ColumnMetadata.named("TITLE").withIndex(3).ofType(Types.VARCHAR).withSize(255));
+    addMetadata(
+        authorId, ColumnMetadata.named("AUTHOR_ID").withIndex(4).ofType(Types.BIGINT).withSize(19));
   }
 }

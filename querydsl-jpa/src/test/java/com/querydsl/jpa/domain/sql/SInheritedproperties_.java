@@ -19,9 +19,9 @@ public class SInheritedproperties_
   public static final SInheritedproperties_ inheritedproperties_ =
       new SInheritedproperties_("inheritedproperties_");
 
-  public final StringPath classproperty = createString("classproperty");
-
   public final NumberPath<Long> id = createNumber("id", Long.class);
+
+  public final StringPath classproperty = createString("classproperty");
 
   public final StringPath stringassimple = createString("stringassimple");
 
@@ -56,10 +56,10 @@ public class SInheritedproperties_
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         classproperty,
         ColumnMetadata.named("CLASSPROPERTY").withIndex(2).ofType(Types.VARCHAR).withSize(255));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         stringassimple,
         ColumnMetadata.named("STRINGASSIMPLE").withIndex(3).ofType(Types.VARCHAR).withSize(255));

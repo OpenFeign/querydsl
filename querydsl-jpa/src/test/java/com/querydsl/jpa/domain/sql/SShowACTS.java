@@ -17,11 +17,11 @@ public class SShowACTS extends com.querydsl.sql.RelationalPathBase<SShowACTS> {
 
   public static final SShowACTS ShowACTS = new SShowACTS("Show_ACTS");
 
+  public final NumberPath<Long> showID = createNumber("showID", Long.class);
+
   public final StringPath acts = createString("acts");
 
   public final StringPath actsKey = createString("actsKey");
-
-  public final NumberPath<Long> showID = createNumber("showID", Long.class);
 
   public final com.querydsl.sql.ForeignKey<SShow_> showACTSShowIDFK =
       createForeignKey(showID, "ID");
@@ -53,10 +53,10 @@ public class SShowACTS extends com.querydsl.sql.RelationalPathBase<SShowACTS> {
 
   public void addMetadata() {
     addMetadata(
+        showID, ColumnMetadata.named("Show_ID").withIndex(1).ofType(Types.BIGINT).withSize(19));
+    addMetadata(
         acts, ColumnMetadata.named("ACTS").withIndex(2).ofType(Types.VARCHAR).withSize(255));
     addMetadata(
         actsKey, ColumnMetadata.named("acts_key").withIndex(3).ofType(Types.VARCHAR).withSize(255));
-    addMetadata(
-        showID, ColumnMetadata.named("Show_ID").withIndex(1).ofType(Types.BIGINT).withSize(19));
   }
 }

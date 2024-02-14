@@ -22,8 +22,8 @@ import com.querydsl.sql.codegen.support.PrimaryKeyData;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -74,7 +74,7 @@ public class KeyDataFactory {
       DatabaseMetaData md, String catalog, String schema, String tableName) throws SQLException {
     try (ResultSet foreignKeys = md.getExportedKeys(catalog, schema, tableName)) {
       Map<String, InverseForeignKeyData> inverseForeignKeyData =
-          new TreeMap<String, InverseForeignKeyData>();
+          new LinkedHashMap<String, InverseForeignKeyData>();
       while (foreignKeys.next()) {
         String name = foreignKeys.getString(FK_NAME);
         String parentColumnName =
@@ -108,7 +108,7 @@ public class KeyDataFactory {
   public Map<String, ForeignKeyData> getImportedKeys(
       DatabaseMetaData md, String catalog, String schema, String tableName) throws SQLException {
     try (ResultSet foreignKeys = md.getImportedKeys(catalog, schema, tableName)) {
-      Map<String, ForeignKeyData> foreignKeyData = new TreeMap<String, ForeignKeyData>();
+      Map<String, ForeignKeyData> foreignKeyData = new LinkedHashMap<String, ForeignKeyData>();
       while (foreignKeys.next()) {
         String name = foreignKeys.getString(FK_NAME);
         String parentSchemaName =
@@ -142,7 +142,7 @@ public class KeyDataFactory {
   public Map<String, PrimaryKeyData> getPrimaryKeys(
       DatabaseMetaData md, String catalog, String schema, String tableName) throws SQLException {
     try (ResultSet primaryKeys = md.getPrimaryKeys(catalog, schema, tableName)) {
-      Map<String, PrimaryKeyData> primaryKeyData = new TreeMap<String, PrimaryKeyData>();
+      Map<String, PrimaryKeyData> primaryKeyData = new LinkedHashMap<String, PrimaryKeyData>();
       while (primaryKeys.next()) {
         String name = primaryKeys.getString(PK_NAME);
         String columnName = primaryKeys.getString(PK_COLUMN_NAME);

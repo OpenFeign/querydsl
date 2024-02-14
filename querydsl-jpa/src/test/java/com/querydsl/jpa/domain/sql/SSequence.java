@@ -17,10 +17,10 @@ public class SSequence extends com.querydsl.sql.RelationalPathBase<SSequence> {
 
   public static final SSequence sequence = new SSequence("SEQUENCE");
 
+  public final StringPath seqName = createString("seqName");
+
   public final NumberPath<java.math.BigInteger> seqCount =
       createNumber("seqCount", java.math.BigInteger.class);
-
-  public final StringPath seqName = createString("seqName");
 
   public final com.querydsl.sql.PrimaryKey<SSequence> primary = createPrimaryKey(seqName);
 
@@ -51,10 +51,10 @@ public class SSequence extends com.querydsl.sql.RelationalPathBase<SSequence> {
 
   public void addMetadata() {
     addMetadata(
-        seqCount,
-        ColumnMetadata.named("SEQ_COUNT").withIndex(2).ofType(Types.DECIMAL).withSize(38));
-    addMetadata(
         seqName,
         ColumnMetadata.named("SEQ_NAME").withIndex(1).ofType(Types.VARCHAR).withSize(50).notNull());
+    addMetadata(
+        seqCount,
+        ColumnMetadata.named("SEQ_COUNT").withIndex(2).ofType(Types.DECIMAL).withSize(38));
   }
 }

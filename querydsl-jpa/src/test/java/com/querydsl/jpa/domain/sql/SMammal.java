@@ -17,9 +17,9 @@ public class SMammal extends com.querydsl.sql.RelationalPathBase<SMammal> {
 
   public static final SMammal mammal = new SMammal("MAMMAL");
 
-  public final StringPath dtype = createString("dtype");
-
   public final NumberPath<Long> id = createNumber("id", Long.class);
+
+  public final StringPath dtype = createString("dtype");
 
   public final com.querydsl.sql.PrimaryKey<SMammal> primary = createPrimaryKey(id);
 
@@ -56,8 +56,8 @@ public class SMammal extends com.querydsl.sql.RelationalPathBase<SMammal> {
 
   public void addMetadata() {
     addMetadata(
-        dtype, ColumnMetadata.named("DTYPE").withIndex(2).ofType(Types.VARCHAR).withSize(31));
-    addMetadata(
         id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
+        dtype, ColumnMetadata.named("DTYPE").withIndex(2).ofType(Types.VARCHAR).withSize(31));
   }
 }

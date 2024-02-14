@@ -17,6 +17,8 @@ public class SSimpletypes_ extends com.querydsl.sql.RelationalPathBase<SSimplety
 
   public static final SSimpletypes_ simpletypes_ = new SSimpletypes_("simpletypes_");
 
+  public final NumberPath<Long> id = createNumber("id", Long.class);
+
   public final NumberPath<Byte> bbyte = createNumber("bbyte", Byte.class);
 
   public final NumberPath<Byte> bbyte2 = createNumber("bbyte2", Byte.class);
@@ -39,8 +41,6 @@ public class SSimpletypes_ extends com.querydsl.sql.RelationalPathBase<SSimplety
   public final NumberPath<Float> ffloat = createNumber("ffloat", Float.class);
 
   public final NumberPath<Float> ffloat2 = createNumber("ffloat2", Float.class);
-
-  public final NumberPath<Long> id = createNumber("id", Long.class);
 
   public final NumberPath<Integer> iint = createNumber("iint", Integer.class);
 
@@ -88,6 +88,8 @@ public class SSimpletypes_ extends com.querydsl.sql.RelationalPathBase<SSimplety
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         bbyte, ColumnMetadata.named("BBYTE").withIndex(2).ofType(Types.TINYINT).withSize(3));
     addMetadata(
         bbyte2, ColumnMetadata.named("BBYTE2").withIndex(3).ofType(Types.TINYINT).withSize(3));
@@ -111,8 +113,6 @@ public class SSimpletypes_ extends com.querydsl.sql.RelationalPathBase<SSimplety
         ffloat, ColumnMetadata.named("FFLOAT").withIndex(11).ofType(Types.REAL).withSize(12));
     addMetadata(
         ffloat2, ColumnMetadata.named("FFLOAT2").withIndex(12).ofType(Types.REAL).withSize(12));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
     addMetadata(
         iint, ColumnMetadata.named("IINT").withIndex(13).ofType(Types.INTEGER).withSize(10));
     addMetadata(

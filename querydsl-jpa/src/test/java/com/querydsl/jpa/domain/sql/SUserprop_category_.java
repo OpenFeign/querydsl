@@ -18,9 +18,9 @@ public class SUserprop_category_ extends com.querydsl.sql.RelationalPathBase<SUs
   public static final SUserprop_category_ userprop_category_ =
       new SUserprop_category_("userprop__category_");
 
-  public final NumberPath<Long> childCategoriesID = createNumber("childCategoriesID", Long.class);
-
   public final NumberPath<Long> userPropID = createNumber("userPropID", Long.class);
+
+  public final NumberPath<Long> childCategoriesID = createNumber("childCategoriesID", Long.class);
 
   public final com.querydsl.sql.PrimaryKey<SUserprop_category_> primary =
       createPrimaryKey(userPropID, childCategoriesID);
@@ -58,16 +58,16 @@ public class SUserprop_category_ extends com.querydsl.sql.RelationalPathBase<SUs
 
   public void addMetadata() {
     addMetadata(
-        childCategoriesID,
-        ColumnMetadata.named("childCategories_ID")
-            .withIndex(2)
+        userPropID,
+        ColumnMetadata.named("UserProp_ID")
+            .withIndex(1)
             .ofType(Types.BIGINT)
             .withSize(19)
             .notNull());
     addMetadata(
-        userPropID,
-        ColumnMetadata.named("UserProp_ID")
-            .withIndex(1)
+        childCategoriesID,
+        ColumnMetadata.named("childCategories_ID")
+            .withIndex(2)
             .ofType(Types.BIGINT)
             .withSize(19)
             .notNull());

@@ -17,9 +17,9 @@ public class SShapes extends com.querydsl.sql.RelationalPathBase<SShapes> {
 
   public static final SShapes shapes = new SShapes("SHAPES");
 
-  public final SimplePath<byte[]> geometry = createSimple("geometry", byte[].class);
-
   public final NumberPath<Integer> id = createNumber("id", Integer.class);
+
+  public final SimplePath<byte[]> geometry = createSimple("geometry", byte[].class);
 
   public final com.querydsl.sql.PrimaryKey<SShapes> primary = createPrimaryKey(id);
 
@@ -50,9 +50,9 @@ public class SShapes extends com.querydsl.sql.RelationalPathBase<SShapes> {
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
+    addMetadata(
         geometry,
         ColumnMetadata.named("GEOMETRY").withIndex(2).ofType(Types.BINARY).withSize(65535));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
   }
 }

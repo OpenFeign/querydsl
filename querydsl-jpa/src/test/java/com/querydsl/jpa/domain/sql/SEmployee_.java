@@ -17,13 +17,13 @@ public class SEmployee_ extends com.querydsl.sql.RelationalPathBase<SEmployee_> 
 
   public static final SEmployee_ employee_ = new SEmployee_("employee_");
 
-  public final NumberPath<Integer> companyId = createNumber("companyId", Integer.class);
+  public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
   public final StringPath firstname = createString("firstname");
 
-  public final NumberPath<Integer> id = createNumber("id", Integer.class);
-
   public final StringPath lastname = createString("lastname");
+
+  public final NumberPath<Integer> companyId = createNumber("companyId", Integer.class);
 
   public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
@@ -37,6 +37,9 @@ public class SEmployee_ extends com.querydsl.sql.RelationalPathBase<SEmployee_> 
 
   public final com.querydsl.sql.ForeignKey<SEmployeeJOBFUNCTIONS>
       _employeeJOBFUNCTIONSEmployeeIDFK = createInvForeignKey(id, "Employee_ID");
+
+  public final com.querydsl.sql.ForeignKey<SCompany> _companyCEOIDFK =
+      createInvForeignKey(id, "CEO_ID");
 
   public final com.querydsl.sql.ForeignKey<SCompany_> _company_CEOIDFK =
       createInvForeignKey(id, "CEO_ID");
@@ -71,16 +74,16 @@ public class SEmployee_ extends com.querydsl.sql.RelationalPathBase<SEmployee_> 
 
   public void addMetadata() {
     addMetadata(
-        companyId,
-        ColumnMetadata.named("COMPANY_ID").withIndex(4).ofType(Types.INTEGER).withSize(10));
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
     addMetadata(
         firstname,
         ColumnMetadata.named("FIRSTNAME").withIndex(2).ofType(Types.VARCHAR).withSize(255));
     addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
-    addMetadata(
         lastname,
         ColumnMetadata.named("LASTNAME").withIndex(3).ofType(Types.VARCHAR).withSize(255));
+    addMetadata(
+        companyId,
+        ColumnMetadata.named("COMPANY_ID").withIndex(4).ofType(Types.INTEGER).withSize(10));
     addMetadata(
         userId, ColumnMetadata.named("USER_ID").withIndex(5).ofType(Types.BIGINT).withSize(19));
   }

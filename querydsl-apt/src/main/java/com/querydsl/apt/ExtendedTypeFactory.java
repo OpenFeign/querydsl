@@ -29,8 +29,8 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -61,10 +61,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ExtendedTypeFactory {
 
-  private final Map<List<String>, Type> typeCache = new HashMap<List<String>, Type>();
+  private final Map<List<String>, Type> typeCache = new LinkedHashMap<List<String>, Type>();
 
   private final Map<List<String>, EntityType> entityTypeCache =
-      new HashMap<List<String>, EntityType>();
+      new LinkedHashMap<List<String>, EntityType>();
 
   private final Type defaultType;
 

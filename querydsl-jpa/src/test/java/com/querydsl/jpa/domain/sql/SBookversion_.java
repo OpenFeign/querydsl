@@ -18,13 +18,13 @@ public class SBookversion_ extends com.querydsl.sql.RelationalPathBase<SBookvers
 
   public static final SBookversion_ bookversion_ = new SBookversion_("bookversion_");
 
-  public final NumberPath<Long> bookidIdentity = createNumber("bookidIdentity", Long.class);
-
   public final StringPath description = createString("description");
 
-  public final NumberPath<Long> libraryIdentity = createNumber("libraryIdentity", Long.class);
-
   public final StringPath name = createString("name");
+
+  public final NumberPath<Long> bookidIdentity = createNumber("bookidIdentity", Long.class);
+
+  public final NumberPath<Long> libraryIdentity = createNumber("libraryIdentity", Long.class);
 
   public final com.querydsl.sql.PrimaryKey<SBookversion_> primary =
       createPrimaryKey(bookidIdentity, libraryIdentity);
@@ -67,6 +67,11 @@ public class SBookversion_ extends com.querydsl.sql.RelationalPathBase<SBookvers
 
   public void addMetadata() {
     addMetadata(
+        description,
+        ColumnMetadata.named("DESCRIPTION").withIndex(1).ofType(Types.VARCHAR).withSize(255));
+    addMetadata(
+        name, ColumnMetadata.named("NAME").withIndex(2).ofType(Types.VARCHAR).withSize(255));
+    addMetadata(
         bookidIdentity,
         ColumnMetadata.named("BOOKID_IDENTITY")
             .withIndex(3)
@@ -74,16 +79,11 @@ public class SBookversion_ extends com.querydsl.sql.RelationalPathBase<SBookvers
             .withSize(19)
             .notNull());
     addMetadata(
-        description,
-        ColumnMetadata.named("DESCRIPTION").withIndex(1).ofType(Types.VARCHAR).withSize(255));
-    addMetadata(
         libraryIdentity,
         ColumnMetadata.named("LIBRARY_IDENTITY")
             .withIndex(4)
             .ofType(Types.BIGINT)
             .withSize(19)
             .notNull());
-    addMetadata(
-        name, ColumnMetadata.named("NAME").withIndex(2).ofType(Types.VARCHAR).withSize(255));
   }
 }

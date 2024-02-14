@@ -17,9 +17,9 @@ public class SHumanHAIRS extends com.querydsl.sql.RelationalPathBase<SHumanHAIRS
 
   public static final SHumanHAIRS HumanHAIRS = new SHumanHAIRS("Human_HAIRS");
 
-  public final NumberPath<Integer> hairs = createNumber("hairs", Integer.class);
-
   public final NumberPath<Long> humanID = createNumber("humanID", Long.class);
+
+  public final NumberPath<Integer> hairs = createNumber("hairs", Integer.class);
 
   public final com.querydsl.sql.ForeignKey<SMammal> humanHAIRSHumanIDFK =
       createForeignKey(humanID, "ID");
@@ -51,8 +51,8 @@ public class SHumanHAIRS extends com.querydsl.sql.RelationalPathBase<SHumanHAIRS
 
   public void addMetadata() {
     addMetadata(
-        hairs, ColumnMetadata.named("HAIRS").withIndex(2).ofType(Types.INTEGER).withSize(10));
-    addMetadata(
         humanID, ColumnMetadata.named("Human_ID").withIndex(1).ofType(Types.BIGINT).withSize(19));
+    addMetadata(
+        hairs, ColumnMetadata.named("HAIRS").withIndex(2).ofType(Types.INTEGER).withSize(10));
   }
 }

@@ -9,13 +9,13 @@ import com.querydsl.sql.ColumnMetadata;
 import java.sql.Types;
 import javax.annotation.processing.Generated;
 
-/** SAnimal_ is a Querydsl query type for SAnimal_ */
+/** SAnimal is a Querydsl query type for SAnimal */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
-public class SAnimal_ extends com.querydsl.sql.RelationalPathBase<SAnimal_> {
+public class SAnimal extends com.querydsl.sql.RelationalPathBase<SAnimal> {
 
-  private static final long serialVersionUID = 2052848731;
+  private static final long serialVersionUID = 343315588;
 
-  public static final SAnimal_ animal_ = new SAnimal_("animal_");
+  public static final SAnimal animal = new SAnimal("animal");
 
   public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
@@ -48,48 +48,35 @@ public class SAnimal_ extends com.querydsl.sql.RelationalPathBase<SAnimal_> {
 
   public final NumberPath<Integer> mateId = createNumber("mateId", Integer.class);
 
-  public final com.querydsl.sql.PrimaryKey<SAnimal_> primary = createPrimaryKey(id);
+  public final com.querydsl.sql.PrimaryKey<SAnimal> primary = createPrimaryKey(id);
 
-  public final com.querydsl.sql.ForeignKey<SAnimal_> animal_MATEIDFK =
-      createForeignKey(mateId, "ID");
+  public final com.querydsl.sql.ForeignKey<SAnimal> animalMATEIDFK = createForeignKey(mateId, "ID");
 
-  public final com.querydsl.sql.ForeignKey<SAnimal_> _animal_MATEIDFK =
+  public final com.querydsl.sql.ForeignKey<SAnimal> _animalMATEIDFK =
       createInvForeignKey(id, "MATE_ID");
 
-  public final com.querydsl.sql.ForeignKey<SKittens> _kittensCatIdFK =
-      createInvForeignKey(id, "cat_id");
-
-  public final com.querydsl.sql.ForeignKey<SKittens> _kittensKittenIdFK =
-      createInvForeignKey(id, "kitten_id");
-
-  public final com.querydsl.sql.ForeignKey<SKittensSet> _kittensSetCatIdFK =
-      createInvForeignKey(id, "cat_id");
-
-  public final com.querydsl.sql.ForeignKey<SKittensSet> _kittensSetKittenIdFK =
-      createInvForeignKey(id, "kitten_id");
-
-  public SAnimal_(String variable) {
-    super(SAnimal_.class, forVariable(variable), "null", "animal_");
+  public SAnimal(String variable) {
+    super(SAnimal.class, forVariable(variable), "null", "animal");
     addMetadata();
   }
 
-  public SAnimal_(String variable, String schema, String table) {
-    super(SAnimal_.class, forVariable(variable), schema, table);
+  public SAnimal(String variable, String schema, String table) {
+    super(SAnimal.class, forVariable(variable), schema, table);
     addMetadata();
   }
 
-  public SAnimal_(String variable, String schema) {
-    super(SAnimal_.class, forVariable(variable), schema, "animal_");
+  public SAnimal(String variable, String schema) {
+    super(SAnimal.class, forVariable(variable), schema, "animal");
     addMetadata();
   }
 
-  public SAnimal_(Path<? extends SAnimal_> path) {
-    super(path.getType(), path.getMetadata(), "null", "animal_");
+  public SAnimal(Path<? extends SAnimal> path) {
+    super(path.getType(), path.getMetadata(), "null", "animal");
     addMetadata();
   }
 
-  public SAnimal_(PathMetadata metadata) {
-    super(SAnimal_.class, metadata, "null", "animal_");
+  public SAnimal(PathMetadata metadata) {
+    super(SAnimal.class, metadata, "null", "animal");
     addMetadata();
   }
 

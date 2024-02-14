@@ -17,9 +17,9 @@ public class SPersonid_ extends com.querydsl.sql.RelationalPathBase<SPersonid_> 
 
   public static final SPersonid_ personid_ = new SPersonid_("personid_");
 
-  public final StringPath country = createString("country");
-
   public final NumberPath<Long> id = createNumber("id", Long.class);
+
+  public final StringPath country = createString("country");
 
   public final NumberPath<Integer> medicarenumber = createNumber("medicarenumber", Integer.class);
 
@@ -55,9 +55,9 @@ public class SPersonid_ extends com.querydsl.sql.RelationalPathBase<SPersonid_> 
 
   public void addMetadata() {
     addMetadata(
-        country, ColumnMetadata.named("COUNTRY").withIndex(2).ofType(Types.VARCHAR).withSize(255));
-    addMetadata(
         id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
+        country, ColumnMetadata.named("COUNTRY").withIndex(2).ofType(Types.VARCHAR).withSize(255));
     addMetadata(
         medicarenumber,
         ColumnMetadata.named("MEDICARENUMBER").withIndex(3).ofType(Types.INTEGER).withSize(10));

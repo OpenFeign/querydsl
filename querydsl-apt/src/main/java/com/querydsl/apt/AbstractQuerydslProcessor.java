@@ -13,9 +13,32 @@
  */
 package com.querydsl.apt;
 
-import static com.querydsl.apt.APTOptions.*;
+import static com.querydsl.apt.APTOptions.QUERYDSL_CREATE_DEFAULT_VARIABLE;
+import static com.querydsl.apt.APTOptions.QUERYDSL_ENTITY_ACCESSORS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_EXCLUDED_CLASSES;
+import static com.querydsl.apt.APTOptions.QUERYDSL_EXCLUDED_PACKAGES;
+import static com.querydsl.apt.APTOptions.QUERYDSL_GENERATED_ANNOTATION_CLASS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_INCLUDED_CLASSES;
+import static com.querydsl.apt.APTOptions.QUERYDSL_INCLUDED_PACKAGES;
+import static com.querydsl.apt.APTOptions.QUERYDSL_LIST_ACCESSORS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_LOG_INFO;
+import static com.querydsl.apt.APTOptions.QUERYDSL_MAP_ACCESSORS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_PACKAGE_SUFFIX;
+import static com.querydsl.apt.APTOptions.QUERYDSL_PREFIX;
+import static com.querydsl.apt.APTOptions.QUERYDSL_SUFFIX;
+import static com.querydsl.apt.APTOptions.QUERYDSL_UNKNOWN_AS_EMBEDDABLE;
+import static com.querydsl.apt.APTOptions.QUERYDSL_USE_FIELDS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_USE_GETTERS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_VARIABLE_NAME_FUNCTION_CLASS;
 
-import com.querydsl.codegen.*;
+import com.querydsl.codegen.Delegate;
+import com.querydsl.codegen.EntityType;
+import com.querydsl.codegen.Property;
+import com.querydsl.codegen.QueryTypeFactory;
+import com.querydsl.codegen.Serializer;
+import com.querydsl.codegen.SerializerConfig;
+import com.querydsl.codegen.Supertype;
+import com.querydsl.codegen.TypeMappings;
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.Parameter;
 import com.querydsl.codegen.utils.model.Type;
@@ -26,12 +49,28 @@ import com.querydsl.core.annotations.QueryProjection;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
@@ -168,7 +207,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     }
 
     // add properties from parents
-    Set<EntityType> handled = new HashSet<EntityType>();
+    Set<EntityType> handled = new LinkedHashSet<EntityType>();
     for (EntityType entityType : context.allTypes.values()) {
       addSupertypeFields(entityType, handled);
     }
@@ -211,7 +250,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   protected Set<TypeElement> collectElements() {
 
     // from delegate methods
-    Set<TypeElement> elements = new HashSet<TypeElement>(processDelegateMethods());
+    Set<TypeElement> elements = new LinkedHashSet<TypeElement>(processDelegateMethods());
 
     // from class annotations
     for (Class<? extends Annotation> annotation : conf.getEntityAnnotations()) {
@@ -249,7 +288,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     // register possible embedded types of non-tracked supertypes
     if (conf.getEmbeddedAnnotation() != null) {
       Class<? extends Annotation> embedded = conf.getEmbeddedAnnotation();
-      Set<TypeElement> embeddedElements = new HashSet<TypeElement>();
+      Set<TypeElement> embeddedElements = new LinkedHashSet<TypeElement>();
       for (TypeElement element : elements) {
         TypeMirror superTypeMirror = element.getSuperclass();
         while (superTypeMirror != null) {
@@ -284,7 +323,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private Set<TypeElement> getAnnotationlessSupertypes(Set<TypeElement> elements) {
-    Set<TypeElement> rv = new HashSet<TypeElement>();
+    Set<TypeElement> rv = new LinkedHashSet<TypeElement>();
     for (TypeElement element : elements) {
       TypeMirror superTypeMirror = element.getSuperclass();
       while (superTypeMirror != null) {
@@ -308,12 +347,12 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
 
   private void registerTypeElement(String entityName, TypeElement element) {
     Set<TypeElement> elements =
-        context.typeElements.computeIfAbsent(entityName, k -> new HashSet<TypeElement>());
+        context.typeElements.computeIfAbsent(entityName, k -> new LinkedHashSet<TypeElement>());
     elements.add(element);
   }
 
   private void processProjectionTypes(Set<TypeElement> elements) {
-    Set<Element> visited = new HashSet<Element>();
+    Set<Element> visited = new LinkedHashSet<Element>();
     for (Element element : getElements(QueryProjection.class)) {
       if (element.getKind() == ElementKind.CONSTRUCTOR) {
         Element parent = element.getEnclosingElement();
@@ -334,7 +373,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private Set<TypeElement> getEmbeddedTypes() {
-    Set<TypeElement> elements = new HashSet<TypeElement>();
+    Set<TypeElement> elements = new LinkedHashSet<TypeElement>();
     // only creation
     for (Element element : getElements(conf.getEmbeddedAnnotation())) {
       handleEmbeddedType(element, elements);
@@ -369,7 +408,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private Set<TypeElement> getTypeFromProperties(Set<TypeElement> parents) {
-    Set<TypeElement> elements = new HashSet<TypeElement>();
+    Set<TypeElement> elements = new LinkedHashSet<TypeElement>();
     for (Element element : parents) {
       if (element instanceof TypeElement) {
         processFromProperties((TypeElement) element, elements);
@@ -451,7 +490,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
 
   private Set<TypeElement> processDelegateMethods() {
     Set<? extends Element> delegateMethods = getElements(QueryDelegate.class);
-    Set<TypeElement> typeElements = new HashSet<TypeElement>();
+    Set<TypeElement> typeElements = new LinkedHashSet<TypeElement>();
 
     for (Element delegateMethod : delegateMethods) {
       ExecutableElement method = (ExecutableElement) delegateMethod;
@@ -626,7 +665,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
         Set<TypeElement> elements = context.typeElements.get(model.getFullName());
 
         if (elements == null) {
-          elements = new HashSet<TypeElement>();
+          elements = new LinkedHashSet<TypeElement>();
         }
         for (Property property : model.getProperties()) {
           if (property.getType().getCategory() == TypeCategory.CUSTOM) {

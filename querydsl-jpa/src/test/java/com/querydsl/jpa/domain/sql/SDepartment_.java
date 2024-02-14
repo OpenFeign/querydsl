@@ -17,11 +17,11 @@ public class SDepartment_ extends com.querydsl.sql.RelationalPathBase<SDepartmen
 
   public static final SDepartment_ department_ = new SDepartment_("department_");
 
-  public final NumberPath<Integer> companyId = createNumber("companyId", Integer.class);
-
   public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
   public final StringPath name = createString("name");
+
+  public final NumberPath<Integer> companyId = createNumber("companyId", Integer.class);
 
   public final com.querydsl.sql.PrimaryKey<SDepartment_> primary = createPrimaryKey(id);
 
@@ -30,6 +30,9 @@ public class SDepartment_ extends com.querydsl.sql.RelationalPathBase<SDepartmen
 
   public final com.querydsl.sql.ForeignKey<SCompany_department_>
       _company_department_departmentsIDFK = createInvForeignKey(id, "departments_ID");
+
+  public final com.querydsl.sql.ForeignKey<SCompanyDepartment_> _companyDepartment_departmentsIDFK =
+      createInvForeignKey(id, "departments_ID");
 
   public final com.querydsl.sql.ForeignKey<SDepartment_employee_>
       _department_employee_DepartmentIDFK = createInvForeignKey(id, "Department_ID");
@@ -61,11 +64,11 @@ public class SDepartment_ extends com.querydsl.sql.RelationalPathBase<SDepartmen
 
   public void addMetadata() {
     addMetadata(
-        companyId,
-        ColumnMetadata.named("COMPANY_ID").withIndex(3).ofType(Types.INTEGER).withSize(10));
-    addMetadata(
         id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
     addMetadata(
         name, ColumnMetadata.named("NAME").withIndex(2).ofType(Types.VARCHAR).withSize(255));
+    addMetadata(
+        companyId,
+        ColumnMetadata.named("COMPANY_ID").withIndex(3).ofType(Types.INTEGER).withSize(10));
   }
 }

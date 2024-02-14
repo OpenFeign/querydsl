@@ -55,6 +55,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -255,7 +257,7 @@ public class GenericExporter {
     // add constructors and properties
     for (Map<Class<?>, EntityType> entries :
         Arrays.asList(superTypes, embeddableTypes, entityTypes, projectionTypes)) {
-      for (Map.Entry<Class<?>, EntityType> entry : new HashSet<>(entries.entrySet())) {
+      for (Map.Entry<Class<?>, EntityType> entry : new LinkedHashSet<>(entries.entrySet())) {
         addConstructors(entry.getKey(), entry.getValue());
         addProperties(entry.getKey(), entry.getValue());
       }
@@ -410,7 +412,7 @@ public class GenericExporter {
   }
 
   private void addProperties(Class<?> cl, EntityType type) {
-    Map<String, Type> types = new HashMap<>();
+    Map<String, Type> types = new LinkedHashMap<>();
     Map<String, Annotations> annotations = new HashMap<>();
 
     PropertyHandling.Config config = propertyHandling.getConfig(cl);

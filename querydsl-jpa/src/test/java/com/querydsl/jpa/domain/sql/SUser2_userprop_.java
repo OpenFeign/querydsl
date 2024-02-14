@@ -17,9 +17,9 @@ public class SUser2_userprop_ extends com.querydsl.sql.RelationalPathBase<SUser2
 
   public static final SUser2_userprop_ user2_userprop_ = new SUser2_userprop_("user2__userprop_");
 
-  public final NumberPath<Long> propertiesID = createNumber("propertiesID", Long.class);
-
   public final NumberPath<Long> user2ID = createNumber("user2ID", Long.class);
+
+  public final NumberPath<Long> propertiesID = createNumber("propertiesID", Long.class);
 
   public final com.querydsl.sql.PrimaryKey<SUser2_userprop_> primary =
       createPrimaryKey(user2ID, propertiesID);
@@ -57,14 +57,14 @@ public class SUser2_userprop_ extends com.querydsl.sql.RelationalPathBase<SUser2
 
   public void addMetadata() {
     addMetadata(
+        user2ID,
+        ColumnMetadata.named("User2_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+    addMetadata(
         propertiesID,
         ColumnMetadata.named("properties_ID")
             .withIndex(2)
             .ofType(Types.BIGINT)
             .withSize(19)
             .notNull());
-    addMetadata(
-        user2ID,
-        ColumnMetadata.named("User2_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
   }
 }

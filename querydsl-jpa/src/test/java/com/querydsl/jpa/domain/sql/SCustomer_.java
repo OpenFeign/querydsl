@@ -17,9 +17,9 @@ public class SCustomer_ extends com.querydsl.sql.RelationalPathBase<SCustomer_> 
 
   public static final SCustomer_ customer_ = new SCustomer_("customer_");
 
-  public final NumberPath<Long> currentorderId = createNumber("currentorderId", Long.class);
-
   public final NumberPath<Integer> id = createNumber("id", Integer.class);
+
+  public final NumberPath<Long> currentorderId = createNumber("currentorderId", Long.class);
 
   public final NumberPath<Long> nameId = createNumber("nameId", Long.class);
 
@@ -64,10 +64,10 @@ public class SCustomer_ extends com.querydsl.sql.RelationalPathBase<SCustomer_> 
 
   public void addMetadata() {
     addMetadata(
+        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
+    addMetadata(
         currentorderId,
         ColumnMetadata.named("CURRENTORDER_ID").withIndex(2).ofType(Types.BIGINT).withSize(19));
-    addMetadata(
-        id, ColumnMetadata.named("ID").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
     addMetadata(
         nameId, ColumnMetadata.named("NAME_ID").withIndex(3).ofType(Types.BIGINT).withSize(19));
   }

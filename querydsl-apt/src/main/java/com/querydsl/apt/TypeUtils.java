@@ -14,11 +14,15 @@
 package com.querydsl.apt;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.lang.model.element.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
@@ -68,7 +72,7 @@ public final class TypeUtils {
   @SuppressWarnings("unchecked")
   public static Set<TypeElement> getAnnotationValuesAsElements(
       AnnotationMirror mirror, String method) {
-    Set<TypeElement> elements = new HashSet<TypeElement>();
+    Set<TypeElement> elements = new LinkedHashSet<TypeElement>();
     for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
         mirror.getElementValues().entrySet()) {
       if (entry.getKey().getSimpleName().toString().equals(method)) {
