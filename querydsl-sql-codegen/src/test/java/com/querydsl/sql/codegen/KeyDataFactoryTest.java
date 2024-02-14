@@ -70,15 +70,15 @@ public class KeyDataFactoryTest extends AbstractJDBCTest {
         keyDataFactory.getExportedKeys(md, null, null, "EMPLOYEE");
     assertThat(exportedKeys).hasSize(2);
     Iterator<String> exportedKeysIterator = exportedKeys.keySet().iterator();
-    assertThat(exportedKeysIterator.next()).isEqualTo("FK_SUPERIOR1");
     assertThat(exportedKeysIterator.next()).isEqualTo("FK_SUPERIOR2");
+    assertThat(exportedKeysIterator.next()).isEqualTo("FK_SUPERIOR1");
     // foreign keys sorted in abc
     Map<String, ForeignKeyData> importedKeys =
         keyDataFactory.getImportedKeys(md, null, null, "EMPLOYEE");
     assertThat(importedKeys).hasSize(3);
     Iterator<String> importedKeysIterator = importedKeys.keySet().iterator();
-    assertThat(importedKeysIterator.next()).isEqualTo("FK_SUPERIOR1");
     assertThat(importedKeysIterator.next()).isEqualTo("FK_SUPERIOR2");
+    assertThat(importedKeysIterator.next()).isEqualTo("FK_SUPERIOR1");
     assertThat(importedKeysIterator.next()).isEqualTo("FK_SURVEY");
 
     // SURVEY
