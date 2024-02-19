@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-root</artifactId>
-  <version>6.0-SNAPSHOT</version>
+  <version>6.1-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>Querydsl</name>
@@ -165,7 +165,7 @@
     <guava.version>33.0.0-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
     <mysema.lang.version>0.2.4</mysema.lang.version>
-    <byte-buddy.version>1.14.11</byte-buddy.version>
+    <byte-buddy.version>1.14.12</byte-buddy.version>
     <slf4j.version>2.0.12</slf4j.version>
     <surefire.version>3.2.5</surefire.version>
     <animal-sniffer.version>1.23</animal-sniffer.version>
