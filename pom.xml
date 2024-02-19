@@ -180,8 +180,6 @@
     <osgi.import.package.root>*</osgi.import.package.root>
     <osgi.import.package>${osgi.import.package.root}</osgi.import.package>
 
-    <!-- try to removed this after 6.0.0 is out -->
-    <japicmp.skip>true</japicmp.skip>
   </properties>
 
   <dependencyManagement>
