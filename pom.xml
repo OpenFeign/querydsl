@@ -180,8 +180,6 @@
     <osgi.import.package.root>*</osgi.import.package.root>
     <osgi.import.package>${osgi.import.package.root}</osgi.import.package>
 
-    <!-- try to removed this after 6.0.0 is out -->
-    <japicmp.skip>true</japicmp.skip>
   </properties>
 
   <dependencyManagement>
@@ -504,7 +502,7 @@
       <plugin>
         <groupId>com.github.siom79.japicmp</groupId>
         <artifactId>japicmp-maven-plugin</artifactId>
-        <version>0.18.4</version>
+        <version>0.18.5</version>
         <configuration>
           <parameter>
             <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
