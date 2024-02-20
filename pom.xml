@@ -656,7 +656,7 @@
                   <groupId>${project.groupId}</groupId>
                   <artifactId>querydsl-apt</artifactId>
                   <version>${project.version}</version>
-                  <classifier>genaral</classifier>
+                  <classifier>general</classifier>
                 </dependency>
                 <dependency>
                   <groupId>${project.groupId}</groupId>
