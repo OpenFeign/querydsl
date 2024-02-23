@@ -138,7 +138,7 @@
     <junit.version>5.10.2</junit.version>
     <ecj.version>3.33.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
-    <springboot.version>3.2.2</springboot.version>
+    <springboot.version>3.2.3</springboot.version>
 
     <!-- SQL deps -->
     <db2.version>11.5.9.0</db2.version>
