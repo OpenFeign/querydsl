@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import org.junit.Before;
@@ -65,20 +66,20 @@ public class CustomTypesTest extends AbstractJDBCTest {
   public void export() throws SQLException, IOException {
     // create exporter
     String namePrefix = "Q";
-    NamingStrategy namingStrategy = new DefaultNamingStrategy();
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setNamePrefix(namePrefix);
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(new File("target/customExport"));
-    exporter.setNamingStrategy(namingStrategy);
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setNamePrefix(namePrefix);
+    config.setPackageName("test");
+    config.setTargetFolder(new File("target/customExport"));
+    config.setNamingStrategyClass(DefaultNamingStrategy.class);
+
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.setConfiguration(configuration);
 
     // export
     exporter.export(connection.getMetaData());
-    String person =
-        new String(
-            Files.readAllBytes(Paths.get("target", "customExport", "test", "QPerson.java")),
-            StandardCharsets.UTF_8);
+    Path qpersonFile = Paths.get("target", "customExport", "test", "QPerson.java");
+    assertThat(qpersonFile).exists();
+    String person = new String(Files.readAllBytes(qpersonFile), StandardCharsets.UTF_8);
     // System.err.println(person);
     assertThat(person).contains("createEnum(\"gender\"");
   }

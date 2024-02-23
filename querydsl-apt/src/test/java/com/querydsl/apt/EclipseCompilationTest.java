@@ -50,7 +50,7 @@ public class EclipseCompilationTest {
     File out = new File("target/out-eclipse");
     FileUtils.delete(out);
     if (!out.mkdirs()) {
-      fail("", "Creation of " + out.getPath() + " failed");
+      fail("Creation of " + out.getPath() + " failed");
     }
 
     String classPath = SimpleCompiler.getClassPath((URLClassLoader) getClass().getClassLoader());

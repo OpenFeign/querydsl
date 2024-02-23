@@ -66,10 +66,13 @@
 
   <modules>
     <module>querydsl-core</module>
+    <module>querydsl-spatial</module>
+
     <module>querydsl-codegen</module>
     <module>querydsl-codegen-utils</module>
-    <module>querydsl-spatial</module>
     <module>querydsl-apt</module>
+    <module>querydsl-maven-plugin</module>
+
     <module>querydsl-collections</module>
     <module>querydsl-guava</module>
     <module>querydsl-sql</module>
@@ -78,7 +81,7 @@
     <module>querydsl-sql-spring</module>
     <module>querydsl-r2dbc</module>
     <module>querydsl-r2dbc-codegen</module>
-    <module>querydsl-maven-plugin</module>
+
     <module>querydsl-jpa</module>
     <module>querydsl-jpa-codegen</module>
     <module>querydsl-jpa-spring</module>
@@ -156,7 +159,7 @@
     <mongodb.version>3.12.14</mongodb.version>
 
     <!-- JPA deps -->
-    <hibernate.version>6.4.3.Final</hibernate.version>
+    <hibernate.version>6.4.4.Final</hibernate.version>
     <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
     <eclipselink.version>4.0.2</eclipselink.version>
     <jpa.version>3.1.0</jpa.version>
@@ -165,7 +168,7 @@
     <guava.version>33.0.0-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
     <mysema.lang.version>0.2.4</mysema.lang.version>
-    <byte-buddy.version>1.14.11</byte-buddy.version>
+    <byte-buddy.version>1.14.12</byte-buddy.version>
     <slf4j.version>2.0.12</slf4j.version>
     <surefire.version>3.2.5</surefire.version>
     <animal-sniffer.version>1.23</animal-sniffer.version>
@@ -504,7 +507,7 @@
       <plugin>
         <groupId>com.github.siom79.japicmp</groupId>
         <artifactId>japicmp-maven-plugin</artifactId>
-        <version>0.18.3</version>
+        <version>0.18.4</version>
         <configuration>
           <parameter>
             <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
@@ -647,10 +650,94 @@
                   <include>io.github.openfeign.querydsl:*</include>
                 </includes>
                 <excludes>
+                  <exclude>*:querydsl-examples</exclude>
                   <exclude>*:querydsl-example-*</exclude>
-                  <exclude>*:querydsl-benchmark</exclude>
+                  <exclude>*:querydsl-jpa-spring</exclude>
                 </excludes>
               </modules>
+
+              <extraDependencies>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>genaral</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>hibernate</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jakarta</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jdo</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jpa</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>morphia</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>roo</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>general-one</classifier>
+                </dependency>
+
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-jpa</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt-one-jar</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-jpa</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt-hibernate-one-jar</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-jpa</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt</classifier>
+                </dependency>
+
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-mongodb</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt-one-jar</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>querydsl-mongodb</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt</classifier>
+                </dependency>
+              </extraDependencies>
             </bom>
           </boms>
         </configuration>

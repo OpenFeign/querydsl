@@ -22,7 +22,7 @@ import org.apache.maven.plugins.annotations.Mojo;
  * default in the {@code generate-sources} phase.
  */
 @Mojo(name = "export", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
-public class MetadataExportMojo extends AbstractSqlMetaDataExportMojo {
+public class MetadataExportMojo extends AbstractMetaDataExportMojo {
 
   @Override
   protected boolean isForTest() {

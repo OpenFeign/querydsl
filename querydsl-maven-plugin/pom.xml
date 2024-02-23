@@ -79,12 +79,6 @@
       <version>${project.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>io.github.openfeign.querydsl</groupId>
-      <artifactId>querydsl-r2dbc-codegen</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <!-- annotations -->
     <dependency>
       <groupId>org.datanucleus</groupId>

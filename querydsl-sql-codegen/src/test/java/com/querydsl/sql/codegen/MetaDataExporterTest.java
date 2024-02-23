@@ -135,36 +135,34 @@ public class MetaDataExporterTest {
     metadata = connection.getMetaData();
   }
 
-  private static final NamingStrategy defaultNaming = new DefaultNamingStrategy();
-
-  private static final NamingStrategy originalNaming = new OriginalNamingStrategy();
-
   private String beanPackageName = null;
 
   @Test
   public void normalSettings_repetition() throws SQLException {
-    test("Q", "", "", "", defaultNaming, folder.getRoot(), false, false, false);
+    test("Q", "", "", "", DefaultNamingStrategy.class, folder.getRoot(), false, false, false);
 
     File file = new File(folder.getRoot(), "test/QEmployee.java");
     long lastModified = file.lastModified();
     assertThat(file).exists();
 
     clean = false;
-    test("Q", "", "", "", defaultNaming, folder.getRoot(), false, false, false);
+    test("Q", "", "", "", DefaultNamingStrategy.class, folder.getRoot(), false, false, false);
     assertThat(file.lastModified()).isEqualTo(lastModified);
   }
 
   @Test
   public void explicit_configuration() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setCatalogPattern(connection.getCatalog());
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setNamePrefix("Q");
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setNamingStrategy(new DefaultNamingStrategy());
-    exporter.setBeanSerializer(new BeanSerializer());
-    exporter.setBeanPackageName("test2");
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setCatalogPattern(connection.getCatalog());
+    config.setSchemaPattern("PUBLIC");
+    config.setNamePrefix("Q");
+    config.setPackageName("test");
+    config.setTargetFolder(folder.getRoot());
+    config.setNamingStrategyClass(DefaultNamingStrategy.class);
+    config.setBeanSerializerClass(BeanSerializer.class);
+    config.setBeanPackageName("test2");
+    config.setExportBeans(true);
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/QDateTest.java")).exists();
@@ -182,14 +180,16 @@ public class MetaDataExporterTest {
         name VARCHAR(255) NOT NULL DEFAULT 'some default')\
         """);
 
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setNamePrefix("Q");
-    exporter.setPackageName("test");
-    exporter.setTableNamePattern("FOO");
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setBeanSerializer(new BeanSerializer());
-    exporter.setValidationAnnotations(true);
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setNamePrefix("Q");
+    config.setPackageName("test");
+    config.setTableNamePattern("FOO");
+    config.setTargetFolder(folder.getRoot());
+    config.setBeanSerializerClass(BeanSerializer.class);
+    config.setValidationAnnotations(true);
+    config.setExportBeans(true);
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     URLClassLoader classLoader =
@@ -219,19 +219,23 @@ public class MetaDataExporterTest {
         name VARCHAR(255) NOT NULL)\
         """);
 
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setNamePrefix("Q");
-    exporter.setPackageName("test");
-    exporter.setTableNamePattern("BAR");
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setBeanSerializer(new BeanSerializer());
-    exporter.setValidationAnnotations(true);
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setNamePrefix("Q");
+    config.setPackageName("test");
+    config.setTableNamePattern("BAR");
+    config.setTargetFolder(folder.getRoot());
+    config.setBeanSerializerClass(BeanSerializer.class);
+    config.setValidationAnnotations(true);
+    config.setExportBeans(true);
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
+    File file = new File(folder.getRoot().getAbsoluteFile(), "/test/Bar.java");
+    assertThat(file.exists());
     URLClassLoader classLoader =
         URLClassLoader.newInstance(new URL[] {folder.getRoot().toURI().toURL()});
-    compiler.run(null, null, null, folder.getRoot().getAbsoluteFile() + "/test/Bar.java");
+    compiler.run(null, null, null, file.toString());
     Class<?> cls = Class.forName("test.Bar", true, classLoader);
     assertThat(
             ReflectionUtils.getAnnotatedElement(cls, "id", Integer.class)
@@ -247,10 +251,11 @@ public class MetaDataExporterTest {
 
   @Test
   public void minimal_configuration() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setPackageName("test");
+    config.setTargetFolder(folder.getRoot());
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/QDateTest.java")).exists();
@@ -258,10 +263,11 @@ public class MetaDataExporterTest {
 
   @Test
   public void minimal_configuration_with_schemas() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC2,PUBLIC");
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC2,PUBLIC");
+    config.setPackageName("test");
+    config.setTargetFolder(folder.getRoot());
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/QDateTest.java")).exists();
@@ -269,11 +275,12 @@ public class MetaDataExporterTest {
 
   @Test
   public void minimal_configuration_with_schemas_and_tables() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC2,PUBLIC");
-    exporter.setTableNamePattern("RESERVED,UNDERSCORE,BEANGEN1");
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC2,PUBLIC");
+    config.setTableNamePattern("RESERVED,UNDERSCORE,BEANGEN1");
+    config.setPackageName("test");
+    config.setTargetFolder(folder.getRoot());
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/QBeangen1.java")).exists();
@@ -284,11 +291,12 @@ public class MetaDataExporterTest {
 
   @Test
   public void minimal_configuration_with_tables() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setTableNamePattern("RESERVED,UNDERSCORE,BEANGEN1");
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setTableNamePattern("RESERVED,UNDERSCORE,BEANGEN1");
+    config.setPackageName("test");
+    config.setTargetFolder(folder.getRoot());
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/QBeangen1.java")).exists();
@@ -299,11 +307,12 @@ public class MetaDataExporterTest {
 
   @Test(expected = IllegalStateException.class)
   public void minimal_configuration_with_duplicate_tables() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setTableNamePattern("%,%");
-    exporter.setPackageName("test");
-    exporter.setTargetFolder(folder.getRoot());
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setTableNamePattern("%,%");
+    config.setPackageName("test");
+    config.setTargetFolder(folder.getRoot());
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/QBeangen1.java")).exists();
@@ -314,12 +323,13 @@ public class MetaDataExporterTest {
 
   @Test
   public void minimal_configuration_with_suffix() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setPackageName("test");
-    exporter.setNamePrefix("");
-    exporter.setNameSuffix("Type");
-    exporter.setTargetFolder(folder.getRoot());
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setPackageName("test");
+    config.setNamePrefix("");
+    config.setNameSuffix("Type");
+    config.setTargetFolder(folder.getRoot());
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/DateTestType.java")).exists();
@@ -327,13 +337,14 @@ public class MetaDataExporterTest {
 
   @Test
   public void minimal_configuration_without_keys() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setPackageName("test");
-    exporter.setNamePrefix("");
-    exporter.setNameSuffix("Type");
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setExportForeignKeys(false);
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setPackageName("test");
+    config.setNamePrefix("");
+    config.setNameSuffix("Type");
+    config.setTargetFolder(folder.getRoot());
+    config.setExportForeignKeys(false);
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/DateTestType.java")).exists();
@@ -341,13 +352,14 @@ public class MetaDataExporterTest {
 
   @Test
   public void minimal_configuration_only_direct_foreign_keys() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setPackageName("test");
-    exporter.setNamePrefix("");
-    exporter.setNameSuffix("Type");
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setExportInverseForeignKeys(false);
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setPackageName("test");
+    config.setNamePrefix("");
+    config.setNameSuffix("Type");
+    config.setTargetFolder(folder.getRoot());
+    config.setExportInverseForeignKeys(false);
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/DateTestType.java")).exists();
@@ -355,13 +367,15 @@ public class MetaDataExporterTest {
 
   @Test
   public void minimal_configuration_with_bean_prefix() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setPackageName("test");
-    exporter.setNamePrefix("");
-    exporter.setBeanPrefix("Bean");
-    exporter.setBeanSerializer(new BeanSerializer());
-    exporter.setTargetFolder(folder.getRoot());
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setPackageName("test");
+    config.setNamePrefix("");
+    config.setBeanPrefix("Bean");
+    config.setBeanSerializerClass(BeanSerializer.class);
+    config.setTargetFolder(folder.getRoot());
+    config.setExportBeans(true);
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/DateTest.java")).exists();
@@ -370,13 +384,15 @@ public class MetaDataExporterTest {
 
   @Test
   public void minimal_configuration_with_bean_suffix() throws SQLException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setPackageName("test");
-    exporter.setNamePrefix("");
-    exporter.setBeanSuffix("Bean");
-    exporter.setBeanSerializer(new BeanSerializer());
-    exporter.setTargetFolder(folder.getRoot());
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setPackageName("test");
+    config.setNamePrefix("");
+    config.setBeanSuffix("Bean");
+    config.setBeanSerializerClass(BeanSerializer.class);
+    config.setTargetFolder(folder.getRoot());
+    config.setExportBeans(true);
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/DateTest.java")).exists();
@@ -385,14 +401,16 @@ public class MetaDataExporterTest {
 
   @Test
   public void minimal_configuration_with_bean_folder() throws SQLException, IOException {
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setPackageName("test");
-    exporter.setNamePrefix("");
-    exporter.setBeanSuffix("Bean");
-    exporter.setBeanSerializer(new BeanSerializer());
-    exporter.setTargetFolder(folder.getRoot());
-    exporter.setBeansTargetFolder(folder.newFolder("beans"));
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setSchemaPattern("PUBLIC");
+    config.setPackageName("test");
+    config.setNamePrefix("");
+    config.setBeanSuffix("Bean");
+    config.setBeanSerializerClass(BeanSerializer.class);
+    config.setTargetFolder(folder.getRoot());
+    config.setBeansTargetFolder(folder.newFolder("beans"));
+    config.setExportBeans(true);
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     assertThat(new File(folder.getRoot(), "test/DateTest.java")).exists();
@@ -415,16 +433,17 @@ public class MetaDataExporterTest {
           "CREATE TABLE IF NOT EXISTS catalog_test_two.test_catalog_table_two(id INT PRIMARY KEY,"
               + " foo VARCHAR(32) NOT NULL)");
 
-      MetaDataExporter exporter = new MetaDataExporter();
-      exporter.setSchemaPattern("PUBLIC");
-      exporter.setCatalogPattern("catalog_test_one");
-      exporter.setPackageName("test");
-      exporter.setNamePrefix("");
-      exporter.setBeanSuffix("Bean");
-      exporter.setBeanSerializer(new BeanSerializer());
-      exporter.setTargetFolder(folder.getRoot());
-      exporter.setBeansTargetFolder(folder.newFolder("beans"));
+      MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+      config.setSchemaPattern("PUBLIC");
+      config.setCatalogPattern("catalog_test_one");
+      config.setPackageName("test");
+      config.setNamePrefix("");
+      config.setBeanSuffix("Bean");
+      config.setBeanSerializerClass(BeanSerializer.class);
+      config.setTargetFolder(folder.getRoot());
+      config.setBeansTargetFolder(folder.newFolder("beans"));
 
+      MetaDataExporter exporter = new MetaDataExporter(config);
       exporter.export(connection.getMetaData());
       assertThat(new File(folder.getRoot(), "test/TestCatalogTableOne.java")).exists();
       assertThat(new File(folder.getRoot(), "beans/test/TestCatalogTableOneBean.java")).exists();
@@ -433,7 +452,7 @@ public class MetaDataExporterTest {
       assertThat(new File(folder.getRoot(), "beans/test/TestCatalogTableTwoBean.java").exists())
           .isFalse();
 
-      exporter.setCatalogPattern("catalog_test_two");
+      config.setCatalogPattern("catalog_test_two");
       exporter.export(connection.getMetaData());
 
       assertThat(new File(folder.getRoot(), "test/TestCatalogTableTwo.java")).exists();
@@ -451,7 +470,7 @@ public class MetaDataExporterTest {
       String nameSuffix,
       String beanPrefix,
       String beanSuffix,
-      NamingStrategy namingStrategy,
+      Class<? extends NamingStrategy> namingStrategy,
       File targetDir,
       boolean withBeans,
       boolean withInnerClasses,
@@ -467,25 +486,26 @@ public class MetaDataExporterTest {
       }
     }
 
-    MetaDataExporter exporter = new MetaDataExporter();
-    exporter.setColumnAnnotations(exportColumns);
-    exporter.setSchemaPattern("PUBLIC");
-    exporter.setNamePrefix(namePrefix);
-    exporter.setNameSuffix(nameSuffix);
-    exporter.setBeanPrefix(beanPrefix);
-    exporter.setBeanSuffix(beanSuffix);
-    exporter.setInnerClassesForKeys(withInnerClasses);
-    exporter.setPackageName("test");
-    exporter.setBeanPackageName(beanPackageName);
-    exporter.setTargetFolder(targetDir);
-    exporter.setNamingStrategy(namingStrategy);
-    exporter.setSchemaToPackage(schemaToPackage);
+    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    config.setColumnAnnotations(exportColumns);
+    config.setSchemaPattern("PUBLIC");
+    config.setNamePrefix(namePrefix);
+    config.setNameSuffix(nameSuffix);
+    config.setBeanPrefix(beanPrefix);
+    config.setBeanSuffix(beanSuffix);
+    config.setInnerClassesForKeys(withInnerClasses);
+    config.setPackageName("test");
+    config.setBeanPackageName(beanPackageName);
+    config.setTargetFolder(targetDir);
+    config.setNamingStrategyClass(namingStrategy);
+    config.setSchemaToPackage(schemaToPackage);
     if (withBeans) {
-      exporter.setBeanSerializer(new BeanSerializer());
+      config.setBeanSerializerClass(BeanSerializer.class);
     }
     if (withOrdinalPositioning) {
-      exporter.setColumnComparatorClass(OrdinalPositionComparator.class);
+      config.setColumnComparatorClass(OrdinalPositionComparator.class);
     }
+    MetaDataExporter exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
     Set<String> classes = exporter.getClasses();

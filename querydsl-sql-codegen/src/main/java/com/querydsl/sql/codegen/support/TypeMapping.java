@@ -25,6 +25,17 @@ public class TypeMapping implements Mapping {
 
   private String table, column, type;
 
+  public TypeMapping() {
+    super();
+  }
+
+  public TypeMapping(String table, String column, String type) {
+    this();
+    this.table = table;
+    this.column = column;
+    this.type = type;
+  }
+
   @Override
   public void apply(Configuration configuration) {
     try {

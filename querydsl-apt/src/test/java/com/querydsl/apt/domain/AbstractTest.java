@@ -48,14 +48,14 @@ public abstract class AbstractTest {
     try {
       cl.getField(name);
     } catch (NoSuchFieldException e) {
-      fail("", "Expected present field : " + cl.getSimpleName() + "." + name);
+      fail("Expected present field : " + cl.getSimpleName() + "." + name);
     }
   }
 
   protected void assertMissing(String name) {
     try {
       cl.getField(name);
-      fail("", "Expected missing field : " + cl.getSimpleName() + "." + name);
+      fail("Expected missing field : " + cl.getSimpleName() + "." + name);
     } catch (NoSuchFieldException e) {
       // expected
     }
