@@ -49,12 +49,13 @@ class TypeExtractor extends SimpleTypeVisitorAdapter<TypeElement, Void> {
   public TypeElement visitDeclared(DeclaredType t, Void p) {
     if (t.asElement() instanceof TypeElement) {
       TypeElement typeElement = (TypeElement) t.asElement();
-      switch (typeElement.getKind()) {
-        case ENUM:
+      switch (typeElement.getKind().name()) {
+        case "ENUM":
           return skipEnum ? null : typeElement;
-        case CLASS:
+        case "RECORD":
+        case "CLASS":
           return typeElement;
-        case INTERFACE:
+        case "INTERFACE":
           return visitInterface(t);
         default:
           throw new IllegalArgumentException("Illegal type: " + typeElement);
