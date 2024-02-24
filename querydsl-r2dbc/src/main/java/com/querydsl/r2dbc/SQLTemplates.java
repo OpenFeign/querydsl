@@ -13,11 +13,20 @@
  */
 package com.querydsl.r2dbc;
 
-import com.querydsl.core.*;
+import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryException;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
-import com.querydsl.core.types.*;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.Templates;
 import com.querydsl.r2dbc.binding.BindMarkersFactory;
-import com.querydsl.r2dbc.dml.R2DBCInsertBatch;
 import com.querydsl.r2dbc.types.Type;
 import com.querydsl.sql.Keywords;
 import com.querydsl.sql.RelationalPath;
@@ -25,7 +34,14 @@ import com.querydsl.sql.SQLOps;
 import com.querydsl.sql.SchemaAndTable;
 import java.lang.reflect.Field;
 import java.sql.Types;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * {@code SQLTemplates} extends {@link Templates} to provides SQL specific extensions and acts as
@@ -914,26 +930,6 @@ public class SQLTemplates extends Templates {
       SubQueryExpression<?> subQuery,
       SQLSerializer context) {
     context.serializeForInsert(metadata, entity, columns, values, subQuery);
-
-    if (!metadata.getFlags().isEmpty()) {
-      context.serialize(Position.END, metadata.getFlags());
-    }
-  }
-
-  /**
-   * template method for INSERT serialization
-   *
-   * @param metadata metadata
-   * @param entity entity
-   * @param batches batches
-   * @param context context
-   */
-  public void serializeInsert(
-      QueryMetadata metadata,
-      RelationalPath<?> entity,
-      List<R2DBCInsertBatch> batches,
-      SQLSerializer context) {
-    context.serializeForInsert(metadata, entity, batches);
 
     if (!metadata.getFlags().isEmpty()) {
       context.serialize(Position.END, metadata.getFlags());

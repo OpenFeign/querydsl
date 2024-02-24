@@ -12,8 +12,8 @@ import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 /**
@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono;
  */
 public class CreateTableClause {
 
-  private static final Logger logger = LoggerFactory.getLogger(CreateTableClause.class);
+  // private static final Logger logger = LoggerFactory.getLogger(CreateTableClause.class);
 
   private static final Joiner COMMA_JOINER = Joiner.on(", ");
 
@@ -192,7 +192,7 @@ public class CreateTableClause {
     }
     builder.append("  " + Joiner.on(",\n  ").join(lines));
     builder.append("\n)\n");
-    logger.info(builder.toString());
+    // logger.info(builder.toString());
 
     Statement statement = connection.createStatement(builder.toString());
     return Mono.from(statement.execute())
@@ -206,7 +206,7 @@ public class CreateTableClause {
               }
               String sql =
                   prefix + index.getName() + templates.getOn() + table + "(" + indexColumns + ")";
-              logger.info(sql);
+              // logger.info(sql);
 
               Statement stmt = connection.createStatement(sql);
               return Mono.from(stmt.execute());

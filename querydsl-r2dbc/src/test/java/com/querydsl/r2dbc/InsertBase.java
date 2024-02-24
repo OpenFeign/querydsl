@@ -27,17 +27,14 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Param;
-import com.querydsl.r2dbc.dml.DefaultMapper;
 import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import com.querydsl.r2dbc.domain.*;
 import com.querydsl.sql.ColumnMetadata;
-import com.querydsl.sql.dml.Mapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public abstract class InsertBase extends AbstractBaseTest {
@@ -117,64 +114,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  public void insert_batch() {
-    R2DBCInsertClause insert = insert(survey).set(survey.id, 5).set(survey.name, "55").addBatch();
-
-    assertEquals(1, insert.getBatchCount());
-
-    insert.set(survey.id, 6).set(survey.name, "66").addBatch();
-
-    assertEquals(2, insert.getBatchCount());
-    assertEquals(2, (long) insert.execute().block());
-
-    assertEquals(1L, (long) query().from(survey).where(survey.name.eq("55")).fetchCount().block());
-    assertEquals(1L, (long) query().from(survey).where(survey.name.eq("66")).fetchCount().block());
-  }
-
-  @Test
-  public void insert_batch_to_bulk() {
-    R2DBCInsertClause insert = insert(survey);
-    insert.setBatchToBulk(true);
-
-    insert.set(survey.id, 5).set(survey.name, "55").addBatch();
-
-    assertEquals(1, insert.getBatchCount());
-
-    insert.set(survey.id, 6).set(survey.name, "66").addBatch();
-
-    assertEquals(2, insert.getBatchCount());
-    assertEquals(2, (long) insert.execute().block());
-
-    assertEquals(1L, (long) query().from(survey).where(survey.name.eq("55")).fetchCount().block());
-    assertEquals(1L, (long) query().from(survey).where(survey.name.eq("66")).fetchCount().block());
-  }
-
-  @Test
-  public void insert_batch_Templates() {
-    R2DBCInsertClause insert =
-        insert(survey)
-            .set(survey.id, 5)
-            .set(survey.name, Expressions.stringTemplate("'55'"))
-            .addBatch();
-
-    insert.set(survey.id, 6).set(survey.name, Expressions.stringTemplate("'66'")).addBatch();
-
-    assertEquals(2, (long) insert.execute().block());
-
-    assertEquals(1L, (long) query().from(survey).where(survey.name.eq("55")).fetchCount().block());
-    assertEquals(1L, (long) query().from(survey).where(survey.name.eq("66")).fetchCount().block());
-  }
-
-  @Test
-  public void insert_batch2() {
-    R2DBCInsertClause insert = insert(survey).set(survey.id, 5).set(survey.name, "55").addBatch();
-
-    insert.set(survey.id, 6).setNull(survey.name).addBatch();
-
-    assertEquals(2, (long) insert.execute().block());
-  }
-
-  @Test
   public void insert_null_with_columns() {
     assertEquals(
         1, (long) insert(survey).columns(survey.id, survey.name).values(3, null).execute().block());
@@ -190,43 +129,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   @ExcludeIn({FIREBIRD, HSQLDB, DB2, DERBY, ORACLE})
   public void insert_without_values() {
     assertEquals(1, (long) insert(survey).execute().block());
-  }
-
-  @Test
-  @ExcludeIn(ORACLE)
-  public void insert_nulls_in_batch() {
-    //        QFoo f= QFoo.foo;
-    //        R2DBCInsertClause sic = new R2DBCInsertClause(c, new H2Templates(), f);
-    //        sic.columns(f.c1,f.c2).values(null,null).addBatch();
-    //        sic.columns(f.c1,f.c2).values(null,1).addBatch();
-    //        sic.execute();
-    R2DBCInsertClause sic = insert(survey);
-    sic.columns(survey.name, survey.name2).values(null, null).addBatch();
-    sic.columns(survey.name, survey.name2).values(null, "X").addBatch();
-    assertEquals(2, (long) sic.execute().block());
-  }
-
-  @Test
-  @Ignore
-  @ExcludeIn({DERBY})
-  public void insert_nulls_in_batch2() {
-    Mapper<Object> mapper = DefaultMapper.WITH_NULL_BINDINGS;
-    //        QFoo f= QFoo.foo;
-    //        R2DBCInsertClause sic = new R2DBCInsertClause(c, new H2Templates(), f);
-    //        Foo f1=new Foo();
-    //        sic.populate(f1).addBatch();
-    //        f1=new Foo();
-    //        f1.setC1(1);
-    //        sic.populate(f1).addBatch();
-    //        sic.execute();
-    QEmployee employee = QEmployee.employee;
-    R2DBCInsertClause sic = insert(employee);
-    Employee e = new Employee();
-    sic.populate(e, mapper).addBatch();
-    e = new Employee();
-    e.setFirstname("X");
-    sic.populate(e, mapper).addBatch();
-    assertEquals(0, (long) sic.execute().block());
   }
 
   @Test
@@ -409,63 +311,10 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
-  public void insertBatch_with_subquery() {
-    R2DBCInsertClause insert =
-        insert(survey)
-            .columns(survey.id, survey.name)
-            .select(query().from(survey2).select(survey2.id.add(20), survey2.name))
-            .addBatch();
-
-    insert(survey)
-        .columns(survey.id, survey.name)
-        .select(query().from(survey2).select(survey2.id.add(40), survey2.name))
-        .addBatch();
-
-    assertEquals(1, (long) insert.execute().block());
-  }
-
-  @Test
   public void like() {
     insert(survey).values(11, "Hello World", "a\\b").execute().block();
     assertEquals(
         1L, (long) query().from(survey).where(survey.name2.contains("a\\b")).fetchCount().block());
-  }
-
-  @Test
-  public void like_with_escape() {
-    R2DBCInsertClause insert = insert(survey);
-    insert.set(survey.id, 5).set(survey.name, "aaa").addBatch();
-    insert.set(survey.id, 6).set(survey.name, "a_").addBatch();
-    insert.set(survey.id, 7).set(survey.name, "a%").addBatch();
-    assertEquals(3, (long) insert.execute().block());
-
-    assertEquals(
-        1L, (long) query().from(survey).where(survey.name.like("a|%", '|')).fetchCount().block());
-    assertEquals(
-        1L, (long) query().from(survey).where(survey.name.like("a|_", '|')).fetchCount().block());
-    assertEquals(
-        3L, (long) query().from(survey).where(survey.name.like("a%")).fetchCount().block());
-    assertEquals(
-        2L, (long) query().from(survey).where(survey.name.like("a_")).fetchCount().block());
-
-    assertEquals(
-        1L, (long) query().from(survey).where(survey.name.startsWith("a_")).fetchCount().block());
-    assertEquals(
-        1L, (long) query().from(survey).where(survey.name.startsWith("a%")).fetchCount().block());
-  }
-
-  @Test
-  public void insert_with_tempateExpression_in_batch() {
-    assertEquals(
-        1,
-        (long)
-            insert(survey)
-                .set(survey.id, 3)
-                .set(survey.name, Expressions.stringTemplate("'Hello'"))
-                .addBatch()
-                .execute()
-                .block());
   }
 
   @Test

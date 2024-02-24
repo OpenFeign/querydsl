@@ -19,16 +19,44 @@ import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.SerializerBase;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.Template;
 import com.querydsl.core.types.Template.Element;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.core.types.TemplateFactory;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.StringUtils;
-import com.querydsl.r2dbc.dml.R2DBCInsertBatch;
 import com.querydsl.r2dbc.types.Null;
-import com.querydsl.sql.*;
+import com.querydsl.sql.ColumnMetadata;
+import com.querydsl.sql.RelationalFunctionCall;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLOps;
+import com.querydsl.sql.SchemaAndTable;
 import java.sql.Types;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -566,24 +594,6 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
       @Nullable SubQueryExpression<?> subQuery) {
     this.entity = entity;
     templates.serializeInsert(metadata, entity, columns, values, subQuery, this);
-  }
-
-  public void serializeInsert(
-      QueryMetadata metadata, RelationalPath<?> entity, List<R2DBCInsertBatch> batches) {
-    this.entity = entity;
-    templates.serializeInsert(metadata, entity, batches, this);
-  }
-
-  protected void serializeForInsert(
-      QueryMetadata metadata, RelationalPath<?> entity, List<R2DBCInsertBatch> batches) {
-    serializeForInsert(
-        metadata, entity, batches.get(0).getColumns(), batches.get(0).getValues(), null);
-    for (int i = 1; i < batches.size(); i++) {
-      append(COMMA);
-      append("(");
-      handle(COMMA, batches.get(i).getValues());
-      append(")");
-    }
   }
 
   protected void serializeForInsert(

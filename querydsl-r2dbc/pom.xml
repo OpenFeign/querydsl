@@ -14,18 +14,10 @@
 
   <properties>
     <bridge-method.version>1.13</bridge-method.version>
-    <reactor.version>3.3.5.RELEASE</reactor.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>io.r2dbc</groupId>
-        <artifactId>r2dbc-bom</artifactId>
-        <version>Arabba-SR9</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <dependency>
         <groupId>io.projectreactor</groupId>
         <artifactId>reactor-core</artifactId>
@@ -43,8 +35,6 @@
     <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
-      <version>20.1.0</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -76,6 +66,7 @@
     <dependency>
       <groupId>io.r2dbc</groupId>
       <artifactId>r2dbc-spi</artifactId>
+      <version>${r2dbc.version}</version>
     </dependency>
 
     <dependency>
@@ -117,28 +108,31 @@
     <dependency>
       <groupId>io.projectreactor</groupId>
       <artifactId>reactor-test</artifactId>
-      <version>${reactor.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>io.r2dbc</groupId>
       <artifactId>r2dbc-h2</artifactId>
+      <version>${r2dbc.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.r2dbc</groupId>
       <artifactId>r2dbc-mssql</artifactId>
+      <version>${r2dbc.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>dev.miku</groupId>
+      <groupId>io.asyncer</groupId>
       <artifactId>r2dbc-mysql</artifactId>
+      <version>1.1.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.r2dbc</groupId>
+      <groupId>org.postgresql</groupId>
       <artifactId>r2dbc-postgresql</artifactId>
+      <version>1.0.4.RELEASE</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

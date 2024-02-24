@@ -30,14 +30,12 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.MethodRule;
 import org.junit.rules.TestRule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public abstract class AbstractBaseTest {
 
-  protected static final Logger logger = LoggerFactory.getLogger(AbstractBaseTest.class);
+  // protected static final Logger logger = LoggerFactory.getLogger(AbstractBaseTest.class);
 
   protected final class TestQuery<T> extends R2DBCQuery<T> {
 
@@ -57,7 +55,7 @@ public abstract class AbstractBaseTest {
         assertEquals(expectedQuery, rv.replace('\n', ' '));
         expectedQuery = null;
       }
-      logger.debug(rv);
+      //      logger.debug(rv);
       return serializer;
     }
 

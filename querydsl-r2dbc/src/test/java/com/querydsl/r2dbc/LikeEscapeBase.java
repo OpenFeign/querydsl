@@ -17,7 +17,6 @@ import static com.querydsl.r2dbc.Constants.survey;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,11 +26,13 @@ public abstract class LikeEscapeBase extends AbstractBaseTest {
   @Before
   public void setUp() {
     delete(survey).execute().block();
-    R2DBCInsertClause insert = insert(survey);
-    insert.set(survey.id, 5).set(survey.name, "aaa").addBatch();
-    insert.set(survey.id, 6).set(survey.name, "a_").addBatch();
-    insert.set(survey.id, 7).set(survey.name, "a%").addBatch();
-    insert.execute().block();
+    insert(survey)
+        .set(survey.id, 5)
+        .set(survey.name, "aaa")
+        .execute()
+        .then(insert(survey).set(survey.id, 6).set(survey.name, "a_").execute())
+        .then(insert(survey).set(survey.id, 7).set(survey.name, "a%").execute())
+        .block();
   }
 
   @After

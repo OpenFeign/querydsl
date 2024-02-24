@@ -1,11 +1,8 @@
 package com.querydsl.r2dbc.suites;
 
-import static com.querydsl.r2dbc.domain.QSurvey.survey;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Throwables;
-import com.querydsl.core.QueryException;
 import com.querydsl.core.testutil.H2;
 import com.querydsl.r2dbc.AbstractBaseTest;
 import com.querydsl.r2dbc.Connections;
@@ -14,7 +11,6 @@ import com.querydsl.sql.DefaultSQLExceptionTranslator;
 import com.querydsl.sql.SQLExceptionTranslator;
 import java.sql.SQLException;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import reactor.core.publisher.Mono;
@@ -53,21 +49,6 @@ public class H2ExceptionSuiteTest extends AbstractBaseTest {
     SQLException sqlException = new SQLException("Batch operation failed");
     sqlException.setNextException(e1);
     RuntimeException result = exceptionTranslator.translate(sqlException);
-    inspectExceptionResult(result);
-  }
-
-  @Test
-  @Ignore("Multiple batches are supported")
-  public void updateBatchFailed() {
-    execute(insert(survey).columns(survey.name, survey.name2).values("New Survey", "New Survey"))
-        .block();
-    Exception result = null;
-    try {
-      execute(update(survey).set(survey.id, 1).addBatch().set(survey.id, 2).addBatch()).block();
-    } catch (QueryException e) {
-      result = e;
-    }
-    assertNotNull(result);
     inspectExceptionResult(result);
   }
 

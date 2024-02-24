@@ -38,15 +38,4 @@ public class R2DBCDeleteClauseTest {
     assertEquals("delete from EMPLOYEE\nwhere EMPLOYEE.ID = ?", sql.getSQL());
     assertEquals(Collections.singletonList(1), sql.getNullFriendlyBindings());
   }
-
-  @Test
-  public void clear() {
-    QEmployee emp1 = new QEmployee("emp1");
-    R2DBCDeleteClause delete = new R2DBCDeleteClause(null, SQLTemplates.DEFAULT, emp1);
-    delete.where(emp1.id.eq(1));
-    delete.addBatch();
-    assertEquals(1, delete.getBatchCount());
-    delete.clear();
-    assertEquals(0, delete.getBatchCount());
-  }
 }

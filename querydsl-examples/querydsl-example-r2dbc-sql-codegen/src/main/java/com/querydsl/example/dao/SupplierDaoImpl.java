@@ -8,7 +8,7 @@ import com.querydsl.core.types.QBean;
 import com.querydsl.example.dto.Supplier;
 import com.querydsl.r2dbc.R2DBCQuery;
 import com.querydsl.r2dbc.R2DBCQueryFactory;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Transactional
 public class SupplierDaoImpl implements SupplierDao {
 
-  @Inject R2DBCQueryFactory queryFactory;
+  @Autowired R2DBCQueryFactory queryFactory;
 
   final QBean<Supplier> supplierBean = bean(Supplier.class, supplier.all());
 

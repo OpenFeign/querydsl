@@ -1,15 +1,15 @@
 package com.querydsl.example.dao;
 
 import com.querydsl.example.dto.Customer;
-import javax.annotation.Resource;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 public class CustomerDaoTest extends AbstractDaoTest {
 
-  @Resource CustomerDao customerDao;
+  @Autowired CustomerDao customerDao;
 
   @Test
   public void findAll() {
@@ -20,14 +20,14 @@ public class CustomerDaoTest extends AbstractDaoTest {
 
   @Test
   public void findById() {
-    Mono<Customer> setup = customerDao.findById(1);
+    Mono<Customer> setup = customerDao.findById(testDataService.customer1);
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
 
   @Test
   public void update() {
-    Mono<Customer> setup = customerDao.findById(1).flatMap(customer -> customerDao.save(customer));
+    Mono<Customer> setup = customerDao.findById(testDataService.customer1).flatMap(customer -> customerDao.save(customer));
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
@@ -38,7 +38,7 @@ public class CustomerDaoTest extends AbstractDaoTest {
         customerDao
             .findById(1)
             .flatMap(
-                customer -> customerDao.delete(customer).flatMap(__ -> customerDao.findById(1)));
+                customer -> customerDao.delete(customer).flatMap(__ -> customerDao.findById(testDataService.customer1)));
 
     StepVerifier.create(setup).verifyComplete();
   }

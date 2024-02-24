@@ -23,19 +23,16 @@ import com.querydsl.r2dbc.Configuration;
 import com.querydsl.r2dbc.R2DBCConnectionProvider;
 import com.querydsl.r2dbc.R2dbcUtils;
 import com.querydsl.r2dbc.SQLSerializer;
-import com.querydsl.r2dbc.binding.BindMarkers;
 import com.querydsl.r2dbc.binding.BindTarget;
 import com.querydsl.r2dbc.binding.StatementWrapper;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLBindings;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.Statement;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.Range;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -57,8 +54,6 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
               + "Consider this alternative: DELETE ... WHERE EXISTS (subquery)");
 
   protected final RelationalPath<?> entity;
-
-  protected final List<QueryMetadata> batches = new ArrayList<QueryMetadata>();
 
   protected DefaultQueryMetadata metadata = new DefaultQueryMetadata();
 
@@ -108,22 +103,8 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
     return (C) this;
   }
 
-  /**
-   * Add current state of bindings as a batch item
-   *
-   * @return the current object
-   */
-  public C addBatch() {
-    batches.add(metadata);
-    metadata = new DefaultQueryMetadata();
-    metadata.addJoin(JoinType.DEFAULT, entity);
-    metadata.setValidatingVisitor(validatingVisitor);
-    return (C) this;
-  }
-
   @Override
   public void clear() {
-    batches.clear();
     metadata = new DefaultQueryMetadata();
     metadata.addJoin(JoinType.DEFAULT, entity);
     metadata.setValidatingVisitor(validatingVisitor);
@@ -141,43 +122,19 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
     Statement statement = connection.createStatement(queryString);
     BindTarget bindTarget = new StatementWrapper(statement);
 
-    if (batches.isEmpty()) {
-      setParameters(
-          bindTarget,
-          configuration.getBindMarkerFactory().create(),
-          serializer.getConstants(),
-          serializer.getConstantPaths(),
-          metadata.getParams());
-    } else {
-      for (QueryMetadata batch : batches) {
-        if (useLiterals) {
-          throw new UnsupportedOperationException("Batch deletes are not supported with literals");
-        }
-        setBatchParameters(bindTarget, configuration.getBindMarkerFactory().create(), batch);
-      }
-    }
+    setParameters(
+        bindTarget,
+        configuration.getBindMarkerFactory().create(),
+        serializer.getConstants(),
+        serializer.getConstantPaths(),
+        metadata.getParams());
+
     return statement;
   }
 
-  private <T> void setBatchParameters(
-      BindTarget bindTarget, BindMarkers bindMarkers, QueryMetadata batch) {
-    SQLSerializer helperSerializer = createSerializerAndSerialize(batch);
-    helperSerializer.serializeDelete(batch, entity);
-    setParameters(
-        bindTarget,
-        bindMarkers,
-        helperSerializer.getConstants(),
-        helperSerializer.getConstantPaths(),
-        metadata.getParams());
-  }
-
-  private SQLSerializer createSerializerAndSerialize(QueryMetadata batch) {
+  private SQLSerializer createSerializerAndSerialize() {
     SQLSerializer serializer = createSerializer(true);
-    if (!batches.isEmpty() && batch != null) {
-      serializer.serializeDelete(batch, entity);
-    } else {
-      serializer.serializeDelete(metadata, entity);
-    }
+    serializer.serializeDelete(metadata, entity);
     return serializer;
   }
 
@@ -185,30 +142,9 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
     return getConnection()
         .map(
             connection -> {
-              SQLSerializer serializer = createSerializerAndSerialize(null);
+              SQLSerializer serializer = createSerializerAndSerialize();
               return prepareStatementAndSetParameters(connection, serializer);
             });
-  }
-
-  protected Flux<Statement> createStatements() {
-    boolean addBatches = !configuration.getUseLiterals();
-
-    return Flux.fromIterable(batches)
-        .flatMap(
-            batch ->
-                getConnection()
-                    .map(
-                        connection -> {
-                          SQLSerializer serializer = createSerializerAndSerialize(batch);
-                          Statement statement =
-                              prepareStatementAndSetParameters(connection, serializer);
-
-                          if (addBatches) {
-                            return statement.add();
-                          }
-
-                          return statement;
-                        }));
   }
 
   @Override
@@ -216,38 +152,19 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
     return getConnection()
         .flatMap(
             connection -> {
-              if (batches.isEmpty()) {
-                return createStatement()
-                    .flatMap(statement -> Mono.from(statement.execute()))
-                    .flatMap(result -> Mono.from(result.getRowsUpdated()))
-                    .map(Long::valueOf)
-                    .doOnError(e -> Mono.error(configuration.translate(queryString, constants, e)));
-              }
-
-              return createStatements()
-                  .flatMap(statement -> Flux.from(statement.execute()))
+              return createStatement()
+                  .flatMap(statement -> Mono.from(statement.execute()))
                   .flatMap(result -> Mono.from(result.getRowsUpdated()))
                   .map(Long::valueOf)
-                  .reduce(0L, Long::sum)
                   .doOnError(e -> Mono.error(configuration.translate(queryString, constants, e)));
             });
   }
 
   @Override
   public List<SQLBindings> getSQL() {
-    if (batches.isEmpty()) {
-      SQLSerializer serializer = createSerializer(true);
-      serializer.serializeDelete(metadata, entity);
-      return Collections.singletonList(createBindings(metadata, serializer));
-    }
-
-    List<SQLBindings> builder = new ArrayList<>();
-    for (QueryMetadata metadata : batches) {
-      SQLSerializer serializer = createSerializer(true);
-      serializer.serializeDelete(metadata, entity);
-      builder.add(createBindings(metadata, serializer));
-    }
-    return Collections.unmodifiableList(builder);
+    SQLSerializer serializer = createSerializer(true);
+    serializer.serializeDelete(metadata, entity);
+    return Collections.singletonList(createBindings(metadata, serializer));
   }
 
   public C where(Predicate p) {
@@ -266,11 +183,6 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
   public C limit(@Range(from = 0, to = Integer.MAX_VALUE) long limit) {
     metadata.setModifiers(QueryModifiers.limit(limit));
     return (C) this;
-  }
-
-  @Override
-  public int getBatchCount() {
-    return batches.size();
   }
 
   @Override

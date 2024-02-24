@@ -16,7 +16,7 @@ import com.querydsl.example.dto.Person;
 import com.querydsl.r2dbc.R2DBCQueryFactory;
 import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import com.querydsl.r2dbc.group.ReactiveGroupBy;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -24,7 +24,7 @@ import reactor.core.publisher.Mono;
 @Transactional
 public class CustomerDaoImpl implements CustomerDao {
 
-  @Inject R2DBCQueryFactory queryFactory;
+  @Autowired R2DBCQueryFactory queryFactory;
 
   final QBean<CustomerAddress> customerAddressBean =
       bean(
@@ -73,7 +73,6 @@ public class CustomerDaoImpl implements CustomerDao {
             id -> {
               c.setId(id);
 
-              R2DBCInsertClause insert = queryFactory.insert(customerAddress);
               return Flux.fromIterable(c.getAddresses())
                   .flatMap(
                       ca -> {
@@ -94,15 +93,14 @@ public class CustomerDaoImpl implements CustomerDao {
                       })
                   .map(
                       ca ->
-                          insert
+                      queryFactory.insert(customerAddress)
                               .set(customerAddress.customerId, id)
                               .set(customerAddress.addressId, ca.getAddress().getId())
                               .set(customerAddress.addressTypeCode, ca.getAddressTypeCode())
                               .set(customerAddress.fromDate, ca.getFromDate())
                               .set(customerAddress.toDate, ca.getToDate())
-                              .addBatch())
+                              .execute())
                   .collectList()
-                  .flatMap(__ -> insert.execute())
                   .map(__ -> c);
             });
   }
@@ -160,9 +158,8 @@ public class CustomerDaoImpl implements CustomerDao {
                                             ca.getAddressTypeCode())
                                         .set(customerAddress.fromDate, ca.getFromDate())
                                         .set(customerAddress.toDate, ca.getToDate())
-                                        .addBatch())
+                                        .execute())
                             .collectList()
-                            .flatMap(___ -> insert.execute())
                             .map(___ -> c);
                       });
             });

@@ -4,15 +4,15 @@ import com.google.common.collect.ImmutableSet;
 import com.querydsl.example.dto.CustomerPaymentMethod;
 import com.querydsl.example.dto.Order;
 import com.querydsl.example.dto.OrderProduct;
-import javax.annotation.Resource;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 public class OrderDaoTest extends AbstractDaoTest {
 
-  @Resource OrderDao orderDao;
+  @Autowired OrderDao orderDao;
 
   @Test
   public void findAll() {
@@ -23,14 +23,14 @@ public class OrderDaoTest extends AbstractDaoTest {
 
   @Test
   public void findById() {
-    Mono<Order> setup = orderDao.findById(1);
+    Mono<Order> setup = orderDao.findById(testDataService.order1);
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
 
   @Test
   public void update() {
-    Mono<Order> setup = orderDao.findById(1).flatMap(order -> orderDao.save(order));
+    Mono<Order> setup = orderDao.findById(testDataService.order1).flatMap(order -> orderDao.save(order));
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
@@ -38,7 +38,7 @@ public class OrderDaoTest extends AbstractDaoTest {
   @Test
   public void delete() {
     OrderProduct orderProduct = new OrderProduct();
-    orderProduct.setProductId(1L);
+    orderProduct.setProductId(testDataService.product1);
     orderProduct.setQuantity(1);
 
     // FIXME

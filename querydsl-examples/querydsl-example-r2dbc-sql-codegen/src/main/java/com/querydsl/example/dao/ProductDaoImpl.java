@@ -15,7 +15,7 @@ import com.querydsl.example.dto.Supplier;
 import com.querydsl.r2dbc.R2DBCQueryFactory;
 import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import com.querydsl.r2dbc.group.ReactiveGroupBy;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono;
 @Transactional
 public class ProductDaoImpl implements ProductDao {
 
-  @Inject R2DBCQueryFactory queryFactory;
+  @Autowired R2DBCQueryFactory queryFactory;
 
   final QBean<ProductL10n> productL10nBean =
       bean(ProductL10n.class, productL10n.description, productL10n.lang, productL10n.name);
@@ -69,27 +69,22 @@ public class ProductDaoImpl implements ProductDao {
   public Mono<Product> insert(Product p) {
     return populate(queryFactory.insert(product), p)
         .executeWithKey(product.id)
-        .flatMap(
-            id -> {
-              R2DBCInsertClause insert = queryFactory.insert(productL10n);
-              for (ProductL10n l10n : p.getLocalizations()) {
-                insert
+        .flatMapIterable(id -> {
+        	R2DBCInsertClause insert = queryFactory.insert(productL10n);
+        	return p.getLocalizations().stream().map(l10n ->  insert
                     .set(productL10n.productId, id)
                     .set(productL10n.description, l10n.getDescription())
                     .set(productL10n.lang, l10n.getLang())
                     .set(productL10n.name, l10n.getName())
-                    .addBatch();
-              }
+                    .execute())
+        			.map(__ -> {
+              p.setId(id);
 
-              return insert
-                  .execute()
-                  .map(
-                      __ -> {
-                        p.setId(id);
-
-                        return p;
-                      });
-            });
+              return p;
+            })
+        			.toList();
+        })
+        .reduce( (a,b) -> a);
   }
 
   public Mono<Product> update(Product p) {
@@ -105,20 +100,22 @@ public class ProductDaoImpl implements ProductDao {
                   .delete(productL10n)
                   .where(productL10n.productId.eq(id))
                   .execute()
-                  .flatMap(
-                      ___ -> {
-                        R2DBCInsertClause insert = queryFactory.insert(productL10n);
-                        for (ProductL10n l10n : p.getLocalizations()) {
-                          insert
+                  .flatMapIterable(___ -> {
+                  	R2DBCInsertClause insert = queryFactory.insert(productL10n);
+                  	return p.getLocalizations().stream().map(l10n ->  insert
                               .set(productL10n.productId, id)
                               .set(productL10n.description, l10n.getDescription())
                               .set(productL10n.lang, l10n.getLang())
                               .set(productL10n.name, l10n.getName())
-                              .addBatch();
-                        }
+                              .execute())
+                  			.map(____ -> {
+                        p.setId(id);
 
-                        return insert.execute().map(____ -> p);
-                      });
+                        return p;
+                      })
+                  			.toList();
+                  })
+                  .reduce( (a,b) -> a);
             });
   }
 
@@ -141,10 +138,9 @@ public class ProductDaoImpl implements ProductDao {
   private Flux<Product> getBaseQuery(Predicate... where) {
     return (Flux<Product>)
         queryFactory
-            .select(productBean)
             .from(product)
             .innerJoin(product.supplierFk, supplier)
-            .innerJoin(product._productFk, productL10n)
+            .leftJoin(product._productFk, productL10n)
             .where(where)
             .transform(ReactiveGroupBy.groupBy(product.id).flux(productBean));
   }

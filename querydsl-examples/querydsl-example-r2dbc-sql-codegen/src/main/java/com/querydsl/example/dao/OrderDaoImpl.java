@@ -1,6 +1,8 @@
 package com.querydsl.example.dao;
 
 import static com.querydsl.core.types.Projections.bean;
+import static com.querydsl.example.r2dbc.QAddress.address;
+import static com.querydsl.example.r2dbc.QCustomerAddress.customerAddress;
 import static com.querydsl.example.r2dbc.QCustomerOrder.customerOrder;
 import static com.querydsl.example.r2dbc.QCustomerOrderProduct.customerOrderProduct;
 import static com.querydsl.example.r2dbc.QCustomerPaymentMethod.customerPaymentMethod;
@@ -15,7 +17,7 @@ import com.querydsl.example.dto.OrderProduct;
 import com.querydsl.r2dbc.R2DBCQueryFactory;
 import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import com.querydsl.r2dbc.group.ReactiveGroupBy;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,7 +25,7 @@ import reactor.core.publisher.Mono;
 @Transactional
 public class OrderDaoImpl implements OrderDao {
 
-  @Inject R2DBCQueryFactory queryFactory;
+  @Autowired R2DBCQueryFactory queryFactory;
 
   final QBean<OrderProduct> orderProductBean =
       bean(
@@ -75,27 +77,23 @@ public class OrderDaoImpl implements OrderDao {
     return populate(queryFactory.insert(customerOrder), o)
         .executeWithKey(customerOrder.id)
         .flatMap(
-            id -> {
-              R2DBCInsertClause insert = queryFactory.insert(customerOrderProduct);
-              for (OrderProduct op : o.getOrderProducts()) {
-                insert
-                    .set(customerOrderProduct.orderId, id)
-                    .set(customerOrderProduct.comments, op.getComments())
-                    .set(customerOrderProduct.productId, op.getProductId())
-                    .set(customerOrderProduct.quantity, op.getQuantity())
-                    .addBatch();
-              }
-              return insert
-                  .execute()
-                  .map(
-                      __ -> {
-                        o.setId(id);
+                id -> {
+                  o.setId(id);
 
-                        return o;
-                      });
-            });
+                  return Flux.fromIterable( o.getOrderProducts())
+                      .map(
+                          op ->
+                          queryFactory.insert(customerOrderProduct)
+                          .set(customerOrderProduct.orderId, id)
+                          .set(customerOrderProduct.comments, op.getComments())
+                          .set(customerOrderProduct.productId, op.getProductId())
+                          .set(customerOrderProduct.quantity, op.getQuantity())
+                          .execute())
+                      .collectList()
+                      .map(__ -> o);
+                });
   }
-
+  
   public Mono<Order> update(Order o) {
     Long id = o.getId();
 
@@ -111,24 +109,19 @@ public class OrderDaoImpl implements OrderDao {
                   .execute()
                   .flatMap(
                       ___ -> {
-                        R2DBCInsertClause insert = queryFactory.insert(customerOrderProduct);
-                        for (OrderProduct op : o.getOrderProducts()) {
-                          insert
-                              .set(customerOrderProduct.orderId, id)
-                              .set(customerOrderProduct.comments, op.getComments())
-                              .set(customerOrderProduct.productId, op.getProductId())
-                              .set(customerOrderProduct.quantity, op.getQuantity())
-                              .addBatch();
-                        }
-                        return insert
-                            .execute()
-                            .map(
-                                ____ -> {
-                                  o.setId(id);
+                        return Flux.fromIterable( o.getOrderProducts())
+                                .map(
+                                    op ->
+                                    queryFactory.insert(customerOrderProduct)
+                                    .set(customerOrderProduct.orderId, id)
+                                    .set(customerOrderProduct.comments, op.getComments())
+                                    .set(customerOrderProduct.productId, op.getProductId())
+                                    .set(customerOrderProduct.quantity, op.getQuantity())
+                                    .execute())
+                                .collectList()
+                                .map(____ -> o);
+                          });
 
-                                  return o;
-                                });
-                      });
             });
   }
 

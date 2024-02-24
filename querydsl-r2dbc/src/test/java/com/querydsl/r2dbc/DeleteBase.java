@@ -19,14 +19,12 @@ import static org.junit.Assert.assertEquals;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Param;
 import com.querydsl.r2dbc.dml.R2DBCDeleteClause;
 import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.r2dbc.domain.QSurvey;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public abstract class DeleteBase extends AbstractBaseTest {
@@ -44,33 +42,6 @@ public abstract class DeleteBase extends AbstractBaseTest {
   @After
   public void tearDown() {
     reset();
-  }
-
-  @Test
-  @Ignore("not supported")
-  public void batch() {
-    insert(survey).values(2, "A", "B").execute();
-    insert(survey).values(3, "B", "C").execute();
-
-    R2DBCDeleteClause delete = delete(survey);
-    delete.where(survey.name.eq("A")).addBatch();
-    assertEquals(1, delete.getBatchCount());
-    delete.where(survey.name.eq("B")).addBatch();
-    assertEquals(2, delete.getBatchCount());
-    assertEquals(2, (long) delete.execute().block());
-  }
-
-  @Test
-  @ExcludeIn({CUBRID, SQLITE})
-  @Ignore("not supported")
-  public void batch_templates() {
-    insert(survey).values(2, "A", "B").execute();
-    insert(survey).values(3, "B", "C").execute();
-
-    R2DBCDeleteClause delete = delete(survey);
-    delete.where(survey.name.eq(Expressions.stringTemplate("'A'"))).addBatch();
-    delete.where(survey.name.eq(Expressions.stringTemplate("'B'"))).addBatch();
-    assertEquals(2, (long) delete.execute().block());
   }
 
   @Test
@@ -124,19 +95,5 @@ public abstract class DeleteBase extends AbstractBaseTest {
         survey1.name.eq("XXX"),
         query().from(employee).where(survey1.name.eq(employee.lastname)).exists());
     assertEquals(0, (long) delete.execute().block());
-  }
-
-  @Test
-  @ExcludeIn({CUBRID, SQLITE})
-  @Ignore("not supported")
-  public void delete_with_tempateExpression_in_batch() {
-    assertEquals(
-        1,
-        (long)
-            delete(survey)
-                .where(survey.name.eq(Expressions.stringTemplate("'Hello World'")))
-                .addBatch()
-                .execute()
-                .block());
   }
 }

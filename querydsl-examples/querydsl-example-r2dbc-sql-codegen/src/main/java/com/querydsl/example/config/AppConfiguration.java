@@ -1,16 +1,25 @@
 package com.querydsl.example.config;
 
-import com.querydsl.example.dao.*;
+import com.querydsl.example.dao.CustomerDao;
+import com.querydsl.example.dao.CustomerDaoImpl;
+import com.querydsl.example.dao.OrderDao;
+import com.querydsl.example.dao.OrderDaoImpl;
+import com.querydsl.example.dao.PersonDao;
+import com.querydsl.example.dao.PersonDaoImpl;
+import com.querydsl.example.dao.ProductDao;
+import com.querydsl.example.dao.ProductDaoImpl;
+import com.querydsl.example.dao.SupplierDao;
+import com.querydsl.example.dao.SupplierDaoImpl;
 import com.querydsl.r2dbc.R2DBCConnectionProvider;
 import com.querydsl.r2dbc.R2DBCQueryFactory;
 import com.querydsl.r2dbc.SQLTemplates;
 import io.r2dbc.spi.ConnectionFactory;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
-import org.springframework.data.r2dbc.connectionfactory.R2dbcTransactionManager;
+import org.springframework.r2dbc.connection.R2dbcTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import reactor.core.publisher.Mono;
 
@@ -19,7 +28,7 @@ import reactor.core.publisher.Mono;
 @Import(R2DBCConfiguration.class)
 public class AppConfiguration {
 
-  @Inject Environment env;
+  @Autowired Environment env;
 
   @Bean
   CustomerDao customerDao() {

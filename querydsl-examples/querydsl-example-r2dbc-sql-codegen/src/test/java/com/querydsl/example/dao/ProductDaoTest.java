@@ -3,17 +3,17 @@ package com.querydsl.example.dao;
 import com.google.common.collect.ImmutableSet;
 import com.querydsl.example.dto.Product;
 import com.querydsl.example.dto.ProductL10n;
-import javax.annotation.Resource;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 public class ProductDaoTest extends AbstractDaoTest {
 
-  @Resource SupplierDao supplierDao;
+  @Autowired SupplierDao supplierDao;
 
-  @Resource ProductDao productDao;
+  @Autowired ProductDao productDao;
 
   @Test
   public void findAll() {
@@ -24,14 +24,14 @@ public class ProductDaoTest extends AbstractDaoTest {
 
   @Test
   public void findById() {
-    Mono<Product> setup = productDao.findById(1);
+    Mono<Product> setup = productDao.findById(testDataService.product1);
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
 
   @Test
   public void update() {
-    Mono<Product> setup = productDao.findById(1).flatMap(p -> productDao.save(p));
+    Mono<Product> setup = productDao.findById(testDataService.product1).flatMap(p -> productDao.save(p));
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }

@@ -20,7 +20,6 @@ import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.dml.ReactiveInsertClause;
 import com.querydsl.core.types.*;
-import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.r2dbc.*;
 import com.querydsl.r2dbc.binding.BindTarget;
 import com.querydsl.r2dbc.binding.StatementWrapper;
@@ -33,7 +32,6 @@ import com.querydsl.sql.dml.Mapper;
 import io.r2dbc.spi.*;
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import reactor.core.publisher.Flux;
@@ -59,8 +57,6 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
 
   @Nullable protected R2DBCQuery<?> subQueryBuilder;
 
-  protected final List<R2DBCInsertBatch> batches = new ArrayList<R2DBCInsertBatch>();
-
   protected final List<Path<?>> columns = new ArrayList<Path<?>>();
 
   protected final List<Expression<?>> values = new ArrayList<Expression<?>>();
@@ -68,8 +64,6 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
   protected transient String queryString;
 
   protected transient List<Object> constants;
-
-  protected transient boolean batchToBulk;
 
   public AbstractR2DBCInsertClause(
       Connection connection,
@@ -127,34 +121,8 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
     return (C) this;
   }
 
-  /**
-   * Add the current state of bindings as a batch item
-   *
-   * @return the current object
-   */
-  public C addBatch() {
-    if (subQueryBuilder != null) {
-      subQuery = subQueryBuilder.select(values.toArray(new Expression[values.size()])).clone();
-      values.clear();
-    }
-    batches.add(new R2DBCInsertBatch(columns, values, subQuery));
-    columns.clear();
-    values.clear();
-    subQuery = null;
-    return (C) this;
-  }
-
-  /**
-   * Set whether batches should be optimized into a single bulk operation. Will revert to batches,
-   * if bulk is not supported
-   */
-  public void setBatchToBulk(boolean b) {
-    this.batchToBulk = b && configuration.getTemplates().isBatchToBulkSupported();
-  }
-
   @Override
   public void clear() {
-    batches.clear();
     columns.clear();
     values.clear();
     subQuery = null;
@@ -228,45 +196,20 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
       values.clear();
     }
 
-    SQLSerializer serializer = createSerializerAndSerialize(null);
+    SQLSerializer serializer = createSerializerAndSerialize();
     return prepareStatementAndSetParameters(connection, serializer, withKeys);
   }
 
-  protected Collection<Statement> createStatements(Connection connection, boolean withKeys) {
+  protected Statement createStatements(Connection connection, boolean withKeys) {
     if (subQueryBuilder != null) {
       subQuery = subQueryBuilder.select(values.toArray(new Expression[values.size()])).clone();
       values.clear();
     }
 
-    return batches.stream()
-        .map(
-            batch -> {
-              SQLSerializer serializer = createSerializerAndSerialize(batch);
-              Statement statement =
-                  prepareStatementAndSetParameters(connection, serializer, withKeys);
+    SQLSerializer serializer = createSerializerAndSerialize();
+    Statement statement = prepareStatementAndSetParameters(connection, serializer, withKeys);
 
-              return statement.add();
-            })
-        .collect(Collectors.toList());
-  }
-
-  private Batch createBatches(Connection connection, boolean withKeys) {
-    if (subQueryBuilder != null) {
-      subQuery = subQueryBuilder.select(values.toArray(new Expression[values.size()])).clone();
-      values.clear();
-    }
-
-    Batch r2dbcBatch = connection.createBatch();
-    batches.forEach(
-        batch -> {
-          SQLSerializer serializer = createSerializerAndSerialize(batch);
-          Statement statement = prepareStatementAndSetParameters(connection, serializer, withKeys);
-
-          //            r2dbcBatch.add(statement.toString());
-          r2dbcBatch.add(serializer.toString());
-        });
-
-    return r2dbcBatch;
+    return statement;
   }
 
   protected Statement prepareStatementAndSetParameters(
@@ -343,46 +286,16 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
 
   @Override
   public Mono<Long> execute() {
-    {
-      if (batchToBulk || batches.isEmpty()) {
-        return getConnection()
-            .map(connection -> createStatement(connection, false))
-            .flatMap(this::executeStatement);
-      }
-
-      if (useLiterals) {
-        return getConnection()
-            .map(connection -> createBatches(connection, false))
-            .flatMap(this::executeBatches);
-      }
-
-      return getConnection()
-          .flatMapIterable(connection -> createStatements(connection, false))
-          .flatMap(this::executeStatements)
-          .reduce(0L, Long::sum);
-    }
+    return getConnection()
+        .map(connection -> createStatements(connection, false))
+        .flatMap(this::executeStatements);
   }
 
   @Override
   public List<SQLBindings> getSQL() {
-    if (batches.isEmpty()) {
-      SQLSerializer serializer = createSerializer(true);
-      serializer.serializeInsert(metadata, entity, columns, values, subQuery);
-      return Collections.singletonList(createBindings(metadata, serializer));
-    } else if (batchToBulk) {
-      SQLSerializer serializer = createSerializer(true);
-      serializer.serializeInsert(metadata, entity, batches);
-      return Collections.singletonList(createBindings(metadata, serializer));
-    } else {
-      List<SQLBindings> builder = new ArrayList<>();
-      for (R2DBCInsertBatch batch : batches) {
-        SQLSerializer serializer = createSerializer(true);
-        serializer.serializeInsert(
-            metadata, entity, batch.getColumns(), batch.getValues(), batch.getSubQuery());
-        builder.add(createBindings(metadata, serializer));
-      }
-      return CollectionUtils.unmodifiableList(builder);
-    }
+    SQLSerializer serializer = createSerializer(true);
+    serializer.serializeInsert(metadata, entity, columns, values, subQuery);
+    return Collections.singletonList(createBindings(metadata, serializer));
   }
 
   @Override
@@ -438,24 +351,13 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
   @Override
   public String toString() {
     SQLSerializer serializer = createSerializer(true);
-    if (!batches.isEmpty() && batchToBulk) {
-      serializer.serializeInsert(metadata, entity, batches);
-    } else {
-      serializer.serializeInsert(metadata, entity, columns, values, subQuery);
-    }
+    serializer.serializeInsert(metadata, entity, columns, values, subQuery);
     return serializer.toString();
   }
 
-  private SQLSerializer createSerializerAndSerialize(R2DBCInsertBatch batch) {
+  private SQLSerializer createSerializerAndSerialize() {
     SQLSerializer serializer = createSerializer(true);
-    if (!batches.isEmpty() && batchToBulk) {
-      serializer.serializeInsert(metadata, entity, batches);
-    } else if (!batches.isEmpty() && batch != null) {
-      serializer.serializeInsert(
-          metadata, entity, batch.getColumns(), batch.getValues(), batch.getSubQuery());
-    } else {
-      serializer.serializeInsert(metadata, entity, columns, values, subQuery);
-    }
+    serializer.serializeInsert(metadata, entity, columns, values, subQuery);
     return serializer;
   }
 
@@ -488,12 +390,7 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
 
   @Override
   public boolean isEmpty() {
-    return values.isEmpty() && batches.isEmpty();
-  }
-
-  @Override
-  public int getBatchCount() {
-    return batches.size();
+    return values.isEmpty();
   }
 
   //    private <T> void setBatchParameters(Statement stmt, R2DBCInsertBatch batch, int offset) {

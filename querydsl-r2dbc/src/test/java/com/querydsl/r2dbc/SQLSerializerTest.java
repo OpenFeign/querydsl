@@ -419,9 +419,7 @@ public class SQLSerializerTest {
     QEmployee e = QEmployee.employee;
     R2DBCDeleteClause delete =
         new R2DBCDeleteClause(
-            (R2DBCConnectionProvider) EasyMock.createNiceMock(Connection.class),
-            defaultWithPrintSchema,
-            e);
+            (Connection) EasyMock.createNiceMock(Connection.class), defaultWithPrintSchema, e);
     delete.where(e.id.gt(100));
 
     assertEquals("delete from PUBLIC.EMPLOYEE\n" + "where EMPLOYEE.ID > ?", delete.toString());

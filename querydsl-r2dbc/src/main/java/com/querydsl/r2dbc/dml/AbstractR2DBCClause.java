@@ -153,6 +153,4 @@ public abstract class AbstractR2DBCClause<C extends AbstractR2DBCClause<C>>
   public void setUseLiterals(boolean useLiterals) {
     this.useLiterals = useLiterals;
   }
-
-  public abstract int getBatchCount();
 }

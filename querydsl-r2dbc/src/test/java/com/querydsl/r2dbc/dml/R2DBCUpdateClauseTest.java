@@ -84,15 +84,4 @@ public class R2DBCUpdateClauseTest {
             + "where emp2.ID = EMPLOYEE.ID)",
         sql.getSQL());
   }
-
-  @Test
-  public void clear() {
-    QEmployee emp1 = new QEmployee("emp1");
-    R2DBCUpdateClause update = new R2DBCUpdateClause(null, SQLTemplates.DEFAULT, emp1);
-    update.set(emp1.id, 1);
-    update.addBatch();
-    assertEquals(1, update.getBatchCount());
-    update.clear();
-    assertEquals(0, update.getBatchCount());
-  }
 }

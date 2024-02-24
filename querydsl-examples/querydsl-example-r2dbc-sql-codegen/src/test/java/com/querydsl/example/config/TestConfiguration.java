@@ -12,6 +12,6 @@ public class TestConfiguration {
 
   @Bean
   public TestDataService testDataService() {
-    return new TestDataServiceImpl();
+    return new TestDataService();
   }
 }

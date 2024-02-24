@@ -142,36 +142,6 @@ public abstract class UpdateBase extends AbstractBaseTest {
   }
 
   @Test
-  public void batch() {
-    assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
-    assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
-
-    R2DBCUpdateClause update = update(survey);
-    update.set(survey.name, "AA").where(survey.name.eq("A")).addBatch();
-    assertEquals(1, update.getBatchCount());
-    update.set(survey.name, "BB").where(survey.name.eq("B")).addBatch();
-    assertEquals(2, update.getBatchCount());
-    assertEquals(2, (long) update.execute().block());
-  }
-
-  @Test
-  public void batch_templates() {
-    assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
-    assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
-
-    R2DBCUpdateClause update = update(survey);
-    update
-        .set(survey.name, "AA")
-        .where(survey.name.eq(Expressions.stringTemplate("'A'")))
-        .addBatch();
-    update
-        .set(survey.name, "BB")
-        .where(survey.name.eq(Expressions.stringTemplate("'B'")))
-        .addBatch();
-    assertEquals(2, (long) update.execute().block());
-  }
-
-  @Test
   public void update_with_subQuery_exists() {
     QSurvey survey1 = new QSurvey("s1");
     QEmployee employee = new QEmployee("e");
@@ -219,19 +189,5 @@ public abstract class UpdateBase extends AbstractBaseTest {
     update.set(survey1.name, "AA");
     update.where(query().from(employee).where(survey1.id.eq(employee.id)).notExists());
     assertEquals(0, (long) update.execute().block());
-  }
-
-  @Test
-  @ExcludeIn(TERADATA)
-  public void update_with_templateExpression_in_batch() {
-    assertEquals(
-        1L,
-        (long)
-            update(survey)
-                .set(survey.id, 3)
-                .set(survey.name, Expressions.stringTemplate("'Hello'"))
-                .addBatch()
-                .execute()
-                .block());
   }
 }
