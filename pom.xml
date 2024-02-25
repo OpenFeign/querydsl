@@ -80,7 +80,6 @@
     <module>querydsl-sql-codegen</module>
     <module>querydsl-sql-spring</module>
     <module>querydsl-r2dbc</module>
-    <module>querydsl-r2dbc-codegen</module>
 
     <module>querydsl-jpa</module>
     <module>querydsl-jpa-codegen</module>
