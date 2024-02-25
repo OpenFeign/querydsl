@@ -337,7 +337,7 @@ public final class Connections {
       BindMarkers bindMarkers = getConfiguration().getBindMarkerFactory().create();
       getConfiguration()
           .set(bindMarkers.next(), bindTarget, Expressions.stringPath("name"), "name" + i);
-      pstmt.add();
+      if (i < (TEST_ROW_COUNT - 1)) pstmt.add();
     }
 
     setup = setup.concatWith(Mono.from(pstmt.execute()).then());
@@ -499,7 +499,7 @@ public final class Connections {
       BindMarkers bindMarkers = getConfiguration().getBindMarkerFactory().create();
       getConfiguration()
           .set(bindMarkers.next(), bindTarget, Expressions.stringPath("name"), "name" + i);
-      pstmt.add();
+      if (i < (TEST_ROW_COUNT - 1)) pstmt.add();
     }
 
     setup = setup.concatWith(Mono.from(pstmt.execute()).then());
