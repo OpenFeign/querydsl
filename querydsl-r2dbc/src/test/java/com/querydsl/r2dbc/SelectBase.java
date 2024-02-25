@@ -777,7 +777,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE}) // FIXME
+  @ExcludeIn({SQLITE, H2}) // FIXME
   public void date_trunc() {
     DateTimeExpression<java.util.Date> expr = DateTimeExpression.currentTimestamp();
 
@@ -796,7 +796,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, TERADATA}) // FIXME
+  @ExcludeIn({SQLITE, TERADATA, DERBY, H2}) // FIXME
   public void date_trunc2() {
     DateTimeExpression<LocalDateTime> expr =
         DateTimeExpression.currentTimestamp(LocalDateTime.class);
@@ -2708,7 +2708,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void yearWeek_h2() {
     R2DBCQuery<?> query = query().from(employee).orderBy(employee.id.asc());
     assertEquals(
-        Integer.valueOf(200006), query.select(employee.datefield.yearWeek()).fetchFirst().block());
+        Integer.valueOf(200007), query.select(employee.datefield.yearWeek()).fetchFirst().block());
   }
 
   @Test

@@ -42,8 +42,8 @@ public class UtilUUIDType extends AbstractType<UUID, Object> {
   }
 
   @Override
-  protected String toDbValue(UUID value) {
-    return value.toString();
+  protected Object toDbValue(UUID value) {
+    return value;
   }
 
   @Override

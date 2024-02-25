@@ -31,7 +31,8 @@ public class ProductDaoTest extends AbstractDaoTest {
 
   @Test
   public void update() {
-    Mono<Product> setup = productDao.findById(testDataService.product1).flatMap(p -> productDao.save(p));
+    Mono<Product> setup =
+        productDao.findById(testDataService.product1).flatMap(p -> productDao.save(p));
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }

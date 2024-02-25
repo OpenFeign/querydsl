@@ -27,7 +27,10 @@ public class CustomerDaoTest extends AbstractDaoTest {
 
   @Test
   public void update() {
-    Mono<Customer> setup = customerDao.findById(testDataService.customer1).flatMap(customer -> customerDao.save(customer));
+    Mono<Customer> setup =
+        customerDao
+            .findById(testDataService.customer1)
+            .flatMap(customer -> customerDao.save(customer));
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
@@ -38,7 +41,10 @@ public class CustomerDaoTest extends AbstractDaoTest {
         customerDao
             .findById(1)
             .flatMap(
-                customer -> customerDao.delete(customer).flatMap(__ -> customerDao.findById(testDataService.customer1)));
+                customer ->
+                    customerDao
+                        .delete(customer)
+                        .flatMap(__ -> customerDao.findById(testDataService.customer1)));
 
     StepVerifier.create(setup).verifyComplete();
   }

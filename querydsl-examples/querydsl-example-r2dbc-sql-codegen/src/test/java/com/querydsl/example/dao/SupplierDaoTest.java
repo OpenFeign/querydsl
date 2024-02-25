@@ -27,7 +27,10 @@ public class SupplierDaoTest extends AbstractDaoTest {
 
   @Test
   public void update() {
-    Mono<Supplier> setup = supplierDao.findById(testDataService.supplier1).flatMap(supplier -> supplierDao.save(supplier));
+    Mono<Supplier> setup =
+        supplierDao
+            .findById(testDataService.supplier1)
+            .flatMap(supplier -> supplierDao.save(supplier));
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }

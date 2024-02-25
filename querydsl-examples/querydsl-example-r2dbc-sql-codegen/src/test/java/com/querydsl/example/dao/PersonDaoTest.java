@@ -27,7 +27,8 @@ public class PersonDaoTest extends AbstractDaoTest {
 
   @Test
   public void update() {
-    Mono<Person> setup = personDao.findById(testDataService.person1).flatMap(p -> personDao.save(p));
+    Mono<Person> setup =
+        personDao.findById(testDataService.person1).flatMap(p -> personDao.save(p));
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }

@@ -93,7 +93,8 @@ public class CustomerDaoImpl implements CustomerDao {
                       })
                   .map(
                       ca ->
-                      queryFactory.insert(customerAddress)
+                          queryFactory
+                              .insert(customerAddress)
                               .set(customerAddress.customerId, id)
                               .set(customerAddress.addressId, ca.getAddress().getId())
                               .set(customerAddress.addressTypeCode, ca.getAddressTypeCode())

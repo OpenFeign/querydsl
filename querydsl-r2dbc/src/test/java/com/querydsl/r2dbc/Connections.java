@@ -94,7 +94,7 @@ public final class Connections {
   }
 
   public static R2DBCConnectionProvider getH2() {
-    String url = "r2dbc:h2:file://././target/h2-test;LOCK_MODE=0";
+    String url = "r2dbc:h2:file://././target/h2-test;LOCK_MODE=0;AUTO_SERVER=TRUE;MODE=legacy";
     return getR2DBCConnectionProvider(url);
   }
 

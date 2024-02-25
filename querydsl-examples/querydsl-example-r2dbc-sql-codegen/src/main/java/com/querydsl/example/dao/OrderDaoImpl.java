@@ -1,8 +1,6 @@
 package com.querydsl.example.dao;
 
 import static com.querydsl.core.types.Projections.bean;
-import static com.querydsl.example.r2dbc.QAddress.address;
-import static com.querydsl.example.r2dbc.QCustomerAddress.customerAddress;
 import static com.querydsl.example.r2dbc.QCustomerOrder.customerOrder;
 import static com.querydsl.example.r2dbc.QCustomerOrderProduct.customerOrderProduct;
 import static com.querydsl.example.r2dbc.QCustomerPaymentMethod.customerPaymentMethod;
@@ -15,7 +13,6 @@ import com.querydsl.example.dto.CustomerPaymentMethod;
 import com.querydsl.example.dto.Order;
 import com.querydsl.example.dto.OrderProduct;
 import com.querydsl.r2dbc.R2DBCQueryFactory;
-import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import com.querydsl.r2dbc.group.ReactiveGroupBy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,23 +74,24 @@ public class OrderDaoImpl implements OrderDao {
     return populate(queryFactory.insert(customerOrder), o)
         .executeWithKey(customerOrder.id)
         .flatMap(
-                id -> {
-                  o.setId(id);
+            id -> {
+              o.setId(id);
 
-                  return Flux.fromIterable( o.getOrderProducts())
-                      .map(
-                          op ->
-                          queryFactory.insert(customerOrderProduct)
-                          .set(customerOrderProduct.orderId, id)
-                          .set(customerOrderProduct.comments, op.getComments())
-                          .set(customerOrderProduct.productId, op.getProductId())
-                          .set(customerOrderProduct.quantity, op.getQuantity())
-                          .execute())
-                      .collectList()
-                      .map(__ -> o);
-                });
+              return Flux.fromIterable(o.getOrderProducts())
+                  .map(
+                      op ->
+                          queryFactory
+                              .insert(customerOrderProduct)
+                              .set(customerOrderProduct.orderId, id)
+                              .set(customerOrderProduct.comments, op.getComments())
+                              .set(customerOrderProduct.productId, op.getProductId())
+                              .set(customerOrderProduct.quantity, op.getQuantity())
+                              .execute())
+                  .collectList()
+                  .map(__ -> o);
+            });
   }
-  
+
   public Mono<Order> update(Order o) {
     Long id = o.getId();
 
@@ -109,19 +107,19 @@ public class OrderDaoImpl implements OrderDao {
                   .execute()
                   .flatMap(
                       ___ -> {
-                        return Flux.fromIterable( o.getOrderProducts())
-                                .map(
-                                    op ->
-                                    queryFactory.insert(customerOrderProduct)
-                                    .set(customerOrderProduct.orderId, id)
-                                    .set(customerOrderProduct.comments, op.getComments())
-                                    .set(customerOrderProduct.productId, op.getProductId())
-                                    .set(customerOrderProduct.quantity, op.getQuantity())
-                                    .execute())
-                                .collectList()
-                                .map(____ -> o);
-                          });
-
+                        return Flux.fromIterable(o.getOrderProducts())
+                            .map(
+                                op ->
+                                    queryFactory
+                                        .insert(customerOrderProduct)
+                                        .set(customerOrderProduct.orderId, id)
+                                        .set(customerOrderProduct.comments, op.getComments())
+                                        .set(customerOrderProduct.productId, op.getProductId())
+                                        .set(customerOrderProduct.quantity, op.getQuantity())
+                                        .execute())
+                            .collectList()
+                            .map(____ -> o);
+                      });
             });
   }
 

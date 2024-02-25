@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public class TestDataService   {
+public class TestDataService {
 
   @Autowired R2DBCQueryFactory r2DBCQueryFactory;
   @Autowired CustomerDao customerDao;
@@ -20,18 +20,18 @@ public class TestDataService   {
   @Autowired PersonDao personDao;
   @Autowired ProductDao productDao;
   @Autowired SupplierDao supplierDao;
-public Long customer1;
-public Long order1;
-public Long product1;
-public Long person1;
-public Long supplier1;
+  public Long customer1;
+  public Long order1;
+  public Long product1;
+  public Long person1;
+  public Long supplier1;
 
   public void addTestData() {
     // suppliers
     Supplier supplier = new Supplier();
     supplier.setCode("acme");
     supplier.setName("ACME");
-   supplier1= supplierDao.save(supplier).block().getId();
+    supplier1 = supplierDao.save(supplier).block().getId();
 
     Supplier supplier2 = new Supplier();
     supplier2.setCode("bigs");
@@ -53,7 +53,7 @@ public Long supplier1;
     l10nDe.setName("Schraubenzieher");
 
     product.setLocalizations(ImmutableSet.of(l10nEn, l10nDe));
-   product1= productDao.save(product).block().getId();
+    product1 = productDao.save(product).block().getId();
 
     Product product2 = new Product();
     product2.setName("Hammer");

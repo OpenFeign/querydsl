@@ -30,7 +30,8 @@ public class OrderDaoTest extends AbstractDaoTest {
 
   @Test
   public void update() {
-    Mono<Order> setup = orderDao.findById(testDataService.order1).flatMap(order -> orderDao.save(order));
+    Mono<Order> setup =
+        orderDao.findById(testDataService.order1).flatMap(order -> orderDao.save(order));
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }

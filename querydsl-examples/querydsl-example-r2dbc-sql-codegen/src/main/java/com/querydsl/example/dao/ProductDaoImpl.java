@@ -69,22 +69,27 @@ public class ProductDaoImpl implements ProductDao {
   public Mono<Product> insert(Product p) {
     return populate(queryFactory.insert(product), p)
         .executeWithKey(product.id)
-        .flatMapIterable(id -> {
-        	R2DBCInsertClause insert = queryFactory.insert(productL10n);
-        	return p.getLocalizations().stream().map(l10n ->  insert
-                    .set(productL10n.productId, id)
-                    .set(productL10n.description, l10n.getDescription())
-                    .set(productL10n.lang, l10n.getLang())
-                    .set(productL10n.name, l10n.getName())
-                    .execute())
-        			.map(__ -> {
-              p.setId(id);
+        .flatMapIterable(
+            id -> {
+              R2DBCInsertClause insert = queryFactory.insert(productL10n);
+              return p.getLocalizations().stream()
+                  .map(
+                      l10n ->
+                          insert
+                              .set(productL10n.productId, id)
+                              .set(productL10n.description, l10n.getDescription())
+                              .set(productL10n.lang, l10n.getLang())
+                              .set(productL10n.name, l10n.getName())
+                              .execute())
+                  .map(
+                      __ -> {
+                        p.setId(id);
 
-              return p;
+                        return p;
+                      })
+                  .toList();
             })
-        			.toList();
-        })
-        .reduce( (a,b) -> a);
+        .reduce((a, b) -> a);
   }
 
   public Mono<Product> update(Product p) {
@@ -100,22 +105,27 @@ public class ProductDaoImpl implements ProductDao {
                   .delete(productL10n)
                   .where(productL10n.productId.eq(id))
                   .execute()
-                  .flatMapIterable(___ -> {
-                  	R2DBCInsertClause insert = queryFactory.insert(productL10n);
-                  	return p.getLocalizations().stream().map(l10n ->  insert
-                              .set(productL10n.productId, id)
-                              .set(productL10n.description, l10n.getDescription())
-                              .set(productL10n.lang, l10n.getLang())
-                              .set(productL10n.name, l10n.getName())
-                              .execute())
-                  			.map(____ -> {
-                        p.setId(id);
+                  .flatMapIterable(
+                      ___ -> {
+                        R2DBCInsertClause insert = queryFactory.insert(productL10n);
+                        return p.getLocalizations().stream()
+                            .map(
+                                l10n ->
+                                    insert
+                                        .set(productL10n.productId, id)
+                                        .set(productL10n.description, l10n.getDescription())
+                                        .set(productL10n.lang, l10n.getLang())
+                                        .set(productL10n.name, l10n.getName())
+                                        .execute())
+                            .map(
+                                ____ -> {
+                                  p.setId(id);
 
-                        return p;
+                                  return p;
+                                })
+                            .toList();
                       })
-                  			.toList();
-                  })
-                  .reduce( (a,b) -> a);
+                  .reduce((a, b) -> a);
             });
   }
 
