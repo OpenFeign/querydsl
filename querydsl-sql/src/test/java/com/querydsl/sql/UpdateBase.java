@@ -34,7 +34,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class UpdateBase extends AbstractBaseTest {
+public abstract class UpdateBase extends AbstractBaseTest {
 
   protected void reset() throws SQLException {
     delete(survey).execute();

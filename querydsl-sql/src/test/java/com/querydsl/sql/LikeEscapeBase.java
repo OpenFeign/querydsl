@@ -22,7 +22,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class LikeEscapeBase extends AbstractBaseTest {
+public abstract class LikeEscapeBase extends AbstractBaseTest {
 
   @Before
   public void setUp() throws SQLException {

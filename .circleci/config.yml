@@ -146,7 +146,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb -am -T2
+            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb,:querydsl-r2dbc -am -T2
             ./mvnw -ntp -B verify -Pexamples -rf :querydsl-examples
       - save-test-results
   buildQuarkusExample:

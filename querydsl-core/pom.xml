@@ -28,6 +28,10 @@
       <artifactId>classgraph</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-core</artifactId>
+    </dependency>
 
     <!-- alias dependencies -->
     <dependency>

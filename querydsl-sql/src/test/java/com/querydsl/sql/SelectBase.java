@@ -111,7 +111,7 @@ import org.apache.commons.compress.utils.Sets;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class SelectBase extends AbstractBaseTest {
+public abstract class SelectBase extends AbstractBaseTest {
 
   private static final Expression<?>[] NO_EXPRESSIONS = new Expression[0];
 

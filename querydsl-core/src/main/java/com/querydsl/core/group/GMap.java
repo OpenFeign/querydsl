@@ -16,7 +16,15 @@ package com.querydsl.core.group;
 import com.mysema.commons.lang.Pair;
 import java.util.*;
 
-abstract class GMap<K, V, M extends Map<K, V>> extends AbstractGroupExpression<Pair<K, V>, M> {
+/**
+ * GMap
+ *
+ * @param <K> k
+ * @param <V> v
+ * @param <M> m
+ */
+public abstract class GMap<K, V, M extends Map<K, V>>
+    extends AbstractGroupExpression<Pair<K, V>, M> {
 
   private static final long serialVersionUID = 7106389414200843920L;
 
@@ -73,7 +81,16 @@ abstract class GMap<K, V, M extends Map<K, V>> extends AbstractGroupExpression<P
     };
   }
 
-  static class Mixin<K, V, T, U, R extends Map<? super T, ? super U>>
+  /**
+   * Mixin
+   *
+   * @param <K> k
+   * @param <V> v
+   * @param <T> t
+   * @param <U> u
+   * @param <R> r
+   */
+  public static class Mixin<K, V, T, U, R extends Map<? super T, ? super U>>
       extends AbstractGroupExpression<Pair<K, V>, R> {
 
     private static final long serialVersionUID = 1939989270493531116L;
@@ -129,7 +146,7 @@ abstract class GMap<K, V, M extends Map<K, V>> extends AbstractGroupExpression<P
     private final GroupExpression<V, U> valueExpression;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    Mixin(
+    public Mixin(
         GroupExpression<K, T> keyExpression,
         GroupExpression<V, U> valueExpression,
         AbstractGroupExpression<Pair<T, U>, R> mixin) {

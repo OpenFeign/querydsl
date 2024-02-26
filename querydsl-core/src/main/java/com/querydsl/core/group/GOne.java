@@ -15,12 +15,17 @@ package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
 
-class GOne<T> extends AbstractGroupExpression<T, T> {
+/**
+ * GOne
+ *
+ * @param <T> t
+ */
+public class GOne<T> extends AbstractGroupExpression<T, T> {
 
   private static final long serialVersionUID = 3518868612387641383L;
 
   @SuppressWarnings("unchecked")
-  GOne(Expression<T> expr) {
+  public GOne(Expression<T> expr) {
     super((Class) expr.getType(), expr);
   }
 

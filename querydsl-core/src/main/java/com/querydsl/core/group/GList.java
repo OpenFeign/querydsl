@@ -17,11 +17,16 @@ import com.querydsl.core.types.Expression;
 import java.util.ArrayList;
 import java.util.List;
 
-class GList<T> extends AbstractGroupExpression<T, List<T>> {
+/**
+ * GList
+ *
+ * @param <T> t
+ */
+public class GList<T> extends AbstractGroupExpression<T, List<T>> {
 
   private static final long serialVersionUID = -5613861506383727078L;
 
-  GList(Expression<T> expr) {
+  public GList(Expression<T> expr) {
     super(List.class, expr);
   }
 

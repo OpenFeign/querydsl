@@ -16,7 +16,13 @@ package com.querydsl.core.group;
 import com.querydsl.core.types.Expression;
 import java.util.*;
 
-abstract class GSet<T, S extends Set<T>> extends AbstractGroupExpression<T, S> {
+/**
+ * GSet
+ *
+ * @param <T> t
+ * @param <S> s
+ */
+public abstract class GSet<T, S extends Set<T>> extends AbstractGroupExpression<T, S> {
 
   private static final long serialVersionUID = -1575808026237160843L;
 

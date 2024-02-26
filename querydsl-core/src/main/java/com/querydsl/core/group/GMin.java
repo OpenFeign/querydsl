@@ -15,12 +15,17 @@ package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
 
-class GMin<T extends Comparable<? super T>> extends AbstractGroupExpression<T, T> {
+/**
+ * GMin
+ *
+ * @param <T> t
+ */
+public class GMin<T extends Comparable<? super T>> extends AbstractGroupExpression<T, T> {
 
   private static final long serialVersionUID = 8312168556148122576L;
 
   @SuppressWarnings("unchecked")
-  GMin(Expression<T> expr) {
+  public GMin(Expression<T> expr) {
     super((Class) expr.getType(), expr);
   }
 

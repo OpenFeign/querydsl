@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
-public class SubqueriesBase extends AbstractBaseTest {
+public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
   @ExcludeIn({CUBRID, DERBY, FIREBIRD, H2, HSQLDB, SQLITE, SQLSERVER})

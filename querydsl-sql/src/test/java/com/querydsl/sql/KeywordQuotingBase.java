@@ -29,7 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class KeywordQuotingBase extends AbstractBaseTest {
+public abstract class KeywordQuotingBase extends AbstractBaseTest {
 
   private static Splitter COMMA = Splitter.on(',');
 

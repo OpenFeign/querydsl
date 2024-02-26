@@ -33,7 +33,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MergeBase extends AbstractBaseTest {
+public abstract class MergeBase extends AbstractBaseTest {
 
   private void reset() throws SQLException {
     delete(survey).execute();

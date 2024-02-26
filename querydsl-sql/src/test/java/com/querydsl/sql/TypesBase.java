@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.Test;
 
-public class TypesBase extends AbstractBaseTest {
+public abstract class TypesBase extends AbstractBaseTest {
 
   @Test
   public void create_tables() {

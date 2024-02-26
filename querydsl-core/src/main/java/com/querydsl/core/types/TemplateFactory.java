@@ -59,7 +59,6 @@ public class TemplateFactory {
               + "\\}");
 
   private final Map<String, Template> cache = Collections.synchronizedMap(new WeakHashMap<>());
-  ;
 
   private final char escape;
 

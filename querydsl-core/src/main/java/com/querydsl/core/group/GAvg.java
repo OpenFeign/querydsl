@@ -18,14 +18,19 @@ import com.querydsl.core.util.MathUtils;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
+/**
+ * GAvg
+ *
+ * @param <T> t
+ */
 @SuppressWarnings("unchecked")
-class GAvg<T extends Number> extends AbstractGroupExpression<T, T> {
+public class GAvg<T extends Number> extends AbstractGroupExpression<T, T> {
 
   private static final long serialVersionUID = 3518868612387641383L;
 
   private final MathContext mathContext;
 
-  GAvg(Expression<T> expr) {
+  public GAvg(Expression<T> expr) {
     this(expr, MathContext.DECIMAL128);
   }
 

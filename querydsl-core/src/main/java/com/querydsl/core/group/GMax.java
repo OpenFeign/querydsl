@@ -15,12 +15,17 @@ package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
 
-class GMax<T extends Comparable<? super T>> extends AbstractGroupExpression<T, T> {
+/**
+ * GMax
+ *
+ * @param <T> t
+ */
+public class GMax<T extends Comparable<? super T>> extends AbstractGroupExpression<T, T> {
 
   private static final long serialVersionUID = 3815394663181131511L;
 
   @SuppressWarnings("unchecked")
-  GMax(Expression<T> expr) {
+  public GMax(Expression<T> expr) {
     super((Class) expr.getType(), expr);
   }
 

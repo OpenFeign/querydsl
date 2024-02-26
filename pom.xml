@@ -79,6 +79,7 @@
     <module>querydsl-sql-spatial</module>
     <module>querydsl-sql-codegen</module>
     <module>querydsl-sql-spring</module>
+    <module>querydsl-r2dbc</module>
 
     <module>querydsl-jpa</module>
     <module>querydsl-jpa-codegen</module>
@@ -154,6 +155,8 @@
     <teradata.version>13.10.00.35</teradata.version>
     <firebird.version>5.0.3.java11</firebird.version>
     <mongodb.version>3.12.14</mongodb.version>
+
+    <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
     <!-- JPA deps -->
     <hibernate.version>6.4.4.Final</hibernate.version>
@@ -289,6 +292,13 @@
         <groupId>org.ow2.asm</groupId>
         <artifactId>asm-bom</artifactId>
         <version>9.6</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.projectreactor</groupId>
+        <artifactId>reactor-bom</artifactId>
+        <version>2023.0.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 
-public class SelectWindowFunctionsBase extends AbstractBaseTest {
+public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
 
   @Test
   @ExcludeIn(SQLSERVER) // FIXME

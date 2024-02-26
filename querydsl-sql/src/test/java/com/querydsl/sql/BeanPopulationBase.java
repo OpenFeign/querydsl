@@ -24,7 +24,7 @@ import org.junit.After;
 import org.junit.Test;
 
 @ExcludeIn({CUBRID, DB2, DERBY, ORACLE, SQLSERVER, POSTGRESQL, SQLITE, TERADATA})
-public class BeanPopulationBase extends AbstractBaseTest {
+public abstract class BeanPopulationBase extends AbstractBaseTest {
 
   private final QEmployee e = new QEmployee("e");
 

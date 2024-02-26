@@ -22,7 +22,7 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class UnionBase extends AbstractBaseTest {
+public abstract class UnionBase extends AbstractBaseTest {
 
   @SuppressWarnings("unchecked")
   @Test

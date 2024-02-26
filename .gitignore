@@ -22,6 +22,7 @@ derby.log
 /devops/test-connection/.lein-repl-history
 **/.flattened-pom.xml
 
+.java-version
 .gitignore
 .checkstyle
 

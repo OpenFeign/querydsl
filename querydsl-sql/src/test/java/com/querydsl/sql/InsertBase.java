@@ -43,7 +43,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class InsertBase extends AbstractBaseTest {
+public abstract class InsertBase extends AbstractBaseTest {
 
   private void reset() throws SQLException {
     delete(survey).execute();

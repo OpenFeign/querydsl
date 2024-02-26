@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class SelectOracleBase extends AbstractBaseTest {
+public abstract class SelectOracleBase extends AbstractBaseTest {
 
   private static final Logger logger = Logger.getLogger(AbstractSQLQuery.class.getName());
 
