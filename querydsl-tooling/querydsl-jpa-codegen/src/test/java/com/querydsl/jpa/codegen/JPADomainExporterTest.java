@@ -57,7 +57,8 @@ public class JPADomainExporterTest {
   private File file;
   private Path outputFolder;
   private File origRoot =
-      new File("../querydsl-jpa/target/generated-test-sources/test-annotations");
+      new File(
+          "../../querydsl-libraries/querydsl-jpa/target/generated-test-sources/test-annotations");
 
   public JPADomainExporterTest(Path outputFolder, File file) {
     this.file = file;

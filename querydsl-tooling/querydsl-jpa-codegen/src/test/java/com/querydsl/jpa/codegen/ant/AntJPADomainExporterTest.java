@@ -31,7 +31,9 @@ public class AntJPADomainExporterTest {
     exporter.setPersistenceUnitName("h2");
     exporter.execute();
 
-    File origRoot = new File("../querydsl-jpa/target/generated-test-sources/test-annotations");
+    File origRoot =
+        new File(
+            "../../querydsl-libraries/querydsl-jpa/target/generated-test-sources/test-annotations");
     Set<File> files = exporter.getGeneratedFiles();
     assertThat(files).isNotEmpty();
     for (File file : files) {
