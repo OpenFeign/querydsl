@@ -65,43 +65,8 @@
   </contributors>
 
   <modules>
-    <module>querydsl-core</module>
-    <module>querydsl-spatial</module>
-
-    <module>querydsl-codegen</module>
-    <module>querydsl-codegen-utils</module>
-    <module>querydsl-apt</module>
-    <module>querydsl-maven-plugin</module>
-
-    <module>querydsl-collections</module>
-    <module>querydsl-guava</module>
-    <module>querydsl-sql</module>
-    <module>querydsl-sql-spatial</module>
-    <module>querydsl-sql-codegen</module>
-    <module>querydsl-sql-spring</module>
-    <module>querydsl-r2dbc</module>
-
-    <module>querydsl-jpa</module>
-    <module>querydsl-jpa-codegen</module>
-    <module>querydsl-jpa-spring</module>
-    <!-- datanucleus core seems to be incompatible with modern java: Unsupported class file major version 65 -->
-    <!--<module>querydsl-jdo</module>-->
-    <module>querydsl-kotlin-codegen</module>
-
-    <!-- Lucene related -->
-    <!-- serious modernization effort needed here
-    <module>querydsl-lucene3</module>
-    <module>querydsl-lucene4</module>
-    <module>querydsl-lucene5</module>
-    <module>querydsl-hibernate-search</module> -->
-
-    <!-- NoSQL -->
-    <module>querydsl-mongodb</module>
-
-    <!-- Languages -->
-    <module>querydsl-scala</module>
-    <module>querydsl-kotlin</module>
-
+    <module>querydsl-tooling</module>
+    <module>querydsl-libraries</module>
   </modules>
 
   <scm>
@@ -206,11 +171,6 @@
         <scope>provided</scope>
       </dependency>
       <dependency>
-        <groupId>jakarta.persistence</groupId>
-        <artifactId>jakarta.persistence-api</artifactId>
-        <version>${jpa.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>javax.jdo</artifactId>
         <version>${jdo.version}</version>
@@ -226,16 +186,6 @@
         <version>${h2.version}</version>
       </dependency>
       <dependency>
-        <groupId>jakarta.validation</groupId>
-        <artifactId>jakarta.validation-api</artifactId>
-        <version>3.0.2</version>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.activation</groupId>
-        <artifactId>jakarta.activation-api</artifactId>
-        <version>2.1.2</version>
-      </dependency>
-      <dependency>
         <groupId>org.eclipse.jdt</groupId>
         <artifactId>ecj</artifactId>
         <version>${ecj.version}</version>
@@ -244,6 +194,7 @@
         <groupId>io.github.classgraph</groupId>
         <artifactId>classgraph</artifactId>
         <version>4.8.165</version>
+        <scope>test</scope>
         <exclusions>
           <exclusion>
             <groupId>org.javassist</groupId>
@@ -294,6 +245,32 @@
         <version>9.6</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
+        <version>${jpa.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.annotation</groupId>
+        <artifactId>jakarta.annotation-api</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.validation</groupId>
+        <artifactId>jakarta.validation-api</artifactId>
+        <version>3.0.2</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.activation</groupId>
+        <artifactId>jakarta.activation-api</artifactId>
+        <version>2.1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.inject</groupId>
+        <artifactId>jakarta.inject-api</artifactId>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>io.projectreactor</groupId>
@@ -451,59 +428,6 @@
             <configuration>
               <rules>
                 <dependencyConvergence></dependencyConvergence>
-              </rules>
-            </configuration>
-          </execution>
-          <execution>
-            <id>enforce-banned-dependencies</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <phase>validate</phase>
-            <configuration>
-              <rules>
-                <bannedDependencies>
-                  <excludes>
-                    <!-- Jetbrains Annotations should be in provided scope -->
-                    <exclude>org.jetbrains:annotations:*:*:compile</exclude>
-                    <!-- JSR-305 annotations should not be used, instead use Jetbrains Annotations -->
-                    <exclude>com.google.code.findbugs:jsr305:*:*:compile</exclude>
-                    <!-- The following API's should be optionally provided and declare provided scope -->
-                    <exclude>org.hibernate:hibernate-core:*:*:compile</exclude>
-                    <exclude>org.hibernate:hibernate-envers:*:*:compile</exclude>
-                    <exclude>org.hibernate.validator:hibernate-validator:*:*:compile</exclude>
-                    <exclude>org.eclipse.persistence:eclipselink:*:*:compile</exclude>
-                    <exclude>javax.transaction:jta:*:*:compile</exclude>
-                    <exclude>org.datanucleus:javax.jdo:*:*:compile</exclude>
-                    <exclude>org.springframework.roo:org.springframework.roo.annotations:*:*:compile</exclude>
-                    <exclude>org.mongodb.morphia:morphia:*:*:compile</exclude>
-                    <exclude>org.joda:joda-money:*:*:compile</exclude>
-                    <exclude>javax.el:javax.el-api:*:*:compile</exclude>
-                    <exclude>javax.persistence:javax.persistence-api:*:*:compile</exclude>
-                    <exclude>javax.annotation:javax.annotation-api:*:*:compile</exclude>
-                    <exclude>javax.inject:javax.inject:*:*:compile</exclude>
-                    <exclude>org.batoo.jpa:batoo-jpa:*:*:compile</exclude>
-                    <!-- The following database drivers should be in test scope -->
-                    <exclude>org.hsqldb:hsqldb:*:*:compile</exclude>
-                    <exclude>com.h2database:h2:*:*:compile</exclude>
-                    <exclude>org.apche.derby:derby:*:*:compile</exclude>
-                    <exclude>mysql:mysql-connector-java:*:*:compile</exclude>
-                    <exclude>com.microsoft.sqlserver:mssql-jdbc:*:*:compile</exclude>
-                    <exclude>com.oracle:ojdbc8:*:*:compile</exclude>
-                    <exclude>org.postgresql:postgresql:*:*:compile</exclude>
-                    <exclude>cubrid:cubrid-jdbc:*:*:compile</exclude>
-                    <exclude>org.firebirdsql.jdbc:jaybird:*:*:compile</exclude>
-                    <exclude>org.xerial:sqlite-jdbc:*:*:compile</exclude>
-                    <!-- hibernate-entitymanager is a legacy artefact and should not be used anymore -->
-                    <exclude>org.hibernate:hibernate-entitymanager</exclude>
-                    <!-- We favor JUL over Slf4j -->
-                    <exclude>org.slf4j:slf4j-api:*:*:compile</exclude>
-                    <exclude>org.slf4j:slf4j-log4j12:*:*:compile</exclude>
-                    <exclude>junit:junit:*:*:*</exclude>
-                    <exclude>cglib:cglib:*:*:*</exclude>
-                  </excludes>
-                  <searchTransitive>false</searchTransitive>
-                </bannedDependencies>
               </rules>
             </configuration>
           </execution>
