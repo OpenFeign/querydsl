@@ -28,18 +28,6 @@
       <artifactId>guice-persist</artifactId>
       <version>${guice.version}</version>
     </dependency>
-    <dependency>
-      <groupId>javax.transaction</groupId>
-      <artifactId>jta</artifactId>
-      <version>1.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.el</groupId>
-      <artifactId>javax.el-api</artifactId>
-      <version>3.0.0</version>
-      <scope>provided</scope>
-    </dependency>
 
     <!-- persistence -->
     <dependency>
