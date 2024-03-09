@@ -16,7 +16,7 @@ package com.querydsl.r2dbc;
 import static com.querydsl.core.Target.*;
 import static com.querydsl.r2dbc.Constants.survey;
 import static com.querydsl.r2dbc.Constants.survey2;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.QueryException;
 import com.querydsl.core.QueryFlag.Position;
@@ -79,12 +79,12 @@ public abstract class InsertBase extends AbstractBaseTest {
                 dateTimeProperty)
             .fetchFirst()
             .block();
-    assertEquals(Integer.valueOf(1978), result.get(0, Integer.class));
-    assertEquals(Integer.valueOf(1), result.get(1, Integer.class));
-    assertEquals(Integer.valueOf(2), result.get(2, Integer.class));
+    assertThat(result.get(0, Integer.class)).isEqualTo(Integer.valueOf(1978));
+    assertThat(result.get(1, Integer.class)).isEqualTo(Integer.valueOf(1));
+    assertThat(result.get(2, Integer.class)).isEqualTo(Integer.valueOf(2));
 
     LocalDateTime dateTime = result.get(dateTimeProperty);
-    assertEquals(localDate.atStartOfDay(), dateTime);
+    assertThat(dateTime).isEqualTo(localDate.atStartOfDay());
   }
 
   @Test
@@ -103,46 +103,48 @@ public abstract class InsertBase extends AbstractBaseTest {
             .innerJoin(emp2)
             .on(emp1.superiorId.eq(emp2.superiorId), emp1.firstname.eq(emp2.firstname)));
 
-    assertEquals(0, (long) insert.execute().block());
+    assertThat((long) insert.execute().block()).isEqualTo(0);
   }
 
   @Test
   public void insert_alternative_syntax() {
     // with columns
-    assertEquals(
-        1, (long) insert(survey).set(survey.id, 3).set(survey.name, "Hello").execute().block());
+    assertThat((long) insert(survey).set(survey.id, 3).set(survey.name, "Hello").execute().block())
+        .isEqualTo(1);
   }
 
   @Test
   public void insert_null_with_columns() {
-    assertEquals(
-        1, (long) insert(survey).columns(survey.id, survey.name).values(3, null).execute().block());
+    assertThat(
+            (long) insert(survey).columns(survey.id, survey.name).values(3, null).execute().block())
+        .isEqualTo(1);
   }
 
   @Test
   @ExcludeIn({DB2, DERBY})
   public void insert_null_without_columns() {
-    assertEquals(1, (long) insert(survey).values(4, null, null).execute().block());
+    assertThat((long) insert(survey).values(4, null, null).execute().block()).isEqualTo(1);
   }
 
   @Test
   @ExcludeIn({FIREBIRD, HSQLDB, DB2, DERBY, ORACLE})
   public void insert_without_values() {
-    assertEquals(1, (long) insert(survey).execute().block());
+    assertThat((long) insert(survey).execute().block()).isEqualTo(1);
   }
 
   @Test
   public void insert_with_columns() {
-    assertEquals(
-        1,
-        (long) insert(survey).columns(survey.id, survey.name).values(3, "Hello").execute().block());
+    assertThat(
+            (long)
+                insert(survey).columns(survey.id, survey.name).values(3, "Hello").execute().block())
+        .isEqualTo(1);
   }
 
   @Test
   @ExcludeIn({CUBRID, SQLSERVER})
   public void insert_with_keys() {
     Integer key = insert(survey).set(survey.name, "Hello World").executeWithKey(survey.id).block();
-    assertTrue(key != null);
+    assertThat(key != null).isTrue();
   }
 
   @Test
@@ -150,13 +152,13 @@ public abstract class InsertBase extends AbstractBaseTest {
   public void insert_with_keys_listener() {
     R2DBCInsertClause clause = insert(survey).set(survey.name, "Hello World");
     Integer key = clause.executeWithKey(survey.id).block();
-    assertTrue(key != null);
+    assertThat(key != null).isTrue();
   }
 
   @Test
   @ExcludeIn({CUBRID, SQLSERVER})
   public void insert_with_keys_Projected() {
-    assertNotNull(insert(survey).set(survey.name, "Hello you").executeWithKey(survey.id));
+    assertThat(insert(survey).set(survey.name, "Hello you").executeWithKey(survey.id)).isNotNull();
   }
 
   @Test
@@ -164,7 +166,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   public void insert_with_keys_Projected2() {
     Path<Object> idPath = ExpressionUtils.path(Object.class, "id");
     Object id = insert(survey).set(survey.name, "Hello you").executeWithKey(idPath);
-    assertNotNull(id);
+    assertThat(id).isNotNull();
   }
 
   @Test(expected = QueryException.class)
@@ -177,7 +179,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
       R2DBCInsertClause insert = new R2DBCInsertClause(connection, configuration, survey);
       Object id = insert.set(survey.name, "Hello you").executeWithKey(survey.id);
-      assertNotNull(id);
+      assertThat(id).isNotNull();
     } finally {
       configuration.registerColumnOverride(
           survey.getSchemaName(), survey.getTableName(), originalColumnName, originalColumnName);
@@ -188,9 +190,10 @@ public abstract class InsertBase extends AbstractBaseTest {
 
   @Test
   public void insert_with_set() {
-    assertEquals(
-        1,
-        (long) insert(survey).set(survey.id, 5).set(survey.name, (String) null).execute().block());
+    assertThat(
+            (long)
+                insert(survey).set(survey.id, 5).set(survey.name, (String) null).execute().block())
+        .isEqualTo(1);
   }
 
   @Test
@@ -201,21 +204,21 @@ public abstract class InsertBase extends AbstractBaseTest {
 
     clause.addFlag(Position.START_OVERRIDE, "insert ignore into ");
 
-    assertEquals("insert ignore into SURVEY (ID, NAME) values (?, ?)", clause.toString());
-    assertEquals(1, (long) clause.execute().block());
+    assertThat(clause.toString()).isEqualTo("insert ignore into SURVEY (ID, NAME) values (?, ?)");
+    assertThat((long) clause.execute().block()).isEqualTo(1);
   }
 
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery() {
     Long count = query().from(survey).fetchCount().block();
-    assertEquals(
-        count,
-        insert(survey)
-            .columns(survey.id, survey.name)
-            .select(query().from(survey2).select(survey2.id.add(20), survey2.name))
-            .execute()
-            .block());
+    assertThat(
+            insert(survey)
+                .columns(survey.id, survey.name)
+                .select(query().from(survey2).select(survey2.id.add(20), survey2.name))
+                .execute()
+                .block())
+        .isEqualTo(count);
   }
 
   @Test
@@ -230,11 +233,12 @@ public abstract class InsertBase extends AbstractBaseTest {
         query()
             .where(query().from(survey2).where(survey2.name.eq("MyModule")).notExists())
             .select(Expressions.constant("MyModule"));
-    assertEquals(
-        1, (long) insert(survey).set(survey.name, select.fetchFirst().block()).execute().block());
+    assertThat(
+            (long) insert(survey).set(survey.name, select.fetchFirst().block()).execute().block())
+        .isEqualTo(1);
 
-    assertEquals(
-        1L, (long) query().from(survey).where(survey.name.eq("MyModule")).fetchCount().block());
+    assertThat((long) query().from(survey).where(survey.name.eq("MyModule")).fetchCount().block())
+        .isEqualTo(1L);
   }
 
   @Test
@@ -245,21 +249,24 @@ public abstract class InsertBase extends AbstractBaseTest {
     //        where not exists
     //        (select 1 from modules where modules.name = 'MyModule')
 
-    assertEquals(
-        1,
-        (long)
-            insert(survey)
-                .columns(survey.name)
-                .select(
-                    query()
-                        .where(
-                            query().from(survey2).where(survey2.name.eq("MyModule2")).notExists())
-                        .select(Expressions.constant("MyModule2")))
-                .execute()
-                .block());
+    assertThat(
+            (long)
+                insert(survey)
+                    .columns(survey.name)
+                    .select(
+                        query()
+                            .where(
+                                query()
+                                    .from(survey2)
+                                    .where(survey2.name.eq("MyModule2"))
+                                    .notExists())
+                            .select(Expressions.constant("MyModule2")))
+                    .execute()
+                    .block())
+        .isEqualTo(1);
 
-    assertEquals(
-        1L, (long) query().from(survey).where(survey.name.eq("MyModule2")).fetchCount().block());
+    assertThat((long) query().from(survey).where(survey.name.eq("MyModule2")).fetchCount().block())
+        .isEqualTo(1L);
   }
 
   @Test
@@ -270,14 +277,14 @@ public abstract class InsertBase extends AbstractBaseTest {
     sq.set(param, 20);
 
     long count = query().from(survey).fetchCount().block();
-    assertEquals(
-        count,
-        (long)
-            insert(survey)
-                .columns(survey.id, survey.name)
-                .select(sq.select(survey2.id.add(param), survey2.name))
-                .execute()
-                .block());
+    assertThat(
+            (long)
+                insert(survey)
+                    .columns(survey.id, survey.name)
+                    .select(sq.select(survey2.id.add(param), survey2.name))
+                    .execute()
+                    .block())
+        .isEqualTo(count);
   }
 
   @Test
@@ -287,34 +294,37 @@ public abstract class InsertBase extends AbstractBaseTest {
     R2DBCInsertClause insert = insert(survey, query().from(survey2));
     insert.set(survey.id, survey2.id.add(20));
     insert.set(survey.name, survey2.name);
-    assertEquals(count, (long) insert.execute().block());
+    assertThat((long) insert.execute().block()).isEqualTo(count);
   }
 
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Without_Columns() {
     long count = query().from(survey).fetchCount().block();
-    assertEquals(
-        count,
-        (long)
-            insert(survey)
-                .select(
-                    query().from(survey2).select(survey2.id.add(10), survey2.name, survey2.name2))
-                .execute()
-                .block());
+    assertThat(
+            (long)
+                insert(survey)
+                    .select(
+                        query()
+                            .from(survey2)
+                            .select(survey2.id.add(10), survey2.name, survey2.name2))
+                    .execute()
+                    .block())
+        .isEqualTo(count);
   }
 
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_without_columns() {
-    assertEquals(1, (long) insert(survey).values(4, "Hello", "World").execute().block());
+    assertThat((long) insert(survey).values(4, "Hello", "World").execute().block()).isEqualTo(1);
   }
 
   @Test
   public void like() {
     insert(survey).values(11, "Hello World", "a\\b").execute().block();
-    assertEquals(
-        1L, (long) query().from(survey).where(survey.name2.contains("a\\b")).fetchCount().block());
+    assertThat(
+            (long) query().from(survey).where(survey.name2.contains("a\\b")).fetchCount().block())
+        .isEqualTo(1L);
   }
 
   @Test
@@ -325,7 +335,7 @@ public abstract class InsertBase extends AbstractBaseTest {
     QUuids uuids = QUuids.uuids;
     UUID uuid = UUID.randomUUID();
     insert(uuids).set(uuids.field, uuid).execute().block();
-    assertEquals(uuid, query().from(uuids).select(uuids.field).fetchFirst().block());
+    assertThat(query().from(uuids).select(uuids.field).fetchFirst().block()).isEqualTo(uuid);
   }
 
   @Test
@@ -337,6 +347,6 @@ public abstract class InsertBase extends AbstractBaseTest {
     QXmlTest xmlTest = QXmlTest.xmlTest;
     String contents = "<html><head>a</head><body>b</body></html>";
     insert(xmlTest).set(xmlTest.col, contents).execute().block();
-    assertEquals(contents, query().from(xmlTest).select(xmlTest.col).fetchFirst().block());
+    assertThat(query().from(xmlTest).select(xmlTest.col).fetchFirst().block()).isEqualTo(contents);
   }
 }

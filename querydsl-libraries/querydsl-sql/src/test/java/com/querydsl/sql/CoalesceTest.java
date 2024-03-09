@@ -1,6 +1,6 @@
 package com.querydsl.sql;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Coalesce;
 import org.junit.Test;

@@ -15,7 +15,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.sql.SQLExpressions.select;
 import static com.querydsl.sql.SQLExpressions.union;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
@@ -57,9 +57,9 @@ public class SQLSubQueryTest {
         select(employee.id, Expressions.constant("XXX"), employee.firstname).from(employee);
     List<? extends Expression<?>> exprs =
         ((FactoryExpression) subQuery.getMetadata().getProjection()).getArgs();
-    assertEquals(employee.id, exprs.getFirst());
-    assertEquals(ConstantImpl.create("XXX"), exprs.get(1));
-    assertEquals(employee.firstname, exprs.get(2));
+    assertThat(exprs.getFirst()).isEqualTo(employee.id);
+    assertThat(exprs.get(1)).isEqualTo(ConstantImpl.create("XXX"));
+    assertThat(exprs.get(2)).isEqualTo(employee.firstname);
   }
 
   @Test
@@ -71,14 +71,14 @@ public class SQLSubQueryTest {
     SQLSerializer serializer = new SQLSerializer(new Configuration(SQLTemplates.DEFAULT));
     serializer.handle(expr);
 
-    assertEquals(
-        """
+    assertThat(serializer.toString())
+        .isEqualTo(
+            """
         (select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID, employee2.ID as col__ID7
         from EMPLOYEE EMPLOYEE
         inner join EMPLOYEE employee2
         on EMPLOYEE.SUPERIOR_ID = employee2.ID)\
-        """,
-        serializer.toString());
+        """);
   }
 
   @Test
@@ -110,9 +110,9 @@ public class SQLSubQueryTest {
         select(employee.id, Expressions.constant("XXX"), employee.firstname).from(employee);
     List<? extends Expression<?>> exprs =
         ((FactoryExpression) subQuery.getMetadata().getProjection()).getArgs();
-    assertEquals(employee.id, exprs.getFirst());
-    assertEquals(ConstantImpl.create("XXX"), exprs.get(1));
-    assertEquals(employee.firstname, exprs.get(2));
+    assertThat(exprs.getFirst()).isEqualTo(employee.id);
+    assertThat(exprs.get(1)).isEqualTo(ConstantImpl.create("XXX"));
+    assertThat(exprs.get(2)).isEqualTo(employee.firstname);
   }
 
   @Test
@@ -129,7 +129,7 @@ public class SQLSubQueryTest {
             .innerJoin(emp2)
             .on(emp1.superiorId.eq(emp2.superiorId), emp1.firstname.eq(emp2.firstname));
 
-    assertEquals(3, subQuery.getMetadata().getJoins().size());
+    assertThat(subQuery.getMetadata().getJoins()).hasSize(3);
   }
 
   @Test
@@ -178,8 +178,9 @@ public class SQLSubQueryTest {
     query.with(survey1, select(survey1.all()).from(survey1));
     query.union(select(survey2.all()).from(survey2), select(survey3.all()).from(survey3));
 
-    assertEquals(
-        """
+    assertThat(query.toString())
+        .isEqualTo(
+            """
         with survey1 as (select survey1.NAME, survey1.NAME2, survey1.ID
         from SURVEY survey1)
         (select survey2.NAME, survey2.NAME2, survey2.ID
@@ -187,7 +188,6 @@ public class SQLSubQueryTest {
         union
         (select survey3.NAME, survey3.NAME2, survey3.ID
         from SURVEY survey3)\
-        """,
-        query.toString());
+        """);
   }
 }

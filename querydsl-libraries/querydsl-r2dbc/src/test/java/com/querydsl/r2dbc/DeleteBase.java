@@ -15,7 +15,7 @@ package com.querydsl.r2dbc;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.r2dbc.Constants.survey;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
@@ -48,8 +48,8 @@ public abstract class DeleteBase extends AbstractBaseTest {
   @ExcludeIn(MYSQL)
   public void delete() {
     Long count = query().from(survey).fetchCount().block();
-    assertEquals(0, (long) delete(survey).where(survey.name.eq("XXX")).execute().block());
-    assertEquals(count, delete(survey).execute().block());
+    assertThat((long) delete(survey).where(survey.name.eq("XXX")).execute().block()).isEqualTo(0);
+    assertThat(delete(survey).execute().block()).isEqualTo(count);
   }
 
   @Test
@@ -59,7 +59,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
     insert(survey).values(3, "B", "C").execute().block();
     insert(survey).values(4, "D", "E").execute().block();
 
-    assertEquals(2, (long) delete(survey).limit(2).execute().block());
+    assertThat((long) delete(survey).limit(2).execute().block()).isEqualTo(2);
   }
 
   @Test
@@ -69,7 +69,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
     R2DBCDeleteClause delete = delete(survey1);
     delete.where(
         survey1.name.eq("XXX"), query().from(employee).where(survey1.id.eq(employee.id)).exists());
-    assertEquals(0, (long) delete.execute().block());
+    assertThat((long) delete.execute().block()).isEqualTo(0);
   }
 
   @Test
@@ -83,7 +83,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
 
     R2DBCDeleteClause delete = delete(survey1);
     delete.where(survey1.name.eq("XXX"), sq.exists());
-    assertEquals(0, (long) delete.execute().block());
+    assertThat((long) delete.execute().block()).isEqualTo(0);
   }
 
   @Test
@@ -94,6 +94,6 @@ public abstract class DeleteBase extends AbstractBaseTest {
     delete.where(
         survey1.name.eq("XXX"),
         query().from(employee).where(survey1.name.eq(employee.lastname)).exists());
-    assertEquals(0, (long) delete.execute().block());
+    assertThat((long) delete.execute().block()).isEqualTo(0);
   }
 }

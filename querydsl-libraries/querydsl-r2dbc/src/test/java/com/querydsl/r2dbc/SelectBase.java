@@ -16,7 +16,9 @@ package com.querydsl.r2dbc;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.r2dbc.Constants.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.common.collect.Maps;
 import com.mysema.commons.lang.Pair;
@@ -35,7 +37,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -242,7 +243,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Ignore("currently not supported by drivers")
   public void array_null() {
     Expression<Integer[]> expr = Expressions.template(Integer[].class, "null");
-    assertNull(firstResult(expr));
+    assertThat(firstResult(expr)).isNull();
   }
 
   @Test
@@ -254,9 +255,9 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (String[] result : results) {
-      assertNotNull(result[0]);
+      assertThat(result[0]).isNotNull();
     }
   }
 
@@ -269,7 +270,7 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertFalse(rows.isEmpty());
+    assertThat(rows).isNotEmpty();
     for (Beans row : rows) {
       assertEquals(Employee.class, row.get(employee).getClass());
       assertEquals(Employee.class, row.get(employee2).getClass());
@@ -294,23 +295,25 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({ORACLE, CUBRID, FIREBIRD, DB2, DERBY, SQLSERVER, SQLITE, TERADATA})
   public void boolean_all() {
-    assertTrue(
-        query()
-            .from(employee)
-            .select(R2DBCExpressions.all(employee.firstname.isNotNull()))
-            .fetchOne()
-            .block());
+    assertThat(
+            query()
+                .from(employee)
+                .select(R2DBCExpressions.all(employee.firstname.isNotNull()))
+                .fetchOne()
+                .block())
+        .isTrue();
   }
 
   @Test
   @ExcludeIn({ORACLE, CUBRID, FIREBIRD, DB2, DERBY, SQLSERVER, SQLITE, TERADATA})
   public void boolean_any() {
-    assertTrue(
-        query()
-            .from(employee)
-            .select(R2DBCExpressions.any(employee.firstname.isNotNull()))
-            .fetchOne()
-            .block());
+    assertThat(
+            query()
+                .from(employee)
+                .select(R2DBCExpressions.any(employee.firstname.isNotNull()))
+                .fetchOne()
+                .block())
+        .isTrue();
   }
 
   @Test
@@ -440,9 +443,9 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block()) {
-      assertNotNull(idAndName);
-      assertNotNull(idAndName.getId());
-      assertNotNull(idAndName.getName());
+      assertThat(idAndName).isNotNull();
+      assertThat(idAndName.getId()).isNotNull();
+      assertThat(idAndName.getName()).isNotNull();
     }
   }
 
@@ -457,9 +460,9 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertFalse(projections.isEmpty());
+    assertThat(projections).isNotEmpty();
     for (SimpleProjection projection : projections) {
-      assertNotNull(projection);
+      assertThat(projection).isNotNull();
     }
   }
 
@@ -533,12 +536,12 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertFalse(tuples.isEmpty());
+    assertThat(tuples).isNotEmpty();
     for (Projection tuple : tuples) {
-      assertNotNull(tuple.get(employee.firstname));
-      assertNotNull(tuple.get(employee.lastname));
-      assertNotNull(tuple.getExpr(employee.firstname));
-      assertNotNull(tuple.getExpr(employee.lastname));
+      assertThat(tuple.get(employee.firstname)).isNotNull();
+      assertThat(tuple.get(employee.lastname)).isNotNull();
+      assertThat(tuple.getExpr(employee.firstname)).isNotNull();
+      assertThat(tuple.getExpr(employee.lastname)).isNotNull();
     }
   }
 
@@ -608,7 +611,7 @@ public abstract class SelectBase extends AbstractBaseTest {
                 + " != "
                 + entry.getValue());
       }
-      Assert.fail("Failed with " + failures);
+      fail("", "Failed with " + failures);
     }
   }
 
@@ -657,9 +660,9 @@ public abstract class SelectBase extends AbstractBaseTest {
         query.select(R2DBCExpressions.addMonths(employee.datefield, 1)).fetchFirst().block();
     Date date4 = query.select(R2DBCExpressions.addDays(employee.datefield, 1)).fetchFirst().block();
 
-    assertTrue(date2.getTime() > date1.getTime());
-    assertTrue(date3.getTime() > date1.getTime());
-    assertTrue(date4.getTime() > date1.getTime());
+    assertThat(date2.getTime() > date1.getTime()).isTrue();
+    assertThat(date3.getTime() > date1.getTime()).isTrue();
+    assertThat(date4.getTime() > date1.getTime()).isTrue();
   }
 
   @Test
@@ -676,7 +679,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     add(exprs, R2DBCExpressions.addSeconds(dt, 1), TERADATA);
 
     for (Expression<?> expr : exprs) {
-      assertNotNull(firstResult(expr));
+      assertThat(firstResult(expr)).isNotNull();
     }
   }
 
@@ -952,8 +955,8 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void factoryExpression_in_groupBy() {
     Expression<Employee> empBean =
         Projections.bean(Employee.class, employee.id, employee.superiorId);
-    assertTrue(
-        query().from(employee).groupBy(empBean).select(empBean).fetchFirst().block() != null);
+    assertThat(query().from(employee).groupBy(empBean).select(empBean).fetchFirst().block() != null)
+        .isTrue();
   }
 
   @Test
@@ -1173,7 +1176,7 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block()) {
-      assertNotNull(name);
+      assertThat(name).isNotNull();
     }
   }
 
@@ -1189,8 +1192,8 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block()) {
-      assertNotNull(row.get(employee.id));
-      assertNotNull(row.get(employee2.id));
+      assertThat(row.get(employee.id)).isNotNull();
+      assertThat(row.get(employee2.id)).isNotNull();
     }
   }
 
@@ -1236,18 +1239,19 @@ public abstract class SelectBase extends AbstractBaseTest {
     List<String> strs = Arrays.asList("%a", "a%", "%a%", "_a", "a_", "_a_", "[C-P]arsen", "a\nb");
 
     for (String str : strs) {
-      assertTrue(
-          str,
-          query()
-                  .from(employee)
-                  .where(
-                      Expressions.predicate(
-                          Ops.STRING_CONTAINS,
-                          Expressions.constant(str),
-                          Expressions.constant(str)))
-                  .fetchCount()
-                  .block()
-              > 0);
+      assertThat(
+              query()
+                      .from(employee)
+                      .where(
+                          Expressions.predicate(
+                              Ops.STRING_CONTAINS,
+                              Expressions.constant(str),
+                              Expressions.constant(str)))
+                      .fetchCount()
+                      .block()
+                  > 0)
+          .as(str)
+          .isTrue();
     }
   }
 
@@ -1388,8 +1392,8 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertEquals(2L, firstResult(ConstantImpl.create(2L)).longValue());
     assertEquals(3.0, firstResult(ConstantImpl.create(3.0)), 0.001);
     assertEquals(4.0f, firstResult(ConstantImpl.create(4.0f)), 0.001);
-    assertEquals(true, firstResult(ConstantImpl.create(true)));
-    assertEquals(false, firstResult(ConstantImpl.create(false)));
+    assertThat(firstResult(ConstantImpl.create(true))).isTrue();
+    assertThat(firstResult(ConstantImpl.create(false))).isFalse();
     assertEquals("abc", firstResult(ConstantImpl.create("abc")));
     assertEquals("'", firstResult(ConstantImpl.create("'")));
     assertEquals("\"", firstResult(ConstantImpl.create("\"")));
@@ -1445,8 +1449,8 @@ public abstract class SelectBase extends AbstractBaseTest {
             .block();
 
     for (Pair<String, String> pair : pairs) {
-      assertNotNull(pair.getFirst());
-      assertNotNull(pair.getSecond());
+      assertThat(pair.getFirst()).isNotNull();
+      assertThat(pair.getSecond()).isNotNull();
     }
   }
 
@@ -1515,7 +1519,7 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertFalse(tuples.isEmpty());
+    assertThat(tuples).isNotEmpty();
     for (Tuple tuple : tuples) {
       String firstName = tuple.get(employee.firstname);
       String lastName = tuple.get(employee.lastname);
@@ -1525,7 +1529,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void no_from() {
-    assertNotNull(firstResult(DateExpression.currentDate()));
+    assertThat(firstResult(DateExpression.currentDate())).isNotNull();
   }
 
   @Test
@@ -1824,7 +1828,7 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertFalse(surveys.isEmpty());
+    assertThat(surveys).isNotEmpty();
   }
 
   @Test
@@ -1837,15 +1841,15 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block()) {
-      assertNotNull(row.get(survey.id));
-      assertNotNull(row.get(survey.name));
+      assertThat(row.get(survey.id)).isNotNull();
+      assertThat(row.get(survey.name)).isNotNull();
     }
   }
 
   @Test
   public void query1() throws Exception {
     for (String s : query().from(survey).select(survey.name).fetch().collectList().block()) {
-      assertNotNull(s);
+      assertThat(s).isNotNull();
     }
   }
 
@@ -1853,8 +1857,8 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void query2() throws Exception {
     for (Tuple row :
         query().from(survey).select(survey.id, survey.name).fetch().collectList().block()) {
-      assertNotNull(row.get(survey.id));
-      assertNotNull(row.get(survey.name));
+      assertThat(row.get(survey.id)).isNotNull();
+      assertThat(row.get(survey.name)).isNotNull();
     }
   }
 
@@ -1883,7 +1887,7 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertFalse(results.isEmpty());
+    assertThat(results).isNotEmpty();
     for (Tuple row : results) {
       Employee e1 = row.get(employee);
       Employee e2 = row.get(employee2);
@@ -1997,8 +2001,8 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void select_booleanExpr3() {
-    assertTrue(query().select(Expressions.TRUE).fetchFirst().block());
-    assertFalse(query().select(Expressions.FALSE).fetchFirst().block());
+    assertThat(query().select(Expressions.TRUE).fetchFirst().block()).isTrue();
+    assertThat(query().select(Expressions.FALSE).fetchFirst().block()).isFalse();
   }
 
   @Test
@@ -2069,9 +2073,9 @@ public abstract class SelectBase extends AbstractBaseTest {
             .collectList()
             .block()
             .size();
-        fail();
+        fail("");
       } catch (QueryException e) {
-        assertTrue(e.getMessage().equals("Using forShare() is not supported"));
+        assertEquals("Using forShare() is not supported", e.getMessage());
       }
     }
   }
@@ -2102,20 +2106,20 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void single() {
-    assertNotNull(query().from(survey).select(survey.name).fetchFirst().block());
+    assertThat(query().from(survey).select(survey.name).fetchFirst().block()).isNotNull();
   }
 
   @Test
   public void single_array() {
-    assertNotNull(
-        query().from(survey).select(new Expression<?>[] {survey.name}).fetchFirst().block());
+    assertThat(query().from(survey).select(new Expression<?>[] {survey.name}).fetchFirst().block())
+        .isNotNull();
   }
 
   @Test
   public void single_column() {
     // single column
     for (String s : query().from(survey).select(survey.name).fetch().collectList().block()) {
-      assertNotNull(s);
+      assertThat(s).isNotNull();
     }
   }
 
@@ -2371,10 +2375,10 @@ public abstract class SelectBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertFalse(tuples.isEmpty());
+    assertThat(tuples).isNotEmpty();
     for (Tuple tuple : tuples) {
-      assertNotNull(tuple.get(employee.firstname));
-      assertNotNull(tuple.get(employee.lastname));
+      assertThat(tuple.get(employee.firstname)).isNotNull();
+      assertThat(tuple.get(employee.lastname)).isNotNull();
     }
   }
 
@@ -2429,25 +2433,25 @@ public abstract class SelectBase extends AbstractBaseTest {
             .select(new QIdName(survey.id, survey.name))
             .fetchFirst()
             .block();
-    assertNotNull(idAndName);
-    assertNotNull(idAndName.getId());
-    assertNotNull(idAndName.getName());
+    assertThat(idAndName).isNotNull();
+    assertThat(idAndName.getId()).isNotNull();
+    assertThat(idAndName.getName()).isNotNull();
   }
 
   @Test
   public void unique_single() {
     String s = query().from(survey).limit(1).select(survey.name).fetchFirst().block();
-    assertNotNull(s);
+    assertThat(s).isNotNull();
   }
 
   @Test
   public void unique_wildcard() {
     // unique wildcard
     Tuple row = query().from(survey).limit(1).select(survey.all()).fetchFirst().block();
-    assertNotNull(row);
+    assertThat(row).isNotNull();
     assertEquals(3, row.size());
-    assertNotNull(row.get(0, Object.class));
-    assertNotNull(row.get(0, Object.class) + " is not null", row.get(1, Object.class));
+    assertThat(row.get(0, Object.class)).isNotNull();
+    assertThat(row.get(1, Object.class)).as(row.get(0, Object.class) + " is not null").isNotNull();
   }
 
   @Ignore("we select the first result if one selected")
@@ -2465,7 +2469,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
     for (String s :
         query().from(survey).select(survey.name.append("abc")).fetch().collectList().block()) {
-      assertTrue(s.endsWith("abc"));
+      assertThat(s).endsWith("abc");
     }
 
     System.out.println(query().from(survey).select(survey.id.sqrt()).fetch().collectList().block());
@@ -2611,10 +2615,12 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void wildcard() {
     // wildcard
     for (Tuple row : query().from(survey).select(survey.all()).fetch().collectList().block()) {
-      assertNotNull(row);
+      assertThat(row).isNotNull();
       assertEquals(3, row.size());
-      assertNotNull(row.get(0, Object.class));
-      assertNotNull(row.get(0, Object.class) + " is not null", row.get(1, Object.class));
+      assertThat(row.get(0, Object.class)).isNotNull();
+      assertThat(row.get(1, Object.class))
+          .as(row.get(0, Object.class) + " is not null")
+          .isNotNull();
     }
   }
 
@@ -2642,8 +2648,8 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void wildcard_and_qTuple() {
     // wildcard and QTuple
     for (Tuple tuple : query().from(survey).select(survey.all()).fetch().collectList().block()) {
-      assertNotNull(tuple.get(survey.id));
-      assertNotNull(tuple.get(survey.name));
+      assertThat(tuple.get(survey.id)).isNotNull();
+      assertThat(tuple.get(survey.name)).isNotNull();
     }
   }
 

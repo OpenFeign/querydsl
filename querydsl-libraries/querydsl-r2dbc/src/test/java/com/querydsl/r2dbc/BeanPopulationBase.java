@@ -14,8 +14,7 @@
 package com.querydsl.r2dbc;
 
 import static com.querydsl.core.Target.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.r2dbc.dml.BeanMapper;
@@ -44,8 +43,9 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
 
     // Update
     employee.setLastname("S");
-    assertEquals(
-        1L, (long) update(e).populate(employee).where(e.id.eq(employee.getId())).execute().block());
+    assertThat(
+            (long) update(e).populate(employee).where(e.id.eq(employee.getId())).execute().block())
+        .isEqualTo(1L);
 
     // Query
     Employee smith =
@@ -55,8 +55,8 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
             .limit(1)
             .uniqueResult(Employee.class, e.lastname, e.firstname)
             .block();
-    assertEquals("John", smith.getFirstname());
-    assertEquals("S", smith.getLastname());
+    assertThat(smith.getFirstname()).isEqualTo("John");
+    assertThat(smith.getLastname()).isEqualTo("S");
 
     // Query with alias
     smith =
@@ -66,8 +66,8 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
             .limit(1)
             .uniqueResult(Employee.class, e.lastname.as("lastname"), e.firstname.as("firstname"))
             .block();
-    assertEquals("John", smith.getFirstname());
-    assertEquals("S", smith.getLastname());
+    assertThat(smith.getFirstname()).isEqualTo("John");
+    assertThat(smith.getLastname()).isEqualTo("S");
 
     // Query into custom type
     OtherEmployee other =
@@ -77,11 +77,11 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
             .limit(1)
             .uniqueResult(OtherEmployee.class, e.lastname, e.firstname)
             .block();
-    assertEquals("John", other.getFirstname());
-    assertEquals("S", other.getLastname());
+    assertThat(other.getFirstname()).isEqualTo("John");
+    assertThat(other.getLastname()).isEqualTo("S");
 
     // Delete (no changes needed)
-    assertEquals(1L, (long) delete(e).where(e.id.eq(employee.getId())).execute().block());
+    assertThat((long) delete(e).where(e.id.eq(employee.getId())).execute().block()).isEqualTo(1L);
   }
 
   @Test
@@ -90,21 +90,22 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
     Employee employee = new Employee();
     employee.setFirstname("John");
     Integer id = insert(e).populate(employee).executeWithKey(e.id).block();
-    assertNotNull(id);
+    assertThat(id).isNotNull();
     employee.setId(id);
 
     // Update
     employee.setLastname("S");
-    assertEquals(
-        1L, (long) update(e).populate(employee).where(e.id.eq(employee.getId())).execute().block());
+    assertThat(
+            (long) update(e).populate(employee).where(e.id.eq(employee.getId())).execute().block())
+        .isEqualTo(1L);
 
     // Query
     Employee smith =
         query().from(e).where(e.lastname.eq("S")).limit(1).select(e).fetchFirst().block();
-    assertEquals("John", smith.getFirstname());
+    assertThat(smith.getFirstname()).isEqualTo("John");
 
     // Delete (no changes needed)
-    assertEquals(1L, (long) delete(e).where(e.id.eq(employee.getId())).execute().block());
+    assertThat((long) delete(e).where(e.id.eq(employee.getId())).execute().block()).isEqualTo(1L);
   }
 
   @Test

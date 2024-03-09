@@ -1,6 +1,6 @@
 package com.querydsl.r2dbc.dml;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.r2dbc.KeyAccessorsTest.QEmployee;
 import com.querydsl.r2dbc.SQLTemplates;
@@ -35,7 +35,7 @@ public class R2DBCDeleteClauseTest {
     delete.where(emp1.id.eq(1));
 
     SQLBindings sql = delete.getSQL().get(0);
-    assertEquals("delete from EMPLOYEE\nwhere EMPLOYEE.ID = ?", sql.getSQL());
-    assertEquals(Collections.singletonList(1), sql.getNullFriendlyBindings());
+    assertThat(sql.getSQL()).isEqualTo("delete from EMPLOYEE\nwhere EMPLOYEE.ID = ?");
+    assertThat(sql.getNullFriendlyBindings()).isEqualTo(Collections.singletonList(1));
   }
 }

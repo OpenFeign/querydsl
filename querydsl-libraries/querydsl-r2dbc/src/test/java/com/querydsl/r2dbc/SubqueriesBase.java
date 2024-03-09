@@ -2,8 +2,7 @@ package com.querydsl.r2dbc;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.r2dbc.Constants.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.SubQueryExpression;
@@ -72,7 +71,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertFalse(list.isEmpty());
+    assertThat(list).isNotEmpty();
   }
 
   @Test
@@ -141,7 +140,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
         R2DBCExpressions.select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));
     subQuery.set(aParam, "Mike");
 
-    assertEquals(1, (long) query().from(subQuery).fetchCount().block());
+    assertThat((long) query().from(subQuery).fetchCount().block()).isEqualTo(1);
   }
 
   @Test
@@ -169,7 +168,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertEquals(ids1, ids2);
+    assertThat(ids2).isEqualTo(ids1);
   }
 
   @Test
@@ -182,7 +181,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
             .fetch()
             .collectList()
             .block();
-    assertEquals(ids1, ids2);
+    assertThat(ids2).isEqualTo(ids1);
   }
 
   @Test
@@ -190,10 +189,10 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   public void subQuerySerialization() {
     R2DBCQuery<?> query = query();
     query.from(survey);
-    assertEquals("from SURVEY s", query.toString());
+    assertThat(query.toString()).isEqualTo("from SURVEY s");
 
     query.from(survey2);
-    assertEquals("from SURVEY s, SURVEY s2", query.toString());
+    assertThat(query.toString()).isEqualTo("from SURVEY s, SURVEY s2");
   }
 
   @Test
@@ -207,9 +206,8 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
             .from(employee)
             .select(employee.salary.add(employee.salary).add(employee.salary).as(sal))
             .as(sq));
-    assertEquals(
-        "(select (e.SALARY + e.SALARY + e.SALARY) as sal\nfrom EMPLOYEE e) as sq",
-        serializer.toString());
+    assertThat(serializer.toString())
+        .isEqualTo("(select (e.SALARY + e.SALARY + e.SALARY) as sal\nfrom EMPLOYEE e) as sq");
   }
 
   @Test
@@ -233,7 +231,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
             + "order by e.SALARY asc\n"
             + "limit ?) in (?, ?))";
 
-    assertEquals(expectedQuery, serializer.toString());
+    assertThat(serializer.toString()).isEqualTo(expectedQuery);
   }
 
   @Test
@@ -257,6 +255,6 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
             + "order by e.SALARY asc\n"
             + "limit ?) in (?, ?))";
 
-    assertEquals(expectedQuery, serializer.toString());
+    assertThat(serializer.toString()).isEqualTo(expectedQuery);
   }
 }

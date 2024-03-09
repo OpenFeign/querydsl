@@ -15,7 +15,7 @@
  */
 package com.querydsl.core;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Templates;
 import io.github.classgraph.ClassGraph;

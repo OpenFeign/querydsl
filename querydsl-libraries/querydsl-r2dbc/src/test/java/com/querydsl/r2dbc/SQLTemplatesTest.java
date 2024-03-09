@@ -13,8 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
@@ -36,17 +35,17 @@ public class SQLTemplatesTest {
   private static final String DATE = "\\(date '\\d{4}-\\d{2}-\\d{2}'\\)";
 
   private static void assertMatches(String regex, String str) {
-    assertTrue(str, str.matches(regex));
+    assertThat(str.matches(regex)).as(str).isTrue();
   }
 
   @Test
   public void test() {
     Template template = TemplateFactory.DEFAULT.create("fetch first {0s} rows only");
-    assertTrue(template.getElements().get(1) instanceof Template.AsString);
+    assertThat(template.getElements().get(1) instanceof Template.AsString).isTrue();
 
     SQLSerializer serializer = new SQLSerializer(new Configuration(new H2Templates()));
     serializer.handle(Expressions.template(Object.class, template, ConstantImpl.create(5)));
-    assertEquals("fetch first 5 rows only", serializer.toString());
+    assertThat(serializer.toString()).isEqualTo("fetch first 5 rows only");
   }
 
   @Test
@@ -71,13 +70,13 @@ public class SQLTemplatesTest {
   public void quote() {
     SQLTemplates templates = SQLTemplates.DEFAULT;
     // non quoted
-    assertEquals("employee", templates.quoteIdentifier("employee"));
-    assertEquals("Employee", templates.quoteIdentifier("Employee"));
-    assertEquals("employee1", templates.quoteIdentifier("employee1"));
-    assertEquals("employee_", templates.quoteIdentifier("employee_"));
+    assertThat(templates.quoteIdentifier("employee")).isEqualTo("employee");
+    assertThat(templates.quoteIdentifier("Employee")).isEqualTo("Employee");
+    assertThat(templates.quoteIdentifier("employee1")).isEqualTo("employee1");
+    assertThat(templates.quoteIdentifier("employee_")).isEqualTo("employee_");
     // quoted
-    assertEquals("\"e e\"", templates.quoteIdentifier("e e"));
-    assertEquals("\"1phoenix2\"", templates.quoteIdentifier("1phoenix2"));
+    assertThat(templates.quoteIdentifier("e e")).isEqualTo("\"e e\"");
+    assertThat(templates.quoteIdentifier("1phoenix2")).isEqualTo("\"1phoenix2\"");
   }
 
   @Test
@@ -96,9 +95,9 @@ public class SQLTemplatesTest {
   public void nextVal() {
     Operation<String> nextval =
         ExpressionUtils.operation(String.class, SQLOps.NEXTVAL, ConstantImpl.create("myseq"));
-    assertEquals(
-        "nextval('myseq')",
-        new SQLSerializer(new Configuration(SQLTemplates.DEFAULT)).handle(nextval).toString());
+    assertThat(
+            new SQLSerializer(new Configuration(SQLTemplates.DEFAULT)).handle(nextval).toString())
+        .isEqualTo("nextval('myseq')");
     // Derby OK
     // H2 OK
     // HSQLDB OK
@@ -115,6 +114,6 @@ public class SQLTemplatesTest {
     NumberPath<Integer> intPath2 = Expressions.numberPath(Integer.class, "intPath2");
     SQLSerializer serializer = new SQLSerializer(new Configuration(SQLTemplates.DEFAULT));
     serializer.handle(intPath.subtract(intPath2.add(2)));
-    assertEquals("intPath - (intPath2 + ?)", serializer.toString());
+    assertThat(serializer.toString()).isEqualTo("intPath - (intPath2 + ?)");
   }
 }

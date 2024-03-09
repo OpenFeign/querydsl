@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.Projections;
@@ -29,22 +29,22 @@ public class QBeanTest {
   public void direct_to_managed_type() {
     FactoryExpression<Employee> expr = Projections.bean(Employee.class, e.superiorId);
     Employee e = expr.newInstance(3);
-    assertEquals(Integer.valueOf(3), e.getSuperiorId());
+    assertThat(e.getSuperiorId()).isEqualTo(Integer.valueOf(3));
   }
 
   @Test
   public void direct_to_custom_type() {
     FactoryExpression<Employee> expr = Projections.bean(Employee.class, e.firstname, e.lastname);
     Employee e = expr.newInstance("John", "Smith");
-    assertEquals("John", e.getFirstname());
-    assertEquals("Smith", e.getLastname());
+    assertThat(e.getFirstname()).isEqualTo("John");
+    assertThat(e.getLastname()).isEqualTo("Smith");
   }
 
   @Test
   public void alias_to_managed_type() {
     FactoryExpression<Employee> expr = Projections.bean(Employee.class, e.superiorId.as("id"));
     Employee e = expr.newInstance(3);
-    assertEquals(3, e.getId().intValue());
+    assertThat(e.getId().intValue()).isEqualTo(3);
   }
 
   @Test
@@ -52,7 +52,7 @@ public class QBeanTest {
     FactoryExpression<Employee> expr =
         Projections.bean(Employee.class, e.firstname.as("lastname"), e.lastname.as("firstname"));
     Employee e = expr.newInstance("John", "Smith");
-    assertEquals("Smith", e.getFirstname());
-    assertEquals("John", e.getLastname());
+    assertThat(e.getFirstname()).isEqualTo("Smith");
+    assertThat(e.getLastname()).isEqualTo("John");
   }
 }

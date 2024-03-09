@@ -25,7 +25,7 @@ public class DefaultMapperTest extends AbstractMapperTest {
   @Test
   public void extract2() {
     Map<Path<?>, Object> values = DefaultMapper.DEFAULT.createMap(emp, new EmployeeX());
-    assertThat(values.isEmpty()).isTrue();
+    assertThat(values).isEmpty();
   }
 
   @Test

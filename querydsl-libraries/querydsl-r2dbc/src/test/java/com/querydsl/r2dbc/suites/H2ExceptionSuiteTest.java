@@ -1,6 +1,6 @@
 package com.querydsl.r2dbc.suites;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.base.Throwables;
 import com.querydsl.core.testutil.H2;
@@ -54,6 +54,6 @@ public class H2ExceptionSuiteTest extends AbstractBaseTest {
 
   private void inspectExceptionResult(Exception result) {
     String stackTraceAsString = Throwables.getStackTraceAsString(result);
-    assertTrue(stackTraceAsString.contains("Suppressed:"));
+    assertThat(stackTraceAsString).contains("Suppressed:");
   }
 }

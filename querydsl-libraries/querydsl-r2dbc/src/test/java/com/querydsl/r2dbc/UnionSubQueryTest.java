@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -46,9 +46,8 @@ public class UnionSubQueryTest {
             R2DBCExpressions.union(R2DBCExpressions.select(one), R2DBCExpressions.select(two)));
 
     serializer.handle(expr);
-    assertEquals(
-        "intPath in ((select 1 from dual)\n" + "union\n" + "(select 2 from dual))",
-        serializer.toString());
+    assertThat(serializer.toString())
+        .isEqualTo("intPath in ((select 1 from dual)\n" + "union\n" + "(select 2 from dual))");
   }
 
   @SuppressWarnings("unchecked")
@@ -62,13 +61,13 @@ public class UnionSubQueryTest {
             R2DBCExpressions.select(three));
 
     serializer.handle(union);
-    assertEquals(
-        "(select 1 as col1 from dual)\n"
-            + "union\n"
-            + "(select 2 from dual)\n"
-            + "union\n"
-            + "(select 3 from dual)",
-        serializer.toString());
+    assertThat(serializer.toString())
+        .isEqualTo(
+            "(select 1 as col1 from dual)\n"
+                + "union\n"
+                + "(select 2 from dual)\n"
+                + "union\n"
+                + "(select 3 from dual)");
   }
 
   @SuppressWarnings("unchecked")
@@ -82,12 +81,12 @@ public class UnionSubQueryTest {
             R2DBCExpressions.select(three));
 
     serializer.handle(union);
-    assertEquals(
-        "(select 1 as col1 from dual)\n"
-            + "union all\n"
-            + "(select 2 from dual)\n"
-            + "union all\n"
-            + "(select 3 from dual)",
-        serializer.toString());
+    assertThat(serializer.toString())
+        .isEqualTo(
+            "(select 1 as col1 from dual)\n"
+                + "union all\n"
+                + "(select 2 from dual)\n"
+                + "union all\n"
+                + "(select 3 from dual)");
   }
 }

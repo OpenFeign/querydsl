@@ -25,6 +25,6 @@ public class BeanMapperTest extends AbstractMapperTest {
   @Test
   public void extract2() {
     Map<Path<?>, Object> values = BeanMapper.DEFAULT.createMap(emp, new EmployeeX());
-    assertThat(values.isEmpty()).isTrue();
+    assertThat(values).isEmpty();
   }
 }

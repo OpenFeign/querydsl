@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
@@ -28,13 +28,13 @@ public class TemplateTest {
   @Test
   public void toDate() {
     StringExpression str = Expressions.stringPath("str");
-    assertEquals("to_date(str,'DD-MON-YYYY')", to_date(str, "DD-MON-YYYY").toString());
+    assertThat(to_date(str, "DD-MON-YYYY").toString()).isEqualTo("to_date(str,'DD-MON-YYYY')");
   }
 
   @Test
   public void toChar() {
     DateExpression<Date> date = Expressions.datePath(Date.class, "date");
-    assertEquals("to_char(date,'DD-MON-YYYY')", to_char(date, "DD-MON-YYYY").toString());
+    assertThat(to_char(date, "DD-MON-YYYY").toString()).isEqualTo("to_char(date,'DD-MON-YYYY')");
   }
 
   private DateExpression<Date> to_date(Expression<String> expr, String pattern) {

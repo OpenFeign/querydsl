@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc.h2;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.r2dbc.Connections;
 import com.querydsl.r2dbc.H2Templates;
@@ -53,19 +53,18 @@ public class GeneratedKeysH2Test {
     Collection<Integer> key =
         insertClause.set(entity.name, "Hello").executeWithKeys(entity.id).collectList().block();
 
-    assertEquals(1, key.size());
+    assertThat(key).hasSize(1);
 
     insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
     key = insertClause.set(entity.name, "World").executeWithKeys(entity.id).collectList().block();
-    assertEquals(2, key.size());
+    assertThat(key).hasSize(2);
 
     insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
-    assertEquals(
-        3, (long) insertClause.set(entity.name, "World").executeWithKey(entity.id).block());
+    assertThat((long) insertClause.set(entity.name, "World").executeWithKey(entity.id).block())
+        .isEqualTo(3);
 
     insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
-    assertEquals(
-        Collections.singletonList(4),
-        insertClause.set(entity.name, "World").executeWithKeys(entity.id));
+    assertThat(insertClause.set(entity.name, "World").executeWithKeys(entity.id))
+        .isEqualTo(Collections.singletonList(4));
   }
 }

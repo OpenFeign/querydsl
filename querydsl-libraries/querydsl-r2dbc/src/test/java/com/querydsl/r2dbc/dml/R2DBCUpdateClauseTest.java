@@ -1,6 +1,6 @@
 package com.querydsl.r2dbc.dml;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.r2dbc.KeyAccessorsTest.QEmployee;
 import com.querydsl.r2dbc.R2DBCExpressions;
@@ -26,8 +26,8 @@ public class R2DBCUpdateClauseTest {
     update.set(emp1.id, 1);
 
     SQLBindings sql = update.getSQL().get(0);
-    assertEquals("update EMPLOYEE\nset ID = ?", sql.getSQL());
-    assertEquals(Collections.singletonList(1), sql.getNullFriendlyBindings());
+    assertThat(sql.getSQL()).isEqualTo("update EMPLOYEE\nset ID = ?");
+    assertThat(sql.getNullFriendlyBindings()).isEqualTo(Collections.singletonList(1));
   }
 
   @Test
@@ -42,13 +42,13 @@ public class R2DBCUpdateClauseTest {
                 R2DBCExpressions.select(emp2.id).from(emp2).where(emp2.superiorId.isNotNull())));
 
     SQLBindings sql = update.getSQL().get(0);
-    assertEquals(
-        "update EMPLOYEE\n"
-            + "set ID = ?\n"
-            + "where EMPLOYEE.ID = (select emp2.ID\n"
-            + "from EMPLOYEE emp2\n"
-            + "where emp2.SUPERIOR_ID is not null)",
-        sql.getSQL());
+    assertThat(sql.getSQL())
+        .isEqualTo(
+            "update EMPLOYEE\n"
+                + "set ID = ?\n"
+                + "where EMPLOYEE.ID = (select emp2.ID\n"
+                + "from EMPLOYEE emp2\n"
+                + "where emp2.SUPERIOR_ID is not null)");
   }
 
   @Test
@@ -60,12 +60,12 @@ public class R2DBCUpdateClauseTest {
         emp1.id, R2DBCExpressions.select(emp2.id).from(emp2).where(emp2.superiorId.isNotNull()));
 
     SQLBindings sql = update.getSQL().get(0);
-    assertEquals(
-        "update EMPLOYEE\n"
-            + "set ID = (select emp2.ID\n"
-            + "from EMPLOYEE emp2\n"
-            + "where emp2.SUPERIOR_ID is not null)",
-        sql.getSQL());
+    assertThat(sql.getSQL())
+        .isEqualTo(
+            "update EMPLOYEE\n"
+                + "set ID = (select emp2.ID\n"
+                + "from EMPLOYEE emp2\n"
+                + "where emp2.SUPERIOR_ID is not null)");
   }
 
   @Test
@@ -77,11 +77,11 @@ public class R2DBCUpdateClauseTest {
         emp1.superiorId, R2DBCExpressions.select(emp2.id).from(emp2).where(emp2.id.eq(emp1.id)));
 
     SQLBindings sql = update.getSQL().get(0);
-    assertEquals(
-        "update EMPLOYEE\n"
-            + "set SUPERIOR_ID = (select emp2.ID\n"
-            + "from EMPLOYEE emp2\n"
-            + "where emp2.ID = EMPLOYEE.ID)",
-        sql.getSQL());
+    assertThat(sql.getSQL())
+        .isEqualTo(
+            "update EMPLOYEE\n"
+                + "set SUPERIOR_ID = (select emp2.ID\n"
+                + "from EMPLOYEE emp2\n"
+                + "where emp2.ID = EMPLOYEE.ID)");
   }
 }
