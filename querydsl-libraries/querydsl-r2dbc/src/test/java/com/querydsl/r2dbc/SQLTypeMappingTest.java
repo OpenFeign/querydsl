@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.lang.reflect.Field;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class SQLTypeMappingTest {
       if (field.getType().equals(int.class)) {
         int val = field.getInt(null);
         if (mapping.get(val, 0, 0) == null) {
-          fail("Got no value for " + field.getName() + " (" + val + ")");
+          fail("", "Got no value for " + field.getName() + " (" + val + ")");
         }
       }
     }

@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
@@ -58,7 +58,7 @@ public class R2DBCRelationalFunctionCallTest {
   public void noArgs() {
     R2DBCRelationalFunctionCall<String> functionCall =
         R2DBCExpressions.relationalFunctionCall(String.class, "getElements");
-    assertEquals("getElements()", functionCall.getTemplate().toString());
+    assertThat(functionCall.getTemplate().toString()).isEqualTo("getElements()");
   }
 
   @Test
@@ -66,8 +66,8 @@ public class R2DBCRelationalFunctionCallTest {
     StringPath str = Expressions.stringPath("str");
     R2DBCRelationalFunctionCall<String> functionCall =
         R2DBCExpressions.relationalFunctionCall(String.class, "getElements", "a", str);
-    assertEquals("getElements({0}, {1})", functionCall.getTemplate().toString());
-    assertEquals("a", functionCall.getArg(0));
-    assertEquals(str, functionCall.getArg(1));
+    assertThat(functionCall.getTemplate().toString()).isEqualTo("getElements({0}, {1})");
+    assertThat(functionCall.getArg(0)).isEqualTo("a");
+    assertThat(functionCall.getArg(1)).isEqualTo(str);
   }
 }

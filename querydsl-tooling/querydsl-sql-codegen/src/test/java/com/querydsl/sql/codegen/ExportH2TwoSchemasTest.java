@@ -59,7 +59,7 @@ public class ExportH2TwoSchemasTest {
     assertThat(contents).contains("name");
     assertThat(contents).contains("name2");
 
-    assertThat(contents.contains("id2")).isFalse();
-    assertThat(contents.contains("name3")).isFalse();
+    assertThat(contents).doesNotContain("id2");
+    assertThat(contents).doesNotContain("name3");
   }
 }

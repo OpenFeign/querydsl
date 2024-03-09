@@ -1,6 +1,6 @@
 package com.querydsl.r2dbc;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -18,13 +18,16 @@ public class WithinGroupTest {
     NumberPath<Long> path = Expressions.numberPath(Long.class, "path");
     NumberPath<Long> path2 = Expressions.numberPath(Long.class, "path2");
 
-    assertEquals("cume_dist(path)", toString(R2DBCExpressions.cumeDist(path)));
-    assertEquals("cume_dist(path, path2)", toString(R2DBCExpressions.cumeDist(path, path2)));
-    assertEquals("dense_rank(path, path2)", toString(R2DBCExpressions.denseRank(path, path2)));
-    assertEquals("listagg(path,',')", toString(R2DBCExpressions.listagg(path, ",")));
-    assertEquals("percent_rank(path, path2)", toString(R2DBCExpressions.percentRank(path, path2)));
-    assertEquals("percentile_cont(path)", toString(R2DBCExpressions.percentileCont(path)));
-    assertEquals("percentile_disc(path)", toString(R2DBCExpressions.percentileDisc(path)));
-    assertEquals("rank(path, path2)", toString(R2DBCExpressions.rank(path, path2)));
+    assertThat(toString(R2DBCExpressions.cumeDist(path))).isEqualTo("cume_dist(path)");
+    assertThat(toString(R2DBCExpressions.cumeDist(path, path2)))
+        .isEqualTo("cume_dist(path, path2)");
+    assertThat(toString(R2DBCExpressions.denseRank(path, path2)))
+        .isEqualTo("dense_rank(path, path2)");
+    assertThat(toString(R2DBCExpressions.listagg(path, ","))).isEqualTo("listagg(path,',')");
+    assertThat(toString(R2DBCExpressions.percentRank(path, path2)))
+        .isEqualTo("percent_rank(path, path2)");
+    assertThat(toString(R2DBCExpressions.percentileCont(path))).isEqualTo("percentile_cont(path)");
+    assertThat(toString(R2DBCExpressions.percentileDisc(path))).isEqualTo("percentile_disc(path)");
+    assertThat(toString(R2DBCExpressions.rank(path, path2))).isEqualTo("rank(path, path2)");
   }
 }

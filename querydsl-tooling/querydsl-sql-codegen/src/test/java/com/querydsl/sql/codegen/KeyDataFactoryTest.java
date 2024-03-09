@@ -64,7 +64,7 @@ public class KeyDataFactoryTest extends AbstractJDBCTest {
     // primary key
     Map<String, PrimaryKeyData> primaryKeys =
         keyDataFactory.getPrimaryKeys(md, null, null, "EMPLOYEE");
-    assertThat(primaryKeys.isEmpty()).isFalse();
+    assertThat(primaryKeys).isNotEmpty();
     // inverse foreign keys sorted in abc
     Map<String, InverseForeignKeyData> exportedKeys =
         keyDataFactory.getExportedKeys(md, null, null, "EMPLOYEE");
@@ -85,13 +85,13 @@ public class KeyDataFactoryTest extends AbstractJDBCTest {
 
     // primary key
     primaryKeys = keyDataFactory.getPrimaryKeys(md, null, null, "SURVEY");
-    assertThat(primaryKeys.isEmpty()).isFalse();
+    assertThat(primaryKeys).isNotEmpty();
     // inverse foreign keys
     exportedKeys = keyDataFactory.getExportedKeys(md, null, null, "SURVEY");
-    assertThat(exportedKeys.isEmpty()).isFalse();
+    assertThat(exportedKeys).isNotEmpty();
     assertThat(exportedKeys).containsKey("FK_SURVEY");
     // foreign keys
     importedKeys = keyDataFactory.getImportedKeys(md, null, null, "SURVEY");
-    assertThat(importedKeys.isEmpty()).isTrue();
+    assertThat(importedKeys).isEmpty();
   }
 }

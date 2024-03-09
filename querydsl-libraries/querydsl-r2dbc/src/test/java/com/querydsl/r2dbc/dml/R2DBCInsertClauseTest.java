@@ -1,6 +1,6 @@
 package com.querydsl.r2dbc.dml;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.r2dbc.KeyAccessorsTest.QEmployee;
 import com.querydsl.r2dbc.SQLTemplates;
@@ -25,8 +25,8 @@ public class R2DBCInsertClauseTest {
     insert.set(emp1.id, 1);
 
     SQLBindings sql = insert.getSQL().get(0);
-    assertEquals("insert into EMPLOYEE (ID)\nvalues (?)", sql.getSQL());
-    assertEquals(Collections.singletonList(1), sql.getNullFriendlyBindings());
+    assertThat(sql.getSQL()).isEqualTo("insert into EMPLOYEE (ID)\nvalues (?)");
+    assertThat(sql.getNullFriendlyBindings()).isEqualTo(Collections.singletonList(1));
   }
 
   @Test
@@ -36,12 +36,12 @@ public class R2DBCInsertClauseTest {
     insert.populate(emp1);
 
     SQLBindings sql = insert.getSQL().get(0);
-    assertEquals(
-        "The order of columns in generated sql should be predictable",
-        "insert into EMPLOYEE (ID, FIRSTNAME, LASTNAME, SALARY, DATEFIELD, TIMEFIELD,"
-            + " SUPERIOR_ID)\n"
-            + "values (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY,"
-            + " EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID)",
-        sql.getSQL());
+    assertThat(sql.getSQL())
+        .as("The order of columns in generated sql should be predictable")
+        .isEqualTo(
+            "insert into EMPLOYEE (ID, FIRSTNAME, LASTNAME, SALARY, DATEFIELD, TIMEFIELD,"
+                + " SUPERIOR_ID)\n"
+                + "values (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY,"
+                + " EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID)");
   }
 }

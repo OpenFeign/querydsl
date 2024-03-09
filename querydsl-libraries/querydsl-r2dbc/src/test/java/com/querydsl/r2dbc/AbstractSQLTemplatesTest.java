@@ -13,8 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
@@ -47,9 +46,9 @@ public abstract class AbstractSQLTemplatesTest {
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
     if (templates.getDummyTable() == null) {
-      assertEquals("select 1", query.toString());
+      assertThat(query.toString()).isEqualTo("select 1");
     } else {
-      assertEquals("select 1 from " + templates.getDummyTable(), query.toString());
+      assertThat(query.toString()).isEqualTo("select 1 from " + templates.getDummyTable());
     }
   }
 
@@ -68,43 +67,42 @@ public abstract class AbstractSQLTemplatesTest {
 
     if (templates.getDummyTable() == null) {
       if (templates.isUnionsWrapped()) {
-        assertEquals(
-            "(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)",
-            union.toString());
+        assertThat(union.toString())
+            .isEqualTo(
+                "(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)");
       } else {
-        assertEquals(
-            "select 1 as col1)\n" + "union\n" + "select 2\n" + "union\n" + "select 3",
-            union.toString());
+        assertThat(union.toString())
+            .isEqualTo("select 1 as col1)\n" + "union\n" + "select 2\n" + "union\n" + "select 3");
       }
     } else {
       String dummyTable = templates.getDummyTable();
       if (templates.isUnionsWrapped()) {
-        assertEquals(
-            "(select 1 as col1 from "
-                + dummyTable
-                + ")\n"
-                + "union\n"
-                + "(select 2 from "
-                + dummyTable
-                + ")\n"
-                + "union\n"
-                + "(select 3 from "
-                + dummyTable
-                + ")",
-            union.toString());
+        assertThat(union.toString())
+            .isEqualTo(
+                "(select 1 as col1 from "
+                    + dummyTable
+                    + ")\n"
+                    + "union\n"
+                    + "(select 2 from "
+                    + dummyTable
+                    + ")\n"
+                    + "union\n"
+                    + "(select 3 from "
+                    + dummyTable
+                    + ")");
       } else {
-        assertEquals(
-            "select 1 as col1 from "
-                + dummyTable
-                + "\n"
-                + "union\n"
-                + "select 2 from "
-                + dummyTable
-                + "\n"
-                + "union\n"
-                + "select 3 from "
-                + dummyTable,
-            union.toString());
+        assertThat(union.toString())
+            .isEqualTo(
+                "select 1 as col1 from "
+                    + dummyTable
+                    + "\n"
+                    + "union\n"
+                    + "select 2 from "
+                    + dummyTable
+                    + "\n"
+                    + "union\n"
+                    + "select 3 from "
+                    + dummyTable);
       }
     }
   }
@@ -112,13 +110,13 @@ public abstract class AbstractSQLTemplatesTest {
   @Test
   public void innerJoin() {
     query.from(survey1).innerJoin(survey2);
-    assertEquals("from SURVEY survey1 inner join SURVEY survey2", query.toString());
+    assertThat(query.toString()).isEqualTo("from SURVEY survey1 inner join SURVEY survey2");
   }
 
   protected int getPrecedence(Operator... ops) {
     int precedence = templates.getPrecedence(ops[0]);
     for (int i = 1; i < ops.length; i++) {
-      assertEquals(ops[i].name(), precedence, templates.getPrecedence(ops[i]));
+      assertThat(templates.getPrecedence(ops[i])).as(ops[i].name()).isEqualTo(precedence);
     }
     return precedence;
   }
@@ -170,13 +168,13 @@ public abstract class AbstractSQLTemplatesTest {
     assertSerialized(Expressions.booleanPath("b").eq(Expressions.FALSE), "b = 0");
     query.setUseLiterals(true);
     query.where(Expressions.booleanPath("b").eq(true));
-    assertTrue(query.toString(), query.toString().endsWith("where b = 1"));
+    assertThat(query.toString().endsWith("where b = 1")).as(query.toString()).isTrue();
   }
 
   protected void assertSerialized(Expression<?> expr, String serialized) {
     SQLSerializer serializer = new SQLSerializer(new Configuration(templates));
     serializer.handle(expr);
-    assertEquals(serialized, serializer.toString());
+    assertThat(serializer.toString()).isEqualTo(serialized);
   }
 
   @Test
@@ -190,7 +188,7 @@ public abstract class AbstractSQLTemplatesTest {
             Expressions.THREE);
     query.from(survey1).where(survey1.id.in(ints));
     query.getMetadata().setProjection(survey1.name);
-    assertEquals(
-        "select survey1.NAME from SURVEY survey1 where survey1.ID in (1, 2, 3)", query.toString());
+    assertThat(query.toString())
+        .isEqualTo("select survey1.NAME from SURVEY survey1 where survey1.ID in (1, 2, 3)");
   }
 }

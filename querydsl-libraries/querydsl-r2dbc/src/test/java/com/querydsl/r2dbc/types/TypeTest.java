@@ -14,7 +14,6 @@
 package com.querydsl.r2dbc.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
 
 import com.mysema.commons.lang.Pair;
 import com.querydsl.r2dbc.binding.BindMarker;
@@ -143,7 +142,7 @@ public class TypeTest implements InvocationHandler {
 
       value = null;
       Type type = (Type) pair.getSecond();
-      assertNull(type.toString(), type.getValue(resultSet, 0));
+      assertThat(type.getValue(resultSet, 0)).as(type.toString()).isNull();
       type.setValue(bindMarker, bindTarget, pair.getFirst());
       assertThat(type.getValue(resultSet, 0)).isEqualTo(pair.getFirst());
     }

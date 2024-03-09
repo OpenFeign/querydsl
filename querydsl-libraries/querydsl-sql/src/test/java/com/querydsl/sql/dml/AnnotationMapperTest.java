@@ -28,12 +28,12 @@ public class AnnotationMapperTest extends AbstractMapperTest {
   @Test
   public void extract_failure() {
     Map<Path<?>, Object> values = AnnotationMapper.DEFAULT.createMap(emp, employee);
-    assertThat(values.isEmpty()).isTrue();
+    assertThat(values).isEmpty();
   }
 
   @Test
   public void extract2() {
     Map<Path<?>, Object> values = AnnotationMapper.DEFAULT.createMap(emp, new EmployeeX());
-    assertThat(values.isEmpty()).isTrue();
+    assertThat(values).isEmpty();
   }
 }

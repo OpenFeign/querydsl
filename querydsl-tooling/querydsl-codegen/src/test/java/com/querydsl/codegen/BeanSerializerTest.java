@@ -89,8 +89,8 @@ public class BeanSerializerTest {
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
     var str = writer.toString();
 
-    assertThat(str.contains("import com.querydsl.core.annotations.QueryEntity;")).isFalse();
-    assertThat(str.contains("@QueryEntity")).isFalse();
+    assertThat(str).doesNotContain("import com.querydsl.core.annotations.QueryEntity;");
+    assertThat(str).doesNotContain("@QueryEntity");
   }
 
   @Test

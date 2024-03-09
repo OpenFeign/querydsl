@@ -14,7 +14,7 @@
 package com.querydsl.r2dbc;
 
 import static com.querydsl.core.types.PathMetadataFactory.forVariable;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.sql.ColumnMetadata;
@@ -71,8 +71,8 @@ public class KeyAccessorsTest {
   @Test
   public void keys() {
     QEmployee employee = QEmployee.employee;
-    assertNotNull(employee.pk.sysIdx53);
-    assertNotNull(employee.fk.superiorFk);
-    assertNotNull(employee.fk._superiorFk);
+    assertThat(employee.pk.sysIdx53).isNotNull();
+    assertThat(employee.fk.superiorFk).isNotNull();
+    assertThat(employee.fk._superiorFk).isNotNull();
   }
 }

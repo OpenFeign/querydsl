@@ -2193,7 +2193,7 @@ public abstract class AbstractJPATest {
             .innerJoin(cat.kittens, kitten)
             .transform(GroupBy.groupBy(cat.id, kitten.id).as(cat, kitten));
 
-    assertThat(result.isEmpty()).isFalse();
+    assertThat(result).isNotEmpty();
     for (Tuple row : query().from(cat).innerJoin(cat.kittens, kitten).select(cat, kitten).fetch()) {
       assertThat(result.get(Arrays.asList(row.get(cat).getId(), row.get(kitten).getId())))
           .isNotNull();

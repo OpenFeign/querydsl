@@ -1,7 +1,7 @@
 package com.querydsl.r2dbc;
 
 import static com.querydsl.r2dbc.Constants.employee;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
 import com.querydsl.core.types.dsl.Expressions;
@@ -20,8 +20,8 @@ public class RelationalPathExtractorTest {
     QEmployee employee2 = new QEmployee("employee2");
     R2DBCQuery<?> query = query().from(employee, employee2);
 
-    assertEquals(
-        ImmutableSet.of(employee, employee2), RelationalPathExtractor.extract(query.getMetadata()));
+    assertThat(RelationalPathExtractor.extract(query.getMetadata()))
+        .isEqualTo(ImmutableSet.of(employee, employee2));
   }
 
   @Test
@@ -30,8 +30,8 @@ public class RelationalPathExtractorTest {
     R2DBCQuery<?> query =
         query().from(employee).innerJoin(employee2).on(employee.superiorId.eq(employee2.id));
 
-    assertEquals(
-        ImmutableSet.of(employee, employee2), RelationalPathExtractor.extract(query.getMetadata()));
+    assertThat(RelationalPathExtractor.extract(query.getMetadata()))
+        .isEqualTo(ImmutableSet.of(employee, employee2));
   }
 
   @Test
@@ -40,7 +40,8 @@ public class RelationalPathExtractorTest {
         query()
             .from(employee)
             .where(employee.id.eq(query().from(employee).select(employee.id.max())));
-    assertEquals(ImmutableSet.of(employee), RelationalPathExtractor.extract(query.getMetadata()));
+    assertThat(RelationalPathExtractor.extract(query.getMetadata()))
+        .isEqualTo(ImmutableSet.of(employee));
   }
 
   @Test
@@ -53,7 +54,7 @@ public class RelationalPathExtractorTest {
                 Expressions.list(employee.id, employee.lastname)
                     .in(query().from(employee2).select(employee2.id, employee2.lastname)));
 
-    assertEquals(
-        ImmutableSet.of(employee, employee2), RelationalPathExtractor.extract(query.getMetadata()));
+    assertThat(RelationalPathExtractor.extract(query.getMetadata()))
+        .isEqualTo(ImmutableSet.of(employee, employee2));
   }
 }

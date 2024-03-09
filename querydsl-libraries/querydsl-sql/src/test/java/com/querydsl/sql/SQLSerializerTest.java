@@ -277,7 +277,7 @@ public class SQLSerializerTest {
     SQLQuery<?> query = new SQLQuery<Void>(MySQLTemplates.DEFAULT);
     PathBuilder<Survey> surveyBuilder = new PathBuilder<Survey>(Survey.class, "survey");
     query.from(surveyBuilder).where(surveyBuilder.get("not").isNotNull());
-    assertThat(query.toString().contains("`")).isFalse();
+    assertThat(query.toString()).doesNotContain("`");
   }
 
   @Test

@@ -1,7 +1,6 @@
 package com.querydsl.core.types;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Expressions;
 import java.util.List;
@@ -13,8 +12,8 @@ public class QListTest {
   public void newInstance() {
     QList qList = new QList(Expressions.stringPath("a"), Expressions.stringPath("b"));
     List<?> list = qList.newInstance("a", null);
-    assertEquals(2, list.size());
-    assertEquals("a", list.getFirst());
-    assertNull(list.get(1));
+    assertThat(list).hasSize(2);
+    assertThat(list.getFirst()).isEqualTo("a");
+    assertThat(list.get(1)).isNull();
   }
 }

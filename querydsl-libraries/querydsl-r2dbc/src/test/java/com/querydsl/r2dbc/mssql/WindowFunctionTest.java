@@ -14,7 +14,7 @@
 package com.querydsl.r2dbc.mssql;
 
 import static com.querydsl.r2dbc.Constants.employee;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.r2dbc.Configuration;
@@ -39,47 +39,45 @@ public class WindowFunctionTest {
   @Test
   public void mutable() {
     WindowFunction<Long> rn = R2DBCExpressions.rowNumber().over().orderBy(employee.firstname);
-    assertEquals("row_number() over (order by e.FIRSTNAME asc)", toString(rn));
-    assertEquals(
-        "row_number() over (order by e.FIRSTNAME asc, e.LASTNAME asc)",
-        toString(rn.orderBy(employee.lastname)));
+    assertThat(toString(rn)).isEqualTo("row_number() over (order by e.FIRSTNAME asc)");
+    assertThat(toString(rn.orderBy(employee.lastname)))
+        .isEqualTo("row_number() over (order by e.FIRSTNAME asc, e.LASTNAME asc)");
   }
 
   @Test
   public void orderBy() {
-    assertEquals(
-        "row_number() over (order by e.FIRSTNAME asc)",
-        toString(R2DBCExpressions.rowNumber().over().orderBy(employee.firstname.asc())));
+    assertThat(toString(R2DBCExpressions.rowNumber().over().orderBy(employee.firstname.asc())))
+        .isEqualTo("row_number() over (order by e.FIRSTNAME asc)");
 
-    assertEquals(
-        "row_number() over (order by e.FIRSTNAME asc)",
-        toString(R2DBCExpressions.rowNumber().over().orderBy(employee.firstname)));
+    assertThat(toString(R2DBCExpressions.rowNumber().over().orderBy(employee.firstname)))
+        .isEqualTo("row_number() over (order by e.FIRSTNAME asc)");
 
-    assertEquals(
-        "row_number() over (order by e.FIRSTNAME asc) as rn",
-        toString(R2DBCExpressions.rowNumber().over().orderBy(employee.firstname.asc()).as("rn")));
+    assertThat(
+            toString(
+                R2DBCExpressions.rowNumber().over().orderBy(employee.firstname.asc()).as("rn")))
+        .isEqualTo("row_number() over (order by e.FIRSTNAME asc) as rn");
 
-    assertEquals(
-        "row_number() over (order by e.FIRSTNAME desc)",
-        toString(R2DBCExpressions.rowNumber().over().orderBy(employee.firstname.desc())));
+    assertThat(toString(R2DBCExpressions.rowNumber().over().orderBy(employee.firstname.desc())))
+        .isEqualTo("row_number() over (order by e.FIRSTNAME desc)");
   }
 
   @Test
   public void partitionBy() {
-    assertEquals(
-        "row_number() over (partition by e.LASTNAME order by e.FIRSTNAME asc)",
-        toString(
-            R2DBCExpressions.rowNumber()
-                .over()
-                .partitionBy(employee.lastname)
-                .orderBy(employee.firstname.asc())));
+    assertThat(
+            toString(
+                R2DBCExpressions.rowNumber()
+                    .over()
+                    .partitionBy(employee.lastname)
+                    .orderBy(employee.firstname.asc())))
+        .isEqualTo("row_number() over (partition by e.LASTNAME order by e.FIRSTNAME asc)");
 
-    assertEquals(
-        "row_number() over (partition by e.LASTNAME, e.FIRSTNAME order by e.FIRSTNAME asc)",
-        toString(
-            R2DBCExpressions.rowNumber()
-                .over()
-                .partitionBy(employee.lastname, employee.firstname)
-                .orderBy(employee.firstname.asc())));
+    assertThat(
+            toString(
+                R2DBCExpressions.rowNumber()
+                    .over()
+                    .partitionBy(employee.lastname, employee.firstname)
+                    .orderBy(employee.firstname.asc())))
+        .isEqualTo(
+            "row_number() over (partition by e.LASTNAME, e.FIRSTNAME order by e.FIRSTNAME asc)");
   }
 }

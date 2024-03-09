@@ -15,7 +15,7 @@ package com.querydsl.r2dbc;
 
 import static com.querydsl.core.Target.*;
 import static com.querydsl.r2dbc.Constants.survey;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
@@ -53,27 +53,30 @@ public abstract class UpdateBase extends AbstractBaseTest {
   public void update() {
     // original state
     long count = query().from(survey).fetchCount().block();
-    assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+    assertThat((long) query().from(survey).where(survey.name.eq("S")).fetchCount().block())
+        .isEqualTo(0);
 
     // update call with 0 update count
-    assertEquals(
-        0,
-        (long) update(survey).where(survey.name.eq("XXX")).set(survey.name, "S").execute().block());
-    assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+    assertThat(
+            (long)
+                update(survey).where(survey.name.eq("XXX")).set(survey.name, "S").execute().block())
+        .isEqualTo(0);
+    assertThat((long) query().from(survey).where(survey.name.eq("S")).fetchCount().block())
+        .isEqualTo(0);
 
     // update call with full update count
-    assertEquals(count, (long) update(survey).set(survey.name, "S").execute().block());
-    assertEquals(
-        count, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+    assertThat((long) update(survey).set(survey.name, "S").execute().block()).isEqualTo(count);
+    assertThat((long) query().from(survey).where(survey.name.eq("S")).fetchCount().block())
+        .isEqualTo(count);
   }
 
   @Test
   @IncludeIn({CUBRID, H2, MYSQL, ORACLE, SQLSERVER})
   public void update_limit() {
-    assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
-    assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
+    assertThat((long) insert(survey).values(2, "A", "B").execute().block()).isEqualTo(1);
+    assertThat((long) insert(survey).values(3, "B", "C").execute().block()).isEqualTo(1);
 
-    assertEquals(2, (long) update(survey).set(survey.name, "S").limit(2).execute().block());
+    assertThat((long) update(survey).set(survey.name, "S").limit(2).execute().block()).isEqualTo(2);
   }
 
   @Test
@@ -83,39 +86,44 @@ public abstract class UpdateBase extends AbstractBaseTest {
 
     // original state
     long count = query().from(survey).fetchCount().block();
-    assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+    assertThat((long) query().from(survey).where(survey.name.eq("S")).fetchCount().block())
+        .isEqualTo(0);
 
     // update call with 0 update count
-    assertEquals(
-        0, (long) update(survey).where(survey.name.eq("XXX")).set(paths, values).execute().block());
-    assertEquals(0, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+    assertThat(
+            (long) update(survey).where(survey.name.eq("XXX")).set(paths, values).execute().block())
+        .isEqualTo(0);
+    assertThat((long) query().from(survey).where(survey.name.eq("S")).fetchCount().block())
+        .isEqualTo(0);
 
     // update call with full update count
-    assertEquals(count, (long) update(survey).set(paths, values).execute().block());
-    assertEquals(
-        count, (long) query().from(survey).where(survey.name.eq("S")).fetchCount().block());
+    assertThat((long) update(survey).set(paths, values).execute().block()).isEqualTo(count);
+    assertThat((long) query().from(survey).where(survey.name.eq("S")).fetchCount().block())
+        .isEqualTo(count);
   }
 
   @Test
   public void update3() {
-    assertEquals(
-        1, (long) update(survey).set(survey.name, survey.name.append("X")).execute().block());
+    assertThat((long) update(survey).set(survey.name, survey.name.append("X")).execute().block())
+        .isEqualTo(1);
   }
 
   @Test
   public void update4() {
-    assertEquals(1, (long) insert(survey).values(2, "A", "B").execute().block());
-    assertEquals(
-        1,
-        (long) update(survey).set(survey.name, "AA").where(survey.name.eq("A")).execute().block());
+    assertThat((long) insert(survey).values(2, "A", "B").execute().block()).isEqualTo(1);
+    assertThat(
+            (long)
+                update(survey).set(survey.name, "AA").where(survey.name.eq("A")).execute().block())
+        .isEqualTo(1);
   }
 
   @Test
   public void update5() {
-    assertEquals(1, (long) insert(survey).values(3, "B", "C").execute().block());
-    assertEquals(
-        1,
-        (long) update(survey).set(survey.name, "BB").where(survey.name.eq("B")).execute().block());
+    assertThat((long) insert(survey).values(3, "B", "C").execute().block()).isEqualTo(1);
+    assertThat(
+            (long)
+                update(survey).set(survey.name, "BB").where(survey.name.eq("B")).execute().block())
+        .isEqualTo(1);
   }
 
   @Test
@@ -123,13 +131,14 @@ public abstract class UpdateBase extends AbstractBaseTest {
     List<Path<?>> paths = Collections.singletonList(survey.name);
     List<?> values = Collections.singletonList(null);
     long count = query().from(survey).fetchCount().block();
-    assertEquals(count, (long) update(survey).set(paths, values).execute().block());
+    assertThat((long) update(survey).set(paths, values).execute().block()).isEqualTo(count);
   }
 
   @Test
   public void setNull2() {
     long count = query().from(survey).fetchCount().block();
-    assertEquals(count, (long) update(survey).set(survey.name, (String) null).execute().block());
+    assertThat((long) update(survey).set(survey.name, (String) null).execute().block())
+        .isEqualTo(count);
   }
 
   @Test
@@ -138,7 +147,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
   public void setNullEmptyRootPath() {
     StringPath name = Expressions.stringPath("name");
     long count = query().from(survey).fetchCount().block();
-    assertEquals(count, (long) execute(update(survey).setNull(name)).block());
+    assertThat((long) execute(update(survey).setNull(name)).block()).isEqualTo(count);
   }
 
   @Test
@@ -149,7 +158,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     update.set(survey1.name, "AA");
     update.where(
         R2DBCExpressions.selectOne().from(employee).where(survey1.id.eq(employee.id)).exists());
-    assertEquals(1, (long) update.execute().block());
+    assertThat((long) update.execute().block()).isEqualTo(1);
   }
 
   @Test
@@ -164,7 +173,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     R2DBCUpdateClause update = update(survey1);
     update.set(survey1.name, "AA");
     update.where(sq.exists());
-    assertEquals(0, (long) update.execute().block());
+    assertThat((long) update.execute().block()).isEqualTo(0);
   }
 
   @Test
@@ -178,7 +187,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
             .from(employee)
             .where(survey1.name.eq(employee.lastname))
             .exists());
-    assertEquals(0, (long) update.execute().block());
+    assertThat((long) update.execute().block()).isEqualTo(0);
   }
 
   @Test
@@ -188,6 +197,6 @@ public abstract class UpdateBase extends AbstractBaseTest {
     R2DBCUpdateClause update = update(survey1);
     update.set(survey1.name, "AA");
     update.where(query().from(employee).where(survey1.id.eq(employee.id)).notExists());
-    assertEquals(0, (long) update.execute().block());
+    assertThat((long) update.execute().block()).isEqualTo(0);
   }
 }

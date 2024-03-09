@@ -1,6 +1,6 @@
 package com.querydsl.r2dbc;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
@@ -242,7 +242,7 @@ public class QueryPerformanceTest {
     serializer.serialize(md, false);
     serializer.getConstants();
     serializer.getConstantPaths();
-    assertNotNull(serializer.toString());
+    assertThat(serializer.toString()).isNotNull();
   }
 
   @Test

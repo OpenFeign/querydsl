@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ExpressionUtils;
@@ -32,7 +32,7 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
-    assertEquals("select 1", query.toString());
+    assertThat(query.toString()).isEqualTo("select 1");
   }
 
   @Override
@@ -53,27 +53,26 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
             R2DBCExpressions.select(one.as(col1)),
             R2DBCExpressions.select(two),
             R2DBCExpressions.select(three));
-    assertEquals(
-        "(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)",
-        union.toString());
+    assertThat(union.toString())
+        .isEqualTo("(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)");
   }
 
   @Test
   public void limit() {
     query.from(survey1).limit(5);
     query.getMetadata().setProjection(survey1.id);
-    assertEquals("select top 5 survey1.ID from SURVEY survey1", query.toString());
+    assertThat(query.toString()).isEqualTo("select top 5 survey1.ID from SURVEY survey1");
   }
 
   @Test
   public void limitOffset() {
     query.from(survey1).limit(5).offset(5);
     query.getMetadata().setProjection(survey1.id);
-    assertEquals(
-        "select survey1.ID from SURVEY survey1 "
-            + "order by 1 asc "
-            + "offset ? rows fetch next ? rows only",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "select survey1.ID from SURVEY survey1 "
+                + "order by 1 asc "
+                + "offset ? rows fetch next ? rows only");
   }
 
   @Test
@@ -81,7 +80,7 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
     R2DBCDeleteClause clause = new R2DBCDeleteClause(null, createTemplates(), survey1);
     clause.where(survey1.name.eq("Bob"));
     clause.limit(5);
-    assertEquals("delete top 5 from SURVEY\n" + "where SURVEY.NAME = ?", clause.toString());
+    assertThat(clause.toString()).isEqualTo("delete top 5 from SURVEY\n" + "where SURVEY.NAME = ?");
   }
 
   @Test
@@ -89,17 +88,17 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
     R2DBCUpdateClause clause = new R2DBCUpdateClause(null, createTemplates(), survey1);
     clause.set(survey1.name, "Bob");
     clause.limit(5);
-    assertEquals("update top 5 SURVEY\n" + "set NAME = ?", clause.toString());
+    assertThat(clause.toString()).isEqualTo("update top 5 SURVEY\n" + "set NAME = ?");
   }
 
   @Test
   public void modifiers() {
     query.from(survey1).limit(5).offset(3).orderBy(survey1.id.asc());
     query.getMetadata().setProjection(survey1.id);
-    assertEquals(
-        "select survey1.ID from SURVEY survey1 order by survey1.ID asc offset ? rows fetch next ?"
-            + " rows only",
-        query.toString());
+    assertThat(query.toString())
+        .isEqualTo(
+            "select survey1.ID from SURVEY survey1 order by survey1.ID asc offset ? rows fetch next ?"
+                + " rows only");
   }
 
   @Test
