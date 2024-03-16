@@ -130,7 +130,7 @@
     <jpa.version>3.1.0</jpa.version>
 
     <mvn.version>3.9.6</mvn.version>
-    <guava.version>33.0.0-jre</guava.version>
+    <guava.version>33.1.0-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
     <mysema.lang.version>0.2.4</mysema.lang.version>
     <byte-buddy.version>1.14.12</byte-buddy.version>
