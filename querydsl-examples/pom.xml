@@ -73,6 +73,16 @@
             <groupId>org.semver</groupId>
             <artifactId>enforcer-rule</artifactId>
             <version>0.9.33</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+              </exclusion>
+            </exclusions>
           </dependency>
           <dependency>
             <groupId>org.ow2.asm</groupId>

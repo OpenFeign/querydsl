@@ -143,6 +143,7 @@
     <kotlin.version>1.9.23</kotlin.version>
     <dokka.version>1.9.20</dokka.version>
     <scala.version>2.11.12</scala.version>
+    <asm.version>9.7</asm.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
     <osgi.import.package.root>*</osgi.import.package.root>
@@ -242,7 +243,7 @@
       <dependency>
         <groupId>org.ow2.asm</groupId>
         <artifactId>asm-bom</artifactId>
-        <version>9.7</version>
+        <version>${asm.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
