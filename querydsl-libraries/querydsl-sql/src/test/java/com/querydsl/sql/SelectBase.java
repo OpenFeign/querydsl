@@ -90,6 +90,7 @@ import com.querydsl.sql.domain.QIdName;
 import com.querydsl.sql.domain.QNumberTest;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -2567,11 +2568,38 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void statementOptions() {
-    StatementOptions options = StatementOptions.builder().setFetchSize(15).setMaxRows(150).build();
-    SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
-    query.setStatementOptions(options);
+
+    // Set a query factory with a predefined StatementOptions
+    StatementOptions options1 = StatementOptions.builder().setFetchSize(24).setMaxRows(500).build();
+    Connection connection = Connections.getConnection();
+    Configuration configuration = Connections.getConfiguration();
+    configuration = new Configuration(configuration.getTemplates(), options1);
+    SQLQueryFactory sqlQueryFactory = new SQLQueryFactory(configuration, () -> connection);
+
+    // Check that a query created with the query factory gets the predefined StatementOptions passed
+    // to the factory when it was created
+    SQLQuery<?> query = sqlQueryFactory.from(employee).orderBy(employee.id.asc());
     query.addListener(
         new SQLBaseListener() {
+          @Override
+          public void preExecute(SQLListenerContext context) {
+            try {
+              assertEquals(24, context.getPreparedStatement().getFetchSize());
+              assertEquals(500, context.getPreparedStatement().getMaxRows());
+            } catch (SQLException e) {
+              throw new RuntimeException(e);
+            }
+          }
+        });
+    query.select(employee.id).fetch();
+
+    // Check that we can override the statement options on a per-query basis
+    StatementOptions options2 = StatementOptions.builder().setFetchSize(15).setMaxRows(150).build();
+    query = sqlQueryFactory.from(employee).orderBy(employee.id.asc()).setStatementOptions(options2);
+
+    query.addListener(
+        new SQLBaseListener() {
+          @Override
           public void preExecute(SQLListenerContext context) {
             try {
               assertEquals(15, context.getPreparedStatement().getFetchSize());
