@@ -450,6 +450,7 @@
               <excludeModule>querydsl-maven-plugin</excludeModule>
               <excludeModule>querydsl-example.*</excludeModule>
             </excludeModules>
+            <accessModifier>public</accessModifier>
           </parameter>
         </configuration>
         <executions>
