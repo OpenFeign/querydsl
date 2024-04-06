@@ -184,7 +184,6 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
-  @Ignore
   @NoHibernate
   @NoOpenJPA
   @NoBatooJPA
