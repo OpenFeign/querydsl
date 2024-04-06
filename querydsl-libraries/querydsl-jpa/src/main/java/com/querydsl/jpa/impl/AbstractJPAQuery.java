@@ -30,7 +30,9 @@ import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.Query;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -48,9 +50,9 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
     extends JPAQueryBase<T, Q> {
 
-  private static final Logger logger = Logger.getLogger(JPAQuery.class.getName());
+  private static final Logger logger = Logger.getLogger(AbstractJPAQuery.class.getName());
 
-  protected final Map<String, Object> hints = new LinkedHashMap<>();
+  protected final Map<String, Collection<Object>> hints = new LinkedHashMap<>();
 
   protected final EntityManager entityManager;
 
@@ -150,8 +152,8 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
       query.setFlushMode(flushMode);
     }
 
-    for (Map.Entry<String, Object> entry : hints.entrySet()) {
-      query.setHint(entry.getKey(), entry.getValue());
+    for (Map.Entry<String, Collection<Object>> entry : hints.entrySet()) {
+      entry.getValue().forEach(value -> query.setHint(entry.getKey(), value));
     }
 
     // set transformer, if necessary and possible
@@ -356,7 +358,8 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
 
   @SuppressWarnings("unchecked")
   public Q setHint(String name, Object value) {
-    hints.put(name, value);
+    hints.computeIfAbsent(name, key -> new LinkedHashSet<>());
+    hints.get(name).add(value);
     return (Q) this;
   }
 
