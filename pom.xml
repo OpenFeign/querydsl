@@ -128,6 +128,7 @@
     <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
     <eclipselink.version>4.0.2</eclipselink.version>
     <jpa.version>3.1.0</jpa.version>
+    <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 
     <mvn.version>3.9.6</mvn.version>
     <guava.version>33.1.0-jre</guava.version>
@@ -256,7 +257,7 @@
       <dependency>
         <groupId>jakarta.annotation</groupId>
         <artifactId>jakarta.annotation-api</artifactId>
-        <version>3.0.0</version>
+        <version>${jakarta.annotation.version}</version>
       </dependency>
       <dependency>
         <groupId>jakarta.validation</groupId>
