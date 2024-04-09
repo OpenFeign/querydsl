@@ -14,29 +14,93 @@
  */
 package com.querydsl.r2dbc;
 
-import static com.querydsl.core.Target.*;
-import static com.querydsl.r2dbc.Constants.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.FIREBIRD;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.SQLITE;
+import static com.querydsl.core.Target.SQLSERVER;
+import static com.querydsl.core.Target.TERADATA;
+import static com.querydsl.r2dbc.Constants.date;
+import static com.querydsl.r2dbc.Constants.employee;
+import static com.querydsl.r2dbc.Constants.employee2;
+import static com.querydsl.r2dbc.Constants.survey;
+import static com.querydsl.r2dbc.Constants.survey2;
+import static com.querydsl.r2dbc.Constants.time;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.common.collect.Maps;
 import com.mysema.commons.lang.Pair;
-import com.querydsl.core.*;
+import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.QueryException;
+import com.querydsl.core.QuerydslModule;
+import com.querydsl.core.ReactiveFetchable;
+import com.querydsl.core.ReactiveQueryExecution;
+import com.querydsl.core.Target;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.testutil.Serialization;
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.*;
-import com.querydsl.r2dbc.domain.*;
-import com.querydsl.sql.*;
+import com.querydsl.core.types.ArrayConstructorExpression;
+import com.querydsl.core.types.Concatenation;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.MappingProjection;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.ParamNotSetException;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Coalesce;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.DateTimeExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.MathExpressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.NumberTemplate;
+import com.querydsl.core.types.dsl.Param;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.StringExpressions;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.Wildcard;
+import com.querydsl.r2dbc.domain.Employee;
+import com.querydsl.r2dbc.domain.IdName;
+import com.querydsl.r2dbc.domain.QEmployee;
+import com.querydsl.r2dbc.domain.QEmployeeNoPK;
+import com.querydsl.r2dbc.domain.QIdName;
+import com.querydsl.r2dbc.domain.QNumberTest;
+import com.querydsl.sql.Beans;
+import com.querydsl.sql.DatePart;
+import com.querydsl.sql.QBeans;
+import com.querydsl.sql.RelationalPathBase;
+import com.querydsl.sql.StatementOptions;
+import com.querydsl.sql.WithinGroup;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -2721,9 +2785,13 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   public void statementOptions() {
     StatementOptions options = StatementOptions.builder().setFetchSize(15).setMaxRows(150).build();
-    R2DBCQuery<?> query = query().from(employee).orderBy(employee.id.asc());
-    query.setStatementOptions(options);
-    query.select(employee.id).fetch().collectList().block();
+    var query =
+        query()
+            .from(employee)
+            .orderBy(employee.id.asc())
+            .statementOptions(options)
+            .select(employee.id);
+    query.fetch().collectList().block();
   }
 
   @Test

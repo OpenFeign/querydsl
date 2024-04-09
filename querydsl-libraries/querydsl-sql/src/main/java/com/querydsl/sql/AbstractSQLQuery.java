@@ -14,9 +14,18 @@
 package com.querydsl.sql;
 
 import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.QueryException;
+import com.querydsl.core.QueryFlag;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.support.QueryMixin;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.ParamNotSetException;
+import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -68,7 +77,7 @@ public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
 
   private SQLListenerContext parentContext;
 
-  private StatementOptions statementOptions = StatementOptions.DEFAULT;
+  private StatementOptions statementOptions;
 
   public AbstractSQLQuery(@Nullable Connection conn, Configuration configuration) {
     this(conn, configuration, new DefaultQueryMetadata());
@@ -80,6 +89,7 @@ public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
     this.conn = conn;
     this.listeners = new SQLListeners(configuration.getListeners());
     this.useLiterals = configuration.getUseLiterals();
+    this.statementOptions = configuration.getStatementOptions();
   }
 
   public AbstractSQLQuery(Supplier<Connection> connProvider, Configuration configuration) {
@@ -92,6 +102,7 @@ public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
     this.connProvider = connProvider;
     this.listeners = new SQLListeners(configuration.getListeners());
     this.useLiterals = configuration.getUseLiterals();
+    this.statementOptions = configuration.getStatementOptions();
   }
 
   /**
@@ -674,8 +685,39 @@ public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
    * Set the options to be applied to the JDBC statements of this query
    *
    * @param statementOptions options to be applied to statements
+   * @return the query itslef for method chaining
+   * @deprecated prefer fluent setter {@link AbstractSQLQuery#statementOptions(StatementOptions)}
    */
+  @Deprecated
   public void setStatementOptions(StatementOptions statementOptions) {
     this.statementOptions = statementOptions;
+  }
+
+  /**
+   * Set the options to be applied to the JDBC statements of this query
+   *
+   * @param statementOptions options to be applied to statements
+   * @return the query itslef for method chaining
+   */
+  public Q statementOptions(StatementOptions statementOptions) {
+    this.statementOptions = statementOptions;
+    return queryMixin.getSelf();
+  }
+
+  /**
+   * Set the fetch size of the JDBC statement of this query
+   *
+   * @param fetchSize the fecth size to be used by the underlying JDBC statement
+   * @return the query itslef for method chaining
+   */
+  public Q fetchSize(int fetchSize) {
+    StatementOptions newStatementOptions =
+        StatementOptions.builder()
+            .setFetchSize(fetchSize)
+            .setQueryTimeout(this.statementOptions.getQueryTimeout())
+            .setMaxFieldSize(this.statementOptions.getMaxFieldSize())
+            .setMaxRows(this.statementOptions.getMaxRows())
+            .build();
+    return statementOptions(newStatementOptions);
   }
 }
