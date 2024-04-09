@@ -16,7 +16,4 @@ package com.querydsl.apt.domain.p1;
 import com.querydsl.core.annotations.QueryEntity;
 
 @QueryEntity
-public class SEntity1 {
-
-  String entity1Field;
-}
+public record SEntity1(String entity1Field) {}

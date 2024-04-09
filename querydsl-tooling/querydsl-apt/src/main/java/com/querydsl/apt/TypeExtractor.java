@@ -14,7 +14,15 @@
 package com.querydsl.apt;
 
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.*;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ErrorType;
+import javax.lang.model.type.ExecutableType;
+import javax.lang.model.type.NoType;
+import javax.lang.model.type.NullType;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeVariable;
+import javax.lang.model.type.WildcardType;
 
 /**
  * {@code TypeExtractor} is a visitor implementation which extracts a concrete type from a generic
@@ -49,12 +57,13 @@ class TypeExtractor extends SimpleTypeVisitorAdapter<TypeElement, Void> {
   public TypeElement visitDeclared(DeclaredType t, Void p) {
     if (t.asElement() instanceof TypeElement) {
       TypeElement typeElement = (TypeElement) t.asElement();
-      switch (typeElement.getKind()) {
-        case ENUM:
+      switch (typeElement.getKind().name()) {
+        case "ENUM":
           return skipEnum ? null : typeElement;
-        case CLASS:
+        case "RECORD":
+        case "CLASS":
           return typeElement;
-        case INTERFACE:
+        case "INTERFACE":
           return visitInterface(t);
         default:
           throw new IllegalArgumentException("Illegal type: " + typeElement);
