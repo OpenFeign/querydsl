@@ -2595,7 +2595,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
     // Check that we can override the statement options on a per-query basis
     StatementOptions options2 = StatementOptions.builder().setFetchSize(15).setMaxRows(150).build();
-    query = sqlQueryFactory.from(employee).orderBy(employee.id.asc()).setStatementOptions(options2);
+    query = sqlQueryFactory.from(employee).orderBy(employee.id.asc()).statementOptions(options2);
 
     query.addListener(
         new SQLBaseListener() {

@@ -14,9 +14,18 @@
 package com.querydsl.sql;
 
 import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.QueryException;
+import com.querydsl.core.QueryFlag;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.support.QueryMixin;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.ParamNotSetException;
+import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -26,7 +35,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -673,8 +686,20 @@ public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
    *
    * @param statementOptions options to be applied to statements
    * @return the query itslef for method chaining
+   * @deprecated prefer fluent setter {@link AbstractSQLQuery#statementOptions(StatementOptions)}
    */
-  public Q setStatementOptions(StatementOptions statementOptions) {
+  @Deprecated
+  public void setStatementOptions(StatementOptions statementOptions) {
+    this.statementOptions = statementOptions;
+  }
+
+  /**
+   * Set the options to be applied to the JDBC statements of this query
+   *
+   * @param statementOptions options to be applied to statements
+   * @return the query itslef for method chaining
+   */
+  public Q statementOptions(StatementOptions statementOptions) {
     this.statementOptions = statementOptions;
     return queryMixin.getSelf();
   }
@@ -693,6 +718,6 @@ public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
             .setMaxFieldSize(this.statementOptions.getMaxFieldSize())
             .setMaxRows(this.statementOptions.getMaxRows())
             .build();
-    return setStatementOptions(newStatementOptions);
+    return statementOptions(newStatementOptions);
   }
 }
