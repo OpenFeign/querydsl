@@ -18,7 +18,11 @@ import com.querydsl.core.QueryException;
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.QueryMixin;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.ParamNotSetException;
+import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -26,8 +30,16 @@ import com.querydsl.r2dbc.binding.BindMarkers;
 import com.querydsl.r2dbc.binding.BindTarget;
 import com.querydsl.r2dbc.binding.StatementWrapper;
 import com.querydsl.sql.StatementOptions;
-import io.r2dbc.spi.*;
-import java.util.*;
+import io.r2dbc.spi.ColumnMetadata;
+import io.r2dbc.spi.Connection;
+import io.r2dbc.spi.Row;
+import io.r2dbc.spi.RowMetadata;
+import io.r2dbc.spi.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -375,9 +387,21 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
    * Set the options to be applied to the JDBC statements of this query
    *
    * @param statementOptions options to be applied to statements
+   * @deprecated prefer fluent setter {@link AbstractR2DBCQuery#statementOptions(StatementOptions)}
    */
+  @Deprecated
   public void setStatementOptions(StatementOptions statementOptions) {
     this.statementOptions = statementOptions;
+  }
+
+  /**
+   * Set the options to be applied to the JDBC statements of this query
+   *
+   * @param statementOptions options to be applied to statements
+   */
+  public Q statementOptions(StatementOptions statementOptions) {
+    this.statementOptions = statementOptions;
+    return queryMixin.getSelf();
   }
 
   @FunctionalInterface
