@@ -20,15 +20,18 @@ Well, openfeign is already stabilished and having querydsl under it gives a bett
 
 ### What's next?
 
-Step 1: Get project setup with CI, change groupId to openfeign.  Just bare basic to get a project operational.
+Initial goals accomplished.
 
-Step 2: Release querydsl `5.0.1`, exact same sources as `5.0.0`, but using step 1 to release from new home.
+We now have a stable fork with regular releases.  Patches from community are happening and this project is moving idenpendently.
 
-Step 3: Immediatelly after step 2, start dependabot on `5.0.0` branch and get all old dependencies up-to-date and release 5.1.
+I'm here to help those who help themselves.  
 
-Step 4: Bring all these changes to `master` and release `6.0.0`.
+What does it mean?
 
-From that point, try to keep regular releases going on, hopefully with patches from community.
+- If you send a PR, I will review, give an honest feedback, merge as soon I'm happy with it, and release as soon it's practical.
+- If you create an issue, well, I'm unlikely to get involved.
+
+I dedicate some of my free time to this project, so I will favor people that are contributing to it.
 
 ### What is the endgame?
 
