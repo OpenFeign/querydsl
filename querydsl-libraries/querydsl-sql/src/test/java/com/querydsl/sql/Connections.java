@@ -135,7 +135,7 @@ public final class Connections {
 
   private static Connection getOracle() throws SQLException, ClassNotFoundException {
     Class.forName("oracle.jdbc.driver.OracleDriver");
-    String url = "jdbc:oracle:thin:@localhost:1521:xe";
+    String url = "jdbc:oracle:thin:@localhost:1521/XEPDB1";
     return DriverManager.getConnection(url, "querydsl", "querydsl");
   }
 
