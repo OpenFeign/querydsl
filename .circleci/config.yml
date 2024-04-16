@@ -230,7 +230,7 @@ jobs:
     working_directory: ~/querydsl
     docker:
       - image: velo/toolchains-4-ci-builds:with-21
-      - image: gvenzl/oracle-xe:11
+      - image: gvenzl/oracle-xe:slim-faststart
         environment:
           - ORACLE_PASSWORD=querydsl
           - APP_USER=querydsl
