@@ -597,9 +597,10 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
     handle(usingExpression);
     dmlWithSchema = originalDmlWithSchema;
 
-    append("\n");
     append(templates.getOn());
+    dmlWithSchema = true;
     handle(usingOn);
+    dmlWithSchema = originalDmlWithSchema;
 
     for (final SQLMergeUsingCase when : whens) {
       append("\nwhen ");
