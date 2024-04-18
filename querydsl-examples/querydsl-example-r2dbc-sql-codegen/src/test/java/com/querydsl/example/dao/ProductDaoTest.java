@@ -1,8 +1,8 @@
 package com.querydsl.example.dao;
 
-import com.google.common.collect.ImmutableSet;
 import com.querydsl.example.dto.Product;
 import com.querydsl.example.dto.ProductL10n;
+import java.util.Set;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
@@ -41,7 +41,7 @@ public class ProductDaoTest extends AbstractDaoTest {
   public void delete() {
     Product product = new Product();
     product.setName("ProductX");
-    product.setLocalizations(ImmutableSet.of(new ProductL10n()));
+    product.setLocalizations(Set.of(new ProductL10n()));
 
     Mono<Product> setup =
         supplierDao

@@ -1,9 +1,9 @@
 package com.querydsl.example.dao;
 
-import com.google.common.collect.ImmutableSet;
 import com.querydsl.example.dto.CustomerPaymentMethod;
 import com.querydsl.example.dto.Order;
 import com.querydsl.example.dto.OrderProduct;
+import java.util.Set;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
@@ -47,7 +47,7 @@ public class OrderDaoTest extends AbstractDaoTest {
 
     Order order = new Order();
     order.setCustomerPaymentMethod(paymentMethod);
-    order.setOrderProducts(ImmutableSet.of(orderProduct));
+    order.setOrderProducts(Set.of(orderProduct));
 
     Mono<Order> setup =
         orderDao

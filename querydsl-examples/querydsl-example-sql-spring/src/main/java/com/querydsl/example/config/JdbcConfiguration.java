@@ -1,6 +1,5 @@
 package com.querydsl.example.config;
 
-import com.jolbox.bonecp.BoneCPDataSource;
 import com.querydsl.sql.H2Templates;
 import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.SQLTemplates;
@@ -15,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
@@ -25,9 +25,15 @@ public class JdbcConfiguration {
 
   @Bean
   public DataSource dataSource() {
-    BoneCPDataSource dataSource = new BoneCPDataSource();
-    dataSource.setDriverClass(env.getRequiredProperty("jdbc.driver"));
-    dataSource.setJdbcUrl(env.getRequiredProperty("jdbc.url"));
+    SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
+    Class driver;
+    try {
+      driver = Class.forName(env.getRequiredProperty("jdbc.driver"));
+    } catch (ClassNotFoundException | IllegalStateException e) {
+      throw new RuntimeException(e);
+    }
+    dataSource.setDriverClass(driver);
+    dataSource.setUrl(env.getRequiredProperty("jdbc.url"));
     dataSource.setUsername(env.getRequiredProperty("jdbc.user"));
     dataSource.setPassword(env.getRequiredProperty("jdbc.password"));
     return dataSource;

@@ -1,6 +1,5 @@
 package com.querydsl.example.config;
 
-import com.google.common.collect.ImmutableSet;
 import com.querydsl.example.dao.*;
 import com.querydsl.example.dto.*;
 import com.querydsl.r2dbc.R2DBCQueryFactory;
@@ -8,6 +7,7 @@ import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.Statement;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -52,7 +52,7 @@ public class TestDataService {
     l10nDe.setLang("de");
     l10nDe.setName("Schraubenzieher");
 
-    product.setLocalizations(ImmutableSet.of(l10nEn, l10nDe));
+    product.setLocalizations(Set.of(l10nEn, l10nDe));
     product1 = productDao.save(product).block().getId();
 
     Product product2 = new Product();
@@ -64,7 +64,7 @@ public class TestDataService {
     l10nEn.setLang("en");
     l10nEn.setName("Hammer");
 
-    product2.setLocalizations(ImmutableSet.of(l10nEn));
+    product2.setLocalizations(Set.of(l10nEn));
     productDao.save(product2).block();
 
     // persons
@@ -93,13 +93,13 @@ public class TestDataService {
     customerAddress.setFromDate(LocalDate.now());
 
     Customer customer = new Customer();
-    customer.setAddresses(ImmutableSet.of(customerAddress));
+    customer.setAddresses(Set.of(customerAddress));
     customer.setContactPerson(person);
     customer.setName("SmallS");
     customer1 = customerDao.save(customer).block().getId();
 
     Customer customer2 = new Customer();
-    customer2.setAddresses(ImmutableSet.<CustomerAddress>of());
+    customer2.setAddresses(Set.<CustomerAddress>of());
     customer2.setContactPerson(person);
     customer2.setName("MediumM");
     customerDao.save(customer2).block();
@@ -119,7 +119,7 @@ public class TestDataService {
     Order order = new Order();
     order.setCustomerPaymentMethod(paymentMethod);
     order.setOrderPlacedDate(LocalDate.now());
-    order.setOrderProducts(ImmutableSet.of(orderProduct));
+    order.setOrderProducts(Set.of(orderProduct));
     order.setTotalOrderPrice(13124.00);
     order1 = orderDao.save(order).block().getId();
   }
