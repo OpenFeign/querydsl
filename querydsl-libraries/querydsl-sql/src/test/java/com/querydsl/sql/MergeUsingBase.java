@@ -161,4 +161,16 @@ public class MergeUsingBase extends AbstractBaseTest {
 
     assertThat(merge.execute()).isEqualTo(1);
   }
+
+  @Test
+  @IncludeIn({H2})
+  public void merge_with_using_direct_table_with_schema() {
+    SQLMergeUsingClause merge =
+        merge(survey).using(employee).on(survey.id.eq(employee.id)).whenMatched().thenDelete();
+
+    // If running with schema, need to have schema also in ON statement
+    if (merge.toString().contains("PUBLIC.SURVEY")) {
+      assertThat(merge.toString()).contains("on PUBLIC.SURVEY.ID = e.ID");
+    }
+  }
 }
