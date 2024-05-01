@@ -47,6 +47,7 @@ public class PostGISTemplates extends PostgreSQLTemplates {
   public PostGISTemplates(char escape, boolean quote) {
     super(escape, quote);
     addCustomType(PGgeometryType.DEFAULT);
+    addCustomType(JtsGeometryType.DEFAULT);
     add(SpatialTemplatesSupport.getSpatialOps(true));
     add(SpatialOps.DISTANCE_SPHERE, "ST_Distance_Sphere({0}, {1})");
     add(SpatialOps.DISTANCE_SPHEROID, "ST_Distance_Spheroid({0}, {1})");
