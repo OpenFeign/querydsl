@@ -96,7 +96,7 @@
     <argLine>-Xms256m -Xmx512m</argLine>
 
     <!-- default bytecode version for src/main -->
-    <main.java.version>17</main.java.version>
+    <main.java.version>11</main.java.version>
     <latest.java.version>21</latest.java.version>
 
     <git-code-format-maven-plugin.version>5.3</git-code-format-maven-plugin.version>
