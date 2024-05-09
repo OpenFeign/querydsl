@@ -45,12 +45,6 @@ commands:
           name: 'Configure GPG keys'
           command: |
             echo -e "$GPG_KEY" | gpg --batch --no-tty --import --yes
-  nexus-deploy:
-    steps:
-      - run:
-          name: 'Deploy Core Modules Sonatype'
-          command: |
-            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease
 
 # our job defaults
 defaults: &defaults
@@ -325,7 +319,7 @@ jobs:
             ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
       - save-test-results
 
-  deploy:
+  deploySnapshot:
     executor:
       name: java
     <<: *defaults
@@ -337,7 +331,27 @@ jobs:
             - querydsl-dependencies-
       - resolve-dependencies
       - configure-gpg
-      - nexus-deploy
+      - run:
+          name: 'Deploy Core Modules Sonatype'
+          command: |
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease
+
+  deployRelease:
+    executor:
+      name: java
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
+      - resolve-dependencies
+      - configure-gpg
+      - run:
+          name: 'Deploy Core Modules Sonatype'
+          command: |
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease,staging
 
 workflows:
   version: 2
@@ -424,7 +438,7 @@ workflows:
           name: 'snapshot'
           filters:
             <<: *master-only
-      - deploy:
+      - deploySnapshot:
           name: 'deploy snapshot'
           requires:
             - 'snapshot'
@@ -434,7 +448,7 @@ workflows:
 
   release:
     jobs:
-      - deploy:
+      - deployRelease:
           name: 'release to maven central'
           context: Sonatype
           filters:
