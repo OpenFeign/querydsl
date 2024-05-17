@@ -13,7 +13,6 @@
   <description>SQL Spring support for Querydsl</description>
 
   <properties>
-    <spring.version>6.1.6</spring.version>
     <!-- to match spring SDK version -->
     <main.java.version>17</main.java.version>
   </properties>
