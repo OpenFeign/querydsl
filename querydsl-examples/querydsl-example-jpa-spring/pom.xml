@@ -10,11 +10,6 @@
   <artifactId>querydsl-example-jpa-spring</artifactId>
   <name>Querydsl example - JPA Spring</name>
 
-  <properties>
-    <!-- to match spring JDK version -->
-    <main.java.version>17</main.java.version>
-  </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
