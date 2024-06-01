@@ -13,6 +13,7 @@
  */
 package com.querydsl.codegen;
 
+import static com.querydsl.codegen.utils.Symbols.THIS_ESCAPE;
 import static com.querydsl.codegen.utils.Symbols.UNCHECKED;
 
 import com.querydsl.codegen.utils.CodeWriter;
@@ -110,6 +111,7 @@ public class DefaultEmbeddableSerializer extends DefaultEntitySerializer
       writer.annotation(annotation);
     }
 
+    writer.suppressWarnings(THIS_ESCAPE);
     writer.line("@", generatedAnnotationClass.getSimpleName(), "(\"", getClass().getName(), "\")");
 
     if (category == TypeCategory.BOOLEAN || category == TypeCategory.STRING) {

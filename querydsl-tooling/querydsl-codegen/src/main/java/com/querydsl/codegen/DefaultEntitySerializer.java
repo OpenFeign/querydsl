@@ -374,6 +374,7 @@ public class DefaultEntitySerializer implements EntitySerializer {
       writer.annotation(annotation);
     }
 
+    writer.suppressWarnings(THIS_ESCAPE);
     writer.line("@", generatedAnnotationClass.getSimpleName(), "(\"", getClass().getName(), "\")");
 
     if (category == TypeCategory.BOOLEAN || category == TypeCategory.STRING) {
@@ -407,7 +408,7 @@ public class DefaultEntitySerializer implements EntitySerializer {
     for (Constructor c : model.getConstructors()) {
       // begin
       if (!localName.equals(genericName)) {
-        writer.suppressWarnings(UNCHECKED, "this-escape");
+        writer.suppressWarnings(UNCHECKED);
       }
       Type returnType = new ClassType(ConstructorExpression.class, model);
       final boolean asExpr = sizes.add(c.getParameters().size());
