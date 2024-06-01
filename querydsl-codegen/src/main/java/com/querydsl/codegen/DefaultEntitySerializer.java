@@ -374,6 +374,7 @@ public class DefaultEntitySerializer implements EntitySerializer {
       writer.annotation(annotation);
     }
 
+    writer.suppressWarnings(THIS_ESCAPE);
     writer.line("@", generatedAnnotationClass.getSimpleName(), "(\"", getClass().getName(), "\")");
 
     if (category == TypeCategory.BOOLEAN || category == TypeCategory.STRING) {

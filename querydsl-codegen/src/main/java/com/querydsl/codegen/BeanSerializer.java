@@ -13,6 +13,8 @@
  */
 package com.querydsl.codegen;
 
+import static com.querydsl.codegen.utils.Symbols.THIS_ESCAPE;
+
 import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Parameter;
@@ -179,6 +181,7 @@ public class BeanSerializer implements Serializer {
       writer.annotation(annotation);
     }
 
+    writer.suppressWarnings(THIS_ESCAPE);
     writer.line("@", generatedAnnotationClass.getSimpleName(), "(\"", getClass().getName(), "\")");
 
     if (!interfaces.isEmpty()) {

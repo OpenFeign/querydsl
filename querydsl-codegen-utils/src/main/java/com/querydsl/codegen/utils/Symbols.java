@@ -50,6 +50,8 @@ public final class Symbols {
 
   public static final String THIS = "this";
 
+  public static final String THIS_ESCAPE = "this-escape";
+
   public static final String UNCHECKED = "unchecked";
 
   private Symbols() {}
