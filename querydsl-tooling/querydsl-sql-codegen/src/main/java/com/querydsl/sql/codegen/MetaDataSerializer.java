@@ -16,6 +16,7 @@ package com.querydsl.sql.codegen;
 import static com.querydsl.codegen.utils.Symbols.COMMA;
 import static com.querydsl.codegen.utils.Symbols.NEW;
 import static com.querydsl.codegen.utils.Symbols.SUPER;
+import static com.querydsl.codegen.utils.Symbols.THIS_ESCAPE;
 
 import com.querydsl.codegen.*;
 import com.querydsl.codegen.utils.CodeWriter;
@@ -177,6 +178,7 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
   protected void introClassHeader(CodeWriter writer, EntityType model) throws IOException {
     Type queryType = typeMappings.getPathType(model, model, true);
 
+    writer.suppressWarnings(THIS_ESCAPE);
     writer.line("@", generatedAnnotationClass.getSimpleName(), "(\"", getClass().getName(), "\")");
 
     TypeCategory category = model.getOriginalCategory();
