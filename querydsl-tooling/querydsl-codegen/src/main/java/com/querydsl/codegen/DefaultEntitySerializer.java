@@ -374,6 +374,7 @@ public class DefaultEntitySerializer implements EntitySerializer {
       writer.annotation(annotation);
     }
 
+    writer.suppressWarnings(THIS_ESCAPE);
     writer.line("@", generatedAnnotationClass.getSimpleName(), "(\"", getClass().getName(), "\")");
 
     if (category == TypeCategory.BOOLEAN || category == TypeCategory.STRING) {
@@ -407,7 +408,7 @@ public class DefaultEntitySerializer implements EntitySerializer {
     for (Constructor c : model.getConstructors()) {
       // begin
       if (!localName.equals(genericName)) {
-        writer.suppressWarnings(UNCHECKED, "this-escape");
+        writer.suppressWarnings(UNCHECKED);
       }
       Type returnType = new ClassType(ConstructorExpression.class, model);
       final boolean asExpr = sizes.add(c.getParameters().size());
@@ -485,6 +486,9 @@ public class DefaultEntitySerializer implements EntitySerializer {
 
     // other packages
     writer.imports(SimpleExpression.class.getPackage());
+
+    // explicit reference to StringTemplate
+    writer.importClasses("com.querydsl.core.types.dsl.StringTemplate");
 
     // other classes
     List<Class<?>> classes = new ArrayList<>();

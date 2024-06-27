@@ -13,6 +13,8 @@
  */
 package com.querydsl.codegen;
 
+import static com.querydsl.codegen.utils.Symbols.THIS_ESCAPE;
+
 import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.model.*;
 import com.querydsl.core.types.ConstructorExpression;
@@ -87,6 +89,7 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
     // javadoc
     writer.javadoc(queryType + " is a Querydsl Projection type for " + simpleName);
 
+    writer.suppressWarnings(THIS_ESCAPE);
     writer.line("@", generatedAnnotationClass.getSimpleName(), "(\"", getClass().getName(), "\")");
 
     // class header
