@@ -487,6 +487,9 @@ public class DefaultEntitySerializer implements EntitySerializer {
     // other packages
     writer.imports(SimpleExpression.class.getPackage());
 
+    // explicit reference to StringTemplate
+    writer.importClasses("com.querydsl.core.types.dsl.StringTemplate");
+
     // other classes
     List<Class<?>> classes = new ArrayList<>();
     classes.add(PathMetadata.class);
