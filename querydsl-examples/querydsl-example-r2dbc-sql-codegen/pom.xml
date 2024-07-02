@@ -5,18 +5,11 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>6.6-SNAPSHOT</version>
+    <version>7.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-example-r2dbc-sql-codegen</artifactId>
   <name>Querydsl example - R2DBC SQL Codegen</name>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <!-- to match spring JDK version -->
-    <main.java.version>17</main.java.version>
-  </properties>
 
   <dependencyManagement>
     <dependencies>

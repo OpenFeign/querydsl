@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-root</artifactId>
-  <version>6.6-SNAPSHOT</version>
+  <version>7.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>Querydsl</name>
@@ -96,7 +96,7 @@
     <argLine>-Xms256m -Xmx512m</argLine>
 
     <!-- default bytecode version for src/main -->
-    <main.java.version>11</main.java.version>
+    <main.java.version>17</main.java.version>
     <latest.java.version>21</latest.java.version>
 
     <git-code-format-maven-plugin.version>5.3</git-code-format-maven-plugin.version>
@@ -125,10 +125,10 @@
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
     <!-- JPA deps -->
-    <hibernate.version>6.5.2.Final</hibernate.version>
+    <hibernate.version>7.0.0.Alpha2</hibernate.version>
     <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
-    <eclipselink.version>4.0.3</eclipselink.version>
-    <jpa.version>3.1.0</jpa.version>
+    <eclipselink.version>5.0.0-B02</eclipselink.version>
+    <jpa.version>3.2.0</jpa.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 
     <mvn.version>3.9.8</mvn.version>
