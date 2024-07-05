@@ -92,6 +92,6 @@ public abstract class AbstractCodeWriter<T extends AbstractCodeWriter<T>>
 
   @Override
   public T nl() throws IOException {
-    return append(System.lineSeparator());
+    return append("\n");
   }
 }

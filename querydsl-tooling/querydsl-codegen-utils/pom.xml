@@ -8,7 +8,7 @@
     <artifactId>querydsl-tooling</artifactId>
     <version>6.6-SNAPSHOT</version>
   </parent>
-  <artifactId>codegen-utils</artifactId>
+  <artifactId>querydsl-codegen-utils</artifactId>
 
   <name>Querydsl - Codegen utils</name>
   <description>Code generation and compilation for Java</description>
@@ -56,14 +56,6 @@
               <Automatic-Module-Name>com.querydsl.codegen.utils</Automatic-Module-Name>
             </manifestEntries>
           </archive>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <skipTests>true</skipTests>
         </configuration>
       </plugin>
     </plugins>

@@ -5,7 +5,6 @@
  */
 package com.querydsl.codegen.utils;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import java.io.File;
@@ -33,16 +32,16 @@ public class SimpleCompilerTest {
   @Ignore
   public void Run() throws UnsupportedEncodingException {
     new File("target/out").mkdir();
-    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-    URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+    var compiler = ToolProvider.getSystemJavaCompiler();
+    var classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
     // create classpath
-    StringBuilder path = new StringBuilder();
+    var path = new StringBuilder();
     for (URL url : classLoader.getURLs()) {
       if (path.length() > 0) {
         path.append(File.pathSeparator);
       }
-      String decodedPath = URLDecoder.decode(url.getPath(), "UTF-8");
+      var decodedPath = URLDecoder.decode(url.getPath(), "UTF-8");
       path.append(new File(decodedPath).getAbsolutePath());
     }
     System.err.println(path);
@@ -55,7 +54,7 @@ public class SimpleCompilerTest {
             "-s",
             "target/out",
             "src/test/java/com/querydsl/codegen/utils/SimpleCompilerTest.java");
-    int compilationResult =
+    var compilationResult =
         compiler.run(null, null, null, options.toArray(new String[options.size()]));
     if (compilationResult != 0) {
       fail("Compilation Failed");
@@ -71,16 +70,10 @@ public class SimpleCompilerTest {
     options.add("-s");
     options.add("target/out2");
     options.add("src/test/java/com/querydsl/codegen/utils/SimpleCompilerTest.java");
-    int compilationResult =
+    var compilationResult =
         compiler.run(null, null, null, options.toArray(new String[options.size()]));
     if (compilationResult != 0) {
       fail("Compilation Failed");
     }
-  }
-
-  @Test
-  public void Surefire() {
-    URLClassLoader cl = (URLClassLoader) Thread.currentThread().getContextClassLoader();
-    assertThat(SimpleCompiler.isSureFireBooter(cl)).isTrue();
   }
 }

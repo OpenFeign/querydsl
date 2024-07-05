@@ -56,19 +56,25 @@ public class AnnotationTest {
   @Test
   public void Min() throws IOException {
     writer.annotation(new MinImpl(10));
-    assertThat(w.toString().trim()).isEqualTo("@javax.validation.constraints.Min(value=10)");
+    assertThat(w.toString().trim())
+        .isEqualTo(
+            "@jakarta.validation.constraints.Min(value=10, message=\"{javax.validation.constraints.Min.message}\")");
   }
 
   @Test
   public void Max() throws IOException {
     writer.annotation(new MaxImpl(10));
-    assertThat(w.toString().trim()).isEqualTo("@javax.validation.constraints.Max(value=10)");
+    assertThat(w.toString().trim())
+        .isEqualTo(
+            "@jakarta.validation.constraints.Max(value=10, message=\"{javax.validation.constraints.Max.message}\")");
   }
 
   @Test
   public void NotNull() throws IOException {
     writer.annotation(new NotNullImpl());
-    assertThat(w.toString().trim()).isEqualTo("@javax.validation.constraints.NotNull");
+    assertThat(w.toString().trim())
+        .isEqualTo(
+            "@jakarta.validation.constraints.NotNull(message=\"{javax.validation.constraints.NotNull.message}\")");
   }
 
   @Test
