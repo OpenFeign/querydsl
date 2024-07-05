@@ -8,7 +8,6 @@ package com.querydsl.codegen.utils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
-import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,13 +43,13 @@ public class JDKEvaluatorFactoryTest {
 
   @Before
   public void setUp() throws IOException {
-    factory = new JDKEvaluatorFactory((URLClassLoader) getClass().getClassLoader());
+    factory = new JDKEvaluatorFactory(getClass().getClassLoader());
   }
 
   @Test
   public void Simple() {
     for (String expr : Arrays.asList("a.equals(b)", "a.startsWith(b)", "a.equalsIgnoreCase(b)")) {
-      long start = System.currentTimeMillis();
+      var start = System.currentTimeMillis();
       evaluate(
           expr,
           boolean.class,
@@ -58,12 +57,12 @@ public class JDKEvaluatorFactoryTest {
           strings,
           Arrays.asList("a", "b"),
           Collections.<String, Object>emptyMap());
-      long duration = System.currentTimeMillis() - start;
+      var duration = System.currentTimeMillis() - start;
       System.err.println(expr + " took " + duration + "ms\n");
     }
 
     for (String expr : Arrays.asList("a != b", "a < b", "a > b", "a <= b", "a >= b")) {
-      long start = System.currentTimeMillis();
+      var start = System.currentTimeMillis();
       evaluate(
           expr,
           boolean.class,
@@ -71,7 +70,7 @@ public class JDKEvaluatorFactoryTest {
           ints,
           Arrays.asList(0, 1),
           Collections.<String, Object>emptyMap());
-      long duration = System.currentTimeMillis() - start;
+      var duration = System.currentTimeMillis() - start;
       System.err.println(expr + " took " + duration + "ms\n");
     }
   }

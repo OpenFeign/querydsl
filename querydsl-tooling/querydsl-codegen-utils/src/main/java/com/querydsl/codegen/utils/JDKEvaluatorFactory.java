@@ -18,13 +18,11 @@ import com.querydsl.codegen.utils.model.Type;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.tools.JavaCompiler;
-import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
@@ -44,11 +42,11 @@ public class JDKEvaluatorFactory extends AbstractEvaluatorFactory {
 
   private final JavaCompiler compiler;
 
-  public JDKEvaluatorFactory(URLClassLoader parent) {
+  public JDKEvaluatorFactory(ClassLoader parent) {
     this(parent, ToolProvider.getSystemJavaCompiler());
   }
 
-  public JDKEvaluatorFactory(URLClassLoader parent, JavaCompiler compiler) {
+  public JDKEvaluatorFactory(ClassLoader parent, JavaCompiler compiler) {
     this.fileManager =
         new MemFileManager(parent, compiler.getStandardFileManager(null, null, null));
     this.compiler = compiler;
@@ -57,6 +55,7 @@ public class JDKEvaluatorFactory extends AbstractEvaluatorFactory {
     this.compilationOptions = Arrays.asList("-classpath", classpath, "-g:none");
   }
 
+  @Override
   protected void compile(
       String source,
       ClassType projectionType,
@@ -72,7 +71,7 @@ public class JDKEvaluatorFactory extends AbstractEvaluatorFactory {
     SimpleJavaFileObject javaFileObject = new MemSourceFileObject(id, source);
     Writer out = new StringWriter();
 
-    CompilationTask task =
+    var task =
         compiler.getTask(
             out,
             fileManager,

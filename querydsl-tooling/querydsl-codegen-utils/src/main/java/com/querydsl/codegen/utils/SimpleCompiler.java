@@ -17,8 +17,6 @@ import io.github.classgraph.ClassGraph;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +32,6 @@ import javax.tools.*;
  * @author tiwe
  */
 public class SimpleCompiler implements JavaCompiler {
-
-  protected static boolean isSureFireBooter(URLClassLoader cl) {
-    for (URL url : cl.getURLs()) {
-      if (url.getPath().contains("surefirebooter")) {
-        return true;
-      }
-    }
-
-    return false;
-  }
 
   public static String getClassPath(ClassLoader cl) {
     return new ClassGraph().overrideClassLoaders(cl).getClasspath();
