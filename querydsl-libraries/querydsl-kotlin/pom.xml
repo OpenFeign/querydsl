@@ -64,6 +64,12 @@
             <artifactId>kotlin-maven-noarg</artifactId>
             <version>${kotlin.version}</version>
           </dependency>
+          <dependency>
+            <groupId>io.github.openfeign.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${project.version}</version>
+            <classifier>general</classifier>
+          </dependency>
         </dependencies>
         <executions>
           <execution>
