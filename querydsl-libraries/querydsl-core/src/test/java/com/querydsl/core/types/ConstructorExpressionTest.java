@@ -120,7 +120,7 @@ public class ConstructorExpressionTest {
   public void serializability() {
     ConstructorExpression<String> expr =
         Serialization.serialize(Projections.constructor(String.class));
-    assertThat(expr.newInstance()).isEqualTo("");
+    assertThat(expr.newInstance()).isEmpty();
   }
 
   @Test
