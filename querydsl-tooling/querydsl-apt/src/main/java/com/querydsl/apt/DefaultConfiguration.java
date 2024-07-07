@@ -298,7 +298,7 @@ public class DefaultConfiguration implements Configuration {
         Class<Function<EntityType, String>> variableNameFunctionClass =
             (Class<Function<EntityType, String>>)
                 Class.forName(options.get(QUERYDSL_VARIABLE_NAME_FUNCTION_CLASS));
-        variableNameFunction = variableNameFunctionClass.newInstance();
+        variableNameFunction = variableNameFunctionClass.getDeclaredConstructor().newInstance();
       } catch (RuntimeException e) {
         throw e;
       } catch (ClassNotFoundException e) {
