@@ -212,31 +212,32 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
   @SuppressWarnings("unchecked")
   @Override
   public Flux<T> fetch() {
-    return getConnection()
-        .flatMapMany(
-            conn -> {
-              Expression<T> expr = (Expression<T>) queryMixin.getMetadata().getProjection();
-              SQLSerializer serializer = serialize(false);
-              Mapper<T> mapper = createMapper(expr);
+    return Flux.usingWhen(
+        getConnection(),
+        conn -> {
+          Expression<T> expr = (Expression<T>) queryMixin.getMetadata().getProjection();
+          SQLSerializer serializer = serialize(false);
+          Mapper<T> mapper = createMapper(expr);
 
-              List<Object> constants = serializer.getConstants();
-              String originalSql = serializer.toString();
-              String sql =
-                  R2dbcUtils.replaceBindingArguments(
-                      configuration.getBindMarkerFactory().create(), constants, originalSql);
+          List<Object> constants = serializer.getConstants();
+          String originalSql = serializer.toString();
+          String sql =
+              R2dbcUtils.replaceBindingArguments(
+                  configuration.getBindMarkerFactory().create(), constants, originalSql);
 
-              Statement statement = conn.createStatement(sql);
-              BindTarget bindTarget = new StatementWrapper(statement);
+          Statement statement = conn.createStatement(sql);
+          BindTarget bindTarget = new StatementWrapper(statement);
 
-              setParameters(
-                  bindTarget,
-                  configuration.getBindMarkerFactory().create(),
-                  constants,
-                  serializer.getConstantPaths(),
-                  getMetadata().getParams());
+          setParameters(
+              bindTarget,
+              configuration.getBindMarkerFactory().create(),
+              constants,
+              serializer.getConstantPaths(),
+              getMetadata().getParams());
 
-              return Flux.from(statement.execute()).flatMap(result -> result.map(mapper::map));
-            });
+          return Flux.from(statement.execute()).flatMap(result -> result.map(mapper::map));
+        },
+        Connection::close);
   }
 
   private Mapper<T> createMapper(Expression<T> expr) {
