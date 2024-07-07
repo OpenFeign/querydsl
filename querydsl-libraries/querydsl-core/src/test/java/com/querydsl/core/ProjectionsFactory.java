@@ -153,9 +153,7 @@ public class ProjectionsFactory {
       rv.add(expr.countDistinct());
     }
 
-    if (!(other instanceof Constant<?>
-        || module == QuerydslModule.JDO
-        || module == QuerydslModule.RDFBEAN)) {
+    if (!(other instanceof Constant<?> || module == QuerydslModule.RDFBEAN)) {
       var cases = new CaseBuilder();
       rv.add(
           NumberConstant.create(1)
@@ -218,9 +216,7 @@ public class ProjectionsFactory {
     rv.add(expr.substring(1));
     rv.add(expr.substring(0, 1));
 
-    if (!(other instanceof Constant<?>
-        || module == QuerydslModule.JDO
-        || module == QuerydslModule.RDFBEAN)) {
+    if (!(other instanceof Constant<?> || module == QuerydslModule.RDFBEAN)) {
       var cases = new CaseBuilder();
       rv.add(cases.when(expr.eq("A")).then(other).when(expr.eq("B")).then(expr).otherwise(other));
 
@@ -231,9 +227,7 @@ public class ProjectionsFactory {
 
     rv.add(expr.upper());
 
-    if (module != QuerydslModule.JDO) {
-      rv.add(expr.nullif("xxx"));
-    }
+    rv.add(expr.nullif("xxx"));
 
     return Collections.unmodifiableSet(rv);
   }
