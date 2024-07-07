@@ -22,11 +22,7 @@ public enum QuerydslModule {
   /** */
   JPA,
   /** */
-  JDO,
-  /** */
   RDFBEAN,
   /** */
   SQL,
-  /** */
-  LUCENE;
 }

@@ -50,21 +50,6 @@ public enum PropertyHandling {
       return Config.NONE;
     }
   },
-  /** JDO compatibility */
-  JDO {
-    @Override
-    public Config getConfig(Class<?> type) {
-      var fields = false;
-      var methods = false;
-      for (Field field : type.getDeclaredFields()) {
-        fields |= hasAnnotations(field, "javax.jdo.annotations.");
-      }
-      for (Method method : type.getDeclaredMethods()) {
-        methods |= hasAnnotations(method, "javax.jdo.annotations.");
-      }
-      return Config.of(fields, methods, Config.FIELDS);
-    }
-  },
   /** JPA compatibility */
   JPA {
     @Override

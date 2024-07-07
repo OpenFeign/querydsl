@@ -35,31 +35,6 @@
 
     <!-- provided -->
     <dependency>
-      <groupId>org.datanucleus</groupId>
-      <artifactId>javax.jdo</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.roo</groupId>
-      <artifactId>org.springframework.roo.annotations</artifactId>
-      <version>1.3.2.RELEASE</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-lang3</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-io</groupId>
-          <artifactId>commons-io</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-codec</groupId>
-          <artifactId>commons-codec</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>org.mongodb.morphia</groupId>
       <artifactId>morphia</artifactId>
       <version>${morphia.version}</version>
@@ -160,10 +135,8 @@
                 <descriptor>src/main/general.xml</descriptor>
                 <descriptor>src/main/hibernate.xml</descriptor>
                 <descriptor>src/main/jakarta.xml</descriptor>
-                <descriptor>src/main/jdo.xml</descriptor>
                 <descriptor>src/main/jpa.xml</descriptor>
                 <descriptor>src/main/morphia.xml</descriptor>
-                <descriptor>src/main/roo.xml</descriptor>
                 <descriptor>src/main/onejar.xml</descriptor>
               </descriptors>
               <outputDirectory>${project.build.directory}</outputDirectory>
@@ -189,8 +162,6 @@
               <processors>
                 <processor>com.querydsl.apt.QuerydslAnnotationProcessor</processor>
                 <processor>com.querydsl.apt.hibernate.HibernateAnnotationProcessor</processor>
-                <processor>com.querydsl.apt.jdo.JDOAnnotationProcessor</processor>
-                <processor>com.querydsl.apt.roo.RooAnnotationProcessor</processor>
               </processors>
             </configuration>
           </execution>

@@ -5,7 +5,6 @@
       <pluginExecutionFilter>
         <goals>
           <goal>generic-export</goal>
-          <goal>jdo-export</goal>
           <goal>jpa-export</goal>
           <goal>export</goal>
           <goal>test-export</goal>

@@ -22,7 +22,6 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import jakarta.persistence.Entity;
 import java.util.Map;
-import javax.jdo.annotations.PersistenceCapable;
 import org.junit.Test;
 
 public class QueryProjectionTest {
@@ -30,7 +29,6 @@ public class QueryProjectionTest {
   // all three annotations are needed, because all are used as entity annotations
   @QueryEntity
   @Entity
-  @PersistenceCapable
   public static class EntityWithProjection {
 
     public EntityWithProjection(long id) {}
