@@ -57,7 +57,7 @@ public class QBeanFieldAccessTest {
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.name).isEqualTo("Fritz");
     assertThat(bean.age).isEqualTo(30);
-    assertThat(bean.married).isEqualTo(true);
+    assertThat(bean.married).isTrue();
   }
 
   @Test
@@ -66,7 +66,7 @@ public class QBeanFieldAccessTest {
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.name).isEqualTo("Fritz");
     assertThat(bean.age).isEqualTo(30);
-    assertThat(bean.married).isEqualTo(true);
+    assertThat(bean.married).isTrue();
   }
 
   @Test
@@ -79,7 +79,7 @@ public class QBeanFieldAccessTest {
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.name).isEqualTo("Fritz");
     assertThat(bean.age).isEqualTo(30);
-    assertThat(bean.married).isEqualTo(true);
+    assertThat(bean.married).isTrue();
   }
 
   @Test
@@ -91,7 +91,7 @@ public class QBeanFieldAccessTest {
     assertThat(bean.name).isNull();
     assertThat(bean.name2).isEqualTo("Fritz");
     assertThat(bean.age).isEqualTo(30);
-    assertThat(bean.married).isEqualTo(true);
+    assertThat(bean.married).isTrue();
   }
 
   @Test
