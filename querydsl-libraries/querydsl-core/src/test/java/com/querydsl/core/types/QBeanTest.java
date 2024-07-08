@@ -91,7 +91,7 @@ public class QBeanTest {
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
-    assertThat(bean.isMarried()).isEqualTo(true);
+    assertThat(bean.isMarried()).isTrue();
   }
 
   @Test
@@ -100,7 +100,7 @@ public class QBeanTest {
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
-    assertThat(bean.isMarried()).isEqualTo(true);
+    assertThat(bean.isMarried()).isTrue();
   }
 
   @Test
@@ -122,7 +122,7 @@ public class QBeanTest {
     Entity bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
-    assertThat(bean.isMarried()).isEqualTo(true);
+    assertThat(bean.isMarried()).isTrue();
   }
 
   @Test
@@ -133,7 +133,7 @@ public class QBeanTest {
     assertThat(bean.getName()).isNull();
     assertThat(bean.getName2()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
-    assertThat(bean.isMarried()).isEqualTo(true);
+    assertThat(bean.isMarried()).isTrue();
   }
 
   @Test
@@ -164,7 +164,7 @@ public class QBeanTest {
     SubEntity bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
-    assertThat(bean.isMarried()).isEqualTo(true);
+    assertThat(bean.isMarried()).isTrue();
   }
 
   @Test

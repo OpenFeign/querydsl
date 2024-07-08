@@ -527,7 +527,7 @@ public class MongodbQueryTest {
     assertThat(i.next().get("_id")).isEqualTo(a.getId());
     assertThat(i.next().get("_id")).isEqualTo(b.getId());
     assertThat(i.next().get("_id")).isEqualTo(c.getId());
-    assertThat(i.hasNext()).isEqualTo(false);
+    assertThat(i).isExhausted();
   }
 
   @Test

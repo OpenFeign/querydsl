@@ -133,7 +133,7 @@ public class MultiIteratorTest {
     while (a.hasNext()) {
       assertThat(Arrays.asList(b.next())).isEqualTo(Arrays.asList(a.next()));
     }
-    assertThat(b.hasNext()).isFalse();
+    assertThat(b).isExhausted();
   }
 
   protected Object[] row(Object... row) {

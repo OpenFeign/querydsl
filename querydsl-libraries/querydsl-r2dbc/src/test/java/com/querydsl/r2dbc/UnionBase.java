@@ -242,10 +242,10 @@ public abstract class UnionBase extends AbstractBaseTest {
         query().from(employee).select(employee.id.min(), employee.id.min().subtract(1));
 
     Iterator<Tuple> iterator = query().union(sq1, sq2).fetch().collectList().block().iterator();
-    assertThat(iterator.hasNext()).isTrue();
+    assertThat(iterator).hasNext();
     assertThat(iterator.next() != null).isTrue();
     assertThat(iterator.next() != null).isTrue();
-    assertThat(iterator.hasNext()).isFalse();
+    assertThat(iterator).isExhausted();
   }
 
   @SuppressWarnings("unchecked")
@@ -267,10 +267,10 @@ public abstract class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
 
     Iterator<Integer> iterator = query().union(sq1, sq2).fetch().collectList().block().iterator();
-    assertThat(iterator.hasNext()).isTrue();
+    assertThat(iterator).hasNext();
     assertThat(iterator.next() != null).isTrue();
     assertThat(iterator.next() != null).isTrue();
-    assertThat(iterator.hasNext()).isFalse();
+    assertThat(iterator).isExhausted();
   }
 
   @SuppressWarnings("unchecked")

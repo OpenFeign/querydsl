@@ -1410,8 +1410,8 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(firstResult(ConstantImpl.create(2L)).longValue()).isEqualTo(2L);
     assertThat(firstResult(ConstantImpl.create(3.0))).isCloseTo(3.0, within(0.001));
     assertThat(firstResult(ConstantImpl.create(4.0f))).isCloseTo(4.0f, within(0.001f));
-    assertThat(firstResult(ConstantImpl.create(true))).isEqualTo(true);
-    assertThat(firstResult(ConstantImpl.create(false))).isEqualTo(false);
+    assertThat(firstResult(ConstantImpl.create(true))).isTrue();
+    assertThat(firstResult(ConstantImpl.create(false))).isFalse();
     assertThat(firstResult(ConstantImpl.create("abc"))).isEqualTo("abc");
     assertThat(firstResult(ConstantImpl.create("'"))).isEqualTo("'");
     assertThat(firstResult(ConstantImpl.create("\""))).isEqualTo("\"");
@@ -1750,7 +1750,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   public void projection() throws IOException {
     CloseableIterator<Tuple> results = query().from(survey).select(survey.all()).iterate();
-    assertThat(results.hasNext()).isTrue();
+    assertThat(results).hasNext();
     while (results.hasNext()) {
       assertThat(results.next().size()).isEqualTo(3);
     }
@@ -1776,7 +1776,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void projection2() throws IOException {
     CloseableIterator<Tuple> results =
         query().from(survey).select(survey.id, survey.name).iterate();
-    assertThat(results.hasNext()).isTrue();
+    assertThat(results).hasNext();
     while (results.hasNext()) {
       assertThat(results.next().size()).isEqualTo(2);
     }
@@ -1786,7 +1786,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   public void projection3() throws IOException {
     CloseableIterator<String> names = query().from(survey).select(survey.name).iterate();
-    assertThat(names.hasNext()).isTrue();
+    assertThat(names).hasNext();
     while (names.hasNext()) {
       System.out.println(names.next());
     }

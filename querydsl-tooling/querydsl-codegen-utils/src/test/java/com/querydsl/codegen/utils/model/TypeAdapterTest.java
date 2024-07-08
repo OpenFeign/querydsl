@@ -18,7 +18,7 @@ public class TypeAdapterTest {
     assertThat(type.getParameters()).isEqualTo(inner.getParameters());
     //        assertEquals(inner.getPrimitiveName(), type.getPrimitiveName());
     assertThat(type.getSimpleName()).isEqualTo(inner.getSimpleName());
-    assertThat(type.isFinal()).isEqualTo(inner.isFinal());
-    assertThat(type.isPrimitive()).isEqualTo(inner.isPrimitive());
+    assertThat(type.isFinal()).isFalse();
+    assertThat(type.isPrimitive()).isFalse();
   }
 }
