@@ -17,16 +17,15 @@ import javax.lang.model.type.IntersectionType;
 import javax.lang.model.util.SimpleTypeVisitor8;
 
 /**
- * Converts Java 8 {@link javax.lang.model.type.IntersectionType IntersectionType} instances into
- * their first bound when visiting
+ * Converts Java 8 {@link javax.lang.model.type.IntersectionType IntersectionType} instances into their first bound when visiting
  *
  * @param <R>
  * @param <P>
  */
 class SimpleTypeVisitorAdapter<R, P> extends SimpleTypeVisitor8<R, P> {
 
-  @Override
-  public R visitIntersection(IntersectionType t, P p) {
-    return t.getBounds().get(0).accept(this, p);
-  }
+    @Override
+    public R visitIntersection(IntersectionType t, P p) {
+        return t.getBounds().get(0).accept(this, p);
+    }
 }
