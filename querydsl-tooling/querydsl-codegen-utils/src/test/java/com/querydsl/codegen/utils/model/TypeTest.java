@@ -38,7 +38,7 @@ public class TypeTest {
 
   @Test
   public void arrayType() {
-    assertThat(Types.OBJECTS.getGenericName(true).toString()).isEqualTo("Object[]");
+    assertThat(Types.OBJECTS.getGenericName(true)).hasToString("Object[]");
   }
 
   @Test
@@ -168,10 +168,10 @@ public class TypeTest {
 
   @Test
   public void ToString() {
-    assertThat(locale.toString()).isEqualTo("java.util.Locale");
-    assertThat(locale2.toString()).isEqualTo("java.util.Locale");
-    assertThat(stringList.toString()).isEqualTo("java.util.List<String>");
-    assertThat(stringList2.toString()).isEqualTo("java.util.List<String>");
+    assertThat(locale).hasToString("java.util.Locale");
+    assertThat(locale2).hasToString("java.util.Locale");
+    assertThat(stringList).hasToString("java.util.List<String>");
+    assertThat(stringList2).hasToString("java.util.List<String>");
   }
 
   @Test

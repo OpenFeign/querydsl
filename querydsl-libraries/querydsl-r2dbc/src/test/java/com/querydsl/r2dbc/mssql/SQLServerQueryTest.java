@@ -55,7 +55,8 @@ public class SQLServerQueryTest {
         .where(survey.name.isNull());
     assertThat(query.toString())
         .isEqualTo(
-            "from SURVEY SURVEY with (NOWAIT), SURVEY survey2 with (NOLOCK)\nwhere SURVEY.NAME is null");
+            "from SURVEY SURVEY with (NOWAIT), SURVEY survey2 with (NOLOCK)\n"
+                + "where SURVEY.NAME is null");
   }
 
   @Test

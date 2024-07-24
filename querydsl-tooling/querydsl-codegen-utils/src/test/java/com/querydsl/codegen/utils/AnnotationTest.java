@@ -58,7 +58,8 @@ public class AnnotationTest {
     writer.annotation(new MinImpl(10));
     assertThat(w.toString().trim())
         .isEqualTo(
-            "@jakarta.validation.constraints.Min(value=10, message=\"{javax.validation.constraints.Min.message}\")");
+            "@jakarta.validation.constraints.Min(value=10,"
+                + " message=\"{javax.validation.constraints.Min.message}\")");
   }
 
   @Test
@@ -66,7 +67,8 @@ public class AnnotationTest {
     writer.annotation(new MaxImpl(10));
     assertThat(w.toString().trim())
         .isEqualTo(
-            "@jakarta.validation.constraints.Max(value=10, message=\"{javax.validation.constraints.Max.message}\")");
+            "@jakarta.validation.constraints.Max(value=10,"
+                + " message=\"{javax.validation.constraints.Max.message}\")");
   }
 
   @Test

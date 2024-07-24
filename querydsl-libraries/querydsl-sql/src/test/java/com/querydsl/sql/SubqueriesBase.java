@@ -173,10 +173,10 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   public void subQuerySerialization() {
     SQLQuery<?> query = query();
     query.from(survey);
-    assertThat(query.toString()).isEqualTo("from SURVEY s");
+    assertThat(query).hasToString("from SURVEY s");
 
     query.from(survey2);
-    assertThat(query.toString()).isEqualTo("from SURVEY s, SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s, SURVEY s2");
   }
 
   @Test
@@ -218,7 +218,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
         limit ?) in (?, ?))\
         """;
 
-    assertThat(serializer.toString()).isEqualTo(expectedQuery);
+    assertThat(serializer).hasToString(expectedQuery);
   }
 
   @Test
@@ -245,6 +245,6 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
         limit ?) in (?, ?))\
         """;
 
-    assertThat(serializer.toString()).isEqualTo(expectedQuery);
+    assertThat(serializer).hasToString(expectedQuery);
   }
 }

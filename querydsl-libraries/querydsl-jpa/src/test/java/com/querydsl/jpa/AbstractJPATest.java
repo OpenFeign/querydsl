@@ -30,7 +30,6 @@ import com.querydsl.core.FilterFactory;
 import com.querydsl.core.MatchingFiltersFactory;
 import com.querydsl.core.ProjectionsFactory;
 import com.querydsl.core.QueryExecution;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.QuerydslModule;
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
@@ -60,7 +59,6 @@ import com.querydsl.core.types.dsl.Param;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.core.types.dsl.StringExpression;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.domain.Animal;
 import com.querydsl.jpa.domain.Author;
 import com.querydsl.jpa.domain.Book;
@@ -149,7 +147,7 @@ public abstract class AbstractJPATest {
   private final List<Cat> savedCats = new ArrayList<Cat>();
 
   static {
-    Calendar cal = Calendar.getInstance();
+    var cal = Calendar.getInstance();
     cal.set(2000, 1, 2, 3, 4);
     cal.set(Calendar.SECOND, 0);
     cal.set(Calendar.MILLISECOND, 0);
@@ -196,35 +194,35 @@ public abstract class AbstractJPATest {
       prev = cat;
     }
 
-    Animal animal = new Animal(10);
+    var animal = new Animal(10);
     animal.setBodyWeight(10.5);
     save(animal);
 
-    Cat cat = new Cat("Some", 6, 6.0);
+    var cat = new Cat("Some", 6, 6.0);
     cat.setBirthdate(birthDate);
     save(cat);
     savedCats.add(cat);
 
-    Show show = new Show(1);
+    var show = new Show(1);
     show.acts = new HashMap<String, String>();
     show.acts.put("a", "A");
     show.acts.put("b", "B");
     save(show);
 
-    Company company = new Company();
+    var company = new Company();
     company.name = "1234567890123456789012345678901234567890"; // 40
     company.id = 1;
     company.ratingOrdinal = Company.Rating.A;
     company.ratingString = Company.Rating.AA;
     save(company);
 
-    Employee employee = new Employee();
+    var employee = new Employee();
     employee.id = 1;
     employee.lastName = "Smith";
     employee.jobFunctions.add(JobFunction.CODER);
     save(employee);
 
-    Employee employee2 = new Employee();
+    var employee2 = new Employee();
     employee2.id = 2;
     employee2.lastName = "Doe";
     employee2.jobFunctions.add(JobFunction.CODER);
@@ -236,13 +234,13 @@ public abstract class AbstractJPATest {
     save(new Entity1(2));
     save(new Entity2(3));
 
-    Foo foo = new Foo();
+    var foo = new Foo();
     foo.id = 1;
     foo.names = Arrays.asList("a", "b");
     foo.bar = "München";
     save(foo);
 
-    Numeric numeric = new Numeric();
+    var numeric = new Numeric();
     numeric.setValue(BigDecimal.valueOf(26.9));
     save(numeric);
   }
@@ -250,10 +248,10 @@ public abstract class AbstractJPATest {
   @Test
   @ExcludeIn(ORACLE)
   public void add_bigDecimal() {
-    QSimpleTypes entity = new QSimpleTypes("entity1");
-    QSimpleTypes entity2 = new QSimpleTypes("entity2");
-    NumberPath<BigDecimal> bigd1 = entity.bigDecimal;
-    NumberPath<BigDecimal> bigd2 = entity2.bigDecimal;
+    var entity = new QSimpleTypes("entity1");
+    var entity2 = new QSimpleTypes("entity2");
+    var bigd1 = entity.bigDecimal;
+    var bigd2 = entity2.bigDecimal;
 
     assertThat(
             query()
@@ -367,7 +365,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoBatooJPA
   public void any_in3() {
-    QEmployee employee = QEmployee.employee;
+    var employee = QEmployee.employee;
     assertThat(
             query()
                 .from(employee)
@@ -395,7 +393,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void arrayProjection() {
-    List<String[]> results =
+    var results =
         query()
             .from(cat)
             .select(new ArrayConstructorExpression<String>(String[].class, cat.name))
@@ -445,7 +443,7 @@ public abstract class AbstractJPATest {
                 .select(cat.name.when("Bob123").then(1L).otherwise(2L))
                 .fetch())
         .isEqualTo(Arrays.asList(1L, 2L, 2L, 2L, 2L, 2L));
-    List<Integer> rv = query().from(cat).select(cat.name.when("Bob").then(1).otherwise(2)).fetch();
+    var rv = query().from(cat).select(cat.name.when("Bob").then(1).otherwise(2)).fetch();
     assertInstancesOf(Integer.class, rv);
   }
 
@@ -453,7 +451,7 @@ public abstract class AbstractJPATest {
   @NoEclipseLink
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-8653
   public void case1_date() {
-    List<LocalDate> rv =
+    var rv =
         query()
             .from(cat)
             .select(
@@ -466,7 +464,7 @@ public abstract class AbstractJPATest {
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-8653
   @NoEclipseLink({MYSQL, POSTGRESQL})
   public void case1_date2() {
-    List<java.sql.Date> rv =
+    var rv =
         query()
             .from(cat)
             .select(cat.name.when("Bob").then(new java.sql.Date(0)).otherwise(new java.sql.Date(0)))
@@ -478,7 +476,7 @@ public abstract class AbstractJPATest {
   @NoEclipseLink
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-8653
   public void case1_time() {
-    List<LocalTime> rv =
+    var rv =
         query()
             .from(cat)
             .select(
@@ -491,7 +489,7 @@ public abstract class AbstractJPATest {
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-8653
   @NoEclipseLink({MYSQL, POSTGRESQL})
   public void case1_time2() {
-    List<java.sql.Time> rv =
+    var rv =
         query()
             .from(cat)
             .select(cat.name.when("Bob").then(new java.sql.Time(0)).otherwise(new java.sql.Time(0)))
@@ -503,7 +501,7 @@ public abstract class AbstractJPATest {
   @NoEclipseLink
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-8653
   public void case1_timestamp() {
-    List<ZonedDateTime> rv =
+    var rv =
         query()
             .from(cat)
             .select(
@@ -519,7 +517,7 @@ public abstract class AbstractJPATest {
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-8653
   @NoEclipseLink({MYSQL, POSTGRESQL})
   public void case1_timestamp2() {
-    List<java.sql.Timestamp> rv =
+    var rv =
         query()
             .from(cat)
             .select(
@@ -566,7 +564,7 @@ public abstract class AbstractJPATest {
   public void case4() {
     NumberExpression<Float> numExpression =
         cat.bodyWeight.floatValue().divide(otherCat.bodyWeight.floatValue()).multiply(100);
-    NumberExpression<Float> numExpression2 = cat.id.when(0).then(0.0F).otherwise(numExpression);
+    var numExpression2 = cat.id.when(0).then(0.0F).otherwise(numExpression);
     assertThat(
             query()
                 .from(cat, otherCat)
@@ -596,8 +594,8 @@ public abstract class AbstractJPATest {
 
   @Test
   public void caseBuilder() {
-    QCat cat2 = new QCat("cat2");
-    NumberExpression<Integer> casex =
+    var cat2 = new QCat("cat2");
+    var casex =
         new CaseBuilder()
             .when(cat.weight.isNull().and(cat.weight.isNull()))
             .then(0)
@@ -613,10 +611,9 @@ public abstract class AbstractJPATest {
 
   @Test
   public void cast() {
-    List<Cat> cats = query().from(cat).select(cat).fetch();
-    List<Integer> weights =
-        query().from(cat).select(cat.bodyWeight.castToNum(Integer.class)).fetch();
-    for (int i = 0; i < cats.size(); i++) {
+    var cats = query().from(cat).select(cat).fetch();
+    var weights = query().from(cat).select(cat.bodyWeight.castToNum(Integer.class)).fetch();
+    for (var i = 0; i < cats.size(); i++) {
       assertThat(weights.get(i)).isEqualTo(Integer.valueOf((int) (cats.get(i).getBodyWeight())));
     }
   }
@@ -641,7 +638,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void collection_predicates() {
-    ListPath<Cat, QCat> path = cat.kittens;
+    var path = cat.kittens;
     //            path.eq(savedCats),
     //            path.in(savedCats),
     //            path.isNotNull(),
@@ -658,7 +655,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void collection_projections() {
-    ListPath<Cat, QCat> path = cat.kittens;
+    var path = cat.kittens;
     //            path.fetchCount(),
     //            path.countDistinct()
     List<Expression<?>> projections = Collections.emptyList();
@@ -671,11 +668,10 @@ public abstract class AbstractJPATest {
   @Test
   public void constant() {
     // select cat.id, ?1 as const from Cat cat
-    List<Cat> cats = query().from(cat).select(cat).fetch();
+    var cats = query().from(cat).select(cat).fetch();
     Path<String> path = Expressions.stringPath("const");
-    List<Tuple> tuples =
-        query().from(cat).select(cat.id, Expressions.constantAs("abc", path)).fetch();
-    for (int i = 0; i < cats.size(); i++) {
+    var tuples = query().from(cat).select(cat.id, Expressions.constantAs("abc", path)).fetch();
+    for (var i = 0; i < cats.size(); i++) {
       assertThat(tuples.get(i).get(cat.id)).isEqualTo(Integer.valueOf(cats.get(i).getId()));
       assertThat(tuples.get(i).get(path)).isEqualTo("abc");
     }
@@ -688,7 +684,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void constructorProjection() {
-    List<Projection> projections =
+    var projections =
         query().from(cat).select(Projections.constructor(Projection.class, cat.name, cat)).fetch();
     assertThat(projections).isNotEmpty();
     for (Projection projection : projections) {
@@ -698,7 +694,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void constructorProjection2() {
-    List<Projection> projections = query().from(cat).select(new QProjection(cat.name, cat)).fetch();
+    var projections = query().from(cat).select(new QProjection(cat.name, cat)).fetch();
     assertThat(projections).isNotEmpty();
     for (Projection projection : projections) {
       assertThat(projection).isNotNull();
@@ -707,8 +703,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void constructorProjection3() {
-    List<Projection> projections =
-        query().from(cat).select(new QProjection(cat.id, Expressions.FALSE)).fetch();
+    var projections = query().from(cat).select(new QProjection(cat.id, Expressions.FALSE)).fetch();
     assertThat(projections).isNotEmpty();
     for (Projection projection : projections) {
       assertThat(projection).isNotNull();
@@ -717,7 +712,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void contains_ic() {
-    QFoo foo = QFoo.foo;
+    var foo = QFoo.foo;
     assertThat(query().from(foo).where(foo.bar.containsIgnoreCase("München")).fetchCount())
         .isEqualTo(1);
   }
@@ -740,7 +735,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void contains4() {
-    QEmployee employee = QEmployee.employee;
+    var employee = QEmployee.employee;
     assertThat(
             query()
                 .from(employee)
@@ -755,13 +750,13 @@ public abstract class AbstractJPATest {
 
   @Test
   public void count() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).fetchCount() > 0).isTrue();
   }
 
   @Test
   public void count_distinct() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     query().from(cat).groupBy(cat.id).select(cat.id, cat.breed.countDistinct()).fetch();
   }
 
@@ -769,7 +764,7 @@ public abstract class AbstractJPATest {
   @NoBatooJPA
   @NoHibernate
   public void count_distinct2() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     query()
         .from(cat)
         .groupBy(cat.id)
@@ -781,8 +776,8 @@ public abstract class AbstractJPATest {
   @NoEclipseLink
   @ExcludeIn(SQLSERVER)
   public void distinct_orderBy() {
-    QCat cat = QCat.cat;
-    List<Tuple> result =
+    var cat = QCat.cat;
+    var result =
         query()
             .select(cat.id, cat.mate.id)
             .distinct()
@@ -803,8 +798,8 @@ public abstract class AbstractJPATest {
   @NoHibernate
   @ExcludeIn(MYSQL)
   public void distinct_orderBy2() {
-    QCat cat = QCat.cat;
-    List<Tuple> result =
+    var cat = QCat.cat;
+    var result =
         query()
             .select(cat.id, cat.mate.id)
             .distinct()
@@ -822,7 +817,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoEclipseLink(HSQLDB)
   public void count_distinct3() {
-    QCat kitten = new QCat("kitten");
+    var kitten = new QCat("kitten");
     assertThat(
             query()
                 .from(cat)
@@ -843,7 +838,7 @@ public abstract class AbstractJPATest {
   @Test
   public void distinctResults() {
     System.out.println("-- fetch results");
-    QueryResults<Date> res = query().from(cat).limit(2).select(cat.birthdate).fetchResults();
+    var res = query().from(cat).limit(2).select(cat.birthdate).fetchResults();
     assertThat(res.getResults()).hasSize(2);
     assertThat(res.getTotal()).isEqualTo(6L);
     System.out.println();
@@ -894,8 +889,8 @@ public abstract class AbstractJPATest {
   @Test
   @ExcludeIn(ORACLE)
   public void divide() {
-    QSimpleTypes entity = new QSimpleTypes("entity1");
-    QSimpleTypes entity2 = new QSimpleTypes("entity2");
+    var entity = new QSimpleTypes("entity1");
+    var entity2 = new QSimpleTypes("entity2");
 
     assertThat(
             query()
@@ -933,10 +928,10 @@ public abstract class AbstractJPATest {
   @Test
   @ExcludeIn(ORACLE)
   public void divide_bigDecimal() {
-    QSimpleTypes entity = new QSimpleTypes("entity1");
-    QSimpleTypes entity2 = new QSimpleTypes("entity2");
-    NumberPath<BigDecimal> bigd1 = entity.bigDecimal;
-    NumberPath<BigDecimal> bigd2 = entity2.bigDecimal;
+    var entity = new QSimpleTypes("entity1");
+    var entity2 = new QSimpleTypes("entity2");
+    var bigd1 = entity.bigDecimal;
+    var bigd2 = entity2.bigDecimal;
 
     assertThat(
             query()
@@ -1007,7 +1002,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoBatooJPA
   public void enum_in2() {
-    QEmployee employee = QEmployee.employee;
+    var employee = QEmployee.employee;
 
     JPQLQuery<?> query = query();
     query
@@ -1030,9 +1025,9 @@ public abstract class AbstractJPATest {
   @Test
   @NoEclipseLink(HSQLDB)
   public void factoryExpressions() {
-    QCat cat = QCat.cat;
-    QCat cat2 = new QCat("cat2");
-    QCat kitten = new QCat("kitten");
+    var cat = QCat.cat;
+    var cat2 = new QCat("cat2");
+    var kitten = new QCat("kitten");
     JPQLQuery<Tuple> query =
         query()
             .from(cat)
@@ -1048,8 +1043,8 @@ public abstract class AbstractJPATest {
   @NoOpenJPA
   @NoBatooJPA
   public void fetch() {
-    QMammal mammal = QMammal.mammal;
-    QHuman human = new QHuman("mammal");
+    var mammal = QMammal.mammal;
+    var human = new QHuman("mammal");
     query().from(mammal).leftJoin(human.hairs).fetchJoin().select(mammal).fetch();
   }
 
@@ -1058,9 +1053,9 @@ public abstract class AbstractJPATest {
   @NoOpenJPA
   @NoBatooJPA
   public void fetch2() {
-    QWorld world = QWorld.world;
-    QMammal mammal = QMammal.mammal;
-    QHuman human = new QHuman("mammal");
+    var world = QWorld.world;
+    var mammal = QMammal.mammal;
+    var human = new QHuman("mammal");
     query()
         .from(world)
         .leftJoin(world.mammals, mammal)
@@ -1075,15 +1070,15 @@ public abstract class AbstractJPATest {
   @ExcludeIn({MYSQL, DERBY})
   @NoBatooJPA
   public void groupBy() {
-    QAuthor author = QAuthor.author;
-    QBook book = QBook.book;
+    var author = QAuthor.author;
+    var book = QBook.book;
 
-    for (int i = 0; i < 10; i++) {
-      Author a = new Author();
+    for (var i = 0; i < 10; i++) {
+      var a = new Author();
       a.setName(String.valueOf(i));
       save(a);
-      for (int j = 0; j < 2; j++) {
-        Book b = new Book();
+      for (var j = 0; j < 2; j++) {
+        var b = new Book();
         b.setTitle(String.valueOf(i) + " " + String.valueOf(j));
         b.setAuthor(a);
         save(b);
@@ -1134,12 +1129,11 @@ public abstract class AbstractJPATest {
   @Test
   @Ignore // FIXME
   public void groupBy_count() {
-    List<Integer> ids = query().from(cat).groupBy(cat.id).select(cat.id).fetch();
-    long count = query().from(cat).groupBy(cat.id).fetchCount();
-    QueryResults<Integer> results =
-        query().from(cat).groupBy(cat.id).limit(1).select(cat.id).fetchResults();
+    var ids = query().from(cat).groupBy(cat.id).select(cat.id).fetch();
+    var count = query().from(cat).groupBy(cat.id).fetchCount();
+    var results = query().from(cat).groupBy(cat.id).limit(1).select(cat.id).fetchResults();
 
-    long catCount = query().from(cat).fetchCount();
+    var catCount = query().from(cat).fetchCount();
     assertThat(ids).hasSize((int) catCount);
     assertThat(count).isEqualTo(catCount);
     assertThat(results.getResults()).hasSize((int) catCount);
@@ -1149,9 +1143,8 @@ public abstract class AbstractJPATest {
   @Test
   @Ignore // FIXME
   public void groupBy_distinct_count() {
-    List<Integer> ids =
-        query().from(cat).groupBy(cat.id).distinct().select(Expressions.ONE).fetch();
-    QueryResults<Integer> results =
+    var ids = query().from(cat).groupBy(cat.id).distinct().select(Expressions.ONE).fetch();
+    var results =
         query()
             .from(cat)
             .groupBy(cat.id)
@@ -1182,15 +1175,14 @@ public abstract class AbstractJPATest {
 
   @Test
   public void groupBy_results() {
-    QueryResults<Integer> results = query().from(cat).groupBy(cat.id).select(cat.id).fetchResults();
+    var results = query().from(cat).groupBy(cat.id).select(cat.id).fetchResults();
     assertThat(results.getTotal()).isEqualTo(6);
     assertThat(results.getResults()).hasSize(6);
   }
 
   @Test
   public void groupBy_results2() {
-    QueryResults<Integer> results =
-        query().from(cat).groupBy(cat.birthdate).select(cat.id.max()).fetchResults();
+    var results = query().from(cat).groupBy(cat.birthdate).select(cat.id.max()).fetchResults();
     assertThat(results.getTotal()).isEqualTo(1);
     assertThat(results.getResults()).hasSize(1);
   }
@@ -1287,14 +1279,14 @@ public abstract class AbstractJPATest {
 
   @Test
   public void instanceOf_entity1() {
-    QEntity1 entity1 = QEntity1.entity1;
+    var entity1 = QEntity1.entity1;
     assertThat(query().from(entity1).where(entity1.instanceOf(Entity1.class)).fetchCount())
         .isEqualTo(2L);
   }
 
   @Test
   public void instanceOf_entity2() {
-    QEntity1 entity1 = QEntity1.entity1;
+    var entity1 = QEntity1.entity1;
     assertThat(query().from(entity1).where(entity1.instanceOf(Entity2.class)).fetchCount())
         .isEqualTo(1L);
   }
@@ -1302,7 +1294,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-6686
   public void isEmpty_elementCollection() {
-    QEmployee employee = QEmployee.employee;
+    var employee = QEmployee.employee;
     assertThat(query().from(employee).where(employee.jobFunctions.isEmpty()).fetchCount())
         .isEqualTo(0);
   }
@@ -1316,8 +1308,8 @@ public abstract class AbstractJPATest {
   @NoEclipseLink
   @ExcludeIn({ORACLE, TERADATA})
   public void joinEmbeddable() {
-    QBookVersion bookVersion = QBookVersion.bookVersion;
-    QBookMark bookMark = QBookMark.bookMark;
+    var bookVersion = QBookVersion.bookVersion;
+    var bookMark = QBookMark.bookMark;
 
     assertThat(
             query()
@@ -1370,11 +1362,11 @@ public abstract class AbstractJPATest {
 
   @Test
   public void list_elementCollection_of_enum() {
-    QEmployee employee = QEmployee.employee;
+    var employee = QEmployee.employee;
     // QJobFunction jobFunction = QJobFunction.jobFunction;
     EnumPath<JobFunction> jobFunction = Expressions.enumPath(JobFunction.class, "jf");
 
-    List<JobFunction> jobFunctions =
+    var jobFunctions =
         query()
             .from(employee)
             .innerJoin(employee.jobFunctions, jobFunction)
@@ -1386,10 +1378,10 @@ public abstract class AbstractJPATest {
   @Test
   @NoBatooJPA
   public void list_elementCollection_of_string() {
-    QFoo foo = QFoo.foo;
-    StringPath str = Expressions.stringPath("str");
+    var foo = QFoo.foo;
+    var str = Expressions.stringPath("str");
 
-    List<String> strings = query().from(foo).innerJoin(foo.names, str).select(str).fetch();
+    var strings = query().from(foo).innerJoin(foo.names, str).select(str).fetch();
     assertThat(strings).hasSize(2);
     assertThat(strings).contains("a");
     assertThat(strings).contains("b");
@@ -1398,20 +1390,20 @@ public abstract class AbstractJPATest {
   @Test
   @NoEclipseLink(HSQLDB)
   public void list_order_get() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     assertThat(query().from(cat).orderBy(cat.kittens.get(0).name.asc()).fetch()).hasSize(6);
   }
 
   @Test
   @NoEclipseLink(HSQLDB)
   public void list_order_get2() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     assertThat(query().from(cat).orderBy(cat.mate.kittens.get(0).name.asc()).fetch()).hasSize(6);
   }
 
   @Test
   public void map_get() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).select(show.acts.get("a")).fetch())
         .isEqualTo(Collections.singletonList("A"));
   }
@@ -1419,22 +1411,22 @@ public abstract class AbstractJPATest {
   @Test
   @NoHibernate
   public void map_get2() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).where(show.acts.get("a").eq("A")).fetchCount()).isEqualTo(1);
   }
 
   @Test
   @NoEclipseLink
   public void map_order_get() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).orderBy(show.parent.acts.get("A").asc()).fetch()).hasSize(1);
   }
 
   @Test
   @NoEclipseLink
   public void map_order_get2() {
-    QShow show = QShow.show;
-    QShow parent = new QShow("parent");
+    var show = QShow.show;
+    var parent = new QShow("parent");
     assertThat(
             query()
                 .from(show)
@@ -1446,50 +1438,50 @@ public abstract class AbstractJPATest {
 
   @Test
   public void map_containsKey() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).where(show.acts.containsKey("a")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
   public void map_containsKey2() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).where(show.acts.containsKey("b")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
   public void map_containsKey3() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).where(show.acts.containsKey("c")).fetchCount()).isEqualTo(0L);
   }
 
   @Test
   public void map_containsValue() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).where(show.acts.containsValue("A")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
   public void map_containsValue2() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).where(show.acts.containsValue("B")).fetchCount()).isEqualTo(1L);
   }
 
   @Test
   public void map_containsValue3() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).where(show.acts.containsValue("C")).fetchCount()).isEqualTo(0L);
   }
 
   @Test
   public void map_contains() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(query().from(show).where(show.acts.contains("a", "A")).fetchCount()).isEqualTo(1L);
     assertThat(query().from(show).where(show.acts.contains("X", "X")).fetchCount()).isEqualTo(0L);
   }
 
   @Test
   public void map_groupBy() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     assertThat(
             query().from(show).select(show.acts.get("X")).groupBy(show.acts.get("a")).fetchCount())
         .isEqualTo(1);
@@ -1499,8 +1491,8 @@ public abstract class AbstractJPATest {
   @Ignore
   public void map_join() {
     // select m.text from Show s join s.acts a where key(a) = 'B'
-    QShow show = QShow.show;
-    StringPath act = Expressions.stringPath("act");
+    var show = QShow.show;
+    var act = Expressions.stringPath("act");
     assertThat(query().from(show).join(show.acts, act).select(act).fetch())
         .isEqualTo(Collections.emptyList());
   }
@@ -1520,8 +1512,8 @@ public abstract class AbstractJPATest {
   @Test
   @ExcludeIn(ORACLE)
   public void multiply() {
-    QSimpleTypes entity = new QSimpleTypes("entity1");
-    QSimpleTypes entity2 = new QSimpleTypes("entity2");
+    var entity = new QSimpleTypes("entity1");
+    var entity2 = new QSimpleTypes("entity2");
 
     assertThat(
             query()
@@ -1535,10 +1527,10 @@ public abstract class AbstractJPATest {
   @Test
   @ExcludeIn(ORACLE)
   public void multiply_bigDecimal() {
-    QSimpleTypes entity = new QSimpleTypes("entity1");
-    QSimpleTypes entity2 = new QSimpleTypes("entity2");
-    NumberPath<BigDecimal> bigd1 = entity.bigDecimal;
-    NumberPath<BigDecimal> bigd2 = entity2.bigDecimal;
+    var entity = new QSimpleTypes("entity1");
+    var entity2 = new QSimpleTypes("entity2");
+    var bigd1 = entity.bigDecimal;
+    var bigd2 = entity2.bigDecimal;
 
     assertThat(
             query()
@@ -1551,8 +1543,8 @@ public abstract class AbstractJPATest {
 
   @Test
   public void nestedProjection() {
-    Concatenation concat = new Concatenation(cat.name, cat.name);
-    List<Tuple> tuples = query().from(cat).select(cat.name, concat).fetch();
+    var concat = new Concatenation(cat.name, cat.name);
+    var tuples = query().from(cat).select(cat.name, concat).fetch();
     assertThat(tuples).isNotEmpty();
     for (Tuple tuple : tuples) {
       assertThat(tuple.get(cat.name) + tuple.get(cat.name)).isEqualTo(tuple.get(concat));
@@ -1561,7 +1553,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void not_in() {
-    long all = query().from(cat).fetchCount();
+    var all = query().from(cat).fetchCount();
     assertThat(
             query().from(cat).where(cat.name.notIn("Bob123", "Ruth123", "Felix123")).fetchCount())
         .isEqualTo(all - 3L);
@@ -1573,7 +1565,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoBatooJPA
   public void not_in_empty() {
-    long count = query().from(cat).fetchCount();
+    var count = query().from(cat).fetchCount();
     assertThat(
             query().from(cat).where(cat.name.notIn(Collections.<String>emptyList())).fetchCount())
         .isEqualTo(count);
@@ -1593,7 +1585,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoEclipseLink
   public void numeric() {
-    QNumeric numeric = QNumeric.numeric;
+    var numeric = QNumeric.numeric;
     BigDecimal singleResult = query().from(numeric).select(numeric.value).fetchFirst();
     assertThat(singleResult.doubleValue()).isCloseTo(26.9, within(0.001));
   }
@@ -1618,8 +1610,8 @@ public abstract class AbstractJPATest {
 
   @Test
   public void one_to_one() {
-    QEmployee employee = QEmployee.employee;
-    QUser user = QUser.user;
+    var employee = QEmployee.employee;
+    var user = QUser.user;
 
     JPQLQuery<?> query = query();
     query.from(employee);
@@ -1647,7 +1639,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void order_stringValue() {
-    int count = (int) query().from(cat).fetchCount();
+    var count = (int) query().from(cat).fetchCount();
     assertThat(query().from(cat).orderBy(cat.id.stringValue().asc()).select(cat).fetch())
         .hasSize(count);
   }
@@ -1655,7 +1647,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoBatooJPA // can't be parsed
   public void order_stringValue_to_integer() {
-    int count = (int) query().from(cat).fetchCount();
+    var count = (int) query().from(cat).fetchCount();
     assertThat(
             query()
                 .from(cat)
@@ -1668,7 +1660,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoBatooJPA // can't be parsed
   public void order_stringValue_toLong() {
-    int count = (int) query().from(cat).fetchCount();
+    var count = (int) query().from(cat).fetchCount();
     assertThat(
             query()
                 .from(cat)
@@ -1681,7 +1673,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoBatooJPA // can't be parsed
   public void order_stringValue_toBigInteger() {
-    int count = (int) query().from(cat).fetchCount();
+    var count = (int) query().from(cat).fetchCount();
     assertThat(
             query()
                 .from(cat)
@@ -1719,7 +1711,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void params() {
-    Param<String> name = new Param<String>(String.class, "name");
+    var name = new Param<String>(String.class, "name");
     assertThat(
             query()
                 .from(cat)
@@ -1732,7 +1724,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void params_anon() {
-    Param<String> name = new Param<String>(String.class);
+    var name = new Param<String>(String.class);
     assertThat(
             query()
                 .from(cat)
@@ -1745,14 +1737,14 @@ public abstract class AbstractJPATest {
 
   @Test(expected = ParamNotSetException.class)
   public void params_not_set() {
-    Param<String> name = new Param<String>(String.class, "name");
+    var name = new Param<String>(String.class, "name");
     assertThat(query().from(cat).where(cat.name.eq(name)).select(cat.name).fetchFirst())
         .isEqualTo("Bob123");
   }
 
   @Test
   public void precedence() {
-    StringPath str = cat.name;
+    var str = cat.name;
     Predicate where =
         str.like("Bob%").and(str.like("%ob123")).or(str.like("Ruth%").and(str.like("%uth123")));
     assertThat(query().from(cat).where(where).fetchCount()).isEqualTo(2L);
@@ -1760,7 +1752,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void precedence2() {
-    StringPath str = cat.name;
+    var str = cat.name;
     Predicate where =
         str.like("Bob%").and(str.like("%ob123").or(str.like("Ruth%"))).and(str.like("%uth123"));
     assertThat(query().from(cat).where(where).fetchCount()).isEqualTo(0L);
@@ -1825,8 +1817,8 @@ public abstract class AbstractJPATest {
 
   @Test
   public void subQuery() {
-    QShow show = QShow.show;
-    QShow show2 = new QShow("show2");
+    var show = QShow.show;
+    var show2 = new QShow("show2");
     assertThat(
             query()
                 .from(show)
@@ -1837,8 +1829,8 @@ public abstract class AbstractJPATest {
 
   @Test
   public void subQuery2() {
-    QCat cat = QCat.cat;
-    QCat other = new QCat("other");
+    var cat = QCat.cat;
+    var other = new QCat("other");
     assertThat(
             query()
                 .from(cat)
@@ -1851,8 +1843,8 @@ public abstract class AbstractJPATest {
 
   @Test
   public void subQuery3() {
-    QCat cat = QCat.cat;
-    QCat other = new QCat("other");
+    var cat = QCat.cat;
+    var other = new QCat("other");
     assertThat(
             query()
                 .from(cat)
@@ -1866,8 +1858,8 @@ public abstract class AbstractJPATest {
 
   @Test
   public void subQuery4() {
-    QCat cat = QCat.cat;
-    QCat other = new QCat("other");
+    var cat = QCat.cat;
+    var other = new QCat("other");
     query()
         .from(cat)
         .select(cat.name, select(other.count()).from(other).where(other.name.eq(cat.name)))
@@ -1876,8 +1868,8 @@ public abstract class AbstractJPATest {
 
   @Test
   public void subQuery5() {
-    QEmployee employee = QEmployee.employee;
-    QEmployee employee2 = new QEmployee("e2");
+    var employee = QEmployee.employee;
+    var employee2 = new QEmployee("e2");
     assertThat(
             query()
                 .from(employee)
@@ -1897,7 +1889,7 @@ public abstract class AbstractJPATest {
   @NoBatooJPA
   @ExcludeIn({ORACLE, SQLSERVER, HSQLDB})
   public void substring2() {
-    QCompany company = QCompany.company;
+    var company = QCompany.company;
     StringExpression name = company.name;
     Integer companyId = query().from(company).select(company.id).fetchFirst();
     JPQLQuery<?> query = query().from(company).where(company.id.eq(companyId));
@@ -1950,10 +1942,10 @@ public abstract class AbstractJPATest {
   @Test
   @ExcludeIn(ORACLE)
   public void subtract_bigDecimal() {
-    QSimpleTypes entity = new QSimpleTypes("entity1");
-    QSimpleTypes entity2 = new QSimpleTypes("entity2");
-    NumberPath<BigDecimal> bigd1 = entity.bigDecimal;
-    NumberPath<BigDecimal> bigd2 = entity2.bigDecimal;
+    var entity = new QSimpleTypes("entity1");
+    var entity2 = new QSimpleTypes("entity2");
+    var bigd1 = entity.bigDecimal;
+    var bigd2 = entity2.bigDecimal;
 
     assertThat(
             query()
@@ -2000,14 +1992,14 @@ public abstract class AbstractJPATest {
 
   @Test
   public void sum_5() {
-    QShow show = QShow.show;
+    var show = QShow.show;
     Long lng = query().from(show).select(show.id.sumLong()).fetchFirst();
     assertThat(lng).isNotNull();
   }
 
   @Test
   public void sum_of_integer() {
-    QCat cat2 = new QCat("cat2");
+    var cat2 = new QCat("cat2");
     assertThat(
             query()
                 .from(cat)
@@ -2019,7 +2011,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void sum_of_float() {
-    QCat cat2 = new QCat("cat2");
+    var cat2 = new QCat("cat2");
     query()
         .from(cat)
         .where(select(cat2.floatProperty.sumDouble()).from(cat2).where(cat2.eq(cat.mate)).gt(0.0d))
@@ -2029,7 +2021,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void sum_of_double() {
-    QCat cat2 = new QCat("cat2");
+    var cat2 = new QCat("cat2");
     query()
         .from(cat)
         .where(select(cat2.bodyWeight.sumDouble()).from(cat2).where(cat2.eq(cat.mate)).gt(0.0))
@@ -2085,8 +2077,8 @@ public abstract class AbstractJPATest {
   @NoBatooJPA
   @ExcludeIn({ORACLE, SQLSERVER, DERBY})
   public void test() {
-    Cat kitten = savedCats.getFirst();
-    Cat noKitten = savedCats.getLast();
+    var kitten = savedCats.getFirst();
+    var noKitten = savedCats.getLast();
 
     ProjectionsFactory projections =
         new ProjectionsFactory(QuerydslModule.JPA, getTarget()) {
@@ -2145,7 +2137,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void tupleProjection() {
-    List<Tuple> tuples = query().from(cat).select(cat.name, cat).fetch();
+    var tuples = query().from(cat).select(cat.name, cat).fetch();
     assertThat(tuples).isNotEmpty();
     for (Tuple tuple : tuples) {
       assertThat(tuple.get(cat.name)).isNotNull();
@@ -2155,7 +2147,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void tupleProjection_as_queryResults() {
-    QueryResults<Tuple> tuples = query().from(cat).limit(1).select(cat.name, cat).fetchResults();
+    var tuples = query().from(cat).limit(1).select(cat.name, cat).fetchResults();
     assertThat(tuples.getResults()).hasSize(1);
     assertThat(tuples.getTotal() > 0).isTrue();
   }
@@ -2163,7 +2155,7 @@ public abstract class AbstractJPATest {
   @Test
   @ExcludeIn(DERBY)
   public void transform_groupBy() {
-    QCat kitten = new QCat("kitten");
+    var kitten = new QCat("kitten");
     Map<Integer, Cat> result =
         query()
             .from(cat)
@@ -2186,7 +2178,7 @@ public abstract class AbstractJPATest {
   @Test
   @ExcludeIn(DERBY)
   public void transform_groupBy2() {
-    QCat kitten = new QCat("kitten");
+    var kitten = new QCat("kitten");
     Map<List<?>, Group> result =
         query()
             .from(cat)
@@ -2203,7 +2195,7 @@ public abstract class AbstractJPATest {
   @Test
   @ExcludeIn(DERBY)
   public void transform_groupBy_alias() {
-    QCat kitten = new QCat("kitten");
+    var kitten = new QCat("kitten");
     SimplePath<Cat> k = Expressions.path(Cat.class, "k");
     Map<Integer, Group> result =
         query()
@@ -2227,7 +2219,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoBatooJPA
   public void treat() {
-    QDomesticCat domesticCat = QDomesticCat.domesticCat;
+    var domesticCat = QDomesticCat.domesticCat;
     assertThat(
             query()
                 .from(cat)
@@ -2264,7 +2256,7 @@ public abstract class AbstractJPATest {
   @Test
   @ExcludeIn({DERBY, ORACLE})
   public void byte_array() {
-    QSimpleTypes simpleTypes = QSimpleTypes.simpleTypes;
+    var simpleTypes = QSimpleTypes.simpleTypes;
     assertThat(
             query()
                 .from(simpleTypes)

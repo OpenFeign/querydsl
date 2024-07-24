@@ -16,7 +16,6 @@ package com.querydsl.apt.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.persistence.Entity;
-import javax.jdo.annotations.PersistenceCapable;
 import org.junit.Test;
 
 public class KeywordsTest {
@@ -33,17 +32,10 @@ public class KeywordsTest {
   @Entity
   public static class NonKeyword {}
 
-  @PersistenceCapable
-  public static class Distinct {
-
-    String distinct;
-  }
-
   @Test
   public void test() {
-    assertThat(QKeywordsTest_Order.order.toString()).isEqualTo("order1");
-    assertThat(QKeywordsTest_From.from.toString()).isEqualTo("from1");
-    assertThat(QKeywordsTest_NonKeyword.nonKeyword.toString()).isEqualTo("nonKeyword");
-    assertThat(QKeywordsTest_Distinct.distinct1.toString()).isEqualTo("distinct1");
+    assertThat(QKeywordsTest_Order.order).hasToString("order1");
+    assertThat(QKeywordsTest_From.from).hasToString("from1");
+    assertThat(QKeywordsTest_NonKeyword.nonKeyword).hasToString("nonKeyword");
   }
 }

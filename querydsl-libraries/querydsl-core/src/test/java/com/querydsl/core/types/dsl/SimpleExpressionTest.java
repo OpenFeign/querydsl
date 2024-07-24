@@ -36,8 +36,8 @@ public class SimpleExpressionTest {
   @Test
   public void as_usage() {
     SimpleExpression<String> str = new StringPath("str");
-    assertThat(str.as("alias").toString()).isEqualTo("str as alias");
-    assertThat(str.as(new StringPath("alias")).toString()).isEqualTo("str as alias");
+    assertThat(str.as("alias")).hasToString("str as alias");
+    assertThat(str.as(new StringPath("alias"))).hasToString("str as alias");
   }
 
   @Test

@@ -79,7 +79,7 @@ public class JoinFlagsTest {
     query.innerJoin(s5).on(s1.eq(s5));
     query.addJoinFlag(" d ", JoinFlag.Position.OVERRIDE);
 
-    assertThat(query.toString()).isEqualTo("from SURVEY s d SURVEY s5\n" + "on s.ID = s5.ID");
+    assertThat(query).hasToString("from SURVEY s d SURVEY s5\n" + "on s.ID = s5.ID");
   }
 
   @SuppressWarnings("unchecked")

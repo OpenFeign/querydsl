@@ -373,7 +373,7 @@ public class ScalaWriterTest {
         "TestType", new Parameter("a", Types.STRING), new Parameter("b", Types.STRING));
 
     System.out.println(w);
-    assertThat(w.toString()).isEqualTo("case class TestType(a: String, b: String)\n");
+    assertThat(w).hasToString("case class TestType(a: String, b: String)\n");
   }
 
   @Test

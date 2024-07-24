@@ -25,6 +25,6 @@ public class QueryByExampleTest {
     ExampleEntity entity = new ExampleEntity();
     entity.name = "XXX";
     Predicate qbe = QExampleEntity.exampleEntity.like(entity);
-    assertThat(qbe.toString()).isEqualTo("exampleEntity.name = XXX");
+    assertThat(qbe).hasToString("exampleEntity.name = XXX");
   }
 }

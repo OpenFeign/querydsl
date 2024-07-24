@@ -31,9 +31,9 @@ public class TimeConstantTest {
     cal.set(Calendar.MILLISECOND, 3);
 
     TimeExpression<Time> time = TimeConstant.create(new Time(cal.getTimeInMillis()));
-    assertThat(time.hour().toString()).isEqualTo("13");
-    assertThat(time.minute().toString()).isEqualTo("30");
-    assertThat(time.second().toString()).isEqualTo("12.0");
+    assertThat(time.hour()).hasToString("13");
+    assertThat(time.minute()).hasToString("30");
+    assertThat(time.second()).hasToString("12.0");
     //        assertEquals("3",    time.getMilliSecond().toString());
   }
 }

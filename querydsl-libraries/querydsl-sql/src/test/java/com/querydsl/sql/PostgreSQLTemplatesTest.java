@@ -32,7 +32,7 @@ public class PostgreSQLTemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
-    assertThat(query.toString()).isEqualTo("select 1");
+    assertThat(query).hasToString("select 1");
   }
 
   @SuppressWarnings("unchecked")

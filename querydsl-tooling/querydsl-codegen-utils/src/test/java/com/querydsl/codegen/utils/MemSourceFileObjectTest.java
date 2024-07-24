@@ -15,20 +15,20 @@ public class MemSourceFileObjectTest {
   @Test
   public void Simple() {
     MemSourceFileObject obj = new MemSourceFileObject("Test", "Hello World");
-    assertThat(obj.getCharContent(true).toString()).isEqualTo("Hello World");
+    assertThat(obj.getCharContent(true)).hasToString("Hello World");
   }
 
   @Test
   public void OpenWriter() throws IOException {
     MemSourceFileObject obj = new MemSourceFileObject("Test");
     obj.openWriter().write("Hello World");
-    assertThat(obj.getCharContent(true).toString()).isEqualTo("Hello World");
+    assertThat(obj.getCharContent(true)).hasToString("Hello World");
   }
 
   @Test
   public void OpenWriter2() throws IOException {
     MemSourceFileObject obj = new MemSourceFileObject("Test");
     obj.openWriter().append("Hello World");
-    assertThat(obj.getCharContent(true).toString()).isEqualTo("Hello World");
+    assertThat(obj.getCharContent(true)).hasToString("Hello World");
   }
 }

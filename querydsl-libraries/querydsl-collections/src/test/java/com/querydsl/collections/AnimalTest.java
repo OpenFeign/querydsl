@@ -24,7 +24,7 @@ public class AnimalTest {
   public void cast() {
     QCat cat = QAnimal.animal.as(QCat.class);
     assertThat(cat.getMetadata().getElement()).isEqualTo(QAnimal.animal);
-    assertThat(cat.toString()).isEqualTo("animal");
+    assertThat(cat).hasToString("animal");
   }
 
   @Test

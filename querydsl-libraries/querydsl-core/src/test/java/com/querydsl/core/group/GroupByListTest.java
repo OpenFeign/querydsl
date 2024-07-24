@@ -135,7 +135,7 @@ public class GroupByListTest extends AbstractGroupByTest {
       Pair<Integer, String> second = pair.getSecond();
       comments.put(second.getFirst(), second.getSecond());
     }
-    assertThat(actual.toString()).isEqualTo(expected.toString());
+    assertThat(actual).hasToString(expected.toString());
   }
 
   @Test
@@ -164,7 +164,7 @@ public class GroupByListTest extends AbstractGroupByTest {
       Map<Integer, String> posts = Collections.singletonMap(first.getFirst(), first.getSecond());
       comments.put(posts, pair.getSecond());
     }
-    assertThat(actual.toString()).isEqualTo(expected.toString());
+    assertThat(actual).hasToString(expected.toString());
   }
 
   @Test
