@@ -56,6 +56,20 @@ public interface Type<T> {
    *
    * @param rs result set
    * @param startIndex column index in result set
+   * @param clazz value type
+   * @return value
+   * @throws SQLException
+   */
+  @Nullable
+  default T getValue(ResultSet rs, int startIndex, Class<T> clazz) throws SQLException {
+      return getValue(rs, startIndex);
+  }
+
+  /**
+   * Get the object from the result set
+   *
+   * @param rs result set
+   * @param startIndex column index in result set
    * @return value
    * @throws SQLException
    */
