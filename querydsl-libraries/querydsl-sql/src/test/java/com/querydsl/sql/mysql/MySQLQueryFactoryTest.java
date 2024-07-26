@@ -58,7 +58,7 @@ public class MySQLQueryFactoryTest {
   @Test
   public void insertIgnore() {
     SQLInsertClause clause = queryFactory.insertIgnore(QSurvey.survey);
-    assertThat(clause.toString()).isEqualTo("insert ignore into SURVEY\nvalues ()");
+    assertThat(clause).hasToString("insert ignore into SURVEY\nvalues ()");
   }
 
   @Test

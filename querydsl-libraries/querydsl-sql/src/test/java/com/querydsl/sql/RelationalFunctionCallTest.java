@@ -57,7 +57,7 @@ public class RelationalFunctionCallTest {
   public void noArgs() {
     RelationalFunctionCall<String> functionCall =
         SQLExpressions.relationalFunctionCall(String.class, "getElements");
-    assertThat(functionCall.getTemplate().toString()).isEqualTo("getElements()");
+    assertThat(functionCall.getTemplate()).hasToString("getElements()");
   }
 
   @Test
@@ -65,7 +65,7 @@ public class RelationalFunctionCallTest {
     StringPath str = Expressions.stringPath("str");
     RelationalFunctionCall<String> functionCall =
         SQLExpressions.relationalFunctionCall(String.class, "getElements", "a", str);
-    assertThat(functionCall.getTemplate().toString()).isEqualTo("getElements({0}, {1})");
+    assertThat(functionCall.getTemplate()).hasToString("getElements({0}, {1})");
     assertThat(functionCall.getArg(0)).isEqualTo("a");
     assertThat(functionCall.getArg(1)).isEqualTo(str);
   }

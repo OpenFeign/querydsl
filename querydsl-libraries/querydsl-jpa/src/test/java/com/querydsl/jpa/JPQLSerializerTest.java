@@ -44,8 +44,8 @@ public class JPQLSerializerTest {
     Predicate pred = cat.id.eq(1).and(cat.name.eq("Kitty").or(cat.name.eq("Boris")));
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(pred);
-    assertThat(serializer.toString()).isEqualTo("cat.id = ?1 and (cat.name = ?2 or cat.name = ?3)");
-    assertThat(pred.toString()).isEqualTo("cat.id = 1 && (cat.name = Kitty || cat.name = Boris)");
+    assertThat(serializer).hasToString("cat.id = ?1 and (cat.name = ?2 or cat.name = ?3)");
+    assertThat(pred).hasToString("cat.id = 1 && (cat.name = Kitty || cat.name = Boris)");
   }
 
   @Test
@@ -130,7 +130,7 @@ public class JPQLSerializerTest {
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, entityPath);
     serializer.serialize(md, false, null);
-    assertThat(serializer.toString()).isEqualTo("select entity\nfrom Location2 entity");
+    assertThat(serializer).hasToString("select entity\nfrom Location2 entity");
   }
 
   @Test
@@ -202,30 +202,30 @@ public class JPQLSerializerTest {
   public void in() {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.numberPath(Integer.class, "id").in(Arrays.asList(1, 2)));
-    assertThat(serializer.toString()).isEqualTo("id in (?1)");
+    assertThat(serializer).hasToString("id in (?1)");
   }
 
   @Test
   public void not_in() {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.numberPath(Integer.class, "id").notIn(Arrays.asList(1, 2)));
-    assertThat(serializer.toString()).isEqualTo("id not in (?1)");
+    assertThat(serializer).hasToString("id not in (?1)");
   }
 
   @Test
   public void like() {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.stringPath("str").contains("abc!"));
-    assertThat(serializer.toString()).isEqualTo("str like ?1 escape '!'");
-    assertThat(serializer.getConstants().get(0).toString()).isEqualTo("%abc!!%");
+    assertThat(serializer).hasToString("str like ?1 escape '!'");
+    assertThat(serializer.getConstants().get(0)).hasToString("%abc!!%");
   }
 
   @Test
   public void stringContainsIc() {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.stringPath("str").containsIgnoreCase("ABc!"));
-    assertThat(serializer.toString()).isEqualTo("lower(str) like ?1 escape '!'");
-    assertThat(serializer.getConstants().get(0).toString()).isEqualTo("%abc!!%");
+    assertThat(serializer).hasToString("lower(str) like ?1 escape '!'");
+    assertThat(serializer.getConstants().get(0)).hasToString("%abc!!%");
   }
 
   @Test
@@ -316,28 +316,28 @@ public class JPQLSerializerTest {
   public void visitLiteral_boolean() {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.visitLiteral(Boolean.TRUE);
-    assertThat(serializer.toString()).isEqualTo("true");
+    assertThat(serializer).hasToString("true");
   }
 
   @Test
   public void visitLiteral_number() {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.visitLiteral(1.543);
-    assertThat(serializer.toString()).isEqualTo("1.543");
+    assertThat(serializer).hasToString("1.543");
   }
 
   @Test
   public void visitLiteral_string() {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.visitLiteral("abc''def");
-    assertThat(serializer.toString()).isEqualTo("'abc''''def'");
+    assertThat(serializer).hasToString("'abc''''def'");
   }
 
   @Test
   public void visitLiteral_enum() {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.visitLiteral(JobFunction.MANAGER);
-    assertThat(serializer.toString()).isEqualTo("com.querydsl.jpa.domain.JobFunction.MANAGER");
+    assertThat(serializer).hasToString("com.querydsl.jpa.domain.JobFunction.MANAGER");
   }
 
   @Test
@@ -345,6 +345,6 @@ public class JPQLSerializerTest {
     QCat cat = QCat.cat;
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     cat.name.substring(cat.name.indexOf("")).accept(serializer, null);
-    assertThat(serializer.toString()).isEqualTo("substring(cat.name,locate(?1,cat.name)-1 + ?2)");
+    assertThat(serializer).hasToString("substring(cat.name,locate(?1,cat.name)-1 + ?2)");
   }
 }

@@ -2018,9 +2018,9 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void serialization() {
     SQLQuery<?> query = query();
     query.from(survey);
-    assertThat(query.toString()).isEqualTo("from SURVEY s");
+    assertThat(query).hasToString("from SURVEY s");
     query.from(survey2);
-    assertThat(query.toString()).isEqualTo("from SURVEY s, SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s, SURVEY s2");
   }
 
   @Test

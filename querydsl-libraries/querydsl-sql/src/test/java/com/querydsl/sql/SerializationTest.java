@@ -39,28 +39,28 @@ public class SerializationTest {
   public void innerJoin() {
     SQLQuery<?> query = new SQLQuery<Void>(connection, SQLTemplates.DEFAULT);
     query.from(new QSurvey("s1")).innerJoin(new QSurvey("s2"));
-    assertThat(query.toString()).isEqualTo("from SURVEY s1\ninner join SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s1\ninner join SURVEY s2");
   }
 
   @Test
   public void leftJoin() {
     SQLQuery<?> query = new SQLQuery<Void>(connection, SQLTemplates.DEFAULT);
     query.from(new QSurvey("s1")).leftJoin(new QSurvey("s2"));
-    assertThat(query.toString()).isEqualTo("from SURVEY s1\nleft join SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s1\nleft join SURVEY s2");
   }
 
   @Test
   public void rightJoin() {
     SQLQuery<?> query = new SQLQuery<Void>(connection, SQLTemplates.DEFAULT);
     query.from(new QSurvey("s1")).rightJoin(new QSurvey("s2"));
-    assertThat(query.toString()).isEqualTo("from SURVEY s1\nright join SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s1\nright join SURVEY s2");
   }
 
   @Test
   public void fullJoin() {
     SQLQuery<?> query = new SQLQuery<Void>(connection, SQLTemplates.DEFAULT);
     query.from(new QSurvey("s1")).fullJoin(new QSurvey("s2"));
-    assertThat(query.toString()).isEqualTo("from SURVEY s1\nfull join SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s1\nfull join SURVEY s2");
   }
 
   @Test
@@ -68,7 +68,7 @@ public class SerializationTest {
     SQLUpdateClause updateClause = new SQLUpdateClause(connection, SQLTemplates.DEFAULT, survey);
     updateClause.set(survey.id, 1);
     updateClause.set(survey.name, (String) null);
-    assertThat(updateClause.toString()).isEqualTo("update SURVEY\nset ID = ?, NAME = ?");
+    assertThat(updateClause).hasToString("update SURVEY\nset ID = ?, NAME = ?");
   }
 
   @Test
@@ -86,7 +86,7 @@ public class SerializationTest {
     SQLInsertClause insertClause = new SQLInsertClause(connection, SQLTemplates.DEFAULT, survey);
     insertClause.set(survey.id, 1);
     insertClause.set(survey.name, (String) null);
-    assertThat(insertClause.toString()).isEqualTo("insert into SURVEY (ID, NAME)\nvalues (?, ?)");
+    assertThat(insertClause).hasToString("insert into SURVEY (ID, NAME)\nvalues (?, ?)");
   }
 
   @Test
@@ -112,7 +112,7 @@ public class SerializationTest {
     SubQueryExpression<?> sq = select(SQLExpressions.nextval("myseq")).from(QSurvey.survey);
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.serialize(sq.getMetadata(), false);
-    assertThat(serializer.toString()).isEqualTo("select nextval('myseq')\nfrom SURVEY SURVEY");
+    assertThat(serializer).hasToString("select nextval('myseq')\nfrom SURVEY SURVEY");
   }
 
   @Test

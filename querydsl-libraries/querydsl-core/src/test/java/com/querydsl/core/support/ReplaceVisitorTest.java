@@ -29,8 +29,8 @@ public class ReplaceVisitorTest {
         Expressions.stringPath(ExpressionUtils.path(Object.class, "customer"), "name");
     Expression<String> str2 = Expressions.stringPath("str");
     Expression<String> concat = Expressions.stringOperation(Ops.CONCAT, str, str2);
-    assertThat(concat.toString()).isEqualTo("customer.name + str");
-    assertThat(concat.accept(visitor, null).toString()).isEqualTo("customer_.name + str_");
+    assertThat(concat).hasToString("customer.name + str");
+    assertThat(concat.accept(visitor, null)).hasToString("customer_.name + str_");
   }
 
   @Test
@@ -39,7 +39,7 @@ public class ReplaceVisitorTest {
         Expressions.stringPath(ExpressionUtils.path(Object.class, "customer"), "name");
     Expression<String> str2 = Expressions.stringPath("str");
     Expression<String> concat = Expressions.stringTemplate("{0} + {1}", str, str2);
-    assertThat(concat.toString()).isEqualTo("customer.name + str");
-    assertThat(concat.accept(visitor, null).toString()).isEqualTo("customer_.name + str_");
+    assertThat(concat).hasToString("customer.name + str");
+    assertThat(concat.accept(visitor, null)).hasToString("customer_.name + str_");
   }
 }

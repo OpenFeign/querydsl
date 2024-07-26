@@ -319,7 +319,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
     clause.addFlag(Position.START_OVERRIDE, "insert ignore into ");
 
-    assertThat(clause.toString()).isEqualTo("insert ignore into SURVEY (ID, NAME) values (?, ?)");
+    assertThat(clause).hasToString("insert ignore into SURVEY (ID, NAME) values (?, ?)");
     assertThat(clause.execute()).isEqualTo(1);
   }
 
@@ -471,7 +471,7 @@ public abstract class InsertBase extends AbstractBaseTest {
     SQLInsertClause clause = mysqlReplace(survey);
     clause.columns(survey.id, survey.name).values(3, "Hello");
 
-    assertThat(clause.toString()).isEqualTo("replace into SURVEY (ID, NAME) values (?, ?)");
+    assertThat(clause).hasToString("replace into SURVEY (ID, NAME) values (?, ?)");
     clause.execute();
   }
 

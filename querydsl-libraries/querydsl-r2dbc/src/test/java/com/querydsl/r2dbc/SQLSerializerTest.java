@@ -47,7 +47,7 @@ public class SQLSerializerTest {
   public void count() {
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(employee.id.count().add(employee.id.countDistinct()));
-    assertThat(serializer.toString()).isEqualTo("count(EMPLOYEE.ID) + count(distinct EMPLOYEE.ID)");
+    assertThat(serializer).hasToString("count(EMPLOYEE.ID) + count(distinct EMPLOYEE.ID)");
   }
 
   @Test
@@ -212,7 +212,7 @@ public class SQLSerializerTest {
     // select some((e.FIRSTNAME is not null)) from EMPLOYEE
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(R2DBCExpressions.any(employee.firstname.isNotNull()));
-    assertThat(serializer.toString()).isEqualTo("some(EMPLOYEE.FIRSTNAME is not null)");
+    assertThat(serializer).hasToString("some(EMPLOYEE.FIRSTNAME is not null)");
   }
 
   @Test
@@ -220,7 +220,7 @@ public class SQLSerializerTest {
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     QSurvey s1 = new QSurvey("s1");
     serializer.handle(s1.name.startsWith("X"));
-    assertThat(serializer.toString()).isEqualTo("s1.NAME like ? escape '\\'");
+    assertThat(serializer).hasToString("s1.NAME like ? escape '\\'");
     assertThat(serializer.getConstants()).isEqualTo(Arrays.asList("X%"));
   }
 
@@ -259,7 +259,7 @@ public class SQLSerializerTest {
     Expression<?> expr = Expressions.stringTemplate("'%a%'").contains("%a%");
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(expr);
-    assertThat(serializer.toString()).isEqualTo("'%a%' like ? escape '\\'");
+    assertThat(serializer).hasToString("'%a%' like ? escape '\\'");
   }
 
   @Test
@@ -414,7 +414,7 @@ public class SQLSerializerTest {
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.visit(
         R2DBCExpressions.select(Expressions.stringPath("id"), Expressions.stringPath("ID")), null);
-    assertThat(serializer.toString()).isEqualTo("(select id, ID as col__ID1\n" + "from dual)");
+    assertThat(serializer).hasToString("(select id, ID as col__ID1\n" + "from dual)");
   }
 
   @Test

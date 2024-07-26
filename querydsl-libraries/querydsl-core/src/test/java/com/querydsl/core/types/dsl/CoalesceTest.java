@@ -26,20 +26,20 @@ public class CoalesceTest {
   @Test
   public void mutable() {
     Coalesce<String> c = new Coalesce<String>(firstname, lastname).add("xxx");
-    assertThat(c.toString()).isEqualTo("coalesce(firstname, lastname, xxx)");
-    assertThat(c.add("yyy").toString()).isEqualTo("coalesce(firstname, lastname, xxx, yyy)");
+    assertThat(c).hasToString("coalesce(firstname, lastname, xxx)");
+    assertThat(c.add("yyy")).hasToString("coalesce(firstname, lastname, xxx, yyy)");
   }
 
   @Test
   public void withList() {
     Coalesce<String> c = new Coalesce<String>(firstname, lastname).add("xxx");
-    assertThat(c.toString()).isEqualTo("coalesce(firstname, lastname, xxx)");
+    assertThat(c).hasToString("coalesce(firstname, lastname, xxx)");
   }
 
   @Test
   public void withSingleArg() {
     Coalesce<String> c = new Coalesce<String>().add("xxx");
-    assertThat(c.toString()).isEqualTo("coalesce(xxx)");
+    assertThat(c).hasToString("coalesce(xxx)");
   }
 
   @Test
@@ -57,12 +57,12 @@ public class CoalesceTest {
   @Test
   public void withoutWarnings() {
     Coalesce<String> c = new Coalesce<String>(String.class).add(firstname).add(lastname);
-    assertThat(c.toString()).isEqualTo("coalesce(firstname, lastname)");
+    assertThat(c).hasToString("coalesce(firstname, lastname)");
   }
 
   @Test
   public void dsl() {
-    assertThat(firstname.coalesce(lastname).toString()).isEqualTo("coalesce(firstname, lastname)");
+    assertThat(firstname.coalesce(lastname)).hasToString("coalesce(firstname, lastname)");
   }
 
   @Test
@@ -73,7 +73,7 @@ public class CoalesceTest {
 
   @Test
   public void dsl3() {
-    assertThat(firstname.coalesce("xxx").toString()).isEqualTo("coalesce(firstname, xxx)");
+    assertThat(firstname.coalesce("xxx")).hasToString("coalesce(firstname, xxx)");
   }
 
   @Test

@@ -32,7 +32,7 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
-    assertThat(query.toString()).isEqualTo("select 1");
+    assertThat(query).hasToString("select 1");
   }
 
   @Override
@@ -57,7 +57,7 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
   public void limit() {
     query.from(survey1).limit(5);
     query.getMetadata().setProjection(survey1.id);
-    assertThat(query.toString()).isEqualTo("select top 5 survey1.ID from SURVEY survey1");
+    assertThat(query).hasToString("select top 5 survey1.ID from SURVEY survey1");
   }
 
   @Test
@@ -78,7 +78,7 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
     SQLDeleteClause clause = new SQLDeleteClause(null, createTemplates(), survey1);
     clause.where(survey1.name.eq("Bob"));
     clause.limit(5);
-    assertThat(clause.toString()).isEqualTo("delete top 5 from SURVEY\n" + "where SURVEY.NAME = ?");
+    assertThat(clause).hasToString("delete top 5 from SURVEY\n" + "where SURVEY.NAME = ?");
   }
 
   @Test
@@ -86,7 +86,7 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
     SQLUpdateClause clause = new SQLUpdateClause(null, createTemplates(), survey1);
     clause.set(survey1.name, "Bob");
     clause.limit(5);
-    assertThat(clause.toString()).isEqualTo("update top 5 SURVEY\n" + "set NAME = ?");
+    assertThat(clause).hasToString("update top 5 SURVEY\n" + "set NAME = ?");
   }
 
   @Test

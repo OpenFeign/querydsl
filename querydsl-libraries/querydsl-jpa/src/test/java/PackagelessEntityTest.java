@@ -27,6 +27,6 @@ public class PackagelessEntityTest {
     PathBuilder<PackagelessEntityTest> builder =
         new PathBuilder(PackagelessEntityTest.class, "entity");
     JPQLSubQuery<PackagelessEntityTest> query = select(builder).from(builder);
-    assertThat(query.toString()).isEqualTo("select entity\nfrom PackagelessEntityTest entity");
+    assertThat(query).hasToString("select entity\nfrom PackagelessEntityTest entity");
   }
 }

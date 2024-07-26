@@ -52,7 +52,7 @@ public class SerializationBase implements JPATest {
 
     // create new query
     JPAQuery<?> query2 = new JPAQuery<Void>(entityManager, metadata2);
-    assertThat(query2.toString()).isEqualTo("select cat\nfrom Cat cat\nwhere cat.name = ?1");
+    assertThat(query2).hasToString("select cat\nfrom Cat cat\nwhere cat.name = ?1");
     query2.select(cat).fetch();
   }
 

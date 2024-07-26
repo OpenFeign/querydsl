@@ -281,7 +281,7 @@ public class MongodbSerializerTest {
 
   private void assertQuery(Expression<?> e, BasicDBObject expected) {
     BasicDBObject result = (BasicDBObject) serializer.handle(e);
-    assertThat(result.toString()).isEqualTo(expected.toString());
+    assertThat(result).hasToString(expected.toString());
   }
 
   public static BasicDBObject dbo(String key, Object... value) {

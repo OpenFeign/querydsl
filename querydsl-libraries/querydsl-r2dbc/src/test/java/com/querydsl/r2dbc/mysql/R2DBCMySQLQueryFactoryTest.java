@@ -59,7 +59,7 @@ public class R2DBCMySQLQueryFactoryTest {
   @Test
   public void insertIgnore() {
     R2DBCInsertClause clause = queryFactory.insertIgnore(QSurvey.survey);
-    assertThat(clause.toString()).isEqualTo("insert ignore into SURVEY\nvalues ()");
+    assertThat(clause).hasToString("insert ignore into SURVEY\nvalues ()");
   }
 
   @Test

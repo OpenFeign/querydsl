@@ -30,7 +30,7 @@ public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
-    assertThat(query.toString()).isEqualTo("select 1");
+    assertThat(query).hasToString("select 1");
   }
 
   @Override
@@ -55,7 +55,7 @@ public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
   public void limit() {
     query.from(survey1).limit(5);
     query.getMetadata().setProjection(survey1.id);
-    assertThat(query.toString()).isEqualTo("select top 5 survey1.ID from SURVEY survey1");
+    assertThat(query).hasToString("select top 5 survey1.ID from SURVEY survey1");
   }
 
   @Test

@@ -44,7 +44,7 @@ public class SQLSerializerTest {
   public void count() {
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(employee.id.count().add(employee.id.countDistinct()));
-    assertThat(serializer.toString()).isEqualTo("count(EMPLOYEE.ID) + count(distinct EMPLOYEE.ID)");
+    assertThat(serializer).hasToString("count(EMPLOYEE.ID) + count(distinct EMPLOYEE.ID)");
   }
 
   @Test
@@ -57,11 +57,11 @@ public class SQLSerializerTest {
     assertThat(serializer.toString())
         .isEqualTo(
             """
-            select count(*)
-            from (select distinct EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, \
-            EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID
-            from EMPLOYEE EMPLOYEE) internal\
-            """);
+select count(*)
+from (select distinct EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, \
+EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID
+from EMPLOYEE EMPLOYEE) internal\
+""");
   }
 
   @Test
@@ -215,7 +215,7 @@ public class SQLSerializerTest {
     // select some((e.FIRSTNAME is not null)) from EMPLOYEE
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(SQLExpressions.any(employee.firstname.isNotNull()));
-    assertThat(serializer.toString()).isEqualTo("some(EMPLOYEE.FIRSTNAME is not null)");
+    assertThat(serializer).hasToString("some(EMPLOYEE.FIRSTNAME is not null)");
   }
 
   @Test
@@ -223,7 +223,7 @@ public class SQLSerializerTest {
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     QSurvey s1 = new QSurvey("s1");
     serializer.handle(s1.name.startsWith("X"));
-    assertThat(serializer.toString()).isEqualTo("s1.NAME like ? escape '\\'");
+    assertThat(serializer).hasToString("s1.NAME like ? escape '\\'");
     assertThat(serializer.getConstants()).isEqualTo(Collections.singletonList("X%"));
   }
 
@@ -269,7 +269,7 @@ public class SQLSerializerTest {
     templates.setCrossJoin(" cross join ");
     SQLQuery<?> query = new SQLQuery<Void>(templates);
     query.from(survey, employee);
-    assertThat(query.toString()).isEqualTo("from SURVEY SURVEY cross join EMPLOYEE EMPLOYEE");
+    assertThat(query).hasToString("from SURVEY SURVEY cross join EMPLOYEE EMPLOYEE");
   }
 
   @Test
@@ -285,7 +285,7 @@ public class SQLSerializerTest {
     Expression<?> expr = Expressions.stringTemplate("'%a%'").contains("%a%");
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(expr);
-    assertThat(serializer.toString()).isEqualTo("'%a%' like ? escape '\\'");
+    assertThat(serializer).hasToString("'%a%' like ? escape '\\'");
   }
 
   @Test
@@ -295,7 +295,7 @@ public class SQLSerializerTest {
 
     SQLQuery<?> query = new SQLQuery<Void>(conf);
     query.from(survey);
-    assertThat(query.toString()).isEqualTo("from surveys SURVEY");
+    assertThat(query).hasToString("from surveys SURVEY");
   }
 
   @Test
@@ -305,7 +305,7 @@ public class SQLSerializerTest {
 
     SQLQuery<?> query = new SQLQuery<Void>(conf);
     query.from(survey).where(survey.name.isNull());
-    assertThat(query.toString()).isEqualTo("from SURVEY SURVEY\n" + "where SURVEY.LABEL is null");
+    assertThat(query).hasToString("from SURVEY SURVEY\n" + "where SURVEY.LABEL is null");
   }
 
   @Test
@@ -315,7 +315,7 @@ public class SQLSerializerTest {
 
     SQLQuery<?> query = new SQLQuery<Void>(conf);
     query.from(survey).where(survey.name.isNull());
-    assertThat(query.toString()).isEqualTo("from SURVEY SURVEY\n" + "where SURVEY.LABEL is null");
+    assertThat(query).hasToString("from SURVEY SURVEY\n" + "where SURVEY.LABEL is null");
   }
 
   @Test
@@ -436,16 +436,16 @@ public class SQLSerializerTest {
     assertThat(serializer.toString())
         .isEqualTo(
             """
-            with recursive sub (ID, FIRSTNAME, SUPERIOR_ID) as ((select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID
-            from EMPLOYEE EMPLOYEE
-            where EMPLOYEE.FIRSTNAME = ?)
-            union all
-            (select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID
-            from EMPLOYEE EMPLOYEE, sub
-            where EMPLOYEE.SUPERIOR_ID = sub.ID))
-            select *
-            from sub\
-            """);
+with recursive sub (ID, FIRSTNAME, SUPERIOR_ID) as ((select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID
+from EMPLOYEE EMPLOYEE
+where EMPLOYEE.FIRSTNAME = ?)
+union all
+(select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID
+from EMPLOYEE EMPLOYEE, sub
+where EMPLOYEE.SUPERIOR_ID = sub.ID))
+select *
+from sub\
+""");
   }
 
   @Test
@@ -465,7 +465,7 @@ public class SQLSerializerTest {
   public void select_normalization() {
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.visit(select(Expressions.stringPath("id"), Expressions.stringPath("ID")), null);
-    assertThat(serializer.toString()).isEqualTo("(select id, ID as col__ID1\n" + "from dual)");
+    assertThat(serializer).hasToString("(select id, ID as col__ID1\n" + "from dual)");
   }
 
   @Test

@@ -194,6 +194,6 @@ public class PathTest {
   public void parent_path() {
     Path<Object> person = ExpressionUtils.path(Object.class, "person");
     Path<String> name = ExpressionUtils.path(String.class, person, "name");
-    assertThat(name.toString()).isEqualTo("person.name");
+    assertThat(name).hasToString("person.name");
   }
 }
