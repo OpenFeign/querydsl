@@ -113,7 +113,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
     CloseableIterator<Cat> cats =
         new ScrollableResultsIterator<Cat>(
             query().from(cat).select(cat).createQuery().getResultList());
-    assertThat(cats.hasNext()).isTrue();
+    assertThat(cats).hasNext();
     while (cats.hasNext()) {
       assertThat(cats.next()).isNotNull();
     }
@@ -125,7 +125,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
     CloseableIterator<Tuple> rows =
         new ScrollableResultsIterator<Tuple>(
             query().from(cat).select(cat.name, cat.birthdate).createQuery().getResultList());
-    assertThat(rows.hasNext()).isTrue();
+    assertThat(rows).hasNext();
     while (rows.hasNext()) {
       Tuple row = rows.next();
       assertThat(row.size()).isEqualTo(2);

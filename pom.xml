@@ -104,18 +104,18 @@
     <junit.version>5.10.3</junit.version>
     <ecj.version>3.33.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
-    <springboot.version>3.3.1</springboot.version>
-    <spring.version>6.1.10</spring.version>
+    <springboot.version>3.3.2</springboot.version>
+    <spring.version>6.1.11</spring.version>
 
     <!-- SQL deps -->
     <db2.version>11.5.9.0</db2.version>
     <derby.version>10.17.1.0</derby.version>
     <hsqldb.version>2.7.3</hsqldb.version>
-    <h2.version>2.2.224</h2.version>
+    <h2.version>2.3.230</h2.version>
     <postgresql.version>42.7.3</postgresql.version>
     <oracle.version>23.4.0.24.05</oracle.version>
     <mysql.version>8.0.30</mysql.version>
-    <mssql.version>12.7.0.jre8-preview</mssql.version>
+    <mssql.version>12.7.1.jre8-preview</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.46.0.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
@@ -127,7 +127,7 @@
     <!-- JPA deps -->
     <hibernate.version>6.5.2.Final</hibernate.version>
     <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
-    <eclipselink.version>4.0.3</eclipselink.version>
+    <eclipselink.version>4.0.4</eclipselink.version>
     <jpa.version>3.1.0</jpa.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 
@@ -135,9 +135,9 @@
     <guava.version>33.2.1-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
     <mysema.lang.version>0.2.4</mysema.lang.version>
-    <byte-buddy.version>1.14.17</byte-buddy.version>
+    <byte-buddy.version>1.14.18</byte-buddy.version>
     <slf4j.version>2.0.13</slf4j.version>
-    <surefire.version>3.3.0</surefire.version>
+    <surefire.version>3.3.1</surefire.version>
     <animal-sniffer.version>1.24</animal-sniffer.version>
     <h2gis.version>2.2.1</h2gis.version>
     <morphia.version>1.3.2</morphia.version>
@@ -278,7 +278,7 @@
       <dependency>
         <groupId>io.projectreactor</groupId>
         <artifactId>reactor-bom</artifactId>
-        <version>2023.0.7</version>
+        <version>2023.0.8</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -289,7 +289,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.26.0</version>
+      <version>3.26.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -332,7 +332,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.8.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -439,7 +439,7 @@
       <plugin>
         <groupId>com.github.siom79.japicmp</groupId>
         <artifactId>japicmp-maven-plugin</artifactId>
-        <version>0.21.2</version>
+        <version>0.22.0</version>
         <configuration>
           <parameter>
             <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
