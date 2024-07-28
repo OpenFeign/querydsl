@@ -69,20 +69,20 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
     // employee
     statement.execute(
         """
-			create table employee(
-			id INT,
-			firstname VARCHAR(50),
-			lastname VARCHAR(50),
-			salary DECIMAL(10, 2),
-			datefield DATE,
-			timefield TIME,
-			superior_id int,
-			survey_id int,
-			"123abc" int,
-			survey_name varchar(30),
-			CONSTRAINT PK_employee PRIMARY KEY (id),
-			CONSTRAINT FK_survey FOREIGN KEY (survey_id, survey_name) REFERENCES survey(id,name),
-			CONSTRAINT FK_superior FOREIGN KEY (superior_id) REFERENCES employee(id))""");
+        create table employee(
+        id INT,
+        firstname VARCHAR(50),
+        lastname VARCHAR(50),
+        salary DECIMAL(10, 2),
+        datefield DATE,
+        timefield TIME,
+        superior_id int,
+        survey_id int,
+        "123abc" int,
+        survey_name varchar(30),
+        CONSTRAINT PK_employee PRIMARY KEY (id),
+        CONSTRAINT FK_survey FOREIGN KEY (survey_id, survey_name) REFERENCES survey(id,name),
+        CONSTRAINT FK_superior FOREIGN KEY (superior_id) REFERENCES employee(id))""");
   }
 
   @Test

@@ -74,11 +74,11 @@ public class SQLSubQueryTest {
     assertThat(serializer.toString())
         .isEqualTo(
             """
-        (select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID, employee2.ID as col__ID7
-        from EMPLOYEE EMPLOYEE
-        inner join EMPLOYEE employee2
-        on EMPLOYEE.SUPERIOR_ID = employee2.ID)\
-        """);
+(select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID, employee2.ID as col__ID7
+from EMPLOYEE EMPLOYEE
+inner join EMPLOYEE employee2
+on EMPLOYEE.SUPERIOR_ID = employee2.ID)\
+""");
   }
 
   @Test
@@ -181,13 +181,13 @@ public class SQLSubQueryTest {
     assertThat(query.toString())
         .isEqualTo(
             """
-        with survey1 as (select survey1.NAME, survey1.NAME2, survey1.ID
-        from SURVEY survey1)
-        (select survey2.NAME, survey2.NAME2, survey2.ID
-        from SURVEY survey2)
-        union
-        (select survey3.NAME, survey3.NAME2, survey3.ID
-        from SURVEY survey3)\
-        """);
+            with survey1 as (select survey1.NAME, survey1.NAME2, survey1.ID
+            from SURVEY survey1)
+            (select survey2.NAME, survey2.NAME2, survey2.ID
+            from SURVEY survey2)
+            union
+            (select survey3.NAME, survey3.NAME2, survey3.ID
+            from SURVEY survey3)\
+            """);
   }
 }

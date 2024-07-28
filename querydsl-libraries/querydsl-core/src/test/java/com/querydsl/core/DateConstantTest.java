@@ -31,10 +31,10 @@ public class DateConstantTest {
     cal.set(Calendar.YEAR, 2000);
 
     DateExpression<Date> date = DateConstant.create(new Date(cal.getTimeInMillis()));
-    assertThat(date.dayOfMonth().toString()).isEqualTo("1");
-    assertThat(date.month().toString()).isEqualTo("1");
-    assertThat(date.year().toString()).isEqualTo("2000");
-    assertThat(date.dayOfWeek().toString()).isEqualTo("7");
-    assertThat(date.dayOfYear().toString()).isEqualTo("1");
+    assertThat(date.dayOfMonth()).hasToString("1");
+    assertThat(date.month()).hasToString("1");
+    assertThat(date.year()).hasToString("2000");
+    assertThat(date.dayOfWeek()).hasToString("7");
+    assertThat(date.dayOfYear()).hasToString("1");
   }
 }

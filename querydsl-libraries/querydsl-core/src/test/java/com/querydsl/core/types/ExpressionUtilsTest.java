@@ -128,17 +128,17 @@ public class ExpressionUtilsTest {
 
   @Test
   public void count() {
-    assertThat(ExpressionUtils.count(str).toString()).isEqualTo("count(str)");
+    assertThat(ExpressionUtils.count(str)).hasToString("count(str)");
   }
 
   @Test
   public void eqConst() {
-    assertThat(ExpressionUtils.eqConst(str, "X").toString()).isEqualTo("str = X");
+    assertThat(ExpressionUtils.eqConst(str, "X")).hasToString("str = X");
   }
 
   @Test
   public void eq() {
-    assertThat(ExpressionUtils.eq(str, str2).toString()).isEqualTo("str = str2");
+    assertThat(ExpressionUtils.eq(str, str2)).hasToString("str = str2");
   }
 
   @Test
@@ -166,22 +166,22 @@ public class ExpressionUtilsTest {
 
   @Test
   public void isNull() {
-    assertThat(ExpressionUtils.isNull(str).toString()).isEqualTo("str is null");
+    assertThat(ExpressionUtils.isNull(str)).hasToString("str is null");
   }
 
   @Test
   public void isNotNull() {
-    assertThat(ExpressionUtils.isNotNull(str).toString()).isEqualTo("str is not null");
+    assertThat(ExpressionUtils.isNotNull(str)).hasToString("str is not null");
   }
 
   @Test
   public void neConst() {
-    assertThat(ExpressionUtils.neConst(str, "X").toString()).isEqualTo("str != X");
+    assertThat(ExpressionUtils.neConst(str, "X")).hasToString("str != X");
   }
 
   @Test
   public void ne() {
-    assertThat(ExpressionUtils.ne(str, str2).toString()).isEqualTo("str != str2");
+    assertThat(ExpressionUtils.ne(str, str2)).hasToString("str != str2");
   }
 
   @Test

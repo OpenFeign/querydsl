@@ -28,13 +28,13 @@ public class TemplateTest {
   @Test
   public void toDate() {
     StringExpression str = Expressions.stringPath("str");
-    assertThat(to_date(str, "DD-MON-YYYY").toString()).isEqualTo("to_date(str,'DD-MON-YYYY')");
+    assertThat(to_date(str, "DD-MON-YYYY")).hasToString("to_date(str,'DD-MON-YYYY')");
   }
 
   @Test
   public void toChar() {
     DateExpression<Date> date = Expressions.datePath(Date.class, "date");
-    assertThat(to_char(date, "DD-MON-YYYY").toString()).isEqualTo("to_char(date,'DD-MON-YYYY')");
+    assertThat(to_char(date, "DD-MON-YYYY")).hasToString("to_char(date,'DD-MON-YYYY')");
   }
 
   private DateExpression<Date> to_date(Expression<String> expr, String pattern) {

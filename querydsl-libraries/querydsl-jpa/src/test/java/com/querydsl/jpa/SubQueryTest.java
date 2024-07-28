@@ -27,13 +27,13 @@ public class SubQueryTest extends AbstractQueryTest {
   @Test
   public void single_source() {
     JPQLSubQuery<?> query = selectFrom(cat);
-    assertThat(query.toString()).isEqualTo("select cat\nfrom Cat cat");
+    assertThat(query).hasToString("select cat\nfrom Cat cat");
   }
 
   @Test
   public void multiple_sources() {
     JPQLSubQuery<?> query = select(cat).from(cat, fatcat);
-    assertThat(query.toString()).isEqualTo("select cat\nfrom Cat cat, Cat fatcat");
+    assertThat(query).hasToString("select cat\nfrom Cat cat, Cat fatcat");
   }
 
   @Test

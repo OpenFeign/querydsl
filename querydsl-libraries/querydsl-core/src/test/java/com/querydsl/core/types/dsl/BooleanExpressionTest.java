@@ -35,16 +35,16 @@ public class BooleanExpressionTest {
 
   @Test
   public void allOf_with_nulls() {
-    assertThat(Expressions.allOf(a, b, null).toString()).isEqualTo("a && b");
-    assertThat(Expressions.allOf(a, null).toString()).isEqualTo("a");
-    assertThat(Expressions.allOf(null, a).toString()).isEqualTo("a");
+    assertThat(Expressions.allOf(a, b, null)).hasToString("a && b");
+    assertThat(Expressions.allOf(a, null)).hasToString("a");
+    assertThat(Expressions.allOf(null, a)).hasToString("a");
   }
 
   @Test
   public void anyOf_with_nulls() {
-    assertThat(Expressions.anyOf(a, b, null).toString()).isEqualTo("a || b");
-    assertThat(Expressions.anyOf(a, null).toString()).isEqualTo("a");
-    assertThat(Expressions.anyOf(null, a).toString()).isEqualTo("a");
+    assertThat(Expressions.anyOf(a, b, null)).hasToString("a || b");
+    assertThat(Expressions.anyOf(a, null)).hasToString("a");
+    assertThat(Expressions.anyOf(null, a)).hasToString("a");
   }
 
   @Test

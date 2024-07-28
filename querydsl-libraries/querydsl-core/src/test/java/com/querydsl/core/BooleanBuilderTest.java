@@ -87,7 +87,7 @@ public class BooleanBuilderTest {
     BooleanBuilder builder = new BooleanBuilder();
     builder.andAnyOf(first, second, first);
     builder.orAllOf(first, second, first);
-    assertThat(builder.toString()).isEqualTo("true || false || true || true && false && true");
+    assertThat(builder).hasToString("true || false || true || true && false && true");
   }
 
   @Test
@@ -155,9 +155,9 @@ public class BooleanBuilderTest {
   @Test
   public void toString_() {
     BooleanBuilder builder = new BooleanBuilder().and(first);
-    assertThat(builder.toString()).isEqualTo("true");
+    assertThat(builder).hasToString("true");
     builder.or(Expressions.booleanPath("condition"));
-    assertThat(builder.toString()).isEqualTo("true || condition");
+    assertThat(builder).hasToString("true || condition");
   }
 
   //    @Test

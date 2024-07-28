@@ -20,7 +20,7 @@ public class JPQLTemplatesTest {
             new EclipseLinkTemplates(), new OpenJPATemplates());
 
     for (Templates t : templates) {
-      assertThat(t.getTemplate(Ops.LIKE).toString()).isEqualTo("{0} like {1} escape '!'");
+      assertThat(t.getTemplate(Ops.LIKE)).hasToString("{0} like {1} escape '!'");
     }
   }
 
@@ -32,7 +32,7 @@ public class JPQLTemplatesTest {
             new EclipseLinkTemplates('X'), new OpenJPATemplates('X'));
 
     for (Templates t : templates) {
-      assertThat(t.getTemplate(Ops.LIKE).toString()).isEqualTo("{0} like {1} escape 'X'");
+      assertThat(t.getTemplate(Ops.LIKE)).hasToString("{0} like {1} escape 'X'");
     }
   }
 

@@ -27,13 +27,13 @@ public class ListPathTest {
 
   @Test
   public void toString_() {
-    assertThat(stringPath.toString()).isEqualTo("stringPath");
-    assertThat(stringPath.any().toString()).isEqualTo("any(stringPath)");
+    assertThat(stringPath).hasToString("stringPath");
+    assertThat(stringPath.any()).hasToString("any(stringPath)");
     assertThat(stringPath.get(0).equalsIgnoreCase("X").toString())
         .isEqualTo("eqIc(stringPath.get(0),X)");
     assertThat(stringPath.any().equalsIgnoreCase("X").toString())
         .isEqualTo("eqIc(any(stringPath),X)");
-    assertThat(stringPath.get(ConstantImpl.create(0)).toString()).isEqualTo("stringPath.get(0)");
+    assertThat(stringPath.get(ConstantImpl.create(0))).hasToString("stringPath.get(0)");
   }
 
   @Test

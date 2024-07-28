@@ -86,11 +86,11 @@ public class PathBuilderTest {
     StringPath strPath = new StringPath("str");
     BooleanPath booleanPath = new BooleanPath("boolean");
 
-    assertThat(entity.get(intPath).toString()).isEqualTo("entity.int");
-    assertThat(entity.get(strPath).toString()).isEqualTo("entity.str");
-    assertThat(entity.get(booleanPath).toString()).isEqualTo("entity.boolean");
+    assertThat(entity.get(intPath)).hasToString("entity.int");
+    assertThat(entity.get(strPath)).hasToString("entity.str");
+    assertThat(entity.get(booleanPath)).hasToString("entity.boolean");
 
-    assertThat(entity.get(entity.get(intPath)).toString()).isEqualTo("entity.int");
+    assertThat(entity.get(entity.get(intPath))).hasToString("entity.int");
   }
 
   @Test

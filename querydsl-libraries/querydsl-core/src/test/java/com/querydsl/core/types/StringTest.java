@@ -66,23 +66,23 @@ public class StringTest {
     SomeType alias = alias(SomeType.class, "alias");
 
     // Path toString
-    assertThat($(alias.getName()).toString()).isEqualTo("alias.name");
-    assertThat($(alias.getRef().getName()).toString()).isEqualTo("alias.ref.name");
-    assertThat($(alias.getRefs().get(0)).toString()).isEqualTo("alias.refs.get(0)");
+    assertThat($(alias.getName())).hasToString("alias.name");
+    assertThat($(alias.getRef().getName())).hasToString("alias.ref.name");
+    assertThat($(alias.getRefs().get(0))).hasToString("alias.refs.get(0)");
 
     // Operation toString
-    assertThat($(alias.getName()).lower().toString()).isEqualTo("lower(alias.name)");
+    assertThat($(alias.getName()).lower()).hasToString("lower(alias.name)");
 
     // ConstructorExpression
     ConstructorExpression<SomeType> someType =
         new ConstructorExpression<SomeType>(
             SomeType.class, new Class<?>[] {SomeType.class}, $(alias));
-    assertThat(someType.toString()).isEqualTo("new SomeType(alias)");
+    assertThat(someType).hasToString("new SomeType(alias)");
 
     // ArrayConstructorExpression
     ArrayConstructorExpression<SomeType> someTypeArray =
         new ArrayConstructorExpression<SomeType>(SomeType[].class, $(alias));
-    assertThat(someTypeArray.toString()).isEqualTo("new SomeType[](alias)");
+    assertThat(someTypeArray).hasToString("new SomeType[](alias)");
   }
 
   public static class SomeType {

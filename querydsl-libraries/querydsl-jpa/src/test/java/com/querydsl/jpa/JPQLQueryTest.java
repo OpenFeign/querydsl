@@ -66,10 +66,10 @@ public class JPQLQueryTest {
   public void toString_() {
     assertThat(new HibernateQuery<Void>().toString()).isEmpty();
     assertThat(new JPAQuery<Void>().toString()).isEmpty();
-    assertThat(new HibernateQuery<Void>().select(cat).toString()).isEqualTo("select cat");
-    assertThat(new JPAQuery<Void>().select(cat).toString()).isEqualTo("select cat");
+    assertThat(new HibernateQuery<Void>().select(cat)).hasToString("select cat");
+    assertThat(new JPAQuery<Void>().select(cat)).hasToString("select cat");
     assertThat(new HibernateQuery<Void>().from(cat).toString())
         .isEqualTo("select cat\nfrom Cat cat");
-    assertThat(new JPAQuery<Void>().from(cat).toString()).isEqualTo("select cat\nfrom Cat cat");
+    assertThat(new JPAQuery<Void>().from(cat)).hasToString("select cat\nfrom Cat cat");
   }
 }

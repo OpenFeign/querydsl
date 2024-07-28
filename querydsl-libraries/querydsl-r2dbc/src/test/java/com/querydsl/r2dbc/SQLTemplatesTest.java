@@ -45,7 +45,7 @@ public class SQLTemplatesTest {
 
     SQLSerializer serializer = new SQLSerializer(new Configuration(new H2Templates()));
     serializer.handle(Expressions.template(Object.class, template, ConstantImpl.create(5)));
-    assertThat(serializer.toString()).isEqualTo("fetch first 5 rows only");
+    assertThat(serializer).hasToString("fetch first 5 rows only");
   }
 
   @Test
@@ -114,6 +114,6 @@ public class SQLTemplatesTest {
     NumberPath<Integer> intPath2 = Expressions.numberPath(Integer.class, "intPath2");
     SQLSerializer serializer = new SQLSerializer(new Configuration(SQLTemplates.DEFAULT));
     serializer.handle(intPath.subtract(intPath2.add(2)));
-    assertThat(serializer.toString()).isEqualTo("intPath - (intPath2 + ?)");
+    assertThat(serializer).hasToString("intPath - (intPath2 + ?)");
   }
 }

@@ -58,7 +58,7 @@ public class NativeSQLSerializerTest {
     Configuration conf = new Configuration(new MySQLTemplates());
     NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
     serializer.handle(entity.get("name"));
-    assertThat(serializer.toString()).isEqualTo("entity.name");
+    assertThat(serializer).hasToString("entity.name");
   }
 
   @Test
@@ -67,6 +67,6 @@ public class NativeSQLSerializerTest {
     Configuration conf = new Configuration(new MySQLTemplates());
     NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
     serializer.handle(entity.get("firstName"));
-    assertThat(serializer.toString()).isEqualTo("entity.first_name");
+    assertThat(serializer).hasToString("entity.first_name");
   }
 }

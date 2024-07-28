@@ -25,6 +25,6 @@ public class PredicateOperationTest {
     Path<?> o1 = ExpressionUtils.path(Object.class, "o1");
     Path<?> o2 = ExpressionUtils.path(Object.class, "o2");
     PredicateOperation template = ExpressionUtils.predicate(Ops.EQ, o1, o2);
-    assertThat(template.not().toString()).isEqualTo("!(o1 = o2)");
+    assertThat(template.not()).hasToString("!(o1 = o2)");
   }
 }
