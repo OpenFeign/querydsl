@@ -62,7 +62,7 @@ public interface Type<T> {
    */
   @Nullable
   default T getValue(ResultSet rs, int startIndex, Class<T> clazz) throws SQLException {
-      return getValue(rs, startIndex);
+    return getValue(rs, startIndex);
   }
 
   /**
