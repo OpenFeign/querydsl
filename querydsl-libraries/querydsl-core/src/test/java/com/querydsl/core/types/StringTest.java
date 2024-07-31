@@ -35,7 +35,7 @@ public class StringTest {
     Set<Field> missing = new HashSet<Field>();
     for (Field field : Ops.class.getFields()) {
       if (field.getType().equals(Operator.class)) {
-        Operator op = (Operator) field.get(null);
+        var op = (Operator) field.get(null);
         if (ops.getTemplate(op) == null) {
           missing.add(field);
         }
@@ -44,7 +44,7 @@ public class StringTest {
     for (Class<?> cl : Ops.class.getClasses()) {
       for (Field field : cl.getFields()) {
         if (field.getType().equals(Operator.class)) {
-          Operator op = (Operator) field.get(null);
+          var op = (Operator) field.get(null);
           if (ops.getTemplate(op) == null) {
             missing.add(field);
           }
@@ -63,25 +63,25 @@ public class StringTest {
   @SuppressWarnings("unchecked")
   @Test
   public void toString_() {
-    SomeType alias = alias(SomeType.class, "alias");
+    var alias = alias(SomeType.class, "alias");
 
     // Path toString
     assertThat($(alias.getName())).hasToString("alias.name");
     assertThat($(alias.getRef().getName())).hasToString("alias.ref.name");
-    assertThat($(alias.getRefs().get(0))).hasToString("alias.refs.get(0)");
+    assertThat($(alias.getRefs().get(3))).hasToString("alias.refs.get(3)");
+    assertThat($(alias.getRefs().getFirst())).hasToString("alias.refs.getFirst()");
 
     // Operation toString
     assertThat($(alias.getName()).lower()).hasToString("lower(alias.name)");
 
     // ConstructorExpression
-    ConstructorExpression<SomeType> someType =
+    var someType =
         new ConstructorExpression<SomeType>(
             SomeType.class, new Class<?>[] {SomeType.class}, $(alias));
     assertThat(someType).hasToString("new SomeType(alias)");
 
     // ArrayConstructorExpression
-    ArrayConstructorExpression<SomeType> someTypeArray =
-        new ArrayConstructorExpression<SomeType>(SomeType[].class, $(alias));
+    var someTypeArray = new ArrayConstructorExpression<SomeType>(SomeType[].class, $(alias));
     assertThat(someTypeArray).hasToString("new SomeType[](alias)");
   }
 

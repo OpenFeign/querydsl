@@ -149,8 +149,10 @@ public class TestDataService {
     // Idem for sequences
     s =
         c.createStatement(
-            "SELECT SEQUENCE_NAME FROM INFORMATION_SCHEMA.SEQUENCES WHERE"
-                + " SEQUENCE_SCHEMA='PUBLIC'");
+            """
+            SELECT SEQUENCE_NAME FROM INFORMATION_SCHEMA.SEQUENCES WHERE\
+             SEQUENCE_SCHEMA='PUBLIC'\
+            """);
     List<String> sequences =
         Flux.from(s.execute())
             .flatMap(result -> result.map((row, meta) -> row.get(0, String.class)))

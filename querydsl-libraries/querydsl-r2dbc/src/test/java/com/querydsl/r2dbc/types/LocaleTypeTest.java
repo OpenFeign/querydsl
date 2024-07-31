@@ -9,19 +9,19 @@ public class LocaleTypeTest {
 
   @Test
   public void lang() {
-    Locale l = new Locale("en");
+    Locale l = Locale.of("en");
     assertThat(LocaleType.toLocale(l.toString())).isEqualTo(l);
   }
 
   @Test
   public void lang_country() {
-    Locale l = new Locale("en", "US");
+    Locale l = Locale.of("en", "US");
     assertThat(LocaleType.toLocale(l.toString())).isEqualTo(l);
   }
 
   @Test
   public void lang_country_variant() {
-    Locale l = new Locale("en", "US", "X");
+    Locale l = Locale.of("en", "US", "X");
     assertThat(LocaleType.toLocale(l.toString())).isEqualTo(l);
   }
 }

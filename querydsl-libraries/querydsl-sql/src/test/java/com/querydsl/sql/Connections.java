@@ -593,8 +593,10 @@ public final class Connections {
 
     stmt.execute("DROP ALIAS IF EXISTS H2GIS_SPATIAL");
     stmt.execute(
-        "CREATE ALIAS IF NOT EXISTS H2GIS_SPATIAL FOR"
-            + " \"org.h2gis.functions.factory.H2GISFunctions.load\"");
+        """
+        CREATE ALIAS IF NOT EXISTS H2GIS_SPATIAL FOR\
+         "org.h2gis.functions.factory.H2GISFunctions.load"\
+        """);
     stmt.execute("CALL H2GIS_SPATIAL();");
 
     // shapes

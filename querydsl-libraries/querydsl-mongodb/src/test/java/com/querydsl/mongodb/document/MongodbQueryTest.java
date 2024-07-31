@@ -604,7 +604,7 @@ public class MongodbQueryTest {
     i.setCtds(Arrays.asList(ObjectId.get(), ObjectId.get(), ObjectId.get()));
     ds.save(i);
 
-    assertThat(where(item, item.ctds.contains(i.getCtds().get(0))).fetchCount() > 0).isTrue();
+    assertThat(where(item, item.ctds.contains(i.getCtds().getFirst())).fetchCount() > 0).isTrue();
     assertThat(where(item, item.ctds.contains(ObjectId.get())).fetchCount() == 0).isTrue();
   }
 

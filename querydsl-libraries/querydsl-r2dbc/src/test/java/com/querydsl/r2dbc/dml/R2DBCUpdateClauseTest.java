@@ -25,7 +25,7 @@ public class R2DBCUpdateClauseTest {
     R2DBCUpdateClause update = new R2DBCUpdateClause(null, SQLTemplates.DEFAULT, emp1);
     update.set(emp1.id, 1);
 
-    SQLBindings sql = update.getSQL().get(0);
+    SQLBindings sql = update.getSQL().getFirst();
     assertThat(sql.getSQL()).isEqualTo("update EMPLOYEE\nset ID = ?");
     assertThat(sql.getNullFriendlyBindings()).isEqualTo(Collections.singletonList(1));
   }
@@ -41,14 +41,16 @@ public class R2DBCUpdateClauseTest {
             emp1.id.eq(
                 R2DBCExpressions.select(emp2.id).from(emp2).where(emp2.superiorId.isNotNull())));
 
-    SQLBindings sql = update.getSQL().get(0);
+    SQLBindings sql = update.getSQL().getFirst();
     assertThat(sql.getSQL())
         .isEqualTo(
-            "update EMPLOYEE\n"
-                + "set ID = ?\n"
-                + "where EMPLOYEE.ID = (select emp2.ID\n"
-                + "from EMPLOYEE emp2\n"
-                + "where emp2.SUPERIOR_ID is not null)");
+            """
+            update EMPLOYEE
+            set ID = ?
+            where EMPLOYEE.ID = (select emp2.ID
+            from EMPLOYEE emp2
+            where emp2.SUPERIOR_ID is not null)\
+            """);
   }
 
   @Test
@@ -59,13 +61,15 @@ public class R2DBCUpdateClauseTest {
     update.set(
         emp1.id, R2DBCExpressions.select(emp2.id).from(emp2).where(emp2.superiorId.isNotNull()));
 
-    SQLBindings sql = update.getSQL().get(0);
+    SQLBindings sql = update.getSQL().getFirst();
     assertThat(sql.getSQL())
         .isEqualTo(
-            "update EMPLOYEE\n"
-                + "set ID = (select emp2.ID\n"
-                + "from EMPLOYEE emp2\n"
-                + "where emp2.SUPERIOR_ID is not null)");
+            """
+            update EMPLOYEE
+            set ID = (select emp2.ID
+            from EMPLOYEE emp2
+            where emp2.SUPERIOR_ID is not null)\
+            """);
   }
 
   @Test
@@ -76,12 +80,14 @@ public class R2DBCUpdateClauseTest {
     update.set(
         emp1.superiorId, R2DBCExpressions.select(emp2.id).from(emp2).where(emp2.id.eq(emp1.id)));
 
-    SQLBindings sql = update.getSQL().get(0);
+    SQLBindings sql = update.getSQL().getFirst();
     assertThat(sql.getSQL())
         .isEqualTo(
-            "update EMPLOYEE\n"
-                + "set SUPERIOR_ID = (select emp2.ID\n"
-                + "from EMPLOYEE emp2\n"
-                + "where emp2.ID = EMPLOYEE.ID)");
+            """
+            update EMPLOYEE
+            set SUPERIOR_ID = (select emp2.ID
+            from EMPLOYEE emp2
+            where emp2.ID = EMPLOYEE.ID)\
+            """);
   }
 }

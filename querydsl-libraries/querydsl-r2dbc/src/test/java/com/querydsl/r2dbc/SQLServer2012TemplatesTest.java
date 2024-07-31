@@ -70,9 +70,11 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
     query.getMetadata().setProjection(survey1.id);
     assertThat(query.toString())
         .isEqualTo(
-            "select survey1.ID from SURVEY survey1 "
-                + "order by 1 asc "
-                + "offset ? rows fetch next ? rows only");
+            """
+            select survey1.ID from SURVEY survey1 \
+            order by 1 asc \
+            offset ? rows fetch next ? rows only\
+            """);
   }
 
   @Test
@@ -97,8 +99,10 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
     query.getMetadata().setProjection(survey1.id);
     assertThat(query.toString())
         .isEqualTo(
-            "select survey1.ID from SURVEY survey1 order by survey1.ID asc offset ? rows fetch next"
-                + " ? rows only");
+            """
+            select survey1.ID from SURVEY survey1 order by survey1.ID asc offset ? rows fetch next\
+             ? rows only\
+            """);
   }
 
   @Test

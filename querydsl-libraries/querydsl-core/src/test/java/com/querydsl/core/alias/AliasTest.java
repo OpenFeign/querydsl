@@ -23,20 +23,20 @@ public class AliasTest {
 
   @Test
   public void alias() {
-    DomainType domainType = Alias.alias(DomainType.class);
+    var domainType = Alias.alias(DomainType.class);
     Alias.alias(DomainType.class, $(domainType.getCollection()).any());
   }
 
   @Test
   public void comparableEntity() {
-    ComparableEntity entity = Alias.alias(ComparableEntity.class);
+    var entity = Alias.alias(ComparableEntity.class);
     Path<ComparableEntity> path = $(entity);
     assertThat(path.getType()).isEqualTo(ComparableEntity.class);
   }
 
   @Test
   public void comparableEntity_property() {
-    ComparableEntity entity = Alias.alias(ComparableEntity.class);
+    var entity = Alias.alias(ComparableEntity.class);
     Path<String> propertyPath = $(entity.getProperty());
     assertThat(propertyPath.getType()).isEqualTo(String.class);
     assertThat(propertyPath.getMetadata().getName()).isEqualTo("property");
@@ -44,12 +44,13 @@ public class AliasTest {
 
   @Test
   public void basicUsage() {
-    DomainType domainType = Alias.alias(DomainType.class);
+    var domainType = Alias.alias(DomainType.class);
     assertThat($(domainType.getFirstName()).lower().toString())
         .isEqualTo("lower(domainType.firstName)");
     assertThat($(domainType.getAge())).hasToString("domainType.age");
     assertThat($(domainType.getMap().get("a"))).hasToString("domainType.map.get(a)");
-    assertThat($(domainType.getList().get(0))).hasToString("domainType.list.get(0)");
+    assertThat($(domainType.getList().get(3))).hasToString("domainType.list.get(3)");
+    assertThat($(domainType.getList().getFirst())).hasToString("domainType.list.getFirst()");
 
     assertThat($(domainType.getBigDecimal())).hasToString("domainType.bigDecimal");
     assertThat($(domainType.getBigInteger())).hasToString("domainType.bigInteger");
@@ -68,14 +69,14 @@ public class AliasTest {
 
   @Test
   public void getAny() {
-    DomainType domainType = Alias.alias(DomainType.class);
+    var domainType = Alias.alias(DomainType.class);
     assertThat(Alias.getAny(domainType).getType()).isEqualTo(DomainType.class);
     assertThat(Alias.getAny(domainType.getFirstName()).getType()).isEqualTo(String.class);
   }
 
   @Test
   public void otherMethods() {
-    DomainType domainType = Alias.alias(DomainType.class);
+    var domainType = Alias.alias(DomainType.class);
     assertThat(domainType).hasToString("domainType");
   }
 

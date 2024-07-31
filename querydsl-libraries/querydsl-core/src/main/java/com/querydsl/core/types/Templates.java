@@ -244,6 +244,7 @@ public class Templates {
         new PathType[] {PathType.LISTVALUE, PathType.MAPVALUE, PathType.MAPVALUE_CONSTANT}) {
       add(type, "{0}.get({1})");
     }
+    add(PathType.LIST_FIRST, "{0}.getFirst()");
     add(PathType.ARRAYVALUE, "{0}[{1}]");
     add(PathType.COLLECTION_ANY, "any({0})");
     add(PathType.LISTVALUE_CONSTANT, "{0}.get({1s})"); // serialized constant
@@ -312,7 +313,7 @@ public class Templates {
   }
 
   protected String escapeForLike(String str) {
-    final StringBuilder rv = new StringBuilder(str.length() + 3);
+    final var rv = new StringBuilder(str.length() + 3);
     for (char ch : str.toCharArray()) {
       if (ch == escape || ch == '%' || ch == '_') {
         rv.append(escape);

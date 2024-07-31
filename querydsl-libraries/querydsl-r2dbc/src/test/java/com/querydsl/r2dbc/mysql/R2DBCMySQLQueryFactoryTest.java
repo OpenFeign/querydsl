@@ -86,8 +86,10 @@ public class R2DBCMySQLQueryFactoryTest {
             R2DBCExpressions.set(QSurvey.survey.name, "B"));
     assertThat(clause.toString())
         .isEqualTo(
-            "insert into SURVEY\n"
-                + "values () on duplicate key update SURVEY.ID = ?, SURVEY.NAME = ?");
+            """
+            insert into SURVEY
+            values () on duplicate key update SURVEY.ID = ?, SURVEY.NAME = ?\
+            """);
   }
 
   @Test
@@ -97,8 +99,10 @@ public class R2DBCMySQLQueryFactoryTest {
             QSurvey.survey, R2DBCExpressions.set(QSurvey.survey.name, QSurvey.survey.name));
     assertThat(clause.toString())
         .isEqualTo(
-            "insert into SURVEY\n"
-                + "values () on duplicate key update SURVEY.NAME = values(SURVEY.NAME)");
+            """
+            insert into SURVEY
+            values () on duplicate key update SURVEY.NAME = values(SURVEY.NAME)\
+            """);
   }
 
   @Test

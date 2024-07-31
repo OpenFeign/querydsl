@@ -47,7 +47,7 @@ public class QueryMetadaSerializationTest {
     QueryMetadata metadata2 = Serialization.serialize(metadata);
 
     assertThat(metadata2.getFlags()).isEqualTo(metadata.getFlags());
-    assertThat(metadata2.getGroupBy().get(0)).isEqualTo(metadata.getGroupBy().get(0));
+    assertThat(metadata2.getGroupBy().getFirst()).isEqualTo(metadata.getGroupBy().getFirst());
     assertThat(metadata2.getGroupBy()).isEqualTo(metadata.getGroupBy());
     assertThat(metadata2.getHaving()).isEqualTo(metadata.getHaving());
     assertThat(metadata2.getJoins()).isEqualTo(metadata.getJoins());

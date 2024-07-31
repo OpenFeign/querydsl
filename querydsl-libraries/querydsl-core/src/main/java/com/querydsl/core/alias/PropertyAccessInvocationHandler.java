@@ -84,27 +84,27 @@ public class PropertyAccessInvocationHandler {
     MethodType methodType = MethodType.get(method);
 
     if (methodType == MethodType.GETTER) {
-      String ptyName = propertyNameForGetter(method);
+      var ptyName = propertyNameForGetter(method);
       Class<?> ptyClass = method.getReturnType();
-      Type genericType = method.getGenericReturnType();
+      var genericType = method.getGenericReturnType();
 
       if (propToObj.containsKey(ptyName)) {
         rv = propToObj.get(ptyName);
       } else {
-        PathMetadata pm = createPropertyPath((Path<?>) hostExpression, ptyName);
+        var pm = createPropertyPath((Path<?>) hostExpression, ptyName);
         rv = newInstance(ptyClass, genericType, proxy, ptyName, pm);
       }
       aliasFactory.setCurrent(propToExpr.get(ptyName));
 
     } else if (methodType == MethodType.SCALA_GETTER) {
-      String ptyName = method.getName();
+      var ptyName = method.getName();
       Class<?> ptyClass = method.getReturnType();
-      Type genericType = method.getGenericReturnType();
+      var genericType = method.getGenericReturnType();
 
       if (propToObj.containsKey(ptyName)) {
         rv = propToObj.get(ptyName);
       } else {
-        PathMetadata pm = createPropertyPath((Path<?>) hostExpression, ptyName);
+        var pm = createPropertyPath((Path<?>) hostExpression, ptyName);
         rv = newInstance(ptyClass, genericType, proxy, ptyName, pm);
       }
       aliasFactory.setCurrent(propToExpr.get(ptyName));
@@ -115,7 +115,18 @@ public class PropertyAccessInvocationHandler {
       if (propToObj.containsKey(propKey)) {
         rv = propToObj.get(propKey);
       } else {
-        PathMetadata pm = createListAccessPath((Path<?>) hostExpression, (Integer) args[0]);
+        var pm = createListAccessPath((Path<?>) hostExpression, (Integer) args[0]);
+        Class<?> elementType = ((ParameterizedExpression<?>) hostExpression).getParameter(0);
+        rv = newInstance(elementType, elementType, proxy, propKey, pm);
+      }
+      aliasFactory.setCurrent(propToExpr.get(propKey));
+    } else if (methodType == MethodType.LIST_GET_FIRST) {
+      // TODO : manage cases where the argument is based on a property invocation
+      Object propKey = Arrays.asList(MethodType.LIST_GET_FIRST);
+      if (propToObj.containsKey(propKey)) {
+        rv = propToObj.get(propKey);
+      } else {
+        var pm = PathMetadataFactory.forListFirst((Path<?>) hostExpression);
         Class<?> elementType = ((ParameterizedExpression<?>) hostExpression).getParameter(0);
         rv = newInstance(elementType, elementType, proxy, propKey, pm);
       }
@@ -126,7 +137,7 @@ public class PropertyAccessInvocationHandler {
       if (propToObj.containsKey(propKey)) {
         rv = propToObj.get(propKey);
       } else {
-        PathMetadata pm = createMapAccessPath((Path<?>) hostExpression, args[0]);
+        var pm = createMapAccessPath((Path<?>) hostExpression, args[0]);
         Class<?> valueType = ((ParameterizedExpression<?>) hostExpression).getParameter(1);
         rv = newInstance(valueType, valueType, proxy, propKey, pm);
       }
@@ -270,7 +281,7 @@ public class PropertyAccessInvocationHandler {
   }
 
   protected String propertyNameForGetter(Method method) {
-    String name = method.getName();
+    var name = method.getName();
     name = name.startsWith("is") ? name.substring(2) : name.substring(3);
     return BeanUtils.uncapitalize(name);
   }

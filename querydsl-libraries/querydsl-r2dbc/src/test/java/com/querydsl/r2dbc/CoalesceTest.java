@@ -15,8 +15,10 @@ public class CoalesceTest {
             QCompanies.companies.name);
     assertThat(R2DBCExpressions.select(coalesce).toString())
         .isEqualTo(
-            "select coalesce((select COMPANIES.NAME\n"
-                + "from COMPANIES COMPANIES), COMPANIES.NAME)\n"
-                + "from dual");
+            """
+            select coalesce((select COMPANIES.NAME
+            from COMPANIES COMPANIES), COMPANIES.NAME)
+            from dual\
+            """);
   }
 }

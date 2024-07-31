@@ -84,8 +84,10 @@ public class JPQLSerializerTest {
     serializer.handle(expr);
     assertThat(serializer.toString())
         .isEqualTo(
-            "case when (cat.toes = ?1) then (cat.id * ?2) when (cat.toes = ?3) then (cat.id * ?4)"
-                + " else ?5 end");
+            """
+            case when (cat.toes = ?1) then (cat.id * ?2) when (cat.toes = ?3) then (cat.id * ?4)\
+             else ?5 end\
+            """);
   }
 
   @Test
@@ -102,8 +104,10 @@ public class JPQLSerializerTest {
     serializer.handle(expr);
     assertThat(serializer.toString())
         .isEqualTo(
-            "case when (cat.toes = ?1) then (cat.id * ?2) when (cat.toes = ?3) then (cat.id * ?4)"
-                + " else 4 end");
+            """
+            case when (cat.toes = ?1) then (cat.id * ?2) when (cat.toes = ?3) then (cat.id * ?4)\
+             else 4 end\
+            """);
   }
 
   @Test
