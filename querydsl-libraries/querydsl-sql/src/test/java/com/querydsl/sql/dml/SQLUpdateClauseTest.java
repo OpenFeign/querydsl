@@ -26,7 +26,7 @@ public class SQLUpdateClauseTest {
     SQLUpdateClause update = new SQLUpdateClause(null, SQLTemplates.DEFAULT, emp1);
     update.set(emp1.id, 1);
 
-    SQLBindings sql = update.getSQL().get(0);
+    SQLBindings sql = update.getSQL().getFirst();
     assertThat(sql.getSQL()).isEqualTo("update EMPLOYEE\nset ID = ?");
     assertThat(sql.getNullFriendlyBindings()).isEqualTo(Collections.singletonList(1));
   }
@@ -40,7 +40,7 @@ public class SQLUpdateClauseTest {
         .set(emp1.id, 1)
         .where(emp1.id.eq(select(emp2.id).from(emp2).where(emp2.superiorId.isNotNull())));
 
-    SQLBindings sql = update.getSQL().get(0);
+    SQLBindings sql = update.getSQL().getFirst();
     assertThat(sql.getSQL())
         .isEqualTo(
             """
@@ -59,7 +59,7 @@ public class SQLUpdateClauseTest {
     SQLUpdateClause update = new SQLUpdateClause(null, SQLTemplates.DEFAULT, emp1);
     update.set(emp1.id, select(emp2.id).from(emp2).where(emp2.superiorId.isNotNull()));
 
-    SQLBindings sql = update.getSQL().get(0);
+    SQLBindings sql = update.getSQL().getFirst();
     assertThat(sql.getSQL())
         .isEqualTo(
             """
@@ -77,7 +77,7 @@ public class SQLUpdateClauseTest {
     SQLUpdateClause update = new SQLUpdateClause(null, SQLTemplates.DEFAULT, emp1);
     update.set(emp1.superiorId, select(emp2.id).from(emp2).where(emp2.id.eq(emp1.id)));
 
-    SQLBindings sql = update.getSQL().get(0);
+    SQLBindings sql = update.getSQL().getFirst();
     assertThat(sql.getSQL())
         .isEqualTo(
             """
@@ -98,7 +98,7 @@ public class SQLUpdateClauseTest {
             .addFlag(Position.BEFORE_FILTERS, "\nfrom %s %s".formatted(emp2.getTableName(), emp2))
             .where(emp2.id.eq(emp1.id));
 
-    SQLBindings sql = update.getSQL().get(0);
+    SQLBindings sql = update.getSQL().getFirst();
     assertThat(sql.getSQL())
         .isEqualTo(
             """
@@ -114,7 +114,7 @@ public class SQLUpdateClauseTest {
             .addFlag(Position.BEFORE_FILTERS, " THE_FLAG")
             .where(emp2.id.eq(emp1.id));
 
-    sql = update.getSQL().get(0);
+    sql = update.getSQL().getFirst();
     assertThat(sql.getSQL())
         .isEqualTo(
             """

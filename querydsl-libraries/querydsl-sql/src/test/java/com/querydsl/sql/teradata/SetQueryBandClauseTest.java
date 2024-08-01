@@ -48,7 +48,7 @@ public class SetQueryBandClauseTest {
     clause.forTransaction();
     clause.set("a", "b");
     clause.set("b", "c");
-    assertThat(clause.getSQL().get(0).getSQL())
+    assertThat(clause.getSQL().getFirst().getSQL())
         .isEqualTo("set query_band='a=b;b=c;' for transaction");
   }
 }

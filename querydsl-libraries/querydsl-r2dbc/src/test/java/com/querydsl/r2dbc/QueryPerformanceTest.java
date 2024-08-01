@@ -28,12 +28,18 @@ import reactor.core.publisher.Mono;
 
 @Category({H2.class, Performance.class})
 @Ignore(
-    "currently R2DBC has known READ performance issues - also there is a bug in the tests"
-        + " somewhere")
+    """
+    currently R2DBC has known READ performance issues - also there is a bug in the tests\
+     somewhere\
+    """)
 public class QueryPerformanceTest {
 
   private static final String QUERY =
-      "select COMPANIES.NAME\n" + "from COMPANIES COMPANIES\n" + "where COMPANIES.ID = ?";
+      """
+      select COMPANIES.NAME
+      from COMPANIES COMPANIES
+      where COMPANIES.ID = ?\
+      """;
 
   private static final SQLTemplates templates = new H2Templates();
 

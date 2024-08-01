@@ -34,7 +34,7 @@ public class SQLDeleteClauseTest {
     SQLDeleteClause delete = new SQLDeleteClause(null, SQLTemplates.DEFAULT, emp1);
     delete.where(emp1.id.eq(1));
 
-    SQLBindings sql = delete.getSQL().get(0);
+    SQLBindings sql = delete.getSQL().getFirst();
     assertThat(sql.getSQL()).isEqualTo("delete from EMPLOYEE\nwhere EMPLOYEE.ID = ?");
     assertThat(sql.getNullFriendlyBindings()).isEqualTo(Collections.singletonList(1));
   }

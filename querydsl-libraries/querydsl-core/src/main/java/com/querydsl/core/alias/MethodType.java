@@ -30,6 +30,8 @@ public enum MethodType {
   /** __mappedPath invocation */
   GET_MAPPED_PATH("__mappedPath", Path.class, ManagedObject.class),
   /** getter invocation */
+  LIST_GET_FIRST("getFirst", Object.class, List.class),
+  /** getter invocation */
   GETTER("(get|is).+", Object.class, Object.class),
   /** hashCode invocation */
   HASH_CODE("hashCode", int.class, Object.class),

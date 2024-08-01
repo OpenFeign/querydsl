@@ -42,9 +42,11 @@ public class GeneratedKeysH2Test {
     Mono.from(conn.createStatement("drop table GENERATED_KEYS if exists").execute()).block();
     Mono.from(
             conn.createStatement(
-                    "create table GENERATED_KEYS("
-                        + "ID int AUTO_INCREMENT PRIMARY KEY, "
-                        + "NAME varchar(30))")
+                    """
+                    create table GENERATED_KEYS(\
+                    ID int AUTO_INCREMENT PRIMARY KEY, \
+                    NAME varchar(30))\
+                    """)
                 .execute())
         .block();
 

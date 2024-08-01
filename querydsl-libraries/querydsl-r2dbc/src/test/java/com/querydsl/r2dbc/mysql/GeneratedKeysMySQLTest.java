@@ -45,9 +45,11 @@ public class GeneratedKeysMySQLTest {
     Mono.from(conn.createStatement("drop table if exists GENERATED_KEYS").execute()).block();
     Mono.from(
             conn.createStatement(
-                    "create table GENERATED_KEYS("
-                        + "ID int AUTO_INCREMENT PRIMARY KEY, "
-                        + "NAME varchar(30))")
+                    """
+                    create table GENERATED_KEYS(\
+                    ID int AUTO_INCREMENT PRIMARY KEY, \
+                    NAME varchar(30))\
+                    """)
                 .execute())
         .block();
 

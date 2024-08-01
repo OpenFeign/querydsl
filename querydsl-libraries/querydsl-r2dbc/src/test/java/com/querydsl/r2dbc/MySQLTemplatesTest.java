@@ -38,8 +38,10 @@ public class MySQLTemplatesTest extends AbstractSQLTemplatesTest {
     query.from(survey1).orderBy(survey1.name.asc().nullsFirst());
     assertThat(query.toString())
         .isEqualTo(
-            "from SURVEY survey1 order by (case when survey1.NAME is null then 0 else 1 end),"
-                + " survey1.NAME asc");
+            """
+            from SURVEY survey1 order by (case when survey1.NAME is null then 0 else 1 end),\
+             survey1.NAME asc\
+            """);
   }
 
   @Test
@@ -47,8 +49,10 @@ public class MySQLTemplatesTest extends AbstractSQLTemplatesTest {
     query.from(survey1).orderBy(survey1.name.asc().nullsLast());
     assertThat(query.toString())
         .isEqualTo(
-            "from SURVEY survey1 order by (case when survey1.NAME is null then 1 else 0 end),"
-                + " survey1.NAME asc");
+            """
+            from SURVEY survey1 order by (case when survey1.NAME is null then 1 else 0 end),\
+             survey1.NAME asc\
+            """);
   }
 
   @Test
