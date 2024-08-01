@@ -179,6 +179,6 @@ public class QBeanTest {
   @Test
   public void alias() {
     QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, name.as("name2"));
-    assertThat(beanProjection.getArgs().get(0)).isEqualTo(name.as("name2"));
+    assertThat(beanProjection.getArgs().getFirst()).isEqualTo(name.as("name2"));
   }
 }

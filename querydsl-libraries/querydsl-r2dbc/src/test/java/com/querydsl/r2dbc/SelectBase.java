@@ -1410,14 +1410,18 @@ public abstract class SelectBase extends AbstractBaseTest {
 
     // offset
     expectedQuery =
-        "select * from (  select a.*, rownum rn from (   select e.ID from EMPLOYEE e  ) a) where rn"
-            + " > ?";
+        """
+        select * from (  select a.*, rownum rn from (   select e.ID from EMPLOYEE e  ) a) where rn\
+         > ?\
+        """;
     query().from(employee).offset(3).select(employee.id).fetch().collectList().block();
 
     // limit offset
     expectedQuery =
-        "select * from (  select a.*, rownum rn from (   select e.ID from EMPLOYEE e  ) a) where rn"
-            + " > 3 and rownum <= 4";
+        """
+        select * from (  select a.*, rownum rn from (   select e.ID from EMPLOYEE e  ) a) where rn\
+         > 3 and rownum <= 4\
+        """;
     query().from(employee).limit(4).offset(3).select(employee.id).fetch().collectList().block();
   }
 
@@ -1809,9 +1813,11 @@ public abstract class SelectBase extends AbstractBaseTest {
   @SkipForQuoted
   public void path_alias() {
     expectedQuery =
-        "select e.LASTNAME, sum(e.SALARY) as salarySum "
-            + "from EMPLOYEE e "
-            + "group by e.LASTNAME having salarySum > ?";
+        """
+        select e.LASTNAME, sum(e.SALARY) as salarySum \
+        from EMPLOYEE e \
+        group by e.LASTNAME having salarySum > ?\
+        """;
 
     NumberExpression<BigDecimal> salarySum = employee.salary.sumBigDecimal().as("salarySum");
     query()
@@ -2238,7 +2244,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @IncludeIn(H2)
   public void standardTest_turkish() {
     Locale defaultLocale = Locale.getDefault();
-    Locale.setDefault(new Locale("tr", "TR"));
+    Locale.setDefault(Locale.of("tr", "TR"));
     try {
       standardTest();
     } finally {

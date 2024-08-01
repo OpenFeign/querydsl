@@ -46,7 +46,10 @@ public enum PathType implements Operator {
   VARIABLE,
 
   /** Treated path */
-  TREATED_PATH;
+  TREATED_PATH,
+
+  /** List first element (list.getFirst) */
+  LIST_FIRST;
 
   @Override
   public Class<?> getType() {

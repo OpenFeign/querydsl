@@ -42,7 +42,7 @@ public class QueryMixinTest {
     mixin.on(entity.version.isNull(), entity.version.isNotNull());
 
     assertThat(mixin.getMetadata().getJoins()).hasSize(1);
-    JoinExpression je = mixin.getMetadata().getJoins().get(0);
+    JoinExpression je = mixin.getMetadata().getJoins().getFirst();
     assertThat(je.getTarget()).isEqualTo(entity);
     assertThat(je.getCondition())
         .isEqualTo(Expressions.allOf(entity.version.isNull(), entity.version.isNotNull()));
@@ -53,7 +53,7 @@ public class QueryMixinTest {
     mixin.innerJoin(entity);
 
     assertThat(mixin.getMetadata().getJoins()).hasSize(1);
-    JoinExpression je = mixin.getMetadata().getJoins().get(0);
+    JoinExpression je = mixin.getMetadata().getJoins().getFirst();
     assertThat(je.getTarget()).isEqualTo(entity);
     assertThat(je.getCondition()).isNull();
   }

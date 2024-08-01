@@ -56,7 +56,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     tweet.setPosterId(posterId);
     Long tweetId = repository.save(tweet, otherId);
 
-    assertThat(repository.findWithMentioned(otherId).get(0).getId()).isEqualTo(tweetId);
+    assertThat(repository.findWithMentioned(otherId).getFirst().getId()).isEqualTo(tweetId);
   }
 
   @Test

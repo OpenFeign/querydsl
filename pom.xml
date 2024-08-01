@@ -1044,7 +1044,7 @@
                 <configuration>
                   <exportDatatables>true</exportDatatables>
                   <activeRecipes>
-                    <recipe>org.openrewrite.java.migrate.UpgradeToJava8</recipe>
+                    <recipe>org.openrewrite.java.migrate.Java8toJava11</recipe>
                   </activeRecipes>
                 </configuration>
               </execution>

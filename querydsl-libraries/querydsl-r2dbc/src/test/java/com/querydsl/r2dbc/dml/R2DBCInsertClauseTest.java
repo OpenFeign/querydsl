@@ -24,7 +24,7 @@ public class R2DBCInsertClauseTest {
     R2DBCInsertClause insert = new R2DBCInsertClause(null, SQLTemplates.DEFAULT, emp1);
     insert.set(emp1.id, 1);
 
-    SQLBindings sql = insert.getSQL().get(0);
+    SQLBindings sql = insert.getSQL().getFirst();
     assertThat(sql.getSQL()).isEqualTo("insert into EMPLOYEE (ID)\nvalues (?)");
     assertThat(sql.getNullFriendlyBindings()).isEqualTo(Collections.singletonList(1));
   }
@@ -35,13 +35,15 @@ public class R2DBCInsertClauseTest {
     R2DBCInsertClause insert = new R2DBCInsertClause(null, SQLTemplates.DEFAULT, emp1);
     insert.populate(emp1);
 
-    SQLBindings sql = insert.getSQL().get(0);
+    SQLBindings sql = insert.getSQL().getFirst();
     assertThat(sql.getSQL())
         .as("The order of columns in generated sql should be predictable")
         .isEqualTo(
-            "insert into EMPLOYEE (ID, FIRSTNAME, LASTNAME, SALARY, DATEFIELD, TIMEFIELD,"
-                + " SUPERIOR_ID)\n"
-                + "values (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY,"
-                + " EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID)");
+            """
+            insert into EMPLOYEE (ID, FIRSTNAME, LASTNAME, SALARY, DATEFIELD, TIMEFIELD,\
+             SUPERIOR_ID)
+            values (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY,\
+             EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID)\
+            """);
   }
 }

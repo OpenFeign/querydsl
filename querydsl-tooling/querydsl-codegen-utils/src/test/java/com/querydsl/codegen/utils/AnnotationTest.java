@@ -24,11 +24,15 @@ public class AnnotationTest {
   public void ClassAnnotation() throws IOException {
     writer.annotation(getClass().getAnnotation(Annotation.class));
     String option1 =
-        "@com.querydsl.codegen.utils.Annotation(clazz=com.querydsl.codegen.utils.AnnotationTest.class,"
-            + " prop2=false)";
+        """
+        @com.querydsl.codegen.utils.Annotation(clazz=com.querydsl.codegen.utils.AnnotationTest.class,\
+         prop2=false)\
+        """;
     String option2 =
-        "@com.querydsl.codegen.utils.Annotation(prop2=false,"
-            + " clazz=com.querydsl.codegen.utils.AnnotationTest.class)";
+        """
+        @com.querydsl.codegen.utils.Annotation(prop2=false,\
+         clazz=com.querydsl.codegen.utils.AnnotationTest.class)\
+        """;
     String serialized = w.toString().trim();
     assertThat(serialized.equals(option1) || serialized.equals(option2)).isTrue();
   }
@@ -58,8 +62,10 @@ public class AnnotationTest {
     writer.annotation(new MinImpl(10));
     assertThat(w.toString().trim())
         .isEqualTo(
-            "@jakarta.validation.constraints.Min(value=10,"
-                + " message=\"{javax.validation.constraints.Min.message}\")");
+            """
+            @jakarta.validation.constraints.Min(value=10,\
+             message="{javax.validation.constraints.Min.message}")\
+            """);
   }
 
   @Test
@@ -67,8 +73,10 @@ public class AnnotationTest {
     writer.annotation(new MaxImpl(10));
     assertThat(w.toString().trim())
         .isEqualTo(
-            "@jakarta.validation.constraints.Max(value=10,"
-                + " message=\"{javax.validation.constraints.Max.message}\")");
+            """
+            @jakarta.validation.constraints.Max(value=10,\
+             message="{javax.validation.constraints.Max.message}")\
+            """);
   }
 
   @Test

@@ -103,9 +103,11 @@ public class PostgreSQLQueryTest {
 
     assertThat(toString(query))
         .isEqualTo(
-            "select distinct on(employee.DATEFIELD, employee.TIMEFIELD) employee.ID from EMPLOYEE"
-                + " employee order by employee.DATEFIELD asc, employee.TIMEFIELD asc,"
-                + " employee.SALARY asc");
+            """
+            select distinct on(employee.DATEFIELD, employee.TIMEFIELD) employee.ID from EMPLOYEE\
+             employee order by employee.DATEFIELD asc, employee.TIMEFIELD asc,\
+             employee.SALARY asc\
+            """);
   }
 
   private String toString(PostgreSQLQuery query) {

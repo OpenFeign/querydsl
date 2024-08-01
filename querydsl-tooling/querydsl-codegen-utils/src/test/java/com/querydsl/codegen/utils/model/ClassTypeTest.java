@@ -57,7 +57,7 @@ public class ClassTypeTest {
   public void GetParameters() {
     ClassType mapType = new ClassType(TypeCategory.MAP, Map.class, stringType, stringType);
     assertThat(mapType.getParameters()).hasSize(2);
-    assertThat(mapType.getParameters().get(0)).isEqualTo(stringType);
+    assertThat(mapType.getParameters().getFirst()).isEqualTo(stringType);
     assertThat(mapType.getParameters().get(1)).isEqualTo(stringType);
     // assertEquals(stringType, mapType.getSelfOrValueType());
     assertThat(mapType.isPrimitive()).isFalse();
