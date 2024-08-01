@@ -42,8 +42,7 @@ jobs:
 
       # Execute recipes
       - name: Apply OpenRewrite recipes
-        run: ./mvnw -Dtoolchain.skip=true -Dlicense.skip=true -DskipTests=true -P openrewrite clean install
-
+        run: ./mvnw -Dtoolchain.skip=true  -P examples,quickbuild,openrewrite,dev clean install
       # Capture the diff
       - name: Create patch
         run: |
