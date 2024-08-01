@@ -106,7 +106,7 @@ public class CollQueryTest extends AbstractQueryTest {
             .from(cat, Collections.<Cat>emptyList())
             .where(cat.isNotNull())
             .clone();
-    assertThat(query.getMetadata().getWhere().toString()).isEqualTo("cat is not null");
+    assertThat(query.getMetadata().getWhere()).hasToString("cat is not null");
   }
 
   @Test

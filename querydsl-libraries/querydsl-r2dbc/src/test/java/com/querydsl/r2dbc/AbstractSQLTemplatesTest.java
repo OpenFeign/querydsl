@@ -46,9 +46,9 @@ public abstract class AbstractSQLTemplatesTest {
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
     if (templates.getDummyTable() == null) {
-      assertThat(query.toString()).isEqualTo("select 1");
+      assertThat(query).hasToString("select 1");
     } else {
-      assertThat(query.toString()).isEqualTo("select 1 from " + templates.getDummyTable());
+      assertThat(query).hasToString("select 1 from " + templates.getDummyTable());
     }
   }
 
@@ -69,7 +69,13 @@ public abstract class AbstractSQLTemplatesTest {
       if (templates.isUnionsWrapped()) {
         assertThat(union.toString())
             .isEqualTo(
-                "(select 1 as col1)\n" + "union\n" + "(select 2)\n" + "union\n" + "(select 3)");
+                """
+                (select 1 as col1)
+                union
+                (select 2)
+                union
+                (select 3)\
+                """);
       } else {
         assertThat(union.toString())
             .isEqualTo("select 1 as col1)\n" + "union\n" + "select 2\n" + "union\n" + "select 3");
@@ -110,7 +116,7 @@ public abstract class AbstractSQLTemplatesTest {
   @Test
   public void innerJoin() {
     query.from(survey1).innerJoin(survey2);
-    assertThat(query.toString()).isEqualTo("from SURVEY survey1 inner join SURVEY survey2");
+    assertThat(query).hasToString("from SURVEY survey1 inner join SURVEY survey2");
   }
 
   protected int getPrecedence(Operator... ops) {
@@ -174,7 +180,7 @@ public abstract class AbstractSQLTemplatesTest {
   protected void assertSerialized(Expression<?> expr, String serialized) {
     SQLSerializer serializer = new SQLSerializer(new Configuration(templates));
     serializer.handle(expr);
-    assertThat(serializer.toString()).isEqualTo(serialized);
+    assertThat(serializer).hasToString(serialized);
   }
 
   @Test

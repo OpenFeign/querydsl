@@ -21,13 +21,10 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.querydsl.core.NonUniqueResultException;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.ListPath;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.mongodb.domain.*;
 import com.querydsl.mongodb.domain.User.Gender;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
@@ -99,7 +96,7 @@ public class MongodbQueryTest {
 
   @Test
   public void list_keys() {
-    User u =
+    var u =
         where(user.firstName.eq("Jaakko")).fetch(user.firstName, user.mainAddress().street).get(0);
     assertThat(u.getFirstName()).isEqualTo("Jaakko");
     assertThat(u.getLastName()).isNull();
@@ -109,21 +106,21 @@ public class MongodbQueryTest {
 
   @Test
   public void singleResult_keys() {
-    User u = where(user.firstName.eq("Jaakko")).fetchFirst(user.firstName);
+    var u = where(user.firstName.eq("Jaakko")).fetchFirst(user.firstName);
     assertThat(u.getFirstName()).isEqualTo("Jaakko");
     assertThat(u.getLastName()).isNull();
   }
 
   @Test
   public void uniqueResult_keys() {
-    User u = where(user.firstName.eq("Jaakko")).fetchOne(user.firstName);
+    var u = where(user.firstName.eq("Jaakko")).fetchOne(user.firstName);
     assertThat(u.getFirstName()).isEqualTo("Jaakko");
     assertThat(u.getLastName()).isNull();
   }
 
   @Test
   public void list_deep_keys() {
-    User u = where(user.firstName.eq("Jaakko")).fetchFirst(user.addresses.any().street);
+    var u = where(user.firstName.eq("Jaakko")).fetchFirst(user.addresses.any().street);
     for (Address a : u.getAddresses()) {
       assertThat(a.street).isNotNull();
       assertThat(a.city).isNull();
@@ -159,7 +156,7 @@ public class MongodbQueryTest {
 
   @Test
   public void contains_key() {
-    MapEntity entity = new MapEntity();
+    var entity = new MapEntity();
     entity.getProperties().put("key", "value");
     ds.save(entity);
 
@@ -177,7 +174,7 @@ public class MongodbQueryTest {
 
   @Test
   public void contains_key_not() {
-    MapEntity entity = new MapEntity();
+    var entity = new MapEntity();
     entity.getProperties().put("key", "value");
     ds.save(entity);
 
@@ -273,14 +270,14 @@ public class MongodbQueryTest {
 
   @Test
   public void dates() {
-    long current = System.currentTimeMillis();
-    int dayInMillis = 24 * 60 * 60 * 1000;
-    Date start = new Date(current);
+    var current = System.currentTimeMillis();
+    var dayInMillis = 24 * 60 * 60 * 1000;
+    var start = new Date(current);
     ds.delete(ds.createQuery(Dates.class));
-    Dates d = new Dates();
+    var d = new Dates();
     d.setDate(new Date(current + dayInMillis));
     ds.save(d);
-    Date end = new Date(current + 2 * dayInMillis);
+    var end = new Date(current + 2 * dayInMillis);
 
     assertThat(query(dates).where(dates.date.between(start, end)).fetchFirst()).isEqualTo(d);
     assertThat(query(dates).where(dates.date.between(new Date(0), start)).fetchCount())
@@ -332,7 +329,7 @@ public class MongodbQueryTest {
 
   @Test
   public void order() {
-    List<User> users = query().orderBy(user.age.asc()).fetch();
+    var users = query().orderBy(user.age.asc()).fetch();
     assertThat(users).isEqualTo(asList(u1, u2, u3, u4));
 
     users = query().orderBy(user.age.desc()).fetch();
@@ -348,7 +345,7 @@ public class MongodbQueryTest {
 
   @Test
   public void listResults() {
-    QueryResults<User> results = query().limit(2).orderBy(user.age.asc()).fetchResults();
+    var results = query().limit(2).orderBy(user.age.asc()).fetchResults();
     assertThat(results.getTotal()).isEqualTo(4L);
     assertThat(results.getResults()).hasSize(2);
 
@@ -359,7 +356,7 @@ public class MongodbQueryTest {
 
   @Test
   public void emptyResults() {
-    QueryResults<User> results = query().where(user.firstName.eq("XXX")).fetchResults();
+    var results = query().where(user.firstName.eq("XXX")).fetchResults();
     assertThat(results.getTotal()).isEqualTo(0L);
     assertThat(results.getResults()).isEqualTo(Collections.emptyList());
   }
@@ -511,9 +508,9 @@ public class MongodbQueryTest {
 
   @Test
   public void iterate() {
-    User a = addUser("A", "A");
-    User b = addUser("A1", "B");
-    User c = addUser("A2", "C");
+    var a = addUser("A", "A");
+    var b = addUser("A1", "B");
+    var c = addUser("A2", "C");
 
     Iterator<User> i =
         where(user.firstName.startsWith("A")).orderBy(user.firstName.asc()).iterate();
@@ -526,7 +523,7 @@ public class MongodbQueryTest {
 
   @Test
   public void uniqueResultAndLimitAndOffset() {
-    MorphiaQuery<User> q = query().where(user.firstName.startsWith("Ja")).orderBy(user.age.asc());
+    var q = query().where(user.firstName.startsWith("Ja")).orderBy(user.age.asc());
     assertThat(q.fetch()).hasSize(4);
     assertThat(q.fetch().get(0)).isEqualTo(u1);
   }
@@ -567,8 +564,8 @@ public class MongodbQueryTest {
 
   @Test
   public void various() {
-    ListPath<Address, QAddress> list = user.addresses;
-    StringPath str = user.lastName;
+    var list = user.addresses;
+    var str = user.lastName;
     List<Predicate> predicates = new ArrayList<Predicate>();
     predicates.add(str.between("a", "b"));
     predicates.add(str.contains("a"));
@@ -596,8 +593,8 @@ public class MongodbQueryTest {
     predicates.add(list.isNotEmpty());
 
     for (Predicate predicate : predicates) {
-      long count1 = where(predicate).fetchCount();
-      long count2 = where(predicate.not()).fetchCount();
+      var count1 = where(predicate).fetchCount();
+      var count2 = where(predicate.not()).fetchCount();
       assertThat(count1 + count2).as(predicate.toString()).isEqualTo(4);
     }
   }
@@ -614,17 +611,17 @@ public class MongodbQueryTest {
 
   @Test
   public void in_objectIds() {
-    Item i = new Item();
+    var i = new Item();
     i.setCtds(Arrays.asList(ObjectId.get(), ObjectId.get(), ObjectId.get()));
     ds.save(i);
 
-    assertThat(where(item, item.ctds.contains(i.getCtds().get(0))).fetchCount() > 0).isTrue();
+    assertThat(where(item, item.ctds.contains(i.getCtds().getFirst())).fetchCount() > 0).isTrue();
     assertThat(where(item, item.ctds.contains(ObjectId.get())).fetchCount() == 0).isTrue();
   }
 
   @Test
   public void in_objectIds2() {
-    Item i = new Item();
+    var i = new Item();
     i.setCtds(Arrays.asList(ObjectId.get(), ObjectId.get(), ObjectId.get()));
     ds.save(i);
 
@@ -648,14 +645,14 @@ public class MongodbQueryTest {
 
   @Test
   public void readPreference() {
-    MorphiaQuery<User> query = query();
+    var query = query();
     query.setReadPreference(ReadPreference.primary());
     assertThat(query.fetchCount()).isEqualTo(4);
   }
 
   @Test
   public void asDBObject() {
-    MorphiaQuery<User> query = query();
+    var query = query();
     query.where(user.firstName.eq("Bob"), user.lastName.eq("Wilson"));
     assertThat(query.asDBObject())
         .isEqualTo(new BasicDBObject().append("firstName", "Bob").append("lastName", "Wilson"));
@@ -663,10 +660,10 @@ public class MongodbQueryTest {
 
   @Test
   public void converter() {
-    Country germany = new Country("Germany", Locale.GERMANY);
+    var germany = new Country("Germany", Locale.GERMANY);
     ds.save(germany);
 
-    Country fetchedCountry =
+    var fetchedCountry =
         query(Country.class).where(country.defaultLocale.eq(Locale.GERMANY)).fetchOne();
     assertThat(fetchedCountry).isEqualTo(germany);
   }
@@ -705,8 +702,8 @@ public class MongodbQueryTest {
   }
 
   private void assertQuery(MorphiaQuery<User> query, User... expected) {
-    String toString = query.toString();
-    List<User> results = query.fetch();
+    var toString = query.toString();
+    var results = query.fetch();
 
     assertThat(results).as(toString).isNotNull();
     if (expected == null) {
@@ -714,21 +711,21 @@ public class MongodbQueryTest {
       return;
     }
     assertThat(results.size()).as(toString).isEqualTo(expected.length);
-    int i = 0;
+    var i = 0;
     for (User u : expected) {
       assertThat(results.get(i++)).as(toString).isEqualTo(u);
     }
   }
 
   private User addUser(String first, String last) {
-    User user = new User(first, last);
+    var user = new User(first, last);
     ds.save(user);
     return user;
   }
 
   private User addUser(
       String first, String last, int age, Address mainAddress, Address... addresses) {
-    User user = new User(first, last, age, new Date());
+    var user = new User(first, last, age, new Date());
     user.setGender(Gender.MALE);
     user.setMainAddress(mainAddress);
     for (Address address : addresses) {

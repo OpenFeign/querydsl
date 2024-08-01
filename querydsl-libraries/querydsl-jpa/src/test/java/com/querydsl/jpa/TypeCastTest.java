@@ -27,7 +27,7 @@ public class TypeCastTest {
 
     assertThat(superClass.getType()).isEqualTo(InheritedProperties.class);
     //        assertEquals(InheritedProperties.class.getSimpleName(), superClass.getEntityName());
-    assertThat(superClass.toString()).isEqualTo("inheritedProperties");
+    assertThat(superClass).hasToString("inheritedProperties");
   }
 
   //    @Test
@@ -47,7 +47,7 @@ public class TypeCastTest {
 
     assertThat(animal.getType()).isEqualTo(Cat.class);
     //        assertEquals(Cat.class.getSimpleName(), animal.getEntityName());
-    assertThat(animal.toString()).isEqualTo("cat");
+    assertThat(animal).hasToString("cat");
   }
 
   @Test
@@ -57,7 +57,7 @@ public class TypeCastTest {
 
     assertThat(animal.getType()).isEqualTo(Animal.class);
     //        assertEquals(Animal.class.getSimpleName(), animal.getEntityName());
-    assertThat(animal.toString()).isEqualTo("cat");
+    assertThat(animal).hasToString("cat");
   }
 
   @Test
@@ -67,6 +67,6 @@ public class TypeCastTest {
 
     assertThat(cat.getType()).isEqualTo(Cat.class);
     //        assertEquals(Cat.class.getSimpleName(), cat.getEntityName());
-    assertThat(cat.toString()).isEqualTo("animal");
+    assertThat(cat).hasToString("animal");
   }
 }

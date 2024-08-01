@@ -204,7 +204,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
     clause.addFlag(Position.START_OVERRIDE, "insert ignore into ");
 
-    assertThat(clause.toString()).isEqualTo("insert ignore into SURVEY (ID, NAME) values (?, ?)");
+    assertThat(clause).hasToString("insert ignore into SURVEY (ID, NAME) values (?, ?)");
     assertThat((long) clause.execute().block()).isEqualTo(1);
   }
 

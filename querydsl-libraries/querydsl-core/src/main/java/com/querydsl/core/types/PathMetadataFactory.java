@@ -56,6 +56,16 @@ public final class PathMetadataFactory {
   }
 
   /**
+   * Create a new PathMetadata instance for list first element
+   *
+   * @param parent parent path
+   * @return collection any path
+   */
+  public static PathMetadata forListFirst(Path<?> parent) {
+    return new PathMetadata(parent, "", PathType.LIST_FIRST);
+  }
+
+  /**
    * Create a new PathMetadata instance for delegate access
    *
    * @param delegate delegate path

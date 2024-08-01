@@ -34,14 +34,14 @@ public class DateTimeConstantTest {
     cal.set(Calendar.MILLISECOND, 3);
 
     DateTimeExpression<Date> date = DateTimeConstant.create(cal.getTime());
-    assertThat(date.dayOfMonth().toString()).isEqualTo("1");
-    assertThat(date.month().toString()).isEqualTo("1");
-    assertThat(date.year().toString()).isEqualTo("2000");
-    assertThat(date.dayOfWeek().toString()).isEqualTo("7");
-    assertThat(date.dayOfYear().toString()).isEqualTo("1");
-    assertThat(date.hour().toString()).isEqualTo("13");
-    assertThat(date.minute().toString()).isEqualTo("30");
-    assertThat(date.second().toString()).isEqualTo("12.0");
-    assertThat(date.milliSecond().toString()).isEqualTo("3");
+    assertThat(date.dayOfMonth()).hasToString("1");
+    assertThat(date.month()).hasToString("1");
+    assertThat(date.year()).hasToString("2000");
+    assertThat(date.dayOfWeek()).hasToString("7");
+    assertThat(date.dayOfYear()).hasToString("1");
+    assertThat(date.hour()).hasToString("13");
+    assertThat(date.minute()).hasToString("30");
+    assertThat(date.second()).hasToString("12.0");
+    assertThat(date.milliSecond()).hasToString("3");
   }
 }

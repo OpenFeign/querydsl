@@ -59,11 +59,15 @@ public class ComplexEvaluationTest {
     StringBuilder source = new StringBuilder();
     source.append("java.util.List<Object[]> rv = new java.util.ArrayList<Object[]>();\n");
     source.append(
-        "for (com.querydsl.codegen.utils.support.Cat cat :"
-            + " (java.util.List<com.querydsl.codegen.utils.support.Cat>)cat_){\n");
+        """
+        for (com.querydsl.codegen.utils.support.Cat cat :\
+         (java.util.List<com.querydsl.codegen.utils.support.Cat>)cat_){
+        """);
     source.append(
-        "for (com.querydsl.codegen.utils.support.Cat otherCat :"
-            + " (java.util.List<com.querydsl.codegen.utils.support.Cat>)otherCat_){\n");
+        """
+        for (com.querydsl.codegen.utils.support.Cat otherCat :\
+         (java.util.List<com.querydsl.codegen.utils.support.Cat>)otherCat_){
+        """);
     source.append("rv.add(new Object[]{cat,otherCat});\n");
     source.append("}\n");
     source.append("}\n");
@@ -108,8 +112,10 @@ public class ComplexEvaluationTest {
     ClassType resultType = new ClassType(TypeCategory.LIST, List.class, Types.STRING);
     StringBuilder source = new StringBuilder();
     source.append(
-        "java.util.List<String> rv = (java.util.List<String>) new"
-            + " java.util.ArrayList<Franklin>();\n");
+        """
+        java.util.List<String> rv = (java.util.List<String>) new\
+         java.util.ArrayList<Franklin>();
+        """);
     source.append("for (String a : a_){\n");
     source.append("    for (String b : b_){\n");
     source.append("        if (a.equals(b)){\n");
@@ -180,8 +186,10 @@ public class ComplexEvaluationTest {
     source.append("    }\n");
     source.append("}\n");
     source.append(
-        "return rv;} private static class TestEmbedded { public TestEmbedded() {} public boolean"
-            + " DO_RETURN() { return true; } ");
+        """
+        return rv;} private static class TestEmbedded { public TestEmbedded() {} public boolean\
+         DO_RETURN() { return true; } \
+        """);
 
     @SuppressWarnings("rawtypes") // cannot specify further than List.class
     Evaluator<List> evaluator =
@@ -211,11 +219,15 @@ public class ComplexEvaluationTest {
     String source =
         new StringBuilder()
             .append(
-                "java.util.List<com.querydsl.codegen.utils.support.Cat> rv = new"
-                    + " java.util.ArrayList<com.querydsl.codegen.utils.support.Cat>();\n")
+                """
+                java.util.List<com.querydsl.codegen.utils.support.Cat> rv = new\
+                 java.util.ArrayList<com.querydsl.codegen.utils.support.Cat>();
+                """)
             .append(
-                "for (com.querydsl.codegen.utils.support.Cat cat :"
-                    + " (java.util.List<com.querydsl.codegen.utils.support.Cat>)cat_){\n")
+                """
+                for (com.querydsl.codegen.utils.support.Cat cat :\
+                 (java.util.List<com.querydsl.codegen.utils.support.Cat>)cat_){
+                """)
             .append("if (cat.equals(a1)) {\n")
             .append("rv.add(cat);\n")
             .append("}\n")

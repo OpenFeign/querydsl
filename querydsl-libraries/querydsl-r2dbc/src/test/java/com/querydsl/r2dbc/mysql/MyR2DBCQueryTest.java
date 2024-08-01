@@ -89,8 +89,10 @@ public class MyR2DBCQueryTest {
 
     assertThat(toString(query))
         .isEqualTo(
-            "select survey.NAME from SURVEY survey force index (col1_index) "
-                + "order by survey.NAME asc");
+            """
+            select survey.NAME from SURVEY survey force index (col1_index) \
+            order by survey.NAME asc\
+            """);
   }
 
   @Test
@@ -104,8 +106,10 @@ public class MyR2DBCQueryTest {
 
     assertThat(toString(query))
         .isEqualTo(
-            "select survey.NAME from SURVEY survey ignore index (col1_index) "
-                + "order by survey.NAME asc");
+            """
+            select survey.NAME from SURVEY survey ignore index (col1_index) \
+            order by survey.NAME asc\
+            """);
   }
 
   @Test
@@ -119,8 +123,10 @@ public class MyR2DBCQueryTest {
 
     assertThat(toString(query))
         .isEqualTo(
-            "select survey.NAME from SURVEY survey use index (col1_index) "
-                + "order by survey.NAME asc");
+            """
+            select survey.NAME from SURVEY survey use index (col1_index) \
+            order by survey.NAME asc\
+            """);
   }
 
   @Test
@@ -134,8 +140,10 @@ public class MyR2DBCQueryTest {
 
     assertThat(toString(query))
         .isEqualTo(
-            "select survey.NAME from SURVEY survey use index (col1_index, col2_index) "
-                + "order by survey.NAME asc");
+            """
+            select survey.NAME from SURVEY survey use index (col1_index, col2_index) \
+            order by survey.NAME asc\
+            """);
   }
 
   @Test
@@ -203,8 +211,10 @@ public class MyR2DBCQueryTest {
     query.withRollup();
     assertThat(toString(query))
         .isEqualTo(
-            "select survey.NAME from SURVEY survey group by survey.NAME with rollup  order by"
-                + " survey.NAME asc");
+            """
+            select survey.NAME from SURVEY survey group by survey.NAME with rollup  order by\
+             survey.NAME asc\
+            """);
   }
 
   @Test
@@ -257,8 +267,10 @@ public class MyR2DBCQueryTest {
     query.lockInShareMode();
     assertThat(toString(query))
         .isEqualTo(
-            "select survey.NAME from SURVEY survey "
-                + "order by survey.NAME asc lock in share mode");
+            """
+            select survey.NAME from SURVEY survey \
+            order by survey.NAME asc lock in share mode\
+            """);
   }
 
   private String toString(R2DBCMySQLQuery<?> query) {

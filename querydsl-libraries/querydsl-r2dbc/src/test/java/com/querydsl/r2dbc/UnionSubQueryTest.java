@@ -63,11 +63,13 @@ public class UnionSubQueryTest {
     serializer.handle(union);
     assertThat(serializer.toString())
         .isEqualTo(
-            "(select 1 as col1 from dual)\n"
-                + "union\n"
-                + "(select 2 from dual)\n"
-                + "union\n"
-                + "(select 3 from dual)");
+            """
+            (select 1 as col1 from dual)
+            union
+            (select 2 from dual)
+            union
+            (select 3 from dual)\
+            """);
   }
 
   @SuppressWarnings("unchecked")
@@ -83,10 +85,12 @@ public class UnionSubQueryTest {
     serializer.handle(union);
     assertThat(serializer.toString())
         .isEqualTo(
-            "(select 1 as col1 from dual)\n"
-                + "union all\n"
-                + "(select 2 from dual)\n"
-                + "union all\n"
-                + "(select 3 from dual)");
+            """
+            (select 1 as col1 from dual)
+            union all
+            (select 2 from dual)
+            union all
+            (select 3 from dual)\
+            """);
   }
 }

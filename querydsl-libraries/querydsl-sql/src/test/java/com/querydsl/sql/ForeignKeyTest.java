@@ -28,7 +28,7 @@ public class ForeignKeyTest {
     QEmployee employee2 = new QEmployee("employee2");
 
     ForeignKey<Employee> foreignKey = new ForeignKey<Employee>(employee, employee.superiorId, "ID");
-    assertThat(foreignKey.on(employee2).toString()).isEqualTo("employee.superiorId = employee2.ID");
+    assertThat(foreignKey.on(employee2)).hasToString("employee.superiorId = employee2.ID");
 
     foreignKey =
         new ForeignKey<Employee>(

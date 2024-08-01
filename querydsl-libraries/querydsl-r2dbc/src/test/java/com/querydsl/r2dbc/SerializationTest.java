@@ -38,28 +38,28 @@ public class SerializationTest {
   public void innerJoin() {
     R2DBCQuery<?> query = new R2DBCQuery<Void>(connection, SQLTemplates.DEFAULT);
     query.from(new QSurvey("s1")).innerJoin(new QSurvey("s2"));
-    assertThat(query.toString()).isEqualTo("from SURVEY s1\ninner join SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s1\ninner join SURVEY s2");
   }
 
   @Test
   public void leftJoin() {
     R2DBCQuery<?> query = new R2DBCQuery<Void>(connection, SQLTemplates.DEFAULT);
     query.from(new QSurvey("s1")).leftJoin(new QSurvey("s2"));
-    assertThat(query.toString()).isEqualTo("from SURVEY s1\nleft join SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s1\nleft join SURVEY s2");
   }
 
   @Test
   public void rightJoin() {
     R2DBCQuery<?> query = new R2DBCQuery<Void>(connection, SQLTemplates.DEFAULT);
     query.from(new QSurvey("s1")).rightJoin(new QSurvey("s2"));
-    assertThat(query.toString()).isEqualTo("from SURVEY s1\nright join SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s1\nright join SURVEY s2");
   }
 
   @Test
   public void fullJoin() {
     R2DBCQuery<?> query = new R2DBCQuery<Void>(connection, SQLTemplates.DEFAULT);
     query.from(new QSurvey("s1")).fullJoin(new QSurvey("s2"));
-    assertThat(query.toString()).isEqualTo("from SURVEY s1\nfull join SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s1\nfull join SURVEY s2");
   }
 
   @Test
@@ -68,7 +68,7 @@ public class SerializationTest {
         new R2DBCUpdateClause(connection, SQLTemplates.DEFAULT, survey);
     updateClause.set(survey.id, 1);
     updateClause.set(survey.name, (String) null);
-    assertThat(updateClause.toString()).isEqualTo("update SURVEY\nset ID = ?, NAME = ?");
+    assertThat(updateClause).hasToString("update SURVEY\nset ID = ?, NAME = ?");
   }
 
   @Test
@@ -88,7 +88,7 @@ public class SerializationTest {
         new R2DBCInsertClause(connection, SQLTemplates.DEFAULT, survey);
     insertClause.set(survey.id, 1);
     insertClause.set(survey.name, (String) null);
-    assertThat(insertClause.toString()).isEqualTo("insert into SURVEY (ID, NAME)\nvalues (?, ?)");
+    assertThat(insertClause).hasToString("insert into SURVEY (ID, NAME)\nvalues (?, ?)");
   }
 
   @Test
@@ -101,10 +101,12 @@ public class SerializationTest {
         R2DBCExpressions.selectOne().from(employee).where(survey1.id.eq(employee.id)).exists());
     assertThat(delete.toString())
         .isEqualTo(
-            "delete from SURVEY\n"
-                + "where SURVEY.NAME = ? and exists (select 1\n"
-                + "from EMPLOYEE e\n"
-                + "where SURVEY.ID = e.ID)");
+            """
+            delete from SURVEY
+            where SURVEY.NAME = ? and exists (select 1
+            from EMPLOYEE e
+            where SURVEY.ID = e.ID)\
+            """);
   }
 
   @Test
@@ -113,7 +115,7 @@ public class SerializationTest {
         R2DBCExpressions.select(R2DBCExpressions.nextval("myseq")).from(QSurvey.survey);
     SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.serialize(sq.getMetadata(), false);
-    assertThat(serializer.toString()).isEqualTo("select nextval('myseq')\nfrom SURVEY SURVEY");
+    assertThat(serializer).hasToString("select nextval('myseq')\nfrom SURVEY SURVEY");
   }
 
   @Test
@@ -131,10 +133,12 @@ public class SerializationTest {
     serializer.serialize(expr.getMetadata(), false);
     assertThat(serializer.toString())
         .isEqualTo(
-            "select SURVEY.NAME\n"
-                + "from SURVEY SURVEY\n"
-                + "join TableValuedFunction(?) as tokFunc\n"
-                + "on not (SURVEY.NAME like tokFunc.prop escape '\\')");
+            """
+            select SURVEY.NAME
+            from SURVEY SURVEY
+            join TableValuedFunction(?) as tokFunc
+            on not (SURVEY.NAME like tokFunc.prop escape '\\')\
+            """);
   }
 
   @Test
@@ -147,9 +151,11 @@ public class SerializationTest {
 
     assertThat(q.toString())
         .isEqualTo(
-            "from SURVEY SURVEY\n"
-                + "join TableValuedFunction(?) as tokFunc\n"
-                + "on not (SURVEY.NAME like tokFunc.prop escape '\\')");
+            """
+            from SURVEY SURVEY
+            join TableValuedFunction(?) as tokFunc
+            on not (SURVEY.NAME like tokFunc.prop escape '\\')\
+            """);
   }
 
   @SuppressWarnings("unchecked")
@@ -162,11 +168,13 @@ public class SerializationTest {
 
     assertThat(q.toString())
         .isEqualTo(
-            "(select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID\n"
-                + "from SURVEY SURVEY)\n"
-                + "union\n"
-                + "(select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID\n"
-                + "from SURVEY SURVEY)");
+            """
+            (select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID
+            from SURVEY SURVEY)
+            union
+            (select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID
+            from SURVEY SURVEY)\
+            """);
   }
 
   @SuppressWarnings("unchecked")
@@ -180,12 +188,14 @@ public class SerializationTest {
 
     assertThat(q.toString())
         .isEqualTo(
-            "(select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID\n"
-                + "from SURVEY SURVEY)\n"
-                + "union\n"
-                + "(select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID\n"
-                + "from SURVEY SURVEY)\n"
-                + "group by SURVEY.ID");
+            """
+            (select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID
+            from SURVEY SURVEY)
+            union
+            (select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID
+            from SURVEY SURVEY)
+            group by SURVEY.ID\
+            """);
   }
 
   @SuppressWarnings("unchecked")
@@ -200,11 +210,13 @@ public class SerializationTest {
 
     assertThat(q.toString())
         .isEqualTo(
-            "from ((select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID\n"
-                + "from SURVEY SURVEY)\n"
-                + "union\n"
-                + "(select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID\n"
-                + "from SURVEY SURVEY)) as SURVEY");
+            """
+            from ((select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID
+            from SURVEY SURVEY)
+            union
+            (select SURVEY.NAME, SURVEY.NAME2, SURVEY.ID
+            from SURVEY SURVEY)) as SURVEY\
+            """);
   }
 
   @Test
@@ -216,9 +228,12 @@ public class SerializationTest {
 
     assertThat(q.toString())
         .isEqualTo(
-            "with SURVEY (ID, NAME) as (select survey2.ID, survey2.NAME\n"
-                + "from SURVEY survey2)\n\n"
-                + "from dual");
+            """
+            with SURVEY (ID, NAME) as (select survey2.ID, survey2.NAME
+            from SURVEY survey2)
+
+            from dual\
+            """);
   }
 
   @Test
@@ -232,10 +247,12 @@ public class SerializationTest {
 
     assertThat(q.toString())
         .isEqualTo(
-            "with s (ID, NAME) as (select SURVEY.ID, SURVEY.NAME\n"
-                + "from SURVEY SURVEY)\n"
-                + "select s.ID, s.NAME, SURVEY.ID, SURVEY.NAME\n"
-                + "from s s, SURVEY SURVEY");
+            """
+            with s (ID, NAME) as (select SURVEY.ID, SURVEY.NAME
+            from SURVEY SURVEY)
+            select s.ID, s.NAME, SURVEY.ID, SURVEY.NAME
+            from s s, SURVEY SURVEY\
+            """);
   }
 
   @Test
@@ -248,9 +265,12 @@ public class SerializationTest {
 
     assertThat(q.toString())
         .isEqualTo(
-            "with SURVEY (ID, NAME) as (select survey2.ID, survey2.NAME\n"
-                + "from SURVEY survey2)\n\n"
-                + "from dual");
+            """
+            with SURVEY (ID, NAME) as (select survey2.ID, survey2.NAME
+            from SURVEY survey2)
+
+            from dual\
+            """);
   }
 
   @Test
@@ -262,9 +282,12 @@ public class SerializationTest {
 
     assertThat(q.toString())
         .isEqualTo(
-            "with SURVEY (ID, NAME) as (select survey2.ID, survey2.NAME\n"
-                + "from SURVEY survey2)\n\n"
-                + "from dual");
+            """
+            with SURVEY (ID, NAME) as (select survey2.ID, survey2.NAME
+            from SURVEY survey2)
+
+            from dual\
+            """);
   }
 
   @Test
@@ -275,6 +298,11 @@ public class SerializationTest {
 
     assertThat(q.toString())
         .isEqualTo(
-            "with SURVEY (ID) as (select survey2.ID\n" + "from SURVEY survey2)\n\n" + "from dual");
+            """
+            with SURVEY (ID) as (select survey2.ID
+            from SURVEY survey2)
+
+            from dual\
+            """);
   }
 }

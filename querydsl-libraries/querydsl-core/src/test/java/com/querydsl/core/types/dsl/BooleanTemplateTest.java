@@ -21,11 +21,11 @@ public class BooleanTemplateTest {
 
   @Test
   public void true_() {
-    assertThat(Expressions.TRUE.toString()).isEqualTo("true");
+    assertThat(Expressions.TRUE).hasToString("true");
   }
 
   @Test
   public void false_() {
-    assertThat(Expressions.FALSE.toString()).isEqualTo("false");
+    assertThat(Expressions.FALSE).hasToString("false");
   }
 }

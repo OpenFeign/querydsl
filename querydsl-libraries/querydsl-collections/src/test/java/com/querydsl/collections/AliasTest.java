@@ -83,7 +83,7 @@ public class AliasTest extends AbstractQueryTest {
 
     // 4
     from(c, cats)
-        .where($(c.getKittens().get(0).getBodyWeight()).gt(12))
+        .where($(c.getKittens().getFirst().getBodyWeight()).gt(12))
         .select($(c.getName()))
         .iterate();
 

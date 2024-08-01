@@ -21,7 +21,7 @@ public class MemJavaFileObjectTest {
     writer.write("Hello World");
     writer.flush();
     writer.close();
-    assertThat(obj.getCharContent(true).toString()).isEqualTo("Hello World");
+    assertThat(obj.getCharContent(true)).hasToString("Hello World");
   }
 
   @Test

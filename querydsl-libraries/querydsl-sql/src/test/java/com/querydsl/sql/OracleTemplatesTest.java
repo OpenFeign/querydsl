@@ -154,6 +154,6 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
         query.select(
             SQLExpressions.datetrunc(
                 DatePart.week, Expressions.dateTimeTemplate(Comparable.class, "dateExpression")));
-    assertThat(expression.toString()).isEqualTo("select trunc(dateExpression, 'iw') from dual");
+    assertThat(expression).hasToString("select trunc(dateExpression, 'iw') from dual");
   }
 }

@@ -62,7 +62,11 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   public void subQueries() {
     // subquery in where block
     expectedQuery =
-        "select e.ID from EMPLOYEE e " + "where e.ID = (select max(e.ID) " + "from EMPLOYEE e)";
+        """
+        select e.ID from EMPLOYEE e \
+        where e.ID = (select max(e.ID) \
+        from EMPLOYEE e)\
+        """;
     List<Integer> list =
         query()
             .from(employee)
@@ -189,10 +193,10 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   public void subQuerySerialization() {
     R2DBCQuery<?> query = query();
     query.from(survey);
-    assertThat(query.toString()).isEqualTo("from SURVEY s");
+    assertThat(query).hasToString("from SURVEY s");
 
     query.from(survey2);
-    assertThat(query.toString()).isEqualTo("from SURVEY s, SURVEY s2");
+    assertThat(query).hasToString("from SURVEY s, SURVEY s2");
   }
 
   @Test
@@ -225,13 +229,16 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
                     .in(Arrays.asList("Mike", "Mary"))));
 
     expectedQuery =
-        "(\nfrom EMPLOYEE e\n"
-            + "where (select e.FIRSTNAME\n"
-            + "from EMPLOYEE e\n"
-            + "order by e.SALARY asc\n"
-            + "limit ?) in (?, ?))";
+        """
+        (
+        from EMPLOYEE e
+        where (select e.FIRSTNAME
+        from EMPLOYEE e
+        order by e.SALARY asc
+        limit ?) in (?, ?))\
+        """;
 
-    assertThat(serializer.toString()).isEqualTo(expectedQuery);
+    assertThat(serializer).hasToString(expectedQuery);
   }
 
   @Test
@@ -249,12 +256,15 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
                     .in("Mike", "Mary")));
 
     expectedQuery =
-        "(\nfrom EMPLOYEE e\n"
-            + "where (select e.FIRSTNAME\n"
-            + "from EMPLOYEE e\n"
-            + "order by e.SALARY asc\n"
-            + "limit ?) in (?, ?))";
+        """
+        (
+        from EMPLOYEE e
+        where (select e.FIRSTNAME
+        from EMPLOYEE e
+        order by e.SALARY asc
+        limit ?) in (?, ?))\
+        """;
 
-    assertThat(serializer.toString()).isEqualTo(expectedQuery);
+    assertThat(serializer).hasToString(expectedQuery);
   }
 }

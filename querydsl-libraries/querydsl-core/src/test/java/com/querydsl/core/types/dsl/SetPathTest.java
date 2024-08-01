@@ -26,8 +26,8 @@ public class SetPathTest {
 
   @Test
   public void toString_() {
-    assertThat(stringPath.toString()).isEqualTo("stringPath");
-    assertThat(stringPath.any().toString()).isEqualTo("any(stringPath)");
+    assertThat(stringPath).hasToString("stringPath");
+    assertThat(stringPath.any()).hasToString("any(stringPath)");
     assertThat(stringPath.any().equalsIgnoreCase("X").toString())
         .isEqualTo("eqIc(any(stringPath),X)");
   }

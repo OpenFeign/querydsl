@@ -56,11 +56,11 @@ public class MultikeyTest {
 
   @Test
   public void toString_() {
-    assertThat(multiKey1.toString()).isEqualTo("Multikey#null;null;null");
+    assertThat(multiKey1).hasToString("Multikey#null;null;null");
 
     multiKey1.setId(1);
     multiKey1.setId2("2");
     multiKey1.setId3(3);
-    assertThat(multiKey1.toString()).isEqualTo("Multikey#1;2;3");
+    assertThat(multiKey1).hasToString("Multikey#1;2;3");
   }
 }

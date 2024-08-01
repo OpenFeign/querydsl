@@ -102,7 +102,7 @@ public class QTupleTest {
   public void duplicates() {
     QTuple expr = new QTuple(str1, str1);
     assertThat(expr.getArgs()).hasSize(1);
-    assertThat(expr.getArgs().get(0)).isEqualTo(str1);
+    assertThat(expr.getArgs().getFirst()).isEqualTo(str1);
   }
 
   @Test
@@ -110,7 +110,7 @@ public class QTupleTest {
   public void duplicates2() {
     QTuple expr = new QTuple(Arrays.asList(str1, str1));
     assertThat(expr.getArgs()).hasSize(1);
-    assertThat(expr.getArgs().get(0)).isEqualTo(str1);
+    assertThat(expr.getArgs().getFirst()).isEqualTo(str1);
   }
 
   @Test

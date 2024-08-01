@@ -27,7 +27,7 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
-    assertThat(query.toString()).isEqualTo("select 1");
+    assertThat(query).hasToString("select 1");
   }
 
   @Override
@@ -56,7 +56,7 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
   public void limit() {
     query.from(survey1).limit(5);
     query.getMetadata().setProjection(survey1.id);
-    assertThat(query.toString()).isEqualTo("select top (?) survey1.ID from SURVEY survey1");
+    assertThat(query).hasToString("select top (?) survey1.ID from SURVEY survey1");
   }
 
   @Test
@@ -66,8 +66,10 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
     query.getMetadata().setProjection(survey1.id);
     assertThat(query.toString())
         .isEqualTo(
-            "select * from (   select survey1.ID, row_number() over (order by survey1.ID asc) as rn"
-                + " from SURVEY survey1) a where rn > ? and rn <= ? order by rn");
+            """
+            select * from (   select survey1.ID, row_number() over (order by survey1.ID asc) as rn\
+             from SURVEY survey1) a where rn > ? and rn <= ? order by rn\
+            """);
   }
 
   @Test
@@ -76,8 +78,10 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
     query.getMetadata().setProjection(survey1.id);
     assertThat(query.toString())
         .isEqualTo(
-            "select * from (   select survey1.ID, row_number() over (order by current_timestamp asc) as"
-                + " rn from SURVEY survey1) a where rn > ? and rn <= ? order by rn");
+            """
+            select * from (   select survey1.ID, row_number() over (order by current_timestamp\
+             asc) as rn from SURVEY survey1) a where rn > ? and rn <= ? order by rn\
+            """);
   }
 
   @Test

@@ -87,8 +87,10 @@ public class ScalaWriterTest {
     // "ID");
     // }
     writer.beginClass(
-        "QDepartment(path: String) extends RelationalPathBase[QDepartment](classOf[QDepartment],"
-            + " path)");
+        """
+        QDepartment(path: String) extends RelationalPathBase[QDepartment](classOf[QDepartment],\
+         path)\
+        """);
     writer.publicFinal(Types.OBJECT, "id", "createNumber(\"ID\", classOf[Integer])");
     writer.publicFinal(Types.OBJECT, "company", "createNumber(\"COMPANY\", classOf[Integer])");
     writer.publicFinal(Types.OBJECT, "idKey", "createPrimaryKey(id)");
@@ -373,7 +375,7 @@ public class ScalaWriterTest {
         "TestType", new Parameter("a", Types.STRING), new Parameter("b", Types.STRING));
 
     System.out.println(w);
-    assertThat(w.toString()).isEqualTo("case class TestType(a: String, b: String)\n");
+    assertThat(w).hasToString("case class TestType(a: String, b: String)\n");
   }
 
   @Test

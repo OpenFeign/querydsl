@@ -24,7 +24,7 @@ public class SetQueryBandClauseTest {
   @Test
   public void toString_() {
     clause.set("a", "b");
-    assertThat(clause.toString()).isEqualTo("set query_band='a=b;' for session");
+    assertThat(clause).hasToString("set query_band='a=b;' for session");
   }
 
   @Test
@@ -32,7 +32,7 @@ public class SetQueryBandClauseTest {
     conf.setUseLiterals(false);
     clause.set("a", "b");
     clause.forTransaction();
-    assertThat(clause.toString()).isEqualTo("set query_band=? for transaction");
+    assertThat(clause).hasToString("set query_band=? for transaction");
   }
 
   @Test
@@ -40,7 +40,7 @@ public class SetQueryBandClauseTest {
     clause.forTransaction();
     clause.set("a", "b");
     clause.set("b", "c");
-    assertThat(clause.toString()).isEqualTo("set query_band='a=b;b=c;' for transaction");
+    assertThat(clause).hasToString("set query_band='a=b;b=c;' for transaction");
   }
 
   @Test
@@ -48,7 +48,7 @@ public class SetQueryBandClauseTest {
     clause.forTransaction();
     clause.set("a", "b");
     clause.set("b", "c");
-    assertThat(clause.getSQL().get(0).getSQL())
+    assertThat(clause.getSQL().getFirst().getSQL())
         .isEqualTo("set query_band='a=b;b=c;' for transaction");
   }
 }

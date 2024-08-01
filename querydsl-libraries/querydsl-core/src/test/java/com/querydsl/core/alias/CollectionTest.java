@@ -30,8 +30,10 @@ public class CollectionTest {
         .isEqualTo("any(domainType.set) = domainType");
     assertThat($(domainType.getList()).any().eq(domainType).toString())
         .isEqualTo("any(domainType.list) = domainType");
-    assertThat($(domainType.getList().get(0)).eq(domainType).toString())
-        .isEqualTo("domainType.list.get(0) = domainType");
+    assertThat($(domainType.getList().getFirst()).eq(domainType).toString())
+        .isEqualTo("domainType.list.getFirst() = domainType");
+    assertThat($(domainType.getList().get(3)).eq(domainType).toString())
+        .isEqualTo("domainType.list.get(3) = domainType");
     assertThat($(domainType.getList()).get(0).eq(domainType).toString())
         .isEqualTo("domainType.list.get(0) = domainType");
     assertThat($(domainType.getMap()).get("key").eq(domainType).toString())

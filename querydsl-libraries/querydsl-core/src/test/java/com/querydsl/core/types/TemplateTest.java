@@ -60,6 +60,6 @@ public class TemplateTest {
   }
 
   private void match(String string, Template template) {
-    assertThat(template.getElements().toString()).isEqualTo(string);
+    assertThat(template.getElements()).hasToString(string);
   }
 }

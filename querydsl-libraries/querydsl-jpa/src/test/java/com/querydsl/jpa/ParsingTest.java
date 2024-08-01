@@ -583,10 +583,10 @@ public class ParsingTest extends AbstractQueryTest {
     QueryHelper query = query();
 
     query.from(cat);
-    assertThat(query.toString()).isEqualTo("select cat\nfrom Cat cat");
+    assertThat(query).hasToString("select cat\nfrom Cat cat");
 
     query.from(fatcat);
-    assertThat(query.toString()).isEqualTo("select cat\nfrom Cat cat, Cat fatcat");
+    assertThat(query).hasToString("select cat\nfrom Cat cat, Cat fatcat");
   }
 
   @Test

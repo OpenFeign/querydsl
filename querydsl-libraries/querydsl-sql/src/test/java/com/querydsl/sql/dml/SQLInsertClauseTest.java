@@ -25,7 +25,7 @@ public class SQLInsertClauseTest {
     SQLInsertClause insert = new SQLInsertClause(null, SQLTemplates.DEFAULT, emp1);
     insert.set(emp1.id, 1);
 
-    SQLBindings sql = insert.getSQL().get(0);
+    SQLBindings sql = insert.getSQL().getFirst();
     assertThat(sql.getSQL()).isEqualTo("insert into EMPLOYEE (ID)\nvalues (?)");
     assertThat(sql.getNullFriendlyBindings()).isEqualTo(Collections.singletonList(1));
   }
@@ -40,7 +40,7 @@ public class SQLInsertClauseTest {
     insert.addBatch();
     insert.addFlag(QueryFlag.Position.END, " on duplicate key ignore");
     insert.setBatchToBulk(true);
-    assertThat(insert.getSQL().get(0).getSQL())
+    assertThat(insert.getSQL().getFirst().getSQL())
         .isEqualTo("insert into EMPLOYEE (ID)\n" + "values (?), (?) on duplicate key ignore");
   }
 
@@ -50,14 +50,14 @@ public class SQLInsertClauseTest {
     SQLInsertClause insert = new SQLInsertClause(null, SQLTemplates.DEFAULT, emp1);
     insert.populate(emp1);
 
-    SQLBindings sql = insert.getSQL().get(0);
+    SQLBindings sql = insert.getSQL().getFirst();
     assertThat(sql.getSQL())
         .as("The order of columns in generated sql should be predictable")
         .isEqualTo(
             """
-            insert into EMPLOYEE (ID, FIRSTNAME, LASTNAME, SALARY, DATEFIELD, TIMEFIELD, SUPERIOR_ID)
-            values (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID)\
-            """);
+insert into EMPLOYEE (ID, FIRSTNAME, LASTNAME, SALARY, DATEFIELD, TIMEFIELD, SUPERIOR_ID)
+values (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID)\
+""");
   }
 
   @Test

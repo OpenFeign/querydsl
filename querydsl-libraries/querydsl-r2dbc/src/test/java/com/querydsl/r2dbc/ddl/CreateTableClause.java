@@ -64,7 +64,7 @@ public class CreateTableClause {
   }
 
   private ColumnData lastColumn() {
-    return columns.get(columns.size() - 1);
+    return columns.getLast();
   }
 
   /**
@@ -131,7 +131,7 @@ public class CreateTableClause {
    * @return
    */
   public CreateTableClause unique() {
-    indexes.get(indexes.size() - 1).setUnique(true);
+    indexes.getLast().setUnique(true);
     return this;
   }
 

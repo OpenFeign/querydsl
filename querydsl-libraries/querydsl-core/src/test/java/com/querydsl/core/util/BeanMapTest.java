@@ -46,7 +46,7 @@ public class BeanMapTest {
 
   @Test
   public void toString_() {
-    assertThat(new BeanMap().toString()).isEqualTo("BeanMap<null>");
+    assertThat(new BeanMap()).hasToString("BeanMap<null>");
   }
 
   @Test
