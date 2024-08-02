@@ -816,10 +816,10 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
   @Override
   public void visitConstant(Object constant) {
     if (useLiterals) {
-      if (constant instanceof Collection) {
+      if (constant instanceof Collection<?> collection) {
         append("(");
         var first = true;
-        for (Object o : ((Collection) constant)) {
+        for (Object o : collection) {
           if (!first) {
             append(COMMA);
           }
@@ -830,10 +830,10 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
       } else {
         append(configuration.asLiteral(constant));
       }
-    } else if (constant instanceof Collection) {
+    } else if (constant instanceof Collection<?> collection) {
       append("(");
       var first = true;
-      for (Object o : ((Collection) constant)) {
+      for (Object o : collection) {
         if (!first) {
           append(COMMA);
         }
@@ -846,7 +846,7 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
       }
       append(")");
 
-      var size = ((Collection) constant).size() - 1;
+      var size = collection.size() - 1;
       Path<?> lastPath = constantPaths.peekLast();
       for (var i = 0; i < size; i++) {
         constantPaths.add(lastPath);

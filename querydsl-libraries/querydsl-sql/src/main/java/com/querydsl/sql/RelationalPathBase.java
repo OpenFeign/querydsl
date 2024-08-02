@@ -142,8 +142,8 @@ public class RelationalPathBase<T> extends BeanPath<T> implements RelationalPath
    */
   @Override
   public BooleanExpression eq(T right) {
-    if (right instanceof RelationalPath) {
-      return primaryKeyOperation(Ops.EQ, primaryKey, ((RelationalPath) right).getPrimaryKey());
+    if (right instanceof RelationalPath<?> path) {
+      return primaryKeyOperation(Ops.EQ, primaryKey, path.getPrimaryKey());
     } else {
       return super.eq(right);
     }
@@ -157,8 +157,8 @@ public class RelationalPathBase<T> extends BeanPath<T> implements RelationalPath
    */
   @Override
   public BooleanExpression eq(Expression<? super T> right) {
-    if (right instanceof RelationalPath) {
-      return primaryKeyOperation(Ops.EQ, primaryKey, ((RelationalPath) right).getPrimaryKey());
+    if (right instanceof RelationalPath<?> path) {
+      return primaryKeyOperation(Ops.EQ, primaryKey, path.getPrimaryKey());
     } else {
       return super.eq(right);
     }
@@ -172,8 +172,8 @@ public class RelationalPathBase<T> extends BeanPath<T> implements RelationalPath
    */
   @Override
   public BooleanExpression ne(T right) {
-    if (right instanceof RelationalPath) {
-      return primaryKeyOperation(Ops.NE, primaryKey, ((RelationalPath) right).getPrimaryKey());
+    if (right instanceof RelationalPath<?> path) {
+      return primaryKeyOperation(Ops.NE, primaryKey, path.getPrimaryKey());
     } else {
       return super.ne(right);
     }
@@ -187,8 +187,8 @@ public class RelationalPathBase<T> extends BeanPath<T> implements RelationalPath
    */
   @Override
   public BooleanExpression ne(Expression<? super T> right) {
-    if (right instanceof RelationalPath) {
-      return primaryKeyOperation(Ops.NE, primaryKey, ((RelationalPath) right).getPrimaryKey());
+    if (right instanceof RelationalPath<?> path) {
+      return primaryKeyOperation(Ops.NE, primaryKey, path.getPrimaryKey());
     } else {
       return super.ne(right);
     }

@@ -115,8 +115,7 @@ public class ConstructorExpression<T> extends FactoryExpressionBase<T> {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof ConstructorExpression<?>) {
-      ConstructorExpression<?> c = (ConstructorExpression<?>) obj;
+    } else if (obj instanceof ConstructorExpression<?> c) {
       return Arrays.equals(parameterTypes, c.parameterTypes)
           && args.equals(c.args)
           && getType().equals(c.getType());
