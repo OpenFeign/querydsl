@@ -98,8 +98,8 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
 
   @Test
   public void scroll() {
-    session.save(new Cat("Bob", 10));
-    session.save(new Cat("Steve", 11));
+    session.persist(new Cat("Bob", 10));
+    session.persist(new Cat("Steve", 11));
 
     var cat = QCat.cat;
     HibernateQuery<?> query = new HibernateQuery<Void>(session);
@@ -112,7 +112,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
 
   @Test
   public void insert() {
-    session.save(new Cat("Bob", 10));
+    session.persist(new Cat("Bob", 10));
 
     var cat = QCat.cat;
     var amount = insert(cat).set(cat.name, "Bobby").set(cat.alive, false).execute();
@@ -123,7 +123,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
 
   @Test
   public void insert2() {
-    session.save(new Cat("Bob", 10));
+    session.persist(new Cat("Bob", 10));
 
     var cat = QCat.cat;
     var amount = insert(cat).columns(cat.name, cat.alive).values("Bobby", false).execute();
@@ -134,7 +134,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
 
   @Test
   public void insert3() {
-    session.save(new Cat("Bob", 10));
+    session.persist(new Cat("Bob", 10));
 
     var cat = QCat.cat;
     var bob = new QCat("Bob");
@@ -151,8 +151,8 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
 
   @Test
   public void update() {
-    session.save(new Cat("Bob", 10));
-    session.save(new Cat("Steve", 11));
+    session.persist(new Cat("Bob", 10));
+    session.persist(new Cat("Steve", 11));
 
     var cat = QCat.cat;
     var amount =
@@ -168,8 +168,8 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
 
   @Test
   public void update_with_null() {
-    session.save(new Cat("Bob", 10));
-    session.save(new Cat("Steve", 11));
+    session.persist(new Cat("Bob", 10));
+    session.persist(new Cat("Steve", 11));
 
     var cat = QCat.cat;
     var amount =
@@ -183,8 +183,8 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
 
   @Test
   public void delete() {
-    session.save(new Cat("Bob", 10));
-    session.save(new Cat("Steve", 11));
+    session.persist(new Cat("Bob", 10));
+    session.persist(new Cat("Steve", 11));
 
     var cat = QCat.cat;
     var amount = delete(cat).where(cat.name.eq("Bob")).execute();
@@ -195,7 +195,7 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
   public void collection() throws Exception {
     List<Cat> cats = Arrays.asList(new Cat("Bob", 10), new Cat("Steve", 11));
     for (Cat cat : cats) {
-      session.save(cat);
+      session.persist(cat);
     }
 
     query().from(cat).innerJoin(cat.kittens, kitten).where(kitten.in(cats)).parse();
