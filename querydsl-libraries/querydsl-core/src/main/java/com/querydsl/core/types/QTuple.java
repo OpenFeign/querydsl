@@ -58,8 +58,8 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
     Map<Expression<?>, Integer> map = new LinkedHashMap<>();
     for (var i = 0; i < exprs.size(); i++) {
       Expression<?> e = exprs.get(i);
-      if (e instanceof Operation && ((Operation<?>) e).getOperator() == Ops.ALIAS) {
-        map.put(((Operation<?>) e).getArg(1), i);
+      if (e instanceof Operation<?> operation && operation.getOperator() == Ops.ALIAS) {
+        map.put(operation.getArg(1), i);
       }
       map.put(e, i);
     }
@@ -107,8 +107,8 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
     public boolean equals(Object obj) {
       if (obj == this) {
         return true;
-      } else if (obj instanceof Tuple) {
-        return Arrays.equals(a, ((Tuple) obj).toArray());
+      } else if (obj instanceof Tuple tuple) {
+        return Arrays.equals(a, tuple.toArray());
       } else {
         return false;
       }
@@ -180,8 +180,7 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof FactoryExpression) {
-      FactoryExpression<?> c = (FactoryExpression<?>) obj;
+    } else if (obj instanceof FactoryExpression<?> c) {
       return args.equals(c.getArgs()) && getType().equals(c.getType());
     } else {
       return false;

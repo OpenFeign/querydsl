@@ -447,8 +447,8 @@ public class ExtendedTypeFactory {
         }
       }
       typeElement = (TypeElement) env.getTypeUtils().asElement(type);
-      if (type instanceof DeclaredType) {
-        arguments = ((DeclaredType) type).getTypeArguments();
+      if (type instanceof DeclaredType declaredType1) {
+        arguments = declaredType1.getTypeArguments();
       }
     }
 
@@ -456,8 +456,8 @@ public class ExtendedTypeFactory {
 
     var superType = typeElement.getSuperclass();
     TypeElement superTypeElement = null;
-    if (superType instanceof DeclaredType) {
-      superTypeElement = (TypeElement) ((DeclaredType) superType).asElement();
+    if (superType instanceof DeclaredType declaredType1) {
+      superTypeElement = (TypeElement) declaredType1.asElement();
     }
 
     // entity type
@@ -624,8 +624,8 @@ public class ExtendedTypeFactory {
       if (e.getKind() == ElementKind.CLASS) {
         if (e.getSuperclass().getKind() != TypeKind.NONE) {
           var supertype = normalize(e.getSuperclass());
-          if (supertype instanceof DeclaredType
-              && ((DeclaredType) supertype).asElement().getAnnotation(QueryExclude.class) != null) {
+          if (supertype instanceof DeclaredType type
+              && type.asElement().getAnnotation(QueryExclude.class) != null) {
             return Collections.emptySet();
           } else {
             Type superClass = getType(supertype, deep);

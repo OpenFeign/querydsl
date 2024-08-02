@@ -73,8 +73,7 @@ public abstract class FetchableQueryBase<T, Q extends FetchableQueryBase<T, Q>> 
   public final boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof SubQueryExpression) {
-      SubQueryExpression<?> s = (SubQueryExpression<?>) o;
+    } else if (o instanceof SubQueryExpression<?> s) {
       return s.getMetadata().equals(queryMixin.getMetadata());
     } else {
       return false;

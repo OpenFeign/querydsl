@@ -126,8 +126,7 @@ public final class Property implements Comparable<Property> {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Property) {
-      var p = (Property) o;
+    } else if (o instanceof Property p) {
       return p.name.equals(name) && p.type.equals(type);
     } else {
       return false;

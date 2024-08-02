@@ -309,8 +309,8 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
       //    not one of our checked exceptions boxed as unchecked; just rethrow
       var cause = ex.getCause();
       if (cause != null) {
-        if (cause instanceof IOException) {
-          throw (IOException) cause;
+        if (cause instanceof IOException exception) {
+          throw exception;
         } else if (cause instanceof ClassFormatException) {
           throw new IOException(cause);
         }

@@ -62,9 +62,8 @@ public class TypeExtends extends TypeAdapter {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof TypeExtends) {
-      return Objects.equals(((TypeExtends) o).varName, varName)
-          && ((TypeExtends) o).type.equals(type);
+    } else if (o instanceof TypeExtends extends1) {
+      return Objects.equals(extends1.varName, varName) && extends1.type.equals(type);
     } else {
       return false;
     }
