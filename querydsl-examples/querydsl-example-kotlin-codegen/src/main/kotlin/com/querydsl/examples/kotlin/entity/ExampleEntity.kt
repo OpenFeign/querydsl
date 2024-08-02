@@ -31,6 +31,10 @@ data class ExampleEntity(
         val children: List<ExampleEntity>? = null,
 
         @ManyToOne
-        val parent: ExampleEntity? = null
+        val parent: ExampleEntity? = null,
+
+        @Convert(converter = MapConverter::class)
+        @Column(columnDefinition = "jsonb")
+        val metadata: Map<String, Any> = mutableMapOf(),
 ) {
 }
