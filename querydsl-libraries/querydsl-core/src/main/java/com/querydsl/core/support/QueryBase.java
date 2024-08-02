@@ -178,8 +178,7 @@ public abstract class QueryBase<Q extends QueryBase<Q>> {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof QueryBase) {
-      var q = (QueryBase) o;
+    } else if (o instanceof QueryBase<?> q) {
       return q.queryMixin.equals(queryMixin);
     } else {
       return false;

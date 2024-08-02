@@ -50,8 +50,8 @@ public class ConstantHidingExpression<T> extends FactoryExpressionBase<T> {
     for (var i = 0; i < template.length; i++) {
       Expression<?> arg = expr.getArgs().get(i);
       Expression<?> unwrapped = unwrap(arg);
-      if (unwrapped instanceof Constant) {
-        template[i] = ((Constant<?>) unwrapped).getConstant();
+      if (unwrapped instanceof Constant<?> constant) {
+        template[i] = constant.getConstant();
       } else if (unwrapped.equals(Expressions.TRUE)) {
         template[i] = Boolean.TRUE;
       } else if (unwrapped.equals(Expressions.FALSE)) {
@@ -64,8 +64,8 @@ public class ConstantHidingExpression<T> extends FactoryExpressionBase<T> {
 
   private static Expression<?> unwrap(Expression<?> expr) {
     expr = ExpressionUtils.extract(expr);
-    if (expr instanceof Operation && ((Operation<?>) expr).getOperator() == Ops.ALIAS) {
-      return ((Operation<?>) expr).getArg(0);
+    if (expr instanceof Operation<?> operation && operation.getOperator() == Ops.ALIAS) {
+      return operation.getArg(0);
     }
     return expr;
   }

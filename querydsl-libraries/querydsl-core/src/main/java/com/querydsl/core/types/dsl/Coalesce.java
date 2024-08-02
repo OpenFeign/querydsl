@@ -145,8 +145,7 @@ public class Coalesce<T extends Comparable> extends MutableExpressionBase<T> {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Coalesce<?>) {
-      Coalesce<?> c = (Coalesce<?>) o;
+    } else if (o instanceof Coalesce<?> c) {
       return c.exprs.equals(exprs);
     } else {
       return false;
