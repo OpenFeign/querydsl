@@ -56,12 +56,12 @@ public class HibernateSQLBase extends AbstractSQLTest implements HibernateTest {
   @Before
   public void setUp() {
     if (query().from(cat).fetchCount() == 0) {
-      session.save(new Cat("Beck", 1, Color.BLACK));
-      session.save(new Cat("Kate", 2, Color.BLACK));
-      session.save(new Cat("Kitty", 3, Color.BLACK));
-      session.save(new Cat("Bobby", 4, Color.BLACK));
-      session.save(new Cat("Harold", 5, Color.BLACK));
-      session.save(new Cat("Tim", 6, Color.BLACK));
+      session.persist(new Cat("Beck", 1, Color.BLACK));
+      session.persist(new Cat("Kate", 2, Color.BLACK));
+      session.persist(new Cat("Kitty", 3, Color.BLACK));
+      session.persist(new Cat("Bobby", 4, Color.BLACK));
+      session.persist(new Cat("Harold", 5, Color.BLACK));
+      session.persist(new Cat("Tim", 6, Color.BLACK));
       session.flush();
     }
   }

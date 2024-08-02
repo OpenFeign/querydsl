@@ -32,9 +32,9 @@ public class UniqueResultsTest implements HibernateTest {
 
   @Test
   public void test() {
-    session.save(new Cat("Bob1", 1));
-    session.save(new Cat("Bob2", 2));
-    session.save(new Cat("Bob3", 3));
+    session.persist(new Cat("Bob1", 1));
+    session.persist(new Cat("Bob2", 2));
+    session.persist(new Cat("Bob3", 3));
 
     assertThat(
             query()

@@ -113,8 +113,10 @@ public class SQLiteTemplates extends SQLTemplates {
 
     add(
         Ops.DateTimeOps.YEAR_MONTH,
-        "cast(strftime('%Y',{0} / 1000, 'unixepoch', 'localtime') * 100 + strftime('%m',{0} / 1000,"
-            + " 'unixepoch', 'localtime') as integer)");
+        """
+        cast(strftime('%Y',{0} / 1000, 'unixepoch', 'localtime') * 100 + strftime('%m',{0} / 1000,\
+         'unixepoch', 'localtime') as integer)\
+        """);
     add(
         Ops.DateTimeOps.YEAR_WEEK,
         "cast(strftime('%Y%W',{0} / 1000, 'unixepoch', 'localtime') as integer)");

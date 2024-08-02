@@ -107,8 +107,10 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
     try {
       if (getMetadata().getGroupBy().size() > 1 || getMetadata().getHaving() != null) {
         logger.warning(
-            "Fetchable#fetchCount() was computed in memory! See the Javadoc for"
-                + " AbstractJPAQuery#fetchCount for more details.");
+            """
+            Fetchable#fetchCount() was computed in memory! See the Javadoc for\
+             AbstractJPAQuery#fetchCount for more details.\
+            """);
         var query = createQuery(null, false);
         return query.getResultList().size();
       }
@@ -286,8 +288,10 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
       var modifiers = getMetadata().getModifiers();
       if (getMetadata().getGroupBy().size() > 1 || getMetadata().getHaving() != null) {
         logger.warning(
-            "Fetchable#fetchResults() was computed in memory! See the Javadoc for"
-                + " AbstractJPAQuery#fetchResults for more details.");
+            """
+            Fetchable#fetchResults() was computed in memory! See the Javadoc for\
+             AbstractJPAQuery#fetchResults for more details.\
+            """);
         var query = createQuery(null, false);
         @SuppressWarnings("unchecked")
         List<T> resultList = query.getResultList();

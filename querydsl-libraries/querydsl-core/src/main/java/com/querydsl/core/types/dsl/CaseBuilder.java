@@ -158,8 +158,8 @@ public final class CaseBuilder {
 
     @SuppressWarnings("unchecked")
     public <A> Cases<A, SimpleExpression<A>> then(Expression<A> expr) {
-      if (expr instanceof Predicate) {
-        return (Cases) then((Predicate) expr);
+      if (expr instanceof Predicate predicate) {
+        return (Cases) then(predicate);
       } else if (expr instanceof StringExpression se) {
         return (Cases) then(se);
       } else if (expr instanceof NumberExpression ne) {
