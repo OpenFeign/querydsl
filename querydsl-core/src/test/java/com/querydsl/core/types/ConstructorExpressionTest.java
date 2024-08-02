@@ -131,4 +131,16 @@ public class ConstructorExpressionTest {
         };
     ThreadSafety.check(invoker, invoker);
   }
+
+  @Test
+  public void constructorArgsShouldBeSerialized() {
+    Expression<Long> longArg = ConstantImpl.create(1L);
+    Expression<String> stringArg = ConstantImpl.create("");
+    ConstructorExpression<ProjectionExample> projection =
+        new ConstructorExpression<ProjectionExample>(
+            ProjectionExample.class, new Class<?>[] {long.class, String.class}, longArg, stringArg);
+    ConstructorExpression<ProjectionExample> deserializationResult =
+        Serialization.serialize(projection);
+    assertEquals(projection, deserializationResult);
+  }
 }

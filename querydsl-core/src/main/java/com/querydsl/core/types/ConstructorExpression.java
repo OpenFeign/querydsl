@@ -149,7 +149,7 @@ public class ConstructorExpression<T> extends FactoryExpressionBase<T> {
   }
 
   private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
-    ois.readObject();
+    ois.defaultReadObject();
     try {
       Field constructor = ConstructorExpression.class.getDeclaredField("constructor");
       constructor.setAccessible(true);
