@@ -19,7 +19,10 @@ import com.querydsl.core.testutil.MySQL;
 import com.querydsl.sql.H2Templates;
 import com.querydsl.sql.QGeneratedKeysEntity;
 import com.querydsl.sql.dml.SQLInsertClause;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +38,7 @@ public class GeneratedKeysMySQLTest {
   @Before
   public void setUp() throws ClassNotFoundException, SQLException {
     Class.forName("com.mysql.jdbc.Driver");
-    String url = "jdbc:mysql://localhost:3306/querydsl";
+    var url = "jdbc:mysql://localhost:3306/querydsl";
     conn = DriverManager.getConnection(url, "querydsl", "querydsl");
     stmt = conn.createStatement();
   }
@@ -59,10 +62,10 @@ public class GeneratedKeysMySQLTest {
         NAME varchar(30))\
         """);
 
-    QGeneratedKeysEntity entity = new QGeneratedKeysEntity("entity");
-    SQLInsertClause insertClause = new SQLInsertClause(conn, new H2Templates(), entity);
-    ResultSet rs = insertClause.set(entity.name, "Hello").executeWithKeys();
-    ResultSetMetaData md = rs.getMetaData();
+    var entity = new QGeneratedKeysEntity("entity");
+    var insertClause = new SQLInsertClause(conn, new H2Templates(), entity);
+    var rs = insertClause.set(entity.name, "Hello").executeWithKeys();
+    var md = rs.getMetaData();
     System.out.println(md.getColumnName(1));
 
     assertThat(rs.next()).isTrue();

@@ -59,7 +59,7 @@ public class JPAQueryMixin<T> extends QueryMixin<T> {
   private final JPACollectionAnyVisitor collectionAnyVisitor;
 
   private final ReplaceVisitor<Void> replaceVisitor =
-      new ReplaceVisitor<Void>() {
+      new ReplaceVisitor<>() {
         @Override
         public Expression<?> visit(Path<?> expr, Void context) {
           return convertPathForOrder(expr);
@@ -119,7 +119,7 @@ public class JPAQueryMixin<T> extends QueryMixin<T> {
 
   @SuppressWarnings("unchecked")
   private <T> Path<T> shorten(Path<T> path, List<Path<?>> paths) {
-    PathMetadata metadata = path.getMetadata();
+    var metadata = path.getMetadata();
     if (metadata.isRoot() || paths.contains(path)) {
       return path;
     } else if (aliases.containsKey(path)) {
@@ -155,11 +155,11 @@ public class JPAQueryMixin<T> extends QueryMixin<T> {
   }
 
   private <T> Path<T> convertPathForOrder(Path<T> path) {
-    PathMetadata metadata = path.getMetadata();
+    var metadata = path.getMetadata();
     // at least three levels
     if (metadata.getParent() != null && !metadata.getParent().getMetadata().isRoot()) {
       Set<Expression<?>> exprs = new HashSet<>();
-      QueryMetadata md = getMetadata();
+      var md = getMetadata();
       exprs.addAll(md.getGroupBy());
       if (md.getProjection() != null) {
         exprs.add(md.getProjection());
@@ -226,11 +226,11 @@ public class JPAQueryMixin<T> extends QueryMixin<T> {
     EntityPath<?> alias = context.replacements.get(i);
     leftJoin((Expression) path.getMetadata().getParent(), context.replacements.get(i));
     Expression index = ExpressionUtils.operation(Integer.class, JPQLOps.INDEX, alias);
-    Object element = path.getMetadata().getElement();
+    var element = path.getMetadata().getElement();
     if (!(element instanceof Expression)) {
       element = ConstantImpl.create(element);
     }
-    Predicate condition = ExpressionUtils.eq(index, (Expression) element);
+    var condition = ExpressionUtils.eq(index, (Expression) element);
     if (where) {
       super.where(condition);
     } else {

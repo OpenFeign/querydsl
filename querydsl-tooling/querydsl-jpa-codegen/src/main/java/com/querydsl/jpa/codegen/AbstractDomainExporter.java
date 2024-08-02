@@ -13,7 +13,19 @@
  */
 package com.querydsl.jpa.codegen;
 
-import com.querydsl.codegen.*;
+import com.querydsl.codegen.CodegenModule;
+import com.querydsl.codegen.EmbeddableSerializer;
+import com.querydsl.codegen.EntitySerializer;
+import com.querydsl.codegen.EntityType;
+import com.querydsl.codegen.Property;
+import com.querydsl.codegen.QueryTypeFactory;
+import com.querydsl.codegen.Serializer;
+import com.querydsl.codegen.SerializerConfig;
+import com.querydsl.codegen.SimpleSerializerConfig;
+import com.querydsl.codegen.Supertype;
+import com.querydsl.codegen.SupertypeSerializer;
+import com.querydsl.codegen.TypeFactory;
+import com.querydsl.codegen.TypeMappings;
 import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.model.Type;
@@ -70,7 +82,7 @@ public abstract class AbstractDomainExporter {
 
   private final Map<Class<?>, SerializerConfig> typeToConfig = new HashMap<>();
 
-  private final Set<EntityType> serialized = new HashSet<EntityType>();
+  private final Set<EntityType> serialized = new HashSet<>();
 
   @SuppressWarnings("unchecked")
   protected final TypeFactory typeFactory =
@@ -92,7 +104,7 @@ public abstract class AbstractDomainExporter {
 
   private final Charset charset;
 
-  private final Set<File> generatedFiles = new HashSet<File>();
+  private final Set<File> generatedFiles = new HashSet<>();
 
   private Function<EntityType, String> variableNameFunction;
 
@@ -106,7 +118,7 @@ public abstract class AbstractDomainExporter {
     this.targetFolder = targetFolder;
     this.serializerConfig = serializerConfig;
     this.charset = charset;
-    CodegenModule module = new CodegenModule();
+    var module = new CodegenModule();
     module.bind(CodegenModule.PREFIX, namePrefix);
     module.bind(CodegenModule.SUFFIX, nameSuffix);
     module.bind(CodegenModule.KEYWORDS, Constants.keywords);
@@ -136,7 +148,7 @@ public abstract class AbstractDomainExporter {
     // go through supertypes
     Set<Supertype> additions = new HashSet<>();
     for (Map.Entry<Class<?>, EntityType> entry : allTypes.entrySet()) {
-      EntityType entityType = entry.getValue();
+      var entityType = entry.getValue();
       if (entityType.getSuperType() != null
           && !allTypes.containsKey(entityType.getSuperType().getType().getJavaClass())) {
         additions.add(entityType.getSuperType());
@@ -148,7 +160,7 @@ public abstract class AbstractDomainExporter {
     }
 
     // merge supertype fields into subtypes
-    Set<EntityType> handled = new HashSet<EntityType>();
+    Set<EntityType> handled = new HashSet<>();
     for (EntityType type : superTypes.values()) {
       addSupertypeFields(type, allTypes, handled);
     }
@@ -169,7 +181,7 @@ public abstract class AbstractDomainExporter {
       EntityType model, Map<Class<?>, EntityType> superTypes, Set<EntityType> handled) {
     if (handled.add(model)) {
       for (Supertype supertype : model.getSuperTypes()) {
-        EntityType entityType = superTypes.get(supertype.getType().getJavaClass());
+        var entityType = superTypes.get(supertype.getType().getJavaClass());
         if (entityType != null) {
           addSupertypeFields(entityType, superTypes, handled);
           supertype.setEntityType(entityType);
@@ -197,7 +209,7 @@ public abstract class AbstractDomainExporter {
     if (allTypes.containsKey(cl)) {
       return allTypes.get(cl);
     } else {
-      EntityType type = typeFactory.getEntityType(cl);
+      var type = typeFactory.getEntityType(cl);
       registerConfig(type);
       typeMappings.register(type, queryTypeFactory.create(type));
       if (!cl.getSuperclass().equals(Object.class)) {
@@ -219,7 +231,7 @@ public abstract class AbstractDomainExporter {
     if (allTypes.containsKey(key)) {
       return allTypes.get(key);
     } else {
-      EntityType entityType = new EntityType(type, variableNameFunction);
+      var entityType = new EntityType(type, variableNameFunction);
       registerConfig(entityType);
       typeMappings.register(entityType, queryTypeFactory.create(entityType));
       Class<?> superClass = key.getSuperclass();
@@ -237,7 +249,7 @@ public abstract class AbstractDomainExporter {
 
   private void registerConfig(EntityType entityType) {
     Class<?> key = entityType.getJavaClass();
-    Config config = key.getAnnotation(Config.class);
+    var config = key.getAnnotation(Config.class);
     if (config == null && key.getPackage() != null) {
       config = key.getPackage().getAnnotation(Config.class);
     }
@@ -249,7 +261,7 @@ public abstract class AbstractDomainExporter {
   @Nullable
   protected Type getTypeOverride(Type propertyType, AnnotatedElement annotated) {
     if (annotated.isAnnotationPresent(QueryType.class)) {
-      QueryType queryType = annotated.getAnnotation(QueryType.class);
+      var queryType = annotated.getAnnotation(QueryType.class);
       if (queryType.value().equals(PropertyType.NONE)) {
         return null;
       }
@@ -324,9 +336,9 @@ public abstract class AbstractDomainExporter {
       throws IOException {
     for (EntityType entityType : types.values()) {
       if (serialized.add(entityType)) {
-        Type type = typeMappings.getPathType(entityType, entityType, true);
-        String packageName = type.getPackageName();
-        String className =
+        var type = typeMappings.getPathType(entityType, entityType, true);
+        var packageName = type.getPackageName();
+        var className =
             packageName.length() > 0
                 ? (packageName + "." + type.getSimpleName())
                 : type.getSimpleName();
@@ -336,9 +348,9 @@ public abstract class AbstractDomainExporter {
   }
 
   private void write(Serializer serializer, String path, EntityType type) throws IOException {
-    File targetFile = new File(targetFolder, path);
+    var targetFile = new File(targetFolder, path);
     generatedFiles.add(targetFile);
-    try (Writer w = writerFor(targetFile)) {
+    try (var w = writerFor(targetFile)) {
       CodeWriter writer = new JavaWriter(w);
       if (typeToConfig.containsKey(type.getJavaClass())) {
         serializer.serialize(type, typeToConfig.get(type.getJavaClass()), writer);

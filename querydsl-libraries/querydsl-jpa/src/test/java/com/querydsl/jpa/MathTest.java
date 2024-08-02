@@ -16,7 +16,6 @@ package com.querydsl.jpa;
 import static com.querydsl.jpa.Constants.cat;
 import static com.querydsl.jpa.Constants.kitten;
 
-import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.domain.QCat;
 import org.junit.Test;
 
@@ -24,7 +23,7 @@ public class MathTest extends AbstractQueryTest {
 
   @Test
   public void test() {
-    NumberPath<Double> path = QCat.cat.bodyWeight;
+    var path = QCat.cat.bodyWeight;
     assertToString(
         "(cat.bodyWeight - sum(cat.bodyWeight)) * cat.bodyWeight",
         path.subtract(path.sumDouble()).multiply(path));
@@ -92,9 +91,9 @@ public class MathTest extends AbstractQueryTest {
 
   @Test
   public void arithmetic_and_arithmetic2() {
-    QCat c1 = new QCat("c1");
-    QCat c2 = new QCat("c2");
-    QCat c3 = new QCat("c3");
+    var c1 = new QCat("c1");
+    var c2 = new QCat("c2");
+    var c3 = new QCat("c3");
     assertToString("c1.id + c2.id * c3.id", c1.id.add(c2.id.multiply(c3.id)));
     assertToString("c1.id * (c2.id + c3.id)", c1.id.multiply(c2.id.add(c3.id)));
     assertToString("(c1.id + c2.id) * c3.id", c1.id.add(c2.id).multiply(c3.id));

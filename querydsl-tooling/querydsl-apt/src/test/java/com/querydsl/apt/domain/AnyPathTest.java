@@ -4,7 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
@@ -15,7 +19,7 @@ public class AnyPathTest {
 
     @OneToMany(mappedBy = "key.foo")
     @QueryInit("key.student")
-    private Set<Bar> bars = new HashSet<Bar>();
+    private Set<Bar> bars = new HashSet<>();
   }
 
   @Entity

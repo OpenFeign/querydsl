@@ -87,7 +87,7 @@ public class HQLTemplates extends JPQLTemplates {
 
   @Override
   public String getTypeForCast(Class<?> cl) {
-    String typeName = typeNames.get(cl);
+    var typeName = typeNames.get(cl);
     if (typeName == null) {
       return super.getTypeForCast(cl);
     }

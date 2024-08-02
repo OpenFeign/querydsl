@@ -23,7 +23,11 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.spatial.SpatialOps;
-import com.vividsolutions.jts.geom.*;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /** GeometryExpressions contains static functions for GEO operations */
 public final class JTSGeometryExpressions {
@@ -227,7 +231,7 @@ public final class JTSGeometryExpressions {
    */
   public static JTSGeometryExpression<Geometry> geometryOperation(
       Operator op, Expression<?>... args) {
-    return new JTSGeometryOperation<Geometry>(Geometry.class, op, args);
+    return new JTSGeometryOperation<>(Geometry.class, op, args);
   }
 
   /**
@@ -239,7 +243,7 @@ public final class JTSGeometryExpressions {
    */
   public static <T extends Geometry> JTSGeometryExpression<T> geometryOperation(
       Class<? extends T> type, Operator op, Expression<?>... args) {
-    return new JTSGeometryOperation<T>(type, op, args);
+    return new JTSGeometryOperation<>(type, op, args);
   }
 
   /**
@@ -251,7 +255,7 @@ public final class JTSGeometryExpressions {
    */
   public static JTSLineStringExpression<LineString> lineStringOperation(
       Operator op, Expression<?>... args) {
-    return new JTSLineStringOperation<LineString>(LineString.class, op, args);
+    return new JTSLineStringOperation<>(LineString.class, op, args);
   }
 
   /**
@@ -262,7 +266,7 @@ public final class JTSGeometryExpressions {
    * @return operation expression
    */
   public static JTSPointExpression<Point> pointOperation(Operator op, Expression<?>... args) {
-    return new JTSPointOperation<Point>(Point.class, op, args);
+    return new JTSPointOperation<>(Point.class, op, args);
   }
 
   /**
@@ -273,7 +277,7 @@ public final class JTSGeometryExpressions {
    * @return operation expression
    */
   public static JTSPolygonExpression<Polygon> polygonOperation(Operator op, Expression<?>... args) {
-    return new JTSPolygonOperation<Polygon>(Polygon.class, op, args);
+    return new JTSPolygonOperation<>(Polygon.class, op, args);
   }
 
   /**
@@ -284,7 +288,7 @@ public final class JTSGeometryExpressions {
    */
   public static <T extends Geometry> JTSGeometryExpression<T> asJTSGeometry(Expression<T> expr) {
     Expression<T> underlyingMixin = ExpressionUtils.extract(expr);
-    return new JTSGeometryExpression<T>(underlyingMixin) {
+    return new JTSGeometryExpression<>(underlyingMixin) {
 
       private static final long serialVersionUID = -6714044005570420009L;
 

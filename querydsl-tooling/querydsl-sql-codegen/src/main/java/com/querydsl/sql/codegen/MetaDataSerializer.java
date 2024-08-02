@@ -18,13 +18,17 @@ import static com.querydsl.codegen.utils.Symbols.NEW;
 import static com.querydsl.codegen.utils.Symbols.SUPER;
 import static com.querydsl.codegen.utils.Symbols.THIS_ESCAPE;
 
-import com.querydsl.codegen.*;
+import com.querydsl.codegen.DefaultEntitySerializer;
+import com.querydsl.codegen.EntityType;
+import com.querydsl.codegen.GeneratedAnnotationResolver;
+import com.querydsl.codegen.Property;
+import com.querydsl.codegen.SerializerConfig;
+import com.querydsl.codegen.TypeMappings;
 import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Parameter;
 import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
-import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.codegen.utils.model.Types;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.ForeignKey;
@@ -105,7 +109,7 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
     super(typeMappings, Collections.<String>emptyList(), generatedAnnotationClass);
     this.namingStrategy = namingStrategy;
     this.innerClassesForKeys = innerClassesForKeys;
-    this.imports = new HashSet<String>(imports);
+    this.imports = new HashSet<>(imports);
     this.columnComparator = columnComparator;
     this.entityPathType = entityPathType;
   }
@@ -138,8 +142,8 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
   protected void constructorsForVariables(CodeWriter writer, EntityType model) throws IOException {
     super.constructorsForVariables(writer, model);
 
-    String localName = writer.getRawName(model);
-    String genericName = writer.getGenericName(true, model);
+    var localName = writer.getRawName(model);
+    var genericName = writer.getGenericName(true, model);
 
     if (!localName.equals(genericName)) {
       writer.suppressWarnings("all");
@@ -176,12 +180,12 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
 
   @Override
   protected void introClassHeader(CodeWriter writer, EntityType model) throws IOException {
-    Type queryType = typeMappings.getPathType(model, model, true);
+    var queryType = typeMappings.getPathType(model, model, true);
 
     writer.suppressWarnings(THIS_ESCAPE);
     writer.line("@", generatedAnnotationClass.getSimpleName(), "(\"", getClass().getName(), "\")");
 
-    TypeCategory category = model.getOriginalCategory();
+    var category = model.getOriginalCategory();
     // serialize annotations only, if no bean types are used
     if (model.equals(queryType)) {
       for (Annotation annotation : model.getAnnotations()) {
@@ -194,7 +198,7 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
 
   @Override
   protected String getAdditionalConstructorParameter(EntityType model) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     if (model.getData().containsKey("schema")) {
       builder.append(", \"").append(model.getData().get("schema")).append("\"");
     } else {
@@ -207,10 +211,10 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
   @Override
   protected void introDefaultInstance(CodeWriter writer, EntityType entityType, String defaultName)
       throws IOException {
-    String variableName =
+    var variableName =
         !defaultName.isEmpty() ? defaultName : namingStrategy.getDefaultVariableName(entityType);
-    String alias = namingStrategy.getDefaultAlias(entityType);
-    Type queryType = typeMappings.getPathType(entityType, entityType, true);
+    var alias = namingStrategy.getDefaultAlias(entityType);
+    var queryType = typeMappings.getPathType(entityType, entityType, true);
     writer.publicStaticFinal(
         queryType, variableName, NEW + queryType.getSimpleName() + "(\"" + alias + "\")");
   }
@@ -221,11 +225,10 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
       throws IOException {
     super.introImports(writer, config, model);
 
-    Collection<ForeignKeyData> foreignKeys =
-        (Collection<ForeignKeyData>) model.getData().get(ForeignKeyData.class);
-    Collection<InverseForeignKeyData> inverseForeignKeys =
+    var foreignKeys = (Collection<ForeignKeyData>) model.getData().get(ForeignKeyData.class);
+    var inverseForeignKeys =
         (Collection<InverseForeignKeyData>) model.getData().get(InverseForeignKeyData.class);
-    boolean addJavaUtilImport = false;
+    var addJavaUtilImport = false;
     if (foreignKeys != null) {
       for (ForeignKeyData keyData : foreignKeys) {
         if (keyData.getForeignColumns().size() > 1) {
@@ -257,13 +260,13 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
   }
 
   protected void writeUserImports(CodeWriter writer) throws IOException {
-    Set<String> packages = new HashSet<String>();
-    Set<String> classes = new HashSet<String>();
+    Set<String> packages = new HashSet<>();
+    Set<String> classes = new HashSet<>();
 
     for (String javaImport : imports) {
       // true if the character next to the dot is an upper case or if no dot is found (-1+1=0) the
       // first character
-      boolean isClass = Character.isUpperCase(javaImport.charAt(javaImport.lastIndexOf(".") + 1));
+      var isClass = Character.isUpperCase(javaImport.charAt(javaImport.lastIndexOf(".") + 1));
       if (isClass) {
         classes.add(javaImport);
       } else {
@@ -271,7 +274,7 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
       }
     }
 
-    String[] marker = new String[] {};
+    var marker = new String[] {};
     writer.importPackages(packages.toArray(marker));
     writer.importClasses(classes.toArray(marker));
   }
@@ -284,14 +287,14 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
       properties.sort(columnComparator);
     }
     for (Property property : properties) {
-      String name = property.getEscapedName();
-      ColumnMetadata metadata = (ColumnMetadata) property.getData().get("COLUMN");
-      StringBuilder columnMeta = new StringBuilder();
+      var name = property.getEscapedName();
+      var metadata = (ColumnMetadata) property.getData().get("COLUMN");
+      var columnMeta = new StringBuilder();
       columnMeta.append("ColumnMetadata");
       columnMeta.append(".named(\"").append(metadata.getName()).append("\")");
       columnMeta.append(".withIndex(").append(metadata.getIndex()).append(")");
       if (metadata.hasJdbcType()) {
-        String type = String.valueOf(metadata.getJdbcType());
+        var type = String.valueOf(metadata.getJdbcType());
         if (typeConstants.containsKey(metadata.getJdbcType())) {
           type = "Types." + typeConstants.get(metadata.getJdbcType());
         }
@@ -317,11 +320,9 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
   @Override
   protected void serializeProperties(EntityType model, SerializerConfig config, CodeWriter writer)
       throws IOException {
-    Collection<PrimaryKeyData> primaryKeys =
-        (Collection<PrimaryKeyData>) model.getData().get(PrimaryKeyData.class);
-    Collection<ForeignKeyData> foreignKeys =
-        (Collection<ForeignKeyData>) model.getData().get(ForeignKeyData.class);
-    Collection<InverseForeignKeyData> inverseForeignKeys =
+    var primaryKeys = (Collection<PrimaryKeyData>) model.getData().get(PrimaryKeyData.class);
+    var foreignKeys = (Collection<ForeignKeyData>) model.getData().get(ForeignKeyData.class);
+    var inverseForeignKeys =
         (Collection<InverseForeignKeyData>) model.getData().get(InverseForeignKeyData.class);
 
     if (innerClassesForKeys) {
@@ -388,9 +389,9 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
   protected void customField(
       EntityType model, Property field, SerializerConfig config, CodeWriter writer)
       throws IOException {
-    Type queryType = typeMappings.getPathType(field.getType(), model, false);
+    var queryType = typeMappings.getPathType(field.getType(), model, false);
     if (queryType.getPackageName().startsWith("com.querydsl")) {
-      String localRawName = writer.getRawName(field.getType());
+      var localRawName = writer.getRawName(field.getType());
       serialize(
           model,
           field,
@@ -407,9 +408,9 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
       EntityType model, CodeWriter writer, Collection<PrimaryKeyData> primaryKeys)
       throws IOException {
     for (PrimaryKeyData primaryKey : primaryKeys) {
-      String fieldName = namingStrategy.getPropertyNameForPrimaryKey(primaryKey.getName(), model);
-      StringBuilder value = new StringBuilder("createPrimaryKey(");
-      boolean first = true;
+      var fieldName = namingStrategy.getPropertyNameForPrimaryKey(primaryKey.getName(), model);
+      var value = new StringBuilder("createPrimaryKey(");
+      var first = true;
       for (String column : primaryKey.getColumns()) {
         if (!first) {
           value.append(", ");
@@ -437,7 +438,7 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
         fieldName = namingStrategy.getPropertyNameForForeignKey(foreignKey.getName(), model);
       }
 
-      StringBuilder value = new StringBuilder();
+      var value = new StringBuilder();
       if (inverse) {
         value.append("createInvForeignKey(");
       } else {
@@ -447,9 +448,9 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
         value.append(namingStrategy.getPropertyName(foreignKey.getForeignColumns().get(0), model));
         value.append(", \"").append(foreignKey.getParentColumns().get(0)).append("\"");
       } else {
-        StringBuilder local = new StringBuilder();
-        StringBuilder foreign = new StringBuilder();
-        for (int i = 0; i < foreignKey.getForeignColumns().size(); i++) {
+        var local = new StringBuilder();
+        var foreign = new StringBuilder();
+        for (var i = 0; i < foreignKey.getForeignColumns().size(); i++) {
           if (i > 0) {
             local.append(", ");
             foreign.append(", ");

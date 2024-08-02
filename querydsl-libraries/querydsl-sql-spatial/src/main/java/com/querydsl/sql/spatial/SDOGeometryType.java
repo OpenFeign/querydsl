@@ -42,10 +42,10 @@ class SDOGeometryType extends AbstractType<Geometry> {
   @Override
   @Nullable
   public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
-    byte[] bytes = rs.getBytes(startIndex);
+    var bytes = rs.getBytes(startIndex);
     if (bytes != null) {
       try {
-        final Struct object = rs.getObject(startIndex, Struct.class);
+        final var object = rs.getObject(startIndex, Struct.class);
         return Decoders.decode(object);
       } catch (Exception e) {
         throw new SQLException(e);
@@ -58,7 +58,7 @@ class SDOGeometryType extends AbstractType<Geometry> {
   @Override
   public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
     try {
-      final Struct struct =
+      final var struct =
           Encoders.encode(
               value, st.getConnection(), new OracleJDBCTypeFactory(new DefaultConnectionFinder()));
       st.setObject(startIndex, struct);

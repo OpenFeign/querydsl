@@ -33,8 +33,8 @@ public class ConstructorExpressionTest {
   public void constructor() {
     Expression<Long> longVal = ConstantImpl.create(1L);
     Expression<String> stringVal = ConstantImpl.create("");
-    ProjectionExample instance =
-        new ConstructorExpression<ProjectionExample>(
+    var instance =
+        new ConstructorExpression<>(
                 ProjectionExample.class,
                 new Class<?>[] {long.class, String.class},
                 longVal,
@@ -84,7 +84,7 @@ public class ConstructorExpressionTest {
     Expression<Long> longVal = ConstantImpl.create(0L);
     Expression<Float> floatVal = ConstantImpl.create(0.0F);
     Expression<Double> doubleVal = ConstantImpl.create(0.0);
-    ProjectionExample instance =
+    var instance =
         Projections.constructor(
                 ProjectionExample.class,
                 booleanVal,

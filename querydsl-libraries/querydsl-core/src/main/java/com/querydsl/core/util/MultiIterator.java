@@ -46,8 +46,8 @@ public class MultiIterator<T> implements Iterator<Object[]> {
 
   public MultiIterator(List<? extends Iterable<T>> iterables) {
     this.iterables = iterables;
-    this.iterators = new ArrayList<Iterator<T>>(iterables.size());
-    for (int i = 0; i < iterables.size(); i++) {
+    this.iterators = new ArrayList<>(iterables.size());
+    for (var i = 0; i < iterables.size(); i++) {
       iterators.add(null);
     }
     this.lastEntry = new boolean[iterables.size()];
@@ -77,7 +77,7 @@ public class MultiIterator<T> implements Iterator<Object[]> {
   }
 
   private void produceNext() {
-    for (int i = index; i < iterables.size(); i++) {
+    for (var i = index; i < iterables.size(); i++) {
       if (iterators.get(i) == null || (!iterators.get(i).hasNext() && i > 0)) {
         iterators.set(i, iterables.get(i).iterator());
       }

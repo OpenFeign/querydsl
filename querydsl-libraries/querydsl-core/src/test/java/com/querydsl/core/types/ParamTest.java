@@ -20,11 +20,11 @@ import org.junit.Test;
 
 public class ParamTest {
 
-  Param<String> param11 = new Param<String>(String.class, "param1");
-  Param<String> param12 = new Param<String>(String.class, "param1");
-  Param<String> param2 = new Param<String>(String.class, "param2");
-  Param<Object> param3 = new Param<Object>(Object.class, "param1");
-  Param<String> param4 = new Param<String>(String.class);
+  Param<String> param11 = new Param<>(String.class, "param1");
+  Param<String> param12 = new Param<>(String.class, "param1");
+  Param<String> param2 = new Param<>(String.class, "param2");
+  Param<Object> param3 = new Param<>(Object.class, "param1");
+  Param<String> param4 = new Param<>(String.class);
 
   @Test
   public void identity() {

@@ -20,10 +20,10 @@ public final class OrderHelper {
     PathBuilder<?> rv = joins.get(path);
     if (rv == null) {
       if (path.contains(".")) {
-        String[] tokens = DOT.split(path);
-        String[] parent = new String[tokens.length - 1];
+        var tokens = DOT.split(path);
+        var parent = new String[tokens.length - 1];
         System.arraycopy(tokens, 0, parent, 0, tokens.length - 1);
-        String parentKey = StringUtils.join(parent, ".");
+        var parentKey = StringUtils.join(parent, ".");
         builder = join(query, builder, joins, parentKey);
         rv = new PathBuilder(Object.class, StringUtils.join(tokens, "_"));
         query.leftJoin((EntityPath) builder.get(tokens[tokens.length - 1]), rv);
@@ -45,10 +45,10 @@ public final class OrderHelper {
     PathBuilder<?> rv = joins.get(path);
     if (rv == null) {
       if (path.contains(".")) {
-        String[] tokens = DOT.split(path);
-        String[] parent = new String[tokens.length - 1];
+        var tokens = DOT.split(path);
+        var parent = new String[tokens.length - 1];
         System.arraycopy(tokens, 0, parent, 0, tokens.length - 1);
-        String parentKey = StringUtils.join(parent, ".");
+        var parentKey = StringUtils.join(parent, ".");
         builder = join(query, builder, joins, parentKey);
         rv = new PathBuilder(Object.class, StringUtils.join(tokens, "_"));
         query.leftJoin((EntityPath) builder.get(tokens[tokens.length - 1]), rv);
@@ -67,9 +67,9 @@ public final class OrderHelper {
     Map<String, PathBuilder<?>> joins = new HashMap<>();
 
     for (String entry : order) {
-      String[] tokens = DOT.split(entry);
+      var tokens = DOT.split(entry);
       if (tokens.length > 1) {
-        String[] parent = new String[tokens.length - 1];
+        var parent = new String[tokens.length - 1];
         System.arraycopy(tokens, 0, parent, 0, tokens.length - 1);
         PathBuilder<?> parentAlias = join(query, builder, joins, StringUtils.join(parent, "."));
         query.orderBy(parentAlias.getString(tokens[tokens.length - 1]).asc());
@@ -85,9 +85,9 @@ public final class OrderHelper {
     Map<String, PathBuilder<?>> joins = new HashMap<>();
 
     for (String entry : order) {
-      String[] tokens = DOT.split(entry);
+      var tokens = DOT.split(entry);
       if (tokens.length > 1) {
-        String[] parent = new String[tokens.length - 1];
+        var parent = new String[tokens.length - 1];
         System.arraycopy(tokens, 0, parent, 0, tokens.length - 1);
         PathBuilder<?> parentAlias = join(query, builder, joins, StringUtils.join(parent, "."));
         query.orderBy(parentAlias.getString(tokens[tokens.length - 1]).asc());

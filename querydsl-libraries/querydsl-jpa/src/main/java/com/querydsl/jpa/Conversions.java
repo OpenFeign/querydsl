@@ -17,7 +17,15 @@ import com.querydsl.core.support.ConstantHidingExpression;
 import com.querydsl.core.support.EnumConversion;
 import com.querydsl.core.support.NumberConversion;
 import com.querydsl.core.support.NumberConversions;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.FactoryExpressionUtils;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLOps;
@@ -34,19 +42,19 @@ public final class Conversions {
 
   public static <RT> Expression<RT> convert(Expression<RT> expr) {
     if (expr instanceof FactoryExpression) {
-      FactoryExpression<RT> factoryExpr = (FactoryExpression<RT>) expr;
+      var factoryExpr = (FactoryExpression<RT>) expr;
       for (Expression<?> e : factoryExpr.getArgs()) {
         if (needsConstantRemoval(e)) {
-          return convert(new ConstantHidingExpression<RT>(factoryExpr));
+          return convert(new ConstantHidingExpression<>(factoryExpr));
         }
       }
       for (Expression<?> e : factoryExpr.getArgs()) {
         if (needsNumberConversion(e)) {
-          return new NumberConversions<RT>(factoryExpr);
+          return new NumberConversions<>(factoryExpr);
         }
       }
     } else if (needsNumberConversion(expr)) {
-      return new NumberConversion<RT>(expr);
+      return new NumberConversion<>(expr);
     }
     return expr;
   }
@@ -94,13 +102,13 @@ public final class Conversions {
     if (isEntityPathAndNeedsWrapping(expr)) {
       return ExpressionUtils.operation(expr.getType(), SQLOps.ALL, expr);
     } else if (Number.class.isAssignableFrom(expr.getType())) {
-      return new NumberConversion<RT>(expr);
+      return new NumberConversion<>(expr);
     } else if (Enum.class.isAssignableFrom(expr.getType())) {
-      return new EnumConversion<RT>(expr);
+      return new EnumConversion<>(expr);
     } else if (expr instanceof FactoryExpression) {
-      FactoryExpression<RT> factoryExpr = (FactoryExpression<RT>) expr;
-      boolean numberConversions = false;
-      boolean hasEntityPath = false;
+      var factoryExpr = (FactoryExpression<RT>) expr;
+      var numberConversions = false;
+      var hasEntityPath = false;
       for (Expression<?> e : factoryExpr.getArgs()) {
         if (isEntityPathAndNeedsWrapping(e)) {
           hasEntityPath = true;
@@ -114,7 +122,7 @@ public final class Conversions {
         factoryExpr = createEntityPathConversions(factoryExpr);
       }
       if (numberConversions) {
-        factoryExpr = new NumberConversions<RT>(factoryExpr);
+        factoryExpr = new NumberConversions<>(factoryExpr);
       }
       return factoryExpr;
     }

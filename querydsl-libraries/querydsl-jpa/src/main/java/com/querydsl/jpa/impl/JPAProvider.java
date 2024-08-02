@@ -46,17 +46,15 @@ public final class JPAProvider {
     boolean hibernate5;
 
     try {
-      String version =
-          Class.forName("org.hibernate.Session").getPackage().getImplementationVersion();
-      String[] versionParts = version.split("\\.");
-      int major = Integer.parseInt(versionParts[0]);
+      var version = Class.forName("org.hibernate.Session").getPackage().getImplementationVersion();
+      var versionParts = version.split("\\.");
+      var major = Integer.parseInt(versionParts[0]);
       hibernate5 = major >= 5;
     } catch (Exception e) {
       hibernate5 = true;
     }
 
-    JPQLTemplates hibernateTemplates =
-        hibernate5 ? Hibernate5Templates.DEFAULT : HQLTemplates.DEFAULT;
+    var hibernateTemplates = hibernate5 ? Hibernate5Templates.DEFAULT : HQLTemplates.DEFAULT;
 
     addMapping("org.batoo.jpa.core.impl.manager.EntityManagerImpl", BatooTemplates.DEFAULT);
     addMapping("org.hibernate.Session", hibernateTemplates);

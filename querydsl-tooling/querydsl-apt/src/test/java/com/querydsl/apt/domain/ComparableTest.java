@@ -56,6 +56,7 @@ public class ComparableTest {
       return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }

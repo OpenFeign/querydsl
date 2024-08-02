@@ -13,7 +13,12 @@
  */
 package com.querydsl.apt;
 
-import com.querydsl.codegen.*;
+import com.querydsl.codegen.EntityType;
+import com.querydsl.codegen.Filer;
+import com.querydsl.codegen.QueryTypeFactory;
+import com.querydsl.codegen.Serializer;
+import com.querydsl.codegen.SerializerConfig;
+import com.querydsl.codegen.TypeMappings;
 import com.querydsl.core.util.Annotations;
 import java.lang.annotation.Annotation;
 import java.util.Collection;

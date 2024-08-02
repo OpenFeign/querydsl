@@ -13,7 +13,13 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.util.CollectionUtils;
 import java.util.Arrays;
 import java.util.Collection;
@@ -364,7 +370,7 @@ public abstract class SimpleExpression<T> extends DslExpression<T> {
    * @return case expression builder
    */
   public CaseForEqBuilder<T> when(T other) {
-    return new CaseForEqBuilder<T>(mixin, ConstantImpl.create(other));
+    return new CaseForEqBuilder<>(mixin, ConstantImpl.create(other));
   }
 
   /**
@@ -374,6 +380,6 @@ public abstract class SimpleExpression<T> extends DslExpression<T> {
    * @return case expression builder
    */
   public CaseForEqBuilder<T> when(Expression<? extends T> other) {
-    return new CaseForEqBuilder<T>(mixin, other);
+    return new CaseForEqBuilder<>(mixin, other);
   }
 }

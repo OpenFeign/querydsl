@@ -14,7 +14,6 @@
 package com.querydsl.mongodb.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -26,9 +25,9 @@ public class MongodbUserTest {
 
   @Test
   public void map() {
-    City tampere = new City("Tampere", 61.30, 23.50);
+    var tampere = new City("Tampere", 61.30, 23.50);
 
-    User user = new User();
+    var user = new User();
     user.setAge(12);
     user.setFirstName("Jaakko");
     user.addAddress("Aakatu", "00300", tampere);
@@ -38,10 +37,10 @@ public class MongodbUserTest {
 
   @Test
   public void friend() {
-    User friend = new User();
+    var friend = new User();
     friend.setId(ObjectId.createFromLegacyFormat(1, 2, 3));
 
-    User user = new User();
+    var user = new User();
     user.setFriend(friend);
 
     assertThat(morphia.toDBObject(user)).isNotNull();
@@ -49,10 +48,10 @@ public class MongodbUserTest {
 
   @Test
   public void friends() {
-    User friend = new User();
+    var friend = new User();
     friend.setId(ObjectId.createFromLegacyFormat(1, 2, 3));
 
-    User user = new User();
+    var user = new User();
     user.addFriend(friend);
 
     assertThat(morphia.toDBObject(user)).isNotNull();

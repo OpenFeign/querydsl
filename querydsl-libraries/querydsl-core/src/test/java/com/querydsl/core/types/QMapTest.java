@@ -60,7 +60,7 @@ public class QMapTest {
 
   @Test
   public void nestedProjection_newInstance() {
-    QMap expr = new QMap(concat);
+    var expr = new QMap(concat);
     var result = FactoryExpressionUtils.wrap(expr).newInstance("12", "34");
     assertThat(result)
         .anySatisfy(
@@ -72,7 +72,7 @@ public class QMapTest {
 
   @Test
   public void nestedProjection_newInstance2() {
-    QMap expr = new QMap(str1, str2, concat);
+    var expr = new QMap(str1, str2, concat);
     var result = FactoryExpressionUtils.wrap(expr).newInstance("1", "2", "12", "34");
     assertThat(result)
         .anySatisfy(
@@ -84,20 +84,20 @@ public class QMapTest {
 
   @Test
   public void tuple_equals() {
-    QMap expr = new QMap(str1, str2);
+    var expr = new QMap(str1, str2);
     assertThat(expr.newInstance("str1", "str2")).isEqualTo(expr.newInstance("str1", "str2"));
   }
 
   @Test
   public void tuple_hashCode() {
-    QMap expr = new QMap(str1, str2);
+    var expr = new QMap(str1, str2);
     assertThat(expr.newInstance("str1", "str2").hashCode())
         .isEqualTo(expr.newInstance("str1", "str2").hashCode());
   }
 
   @Test
   public void null_value() {
-    QMap expr = new QMap(str1, str2);
+    var expr = new QMap(str1, str2);
     assertThat(expr.newInstance("str1", null)).isNotNull();
   }
 }

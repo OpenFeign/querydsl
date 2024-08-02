@@ -18,10 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import java.io.Serializable;
-import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 import org.junit.Test;
 
 public class ReflectionUtilsTest {
@@ -30,7 +28,7 @@ public class ReflectionUtilsTest {
 
   @Test
   public void getAnnotatedElement() {
-    AnnotatedElement annotatedElement =
+    var annotatedElement =
         ReflectionUtils.getAnnotatedElement(ReflectionUtilsTest.class, "property", String.class);
     assertThat(annotatedElement).isNotNull();
   }
@@ -38,8 +36,8 @@ public class ReflectionUtilsTest {
   @Test
   @SuppressWarnings("unchecked")
   public void getImplementedInterfaces() {
-    Set<Class<?>> ifaces = ReflectionUtils.getImplementedInterfaces(SimpleExpression.class);
+    var ifaces = ReflectionUtils.getImplementedInterfaces(SimpleExpression.class);
     assertThat(ifaces)
-        .isEqualTo(new HashSet<Class<?>>(Arrays.asList(Serializable.class, Expression.class)));
+        .isEqualTo(new HashSet<>(Arrays.asList(Serializable.class, Expression.class)));
   }
 }

@@ -24,14 +24,14 @@ public class DelegateTest {
 
   @Test
   public void equals_object() {
-    Delegate delegate =
+    var delegate =
         new Delegate(
             Types.STRING,
             Types.STRING,
             "delegate",
             Collections.<Parameter>emptyList(),
             Types.STRING);
-    Delegate delegate2 =
+    var delegate2 =
         new Delegate(
             Types.STRING,
             Types.STRING,
@@ -43,14 +43,14 @@ public class DelegateTest {
 
   @Test
   public void not_equals_object() {
-    Delegate delegate =
+    var delegate =
         new Delegate(
             Types.STRING,
             Types.STRING,
             "delegate",
             Collections.<Parameter>emptyList(),
             Types.STRING);
-    Delegate delegate2 =
+    var delegate2 =
         new Delegate(
             Types.STRING,
             Types.STRING,

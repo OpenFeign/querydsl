@@ -9,6 +9,7 @@ public class JSR310InstantTypeTest extends AbstractJSR310DateTimeTypeTest<Instan
     super(new JSR310InstantType());
   }
 
+  @Override
   @Test
   public void set() {
     //        Instant value = Instant.now();
@@ -22,6 +23,7 @@ public class JSR310InstantTypeTest extends AbstractJSR310DateTimeTypeTest<Instan
     //        EasyMock.verify(stmt);
   }
 
+  @Override
   @Test
   public void get() {
     //        ResultSet resultSet = EasyMock.createNiceMock(ResultSet.class);

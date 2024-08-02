@@ -32,9 +32,9 @@ public class GList<T> extends AbstractGroupExpression<T, List<T>> {
 
   @Override
   public GroupCollector<T, List<T>> createGroupCollector() {
-    return new GroupCollector<T, List<T>>() {
+    return new GroupCollector<>() {
 
-      private final List<T> list = new ArrayList<T>();
+      private final List<T> list = new ArrayList<>();
 
       @Override
       public void add(T o) {

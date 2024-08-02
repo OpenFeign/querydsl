@@ -5,7 +5,11 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.support.DummyFetchableQuery;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.core.types.dsl.StringExpression;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -141,7 +145,7 @@ public abstract class AbstractGroupByTest {
       Projections.constructor(Comment.class, commentId, commentText, score);
 
   protected static <K, V> Pair<K, V> pair(K key, V value) {
-    return new Pair<K, V>(key, value);
+    return new Pair<>(key, value);
   }
 
   protected Integer toInt(int i) {
@@ -149,7 +153,7 @@ public abstract class AbstractGroupByTest {
   }
 
   protected <T> Set<T> toSet(T... s) {
-    return new HashSet<T>(Arrays.asList(s));
+    return new HashSet<>(Arrays.asList(s));
   }
 
   protected static Comment comment(Integer id) {
@@ -157,7 +161,7 @@ public abstract class AbstractGroupByTest {
   }
 
   protected static DummyFetchableQuery<Tuple> projectable(final Object[]... rows) {
-    return new DummyFetchableQuery<Tuple>(toTuples(rows));
+    return new DummyFetchableQuery<>(toTuples(rows));
   }
 
   protected static Object[] row(Object... row) {

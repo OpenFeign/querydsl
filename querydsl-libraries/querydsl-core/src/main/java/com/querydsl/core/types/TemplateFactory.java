@@ -24,7 +24,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Function;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -37,7 +36,7 @@ public class TemplateFactory {
   private static final Map<String, Operator> OPERATORS;
 
   static {
-    HashMap<String, Operator> operators = new HashMap<>();
+    var operators = new HashMap<String, Operator>();
     operators.put("+", Ops.ADD);
     operators.put("-", Ops.SUB);
     operators.put("*", Ops.MULT);
@@ -63,7 +62,7 @@ public class TemplateFactory {
   private final char escape;
 
   private final Function<Object, Object> toLowerCase =
-      new Function<Object, Object>() {
+      new Function<>() {
         @Override
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
@@ -77,7 +76,7 @@ public class TemplateFactory {
       };
 
   private final Function<Object, Object> toUpperCase =
-      new Function<Object, Object>() {
+      new Function<>() {
         @Override
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
@@ -91,7 +90,7 @@ public class TemplateFactory {
       };
 
   private final Function<Object, Object> toStartsWithViaLike =
-      new Function<Object, Object>() {
+      new Function<>() {
         @Override
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
@@ -105,7 +104,7 @@ public class TemplateFactory {
       };
 
   private final Function<Object, Object> toStartsWithViaLikeLower =
-      new Function<Object, Object>() {
+      new Function<>() {
         @Override
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
@@ -121,7 +120,7 @@ public class TemplateFactory {
       };
 
   private final Function<Object, Object> toEndsWithViaLike =
-      new Function<Object, Object>() {
+      new Function<>() {
         @Override
         public Object apply(Object arg) {
           if (arg instanceof Constant) {
@@ -135,7 +134,7 @@ public class TemplateFactory {
       };
 
   private final Function<Object, Object> toEndsWithViaLikeLower =
-      new Function<Object, Object>() {
+      new Function<>() {
         @Override
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
@@ -151,7 +150,7 @@ public class TemplateFactory {
       };
 
   private final Function<Object, Object> toContainsViaLike =
-      new Function<Object, Object>() {
+      new Function<>() {
         @Override
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
@@ -167,7 +166,7 @@ public class TemplateFactory {
       };
 
   private final Function<Object, Object> toContainsViaLikeLower =
-      new Function<Object, Object>() {
+      new Function<>() {
         @Override
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
@@ -192,17 +191,17 @@ public class TemplateFactory {
     if (cache.containsKey(template)) {
       return cache.get(template);
     } else {
-      Matcher m = elementPattern.matcher(template);
+      var m = elementPattern.matcher(template);
       final List<Element> elements = new ArrayList<>();
-      int end = 0;
+      var end = 0;
       while (m.find()) {
         if (m.start() > end) {
           elements.add(new Template.StaticText(template.substring(end, m.start())));
         }
-        String premodifiers = m.group(1).toLowerCase(Locale.ENGLISH);
-        int index = Integer.parseInt(m.group(2));
-        String postmodifiers = m.group(6).toLowerCase(Locale.ENGLISH);
-        boolean asString = false;
+        var premodifiers = m.group(1).toLowerCase(Locale.ENGLISH);
+        var index = Integer.parseInt(m.group(2));
+        var postmodifiers = m.group(6).toLowerCase(Locale.ENGLISH);
+        var asString = false;
         Function<Object, Object> transformer = null;
         switch (premodifiers.length()) {
           case 1:
@@ -242,11 +241,11 @@ public class TemplateFactory {
             break;
         }
         if (m.group(4) != null) {
-          Operator operator = OPERATORS.get(m.group(3));
-          int index2 = Integer.parseInt(m.group(4));
+          var operator = OPERATORS.get(m.group(3));
+          var index2 = Integer.parseInt(m.group(4));
           elements.add(new Template.Operation(index, index2, operator, asString));
         } else if (m.group(5) != null) {
-          Operator operator = OPERATORS.get(m.group(3));
+          var operator = OPERATORS.get(m.group(3));
           Number number;
           if (m.group(5).contains(".")) {
             number = new BigDecimal(m.group(5));
@@ -266,16 +265,16 @@ public class TemplateFactory {
       if (end < template.length()) {
         elements.add(new Template.StaticText(template.substring(end)));
       }
-      Template rv = new Template(template, CollectionUtils.unmodifiableList(elements));
+      var rv = new Template(template, CollectionUtils.unmodifiableList(elements));
       cache.put(template, rv);
       return rv;
     }
   }
 
   public String escapeForLike(String str) {
-    final StringBuilder rv = new StringBuilder(str.length() + 3);
-    for (int i = 0; i < str.length(); i++) {
-      final char ch = str.charAt(i);
+    final var rv = new StringBuilder(str.length() + 3);
+    for (var i = 0; i < str.length(); i++) {
+      final var ch = str.charAt(i);
       if (ch == escape || ch == '%' || ch == '_') {
         rv.append(escape);
       }

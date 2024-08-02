@@ -22,8 +22,6 @@ import org.geolatte.geom.ByteBuffer;
 import org.geolatte.geom.ByteOrder;
 import org.geolatte.geom.Geometry;
 import org.geolatte.geom.codec.Wkb;
-import org.geolatte.geom.codec.WkbDecoder;
-import org.geolatte.geom.codec.WkbEncoder;
 import org.geolatte.geom.codec.Wkt;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +43,7 @@ class GeoDBWkbType extends AbstractType<Geometry> {
   @Override
   @Nullable
   public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
-    byte[] bytes = rs.getBytes(startIndex);
+    var bytes = rs.getBytes(startIndex);
     if (bytes != null) {
       byte[] wkb;
       if (bytes[0] != 0 && bytes[0] != 1) { // decodes EWKB
@@ -54,7 +52,7 @@ class GeoDBWkbType extends AbstractType<Geometry> {
       } else {
         wkb = bytes;
       }
-      WkbDecoder decoder = Wkb.newDecoder(Wkb.Dialect.POSTGIS_EWKB_1);
+      var decoder = Wkb.newDecoder(Wkb.Dialect.POSTGIS_EWKB_1);
       return decoder.decode(ByteBuffer.from(wkb));
     } else {
       return null;
@@ -63,14 +61,14 @@ class GeoDBWkbType extends AbstractType<Geometry> {
 
   @Override
   public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
-    WkbEncoder encoder = Wkb.newEncoder(Wkb.Dialect.POSTGIS_EWKB_1);
-    ByteBuffer buffer = encoder.encode(value, byteOrder);
+    var encoder = Wkb.newEncoder(Wkb.Dialect.POSTGIS_EWKB_1);
+    var buffer = encoder.encode(value, byteOrder);
     st.setBytes(startIndex, buffer.toByteArray());
   }
 
   @Override
   public String getLiteral(Geometry geometry) {
-    String str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry);
+    var str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry);
     if (geometry.getSRID() > -1) {
       return "ST_GeomFromText('" + str + "', " + geometry.getSRID() + ")";
     } else {

@@ -1,6 +1,10 @@
 package com.querydsl.example.jpa.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,7 +15,7 @@ public class User extends BaseEntity {
   private String username;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "poster")
-  private Set<Tweet> tweets = new HashSet<Tweet>();
+  private Set<Tweet> tweets = new HashSet<>();
 
   public User() {}
 

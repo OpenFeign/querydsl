@@ -111,9 +111,9 @@ public abstract class AbstractExporterMojo extends AbstractMojo {
       throw new MojoFailureException(e.getMessage(), e);
     }
 
-    Charset charset =
+    var charset =
         sourceEncoding != null ? Charset.forName(sourceEncoding) : Charset.defaultCharset();
-    GenericExporter exporter = new GenericExporter(classLoader, charset);
+    var exporter = new GenericExporter(classLoader, charset);
     exporter.setTargetFolder(targetFolder);
 
     if (scala) {
@@ -150,9 +150,9 @@ public abstract class AbstractExporterMojo extends AbstractMojo {
     } else {
       classpathElements = project.getCompileClasspathElements();
     }
-    List<URL> urls = new ArrayList<URL>(classpathElements.size());
+    List<URL> urls = new ArrayList<>(classpathElements.size());
     for (String element : classpathElements) {
-      File file = new File(element);
+      var file = new File(element);
       if (file.exists()) {
         urls.add(file.toURI().toURL());
       }
@@ -163,7 +163,7 @@ public abstract class AbstractExporterMojo extends AbstractMojo {
   @SuppressWarnings("rawtypes")
   private boolean hasSourceChanges() {
     if (buildContext != null) {
-      List sourceRoots =
+      var sourceRoots =
           testClasspath ? project.getTestCompileSourceRoots() : project.getCompileSourceRoots();
       for (Object path : sourceRoots) {
         if (buildContext.hasDelta(new File(path.toString()))) {

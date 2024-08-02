@@ -31,7 +31,7 @@ public class InnerClassTest {
 
   @Test
   public void query() {
-    Example example = alias(Example.class);
+    var example = alias(Example.class);
     assertThat(
             CollQueryFactory.<Example>from(
                     $(example), Collections.<Example>singletonList(new Example()))

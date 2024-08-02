@@ -41,7 +41,7 @@ public final class SimpleConstant<D> extends SimpleExpression<D> implements Cons
     if (val instanceof Boolean boolean1) {
       return (SimpleExpression<T>) BooleanConstant.create(boolean1);
     } else {
-      return new SimpleConstant<T>(val);
+      return new SimpleConstant<>(val);
     }
   }
 

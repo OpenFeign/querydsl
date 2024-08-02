@@ -76,7 +76,7 @@ public final class SpatialSupport implements Extension {
     if (imports.isEmpty()) {
       imports = Collections.singleton(packageName);
     } else {
-      Set<String> old = imports;
+      var old = imports;
       imports = new HashSet<>();
       imports.addAll(old);
       imports.add(packageName);
@@ -89,6 +89,7 @@ public final class SpatialSupport implements Extension {
    *
    * @param module module to be customized for spatial support
    */
+  @Override
   public void addSupport(AbstractModule module) {
     registerTypes(module.get(TypeMappings.class));
     addImports(module, "com.querydsl.spatial.path");

@@ -1,7 +1,12 @@
 package com.querydsl.core.support;
 
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.SubQueryExpressionImpl;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanOperation;
 import com.querydsl.core.types.dsl.Expressions;
@@ -39,7 +44,7 @@ public abstract class ReactiveFetchableSubQueryBase<
 
   @Override
   public BooleanExpression exists() {
-    QueryMetadata metadata = getMetadata();
+    var metadata = getMetadata();
     if (metadata.getProjection() == null) {
       queryMixin.setProjection(Expressions.ONE);
     }

@@ -1,6 +1,10 @@
 package com.querydsl.r2dbc;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.FIREBIRD;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.TERADATA;
 import static com.querydsl.r2dbc.Constants.employee;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,8 +19,6 @@ import com.querydsl.r2dbc.domain.Employee;
 import com.querydsl.r2dbc.domain.QEmployee;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -68,7 +70,7 @@ public abstract class UnionBase extends AbstractBaseTest {
   public void union_all() {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
-    List<Integer> list = query().unionAll(sq1, sq2).fetch().collectList().block();
+    var list = query().unionAll(sq1, sq2).fetch().collectList().block();
     assertThat(list).isNotEmpty();
   }
 
@@ -79,7 +81,7 @@ public abstract class UnionBase extends AbstractBaseTest {
         query().from(employee).select(employee.firstname, employee.lastname);
     SubQueryExpression<Tuple> sq2 =
         query().from(employee).select(employee.lastname, employee.firstname);
-    List<Tuple> list = query().union(sq1, sq2).fetch().collectList().block();
+    var list = query().union(sq1, sq2).fetch().collectList().block();
     assertThat(list).isNotEmpty();
     for (Tuple row : list) {
       assertThat(row.get(0, Object.class)).isNotNull();
@@ -97,7 +99,7 @@ public abstract class UnionBase extends AbstractBaseTest {
         query().from(employee).select(employee.firstname, employee.lastname);
     R2DBCQuery<?> query = query();
     query.union(sq1, sq2);
-    List<String> list = query.select(employee.firstname).fetch().collectList().block();
+    var list = query.select(employee.firstname).fetch().collectList().block();
     assertThat(list).isNotEmpty();
     for (String row : list) {
       assertThat(row).isNotNull();
@@ -114,8 +116,7 @@ public abstract class UnionBase extends AbstractBaseTest {
         query().from(employee).select(employee.firstname, employee.lastname);
     R2DBCQuery<?> query = query();
     query.union(sq1, sq2);
-    List<Tuple> list =
-        query.select(employee.lastname, employee.firstname).fetch().collectList().block();
+    var list = query.select(employee.lastname, employee.firstname).fetch().collectList().block();
     assertThat(list).isNotEmpty();
     for (Tuple row : list) {
       System.out.println(row.get(0, String.class) + " " + row.get(1, String.class));
@@ -129,14 +130,14 @@ public abstract class UnionBase extends AbstractBaseTest {
         query().from(employee).where(employee.firstname.eq("XXX")).select(employee.id);
     SubQueryExpression<Integer> sq2 =
         query().from(employee).where(employee.firstname.eq("YYY")).select(employee.id);
-    List<Integer> list = query().union(sq1, sq2).fetch().collectList().block();
+    var list = query().union(sq1, sq2).fetch().collectList().block();
     assertThat(list).isEmpty();
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void union2() {
-    List<Integer> list =
+    var list =
         query()
             .union(
                 query().from(employee).select(employee.id.max()),
@@ -154,7 +155,7 @@ public abstract class UnionBase extends AbstractBaseTest {
         query().from(employee).select(new Expression[] {employee.id.max()});
     SubQueryExpression<Tuple> sq4 =
         query().from(employee).select(new Expression[] {employee.id.min()});
-    List<Tuple> list2 = query().union(sq3, sq4).fetch().collectList().block();
+    var list2 = query().union(sq3, sq4).fetch().collectList().block();
     assertThat(list2).isNotEmpty();
   }
 
@@ -187,7 +188,7 @@ public abstract class UnionBase extends AbstractBaseTest {
      * (select e.ID, e.FIRSTNAME, null, null from EMPLOYEE e)
      * order by ID asc
      */
-    QEmployee superior = new QEmployee("superior");
+    var superior = new QEmployee("superior");
     SubQueryExpression<Tuple> sq1 =
         query()
             .from(employee)
@@ -199,8 +200,7 @@ public abstract class UnionBase extends AbstractBaseTest {
                 superior.firstname.as("sup_name"));
     SubQueryExpression<Tuple> sq2 =
         query().from(employee).select(employee.id, employee.firstname, null, null);
-    List<Tuple> results =
-        query().union(sq1, sq2).orderBy(employee.id.asc()).fetch().collectList().block();
+    var results = query().union(sq1, sq2).orderBy(employee.id.asc()).fetch().collectList().block();
     for (Tuple result : results) {
       System.err.println(Arrays.asList(result));
     }
@@ -212,8 +212,7 @@ public abstract class UnionBase extends AbstractBaseTest {
   public void union_with_order() {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id);
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id);
-    List<Integer> list =
-        query().union(sq1, sq2).orderBy(employee.id.asc()).fetch().collectList().block();
+    var list = query().union(sq1, sq2).orderBy(employee.id.asc()).fetch().collectList().block();
     assertThat(list).isNotEmpty();
   }
 
@@ -226,7 +225,7 @@ public abstract class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Tuple> sq2 =
         query().from(employee).select(employee.id.min(), employee.id.min().subtract(1));
 
-    List<Tuple> list = query().union(sq1, sq2).fetch().collectList().block();
+    var list = query().union(sq1, sq2).fetch().collectList().block();
     assertThat(list).hasSize(2);
     assertThat(list.getFirst() != null).isTrue();
     assertThat(list.get(1) != null).isTrue();
@@ -241,7 +240,7 @@ public abstract class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Tuple> sq2 =
         query().from(employee).select(employee.id.min(), employee.id.min().subtract(1));
 
-    Iterator<Tuple> iterator = query().union(sq1, sq2).fetch().collectList().block().iterator();
+    var iterator = query().union(sq1, sq2).fetch().collectList().block().iterator();
     assertThat(iterator).hasNext();
     assertThat(iterator.next() != null).isTrue();
     assertThat(iterator.next() != null).isTrue();
@@ -254,7 +253,7 @@ public abstract class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
 
-    List<Integer> list = query().union(sq1, sq2).fetch().collectList().block();
+    var list = query().union(sq1, sq2).fetch().collectList().block();
     assertThat(list).hasSize(2);
     assertThat(list.getFirst() != null).isTrue();
     assertThat(list.get(1) != null).isTrue();
@@ -266,7 +265,7 @@ public abstract class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
 
-    Iterator<Integer> iterator = query().union(sq1, sq2).fetch().collectList().block().iterator();
+    var iterator = query().union(sq1, sq2).fetch().collectList().block().iterator();
     assertThat(iterator).hasNext();
     assertThat(iterator.next() != null).isTrue();
     assertThat(iterator.next() != null).isTrue();
@@ -280,7 +279,7 @@ public abstract class UnionBase extends AbstractBaseTest {
         query().from(employee).select(Projections.constructor(Employee.class, employee.id));
     SubQueryExpression<Employee> sq2 =
         query().from(employee).select(Projections.constructor(Employee.class, employee.id));
-    List<Employee> employees = query().union(sq1, sq2).fetch().collectList().block();
+    var employees = query().union(sq1, sq2).fetch().collectList().block();
     for (Employee employee : employees) {
       assertThat(employee).isNotNull();
     }

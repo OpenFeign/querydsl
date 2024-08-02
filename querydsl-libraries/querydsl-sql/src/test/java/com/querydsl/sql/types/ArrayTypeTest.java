@@ -1,7 +1,6 @@
 package com.querydsl.sql.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Array;
 import java.sql.Connection;
@@ -15,12 +14,12 @@ public class ArrayTypeTest {
 
   @Test
   public void set_object_array() throws SQLException {
-    Integer[] value = new Integer[] {1, 2, 3};
-    ArrayType<Integer[]> type = new ArrayType<>(Integer[].class, "INTEGER ARRAY");
+    var value = new Integer[] {1, 2, 3};
+    var type = new ArrayType<Integer[]>(Integer[].class, "INTEGER ARRAY");
 
-    Array arr = EasyMock.createMock(Array.class);
-    Connection conn = EasyMock.createMock(Connection.class);
-    PreparedStatement stmt = EasyMock.createMock(PreparedStatement.class);
+    var arr = (Array) EasyMock.createMock(Array.class);
+    var conn = (Connection) EasyMock.createMock(Connection.class);
+    var stmt = (PreparedStatement) EasyMock.createMock(PreparedStatement.class);
     EasyMock.expect(stmt.getConnection()).andStubReturn(conn);
     EasyMock.expect(conn.createArrayOf("INTEGER ARRAY", value)).andReturn(arr);
     stmt.setArray(1, arr);
@@ -33,13 +32,13 @@ public class ArrayTypeTest {
 
   @Test
   public void set_primitive_array() throws SQLException {
-    int[] value = new int[] {1, 2, 3};
-    Integer[] boxedValue = new Integer[] {1, 2, 3};
-    ArrayType<int[]> type = new ArrayType<>(int[].class, "INTEGER ARRAY");
+    var value = new int[] {1, 2, 3};
+    var boxedValue = new Integer[] {1, 2, 3};
+    var type = new ArrayType<int[]>(int[].class, "INTEGER ARRAY");
 
-    Array arr = EasyMock.createMock(Array.class);
-    Connection conn = EasyMock.createMock(Connection.class);
-    PreparedStatement stmt = EasyMock.createMock(PreparedStatement.class);
+    var arr = (Array) EasyMock.createMock(Array.class);
+    var conn = (Connection) EasyMock.createMock(Connection.class);
+    var stmt = (PreparedStatement) EasyMock.createMock(PreparedStatement.class);
     EasyMock.expect(stmt.getConnection()).andStubReturn(conn);
     EasyMock.expect(conn.createArrayOf("INTEGER ARRAY", boxedValue)).andReturn(arr);
     stmt.setArray(1, arr);
@@ -52,11 +51,11 @@ public class ArrayTypeTest {
 
   @Test
   public void get_typed_object_array() throws SQLException {
-    Integer[] value = new Integer[] {1, 2, 3};
-    ArrayType<Integer[]> type = new ArrayType<>(Integer[].class, "INTEGER ARRAY");
+    var value = new Integer[] {1, 2, 3};
+    var type = new ArrayType<Integer[]>(Integer[].class, "INTEGER ARRAY");
 
-    ResultSet rs = EasyMock.createMock(ResultSet.class);
-    Array arr = EasyMock.createMock(Array.class);
+    var rs = (ResultSet) EasyMock.createMock(ResultSet.class);
+    var arr = (Array) EasyMock.createMock(Array.class);
     EasyMock.expect(rs.getArray(1)).andReturn(arr);
     EasyMock.expect(arr.getArray()).andReturn(value);
     EasyMock.replay(rs, arr);
@@ -69,11 +68,11 @@ public class ArrayTypeTest {
 
   @Test
   public void get_generic_object_array() throws SQLException {
-    Integer[] value = new Integer[] {1, 2, 3};
-    ArrayType<Integer[]> type = new ArrayType<>(Integer[].class, "INTEGER ARRAY");
+    var value = new Integer[] {1, 2, 3};
+    var type = new ArrayType<Integer[]>(Integer[].class, "INTEGER ARRAY");
 
-    ResultSet rs = EasyMock.createMock(ResultSet.class);
-    Array arr = EasyMock.createMock(Array.class);
+    var rs = (ResultSet) EasyMock.createMock(ResultSet.class);
+    var arr = (Array) EasyMock.createMock(Array.class);
     EasyMock.expect(rs.getArray(1)).andReturn(arr);
     EasyMock.expect(arr.getArray()).andReturn(value);
     EasyMock.replay(rs, arr);
@@ -86,12 +85,12 @@ public class ArrayTypeTest {
 
   @Test
   public void get_primitive_array() throws SQLException {
-    int[] value = new int[] {1, 2, 3};
-    Integer[] boxedValue = new Integer[] {1, 2, 3};
-    ArrayType<Integer[]> type = new ArrayType<>(Integer[].class, "INTEGER ARRAY");
+    var value = new int[] {1, 2, 3};
+    var boxedValue = new Integer[] {1, 2, 3};
+    var type = new ArrayType<Integer[]>(Integer[].class, "INTEGER ARRAY");
 
-    ResultSet rs = EasyMock.createMock(ResultSet.class);
-    Array arr = EasyMock.createMock(Array.class);
+    var rs = (ResultSet) EasyMock.createMock(ResultSet.class);
+    var arr = (Array) EasyMock.createMock(Array.class);
     EasyMock.expect(rs.getArray(1)).andReturn(arr);
     EasyMock.expect(arr.getArray()).andReturn(value);
     EasyMock.replay(rs, arr);

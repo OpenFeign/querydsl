@@ -18,11 +18,18 @@ import static com.querydsl.codegen.utils.Symbols.UNCHECKED;
 
 import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.model.ClassType;
-import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.codegen.utils.model.Types;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.BeanPath;
+import com.querydsl.core.types.dsl.BooleanPath;
+import com.querydsl.core.types.dsl.ComparablePath;
+import com.querydsl.core.types.dsl.DatePath;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.EnumPath;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.TimePath;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.IOException;
@@ -70,9 +77,9 @@ public class DefaultEmbeddableSerializer extends DefaultEntitySerializer
   @Override
   @SuppressWarnings(UNCHECKED)
   protected void introClassHeader(CodeWriter writer, EntityType model) throws IOException {
-    Type queryType = typeMappings.getPathType(model, model, true);
+    var queryType = typeMappings.getPathType(model, model, true);
 
-    TypeCategory category = model.getOriginalCategory();
+    var category = model.getOriginalCategory();
     Class<? extends Path> pathType;
     if (model.getProperties().isEmpty()) {
       switch (category) {

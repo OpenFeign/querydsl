@@ -1,16 +1,26 @@
 package com.querydsl.jpa;
 
 import com.querydsl.core.Target;
-import com.querydsl.sql.*;
+import com.querydsl.sql.CUBRIDTemplates;
+import com.querydsl.sql.DerbyTemplates;
+import com.querydsl.sql.H2Templates;
+import com.querydsl.sql.HSQLDBTemplates;
+import com.querydsl.sql.MySQLTemplates;
+import com.querydsl.sql.OracleTemplates;
+import com.querydsl.sql.PostgreSQLTemplates;
+import com.querydsl.sql.SQLServer2008Templates;
+import com.querydsl.sql.SQLTemplates;
+import com.querydsl.sql.SQLiteTemplates;
+import com.querydsl.sql.TeradataTemplates;
 
 /**
  * @author tiwe
  */
 public final class Mode {
 
-  public static final ThreadLocal<String> mode = new ThreadLocal<String>();
+  public static final ThreadLocal<String> mode = new ThreadLocal<>();
 
-  public static final ThreadLocal<Target> target = new ThreadLocal<Target>();
+  public static final ThreadLocal<Target> target = new ThreadLocal<>();
 
   public static SQLTemplates getSQLTemplates() {
     switch (target.get()) {

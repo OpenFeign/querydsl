@@ -13,7 +13,12 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -181,7 +186,7 @@ public abstract class BooleanExpression extends LiteralExpression<Boolean> imple
    */
   @Override
   public BooleanExpression coalesce(Expression<Boolean> expr) {
-    Coalesce<Boolean> coalesce = new Coalesce<Boolean>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(expr);
     return coalesce.asBoolean();
   }
@@ -195,7 +200,7 @@ public abstract class BooleanExpression extends LiteralExpression<Boolean> imple
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
   public BooleanExpression coalesce(Expression<?>... exprs) {
-    Coalesce<Boolean> coalesce = new Coalesce<Boolean>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);
     }
@@ -210,7 +215,7 @@ public abstract class BooleanExpression extends LiteralExpression<Boolean> imple
    */
   @Override
   public BooleanExpression coalesce(Boolean arg) {
-    Coalesce<Boolean> coalesce = new Coalesce<Boolean>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(arg);
     return coalesce.asBoolean();
   }
@@ -223,7 +228,7 @@ public abstract class BooleanExpression extends LiteralExpression<Boolean> imple
    */
   @Override
   public BooleanExpression coalesce(Boolean... args) {
-    Coalesce<Boolean> coalesce = new Coalesce<Boolean>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (Boolean arg : args) {
       coalesce.add(arg);
     }

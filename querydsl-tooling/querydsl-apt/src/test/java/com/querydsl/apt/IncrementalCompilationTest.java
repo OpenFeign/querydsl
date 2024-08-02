@@ -29,14 +29,14 @@ public class IncrementalCompilationTest extends AbstractProcessorTest {
 
   @Test
   public void does_not_overwrite_unchanged_files() throws IOException, InterruptedException {
-    File source = new File(packagePath, "ExampleEntity.java");
-    String path = source.getPath();
-    File qType = new File("target/overwrite/com/querydsl/apt/domain/QExampleEntity.java");
+    var source = new File(packagePath, "ExampleEntity.java");
+    var path = source.getPath();
+    var qType = new File("target/overwrite/com/querydsl/apt/domain/QExampleEntity.java");
 
     // QTestEntity is generated
     process(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "overwrite");
     assertThat(qType).exists();
-    long modified = qType.lastModified();
+    var modified = qType.lastModified();
     Thread.sleep(1000);
 
     // TestEntity has not changed, QTestEntity is not overwritten

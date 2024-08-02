@@ -15,8 +15,8 @@ public class ListSubQueryTest {
 
   @Test
   public void hashCode1() {
-    QSurvey survey = QSurvey.survey;
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey = QSurvey.survey;
+    var survey2 = new QSurvey("survey2");
     SubQueryExpression<Tuple> query1 = select(survey.all()).from(survey);
     SubQueryExpression<Tuple> query2 = select(survey2.all()).from(survey2);
 
@@ -28,8 +28,8 @@ public class ListSubQueryTest {
 
   @Test
   public void hashCode2() {
-    QSurvey survey = new QSurvey("entity");
-    QEmployee employee = new QEmployee("entity");
+    var survey = new QSurvey("entity");
+    var employee = new QEmployee("entity");
     SubQueryExpression<Integer> query1 = select(survey.id).from(survey);
     SubQueryExpression<Integer> query2 = select(employee.id).from(employee);
 

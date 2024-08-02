@@ -203,7 +203,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
 
       dbConn = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
 
-      MetaDataExporter exporter = new MetaDataExporter(this);
+      var exporter = new MetaDataExporter(this);
 
       exporter.export(dbConn.getMetaData());
 
@@ -256,6 +256,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.jdbcPassword = jdbcPassword;
   }
 
+  @Override
   public String getNamePrefix() {
     return namePrefix;
   }
@@ -264,6 +265,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.namePrefix = namePrefix;
   }
 
+  @Override
   public String getNameSuffix() {
     return nameSuffix;
   }
@@ -272,6 +274,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.nameSuffix = nameSuffix;
   }
 
+  @Override
   public String getBeanPrefix() {
     return beanPrefix;
   }
@@ -280,6 +283,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.beanPrefix = beanPrefix;
   }
 
+  @Override
   public String getBeanSuffix() {
     return beanSuffix;
   }
@@ -288,6 +292,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.beanSuffix = beanSuffix;
   }
 
+  @Override
   public String getPackageName() {
     return packageName;
   }
@@ -296,6 +301,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.packageName = packageName;
   }
 
+  @Override
   public String getBeanPackageName() {
     return beanPackageName;
   }
@@ -304,6 +310,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.beanPackageName = beanPackageName;
   }
 
+  @Override
   public String getSchemaPattern() {
     return schemaPattern;
   }
@@ -312,6 +319,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.schemaPattern = schemaPattern;
   }
 
+  @Override
   public String getTableNamePattern() {
     return tableNamePattern;
   }
@@ -320,6 +328,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.tableNamePattern = tableNamePattern;
   }
 
+  @Override
   public File getTargetFolder() {
     return new File(targetFolder);
   }
@@ -328,6 +337,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.targetFolder = targetFolder;
   }
 
+  @Override
   public Class<? extends NamingStrategy> getNamingStrategyClass() {
     if (namingStrategyClass == null) {
       return null;
@@ -343,6 +353,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.namingStrategyClass = namingStrategyClass;
   }
 
+  @Override
   public Class<? extends BeanSerializer> getBeanSerializerClass() {
     if (exportBeans && beanSerializerClass != null) {
       try {
@@ -358,6 +369,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.beanSerializerClass = beanSerializerClass;
   }
 
+  @Override
   public Class<? extends Serializer> getSerializerClass() {
     if (serializerClass == null) {
       return null;
@@ -373,6 +385,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.serializerClass = serializerClass;
   }
 
+  @Override
   public boolean isExportBeans() {
     return exportBeans;
   }
@@ -381,6 +394,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.exportBeans = exportBeans;
   }
 
+  @Override
   public String[] getBeanInterfaces() {
     return beanInterfaces;
   }
@@ -389,6 +403,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.beanInterfaces = beanInterfaces;
   }
 
+  @Override
   public boolean isBeanAddToString() {
     return beanAddToString;
   }
@@ -397,6 +412,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.beanAddToString = beanAddToString;
   }
 
+  @Override
   public boolean isBeanAddFullConstructor() {
     return beanAddFullConstructor;
   }
@@ -405,6 +421,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.beanAddFullConstructor = beanAddFullConstructor;
   }
 
+  @Override
   public boolean isBeanPrintSupertype() {
     return beanPrintSupertype;
   }
@@ -413,6 +430,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.beanPrintSupertype = beanPrintSupertype;
   }
 
+  @Override
   public boolean isInnerClassesForKeys() {
     return innerClassesForKeys;
   }
@@ -421,6 +439,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.innerClassesForKeys = innerClassesForKeys;
   }
 
+  @Override
   public boolean isValidationAnnotations() {
     return validationAnnotations;
   }
@@ -429,6 +448,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.validationAnnotations = validationAnnotations;
   }
 
+  @Override
   public boolean isColumnAnnotations() {
     return columnAnnotations;
   }
@@ -448,6 +468,8 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
    * @return a list of custom types
    * @deprecated Use addCustomType instead
    */
+  @Deprecated
+  @Override
   public List<CustomType> getCustomTypes() {
     return this.customTypes;
   }
@@ -458,10 +480,11 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
    * @param strings a list of custom types
    * @deprecated Use addCustomType instead
    */
+  @Deprecated
   public void setCustomTypes(String[] strings) {
     this.customTypes.clear();
     for (String string : strings) {
-      CustomType customType = new CustomType();
+      var customType = new CustomType();
       customType.setClassName(string);
       this.customTypes.add(customType);
     }
@@ -471,6 +494,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.createScalaSources = createScalaSources;
   }
 
+  @Override
   public boolean isSchemaToPackage() {
     return schemaToPackage;
   }
@@ -479,6 +503,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.schemaToPackage = schemaToPackage;
   }
 
+  @Override
   public boolean isLowerCase() {
     return lowerCase;
   }
@@ -487,6 +512,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.lowerCase = lowerCase;
   }
 
+  @Override
   public boolean isExportTables() {
     return exportTables;
   }
@@ -495,6 +521,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.exportTables = exportTables;
   }
 
+  @Override
   public boolean isExportViews() {
     return exportViews;
   }
@@ -503,6 +530,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.exportViews = exportViews;
   }
 
+  @Override
   public boolean isExportAll() {
     return exportAll;
   }
@@ -511,6 +539,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.exportAll = exportAll;
   }
 
+  @Override
   public boolean isExportPrimaryKeys() {
     return exportPrimaryKeys;
   }
@@ -519,10 +548,12 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.exportPrimaryKeys = exportPrimaryKeys;
   }
 
+  @Override
   public boolean isExportForeignKeys() {
     return exportForeignKeys;
   }
 
+  @Override
   public boolean isExportDirectForeignKeys() {
     return exportDirectForeignKeys;
   }
@@ -531,6 +562,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.exportDirectForeignKeys = exportDirectForeignKeys;
   }
 
+  @Override
   public boolean isExportInverseForeignKeys() {
     return exportInverseForeignKeys;
   }
@@ -559,6 +591,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.columnComparatorClass = columnComparatorClass;
   }
 
+  @Override
   public String getTableTypesToExport() {
     return tableTypesToExport;
   }
@@ -567,6 +600,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.tableTypesToExport = tableTypesToExport;
   }
 
+  @Override
   public List<String> getImports() {
     if (imports == null) {
       return null;
@@ -578,8 +612,11 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.imports = imports;
   }
 
+  @Override
   public Charset getSourceEncoding() {
-    if (sourceEncoding != null) return Charset.forName(sourceEncoding);
+    if (sourceEncoding != null) {
+      return Charset.forName(sourceEncoding);
+    }
 
     return StandardCharsets.UTF_8;
   }
@@ -588,6 +625,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
     this.sourceEncoding = sourceEncoding;
   }
 
+  @Override
   public File getBeansTargetFolder() {
     if (beansTargetFolder != null) {
       return new File(beansTargetFolder);

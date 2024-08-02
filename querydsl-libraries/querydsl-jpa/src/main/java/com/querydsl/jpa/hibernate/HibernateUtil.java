@@ -18,8 +18,17 @@ import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.dsl.Param;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
-import org.hibernate.type.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.hibernate.type.BasicTypeReference;
+import org.hibernate.type.StandardBasicTypes;
 
 /**
  * {@code HibernateUtil} provides static utility methods for Hibernate
@@ -82,8 +91,8 @@ public final class HibernateUtil {
       org.hibernate.query.Query<?> query,
       List<Object> constants,
       Map<ParamExpression<?>, Object> params) {
-    for (int i = 0; i < constants.size(); i++) {
-      Object val = constants.get(i);
+    for (var i = 0; i < constants.size(); i++) {
+      var val = constants.get(i);
 
       if (val instanceof Param) {
         Param<?> param = (Param<?>) val;

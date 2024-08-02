@@ -1,19 +1,35 @@
 package com.querydsl.sql;
 
-import static com.querydsl.core.Target.*;
-import static com.querydsl.sql.Constants.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.FIREBIRD;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.SQLITE;
+import static com.querydsl.core.Target.SQLSERVER;
+import static com.querydsl.core.Target.TERADATA;
+import static com.querydsl.sql.Constants.employee;
+import static com.querydsl.sql.Constants.employee2;
+import static com.querydsl.sql.Constants.survey;
+import static com.querydsl.sql.Constants.survey2;
 import static com.querydsl.sql.SQLExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.SubQueryExpression;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.Param;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.sql.domain.Employee;
 import com.querydsl.sql.domain.QEmployee;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.List;
 import org.junit.Test;
 
 public abstract class SubqueriesBase extends AbstractBaseTest {
@@ -21,13 +37,13 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({CUBRID, DERBY, FIREBIRD, H2, HSQLDB, SQLITE, SQLSERVER})
   public void keys() {
-    QEmployee employee2 = new QEmployee("employee2");
-    ForeignKey<Employee> nameKey1 =
+    var employee2 = new QEmployee("employee2");
+    var nameKey1 =
         new ForeignKey<Employee>(
             employee,
             Arrays.asList(employee.firstname, employee.lastname),
             Arrays.asList("a", "b"));
-    ForeignKey<Employee> nameKey2 =
+    var nameKey2 =
         new ForeignKey<Employee>(
             employee,
             Arrays.asList(employee.firstname, employee.lastname),
@@ -43,7 +59,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({CUBRID, DERBY, FIREBIRD, H2, HSQLDB, SQLITE, SQLSERVER})
   public void list_in_query() {
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee2 = new QEmployee("employee2");
     query()
         .from(employee)
         .where(
@@ -64,7 +80,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
         where e.ID = (select max(e.ID) \
         from EMPLOYEE e)\
         """;
-    List<Integer> list =
+    var list =
         query()
             .from(employee)
             .where(employee.id.eq(query().from(employee).select(employee.id.max())))
@@ -102,7 +118,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   @Test
   public void subQuery_innerJoin() {
     SubQueryExpression<Integer> sq = query().from(employee2).select(employee2.id);
-    QEmployee sqEmp = new QEmployee("sq");
+    var sqEmp = new QEmployee("sq");
     query()
         .from(employee)
         .innerJoin(sq, sqEmp)
@@ -114,7 +130,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   @Test
   public void subQuery_leftJoin() {
     SubQueryExpression<Integer> sq = query().from(employee2).select(employee2.id);
-    QEmployee sqEmp = new QEmployee("sq");
+    var sqEmp = new QEmployee("sq");
     query()
         .from(employee)
         .leftJoin(sq, sqEmp)
@@ -126,7 +142,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({MYSQL, POSTGRESQL, DERBY, SQLSERVER, TERADATA})
   public void subQuery_params() {
-    Param<String> aParam = new Param<String>(String.class, "param");
+    var aParam = new Param<String>(String.class, "param");
     SQLQuery<?> subQuery = select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));
     subQuery.set(aParam, "Mike");
 
@@ -137,7 +153,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   @ExcludeIn(SQLITE)
   public void subQuery_rightJoin() {
     SubQueryExpression<Integer> sq = query().from(employee2).select(employee2.id);
-    QEmployee sqEmp = new QEmployee("sq");
+    var sqEmp = new QEmployee("sq");
     query()
         .from(employee)
         .rightJoin(sq, sqEmp)
@@ -148,8 +164,8 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
   public void subQuery_with_alias() {
-    List<Integer> ids1 = query().from(employee).select(employee.id).fetch();
-    List<Integer> ids2 =
+    var ids1 = query().from(employee).select(employee.id).fetch();
+    var ids2 =
         query()
             .from(query().from(employee).select(employee.id), employee)
             .select(employee.id)
@@ -159,8 +175,8 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
   public void subQuery_with_alias2() {
-    List<Integer> ids1 = query().from(employee).select(employee.id).fetch();
-    List<Integer> ids2 =
+    var ids1 = query().from(employee).select(employee.id).fetch();
+    var ids2 =
         query()
             .from(query().from(employee).select(employee.id).as(employee))
             .select(employee.id)
@@ -182,8 +198,8 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   @Test
   public void subQuerySerialization2() {
     NumberPath<BigDecimal> sal = Expressions.numberPath(BigDecimal.class, "sal");
-    PathBuilder<Object[]> sq = new PathBuilder<Object[]>(Object[].class, "sq");
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var sq = new PathBuilder<Object[]>(Object[].class, "sq");
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
 
     serializer.handle(
         query()
@@ -196,7 +212,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
   public void scalarSubQueryInClause() {
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
 
     serializer.handle(
         this.query()
@@ -223,7 +239,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
   public void scalarSubQueryInClause2() {
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
 
     serializer.handle(
         this.query()

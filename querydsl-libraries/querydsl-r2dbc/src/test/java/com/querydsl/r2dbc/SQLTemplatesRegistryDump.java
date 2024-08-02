@@ -1,7 +1,5 @@
 package com.querydsl.r2dbc;
 
-import io.r2dbc.spi.ConnectionMetadata;
-
 public final class SQLTemplatesRegistryDump {
 
   private SQLTemplatesRegistryDump() {}
@@ -19,7 +17,7 @@ public final class SQLTemplatesRegistryDump {
   }
 
   private static void dump() {
-    ConnectionMetadata md = Connections.getConnection().getMetadata();
+    var md = Connections.getConnection().getMetadata();
     System.out.println(md.getDatabaseProductName());
     System.out.println(md.getDatabaseVersion());
     System.out.println();

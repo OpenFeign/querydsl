@@ -63,7 +63,7 @@ public class OracleQuery<T> extends AbstractOracleQuery<T, OracleQuery<T>> {
 
   @Override
   public OracleQuery<T> clone(Connection conn) {
-    OracleQuery<T> q = new OracleQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    var q = new OracleQuery<T>(conn, getConfiguration(), getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -72,7 +72,7 @@ public class OracleQuery<T> extends AbstractOracleQuery<T, OracleQuery<T>> {
   public <U> OracleQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    OracleQuery<U> newType = (OracleQuery<U>) this;
+    var newType = (OracleQuery<U>) this;
     return newType;
   }
 
@@ -80,7 +80,7 @@ public class OracleQuery<T> extends AbstractOracleQuery<T, OracleQuery<T>> {
   public OracleQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    OracleQuery<Tuple> newType = (OracleQuery<Tuple>) this;
+    var newType = (OracleQuery<Tuple>) this;
     return newType;
   }
 }

@@ -3,7 +3,6 @@ package com.querydsl.sql;
 import static com.querydsl.sql.Constants.employee;
 import static com.querydsl.sql.RelationalPathExtractor.extract;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.domain.QEmployee;
@@ -20,7 +19,7 @@ public class RelationalPathExtractorTest {
 
   @Test
   public void simpleQuery() {
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee2 = new QEmployee("employee2");
     SQLQuery<?> query = query().from(employee, employee2);
 
     assertThat(extract(query.getMetadata()))
@@ -29,7 +28,7 @@ public class RelationalPathExtractorTest {
 
   @Test
   public void joins() {
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee2 = new QEmployee("employee2");
     SQLQuery<?> query =
         query().from(employee).innerJoin(employee2).on(employee.superiorId.eq(employee2.id));
 
@@ -48,7 +47,7 @@ public class RelationalPathExtractorTest {
 
   @Test
   public void subQuery2() {
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee2 = new QEmployee("employee2");
     SQLQuery<?> query =
         query()
             .from(employee)

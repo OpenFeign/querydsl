@@ -18,7 +18,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import com.mysema.commons.lang.IteratorAdapter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import org.junit.Test;
 
 @SuppressWarnings("unchecked")
@@ -51,7 +55,7 @@ public class MultiIteratorTest {
   public void twoLevels() {
     list2 = Arrays.asList(10, 20, 30);
     it = new MultiIterator(Arrays.asList(list1, list2));
-    Iterator<Object[]> base =
+    var base =
         Arrays.asList(row(1, 10), row(1, 20), row(1, 30), row(2, 10), row(2, 20), row(2, 30))
             .iterator();
     assertIteratorEquals(base, it);
@@ -63,7 +67,7 @@ public class MultiIteratorTest {
     list2 = Arrays.asList(10, 20, 30);
     list3 = Arrays.asList(100, 200, 300, 400);
     it = new MultiIterator(Arrays.asList(list1, list2, list3));
-    List<Object[]> list = new ArrayList<Object[]>();
+    List<Object[]> list = new ArrayList<>();
     for (Object a : row(1, 2)) {
       for (Object b : row(10, 20, 30)) {
         for (Object c : row(100, 200, 300, 400)) {
@@ -82,7 +86,7 @@ public class MultiIteratorTest {
     list4 = Arrays.asList(1000, 2000, 3000, 4000, 5000);
     it = new MultiIterator(Arrays.asList(list1, list2, list3, list4));
 
-    List<Object[]> list = new ArrayList<Object[]>();
+    List<Object[]> list = new ArrayList<>();
     for (Object a : row(1, 2)) {
       for (Object b : row(10, 20, 30)) {
         for (Object c : row(100, 200, 300, 400)) {
@@ -97,8 +101,8 @@ public class MultiIteratorTest {
 
   @Test
   public void fourLevels2() {
-    list1 = new ArrayList<Integer>(100);
-    for (int i = 0; i < 100; i++) {
+    list1 = new ArrayList<>(100);
+    for (var i = 0; i < 100; i++) {
       list1.add(i + 1);
     }
     list2 = list1;
@@ -112,7 +116,7 @@ public class MultiIteratorTest {
   public void test() {
     List<Integer> list1 = asList(1, 2, 3, 4);
     List<Integer> list2 = asList(10, 20, 30);
-    MultiIterator<Integer> iterator = new MultiIterator<Integer>(asList(list1, list2));
+    var iterator = new MultiIterator<>(asList(list1, list2));
     List<Object[]> list = IteratorAdapter.asList(iterator);
 
     assertThat(asList(list.getFirst())).isEqualTo(asList(1, 10));

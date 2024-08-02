@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class CollUpdateClause<T> implements UpdateClause<CollUpdateClause<T>> {
 
-  private final Map<Path<?>, Object> paths = new HashMap<Path<?>, Object>();
+  private final Map<Path<?>, Object> paths = new HashMap<>();
 
   private final CollQuery<T> query;
 
@@ -45,12 +45,12 @@ public class CollUpdateClause<T> implements UpdateClause<CollUpdateClause<T>> {
 
   @Override
   public long execute() {
-    int rv = 0;
+    var rv = 0;
     for (T match : query.fetch()) {
-      BeanMap beanMap = new BeanMap(match);
+      var beanMap = new BeanMap(match);
       for (Map.Entry<Path<?>, Object> entry : paths.entrySet()) {
         // TODO : support deep updates as well
-        String propertyName = entry.getKey().getMetadata().getName();
+        var propertyName = entry.getKey().getMetadata().getName();
         beanMap.put(propertyName, entry.getValue());
       }
       rv++;
@@ -78,7 +78,7 @@ public class CollUpdateClause<T> implements UpdateClause<CollUpdateClause<T>> {
 
   @Override
   public CollUpdateClause<T> set(List<? extends Path<?>> p, List<?> v) {
-    for (int i = 0; i < p.size(); i++) {
+    for (var i = 0; i < p.size(); i++) {
       paths.put(p.get(i), v.get(i));
     }
     return this;

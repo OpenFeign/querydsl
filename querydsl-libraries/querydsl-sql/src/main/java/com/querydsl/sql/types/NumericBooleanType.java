@@ -49,7 +49,7 @@ public class NumericBooleanType extends AbstractType<Boolean> {
   @Override
   @Nullable
   public Boolean getValue(ResultSet rs, int startIndex) throws SQLException {
-    Number num = (Number) rs.getObject(startIndex);
+    var num = (Number) rs.getObject(startIndex);
     return num != null ? num.intValue() == 1 : null;
   }
 

@@ -29,7 +29,7 @@ public class CollQueryTemplates extends JavaTemplates {
   public static final CollQueryTemplates DEFAULT = new CollQueryTemplates();
 
   protected CollQueryTemplates() {
-    String functions = CollQueryFunctions.class.getName();
+    var functions = CollQueryFunctions.class.getName();
     add(Ops.EQ, functions + ".equals({0}, {1})");
     add(Ops.NE, "!" + functions + ".equals({0}, {1})");
     add(Ops.INSTANCE_OF, "{1}.isInstance({0})");

@@ -15,7 +15,12 @@ package com.querydsl.sql;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.annotations.Immutable;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.ProjectionRole;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.CollectionUtils;

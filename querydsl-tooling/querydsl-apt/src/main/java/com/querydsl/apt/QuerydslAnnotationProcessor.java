@@ -13,7 +13,12 @@
  */
 package com.querydsl.apt;
 
-import com.querydsl.core.annotations.*;
+import com.querydsl.core.annotations.QueryEmbeddable;
+import com.querydsl.core.annotations.QueryEmbedded;
+import com.querydsl.core.annotations.QueryEntities;
+import com.querydsl.core.annotations.QueryEntity;
+import com.querydsl.core.annotations.QuerySupertype;
+import com.querydsl.core.annotations.QueryTransient;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 import javax.annotation.processing.RoundEnvironment;

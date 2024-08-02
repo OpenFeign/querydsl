@@ -61,7 +61,7 @@ public class OrderDaoImpl implements OrderDao {
 
   @Override
   public Mono<Order> save(Order o) {
-    Long id = o.getId();
+    var id = o.getId();
 
     if (id == null) {
       return insert(o);
@@ -93,7 +93,7 @@ public class OrderDaoImpl implements OrderDao {
   }
 
   public Mono<Order> update(Order o) {
-    Long id = o.getId();
+    var id = o.getId();
 
     return populate(queryFactory.update(customerOrder), o)
         .where(customerOrder.id.eq(id))

@@ -15,11 +15,11 @@ public class GenericExporterMojoTest {
       new File("target/generated-test-data/com/querydsl/maven/QEntity.java");
 
   private GenericExporterMojo prepareMojo() {
-    MavenProject mavenProject = new MavenProject();
+    var mavenProject = new MavenProject();
     mavenProject.getBuild().setOutputDirectory("target/classes");
     mavenProject.getBuild().setTestOutputDirectory("target/test-classes");
 
-    GenericExporterMojo mojo = new GenericExporterMojo();
+    var mojo = new GenericExporterMojo();
     mojo.setTargetFolder(new File("target/generated-test-data"));
     mojo.setPackages(new String[] {"com.querydsl.maven"});
     mojo.setProject(mavenProject);
@@ -29,7 +29,7 @@ public class GenericExporterMojoTest {
 
   @Test
   public void execute() throws Exception {
-    GenericExporterMojo mojo = prepareMojo();
+    var mojo = prepareMojo();
     mojo.execute();
 
     assertThat(Q_ENTITY_SOURCE_FILE).exists();
@@ -37,23 +37,23 @@ public class GenericExporterMojoTest {
 
   @Test
   public void defaultGeneratedAnnotation() throws Exception {
-    GenericExporterMojo mojo = prepareMojo();
+    var mojo = prepareMojo();
     mojo.execute();
 
-    File file = Q_ENTITY_SOURCE_FILE;
-    String source = FileUtils.fileRead(file);
+    var file = Q_ENTITY_SOURCE_FILE;
+    var source = FileUtils.fileRead(file);
     assertThat(source).contains("@" + GeneratedAnnotationResolver.resolveDefault().getSimpleName());
   }
 
   @Test
   public void providedGeneratedAnnotation() throws Exception {
     Class<? extends Annotation> annotationClass = com.querydsl.core.annotations.Generated.class;
-    GenericExporterMojo mojo = prepareMojo();
+    var mojo = prepareMojo();
     mojo.setGeneratedAnnotationClass(annotationClass.getName());
     mojo.execute();
 
-    File file = Q_ENTITY_SOURCE_FILE;
-    String source = FileUtils.fileRead(file);
+    var file = Q_ENTITY_SOURCE_FILE;
+    var source = FileUtils.fileRead(file);
     assertThat(source).contains("@" + annotationClass.getSimpleName());
   }
 }

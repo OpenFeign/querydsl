@@ -17,19 +17,19 @@ public class EntityWithLongIdTest {
 
   @Test
   public void simpleEquals() {
-    QEntityWithLongId root = QEntityWithLongId.entityWithLongId;
+    var root = QEntityWithLongId.entityWithLongId;
     CollQuery<?> query = new CollQuery<Void>().from(root, entities);
     query.where(root.id.eq(1000L));
 
-    Long found = query.select(root.id).fetchFirst();
+    var found = query.select(root.id).fetchFirst();
     assertThat(found).isNotNull();
     assertThat(1000).isEqualTo(found.longValue());
   }
 
   @Test
   public void cartesianEquals() {
-    QEntityWithLongId root = new QEntityWithLongId("root1");
-    QEntityWithLongId root2 = new QEntityWithLongId("root2");
+    var root = new QEntityWithLongId("root1");
+    var root2 = new QEntityWithLongId("root2");
     assertThat(
             new CollQuery<Void>()
                 .from(root, entities)
@@ -41,8 +41,8 @@ public class EntityWithLongIdTest {
 
   @Test
   public void cartesianPlus1() {
-    QEntityWithLongId root = new QEntityWithLongId("root1");
-    QEntityWithLongId root2 = new QEntityWithLongId("root2");
+    var root = new QEntityWithLongId("root1");
+    var root2 = new QEntityWithLongId("root2");
     assertThat(
             new CollQuery<Void>()
                 .from(root, entities)

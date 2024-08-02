@@ -119,14 +119,14 @@ public class DefaultQueryMetadataTest {
 
   @Test
   public void getModifiers() {
-    QueryModifiers modifiers = new QueryModifiers(1L, 2L);
+    var modifiers = new QueryModifiers(1L, 2L);
     metadata.setModifiers(modifiers);
     assertThat(metadata.getModifiers()).isEqualTo(modifiers);
   }
 
   @Test
   public void setLimit() {
-    QueryModifiers modifiers = new QueryModifiers(1L, 2L);
+    var modifiers = new QueryModifiers(1L, 2L);
     metadata.setModifiers(modifiers);
     metadata.setLimit(3L);
 
@@ -136,7 +136,7 @@ public class DefaultQueryMetadataTest {
 
   @Test
   public void setOffset() {
-    QueryModifiers modifiers = new QueryModifiers(1L, 1L);
+    var modifiers = new QueryModifiers(1L, 1L);
     metadata.setModifiers(modifiers);
     metadata.setOffset(2L);
 
@@ -184,9 +184,9 @@ public class DefaultQueryMetadataTest {
 
   @Test
   public void joinShouldBeCommitted() {
-    DefaultQueryMetadata md = new DefaultQueryMetadata();
+    var md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, str);
-    DefaultQueryMetadata emptyMetadata = new DefaultQueryMetadata();
+    var emptyMetadata = new DefaultQueryMetadata();
     assertThat(md.equals(emptyMetadata)).isFalse();
   }
 
@@ -196,14 +196,14 @@ public class DefaultQueryMetadataTest {
     metadata.addGroupBy(str);
     metadata.addHaving(str.isNotNull());
     metadata.addJoin(JoinType.DEFAULT, str2);
-    QueryModifiers modifiers = new QueryModifiers(1L, 2L);
+    var modifiers = new QueryModifiers(1L, 2L);
     metadata.setModifiers(modifiers);
     metadata.addOrderBy(str.asc());
     metadata.setProjection(str.append("abc"));
     metadata.addWhere(str.eq("b"));
     metadata.addWhere(str.isNotEmpty());
 
-    QueryMetadata clone = metadata.clone();
+    var clone = metadata.clone();
     assertThat(clone.getGroupBy()).isEqualTo(metadata.getGroupBy());
     assertThat(clone.getHaving()).isEqualTo(metadata.getHaving());
     assertThat(clone.getJoins()).isEqualTo(metadata.getJoins());
@@ -228,7 +228,7 @@ public class DefaultQueryMetadataTest {
 
   @Test
   public void addFlag() {
-    QueryFlag flag = new QueryFlag(Position.START, "X");
+    var flag = new QueryFlag(Position.START, "X");
     metadata.addFlag(flag);
     assertThat(metadata.hasFlag(flag)).isTrue();
   }
@@ -239,7 +239,7 @@ public class DefaultQueryMetadataTest {
     metadata.addGroupBy(str);
     metadata.addHaving(str.isNotNull());
     metadata.addJoin(JoinType.DEFAULT, str2);
-    QueryModifiers modifiers = new QueryModifiers(1L, 2L);
+    var modifiers = new QueryModifiers(1L, 2L);
     metadata.setModifiers(modifiers);
     metadata.addOrderBy(str.asc());
     metadata.setProjection(str.append("abc"));
@@ -273,7 +273,7 @@ public class DefaultQueryMetadataTest {
     metadata.addGroupBy(str);
     metadata.addHaving(str.isNotNull());
     metadata.addJoin(JoinType.DEFAULT, str2);
-    QueryModifiers modifiers = new QueryModifiers(1L, 2L);
+    var modifiers = new QueryModifiers(1L, 2L);
     metadata.setModifiers(modifiers);
     metadata.addOrderBy(str.asc());
     metadata.setProjection(str.append("abc"));

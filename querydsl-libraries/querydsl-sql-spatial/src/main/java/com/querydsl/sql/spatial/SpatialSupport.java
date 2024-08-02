@@ -52,6 +52,7 @@ public final class SpatialSupport implements Extension {
    *
    * @param module module to be customized for spatial support
    */
+  @Override
   public void addSupport(AbstractModule module) {
     module.bindInstance(SQLCodegenModule.ENTITYPATH_TYPE, RelationalPathSpatial.class);
     registerTypes(module.get(Configuration.class));

@@ -13,7 +13,12 @@
  */
 package com.querydsl.spatial;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathImpl;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathMetadataFactory;
+import com.querydsl.core.types.Visitor;
 import java.lang.reflect.AnnotatedElement;
 import org.geolatte.geom.MultiLineString;
 

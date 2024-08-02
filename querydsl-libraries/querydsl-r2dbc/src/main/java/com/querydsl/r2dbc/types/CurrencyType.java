@@ -41,7 +41,7 @@ public class CurrencyType extends AbstractType<Currency, String> {
   @Override
   @Nullable
   public Currency getValue(Row row, int startIndex) {
-    String val = row.get(startIndex, String.class);
+    var val = row.get(startIndex, String.class);
     return val != null ? Currency.getInstance(val) : null;
   }
 

@@ -13,7 +13,14 @@
  */
 package com.querydsl.sql;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.SQLITE;
+import static com.querydsl.core.Target.SQLSERVER;
+import static com.querydsl.core.Target.TERADATA;
 import static com.querydsl.sql.Constants.survey;
 import static com.querydsl.sql.Constants.survey2;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,9 +30,7 @@ import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.sql.dml.SQLMergeClause;
 import com.querydsl.sql.domain.QSurvey;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -53,7 +58,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
   public void merge_with_keys() throws SQLException {
-    ResultSet rs =
+    var rs =
         merge(survey)
             .keys(survey.id)
             .set(survey.id, 7)
@@ -67,7 +72,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
   public void merge_with_keys_listener() throws SQLException {
-    final AtomicBoolean result = new AtomicBoolean();
+    final var result = new AtomicBoolean();
     SQLListener listener =
         new SQLBaseListener() {
           @Override
@@ -75,10 +80,9 @@ public abstract class MergeBase extends AbstractBaseTest {
             result.set(true);
           }
         };
-    SQLMergeClause clause =
-        merge(survey).keys(survey.id).set(survey.id, 7).set(survey.name, "Hello World");
+    var clause = merge(survey).keys(survey.id).set(survey.id, 7).set(survey.name, "Hello World");
     clause.addListener(listener);
-    ResultSet rs = clause.executeWithKeys();
+    var rs = clause.executeWithKeys();
     assertThat(rs.next()).isTrue();
     assertThat(rs.getObject(1) != null).isTrue();
     rs.close();
@@ -91,7 +95,7 @@ public abstract class MergeBase extends AbstractBaseTest {
     assertThat(insert(survey).set(survey.id, 6).set(survey.name, "H").execute()).isEqualTo(1);
 
     // keys + subquery
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey2 = new QSurvey("survey2");
     assertThat(
             merge(survey)
                 .keys(survey.id)
@@ -137,7 +141,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({CUBRID, DB2, DERBY, POSTGRESQL, SQLSERVER, TERADATA, SQLITE})
   public void merge_with_keys_Null_Id() throws SQLException {
-    ResultSet rs =
+    var rs =
         merge(survey)
             .keys(survey.id)
             .setNull(survey.id)
@@ -176,8 +180,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   @Test
   @IncludeIn(H2)
   public void mergeBatch() {
-    SQLMergeClause merge =
-        merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, "5").addBatch();
+    var merge = merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, "5").addBatch();
     assertThat(merge.getBatchCount()).isEqualTo(1);
     assertThat(merge.isEmpty()).isFalse();
 
@@ -193,7 +196,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   @Test
   @IncludeIn(H2)
   public void mergeBatch_templates() {
-    SQLMergeClause merge =
+    var merge =
         merge(survey)
             .keys(survey.id)
             .set(survey.id, 5)
@@ -215,7 +218,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   @Test
   @IncludeIn(H2)
   public void mergeBatch_with_subquery() {
-    SQLMergeClause merge =
+    var merge =
         merge(survey)
             .keys(survey.id)
             .columns(survey.id, survey.name)
@@ -234,7 +237,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   @Test
   @IncludeIn(H2)
   public void merge_with_templateExpression_in_batch() {
-    SQLMergeClause merge =
+    var merge =
         merge(survey)
             .keys(survey.id)
             .set(survey.id, 5)
@@ -246,7 +249,7 @@ public abstract class MergeBase extends AbstractBaseTest {
 
   @Test
   public void merge_listener() {
-    final AtomicInteger calls = new AtomicInteger(0);
+    final var calls = new AtomicInteger(0);
     SQLListener listener =
         new SQLBaseListener() {
           @Override
@@ -257,8 +260,7 @@ public abstract class MergeBase extends AbstractBaseTest {
           }
         };
 
-    SQLMergeClause clause =
-        merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, "Hello World");
+    var clause = merge(survey).keys(survey.id).set(survey.id, 5).set(survey.name, "Hello World");
     clause.addListener(listener);
     assertThat(clause.execute()).isEqualTo(1);
     assertThat(calls.intValue()).isEqualTo(1);

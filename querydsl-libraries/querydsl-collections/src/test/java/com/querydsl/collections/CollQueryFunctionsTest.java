@@ -31,14 +31,14 @@ public class CollQueryFunctionsTest {
   @Ignore
   public void likeSpeed() {
     // 3015
-    final int iterations = 1000000;
-    long start = System.currentTimeMillis();
-    for (int i = 0; i < iterations; i++) {
+    final var iterations = 1000000;
+    var start = System.currentTimeMillis();
+    for (var i = 0; i < iterations; i++) {
       CollQueryFunctions.like("abcDOG", "%DOG");
       CollQueryFunctions.like("DOGabc", "DOG%");
       CollQueryFunctions.like("abcDOGabc", "%DOG%");
     }
-    long duration = System.currentTimeMillis() - start;
+    var duration = System.currentTimeMillis() - start;
     System.err.println(duration);
   }
 

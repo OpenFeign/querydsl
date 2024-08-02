@@ -16,7 +16,6 @@ package com.querydsl.core.types;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.domain.QCat;
-import com.querydsl.core.types.dsl.BooleanPath;
 import com.querydsl.core.types.dsl.Expressions;
 import org.junit.Test;
 
@@ -52,10 +51,10 @@ public class ToStringVisitorTest {
 
   @Test
   public void complex() {
-    BooleanPath a = Expressions.booleanPath("a");
-    BooleanPath b = Expressions.booleanPath("d");
-    BooleanPath c = Expressions.booleanPath("c");
-    BooleanPath d = Expressions.booleanPath("d");
+    var a = Expressions.booleanPath("a");
+    var b = Expressions.booleanPath("d");
+    var c = Expressions.booleanPath("c");
+    var d = Expressions.booleanPath("d");
     Predicate complex = a.or(b).and(c.or(d));
     assertThat(complex.accept(ToStringVisitor.DEFAULT, templates))
         .isEqualTo("(a || d) && (c || d)");

@@ -54,7 +54,7 @@ public class GuavaGroupByBuilder<K> extends GroupByBuilder<K> {
    */
   public <V> ResultTransformer<Multimap<K, V>> asMultimap(Expression<V> expression) {
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByMultimap<K, V, Multimap<K, V>>(key, expression) {
+    return new GroupByMultimap<>(key, expression) {
       @Override
       protected Multimap<K, V> transform(Multimap<K, Group> groups) {
         Multimap<K, V> results = LinkedHashMultimap.create();
@@ -76,7 +76,7 @@ public class GuavaGroupByBuilder<K> extends GroupByBuilder<K> {
   public <V extends Comparable<? super V>>
       ResultTransformer<TreeMultimap<K, V>> asSortedSetMultimap(Expression<V> expression) {
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByMultimap<K, V, TreeMultimap<K, V>>(key, expression) {
+    return new GroupByMultimap<>(key, expression) {
       @Override
       protected TreeMultimap<K, V> transform(Multimap<K, Group> groups) {
         TreeMultimap<K, V> results = (TreeMultimap) TreeMultimap.create();
@@ -102,7 +102,7 @@ public class GuavaGroupByBuilder<K> extends GroupByBuilder<K> {
       final Comparator<? super K> comparator,
       final Comparator<? super V> valueComparator) {
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByMultimap<K, V, TreeMultimap<K, V>>(key, expression) {
+    return new GroupByMultimap<>(key, expression) {
       @Override
       protected TreeMultimap<K, V> transform(Multimap<K, Group> groups) {
         TreeMultimap<K, V> results = TreeMultimap.create(comparator, valueComparator);
@@ -127,14 +127,14 @@ public class GuavaGroupByBuilder<K> extends GroupByBuilder<K> {
       final Expression<C> column, final Expression<V> expression) {
     final Expression<C> columnKeyLookup = getLookup(column);
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByTable<K, C, V, Table<K, C, V>>(key, column, expression) {
+    return new GroupByTable<>(key, column, expression) {
       @Override
       protected Table<K, C, V> transform(Table<K, ?, Group> groups) {
         Table<K, C, V> results = HashBasedTable.create();
         for (Cell<K, ?, Group> cell : groups.cellSet()) {
-          K rowKey = cell.getRowKey();
-          C columnKey = cell.getValue().getOne(columnKeyLookup);
-          V value = cell.getValue().getOne(lookup);
+          var rowKey = cell.getRowKey();
+          var columnKey = cell.getValue().getOne(columnKeyLookup);
+          var value = cell.getValue().getOne(lookup);
           results.put(rowKey, columnKey, value);
         }
         return results;
@@ -156,14 +156,14 @@ public class GuavaGroupByBuilder<K> extends GroupByBuilder<K> {
           final Expression<C> column, final Expression<V> expression) {
     final Expression<C> columnKeyLookup = getLookup(column);
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByTable<K, C, V, TreeBasedTable<K, C, V>>(key, column, expression) {
+    return new GroupByTable<>(key, column, expression) {
       @Override
       protected TreeBasedTable<K, C, V> transform(Table<K, ?, Group> groups) {
         TreeBasedTable<K, C, V> results = (TreeBasedTable) TreeBasedTable.create();
         for (Cell<K, ?, Group> cell : groups.cellSet()) {
-          K rowKey = cell.getRowKey();
-          C columnKey = cell.getValue().getOne(columnKeyLookup);
-          V value = cell.getValue().getOne(lookup);
+          var rowKey = cell.getRowKey();
+          var columnKey = cell.getValue().getOne(columnKeyLookup);
+          var value = cell.getValue().getOne(lookup);
           results.put(rowKey, columnKey, value);
         }
         return results;
@@ -189,14 +189,14 @@ public class GuavaGroupByBuilder<K> extends GroupByBuilder<K> {
       final Comparator<? super C> columnComparator) {
     final Expression<C> columnKeyLookup = getLookup(column);
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByTable<K, C, V, TreeBasedTable<K, C, V>>(key, column, expression) {
+    return new GroupByTable<>(key, column, expression) {
       @Override
       protected TreeBasedTable<K, C, V> transform(Table<K, ?, Group> groups) {
         TreeBasedTable<K, C, V> results = TreeBasedTable.create(rowComparator, columnComparator);
         for (Cell<K, ?, Group> cell : groups.cellSet()) {
-          K rowKey = cell.getRowKey();
-          C columnKey = cell.getValue().getOne(columnKeyLookup);
-          V value = cell.getValue().getOne(lookup);
+          var rowKey = cell.getRowKey();
+          var columnKey = cell.getValue().getOne(columnKeyLookup);
+          var value = cell.getValue().getOne(lookup);
           results.put(rowKey, columnKey, value);
         }
         return results;

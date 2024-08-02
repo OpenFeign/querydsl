@@ -28,14 +28,14 @@ public final class SpatialTemplatesSupport {
   private SpatialTemplatesSupport() {}
 
   private static String createSpatial(String name, int args, boolean asFunction) {
-    StringBuilder result = new StringBuilder();
+    var result = new StringBuilder();
     if (!asFunction) {
       result.append("{0}.");
     }
     result.append(name);
     result.append("(");
-    int start = asFunction ? 0 : 1;
-    for (int i = start; i < args; i++) {
+    var start = asFunction ? 0 : 1;
+    for (var i = start; i < args; i++) {
       if (i > start) {
         result.append(", ");
       }

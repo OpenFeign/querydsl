@@ -62,8 +62,8 @@ public class ClassType implements Type {
   @Override
   public Type asArrayType() {
     if (arrayType == null) {
-      String fullName = ClassUtils.getFullName(javaClass) + "[]";
-      String simpleName = javaClass.getSimpleName() + "[]";
+      var fullName = ClassUtils.getFullName(javaClass) + "[]";
+      var simpleName = javaClass.getSimpleName() + "[]";
       arrayType =
           new SimpleType(TypeCategory.ARRAY, fullName, getPackageName(), simpleName, false, false);
     }
@@ -75,13 +75,14 @@ public class ClassType implements Type {
     if (o == this) {
       return true;
     } else if (o instanceof Type) {
-      Type t = (Type) o;
+      var t = (Type) o;
       return t.getFullName().equals(className) && t.getParameters().equals(parameters);
     } else {
       return false;
     }
   }
 
+  @Override
   public TypeCategory getCategory() {
     return category;
   }
@@ -122,10 +123,10 @@ public class ClassType implements Type {
     if (parameters.isEmpty()) {
       return ClassUtils.getName(javaClass, packages, classes);
     } else {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       builder.append(ClassUtils.getName(javaClass, packages, classes));
       builder.append("<");
-      boolean first = true;
+      var first = true;
       for (Type parameter : parameters) {
         if (!first) {
           builder.append(", ");
@@ -142,6 +143,7 @@ public class ClassType implements Type {
     }
   }
 
+  @Override
   public Class<?> getJavaClass() {
     return javaClass;
   }

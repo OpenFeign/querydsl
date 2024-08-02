@@ -136,6 +136,7 @@ public abstract class LocalDateTimeExpression<T extends Comparable> extends Temp
    *
    * @return max(this)
    */
+  @Override
   public LocalDateTimeExpression<T> max() {
     if (max == null) {
       max = R2DBCExpressions.localDateTimeOperation(getType(), Ops.AggOps.MAX_AGG, mixin);
@@ -162,6 +163,7 @@ public abstract class LocalDateTimeExpression<T extends Comparable> extends Temp
    *
    * @return min(this)
    */
+  @Override
   public LocalDateTimeExpression<T> min() {
     if (min == null) {
       min = R2DBCExpressions.localDateTimeOperation(getType(), Ops.AggOps.MIN_AGG, mixin);

@@ -15,7 +15,12 @@ package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Templates;
+import com.querydsl.core.types.ToStringVisitor;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,8 +37,8 @@ public class OperationTest {
   @SuppressWarnings("unchecked")
   @Test
   public void various() {
-    Expression[] args = new Expression[] {new StringPath("x"), new StringPath("y")};
-    List<Operation<?>> operations = new ArrayList<Operation<?>>();
+    var args = new Expression[] {new StringPath("x"), new StringPath("y")};
+    List<Operation<?>> operations = new ArrayList<>();
     //        paths.add(new ArrayOperation(String[].class, "p"));
     operations.add(new BooleanOperation(Ops.EQ, args));
     operations.add(new ComparableOperation(String.class, Ops.SUBSTR_1ARG, args));

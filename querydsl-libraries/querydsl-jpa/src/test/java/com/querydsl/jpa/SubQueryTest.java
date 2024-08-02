@@ -13,8 +13,11 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.jpa.Constants.*;
-import static com.querydsl.jpa.JPAExpressions.*;
+import static com.querydsl.jpa.Constants.cat;
+import static com.querydsl.jpa.Constants.fatcat;
+import static com.querydsl.jpa.JPAExpressions.select;
+import static com.querydsl.jpa.JPAExpressions.selectFrom;
+import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.domain.QCat;
@@ -49,8 +52,8 @@ public class SubQueryTest extends AbstractQueryTest {
 
   @Test
   public void innerJoin2() {
-    QEmployee employee = QEmployee.employee;
-    QUser user = QUser.user;
+    var employee = QEmployee.employee;
+    var user = QUser.user;
     assertThat(selectFrom(employee).innerJoin(employee.user, user).toString())
         .isEqualTo("select employee\nfrom Employee employee\n  inner join employee.user as user");
   }
@@ -137,14 +140,14 @@ public class SubQueryTest extends AbstractQueryTest {
 
   @Test
   public void count_multiple_sources() {
-    QCat other = new QCat("other");
+    var other = new QCat("other");
     assertToString(
         "(select count(cat) from Cat cat, Cat other)", select(cat.count()).from(cat, other));
   }
 
   @Test
   public void count_multiple_sources_via_list() {
-    QCat other = new QCat("other");
+    var other = new QCat("other");
     assertToString(
         "(select count(cat) from Cat cat, Cat other)", select(cat.count()).from(cat, other));
   }

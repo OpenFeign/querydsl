@@ -13,7 +13,11 @@
  */
 package com.querydsl.sql.types;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Calendar;
@@ -40,9 +44,9 @@ public class CalendarType extends AbstractDateTimeType<Calendar> {
 
   @Override
   public Calendar getValue(ResultSet rs, int startIndex) throws SQLException {
-    Timestamp ts = rs.getTimestamp(startIndex);
+    var ts = rs.getTimestamp(startIndex);
     if (ts != null) {
-      Calendar cal = Calendar.getInstance();
+      var cal = Calendar.getInstance();
       cal.setTimeInMillis(ts.getTime());
       return cal;
     } else {

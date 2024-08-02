@@ -19,7 +19,7 @@ import org.junit.Test;
 
 public class NumberExpressionTest {
 
-  private NumberPath<Integer> intPath = new NumberPath<Integer>(Integer.class, "int");
+  private NumberPath<Integer> intPath = new NumberPath<>(Integer.class, "int");
 
   @Test
   public void between_start_given() {

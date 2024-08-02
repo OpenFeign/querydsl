@@ -42,7 +42,7 @@ public class MorphiaAnnotationProcessor extends AbstractQuerydslProcessor {
     Class<? extends Annotation> superType = QuerySupertype.class;
     Class<? extends Annotation> embedded = Embedded.class;
     Class<? extends Annotation> skip = Transient.class;
-    DefaultConfiguration conf =
+    var conf =
         new DefaultConfiguration(
             processingEnv,
             roundEnv,

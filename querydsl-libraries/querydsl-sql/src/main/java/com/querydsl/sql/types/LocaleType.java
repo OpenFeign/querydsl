@@ -46,12 +46,12 @@ public class LocaleType extends AbstractType<Locale> {
   @Override
   @Nullable
   public Locale getValue(ResultSet rs, int startIndex) throws SQLException {
-    String val = rs.getString(startIndex);
+    var val = rs.getString(startIndex);
     return val != null ? toLocale(val) : null;
   }
 
   public static Locale toLocale(String val) {
-    String[] tokens = LOCALE.split(val);
+    var tokens = LOCALE.split(val);
     switch (tokens.length) {
       case 1:
         return new Locale(tokens[0]);

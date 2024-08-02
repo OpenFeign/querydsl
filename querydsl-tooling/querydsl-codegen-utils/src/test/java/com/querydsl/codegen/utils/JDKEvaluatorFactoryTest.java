@@ -95,7 +95,7 @@ public class JDKEvaluatorFactoryTest {
 
   @Test
   public void WithConstants() {
-    Map<String, Object> constants = new HashMap<String, Object>();
+    Map<String, Object> constants = new HashMap<>();
     constants.put("x", "Hello World");
     List<Class<?>> types = Arrays.<Class<?>>asList(String.class);
     List<String> names = Arrays.asList("a");

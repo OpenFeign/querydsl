@@ -92,7 +92,7 @@ public class OrderSpecifier<T extends Comparable> implements Serializable {
    * @return new instance with null first enabled
    */
   public OrderSpecifier<T> nullsFirst() {
-    return new OrderSpecifier<T>(order, target, NullHandling.NullsFirst);
+    return new OrderSpecifier<>(order, target, NullHandling.NullsFirst);
   }
 
   /**
@@ -101,7 +101,7 @@ public class OrderSpecifier<T extends Comparable> implements Serializable {
    * @return new instance with nulls last enabled
    */
   public OrderSpecifier<T> nullsLast() {
-    return new OrderSpecifier<T>(order, target, NullHandling.NullsLast);
+    return new OrderSpecifier<>(order, target, NullHandling.NullsLast);
   }
 
   @Override

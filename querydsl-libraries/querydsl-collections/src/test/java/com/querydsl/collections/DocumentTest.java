@@ -3,7 +3,6 @@ package com.querydsl.collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Predicate;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,21 +28,21 @@ public class DocumentTest {
   @Test
   public void test1() {
     Predicate crit = qDoc.id.eq(3L);
-    List<Document> expResult = CollQueryFactory.from(qDoc, doc1, doc2, doc3).where(crit).fetch();
+    var expResult = CollQueryFactory.from(qDoc, doc1, doc2, doc3).where(crit).fetch();
     assertThat(expResult).contains(doc3); // ok
   }
 
   @Test
   public void test2() {
     Predicate crit = qDoc.meshThesaurusTerms.any().eq("x");
-    List<Document> expResult = CollQueryFactory.from(qDoc, doc1, doc2, doc3).where(crit).fetch();
+    var expResult = CollQueryFactory.from(qDoc, doc1, doc2, doc3).where(crit).fetch();
     assertThat(expResult).contains(doc1); // ok
   }
 
   @Test
   public void test3() {
     Predicate crit = qDoc.meshThesaurusTerms.any().eq("x").or(qDoc.id.eq(3L));
-    List<Document> expResult = CollQueryFactory.from(qDoc, doc1, doc2, doc3).where(crit).fetch();
+    var expResult = CollQueryFactory.from(qDoc, doc1, doc2, doc3).where(crit).fetch();
     assertThat(expResult).contains(doc1);
     assertThat(expResult)
         .contains(doc3); // fails, expResult contains only doc1, but should contain doc1 and doc3!
@@ -52,7 +51,7 @@ public class DocumentTest {
   @Test
   public void test4() {
     Predicate crit = qDoc.id.eq(3L).or(qDoc.meshThesaurusTerms.any().eq("x"));
-    List<Document> expResult = CollQueryFactory.from(qDoc, doc1, doc2, doc3).where(crit).fetch();
+    var expResult = CollQueryFactory.from(qDoc, doc1, doc2, doc3).where(crit).fetch();
     assertThat(expResult).contains(doc1);
     assertThat(expResult)
         .contains(doc3); // fails, expResult contains only doc1, but should contain doc1 and doc3!

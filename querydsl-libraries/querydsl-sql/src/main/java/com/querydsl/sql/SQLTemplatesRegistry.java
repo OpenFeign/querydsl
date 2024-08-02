@@ -39,7 +39,7 @@ public class SQLTemplatesRegistry {
    * @throws SQLException
    */
   public SQLTemplates.Builder getBuilder(DatabaseMetaData md) throws SQLException {
-    String name = md.getDatabaseProductName().toLowerCase();
+    var name = md.getDatabaseProductName().toLowerCase();
     if (name.equals("cubrid")) {
       return CUBRIDTemplates.builder();
     } else if (name.equals("apache derby")) {
@@ -73,7 +73,7 @@ public class SQLTemplatesRegistry {
   }
 
   private SQLTemplates.Builder getMssqlSqlTemplates(DatabaseMetaData md) throws SQLException {
-    int databaseMajorVersion = md.getDatabaseMajorVersion();
+    var databaseMajorVersion = md.getDatabaseMajorVersion();
 
     if (databaseMajorVersion < 9) {
       return SQLServerTemplates.builder();

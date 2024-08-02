@@ -17,7 +17,6 @@ import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
@@ -33,7 +32,6 @@ import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLSerializer;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,8 +82,8 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
   }
 
   private Query createQuery(boolean forCount) {
-    NativeSQLSerializer serializer = (NativeSQLSerializer) serialize(forCount);
-    String queryString = serializer.toString();
+    var serializer = (NativeSQLSerializer) serialize(forCount);
+    var queryString = serializer.toString();
     logQuery(queryString);
     org.hibernate.query.NativeQuery query = session.createSQLQuery(queryString);
     // set constants
@@ -93,7 +91,7 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
         query, serializer.getConstants(), queryMixin.getMetadata().getParams());
 
     if (!forCount) {
-      Map<Expression<?>, List<String>> aliases = serializer.getAliases();
+      var aliases = serializer.getAliases();
       Set<String> used = new HashSet<>();
       // set entity paths
       Expression<?> projection = queryMixin.getMetadata().getProjection();
@@ -166,7 +164,7 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
   @Override
   public CloseableIterator<T> iterate() {
     try {
-      Query query = createQuery();
+      var query = createQuery();
       return new ScrollableResultsIterator<T>(query.getResultList());
     } finally {
       reset();
@@ -176,7 +174,7 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
   @Override
   public Stream<T> stream() {
     try {
-      Query query = createQuery();
+      var query = createQuery();
       return query.getResultStream();
     } finally {
       reset();
@@ -187,14 +185,14 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
   public QueryResults<T> fetchResults() {
     // TODO : handle entity projections as well
     try {
-      Query query = createQuery(true);
-      long total = ((Number) query.uniqueResult()).longValue();
+      var query = createQuery(true);
+      var total = ((Number) query.uniqueResult()).longValue();
       if (total > 0) {
-        QueryModifiers modifiers = queryMixin.getMetadata().getModifiers();
+        var modifiers = queryMixin.getMetadata().getModifiers();
         query = createQuery(false);
         @SuppressWarnings("unchecked")
         List<T> list = query.list();
-        return new QueryResults<T>(list, modifiers, total);
+        return new QueryResults<>(list, modifiers, total);
       } else {
         return QueryResults.emptyResults();
       }
@@ -205,7 +203,7 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
 
   protected void logQuery(String queryString) {
     if (logger.isLoggable(Level.FINE)) {
-      String normalizedQuery = queryString.replace('\n', ' ');
+      var normalizedQuery = queryString.replace('\n', ' ');
       logger.fine(normalizedQuery);
     }
   }
@@ -216,7 +214,7 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
   @Override
   public T fetchOne() throws NonUniqueResultException {
     try {
-      Query query = createQuery();
+      var query = createQuery();
       return (T) uniqueResult(query);
     } finally {
       reset();

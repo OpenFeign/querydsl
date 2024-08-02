@@ -13,12 +13,16 @@
  */
 package com.querydsl.sql;
 
-import static com.querydsl.core.Target.*;
-import static com.querydsl.sql.Constants.*;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.SQLSERVER;
+import static com.querydsl.sql.Constants.employee;
+import static com.querydsl.sql.Constants.survey;
+import static com.querydsl.sql.Constants.survey2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.IncludeIn;
-import com.querydsl.sql.dml.SQLMergeUsingClause;
 import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
 import java.sql.SQLException;
@@ -49,8 +53,8 @@ public class MergeUsingBase extends AbstractBaseTest {
   @Test
   @IncludeIn({DB2, SQLSERVER, H2, POSTGRESQL})
   public void merge_with_using() {
-    QSurvey usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
-    SQLMergeUsingClause merge =
+    var usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
+    var merge =
         merge(survey)
             .using(
                 query()
@@ -76,8 +80,8 @@ public class MergeUsingBase extends AbstractBaseTest {
   @Test
   @IncludeIn({DB2, SQLSERVER, H2, POSTGRESQL})
   public void merge_with_using_insert() {
-    QSurvey usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
-    SQLMergeUsingClause merge =
+    var usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
+    var merge =
         merge(survey)
             .using(
                 query()
@@ -96,8 +100,8 @@ public class MergeUsingBase extends AbstractBaseTest {
   @Test
   @IncludeIn({DB2, SQLSERVER, H2, POSTGRESQL})
   public void merge_with_using_delete() {
-    QSurvey usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
-    SQLMergeUsingClause merge =
+    var usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
+    var merge =
         merge(survey)
             .using(query().from(survey2).select(survey2.id, survey2.name).as(usingSubqueryAlias))
             .on(survey.id.eq(usingSubqueryAlias.id))
@@ -110,8 +114,8 @@ public class MergeUsingBase extends AbstractBaseTest {
   @Test
   @IncludeIn({DB2, SQLSERVER, H2, POSTGRESQL})
   public void merge_with_using_update() {
-    QSurvey usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
-    SQLMergeUsingClause merge =
+    var usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
+    var merge =
         merge(survey)
             .using(
                 query()
@@ -128,8 +132,8 @@ public class MergeUsingBase extends AbstractBaseTest {
   @Test
   @IncludeIn({DB2, SQLSERVER, H2, POSTGRESQL})
   public void merge_with_using_extra_filter() {
-    QSurvey usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
-    SQLMergeUsingClause merge =
+    var usingSubqueryAlias = new QSurvey("USING_SUBSELECT");
+    var merge =
         merge(survey)
             .using(query().from(survey2).select(survey2.id, survey2.name).as(usingSubqueryAlias))
             .on(survey.id.eq(usingSubqueryAlias.id))
@@ -143,7 +147,7 @@ public class MergeUsingBase extends AbstractBaseTest {
   @Test
   @IncludeIn({DB2, SQLSERVER, H2, POSTGRESQL})
   public void merge_with_using_direct_table_with_alias() {
-    SQLMergeUsingClause merge =
+    var merge =
         merge(survey).using(employee).on(survey.id.eq(employee.id)).whenMatched().thenDelete();
 
     assertThat(merge.execute()).isEqualTo(1);
@@ -152,7 +156,7 @@ public class MergeUsingBase extends AbstractBaseTest {
   @Test
   @IncludeIn({DB2, SQLSERVER, H2, POSTGRESQL})
   public void merge_with_using_direct_table_no_alias() {
-    SQLMergeUsingClause merge =
+    var merge =
         merge(survey)
             .using(QEmployee.employee)
             .on(survey.id.eq(QEmployee.employee.id))
@@ -165,7 +169,7 @@ public class MergeUsingBase extends AbstractBaseTest {
   @Test
   @IncludeIn({H2})
   public void merge_with_using_direct_table_with_schema() {
-    SQLMergeUsingClause merge =
+    var merge =
         merge(survey).using(employee).on(survey.id.eq(employee.id)).whenMatched().thenDelete();
 
     // If running with schema, need to have schema also in ON statement

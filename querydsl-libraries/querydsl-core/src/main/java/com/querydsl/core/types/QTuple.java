@@ -56,7 +56,7 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
 
   private static Map<Expression<?>, Integer> createBindings(List<Expression<?>> exprs) {
     Map<Expression<?>, Integer> map = new LinkedHashMap<>();
-    for (int i = 0; i < exprs.size(); i++) {
+    for (var i = 0; i < exprs.size(); i++) {
       Expression<?> e = exprs.get(i);
       if (e instanceof Operation && ((Operation<?>) e).getOperator() == Ops.ALIAS) {
         map.put(((Operation<?>) e).getArg(1), i);
@@ -85,7 +85,7 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T get(Expression<T> expr) {
-      Integer idx = QTuple.this.bindings.get(expr);
+      var idx = QTuple.this.bindings.get(expr);
       if (idx != null) {
         return (T) a[idx];
       } else {
@@ -158,7 +158,7 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
    */
   protected QTuple(Expression<?>[]... args) {
     super(Tuple.class);
-    ArrayList<Expression<?>> builder = new ArrayList<>();
+    var builder = new ArrayList<Expression<?>>();
     for (Expression<?>[] exprs : args) {
       Collections.addAll(builder, exprs);
     }

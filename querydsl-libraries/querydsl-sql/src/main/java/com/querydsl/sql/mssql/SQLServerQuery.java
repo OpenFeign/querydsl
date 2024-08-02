@@ -64,7 +64,7 @@ public class SQLServerQuery<T> extends AbstractSQLServerQuery<T, SQLServerQuery<
 
   @Override
   public SQLServerQuery<T> clone(Connection conn) {
-    SQLServerQuery<T> q = new SQLServerQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    var q = new SQLServerQuery<T>(conn, getConfiguration(), getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -73,7 +73,7 @@ public class SQLServerQuery<T> extends AbstractSQLServerQuery<T, SQLServerQuery<
   public <U> SQLServerQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    SQLServerQuery<U> newType = (SQLServerQuery<U>) this;
+    var newType = (SQLServerQuery<U>) this;
     return newType;
   }
 
@@ -81,7 +81,7 @@ public class SQLServerQuery<T> extends AbstractSQLServerQuery<T, SQLServerQuery<
   public SQLServerQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    SQLServerQuery<Tuple> newType = (SQLServerQuery<Tuple>) this;
+    var newType = (SQLServerQuery<Tuple>) this;
     return newType;
   }
 }

@@ -39,7 +39,7 @@ public class SpringConnectionProvider implements Supplier<Connection> {
 
   @Override
   public Connection get() {
-    Connection connection = DataSourceUtils.getConnection(dataSource);
+    var connection = DataSourceUtils.getConnection(dataSource);
     if (!DataSourceUtils.isConnectionTransactional(connection, dataSource)) {
       throw new IllegalStateException("Connection is not transactional");
     }

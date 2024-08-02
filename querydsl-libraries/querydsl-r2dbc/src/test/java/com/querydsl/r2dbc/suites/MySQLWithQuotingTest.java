@@ -1,7 +1,18 @@
 package com.querydsl.r2dbc.suites;
 
 import com.querydsl.core.testutil.MySQL;
-import com.querydsl.r2dbc.*;
+import com.querydsl.r2dbc.BeanPopulationBase;
+import com.querydsl.r2dbc.Connections;
+import com.querydsl.r2dbc.DeleteBase;
+import com.querydsl.r2dbc.InsertBase;
+import com.querydsl.r2dbc.KeywordQuotingBase;
+import com.querydsl.r2dbc.LikeEscapeBase;
+import com.querydsl.r2dbc.MySQLTemplates;
+import com.querydsl.r2dbc.SelectBase;
+import com.querydsl.r2dbc.SubqueriesBase;
+import com.querydsl.r2dbc.TypesBase;
+import com.querydsl.r2dbc.UnionBase;
+import com.querydsl.r2dbc.UpdateBase;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
 

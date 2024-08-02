@@ -13,8 +13,21 @@
  */
 package com.querydsl.spatial.jts;
 
-import com.querydsl.core.types.*;
-import com.vividsolutions.jts.geom.*;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathImpl;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathMetadataFactory;
+import com.querydsl.core.types.Visitor;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPoint;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 import java.lang.reflect.AnnotatedElement;
 
 /**
@@ -73,56 +86,56 @@ public class JTSGeometryPath<T extends Geometry> extends JTSGeometryExpression<T
 
   public JTSGeometryCollectionPath<GeometryCollection> asCollection() {
     if (collection == null) {
-      collection = new JTSGeometryCollectionPath<GeometryCollection>(pathMixin.getMetadata());
+      collection = new JTSGeometryCollectionPath<>(pathMixin.getMetadata());
     }
     return collection;
   }
 
   public JTSLinearRingPath<LinearRing> asLinearRing() {
     if (linearRing == null) {
-      linearRing = new JTSLinearRingPath<LinearRing>(pathMixin.getMetadata());
+      linearRing = new JTSLinearRingPath<>(pathMixin.getMetadata());
     }
     return linearRing;
   }
 
   public JTSLineStringPath<LineString> asLineString() {
     if (lineString == null) {
-      lineString = new JTSLineStringPath<LineString>(pathMixin.getMetadata());
+      lineString = new JTSLineStringPath<>(pathMixin.getMetadata());
     }
     return lineString;
   }
 
   public JTSMultiLineStringPath<MultiLineString> asMultiLineString() {
     if (multiLineString == null) {
-      multiLineString = new JTSMultiLineStringPath<MultiLineString>(pathMixin.getMetadata());
+      multiLineString = new JTSMultiLineStringPath<>(pathMixin.getMetadata());
     }
     return multiLineString;
   }
 
   public JTSMultiPointPath<MultiPoint> asMultiPoint() {
     if (multiPoint == null) {
-      multiPoint = new JTSMultiPointPath<MultiPoint>(pathMixin.getMetadata());
+      multiPoint = new JTSMultiPointPath<>(pathMixin.getMetadata());
     }
     return multiPoint;
   }
 
   public JTSMultiPolygonPath<MultiPolygon> asMultiPolygon() {
     if (multiPolygon == null) {
-      multiPolygon = new JTSMultiPolygonPath<MultiPolygon>(pathMixin.getMetadata());
+      multiPolygon = new JTSMultiPolygonPath<>(pathMixin.getMetadata());
     }
     return multiPolygon;
   }
 
   public JTSPointPath<Point> asPoint() {
     if (point == null) {
-      point = new JTSPointPath<Point>(pathMixin.getMetadata());
+      point = new JTSPointPath<>(pathMixin.getMetadata());
     }
     return point;
   }
 
   public JTSPolygonPath<Polygon> asPolygon() {
     if (polygon == null) {
-      polygon = new JTSPolygonPath<Polygon>(pathMixin.getMetadata());
+      polygon = new JTSPolygonPath<>(pathMixin.getMetadata());
     }
     return polygon;
   }

@@ -13,7 +13,11 @@
  */
 package com.querydsl.core.group;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.DslExpression;
 import com.querydsl.core.types.dsl.Expressions;
 

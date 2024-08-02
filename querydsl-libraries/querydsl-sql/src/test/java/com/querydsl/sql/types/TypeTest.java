@@ -23,12 +23,22 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.sql.*;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Currency;
+import java.util.List;
+import java.util.UUID;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -86,7 +96,7 @@ public class TypeTest implements InvocationHandler {
   @SuppressWarnings("unchecked")
   @Test
   public void test() throws MalformedURLException, SQLException {
-    List<Pair<?, ?>> valueAndType = new ArrayList<Pair<?, ?>>();
+    List<Pair<?, ?>> valueAndType = new ArrayList<>();
     valueAndType.add(Pair.of(new BigDecimal("1"), new BigDecimalType()));
     valueAndType.add(Pair.of(new BigInteger("2"), new BigIntegerType()));
     valueAndType.add(Pair.of(new BigDecimal("1.0"), new BigDecimalAsDoubleType()));
@@ -118,8 +128,8 @@ public class TypeTest implements InvocationHandler {
     valueAndType.add(Pair.of(LocalDate.now(), new LocalDateType()));
     valueAndType.add(Pair.of(LocalTime.now(), new LocalTimeType()));
 
-    valueAndType.add(Pair.of(Gender.MALE, new EnumByNameType<Gender>(Gender.class)));
-    valueAndType.add(Pair.of(Gender.MALE, new EnumByOrdinalType<Gender>(Gender.class)));
+    valueAndType.add(Pair.of(Gender.MALE, new EnumByNameType<>(Gender.class)));
+    valueAndType.add(Pair.of(Gender.MALE, new EnumByOrdinalType<>(Gender.class)));
 
     valueAndType.add(Pair.of(EasyMock.createNiceMock(Blob.class), new BlobType()));
     valueAndType.add(Pair.of(EasyMock.createNiceMock(Clob.class), new ClobType()));
@@ -129,7 +139,7 @@ public class TypeTest implements InvocationHandler {
 
     for (Pair pair : valueAndType) {
       value = null;
-      Type type = (Type) pair.getSecond();
+      var type = (Type) pair.getSecond();
       assertThat(type.getValue(resultSet, 0)).as(type.toString()).isNull();
       type.setValue(statement, 0, pair.getFirst());
       assertThat(pair.getFirst()).isEqualTo(type.getValue(resultSet, 0)).as(type.toString());

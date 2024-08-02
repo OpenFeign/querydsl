@@ -24,7 +24,7 @@ import org.junit.Test;
 @SuppressWarnings("unchecked")
 public class ValidatingVisitorTest {
 
-  private final Set<Expression<?>> known = new HashSet<Expression<?>>();
+  private final Set<Expression<?>> known = new HashSet<>();
 
   private final ValidatingVisitor validator = ValidatingVisitor.DEFAULT;
 
@@ -65,6 +65,6 @@ public class ValidatingVisitorTest {
 
   @Test
   public void visitTemplateExpressionOfQVoid() {
-    validator.visit((TemplateExpression) Expressions.template(Object.class, "XXX"), known);
+    validator.visit(Expressions.template(Object.class, "XXX"), known);
   }
 }

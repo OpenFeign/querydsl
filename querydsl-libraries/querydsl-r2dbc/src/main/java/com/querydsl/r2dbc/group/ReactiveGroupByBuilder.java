@@ -51,7 +51,7 @@ public class ReactiveGroupByBuilder<K> {
    * @return new result transformer
    */
   public ReactiveResultTransformer<Map<K, Group>> as(Expression<?>... expressions) {
-    return new ReactiveGroupByMap<K, Group>(key, expressions);
+    return new ReactiveGroupByMap<>(key, expressions);
   }
 
   /**
@@ -61,7 +61,7 @@ public class ReactiveGroupByBuilder<K> {
    * @return new result transformer
    */
   public ReactiveResultTransformer<Group> flux(Expression<?>... expressions) {
-    return new ReactiveGroupByList<K, Group>(key, expressions);
+    return new ReactiveGroupByList<>(key, expressions);
   }
 
   /**
@@ -73,10 +73,10 @@ public class ReactiveGroupByBuilder<K> {
   @SuppressWarnings("unchecked")
   public <V> ReactiveResultTransformer<Map<K, V>> as(Expression<V> expression) {
     final Expression<V> lookup = getLookup(expression);
-    return new ReactiveGroupByMap<K, V>(key, expression) {
+    return new ReactiveGroupByMap<>(key, expression) {
       @Override
       protected Map<K, V> transform(Map<K, Group> groups) {
-        Map<K, V> results = new LinkedHashMap<K, V>((int) Math.ceil(groups.size() / 0.75), 0.75f);
+        Map<K, V> results = new LinkedHashMap<>((int) Math.ceil(groups.size() / 0.75), 0.75f);
         for (Map.Entry<K, Group> entry : groups.entrySet()) {
           results.put(entry.getKey(), entry.getValue().getOne(lookup));
         }
@@ -93,7 +93,7 @@ public class ReactiveGroupByBuilder<K> {
    */
   public <V> ReactiveResultTransformer<V> flux(Expression<V> expression) {
     final Expression<V> lookup = getLookup(expression);
-    return new ReactiveGroupByList<K, V>(key, expression) {
+    return new ReactiveGroupByList<>(key, expression) {
       @Override
       protected V transform(Group group) {
         return group.getOne(lookup);
@@ -119,12 +119,12 @@ public class ReactiveGroupByBuilder<K> {
    */
   public <V> ReactiveResultTransformer<Map<K, V>> as(FactoryExpression<V> expression) {
     final FactoryExpression<?> transformation = FactoryExpressionUtils.wrap(expression);
-    List<Expression<?>> args = transformation.getArgs();
+    var args = transformation.getArgs();
     return new ReactiveGroupByMap<K, V>(key, args.toArray(new Expression<?>[args.size()])) {
 
       @Override
       protected Map<K, V> transform(Map<K, Group> groups) {
-        Map<K, V> results = new LinkedHashMap<K, V>((int) Math.ceil(groups.size() / 0.75), 0.75f);
+        Map<K, V> results = new LinkedHashMap<>((int) Math.ceil(groups.size() / 0.75), 0.75f);
         for (Map.Entry<K, Group> entry : groups.entrySet()) {
           results.put(entry.getKey(), transform(entry.getValue()));
         }
@@ -134,8 +134,8 @@ public class ReactiveGroupByBuilder<K> {
       @SuppressWarnings("unchecked")
       protected V transform(Group group) {
         // XXX Isn't group.toArray() suitable here?
-        List<Object> args = new ArrayList<Object>(groupExpressions.size() - 1);
-        for (int i = 1; i < groupExpressions.size(); i++) {
+        List<Object> args = new ArrayList<>(groupExpressions.size() - 1);
+        for (var i = 1; i < groupExpressions.size(); i++) {
           args.add(group.getGroup(groupExpressions.get(i)));
         }
         return (V) transformation.newInstance(args.toArray());
@@ -151,13 +151,13 @@ public class ReactiveGroupByBuilder<K> {
    */
   public <V> ReactiveResultTransformer<V> flux(FactoryExpression<V> expression) {
     final FactoryExpression<V> transformation = FactoryExpressionUtils.wrap(expression);
-    List<Expression<?>> args = transformation.getArgs();
-    return new ReactiveGroupByList<K, V>(key, args.toArray(new Expression<?>[args.size()])) {
+    var args = transformation.getArgs();
+    return new ReactiveGroupByList<>(key, args.toArray(new Expression<?>[args.size()])) {
       @Override
       protected V transform(Group group) {
         // XXX Isn't group.toArray() suitable here?
-        List<Object> args = new ArrayList<Object>(groupExpressions.size() - 1);
-        for (int i = 1; i < groupExpressions.size(); i++) {
+        List<Object> args = new ArrayList<>(groupExpressions.size() - 1);
+        for (var i = 1; i < groupExpressions.size(); i++) {
           args.add(group.getGroup(groupExpressions.get(i)));
         }
         return transformation.newInstance(args.toArray());

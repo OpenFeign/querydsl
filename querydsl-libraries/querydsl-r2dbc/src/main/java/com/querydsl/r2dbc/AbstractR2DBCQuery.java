@@ -83,7 +83,7 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
 
   public AbstractR2DBCQuery(
       @Nullable Connection conn, Configuration configuration, QueryMetadata metadata) {
-    super(new QueryMixin<Q>(metadata, false), configuration);
+    super(new QueryMixin<>(metadata, false), configuration);
     this.conn = conn;
     this.useLiterals = configuration.getUseLiterals();
   }
@@ -94,7 +94,7 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
 
   public AbstractR2DBCQuery(
       R2DBCConnectionProvider connProvider, Configuration configuration, QueryMetadata metadata) {
-    super(new QueryMixin<Q>(metadata, false), configuration);
+    super(new QueryMixin<>(metadata, false), configuration);
     this.connProvider = connProvider;
     this.useLiterals = configuration.getUseLiterals();
   }
@@ -134,7 +134,7 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
    * @return the current object
    */
   public Q forUpdate() {
-    QueryFlag forUpdateFlag = configuration.getTemplates().getForUpdateFlag();
+    var forUpdateFlag = configuration.getTemplates().getForUpdateFlag();
     return addFlag(forUpdateFlag);
   }
 
@@ -162,10 +162,10 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
    *     to <code>false</code>.
    */
   public Q forShare(boolean fallbackToForUpdate) {
-    SQLTemplates sqlTemplates = configuration.getTemplates();
+    var sqlTemplates = configuration.getTemplates();
 
     if (sqlTemplates.isForShareSupported()) {
-      QueryFlag forShareFlag = sqlTemplates.getForShareFlag();
+      var forShareFlag = sqlTemplates.getForShareFlag();
       return addFlag(forShareFlag);
     }
 
@@ -178,7 +178,7 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
 
   @Override
   protected SQLSerializer createSerializer() {
-    SQLSerializer serializer = new SQLSerializer(configuration);
+    var serializer = new SQLSerializer(configuration);
     serializer.setUseLiterals(useLiterals);
     return serializer;
   }
@@ -189,7 +189,7 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
   }
 
   private Statement getStatement(Connection connection, String queryString) {
-    Statement statement = connection.createStatement(queryString);
+    var statement = connection.createStatement(queryString);
     if (statementOptions.getFetchSize() != null) {
       statement.fetchSize(statementOptions.getFetchSize());
     }
@@ -215,17 +215,17 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
     return getConnection()
         .flatMapMany(
             conn -> {
-              Expression<T> expr = (Expression<T>) queryMixin.getMetadata().getProjection();
-              SQLSerializer serializer = serialize(false);
-              Mapper<T> mapper = createMapper(expr);
+              var expr = (Expression<T>) queryMixin.getMetadata().getProjection();
+              var serializer = serialize(false);
+              var mapper = createMapper(expr);
 
-              List<Object> constants = serializer.getConstants();
-              String originalSql = serializer.toString();
-              String sql =
+              var constants = serializer.getConstants();
+              var originalSql = serializer.toString();
+              var sql =
                   R2dbcUtils.replaceBindingArguments(
                       configuration.getBindMarkerFactory().create(), constants, originalSql);
 
-              Statement statement = conn.createStatement(sql);
+              var statement = conn.createStatement(sql);
               BindTarget bindTarget = new StatementWrapper(statement);
 
               setParameters(
@@ -241,7 +241,7 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
 
   private Mapper<T> createMapper(Expression<T> expr) {
     if (expr instanceof FactoryExpression) {
-      FactoryExpression<T> fe = (FactoryExpression<T>) expr;
+      var fe = (FactoryExpression<T>) expr;
       return (row, meta) -> newInstance(fe, row, 0);
     } else if (expr.equals(Wildcard.all)) {
       return this::toWildcardObjectArray;
@@ -251,26 +251,26 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
   }
 
   private T newInstance(FactoryExpression<T> c, Row rs, int offset) {
-    Object[] args = new Object[c.getArgs().size()];
-    for (int i = 0; i < args.length; i++) {
+    var args = new Object[c.getArgs().size()];
+    for (var i = 0; i < args.length; i++) {
       args[i] = get(rs, c.getArgs().get(i), offset + i, c.getArgs().get(i).getType());
     }
     return Objects.requireNonNull(c.newInstance(args), "Null result");
   }
 
   private T toWildcardObjectArray(Row row, RowMetadata meta) {
-    ArrayList<ColumnMetadata> metaList = new ArrayList<>();
+    var metaList = new ArrayList<ColumnMetadata>();
     meta.getColumnMetadatas().forEach(metaList::add);
 
-    Object[] args = new Object[metaList.size()];
-    for (int i = 0; i < args.length; i++) {
-      ColumnMetadata columnMetadata = metaList.get(i);
+    var args = new Object[metaList.size()];
+    for (var i = 0; i < args.length; i++) {
+      var columnMetadata = metaList.get(i);
       args[i] =
           row.get(i, Objects.requireNonNull(columnMetadata.getJavaType(), "Unknown Java type"));
     }
 
     @SuppressWarnings("unchecked")
-    T result = (T) args;
+    var result = (T) args;
     return result;
   }
 
@@ -299,7 +299,7 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
           "Expected " + objects.size() + " paths, but got " + constantPaths.size());
     }
 
-    for (int i = 0; i < objects.size(); i++) {
+    for (var i = 0; i < objects.size(); i++) {
       Object o = objects.get(i);
       if (o instanceof ParamExpression) {
         if (!params.containsKey(o)) {
@@ -313,11 +313,11 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
   }
 
   private Mono<Long> unsafeCount() {
-    SQLSerializer serializer = serialize(true);
+    var serializer = serialize(true);
 
-    List<Object> constants = serializer.getConstants();
-    String originalSql = serializer.toString();
-    String sql =
+    var constants = serializer.getConstants();
+    var originalSql = serializer.toString();
+    var sql =
         R2dbcUtils.replaceBindingArguments(
             configuration.getBindMarkerFactory().create(), constants, originalSql);
 
@@ -326,7 +326,7 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
     return getConnection()
         .flatMap(
             connection -> {
-              Statement statement = getStatement(connection, sql);
+              var statement = getStatement(connection, sql);
               BindTarget bindTarget = new StatementWrapper(statement);
 
               setParameters(
@@ -353,7 +353,7 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
 
   protected void logQuery(String queryString, Collection<Object> parameters) {
     if (logger.isLoggable(Level.FINE)) {
-      String normalizedQuery = queryString.replace('\n', ' ');
+      var normalizedQuery = queryString.replace('\n', ' ');
       logger.fine(normalizedQuery);
     }
   }

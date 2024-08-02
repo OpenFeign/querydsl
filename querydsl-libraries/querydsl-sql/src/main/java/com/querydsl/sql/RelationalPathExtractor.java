@@ -17,7 +17,16 @@ import static com.querydsl.core.util.CollectionUtils.add;
 
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.core.types.Visitor;
 import java.util.Collections;
 import java.util.Set;
 
@@ -97,8 +106,8 @@ public final class RelationalPathExtractor
 
   @Override
   public Set<RelationalPath<?>> visit(SubQueryExpression<?> expr, Set<RelationalPath<?>> known) {
-    Set<RelationalPath<?>> old = known;
-    final QueryMetadata md = expr.getMetadata();
+    var old = known;
+    final var md = expr.getMetadata();
     known = visitJoins(md.getJoins(), known);
     if (md.getProjection() != null) {
       known = md.getProjection().accept(this, known);

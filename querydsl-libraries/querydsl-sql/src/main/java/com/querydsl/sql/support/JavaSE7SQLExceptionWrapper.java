@@ -26,8 +26,8 @@ class JavaSE7SQLExceptionWrapper extends SQLExceptionWrapper {
 
   @Override
   public RuntimeException wrap(SQLException exception) {
-    QueryException rv = new QueryException(exception);
-    SQLException linkedException = exception.getNextException();
+    var rv = new QueryException(exception);
+    var linkedException = exception.getNextException();
     while (linkedException != null) {
       rv.addSuppressed(linkedException);
       linkedException = linkedException.getNextException();
@@ -37,8 +37,8 @@ class JavaSE7SQLExceptionWrapper extends SQLExceptionWrapper {
 
   @Override
   public RuntimeException wrap(String message, SQLException exception) {
-    QueryException rv = new QueryException(message, exception);
-    SQLException linkedException = exception.getNextException();
+    var rv = new QueryException(message, exception);
+    var linkedException = exception.getNextException();
     while (linkedException != null) {
       rv.addSuppressed(linkedException);
       linkedException = linkedException.getNextException();

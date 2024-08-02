@@ -116,7 +116,7 @@ public class R2DBCQuery<T> extends AbstractR2DBCQuery<T, R2DBCQuery<T>> {
 
   @Override
   public R2DBCQuery<T> clone(Connection conn) {
-    R2DBCQuery<T> q = new R2DBCQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    var q = new R2DBCQuery<T>(conn, getConfiguration(), getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -125,7 +125,7 @@ public class R2DBCQuery<T> extends AbstractR2DBCQuery<T, R2DBCQuery<T>> {
   public <U> R2DBCQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    R2DBCQuery<U> newType = (R2DBCQuery<U>) this;
+    var newType = (R2DBCQuery<U>) this;
     return newType;
   }
 
@@ -133,7 +133,7 @@ public class R2DBCQuery<T> extends AbstractR2DBCQuery<T, R2DBCQuery<T>> {
   public R2DBCQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    R2DBCQuery<Tuple> newType = (R2DBCQuery<Tuple>) this;
+    var newType = (R2DBCQuery<Tuple>) this;
     return newType;
   }
 }

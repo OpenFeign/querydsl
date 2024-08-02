@@ -15,16 +15,16 @@ public class QueryByExampleTest {
 
   @Test
   public void name_not_set() {
-    ExampleEntity entity = new ExampleEntity();
-    Predicate qbe = QExampleEntity.exampleEntity.like(entity);
+    var entity = new ExampleEntity();
+    var qbe = QExampleEntity.exampleEntity.like(entity);
     assertThat(qbe).isNull();
   }
 
   @Test
   public void name_set() {
-    ExampleEntity entity = new ExampleEntity();
+    var entity = new ExampleEntity();
     entity.name = "XXX";
-    Predicate qbe = QExampleEntity.exampleEntity.like(entity);
+    var qbe = QExampleEntity.exampleEntity.like(entity);
     assertThat(qbe).hasToString("exampleEntity.name = XXX");
   }
 }

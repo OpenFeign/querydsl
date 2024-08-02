@@ -16,7 +16,6 @@ package com.querydsl.jpa.support;
 import com.querydsl.core.types.dsl.PathBuilderValidator;
 import com.querydsl.core.util.PrimitiveUtils;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.ManagedType;
 import jakarta.persistence.metamodel.Metamodel;
 import jakarta.persistence.metamodel.PluralAttribute;
@@ -38,7 +37,7 @@ public class JPAPathBuilderValidator implements PathBuilderValidator {
   public Class<?> validate(Class<?> parent, String property, Class<?> propertyType) {
     try {
       ManagedType managedType = metamodel.managedType(parent);
-      Attribute attribute = managedType.getAttribute(property);
+      var attribute = managedType.getAttribute(property);
       if (attribute instanceof PluralAttribute) {
         return ((PluralAttribute) attribute).getElementType().getJavaType();
       } else {

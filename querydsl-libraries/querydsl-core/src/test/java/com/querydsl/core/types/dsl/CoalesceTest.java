@@ -25,38 +25,38 @@ public class CoalesceTest {
 
   @Test
   public void mutable() {
-    Coalesce<String> c = new Coalesce<String>(firstname, lastname).add("xxx");
+    var c = new Coalesce<String>(firstname, lastname).add("xxx");
     assertThat(c).hasToString("coalesce(firstname, lastname, xxx)");
     assertThat(c.add("yyy")).hasToString("coalesce(firstname, lastname, xxx, yyy)");
   }
 
   @Test
   public void withList() {
-    Coalesce<String> c = new Coalesce<String>(firstname, lastname).add("xxx");
+    var c = new Coalesce<String>(firstname, lastname).add("xxx");
     assertThat(c).hasToString("coalesce(firstname, lastname, xxx)");
   }
 
   @Test
   public void withSingleArg() {
-    Coalesce<String> c = new Coalesce<String>().add("xxx");
+    var c = new Coalesce<String>().add("xxx");
     assertThat(c).hasToString("coalesce(xxx)");
   }
 
   @Test
   public void asComparable() {
-    Coalesce<String> c = new Coalesce<String>(firstname, lastname);
+    var c = new Coalesce<>(firstname, lastname);
     c.getValue().asc();
   }
 
   @Test
   public void asString() {
-    Coalesce<String> c = new Coalesce<String>(firstname, lastname);
+    var c = new Coalesce<>(firstname, lastname);
     c.asString().lower();
   }
 
   @Test
   public void withoutWarnings() {
-    Coalesce<String> c = new Coalesce<String>(String.class).add(firstname).add(lastname);
+    var c = new Coalesce<>(String.class).add(firstname).add(lastname);
     assertThat(c).hasToString("coalesce(firstname, lastname)");
   }
 

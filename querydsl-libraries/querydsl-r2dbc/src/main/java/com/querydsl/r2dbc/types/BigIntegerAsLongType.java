@@ -38,7 +38,7 @@ public class BigIntegerAsLongType extends AbstractType<BigInteger, BigInteger> {
 
   @Override
   public BigInteger getValue(Row row, int startIndex) {
-    Long val = row.get(startIndex, Long.class);
+    var val = row.get(startIndex, Long.class);
     return val == null ? null : BigInteger.valueOf(val);
   }
 

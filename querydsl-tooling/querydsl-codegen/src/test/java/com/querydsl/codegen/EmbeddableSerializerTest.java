@@ -72,8 +72,7 @@ public class EmbeddableSerializerTest {
 
   @Test
   public void originalCategory() throws IOException {
-    Map<TypeCategory, String> categoryToSuperClass =
-        new EnumMap<TypeCategory, String>(TypeCategory.class);
+    Map<TypeCategory, String> categoryToSuperClass = new EnumMap<>(TypeCategory.class);
     categoryToSuperClass.put(TypeCategory.COMPARABLE, "ComparablePath<Entity>");
     categoryToSuperClass.put(TypeCategory.ENUM, "EnumPath<Entity>");
     categoryToSuperClass.put(TypeCategory.DATE, "DatePath<Entity>");

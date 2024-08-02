@@ -8,11 +8,18 @@ import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.group.GroupExpression;
 import com.querydsl.core.testutil.Serialization;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.BeanPath;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.PathBuilderValidator;
+import com.querydsl.core.types.dsl.PathInits;
+import com.querydsl.core.types.dsl.SimplePath;
 import io.github.classgraph.ClassGraph;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import org.junit.Test;
 
 public class SerializationTest {
@@ -26,7 +33,7 @@ public class SerializationTest {
   public void expressions() throws Exception {
     Map<Class<?>, Object> args = new HashMap<>();
     args.put(Object.class, "obj");
-    args.put(BeanPath.class, new EntityPathBase<Object>(Object.class, "obj"));
+    args.put(BeanPath.class, new EntityPathBase<>(Object.class, "obj"));
     args.put(Class.class, Integer.class);
     args.put(Class[].class, new Class<?>[] {Object.class, Object.class});
     args.put(java.util.Date.class, new java.util.Date(0));
@@ -49,16 +56,15 @@ public class SerializationTest {
     args.put(QueryMetadata.class, new DefaultQueryMetadata());
     args.put(String.class, "obj");
 
-    ClassGraph reflections = new ClassGraph().enableClassInfo();
-    List<Class<?>> types =
-        reflections.scan().getSubclasses(Expression.class.getName()).loadClasses();
+    var reflections = new ClassGraph().enableClassInfo();
+    var types = reflections.scan().getSubclasses(Expression.class.getName()).loadClasses();
     for (Class<?> type : types) {
       if (!type.isInterface()
           && !type.isMemberClass()
           && !Modifier.isAbstract(type.getModifiers())) {
         for (Constructor<?> c : type.getConstructors()) {
-          Object[] parameters = new Object[c.getParameterTypes().length];
-          for (int i = 0; i < c.getParameterTypes().length; i++) {
+          var parameters = new Object[c.getParameterTypes().length];
+          for (var i = 0; i < c.getParameterTypes().length; i++) {
             parameters[i] =
                 Objects.requireNonNull(
                     args.get(c.getParameterTypes()[i]), c.getParameterTypes()[i].getName());
@@ -73,7 +79,7 @@ public class SerializationTest {
 
   @Test
   public void order() {
-    OrderSpecifier<?> order = new OrderSpecifier<String>(Order.ASC, Expressions.stringPath("str"));
+    OrderSpecifier<?> order = new OrderSpecifier<>(Order.ASC, Expressions.stringPath("str"));
     assertThat(Serialization.serialize(order)).isEqualTo(order);
   }
 

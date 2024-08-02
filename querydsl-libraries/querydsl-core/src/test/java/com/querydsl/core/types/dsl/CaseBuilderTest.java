@@ -36,15 +36,14 @@ public class CaseBuilderTest {
 
   @Test
   public void general() {
-    SimpleExpression<Object> expr =
-        new CaseBuilder().when(Expressions.TRUE).then(new Object()).otherwise(null);
+    var expr = new CaseBuilder().when(Expressions.TRUE).then(new Object()).otherwise(null);
     assertThat(expr).isNotNull();
   }
 
   @Test
   public void booleanTyped() {
-    Customer c = alias(Customer.class, "customer");
-    BooleanExpression cases =
+    var c = alias(Customer.class, "customer");
+    var cases =
         new CaseBuilder().when($(c.getAnnualSpending()).gt(10000)).then(true).otherwise(false);
 
     assertThat(cases.toString())
@@ -59,8 +58,8 @@ public class CaseBuilderTest {
 
   @Test
   public void booleanTyped_predicate() {
-    Customer c = alias(Customer.class, "customer");
-    BooleanExpression cases =
+    var c = alias(Customer.class, "customer");
+    var cases =
         new CaseBuilder()
             .when($(c.getAnnualSpending()).gt(20000))
             .then(false)
@@ -81,8 +80,8 @@ public class CaseBuilderTest {
 
   @Test
   public void enumTyped() {
-    Customer c = alias(Customer.class, "customer");
-    EnumExpression<Gender> cases =
+    var c = alias(Customer.class, "customer");
+    var cases =
         new CaseBuilder()
             .when($(c.getAnnualSpending()).gt(10000))
             .then(Gender.MALE)
@@ -100,8 +99,8 @@ public class CaseBuilderTest {
 
   @Test
   public void numberTyped() {
-    Customer c = alias(Customer.class, "customer");
-    NumberExpression<Integer> cases =
+    var c = alias(Customer.class, "customer");
+    var cases =
         new CaseBuilder()
             .when($(c.getAnnualSpending()).gt(10000))
             .then(1)
@@ -132,8 +131,8 @@ public class CaseBuilderTest {
     //          ELSE 'Bronze'
     //        END
 
-    Customer c = alias(Customer.class, "customer");
-    StringExpression cases =
+    var c = alias(Customer.class, "customer");
+    var cases =
         new CaseBuilder()
             .when($(c.getAnnualSpending()).gt(10000))
             .then("Premier")

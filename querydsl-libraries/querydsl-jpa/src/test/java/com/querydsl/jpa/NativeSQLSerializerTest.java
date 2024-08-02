@@ -35,10 +35,10 @@ public class NativeSQLSerializerTest {
 
   @Test
   public void in() {
-    Configuration conf = new Configuration(new MySQLTemplates());
-    NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
-    DefaultQueryMetadata md = new DefaultQueryMetadata();
-    SAnimal_ cat = SAnimal_.animal_;
+    var conf = new Configuration(new MySQLTemplates());
+    var serializer = new NativeSQLSerializer(conf, true);
+    var md = new DefaultQueryMetadata();
+    var cat = SAnimal_.animal_;
     md.addJoin(JoinType.DEFAULT, cat);
     md.addWhere(cat.name.in("X", "Y"));
     md.setProjection(cat.id);
@@ -54,18 +54,18 @@ public class NativeSQLSerializerTest {
 
   @Test
   public void path_column() {
-    PathBuilder<Entity> entity = new PathBuilder<Entity>(Entity.class, "entity");
-    Configuration conf = new Configuration(new MySQLTemplates());
-    NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
+    var entity = new PathBuilder<>(Entity.class, "entity");
+    var conf = new Configuration(new MySQLTemplates());
+    var serializer = new NativeSQLSerializer(conf, true);
     serializer.handle(entity.get("name"));
     assertThat(serializer).hasToString("entity.name");
   }
 
   @Test
   public void path_column2() {
-    PathBuilder<Entity> entity = new PathBuilder<Entity>(Entity.class, "entity");
-    Configuration conf = new Configuration(new MySQLTemplates());
-    NativeSQLSerializer serializer = new NativeSQLSerializer(conf, true);
+    var entity = new PathBuilder<>(Entity.class, "entity");
+    var conf = new Configuration(new MySQLTemplates());
+    var serializer = new NativeSQLSerializer(conf, true);
     serializer.handle(entity.get("firstName"));
     assertThat(serializer).hasToString("entity.first_name");
   }

@@ -13,7 +13,6 @@
  */
 package com.querydsl.sql;
 
-import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.JoinFlag;
 import com.querydsl.core.NonUniqueResultException;
@@ -22,7 +21,17 @@ import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.support.FetchableSubQueryBase;
 import com.querydsl.core.support.QueryMixin;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.ParamNotSetException;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathExtractor;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Wildcard;
 import java.util.ArrayList;
@@ -171,7 +180,7 @@ public abstract class ProjectableSQLQuery<T, Q extends ProjectableSQLQuery<T, Q>
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
   public Q from(SubQueryExpression<?> subQuery, Path<?> alias) {
-    return queryMixin.from((Expression) ExpressionUtils.as((Expression) subQuery, alias));
+    return queryMixin.from(ExpressionUtils.as((Expression) subQuery, alias));
   }
 
   @Override
@@ -356,7 +365,7 @@ public abstract class ProjectableSQLQuery<T, Q extends ProjectableSQLQuery<T, Q>
    */
   @SuppressWarnings("unchecked")
   public <RT> Q union(Path<?> alias, SubQueryExpression<RT>... sq) {
-    return from((Expression) UnionUtils.union(Arrays.asList(sq), (Path) alias, false));
+    return from(UnionUtils.union(Arrays.asList(sq), (Path) alias, false));
   }
 
   /**
@@ -393,7 +402,7 @@ public abstract class ProjectableSQLQuery<T, Q extends ProjectableSQLQuery<T, Q>
    */
   @SuppressWarnings("unchecked")
   public <RT> Q unionAll(Path<?> alias, SubQueryExpression<RT>... sq) {
-    return from((Expression) UnionUtils.union(Arrays.asList(sq), (Path) alias, true));
+    return from(UnionUtils.union(Arrays.asList(sq), (Path) alias, true));
   }
 
   @Override
@@ -402,7 +411,7 @@ public abstract class ProjectableSQLQuery<T, Q extends ProjectableSQLQuery<T, Q>
         && !queryMixin.getMetadata().getProjection().toString().contains("count(")) {
       limit(2);
     }
-    CloseableIterator<T> iterator = iterate();
+    var iterator = iterate();
     return uniqueResult(iterator);
   }
 
@@ -443,7 +452,7 @@ public abstract class ProjectableSQLQuery<T, Q extends ProjectableSQLQuery<T, Q>
     Expression<?> columnsCombined = ExpressionUtils.list(Object.class, columns);
     Expression<?> aliasCombined =
         Expressions.operation(alias.getType(), SQLOps.WITH_COLUMNS, alias, columnsCombined);
-    return new WithBuilder<Q>(queryMixin, aliasCombined);
+    return new WithBuilder<>(queryMixin, aliasCombined);
   }
 
   protected void clone(Q query) {
@@ -479,15 +488,15 @@ public abstract class ProjectableSQLQuery<T, Q extends ProjectableSQLQuery<T, Q>
 
   @SuppressWarnings("unchecked")
   protected SQLSerializer serialize(boolean forCountRow) {
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     if (union != null) {
       if (queryMixin.getMetadata().getProjection() == null
           || expandProjection(queryMixin.getMetadata().getProjection())
               .equals(expandProjection(firstUnionSubQuery.getMetadata().getProjection()))) {
         serializer.serializeUnion(union, queryMixin.getMetadata(), unionAll);
       } else {
-        QueryMixin<Q> mixin2 = new QueryMixin<Q>(queryMixin.getMetadata().clone());
-        Set<Path<?>> paths = getRootPaths(expandProjection(mixin2.getMetadata().getProjection()));
+        var mixin2 = new QueryMixin<Q>(queryMixin.getMetadata().clone());
+        var paths = getRootPaths(expandProjection(mixin2.getMetadata().getProjection()));
         if (paths.isEmpty()) {
           mixin2.from(ExpressionUtils.as((Expression) union, defaultQueryAlias));
         } else if (paths.size() == 1) {
@@ -529,7 +538,7 @@ public abstract class ProjectableSQLQuery<T, Q extends ProjectableSQLQuery<T, Q>
 
   @Override
   public String toString() {
-    SQLSerializer serializer = serialize(false);
+    var serializer = serialize(false);
     return serializer.toString().trim();
   }
 }

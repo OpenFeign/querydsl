@@ -15,8 +15,8 @@
 package com.querydsl.collections;
 
 import static com.querydsl.core.group.GroupBy.list;
+import static com.querydsl.core.group.GroupBy.map;
 import static com.querydsl.core.group.guava.GuavaGroupBy.groupBy;
-import static com.querydsl.core.group.guava.GuavaGroupBy.map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.HashMultimap;
@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.querydsl.core.annotations.QueryEntity;
+import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.group.guava.GuavaGroupBy;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +59,7 @@ public class GroupBy4Test {
     data.add(new Table("3", "abc", "555"));
     data.add(new Table("3", "pqr", "666"));
 
-    QGroupBy4Test_Table table = QGroupBy4Test_Table.table;
+    var table = QGroupBy4Test_Table.table;
     Map<String, Map<String, String>> grouped =
         CollQueryFactory.from(table, data)
             .transform(groupBy(table.col1).as(map(table.col2, table.col3)));
@@ -78,7 +79,7 @@ public class GroupBy4Test {
     data.add(new Table("3", "abc", "555"));
     data.add(new Table("3", "pqr", "666"));
 
-    QGroupBy4Test_Table table = QGroupBy4Test_Table.table;
+    var table = QGroupBy4Test_Table.table;
     Multimap<String, String> transform =
         CollQueryFactory.from(table, data).transform(groupBy(table.col1).asMultimap(table.col2));
 
@@ -103,7 +104,7 @@ public class GroupBy4Test {
     data.add(new Table("3", "abc", "555"));
     data.add(new Table("3", "pqr", "666"));
 
-    QGroupBy4Test_Table table = QGroupBy4Test_Table.table;
+    var table = QGroupBy4Test_Table.table;
     Multimap<String, Map<String, String>> transform =
         CollQueryFactory.from(table, data)
             .transform(groupBy(table.col1).asMultimap(map(table.col2, table.col3)));
@@ -129,12 +130,12 @@ public class GroupBy4Test {
     data.add(new Table("3", "abc", "555"));
     data.add(new Table("3", "pqr", "666"));
 
-    QGroupBy4Test_Table table = QGroupBy4Test_Table.table;
+    var table = QGroupBy4Test_Table.table;
     com.google.common.collect.Table<String, String, String> transform =
         CollQueryFactory.from(table, data)
             .transform(groupBy(table.col1).asTable(table.col2, table.col3));
 
-    ImmutableTable<String, String, String> expected =
+    var expected =
         ImmutableTable.<String, String, String>builder()
             .put("1", "abc", "111")
             .put("1", "pqr", "222")
@@ -158,12 +159,12 @@ public class GroupBy4Test {
     data.add(new Table("3", "pqr", "666"));
     data.add(new Table("3", "pqr", "777"));
 
-    QGroupBy4Test_Table table = QGroupBy4Test_Table.table;
+    var table = QGroupBy4Test_Table.table;
     com.google.common.collect.Table<String, String, List<String>> transform =
         CollQueryFactory.from(table, data)
             .transform(groupBy(table.col1).asTable(table.col2, list(table.col3)));
 
-    ImmutableTable<String, String, List<String>> expected =
+    var expected =
         ImmutableTable.<String, String, List<String>>builder()
             .put("1", "abc", ImmutableList.of("111"))
             .put("1", "pqr", ImmutableList.of("222"))
@@ -187,12 +188,12 @@ public class GroupBy4Test {
     data.add(new Table("3", "pqr", "666"));
     data.add(new Table("3", "pqr", "777"));
 
-    QGroupBy4Test_Table table = QGroupBy4Test_Table.table;
+    var table = QGroupBy4Test_Table.table;
     Map<String, Multimap<String, String>> transform =
         CollQueryFactory.from(table, data)
             .transform(groupBy(table.col1).as(GuavaGroupBy.multimap(table.col2, table.col3)));
 
-    ImmutableMap<String, Multimap<String, String>> expected =
+    var expected =
         ImmutableMap.<String, Multimap<String, String>>builder()
             .put(
                 "1",
@@ -231,7 +232,7 @@ public class GroupBy4Test {
     data.add(new Table("3", "pqr", "666"));
     data.add(new Table("3", "pqr", "777"));
 
-    QGroupBy4Test_Table table = QGroupBy4Test_Table.table;
+    var table = QGroupBy4Test_Table.table;
     Map<String, com.google.common.collect.Table<String, String, Map<String, List<String>>>>
         transform =
             CollQueryFactory.from(table, data)
@@ -241,50 +242,48 @@ public class GroupBy4Test {
                             GuavaGroupBy.table(
                                 table.col1, table.col2, map(table.col2, list(table.col3)))));
 
-    ImmutableMap<String, com.google.common.collect.Table<String, String, Map<String, List<String>>>>
-        expected =
-            ImmutableMap
-                .<String,
-                    com.google.common.collect.Table<String, String, Map<String, List<String>>>>
-                    builder()
-                .put(
-                    "1",
-                    ImmutableTable.<String, String, Map<String, List<String>>>builder()
-                        .put(
-                            "1",
-                            "abc",
-                            ImmutableMap.<String, List<String>>of("abc", ImmutableList.of("111")))
-                        .put(
-                            "1",
-                            "pqr",
-                            ImmutableMap.<String, List<String>>of("pqr", ImmutableList.of("222")))
-                        .build())
-                .put(
-                    "2",
-                    ImmutableTable.<String, String, Map<String, List<String>>>builder()
-                        .put(
-                            "2",
-                            "abc",
-                            ImmutableMap.<String, List<String>>of("abc", ImmutableList.of("333")))
-                        .put(
-                            "2",
-                            "pqr",
-                            ImmutableMap.<String, List<String>>of("pqr", ImmutableList.of("444")))
-                        .build())
-                .put(
-                    "3",
-                    ImmutableTable.<String, String, Map<String, List<String>>>builder()
-                        .put(
-                            "3",
-                            "abc",
-                            ImmutableMap.<String, List<String>>of("abc", ImmutableList.of("555")))
-                        .put(
-                            "3",
-                            "pqr",
-                            ImmutableMap.<String, List<String>>of(
-                                "pqr", ImmutableList.of("666", "777")))
-                        .build())
-                .build();
+    var expected =
+        ImmutableMap
+            .<String, com.google.common.collect.Table<String, String, Map<String, List<String>>>>
+                builder()
+            .put(
+                "1",
+                ImmutableTable.<String, String, Map<String, List<String>>>builder()
+                    .put(
+                        "1",
+                        "abc",
+                        ImmutableMap.<String, List<String>>of("abc", ImmutableList.of("111")))
+                    .put(
+                        "1",
+                        "pqr",
+                        ImmutableMap.<String, List<String>>of("pqr", ImmutableList.of("222")))
+                    .build())
+            .put(
+                "2",
+                ImmutableTable.<String, String, Map<String, List<String>>>builder()
+                    .put(
+                        "2",
+                        "abc",
+                        ImmutableMap.<String, List<String>>of("abc", ImmutableList.of("333")))
+                    .put(
+                        "2",
+                        "pqr",
+                        ImmutableMap.<String, List<String>>of("pqr", ImmutableList.of("444")))
+                    .build())
+            .put(
+                "3",
+                ImmutableTable.<String, String, Map<String, List<String>>>builder()
+                    .put(
+                        "3",
+                        "abc",
+                        ImmutableMap.<String, List<String>>of("abc", ImmutableList.of("555")))
+                    .put(
+                        "3",
+                        "pqr",
+                        ImmutableMap.<String, List<String>>of(
+                            "pqr", ImmutableList.of("666", "777")))
+                    .build())
+            .build();
 
     assertThat(transform).isEqualTo(expected);
   }
@@ -300,14 +299,13 @@ public class GroupBy4Test {
     data.add(new Table("3", "pqr", "666"));
     data.add(new Table("3", "pqr", "777"));
 
-    QGroupBy4Test_Table table = QGroupBy4Test_Table.table;
+    var table = QGroupBy4Test_Table.table;
     com.google.common.collect.Table<String, Map<String, String>, List<String>> transform =
         CollQueryFactory.from(table, data)
             .transform(
-                groupBy(table.col1)
-                    .asTable(map(table.col1, table.col2), GuavaGroupBy.list(table.col3)));
+                groupBy(table.col1).asTable(map(table.col1, table.col2), GroupBy.list(table.col3)));
 
-    ImmutableTable<String, Map<String, String>, List<String>> expected =
+    var expected =
         ImmutableTable.<String, Map<String, String>, List<String>>builder()
             .put("1", ImmutableMap.of("1", "abc"), ImmutableList.of("111"))
             .put("1", ImmutableMap.of("1", "pqr"), ImmutableList.of("222"))

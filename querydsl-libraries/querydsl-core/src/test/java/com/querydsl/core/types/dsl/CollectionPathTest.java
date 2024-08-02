@@ -21,7 +21,7 @@ import org.junit.Test;
 public class CollectionPathTest {
 
   private CollectionPath<String, StringPath> stringPath =
-      new CollectionPath<String, StringPath>(
+      new CollectionPath<>(
           String.class, StringPath.class, PathMetadataFactory.forVariable("stringPath"));
 
   @Test

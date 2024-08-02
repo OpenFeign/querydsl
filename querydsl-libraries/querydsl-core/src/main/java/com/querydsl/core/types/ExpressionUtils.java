@@ -16,7 +16,13 @@ package com.querydsl.core.types;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryException;
 import com.querydsl.core.util.CollectionUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -67,7 +73,7 @@ public final class ExpressionUtils {
     if (type.equals(Boolean.class)) {
       return (Operation<T>) new PredicateOperation(operator, args);
     } else {
-      return new OperationImpl<T>(type, operator, args);
+      return new OperationImpl<>(type, operator, args);
     }
   }
 
@@ -101,7 +107,7 @@ public final class ExpressionUtils {
    * @return path expression
    */
   public static <T> Path<T> path(Class<? extends T> type, String variable) {
-    return new PathImpl<T>(type, variable);
+    return new PathImpl<>(type, variable);
   }
 
   /**
@@ -113,7 +119,7 @@ public final class ExpressionUtils {
    * @return property path
    */
   public static <T> Path<T> path(Class<? extends T> type, Path<?> parent, String property) {
-    return new PathImpl<T>(type, parent, property);
+    return new PathImpl<>(type, parent, property);
   }
 
   /**
@@ -125,7 +131,7 @@ public final class ExpressionUtils {
    * @return path expression
    */
   public static <T> Path<T> path(Class<? extends T> type, PathMetadata metadata) {
-    return new PathImpl<T>(type, metadata);
+    return new PathImpl<>(type, metadata);
   }
 
   /**
@@ -225,7 +231,7 @@ public final class ExpressionUtils {
     if (cl.equals(Boolean.class)) {
       return (TemplateExpression<T>) new PredicateTemplate(template, args);
     } else {
-      return new TemplateExpressionImpl<T>(cl, template, args);
+      return new TemplateExpressionImpl<>(cl, template, args);
     }
   }
 
@@ -237,7 +243,7 @@ public final class ExpressionUtils {
    */
   @SuppressWarnings("unchecked")
   public static <T> Expression<T> all(CollectionExpression<?, ? super T> col) {
-    return new OperationImpl<T>(
+    return new OperationImpl<>(
         (Class<T>) col.getParameter(0), Ops.QuantOps.ALL, Collections.singletonList(col));
   }
 
@@ -249,7 +255,7 @@ public final class ExpressionUtils {
    */
   @SuppressWarnings("unchecked")
   public static <T> Expression<T> any(CollectionExpression<?, ? super T> col) {
-    return new OperationImpl<T>(
+    return new OperationImpl<>(
         (Class<T>) col.getParameter(0), Ops.QuantOps.ANY, Collections.singletonList(col));
   }
 
@@ -261,7 +267,7 @@ public final class ExpressionUtils {
    */
   @SuppressWarnings("unchecked")
   public static <T> Expression<T> all(SubQueryExpression<? extends T> col) {
-    return new OperationImpl<T>(col.getType(), Ops.QuantOps.ALL, Collections.singletonList(col));
+    return new OperationImpl<>(col.getType(), Ops.QuantOps.ALL, Collections.singletonList(col));
   }
 
   /**
@@ -272,7 +278,7 @@ public final class ExpressionUtils {
    */
   @SuppressWarnings("unchecked")
   public static <T> Expression<T> any(SubQueryExpression<? extends T> col) {
-    return new OperationImpl<T>(col.getType(), Ops.QuantOps.ANY, Collections.singletonList(col));
+    return new OperationImpl<>(col.getType(), Ops.QuantOps.ANY, Collections.singletonList(col));
   }
 
   /**
@@ -470,7 +476,7 @@ public final class ExpressionUtils {
    */
   public static <D> Predicate inAny(
       Expression<D> left, Iterable<? extends Collection<? extends D>> lists) {
-    BooleanBuilder rv = new BooleanBuilder();
+    var rv = new BooleanBuilder();
     for (Collection<? extends D> list : lists) {
       rv.or(in(left, list));
     }
@@ -518,13 +524,13 @@ public final class ExpressionUtils {
   public static Expression<String> likeToRegex(Expression<String> expr, boolean matchStartAndEnd) {
     // TODO : this should take the escape character into account
     if (expr instanceof Constant<?>) {
-      final String like = expr.toString();
-      final StringBuilder rv = new StringBuilder(like.length() + 4);
+      final var like = expr.toString();
+      final var rv = new StringBuilder(like.length() + 4);
       if (matchStartAndEnd && !like.startsWith("%")) {
         rv.append('^');
       }
-      for (int i = 0; i < like.length(); i++) {
-        char ch = like.charAt(i);
+      for (var i = 0; i < like.length(); i++) {
+        var ch = like.charAt(i);
         if (ch == '.' || ch == '*' || ch == '?') {
           rv.append('\\');
         } else if (ch == '%') {
@@ -545,8 +551,8 @@ public final class ExpressionUtils {
     } else if (expr instanceof Operation<?>) {
       Operation<?> o = (Operation<?>) expr;
       if (o.getOperator() == Ops.CONCAT) {
-        Expression<String> lhs = likeToRegex((Expression<String>) o.getArg(0), false);
-        Expression<String> rhs = likeToRegex((Expression<String>) o.getArg(1), false);
+        var lhs = likeToRegex((Expression<String>) o.getArg(0), false);
+        var rhs = likeToRegex((Expression<String>) o.getArg(1), false);
         if (lhs != o.getArg(0) || rhs != o.getArg(1)) {
           return operation(String.class, Ops.CONCAT, lhs, rhs);
         }
@@ -573,11 +579,11 @@ public final class ExpressionUtils {
    */
   @SuppressWarnings("unchecked")
   public static <T> Expression<T> list(Class<T> clazz, List<? extends Expression<?>> exprs) {
-    Expression<T> rv = (Expression<T>) exprs.get(0);
+    var rv = (Expression<T>) exprs.get(0);
     if (exprs.size() == 1) {
       rv = operation(clazz, Ops.SINGLETON, rv, exprs.get(0));
     } else {
-      for (int i = 1; i < exprs.size(); i++) {
+      for (var i = 1; i < exprs.size(); i++) {
         rv = operation(clazz, Ops.LIST, rv, exprs.get(i));
       }
     }
@@ -594,11 +600,11 @@ public final class ExpressionUtils {
   @SuppressWarnings("unchecked")
   public static Expression<String> regexToLike(Expression<String> expr) {
     if (expr instanceof Constant<?>) {
-      final String str = expr.toString();
-      final StringBuilder rv = new StringBuilder(str.length() + 2);
-      boolean escape = false;
-      for (int i = 0; i < str.length(); i++) {
-        final char ch = str.charAt(i);
+      final var str = expr.toString();
+      final var rv = new StringBuilder(str.length() + 2);
+      var escape = false;
+      for (var i = 0; i < str.length(); i++) {
+        final var ch = str.charAt(i);
         if (!escape && ch == '.') {
           if (i < str.length() - 1 && str.charAt(i + 1) == '*') {
             rv.append('%');
@@ -625,8 +631,8 @@ public final class ExpressionUtils {
     } else if (expr instanceof Operation<?>) {
       Operation<?> o = (Operation<?>) expr;
       if (o.getOperator() == Ops.CONCAT) {
-        Expression<String> lhs = regexToLike((Expression<String>) o.getArg(0));
-        Expression<String> rhs = regexToLike((Expression<String>) o.getArg(1));
+        var lhs = regexToLike((Expression<String>) o.getArg(0));
+        var rhs = regexToLike((Expression<String>) o.getArg(1));
         if (lhs != o.getArg(0) || rhs != o.getArg(1)) {
           return operation(String.class, Ops.CONCAT, lhs, rhs);
         }
@@ -710,7 +716,7 @@ public final class ExpressionUtils {
    */
   public static <D> Predicate notInAny(
       Expression<D> left, Iterable<? extends Collection<? extends D>> lists) {
-    BooleanBuilder rv = new BooleanBuilder();
+    var rv = new BooleanBuilder();
     for (Collection<? extends D> list : lists) {
       rv.and(notIn(left, list));
     }
@@ -831,7 +837,7 @@ public final class ExpressionUtils {
    */
   public static Expression<String> toLower(Expression<String> stringExpression) {
     if (stringExpression instanceof Constant) {
-      Constant<String> constantExpression = (Constant<String>) stringExpression;
+      var constantExpression = (Constant<String>) stringExpression;
       return ConstantImpl.create(constantExpression.getConstant().toLowerCase());
     } else {
       return operation(String.class, Ops.LOWER, stringExpression);

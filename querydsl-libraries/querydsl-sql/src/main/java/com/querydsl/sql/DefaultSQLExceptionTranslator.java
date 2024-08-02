@@ -40,7 +40,7 @@ public final class DefaultSQLExceptionTranslator implements SQLExceptionTranslat
 
   @Override
   public RuntimeException translate(String sql, List<Object> bindings, SQLException e) {
-    String message = "Caught " + e.getClass().getSimpleName() + " for " + sql;
+    var message = "Caught " + e.getClass().getSimpleName() + " for " + sql;
     if (containsAdditionalExceptions(e)) {
       return WRAPPER.wrap(message, e);
     } else {

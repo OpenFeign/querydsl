@@ -226,10 +226,10 @@ public final class Template implements Serializable {
         if (arg2 instanceof Number) {
           if (CONVERTIBLES.contains(operator)
               && expr1 instanceof com.querydsl.core.types.Operation) {
-            com.querydsl.core.types.Operation operation = (com.querydsl.core.types.Operation) expr1;
+            var operation = (com.querydsl.core.types.Operation) expr1;
             if (CONVERTIBLES.contains(operation.getOperator())
                 && operation.getArg(1) instanceof Constant) {
-              Number num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
+              var num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
               Number num2;
               if (operator == operation.getOperator()) {
                 num2 = MathUtils.result(num1, (Number) arg2, Ops.ADD);
@@ -296,10 +296,10 @@ public final class Template implements Serializable {
         Expression<?> expr1 = asExpression(arg1);
 
         if (CONVERTIBLES.contains(operator) && expr1 instanceof com.querydsl.core.types.Operation) {
-          com.querydsl.core.types.Operation operation = (com.querydsl.core.types.Operation) expr1;
+          var operation = (com.querydsl.core.types.Operation) expr1;
           if (CONVERTIBLES.contains(operation.getOperator())
               && operation.getArg(1) instanceof Constant) {
-            Number num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
+            var num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
             Number num2;
             if (operator == operation.getOperator()) {
               num2 = MathUtils.result(num1, arg2, Ops.ADD);

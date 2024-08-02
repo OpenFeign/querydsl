@@ -13,7 +13,11 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Ops;
 import java.util.Collection;
 import org.jetbrains.annotations.Nullable;
 

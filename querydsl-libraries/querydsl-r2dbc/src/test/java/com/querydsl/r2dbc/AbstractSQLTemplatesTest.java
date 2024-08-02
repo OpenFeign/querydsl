@@ -15,7 +15,12 @@ package com.querydsl.r2dbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.TemplatesTestUtils;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.r2dbc.domain.QSurvey;
@@ -55,9 +60,9 @@ public abstract class AbstractSQLTemplatesTest {
   @SuppressWarnings("unchecked")
   @Test
   public void union() {
-    NumberExpression<Integer> one = Expressions.ONE;
-    NumberExpression<Integer> two = Expressions.TWO;
-    NumberExpression<Integer> three = Expressions.THREE;
+    var one = Expressions.ONE;
+    var two = Expressions.TWO;
+    var three = Expressions.THREE;
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union =
         query.union(
@@ -81,7 +86,7 @@ public abstract class AbstractSQLTemplatesTest {
             .isEqualTo("select 1 as col1)\n" + "union\n" + "select 2\n" + "union\n" + "select 3");
       }
     } else {
-      String dummyTable = templates.getDummyTable();
+      var dummyTable = templates.getDummyTable();
       if (templates.isUnionsWrapped()) {
         assertThat(union.toString())
             .isEqualTo(
@@ -120,8 +125,8 @@ public abstract class AbstractSQLTemplatesTest {
   }
 
   protected int getPrecedence(Operator... ops) {
-    int precedence = templates.getPrecedence(ops[0]);
-    for (int i = 1; i < ops.length; i++) {
+    var precedence = templates.getPrecedence(ops[0]);
+    for (var i = 1; i < ops.length; i++) {
       assertThat(templates.getPrecedence(ops[i])).as(ops[i].name()).isEqualTo(precedence);
     }
     return precedence;
@@ -178,7 +183,7 @@ public abstract class AbstractSQLTemplatesTest {
   }
 
   protected void assertSerialized(Expression<?> expr, String serialized) {
-    SQLSerializer serializer = new SQLSerializer(new Configuration(templates));
+    var serializer = new SQLSerializer(new Configuration(templates));
     serializer.handle(expr);
     assertThat(serializer).hasToString(serialized);
   }

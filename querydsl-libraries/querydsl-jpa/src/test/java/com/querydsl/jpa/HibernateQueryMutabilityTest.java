@@ -14,7 +14,6 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.QueryMutability;
 import com.querydsl.jpa.domain.QCat;
@@ -50,14 +49,14 @@ public class HibernateQueryMutabilityTest implements HibernateTest {
           IllegalAccessException,
           InvocationTargetException,
           IOException {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     HibernateQuery<?> query = query().from(cat);
     new QueryMutability(query).test(cat, cat.name);
   }
 
   @Test
   public void clone_() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     HibernateQuery<?> query = query().from(cat).where(cat.name.isNotNull());
     HibernateQuery<?> query2 = query.clone(session);
     assertThat(query2.getMetadata().getJoins()).isEqualTo(query.getMetadata().getJoins());

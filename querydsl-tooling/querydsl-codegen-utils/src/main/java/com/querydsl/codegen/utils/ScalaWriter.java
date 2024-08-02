@@ -38,7 +38,7 @@ import java.util.function.Function;
 public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
 
   private static final Set<String> PRIMITIVE_TYPES =
-      new HashSet<String>(
+      new HashSet<>(
           Arrays.asList("boolean", "byte", "char", "int", "long", "short", "double", "float"));
 
   private static final String DEF = "def ";
@@ -79,9 +79,9 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
 
   private static final String TRAIT = "trait ";
 
-  private final Set<String> classes = new HashSet<String>();
+  private final Set<String> classes = new HashSet<>();
 
-  private final Set<String> packages = new HashSet<String>();
+  private final Set<String> packages = new HashSet<>();
 
   private Type type;
 
@@ -103,10 +103,10 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
   @Override
   public ScalaWriter annotation(Annotation annotation) throws IOException {
     beginLine().append("@").appendType(annotation.annotationType());
-    Method[] methods = annotation.annotationType().getDeclaredMethods();
+    var methods = annotation.annotationType().getDeclaredMethods();
     if (methods.length == 1 && methods[0].getName().equals("value")) {
       try {
-        Object value = methods[0].invoke(annotation);
+        var value = methods[0].invoke(annotation);
         append("(");
         annotationConstant(value);
         append(")");
@@ -118,10 +118,10 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
         throw new CodegenException(e);
       }
     } else {
-      boolean first = true;
+      var first = true;
       for (Method method : methods) {
         try {
-          Object value = method.invoke(annotation);
+          var value = method.invoke(annotation);
           if (value == null
               || value.equals(method.getDefaultValue())
               || (value.getClass().isArray()
@@ -159,7 +159,7 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
   private void annotationConstant(Object value) throws IOException {
     if (value.getClass().isArray()) {
       append("Array(");
-      boolean first = true;
+      var first = true;
       for (Object o : (Object[]) value) {
         if (!first) {
           append(", ");
@@ -231,7 +231,7 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
         append(EXTENDS);
         append(getGenericName(false, interfaces[0]));
         append(WITH);
-        for (int i = 1; i < interfaces.length; i++) {
+        for (var i = 1; i < interfaces.length; i++) {
           if (i > 1) {
             append(COMMA);
           }
@@ -239,7 +239,7 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
         }
       } else {
         append(WITH);
-        for (int i = 0; i < interfaces.length; i++) {
+        for (var i = 0; i < interfaces.length; i++) {
           if (i > 0) {
             append(COMMA);
           }
@@ -275,7 +275,7 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
       append(getGenericName(false, interfaces[0]));
       if (interfaces.length > 1) {
         append(WITH);
-        for (int i = 1; i < interfaces.length; i++) {
+        for (var i = 1; i < interfaces.length; i++) {
           if (i > 1) {
             append(COMMA);
           }
@@ -362,6 +362,7 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
     return line("}").nl();
   }
 
+  @Override
   public ScalaWriter field(Type type, String name) throws IOException {
     line(VAR, escape(name), ": ", getGenericName(true, type));
     return compact ? this : nl();
@@ -388,11 +389,11 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
     if (type.getParameters().isEmpty()) {
       return getRawName(type);
     } else {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       builder.append(getRawName(type));
       builder.append("[");
-      boolean first = true;
-      String fullName = type.getFullName();
+      var first = true;
+      var fullName = type.getFullName();
       for (Type parameter : type.getParameters()) {
         if (!first) {
           builder.append(", ");
@@ -411,17 +412,17 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
 
   @Override
   public String getRawName(Type type) {
-    String fullName = type.getFullName();
+    var fullName = type.getFullName();
     if (PRIMITIVE_TYPES.contains(fullName)) {
       fullName = StringUtils.capitalize(fullName);
     }
-    String packageName = type.getPackageName();
+    var packageName = type.getPackageName();
     if (packageName != null && packageName.length() > 0) {
       fullName = packageName + "." + fullName.substring(packageName.length() + 1).replace('.', '$');
     } else {
       fullName = fullName.replace('.', '$');
     }
-    String rv = fullName;
+    var rv = fullName;
     if (type.isPrimitive() && packageName.isEmpty()) {
       rv = Character.toUpperCase(rv.charAt(0)) + rv.substring(1);
     }
@@ -501,7 +502,7 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
   private <T> ScalaWriter params(Collection<T> parameters, Function<T, Parameter> transformer)
       throws IOException {
     append("(");
-    boolean first = true;
+    var first = true;
     for (T param : parameters) {
       if (!first) {
         append(COMMA);
@@ -515,7 +516,7 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
 
   private ScalaWriter params(Parameter... params) throws IOException {
     append("(");
-    for (int i = 0; i < params.length; i++) {
+    for (var i = 0; i < params.length; i++) {
       if (i > 0) {
         append(COMMA);
       }
@@ -611,8 +612,8 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
   }
 
   private <T> Parameter[] transform(Collection<T> parameters, Function<T, Parameter> transformer) {
-    Parameter[] rv = new Parameter[parameters.size()];
-    int i = 0;
+    var rv = new Parameter[parameters.size()];
+    var i = 0;
     for (T value : parameters) {
       rv[i++] = transformer.apply(value);
     }

@@ -70,11 +70,11 @@ public class TypeElementHandler {
   public EntityType handleEntityType(TypeElement element) {
     EntityType entityType = typeFactory.getEntityType(element.asType(), true);
     List<? extends Element> elements = element.getEnclosedElements();
-    VisitorConfig config = configuration.getConfig(element, elements);
-    Set<String> blockedProperties = new HashSet<String>();
-    Map<String, TypeMirror> propertyTypes = new HashMap<String, TypeMirror>();
-    Map<String, TypeMirror> fixedTypes = new HashMap<String, TypeMirror>();
-    Map<String, Annotations> propertyAnnotations = new HashMap<String, Annotations>();
+    var config = configuration.getConfig(element, elements);
+    Set<String> blockedProperties = new HashSet<>();
+    Map<String, TypeMirror> propertyTypes = new HashMap<>();
+    Map<String, TypeMirror> fixedTypes = new HashMap<>();
+    Map<String, Annotations> propertyAnnotations = new HashMap<>();
 
     // constructors
     if (config.visitConstructors()) {
@@ -84,17 +84,17 @@ public class TypeElementHandler {
     // fields
     if (config.visitFieldProperties()) {
       for (VariableElement field : ElementFilter.fieldsIn(elements)) {
-        String name = field.getSimpleName().toString();
+        var name = field.getSimpleName().toString();
         if (configuration.isBlockedField(field)) {
           blockedProperties.add(name);
         } else if (configuration.isValidField(field)) {
-          Annotations annotations = new Annotations();
+          var annotations = new Annotations();
           configuration.inspect(field, annotations);
           annotations.addAnnotation(field.getAnnotation(QueryType.class));
           annotations.addAnnotation(field.getAnnotation(QueryInit.class));
           propertyAnnotations.put(name, annotations);
           propertyTypes.put(name, field.asType());
-          TypeMirror fixedType = configuration.getRealType(field);
+          var fixedType = configuration.getRealType(field);
           if (fixedType != null) {
             fixedTypes.put(name, fixedType);
           }
@@ -105,7 +105,7 @@ public class TypeElementHandler {
     // methods
     if (config.visitMethodProperties()) {
       for (ExecutableElement method : ElementFilter.methodsIn(elements)) {
-        String name = method.getSimpleName().toString();
+        var name = method.getSimpleName().toString();
         if (name.startsWith("get") && name.length() > 3 && method.getParameters().isEmpty()) {
           name = BeanUtils.uncapitalize(name.substring(3));
         } else if (name.startsWith("is") && name.length() > 2 && method.getParameters().isEmpty()) {
@@ -117,7 +117,7 @@ public class TypeElementHandler {
         if (configuration.isBlockedGetter(method)) {
           blockedProperties.add(name);
         } else if (configuration.isValidGetter(method) && !blockedProperties.contains(name)) {
-          Annotations annotations = propertyAnnotations.get(name);
+          var annotations = propertyAnnotations.get(name);
           if (annotations == null) {
             annotations = new Annotations();
             propertyAnnotations.put(name, annotations);
@@ -126,7 +126,7 @@ public class TypeElementHandler {
           annotations.addAnnotation(method.getAnnotation(QueryType.class));
           annotations.addAnnotation(method.getAnnotation(QueryInit.class));
           propertyTypes.put(name, method.getReturnType());
-          TypeMirror fixedType = configuration.getRealType(method);
+          var fixedType = configuration.getRealType(method);
           if (fixedType != null) {
             fixedTypes.put(name, fixedType);
           }
@@ -137,7 +137,7 @@ public class TypeElementHandler {
     // fixed types override property types
     propertyTypes.putAll(fixedTypes);
     for (Map.Entry<String, Annotations> entry : propertyAnnotations.entrySet()) {
-      Property property =
+      var property =
           toProperty(
               entityType, entry.getKey(), propertyTypes.get(entry.getKey()), entry.getValue());
       if (property != null) {
@@ -153,9 +153,9 @@ public class TypeElementHandler {
     // type
     Type propertyType = typeFactory.getType(type, true);
     if (annotations.isAnnotationPresent(QueryType.class)) {
-      PropertyType propertyTypeAnn = annotations.getAnnotation(QueryType.class).value();
+      var propertyTypeAnn = annotations.getAnnotation(QueryType.class).value();
       if (propertyTypeAnn != PropertyType.NONE) {
-        TypeCategory typeCategory =
+        var typeCategory =
             TypeCategory.valueOf(annotations.getAnnotation(QueryType.class).value().name());
         if (typeCategory == null) {
           return null;
@@ -177,7 +177,7 @@ public class TypeElementHandler {
 
   public EntityType handleProjectionType(TypeElement e, boolean onlyAnnotatedConstructors) {
     Type c = typeFactory.getType(e.asType(), true);
-    EntityType entityType =
+    var entityType =
         new EntityType(c.as(TypeCategory.ENTITY), configuration.getVariableNameFunction());
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
     List<? extends Element> elements = e.getEnclosedElements();
@@ -188,9 +188,9 @@ public class TypeElementHandler {
   private Type getType(VariableElement element) {
     Type rv = typeFactory.getType(element.asType(), true);
     if (element.getAnnotation(QueryType.class) != null) {
-      QueryType qt = element.getAnnotation(QueryType.class);
+      var qt = element.getAnnotation(QueryType.class);
       if (qt.value() != PropertyType.NONE) {
-        TypeCategory typeCategory = TypeCategory.valueOf(qt.value().name());
+        var typeCategory = TypeCategory.valueOf(qt.value().name());
         rv = rv.as(typeCategory);
       }
     }
@@ -201,16 +201,16 @@ public class TypeElementHandler {
       EntityType entityType, List<? extends Element> elements, boolean onlyAnnotatedConstructors) {
     for (ExecutableElement constructor : ElementFilter.constructorsIn(elements)) {
       if (configuration.isValidConstructor(constructor, onlyAnnotatedConstructors)) {
-        List<Parameter> parameters = transformParams(constructor.getParameters());
+        var parameters = transformParams(constructor.getParameters());
         entityType.addConstructor(new Constructor(parameters));
       }
     }
   }
 
   public List<Parameter> transformParams(List<? extends VariableElement> params) {
-    List<Parameter> parameters = new ArrayList<Parameter>(params.size());
+    List<Parameter> parameters = new ArrayList<>(params.size());
     for (VariableElement param : params) {
-      Type paramType = getType(param);
+      var paramType = getType(param);
       parameters.add(new Parameter(param.getSimpleName().toString(), paramType));
     }
     return parameters;

@@ -13,7 +13,14 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.MutableExpressionBase;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +39,7 @@ public class Coalesce<T extends Comparable> extends MutableExpressionBase<T> {
 
   private static final long serialVersionUID = 445439522266250417L;
 
-  private final List<Expression<? extends T>> exprs = new ArrayList<Expression<? extends T>>();
+  private final List<Expression<? extends T>> exprs = new ArrayList<>();
 
   private transient volatile ComparableExpression<T> value;
 

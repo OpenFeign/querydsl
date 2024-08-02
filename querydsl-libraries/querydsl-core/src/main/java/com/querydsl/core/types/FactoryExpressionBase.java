@@ -79,7 +79,7 @@ public abstract class FactoryExpressionBase<T> extends ExpressionBase<T>
    * @return new factory expression with {@code skip nulls} applied
    */
   public FactoryExpression<T> skipNulls() {
-    return new FactoryExpressionWrapper<T>(this);
+    return new FactoryExpressionWrapper<>(this);
   }
 
   @Override

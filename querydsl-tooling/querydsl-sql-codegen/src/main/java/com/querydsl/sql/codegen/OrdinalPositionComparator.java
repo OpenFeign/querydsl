@@ -17,7 +17,6 @@ import com.querydsl.codegen.Property;
 import com.querydsl.sql.ColumnMetadata;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Map;
 
 /** Compares {@link Property} instances based on their ordinal position in the table */
 public class OrdinalPositionComparator implements Comparator<Property> {
@@ -30,9 +29,9 @@ public class OrdinalPositionComparator implements Comparator<Property> {
   public int compare(Property property1, Property property2) {
     Integer comparison = null;
     for (Property property : Arrays.asList(property1, property2)) {
-      Map<Object, Object> data = property.getData();
-      ColumnMetadata columnMetadata = (ColumnMetadata) data.get("COLUMN");
-      int index = columnMetadata.getIndex();
+      var data = property.getData();
+      var columnMetadata = (ColumnMetadata) data.get("COLUMN");
+      var index = columnMetadata.getIndex();
       comparison = comparison == null ? index : comparison - index;
     }
     return comparison;

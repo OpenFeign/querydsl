@@ -13,7 +13,14 @@
  */
 package com.querydsl.sql;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.SQLSERVER;
+import static com.querydsl.core.Target.TERADATA;
 import static com.querydsl.sql.Constants.survey;
 import static com.querydsl.sql.SQLExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,8 +30,6 @@ import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Param;
-import com.querydsl.core.types.dsl.StringPath;
-import com.querydsl.sql.dml.SQLUpdateClause;
 import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
 import java.sql.SQLException;
@@ -54,7 +59,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
   @Test
   public void update() throws SQLException {
     // original state
-    long count = query().from(survey).fetchCount();
+    var count = query().from(survey).fetchCount();
     assertThat(query().from(survey).where(survey.name.eq("S")).fetchCount()).isEqualTo(0);
 
     // update call with 0 update count
@@ -82,7 +87,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     List<?> values = Collections.singletonList("S");
 
     // original state
-    long count = query().from(survey).fetchCount();
+    var count = query().from(survey).fetchCount();
     assertThat(query().from(survey).where(survey.name.eq("S")).fetchCount()).isEqualTo(0);
 
     // update call with 0 update count
@@ -118,13 +123,13 @@ public abstract class UpdateBase extends AbstractBaseTest {
   public void setNull() {
     List<Path<?>> paths = Collections.<Path<?>>singletonList(survey.name);
     List<?> values = Collections.singletonList(null);
-    long count = query().from(survey).fetchCount();
+    var count = query().from(survey).fetchCount();
     assertThat(update(survey).set(paths, values).execute()).isEqualTo(count);
   }
 
   @Test
   public void setNull2() {
-    long count = query().from(survey).fetchCount();
+    var count = query().from(survey).fetchCount();
     assertThat(update(survey).set(survey.name, (String) null).execute()).isEqualTo(count);
   }
 
@@ -132,8 +137,8 @@ public abstract class UpdateBase extends AbstractBaseTest {
   @SkipForQuoted
   @ExcludeIn({DB2, DERBY})
   public void setNullEmptyRootPath() {
-    StringPath name = Expressions.stringPath("name");
-    long count = query().from(survey).fetchCount();
+    var name = Expressions.stringPath("name");
+    var count = query().from(survey).fetchCount();
     assertThat(execute(update(survey).setNull(name))).isEqualTo(count);
   }
 
@@ -142,7 +147,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(insert(survey).values(2, "A", "B").execute()).isEqualTo(1);
     assertThat(insert(survey).values(3, "B", "C").execute()).isEqualTo(1);
 
-    SQLUpdateClause update = update(survey);
+    var update = update(survey);
     update.set(survey.name, "AA").where(survey.name.eq("A")).addBatch();
     assertThat(update.getBatchCount()).isEqualTo(1);
     update.set(survey.name, "BB").where(survey.name.eq("B")).addBatch();
@@ -155,7 +160,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(insert(survey).values(2, "A", "B").execute()).isEqualTo(1);
     assertThat(insert(survey).values(3, "B", "C").execute()).isEqualTo(1);
 
-    SQLUpdateClause update = update(survey);
+    var update = update(survey);
     update
         .set(survey.name, "AA")
         .where(survey.name.eq(Expressions.stringTemplate("'A'")))
@@ -169,9 +174,9 @@ public abstract class UpdateBase extends AbstractBaseTest {
 
   @Test
   public void update_with_subQuery_exists() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
-    SQLUpdateClause update = update(survey1);
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
+    var update = update(survey1);
     update.set(survey1.name, "AA");
     update.where(selectOne().from(employee).where(survey1.id.eq(employee.id)).exists());
     assertThat(update.execute()).isEqualTo(1);
@@ -179,14 +184,14 @@ public abstract class UpdateBase extends AbstractBaseTest {
 
   @Test
   public void update_with_subQuery_exists_Params() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
 
-    Param<Integer> param = new Param<Integer>(Integer.class, "param");
+    var param = new Param<Integer>(Integer.class, "param");
     SQLQuery<?> sq = query().from(employee).where(employee.id.eq(param));
     sq.set(param, -12478923);
 
-    SQLUpdateClause update = update(survey1);
+    var update = update(survey1);
     update.set(survey1.name, "AA");
     update.where(sq.exists());
     assertThat(update.execute()).isEqualTo(0);
@@ -194,9 +199,9 @@ public abstract class UpdateBase extends AbstractBaseTest {
 
   @Test
   public void update_with_subQuery_exists2() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
-    SQLUpdateClause update = update(survey1);
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
+    var update = update(survey1);
     update.set(survey1.name, "AA");
     update.where(selectOne().from(employee).where(survey1.name.eq(employee.lastname)).exists());
     assertThat(update.execute()).isEqualTo(0);
@@ -204,9 +209,9 @@ public abstract class UpdateBase extends AbstractBaseTest {
 
   @Test
   public void update_with_subQuery_notExists() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
-    SQLUpdateClause update = update(survey1);
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
+    var update = update(survey1);
     update.set(survey1.name, "AA");
     update.where(query().from(employee).where(survey1.id.eq(employee.id)).notExists());
     assertThat(update.execute()).isEqualTo(0);

@@ -1,6 +1,10 @@
 package com.querydsl.apt.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 import org.junit.Test;
 

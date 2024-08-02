@@ -2,9 +2,7 @@ package com.querydsl.sql.dml;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.types.Path;
 import com.querydsl.sql.domain.QEmployee;
-import java.util.Map;
 import org.junit.Test;
 
 public class BeanMapperTest extends AbstractMapperTest {
@@ -13,7 +11,7 @@ public class BeanMapperTest extends AbstractMapperTest {
 
   @Test
   public void extract() {
-    Map<Path<?>, Object> values = BeanMapper.DEFAULT.createMap(emp, employee);
+    var values = BeanMapper.DEFAULT.createMap(emp, employee);
     assertThat(values).containsEntry(emp.datefield, employee.getDatefield());
     assertThat(values).containsEntry(emp.firstname, employee.getFirstname());
     assertThat(values).containsEntry(emp.lastname, employee.getLastname());
@@ -24,7 +22,7 @@ public class BeanMapperTest extends AbstractMapperTest {
 
   @Test
   public void extract2() {
-    Map<Path<?>, Object> values = BeanMapper.DEFAULT.createMap(emp, new EmployeeX());
+    var values = BeanMapper.DEFAULT.createMap(emp, new EmployeeX());
     assertThat(values).isEmpty();
   }
 }

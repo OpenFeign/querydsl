@@ -29,9 +29,9 @@ public class MetaDataTest {
   @Before
   public void setUp() {
     NamingStrategy namingStrategy = new DefaultNamingStrategy();
-    String packageName = "com.myproject.domain";
-    String tableName = "vwServiceName";
-    String className = namingStrategy.getClassName(tableName);
+    var packageName = "com.myproject.domain";
+    var tableName = "vwServiceName";
+    var className = namingStrategy.getClassName(tableName);
 
     Type classTypeModel =
         new SimpleType(

@@ -26,8 +26,7 @@ public class JPAPathBuilderValidatorTest {
 
   @Test
   public void validate() {
-    JPAPathBuilderValidator validator =
-        new JPAPathBuilderValidator(entityManagerFactory.getMetamodel());
+    var validator = new JPAPathBuilderValidator(entityManagerFactory.getMetamodel());
     assertThat(validator.validate(Cat.class, "name", String.class)).isEqualTo(String.class);
     assertThat(validator.validate(Cat.class, "kittens", Collection.class)).isEqualTo(Cat.class);
     assertThat(validator.validate(Cat.class, "mate", Cat.class)).isEqualTo(Cat.class);

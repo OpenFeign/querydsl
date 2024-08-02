@@ -15,7 +15,12 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.BooleanPath;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.PathBuilderFactory;
+import com.querydsl.core.types.dsl.StringPath;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.Before;
@@ -87,8 +92,8 @@ public class QBeanTest {
 
   @Test
   public void with_class_and_exprs() {
-    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, name, age, married);
-    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    var beanProjection = new QBean<>(Entity.class, name, age, married);
+    var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
     assertThat(bean.isMarried()).isTrue();
@@ -97,7 +102,7 @@ public class QBeanTest {
   @Test
   public void with_path_and_exprs() {
     QBean<Entity> beanProjection = Projections.bean(entity, name, age, married);
-    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
     assertThat(bean.isMarried()).isTrue();
@@ -107,19 +112,19 @@ public class QBeanTest {
   public void with_unknown_properties() {
     QBean<Entity> beanProjection =
         Projections.bean(entity, name, age, Expressions.booleanPath("unknown"));
-    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
   }
 
   @Test
   public void with_class_and_map() {
-    Map<String, Expression<?>> bindings = new LinkedHashMap<String, Expression<?>>();
+    Map<String, Expression<?>> bindings = new LinkedHashMap<>();
     bindings.put("name", name);
     bindings.put("age", age);
     bindings.put("married", married);
-    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, bindings);
-    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    var beanProjection = new QBean<>(Entity.class, bindings);
+    var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
     assertThat(bean.isMarried()).isTrue();
@@ -127,9 +132,9 @@ public class QBeanTest {
 
   @Test
   public void with_class_and_alias() {
-    StringPath name2 = Expressions.stringPath("name2");
-    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, name.as(name2), age, married);
-    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    var name2 = Expressions.stringPath("name2");
+    var beanProjection = new QBean<>(Entity.class, name.as(name2), age, married);
+    var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isNull();
     assertThat(bean.getName2()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
@@ -138,10 +143,10 @@ public class QBeanTest {
 
   @Test
   public void with_nested_factoryExpression() {
-    Map<String, Expression<?>> bindings = new LinkedHashMap<String, Expression<?>>();
+    Map<String, Expression<?>> bindings = new LinkedHashMap<>();
     bindings.put("age", age);
     bindings.put("name", new Concatenation(name, name2));
-    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, bindings);
+    var beanProjection = new QBean<>(Entity.class, bindings);
     FactoryExpression<Entity> wrappedProjection = FactoryExpressionUtils.wrap(beanProjection);
     Entity bean = wrappedProjection.newInstance(30, "Fri", "tz");
     assertThat(bean.getName()).isEqualTo("Fritz");
@@ -149,9 +154,8 @@ public class QBeanTest {
 
   @Test
   public void with_nested_factoryExpression2() {
-    QBean<Entity> beanProjection =
-        new QBean<Entity>(
-            Entity.class, age, ExpressionUtils.as(new Concatenation(name, name2), "name"));
+    var beanProjection =
+        new QBean<>(Entity.class, age, ExpressionUtils.as(new Concatenation(name, name2), "name"));
     FactoryExpression<Entity> wrappedProjection = FactoryExpressionUtils.wrap(beanProjection);
     Entity bean = wrappedProjection.newInstance(30, "Fri", "tz");
     assertThat(bean.getName()).isEqualTo("Fritz");
@@ -159,9 +163,8 @@ public class QBeanTest {
 
   @Test
   public void supertype_population() {
-    QBean<SubEntity> beanProjection =
-        new QBean<SubEntity>(SubEntity.class, true, name, age, married);
-    SubEntity bean = beanProjection.newInstance("Fritz", 30, true);
+    var beanProjection = new QBean<>(SubEntity.class, true, name, age, married);
+    var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
     assertThat(bean.getAge()).isEqualTo(30);
     assertThat(bean.isMarried()).isTrue();
@@ -178,7 +181,7 @@ public class QBeanTest {
 
   @Test
   public void alias() {
-    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, name.as("name2"));
+    var beanProjection = new QBean<>(Entity.class, name.as("name2"));
     assertThat(beanProjection.getArgs().getFirst()).isEqualTo(name.as("name2"));
   }
 }

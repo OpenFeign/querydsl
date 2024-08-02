@@ -44,9 +44,9 @@ public final class PathBuilderFactory {
    */
   @SuppressWarnings("unchecked")
   public <T> PathBuilder<T> create(Class<T> type) {
-    PathBuilder<T> rv = (PathBuilder<T>) paths.get(type);
+    var rv = (PathBuilder<T>) paths.get(type);
     if (rv == null) {
-      rv = new PathBuilder<T>(type, variableName(type));
+      rv = new PathBuilder<>(type, variableName(type));
       paths.put(type, rv);
     }
     return rv;

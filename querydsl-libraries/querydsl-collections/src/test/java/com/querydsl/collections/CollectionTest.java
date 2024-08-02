@@ -31,13 +31,13 @@ public class CollectionTest {
 
   @Before
   public void setUp() {
-    Cat cat1 = new Cat("1");
+    var cat1 = new Cat("1");
     cat1.setKittens(Collections.singletonList(cat1));
-    Cat cat2 = new Cat("2");
+    var cat2 = new Cat("2");
     cat2.setKittens(Arrays.asList(cat1, cat2));
-    Cat cat3 = new Cat("3");
+    var cat3 = new Cat("3");
     cat3.setKittens(Arrays.asList(cat1, cat2, cat3));
-    Cat cat4 = new Cat("4");
+    var cat4 = new Cat("4");
     cat4.setKittens(Arrays.asList(cat1, cat2, cat3, cat4));
 
     cats = Arrays.asList(cat1, cat2, cat3, cat4);
@@ -56,8 +56,8 @@ public class CollectionTest {
 
   @Test
   public void join_from_two_sources() {
-    QCat catKittens = new QCat("cat_kittens");
-    QCat otherKittens = new QCat("other_kittens");
+    var catKittens = new QCat("cat_kittens");
+    var otherKittens = new QCat("other_kittens");
     assertThat(
             CollQueryFactory.from(cat, cats)
                 .from(other, cats)

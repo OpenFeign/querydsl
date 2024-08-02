@@ -17,8 +17,6 @@ import com.querydsl.core.util.BeanUtils;
 import com.querydsl.core.util.PrimitiveUtils;
 import com.querydsl.core.util.ReflectionUtils;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 
@@ -49,13 +47,13 @@ public interface PathBuilderValidator extends Serializable {
         public Class<?> validate(Class<?> parent, String property, Class<?> propertyType) {
           while (!parent.equals(Object.class)) {
             try {
-              Field field = parent.getDeclaredField(property);
+              var field = parent.getDeclaredField(property);
               if (Map.class.isAssignableFrom(field.getType())) {
-                return (Class) ReflectionUtils.getTypeParameterAsClass(field.getGenericType(), 1);
+                return ReflectionUtils.getTypeParameterAsClass(field.getGenericType(), 1);
               } else if (Collection.class.isAssignableFrom(field.getType())) {
-                return (Class) ReflectionUtils.getTypeParameterAsClass(field.getGenericType(), 0);
+                return ReflectionUtils.getTypeParameterAsClass(field.getGenericType(), 0);
               } else {
-                return (Class) PrimitiveUtils.wrap(field.getType());
+                return PrimitiveUtils.wrap(field.getType());
               }
             } catch (NoSuchFieldException e) {
               parent = parent.getSuperclass();
@@ -69,19 +67,17 @@ public interface PathBuilderValidator extends Serializable {
       new PathBuilderValidator() {
         @Override
         public Class<?> validate(Class<?> parent, String property, Class<?> propertyType) {
-          Method getter = BeanUtils.getAccessor("get", property, parent);
+          var getter = BeanUtils.getAccessor("get", property, parent);
           if (getter == null && PrimitiveUtils.wrap(propertyType).equals(Boolean.class)) {
             getter = BeanUtils.getAccessor("is", property, parent);
           }
           if (getter != null) {
             if (Map.class.isAssignableFrom(getter.getReturnType())) {
-              return (Class)
-                  ReflectionUtils.getTypeParameterAsClass(getter.getGenericReturnType(), 1);
+              return ReflectionUtils.getTypeParameterAsClass(getter.getGenericReturnType(), 1);
             } else if (Collection.class.isAssignableFrom(getter.getReturnType())) {
-              return (Class)
-                  ReflectionUtils.getTypeParameterAsClass(getter.getGenericReturnType(), 0);
+              return ReflectionUtils.getTypeParameterAsClass(getter.getGenericReturnType(), 0);
             } else {
-              return (Class) PrimitiveUtils.wrap(getter.getReturnType());
+              return PrimitiveUtils.wrap(getter.getReturnType());
             }
           } else {
             return null;

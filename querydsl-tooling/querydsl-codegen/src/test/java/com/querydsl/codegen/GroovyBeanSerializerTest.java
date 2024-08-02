@@ -17,7 +17,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.StringUtils;
-import com.querydsl.codegen.utils.model.*;
+import com.querydsl.codegen.utils.model.ClassType;
+import com.querydsl.codegen.utils.model.SimpleType;
+import com.querydsl.codegen.utils.model.Type;
+import com.querydsl.codegen.utils.model.TypeCategory;
+import com.querydsl.codegen.utils.model.Types;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -71,9 +75,9 @@ public class GroovyBeanSerializerTest {
       type.addProperty(new Property(type, StringUtils.uncapitalize(cl.getSimpleName()), classType));
     }
 
-    GroovyBeanSerializer serializer = new GroovyBeanSerializer();
+    var serializer = new GroovyBeanSerializer();
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    String str = writer.toString();
+    var str = writer.toString();
     // System.err.println(str);
     for (String prop :
         Arrays.asList(

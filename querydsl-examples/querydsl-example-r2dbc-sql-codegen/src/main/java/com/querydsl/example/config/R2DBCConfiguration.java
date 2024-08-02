@@ -11,6 +11,7 @@ import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 @EnableR2dbcRepositories
 class R2DBCConfiguration extends AbstractR2dbcConfiguration {
 
+  @Override
   @Bean
   public H2ConnectionFactory connectionFactory() {
     return new H2ConnectionFactory(

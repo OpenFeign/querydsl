@@ -14,7 +14,6 @@
 package com.querydsl.sql;
 
 import com.querydsl.core.QueryException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -28,7 +27,7 @@ public final class SQLCloseListener extends SQLBaseListener {
 
   @Override
   public void end(SQLListenerContext context) {
-    Connection connection = context.getConnection();
+    var connection = context.getConnection();
     if (connection != null && context.getData(AbstractSQLQuery.PARENT_CONTEXT) == null) {
       try {
         connection.close();

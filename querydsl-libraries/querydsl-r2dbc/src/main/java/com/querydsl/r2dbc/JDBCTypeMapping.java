@@ -21,7 +21,11 @@ import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -33,9 +37,9 @@ final class JDBCTypeMapping {
 
   private static final Set<Integer> NUMERIC_TYPES;
 
-  private static final Map<Integer, Class<?>> defaultTypes = new HashMap<Integer, Class<?>>();
+  private static final Map<Integer, Class<?>> defaultTypes = new HashMap<>();
 
-  private static final Map<Class<?>, Integer> defaultSqlTypes = new HashMap<Class<?>, Integer>();
+  private static final Map<Class<?>, Integer> defaultSqlTypes = new HashMap<>();
 
   static {
     registerDefault(-101, Object.class);
@@ -108,12 +112,11 @@ final class JDBCTypeMapping {
     defaultSqlTypes.put(javaType, sqlType);
   }
 
-  private final Map<Integer, Class<?>> types = new HashMap<Integer, Class<?>>();
+  private final Map<Integer, Class<?>> types = new HashMap<>();
 
-  private final Map<Class<?>, Integer> sqlTypes = new HashMap<Class<?>, Integer>();
+  private final Map<Class<?>, Integer> sqlTypes = new HashMap<>();
 
-  private final Map<Pair<Integer, Integer>, Class<?>> numericTypes =
-      new HashMap<Pair<Integer, Integer>, Class<?>>();
+  private final Map<Pair<Integer, Integer>, Class<?>> numericTypes = new HashMap<>();
 
   public void register(int sqlType, Class<?> javaType) {
     types.put(sqlType, javaType);

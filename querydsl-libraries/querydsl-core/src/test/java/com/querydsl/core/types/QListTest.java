@@ -10,7 +10,7 @@ public class QListTest {
 
   @Test
   public void newInstance() {
-    QList qList = new QList(Expressions.stringPath("a"), Expressions.stringPath("b"));
+    var qList = new QList(Expressions.stringPath("a"), Expressions.stringPath("b"));
     List<?> list = qList.newInstance("a", null);
     assertThat(list).hasSize(2);
     assertThat(list.getFirst()).isEqualTo("a");

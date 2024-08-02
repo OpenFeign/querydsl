@@ -13,8 +13,11 @@
  */
 package com.querydsl.r2dbc.dml;
 
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
+import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.dml.ReactiveDeleteClause;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
@@ -112,14 +115,14 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
 
   private Statement prepareStatementAndSetParameters(
       Connection connection, SQLSerializer serializer) {
-    List<Object> constants = serializer.getConstants();
-    String originalSql = serializer.toString();
+    var constants = serializer.getConstants();
+    var originalSql = serializer.toString();
     queryString =
         R2dbcUtils.replaceBindingArguments(
             configuration.getBindMarkerFactory().create(), constants, originalSql);
 
     logQuery(logger, queryString, serializer.getConstants());
-    Statement statement = connection.createStatement(queryString);
+    var statement = connection.createStatement(queryString);
     BindTarget bindTarget = new StatementWrapper(statement);
 
     setParameters(
@@ -133,7 +136,7 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
   }
 
   private SQLSerializer createSerializerAndSerialize() {
-    SQLSerializer serializer = createSerializer(true);
+    var serializer = createSerializer(true);
     serializer.serializeDelete(metadata, entity);
     return serializer;
   }
@@ -142,7 +145,7 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
     return getConnection()
         .map(
             connection -> {
-              SQLSerializer serializer = createSerializerAndSerialize();
+              var serializer = createSerializerAndSerialize();
               return prepareStatementAndSetParameters(connection, serializer);
             });
   }
@@ -162,7 +165,7 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
 
   @Override
   public List<SQLBindings> getSQL() {
-    SQLSerializer serializer = createSerializer(true);
+    var serializer = createSerializer(true);
     serializer.serializeDelete(metadata, entity);
     return Collections.singletonList(createBindings(metadata, serializer));
   }
@@ -187,7 +190,7 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
 
   @Override
   public String toString() {
-    SQLSerializer serializer = createSerializer(true);
+    var serializer = createSerializer(true);
     serializer.serializeDelete(metadata, entity);
     return serializer.toString();
   }

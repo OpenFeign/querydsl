@@ -31,7 +31,7 @@ public class PackageVerification {
 
   @Test
   public void verify_package() throws Exception {
-    String version = System.getProperty("version");
+    var version = System.getProperty("version");
     verify(new File("target/querydsl-jpa-" + version + "-apt-hibernate-one-jar.jar"), true);
     verify(new File("target/querydsl-jpa-" + version + "-apt-one-jar.jar"), false);
   }
@@ -39,7 +39,7 @@ public class PackageVerification {
   private void verify(File oneJar, boolean hibernateDeps) throws Exception {
     assertThat(oneJar.exists()).as(oneJar.getPath() + " doesn't exist").isTrue();
     // verify classLoader
-    URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
+    var oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
     oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core
     oneJarClassLoader.loadClass(CodeWriter.class.getName()); // codegen
     oneJarClassLoader
@@ -56,7 +56,7 @@ public class PackageVerification {
     }
     Class cl = oneJarClassLoader.loadClass(processor.getName()); // querydsl-apt
     cl.getDeclaredConstructor().newInstance();
-    String resourceKey = "META-INF/services/javax.annotation.processing.Processor";
+    var resourceKey = "META-INF/services/javax.annotation.processing.Processor";
     assertThat(new Scanner(oneJarClassLoader.findResource(resourceKey).openStream()).nextLine())
         .isEqualTo(processor.getName());
   }

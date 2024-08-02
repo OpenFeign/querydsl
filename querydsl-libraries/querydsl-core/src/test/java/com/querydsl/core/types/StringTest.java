@@ -32,7 +32,7 @@ public class StringTest {
   @Test
   public void patternAvailability() throws IllegalArgumentException, IllegalAccessException {
     Templates ops = new DummyTemplates();
-    Set<Field> missing = new HashSet<Field>();
+    Set<Field> missing = new HashSet<>();
     for (Field field : Ops.class.getFields()) {
       if (field.getType().equals(Operator.class)) {
         var op = (Operator) field.get(null);
@@ -76,12 +76,11 @@ public class StringTest {
 
     // ConstructorExpression
     var someType =
-        new ConstructorExpression<SomeType>(
-            SomeType.class, new Class<?>[] {SomeType.class}, $(alias));
+        new ConstructorExpression<>(SomeType.class, new Class<?>[] {SomeType.class}, $(alias));
     assertThat(someType).hasToString("new SomeType(alias)");
 
     // ArrayConstructorExpression
-    var someTypeArray = new ArrayConstructorExpression<SomeType>(SomeType[].class, $(alias));
+    var someTypeArray = new ArrayConstructorExpression<>(SomeType[].class, $(alias));
     assertThat(someTypeArray).hasToString("new SomeType[](alias)");
   }
 

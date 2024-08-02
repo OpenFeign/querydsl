@@ -42,8 +42,8 @@ public class HibernateHandlerTest {
 
   @Test(expected = PersistenceException.class)
   public void addEntity_should_throw_persistence_exception_when_invalid_query_type() {
-    Query notSupportedQuery = createMock(EJBQueryImpl.class);
-    PersistenceException expectedThrow =
+    var notSupportedQuery = (Query) createMock(EJBQueryImpl.class);
+    var expectedThrow =
         new PersistenceException(
             ExceptionLocalization.buildMessage(
                 "unable_to_unwrap_jpa",
@@ -68,8 +68,8 @@ public class HibernateHandlerTest {
 
   @Test(expected = PersistenceException.class)
   public void addScalar_should_throw_persistence_exception_when_invalid_query_type() {
-    Query notSupportedQuery = createMock(EJBQueryImpl.class);
-    PersistenceException expectedThrow =
+    var notSupportedQuery = (EJBQueryImpl) createMock(EJBQueryImpl.class);
+    var expectedThrow =
         new PersistenceException(
             ExceptionLocalization.buildMessage(
                 "unable_to_unwrap_jpa",
@@ -94,8 +94,8 @@ public class HibernateHandlerTest {
 
   @Test
   public void should_return_transforming_iterator_when_call_iterate_function() {
-    ScrollableResultsImplementor scrollableResultsImplementor =
-        createMock(ScrollableResultsImplementor.class);
+    var scrollableResultsImplementor =
+        (ScrollableResultsImplementor) createMock(ScrollableResultsImplementor.class);
     FactoryExpression<?> factoryExpression = createMock(FactoryExpression.class);
 
     expect(nativeQuery.unwrap(org.hibernate.query.Query.class)).andReturn(nativeQuery);
@@ -109,9 +109,9 @@ public class HibernateHandlerTest {
 
   @Test
   public void should_return_iterator_adapter_when_call_iterate_function() {
-    Query query = createMock(Query.class);
-    List queryResultList = createMock(List.class);
-    Iterator iterator = createMock(Iterator.class);
+    var query = (Query) createMock(Query.class);
+    var queryResultList = (List) createMock(List.class);
+    var iterator = (Iterator) createMock(Iterator.class);
 
     expect(query.unwrap(org.hibernate.query.Query.class))
         .andThrow(new PersistenceException("Cannot unwrap Query"));
@@ -124,10 +124,10 @@ public class HibernateHandlerTest {
 
   @Test
   public void should_ReturnTransformingIterator_when_other_query_implementor() {
-    Query query = createMock(Query.class);
+    var query = (Query) createMock(Query.class);
     FactoryExpression<?> factoryExpression = createMock(FactoryExpression.class);
-    List queryResultList = createMock(List.class);
-    Iterator iterator = createMock(Iterator.class);
+    var queryResultList = (List) createMock(List.class);
+    var iterator = (Iterator) createMock(Iterator.class);
 
     expect(query.unwrap(org.hibernate.query.Query.class))
         .andThrow(new PersistenceException("Cannot unwrap Query"));

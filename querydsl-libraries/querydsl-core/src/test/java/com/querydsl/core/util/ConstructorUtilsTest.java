@@ -53,7 +53,7 @@ public class ConstructorUtilsTest {
   public void getDefaultConstructorParameters() {
     Class<?>[] args = {Long.class, String.class};
     Class<?>[] expected = {Long.TYPE, String.class};
-    Class<?>[] constructorParameters = getConstructorParameters(ProjectionExample.class, args);
+    var constructorParameters = getConstructorParameters(ProjectionExample.class, args);
     assertThat(constructorParameters)
         .as("Constructorparameters not equal")
         .containsExactly(expected);

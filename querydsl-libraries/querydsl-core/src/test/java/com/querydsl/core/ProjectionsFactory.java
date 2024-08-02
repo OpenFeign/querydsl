@@ -17,7 +17,18 @@ import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.MapExpression;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.ArrayExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.CollectionExpressionBase;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.DateTimeExpression;
+import com.querydsl.core.types.dsl.ListExpression;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.MapExpressionBase;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.TimeExpression;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,7 +49,7 @@ public class ProjectionsFactory {
 
   public <A> Collection<Expression<?>> array(
       ArrayExpression<A[], A> expr, ArrayExpression<A[], A> other, A knownElement) {
-    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    var rv = new HashSet<Expression<?>>();
     if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size());
     }
@@ -47,7 +58,7 @@ public class ProjectionsFactory {
 
   public <A> Collection<Expression<?>> collection(
       CollectionExpressionBase<?, A> expr, CollectionExpression<?, A> other, A knownElement) {
-    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    var rv = new HashSet<Expression<?>>();
     if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size());
     }
@@ -57,7 +68,7 @@ public class ProjectionsFactory {
   @SuppressWarnings("unchecked")
   public <A extends Comparable> Collection<Expression<?>> date(
       DateExpression<A> expr, DateExpression<A> other, A knownValue) {
-    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    var rv = new HashSet<Expression<?>>();
     rv.add(expr.dayOfMonth());
     rv.add(expr.month());
     rv.add(expr.year());
@@ -74,7 +85,7 @@ public class ProjectionsFactory {
   @SuppressWarnings("unchecked")
   public <A extends Comparable> Collection<Expression<?>> dateTime(
       DateTimeExpression<A> expr, DateTimeExpression<A> other, A knownValue) {
-    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    var rv = new HashSet<Expression<?>>();
     rv.add(expr.dayOfMonth());
     rv.add(expr.month());
     rv.add(expr.year());
@@ -93,7 +104,7 @@ public class ProjectionsFactory {
 
   public <A, Q extends SimpleExpression<A>> Collection<Expression<?>> list(
       ListPath<A, Q> expr, ListExpression<A, Q> other, A knownElement) {
-    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    var rv = new HashSet<Expression<?>>();
     rv.add(expr.get(0));
     if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size());
@@ -103,7 +114,7 @@ public class ProjectionsFactory {
 
   public <K, V> Collection<Expression<?>> map(
       MapExpressionBase<K, V, ?> expr, MapExpression<K, V> other, K knownKey, V knownValue) {
-    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    var rv = new HashSet<Expression<?>>();
     rv.add(expr.get(knownKey));
     if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size());
@@ -113,7 +124,7 @@ public class ProjectionsFactory {
 
   public <A extends Number & Comparable<A>> Collection<NumberExpression<?>> numeric(
       NumberExpression<A> expr, NumberExpression<A> other, A knownValue, boolean forFilter) {
-    HashSet<NumberExpression<?>> rv = new HashSet<NumberExpression<?>>();
+    var rv = new HashSet<NumberExpression<?>>();
     rv.addAll(numeric(expr, other, forFilter));
     rv.addAll(numeric(expr, NumberConstant.create(knownValue), forFilter));
     return Collections.unmodifiableSet(rv);
@@ -122,7 +133,7 @@ public class ProjectionsFactory {
   @SuppressWarnings("unchecked")
   private <A extends Number & Comparable<A>> Collection<NumberExpression<?>> numeric(
       NumberExpression<A> expr, NumberExpression<?> other, boolean forFilter) {
-    HashSet<NumberExpression<?>> rv = new HashSet<NumberExpression<?>>();
+    var rv = new HashSet<NumberExpression<?>>();
     rv.add(expr.abs());
     rv.add(expr.add(other));
     rv.add(expr.divide(other));
@@ -146,7 +157,7 @@ public class ProjectionsFactory {
     if (!(other instanceof Constant<?>
         || module == QuerydslModule.JDO
         || module == QuerydslModule.RDFBEAN)) {
-      CaseBuilder cases = new CaseBuilder();
+      var cases = new CaseBuilder();
       rv.add(
           NumberConstant.create(1)
               .add(
@@ -167,7 +178,7 @@ public class ProjectionsFactory {
   public <A extends Number & Comparable<A>> Collection<NumberExpression<?>> numericCasts(
       NumberExpression<A> expr, NumberExpression<A> other, A knownValue) {
     if (!target.equals(Target.MYSQL)) {
-      HashSet<NumberExpression<?>> rv = new HashSet<NumberExpression<?>>();
+      var rv = new HashSet<NumberExpression<?>>();
       rv.add(expr.byteValue());
       rv.add(expr.doubleValue());
       rv.add(expr.floatValue());
@@ -182,7 +193,7 @@ public class ProjectionsFactory {
 
   public Collection<SimpleExpression<String>> string(
       StringExpression expr, StringExpression other, String knownValue) {
-    HashSet<SimpleExpression<String>> rv = new HashSet<SimpleExpression<String>>();
+    var rv = new HashSet<SimpleExpression<String>>();
     rv.addAll(stringProjections(expr, other));
     rv.addAll(stringProjections(expr, StringConstant.create(knownValue)));
     return rv;
@@ -191,7 +202,7 @@ public class ProjectionsFactory {
   @SuppressWarnings("unchecked")
   public Collection<SimpleExpression<String>> stringProjections(
       StringExpression expr, StringExpression other) {
-    HashSet<SimpleExpression<String>> rv = new HashSet<SimpleExpression<String>>();
+    var rv = new HashSet<SimpleExpression<String>>();
 
     rv.add(expr.append("Hello"));
     rv.add(expr.append(other));
@@ -212,7 +223,7 @@ public class ProjectionsFactory {
     if (!(other instanceof Constant<?>
         || module == QuerydslModule.JDO
         || module == QuerydslModule.RDFBEAN)) {
-      CaseBuilder cases = new CaseBuilder();
+      var cases = new CaseBuilder();
       rv.add(cases.when(expr.eq("A")).then(other).when(expr.eq("B")).then(expr).otherwise(other));
 
       rv.add(expr.when("A").then(other).when("B").then(expr).otherwise(other));
@@ -232,7 +243,7 @@ public class ProjectionsFactory {
   @SuppressWarnings("unchecked")
   public <A extends Comparable> Collection<Expression<?>> time(
       TimeExpression<A> expr, TimeExpression<A> other, A knownValue) {
-    HashSet<Expression<?>> rv = new HashSet<Expression<?>>();
+    var rv = new HashSet<Expression<?>>();
     rv.add(expr.hour());
     rv.add(expr.minute());
     rv.add(expr.second());

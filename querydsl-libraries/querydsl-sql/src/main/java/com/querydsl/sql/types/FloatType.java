@@ -40,7 +40,7 @@ public class FloatType extends AbstractType<Float> {
 
   @Override
   public Float getValue(ResultSet rs, int startIndex) throws SQLException {
-    float val = rs.getFloat(startIndex);
+    var val = rs.getFloat(startIndex);
     return rs.wasNull() ? null : val;
   }
 

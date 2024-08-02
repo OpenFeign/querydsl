@@ -53,7 +53,7 @@ public class MultiComparator<T> implements Comparator<T>, Serializable {
   }
 
   private int innerCompare(Object[] o1, Object[] o2) {
-    for (int i = 0; i < o1.length; i++) {
+    for (var i = 0; i < o1.length; i++) {
       if (o1[i] == null) {
         return o2[i] == null ? 0 : nullsLast[i] ? 1 : -1;
       } else if (o2[i] == null) {

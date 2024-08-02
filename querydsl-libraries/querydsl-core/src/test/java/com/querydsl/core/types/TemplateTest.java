@@ -21,7 +21,7 @@ public class TemplateTest {
 
   @Test
   public void test() {
-    TemplateFactory factory = new TemplateFactory('\\');
+    var factory = new TemplateFactory('\\');
     match("[0, ' + ', 1, ' + ', 2]", factory.create("{0} + {1} + {2}"));
     match("['blah ', 0, ' + ', 1, ' + ', 2, ' XXX']", factory.create("blah {0} + {1} + {2} XXX"));
     match("['+', 1]", factory.create("+{1}"));
@@ -32,14 +32,14 @@ public class TemplateTest {
 
   @Test
   public void operation() {
-    TemplateFactory factory = new TemplateFactory('\\');
+    var factory = new TemplateFactory('\\');
     match("[0 ADD 1]", factory.create("{0+1}"));
     match("[0 DIV 1]", factory.create("{0/1}"));
   }
 
   @Test
   public void operationConst() {
-    TemplateFactory factory = new TemplateFactory('\\');
+    var factory = new TemplateFactory('\\');
     match("[0 ADD 1]", factory.create("{0+'1'}"));
     match("[0 DIV 1.0]", factory.create("{0/'1.0'}"));
     match(
@@ -49,7 +49,7 @@ public class TemplateTest {
 
   @Test
   public void like() {
-    TemplateFactory factory = new TemplateFactory('\\');
+    var factory = new TemplateFactory('\\');
     match("[0]", factory.create("{0%}"));
     match("[0]", factory.create("{%0}"));
     match("[0]", factory.create("{%0%}"));

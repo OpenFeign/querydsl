@@ -9,6 +9,7 @@ public class JSR310LocalDateTypeTest extends AbstractJSR310DateTimeTypeTest<Loca
     super(new JSR310LocalDateType());
   }
 
+  @Override
   @Test
   public void set() {
     //        LocalDate value = LocalDate.now();

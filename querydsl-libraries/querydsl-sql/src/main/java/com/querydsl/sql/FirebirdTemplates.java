@@ -14,7 +14,6 @@
 package com.querydsl.sql;
 
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.types.Ops;
 import java.sql.Types;
 
@@ -159,7 +158,7 @@ public class FirebirdTemplates extends SQLTemplates {
 
   @Override
   protected void serializeModifiers(QueryMetadata metadata, SQLSerializer context) {
-    QueryModifiers mod = metadata.getModifiers();
+    var mod = metadata.getModifiers();
     if (mod.isRestricting()) {
       if (mod.getLimit() != null) {
         if (mod.getOffset() != null) {

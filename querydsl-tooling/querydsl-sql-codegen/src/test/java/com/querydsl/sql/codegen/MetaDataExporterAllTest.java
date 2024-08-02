@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import javax.tools.JavaCompiler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -46,7 +45,7 @@ public class MetaDataExporterAllTest {
   @BeforeClass
   public static void setUpClass() throws ClassNotFoundException, SQLException {
     Class.forName("org.h2.Driver");
-    String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy";
+    var url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy";
     connection = DriverManager.getConnection(url, "sa", "");
     metadata = connection.getMetaData();
     MetaDataExporterTest.createTables(connection);
@@ -146,7 +145,7 @@ public class MetaDataExporterAllTest {
 
   @Test
   public void export() throws SQLException, IOException {
-    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    var config = new MetadataExporterConfigImpl();
     config.setColumnAnnotations(exportColumns);
     config.setSchemaPattern("PUBLIC");
     config.setNamePrefix(namePrefix);
@@ -166,11 +165,11 @@ public class MetaDataExporterAllTest {
       config.setColumnComparatorClass(OrdinalPositionComparator.class);
     }
 
-    MetaDataExporter exporter = new MetaDataExporter(config);
+    var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    Set<String> classes = exporter.getClasses();
-    int compilationResult =
+    var classes = exporter.getClasses();
+    var compilationResult =
         compiler.run(null, System.out, System.err, classes.toArray(new String[0]));
     if (compilationResult != 0) {
       fail("Compilation Failed for " + folder.getRoot().getPath());

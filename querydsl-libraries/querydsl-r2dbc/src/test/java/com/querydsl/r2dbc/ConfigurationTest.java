@@ -16,11 +16,14 @@ package com.querydsl.r2dbc;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.alias.Gender;
-import com.querydsl.r2dbc.binding.BindMarker;
 import com.querydsl.r2dbc.binding.BindTarget;
 import com.querydsl.r2dbc.binding.StatementWrapper;
 import com.querydsl.r2dbc.domain.QSurvey;
-import com.querydsl.r2dbc.types.*;
+import com.querydsl.r2dbc.types.EnumByNameType;
+import com.querydsl.r2dbc.types.InputStreamType;
+import com.querydsl.r2dbc.types.Null;
+import com.querydsl.r2dbc.types.StringType;
+import com.querydsl.r2dbc.types.UtilDateType;
 import com.querydsl.sql.SchemaAndTable;
 import com.querydsl.sql.namemapping.ChainedNameMapping;
 import com.querydsl.sql.namemapping.ChangeLetterCaseNameMapping;
@@ -38,11 +41,11 @@ public class ConfigurationTest {
 
   @Test
   public void various() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     //        configuration.setJavaType(Types.DATE, java.util.Date.class);
     configuration.register(new UtilDateType());
     configuration.register("person", "secureId", new EncryptedString());
-    configuration.register("person", "gender", new EnumByNameType<Gender>(Gender.class));
+    configuration.register("person", "gender", new EnumByNameType<>(Gender.class));
     configuration.register(new StringType());
     assertThat(configuration.getJavaType(Types.VARCHAR, null, 0, 0, "person", "gender"))
         .isEqualTo(Gender.class);
@@ -50,7 +53,7 @@ public class ConfigurationTest {
 
   @Test
   public void custom_type() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     //        configuration.setJavaType(Types.BLOB, InputStream.class);
     configuration.register(new InputStreamType());
     assertThat(configuration.getJavaType(Types.BLOB, null, 0, 0, "", ""))
@@ -59,18 +62,18 @@ public class ConfigurationTest {
 
   @Test
   public void set_null() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     //        configuration.register(new UntypedNullType());
     configuration.register("SURVEY", "NAME", new EncryptedString());
-    Statement stmt = EasyMock.createNiceMock(Statement.class);
+    var stmt = (Statement) EasyMock.createNiceMock(Statement.class);
     BindTarget bindTarget = new StatementWrapper(stmt);
-    BindMarker bindMarker = SQLTemplates.ANONYMOUS.create().next();
+    var bindMarker = SQLTemplates.ANONYMOUS.create().next();
     configuration.set(bindMarker, bindTarget, QSurvey.survey.name, Null.DEFAULT);
   }
 
   @Test
   public void get_schema() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     configuration.registerSchemaOverride("public", "pub");
     configuration.registerTableOverride("employee", "emp");
     configuration.registerTableOverride("public", "employee", "employees");
@@ -83,15 +86,14 @@ public class ConfigurationTest {
         .isEqualTo("employees");
 
     configuration.setDynamicNameMapping(new PreConfiguredNameMapping());
-    SchemaAndTable notOverriddenSchemaAndTable =
-        new SchemaAndTable("notoverridden", "notoverridden");
+    var notOverriddenSchemaAndTable = new SchemaAndTable("notoverridden", "notoverridden");
     assertThat(configuration.getOverride(notOverriddenSchemaAndTable))
         .isEqualTo(notOverriddenSchemaAndTable);
 
     configuration.setDynamicNameMapping(
         new ChangeLetterCaseNameMapping(
             ChangeLetterCaseNameMapping.LetterCase.UPPER, Locale.ENGLISH));
-    String notDirectOverriden = "notDirectOverriden";
+    var notDirectOverriden = "notDirectOverriden";
     assertThat(
             configuration.getOverride(new SchemaAndTable("public", notDirectOverriden)).getTable())
         .isEqualTo(notDirectOverriden.toUpperCase(Locale.ENGLISH));
@@ -99,7 +101,7 @@ public class ConfigurationTest {
 
   @Test
   public void columnOverride() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     assertThat(
             configuration.getColumnOverride(
                 new SchemaAndTable("myschema", "mytable"), "notoverriddencolumn"))
@@ -155,7 +157,7 @@ public class ConfigurationTest {
 
   @Test
   public void numericOverriden() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     configuration.registerNumeric(19, 0, BigInteger.class);
     assertThat(configuration.getJavaType(Types.NUMERIC, "", 19, 0, "", ""))
         .isEqualTo(BigInteger.class);
@@ -163,7 +165,7 @@ public class ConfigurationTest {
 
   @Test
   public void numericOverriden2() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     configuration.registerNumeric(18, 19, 0, 0, BigInteger.class);
     assertThat(configuration.getJavaType(Types.NUMERIC, "", 18, 0, "", ""))
         .isEqualTo(BigInteger.class);

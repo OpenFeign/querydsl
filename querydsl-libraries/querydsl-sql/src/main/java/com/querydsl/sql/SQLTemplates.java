@@ -13,9 +13,19 @@
  */
 package com.querydsl.sql;
 
-import com.querydsl.core.*;
+import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryException;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
-import com.querydsl.core.types.*;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.Templates;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.sql.dml.SQLInsertBatch;
 import com.querydsl.sql.dml.SQLMergeUsingCase;
@@ -99,7 +109,7 @@ public class SQLTemplates extends Templates {
     protected abstract SQLTemplates build(char escape, boolean quote);
 
     public SQLTemplates build() {
-      SQLTemplates templates = build(escape, quote);
+      var templates = build(escape, quote);
       if (newLineToSingleSpace) {
         templates.newLineToSingleSpace();
       }
@@ -492,7 +502,7 @@ public class SQLTemplates extends Templates {
   }
 
   public String escapeLiteral(String str) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     for (char ch : str.toCharArray()) {
       if (ch == '\'') {
         builder.append("''");
@@ -815,7 +825,7 @@ public class SQLTemplates extends Templates {
         try {
           if (field.getType().equals(String.class)) {
             field.setAccessible(true);
-            Object val = field.get(this);
+            var val = field.get(this);
             if (val != null) {
               field.set(this, val.toString().replace('\n', ' '));
             }
@@ -1016,7 +1026,7 @@ public class SQLTemplates extends Templates {
    * @param context
    */
   protected void serializeModifiers(QueryMetadata metadata, SQLSerializer context) {
-    QueryModifiers mod = metadata.getModifiers();
+    var mod = metadata.getModifiers();
     if (mod.getLimit() != null) {
       context.handle(limitTemplate, mod.getLimit());
     } else if (limitRequired) {

@@ -15,15 +15,20 @@ package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.jpa.domain.*;
+import com.querydsl.jpa.domain.Animal;
+import com.querydsl.jpa.domain.Cat;
+import com.querydsl.jpa.domain.InheritedProperties;
+import com.querydsl.jpa.domain.QAnimal;
+import com.querydsl.jpa.domain.QCat;
+import com.querydsl.jpa.domain.QInheritedProperties;
 import org.junit.Test;
 
 public class TypeCastTest {
 
   @Test
   public void mappedSuperclass() {
-    QInheritedProperties subClass = QInheritedProperties.inheritedProperties;
-    QSuperclass superClass = subClass._super;
+    var subClass = QInheritedProperties.inheritedProperties;
+    var superClass = subClass._super;
 
     assertThat(superClass.getType()).isEqualTo(InheritedProperties.class);
     //        assertEquals(InheritedProperties.class.getSimpleName(), superClass.getEntityName());
@@ -42,8 +47,8 @@ public class TypeCastTest {
 
   @Test
   public void subClassToSuper() {
-    QCat cat = QCat.cat;
-    QAnimal animal = new QAnimal(cat);
+    var cat = QCat.cat;
+    var animal = new QAnimal(cat);
 
     assertThat(animal.getType()).isEqualTo(Cat.class);
     //        assertEquals(Cat.class.getSimpleName(), animal.getEntityName());
@@ -52,8 +57,8 @@ public class TypeCastTest {
 
   @Test
   public void subClassToSuper2() {
-    QCat cat = QCat.cat;
-    QAnimal animal = new QAnimal(cat.getMetadata());
+    var cat = QCat.cat;
+    var animal = new QAnimal(cat.getMetadata());
 
     assertThat(animal.getType()).isEqualTo(Animal.class);
     //        assertEquals(Animal.class.getSimpleName(), animal.getEntityName());
@@ -62,8 +67,8 @@ public class TypeCastTest {
 
   @Test
   public void superClassToSub() {
-    QAnimal animal = QAnimal.animal;
-    QCat cat = new QCat(animal.getMetadata());
+    var animal = QAnimal.animal;
+    var cat = new QCat(animal.getMetadata());
 
     assertThat(cat.getType()).isEqualTo(Cat.class);
     //        assertEquals(Cat.class.getSimpleName(), cat.getEntityName());

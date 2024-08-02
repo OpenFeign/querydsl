@@ -15,7 +15,6 @@ package com.querydsl.core.types;
 
 import com.querydsl.core.group.GroupExpression;
 import com.querydsl.core.util.PrimitiveUtils;
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -147,9 +146,9 @@ public class QBean<T> extends FactoryExpressionBase<T> {
   }
 
   private List<Field> initFields(Map<String, ? extends Expression<?>> args) {
-    List<Field> fields = new ArrayList<Field>(args.size());
+    List<Field> fields = new ArrayList<>(args.size());
     for (Map.Entry<String, ? extends Expression<?>> entry : args.entrySet()) {
-      String property = entry.getKey();
+      var property = entry.getKey();
       Expression<?> expr = entry.getValue();
       Class<?> beanType = getType();
       Field field = null;
@@ -177,11 +176,11 @@ public class QBean<T> extends FactoryExpressionBase<T> {
 
   private List<Method> initMethods(Map<String, ? extends Expression<?>> args) {
     try {
-      List<Method> methods = new ArrayList<Method>(args.size());
-      BeanInfo beanInfo = Introspector.getBeanInfo(getType());
-      PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+      List<Method> methods = new ArrayList<>(args.size());
+      var beanInfo = Introspector.getBeanInfo(getType());
+      var propertyDescriptors = beanInfo.getPropertyDescriptors();
       for (Map.Entry<String, ? extends Expression<?>> entry : args.entrySet()) {
-        String property = entry.getKey();
+        var property = entry.getKey();
         Expression<?> expr = entry.getValue();
         Method setter = null;
         for (PropertyDescriptor prop : propertyDescriptors) {
@@ -209,7 +208,7 @@ public class QBean<T> extends FactoryExpressionBase<T> {
   }
 
   protected void typeMismatch(Class<?> type, Expression<?> expr) {
-    final String msg = expr.getType().getName() + " is not compatible with " + type.getName();
+    final var msg = expr.getType().getName() + " is not compatible with " + type.getName();
     throw new IllegalArgumentException(msg);
   }
 
@@ -218,20 +217,20 @@ public class QBean<T> extends FactoryExpressionBase<T> {
     try {
       T rv = create(getType());
       if (fieldAccess) {
-        for (int i = 0; i < a.length; i++) {
-          Object value = a[i];
+        for (var i = 0; i < a.length; i++) {
+          var value = a[i];
           if (value != null) {
-            Field field = fields.get(i);
+            var field = fields.get(i);
             if (field != null) {
               field.set(rv, value);
             }
           }
         }
       } else {
-        for (int i = 0; i < a.length; i++) {
-          Object value = a[i];
+        for (var i = 0; i < a.length; i++) {
+          var value = a[i];
           if (value != null) {
-            Method setter = setters.get(i);
+            var setter = setters.get(i);
             if (setter != null) {
               setter.invoke(rv, value);
             }

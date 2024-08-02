@@ -15,10 +15,33 @@ package com.querydsl.r2dbc;
 
 import com.querydsl.core.util.PrimitiveUtils;
 import com.querydsl.core.util.ReflectionUtils;
-import com.querydsl.r2dbc.types.*;
+import com.querydsl.r2dbc.types.BigDecimalType;
+import com.querydsl.r2dbc.types.BigIntegerType;
+import com.querydsl.r2dbc.types.BlobType;
+import com.querydsl.r2dbc.types.BooleanType;
+import com.querydsl.r2dbc.types.ByteType;
+import com.querydsl.r2dbc.types.BytesType;
+import com.querydsl.r2dbc.types.CharacterType;
+import com.querydsl.r2dbc.types.ClobType;
+import com.querydsl.r2dbc.types.CurrencyType;
+import com.querydsl.r2dbc.types.DateType;
+import com.querydsl.r2dbc.types.DoubleType;
+import com.querydsl.r2dbc.types.FloatType;
+import com.querydsl.r2dbc.types.IntegerType;
+import com.querydsl.r2dbc.types.LocaleType;
+import com.querydsl.r2dbc.types.LongType;
+import com.querydsl.r2dbc.types.NullType;
+import com.querydsl.r2dbc.types.ObjectType;
+import com.querydsl.r2dbc.types.ShortType;
+import com.querydsl.r2dbc.types.StringType;
+import com.querydsl.r2dbc.types.TimeType;
+import com.querydsl.r2dbc.types.TimestampType;
+import com.querydsl.r2dbc.types.Type;
+import com.querydsl.r2dbc.types.URLType;
+import com.querydsl.r2dbc.types.UtilDateType;
+import com.querydsl.r2dbc.types.UtilUUIDType;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -96,17 +119,15 @@ class JavaTypeMapping {
     }
   }
 
-  private final Map<Class<?>, Type<?, ?>> typeByClass = new HashMap<Class<?>, Type<?, ?>>();
+  private final Map<Class<?>, Type<?, ?>> typeByClass = new HashMap<>();
 
-  private final Map<Class<?>, Type<?, ?>> resolvedTypesByClass =
-      new HashMap<Class<?>, Type<?, ?>>();
+  private final Map<Class<?>, Type<?, ?>> resolvedTypesByClass = new HashMap<>();
 
-  private final Map<String, Map<String, Type<?, ?>>> typeByColumn =
-      new HashMap<String, Map<String, Type<?, ?>>>();
+  private final Map<String, Map<String, Type<?, ?>>> typeByColumn = new HashMap<>();
 
   @Nullable
   public Type<?, ?> getType(String table, String column) {
-    Map<String, Type<?, ?>> columns = typeByColumn.get(table);
+    var columns = typeByColumn.get(table);
     if (columns != null) {
       return columns.get(column);
     } else {
@@ -142,7 +163,7 @@ class JavaTypeMapping {
     } while (!cl.equals(Object.class));
 
     // Look for a registered type in any implemented interfaces
-    Set<Class<?>> interfaces = ReflectionUtils.getImplementedInterfaces(clazz);
+    var interfaces = ReflectionUtils.getImplementedInterfaces(clazz);
     for (Class<?> itf : interfaces) {
       if (typeByClass.containsKey(itf)) {
         return typeByClass.get(itf);
@@ -164,9 +185,9 @@ class JavaTypeMapping {
   }
 
   public void setType(String table, String column, Type<?, ?> type) {
-    Map<String, Type<?, ?>> columns = typeByColumn.get(table);
+    var columns = typeByColumn.get(table);
     if (columns == null) {
-      columns = new HashMap<String, Type<?, ?>>();
+      columns = new HashMap<>();
       typeByColumn.put(table, columns);
     }
     columns.put(column, type);

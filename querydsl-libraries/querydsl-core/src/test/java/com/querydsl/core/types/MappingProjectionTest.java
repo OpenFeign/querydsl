@@ -30,14 +30,14 @@ public class MappingProjectionTest {
   @Test
   public void two_args() {
     MappingProjection<Pair<String, String>> mapping =
-        new MappingProjection<Pair<String, String>>(Pair.class, str1, str2) {
+        new MappingProjection<>(Pair.class, str1, str2) {
           @Override
           protected Pair<String, String> map(Tuple row) {
             return Pair.of(row.get(str1), row.get(str2));
           }
         };
 
-    Pair<String, String> pair = mapping.newInstance("1", "2");
+    var pair = mapping.newInstance("1", "2");
     assertThat(pair.getFirst()).isEqualTo("1");
     assertThat(pair.getSecond()).isEqualTo("2");
   }
@@ -46,7 +46,7 @@ public class MappingProjectionTest {
   @Test
   public void single_arg() {
     MappingProjection<String> mapping =
-        new MappingProjection<String>(String.class, str1) {
+        new MappingProjection<>(String.class, str1) {
           @Override
           protected String map(Tuple row) {
             return row.get(str1);
@@ -59,7 +59,7 @@ public class MappingProjectionTest {
   @Test
   public void distinct_expressions() {
     MappingProjection<Pair<String, String>> mapping =
-        new MappingProjection<Pair<String, String>>(Pair.class, str1, str1) {
+        new MappingProjection<>(Pair.class, str1, str1) {
           @Override
           protected Pair<String, String> map(Tuple row) {
             return Pair.of(row.get(str1), row.get(str1));

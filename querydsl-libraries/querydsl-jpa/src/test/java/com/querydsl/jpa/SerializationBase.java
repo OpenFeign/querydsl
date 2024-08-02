@@ -15,14 +15,18 @@ package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.testutil.Serialization;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
 import jakarta.persistence.EntityManager;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -39,11 +43,11 @@ public class SerializationBase implements JPATest {
     JPAQuery<?> query = query();
     query.from(cat).where(cat.name.eq("Kate")).select(cat).fetch();
 
-    QueryMetadata metadata = query.getMetadata();
+    var metadata = query.getMetadata();
     assertThat(metadata.getJoins()).isNotEmpty();
     assertThat(metadata.getWhere() != null).isTrue();
     assertThat(metadata.getProjection() != null).isTrue();
-    QueryMetadata metadata2 = Serialization.serialize(metadata);
+    var metadata2 = Serialization.serialize(metadata);
 
     // validate it
     assertThat(metadata2.getJoins()).isEqualTo(metadata.getJoins());
@@ -59,7 +63,7 @@ public class SerializationBase implements JPATest {
   @Test
   public void any_serialized() throws Exception {
     Predicate where = cat.kittens.any().name.eq("Ruth234");
-    Predicate where2 = Serialization.serialize(where);
+    var where2 = Serialization.serialize(where);
 
     assertThat(query().from(cat).where(where).fetchCount()).isEqualTo(0);
     assertThat(query().from(cat).where(where2).fetchCount()).isEqualTo(0);
@@ -69,19 +73,19 @@ public class SerializationBase implements JPATest {
   public void any_serialized2() throws Exception {
     Predicate where = cat.kittens.any().name.eq("Ruth234");
 
-    File file = new File("target", "predicate.ser");
+    var file = new File("target", "predicate.ser");
     if (!file.exists()) {
       // serialize predicate on first run
-      FileOutputStream fileOutputStream = new FileOutputStream(file);
-      ObjectOutputStream out = new ObjectOutputStream(fileOutputStream);
+      var fileOutputStream = new FileOutputStream(file);
+      var out = new ObjectOutputStream(fileOutputStream);
       out.writeObject(where);
       out.close();
       assertThat(query().from(cat).where(where).fetchCount()).isEqualTo(0);
     } else {
       // deserialize predicate on second run
-      FileInputStream fileInputStream = new FileInputStream(file);
-      ObjectInputStream in = new ObjectInputStream(fileInputStream);
-      Predicate where2 = (Predicate) in.readObject();
+      var fileInputStream = new FileInputStream(file);
+      var in = new ObjectInputStream(fileInputStream);
+      var where2 = (Predicate) in.readObject();
       in.close();
       assertThat(query().from(cat).where(where2).fetchCount()).isEqualTo(0);
     }

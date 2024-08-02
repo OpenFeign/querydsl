@@ -15,7 +15,11 @@ package com.querydsl.apt.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 import org.junit.Test;
 
 public class EmbeddedTest {

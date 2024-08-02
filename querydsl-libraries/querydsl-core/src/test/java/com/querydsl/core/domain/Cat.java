@@ -22,7 +22,7 @@ public class Cat extends Animal {
 
   private int breed;
 
-  private List<Cat> kittens = new ArrayList<Cat>();
+  private List<Cat> kittens = new ArrayList<>();
 
   private Set<Cat> kittensSet;
 

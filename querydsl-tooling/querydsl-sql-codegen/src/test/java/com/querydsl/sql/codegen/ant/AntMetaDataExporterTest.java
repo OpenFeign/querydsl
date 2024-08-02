@@ -16,10 +16,8 @@ package com.querydsl.sql.codegen.ant;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.junit.BeforeClass;
@@ -31,8 +29,8 @@ public class AntMetaDataExporterTest {
 
   @BeforeClass
   public static void setUp() throws SQLException {
-    try (Connection conn = DriverManager.getConnection(url, "sa", "")) {
-      try (Statement stmt = conn.createStatement()) {
+    try (var conn = DriverManager.getConnection(url, "sa", "")) {
+      try (var stmt = conn.createStatement()) {
         stmt.execute("drop table test if exists");
         stmt.execute("create table test (id int)");
       }
@@ -41,7 +39,7 @@ public class AntMetaDataExporterTest {
 
   @Test
   public void execute() {
-    AntMetaDataExporter exporter = new AntMetaDataExporter();
+    var exporter = new AntMetaDataExporter();
     exporter.setJdbcDriver("org.h2.Driver");
     exporter.setJdbcUser("sa");
     exporter.setJdbcUrl(url);
@@ -55,7 +53,7 @@ public class AntMetaDataExporterTest {
 
   @Test
   public void execute_with_beans() {
-    AntMetaDataExporter exporter = new AntMetaDataExporter();
+    var exporter = new AntMetaDataExporter();
     exporter.setJdbcDriver("org.h2.Driver");
     exporter.setJdbcUser("sa");
     exporter.setJdbcUrl(url);
@@ -75,7 +73,7 @@ public class AntMetaDataExporterTest {
 
   @Test
   public void execute_with_import() {
-    AntMetaDataExporter exporter = new AntMetaDataExporter();
+    var exporter = new AntMetaDataExporter();
     exporter.setJdbcDriver("org.h2.Driver");
     exporter.setJdbcUser("sa");
     exporter.setJdbcUrl(url);
@@ -96,11 +94,11 @@ public class AntMetaDataExporterTest {
 
   @Test
   public void execute_inside_ant() {
-    File buildFile = new File(getClass().getResource("/build.xml").getFile());
-    Project p = new Project();
+    var buildFile = new File(getClass().getResource("/build.xml").getFile());
+    var p = new Project();
     p.setUserProperty("ant.file", buildFile.getAbsolutePath());
     p.init();
-    ProjectHelper helper = ProjectHelper.getProjectHelper();
+    var helper = ProjectHelper.getProjectHelper();
     p.addReference("ant.projectHelper", helper);
     helper.parse(p, buildFile);
     p.executeTarget(p.getDefaultTarget());

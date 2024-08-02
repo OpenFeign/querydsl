@@ -1,6 +1,10 @@
 package com.querydsl.core.testutil;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public final class Serialization {
 
@@ -10,15 +14,15 @@ public final class Serialization {
   public static <T> T serialize(T obj) {
     try {
       // serialize
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      ObjectOutputStream out = new ObjectOutputStream(baos);
+      var baos = new ByteArrayOutputStream();
+      var out = new ObjectOutputStream(baos);
       out.writeObject(obj);
       out.close();
 
       // deserialize
-      ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      ObjectInputStream in = new ObjectInputStream(bais);
-      T rv = (T) in.readObject();
+      var bais = new ByteArrayInputStream(baos.toByteArray());
+      var in = new ObjectInputStream(bais);
+      var rv = (T) in.readObject();
       in.close();
       return rv;
     } catch (IOException | ClassNotFoundException e) {

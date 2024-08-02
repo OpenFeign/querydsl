@@ -13,13 +13,25 @@
  */
 package com.querydsl.collections;
 
-import static com.querydsl.core.group.GroupBy.*;
+import static com.querydsl.core.group.GroupBy.avg;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
+import static com.querydsl.core.group.GroupBy.map;
+import static com.querydsl.core.group.GroupBy.max;
+import static com.querydsl.core.group.GroupBy.min;
+import static com.querydsl.core.group.GroupBy.set;
+import static com.querydsl.core.group.GroupBy.sum;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.group.Group;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -135,7 +147,7 @@ public class GroupByTest {
             .where(comment.post.id.eq(post.id))
             .transform(groupBy(post.id).as(post.name, set(comment.id), list(comment.text)));
 
-    Group group = results.get(1);
+    var group = results.get(1);
     assertThat(group.getOne(post.id)).isEqualTo(toInt(1));
     assertThat(group.getOne(post.name)).isEqualTo("Post 1");
     assertThat(group.getSet(comment.id)).isEqualTo(toSet(1));
@@ -151,7 +163,7 @@ public class GroupByTest {
             .where(comment.post.id.eq(post.id))
             .transform(groupBy(post.id).as(post.name, set(comment.id), list(comment.text)));
 
-    Group group = results.get(null);
+    var group = results.get(null);
     assertThat(group.getOne(post.id)).isNull();
     assertThat(group.getOne(post.name)).isEqualTo("null post");
     assertThat(group.getSet(comment.id)).isEqualTo(toSet(7, 8));
@@ -175,7 +187,7 @@ public class GroupByTest {
             .where(comment.post.id.eq(post.id))
             .transform(groupBy(post.id).as(post.name, set(comment.id), list(comment.text)));
 
-    Group group = results.get(1);
+    var group = results.get(1);
     group.getList(comment.id);
   }
 
@@ -188,7 +200,7 @@ public class GroupByTest {
             .where(comment.post.id.eq(post.id))
             .transform(groupBy(post.id).as(post.name, map(comment.id, comment.text)));
 
-    Group group = results.get(1);
+    var group = results.get(1);
     Map<Integer, String> comments = group.getMap(comment.id, comment.text);
     assertThat(comments).hasSize(1);
     //        assertEquals("comment 2", comments.get(2));
@@ -202,8 +214,8 @@ public class GroupByTest {
             .where(comment.post.id.eq(post.id))
             .transform(groupBy(post.id).as(post.name, set(comment.id), list(comment.text)));
 
-    Group group = results.get(1);
-    Object[] array = group.toArray();
+    var group = results.get(1);
+    var array = group.toArray();
     assertThat(array[0]).isEqualTo(toInt(1));
     assertThat(array[1]).isEqualTo("Post 1");
     assertThat(array[2]).isEqualTo(toSet(1));
@@ -218,7 +230,7 @@ public class GroupByTest {
             .where(comment.post.id.eq(post.id))
             .transform(groupBy(post.id).as(QPost.create(post.id, post.name, set(qComment))));
 
-    Post post = results.get(1);
+    var post = results.get(1);
     assertThat(post).isNotNull();
     assertThat(post.getId()).isEqualTo(1);
     assertThat(post.getName()).isEqualTo("Post 1");
@@ -237,7 +249,7 @@ public class GroupByTest {
                         Projections.bean(
                             Post.class, post.id, post.name, set(qComment).as("comments"))));
 
-    Post post = results.get(1);
+    var post = results.get(1);
     assertThat(post).isNotNull();
     assertThat(post.getId()).isEqualTo(1);
     assertThat(post.getName()).isEqualTo("Post 1");
@@ -261,8 +273,8 @@ public class GroupByTest {
 
     assertThat(results).hasSize(2);
 
-    User user = results.get("Jane");
-    Post post = user.getLatestPost();
+    var user = results.get("Jane");
+    var post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(3);
     assertThat(post.getName()).isEqualTo("Post 3");
     assertThat(post.getComments()).hasSize(3);
@@ -287,8 +299,8 @@ public class GroupByTest {
 
     assertThat(results).hasSize(2);
 
-    User user = results.get("Jane");
-    Post post = user.getLatestPost();
+    var user = results.get("Jane");
+    var post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(3);
     assertThat(post.getName()).isEqualTo("Post 3");
     assertThat(post.getComments()).hasSize(3);
@@ -311,8 +323,8 @@ public class GroupByTest {
 
     assertThat(results).hasSize(2);
 
-    User user = results.get("Jane");
-    Post post = user.getLatestPost();
+    var user = results.get("Jane");
+    var post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(3);
     assertThat(post.getName()).isEqualTo("Post 3");
     assertThat(post.getComments()).hasSize(3);
@@ -323,6 +335,6 @@ public class GroupByTest {
   }
 
   private <T> Set<T> toSet(T... s) {
-    return new HashSet<T>(Arrays.asList(s));
+    return new HashSet<>(Arrays.asList(s));
   }
 }

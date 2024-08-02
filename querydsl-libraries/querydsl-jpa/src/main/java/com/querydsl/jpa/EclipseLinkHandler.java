@@ -53,7 +53,7 @@ class EclipseLinkHandler implements QueryHandler {
   @SuppressWarnings("unchecked")
   @Override
   public <T> CloseableIterator<T> iterate(Query query, FactoryExpression<?> projection) {
-    boolean canUseCursor = false;
+    var canUseCursor = false;
     try {
       canUseCursor = query.unwrap(Query.class) instanceof JpaQuery;
     } catch (PersistenceException e) {
@@ -63,8 +63,8 @@ class EclipseLinkHandler implements QueryHandler {
     Closeable closeable = null;
     if (canUseCursor) {
       query.setHint(QueryHints.CURSOR, HintValues.TRUE);
-      final Cursor cursor = (Cursor) query.getSingleResult();
-      final int pageSize = cursor.getPageSize();
+      final var cursor = (Cursor) query.getSingleResult();
+      final var pageSize = cursor.getPageSize();
       closeable =
           new Closeable() {
             @Override
@@ -73,7 +73,7 @@ class EclipseLinkHandler implements QueryHandler {
             }
           };
       iterator =
-          new Iterator<T>() {
+          new Iterator<>() {
             private int rowsSinceLastClear = 0;
 
             @Override
@@ -94,15 +94,15 @@ class EclipseLinkHandler implements QueryHandler {
       iterator = query.getResultList().iterator();
     }
     if (projection != null) {
-      return new TransformingIterator<T>(iterator, closeable, projection);
+      return new TransformingIterator<>(iterator, closeable, projection);
     } else {
-      return new IteratorAdapter<T>(iterator, closeable);
+      return new IteratorAdapter<>(iterator, closeable);
     }
   }
 
   @Override
   public <T> Stream<T> stream(Query query, @Nullable FactoryExpression<?> projection) {
-    final Stream resultStream = query.getResultStream();
+    final var resultStream = query.getResultStream();
     if (projection != null) {
       return resultStream.map(
           element ->

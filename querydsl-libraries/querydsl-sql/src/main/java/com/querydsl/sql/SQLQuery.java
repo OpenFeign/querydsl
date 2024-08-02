@@ -117,7 +117,7 @@ public class SQLQuery<T> extends AbstractSQLQuery<T, SQLQuery<T>> {
 
   @Override
   public SQLQuery<T> clone(Connection conn) {
-    SQLQuery<T> q = new SQLQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    var q = new SQLQuery<T>(conn, getConfiguration(), getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -126,7 +126,7 @@ public class SQLQuery<T> extends AbstractSQLQuery<T, SQLQuery<T>> {
   public <U> SQLQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    SQLQuery<U> newType = (SQLQuery<U>) this;
+    var newType = (SQLQuery<U>) this;
     return newType;
   }
 
@@ -134,7 +134,7 @@ public class SQLQuery<T> extends AbstractSQLQuery<T, SQLQuery<T>> {
   public SQLQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    SQLQuery<Tuple> newType = (SQLQuery<Tuple>) this;
+    var newType = (SQLQuery<Tuple>) this;
     return newType;
   }
 }

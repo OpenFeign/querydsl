@@ -13,14 +13,17 @@
  */
 package com.querydsl.r2dbc;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.r2dbc.Constants.survey;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.types.dsl.Param;
-import com.querydsl.r2dbc.dml.R2DBCDeleteClause;
 import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.r2dbc.domain.QSurvey;
 import org.junit.After;
@@ -47,7 +50,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
   @Test
   @ExcludeIn(MYSQL)
   public void delete() {
-    Long count = query().from(survey).fetchCount().block();
+    var count = query().from(survey).fetchCount().block();
     assertThat((long) delete(survey).where(survey.name.eq("XXX")).execute().block()).isEqualTo(0);
     assertThat(delete(survey).execute().block()).isEqualTo(count);
   }
@@ -64,9 +67,9 @@ public abstract class DeleteBase extends AbstractBaseTest {
 
   @Test
   public void delete_with_subQuery_exists() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
-    R2DBCDeleteClause delete = delete(survey1);
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
+    var delete = delete(survey1);
     delete.where(
         survey1.name.eq("XXX"), query().from(employee).where(survey1.id.eq(employee.id)).exists());
     assertThat((long) delete.execute().block()).isEqualTo(0);
@@ -74,23 +77,23 @@ public abstract class DeleteBase extends AbstractBaseTest {
 
   @Test
   public void delete_with_subQuery_exists_Params() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
 
-    Param<Integer> param = new Param<Integer>(Integer.class, "param");
+    var param = new Param<Integer>(Integer.class, "param");
     R2DBCQuery<?> sq = query().from(employee).where(employee.id.eq(param));
     sq.set(param, -12478923);
 
-    R2DBCDeleteClause delete = delete(survey1);
+    var delete = delete(survey1);
     delete.where(survey1.name.eq("XXX"), sq.exists());
     assertThat((long) delete.execute().block()).isEqualTo(0);
   }
 
   @Test
   public void delete_with_subQuery_exists2() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
-    R2DBCDeleteClause delete = delete(survey1);
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
+    var delete = delete(survey1);
     delete.where(
         survey1.name.eq("XXX"),
         query().from(employee).where(survey1.name.eq(employee.lastname)).exists());

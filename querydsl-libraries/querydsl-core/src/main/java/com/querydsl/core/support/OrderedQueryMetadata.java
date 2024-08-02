@@ -47,7 +47,7 @@ public class OrderedQueryMetadata extends DefaultQueryMetadata {
   public List<JoinExpression> getJoins() {
     if (joins == null) {
       joins = new ArrayList<>();
-      int separator = 0;
+      var separator = 0;
       for (JoinExpression j : super.getJoins()) {
         if (j.getType() == JoinType.DEFAULT) {
           joins.add(separator++, j);

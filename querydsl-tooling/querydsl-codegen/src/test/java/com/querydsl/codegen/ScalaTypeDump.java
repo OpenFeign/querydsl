@@ -18,7 +18,16 @@ import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Parameter;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.ComparableExpression;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.DateTimeExpression;
+import com.querydsl.core.types.dsl.EnumExpression;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.TemporalExpression;
+import com.querydsl.core.types.dsl.TimeExpression;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
@@ -32,7 +41,7 @@ public class ScalaTypeDump {
   @Test
   @Ignore
   public void test() throws IOException {
-    List<Class<?>> classes = new ArrayList<Class<?>>();
+    List<Class<?>> classes = new ArrayList<>();
     classes.add(SimpleExpression.class);
     classes.add(ComparableExpression.class);
     classes.add(BooleanExpression.class);
@@ -44,8 +53,8 @@ public class ScalaTypeDump {
     classes.add(EnumExpression.class);
     classes.add(NumberExpression.class);
 
-    StringWriter w = new StringWriter();
-    ScalaWriter writer = new ScalaWriter(w);
+    var w = new StringWriter();
+    var writer = new ScalaWriter(w);
     writer.packageDecl("com.querydsl.scala");
     writer.imports(Expression.class.getPackage());
     for (Class<?> cl : classes) {
@@ -53,7 +62,7 @@ public class ScalaTypeDump {
       Type superClass = new ClassType(cl.getSuperclass());
       writer.beginClass(type, superClass);
       for (Method m : cl.getDeclaredMethods()) {
-        List<Parameter> params = new ArrayList<Parameter>();
+        List<Parameter> params = new ArrayList<>();
         for (Class<?> paramType : m.getParameterTypes()) {
           params.add(new Parameter("arg" + params.size(), new ClassType(paramType)));
         }

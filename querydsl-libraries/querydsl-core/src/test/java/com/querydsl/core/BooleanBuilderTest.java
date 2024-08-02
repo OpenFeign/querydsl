@@ -36,35 +36,35 @@ public class BooleanBuilderTest {
 
   @Test
   public void and_empty() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.and(new BooleanBuilder());
     assertThat(ExpressionUtils.extract(builder)).isNull();
   }
 
   @Test
   public void and_any_of() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.andAnyOf(first, null);
     assertThat(builder.getValue()).isEqualTo(first);
   }
 
   @Test
   public void and_any_of2() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.andAnyOf(null, first);
     assertThat(builder.getValue()).isEqualTo(first);
   }
 
   @Test
   public void or_all_of() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.orAllOf(first, null);
     assertThat(builder.getValue()).isEqualTo(first);
   }
 
   @Test
   public void or_all_of2() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.orAllOf(null, first);
     assertThat(builder.getValue()).isEqualTo(first);
   }
@@ -84,7 +84,7 @@ public class BooleanBuilderTest {
 
   @Test
   public void advanced() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.andAnyOf(first, second, first);
     builder.orAllOf(first, second, first);
     assertThat(builder).hasToString("true || false || true || true && false && true");
@@ -92,7 +92,7 @@ public class BooleanBuilderTest {
 
   @Test
   public void if_then_else() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.and(null);
     builder.or(null);
     builder.and(second);
@@ -111,21 +111,21 @@ public class BooleanBuilderTest {
 
   @Test
   public void and_not() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.and(first).andNot(second);
     assertThat(builder.getValue()).isEqualTo(first.and(second.not()));
   }
 
   @Test
   public void or_not() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.and(first).orNot(second);
     assertThat(builder.getValue()).isEqualTo(first.or(second.not()));
   }
 
   @Test
   public void not() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.and(first).not();
     assertThat(builder.getValue()).isEqualTo(first.not());
   }
@@ -154,7 +154,7 @@ public class BooleanBuilderTest {
 
   @Test
   public void toString_() {
-    BooleanBuilder builder = new BooleanBuilder().and(first);
+    var builder = new BooleanBuilder().and(first);
     assertThat(builder).hasToString("true");
     builder.or(Expressions.booleanPath("condition"));
     assertThat(builder).hasToString("true || condition");
@@ -174,7 +174,7 @@ public class BooleanBuilderTest {
 
   @Test
   public void accept() {
-    BooleanBuilder builder = new BooleanBuilder();
+    var builder = new BooleanBuilder();
     builder.and(first);
     builder.or(Expressions.booleanPath("condition"));
     assertThat(builder.accept(ToStringVisitor.DEFAULT, Templates.DEFAULT))

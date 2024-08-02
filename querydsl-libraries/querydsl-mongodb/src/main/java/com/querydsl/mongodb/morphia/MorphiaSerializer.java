@@ -18,7 +18,6 @@ import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.mongodb.MongodbSerializer;
-import java.lang.reflect.AnnotatedElement;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.annotations.Id;
@@ -42,13 +41,13 @@ public class MorphiaSerializer extends MongodbSerializer {
 
   @Override
   public Object visit(Constant<?> expr, Void context) {
-    Object value = super.visit(expr, context);
+    var value = super.visit(expr, context);
     return morphia.getMapper().toMongoObject(null, null, value);
   }
 
   @Override
   protected String getKeyForPath(Path<?> expr, PathMetadata metadata) {
-    AnnotatedElement annotations = expr.getAnnotatedElement();
+    var annotations = expr.getAnnotatedElement();
     if (annotations.isAnnotationPresent(Id.class)) {
       Path<?> parent = expr.getMetadata().getParent();
       if (parent.getAnnotatedElement().isAnnotationPresent(Reference.class)) {
@@ -57,12 +56,12 @@ public class MorphiaSerializer extends MongodbSerializer {
         return "_id";
       }
     } else if (annotations.isAnnotationPresent(Property.class)) {
-      Property property = annotations.getAnnotation(Property.class);
+      var property = annotations.getAnnotation(Property.class);
       if (!property.value().equals(Mapper.IGNORED_FIELDNAME)) {
         return property.value();
       }
     } else if (annotations.isAnnotationPresent(Reference.class)) {
-      Reference reference = annotations.getAnnotation(Reference.class);
+      var reference = annotations.getAnnotation(Reference.class);
       if (!reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
         return reference.value();
       }
@@ -94,7 +93,7 @@ public class MorphiaSerializer extends MongodbSerializer {
 
   @Override
   protected DBRef asReferenceKey(Class<?> entity, Object id) {
-    String collection = morphia.getMapper().getCollectionName(entity);
+    var collection = morphia.getMapper().getCollectionName(entity);
     Key<?> key = new Key<Object>(entity, collection, id);
     return morphia.getMapper().keyToDBRef(key);
   }

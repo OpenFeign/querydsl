@@ -44,7 +44,7 @@ public abstract class ComparableExpressionBase<T extends Comparable> extends Sim
    */
   public OrderSpecifier<T> asc() {
     if (asc == null) {
-      asc = new OrderSpecifier<T>(Order.ASC, mixin);
+      asc = new OrderSpecifier<>(Order.ASC, mixin);
     }
     return asc;
   }
@@ -56,7 +56,7 @@ public abstract class ComparableExpressionBase<T extends Comparable> extends Sim
    * @return coalesce
    */
   public ComparableExpressionBase<T> coalesce(Expression<T> expr) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(expr);
     return coalesce.getValue();
   }
@@ -69,7 +69,7 @@ public abstract class ComparableExpressionBase<T extends Comparable> extends Sim
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
   public ComparableExpressionBase<T> coalesce(Expression<?>... exprs) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);
     }
@@ -83,7 +83,7 @@ public abstract class ComparableExpressionBase<T extends Comparable> extends Sim
    * @return coalesce
    */
   public ComparableExpressionBase<T> coalesce(T arg) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(arg);
     return coalesce.getValue();
   }
@@ -96,7 +96,7 @@ public abstract class ComparableExpressionBase<T extends Comparable> extends Sim
    */
   @SuppressWarnings("unchecked")
   public ComparableExpressionBase<T> coalesce(T... args) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (T arg : args) {
       coalesce.add(arg);
     }
@@ -132,7 +132,7 @@ public abstract class ComparableExpressionBase<T extends Comparable> extends Sim
    */
   public OrderSpecifier<T> desc() {
     if (desc == null) {
-      desc = new OrderSpecifier<T>(Order.DESC, mixin);
+      desc = new OrderSpecifier<>(Order.DESC, mixin);
     }
     return desc;
   }

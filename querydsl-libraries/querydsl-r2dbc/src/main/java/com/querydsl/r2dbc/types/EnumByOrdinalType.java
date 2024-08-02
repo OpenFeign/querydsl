@@ -42,7 +42,7 @@ public class EnumByOrdinalType<T extends Enum<T>> extends AbstractType<T, Intege
 
   @Override
   public T getValue(Row row, int startIndex) {
-    Integer val = row.get(startIndex, Integer.class);
+    var val = row.get(startIndex, Integer.class);
     return val != null ? type.getEnumConstants()[val] : null;
   }
 

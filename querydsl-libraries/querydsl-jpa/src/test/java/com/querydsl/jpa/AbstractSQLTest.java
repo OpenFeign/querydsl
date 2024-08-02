@@ -3,7 +3,6 @@ package com.querydsl.jpa;
 import static com.querydsl.sql.SQLExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.testutil.ExcludeIn;
@@ -20,7 +19,6 @@ import com.querydsl.jpa.domain.sql.SCompany_;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -58,7 +56,7 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void enum_binding() {
-    List<Cat> cats = query().from(cat).select(Projections.bean(Cat.class, QCat.cat.color)).fetch();
+    var cats = query().from(cat).select(Projections.bean(Cat.class, QCat.cat.color)).fetch();
     assertThat(cats).isNotEmpty();
 
     for (Cat cat : cats) {
@@ -69,7 +67,7 @@ public abstract class AbstractSQLTest {
   @Test
   @Ignore
   public void entityProjections() {
-    List<Cat> cats =
+    var cats =
         query()
             .from(cat)
             .orderBy(cat.name.asc())
@@ -84,9 +82,9 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void entityQueries() {
-    QCat catEntity = QCat.cat;
+    var catEntity = QCat.cat;
 
-    List<Cat> cats = query().from(cat).orderBy(cat.name.asc()).select(catEntity).fetch();
+    var cats = query().from(cat).orderBy(cat.name.asc()).select(catEntity).fetch();
     assertThat(cats).hasSize(6);
     for (Cat c : cats) {
       assertThat(c.getName()).isNotNull();
@@ -95,10 +93,10 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void entityQueries2() {
-    SAnimal_ mate = new SAnimal_("mate");
-    QCat catEntity = QCat.cat;
+    var mate = new SAnimal_("mate");
+    var catEntity = QCat.cat;
 
-    List<Cat> cats =
+    var cats =
         query()
             .from(cat)
             .innerJoin(mate)
@@ -111,7 +109,7 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void entityQueries3() {
-    SAnimal_ catEntity = new SAnimal_("animal_");
+    var catEntity = new SAnimal_("animal_");
     assertThat(
             query()
                 .from(catEntity)
@@ -126,8 +124,8 @@ public abstract class AbstractSQLTest {
   @NoBatooJPA
   @NoEclipseLink
   public void entityQueries4() {
-    QCat catEntity = QCat.cat;
-    List<Tuple> cats = query().from(cat).select(catEntity, cat.name, cat.id).fetch();
+    var catEntity = QCat.cat;
+    var cats = query().from(cat).select(catEntity, cat.name, cat.id).fetch();
     assertThat(cats).hasSize(6);
 
     for (Tuple tuple : cats) {
@@ -141,10 +139,10 @@ public abstract class AbstractSQLTest {
   @NoBatooJPA
   @NoEclipseLink
   public void entityQueries5() {
-    QCat catEntity = QCat.cat;
-    SAnimal_ otherCat = new SAnimal_("otherCat");
-    QCat otherCatEntity = new QCat("otherCat");
-    List<Tuple> cats = query().from(cat, otherCat).select(catEntity, otherCatEntity).fetch();
+    var catEntity = QCat.cat;
+    var otherCat = new SAnimal_("otherCat");
+    var otherCatEntity = new QCat("otherCat");
+    var cats = query().from(cat, otherCat).select(catEntity, otherCatEntity).fetch();
     assertThat(cats).hasSize(36);
 
     for (Tuple tuple : cats) {
@@ -157,8 +155,8 @@ public abstract class AbstractSQLTest {
   @NoBatooJPA
   @NoEclipseLink
   public void entityQueries6() {
-    QCat catEntity = QCat.cat;
-    List<CatDTO> results =
+    var catEntity = QCat.cat;
+    var results =
         query().from(cat).select(Projections.constructor(CatDTO.class, catEntity)).fetch();
     assertThat(results).hasSize(6);
 
@@ -169,7 +167,7 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void entityQueries7() {
-    SCompany_ company = SCompany_.company_;
+    var company = SCompany_.company_;
     assertThat(query().from(company).select(company.officialName).fetch())
         .isEqualTo(Collections.emptyList());
   }
@@ -205,7 +203,7 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void list_limit_and_offset2() {
-    List<Tuple> tuples =
+    var tuples =
         query().from(cat).orderBy(cat.id.asc()).offset(3).limit(3).select(cat.id, cat.name).fetch();
     assertThat(tuples).hasSize(3);
     assertThat(tuples.getFirst().size()).isEqualTo(2);
@@ -213,7 +211,7 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void list_limit_and_offset3() {
-    List<Tuple> tuples =
+    var tuples =
         query()
             .from(cat)
             .orderBy(cat.id.asc())
@@ -248,7 +246,7 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void list_results() {
-    QueryResults<String> results =
+    var results =
         query().from(cat).limit(3).orderBy(cat.name.asc()).select(cat.name).fetchResults();
     assertThat(results.getResults()).isEqualTo(Arrays.asList("Beck", "Bobby", "Harold"));
     assertThat(results.getTotal()).isEqualTo(6L);
@@ -307,7 +305,7 @@ public abstract class AbstractSQLTest {
 
   @Test
   public void projections_duplicateColumns() {
-    SAnimal_ cat = new SAnimal_("cat");
+    var cat = new SAnimal_("cat");
     assertThat(query().from(cat).select(Projections.list(cat.count(), cat.count())).fetch())
         .hasSize(1);
   }
@@ -335,7 +333,7 @@ public abstract class AbstractSQLTest {
   public void union() throws SQLException {
     SubQueryExpression<Integer> sq1 = select(cat.id.max()).from(cat);
     SubQueryExpression<Integer> sq2 = select(cat.id.min()).from(cat);
-    List<Integer> list = query().union(sq1, sq2).list();
+    var list = query().union(sq1, sq2).list();
     assertThat(list).isNotEmpty();
   }
 
@@ -344,7 +342,7 @@ public abstract class AbstractSQLTest {
   public void union_all() {
     SubQueryExpression<Integer> sq1 = select(cat.id.max()).from(cat);
     SubQueryExpression<Integer> sq2 = select(cat.id.min()).from(cat);
-    List<Integer> list = query().unionAll(sq1, sq2).list();
+    var list = query().unionAll(sq1, sq2).list();
     assertThat(list).isNotEmpty();
   }
 
@@ -353,7 +351,7 @@ public abstract class AbstractSQLTest {
   @ExcludeIn({Target.DERBY, Target.POSTGRESQL})
   @Ignore // FIXME
   public void union2() {
-    List<Tuple> rows =
+    var rows =
         query()
             .union(
                 select(cat.name, cat.id).from(cat).where(cat.name.eq("Beck")).distinct(),
@@ -371,8 +369,8 @@ public abstract class AbstractSQLTest {
   @ExcludeIn(Target.DERBY)
   @Ignore // FIXME
   public void union3() {
-    SAnimal_ cat2 = new SAnimal_("cat2");
-    List<Tuple> rows =
+    var cat2 = new SAnimal_("cat2");
+    var rows =
         query()
             .union(
                 select(cat.id, cat2.id).from(cat).innerJoin(cat2).on(cat2.id.eq(cat.id)),
@@ -380,7 +378,7 @@ public abstract class AbstractSQLTest {
             .list();
 
     assertThat(rows).hasSize(12);
-    int nulls = 0;
+    var nulls = 0;
     for (Tuple row : rows) {
       System.err.println(Collections.singletonList(row));
       if (row.get(1, Object.class) == null) {
@@ -408,8 +406,8 @@ public abstract class AbstractSQLTest {
   @Test
   @ExcludeIn({Target.DERBY, Target.ORACLE})
   public void union5() {
-    SAnimal_ cat2 = new SAnimal_("cat2");
-    List<Tuple> rows =
+    var cat2 = new SAnimal_("cat2");
+    var rows =
         query()
             .union(
                 select(cat.id, cat2.id).from(cat).join(cat2).on(cat2.id.eq(cat.id.add(1))),
@@ -448,7 +446,7 @@ public abstract class AbstractSQLTest {
   @Test
   @ExcludeIn(Target.H2)
   public void wildcard() {
-    List<Tuple> rows = query().from(cat).select(cat.all()).fetch();
+    var rows = query().from(cat).select(cat.all()).fetch();
     assertThat(rows).hasSize(6);
     print(rows);
 

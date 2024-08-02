@@ -17,7 +17,6 @@ import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.FetchableSubQueryBase;
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.MapExpression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
@@ -39,7 +38,7 @@ public abstract class JPAQueryBase<T, Q extends JPAQueryBase<T, Q>>
 
   @SuppressWarnings("unchecked")
   public JPAQueryBase(QueryMetadata md, JPQLTemplates templates) {
-    super(new JPAQueryMixin<Q>(md));
+    super(new JPAQueryMixin<>(md));
     super.queryMixin.setSelf((Q) this);
     this.queryMixin = (JPAQueryMixin<Q>) super.queryMixin;
     this.templates = templates;
@@ -61,7 +60,7 @@ public abstract class JPAQueryBase<T, Q extends JPAQueryBase<T, Q>>
         throw new IllegalArgumentException("No sources given");
       }
     }
-    JPQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serialize(queryMixin.getMetadata(), forCountRow, null);
     return serializer;
   }
@@ -85,7 +84,7 @@ public abstract class JPAQueryBase<T, Q extends JPAQueryBase<T, Q>>
   @SuppressWarnings("unchecked")
   @Override
   public <P> Q from(CollectionExpression<?, P> target, Path<P> alias) {
-    return (Q) queryMixin.from((Expression) Expressions.as((Path) target, alias));
+    return queryMixin.from(Expressions.as((Path) target, alias));
   }
 
   @Override
@@ -219,7 +218,7 @@ public abstract class JPAQueryBase<T, Q extends JPAQueryBase<T, Q>>
 
   @Override
   public String toString() {
-    JPQLSerializer serializer = serialize(false, false);
+    var serializer = serialize(false, false);
     return serializer.toString().trim();
   }
 

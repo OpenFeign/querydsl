@@ -16,7 +16,12 @@ package com.querydsl.sql.codegen;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.alias.Gender;
-import com.querydsl.sql.*;
+import com.querydsl.sql.AbstractJDBCTest;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.EncryptedString;
+import com.querydsl.sql.HSQLDBTemplates;
+import com.querydsl.sql.QPerson;
+import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import com.querydsl.sql.types.EnumByNameType;
@@ -26,7 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import org.junit.Before;
@@ -58,38 +62,38 @@ public class CustomTypesTest extends AbstractJDBCTest {
     //        configuration.setJavaType(Types.DATE, java.util.Date.class);
     configuration.register(new UtilDateType());
     configuration.register("PERSON", "SECUREDID", new EncryptedString());
-    configuration.register("PERSON", "GENDER", new EnumByNameType<Gender>(Gender.class));
+    configuration.register("PERSON", "GENDER", new EnumByNameType<>(Gender.class));
     configuration.register(new StringType());
   }
 
   @Test
   public void export() throws SQLException, IOException {
     // create exporter
-    String namePrefix = "Q";
-    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    var namePrefix = "Q";
+    var config = new MetadataExporterConfigImpl();
     config.setNamePrefix(namePrefix);
     config.setPackageName("test");
     config.setTargetFolder(new File("target/customExport"));
     config.setNamingStrategyClass(DefaultNamingStrategy.class);
 
-    MetaDataExporter exporter = new MetaDataExporter(config);
+    var exporter = new MetaDataExporter(config);
     exporter.setConfiguration(configuration);
 
     // export
     exporter.export(connection.getMetaData());
-    Path qpersonFile = Paths.get("target", "customExport", "test", "QPerson.java");
+    var qpersonFile = Paths.get("target", "customExport", "test", "QPerson.java");
     assertThat(qpersonFile).exists();
-    String person = new String(Files.readAllBytes(qpersonFile), StandardCharsets.UTF_8);
+    var person = new String(Files.readAllBytes(qpersonFile), StandardCharsets.UTF_8);
     // System.err.println(person);
     assertThat(person).contains("createEnum(\"gender\"");
   }
 
   @Test
   public void insert_query_update() {
-    QPerson person = QPerson.person;
+    var person = QPerson.person;
 
     // insert
-    SQLInsertClause insert = new SQLInsertClause(connection, configuration, person);
+    var insert = new SQLInsertClause(connection, configuration, person);
     insert.set(person.id, 10);
     insert.set(person.firstname, "Bob");
     insert.set(person.gender, Gender.MALE);
@@ -101,7 +105,7 @@ public class CustomTypesTest extends AbstractJDBCTest {
         .isEqualTo(Gender.MALE);
 
     // update
-    SQLUpdateClause update = new SQLUpdateClause(connection, configuration, person);
+    var update = new SQLUpdateClause(connection, configuration, person);
     update.set(person.gender, Gender.FEMALE);
     update.set(person.firstname, "Jane");
     update.where(person.id.eq(10));

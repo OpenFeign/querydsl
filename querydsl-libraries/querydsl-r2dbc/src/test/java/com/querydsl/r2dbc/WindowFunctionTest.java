@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.sql.WindowFunction;
 import org.junit.Test;
 
 public class WindowFunctionTest {
@@ -94,7 +93,7 @@ public class WindowFunctionTest {
   public void rows_between() {
     NumberPath<Long> path = Expressions.numberPath(Long.class, "path");
     NumberPath<Integer> intPath = Expressions.numberPath(Integer.class, "intPath");
-    WindowFunction<Long> wf = R2DBCExpressions.sum(path).over().orderBy(path);
+    var wf = R2DBCExpressions.sum(path).over().orderBy(path);
 
     assertThat(toString(wf.rows().between().currentRow().unboundedFollowing()))
         .isEqualTo(
@@ -112,7 +111,7 @@ public class WindowFunctionTest {
   @Test
   public void rows_unboundedPreceding() {
     NumberPath<Long> path = Expressions.numberPath(Long.class, "path");
-    WindowFunction<Long> wf = R2DBCExpressions.sum(path).over().orderBy(path);
+    var wf = R2DBCExpressions.sum(path).over().orderBy(path);
 
     assertThat(toString(wf.rows().unboundedPreceding()))
         .isEqualTo("sum(path) over (order by path asc rows unbounded preceding)");
@@ -121,7 +120,7 @@ public class WindowFunctionTest {
   @Test
   public void rows_currentRow() {
     NumberPath<Long> path = Expressions.numberPath(Long.class, "path");
-    WindowFunction<Long> wf = R2DBCExpressions.sum(path).over().orderBy(path);
+    var wf = R2DBCExpressions.sum(path).over().orderBy(path);
 
     assertThat(toString(wf.rows().currentRow()))
         .isEqualTo("sum(path) over (order by path asc rows current row)");
@@ -131,7 +130,7 @@ public class WindowFunctionTest {
   public void rows_precedingRow() {
     NumberPath<Long> path = Expressions.numberPath(Long.class, "path");
     NumberPath<Integer> intPath = Expressions.numberPath(Integer.class, "intPath");
-    WindowFunction<Long> wf = R2DBCExpressions.sum(path).over().orderBy(path);
+    var wf = R2DBCExpressions.sum(path).over().orderBy(path);
 
     assertThat(toString(wf.rows().preceding(intPath)))
         .isEqualTo("sum(path) over (order by path asc rows preceding intPath)");

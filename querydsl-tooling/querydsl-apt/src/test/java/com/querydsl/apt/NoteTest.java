@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import org.junit.Test;
 
 public class NoteTest extends AbstractProcessorTest {
@@ -18,7 +17,7 @@ public class NoteTest extends AbstractProcessorTest {
   private static final String packagePath = "src/test/java/com/querydsl/apt/";
 
   public void process() throws IOException {
-    List<String> classes = getFiles(packagePath);
+    var classes = getFiles(packagePath);
     process(QuerydslAnnotationProcessor.class, classes, "includedClasses");
   }
 

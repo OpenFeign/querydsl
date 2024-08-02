@@ -27,7 +27,7 @@ public class H2TemplatesTest extends AbstractSQLTemplatesTest {
 
   @Test
   public void builder() {
-    SQLTemplates templates = H2Templates.builder().quote().newLineToSingleSpace().build();
+    var templates = H2Templates.builder().quote().newLineToSingleSpace().build();
 
     assertThat(templates).isNotNull();
   }
@@ -43,14 +43,14 @@ public class H2TemplatesTest extends AbstractSQLTemplatesTest {
     // AND
     // OR
 
-    int p1 = getPrecedence(Ops.NEGATE);
-    int p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
-    int p3 = getPrecedence(Ops.ADD, Ops.SUB);
-    int p4 = getPrecedence(Ops.CONCAT);
-    int p5 = getPrecedence(Ops.EQ, Ops.NE, Ops.LT, Ops.GT); // ...
-    int p6 = getPrecedence(Ops.NOT);
-    int p7 = getPrecedence(Ops.AND);
-    int p8 = getPrecedence(Ops.OR);
+    var p1 = getPrecedence(Ops.NEGATE);
+    var p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
+    var p3 = getPrecedence(Ops.ADD, Ops.SUB);
+    var p4 = getPrecedence(Ops.CONCAT);
+    var p5 = getPrecedence(Ops.EQ, Ops.NE, Ops.LT, Ops.GT); // ...
+    var p6 = getPrecedence(Ops.NOT);
+    var p7 = getPrecedence(Ops.AND);
+    var p8 = getPrecedence(Ops.OR);
 
     assertThat(p1 < p2).isTrue();
     assertThat(p2 < p3).isTrue();

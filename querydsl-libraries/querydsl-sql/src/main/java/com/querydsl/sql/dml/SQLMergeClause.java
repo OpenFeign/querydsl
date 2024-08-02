@@ -13,18 +13,45 @@
  */
 package com.querydsl.sql.dml;
 
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.FilteredClause;
+import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
+import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.dml.StoreClause;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.NullExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.ResultSetAdapter;
-import com.querydsl.sql.*;
+import com.querydsl.sql.ColumnMetadata;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLBindings;
+import com.querydsl.sql.SQLListener;
+import com.querydsl.sql.SQLNoCloseListener;
+import com.querydsl.sql.SQLQuery;
+import com.querydsl.sql.SQLSerializer;
+import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.types.Null;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -39,19 +66,19 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
 
   protected static final Logger logger = Logger.getLogger(SQLMergeClause.class.getName());
 
-  protected final List<Path<?>> columns = new ArrayList<Path<?>>();
+  protected final List<Path<?>> columns = new ArrayList<>();
 
   protected final RelationalPath<?> entity;
 
   protected final QueryMetadata metadata = new DefaultQueryMetadata();
 
-  protected final List<Path<?>> keys = new ArrayList<Path<?>>();
+  protected final List<Path<?>> keys = new ArrayList<>();
 
   @Nullable protected SubQueryExpression<?> subQuery;
 
-  protected final List<SQLMergeBatch> batches = new ArrayList<SQLMergeBatch>();
+  protected final List<SQLMergeBatch> batches = new ArrayList<>();
 
-  protected final List<Expression<?>> values = new ArrayList<Expression<?>>();
+  protected final List<Expression<?>> values = new ArrayList<>();
 
   protected transient String queryString;
 
@@ -174,7 +201,7 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
   }
 
   protected <T> T executeWithKey(Class<T> type, @Nullable Path<T> path) {
-    ResultSet rs = executeWithKeys();
+    var rs = executeWithKeys();
     try {
       if (rs.next()) {
         return configuration.get(rs, path, 1, type);
@@ -210,7 +237,7 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
     ResultSet rs = null;
     try {
       rs = executeWithKeys();
-      List<T> rv = new ArrayList<T>();
+      List<T> rv = new ArrayList<>();
       while (rs.next()) {
         rv.add(configuration.get(rs, path, 1, type));
       }
@@ -243,7 +270,7 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
           stmt.executeUpdate();
           listeners.executed(context);
         } else {
-          Collection<PreparedStatement> stmts = createStatements(true);
+          var stmts = createStatements(true);
           if (stmts != null && stmts.size() > 1) {
             throw new IllegalStateException(
                 "executeWithKeys called with batch statement and multiple SQL strings");
@@ -257,7 +284,7 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
         }
 
         final Statement stmt2 = stmt;
-        ResultSet rs = stmt.getGeneratedKeys();
+        var rs = stmt.getGeneratedKeys();
         return new ResultSetAdapter(rs) {
           @Override
           public void close() throws SQLException {
@@ -273,7 +300,7 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
       } else {
         if (hasRow()) {
           // update
-          SQLUpdateClause update = new SQLUpdateClause(connection(), configuration, entity);
+          var update = new SQLUpdateClause(connection(), configuration, entity);
           update.addListener(listeners);
           populate(update);
           addKeyConditions(update);
@@ -282,7 +309,7 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
           return EmptyResultSet.DEFAULT;
         } else {
           // insert
-          SQLInsertClause insert = new SQLInsertClause(connection(), configuration, entity);
+          var insert = new SQLInsertClause(connection(), configuration, entity);
           insert.addListener(listeners);
           populate(insert);
           return insert.executeWithKeys();
@@ -308,13 +335,13 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
   @Override
   public List<SQLBindings> getSQL() {
     if (batches.isEmpty()) {
-      SQLSerializer serializer = createSerializer();
+      var serializer = createSerializer();
       serializer.serializeMerge(metadata, entity, keys, columns, values, subQuery);
       return Collections.singletonList(createBindings(metadata, serializer));
     } else {
       List<SQLBindings> builder = new ArrayList<>();
       for (SQLMergeBatch batch : batches) {
-        SQLSerializer serializer = createSerializer();
+        var serializer = createSerializer();
         serializer.serializeMerge(
             metadata,
             entity,
@@ -341,7 +368,7 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
   @SuppressWarnings("unchecked")
   protected void addKeyConditions(FilteredClause<?> query) {
     List<? extends Path<?>> keys = getKeys();
-    for (int i = 0; i < columns.size(); i++) {
+    for (var i = 0; i < columns.size(); i++) {
       if (keys.contains(columns.get(i))) {
         if (values.get(i) instanceof NullExpression) {
           query.where(ExpressionUtils.isNull(columns.get(i)));
@@ -356,14 +383,14 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
   protected long executeCompositeMerge() {
     if (hasRow()) {
       // update
-      SQLUpdateClause update = new SQLUpdateClause(connection(), configuration, entity);
+      var update = new SQLUpdateClause(connection(), configuration, entity);
       populate(update);
       addListeners(update);
       addKeyConditions(update);
       return update.execute();
     } else {
       // insert
-      SQLInsertClause insert = new SQLInsertClause(connection(), configuration, entity);
+      var insert = new SQLInsertClause(connection(), configuration, entity);
       addListeners(insert);
       populate(insert);
       return insert.execute();
@@ -378,15 +405,15 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
 
   @SuppressWarnings("unchecked")
   protected void populate(StoreClause<?> clause) {
-    for (int i = 0; i < columns.size(); i++) {
+    for (var i = 0; i < columns.size(); i++) {
       clause.set((Path) columns.get(i), (Object) values.get(i));
     }
   }
 
   protected PreparedStatement createStatement(boolean withKeys) throws SQLException {
-    boolean addBatches = !configuration.getUseLiterals();
+    var addBatches = !configuration.getUseLiterals();
     listeners.preRender(context);
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     PreparedStatement stmt = null;
     if (batches.isEmpty()) {
       serializer.serializeMerge(metadata, entity, keys, columns, values, subQuery);
@@ -416,8 +443,8 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
       }
 
       // add other batches
-      for (int i = 1; i < batches.size(); i++) {
-        SQLMergeBatch batch = batches.get(i);
+      for (var i = 1; i < batches.size(); i++) {
+        var batch = batches.get(i);
         listeners.preRender(context);
         serializer = createSerializer();
         serializer.serializeMerge(
@@ -441,12 +468,12 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
   }
 
   protected Collection<PreparedStatement> createStatements(boolean withKeys) throws SQLException {
-    boolean addBatches = !configuration.getUseLiterals();
+    var addBatches = !configuration.getUseLiterals();
     Map<String, PreparedStatement> stmts = new HashMap<>();
 
     // add first batch
     listeners.preRender(context);
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeMerge(
         metadata,
         entity,
@@ -457,15 +484,15 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
     context.addSQL(createBindings(metadata, serializer));
     listeners.rendered(context);
 
-    PreparedStatement stmt = prepareStatementAndSetParameters(serializer, withKeys);
+    var stmt = prepareStatementAndSetParameters(serializer, withKeys);
     stmts.put(serializer.toString(), stmt);
     if (addBatches) {
       stmt.addBatch();
     }
 
     // add other batches
-    for (int i = 1; i < batches.size(); i++) {
-      SQLMergeBatch batch = batches.get(i);
+    for (var i = 1; i < batches.size(); i++) {
+      var batch = batches.get(i);
       serializer = createSerializer();
       serializer.serializeMerge(
           metadata,
@@ -499,8 +526,8 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
     logQuery(logger, queryString, constants);
     PreparedStatement stmt;
     if (withKeys) {
-      String[] target = new String[keys.size()];
-      for (int i = 0; i < target.length; i++) {
+      var target = new String[keys.size()];
+      for (var i = 0; i < target.length; i++) {
         target[i] = ColumnMetadata.getName(getKeys().get(i));
       }
       stmt = connection().prepareStatement(queryString, target);
@@ -525,7 +552,7 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
         listeners.notifyMerge(entity, metadata, keys, columns, values, subQuery);
 
         listeners.preExecute(context);
-        int rc = stmt.executeUpdate();
+        var rc = stmt.executeUpdate();
         listeners.executed(context);
         return rc;
       } else {
@@ -533,7 +560,7 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
         listeners.notifyMerges(entity, metadata, batches);
 
         listeners.preExecute(context);
-        long rc = executeBatch(stmts);
+        var rc = executeBatch(stmts);
         listeners.executed(context);
         return rc;
       }
@@ -595,7 +622,7 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
 
   @Override
   public String toString() {
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeMerge(metadata, entity, keys, columns, values, subQuery);
     return serializer.toString();
   }

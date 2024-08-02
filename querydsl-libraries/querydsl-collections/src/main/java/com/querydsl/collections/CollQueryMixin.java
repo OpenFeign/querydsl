@@ -46,9 +46,9 @@ public class CollQueryMixin<T> extends QueryMixin<T> {
   protected Predicate convert(Predicate predicate, Role role) {
     predicate = (Predicate) ExpressionUtils.extract(predicate);
     if (predicate != null) {
-      Context context = new Context();
-      Predicate transformed = (Predicate) predicate.accept(collectionAnyVisitor, context);
-      for (int i = 0; i < context.paths.size(); i++) {
+      var context = new Context();
+      var transformed = (Predicate) predicate.accept(collectionAnyVisitor, context);
+      for (var i = 0; i < context.paths.size(); i++) {
         leftJoin(
             (Path) context.paths.get(i).getMetadata().getParent(),
             (Path) context.replacements.get(i));

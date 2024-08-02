@@ -1,6 +1,5 @@
 package com.querydsl.sql;
 
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 public final class SQLTemplatesRegistryDump {
@@ -33,7 +32,7 @@ public final class SQLTemplatesRegistryDump {
   }
 
   private static void dump() throws SQLException {
-    DatabaseMetaData md = Connections.getConnection().getMetaData();
+    var md = Connections.getConnection().getMetaData();
     System.out.println(md.getDatabaseProductName());
     System.out.println(md.getDatabaseMajorVersion());
     System.out.println(md.getDatabaseMinorVersion());

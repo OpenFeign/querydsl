@@ -45,17 +45,17 @@ public class ExtendedBeanSerializerTest {
     Type typeModel =
         new SimpleType(TypeCategory.ENTITY, FULL_NAME, PACKAGE, CLASS_NAME, false, false);
     type = new EntityType(typeModel);
-    File srcFolder = compileFolder.newFolder(PATH);
+    var srcFolder = compileFolder.newFolder(PATH);
     srcFile = new File(srcFolder, CLASS_NAME + ".java");
   }
 
   @Test
   public void equals_hashcode_tostring() throws Exception {
-    Property idCol = new Property(type, "id", new ClassType(Integer.class));
+    var idCol = new Property(type, "id", new ClassType(Integer.class));
     idCol.addAnnotation(new ColumnImpl("ID"));
-    Property subIdCol = new Property(type, "sub_id", new ClassType(String.class));
+    var subIdCol = new Property(type, "sub_id", new ClassType(String.class));
     subIdCol.addAnnotation(new ColumnImpl("SUB_ID"));
-    Property nameCol = new Property(type, "name", new ClassType(String.class));
+    var nameCol = new Property(type, "name", new ClassType(String.class));
     nameCol.addAnnotation(new ColumnImpl("NAME"));
 
     type.addProperty(idCol);
@@ -67,20 +67,20 @@ public class ExtendedBeanSerializerTest {
             PrimaryKeyData.class,
             Arrays.asList(new PrimaryKeyData("PK", new String[] {"ID", "SUB_ID"})));
 
-    ExtendedBeanSerializer extendedBeanSerializer = new ExtendedBeanSerializer();
+    var extendedBeanSerializer = new ExtendedBeanSerializer();
     extendedBeanSerializer.setAddToString(true);
 
-    FileWriter fw = new FileWriter(srcFile);
+    var fw = new FileWriter(srcFile);
     extendedBeanSerializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(fw));
     fw.close();
 
-    URLClassLoader classLoader =
+    var classLoader =
         URLClassLoader.newInstance(new URL[] {compileFolder.getRoot().toURI().toURL()});
-    int retCode = new SimpleCompiler().run(null, System.out, System.err, srcFile.getAbsolutePath());
+    var retCode = new SimpleCompiler().run(null, System.out, System.err, srcFile.getAbsolutePath());
     assertThat(retCode).as("The generated source should compile").isEqualTo(0);
 
     Class<?> cls = Class.forName(FULL_NAME, true, classLoader);
-    ReflectionHelper reflection = new ReflectionHelper(cls);
+    var reflection = new ReflectionHelper(cls);
     Object obj1 = cls.getDeclaredConstructor().newInstance();
     Object obj1a = cls.getDeclaredConstructor().newInstance();
     Object obj2 = cls.getDeclaredConstructor().newInstance();
@@ -96,7 +96,7 @@ public class ExtendedBeanSerializerTest {
   }
 
   private static class ReflectionHelper {
-    private final Map<String, Method> methodByName = new HashMap<String, Method>();
+    private final Map<String, Method> methodByName = new HashMap<>();
 
     ReflectionHelper(Class<?> cls) {
       for (Method m : cls.getDeclaredMethods()) {

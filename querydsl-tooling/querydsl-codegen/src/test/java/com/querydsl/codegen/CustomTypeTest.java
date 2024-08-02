@@ -37,8 +37,8 @@ public class CustomTypeTest {
 
   @Test
   public void customType() throws IOException {
-    SimpleType type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
-    EntityType entityType = new EntityType(type);
+    var type = new SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false);
+    var entityType = new EntityType(type);
     entityType.addProperty(new Property(entityType, "property", new ClassType(Double[].class)));
     typeMappings.register(new ClassType(Double[].class), new ClassType(Point.class));
     typeMappings.register(entityType, queryTypeFactory.create(entityType));

@@ -13,8 +13,18 @@
  */
 package com.querydsl.apt.domain;
 
-import com.querydsl.core.annotations.*;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.annotations.Config;
+import com.querydsl.core.annotations.PropertyType;
+import com.querydsl.core.annotations.QueryEntity;
+import com.querydsl.core.annotations.QueryTransient;
+import com.querydsl.core.annotations.QueryType;
+import com.querydsl.core.types.dsl.ComparablePath;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.EnumPath;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.TimePath;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;

@@ -13,7 +13,13 @@
  */
 package com.querydsl.r2dbc;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.r2dbc.Constants.survey;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,8 +28,6 @@ import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Param;
-import com.querydsl.core.types.dsl.StringPath;
-import com.querydsl.r2dbc.dml.R2DBCUpdateClause;
 import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.r2dbc.domain.QSurvey;
 import java.util.Collections;
@@ -145,16 +149,16 @@ public abstract class UpdateBase extends AbstractBaseTest {
   @SkipForQuoted
   @ExcludeIn({DB2, DERBY})
   public void setNullEmptyRootPath() {
-    StringPath name = Expressions.stringPath("name");
+    var name = Expressions.stringPath("name");
     long count = query().from(survey).fetchCount().block();
     assertThat((long) execute(update(survey).setNull(name)).block()).isEqualTo(count);
   }
 
   @Test
   public void update_with_subQuery_exists() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
-    R2DBCUpdateClause update = update(survey1);
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
+    var update = update(survey1);
     update.set(survey1.name, "AA");
     update.where(
         R2DBCExpressions.selectOne().from(employee).where(survey1.id.eq(employee.id)).exists());
@@ -163,14 +167,14 @@ public abstract class UpdateBase extends AbstractBaseTest {
 
   @Test
   public void update_with_subQuery_exists_Params() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
 
-    Param<Integer> param = new Param<Integer>(Integer.class, "param");
+    var param = new Param<Integer>(Integer.class, "param");
     R2DBCQuery<?> sq = query().from(employee).where(employee.id.eq(param));
     sq.set(param, -12478923);
 
-    R2DBCUpdateClause update = update(survey1);
+    var update = update(survey1);
     update.set(survey1.name, "AA");
     update.where(sq.exists());
     assertThat((long) update.execute().block()).isEqualTo(0);
@@ -178,9 +182,9 @@ public abstract class UpdateBase extends AbstractBaseTest {
 
   @Test
   public void update_with_subQuery_exists2() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
-    R2DBCUpdateClause update = update(survey1);
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
+    var update = update(survey1);
     update.set(survey1.name, "AA");
     update.where(
         R2DBCExpressions.selectOne()
@@ -192,9 +196,9 @@ public abstract class UpdateBase extends AbstractBaseTest {
 
   @Test
   public void update_with_subQuery_notExists() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
-    R2DBCUpdateClause update = update(survey1);
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
+    var update = update(survey1);
     update.set(survey1.name, "AA");
     update.where(query().from(employee).where(survey1.id.eq(employee.id)).notExists());
     assertThat((long) update.execute().block()).isEqualTo(0);

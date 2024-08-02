@@ -10,7 +10,7 @@ public class NestedTest {
 
   @Test
   public void ClassUtils_getName() {
-    String name = ClassUtils.getName(NestedTest.Inner.class);
+    var name = ClassUtils.getName(NestedTest.Inner.class);
     assertThat(name).isEqualTo("NestedTest.Inner");
   }
 

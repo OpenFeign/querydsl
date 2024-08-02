@@ -6,7 +6,6 @@ import static com.querydsl.sql.oracle.OracleGrammar.level;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.IncludeIn;
-import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.oracle.OracleQuery;
 import java.sql.SQLException;
 import java.util.logging.Logger;
@@ -21,8 +20,8 @@ public abstract class SelectOracleBase extends AbstractBaseTest {
     return new OracleQuery<Void>(connection, configuration) {
       @Override
       protected SQLSerializer serialize(boolean forCountRow) {
-        SQLSerializer serializer = super.serialize(forCountRow);
-        String rv = serializer.toString();
+        var serializer = super.serialize(forCountRow);
+        var rv = serializer.toString();
         if (expectedQuery != null) {
           assertThat(rv.replace('\n', ' ')).isEqualTo(expectedQuery);
           expectedQuery = null;
@@ -170,7 +169,7 @@ public abstract class SelectOracleBase extends AbstractBaseTest {
         .fetch();
 
     // shorter version
-    QEmployee e = employee;
+    var e = employee;
     oracleQuery()
         .from(e)
         .orderBy(e.salary.asc(), e.superiorId.asc())

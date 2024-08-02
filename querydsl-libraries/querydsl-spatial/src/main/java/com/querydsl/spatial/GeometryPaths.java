@@ -13,7 +13,15 @@
  */
 package com.querydsl.spatial;
 
-import org.geolatte.geom.*;
+import org.geolatte.geom.Geometry;
+import org.geolatte.geom.GeometryCollection;
+import org.geolatte.geom.LineString;
+import org.geolatte.geom.LinearRing;
+import org.geolatte.geom.MultiLineString;
+import org.geolatte.geom.MultiPoint;
+import org.geolatte.geom.MultiPolygon;
+import org.geolatte.geom.Point;
+import org.geolatte.geom.Polygon;
 
 /**
  * {@code GeometryPaths} provides factory methods for {@link GeometryExpression} creation

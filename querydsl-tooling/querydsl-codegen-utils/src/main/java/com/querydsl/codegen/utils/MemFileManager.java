@@ -42,8 +42,8 @@ public class MemFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
   public MemFileManager(ClassLoader parent, StandardJavaFileManager sjfm) {
     super(sjfm);
-    ramFileSystem = new HashMap<LocationAndKind, Map<String, JavaFileObject>>();
-    Map<String, JavaFileObject> classLoaderContent = new HashMap<String, JavaFileObject>();
+    ramFileSystem = new HashMap<>();
+    Map<String, JavaFileObject> classLoaderContent = new HashMap<>();
     ramFileSystem.put(
         new LocationAndKind(StandardLocation.CLASS_OUTPUT, Kind.CLASS), classLoaderContent);
     classLoader = new MemClassLoader(parent, ramFileSystem);
@@ -75,9 +75,9 @@ public class MemFileManager extends ForwardingJavaFileManager<JavaFileManager> {
     } else {
       name = packageName.replace('.', '/') + "/" + relativeName;
     }
-    LocationAndKind key = new LocationAndKind(location, Kind.OTHER);
+    var key = new LocationAndKind(location, Kind.OTHER);
     if (ramFileSystem.containsKey(key)) {
-      JavaFileObject jfo = ramFileSystem.get(key).get(name);
+      var jfo = ramFileSystem.get(key).get(name);
       if (jfo != null) {
         return jfo;
       }
@@ -91,7 +91,7 @@ public class MemFileManager extends ForwardingJavaFileManager<JavaFileManager> {
   public JavaFileObject getJavaFileForOutput(
       Location location, String name, Kind kind, FileObject sibling) throws IOException {
     JavaFileObject javaFileObject = null;
-    LocationAndKind key = new LocationAndKind(location, kind);
+    var key = new LocationAndKind(location, kind);
 
     if (ramFileSystem.containsKey(key)) {
       javaFileObject = ramFileSystem.get(key).get(name);
@@ -128,7 +128,7 @@ public class MemFileManager extends ForwardingJavaFileManager<JavaFileManager> {
   public Iterable<JavaFileObject> list(
       Location location, String pkg, Set<Kind> kinds, boolean recurse) throws IOException {
 
-    List<JavaFileObject> result = new ArrayList<JavaFileObject>();
+    List<JavaFileObject> result = new ArrayList<>();
     for (JavaFileObject f : super.list(location, pkg, kinds, recurse)) {
       result.add(f);
     }
@@ -137,17 +137,17 @@ public class MemFileManager extends ForwardingJavaFileManager<JavaFileManager> {
     }
 
     for (Kind kind : kinds) {
-      LocationAndKind key = new LocationAndKind(location, kind);
+      var key = new LocationAndKind(location, kind);
       if (ramFileSystem.containsKey(key)) {
-        Map<String, JavaFileObject> locatedFiles = ramFileSystem.get(key);
+        var locatedFiles = ramFileSystem.get(key);
         for (Map.Entry<String, JavaFileObject> entry : locatedFiles.entrySet()) {
-          String name = entry.getKey();
-          String packageName = "";
+          var name = entry.getKey();
+          var packageName = "";
           if (name.indexOf('.') > -1) {
             packageName = name.substring(0, name.lastIndexOf('.'));
           }
           if (recurse ? packageName.startsWith(pkg) : packageName.equals(pkg)) {
-            JavaFileObject candidate = entry.getValue();
+            var candidate = entry.getValue();
             if (kinds.contains(candidate.getKind())) {
               result.add(candidate);
             }
@@ -160,7 +160,7 @@ public class MemFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
   private void register(LocationAndKind key, JavaFileObject javaFileObject) {
     if (!ramFileSystem.containsKey(key)) {
-      ramFileSystem.put(key, new HashMap<String, JavaFileObject>());
+      ramFileSystem.put(key, new HashMap<>());
     }
     ramFileSystem.get(key).put(javaFileObject.getName(), javaFileObject);
   }

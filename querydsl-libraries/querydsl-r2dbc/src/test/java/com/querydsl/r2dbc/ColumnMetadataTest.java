@@ -11,7 +11,7 @@ public class ColumnMetadataTest {
 
   @Test
   public void defaultColumn() {
-    ColumnMetadata column = ColumnMetadata.named("Person");
+    var column = ColumnMetadata.named("Person");
     assertThat(column.getName()).isEqualTo("Person");
     assertThat(column.hasJdbcType()).isFalse();
     assertThat(column.hasSize()).isFalse();
@@ -20,8 +20,7 @@ public class ColumnMetadataTest {
 
   @Test
   public void fullyConfigured() {
-    ColumnMetadata column =
-        ColumnMetadata.named("Person").withSize(10).notNull().ofType(Types.BIGINT);
+    var column = ColumnMetadata.named("Person").withSize(10).notNull().ofType(Types.BIGINT);
     assertThat(column.getName()).isEqualTo("Person");
     assertThat(column.hasJdbcType()).isTrue();
     assertThat(column.getJdbcType()).isEqualTo(Types.BIGINT);
@@ -32,13 +31,13 @@ public class ColumnMetadataTest {
 
   @Test
   public void extractFromRelationalPath() {
-    ColumnMetadata column = ColumnMetadata.getColumnMetadata(QEmployee.employee.id);
+    var column = ColumnMetadata.getColumnMetadata(QEmployee.employee.id);
     assertThat(column.getName()).isEqualTo("ID");
   }
 
   @Test
   public void fallBackToDefaultWhenMissing() {
-    ColumnMetadata column = ColumnMetadata.getColumnMetadata(QEmployee.employee.salary);
+    var column = ColumnMetadata.getColumnMetadata(QEmployee.employee.salary);
     assertThat(column.getName()).isEqualTo("SALARY");
   }
 }

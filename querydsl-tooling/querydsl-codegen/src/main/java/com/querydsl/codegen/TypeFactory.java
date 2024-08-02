@@ -118,7 +118,7 @@ public final class TypeFactory {
     }
     key = Collections.unmodifiableList(key);
     if (cache.containsKey(key)) {
-      Type value = cache.get(key);
+      var value = cache.get(key);
       if (entity && !(value instanceof EntityType)) {
         value = new EntityType(value, variableNameFunction);
         cache.put(key, value);
@@ -126,7 +126,7 @@ public final class TypeFactory {
       return value;
 
     } else {
-      Type value = create(entity, cl, annotationHelper, selectedAnnotation, genericType, key);
+      var value = create(entity, cl, annotationHelper, selectedAnnotation, genericType, key);
       cache.put(key, value);
       return value;
     }
@@ -143,13 +143,13 @@ public final class TypeFactory {
       cl = PrimitiveUtils.wrap(cl);
     }
     Type value;
-    Type[] tempParams =
+    var tempParams =
         (Type[]) Array.newInstance(Type.class, ReflectionUtils.getTypeParameterCount(genericType));
     cache.put(key, new ClassType(cl, tempParams));
-    Type[] parameters = getParameters(cl, genericType);
+    var parameters = getParameters(cl, genericType);
 
     if (cl.isArray()) {
-      Type componentType = get(cl.getComponentType());
+      var componentType = get(cl.getComponentType());
       if (cl.getComponentType().isPrimitive()) {
         componentType = Types.PRIMITIVES.get(componentType);
       }
@@ -173,7 +173,7 @@ public final class TypeFactory {
     }
 
     if (genericType instanceof TypeVariable) {
-      TypeVariable tv = (TypeVariable) genericType;
+      var tv = (TypeVariable) genericType;
       if (tv.getBounds().length == 1 && tv.getBounds()[0].equals(Object.class)) {
         value = new TypeSuper(tv.getName(), value);
       } else {
@@ -189,7 +189,7 @@ public final class TypeFactory {
 
   private Type asGeneric(Type type) {
     if (type.getParameters().size() == 0) {
-      int count = type.getJavaClass().getTypeParameters().length;
+      var count = type.getJavaClass().getTypeParameters().length;
       if (count > 0) {
         return new SimpleType(type, new Type[count]);
       }
@@ -203,7 +203,7 @@ public final class TypeFactory {
       AnnotationHelper annotationHelper,
       Annotation annotation,
       Type[] parameters) {
-    TypeCategory typeCategory = TypeCategory.get(cl.getName());
+    var typeCategory = TypeCategory.get(cl.getName());
     if (annotationHelper != null) {
       typeCategory = annotationHelper.getTypeByAnnotation(cl, annotation);
     } else if (embeddableTypes.contains(cl)) {
@@ -224,7 +224,7 @@ public final class TypeFactory {
   }
 
   private Type[] getParameters(Class<?> cl, java.lang.reflect.Type genericType) {
-    int parameterCount = ReflectionUtils.getTypeParameterCount(genericType);
+    var parameterCount = ReflectionUtils.getTypeParameterCount(genericType);
     if (parameterCount > 0) {
       return getGenericParameters(cl, genericType, parameterCount);
     } else if (Map.class.isAssignableFrom(cl)) {
@@ -238,8 +238,8 @@ public final class TypeFactory {
 
   private Type[] getGenericParameters(
       Class<?> cl, java.lang.reflect.Type genericType, int parameterCount) {
-    Type[] types = new Type[parameterCount];
-    for (int i = 0; i < types.length; i++) {
+    var types = new Type[parameterCount];
+    for (var i = 0; i < types.length; i++) {
       types[i] = getGenericParameter(cl, genericType, i);
     }
     return types;
@@ -249,15 +249,15 @@ public final class TypeFactory {
   private Type getGenericParameter(Class<?> cl, java.lang.reflect.Type genericType, int i) {
     java.lang.reflect.Type parameter = ReflectionUtils.getTypeParameter(genericType, i);
     if (parameter instanceof TypeVariable) {
-      TypeVariable variable = (TypeVariable) parameter;
-      Type rv = get(ReflectionUtils.getTypeParameterAsClass(genericType, i), null, parameter);
+      var variable = (TypeVariable) parameter;
+      var rv = get(ReflectionUtils.getTypeParameterAsClass(genericType, i), null, parameter);
       return new TypeExtends(variable.getName(), rv);
     } else if (parameter instanceof WildcardType
         && ((WildcardType) parameter).getUpperBounds()[0].equals(Object.class)
         && ((WildcardType) parameter).getLowerBounds().length == 0) {
       return ANY;
     } else {
-      Type rv = get(ReflectionUtils.getTypeParameterAsClass(genericType, i), null, parameter);
+      var rv = get(ReflectionUtils.getTypeParameterAsClass(genericType, i), null, parameter);
       if (parameter instanceof WildcardType) {
         rv = new TypeExtends(rv);
       }
@@ -277,11 +277,11 @@ public final class TypeFactory {
   public void extendTypes() {
     for (Map.Entry<List<?>, Type> entry : cache.entrySet()) {
       if (entry.getValue() instanceof EntityType) {
-        EntityType entityType = (EntityType) entry.getValue();
+        var entityType = (EntityType) entry.getValue();
         if (entityType.getProperties().isEmpty()) {
           for (Type type : cache.values()) {
             if (type.getFullName().equals(entityType.getFullName()) && type instanceof EntityType) {
-              EntityType base = (EntityType) type;
+              var base = (EntityType) type;
               for (Property property : base.getProperties()) {
                 entityType.addProperty(property);
               }

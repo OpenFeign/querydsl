@@ -196,8 +196,8 @@ public class ParsingTest extends AbstractQueryTest {
         .orderBy(price.amount.sumLong().desc())
         .select(ord.id, price.amount.sumLong(), item.count());
 
-    Customer c1 = new Customer();
-    Catalog c2 = new Catalog();
+    var c1 = new Customer();
+    var c2 = new Catalog();
 
     query()
         .from(ord)
@@ -254,35 +254,35 @@ public class ParsingTest extends AbstractQueryTest {
 
   @Test
   public void docoExamples93_viaAlias() throws Exception {
-    Cat c = alias(Cat.class, "cat");
-    Cat k = alias(Cat.class, "kittens");
-    Cat m = alias(Cat.class, "mate");
+    var c = alias(Cat.class, "cat");
+    var k = alias(Cat.class, "kittens");
+    var m = alias(Cat.class, "mate");
 
     query().from($(c)).innerJoin($(c.getMate()), $(m)).leftJoin($(c.getKittens()), $(k)).parse();
   }
 
   @Test
   public void docoExamples93_viaAlias2() throws Exception {
-    Cat c = alias(Cat.class, "cat");
-    Cat k = alias(Cat.class, "kittens");
+    var c = alias(Cat.class, "cat");
+    var k = alias(Cat.class, "kittens");
 
     query().from($(c)).leftJoin($(c.getMate().getKittens()), $(k)).parse();
   }
 
   @Test
   public void docoExamples93_viaAlias3() throws Exception {
-    Cat c = alias(Cat.class, "cat");
-    Cat k = alias(Cat.class, "kittens");
-    Cat m = alias(Cat.class, "mate");
+    var c = alias(Cat.class, "cat");
+    var k = alias(Cat.class, "kittens");
+    var m = alias(Cat.class, "mate");
 
     query().from($(c)).innerJoin($(c.getMate()), $(m)).leftJoin($(c.getKittens()), $(k)).parse();
   }
 
   @Test
   public void docoExamples93_viaAlias4() throws Exception {
-    Cat c = alias(Cat.class, "cat");
-    Cat k = alias(Cat.class, "kittens");
-    Cat m = alias(Cat.class, "mate");
+    var c = alias(Cat.class, "cat");
+    var k = alias(Cat.class, "kittens");
+    var m = alias(Cat.class, "mate");
 
     query().from($(c)).innerJoin($(c.getMate()), $(m)).leftJoin($(c.getKittens()), $(k)).parse();
   }

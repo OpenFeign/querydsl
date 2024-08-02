@@ -24,7 +24,7 @@ public class QueryResultsTest {
 
   private List<Integer> list = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-  private QueryResults<Integer> results = new QueryResults<Integer>(list, 10L, 0L, 20);
+  private QueryResults<Integer> results = new QueryResults<>(list, 10L, 0L, 20);
 
   @Test
   public void getResults() {

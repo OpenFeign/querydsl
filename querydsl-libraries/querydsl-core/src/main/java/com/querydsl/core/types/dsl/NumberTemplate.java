@@ -13,7 +13,11 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Template;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.core.types.TemplateExpressionImpl;
+import com.querydsl.core.types.Visitor;
 import java.util.List;
 
 /**

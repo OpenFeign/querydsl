@@ -14,7 +14,11 @@
 package com.querydsl.codegen.utils.support;
 
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author tiwe
@@ -31,7 +35,7 @@ public final class ClassUtils {
     if (cl.isArray()) {
       return getFullName(cl.getComponentType()) + "[]";
     }
-    final String name = cl.getName();
+    final var name = cl.getName();
     if (name.indexOf('$') > 0) {
       return getFullName(cl.getDeclaringClass()) + "." + cl.getSimpleName();
     }
@@ -42,8 +46,8 @@ public final class ClassUtils {
     while (cl.isArray()) {
       cl = cl.getComponentType();
     }
-    final String name = cl.getName();
-    final int i = name.lastIndexOf('.');
+    final var name = cl.getName();
+    final var i = name.lastIndexOf('.');
     if (i > 0) {
       return name.substring(0, i);
     } else {
@@ -55,8 +59,8 @@ public final class ClassUtils {
     if (cl.isArray()) {
       return getName(cl.getComponentType(), packages, classes) + "[]";
     }
-    final String canonicalName = cl.getName().replace('$', '.');
-    final int i = cl.getName().lastIndexOf('.');
+    final var canonicalName = cl.getName().replace('$', '.');
+    final var i = cl.getName().lastIndexOf('.');
     if (classes.contains(canonicalName)) {
       return cl.getSimpleName();
     } else if (cl.getEnclosingClass() != null) {

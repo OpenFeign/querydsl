@@ -23,21 +23,25 @@ import com.querydsl.core.types.dsl.SimpleExpression;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
 public class SignatureTest {
 
-  private List<Class<?>> classes = new ArrayList<Class<?>>();
+  private List<Class<?>> classes = new ArrayList<>();
 
   @Before
   public void setUp() throws ClassNotFoundException {
     for (String folder : Collections.singletonList("com/querydsl/core/types/dsl")) {
       for (String file : new File("src/main/java", folder).list()) {
         if (file.endsWith(".java") && !file.equals("package-info.java")) {
-          String className =
-              (folder + "." + file.substring(0, file.length() - 5)).replace('/', '.');
+          var className = (folder + "." + file.substring(0, file.length() - 5)).replace('/', '.');
           classes.add(Class.forName(className));
         }
       }
@@ -47,8 +51,8 @@ public class SignatureTest {
   @Test
   public void returnType_extends_simpleExpression() {
     assertThat(classes).isNotEmpty();
-    Set<String> skippedMethods = new HashSet<String>(Arrays.asList("getArg", "getRoot", "not"));
-    List<String> errors = new ArrayList<String>();
+    Set<String> skippedMethods = new HashSet<>(Arrays.asList("getArg", "getRoot", "not"));
+    List<String> errors = new ArrayList<>();
     for (Class<?> cl : classes) {
       if (cl.equals(Expressions.class)) {
         continue;

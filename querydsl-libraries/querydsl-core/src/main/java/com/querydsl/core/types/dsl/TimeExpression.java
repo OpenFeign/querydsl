@@ -150,7 +150,7 @@ public abstract class TimeExpression<T extends Comparable> extends TemporalExpre
    */
   @Override
   public TimeExpression<T> coalesce(Expression<T> expr) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(expr);
     return coalesce.asTime();
   }
@@ -164,7 +164,7 @@ public abstract class TimeExpression<T extends Comparable> extends TemporalExpre
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
   public TimeExpression<T> coalesce(Expression<?>... exprs) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);
     }
@@ -179,7 +179,7 @@ public abstract class TimeExpression<T extends Comparable> extends TemporalExpre
    */
   @Override
   public TimeExpression<T> coalesce(T arg) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(arg);
     return coalesce.asTime();
   }
@@ -193,7 +193,7 @@ public abstract class TimeExpression<T extends Comparable> extends TemporalExpre
   @Override
   @SuppressWarnings({"unchecked"})
   public TimeExpression<T> coalesce(T... args) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (T arg : args) {
       coalesce.add(arg);
     }

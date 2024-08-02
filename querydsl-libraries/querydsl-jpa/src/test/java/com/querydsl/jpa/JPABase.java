@@ -18,19 +18,15 @@ import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.domain.Cat;
-import com.querydsl.jpa.domain.Parent;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.QCatSummary;
 import com.querydsl.jpa.domain.QChild;
@@ -127,8 +123,8 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @NoBatooJPA
   @ExcludeIn(Target.MYSQL)
   public void delete_where_subQuery_exists() {
-    QCat parent = cat;
-    QCat child = new QCat("kitten");
+    var parent = cat;
+    var child = new QCat("kitten");
 
     delete(child)
         .where(
@@ -140,11 +136,10 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @Test
   @NoBatooJPA
   public void delete_where_subQuery2() {
-    QChild child = QChild.child;
-    QParent parent = QParent.parent;
+    var child = QChild.child;
+    var parent = QParent.parent;
 
-    JPQLSubQuery<Parent> subQuery =
-        selectFrom(parent).where(parent.id.eq(2), child.parent.eq(parent));
+    var subQuery = selectFrom(parent).where(parent.id.eq(2), child.parent.eq(parent));
     // child.in(parent.children));
 
     delete(child).where(child.id.eq(1), subQuery.exists()).execute();
@@ -152,7 +147,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void finder() {
-    Map<String, Object> conditions = new HashMap<String, Object>();
+    Map<String, Object> conditions = new HashMap<>();
     conditions.put("name", "Bob123");
 
     List<Cat> cats = CustomFinder.findCustom(entityManager, Cat.class, conditions, "name");
@@ -169,7 +164,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @NoEclipseLink
   @NoOpenJPA
   public void hint() {
-    jakarta.persistence.Query query =
+    var query =
         query().from(cat).setHint("org.hibernate.cacheable", true).select(cat).createQuery();
 
     assertThat(query).isNotNull();
@@ -188,7 +183,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @NoOpenJPA
   @NoBatooJPA
   public void hint3() {
-    jakarta.persistence.Query query =
+    var query =
         query()
             .from(cat)
             .setHint("eclipselink.batch.type", "IN")
@@ -204,9 +199,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @Test
   @ExcludeIn(Target.DERBY)
   public void iterate() {
-    CloseableIterator<Cat> cats = query().from(cat).select(cat).iterate();
+    var cats = query().from(cat).select(cat).iterate();
     while (cats.hasNext()) {
-      Cat cat = cats.next();
+      var cat = cats.next();
       assertThat(cat).isNotNull();
     }
     cats.close();
@@ -219,7 +214,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void lockMode() {
-    jakarta.persistence.Query query =
+    var query =
         query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).createQuery();
     assertThat(LockModeType.PESSIMISTIC_READ).isEqualTo(query.getLockMode());
     assertThat(query.getResultList()).isNotEmpty();
@@ -242,9 +237,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @Test
   @Ignore // isn't a valid JPQL query
   public void subquery_uniqueResult() {
-    QCat cat2 = new QCat("cat2");
+    var cat2 = new QCat("cat2");
 
-    BooleanExpression exists = selectOne().from(cat2).where(cat2.eyecolor.isNotNull()).exists();
+    var exists = selectOne().from(cat2).where(cat2.eyecolor.isNotNull()).exists();
     assertThat(
             query()
                 .from(cat)
@@ -288,8 +283,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @NoHibernate
   @ExcludeIn(Target.DERBY)
   public void createQuery4() {
-    List<Tuple> rows =
-        query().from(cat).select(new Expression<?>[] {Expressions.nullExpression()}).fetch();
+    var rows = query().from(cat).select(new Expression<?>[] {Expressions.nullExpression()}).fetch();
     for (Tuple row : rows) {
       assertThat(row).isNotNull();
       assertThat(row.size()).isEqualTo(1);
@@ -299,7 +293,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void fetchCountResultsGroupByWithMultipleFields() {
-    QueryResults<Tuple> results =
+    var results =
         query()
             .from(cat)
             .groupBy(cat.alive, cat.breed)
@@ -311,7 +305,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   public void fetchCountResultsGroupByWithHaving() {
-    QueryResults<Tuple> results =
+    var results =
         query()
             .from(cat)
             .groupBy(cat.alive)

@@ -24,8 +24,8 @@ public class EntityTypeTest {
 
   @Test
   public void uncapSimpleName_escaped() {
-    ClassType typeModel = new ClassType(TypeCategory.ENTITY, Object.class);
-    EntityType entityModel = new EntityType(typeModel);
+    var typeModel = new ClassType(TypeCategory.ENTITY, Object.class);
+    var entityModel = new EntityType(typeModel);
     assertThat(entityModel.getModifiedSimpleName()).isEqualTo("object");
 
     entityModel.addProperty(new Property(entityModel, "object", typeModel));
@@ -34,8 +34,8 @@ public class EntityTypeTest {
 
   @Test
   public void uncapSimpleName_escaped2() {
-    ClassType typeModel = new ClassType(TypeCategory.ENTITY, Object.class);
-    EntityType entityModel = new EntityType(typeModel);
+    var typeModel = new ClassType(TypeCategory.ENTITY, Object.class);
+    var entityModel = new EntityType(typeModel);
     assertThat(entityModel.getModifiedSimpleName()).isEqualTo("object");
 
     entityModel.addProperty(
@@ -46,8 +46,8 @@ public class EntityTypeTest {
 
   @Test
   public void uncapSimpleName_escaped3() {
-    ClassType typeModel = new ClassType(TypeCategory.ENTITY, Void.class);
-    EntityType entityModel = new EntityType(typeModel);
+    var typeModel = new ClassType(TypeCategory.ENTITY, Void.class);
+    var entityModel = new EntityType(typeModel);
     assertThat(entityModel.getModifiedSimpleName()).isEqualTo("void$");
   }
 }

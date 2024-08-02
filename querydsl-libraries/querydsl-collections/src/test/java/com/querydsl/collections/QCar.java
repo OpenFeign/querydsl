@@ -11,9 +11,9 @@ public class QCar extends BeanPath<Car> {
 
   public final NumberPath<Integer> horsePower = createNumber("horsePower", Integer.class);
 
-  public final QPerson owner = new QPerson(new BeanPath<Person>(Person.class, this, "owner"));
+  public final QPerson owner = new QPerson(new BeanPath<>(Person.class, this, "owner"));
 
-  public static QCar car = new QCar(new BeanPath<Car>(Car.class, "car"));
+  public static QCar car = new QCar(new BeanPath<>(Car.class, "car"));
 
   public QCar(BeanPath<? extends Car> entity) {
     super(entity.getType(), entity.getMetadata());

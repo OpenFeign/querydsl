@@ -41,7 +41,7 @@ public final class NumberConstant<D extends Number & Comparable<?>> extends Numb
    */
   @SuppressWarnings("unchecked")
   public static <T extends Number & Comparable<?>> NumberExpression<T> create(T val) {
-    return new NumberConstant<T>((Class<T>) val.getClass(), val);
+    return new NumberConstant<>((Class<T>) val.getClass(), val);
   }
 
   private final D constant;

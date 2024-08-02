@@ -13,7 +13,17 @@
  */
 package com.querydsl.apt.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
@@ -123,7 +133,7 @@ public class Person implements Serializable {
 
   @Override
   public int hashCode() {
-    int hash = 0;
+    var hash = 0;
     hash += (personId != null ? personId.hashCode() : 0);
     return hash;
   }
@@ -134,7 +144,7 @@ public class Person implements Serializable {
     if (!(object instanceof Person)) {
       return false;
     }
-    Person other = (Person) object;
+    var other = (Person) object;
     if ((this.personId == null && other.personId != null)
         || (this.personId != null && !this.personId.equals(other.personId))) {
       return false;

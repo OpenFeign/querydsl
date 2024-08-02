@@ -13,7 +13,11 @@
  */
 package com.querydsl.sql.types;
 
-import java.sql.*;
+import java.sql.Clob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  * {@code ClobType} maps Clob to Clob on the JDBC level

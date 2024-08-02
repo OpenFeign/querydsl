@@ -41,7 +41,7 @@ class AnonymousBindMarkers implements BindMarkers {
   @Override
   public BindMarker next() {
 
-    int index = COUNTER_INCREMENTER.getAndIncrement(this);
+    var index = COUNTER_INCREMENTER.getAndIncrement(this);
 
     return new IndexedBindMarker(placeholder, index);
   }

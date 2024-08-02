@@ -26,7 +26,7 @@ public class BooleanTest {
 
   @Test
   public void primitive_boolean() {
-    Entity entity = Alias.alias(Entity.class);
+    var entity = Alias.alias(Entity.class);
     assertThat(
             CollQueryFactory.from(entity, Collections.singleton(new Entity()))
                 .where($(entity.isBoolean1()).eq(Boolean.TRUE))
@@ -36,7 +36,7 @@ public class BooleanTest {
 
   @Test
   public void object_boolean() {
-    Entity entity = Alias.alias(Entity.class);
+    var entity = Alias.alias(Entity.class);
     assertThat(
             CollQueryFactory.from(entity, Collections.singleton(new Entity()))
                 .where($(entity.getBoolean2()).eq(Boolean.TRUE))

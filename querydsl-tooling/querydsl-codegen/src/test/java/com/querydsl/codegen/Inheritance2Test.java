@@ -2,11 +2,9 @@ package com.querydsl.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeExtends;
 import com.querydsl.core.annotations.QueryEntity;
 import java.io.File;
-import java.lang.reflect.Field;
 import org.junit.Test;
 
 public class Inheritance2Test {
@@ -35,17 +33,17 @@ public class Inheritance2Test {
 
   @Test
   public void base_base() throws SecurityException, NoSuchFieldException {
-    TypeFactory typeFactory = new TypeFactory();
-    Field field = Base.class.getDeclaredField("base");
-    Type type = typeFactory.get(field.getType(), field.getGenericType());
+    var typeFactory = new TypeFactory();
+    var field = Base.class.getDeclaredField("base");
+    var type = typeFactory.get(field.getType(), field.getGenericType());
     assertThat(type.getParameters()).isEmpty();
   }
 
   @Test
   public void base_base2() throws SecurityException, NoSuchFieldException {
-    TypeFactory typeFactory = new TypeFactory();
-    Field field = Base.class.getDeclaredField("base2");
-    Type type = typeFactory.get(field.getType(), field.getGenericType());
+    var typeFactory = new TypeFactory();
+    var field = Base.class.getDeclaredField("base2");
+    var type = typeFactory.get(field.getType(), field.getGenericType());
     assertThat(type.getParameters()).hasSize(2);
     assertThat(((TypeExtends) type.getParameters().get(0)).getVarName()).isNull();
     assertThat(((TypeExtends) type.getParameters().get(1)).getVarName()).isNull();
@@ -53,7 +51,7 @@ public class Inheritance2Test {
 
   @Test
   public void test() {
-    GenericExporter exporter = new GenericExporter();
+    var exporter = new GenericExporter();
     exporter.setTargetFolder(new File("target/" + getClass().getSimpleName()));
     exporter.export(getClass().getClasses());
   }

@@ -43,7 +43,7 @@ public class CurrencyType extends AbstractType<Currency> {
   @Override
   @Nullable
   public Currency getValue(ResultSet rs, int startIndex) throws SQLException {
-    String val = rs.getString(startIndex);
+    var val = rs.getString(startIndex);
     return val != null ? Currency.getInstance(val) : null;
   }
 

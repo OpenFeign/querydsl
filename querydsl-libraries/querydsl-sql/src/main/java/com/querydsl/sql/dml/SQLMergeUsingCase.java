@@ -70,7 +70,7 @@ public class SQLMergeUsingCase {
   }
 
   private void set(List<? extends Path<?>> paths, List<?> values) {
-    for (int i = 0; i < paths.size(); i++) {
+    for (var i = 0; i < paths.size(); i++) {
       if (values.get(i) instanceof Expression) {
         updates.put(paths.get(i), (Expression<?>) values.get(i));
       } else if (values.get(i) != null) {

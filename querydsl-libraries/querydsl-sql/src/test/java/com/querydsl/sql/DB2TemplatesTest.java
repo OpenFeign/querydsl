@@ -32,11 +32,11 @@ public class DB2TemplatesTest extends AbstractSQLTemplatesTest {
     // and multiplication, division, and concatenation are applied before addition and subtraction.
     // Operators at the same precedence level are applied from left to right.
 
-    int p1 = getPrecedence(Ops.NEGATE);
-    int p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.CONCAT);
-    int p3 = getPrecedence(Ops.ADD, Ops.SUB);
-    int p4 = getPrecedence(Ops.EQ, Ops.NE, Ops.LT, Ops.GT, Ops.LOE, Ops.GOE);
-    int p5 =
+    var p1 = getPrecedence(Ops.NEGATE);
+    var p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.CONCAT);
+    var p3 = getPrecedence(Ops.ADD, Ops.SUB);
+    var p4 = getPrecedence(Ops.EQ, Ops.NE, Ops.LT, Ops.GT, Ops.LOE, Ops.GOE);
+    var p5 =
         getPrecedence(
             Ops.IS_NULL,
             Ops.IS_NOT_NULL,
@@ -46,9 +46,9 @@ public class DB2TemplatesTest extends AbstractSQLTemplatesTest {
             Ops.IN,
             Ops.NOT_IN,
             Ops.EXISTS);
-    int p6 = getPrecedence(Ops.NOT);
-    int p7 = getPrecedence(Ops.AND);
-    int p8 = getPrecedence(Ops.OR);
+    var p6 = getPrecedence(Ops.NOT);
+    var p7 = getPrecedence(Ops.AND);
+    var p8 = getPrecedence(Ops.OR);
 
     assertThat(p1 < p2).isTrue();
     assertThat(p2 < p3).isTrue();

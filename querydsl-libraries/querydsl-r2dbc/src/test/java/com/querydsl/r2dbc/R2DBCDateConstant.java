@@ -30,7 +30,7 @@ public final class R2DBCDateConstant<D extends LocalDate> extends LocalDateExpre
   private static final long serialVersionUID = -5745611667058255826L;
 
   public static <D extends LocalDate> LocalDateExpression<D> create(D date) {
-    return new R2DBCDateConstant<D>(date);
+    return new R2DBCDateConstant<>(date);
   }
 
   private final D date;
@@ -38,7 +38,7 @@ public final class R2DBCDateConstant<D extends LocalDate> extends LocalDateExpre
   @SuppressWarnings("unchecked")
   public R2DBCDateConstant(D date) {
     super(ConstantImpl.create(date));
-    this.date = (D) date;
+    this.date = date;
   }
 
   @Override

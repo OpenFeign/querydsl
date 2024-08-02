@@ -13,7 +13,11 @@
  */
 package com.querydsl.sql;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.MutableExpressionBase;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimpleExpression;
@@ -35,7 +39,7 @@ public class WindowFirstLast<T> extends MutableExpressionBase<T> {
 
   private static final String ORDER_BY = "order by ";
 
-  private final List<OrderSpecifier<?>> orderBy = new ArrayList<OrderSpecifier<?>>();
+  private final List<OrderSpecifier<?>> orderBy = new ArrayList<>();
 
   @Nullable private transient volatile SimpleExpression<T> value;
 
@@ -87,7 +91,7 @@ public class WindowFirstLast<T> extends MutableExpressionBase<T> {
         throw new IllegalStateException("No order by arguments given");
       }
       List<Expression<?>> args = new ArrayList<>();
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       builder.append("{0} keep (dense_rank ");
       args.add(target);
       builder.append(first ? "first " : "last ");
@@ -103,6 +107,6 @@ public class WindowFirstLast<T> extends MutableExpressionBase<T> {
   }
 
   public WindowFunction<T> over() {
-    return new WindowFunction<T>(getValue());
+    return new WindowFunction<>(getValue());
   }
 }

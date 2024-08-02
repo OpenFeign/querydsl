@@ -13,7 +13,14 @@
  */
 package com.querydsl.core.support;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.FactoryExpressionBase;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.Expressions;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +47,7 @@ public class ConstantHidingExpression<T> extends FactoryExpressionBase<T> {
     this.expr = expr;
     this.args = new ArrayList<>();
     this.template = new Object[expr.getArgs().size()];
-    for (int i = 0; i < template.length; i++) {
+    for (var i = 0; i < template.length; i++) {
       Expression<?> arg = expr.getArgs().get(i);
       Expression<?> unwrapped = unwrap(arg);
       if (unwrapped instanceof Constant) {
@@ -76,10 +83,10 @@ public class ConstantHidingExpression<T> extends FactoryExpressionBase<T> {
   @Nullable
   @Override
   public T newInstance(Object... args) {
-    Object[] expanded = new Object[template.length];
+    var expanded = new Object[template.length];
     System.arraycopy(template, 0, expanded, 0, template.length);
-    int j = 0;
-    for (int i = 0; i < expanded.length; i++) {
+    var j = 0;
+    for (var i = 0; i < expanded.length; i++) {
       if (expanded[i] == null) {
         expanded[i] = args[j++];
       }

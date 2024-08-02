@@ -9,11 +9,10 @@ import com.google.common.base.Joiner;
 import com.querydsl.r2dbc.Configuration;
 import com.querydsl.r2dbc.SQLTemplates;
 import io.r2dbc.spi.Connection;
-import io.r2dbc.spi.Statement;
-import java.util.ArrayList;
-import java.util.List;
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
 import reactor.core.publisher.Mono;
 
 /**
@@ -35,13 +34,13 @@ public class CreateTableClause {
 
   private final String table;
 
-  private final List<ColumnData> columns = new ArrayList<ColumnData>();
+  private final List<ColumnData> columns = new ArrayList<>();
 
-  private final List<IndexData> indexes = new ArrayList<IndexData>();
+  private final List<IndexData> indexes = new ArrayList<>();
 
   private PrimaryKeyData primaryKey;
 
-  private final List<ForeignKeyData> foreignKeys = new ArrayList<ForeignKeyData>();
+  private final List<ForeignKeyData> foreignKeys = new ArrayList<>();
 
   public CreateTableClause(Connection connection, Configuration c, String table) {
     this.connection = connection;
@@ -58,7 +57,7 @@ public class CreateTableClause {
    * @return
    */
   public CreateTableClause column(String name, Class<?> type) {
-    String typeName = configuration.getTypeName(type);
+    var typeName = configuration.getTypeName(type);
     columns.add(new ColumnData(templates.quoteIdentifier(name), typeName));
     return this;
   }
@@ -106,7 +105,7 @@ public class CreateTableClause {
    * @return
    */
   public CreateTableClause primaryKey(String name, String... columns) {
-    for (int i = 0; i < columns.length; i++) {
+    for (var i = 0; i < columns.length; i++) {
       columns[i] = templates.quoteIdentifier(columns[i]);
     }
     primaryKey = new PrimaryKeyData(templates.quoteIdentifier(name), columns);
@@ -150,12 +149,12 @@ public class CreateTableClause {
   /** Execute the clause */
   @SuppressWarnings("SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE")
   public Mono<Void> execute() {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     builder.append(templates.getCreateTable() + table + " (\n");
-    List<String> lines = new ArrayList<String>(columns.size() + foreignKeys.size() + 1);
+    List<String> lines = new ArrayList<>(columns.size() + foreignKeys.size() + 1);
     // columns
     for (ColumnData column : columns) {
-      StringBuilder line = new StringBuilder();
+      var line = new StringBuilder();
       line.append(column.getName() + " " + column.getType().toUpperCase());
       if (column.getSize() != null) {
         line.append("(" + column.getSize() + ")");
@@ -171,7 +170,7 @@ public class CreateTableClause {
 
     // primary key
     if (primaryKey != null) {
-      StringBuilder line = new StringBuilder();
+      var line = new StringBuilder();
       line.append("CONSTRAINT " + primaryKey.getName() + " ");
       line.append("PRIMARY KEY(" + COMMA_JOINER.join(primaryKey.getColumns()) + ")");
       lines.add(line.toString());
@@ -179,7 +178,7 @@ public class CreateTableClause {
 
     // foreign keys
     for (ForeignKeyData foreignKey : foreignKeys) {
-      StringBuilder line = new StringBuilder();
+      var line = new StringBuilder();
       line.append("CONSTRAINT " + foreignKey.getName() + " ");
       line.append("FOREIGN KEY(" + COMMA_JOINER.join(foreignKey.getForeignColumns()) + ") ");
       line.append(
@@ -194,21 +193,21 @@ public class CreateTableClause {
     builder.append("\n)\n");
     // logger.info(builder.toString());
 
-    Statement statement = connection.createStatement(builder.toString());
+    var statement = connection.createStatement(builder.toString());
     return Mono.from(statement.execute())
         .flatMapIterable(__ -> indexes)
         .flatMap(
             index -> {
-              String indexColumns = COMMA_JOINER.join(index.getColumns());
-              String prefix = templates.getCreateIndex();
+              var indexColumns = COMMA_JOINER.join(index.getColumns());
+              var prefix = templates.getCreateIndex();
               if (index.isUnique()) {
                 prefix = templates.getCreateUniqueIndex();
               }
-              String sql =
+              var sql =
                   prefix + index.getName() + templates.getOn() + table + "(" + indexColumns + ")";
               // logger.info(sql);
 
-              Statement stmt = connection.createStatement(sql);
+              var stmt = connection.createStatement(sql);
               return Mono.from(stmt.execute());
             })
         .collectList()

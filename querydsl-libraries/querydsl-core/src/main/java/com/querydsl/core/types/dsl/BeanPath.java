@@ -13,7 +13,16 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.ExpressionException;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathImpl;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathMetadataFactory;
+import com.querydsl.core.types.PathType;
+import com.querydsl.core.types.Visitor;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -30,7 +39,7 @@ public class BeanPath<T> extends SimpleExpression<T> implements Path<T> {
 
   private static final long serialVersionUID = -1845524024957822731L;
 
-  private final Map<Class<?>, Object> casts = new ConcurrentHashMap<Class<?>, Object>();
+  private final Map<Class<?>, Object> casts = new ConcurrentHashMap<>();
 
   @Nullable private final PathInits inits;
 
@@ -172,7 +181,7 @@ public class BeanPath<T> extends SimpleExpression<T> implements Path<T> {
    * @return property path
    */
   protected <A extends Enum<A>> EnumPath<A> createEnum(String property, Class<A> type) {
-    return add(new EnumPath<A>(type, forProperty(property)));
+    return add(new EnumPath<>(type, forProperty(property)));
   }
 
   /**
@@ -274,7 +283,7 @@ public class BeanPath<T> extends SimpleExpression<T> implements Path<T> {
    */
   @SuppressWarnings("unchecked")
   protected <A> SimplePath<A> createSimple(String property, Class<? super A> type) {
-    return add(new SimplePath<A>((Class<A>) type, forProperty(property)));
+    return add(new SimplePath<>((Class<A>) type, forProperty(property)));
   }
 
   /**
@@ -327,8 +336,8 @@ public class BeanPath<T> extends SimpleExpression<T> implements Path<T> {
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   public BooleanExpression instanceOfAny(Class... types) {
-    BooleanExpression[] exprs = new BooleanExpression[types.length];
-    for (int i = 0; i < types.length; i++) {
+    var exprs = new BooleanExpression[types.length];
+    for (var i = 0; i < types.length; i++) {
       exprs[i] = this.instanceOf(types[i]);
     }
     return Expressions.anyOf(exprs);

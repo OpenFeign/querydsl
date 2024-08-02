@@ -27,7 +27,7 @@ public class NullExpressionTest {
 
   @Test
   public void withConstructor() {
-    Cat cat =
+    var cat =
         Projections.constructor(
                 Cat.class,
                 Expressions.nullExpression(String.class),
@@ -39,7 +39,7 @@ public class NullExpressionTest {
 
   @Test(expected = ExpressionException.class)
   public void withoutConstructor() {
-    Cat cat =
+    var cat =
         Projections.constructor(
                 Cat.class,
                 Expressions.nullExpression(String.class),

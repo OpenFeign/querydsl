@@ -19,7 +19,12 @@ import com.querydsl.core.group.GMap;
 import com.querydsl.core.group.GOne;
 import com.querydsl.core.group.GroupExpression;
 import com.querydsl.core.group.QPair;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionBase;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,17 +66,16 @@ public abstract class ReactiveAbstractGroupByTransformer<K, T>
     }
   }
 
-  protected final List<GroupExpression<?, ?>> groupExpressions =
-      new ArrayList<GroupExpression<?, ?>>();
+  protected final List<GroupExpression<?, ?>> groupExpressions = new ArrayList<>();
 
-  protected final List<QPair<?, ?>> maps = new ArrayList<QPair<?, ?>>();
+  protected final List<QPair<?, ?>> maps = new ArrayList<>();
 
   protected final Expression<?>[] expressions;
 
   @SuppressWarnings("unchecked")
   ReactiveAbstractGroupByTransformer(Expression<K> key, Expression<?>... expressions) {
-    List<Expression<?>> projection = new ArrayList<Expression<?>>(expressions.length);
-    groupExpressions.add(new GOne<K>(key));
+    List<Expression<?>> projection = new ArrayList<>(expressions.length);
+    groupExpressions.add(new GOne<>(key));
     projection.add(key);
 
     for (Expression<?> expr : expressions) {
@@ -99,7 +103,7 @@ public abstract class ReactiveAbstractGroupByTransformer<K, T>
 
   protected static FactoryExpression<Tuple> withoutGroupExpressions(
       final FactoryExpression<Tuple> expr) {
-    List<Expression<?>> args = new ArrayList<Expression<?>>(expr.getArgs().size());
+    List<Expression<?>> args = new ArrayList<>(expr.getArgs().size());
     for (Expression<?> arg : expr.getArgs()) {
       if (arg instanceof GroupExpression) {
         args.add(((GroupExpression) arg).getExpression());
@@ -107,6 +111,6 @@ public abstract class ReactiveAbstractGroupByTransformer<K, T>
         args.add(arg);
       }
     }
-    return new FactoryExpressionAdapter<Tuple>(expr, args);
+    return new FactoryExpressionAdapter<>(expr, args);
   }
 }

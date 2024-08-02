@@ -14,7 +14,10 @@
 package com.querydsl.sql.spatial;
 
 import com.querydsl.sql.types.AbstractType;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import org.geolatte.geom.Geometry;
 import org.geolatte.geom.codec.Wkt;
 import org.jetbrains.annotations.Nullable;
@@ -35,8 +38,8 @@ class GeometryWktClobType extends AbstractType<Geometry> {
   @Override
   @Nullable
   public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
-    Clob clob = rs.getClob(startIndex);
-    String str = clob != null ? clob.getSubString(1, (int) clob.length()) : null;
+    var clob = rs.getClob(startIndex);
+    var str = clob != null ? clob.getSubString(1, (int) clob.length()) : null;
     if (str != null) {
       return Wkt.newDecoder(Wkt.Dialect.POSTGIS_EWKT_1).decode(str);
     } else {
@@ -46,7 +49,7 @@ class GeometryWktClobType extends AbstractType<Geometry> {
 
   @Override
   public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
-    String str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(value);
+    var str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(value);
     st.setString(startIndex, str);
   }
 

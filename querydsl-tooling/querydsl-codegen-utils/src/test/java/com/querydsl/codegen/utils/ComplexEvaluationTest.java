@@ -24,8 +24,8 @@ public class ComplexEvaluationTest {
   @Test
   @SuppressWarnings("unchecked")
   public void Complex() {
-    ClassType resultType = new ClassType(TypeCategory.LIST, List.class, Types.STRING);
-    StringBuilder source = new StringBuilder();
+    var resultType = new ClassType(TypeCategory.LIST, List.class, Types.STRING);
+    var source = new StringBuilder();
     source.append("java.util.List<String> rv = new java.util.ArrayList<String>();\n");
     source.append("for (String a : a_){\n");
     source.append("    for (String b : b_){\n");
@@ -55,8 +55,8 @@ public class ComplexEvaluationTest {
   @Test
   @SuppressWarnings("unchecked")
   public void ComplexClassLoading() {
-    ClassType resultType = new ClassType(TypeCategory.LIST, List.class, Types.OBJECTS);
-    StringBuilder source = new StringBuilder();
+    var resultType = new ClassType(TypeCategory.LIST, List.class, Types.OBJECTS);
+    var source = new StringBuilder();
     source.append("java.util.List<Object[]> rv = new java.util.ArrayList<Object[]>();\n");
     source.append(
         """
@@ -73,15 +73,15 @@ public class ComplexEvaluationTest {
     source.append("}\n");
     source.append("return rv;\n");
 
-    Cat fuzzy = new Cat("fuzzy");
-    Cat spot = new Cat("spot");
-    Cat mittens = new Cat("mittens");
-    Cat sparkles = new Cat("sparkles");
+    var fuzzy = new Cat("fuzzy");
+    var spot = new Cat("spot");
+    var mittens = new Cat("mittens");
+    var sparkles = new Cat("sparkles");
 
     List<Cat> a = Arrays.asList(fuzzy, spot);
     List<Cat> b = Arrays.asList(mittens, sparkles);
 
-    ClassType argType = new ClassType(TypeCategory.LIST, List.class, new ClassType(Cat.class));
+    var argType = new ClassType(TypeCategory.LIST, List.class, new ClassType(Cat.class));
     @SuppressWarnings("rawtypes") // cannot specify further than List.class
     Evaluator<List> evaluator =
         factory.createEvaluator(
@@ -98,9 +98,9 @@ public class ComplexEvaluationTest {
     List<Object[]> result = evaluator.evaluate(a, b);
     assertThat(result).hasSize(expResults.length);
 
-    for (int i = 0; i < expResults.length; i++) {
+    for (var i = 0; i < expResults.length; i++) {
       assertThat(result.get(i).length).isEqualTo(expResults[i].length);
-      for (int j = 0; j < expResults[i].length; j++) {
+      for (var j = 0; j < expResults[i].length; j++) {
         assertThat(result.get(i)[j]).isEqualTo(expResults[i][j]);
       }
     }
@@ -109,8 +109,8 @@ public class ComplexEvaluationTest {
   @Test(expected = CodegenException.class)
   @SuppressWarnings("unchecked")
   public void ComplexClassLoadingFailure() {
-    ClassType resultType = new ClassType(TypeCategory.LIST, List.class, Types.STRING);
-    StringBuilder source = new StringBuilder();
+    var resultType = new ClassType(TypeCategory.LIST, List.class, Types.STRING);
+    var source = new StringBuilder();
     source.append(
         """
         java.util.List<String> rv = (java.util.List<String>) new\
@@ -144,8 +144,8 @@ public class ComplexEvaluationTest {
   @Test
   @SuppressWarnings("unchecked")
   public void ComplexPrimitiveType() {
-    ClassType resultType = new ClassType(TypeCategory.LIST, List.class, Types.BOOLEAN);
-    StringBuilder source = new StringBuilder();
+    var resultType = new ClassType(TypeCategory.LIST, List.class, Types.BOOLEAN);
+    var source = new StringBuilder();
     source.append("java.util.List<Boolean> rv = new java.util.ArrayList<Boolean>();\n");
     source.append("for (boolean a : a_){\n");
     source.append("    for (boolean b : b_){\n");
@@ -175,8 +175,8 @@ public class ComplexEvaluationTest {
   @Test
   @SuppressWarnings("unchecked")
   public void ComplexEmbeddedClass() {
-    ClassType resultType = new ClassType(TypeCategory.LIST, List.class, Types.BOOLEAN);
-    StringBuilder source = new StringBuilder();
+    var resultType = new ClassType(TypeCategory.LIST, List.class, Types.BOOLEAN);
+    var source = new StringBuilder();
     source.append("java.util.List<Boolean> rv = new java.util.ArrayList<Boolean>();\n");
     source.append("for (boolean a : a_){\n");
     source.append("    for (boolean b : b_){\n");
@@ -215,8 +215,8 @@ public class ComplexEvaluationTest {
 
   @Test
   public void ComplexDifferentConstants() {
-    ClassType resultType = new ClassType(TypeCategory.LIST, List.class, new ClassType(Cat.class));
-    String source =
+    var resultType = new ClassType(TypeCategory.LIST, List.class, new ClassType(Cat.class));
+    var source =
         new StringBuilder()
             .append(
                 """
@@ -236,10 +236,9 @@ public class ComplexEvaluationTest {
             .toString();
 
     List<Cat> cats = Arrays.asList(new Cat("fuzzy"), new Cat("spot"));
-    String[] names = new String[] {"cat_"};
-    Type[] types =
-        new Type[] {new ClassType(TypeCategory.LIST, List.class, new ClassType(Cat.class))};
-    Class<?>[] classes = new Class<?>[] {List.class};
+    var names = new String[] {"cat_"};
+    var types = new Type[] {new ClassType(TypeCategory.LIST, List.class, new ClassType(Cat.class))};
+    var classes = new Class<?>[] {List.class};
 
     // first pass
     factory

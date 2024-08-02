@@ -1,6 +1,10 @@
 package com.querydsl.apt.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import java.lang.annotation.Annotation;
 import org.junit.Ignore;
 

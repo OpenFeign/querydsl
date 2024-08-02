@@ -30,7 +30,7 @@ public class ExpressionTest {
 
   @Test
   public void test() throws Throwable {
-    List<Expression<?>> exprs = new ArrayList<Expression<?>>();
+    List<Expression<?>> exprs = new ArrayList<>();
     exprs.add(QAnimalTest_Animal.animal);
     exprs.add(QAnimalTest_Cat.cat);
     exprs.add(QConstructorTest_Category.category);
@@ -64,11 +64,11 @@ public class ExpressionTest {
     exprs.add(ConstantImpl.create(false));
 
     // all entities
-    Set<Expression<?>> toVisit = new HashSet<Expression<?>>(exprs);
+    Set<Expression<?>> toVisit = new HashSet<>(exprs);
     // and all their direct properties
     for (Expression<?> expr : exprs) {
       for (Field field : expr.getClass().getFields()) {
-        Object rv = field.get(expr);
+        var rv = field.get(expr);
         if (rv instanceof Expression expression) {
           if (rv instanceof StringExpression str) {
             toVisit.add(str.toLowerCase());
@@ -82,18 +82,15 @@ public class ExpressionTest {
       }
     }
 
-    Set<String> failures = new TreeSet<String>();
+    Set<String> failures = new TreeSet<>();
 
     for (Expression<?> expr : toVisit) {
       for (Method method : expr.getClass().getMethods()) {
-        if (method.getName().equals("getParameter")) {
-          continue;
-        }
-        if (method.getName().equals("getArg")) {
+        if (method.getName().equals("getParameter") || method.getName().equals("getArg")) {
           continue;
         }
         if (method.getReturnType() != void.class && !method.getReturnType().isPrimitive()) {
-          Class<?>[] types = method.getParameterTypes();
+          var types = method.getParameterTypes();
           Object[] args;
           if (types.length == 0) {
             args = new Object[0];
@@ -109,7 +106,7 @@ public class ExpressionTest {
           } else {
             continue;
           }
-          Object rv = method.invoke(expr, args);
+          var rv = method.invoke(expr, args);
           if (method.invoke(expr, args) != rv) {
             failures.add(expr.getClass().getSimpleName() + "." + method.getName() + " is unstable");
           }

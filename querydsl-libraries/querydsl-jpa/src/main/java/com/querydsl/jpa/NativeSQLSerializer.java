@@ -15,8 +15,20 @@ package com.querydsl.jpa;
 
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.types.*;
-import com.querydsl.sql.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.sql.ColumnMetadata;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLOps;
+import com.querydsl.sql.SQLSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -51,7 +63,7 @@ public final class NativeSQLSerializer extends SQLSerializer {
   @Override
   protected void appendAsColumnName(Path<?> path, boolean precededByDot) {
     if (path.getAnnotatedElement().isAnnotationPresent(Column.class)) {
-      Column column = path.getAnnotatedElement().getAnnotation(Column.class);
+      var column = path.getAnnotatedElement().getAnnotation(Column.class);
       if (!column.name().isEmpty()) {
         append(getTemplates().quoteIdentifier(column.name(), precededByDot));
       } else {
@@ -64,10 +76,10 @@ public final class NativeSQLSerializer extends SQLSerializer {
 
   @Override
   protected void handleJoinTarget(JoinExpression je) {
-    SQLTemplates templates = getTemplates();
+    var templates = getTemplates();
     Class<?> type = je.getTarget().getType();
     if (type.isAnnotationPresent(Table.class) && templates.isSupportsAlias()) {
-      Table table = type.getAnnotation(Table.class);
+      var table = type.getAnnotation(Table.class);
       boolean precededByDot;
       if (!table.schema().isEmpty() && templates.isPrintSchema()) {
         appendSchemaName(table.schema());
@@ -103,18 +115,18 @@ public final class NativeSQLSerializer extends SQLSerializer {
   @Override
   public void serialize(QueryMetadata metadata, boolean forCountRow) {
     // TODO get rid of this wrapping when Hibernate doesn't require unique aliases anymore
-    boolean modified = false;
-    Set<String> used = new HashSet<String>();
+    var modified = false;
+    Set<String> used = new HashSet<>();
     Expression<?> projection = metadata.getProjection();
     if (projection instanceof Path) {
       Path<?> path = (Path<?>) projection;
       if (!used.add(path.getMetadata().getName())) {
-        String alias = "col_1";
+        var alias = "col_1";
         aliases.computeIfAbsent(projection, NativeSQLSerializer::createArrayList).add(alias);
         projection = ExpressionUtils.as(projection, alias);
         modified = true;
       } else if (path.getAnnotatedElement().isAnnotationPresent(Column.class)) {
-        Column column = path.getAnnotatedElement().getAnnotation(Column.class);
+        var column = path.getAnnotatedElement().getAnnotation(Column.class);
         if (!column.name().isEmpty()) {
           aliases
               .computeIfAbsent(projection, NativeSQLSerializer::createArrayList)
@@ -132,12 +144,12 @@ public final class NativeSQLSerializer extends SQLSerializer {
     } else if (projection instanceof FactoryExpression) {
       FactoryExpression<?> factoryExpr = (FactoryExpression<?>) projection;
       List<Expression<?>> fargs = new ArrayList<>(factoryExpr.getArgs());
-      for (int j = 0; j < fargs.size(); j++) {
+      for (var j = 0; j < fargs.size(); j++) {
         if (fargs.get(j) instanceof Path) {
           Path<?> path = (Path<?>) fargs.get(j);
           String columnName;
           if (path.getAnnotatedElement().isAnnotationPresent(Column.class)) {
-            Column column = path.getAnnotatedElement().getAnnotation(Column.class);
+            var column = path.getAnnotatedElement().getAnnotation(Column.class);
             if (!column.name().isEmpty()) {
               columnName = column.name();
             } else {
@@ -147,7 +159,7 @@ public final class NativeSQLSerializer extends SQLSerializer {
             columnName = ColumnMetadata.getName(path);
           }
           if (!used.add(columnName)) {
-            String alias = "col_" + (j + 1);
+            var alias = "col_" + (j + 1);
             aliases.computeIfAbsent(path, NativeSQLSerializer::createArrayList).add(alias);
             fargs.set(j, ExpressionUtils.as(fargs.get(j), alias));
           } else {
@@ -159,7 +171,7 @@ public final class NativeSQLSerializer extends SQLSerializer {
               .computeIfAbsent(operation, NativeSQLSerializer::createArrayList)
               .add(operation.getArg(1).toString());
         } else if (!isAllExpression(fargs.get(j))) {
-          String alias = "col_" + (j + 1);
+          var alias = "col_" + (j + 1);
           aliases.computeIfAbsent(fargs.get(j), NativeSQLSerializer::createArrayList).add(alias);
           fargs.set(j, ExpressionUtils.as(fargs.get(j), alias));
         }
@@ -174,7 +186,7 @@ public final class NativeSQLSerializer extends SQLSerializer {
     } else {
       // https://github.com/querydsl/querydsl/issues/80
       if (!isAllExpression(projection)) {
-        String alias = "col_1";
+        var alias = "col_1";
         aliases.computeIfAbsent(projection, NativeSQLSerializer::createArrayList).add(alias);
         projection = ExpressionUtils.as(projection, alias);
         modified = true;
@@ -188,14 +200,14 @@ public final class NativeSQLSerializer extends SQLSerializer {
   }
 
   private static <T> ArrayList<T> createArrayList(Object key) {
-    return new ArrayList<T>();
+    return new ArrayList<>();
   }
 
   @Override
   public void visitConstant(Object constant) {
     if (constant instanceof Collection<?>) {
       append("(");
-      boolean first = true;
+      var first = true;
       for (Object element : ((Collection<?>) constant)) {
         if (!first) {
           append(", ");

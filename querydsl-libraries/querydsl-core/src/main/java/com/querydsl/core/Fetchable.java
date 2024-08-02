@@ -66,7 +66,7 @@ public interface Fetchable<T> {
    * @return closeable stream
    */
   default Stream<T> stream() {
-    final CloseableIterator<T> iterator = iterate();
+    final var iterator = iterate();
     final Spliterator<T> spliterator =
         Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED);
     return StreamSupport.stream(spliterator, false).onClose(iterator::close);

@@ -40,11 +40,11 @@ public class ConfigurationTest {
 
   @Test
   public void various() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     //        configuration.setJavaType(Types.DATE, java.util.Date.class);
     configuration.register(new UtilDateType());
     configuration.register("person", "secureId", new EncryptedString());
-    configuration.register("person", "gender", new EnumByNameType<Gender>(Gender.class));
+    configuration.register("person", "gender", new EnumByNameType<>(Gender.class));
     configuration.register(new StringType());
     assertThat(configuration.getJavaType(java.sql.Types.VARCHAR, null, 0, 0, "person", "gender"))
         .isEqualTo(Gender.class);
@@ -52,7 +52,7 @@ public class ConfigurationTest {
 
   @Test
   public void custom_type() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     //        configuration.setJavaType(Types.BLOB, InputStream.class);
     configuration.register(new InputStreamType());
     assertThat(configuration.getJavaType(Types.BLOB, null, 0, 0, "", ""))
@@ -61,16 +61,16 @@ public class ConfigurationTest {
 
   @Test
   public void set_null() throws SQLException {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     //        configuration.register(new UntypedNullType());
     configuration.register("SURVEY", "NAME", new EncryptedString());
-    PreparedStatement stmt = EasyMock.<PreparedStatement>createNiceMock(PreparedStatement.class);
+    var stmt = EasyMock.<PreparedStatement>createNiceMock(PreparedStatement.class);
     configuration.set(stmt, QSurvey.survey.name, 0, Null.DEFAULT);
   }
 
   @Test
   public void get_schema() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     configuration.registerSchemaOverride("public", "pub");
     configuration.registerTableOverride("employee", "emp");
     configuration.registerTableOverride("public", "employee", "employees");
@@ -83,14 +83,13 @@ public class ConfigurationTest {
         .isEqualTo("employees");
 
     configuration.setDynamicNameMapping(new PreConfiguredNameMapping());
-    SchemaAndTable notOverriddenSchemaAndTable =
-        new SchemaAndTable("notoverridden", "notoverridden");
+    var notOverriddenSchemaAndTable = new SchemaAndTable("notoverridden", "notoverridden");
     assertThat(configuration.getOverride(notOverriddenSchemaAndTable))
         .isEqualTo(notOverriddenSchemaAndTable);
 
     configuration.setDynamicNameMapping(
         new ChangeLetterCaseNameMapping(LetterCase.UPPER, Locale.ENGLISH));
-    String notDirectOverriden = "notDirectOverriden";
+    var notDirectOverriden = "notDirectOverriden";
     assertThat(
             configuration.getOverride(new SchemaAndTable("public", notDirectOverriden)).getTable())
         .isEqualTo(notDirectOverriden.toUpperCase(Locale.ENGLISH));
@@ -98,7 +97,7 @@ public class ConfigurationTest {
 
   @Test
   public void columnOverride() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     assertThat(
             configuration.getColumnOverride(
                 new SchemaAndTable("myschema", "mytable"), "notoverriddencolumn"))
@@ -153,7 +152,7 @@ public class ConfigurationTest {
 
   @Test
   public void numericOverriden() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     configuration.registerNumeric(19, 0, BigInteger.class);
     assertThat(BigInteger.class)
         .isEqualTo(configuration.getJavaType(Types.NUMERIC, "", 19, 0, "", ""));
@@ -161,7 +160,7 @@ public class ConfigurationTest {
 
   @Test
   public void numericOverriden2() {
-    Configuration configuration = new Configuration(new H2Templates());
+    var configuration = new Configuration(new H2Templates());
     configuration.registerNumeric(18, 19, 0, 0, BigInteger.class);
     assertThat(BigInteger.class)
         .isEqualTo(configuration.getJavaType(Types.NUMERIC, "", 18, 0, "", ""));

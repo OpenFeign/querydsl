@@ -13,7 +13,17 @@
  */
 package com.querydsl.sql;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.FIREBIRD;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.SQLITE;
+import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.sql.Constants.survey;
 import static com.querydsl.sql.Constants.survey2;
 import static com.querydsl.sql.SQLExpressions.select;
@@ -21,7 +31,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.QueryException;
 import com.querydsl.core.QueryFlag.Position;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.types.ExpressionUtils;
@@ -31,8 +40,12 @@ import com.querydsl.core.types.dsl.Param;
 import com.querydsl.sql.dml.DefaultMapper;
 import com.querydsl.sql.dml.Mapper;
 import com.querydsl.sql.dml.SQLInsertClause;
-import com.querydsl.sql.domain.*;
-import java.sql.ResultSet;
+import com.querydsl.sql.domain.Employee;
+import com.querydsl.sql.domain.QDateTest;
+import com.querydsl.sql.domain.QEmployee;
+import com.querydsl.sql.domain.QSurvey;
+import com.querydsl.sql.domain.QUuids;
+import com.querydsl.sql.domain.QXmlTest;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -67,16 +80,16 @@ public abstract class InsertBase extends AbstractBaseTest {
     CUBRID, SQLITE, DERBY, ORACLE
   }) // https://bitbucket.org/xerial/sqlite-jdbc/issue/133/prepstmtsetdate-int-date-calendar-seems
   public void insert_dates() {
-    QDateTest dateTest = QDateTest.qDateTest;
-    LocalDate localDate = LocalDate.of(1978, 1, 2);
+    var dateTest = QDateTest.qDateTest;
+    var localDate = LocalDate.of(1978, 1, 2);
 
     Path<LocalDate> localDateProperty = ExpressionUtils.path(LocalDate.class, "DATE_TEST");
     Path<LocalDateTime> dateTimeProperty = ExpressionUtils.path(LocalDateTime.class, "DATE_TEST");
-    SQLInsertClause insert = insert(dateTest);
+    var insert = insert(dateTest);
     insert.set(localDateProperty, localDate);
     insert.execute();
 
-    Tuple result =
+    var result =
         query()
             .from(dateTest)
             .select(
@@ -100,10 +113,10 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   public void complex1() {
     // related to #584795
-    QSurvey survey = new QSurvey("survey");
-    QEmployee emp1 = new QEmployee("emp1");
-    QEmployee emp2 = new QEmployee("emp2");
-    SQLInsertClause insert = insert(survey);
+    var survey = new QSurvey("survey");
+    var emp1 = new QEmployee("emp1");
+    var emp2 = new QEmployee("emp2");
+    var insert = insert(survey);
     insert.columns(survey.id, survey.name);
     insert.select(
         select(survey.id, emp2.firstname)
@@ -124,7 +137,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
   @Test
   public void insert_batch() {
-    SQLInsertClause insert = insert(survey).set(survey.id, 5).set(survey.name, "55").addBatch();
+    var insert = insert(survey).set(survey.id, 5).set(survey.name, "55").addBatch();
 
     assertThat(insert.getBatchCount()).isEqualTo(1);
 
@@ -139,7 +152,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
   @Test
   public void insert_batch_to_bulk() {
-    SQLInsertClause insert = insert(survey);
+    var insert = insert(survey);
     insert.setBatchToBulk(true);
 
     insert.set(survey.id, 5).set(survey.name, "55").addBatch();
@@ -157,7 +170,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
   @Test
   public void insert_batch_Templates() {
-    SQLInsertClause insert =
+    var insert =
         insert(survey)
             .set(survey.id, 5)
             .set(survey.name, Expressions.stringTemplate("'55'"))
@@ -173,7 +186,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
   @Test
   public void insert_batch2() {
-    SQLInsertClause insert = insert(survey).set(survey.id, 5).set(survey.name, "55").addBatch();
+    var insert = insert(survey).set(survey.id, 5).set(survey.name, "55").addBatch();
 
     insert.set(survey.id, 6).setNull(survey.name).addBatch();
 
@@ -206,7 +219,7 @@ public abstract class InsertBase extends AbstractBaseTest {
     //        sic.columns(f.c1,f.c2).values(null,null).addBatch();
     //        sic.columns(f.c1,f.c2).values(null,1).addBatch();
     //        sic.execute();
-    SQLInsertClause sic = insert(survey);
+    var sic = insert(survey);
     sic.columns(survey.name, survey.name2).values(null, null).addBatch();
     sic.columns(survey.name, survey.name2).values(null, "X").addBatch();
     assertThat(sic.execute()).isEqualTo(2);
@@ -225,9 +238,9 @@ public abstract class InsertBase extends AbstractBaseTest {
     //        f1.setC1(1);
     //        sic.populate(f1).addBatch();
     //        sic.execute();
-    QEmployee employee = QEmployee.employee;
-    SQLInsertClause sic = insert(employee);
-    Employee e = new Employee();
+    var employee = QEmployee.employee;
+    var sic = insert(employee);
+    var e = new Employee();
     sic.populate(e, mapper).addBatch();
     e = new Employee();
     e.setFirstname("X");
@@ -244,7 +257,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
   public void insert_with_keys() throws SQLException {
-    ResultSet rs = insert(survey).set(survey.name, "Hello World").executeWithKeys();
+    var rs = insert(survey).set(survey.name, "Hello World").executeWithKeys();
     assertThat(rs.next()).isTrue();
     assertThat(rs.getObject(1) != null).isTrue();
     rs.close();
@@ -253,7 +266,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
   public void insert_with_keys_listener() throws SQLException {
-    final AtomicBoolean result = new AtomicBoolean();
+    final var result = new AtomicBoolean();
     SQLListener listener =
         new SQLBaseListener() {
           @Override
@@ -261,9 +274,9 @@ public abstract class InsertBase extends AbstractBaseTest {
             result.set(true);
           }
         };
-    SQLInsertClause clause = insert(survey).set(survey.name, "Hello World");
+    var clause = insert(survey).set(survey.name, "Hello World");
     clause.addListener(listener);
-    ResultSet rs = clause.executeWithKeys();
+    var rs = clause.executeWithKeys();
     assertThat(result.get()).isFalse();
     assertThat(rs.next()).isTrue();
     assertThat(rs.getObject(1) != null).isTrue();
@@ -288,12 +301,12 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test(expected = QueryException.class)
   @IncludeIn({DERBY, HSQLDB})
   public void insert_with_keys_OverriddenColumn() throws SQLException {
-    String originalColumnName = ColumnMetadata.getName(survey.id);
+    var originalColumnName = ColumnMetadata.getName(survey.id);
     try {
       configuration.registerColumnOverride(
           survey.getSchemaName(), survey.getTableName(), originalColumnName, "wrongColumnName");
 
-      SQLInsertClause sqlInsertClause = new SQLInsertClause(connection, configuration, survey);
+      var sqlInsertClause = new SQLInsertClause(connection, configuration, survey);
       sqlInsertClause.addListener(new TestLoggingListener());
       Object id = sqlInsertClause.set(survey.name, "Hello you").executeWithKey(survey.id);
       assertThat(id).isNotNull();
@@ -315,7 +328,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @IncludeIn(MYSQL)
   @SkipForQuoted
   public void insert_with_special_options() {
-    SQLInsertClause clause = insert(survey).columns(survey.id, survey.name).values(3, "Hello");
+    var clause = insert(survey).columns(survey.id, survey.name).values(3, "Hello");
 
     clause.addFlag(Position.START_OVERRIDE, "insert ignore into ");
 
@@ -326,7 +339,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery() {
-    int count = (int) query().from(survey).fetchCount();
+    var count = (int) query().from(survey).fetchCount();
     assertThat(
             insert(survey)
                 .columns(survey.id, survey.name)
@@ -382,11 +395,11 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Params() {
-    Param<Integer> param = new Param<Integer>(Integer.class, "param");
+    var param = new Param<Integer>(Integer.class, "param");
     SQLQuery<?> sq = query().from(survey2);
     sq.set(param, 20);
 
-    int count = (int) query().from(survey).fetchCount();
+    var count = (int) query().from(survey).fetchCount();
     assertThat(
             insert(survey)
                 .columns(survey.id, survey.name)
@@ -398,8 +411,8 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Via_Constructor() {
-    int count = (int) query().from(survey).fetchCount();
-    SQLInsertClause insert = insert(survey, query().from(survey2));
+    var count = (int) query().from(survey).fetchCount();
+    var insert = insert(survey, query().from(survey2));
     insert.set(survey.id, survey2.id.add(20));
     insert.set(survey.name, survey2.name);
     assertThat(insert.execute()).isEqualTo(count);
@@ -408,7 +421,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Without_Columns() {
-    int count = (int) query().from(survey).fetchCount();
+    var count = (int) query().from(survey).fetchCount();
     assertThat(
             insert(survey)
                 .select(
@@ -426,7 +439,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insertBatch_with_subquery() {
-    SQLInsertClause insert =
+    var insert =
         insert(survey)
             .columns(survey.id, survey.name)
             .select(query().from(survey2).select(survey2.id.add(20), survey2.name))
@@ -449,7 +462,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
   @Test
   public void like_with_escape() {
-    SQLInsertClause insert = insert(survey);
+    var insert = insert(survey);
     insert.set(survey.id, 5).set(survey.name, "aaa").addBatch();
     insert.set(survey.id, 6).set(survey.name, "a_").addBatch();
     insert.set(survey.id, 7).set(survey.name, "a%").addBatch();
@@ -468,7 +481,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @IncludeIn(MYSQL)
   @SkipForQuoted
   public void replace() {
-    SQLInsertClause clause = mysqlReplace(survey);
+    var clause = mysqlReplace(survey);
     clause.columns(survey.id, survey.name).values(3, "Hello");
 
     assertThat(clause).hasToString("replace into SURVEY (ID, NAME) values (?, ?)");
@@ -491,8 +504,8 @@ public abstract class InsertBase extends AbstractBaseTest {
   @SkipForQuoted
   public void uuids() {
     delete(QUuids.uuids).execute();
-    QUuids uuids = QUuids.uuids;
-    UUID uuid = UUID.randomUUID();
+    var uuids = QUuids.uuids;
+    var uuid = UUID.randomUUID();
     insert(uuids).set(uuids.field, uuid).execute();
     assertThat(query().from(uuids).select(uuids.field).fetchFirst()).isEqualTo(uuid);
   }
@@ -501,8 +514,8 @@ public abstract class InsertBase extends AbstractBaseTest {
   @ExcludeIn({ORACLE})
   public void xml() {
     delete(QXmlTest.xmlTest).execute();
-    QXmlTest xmlTest = QXmlTest.xmlTest;
-    String contents = "<html><head>a</head><body>b</body></html>";
+    var xmlTest = QXmlTest.xmlTest;
+    var contents = "<html><head>a</head><body>b</body></html>";
     insert(xmlTest).set(xmlTest.col, contents).execute();
     assertThat(query().from(xmlTest).select(xmlTest.col).fetchFirst()).isEqualTo(contents);
   }

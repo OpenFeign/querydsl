@@ -15,11 +15,14 @@ package com.querydsl.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.codegen.utils.model.*;
+import com.querydsl.codegen.utils.model.ClassType;
+import com.querydsl.codegen.utils.model.Type;
+import com.querydsl.codegen.utils.model.TypeCategory;
+import com.querydsl.codegen.utils.model.TypeExtends;
+import com.querydsl.codegen.utils.model.Types;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.types.Expression;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.Arrays;
@@ -56,73 +59,73 @@ public class TypeFactoryTest {
 
   @Test
   public void innerClass_field() throws SecurityException, NoSuchFieldException {
-    Field field = Entity.class.getDeclaredField("field");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = Entity.class.getDeclaredField("field");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type.getParameters()).hasSize(1);
     assertThat(Types.OBJECT).isEqualTo(type.getParameters().get(0));
   }
 
   @Test
   public void parameters() {
-    EntityType type = factory.getEntityType(Examples.Complex.class);
+    var type = factory.getEntityType(Examples.Complex.class);
     assertThat(type.getParameters()).hasSize(1);
     assertThat(type.getParameters().get(0).getClass()).isEqualTo(TypeExtends.class);
   }
 
   @Test
   public void map_field_parameters() throws SecurityException, NoSuchFieldException {
-    Field field = Examples.ComplexCollections.class.getDeclaredField("map2");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = Examples.ComplexCollections.class.getDeclaredField("map2");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type.getParameters()).hasSize(2);
-    Type valueType = type.getParameters().get(1);
+    var valueType = type.getParameters().get(1);
     assertThat(valueType.getParameters()).hasSize(1);
     assertThat(valueType.getParameters().get(0).getClass()).isEqualTo(TypeExtends.class);
   }
 
   @Test
   public void orderBys() throws SecurityException, NoSuchFieldException {
-    Field field = Examples.OrderBys.class.getDeclaredField("orderBy");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = Examples.OrderBys.class.getDeclaredField("orderBy");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type.getParameters()).hasSize(1);
   }
 
   @Test
   public void subEntity() {
-    Type type = factory.get(Examples.SubEntity.class);
+    var type = factory.get(Examples.SubEntity.class);
     assertThat(type.getParameters()).isEmpty();
   }
 
   @Test
   public void abstractEntity_code() throws SecurityException, NoSuchFieldException {
-    Field field = EmbeddedTest.AbstractEntity.class.getDeclaredField("code");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = EmbeddedTest.AbstractEntity.class.getDeclaredField("code");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type instanceof TypeExtends).isTrue();
     assertThat(((TypeExtends) type).getVarName()).isEqualTo("C");
   }
 
   @Test
   public void simpleTypes_classList5() throws SecurityException, NoSuchFieldException {
-    Field field = Examples.SimpleTypes.class.getDeclaredField("classList5");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = Examples.SimpleTypes.class.getDeclaredField("classList5");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type.getCategory()).isEqualTo(TypeCategory.LIST);
-    Type parameter = type.getParameters().get(0);
+    var parameter = type.getParameters().get(0);
     assertThat(parameter.getClass()).isEqualTo(ClassType.class);
     assertThat(parameter.getParameters().get(0).getClass()).isEqualTo(TypeExtends.class);
   }
 
   @Test
   public void collection_of_collection() throws SecurityException, NoSuchFieldException {
-    Field field = Examples.GenericRelations.class.getDeclaredField("col3");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = Examples.GenericRelations.class.getDeclaredField("col3");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type.getParameters()).hasSize(1);
-    Type valueType = type.getParameters().get(0);
+    var valueType = type.getParameters().get(0);
     assertThat(valueType.getParameters().get(0).getClass()).isEqualTo(TypeExtends.class);
   }
 
   @Test
   public void generics_wildCard() throws SecurityException, NoSuchFieldException {
-    Field field = getClass().getDeclaredField("field");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = getClass().getDeclaredField("field");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type.getParameters()).hasSize(1);
     assertThat(type.getParameters().get(0).getClass()).isEqualTo(TypeExtends.class);
     //        assertNull(type.getParameters().get(0));
@@ -130,8 +133,8 @@ public class TypeFactoryTest {
 
   @Test
   public void generics_object() throws SecurityException, NoSuchFieldException {
-    Field field = getClass().getDeclaredField("field2");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = getClass().getDeclaredField("field2");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type.getParameters()).hasSize(1);
     assertThat(type.getParameters().get(0)).isEqualTo(Types.OBJECT);
   }
@@ -140,16 +143,16 @@ public class TypeFactoryTest {
   public void generics_typeVariable() {
     Type type = factory.getEntityType(Generic2Test.AbstractCollectionAttribute.class);
     assertThat(type.getParameters().get(0).getClass()).isEqualTo(TypeExtends.class);
-    TypeExtends t = (TypeExtends) type.getParameters().get(0);
+    var t = (TypeExtends) type.getParameters().get(0);
     assertThat(t.getVarName()).isEqualTo("T");
   }
 
   @Test
   public void generics_wildcard() throws SecurityException, NoSuchFieldException {
-    Field field = DefaultQueryMetadata.class.getDeclaredField("exprInJoins");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = DefaultQueryMetadata.class.getDeclaredField("exprInJoins");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type.getCategory()).isEqualTo(TypeCategory.SET);
-    Type parameter = type.getParameters().get(0);
+    var parameter = type.getParameters().get(0);
     assertThat(parameter.getJavaClass()).isEqualTo(Expression.class);
     parameter = parameter.getParameters().get(0);
     assertThat(parameter.getClass()).isEqualTo(TypeExtends.class);
@@ -161,36 +164,36 @@ public class TypeFactoryTest {
     Type type = factory.getEntityType(ComparableEntity.class);
     // ComparableEntity<T extends Comparable<? super T>> implements Serializable
     assertThat(type.getParameters()).hasSize(1);
-    TypeExtends t = (TypeExtends) type.getParameters().get(0);
+    var t = (TypeExtends) type.getParameters().get(0);
     assertThat(t.getVarName()).isEqualTo("T");
     assertThat(t.getParameters()).hasSize(1);
   }
 
   @Test
   public void rawField() throws SecurityException, NoSuchFieldException {
-    Field field = getClass().getDeclaredField("field3");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = getClass().getDeclaredField("field3");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type.getParameters()).hasSize(1);
     //        assertEquals(Types.OBJECT, type.getParameters().get(0));
   }
 
   @Test
   public void extends_() throws SecurityException, NoSuchFieldException {
-    Field field = getClass().getDeclaredField("field4");
-    Type type = factory.get(field.getType(), field.getGenericType());
+    var field = getClass().getDeclaredField("field4");
+    var type = factory.get(field.getType(), field.getGenericType());
     assertThat(type.getParameters()).hasSize(1);
     //        assertEquals(Types.OBJECT, type.getParameters().get(0));
   }
 
   @Test
   public void className() {
-    Type type = factory.get(EnumExample.class);
+    var type = factory.get(EnumExample.class);
     assertThat(type.getFullName()).isEqualTo("com.querydsl.codegen.TypeFactoryTest.EnumExample");
   }
 
   @Test
   public void blob() {
-    Type blob = factory.get(Blob.class);
+    var blob = factory.get(Blob.class);
     assertThat(blob.getSimpleName()).isEqualTo("Blob");
     assertThat(blob.getFullName()).isEqualTo("java.sql.Blob");
     assertThat(blob.getPackageName()).isEqualTo("java.sql");
@@ -198,7 +201,7 @@ public class TypeFactoryTest {
 
   @Test
   public void boolean_() {
-    Type bo = factory.get(boolean.class);
+    var bo = factory.get(boolean.class);
     assertThat(bo.getCategory()).isEqualTo(TypeCategory.BOOLEAN);
     assertThat(bo.getSimpleName()).isEqualTo("Boolean");
     assertThat(bo.getFullName()).isEqualTo("java.lang.Boolean");

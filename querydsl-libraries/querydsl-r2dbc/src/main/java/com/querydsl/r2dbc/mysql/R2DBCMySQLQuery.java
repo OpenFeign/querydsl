@@ -58,7 +58,7 @@ public class R2DBCMySQLQuery<T> extends AbstractR2DBCMySQLQuery<T, R2DBCMySQLQue
 
   @Override
   public R2DBCMySQLQuery<T> clone(Connection conn) {
-    R2DBCMySQLQuery<T> q = new R2DBCMySQLQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    var q = new R2DBCMySQLQuery<T>(conn, getConfiguration(), getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -68,7 +68,7 @@ public class R2DBCMySQLQuery<T> extends AbstractR2DBCMySQLQuery<T, R2DBCMySQLQue
     queryMixin.setProjection(expr);
 
     @SuppressWarnings("unchecked")
-    R2DBCMySQLQuery<U> res = (R2DBCMySQLQuery<U>) this;
+    var res = (R2DBCMySQLQuery<U>) this;
     return res;
   }
 
@@ -77,7 +77,7 @@ public class R2DBCMySQLQuery<T> extends AbstractR2DBCMySQLQuery<T, R2DBCMySQLQue
     queryMixin.setProjection(exprs);
 
     @SuppressWarnings("unchecked")
-    R2DBCMySQLQuery<Tuple> res = (R2DBCMySQLQuery<Tuple>) this;
+    var res = (R2DBCMySQLQuery<Tuple>) this;
     return res;
   }
 }

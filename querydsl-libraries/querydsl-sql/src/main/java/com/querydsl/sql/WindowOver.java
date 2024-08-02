@@ -42,14 +42,14 @@ public class WindowOver<T> extends SimpleOperation<T> {
   }
 
   public WindowFirstLast<T> keepFirst() {
-    return new WindowFirstLast<T>(this, true);
+    return new WindowFirstLast<>(this, true);
   }
 
   public WindowFirstLast<T> keepLast() {
-    return new WindowFirstLast<T>(this, false);
+    return new WindowFirstLast<>(this, false);
   }
 
   public WindowFunction<T> over() {
-    return new WindowFunction<T>(this);
+    return new WindowFunction<>(this);
   }
 }

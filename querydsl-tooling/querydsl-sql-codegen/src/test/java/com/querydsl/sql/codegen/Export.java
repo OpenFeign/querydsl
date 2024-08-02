@@ -1,7 +1,6 @@
 package com.querydsl.sql.codegen;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.DriverManager;
 
 public final class Export {
@@ -10,15 +9,15 @@ public final class Export {
 
   public static void main(String[] args) throws Exception {
     Class.forName("com.mysql.jdbc.Driver");
-    String url = "jdbc:mysql://localhost:3306/querydsl";
-    Connection conn = DriverManager.getConnection(url, "querydsl", "querydsl");
+    var url = "jdbc:mysql://localhost:3306/querydsl";
+    var conn = DriverManager.getConnection(url, "querydsl", "querydsl");
 
-    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    var config = new MetadataExporterConfigImpl();
     config.setNamePrefix("S");
     config.setPackageName("com.querydsl.jpa.domain.sql");
     config.setTargetFolder(new File("../querydsl-jpa/src/test/java"));
 
-    MetaDataExporter exporter = new MetaDataExporter(config);
+    var exporter = new MetaDataExporter(config);
     exporter.export(conn.getMetaData());
 
     conn.close();

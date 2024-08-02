@@ -70,7 +70,7 @@ public class KeyAccessorsTest {
 
   @Test
   public void keys() {
-    QEmployee employee = QEmployee.employee;
+    var employee = QEmployee.employee;
     assertThat(employee.pk.sysIdx53).isNotNull();
     assertThat(employee.fk.superiorFk).isNotNull();
     assertThat(employee.fk._superiorFk).isNotNull();

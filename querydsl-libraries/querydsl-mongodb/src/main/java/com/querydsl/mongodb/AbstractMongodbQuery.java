@@ -13,11 +13,29 @@
  */
 package com.querydsl.mongodb;
 
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.ReadPreference;
 import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.Fetchable;
+import com.querydsl.core.JoinExpression;
+import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.SimpleQuery;
 import com.querydsl.core.support.QueryMixin;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.CollectionPathBase;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,8 +81,8 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
   public AbstractMongodbQuery(
       DBCollection collection, Function<DBObject, K> transformer, MongodbSerializer serializer) {
     @SuppressWarnings("unchecked") // Q is this plus subclass
-    Q query = (Q) this;
-    this.queryMixin = new QueryMixin<Q>(query, new DefaultQueryMetadata(), false);
+    var query = (Q) this;
+    this.queryMixin = new QueryMixin<>(query, new DefaultQueryMetadata(), false);
     this.transformer = transformer;
     this.collection = collection;
     this.serializer = serializer;
@@ -78,7 +96,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
    * @return join builder
    */
   public <T> JoinBuilder<Q, K, T> join(Path<T> ref, Path<T> target) {
-    return new JoinBuilder<Q, K, T>(queryMixin, ref, target);
+    return new JoinBuilder<>(queryMixin, ref, target);
   }
 
   /**
@@ -89,7 +107,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
    * @return join builder
    */
   public <T> JoinBuilder<Q, K, T> join(CollectionPathBase<?, T, ?> ref, Path<T> target) {
-    return new JoinBuilder<Q, K, T>(queryMixin, ref, target);
+    return new JoinBuilder<>(queryMixin, ref, target);
   }
 
   /**
@@ -101,7 +119,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
    */
   public <T> AnyEmbeddedBuilder<Q, K> anyEmbedded(
       Path<? extends Collection<T>> collection, Path<T> target) {
-    return new AnyEmbeddedBuilder<Q, K>(queryMixin, collection);
+    return new AnyEmbeddedBuilder<>(queryMixin, collection);
   }
 
   protected abstract DBCollection getCollection(Class<?> type);
@@ -122,12 +140,12 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
   protected Predicate createJoinFilter(QueryMetadata metadata) {
     Map<Expression<?>, Predicate> predicates = new HashMap<>();
     List<JoinExpression> joins = metadata.getJoins();
-    for (int i = joins.size() - 1; i >= 0; i--) {
-      JoinExpression join = joins.get(i);
+    for (var i = joins.size() - 1; i >= 0; i--) {
+      var join = joins.get(i);
       Path<?> source = (Path) ((Operation<?>) join.getTarget()).getArg(0);
       Path<?> target = (Path) ((Operation<?>) join.getTarget()).getArg(1);
 
-      final Predicate extraFilters = predicates.get(target.getRoot());
+      final var extraFilters = predicates.get(target.getRoot());
       Predicate filter = ExpressionUtils.allOf(join.getCondition(), extraFilters);
       List<? extends Object> ids = getIds(target.getType(), filter);
       if (ids.isEmpty()) {
@@ -142,9 +160,9 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
   }
 
   protected List<Object> getIds(Class<?> targetType, Predicate condition) {
-    DBCollection collection = getCollection(targetType);
+    var collection = getCollection(targetType);
     // TODO : fetch only ids
-    DBCursor cursor =
+    var cursor =
         createCursor(
             collection,
             condition,
@@ -152,7 +170,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
             QueryModifiers.EMPTY,
             Collections.<OrderSpecifier<?>>emptyList());
     if (cursor.hasNext()) {
-      List<Object> ids = new ArrayList<Object>(cursor.count());
+      List<Object> ids = new ArrayList<>(cursor.count());
       for (DBObject obj : cursor) {
         ids.add(obj.get("_id"));
       }
@@ -218,8 +236,8 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
 
   @Override
   public CloseableIterator<K> iterate() {
-    final DBCursor cursor = createCursor();
-    return new CloseableIterator<K>() {
+    final var cursor = createCursor();
+    return new CloseableIterator<>() {
       @Override
       public boolean hasNext() {
         return cursor.hasNext();
@@ -252,8 +270,8 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
   @Override
   public List<K> fetch() {
     try {
-      DBCursor cursor = createCursor();
-      List<K> results = new ArrayList<K>();
+      var cursor = createCursor();
+      List<K> results = new ArrayList<>();
       for (DBObject dbObject : cursor) {
         results.add(transformer.apply(dbObject));
       }
@@ -264,7 +282,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
   }
 
   protected DBCursor createCursor() {
-    QueryMetadata metadata = queryMixin.getMetadata();
+    var metadata = queryMixin.getMetadata();
     Predicate filter = createFilter(metadata);
     return createCursor(
         collection,
@@ -280,7 +298,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
       Expression<?> projection,
       QueryModifiers modifiers,
       List<OrderSpecifier<?>> orderBy) {
-    DBCursor cursor = collection.find(createQuery(where), createProjection(projection));
+    var cursor = collection.find(createQuery(where), createProjection(projection));
     Integer limit = modifiers.getLimitAsInteger();
     Integer offset = modifiers.getOffsetAsInteger();
     if (limit != null) {
@@ -325,7 +343,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
   @Override
   public K fetchFirst() {
     try {
-      DBCursor c = createCursor().limit(1);
+      var c = createCursor().limit(1);
       if (c.hasNext()) {
         return transformer.apply(c.next());
       } else {
@@ -354,9 +372,9 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
       if (limit == null) {
         limit = 2L;
       }
-      DBCursor c = createCursor().limit(limit.intValue());
+      var c = createCursor().limit(limit.intValue());
       if (c.hasNext()) {
-        K rv = transformer.apply(c.next());
+        var rv = transformer.apply(c.next());
         if (c.hasNext()) {
           throw new NonUniqueResultException();
         }
@@ -383,9 +401,9 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
   @Override
   public QueryResults<K> fetchResults() {
     try {
-      long total = fetchCount();
+      var total = fetchCount();
       if (total > 0L) {
-        return new QueryResults<K>(fetch(), queryMixin.getMetadata().getModifiers(), total);
+        return new QueryResults<>(fetch(), queryMixin.getMetadata().getModifiers(), total);
       } else {
         return QueryResults.emptyResults();
       }

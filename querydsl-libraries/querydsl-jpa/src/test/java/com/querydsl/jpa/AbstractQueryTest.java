@@ -24,13 +24,13 @@ public abstract class AbstractQueryTest {
   }
 
   protected static void assertToString(String expected, Expression<?> expr) {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
     assertThat(serializer.handle(expr).toString().replace("\n", " ")).isEqualTo(expected);
   }
 
   protected static void assertMatches(String expected, Expression<?> expr) {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
-    String str = serializer.handle(expr).toString().replace("\n", " ");
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
+    var str = serializer.handle(expr).toString().replace("\n", " ");
     assertThat(str.matches(expected)).as(expected + "\n!=\n" + str).isTrue();
   }
 }

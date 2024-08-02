@@ -14,7 +14,6 @@
 package com.querydsl.sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.QueryMutability;
 import com.querydsl.core.testutil.Derby;

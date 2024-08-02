@@ -34,7 +34,7 @@ public class FinalPropertyTest {
 
   @Test
   public void test() {
-    Entity entity = Alias.alias(Entity.class);
+    var entity = Alias.alias(Entity.class);
     Alias.$(entity.getProperty());
   }
 }

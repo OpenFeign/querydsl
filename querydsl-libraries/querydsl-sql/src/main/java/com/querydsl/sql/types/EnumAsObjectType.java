@@ -44,7 +44,7 @@ public class EnumAsObjectType<T extends Enum<T>> extends AbstractType<T> {
 
   @Override
   public T getValue(ResultSet rs, int startIndex) throws SQLException {
-    String name = rs.getString(startIndex);
+    var name = rs.getString(startIndex);
     return name != null ? Enum.valueOf(type, name) : null;
   }
 

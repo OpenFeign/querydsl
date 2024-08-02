@@ -40,7 +40,7 @@ public class DoubleType extends AbstractType<Double> {
 
   @Override
   public Double getValue(ResultSet rs, int startIndex) throws SQLException {
-    double val = rs.getDouble(startIndex);
+    var val = rs.getDouble(startIndex);
     return rs.wasNull() ? null : val;
   }
 

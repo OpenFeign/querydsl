@@ -66,7 +66,7 @@ public final class CaseForEqBuilder<D> {
 
   private final Expression<? extends D> other;
 
-  private final List<CaseElement<D>> caseElements = new ArrayList<CaseElement<D>>();
+  private final List<CaseElement<D>> caseElements = new ArrayList<>();
 
   private Class<?> type;
 
@@ -243,7 +243,7 @@ public final class CaseForEqBuilder<D> {
 
       @Override
       public NumberExpression<T> otherwise(Expression<T> otherwise) {
-        caseElements.add(0, new CaseElement<D>(null, otherwise));
+        caseElements.add(0, new CaseElement<>(null, otherwise));
         Expression<T> last = null;
         for (CaseElement<D> element : caseElements) {
           if (last == null) {
@@ -315,7 +315,7 @@ public final class CaseForEqBuilder<D> {
   public abstract class Cases<T, Q extends Expression<T>> {
 
     public CaseWhen<T, Q> when(Expression<? extends D> when) {
-      return new CaseWhen<T, Q>(this, when);
+      return new CaseWhen<>(this, when);
     }
 
     public CaseWhen<T, Q> when(D when) {
@@ -324,7 +324,7 @@ public final class CaseForEqBuilder<D> {
 
     @SuppressWarnings("unchecked")
     public Q otherwise(Expression<T> otherwise) {
-      caseElements.add(0, new CaseElement<D>(null, otherwise));
+      caseElements.add(0, new CaseElement<>(null, otherwise));
       Expression<T> last = null;
       for (CaseElement<D> element : caseElements) {
         if (last == null) {
@@ -368,7 +368,7 @@ public final class CaseForEqBuilder<D> {
     }
 
     public Cases<T, Q> then(Expression<T> then) {
-      caseElements.add(0, new CaseElement<D>(when, then));
+      caseElements.add(0, new CaseElement<>(when, then));
       return cases;
     }
 

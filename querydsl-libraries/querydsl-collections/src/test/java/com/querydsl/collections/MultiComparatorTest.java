@@ -21,7 +21,7 @@ import org.junit.Test;
 public class MultiComparatorTest {
 
   private final Evaluator<Object[]> evaluator =
-      new Evaluator<Object[]>() {
+      new Evaluator<>() {
         @Override
         public Object[] evaluate(Object... args) {
           return args;
@@ -35,9 +35,8 @@ public class MultiComparatorTest {
 
   @Test
   public void test() {
-    MultiComparator<Object[]> comparator =
-        new MultiComparator<Object[]>(
-            evaluator, new boolean[] {true, true}, new boolean[] {true, true});
+    var comparator =
+        new MultiComparator<>(evaluator, new boolean[] {true, true}, new boolean[] {true, true});
     assertThat(comparator.compare(new Object[] {"a", "b"}, new Object[] {"a", "c"}) < 0).isTrue();
     assertThat(comparator.compare(new Object[] {"b", "a"}, new Object[] {"a", "b"}) > 0).isTrue();
     assertThat(comparator.compare(new Object[] {"b", "b"}, new Object[] {"b", "b"}) == 0).isTrue();

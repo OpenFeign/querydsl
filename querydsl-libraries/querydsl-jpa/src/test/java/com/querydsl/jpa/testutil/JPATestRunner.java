@@ -55,7 +55,7 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
                 .formatted(JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class))
         .isTrue();
 
-    List<MethodRule> rules = super.rules(test);
+    var rules = super.rules(test);
     rules.add(
         new MethodRule() {
           @Override
@@ -80,7 +80,7 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
       super.run(notifier);
     } catch (Exception e) {
       e.printStackTrace();
-      Failure failure =
+      var failure =
           new Failure(Description.createSuiteDescription(getTestClass().getJavaClass()), e);
       notifier.fireTestFailure(failure);
     } finally {
@@ -89,7 +89,7 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
   }
 
   private void start() throws Exception {
-    String mode = Mode.mode.get();
+    var mode = Mode.mode.get();
     if (mode == null) {
       mode = "h2perf";
     }

@@ -29,16 +29,17 @@ public class LeftJoinTest extends AbstractQueryTest {
 
   private List<Cat> cats;
 
+  @Override
   @Before
   public void setUp() {
     super.setUp();
     cat = new QCat("c");
     kitten = new QCat("k");
-    Cat bob = new Cat("Bob");
-    Cat bob2 = new Cat("Bob");
-    Cat kate = new Cat("Kate");
-    Cat kate2 = new Cat("Kate");
-    Cat franz = new Cat("Franz");
+    var bob = new Cat("Bob");
+    var bob2 = new Cat("Bob");
+    var kate = new Cat("Kate");
+    var kate2 = new Cat("Kate");
+    var franz = new Cat("Franz");
 
     bob.setKittens(Collections.singletonList(bob2));
     bob.setKittensByName(Collections.singletonMap(bob2.getName(), bob2));
@@ -49,7 +50,7 @@ public class LeftJoinTest extends AbstractQueryTest {
 
   @Test
   public void list() {
-    List<Cat> rv =
+    var rv =
         CollQueryFactory.from(cat, cats)
             .leftJoin(cat.kittens, kitten)
             .where(kitten.isNotNull(), cat.name.eq(kitten.name))
@@ -62,9 +63,9 @@ public class LeftJoinTest extends AbstractQueryTest {
 
   @Test
   public void alias_() {
-    Cat cc = alias(Cat.class, "cat1");
-    Cat ck = alias(Cat.class, "cat2");
-    List<Cat> rv =
+    var cc = alias(Cat.class, "cat1");
+    var ck = alias(Cat.class, "cat2");
+    var rv =
         CollQueryFactory.from($(cc), cats)
             .leftJoin($(cc.getKittens()), $(ck))
             .where($(ck).isNotNull(), $(cc.getName()).eq($(ck.getName())))
@@ -74,7 +75,7 @@ public class LeftJoinTest extends AbstractQueryTest {
 
   @Test
   public void map() {
-    List<Cat> rv =
+    var rv =
         CollQueryFactory.from(cat, cats)
             .leftJoin(cat.kittensByName, kitten)
             .where(cat.name.eq(kitten.name))

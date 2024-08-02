@@ -47,7 +47,7 @@ public abstract class AbstractR2DBCSQLServerQuery<T, C extends AbstractR2DBCSQLS
    */
   public C tableHints(SQLServerTableHints... tableHints) {
     if (tableHints.length > 0) {
-      String hints = SQLServerGrammar.tableHints(tableHints);
+      var hints = SQLServerGrammar.tableHints(tableHints);
       addJoinFlag(hints, JoinFlag.Position.BEFORE_CONDITION);
     }
     return (C) this;

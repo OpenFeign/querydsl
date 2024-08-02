@@ -11,8 +11,8 @@ public class UserRepositoryTest extends AbstractPersistenceTest {
 
   @Test
   public void save_and_get_by_id() {
-    String username = "jackie";
-    User user = new User(username);
+    var username = "jackie";
+    var user = new User(username);
     repository.save(user);
     assertThat(repository.findById(user.getId()).getUsername()).isEqualTo(username);
   }

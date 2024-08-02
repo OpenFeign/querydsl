@@ -36,7 +36,7 @@ public class BooleanExtensionsTest extends AbstractProcessorTest {
             new File(packagePath, "ExampleEntity.java").getPath());
     process(QuerydslAnnotationProcessor.class, sources, "booleanExtensions");
 
-    String qtypeContent =
+    var qtypeContent =
         new String(
             Files.readAllBytes(
                 Paths.get("target", "booleanExtensions", "com", "querydsl", "QExampleEntity.java")),
@@ -52,7 +52,7 @@ public class BooleanExtensionsTest extends AbstractProcessorTest {
             new File(packagePath, "BooleanExtensions2.java").getPath(),
             new File(packagePath, "ExampleEntity.java").getPath());
     process(QuerydslAnnotationProcessor.class, sources, "booleanExtensions2");
-    String qtypeContent =
+    var qtypeContent =
         new String(
             Files.readAllBytes(
                 Paths.get(

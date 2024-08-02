@@ -48,7 +48,7 @@ public class OrderedQueryMetadataTest {
 
   @Test
   public void addJoin() {
-    List<JoinExpression> joins = new ArrayList<JoinExpression>();
+    List<JoinExpression> joins = new ArrayList<>();
     joins.add(new JoinExpression(JoinType.DEFAULT, x));
     joins.add(new JoinExpression(JoinType.DEFAULT, y));
     joins.add(new JoinExpression(JoinType.INNERJOIN, y));
@@ -87,10 +87,10 @@ public class OrderedQueryMetadataTest {
   }
 
   private void validate(List<JoinExpression> joins) {
-    int maxFromIndex = -1;
-    int maxJoinIndex = -1;
+    var maxFromIndex = -1;
+    var maxJoinIndex = -1;
 
-    for (int i = 0; i < joins.size(); i++) {
+    for (var i = 0; i < joins.size(); i++) {
       if (joins.get(i).getType() == JoinType.DEFAULT) {
         maxFromIndex = i;
       } else {
@@ -98,7 +98,7 @@ public class OrderedQueryMetadataTest {
       }
     }
 
-    String str = joins.toString();
+    var str = joins.toString();
     if (maxJoinIndex > -1 && maxFromIndex > -1) {
       assertThat(maxJoinIndex >= maxFromIndex).as(str).isTrue();
     }

@@ -20,7 +20,6 @@ import com.querydsl.codegen.utils.SimpleCompiler;
 import com.querydsl.core.util.FileUtils;
 import java.io.File;
 import java.io.IOException;
-import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class EclipseCompilationTest {
   public void test() throws IOException {
     System.setProperty("jdt.compiler.useSingleThread", "true");
     // select classes
-    List<String> classes = new ArrayList<String>();
+    List<String> classes = new ArrayList<>();
     for (File file : new File(packagePath).listFiles()) {
       if (file.getName().endsWith(".java")) {
         classes.add(file.getPath());
@@ -47,15 +46,15 @@ public class EclipseCompilationTest {
     }
 
     // prepare output
-    File out = new File("target/out-eclipse");
+    var out = new File("target/out-eclipse");
     FileUtils.delete(out);
     if (!out.mkdirs()) {
       fail("Creation of " + out.getPath() + " failed");
     }
 
-    String classPath = SimpleCompiler.getClassPath((URLClassLoader) getClass().getClassLoader());
+    var classPath = SimpleCompiler.getClassPath(getClass().getClassLoader());
     JavaCompiler compiler = new EclipseCompiler();
-    List<String> options = new ArrayList<String>();
+    List<String> options = new ArrayList<>();
     options.add("-s");
     options.add("target/out-eclipse");
     options.add("-proc:only");
@@ -69,7 +68,7 @@ public class EclipseCompilationTest {
     options.add("-verbose");
     options.addAll(classes);
 
-    int compilationResult =
+    var compilationResult =
         compiler.run(null, System.out, System.err, options.toArray(new String[0]));
     if (compilationResult == 0) {
       System.out.println("Compilation is successful");
@@ -77,9 +76,9 @@ public class EclipseCompilationTest {
       fail("Compilation Failed");
     }
 
-    File resultFile = new File("target/out-eclipse/com/querydsl/eclipse/QSimpleEntity.java");
+    var resultFile = new File("target/out-eclipse/com/querydsl/eclipse/QSimpleEntity.java");
     assertThat(resultFile).exists();
-    String result = new String(Files.readAllBytes(resultFile.toPath()), StandardCharsets.UTF_8);
+    var result = new String(Files.readAllBytes(resultFile.toPath()), StandardCharsets.UTF_8);
     assertThat(result).contains("NumberPath<java.math.BigDecimal> bigDecimalProp");
     assertThat(result).contains("NumberPath<Integer> integerProp");
     assertThat(result).contains("NumberPath<Integer> intProp");

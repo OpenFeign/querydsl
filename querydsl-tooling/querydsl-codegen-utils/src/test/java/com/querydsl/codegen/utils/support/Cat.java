@@ -59,7 +59,7 @@ public class Cat {
   }
 
   public Cat(String name) {
-    Cat kitten = new Cat();
+    var kitten = new Cat();
     this.kittens = Arrays.asList(kitten);
     this.kittenArray = new Cat[] {kitten};
     this.kittensByName = Collections.singletonMap("Kitty", kitten);
@@ -155,6 +155,7 @@ public class Cat {
     this.kittenArray = kittenArray.clone();
   }
 
+  @Override
   public String toString() {
     return name;
   }

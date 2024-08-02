@@ -23,11 +23,11 @@ public class ArrayConstructorExpressionTest {
   @SuppressWarnings("unchecked")
   @Test
   public void newInstanceObjectArray() {
-    ArrayConstructorExpression<String> constructor =
-        new ArrayConstructorExpression<String>(
+    var constructor =
+        new ArrayConstructorExpression<>(
             String[].class, new StringPath("test"), new StringPath("test2"));
 
-    String[] strings = constructor.newInstance((Object[]) new String[] {"1", "2"});
+    var strings = constructor.newInstance((Object[]) new String[] {"1", "2"});
     assertThat(strings[0]).isEqualTo("1");
     assertThat(strings[1]).isEqualTo("2");
 

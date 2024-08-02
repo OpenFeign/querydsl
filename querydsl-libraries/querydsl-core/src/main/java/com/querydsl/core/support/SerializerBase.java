@@ -23,7 +23,6 @@ import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.PathType;
 import com.querydsl.core.types.Template;
 import com.querydsl.core.types.TemplateExpression;
 import com.querydsl.core.types.Templates;
@@ -135,7 +134,7 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
   }
 
   public final S handle(final String sep, final List<? extends Expression<?>> expressions) {
-    for (int i = 0; i < expressions.size(); i++) {
+    for (var i = 0; i < expressions.size(); i++) {
       if (i != 0) {
         append(sep);
       }
@@ -146,7 +145,7 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
 
   protected void handleTemplate(final Template template, final List<?> args) {
     for (final Template.Element element : template.getElements()) {
-      final Object rv = element.convert(args);
+      final var rv = element.convert(args);
       if (rv instanceof Expression) {
         ((Expression<?>) rv).accept(this, null);
       } else if (element.isString()) {
@@ -158,7 +157,7 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
   }
 
   public final boolean serialize(final QueryFlag.Position position, final Set<QueryFlag> flags) {
-    boolean handled = false;
+    var handled = false;
     for (final QueryFlag flag : flags) {
       if (flag.getPosition() == position) {
         handle(flag.getFlag());
@@ -169,7 +168,7 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
   }
 
   public final boolean serialize(final JoinFlag.Position position, final Set<JoinFlag> flags) {
-    boolean handled = false;
+    var handled = false;
     for (final JoinFlag flag : flags) {
       if (flag.getPosition() == position) {
         handle(flag.getFlag());
@@ -215,7 +214,7 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
   }
 
   public void visitConstant(Object constant) {
-    final String constantLabel =
+    final var constantLabel =
         getConstantToLabel().computeIfAbsent(constant, this::getConstantLabel);
     constants.add(constant);
     serializeConstant(constants.size(), constantLabel);
@@ -284,9 +283,9 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
 
   @Override
   public Void visit(Path<?> path, Void context) {
-    final PathType pathType = path.getMetadata().getPathType();
+    final var pathType = path.getMetadata().getPathType();
     final Template template = templates.getTemplate(pathType);
-    final Object element = path.getMetadata().getElement();
+    final var element = path.getMetadata().getElement();
     List<Object> args;
     if (path.getMetadata().getParent() != null) {
       args = Arrays.asList(path.getMetadata().getParent(), element);
@@ -301,15 +300,15 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
       Class<?> type, Operator operator, final List<? extends Expression<?>> args) {
     final Template template = templates.getTemplate(operator);
     if (template != null) {
-      final int precedence = templates.getPrecedence(operator);
-      boolean first = true;
+      final var precedence = templates.getPrecedence(operator);
+      var first = true;
       for (final Template.Element element : template.getElements()) {
-        final Object rv = element.convert(args);
+        final var rv = element.convert(args);
         if (rv instanceof Expression) {
           final Expression<?> expr = (Expression<?>) rv;
           if (precedence > -1 && expr instanceof Operation) {
-            Operator op = ((Operation<?>) expr).getOperator();
-            int opPrecedence = templates.getPrecedence(op);
+            var op = ((Operation<?>) expr).getOperator();
+            var opPrecedence = templates.getPrecedence(op);
             if (precedence < opPrecedence) {
               append("(").handle(expr).append(")");
             } else if (!first && precedence == opPrecedence && !SAME_PRECEDENCE.contains(op)) {

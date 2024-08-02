@@ -16,7 +16,13 @@ package com.querydsl.codegen;
 import static com.querydsl.codegen.utils.Symbols.THIS_ESCAPE;
 
 import com.querydsl.codegen.utils.CodeWriter;
-import com.querydsl.codegen.utils.model.*;
+import com.querydsl.codegen.utils.model.ClassType;
+import com.querydsl.codegen.utils.model.Constructor;
+import com.querydsl.codegen.utils.model.Parameter;
+import com.querydsl.codegen.utils.model.Type;
+import com.querydsl.codegen.utils.model.TypeCategory;
+import com.querydsl.codegen.utils.model.TypeExtends;
+import com.querydsl.codegen.utils.model.Types;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -67,8 +73,8 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
   }
 
   protected void intro(EntityType model, CodeWriter writer) throws IOException {
-    String simpleName = model.getSimpleName();
-    Type queryType = typeMappings.getPathType(model, model, false);
+    var simpleName = model.getSimpleName();
+    var queryType = typeMappings.getPathType(model, model, false);
 
     // package
     if (!queryType.getPackageName().isEmpty()) {
@@ -115,11 +121,11 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
     // intro
     intro(model, writer);
 
-    String localName = writer.getRawName(model);
+    var localName = writer.getRawName(model);
     Set<Integer> sizes = new HashSet<>();
 
     for (Constructor c : model.getConstructors()) {
-      final boolean asExpr = sizes.add(c.getParameters().size());
+      final var asExpr = sizes.add(c.getParameters().size());
       // begin
       writer.beginConstructor(
           c.getParameters(),
@@ -142,7 +148,7 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
       writer.beginLine("super(" + writer.getClassConstant(localName));
       // TODO: Fix for Scala (Array[Class])
       writer.append(", new Class<?>[]{");
-      boolean first = true;
+      var first = true;
 
       for (Parameter p : c.getParameters()) {
         if (!first) {
@@ -169,7 +175,7 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
 
   protected void parameterType(CodeWriter writer, Parameter p) throws IOException {
     if (Types.PRIMITIVES.containsKey(p.getType())) {
-      Type primitive = Types.PRIMITIVES.get(p.getType());
+      var primitive = Types.PRIMITIVES.get(p.getType());
       writer.append(writer.getClassConstant(primitive.getFullName()));
     } else {
       writer.append(writer.getClassConstant(writer.getRawName(p.getType())));

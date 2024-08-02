@@ -21,7 +21,6 @@ import com.querydsl.r2dbc.Configuration;
 import com.querydsl.r2dbc.R2DBCExpressions;
 import com.querydsl.r2dbc.SQLSerializer;
 import com.querydsl.r2dbc.SQLTemplates;
-import com.querydsl.sql.WindowFunction;
 import org.junit.Test;
 
 public class WindowFunctionTest {
@@ -38,7 +37,7 @@ public class WindowFunctionTest {
 
   @Test
   public void mutable() {
-    WindowFunction<Long> rn = R2DBCExpressions.rowNumber().over().orderBy(employee.firstname);
+    var rn = R2DBCExpressions.rowNumber().over().orderBy(employee.firstname);
     assertThat(toString(rn)).isEqualTo("row_number() over (order by e.FIRSTNAME asc)");
     assertThat(toString(rn.orderBy(employee.lastname)))
         .isEqualTo("row_number() over (order by e.FIRSTNAME asc, e.LASTNAME asc)");

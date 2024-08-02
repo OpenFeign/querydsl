@@ -18,8 +18,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.apt.domain.rel.RelationType2;
 import com.querydsl.core.annotations.Config;
 import com.querydsl.core.annotations.QueryEntity;
-import com.querydsl.core.types.dsl.*;
-import java.util.*;
+import com.querydsl.core.types.dsl.CollectionPath;
+import com.querydsl.core.types.dsl.EnumPath;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.MapPath;
+import com.querydsl.core.types.dsl.SetPath;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
 import org.junit.Test;
 
 public class RelationTest extends AbstractTest {
@@ -143,7 +151,7 @@ public class RelationTest extends AbstractTest {
 
   @Test
   public void list_usage() {
-    String expected = "relationType.list.get(0).set";
+    var expected = "relationType.list.get(0).set";
     assertThat(QRelationTest_RelationType.relationType.list.get(0).set.toString())
         .isEqualTo(expected);
     //        assertEquals(expected,

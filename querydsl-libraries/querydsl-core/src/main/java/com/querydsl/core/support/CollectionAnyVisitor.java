@@ -13,7 +13,22 @@
  */
 package com.querydsl.core.support;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathMetadataFactory;
+import com.querydsl.core.types.PathType;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimplePath;
@@ -31,11 +46,11 @@ public class CollectionAnyVisitor implements Visitor<Expression<?>, Context> {
 
   @SuppressWarnings("rawtypes")
   private static <T> Path<T> replaceParent(Path<T> path, Path<?> parent) {
-    PathMetadata metadata =
+    var metadata =
         new PathMetadata(parent, path.getMetadata().getElement(), path.getMetadata().getPathType());
     if (path instanceof CollectionExpression) {
       CollectionExpression<?, ?> col = (CollectionExpression<?, ?>) path;
-      return (Path<T>) Expressions.listPath(col.getParameter(0), SimplePath.class, metadata);
+      return Expressions.listPath(col.getParameter(0), SimplePath.class, metadata);
     } else {
       return ExpressionUtils.path(path.getType(), metadata);
     }
@@ -48,9 +63,9 @@ public class CollectionAnyVisitor implements Visitor<Expression<?>, Context> {
 
   @Override
   public Expression<?> visit(TemplateExpression<?> expr, Context context) {
-    Object[] args = new Object[expr.getArgs().size()];
-    for (int i = 0; i < args.length; i++) {
-      Context c = new Context();
+    var args = new Object[expr.getArgs().size()];
+    for (var i = 0; i < args.length; i++) {
+      var c = new Context();
       if (expr.getArg(i) instanceof Expression) {
         args[i] = ((Expression<?>) expr.getArg(i)).accept(this, c);
       } else {
@@ -78,9 +93,9 @@ public class CollectionAnyVisitor implements Visitor<Expression<?>, Context> {
   @SuppressWarnings("rawtypes")
   @Override
   public Expression<?> visit(Operation<?> expr, Context context) {
-    Expression<?>[] args = new Expression<?>[expr.getArgs().size()];
-    for (int i = 0; i < args.length; i++) {
-      Context c = new Context();
+    var args = new Expression<?>[expr.getArgs().size()];
+    for (var i = 0; i < args.length; i++) {
+      var c = new Context();
       args[i] = expr.getArg(i).accept(this, c);
       context.add(c);
     }
@@ -112,7 +127,7 @@ public class CollectionAnyVisitor implements Visitor<Expression<?>, Context> {
       return replacement;
 
     } else if (expr.getMetadata().getParent() != null) {
-      Context c = new Context();
+      var c = new Context();
       Path<?> parent = (Path<?>) expr.getMetadata().getParent().accept(this, c);
       if (c.replace) {
         context.add(c);

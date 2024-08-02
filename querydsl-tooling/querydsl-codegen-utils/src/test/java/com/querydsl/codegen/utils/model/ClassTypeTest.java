@@ -55,7 +55,7 @@ public class ClassTypeTest {
 
   @Test
   public void GetParameters() {
-    ClassType mapType = new ClassType(TypeCategory.MAP, Map.class, stringType, stringType);
+    var mapType = new ClassType(TypeCategory.MAP, Map.class, stringType, stringType);
     assertThat(mapType.getParameters()).hasSize(2);
     assertThat(mapType.getParameters().getFirst()).isEqualTo(stringType);
     assertThat(mapType.getParameters().get(1)).isEqualTo(stringType);
@@ -71,7 +71,7 @@ public class ClassTypeTest {
 
   @Test
   public void Primitive_Arrays() {
-    ClassType byteArray = new ClassType(byte[].class);
+    var byteArray = new ClassType(byte[].class);
     assertThat(
             byteArray.getRawName(
                 Collections.singleton("java.lang"), Collections.<String>emptySet()))
@@ -82,7 +82,7 @@ public class ClassTypeTest {
 
   @Test
   public void Array() {
-    ClassType byteArray = new ClassType(Byte[].class);
+    var byteArray = new ClassType(Byte[].class);
     assertThat(
             byteArray.getRawName(
                 Collections.singleton("java.lang"), Collections.<String>emptySet()))

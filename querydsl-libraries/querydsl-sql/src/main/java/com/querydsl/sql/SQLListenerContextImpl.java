@@ -144,7 +144,7 @@ public class SQLListenerContextImpl implements SQLListenerContext {
 
   @Override
   public String toString() {
-    StringBuilder sb =
+    var sb =
         new StringBuilder()
             .append(" sql:")
             .append(nicerSql(getSQL()))

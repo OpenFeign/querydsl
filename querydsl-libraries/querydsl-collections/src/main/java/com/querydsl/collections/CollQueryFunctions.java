@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -59,11 +58,11 @@ public final class CollQueryFunctions {
           if (num1.getClass().equals(num2.getClass()) && num1 instanceof Comparable) {
             @SuppressWarnings(
                 "unchecked") // The types are interchangeable, guarded by previous check
-            Comparable<Number> left = (Comparable<Number>) num1;
+            var left = (Comparable<Number>) num1;
             return left.compareTo(num2) < 0 ? num2 : num1;
           } else {
-            BigDecimal n1 = new BigDecimal(num1.toString());
-            BigDecimal n2 = new BigDecimal(num2.toString());
+            var n1 = new BigDecimal(num1.toString());
+            var n2 = new BigDecimal(num2.toString());
             return n1.compareTo(n2) < 0 ? num2 : num1;
           }
         }
@@ -76,11 +75,11 @@ public final class CollQueryFunctions {
           if (num1.getClass().equals(num2.getClass()) && num1 instanceof Comparable) {
             @SuppressWarnings(
                 "unchecked") // The types are interchangeable, guarded by previous check
-            Comparable<Number> left = (Comparable<Number>) num1;
+            var left = (Comparable<Number>) num1;
             return left.compareTo(num2) < 0 ? num1 : num2;
           } else {
-            BigDecimal n1 = new BigDecimal(num1.toString());
-            BigDecimal n2 = new BigDecimal(num2.toString());
+            var n1 = new BigDecimal(num1.toString());
+            var n2 = new BigDecimal(num2.toString());
             return n1.compareTo(n2) < 0 ? num1 : num2;
           }
         }
@@ -146,7 +145,7 @@ public final class CollQueryFunctions {
   }
 
   public static int getYearMonth(Date date) {
-    Calendar cal = Calendar.getInstance();
+    var cal = Calendar.getInstance();
     cal.setTime(date);
     return cal.get(Calendar.YEAR) * 100 + cal.get(Calendar.MONTH) + 1;
   }
@@ -164,7 +163,7 @@ public final class CollQueryFunctions {
   }
 
   private static int getField(Date date, int field) {
-    Calendar cal = Calendar.getInstance();
+    var cal = Calendar.getInstance();
     cal.setTime(date);
     return cal.get(field);
   }
@@ -198,7 +197,7 @@ public final class CollQueryFunctions {
   }
 
   public static int getYearWeek(Date date) {
-    Calendar cal = Calendar.getInstance();
+    var cal = Calendar.getInstance();
     cal.setTime(date);
     return cal.get(Calendar.YEAR) * 100 + cal.get(Calendar.WEEK_OF_YEAR);
   }
@@ -206,7 +205,7 @@ public final class CollQueryFunctions {
   public static <T> Collection<T> leftJoin(Collection<T> coll) {
     if (coll == null || coll.isEmpty()) {
       @SuppressWarnings("unchecked") // List only contains null
-      Collection<T> rv = (Collection<T>) nullList;
+      var rv = (Collection<T>) nullList;
       return rv;
     } else {
       return coll;
@@ -214,8 +213,8 @@ public final class CollQueryFunctions {
   }
 
   private static Number reduce(Iterable<Number> source, BinaryFunction f) {
-    Iterator<Number> it = source.iterator();
-    Number result = it.next();
+    var it = source.iterator();
+    var result = it.next();
     while (it.hasNext()) {
       result = f.apply(result, it.next());
     }
@@ -225,9 +224,9 @@ public final class CollQueryFunctions {
   public static Number aggregate(
       Collection<Number> source, Expression<?> expr, Operator aggregator) {
     @SuppressWarnings("unchecked") // This is a number expression
-    Class<Number> numberType = (Class<Number>) expr.getType();
+    var numberType = (Class<Number>) expr.getType();
     if (aggregator == Ops.AggOps.AVG_AGG) {
-      Number sum = reduce(source, SUM);
+      var sum = reduce(source, SUM);
       return sum.doubleValue() / source.size();
     } else if (aggregator == Ops.AggOps.COUNT_AGG) {
       return (long) source.size();
@@ -248,9 +247,9 @@ public final class CollQueryFunctions {
   }
 
   public static boolean like(final String str, String like) {
-    final StringBuilder pattern = new StringBuilder(like.length() + 4);
-    for (int i = 0; i < like.length(); i++) {
-      final char ch = like.charAt(i);
+    final var pattern = new StringBuilder(like.length() + 4);
+    for (var i = 0; i < like.length(); i++) {
+      final var ch = like.charAt(i);
       if (ch == '%') {
         pattern.append(".*");
         continue;
@@ -274,9 +273,9 @@ public final class CollQueryFunctions {
   }
 
   public static boolean likeIgnoreCase(String str, String like) {
-    final StringBuilder pattern = new StringBuilder(like.length() + 4);
-    for (int i = 0; i < like.length(); i++) {
-      final char ch = like.charAt(i);
+    final var pattern = new StringBuilder(like.length() + 4);
+    for (var i = 0; i < like.length(); i++) {
+      final var ch = like.charAt(i);
       if (ch == '%') {
         pattern.append(".*");
         continue;
@@ -305,7 +304,7 @@ public final class CollQueryFunctions {
       if (field != null) {
         field.setAccessible(true);
         @SuppressWarnings("unchecked")
-        T rv = (T) field.get(parent);
+        var rv = (T) field.get(parent);
         return rv;
       } else {
         throw new IllegalArgumentException("No field " + f + " for " + parent.getClass());

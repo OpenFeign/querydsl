@@ -30,12 +30,12 @@ public class Param<T> extends SimpleExpression<T> implements ParamExpression<T> 
   private final ParamExpression<T> paramMixin;
 
   public Param(Class<? extends T> type, String name) {
-    super(new ParamExpressionImpl<T>(type, name));
+    super(new ParamExpressionImpl<>(type, name));
     this.paramMixin = (ParamExpression<T>) mixin;
   }
 
   public Param(Class<? extends T> type) {
-    super(new ParamExpressionImpl<T>(type));
+    super(new ParamExpressionImpl<>(type));
     this.paramMixin = (ParamExpression<T>) mixin;
   }
 

@@ -13,7 +13,9 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.jpa.Constants.*;
+import static com.querydsl.jpa.Constants.cat;
+import static com.querydsl.jpa.Constants.cust;
+import static com.querydsl.jpa.Constants.kitten;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Expressions;
@@ -26,14 +28,14 @@ public class FeaturesTest extends AbstractQueryTest {
 
   @Test
   public void domainConstruction() {
-    QInheritedProperties i = new QInheritedProperties("i");
+    var i = new QInheritedProperties("i");
     assertThat(i.superclassProperty).isNotNull();
     assertThat(i.classProperty).isNotNull();
   }
 
   @Test
   public void domainConstruction2() {
-    QAccount a = new QAccount("a");
+    var a = new QAccount("a");
     assertThat(a.embeddedData.someData).isNotNull();
   }
 

@@ -30,16 +30,16 @@ public abstract class TypesBase extends AbstractBaseTest {
     instances.put(String.class, "ABC");
 
     for (Map.Entry<Class<?>, Object> entry : instances.entrySet()) {
-      String tableName = "test_" + entry.getKey().getSimpleName();
+      var tableName = "test_" + entry.getKey().getSimpleName();
       new DropTableClause(connection, configuration, tableName).execute();
-      CreateTableClause c =
+      var c =
           new CreateTableClause(connection, configuration, tableName).column("col", entry.getKey());
       if (entry.getKey().equals(String.class)) {
         c.size(256);
       }
       c.execute();
       RelationalPath<Object> entityPath =
-          new RelationalPathBase<Object>(Object.class, tableName, "PUBLIC", tableName);
+          new RelationalPathBase<>(Object.class, tableName, "PUBLIC", tableName);
       Path<?> columnPath = Expressions.path(entry.getKey(), entityPath, "col");
       insert(entityPath).set((Path) columnPath, entry.getValue()).execute();
       new DropTableClause(connection, configuration, tableName).execute();

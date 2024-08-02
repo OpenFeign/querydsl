@@ -40,7 +40,7 @@ public class YesNoType extends AbstractType<Boolean, String> {
   @Override
   @Nullable
   public Boolean getValue(Row row, int startIndex) {
-    String val = row.get(startIndex, String.class);
+    var val = row.get(startIndex, String.class);
     return val != null ? val.equalsIgnoreCase("Y") : null;
   }
 

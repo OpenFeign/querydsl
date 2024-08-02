@@ -24,7 +24,7 @@ public class MultikeyTest {
 
   @Test
   public void hashCode_() {
-    int hashCode = multiKey1.hashCode();
+    var hashCode = multiKey1.hashCode();
     multiKey1.setId(1);
     assertThat(multiKey1.hashCode()).isEqualTo(hashCode);
 

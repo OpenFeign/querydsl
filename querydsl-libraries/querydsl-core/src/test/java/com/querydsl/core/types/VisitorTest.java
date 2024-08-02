@@ -22,7 +22,7 @@ public class VisitorTest {
 
   @Test
   public void iteration() throws SecurityException, NoSuchMethodException {
-    List<Class<?>> types = new ArrayList<Class<?>>();
+    List<Class<?>> types = new ArrayList<>();
     //        types.addAll(Arrays.<Class<?>>asList(Alias.class.getClasses()));
     types.addAll(Arrays.asList(Operation.class.getClasses()));
     types.addAll(Arrays.asList(Path.class.getClasses()));

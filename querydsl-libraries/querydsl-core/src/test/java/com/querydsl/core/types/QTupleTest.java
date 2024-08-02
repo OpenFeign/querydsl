@@ -15,7 +15,6 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.Arrays;
@@ -36,8 +35,8 @@ public class QTupleTest {
   @Test
   public void alias() {
     Expression<?> expr = str1.as("s");
-    QTuple qTuple = new QTuple(expr);
-    Tuple tuple = qTuple.newInstance("arg");
+    var qTuple = new QTuple(expr);
+    var tuple = qTuple.newInstance("arg");
     assertThat(tuple.get(expr)).isEqualTo("arg");
     assertThat(tuple.get(Expressions.stringPath("s"))).isEqualTo("arg");
   }
@@ -72,27 +71,27 @@ public class QTupleTest {
 
   @Test
   public void nestedProjection_newInstance() {
-    QTuple expr = new QTuple(concat);
+    var expr = new QTuple(concat);
     assertThat(FactoryExpressionUtils.wrap(expr).newInstance("12", "34").get(concat))
         .isEqualTo("1234");
   }
 
   @Test
   public void nestedProjection_newInstance2() {
-    QTuple expr = new QTuple(str1, str2, concat);
+    var expr = new QTuple(str1, str2, concat);
     assertThat(FactoryExpressionUtils.wrap(expr).newInstance("1", "2", "12", "34").get(concat))
         .isEqualTo("1234");
   }
 
   @Test
   public void tuple_equals() {
-    QTuple expr = new QTuple(str1, str2);
+    var expr = new QTuple(str1, str2);
     assertThat(expr.newInstance("str1", "str2")).isEqualTo(expr.newInstance("str1", "str2"));
   }
 
   @Test
   public void tuple_hashCode() {
-    QTuple expr = new QTuple(str1, str2);
+    var expr = new QTuple(str1, str2);
     assertThat(expr.newInstance("str1", "str2").hashCode())
         .isEqualTo(expr.newInstance("str1", "str2").hashCode());
   }
@@ -100,7 +99,7 @@ public class QTupleTest {
   @Test
   @Ignore
   public void duplicates() {
-    QTuple expr = new QTuple(str1, str1);
+    var expr = new QTuple(str1, str1);
     assertThat(expr.getArgs()).hasSize(1);
     assertThat(expr.getArgs().getFirst()).isEqualTo(str1);
   }
@@ -108,7 +107,7 @@ public class QTupleTest {
   @Test
   @Ignore
   public void duplicates2() {
-    QTuple expr = new QTuple(Arrays.asList(str1, str1));
+    var expr = new QTuple(Arrays.asList(str1, str1));
     assertThat(expr.getArgs()).hasSize(1);
     assertThat(expr.getArgs().getFirst()).isEqualTo(str1);
   }

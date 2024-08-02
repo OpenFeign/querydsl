@@ -32,7 +32,7 @@ public final class Projections {
    * @return factory expression
    */
   public static <T> ArrayConstructorExpression<T> array(Class<T[]> type, Expression<T>... exprs) {
-    return new ArrayConstructorExpression<T>(type, exprs);
+    return new ArrayConstructorExpression<>(type, exprs);
   }
 
   /**
@@ -46,7 +46,7 @@ public final class Projections {
    */
   public static <T> AppendingFactoryExpression<T> appending(
       Expression<T> base, Expression<?>... rest) {
-    return new AppendingFactoryExpression<T>(base, rest);
+    return new AppendingFactoryExpression<>(base, rest);
   }
 
   /**
@@ -65,7 +65,7 @@ public final class Projections {
    * @return factory expression
    */
   public static <T> QBean<T> bean(Class<? extends T> type, Expression<?>... exprs) {
-    return new QBean<T>(type, exprs);
+    return new QBean<>(type, exprs);
   }
 
   /**
@@ -77,7 +77,7 @@ public final class Projections {
    * @return factory expression
    */
   public static <T> QBean<T> bean(Path<? extends T> type, Expression<?>... exprs) {
-    return new QBean<T>(type.getType(), exprs);
+    return new QBean<>(type.getType(), exprs);
   }
 
   /**
@@ -90,7 +90,7 @@ public final class Projections {
    */
   public static <T> QBean<T> bean(
       Path<? extends T> type, Map<String, ? extends Expression<?>> bindings) {
-    return new QBean<T>(type.getType(), bindings);
+    return new QBean<>(type.getType(), bindings);
   }
 
   /**
@@ -103,7 +103,7 @@ public final class Projections {
    */
   public static <T> QBean<T> bean(
       Class<? extends T> type, Map<String, ? extends Expression<?>> bindings) {
-    return new QBean<T>(type, bindings);
+    return new QBean<>(type, bindings);
   }
 
   /**
@@ -123,7 +123,7 @@ public final class Projections {
    */
   public static <T> ConstructorExpression<T> constructor(
       Class<? extends T> type, Expression<?>... exprs) {
-    return new ConstructorExpression<T>(type, exprs);
+    return new ConstructorExpression<>(type, exprs);
   }
 
   /**
@@ -137,7 +137,7 @@ public final class Projections {
    */
   public static <T> ConstructorExpression<T> constructor(
       Class<? extends T> type, Class<?>[] paramTypes, Expression<?>... exprs) {
-    return new ConstructorExpression<T>(type, paramTypes, exprs);
+    return new ConstructorExpression<>(type, paramTypes, exprs);
   }
 
   /**
@@ -151,7 +151,7 @@ public final class Projections {
    */
   public static <T> ConstructorExpression<T> constructor(
       Class<? extends T> type, Class<?>[] paramTypes, List<Expression<?>> exprs) {
-    return new ConstructorExpression<T>(type, paramTypes, exprs);
+    return new ConstructorExpression<>(type, paramTypes, exprs);
   }
 
   /**
@@ -170,7 +170,7 @@ public final class Projections {
    * @return factory expression
    */
   public static <T> QBean<T> fields(Class<? extends T> type, Expression<?>... exprs) {
-    return new QBean<T>(type, true, exprs);
+    return new QBean<>(type, true, exprs);
   }
 
   /**
@@ -182,7 +182,7 @@ public final class Projections {
    * @return factory expression
    */
   public static <T> QBean<T> fields(Path<? extends T> type, Expression<?>... exprs) {
-    return new QBean<T>(type.getType(), true, exprs);
+    return new QBean<>(type.getType(), true, exprs);
   }
 
   /**
@@ -195,7 +195,7 @@ public final class Projections {
    */
   public static <T> QBean<T> fields(
       Path<? extends T> type, Map<String, ? extends Expression<?>> bindings) {
-    return new QBean<T>(type.getType(), true, bindings);
+    return new QBean<>(type.getType(), true, bindings);
   }
 
   /**
@@ -208,7 +208,7 @@ public final class Projections {
    */
   public static <T> QBean<T> fields(
       Class<? extends T> type, Map<String, ? extends Expression<?>> bindings) {
-    return new QBean<T>(type, true, bindings);
+    return new QBean<>(type, true, bindings);
   }
 
   /**

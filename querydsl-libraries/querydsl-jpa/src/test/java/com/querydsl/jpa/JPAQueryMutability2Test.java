@@ -15,7 +15,6 @@ package com.querydsl.jpa;
 
 import static com.querydsl.core.types.dsl.Expressions.numberOperation;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.types.Operator;
 import com.querydsl.jpa.domain.QCat;
@@ -32,14 +31,17 @@ public class JPAQueryMutability2Test implements JPATest {
 
   private final Operator customOperator =
       new Operator() {
+        @Override
         public String name() {
           return "custom";
         }
 
+        @Override
         public String toString() {
           return name();
         }
 
+        @Override
         public Class<?> getType() {
           return Object.class;
         }
@@ -67,7 +69,7 @@ public class JPAQueryMutability2Test implements JPATest {
 
   @Test
   public void test() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     JPAQuery<?> query = query().from(cat);
 
     query.fetchCount();
@@ -89,7 +91,7 @@ public class JPAQueryMutability2Test implements JPATest {
 
   @Test
   public void clone_() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     JPAQuery<?> query = query().from(cat).where(cat.name.isNotNull());
     JPAQuery<?> query2 = query.clone(entityManager);
     assertThat(query2.getMetadata().getJoins()).isEqualTo(query.getMetadata().getJoins());
@@ -99,7 +101,7 @@ public class JPAQueryMutability2Test implements JPATest {
 
   @Test
   public void clone_custom_templates() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     JPAQuery<?> query = query().from(cat);
     // attach using the custom templates
     query
@@ -110,7 +112,7 @@ public class JPAQueryMutability2Test implements JPATest {
 
   @Test
   public void clone_keep_templates() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     JPAQuery<?> query = query(customTemplates).from(cat);
     // keep the original templates
     query
@@ -121,7 +123,7 @@ public class JPAQueryMutability2Test implements JPATest {
 
   @Test(expected = IllegalArgumentException.class)
   public void clone_lose_templates() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     JPAQuery<?> query = query(customTemplates).from(cat);
     // clone using the entitymanager's default templates
     query

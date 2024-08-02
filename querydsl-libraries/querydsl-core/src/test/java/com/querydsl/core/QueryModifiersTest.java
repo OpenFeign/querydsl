@@ -23,7 +23,7 @@ public class QueryModifiersTest {
 
   @Test
   public void limit() {
-    QueryModifiers modifiers = QueryModifiers.limit(12L);
+    var modifiers = QueryModifiers.limit(12L);
     assertThat(modifiers.getLimit()).isEqualTo(Long.valueOf(12));
     assertThat(modifiers.getOffset()).isNull();
     assertThat(modifiers.isRestricting()).isTrue();
@@ -31,7 +31,7 @@ public class QueryModifiersTest {
 
   @Test
   public void offset() {
-    QueryModifiers modifiers = QueryModifiers.offset(12L);
+    var modifiers = QueryModifiers.offset(12L);
     assertThat(modifiers.getOffset()).isEqualTo(Long.valueOf(12));
     assertThat(modifiers.getLimit()).isNull();
     assertThat(modifiers.isRestricting()).isTrue();
@@ -39,7 +39,7 @@ public class QueryModifiersTest {
 
   @Test
   public void both() {
-    QueryModifiers modifiers = new QueryModifiers(1L, 2L);
+    var modifiers = new QueryModifiers(1L, 2L);
     assertThat(modifiers.getLimit()).isEqualTo(Long.valueOf(1));
     assertThat(modifiers.getOffset()).isEqualTo(Long.valueOf(2));
     assertThat(modifiers.isRestricting()).isTrue();
@@ -47,7 +47,7 @@ public class QueryModifiersTest {
 
   @Test
   public void empty() {
-    QueryModifiers modifiers = new QueryModifiers(null, null);
+    var modifiers = new QueryModifiers(null, null);
     assertThat(modifiers.getLimit()).isNull();
     assertThat(modifiers.getOffset()).isNull();
     assertThat(modifiers.isRestricting()).isFalse();
@@ -55,9 +55,9 @@ public class QueryModifiersTest {
 
   @Test
   public void hashCode_() {
-    QueryModifiers modifiers1 = new QueryModifiers(null, null);
-    QueryModifiers modifiers2 = new QueryModifiers(1L, null);
-    QueryModifiers modifiers3 = new QueryModifiers(null, 1L);
+    var modifiers1 = new QueryModifiers(null, null);
+    var modifiers2 = new QueryModifiers(1L, null);
+    var modifiers3 = new QueryModifiers(null, 1L);
 
     assertThat(QueryModifiers.EMPTY.hashCode()).isEqualTo(modifiers1.hashCode());
     assertThat(QueryModifiers.limit(1L).hashCode()).isEqualTo(modifiers2.hashCode());

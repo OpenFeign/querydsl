@@ -18,7 +18,7 @@ public class ConstantHidingExpressionTest {
             Expressions.TRUE,
             Expressions.FALSE.as("false"),
             Expressions.constant(1));
-    FactoryExpression<Tuple> wrapped = new ConstantHidingExpression<Tuple>(tuple);
+    FactoryExpression<Tuple> wrapped = new ConstantHidingExpression<>(tuple);
     assertThat(wrapped.getArgs()).hasSize(1);
     Tuple t = wrapped.newInstance("s");
 

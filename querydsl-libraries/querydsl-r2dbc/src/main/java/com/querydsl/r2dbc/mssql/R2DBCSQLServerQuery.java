@@ -64,8 +64,7 @@ public class R2DBCSQLServerQuery<T> extends AbstractR2DBCSQLServerQuery<T, R2DBC
 
   @Override
   public R2DBCSQLServerQuery<T> clone(Connection conn) {
-    R2DBCSQLServerQuery<T> q =
-        new R2DBCSQLServerQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    var q = new R2DBCSQLServerQuery<T>(conn, getConfiguration(), getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -74,7 +73,7 @@ public class R2DBCSQLServerQuery<T> extends AbstractR2DBCSQLServerQuery<T, R2DBC
   public <U> R2DBCSQLServerQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    R2DBCSQLServerQuery<U> newType = (R2DBCSQLServerQuery<U>) this;
+    var newType = (R2DBCSQLServerQuery<U>) this;
     return newType;
   }
 
@@ -82,7 +81,7 @@ public class R2DBCSQLServerQuery<T> extends AbstractR2DBCSQLServerQuery<T, R2DBC
   public R2DBCSQLServerQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    R2DBCSQLServerQuery<Tuple> newType = (R2DBCSQLServerQuery<Tuple>) this;
+    var newType = (R2DBCSQLServerQuery<Tuple>) this;
     return newType;
   }
 }

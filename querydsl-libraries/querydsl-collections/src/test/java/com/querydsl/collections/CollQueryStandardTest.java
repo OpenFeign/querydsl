@@ -73,7 +73,7 @@ public class CollQueryStandardTest {
 
   @Test
   public void test() {
-    Cat kitten = data.getFirst().getKittens().getFirst();
+    var kitten = data.getFirst().getKittens().getFirst();
     standardTest.runArrayTests(cat.kittenArray, otherCat.kittenArray, kitten, new Cat());
     standardTest.runBooleanTests(cat.name.isNull(), otherCat.kittens.isEmpty());
     standardTest.runCollectionTests(cat.kittens, otherCat.kittens, kitten, new Cat());
@@ -94,7 +94,7 @@ public class CollQueryStandardTest {
 
   @Test
   public void tupleMultipleFieldsProjection() {
-    List<Tuple> tuples = CollQueryFactory.from(cat, data).select(cat.name, cat.birthdate).fetch();
+    var tuples = CollQueryFactory.from(cat, data).select(cat.name, cat.birthdate).fetch();
     for (Tuple tuple : tuples) {
       assertThat(tuple.get(cat.name)).isNotNull();
       assertThat(tuple.get(cat.birthdate)).isNotNull();
@@ -103,8 +103,7 @@ public class CollQueryStandardTest {
 
   @Test
   public void tupleOneFieldProjection() {
-    List<Tuple> tuples =
-        CollQueryFactory.from(cat, data).select(new Expression<?>[] {cat.name}).fetch();
+    var tuples = CollQueryFactory.from(cat, data).select(new Expression<?>[] {cat.name}).fetch();
     for (Tuple tuple : tuples) {
       assertThat(tuple.size()).isEqualTo(1);
       assertThat(tuple.get(cat.name)).isNotNull();
@@ -113,7 +112,7 @@ public class CollQueryStandardTest {
 
   @Test
   public void tupleOneNullFieldProjection() {
-    List<Tuple> tuples =
+    var tuples =
         CollQueryFactory.from(cat, data)
             .select(new Expression<?>[] {Expressions.nullExpression()})
             .fetch();
@@ -126,9 +125,8 @@ public class CollQueryStandardTest {
 
   @Test
   public void nested_tupleProjection() {
-    Concatenation concat = new Concatenation(cat.name, cat.name);
-    List<Tuple> tuples =
-        CollQueryFactory.from(cat, data).select(concat, cat.name, cat.birthdate).fetch();
+    var concat = new Concatenation(cat.name, cat.name);
+    var tuples = CollQueryFactory.from(cat, data).select(concat, cat.name, cat.birthdate).fetch();
     for (Tuple tuple : tuples) {
       assertThat(tuple.get(cat.name)).isNotNull();
       assertThat(tuple.get(cat.birthdate)).isNotNull();
@@ -139,9 +137,9 @@ public class CollQueryStandardTest {
   @SuppressWarnings("unchecked")
   @Test
   public void arrayProjection() {
-    List<String[]> results =
+    var results =
         CollQueryFactory.from(cat, data)
-            .select(new ArrayConstructorExpression<String>(String[].class, cat.name))
+            .select(new ArrayConstructorExpression<>(String[].class, cat.name))
             .fetch();
     assertThat(results).isNotEmpty();
     for (String[] result : results) {
@@ -151,7 +149,7 @@ public class CollQueryStandardTest {
 
   @Test
   public void constructorProjection() {
-    List<Projection> projections =
+    var projections =
         CollQueryFactory.from(cat, data)
             .select(Projections.constructor(Projection.class, cat.name, cat))
             .fetch();
@@ -163,7 +161,7 @@ public class CollQueryStandardTest {
 
   @Test
   public void params() {
-    Param<String> name = new Param<String>(String.class, "name");
+    var name = new Param<>(String.class, "name");
     assertThat(
             CollQueryFactory.from(cat, data)
                 .where(cat.name.eq(name))
@@ -175,7 +173,7 @@ public class CollQueryStandardTest {
 
   @Test
   public void params_anon() {
-    Param<String> name = new Param<String>(String.class);
+    var name = new Param<>(String.class);
     assertThat(
             CollQueryFactory.from(cat, data)
                 .where(cat.name.eq(name))
@@ -187,7 +185,7 @@ public class CollQueryStandardTest {
 
   @Test(expected = ParamNotSetException.class)
   public void params_not_set() {
-    Param<String> name = new Param<String>(String.class, "name");
+    var name = new Param<>(String.class, "name");
     assertThat(
             CollQueryFactory.from(cat, data).where(cat.name.eq(name)).select(cat.name).fetchOne())
         .isEqualTo("Bob");

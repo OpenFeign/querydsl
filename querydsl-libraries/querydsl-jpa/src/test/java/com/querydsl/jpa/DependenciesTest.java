@@ -23,7 +23,7 @@ public class DependenciesTest {
 
   @Test
   public void test() throws IOException {
-    JDepend jdepend = new JDepend();
+    var jdepend = new JDepend();
     jdepend.addDirectory("target/classes/com/querydsl/jpa");
     jdepend.addDirectory("target/classes/com/querydsl/jpa/hibernate");
     jdepend.addDirectory("target/classes/com/querydsl/jpa/hibernate/sql");

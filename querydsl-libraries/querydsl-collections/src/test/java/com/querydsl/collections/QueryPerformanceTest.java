@@ -15,7 +15,6 @@ import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
@@ -25,11 +24,11 @@ public class QueryPerformanceTest {
 
   private static final int size = 1000;
 
-  private static List<Cat> cats = new ArrayList<Cat>(size);
+  private static List<Cat> cats = new ArrayList<>(size);
 
   @BeforeClass
   public static void setUpClass() throws SQLException, ClassNotFoundException {
-    for (int i = 0; i < size; i++) {
+    for (var i = 0; i < size; i++) {
       cats.add(new Cat(String.valueOf(i), i));
     }
   }
@@ -39,7 +38,7 @@ public class QueryPerformanceTest {
   @OutputTimeUnit(TimeUnit.MICROSECONDS)
   public void benchmark1() {
     // 15857
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     CollQueryFactory.from(cat, cats)
         .where(cat.id.eq(ThreadLocalRandom.current().nextInt(100) % size))
         .select(cat)
@@ -48,7 +47,7 @@ public class QueryPerformanceTest {
 
   @Test
   public void launchBenchmark() throws Exception {
-    Options opt =
+    var opt =
         new OptionsBuilder()
             .include(this.getClass().getName() + ".*")
             .mode(Mode.AverageTime)

@@ -26,7 +26,7 @@ public class PathInitsTest {
 
   @Test
   public void isInitialized() {
-    PathInits inits = new PathInits(".2").get("");
+    var inits = new PathInits(".2").get("");
     assertThat(inits.isInitialized("1")).isFalse();
     assertThat(inits.isInitialized("2")).isTrue();
   }
@@ -38,14 +38,14 @@ public class PathInitsTest {
 
   @Test
   public void wildcard2() {
-    PathInits inits = new PathInits(".*").get("");
+    var inits = new PathInits(".*").get("");
     assertThat(inits.isInitialized("1")).isTrue();
     assertThat(inits.isInitialized("2")).isTrue();
   }
 
   @Test
   public void deep_wildcard() {
-    PathInits inits = new PathInits("*.*").get("");
+    var inits = new PathInits("*.*").get("");
     assertThat(inits.isInitialized("1")).isTrue();
     assertThat(inits.isInitialized("2")).isTrue();
   }

@@ -9,7 +9,7 @@ public class ConnectionContext {
 
   private final DataSource dataSource;
 
-  private final ThreadLocal<Connection> connectionHolder = new ThreadLocal<Connection>();
+  private final ThreadLocal<Connection> connectionHolder = new ThreadLocal<>();
 
   @Inject
   public ConnectionContext(DataSource dataSource) {
@@ -17,7 +17,7 @@ public class ConnectionContext {
   }
 
   public Connection getConnection(boolean create) {
-    Connection connection = connectionHolder.get();
+    var connection = connectionHolder.get();
     if (!create || connection != null) {
       return connection;
     }

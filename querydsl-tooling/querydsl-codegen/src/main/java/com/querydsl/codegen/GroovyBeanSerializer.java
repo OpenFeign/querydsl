@@ -16,7 +16,11 @@ package com.querydsl.codegen;
 import com.querydsl.codegen.utils.CodeWriter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * {@code GroovyBeanSerializer} is a {@link Serializer} implementation which serializes {@link
@@ -69,7 +73,7 @@ public class GroovyBeanSerializer implements Serializer {
   @Override
   public void serialize(EntityType model, SerializerConfig serializerConfig, CodeWriter writer)
       throws IOException {
-    String simpleName = model.getSimpleName();
+    var simpleName = model.getSimpleName();
 
     // package
     if (!model.getPackageName().isEmpty()) {
@@ -77,7 +81,7 @@ public class GroovyBeanSerializer implements Serializer {
     }
 
     // imports
-    Set<String> importedClasses = getAnnotationTypes(model);
+    var importedClasses = getAnnotationTypes(model);
     if (model.hasLists()) {
       importedClasses.add(List.class.getName());
     }
@@ -131,7 +135,7 @@ public class GroovyBeanSerializer implements Serializer {
   }
 
   private Set<String> getAnnotationTypes(EntityType model) {
-    Set<String> imports = new HashSet<String>();
+    Set<String> imports = new HashSet<>();
     for (Annotation annotation : model.getAnnotations()) {
       imports.add(annotation.annotationType().getName());
     }

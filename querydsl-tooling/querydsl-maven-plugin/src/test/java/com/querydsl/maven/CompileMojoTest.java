@@ -10,10 +10,10 @@ public class CompileMojoTest {
   @Test
   public void test() throws Exception {
     new File("target/compile-mojo").mkdir();
-    MavenProject mavenProject = new MavenProject();
+    var mavenProject = new MavenProject();
     mavenProject.getBuild().setOutputDirectory("target/compile-mojo");
 
-    CompileMojo mojo = new CompileMojo();
+    var mojo = new CompileMojo();
     mojo.setBuildContext(new DefaultBuildContext());
     mojo.setProject(mavenProject);
     mojo.setSourceFolder(new File("src/test/java"));

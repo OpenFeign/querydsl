@@ -9,7 +9,7 @@ public class CastTest extends AbstractQueryTest {
 
   @Test
   public void parents() {
-    QCat cat = QAnimal.animal.as(QCat.class);
+    var cat = QAnimal.animal.as(QCat.class);
     assertThat(cat.getMetadata().getParent()).isEqualTo(QAnimal.animal);
   }
 
@@ -26,7 +26,7 @@ public class CastTest extends AbstractQueryTest {
 
   @Test
   public void property_dereference() {
-    Cat cat = new Cat();
+    var cat = new Cat();
     cat.setEyecolor(Color.TABBY);
     assertThat(
             CollQueryFactory.from(QAnimal.animal, cat)

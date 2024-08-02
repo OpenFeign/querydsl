@@ -1,6 +1,10 @@
 package com.querydsl.sql.types;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.Instant;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +34,7 @@ public class InstantType extends AbstractJSR310DateTimeType<Instant> {
   @Nullable
   @Override
   public Instant getValue(ResultSet rs, int startIndex) throws SQLException {
-    Timestamp timestamp = rs.getTimestamp(startIndex);
+    var timestamp = rs.getTimestamp(startIndex);
     return timestamp != null ? timestamp.toInstant() : null;
   }
 

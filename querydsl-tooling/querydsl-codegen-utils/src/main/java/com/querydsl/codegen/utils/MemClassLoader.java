@@ -52,9 +52,9 @@ public final class MemClassLoader extends ClassLoader {
 
   @Override
   protected Class<?> findClass(String name) throws ClassNotFoundException {
-    JavaFileObject jfo = memFileSystem.get(CLASS_KEY).get(name);
+    var jfo = memFileSystem.get(CLASS_KEY).get(name);
     if (jfo != null) {
-      byte[] bytes = ((MemJavaFileObject) jfo).getByteArray();
+      var bytes = ((MemJavaFileObject) jfo).getByteArray();
       return defineClass(name, bytes, 0, bytes.length);
     } else {
       return super.findClass(name);
@@ -63,11 +63,11 @@ public final class MemClassLoader extends ClassLoader {
 
   @Override
   protected URL findResource(String name) {
-    URL retValue = super.findResource(name);
+    var retValue = super.findResource(name);
     if (retValue != null) {
       return retValue;
     } else {
-      JavaFileObject jfo = getFileObject(name);
+      var jfo = getFileObject(name);
       if (jfo != null) {
         try {
           return jfo.toUri().toURL();
@@ -102,9 +102,9 @@ public final class MemClassLoader extends ClassLoader {
 
   @Override
   public InputStream getResourceAsStream(String name) {
-    JavaFileObject jfo = getFileObject(name);
+    var jfo = getFileObject(name);
     if (jfo != null) {
-      byte[] bytes = ((MemJavaFileObject) jfo).getByteArray();
+      var bytes = ((MemJavaFileObject) jfo).getByteArray();
       return new ByteArrayInputStream(bytes);
     } else {
       return null;
@@ -115,7 +115,7 @@ public final class MemClassLoader extends ClassLoader {
   public Enumeration<URL> getResources(String name) throws IOException {
     List<URL> retValue;
     retValue = Collections.list(super.getResources(name));
-    JavaFileObject jfo = getFileObject(name);
+    var jfo = getFileObject(name);
     if (jfo != null) {
       retValue.add(jfo.toUri().toURL());
     }

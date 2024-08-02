@@ -46,7 +46,7 @@ public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
 
   @SuppressWarnings("unchecked")
   public AbstractSQLQuery(QueryMetadata metadata, Configuration configuration) {
-    super(new NativeQueryMixin<Q>(metadata), configuration);
+    super(new NativeQueryMixin<>(metadata), configuration);
     this.queryMixin.setSelf((Q) this);
   }
 

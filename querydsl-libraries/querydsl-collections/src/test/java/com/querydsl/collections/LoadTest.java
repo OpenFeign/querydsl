@@ -38,20 +38,20 @@ public class LoadTest {
   @Test
   public void creation() {
     System.out.println("Evaluator creation #1");
-    for (int i = 0; i < 5; i++) {
-      long s = System.currentTimeMillis();
+    for (var i = 0; i < 5; i++) {
+      var s = System.currentTimeMillis();
       evaluatorFactory.create(metadata, Collections.singletonList(cat), cat.name.startsWith("Bob"));
-      long e = System.currentTimeMillis();
+      var e = System.currentTimeMillis();
       System.out.println(" " + (e - s) + "ms");
     }
     System.out.println();
 
     System.out.println("Evaluator creation #2");
-    for (int i = 0; i < 5; i++) {
-      long s = System.currentTimeMillis();
+    for (var i = 0; i < 5; i++) {
+      var s = System.currentTimeMillis();
       evaluatorFactory.create(
           metadata, Collections.singletonList(cat), cat.name.startsWith("Bob" + i));
-      long e = System.currentTimeMillis();
+      var e = System.currentTimeMillis();
       System.out.println(" " + (e - s) + "ms");
     }
     System.out.println();
@@ -59,8 +59,8 @@ public class LoadTest {
 
   @Test
   public void test() {
-    List<Cat> data = new ArrayList<Cat>(5000);
-    for (int i = 0; i < 1000; i++) {
+    List<Cat> data = new ArrayList<>(5000);
+    for (var i = 0; i < 1000; i++) {
       data.addAll(
           Arrays.asList(
               new Cat("Bob" + i),
@@ -72,27 +72,27 @@ public class LoadTest {
 
     // #1
     System.out.println("Querydsl iteration");
-    for (int i = 0; i < 5; i++) {
-      long s1 = System.currentTimeMillis();
-      List<Cat> bobs1 = CollQueryFactory.from(cat, data).where(cat.name.startsWith("Bob")).fetch();
+    for (var i = 0; i < 5; i++) {
+      var s1 = System.currentTimeMillis();
+      var bobs1 = CollQueryFactory.from(cat, data).where(cat.name.startsWith("Bob")).fetch();
       assertThat(bobs1).hasSize(1000);
-      long e1 = System.currentTimeMillis();
+      var e1 = System.currentTimeMillis();
       System.out.println(" " + (e1 - s1) + "ms");
     }
     System.out.println();
 
     // #2
     System.out.println("Normal iteration");
-    for (int i = 0; i < 5; i++) {
-      long s2 = System.currentTimeMillis();
-      List<Cat> bobs2 = new ArrayList<Cat>();
+    for (var i = 0; i < 5; i++) {
+      var s2 = System.currentTimeMillis();
+      List<Cat> bobs2 = new ArrayList<>();
       for (Cat c : data) {
         if (c.getName().startsWith("Bob")) {
           bobs2.add(c);
         }
       }
       assertThat(bobs2).hasSize(1000);
-      long e2 = System.currentTimeMillis();
+      var e2 = System.currentTimeMillis();
       System.out.println(" " + (e2 - s2) + "ms");
     }
     System.out.println();

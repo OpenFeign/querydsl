@@ -19,8 +19,16 @@ import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.dml.ReactiveInsertClause;
-import com.querydsl.core.types.*;
-import com.querydsl.r2dbc.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.r2dbc.Configuration;
+import com.querydsl.r2dbc.R2DBCConnectionProvider;
+import com.querydsl.r2dbc.R2DBCQuery;
+import com.querydsl.r2dbc.R2dbcUtils;
+import com.querydsl.r2dbc.SQLSerializer;
 import com.querydsl.r2dbc.binding.BindTarget;
 import com.querydsl.r2dbc.binding.StatementWrapper;
 import com.querydsl.r2dbc.types.Null;
@@ -29,8 +37,17 @@ import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLBindings;
 import com.querydsl.sql.dml.DefaultMapper;
 import com.querydsl.sql.dml.Mapper;
-import io.r2dbc.spi.*;
-import java.util.*;
+import io.r2dbc.spi.Batch;
+import io.r2dbc.spi.Connection;
+import io.r2dbc.spi.Row;
+import io.r2dbc.spi.RowMetadata;
+import io.r2dbc.spi.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,9 +74,9 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
 
   @Nullable protected R2DBCQuery<?> subQueryBuilder;
 
-  protected final List<Path<?>> columns = new ArrayList<Path<?>>();
+  protected final List<Path<?>> columns = new ArrayList<>();
 
-  protected final List<Expression<?>> values = new ArrayList<Expression<?>>();
+  protected final List<Expression<?>> values = new ArrayList<>();
 
   protected transient String queryString;
 
@@ -196,7 +213,7 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
       values.clear();
     }
 
-    SQLSerializer serializer = createSerializerAndSerialize();
+    var serializer = createSerializerAndSerialize();
     return prepareStatementAndSetParameters(connection, serializer, withKeys);
   }
 
@@ -206,31 +223,31 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
       values.clear();
     }
 
-    SQLSerializer serializer = createSerializerAndSerialize();
-    Statement statement = prepareStatementAndSetParameters(connection, serializer, withKeys);
+    var serializer = createSerializerAndSerialize();
+    var statement = prepareStatementAndSetParameters(connection, serializer, withKeys);
 
     return statement;
   }
 
   protected Statement prepareStatementAndSetParameters(
       Connection connection, SQLSerializer serializer, boolean withKeys) {
-    List<Object> constants = serializer.getConstants();
-    String originalSql = serializer.toString();
+    var constants = serializer.getConstants();
+    var originalSql = serializer.toString();
     queryString =
         R2dbcUtils.replaceBindingArguments(
             configuration.getBindMarkerFactory().create(), constants, originalSql);
 
     logQuery(logger, queryString, constants);
 
-    Statement statement = connection.createStatement(queryString);
+    var statement = connection.createStatement(queryString);
     BindTarget bindTarget = new StatementWrapper(statement);
 
     if (withKeys) {
       if (entity.getPrimaryKey() != null) {
-        String[] target = new String[entity.getPrimaryKey().getLocalColumns().size()];
-        for (int i = 0; i < target.length; i++) {
+        var target = new String[entity.getPrimaryKey().getLocalColumns().size()];
+        for (var i = 0; i < target.length; i++) {
           Path<?> path = entity.getPrimaryKey().getLocalColumns().get(i);
-          String column = ColumnMetadata.getName(path);
+          var column = ColumnMetadata.getName(path);
           target[i] = column;
         }
         statement.returnGeneratedValues(target);
@@ -293,7 +310,7 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
 
   @Override
   public List<SQLBindings> getSQL() {
-    SQLSerializer serializer = createSerializer(true);
+    var serializer = createSerializer(true);
     serializer.serializeInsert(metadata, entity, columns, values, subQuery);
     return Collections.singletonList(createBindings(metadata, serializer));
   }
@@ -350,13 +367,13 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
 
   @Override
   public String toString() {
-    SQLSerializer serializer = createSerializer(true);
+    var serializer = createSerializer(true);
     serializer.serializeInsert(metadata, entity, columns, values, subQuery);
     return serializer.toString();
   }
 
   private SQLSerializer createSerializerAndSerialize() {
-    SQLSerializer serializer = createSerializer(true);
+    var serializer = createSerializer(true);
     serializer.serializeInsert(metadata, entity, columns, values, subQuery);
     return serializer;
   }
@@ -381,7 +398,7 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
    */
   @SuppressWarnings("rawtypes")
   public <T> C populate(T obj, Mapper<T> mapper) {
-    Map<Path<?>, Object> values = mapper.createMap(entity, obj);
+    var values = mapper.createMap(entity, obj);
     for (Map.Entry<Path<?>, Object> entry : values.entrySet()) {
       set((Path) entry.getKey(), entry.getValue());
     }

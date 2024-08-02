@@ -66,7 +66,7 @@ public class SimpleCompilerTest {
     new File("target/out2").mkdir();
     JavaCompiler compiler = new SimpleCompiler();
     System.out.println(compiler.getClass().getName());
-    List<String> options = new ArrayList<String>(3);
+    List<String> options = new ArrayList<>(3);
     options.add("-s");
     options.add("target/out2");
     options.add("src/test/java/com/querydsl/codegen/utils/SimpleCompilerTest.java");

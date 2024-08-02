@@ -47,9 +47,9 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
 
   private final Map<Path<?>, Expression<?>> inserts = new LinkedHashMap<>();
 
-  private final List<Path<?>> columns = new ArrayList<Path<?>>();
+  private final List<Path<?>> columns = new ArrayList<>();
 
-  private final List<Object> values = new ArrayList<Object>();
+  private final List<Object> values = new ArrayList<>();
 
   private SubQueryExpression<?> subQuery;
 
@@ -57,7 +57,7 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
 
   private final JPQLTemplates templates;
 
-  private final Map<Path<?>, LockMode> lockModes = new HashMap<Path<?>, LockMode>();
+  private final Map<Path<?>, LockMode> lockModes = new HashMap<>();
 
   public HibernateInsertClause(Session session, EntityPath<?> entity) {
     this(new DefaultSessionHolder(session), entity, HQLTemplates.DEFAULT);
@@ -80,7 +80,7 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
 
   @Override
   public long execute() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, null);
+    var serializer = new JPQLSerializer(templates, null);
     serializer.serializeForInsert(
         queryMixin.getMetadata(),
         inserts.isEmpty() ? columns : inserts.keySet(),
@@ -122,7 +122,7 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
 
   @Override
   public String toString() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, null);
+    var serializer = new JPQLSerializer(templates, null);
     serializer.serializeForInsert(
         queryMixin.getMetadata(),
         inserts.isEmpty() ? columns : inserts.keySet(),

@@ -33,69 +33,66 @@ public class QuerydslAnnotationProcessorTest extends AbstractProcessorTest {
 
   @Test
   public void process() throws IOException {
-    File file = new File(PACKAGE_PATH, "AbstractEntityTest.java");
+    var file = new File(PACKAGE_PATH, "AbstractEntityTest.java");
     process(QuerydslAnnotationProcessor.class, Collections.singletonList(file.getPath()), "qdsl");
   }
 
   @Test
   public void process_monitoredCompany() throws IOException {
-    String path = new File(PACKAGE_PATH, "MonitoredCompany.java").getPath();
+    var path = new File(PACKAGE_PATH, "MonitoredCompany.java").getPath();
     process(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "MonitoredCompany");
   }
 
   @Test
   public void process_inheritance3() throws IOException {
-    String path =
+    var path =
         new File("src/test/java/com/querydsl/apt/inheritance/Inheritance3Test.java").getPath();
     process(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "Inheritance3Test");
   }
 
   @Test
   public void process_inheritance8() throws IOException {
-    String path =
+    var path =
         new File("src/test/java/com/querydsl/apt/inheritance/Inheritance8Test.java").getPath();
     process(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "Inheritance8Test");
   }
 
   @Test
   public void process_queryEmbedded3() throws IOException {
-    String path =
-        new File("src/test/java/com/querydsl/apt/domain/QueryEmbedded3Test.java").getPath();
+    var path = new File("src/test/java/com/querydsl/apt/domain/QueryEmbedded3Test.java").getPath();
     process(
         QuerydslAnnotationProcessor.class, Collections.singletonList(path), "QueryEmbedded3Test");
   }
 
   @Test
   public void process_queryEmbedded4() throws IOException {
-    String path =
-        new File("src/test/java/com/querydsl/apt/domain/QueryEmbedded4Test.java").getPath();
+    var path = new File("src/test/java/com/querydsl/apt/domain/QueryEmbedded4Test.java").getPath();
     process(
         QuerydslAnnotationProcessor.class, Collections.singletonList(path), "QueryEmbedded4Test");
   }
 
   @Test
   public void process_delegate() throws IOException {
-    String path = new File("src/test/java/com/querydsl/apt/domain/DelegateTest.java").getPath();
+    var path = new File("src/test/java/com/querydsl/apt/domain/DelegateTest.java").getPath();
     process(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "DelegateTest");
   }
 
   @Test
   public void process_abstractClasses() throws IOException {
-    String path =
-        new File("src/test/java/com/querydsl/apt/domain/AbstractClassesTest.java").getPath();
+    var path = new File("src/test/java/com/querydsl/apt/domain/AbstractClassesTest.java").getPath();
     process(JPAAnnotationProcessor.class, Collections.singletonList(path), "AbstractClassesTest");
   }
 
   @Test
   public void process_abstractClasses2() throws IOException {
-    String path =
+    var path =
         new File("src/test/java/com/querydsl/apt/domain/AbstractClasses2Test.java").getPath();
     process(JPAAnnotationProcessor.class, Collections.singletonList(path), "abstractClasses2");
   }
 
   @Test
   public void process_genericSignature() throws IOException {
-    String path =
+    var path =
         new File("src/test/java/com/querydsl/apt/domain/GenericSignatureTest.java").getPath();
     process(
         QuerydslAnnotationProcessor.class, Collections.singletonList(path), "GenericSignatureTest");
@@ -103,7 +100,7 @@ public class QuerydslAnnotationProcessorTest extends AbstractProcessorTest {
 
   @Test
   public void process_abstractProperties2Test() throws IOException {
-    String path =
+    var path =
         new File("src/test/java/com/querydsl/apt/domain/AbstractProperties2Test.java").getPath();
     process(
         QuerydslAnnotationProcessor.class,
@@ -113,35 +110,34 @@ public class QuerydslAnnotationProcessorTest extends AbstractProcessorTest {
 
   @Test
   public void process_inheritance2Test() throws IOException {
-    String path =
+    var path =
         new File("src/test/java/com/querydsl/apt/inheritance/Inheritance2Test.java").getPath();
     process(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "InheritanceTest2");
   }
 
   @Test
   public void process_entityInheritanceTest() throws IOException {
-    String path =
+    var path =
         new File("src/test/java/com/querydsl/apt/domain/EntityInheritanceTest.java").getPath();
     process(JPAAnnotationProcessor.class, Collections.singletonList(path), "EntityInheritanceTest");
   }
 
   @Test
   public void process_enum2Test() throws IOException {
-    String path = new File("src/test/java/com/querydsl/apt/domain/Enum2Test.java").getPath();
+    var path = new File("src/test/java/com/querydsl/apt/domain/Enum2Test.java").getPath();
     process(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "Enum2Test");
   }
 
   @Test
   public void process_externalEntityTest() throws IOException {
-    String path =
-        new File("src/test/java/com/querydsl/apt/domain/ExternalEntityTest.java").getPath();
+    var path = new File("src/test/java/com/querydsl/apt/domain/ExternalEntityTest.java").getPath();
     process(
         QuerydslAnnotationProcessor.class, Collections.singletonList(path), "ExternalEntityTest");
   }
 
   @Test
   public void process_generic13Test() throws IOException {
-    String path = new File("src/test/java/com/querydsl/apt/domain/Generic13Test.java").getPath();
+    var path = new File("src/test/java/com/querydsl/apt/domain/Generic13Test.java").getPath();
     process(QuerydslAnnotationProcessor.class, Collections.singletonList(path), "Generic13Test");
   }
 

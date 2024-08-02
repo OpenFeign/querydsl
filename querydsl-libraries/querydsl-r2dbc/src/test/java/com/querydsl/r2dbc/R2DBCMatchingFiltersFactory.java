@@ -17,8 +17,20 @@ import com.querydsl.core.NumberConstant;
 import com.querydsl.core.QuerydslModule;
 import com.querydsl.core.StringConstant;
 import com.querydsl.core.Target;
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.MapExpression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.ArrayExpression;
+import com.querydsl.core.types.dsl.CollectionExpressionBase;
+import com.querydsl.core.types.dsl.ComparableExpression;
+import com.querydsl.core.types.dsl.ListExpression;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.MapExpressionBase;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringExpression;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -45,7 +57,7 @@ public class R2DBCMatchingFiltersFactory {
       ArrayExpression<A[], A> other,
       A knownElement,
       A missingElement) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     //        rv.add(expr.isEmpty().not());
     if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size().gt(0));
@@ -58,7 +70,7 @@ public class R2DBCMatchingFiltersFactory {
       CollectionExpression<?, A> other,
       A knownElement,
       A missingElement) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.contains(knownElement));
       rv.add(expr.contains(missingElement).not());
@@ -71,7 +83,7 @@ public class R2DBCMatchingFiltersFactory {
   @SuppressWarnings("unchecked")
   private <A extends Comparable> Collection<Predicate> comparable(
       ComparableExpression<A> expr, Expression<A> other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.add(expr.eq(other));
     rv.add(expr.goe(other));
     rv.add(expr.loe(other));
@@ -81,7 +93,7 @@ public class R2DBCMatchingFiltersFactory {
 
   public Collection<Predicate> date(
       LocalDateExpression<LocalDate> expr, LocalDateExpression<LocalDate> other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(comparable(expr, other));
     rv.add(expr.dayOfMonth().eq(other.dayOfMonth()));
 
@@ -112,7 +124,7 @@ public class R2DBCMatchingFiltersFactory {
       LocalDateExpression<LocalDate> expr,
       LocalDateExpression<LocalDate> other,
       LocalDate knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(date(expr, other));
     rv.addAll(date(expr, R2DBCDateConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
@@ -120,7 +132,7 @@ public class R2DBCMatchingFiltersFactory {
 
   public Collection<Predicate> dateTime(
       LocalDateTimeExpression<LocalDateTime> expr, LocalDateTimeExpression<LocalDateTime> other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(comparable(expr, other));
     rv.add(expr.milliSecond().eq(other.milliSecond()));
     rv.add(expr.second().eq(other.second()));
@@ -154,7 +166,7 @@ public class R2DBCMatchingFiltersFactory {
       LocalDateTimeExpression<LocalDateTime> expr,
       LocalDateTimeExpression<LocalDateTime> other,
       LocalDateTime knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(dateTime(expr, other));
     rv.addAll(dateTime(expr, R2DBCDateTimeConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
@@ -172,7 +184,7 @@ public class R2DBCMatchingFiltersFactory {
       V knownValue,
       K missingKey,
       V missingValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.add(expr.containsKey(knownKey));
     rv.add(expr.containsKey(missingKey).not());
     rv.add(expr.containsValue(knownValue));
@@ -185,7 +197,7 @@ public class R2DBCMatchingFiltersFactory {
 
   public <A extends Number & Comparable<A>> Collection<Predicate> numeric(
       NumberExpression<A> expr, NumberExpression<A> other, A knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(numeric(expr, other));
     rv.addAll(numeric(expr, NumberConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
@@ -193,7 +205,7 @@ public class R2DBCMatchingFiltersFactory {
 
   public <A extends Number & Comparable<A>> Collection<Predicate> numeric(
       NumberExpression<A> expr, NumberExpression<A> other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.add(expr.eq(other));
     rv.add(expr.goe(other));
     rv.add(expr.gt(other.subtract(1)));
@@ -206,7 +218,7 @@ public class R2DBCMatchingFiltersFactory {
   }
 
   public Collection<Predicate> string(StringExpression expr, StringExpression other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     if (module != QuerydslModule.LUCENE) {
       rv.addAll(comparable(expr, other));
 
@@ -315,7 +327,7 @@ public class R2DBCMatchingFiltersFactory {
 
   public Collection<Predicate> string(
       StringExpression expr, StringExpression other, String knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(string(expr, other));
     rv.addAll(string(expr, StringConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
@@ -323,7 +335,7 @@ public class R2DBCMatchingFiltersFactory {
 
   public Collection<Predicate> time(
       LocalTimeExpression<LocalTime> expr, LocalTimeExpression<LocalTime> other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(comparable(expr, other));
     rv.add(expr.milliSecond().eq(other.milliSecond()));
     rv.add(expr.second().eq(other.second()));
@@ -336,7 +348,7 @@ public class R2DBCMatchingFiltersFactory {
       LocalTimeExpression<LocalTime> expr,
       LocalTimeExpression<LocalTime> other,
       LocalTime knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(time(expr, other));
     rv.addAll(time(expr, R2DBCTimeConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);

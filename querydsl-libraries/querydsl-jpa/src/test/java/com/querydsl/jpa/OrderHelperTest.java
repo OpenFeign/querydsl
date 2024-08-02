@@ -12,7 +12,7 @@ public class OrderHelperTest {
 
   @Test
   public void order() {
-    PathBuilder<Object> entity = new PathBuilder<Object>(Object.class, "project");
+    var entity = new PathBuilder<>(Object.class, "project");
     List<String> order = new ArrayList<>();
     order.add("customer.name");
     order.add("department.superior.name");

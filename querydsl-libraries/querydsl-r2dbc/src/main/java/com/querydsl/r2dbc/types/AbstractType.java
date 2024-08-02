@@ -44,7 +44,7 @@ public abstract class AbstractType<IN, OUT> implements Type<IN, OUT> {
 
   @Override
   public IN getValue(Row row, int startIndex) {
-    OUT value = row.get(startIndex, getDatabaseClass());
+    var value = row.get(startIndex, getDatabaseClass());
     if (value == null) {
       return null;
     }

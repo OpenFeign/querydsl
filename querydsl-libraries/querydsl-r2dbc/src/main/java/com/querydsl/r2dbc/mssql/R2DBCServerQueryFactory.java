@@ -16,7 +16,11 @@ package com.querydsl.r2dbc.mssql;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.r2dbc.*;
+import com.querydsl.r2dbc.AbstractR2DBCQueryFactory;
+import com.querydsl.r2dbc.Configuration;
+import com.querydsl.r2dbc.R2DBCConnectionProvider;
+import com.querydsl.r2dbc.SQLServerTemplates;
+import com.querydsl.r2dbc.SQLTemplates;
 import com.querydsl.sql.RelationalPath;
 
 /**

@@ -22,7 +22,11 @@ import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.junit.Test;
 
 /** The Class CoverageTest. */
@@ -41,10 +45,10 @@ public class CoverageTest {
   @Test
   public void test() throws IllegalArgumentException, IllegalAccessException {
     // make sure all Operators are covered in expression factory methods
-    Set<Operator> usedOperators = new HashSet<Operator>();
-    List<Expression<?>> exprs = new ArrayList<Expression<?>>();
+    Set<Operator> usedOperators = new HashSet<>();
+    List<Expression<?>> exprs = new ArrayList<>();
 
-    Entity entity = Alias.alias(Entity.class, "entity");
+    var entity = Alias.alias(Entity.class, "entity");
     // numeric
     exprs.addAll(projections.numeric($(entity.getNum()), $(entity.getNum()), 1, false));
     exprs.addAll(matchers.numeric($(entity.getNum()), $(entity.getNum()), 1));
@@ -128,10 +132,10 @@ public class CoverageTest {
             Ops.AggOps.COUNT_ALL_AGG,
             Ops.EXISTS));
 
-    List<Operator> notContained = new ArrayList<Operator>();
+    List<Operator> notContained = new ArrayList<>();
     for (Field field : Ops.class.getFields()) {
       if (Operator.class.isAssignableFrom(field.getType())) {
-        Operator val = (Operator) field.get(null);
+        var val = (Operator) field.get(null);
         if (!usedOperators.contains(val)) {
           System.err.println(field.getName() + " was not contained");
           notContained.add(val);

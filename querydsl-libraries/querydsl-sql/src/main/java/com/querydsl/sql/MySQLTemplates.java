@@ -162,7 +162,7 @@ public class MySQLTemplates extends SQLTemplates {
 
   @Override
   public String escapeLiteral(String str) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     for (char ch : super.escapeLiteral(str).toCharArray()) {
       if (ch == '\\') {
         builder.append("\\");

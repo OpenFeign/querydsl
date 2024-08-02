@@ -1,6 +1,5 @@
 package com.querydsl.r2dbc;
 
-import io.r2dbc.spi.Connection;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -25,7 +24,7 @@ public class MetadataTest {
   }
 
   private void printMetadata() {
-    Connection conn = Connections.getConnection();
+    var conn = Connections.getConnection();
     System.out.println(conn.getMetadata().getDatabaseProductName());
   }
 }

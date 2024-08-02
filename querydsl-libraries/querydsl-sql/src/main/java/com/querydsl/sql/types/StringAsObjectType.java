@@ -13,7 +13,11 @@
  */
 package com.querydsl.sql.types;
 
-import java.sql.*;
+import java.sql.Clob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  * {@code StringAsObjectType} maps String to String on the JDBC level
@@ -34,11 +38,11 @@ public class StringAsObjectType extends AbstractType<String> {
 
   @Override
   public String getValue(ResultSet rs, int startIndex) throws SQLException {
-    Object o = rs.getObject(startIndex);
+    var o = rs.getObject(startIndex);
     if (o instanceof String) {
       return (String) o;
     } else if (o instanceof Clob) {
-      Clob clob = (Clob) o;
+      var clob = (Clob) o;
       return clob.getSubString(1, (int) clob.length());
     } else if (o != null) {
       return o.toString();

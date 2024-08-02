@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import org.junit.Test;
 
 public class NameSuffixTest extends AbstractProcessorTest {
@@ -29,7 +28,7 @@ public class NameSuffixTest extends AbstractProcessorTest {
   @Test
   public void process_all() throws IOException {
     // works only in Eclipse for the moment
-    List<String> classes = getFiles(packagePath);
+    var classes = getFiles(packagePath);
 
     // default Processor
     process(QuerydslAnnotationProcessor.class, classes, "suffix");

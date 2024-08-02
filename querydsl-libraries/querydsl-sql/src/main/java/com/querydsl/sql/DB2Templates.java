@@ -15,8 +15,11 @@ package com.querydsl.sql;
 
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.QueryModifiers;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.FactoryExpressionUtils;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import java.sql.Types;
 
 /**
@@ -157,14 +160,14 @@ public class DB2Templates extends SQLTemplates {
   @Override
   public void serialize(QueryMetadata metadata, boolean forCountRow, SQLSerializer context) {
     if (!forCountRow && metadata.getModifiers().isRestricting() && !metadata.getJoins().isEmpty()) {
-      QueryModifiers mod = metadata.getModifiers();
+      var mod = metadata.getModifiers();
       if (mod.getOffset() == null) {
         context.serializeForQuery(metadata, forCountRow);
         context.handle(limitTemplate, mod.getLimit());
       } else {
         context.append(outerQueryStart);
         metadata = metadata.clone();
-        WindowFunction<Long> rn = SQLExpressions.rowNumber().over();
+        var rn = SQLExpressions.rowNumber().over();
         for (OrderSpecifier<?> os : metadata.getOrderBy()) {
           rn.orderBy(os);
         }

@@ -16,7 +16,6 @@ package com.querydsl.sql;
 import static com.querydsl.sql.Constants.survey;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.sql.dml.SQLInsertClause;
 import java.sql.SQLException;
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +26,7 @@ public abstract class LikeEscapeBase extends AbstractBaseTest {
   @Before
   public void setUp() throws SQLException {
     delete(survey).execute();
-    SQLInsertClause insert = insert(survey);
+    var insert = insert(survey);
     insert.set(survey.id, 5).set(survey.name, "aaa").addBatch();
     insert.set(survey.id, 6).set(survey.name, "a_").addBatch();
     insert.set(survey.id, 7).set(survey.name, "a%").addBatch();

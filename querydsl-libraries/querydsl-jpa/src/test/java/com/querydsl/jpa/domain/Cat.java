@@ -39,7 +39,7 @@ public class Cat extends Animal {
       joinColumns = @JoinColumn(name = "cat_id"),
       inverseJoinColumns = @JoinColumn(name = "kitten_id"))
   @OrderColumn(name = "ind")
-  private List<Cat> kittens = new ArrayList<Cat>();
+  private List<Cat> kittens = new ArrayList<>();
 
   @OneToMany
   @JoinTable(

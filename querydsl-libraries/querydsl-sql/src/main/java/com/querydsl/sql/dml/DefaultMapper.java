@@ -51,14 +51,14 @@ public class DefaultMapper extends AbstractMapper<Object> {
     try {
       Map<Path<?>, Object> values = new LinkedHashMap<>();
       Class<?> beanClass = bean.getClass();
-      Map<String, Path<?>> columns = getColumns(entity);
+      var columns = getColumns(entity);
       // populate in column order
       for (Map.Entry<String, Path<?>> entry : columns.entrySet()) {
         Path<?> path = entry.getValue();
         Field beanField = ReflectionUtils.getFieldOrNull(beanClass, entry.getKey());
         if (beanField != null && !Modifier.isStatic(beanField.getModifiers())) {
           beanField.setAccessible(true);
-          Object propertyValue = beanField.get(bean);
+          var propertyValue = beanField.get(bean);
           if (propertyValue != null) {
             values.put(path, propertyValue);
           } else if (withNullBindings && !isPrimaryKeyColumn(entity, path)) {

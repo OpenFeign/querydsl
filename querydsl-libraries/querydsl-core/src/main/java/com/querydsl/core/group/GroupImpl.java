@@ -16,7 +16,14 @@ package com.querydsl.core.group;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.Ops;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 /**
  * Default implementation of the Group interface
@@ -26,12 +33,11 @@ import java.util.*;
  */
 public class GroupImpl implements Group {
 
-  private final Map<Expression<?>, GroupCollector<?, ?>> groupCollectorMap =
-      new LinkedHashMap<Expression<?>, GroupCollector<?, ?>>();
+  private final Map<Expression<?>, GroupCollector<?, ?>> groupCollectorMap = new LinkedHashMap<>();
 
   private final List<GroupExpression<?, ?>> groupExpressions;
 
-  private final List<GroupCollector<?, ?>> groupCollectors = new ArrayList<GroupCollector<?, ?>>();
+  private final List<GroupCollector<?, ?>> groupCollectors = new ArrayList<>();
 
   private final List<QPair<?, ?>> maps;
 
@@ -55,7 +61,7 @@ public class GroupImpl implements Group {
 
   @SuppressWarnings("unchecked")
   public void add(Object[] row) {
-    int i = 0;
+    var i = 0;
     for (GroupCollector groupCollector : groupCollectors) {
       groupCollector.add(row[i]);
       i++;
@@ -64,7 +70,7 @@ public class GroupImpl implements Group {
 
   @SuppressWarnings("unchecked")
   private <T, R> R get(Expression<T> expr) {
-    GroupCollector<T, R> col = (GroupCollector<T, R>) groupCollectorMap.get(expr);
+    var col = (GroupCollector<T, R>) groupCollectorMap.get(expr);
     if (col != null) {
       return col.get();
     }
@@ -126,7 +132,7 @@ public class GroupImpl implements Group {
 
   @Override
   public Object[] toArray() {
-    List<Object> arr = new ArrayList<Object>(groupCollectors.size());
+    List<Object> arr = new ArrayList<>(groupCollectors.size());
     for (GroupCollector<?, ?> col : groupCollectors) {
       arr.add(col.get());
     }

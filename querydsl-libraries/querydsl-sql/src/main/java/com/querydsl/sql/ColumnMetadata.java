@@ -30,7 +30,7 @@ public final class ColumnMetadata implements Serializable {
   public static ColumnMetadata getColumnMetadata(Path<?> path) {
     Path<?> parent = path.getMetadata().getParent();
     if (parent instanceof EntityPath) {
-      Object columnMetadata = ((EntityPath<?>) parent).getMetadata(path);
+      var columnMetadata = ((EntityPath<?>) parent).getMetadata(path);
       if (columnMetadata instanceof ColumnMetadata) {
         return (ColumnMetadata) columnMetadata;
       }
@@ -48,7 +48,7 @@ public final class ColumnMetadata implements Serializable {
   public static String getName(Path<?> path) {
     Path<?> parent = path.getMetadata().getParent();
     if (parent instanceof EntityPath) {
-      Object columnMetadata = ((EntityPath<?>) parent).getMetadata(path);
+      var columnMetadata = ((EntityPath<?>) parent).getMetadata(path);
       if (columnMetadata instanceof ColumnMetadata) {
         return ((ColumnMetadata) columnMetadata).getName();
       }
@@ -162,7 +162,7 @@ public final class ColumnMetadata implements Serializable {
     if (o == this) {
       return true;
     } else if (o instanceof ColumnMetadata) {
-      ColumnMetadata md = (ColumnMetadata) o;
+      var md = (ColumnMetadata) o;
       return name.equals(md.name)
           && Objects.equals(jdbcType, md.jdbcType)
           && nullable == md.nullable

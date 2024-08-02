@@ -19,7 +19,7 @@ public class DummyFetchable<T> implements Fetchable<T> {
 
   @Override
   public CloseableIterator<T> iterate() {
-    return new IteratorAdapter<T>(results.iterator());
+    return new IteratorAdapter<>(results.iterator());
   }
 
   @Override
@@ -47,7 +47,7 @@ public class DummyFetchable<T> implements Fetchable<T> {
 
   @Override
   public QueryResults<T> fetchResults() {
-    return new QueryResults<T>(results, QueryModifiers.EMPTY, results.size());
+    return new QueryResults<>(results, QueryModifiers.EMPTY, results.size());
   }
 
   @Override

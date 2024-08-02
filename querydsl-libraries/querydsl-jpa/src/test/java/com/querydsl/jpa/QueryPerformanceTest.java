@@ -10,7 +10,11 @@ import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
 import jakarta.persistence.EntityManager;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
@@ -42,7 +46,7 @@ public class QueryPerformanceTest implements JPATest {
   @Before
   public void setUp() {
     if (query().from(QCat.cat).fetchCount() == 0) {
-      for (int i = 0; i < iterations; i++) {
+      for (var i = 0; i < iterations; i++) {
         entityManager.persist(new Cat(String.valueOf(i), i + 100));
       }
       entityManager.flush();
@@ -51,9 +55,9 @@ public class QueryPerformanceTest implements JPATest {
 
   @Test
   public void byId_raw() {
-    long start = System.currentTimeMillis();
-    for (int i = 0; i < iterations; i++) {
-      Cat cat =
+    var start = System.currentTimeMillis();
+    for (var i = 0; i < iterations; i++) {
+      var cat =
           (Cat)
               entityManager
                   .createQuery("select cat from Cat cat where id = ?")
@@ -66,9 +70,9 @@ public class QueryPerformanceTest implements JPATest {
 
   @Test
   public void byId_qdsl() {
-    long start = System.currentTimeMillis();
-    for (int i = 0; i < iterations; i++) {
-      QCat cat = QCat.cat;
+    var start = System.currentTimeMillis();
+    for (var i = 0; i < iterations; i++) {
+      var cat = QCat.cat;
       Cat c = query().from(cat).where(cat.id.eq(i + 100)).select(cat).fetchOne();
       assertThat(c).isNotNull();
     }
@@ -77,9 +81,9 @@ public class QueryPerformanceTest implements JPATest {
 
   @Test
   public void byId_twoCols_raw() {
-    long start = System.currentTimeMillis();
-    for (int i = 0; i < iterations; i++) {
-      Object[] row =
+    var start = System.currentTimeMillis();
+    for (var i = 0; i < iterations; i++) {
+      var row =
           (Object[])
               entityManager
                   .createQuery("select cat.id, cat.name from Cat cat where id = ?")
@@ -92,9 +96,9 @@ public class QueryPerformanceTest implements JPATest {
 
   @Test
   public void byId_twoCols_qdsl() {
-    long start = System.currentTimeMillis();
-    for (int i = 0; i < iterations; i++) {
-      QCat cat = QCat.cat;
+    var start = System.currentTimeMillis();
+    for (var i = 0; i < iterations; i++) {
+      var cat = QCat.cat;
       Tuple row = query().from(cat).where(cat.id.eq(i + 100)).select(cat.id, cat.name).fetchOne();
       assertThat(row).isNotNull();
     }

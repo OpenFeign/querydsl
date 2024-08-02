@@ -64,8 +64,8 @@ public abstract class AbstractMongodbQuery<Q extends AbstractMongodbQuery<Q>>
   @SuppressWarnings("unchecked")
   public AbstractMongodbQuery(MongodbDocumentSerializer serializer) {
     @SuppressWarnings("unchecked") // Q is this plus subclass
-    Q query = (Q) this;
-    this.queryMixin = new QueryMixin<Q>(query, new DefaultQueryMetadata(), false);
+    var query = (Q) this;
+    this.queryMixin = new QueryMixin<>(query, new DefaultQueryMetadata(), false);
     this.serializer = serializer;
   }
 
@@ -77,7 +77,7 @@ public abstract class AbstractMongodbQuery<Q extends AbstractMongodbQuery<Q>>
    * @return join builder
    */
   public <T> JoinBuilder<Q, T> join(Path<T> ref, Path<T> target) {
-    return new JoinBuilder<Q, T>(queryMixin, ref, target);
+    return new JoinBuilder<>(queryMixin, ref, target);
   }
 
   /**
@@ -88,7 +88,7 @@ public abstract class AbstractMongodbQuery<Q extends AbstractMongodbQuery<Q>>
    * @return join builder
    */
   public <T> JoinBuilder<Q, T> join(CollectionPathBase<?, T, ?> ref, Path<T> target) {
-    return new JoinBuilder<Q, T>(queryMixin, ref, target);
+    return new JoinBuilder<>(queryMixin, ref, target);
   }
 
   /**
@@ -100,7 +100,7 @@ public abstract class AbstractMongodbQuery<Q extends AbstractMongodbQuery<Q>>
    */
   public <T> AnyEmbeddedBuilder<Q> anyEmbedded(
       Path<? extends Collection<T>> collection, Path<T> target) {
-    return new AnyEmbeddedBuilder<Q>(queryMixin, collection);
+    return new AnyEmbeddedBuilder<>(queryMixin, collection);
   }
 
   @Nullable
@@ -119,12 +119,12 @@ public abstract class AbstractMongodbQuery<Q extends AbstractMongodbQuery<Q>>
   protected Predicate createJoinFilter(QueryMetadata metadata) {
     Map<Expression<?>, Predicate> predicates = new HashMap<>();
     List<JoinExpression> joins = metadata.getJoins();
-    for (int i = joins.size() - 1; i >= 0; i--) {
-      JoinExpression join = joins.get(i);
+    for (var i = joins.size() - 1; i >= 0; i--) {
+      var join = joins.get(i);
       Path<?> source = (Path) ((Operation<?>) join.getTarget()).getArg(0);
       Path<?> target = (Path) ((Operation<?>) join.getTarget()).getArg(1);
 
-      final Predicate extraFilters = predicates.get(target.getRoot());
+      final var extraFilters = predicates.get(target.getRoot());
       Predicate filter = ExpressionUtils.allOf(join.getCondition(), extraFilters);
       List<? extends Object> ids = getIds(target.getType(), filter);
       if (ids.isEmpty()) {
@@ -189,7 +189,7 @@ public abstract class AbstractMongodbQuery<Q extends AbstractMongodbQuery<Q>>
 
   protected Document createProjection(Expression<?> projection) {
     if (projection instanceof FactoryExpression) {
-      Document obj = new Document();
+      var obj = new Document();
       for (Object expr : ((FactoryExpression) projection).getArgs()) {
         if (expr instanceof Expression) {
           obj.put((String) serializer.handle((Expression) expr), 1);

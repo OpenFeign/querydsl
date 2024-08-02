@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.MappingProjection;
-import java.util.List;
 import org.junit.Test;
 
 @SuppressWarnings("serial")
@@ -17,7 +16,7 @@ public class MappingProjectionTest extends AbstractQueryTest {
   @Test
   public void test() {
     final MappingProjection<ResultPart> key =
-        new MappingProjection<ResultPart>(ResultPart.class, cat.name) {
+        new MappingProjection<>(ResultPart.class, cat.name) {
 
           @Override
           protected ResultPart map(Tuple row) {
@@ -25,11 +24,11 @@ public class MappingProjectionTest extends AbstractQueryTest {
           }
         };
 
-    List<ResultObject> list =
+    var list =
         query()
             .from(cat, cats)
             .select(
-                new MappingProjection<ResultObject>(ResultObject.class, key) {
+                new MappingProjection<>(ResultObject.class, key) {
 
                   @Override
                   protected ResultObject map(Tuple row) {

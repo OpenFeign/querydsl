@@ -40,16 +40,16 @@ public class GroupByIterate<K, V> extends AbstractGroupByTransformer<K, Closeabl
   public CloseableIterator<V> transform(FetchableQuery<?, ?> query) {
     // create groups
     FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-    boolean hasGroups = false;
+    var hasGroups = false;
     for (Expression<?> e : expr.getArgs()) {
       hasGroups |= e instanceof GroupExpression;
     }
     if (hasGroups) {
       expr = withoutGroupExpressions(expr);
     }
-    final CloseableIterator<Tuple> iter = query.select(expr).iterate();
+    final var iter = query.select(expr).iterate();
 
-    return new CloseableIterator<V>() {
+    return new CloseableIterator<>() {
 
       private GroupImpl group;
 
@@ -74,7 +74,7 @@ public class GroupByIterate<K, V> extends AbstractGroupByTransformer<K, Closeabl
 
         while (iter.hasNext()) {
           @SuppressWarnings("unchecked") // This type is mandated by the key type
-          K[] row = (K[]) iter.next().toArray();
+          var row = (K[]) iter.next().toArray();
           if (group == null) {
             group = new GroupImpl(groupExpressions, maps);
             groupId = row[0];

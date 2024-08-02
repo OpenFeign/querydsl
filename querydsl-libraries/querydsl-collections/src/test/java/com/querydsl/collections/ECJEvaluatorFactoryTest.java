@@ -7,7 +7,7 @@ public class ECJEvaluatorFactoryTest extends AbstractQueryTest {
 
   @Test
   public void evaluator_factory() {
-    DefaultEvaluatorFactory evaluatorFactory =
+    var evaluatorFactory =
         new DefaultEvaluatorFactory(
             CollQueryTemplates.DEFAULT, new ECJEvaluatorFactory(getClass().getClassLoader()));
     QueryEngine queryEngine = new DefaultQueryEngine(evaluatorFactory);

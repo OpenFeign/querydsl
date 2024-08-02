@@ -1,6 +1,5 @@
 package com.querydsl.core.types;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class TemplateInfiniteLoop {
@@ -10,7 +9,7 @@ public final class TemplateInfiniteLoop {
   static String[] templates = createTemplates();
 
   public static void main(String[] args) {
-    ExecutorService executorService = Executors.newFixedThreadPool(3);
+    var executorService = Executors.newFixedThreadPool(3);
     executorService.execute(new Runner());
     executorService.execute(new Runner());
     executorService.execute(new Runner());
@@ -18,8 +17,9 @@ public final class TemplateInfiniteLoop {
   }
 
   private static class Runner implements Runnable {
+    @Override
     public void run() {
-      for (int i = 0; i < 100000; i++) {
+      for (var i = 0; i < 100000; i++) {
         TemplateFactory.DEFAULT.create(templates[i % templates.length]);
       }
     }
@@ -31,9 +31,9 @@ public final class TemplateInfiniteLoop {
    * @return
    */
   private static String[] createTemplates() {
-    String[] tab = new String[10000];
-    StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < tab.length; i++) {
+    var tab = new String[10000];
+    var builder = new StringBuilder();
+    for (var i = 0; i < tab.length; i++) {
       builder.append('\0');
       tab[i] = builder.toString() + 'a';
     }

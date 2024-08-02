@@ -18,7 +18,6 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.JavaTemplates;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.core.types.dsl.StringPath;
 import java.util.Map;
 import org.junit.Test;
 
@@ -26,14 +25,14 @@ public class SerializerBaseTest {
 
   @Test
   public void test() {
-    DummySerializer serializer = new DummySerializer(new JavaTemplates());
-    StringPath strPath = Expressions.stringPath("str");
+    var serializer = new DummySerializer(new JavaTemplates());
+    var strPath = Expressions.stringPath("str");
     // path
     serializer.handle(strPath);
     // operation
     serializer.handle(strPath.isNotNull());
     // long path
-    serializer.handle(new PathBuilder<Object>(Object.class, "p").getList("l", Map.class).get(0));
+    serializer.handle(new PathBuilder<>(Object.class, "p").getList("l", Map.class).get(0));
     // constant
     serializer.handle(ConstantImpl.create(""));
     //  custom

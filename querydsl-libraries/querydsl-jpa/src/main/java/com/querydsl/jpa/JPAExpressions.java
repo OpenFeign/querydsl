@@ -121,7 +121,7 @@ public final class JPAExpressions {
       BeanPath<? extends T> path, Class<U> subtype) {
     try {
       Class<? extends T> entitySubType = getConcreteEntitySubType(subtype);
-      PathMetadata pathMetadata =
+      var pathMetadata =
           new PathMetadata(path, getEntityName(entitySubType), PathType.TREATED_PATH);
       return subtype.getConstructor(PathMetadata.class).newInstance(pathMetadata);
     } catch (InstantiationException e) {
@@ -182,11 +182,11 @@ public final class JPAExpressions {
   }
 
   private static String getEntityName(Class<?> clazz) {
-    final Entity entityAnnotation = clazz.getAnnotation(Entity.class);
+    final var entityAnnotation = clazz.getAnnotation(Entity.class);
     if (entityAnnotation != null && entityAnnotation.name().length() > 0) {
       return entityAnnotation.name();
     } else if (clazz.getPackage() != null) {
-      String pn = clazz.getPackage().getName();
+      var pn = clazz.getPackage().getName();
       return clazz.getName().substring(pn.length() + 1);
     } else {
       return clazz.getName();

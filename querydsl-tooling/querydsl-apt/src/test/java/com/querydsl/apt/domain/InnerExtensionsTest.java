@@ -24,7 +24,7 @@ public class InnerExtensionsTest extends AbstractProcessorTest {
             new File(packagePath, "InnerExtensions.java").getPath(),
             new File(packagePath, "ExampleEntity2.java").getPath());
     process(QuerydslAnnotationProcessor.class, sources, "innerextensions");
-    String qtypeContent =
+    var qtypeContent =
         new String(
             Files.readAllBytes(
                 Paths.get("target", "innerextensions", "com", "querydsl", "QExampleEntity2.java")),

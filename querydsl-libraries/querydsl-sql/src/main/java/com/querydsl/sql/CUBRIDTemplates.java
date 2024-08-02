@@ -14,7 +14,6 @@
 package com.querydsl.sql;
 
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.types.Ops;
 import com.querydsl.sql.types.NumericBooleanType;
 import java.sql.Types;
@@ -74,7 +73,7 @@ public class CUBRIDTemplates extends SQLTemplates {
     add(Ops.DateTimeOps.ADD_MINUTES, "date_add({0}, interval {1s} minute)");
     add(Ops.DateTimeOps.ADD_SECONDS, "date_add({0}, interval {1s} second)");
 
-    String diffSeconds = "(unix_timestamp({1}) - unix_timestamp({0}))";
+    var diffSeconds = "(unix_timestamp({1}) - unix_timestamp({0}))";
     add(Ops.DateTimeOps.DIFF_YEARS, "(year({1}) - year({0}))");
     add(Ops.DateTimeOps.DIFF_MONTHS, "months_between({1}, {0})");
     add(Ops.DateTimeOps.DIFF_WEEKS, "ceil(({1}-{0}) / 7)");
@@ -133,7 +132,7 @@ public class CUBRIDTemplates extends SQLTemplates {
 
   @Override
   protected void serializeModifiers(QueryMetadata metadata, SQLSerializer context) {
-    QueryModifiers mod = metadata.getModifiers();
+    var mod = metadata.getModifiers();
     if (mod.getLimit() != null) {
       if (mod.getOffset() != null) {
         context.handle(offsetLimitTemplate, mod.getOffset(), mod.getLimit());

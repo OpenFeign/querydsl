@@ -25,7 +25,6 @@ import com.querydsl.core.types.Projections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -44,18 +43,18 @@ public class ReactiveGroupByMap<K, V> extends ReactiveAbstractGroupByTransformer
 
   @Override
   public Mono<Map<K, V>> transform(ReactiveFetchableQuery<?, ?> query) {
-    final Map<K, Group> groups = new LinkedHashMap<K, Group>();
+    final Map<K, Group> groups = new LinkedHashMap<>();
 
     // create groups
     FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-    boolean hasGroups = false;
+    var hasGroups = false;
     for (Expression<?> e : expr.getArgs()) {
       hasGroups |= e instanceof GroupExpression;
     }
     if (hasGroups) {
       expr = withoutGroupExpressions(expr);
     }
-    Flux<Tuple> result = query.select(expr).fetch();
+    var result = query.select(expr).fetch();
 
     return result
         .collectList()
@@ -63,9 +62,9 @@ public class ReactiveGroupByMap<K, V> extends ReactiveAbstractGroupByTransformer
             tupels -> {
               tupels.forEach(
                   tuple -> {
-                    K[] row = (K[]) tuple.toArray();
-                    K groupId = row[0];
-                    GroupImpl group = (GroupImpl) groups.get(groupId);
+                    var row = (K[]) tuple.toArray();
+                    var groupId = row[0];
+                    var group = (GroupImpl) groups.get(groupId);
                     if (group == null) {
                       group = new GroupImpl(groupExpressions, maps);
                       groups.put(groupId, group);

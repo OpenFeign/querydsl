@@ -50,8 +50,8 @@ public class GeneratedKeysH2Test {
                 .execute())
         .block();
 
-    QGeneratedKeysEntity entity = new QGeneratedKeysEntity("entity");
-    R2DBCInsertClause insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
+    var entity = new QGeneratedKeysEntity("entity");
+    var insertClause = new R2DBCInsertClause(conn, new H2Templates(), entity);
     Collection<Integer> key =
         insertClause.set(entity.name, "Hello").executeWithKeys(entity.id).collectList().block();
 

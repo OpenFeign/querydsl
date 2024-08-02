@@ -15,12 +15,13 @@
  */
 package com.querydsl.mongodb.document;
 
-import com.mongodb.ReadPreference;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.*;
+import com.querydsl.core.Fetchable;
+import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
@@ -76,10 +77,10 @@ public abstract class AbstractFetchableMongodbQuery<
 
   @Override
   public CloseableIterator<K> iterate() {
-    FindIterable<Document> cursor = createCursor();
-    final MongoCursor<Document> iterator = cursor.iterator();
+    var cursor = createCursor();
+    final var iterator = cursor.iterator();
 
-    return new CloseableIterator<K>() {
+    return new CloseableIterator<>() {
       @Override
       public boolean hasNext() {
         return iterator.hasNext();
@@ -114,8 +115,8 @@ public abstract class AbstractFetchableMongodbQuery<
   @Override
   public List<K> fetch() {
     try {
-      FindIterable<Document> cursor = createCursor();
-      List<K> results = new ArrayList<K>();
+      var cursor = createCursor();
+      List<K> results = new ArrayList<>();
       for (Document document : cursor) {
         results.add(transformer.apply(document));
       }
@@ -139,8 +140,8 @@ public abstract class AbstractFetchableMongodbQuery<
   @Override
   public K fetchFirst() {
     try {
-      FindIterable<Document> c = createCursor().limit(1);
-      MongoCursor<Document> iterator = c.iterator();
+      var c = createCursor().limit(1);
+      var iterator = c.iterator();
       try {
 
         if (iterator.hasNext()) {
@@ -175,12 +176,12 @@ public abstract class AbstractFetchableMongodbQuery<
         limit = 2L;
       }
 
-      FindIterable<Document> c = createCursor().limit(limit.intValue());
-      MongoCursor<Document> iterator = c.iterator();
+      var c = createCursor().limit(limit.intValue());
+      var iterator = c.iterator();
       try {
 
         if (iterator.hasNext()) {
-          K rv = transformer.apply(iterator.next());
+          var rv = transformer.apply(iterator.next());
           if (iterator.hasNext()) {
             throw new NonUniqueResultException();
           }
@@ -211,9 +212,9 @@ public abstract class AbstractFetchableMongodbQuery<
   @Override
   public QueryResults<K> fetchResults() {
     try {
-      long total = fetchCount();
+      var total = fetchCount();
       if (total > 0L) {
-        return new QueryResults<K>(fetch(), getQueryMixin().getMetadata().getModifiers(), total);
+        return new QueryResults<>(fetch(), getQueryMixin().getMetadata().getModifiers(), total);
       } else {
         return QueryResults.emptyResults();
       }
@@ -233,7 +234,7 @@ public abstract class AbstractFetchableMongodbQuery<
   }
 
   protected FindIterable<Document> createCursor() {
-    QueryMetadata metadata = getQueryMixin().getMetadata();
+    var metadata = getQueryMixin().getMetadata();
     Predicate filter = createFilter(metadata);
     return createCursor(
         collection,
@@ -250,11 +251,10 @@ public abstract class AbstractFetchableMongodbQuery<
       QueryModifiers modifiers,
       List<OrderSpecifier<?>> orderBy) {
 
-    ReadPreference readPreference = getReadPreference();
-    MongoCollection<Document> collectionToUse =
+    var readPreference = getReadPreference();
+    var collectionToUse =
         readPreference != null ? collection.withReadPreference(readPreference) : collection;
-    FindIterable<Document> cursor =
-        collectionToUse.find(createQuery(where)).projection(createProjection(projection));
+    var cursor = collectionToUse.find(createQuery(where)).projection(createProjection(projection));
     Integer limit = modifiers.getLimitAsInteger();
     Integer offset = modifiers.getOffsetAsInteger();
 
@@ -274,9 +274,9 @@ public abstract class AbstractFetchableMongodbQuery<
 
   @Override
   protected List<Object> getIds(Class<?> targetType, Predicate condition) {
-    MongoCollection<Document> collection = getCollection(targetType);
+    var collection = getCollection(targetType);
     // TODO : fetch only ids
-    FindIterable<Document> cursor =
+    var cursor =
         createCursor(
             collection,
             condition,
@@ -284,11 +284,11 @@ public abstract class AbstractFetchableMongodbQuery<
             QueryModifiers.EMPTY,
             Collections.<OrderSpecifier<?>>emptyList());
 
-    MongoCursor<Document> iterator = cursor.iterator();
+    var iterator = cursor.iterator();
     try {
 
       if (iterator.hasNext()) {
-        List<Object> ids = new ArrayList<Object>();
+        List<Object> ids = new ArrayList<>();
         for (Document obj : cursor) {
           ids.add(obj.get("_id"));
         }

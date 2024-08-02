@@ -22,7 +22,7 @@ public class IntegerExtensionsTest extends AbstractProcessorTest {
             new File(packagePath, "IntegerExtensions.java").getPath(),
             new File(packagePath, "ExampleEntity2.java").getPath());
     process(QuerydslAnnotationProcessor.class, sources, "integerExtensions");
-    String qtypeContent =
+    var qtypeContent =
         new String(
             Files.readAllBytes(
                 Paths.get(

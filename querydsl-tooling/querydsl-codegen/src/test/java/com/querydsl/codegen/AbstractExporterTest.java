@@ -7,7 +7,7 @@ public abstract class AbstractExporterTest {
 
   @Test
   public void test() {
-    GenericExporter exporter = new GenericExporter();
+    var exporter = new GenericExporter();
     exporter.setTargetFolder(new File("target/" + getClass().getSimpleName()));
     exporter.export(getClass().getClasses());
   }

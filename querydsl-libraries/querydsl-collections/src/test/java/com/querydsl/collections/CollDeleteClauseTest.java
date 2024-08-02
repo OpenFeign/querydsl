@@ -24,12 +24,12 @@ public class CollDeleteClauseTest {
 
   @Test
   public void execute() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     List<Cat> cats =
-        new ArrayList<Cat>(
+        new ArrayList<>(
             Arrays.asList(new Cat("Ann"), new Cat("Bob"), new Cat("John"), new Cat("Carl")));
 
-    CollDeleteClause<Cat> deleteClause = new CollDeleteClause<Cat>(cat, cats);
+    var deleteClause = new CollDeleteClause<>(cat, cats);
     deleteClause.where(cat.name.eq("Bob"));
     assertThat(deleteClause.execute()).isEqualTo(1);
 

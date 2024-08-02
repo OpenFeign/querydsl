@@ -18,7 +18,7 @@ public class Generic16Test extends AbstractTest {
   public abstract static class HidaBezGruppe<G extends HidaBezGruppe<G, B>, B extends HidaBez<B, G>>
       extends CapiBCKeyedByGrundstueck {
 
-    SortedSet<B> bez = new TreeSet<B>();
+    SortedSet<B> bez = new TreeSet<>();
   }
 
   @MappedSuperclass

@@ -13,7 +13,8 @@
  */
 package com.querydsl.r2dbc;
 
-import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public final class StoredProcedures {
 
@@ -21,30 +22,30 @@ public final class StoredProcedures {
 
   public static void main(String[] args) throws ClassNotFoundException, SQLException {
     Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
-    String url = "jdbc:derby:target/procedure_test;create=true";
-    Connection connection = DriverManager.getConnection(url, "", "");
+    var url = "jdbc:derby:target/procedure_test;create=true";
+    var connection = DriverManager.getConnection(url, "", "");
 
     try {
-      DatabaseMetaData md = connection.getMetaData();
-      ResultSet procedures = md.getProcedures(null, null, null);
+      var md = connection.getMetaData();
+      var procedures = md.getProcedures(null, null, null);
       try {
         while (procedures.next()) {
-          String cat = procedures.getString(1);
-          String schema = procedures.getString(2);
-          String name = procedures.getString(3);
-          String remarks = procedures.getString(7);
-          String type = procedures.getString(8);
-          String specificName = procedures.getString(9);
+          var cat = procedures.getString(1);
+          var schema = procedures.getString(2);
+          var name = procedures.getString(3);
+          var remarks = procedures.getString(7);
+          var type = procedures.getString(8);
+          var specificName = procedures.getString(9);
           System.out.println(name + "\n" + remarks + "\n" + type + "\n" + specificName);
 
-          ResultSet procedureColumns = md.getProcedureColumns(cat, schema, name, null);
+          var procedureColumns = md.getProcedureColumns(cat, schema, name, null);
           try {
             while (procedureColumns.next()) {
-              String columnName = procedureColumns.getString(4);
-              int columnType = procedureColumns.getInt(5);
-              int dataType = procedureColumns.getInt(6);
-              String typeName = procedureColumns.getString(7);
-              short nullable = procedureColumns.getShort(12);
+              var columnName = procedureColumns.getString(4);
+              var columnType = procedureColumns.getInt(5);
+              var dataType = procedureColumns.getInt(6);
+              var typeName = procedureColumns.getString(7);
+              var nullable = procedureColumns.getShort(12);
               System.out.println(
                   " "
                       + columnName

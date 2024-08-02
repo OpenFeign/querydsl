@@ -50,7 +50,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -125,7 +124,7 @@ public class JPAConfiguration extends DefaultConfiguration {
 
   @Override
   public VisitorConfig getConfig(TypeElement e, List<? extends Element> elements) {
-    Access access = e.getAnnotation(Access.class);
+    var access = e.getAnnotation(Access.class);
     if (access != null) {
       if (access.value() == AccessType.FIELD) {
         return VisitorConfig.FIELDS_ONLY;
@@ -154,7 +153,7 @@ public class JPAConfiguration extends DefaultConfiguration {
   }
 
   private TypeMirror getRealElementType(Element element) {
-    AnnotationMirror mirror = TypeUtils.getAnnotationMirrorOfType(element, ManyToOne.class);
+    var mirror = TypeUtils.getAnnotationMirrorOfType(element, ManyToOne.class);
     if (mirror == null) {
       mirror = TypeUtils.getAnnotationMirrorOfType(element, OneToOne.class);
     }
@@ -167,14 +166,14 @@ public class JPAConfiguration extends DefaultConfiguration {
       mirror = TypeUtils.getAnnotationMirrorOfType(element, ManyToMany.class);
     }
     if (mirror != null) {
-      TypeMirror typeArg = TypeUtils.getAnnotationValueAsTypeMirror(mirror, "targetEntity");
+      var typeArg = TypeUtils.getAnnotationValueAsTypeMirror(mirror, "targetEntity");
       TypeMirror erasure;
       if (element instanceof ExecutableElement) {
         erasure = ((ExecutableElement) element).getReturnType();
       } else {
         erasure = types.erasure(element.asType());
       }
-      TypeElement typeElement = (TypeElement) types.asElement(erasure);
+      var typeElement = (TypeElement) types.asElement(erasure);
       if (typeElement != null && typeArg != null) {
         if (typeElement.getTypeParameters().size() == 1) {
           return types.getDeclaredType(typeElement, typeArg);
@@ -192,7 +191,7 @@ public class JPAConfiguration extends DefaultConfiguration {
 
   @Override
   public void inspect(Element element, Annotations annotations) {
-    Temporal temporal = element.getAnnotation(Temporal.class);
+    var temporal = element.getAnnotation(Temporal.class);
     if (temporal != null && element.getAnnotation(ElementCollection.class) == null) {
       PropertyType propertyType = null;
       switch (temporal.value()) {

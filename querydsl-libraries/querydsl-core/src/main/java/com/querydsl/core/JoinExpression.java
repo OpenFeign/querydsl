@@ -88,8 +88,9 @@ public final class JoinExpression implements Serializable {
     return flags;
   }
 
+  @Override
   public String toString() {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     builder.append(type).append(" ").append(target);
     if (condition != null) {
       builder.append(" on ").append(condition);
@@ -107,7 +108,7 @@ public final class JoinExpression implements Serializable {
     if (o == this) {
       return true;
     } else if (o instanceof JoinExpression) {
-      JoinExpression j = (JoinExpression) o;
+      var j = (JoinExpression) o;
       return Objects.equals(condition, j.condition)
           && Objects.equals(target, j.target)
           && Objects.equals(type, j.type);

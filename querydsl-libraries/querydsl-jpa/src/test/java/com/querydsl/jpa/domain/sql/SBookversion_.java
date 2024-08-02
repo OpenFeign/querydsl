@@ -1,13 +1,14 @@
 package com.querydsl.jpa.domain.sql;
 
-import static com.querydsl.core.types.PathMetadataFactory.*;
+import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
 import java.sql.Types;
-import java.util.*;
+import java.util.Arrays;
 import javax.annotation.processing.Generated;
 
 /** SBookversion_ is a Querydsl query type for SBookversion_ */

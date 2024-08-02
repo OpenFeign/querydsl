@@ -13,7 +13,12 @@
  */
 package com.querydsl.spatial;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.OperationImpl;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Visitor;
 import java.util.Arrays;
 import java.util.List;
 import org.geolatte.geom.Geometry;

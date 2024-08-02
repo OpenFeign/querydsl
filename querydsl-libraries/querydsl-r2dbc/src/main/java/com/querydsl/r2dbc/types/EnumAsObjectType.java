@@ -42,7 +42,7 @@ public class EnumAsObjectType<T extends Enum<T>> extends AbstractType<T, String>
 
   @Override
   public T getValue(Row row, int startIndex) {
-    String val = row.get(startIndex, String.class);
+    var val = row.get(startIndex, String.class);
     return val != null ? Enum.valueOf(type, val) : null;
   }
 

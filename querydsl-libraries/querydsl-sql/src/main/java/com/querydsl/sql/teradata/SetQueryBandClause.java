@@ -92,8 +92,10 @@ public class SetQueryBandClause extends AbstractSQLClause<SetQueryBandClause> {
       }
       return 1;
     } catch (SQLException e) {
-      List<Object> bindings =
-          parameter != null ? Collections.singletonList(parameter) : Collections.emptyList();
+      var bindings =
+          parameter != null
+              ? Collections.singletonList((Object) parameter)
+              : Collections.emptyList();
       throw configuration.translate(queryString, bindings, e);
     } finally {
       if (stmt != null) {
@@ -116,7 +118,7 @@ public class SetQueryBandClause extends AbstractSQLClause<SetQueryBandClause> {
   @Override
   public String toString() {
     if (queryString == null) {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       for (Map.Entry<String, String> entry : values.entrySet()) {
         builder.append(entry.getKey()).append("=").append(entry.getValue());
         builder.append(";");

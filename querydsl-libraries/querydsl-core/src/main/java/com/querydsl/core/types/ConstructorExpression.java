@@ -21,7 +21,6 @@ import com.querydsl.core.annotations.Immutable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,7 +51,7 @@ public class ConstructorExpression<T> extends FactoryExpressionBase<T> {
 
   private static Class<?>[] getParameterTypes(Expression<?>... args) {
     Class<?>[] paramTypes = new Class[args.length];
-    for (int i = 0; i < paramTypes.length; i++) {
+    for (var i = 0; i < paramTypes.length; i++) {
       paramTypes[i] = args[i].getType();
     }
     return paramTypes;
@@ -151,10 +150,10 @@ public class ConstructorExpression<T> extends FactoryExpressionBase<T> {
   private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
     ois.readObject();
     try {
-      Field constructor = ConstructorExpression.class.getDeclaredField("constructor");
+      var constructor = ConstructorExpression.class.getDeclaredField("constructor");
       constructor.setAccessible(true);
       constructor.set(this, getConstructor(getType(), parameterTypes));
-      Field transformers = ConstructorExpression.class.getDeclaredField("transformers");
+      var transformers = ConstructorExpression.class.getDeclaredField("transformers");
       transformers.setAccessible(true);
       transformers.set(this, getTransformers(this.constructor));
     } catch (Exception e) {

@@ -53,7 +53,7 @@ public class ExtendsAndSuperTest {
 
   @Test
   public void validate() {
-    QExtendsAndSuperTest_ExtendsAndSuper var = QExtendsAndSuperTest_ExtendsAndSuper.extendsAndSuper;
+    var var = QExtendsAndSuperTest_ExtendsAndSuper.extendsAndSuper;
     assertThat(var.extendsCol.getElementType()).isEqualTo(Object.class);
     assertThat(var.extendsCol2.getElementType()).isEqualTo(CharSequence.class);
 
@@ -63,8 +63,8 @@ public class ExtendsAndSuperTest {
 
   @Test
   public void test() {
-    QExtendsAndSuperTest_ExtendsAndSuper var = QExtendsAndSuperTest_ExtendsAndSuper.extendsAndSuper;
-    ExtendsAndSuper<Object> entity = new ExtendsAndSuper<Object>();
+    var var = QExtendsAndSuperTest_ExtendsAndSuper.extendsAndSuper;
+    var entity = new ExtendsAndSuper<>();
     assertThat(var.eq(entity)).isNotNull();
     assertThat(var.extendsMap.containsKey("")).isNotNull();
     assertThat(var.extendsMap2.containsValue("")).isNotNull();

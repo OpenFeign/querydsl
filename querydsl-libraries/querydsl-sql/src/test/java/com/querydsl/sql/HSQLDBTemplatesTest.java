@@ -35,11 +35,11 @@ public class HSQLDBTemplatesTest extends AbstractSQLTemplatesTest {
     // Comparison ops are not combined without logical ops so there is no precedence issue.
 
     // int p1 = getPrecedence(Ops.NEGATE);
-    int p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.CONCAT);
-    int p3 = getPrecedence(Ops.ADD, Ops.SUB);
-    int p4 = getPrecedence(Ops.NOT);
-    int p5 = getPrecedence(Ops.EQ, Ops.NE, Ops.LT, Ops.GT, Ops.LOE, Ops.GOE);
-    int p6 =
+    var p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.CONCAT);
+    var p3 = getPrecedence(Ops.ADD, Ops.SUB);
+    var p4 = getPrecedence(Ops.NOT);
+    var p5 = getPrecedence(Ops.EQ, Ops.NE, Ops.LT, Ops.GT, Ops.LOE, Ops.GOE);
+    var p6 =
         getPrecedence(
             Ops.IS_NULL,
             Ops.IS_NOT_NULL,
@@ -49,8 +49,8 @@ public class HSQLDBTemplatesTest extends AbstractSQLTemplatesTest {
             Ops.IN,
             Ops.NOT_IN,
             Ops.EXISTS);
-    int p7 = getPrecedence(Ops.AND);
-    int p8 = getPrecedence(Ops.OR);
+    var p7 = getPrecedence(Ops.AND);
+    var p8 = getPrecedence(Ops.OR);
 
     // assertTrue(p1 < p2);
     assertThat(p2 < p3).isTrue();

@@ -20,7 +20,12 @@ import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
-import com.querydsl.sql.*;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.RelationalFunctionCall;
+import com.querydsl.sql.RelationalPathBase;
+import com.querydsl.sql.SQLExpressions;
+import com.querydsl.sql.SQLSerializer;
+import com.querydsl.sql.SQLServerTemplates;
 import org.junit.Test;
 
 public class RelationalFunctionCallTest {
@@ -43,17 +48,17 @@ public class RelationalFunctionCallTest {
     // select tab.col from Table tab join TableValuedFunction('parameter') func on tab.col not like
     // func.col
 
-    QSurvey table = new QSurvey("SURVEY");
+    var table = new QSurvey("SURVEY");
     RelationalFunctionCall<String> func =
         SQLExpressions.relationalFunctionCall(String.class, "TableValuedFunction", "parameter");
-    PathBuilder<String> funcAlias = new PathBuilder<String>(String.class, "tokFunc");
+    var funcAlias = new PathBuilder<>(String.class, "tokFunc");
     SubQueryExpression<?> expr =
         select(table.name)
             .from(table)
             .join(func, funcAlias)
             .on(table.name.like(funcAlias.getString("prop")).not());
 
-    Configuration conf = new Configuration(new SQLServerTemplates());
+    var conf = new Configuration(new SQLServerTemplates());
     SQLSerializer serializer = new NativeSQLSerializer(conf, true);
     serializer.serialize(expr.getMetadata(), false);
     assertThat(serializer.toString())

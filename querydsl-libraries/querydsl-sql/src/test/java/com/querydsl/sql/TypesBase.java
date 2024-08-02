@@ -1,6 +1,8 @@
 package com.querydsl.sql;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.TERADATA;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.Path;
@@ -9,9 +11,6 @@ import com.querydsl.sql.ddl.CreateTableClause;
 import com.querydsl.sql.ddl.DropTableClause;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -35,16 +34,16 @@ public abstract class TypesBase extends AbstractBaseTest {
     instances.put(String.class, "ABC");
 
     for (Map.Entry<Class<?>, Object> entry : instances.entrySet()) {
-      String tableName = "test_" + entry.getKey().getSimpleName();
+      var tableName = "test_" + entry.getKey().getSimpleName();
       new DropTableClause(connection, configuration, tableName).execute();
-      CreateTableClause c =
+      var c =
           new CreateTableClause(connection, configuration, tableName).column("col", entry.getKey());
       if (entry.getKey().equals(String.class)) {
         c.size(256);
       }
       c.execute();
       RelationalPath<Object> entityPath =
-          new RelationalPathBase<Object>(Object.class, tableName, "PUBLIC", tableName);
+          new RelationalPathBase<>(Object.class, tableName, "PUBLIC", tableName);
       Path<?> columnPath = Expressions.path(entry.getKey(), entityPath, "col");
       insert(entityPath).set((Path) columnPath, entry.getValue()).execute();
       new DropTableClause(connection, configuration, tableName).execute();
@@ -54,37 +53,37 @@ public abstract class TypesBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({CUBRID, POSTGRESQL, TERADATA})
   public void dump_types() throws SQLException {
-    Connection conn = Connections.getConnection();
-    DatabaseMetaData md = conn.getMetaData();
+    var conn = Connections.getConnection();
+    var md = conn.getMetaData();
 
     // types
-    try (ResultSet rs = md.getUDTs(null, null, null, null)) {
+    try (var rs = md.getUDTs(null, null, null, null)) {
       while (rs.next()) {
         // cat, schema, name, classname, datatype, remarks, base_type
-        String cat = rs.getString(1);
-        String schema = rs.getString(2);
-        String name = rs.getString(3);
-        String classname = rs.getString(4);
-        String datatype = rs.getString(5);
-        String remarks = rs.getString(6);
-        String baseType = rs.getString(7);
+        var cat = rs.getString(1);
+        var schema = rs.getString(2);
+        var name = rs.getString(3);
+        var classname = rs.getString(4);
+        var datatype = rs.getString(5);
+        var remarks = rs.getString(6);
+        var baseType = rs.getString(7);
         System.out.println(
             name + " " + classname + " " + datatype + " " + remarks + " " + baseType);
 
         // attributes
-        try (ResultSet rs2 = md.getAttributes(cat, schema, name, null)) {
+        try (var rs2 = md.getAttributes(cat, schema, name, null)) {
           while (rs2.next()) {
             // cat, schema, name, attr_name, data_type, attr_type_name, attr_size
             // decimal_digits, num_prec_radix, nullable, remarks, attr_def, sql_data_type,
             // ordinal_position
             // ...
-            String cat2 = rs2.getString(1);
-            String schema2 = rs2.getString(2);
-            String name2 = rs2.getString(3);
-            String attrName2 = rs2.getString(4);
-            String dataType2 = rs2.getString(5);
-            String attrTypeName2 = rs2.getString(6);
-            String attrSize2 = rs2.getString(7);
+            var cat2 = rs2.getString(1);
+            var schema2 = rs2.getString(2);
+            var name2 = rs2.getString(3);
+            var attrName2 = rs2.getString(4);
+            var dataType2 = rs2.getString(5);
+            var attrTypeName2 = rs2.getString(6);
+            var attrSize2 = rs2.getString(7);
 
             System.out.println(
                 " " + attrName2 + " " + dataType2 + " " + attrTypeName2 + " " + attrSize2);

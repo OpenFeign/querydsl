@@ -108,8 +108,8 @@ public final class QueryModifiers implements Serializable {
    */
   public <T> List<T> subList(List<T> list) {
     if (!list.isEmpty()) {
-      int from = offset != null ? toInt(offset) : 0;
-      int to = limit != null ? (from + toInt(limit)) : list.size();
+      var from = offset != null ? toInt(offset) : 0;
+      var to = limit != null ? (from + toInt(limit)) : list.size();
       return list.subList(from, Math.min(to, list.size()));
     } else {
       return list;
@@ -121,7 +121,7 @@ public final class QueryModifiers implements Serializable {
     if (o == this) {
       return true;
     } else if (o instanceof QueryModifiers) {
-      QueryModifiers qm = (QueryModifiers) o;
+      var qm = (QueryModifiers) o;
       return Objects.equals(qm.getLimit(), limit) && Objects.equals(qm.getOffset(), offset);
     } else {
       return false;

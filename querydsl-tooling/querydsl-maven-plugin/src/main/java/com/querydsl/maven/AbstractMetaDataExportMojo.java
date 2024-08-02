@@ -27,7 +27,6 @@ import com.querydsl.sql.codegen.support.TypeMapping;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -42,7 +41,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.wagon.authentication.AuthenticationInfo;
 
 /**
  * {@code AbstractMetaDataExportMojo} is the base class for {@link MetaDataExporter} usage
@@ -279,7 +277,7 @@ public abstract class AbstractMetaDataExportMojo extends AbstractMojo
         }
       }
 
-      MetaDataExporter exporter = new MetaDataExporter(this);
+      var exporter = new MetaDataExporter(this);
 
       Class.forName(jdbcDriver);
       String user;
@@ -288,7 +286,7 @@ public abstract class AbstractMetaDataExportMojo extends AbstractMojo
         user = jdbcUser;
         password = jdbcPassword;
       } else {
-        AuthenticationInfo info = wagonManager.getAuthenticationInfo(server);
+        var info = wagonManager.getAuthenticationInfo(server);
         if (info == null) {
           throw new MojoExecutionException("No authentication info for server " + server);
         }
@@ -303,7 +301,7 @@ public abstract class AbstractMetaDataExportMojo extends AbstractMojo
           throw new MojoExecutionException("Missing password from server " + server);
         }
       }
-      try (Connection conn = DriverManager.getConnection(jdbcUrl, user, password)) {
+      try (var conn = DriverManager.getConnection(jdbcUrl, user, password)) {
         exporter.export(conn.getMetaData());
       }
     } catch (ClassNotFoundException | SQLException e) {
@@ -458,7 +456,7 @@ public abstract class AbstractMetaDataExportMojo extends AbstractMojo
   }
 
   private static String emptyIfSetToBlank(String value) {
-    boolean setToBlank = value == null || value.equalsIgnoreCase("BLANK");
+    var setToBlank = value == null || value.equalsIgnoreCase("BLANK");
     return setToBlank ? "" : value;
   }
 
@@ -610,7 +608,7 @@ public abstract class AbstractMetaDataExportMojo extends AbstractMojo
 
   @Override
   public Charset getSourceEncoding() {
-    String sourceEncoding = (String) project.getProperties().get("project.build.sourceEncoding");
+    var sourceEncoding = (String) project.getProperties().get("project.build.sourceEncoding");
     if (sourceEncoding != null) {
       return Charset.forName(sourceEncoding);
     }

@@ -46,7 +46,7 @@ public class CodegenModuleTest {
 
   @Test
   public void javadocSuffixForBeanSerializerOverloadedConstructorInjection() {
-    String o = module.get(String.class, CodegenModule.JAVADOC_SUFFIX);
+    var o = module.get(String.class, CodegenModule.JAVADOC_SUFFIX);
     assertThat(BeanSerializer.DEFAULT_JAVADOC_SUFFIX).isEqualTo(o);
   }
 }

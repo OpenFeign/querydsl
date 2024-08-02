@@ -16,7 +16,11 @@ package com.querydsl.sql;
 import com.querydsl.core.JoinFlag;
 import com.querydsl.core.Query;
 import com.querydsl.core.QueryFlag.Position;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
 
 /**
  * {@code SQLCommonQuery} is a common interface for SQLQuery and SQLSubQuery

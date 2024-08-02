@@ -16,7 +16,11 @@ package com.querydsl.apt.domain;
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryType;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.ComparablePath;
+import com.querydsl.core.types.dsl.DatePath;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.core.types.dsl.TimePath;
 import org.junit.Test;
 
 public class QueryTypeTest extends AbstractTest {

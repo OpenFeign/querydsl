@@ -13,14 +13,23 @@
  */
 package com.querydsl.r2dbc;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.FIREBIRD;
+import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MYSQL;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.SQLITE;
+import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.r2dbc.Constants.survey;
 import static com.querydsl.r2dbc.Constants.survey2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.QueryException;
 import com.querydsl.core.QueryFlag.Position;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.types.ExpressionUtils;
@@ -28,7 +37,11 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Param;
 import com.querydsl.r2dbc.dml.R2DBCInsertClause;
-import com.querydsl.r2dbc.domain.*;
+import com.querydsl.r2dbc.domain.QDateTest;
+import com.querydsl.r2dbc.domain.QEmployee;
+import com.querydsl.r2dbc.domain.QSurvey;
+import com.querydsl.r2dbc.domain.QUuids;
+import com.querydsl.r2dbc.domain.QXmlTest;
 import com.querydsl.sql.ColumnMetadata;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -60,16 +73,16 @@ public abstract class InsertBase extends AbstractBaseTest {
   @ExcludeIn({CUBRID, SQLITE})
   // https://bitbucket.org/xerial/sqlite-jdbc/issue/133/prepstmtsetdate-int-date-calendar-seems
   public void insert_dates() {
-    QDateTest dateTest = QDateTest.qDateTest;
-    LocalDate localDate = LocalDate.of(1978, 1, 2);
+    var dateTest = QDateTest.qDateTest;
+    var localDate = LocalDate.of(1978, 1, 2);
 
     Path<LocalDate> localDateProperty = ExpressionUtils.path(LocalDate.class, "DATE_TEST");
     Path<LocalDateTime> dateTimeProperty = ExpressionUtils.path(LocalDateTime.class, "DATE_TEST");
-    R2DBCInsertClause insert = insert(dateTest);
+    var insert = insert(dateTest);
     insert.set(localDateProperty, localDate);
     insert.execute().block();
 
-    Tuple result =
+    var result =
         query()
             .from(dateTest)
             .select(
@@ -90,10 +103,10 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   public void complex1() {
     // related to #584795
-    QSurvey survey = new QSurvey("survey");
-    QEmployee emp1 = new QEmployee("emp1");
-    QEmployee emp2 = new QEmployee("emp2");
-    R2DBCInsertClause insert = insert(survey);
+    var survey = new QSurvey("survey");
+    var emp1 = new QEmployee("emp1");
+    var emp2 = new QEmployee("emp2");
+    var insert = insert(survey);
     insert.columns(survey.id, survey.name);
     insert.select(
         R2DBCExpressions.select(survey.id, emp2.firstname)
@@ -143,15 +156,15 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({CUBRID, SQLSERVER})
   public void insert_with_keys() {
-    Integer key = insert(survey).set(survey.name, "Hello World").executeWithKey(survey.id).block();
+    var key = insert(survey).set(survey.name, "Hello World").executeWithKey(survey.id).block();
     assertThat(key != null).isTrue();
   }
 
   @Test
   @ExcludeIn({CUBRID, SQLSERVER})
   public void insert_with_keys_listener() {
-    R2DBCInsertClause clause = insert(survey).set(survey.name, "Hello World");
-    Integer key = clause.executeWithKey(survey.id).block();
+    var clause = insert(survey).set(survey.name, "Hello World");
+    var key = clause.executeWithKey(survey.id).block();
     assertThat(key != null).isTrue();
   }
 
@@ -172,12 +185,12 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test(expected = QueryException.class)
   @IncludeIn({DERBY, HSQLDB})
   public void insert_with_keys_OverriddenColumn() {
-    String originalColumnName = ColumnMetadata.getName(survey.id);
+    var originalColumnName = ColumnMetadata.getName(survey.id);
     try {
       configuration.registerColumnOverride(
           survey.getSchemaName(), survey.getTableName(), originalColumnName, "wrongColumnName");
 
-      R2DBCInsertClause insert = new R2DBCInsertClause(connection, configuration, survey);
+      var insert = new R2DBCInsertClause(connection, configuration, survey);
       Object id = insert.set(survey.name, "Hello you").executeWithKey(survey.id);
       assertThat(id).isNotNull();
     } finally {
@@ -200,7 +213,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @IncludeIn(MYSQL)
   @SkipForQuoted
   public void insert_with_special_options() {
-    R2DBCInsertClause clause = insert(survey).columns(survey.id, survey.name).values(3, "Hello");
+    var clause = insert(survey).columns(survey.id, survey.name).values(3, "Hello");
 
     clause.addFlag(Position.START_OVERRIDE, "insert ignore into ");
 
@@ -211,7 +224,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery() {
-    Long count = query().from(survey).fetchCount().block();
+    var count = query().from(survey).fetchCount().block();
     assertThat(
             insert(survey)
                 .columns(survey.id, survey.name)
@@ -272,7 +285,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @Test
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Params() {
-    Param<Integer> param = new Param<Integer>(Integer.class, "param");
+    var param = new Param<Integer>(Integer.class, "param");
     R2DBCQuery<?> sq = query().from(survey2);
     sq.set(param, 20);
 
@@ -291,7 +304,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Via_Constructor() {
     long count = query().from(survey).fetchCount().block();
-    R2DBCInsertClause insert = insert(survey, query().from(survey2));
+    var insert = insert(survey, query().from(survey2));
     insert.set(survey.id, survey2.id.add(20));
     insert.set(survey.name, survey2.name);
     assertThat((long) insert.execute().block()).isEqualTo(count);
@@ -332,8 +345,8 @@ public abstract class InsertBase extends AbstractBaseTest {
   @SkipForQuoted
   public void uuids() {
     delete(QUuids.uuids).execute().block();
-    QUuids uuids = QUuids.uuids;
-    UUID uuid = UUID.randomUUID();
+    var uuids = QUuids.uuids;
+    var uuid = UUID.randomUUID();
     insert(uuids).set(uuids.field, uuid).execute().block();
     assertThat(query().from(uuids).select(uuids.field).fetchFirst().block()).isEqualTo(uuid);
   }
@@ -344,8 +357,8 @@ public abstract class InsertBase extends AbstractBaseTest {
   // TODO when r2dbc-postgre fixes this, remove POSTGRESQL
   public void xml() {
     delete(QXmlTest.xmlTest).execute().block();
-    QXmlTest xmlTest = QXmlTest.xmlTest;
-    String contents = "<html><head>a</head><body>b</body></html>";
+    var xmlTest = QXmlTest.xmlTest;
+    var contents = "<html><head>a</head><body>b</body></html>";
     insert(xmlTest).set(xmlTest.col, contents).execute().block();
     assertThat(query().from(xmlTest).select(xmlTest.col).fetchFirst().block()).isEqualTo(contents);
   }

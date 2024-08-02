@@ -40,14 +40,14 @@ public class JPQLTemplatesTest {
   public void precedence() {
     // Navigation operator (.)
     // +, - unary *,
-    int p1 = getPrecedence(Ops.NEGATE);
+    var p1 = getPrecedence(Ops.NEGATE);
     // / multiplication and division
-    int p2 = getPrecedence(Ops.MULT, Ops.DIV);
+    var p2 = getPrecedence(Ops.MULT, Ops.DIV);
     // +, - addition and subtraction
-    int p3 = getPrecedence(Ops.ADD, Ops.SUB);
+    var p3 = getPrecedence(Ops.ADD, Ops.SUB);
     // Comparison operators : =, >, >=, <, <=, <> (not equal), [NOT] BETWEEN, [NOT] LIKE, [NOT] IN,
     // IS [NOT] NULL, IS [NOT] EMPTY, [NOT] MEMBER [OF]
-    int p4 =
+    var p4 =
         getPrecedence(
             Ops.EQ,
             Ops.GT,
@@ -64,11 +64,11 @@ public class JPQLTemplatesTest {
             JPQLOps.MEMBER_OF,
             JPQLOps.NOT_MEMBER_OF);
     // NOT
-    int p5 = getPrecedence(Ops.NOT);
+    var p5 = getPrecedence(Ops.NOT);
     // AND
-    int p6 = getPrecedence(Ops.AND);
+    var p6 = getPrecedence(Ops.AND);
     // OR
-    int p7 = getPrecedence(Ops.OR);
+    var p7 = getPrecedence(Ops.OR);
 
     assertThat(p1 < p2).isTrue();
     assertThat(p2 < p3).isTrue();
@@ -79,8 +79,8 @@ public class JPQLTemplatesTest {
   }
 
   protected int getPrecedence(Operator... ops) {
-    int precedence = JPQLTemplates.DEFAULT.getPrecedence(ops[0]);
-    for (int i = 1; i < ops.length; i++) {
+    var precedence = JPQLTemplates.DEFAULT.getPrecedence(ops[0]);
+    for (var i = 1; i < ops.length; i++) {
       assertThat(JPQLTemplates.DEFAULT.getPrecedence(ops[i]))
           .as(ops[i].name())
           .isEqualTo(precedence);

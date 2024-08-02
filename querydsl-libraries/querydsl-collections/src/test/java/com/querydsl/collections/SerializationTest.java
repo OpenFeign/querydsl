@@ -53,7 +53,7 @@ public class SerializationTest extends AbstractQueryTest {
   }
 
   public List<Cat> oneSource_filteredList(List<Cat> cats) {
-    List<Cat> rv = new ArrayList<Cat>();
+    List<Cat> rv = new ArrayList<>();
     for (Cat cat : cats) { // from
       if (cat.getName().equals("Kitty")) { // where
         rv.add(cat); // list
@@ -68,7 +68,7 @@ public class SerializationTest extends AbstractQueryTest {
   }
 
   public List<String> oneSource_projectedList(List<Cat> cats) {
-    List<String> rv = new ArrayList<String>();
+    List<String> rv = new ArrayList<>();
     for (Cat cat : cats) { // from
       rv.add(cat.getName()); // list
     }
@@ -81,7 +81,7 @@ public class SerializationTest extends AbstractQueryTest {
   }
 
   public List<String> oneSource_filtered_projectedList(List<Cat> cats) {
-    List<String> rv = new ArrayList<String>();
+    List<String> rv = new ArrayList<>();
     for (Cat cat : cats) { // from
       if (cat.getName().equals("Kitty")) { // where
         rv.add(cat.getName()); // list
@@ -116,7 +116,7 @@ public class SerializationTest extends AbstractQueryTest {
   }
 
   public List<Cat> join_list(List<Cat> cats) {
-    List<Cat> rv = new ArrayList<Cat>();
+    List<Cat> rv = new ArrayList<>();
     for (Cat cat : cats) { // from
       for (Cat kitten : cat.getKittens()) { // inner join
         if (kitten.getName().equals("Kitty")) { // where
@@ -135,7 +135,7 @@ public class SerializationTest extends AbstractQueryTest {
         .select(cat, otherCat)
         .fetch();
 
-    List<Object[]> rv = new ArrayList<Object[]>();
+    List<Object[]> rv = new ArrayList<>();
     for (Cat cat : cats) { // from
       for (Cat otherCat : otherCats) { // from
         if (cat.getName().equals(otherCat.getName())) { // where
@@ -154,7 +154,7 @@ public class SerializationTest extends AbstractQueryTest {
         .select(Projections.tuple(cat, otherCat))
         .fetch();
 
-    List<Tuple> rv = new ArrayList<Tuple>();
+    List<Tuple> rv = new ArrayList<>();
     for (Cat cat : cats) { // from
       for (Cat otherCat : otherCats) { // from
         if (cat.getName().equals(otherCat.getName())) { // where

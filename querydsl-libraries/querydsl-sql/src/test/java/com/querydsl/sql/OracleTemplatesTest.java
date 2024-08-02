@@ -89,10 +89,11 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
             """);
   }
 
+  @Override
   @Test
   public void in() {
-    List<Integer> ids = new ArrayList<Integer>();
-    for (int i = 0; i < 2000; i++) {
+    List<Integer> ids = new ArrayList<>();
+    for (var i = 0; i < 2000; i++) {
       ids.add(i);
     }
     query.where(survey1.id.isNotNull());
@@ -113,15 +114,15 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void precedence() {
     // +, - (as unary operators), PRIOR, CONNECT_BY_ROOT  identity, negation, location in hierarchy
-    int p1 = getPrecedence(Ops.NEGATE);
+    var p1 = getPrecedence(Ops.NEGATE);
     // *, / multiplication, division
-    int p2 = getPrecedence(Ops.MULT, Ops.DIV);
+    var p2 = getPrecedence(Ops.MULT, Ops.DIV);
     // +, - (as binary operators), || addition, subtraction, concatenation
-    int p3 = getPrecedence(Ops.ADD, Ops.SUB, Ops.CONCAT);
+    var p3 = getPrecedence(Ops.ADD, Ops.SUB, Ops.CONCAT);
     // =, !=, <, >, <=, >=, comparison
-    int p4 = getPrecedence(Ops.EQ, Ops.NE, Ops.LT, Ops.GT, Ops.LOE, Ops.GOE);
+    var p4 = getPrecedence(Ops.EQ, Ops.NE, Ops.LT, Ops.GT, Ops.LOE, Ops.GOE);
     // IS [NOT] NULL, LIKE, [NOT] BETWEEN, [NOT] IN, EXISTS, IS OF type comparison
-    int p5 =
+    var p5 =
         getPrecedence(
             Ops.IS_NULL,
             Ops.IS_NOT_NULL,
@@ -132,11 +133,11 @@ public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
             Ops.NOT_IN,
             Ops.EXISTS);
     // NOT exponentiation, logical negation
-    int p6 = getPrecedence(Ops.NOT);
+    var p6 = getPrecedence(Ops.NOT);
     // AND conjunction
-    int p7 = getPrecedence(Ops.AND);
+    var p7 = getPrecedence(Ops.AND);
     // OR disjunction
-    int p8 = getPrecedence(Ops.OR);
+    var p8 = getPrecedence(Ops.OR);
 
     assertThat(p1 < p2).isTrue();
     assertThat(p2 < p3).isTrue();

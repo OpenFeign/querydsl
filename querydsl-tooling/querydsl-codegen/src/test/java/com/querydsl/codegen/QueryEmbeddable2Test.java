@@ -21,6 +21,7 @@ public class QueryEmbeddable2Test extends AbstractExporterTest {
       return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }

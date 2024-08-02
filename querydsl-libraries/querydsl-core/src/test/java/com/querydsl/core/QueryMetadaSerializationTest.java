@@ -18,13 +18,23 @@ import static org.assertj.core.api.Assertions.fail;
 
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.testutil.Serialization;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.BeanPath;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberOperation;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.core.util.ReflectionUtils;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 import org.junit.Test;
 
 public class QueryMetadaSerializationTest {
@@ -33,7 +43,7 @@ public class QueryMetadaSerializationTest {
 
   @Test
   public void serialization() throws IOException, ClassNotFoundException {
-    StringPath expr = Expressions.stringPath("str");
+    var expr = Expressions.stringPath("str");
     metadata.addJoin(JoinType.DEFAULT, expr);
     metadata.addFlag(new QueryFlag(Position.AFTER_FILTERS, ""));
     metadata.addGroupBy(expr);
@@ -44,7 +54,7 @@ public class QueryMetadaSerializationTest {
     metadata.setProjection(expr);
     metadata.addWhere(expr.isEmpty());
 
-    QueryMetadata metadata2 = Serialization.serialize(metadata);
+    var metadata2 = Serialization.serialize(metadata);
 
     assertThat(metadata2.getFlags()).isEqualTo(metadata.getFlags());
     assertThat(metadata2.getGroupBy().getFirst()).isEqualTo(metadata.getGroupBy().getFirst());
@@ -62,7 +72,7 @@ public class QueryMetadaSerializationTest {
   @Test
   public void fullySerializable() {
     Set<Class<?>> checked =
-        new HashSet<Class<?>>(
+        new HashSet<>(
             Arrays.asList(
                 Collection.class,
                 List.class,
@@ -71,7 +81,7 @@ public class QueryMetadaSerializationTest {
                 Object.class,
                 String.class,
                 Class.class));
-    Stack<Class<?>> classes = new Stack<Class<?>>();
+    var classes = new Stack<Class<?>>();
     classes.addAll(
         Arrays.<Class<?>>asList(
             NumberPath.class,
@@ -89,7 +99,7 @@ public class QueryMetadaSerializationTest {
         if (Modifier.isTransient(field.getModifiers())) {
           continue;
         }
-        Set<Class<?>> types = new HashSet<Class<?>>(3);
+        Set<Class<?>> types = new HashSet<>(3);
         types.add(field.getType());
         if (field.getType().getSuperclass() != null) {
           types.add(field.getType().getSuperclass());

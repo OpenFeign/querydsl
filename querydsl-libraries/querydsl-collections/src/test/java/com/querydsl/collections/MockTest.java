@@ -15,7 +15,7 @@ public class MockTest {
   public void test() {
     List<MockTest> tests = Arrays.asList(new MockTest(), new MockTest(), new MockTest());
     SimplePath<MockTest> path = Expressions.path(MockTest.class, "obj");
-    MockTest mock = EasyMock.createMock(MockTest.class);
+    var mock = (MockTest) EasyMock.createMock(MockTest.class);
     assertThat(CollQueryFactory.from(path, tests).where(path.eq(mock)).fetch()).isEmpty();
   }
 }

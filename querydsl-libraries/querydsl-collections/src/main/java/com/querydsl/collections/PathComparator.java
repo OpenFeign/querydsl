@@ -39,7 +39,7 @@ public class PathComparator<T, V extends Comparable<V>> implements Comparator<T>
 
   public static <T, V extends Comparable<V>> PathComparator<T, V> pathComparator(
       Path<V> comparingPath) {
-    return new PathComparator<T, V>(comparingPath);
+    return new PathComparator<>(comparingPath);
   }
 
   @Override
@@ -57,8 +57,8 @@ public class PathComparator<T, V extends Comparable<V>> implements Comparator<T>
   }
 
   private int comparePathValues(T leftBean, T rightBean) {
-    V left = accessor.apply(leftBean);
-    V right = accessor.apply(rightBean);
+    var left = accessor.apply(leftBean);
+    var right = accessor.apply(rightBean);
     if (left == null) {
       return -1;
     } else if (right == null) {

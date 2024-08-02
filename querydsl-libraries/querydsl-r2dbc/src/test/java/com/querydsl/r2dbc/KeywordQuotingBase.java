@@ -74,7 +74,7 @@ public abstract class KeywordQuotingBase extends AbstractBaseTest {
 
   @Test
   public void keywords() {
-    Quoting from = new Quoting("from");
+    var from = new Quoting("from");
     assertThat(
             query()
                 .from(quoting.as(from))

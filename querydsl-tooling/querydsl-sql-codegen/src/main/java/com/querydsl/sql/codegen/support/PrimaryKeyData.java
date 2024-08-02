@@ -26,7 +26,7 @@ public class PrimaryKeyData {
 
   private final String name;
 
-  private final List<String> columns = new ArrayList<String>();
+  private final List<String> columns = new ArrayList<>();
 
   public PrimaryKeyData(String name) {
     this.name = name;

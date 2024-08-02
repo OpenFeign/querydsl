@@ -15,8 +15,11 @@ package com.querydsl.apt.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,26 +58,26 @@ public class AnyUsageTest {
 
   @Test
   public void test() {
-    QAnyUsageTest_Dealer dealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
+    var dealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
     assertThat(dealer).isNotNull();
     assertThat(dealer.company).isNotNull();
   }
 
   @Test
   public void withQDealer() {
-    List<Company> companies = new LinkedList<Company>();
+    List<Company> companies = new LinkedList<>();
     companies.add(new Company());
-    QAnyUsageTest_Dealer qDealer = QAnyUsageTest_Dealer.dealer;
-    BooleanExpression expression = qDealer.company.in(companies);
+    var qDealer = QAnyUsageTest_Dealer.dealer;
+    var expression = qDealer.company.in(companies);
     assertThat(expression).isNotNull();
   }
 
   @Test
   public void withQDealerGroup() {
-    List<Company> companies = new LinkedList<Company>();
+    List<Company> companies = new LinkedList<>();
     companies.add(new Company());
-    QAnyUsageTest_Dealer qDealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
-    BooleanExpression expression = qDealer.company.in(companies);
+    var qDealer = QAnyUsageTest_DealerGroup.dealerGroup.dealers.any();
+    var expression = qDealer.company.in(companies);
     assertThat(expression).isNotNull();
   }
 }

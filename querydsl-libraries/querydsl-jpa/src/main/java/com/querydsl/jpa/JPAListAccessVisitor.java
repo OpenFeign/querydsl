@@ -16,7 +16,11 @@ package com.querydsl.jpa;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.ReplaceVisitor;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathType;
 import com.querydsl.core.types.dsl.Expressions;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +43,7 @@ class JPAListAccessVisitor extends ReplaceVisitor<Void> {
   @Override
   public Expression<?> visit(Path<?> expr, @Nullable Void context) {
     expr = (Path<?>) super.visit(expr, null);
-    PathMetadata pathMetadata = expr.getMetadata();
+    var pathMetadata = expr.getMetadata();
     if (pathMetadata.getPathType() == PathType.LISTVALUE
         || pathMetadata.getPathType() == PathType.LISTVALUE_CONSTANT) {
       Path<?> replacement = replacements.get(expr);

@@ -26,8 +26,8 @@ import org.junit.Test;
 public class R2DBCRelationalFunctionCallTest {
 
   private static Expression[] serializeCollection(String... tokens) {
-    Expression[] rv = new Expression[tokens.length];
-    for (int i = 0; i < tokens.length; i++) {
+    var rv = new Expression[tokens.length];
+    for (var i = 0; i < tokens.length; i++) {
       rv[i] = ConstantImpl.create(tokens[i]);
     }
     return rv;
@@ -39,7 +39,7 @@ public class R2DBCRelationalFunctionCallTest {
 
     public TokenizeFunction(String alias, String... tokens) {
       super(String.class, "tokenize", serializeCollection(tokens));
-      this.alias = new PathBuilder<String>(String.class, alias);
+      this.alias = new PathBuilder<>(String.class, alias);
       this.token = Expressions.stringPath(this.alias, "token");
     }
   }
@@ -63,7 +63,7 @@ public class R2DBCRelationalFunctionCallTest {
 
   @Test
   public void twoArgs() {
-    StringPath str = Expressions.stringPath("str");
+    var str = Expressions.stringPath("str");
     R2DBCRelationalFunctionCall<String> functionCall =
         R2DBCExpressions.relationalFunctionCall(String.class, "getElements", "a", str);
     assertThat(functionCall.getTemplate()).hasToString("getElements({0}, {1})");

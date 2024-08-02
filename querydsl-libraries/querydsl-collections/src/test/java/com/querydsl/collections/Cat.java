@@ -17,7 +17,12 @@ import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.core.annotations.QueryType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @QueryEntity
 public class Cat extends Animal {
@@ -49,7 +54,7 @@ public class Cat extends Animal {
   }
 
   public Cat(String name) {
-    Cat kitten = new Cat();
+    var kitten = new Cat();
     this.kittens = Collections.singletonList(kitten);
     this.kittenArray = new Cat[] {kitten};
     this.kittensByName = Collections.singletonMap("Kitty", kitten);

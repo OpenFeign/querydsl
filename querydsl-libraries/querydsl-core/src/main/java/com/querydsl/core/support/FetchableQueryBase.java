@@ -56,7 +56,7 @@ public abstract class FetchableQueryBase<T, Q extends FetchableQueryBase<T, Q>> 
   protected <T> T uniqueResult(CloseableIterator<T> it) {
     try {
       if (it.hasNext()) {
-        T rv = it.next();
+        var rv = it.next();
         if (it.hasNext()) {
           throw new NonUniqueResultException();
         }

@@ -14,7 +14,12 @@
 package com.querydsl.core.group;
 
 import com.mysema.commons.lang.Pair;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * GMap
@@ -35,37 +40,37 @@ public abstract class GMap<K, V, M extends Map<K, V>>
   protected abstract M createMap();
 
   public static <T, U> GMap<T, U, Map<T, U>> createLinked(QPair<T, U> expr) {
-    return new GMap<T, U, Map<T, U>>(expr) {
+    return new GMap<>(expr) {
       @Override
       protected Map<T, U> createMap() {
-        return new LinkedHashMap<T, U>();
+        return new LinkedHashMap<>();
       }
     };
   }
 
   public static <T extends Comparable<? super T>, U> GMap<T, U, SortedMap<T, U>> createSorted(
       QPair<T, U> expr) {
-    return new GMap<T, U, SortedMap<T, U>>(expr) {
+    return new GMap<>(expr) {
       @Override
       protected SortedMap<T, U> createMap() {
-        return new TreeMap<T, U>();
+        return new TreeMap<>();
       }
     };
   }
 
   public static <T, U> GMap<T, U, SortedMap<T, U>> createSorted(
       QPair<T, U> expr, final Comparator<? super T> comparator) {
-    return new GMap<T, U, SortedMap<T, U>>(expr) {
+    return new GMap<>(expr) {
       @Override
       protected SortedMap<T, U> createMap() {
-        return new TreeMap<T, U>(comparator);
+        return new TreeMap<>(comparator);
       }
     };
   }
 
   @Override
   public GroupCollector<Pair<K, V>, M> createGroupCollector() {
-    return new GroupCollector<Pair<K, V>, M>() {
+    return new GroupCollector<>() {
 
       private final M map = createMap();
 
@@ -99,11 +104,10 @@ public abstract class GMap<K, V, M extends Map<K, V>>
 
       private final GroupCollector<Pair<T, U>, R> groupCollector;
 
-      private final Map<K, GroupCollector<K, T>> keyCollectors =
-          new LinkedHashMap<K, GroupCollector<K, T>>();
+      private final Map<K, GroupCollector<K, T>> keyCollectors = new LinkedHashMap<>();
 
       private final Map<GroupCollector<K, T>, GroupCollector<V, U>> valueCollectors =
-          new HashMap<GroupCollector<K, T>, GroupCollector<V, U>>();
+          new HashMap<>();
 
       GroupCollectorImpl() {
         this.groupCollector = mixin.createGroupCollector();
@@ -111,28 +115,28 @@ public abstract class GMap<K, V, M extends Map<K, V>>
 
       @Override
       public void add(Pair<K, V> pair) {
-        K first = pair.getFirst();
-        GroupCollector<K, T> keyCollector = keyCollectors.get(first);
+        var first = pair.getFirst();
+        var keyCollector = keyCollectors.get(first);
         if (keyCollector == null) {
           keyCollector = keyExpression.createGroupCollector();
           keyCollectors.put(first, keyCollector);
         }
         keyCollector.add(first);
-        GroupCollector<V, U> valueCollector = valueCollectors.get(keyCollector);
+        var valueCollector = valueCollectors.get(keyCollector);
         if (valueCollector == null) {
           valueCollector = valueExpression.createGroupCollector();
           valueCollectors.put(keyCollector, valueCollector);
         }
-        V second = pair.getSecond();
+        var second = pair.getSecond();
         valueCollector.add(second);
       }
 
       @Override
       public R get() {
         for (GroupCollector<K, T> keyCollector : keyCollectors.values()) {
-          T key = keyCollector.get();
-          GroupCollector<V, U> valueCollector = valueCollectors.remove(keyCollector);
-          U value = valueCollector.get();
+          var key = keyCollector.get();
+          var valueCollector = valueCollectors.remove(keyCollector);
+          var value = valueCollector.get();
           groupCollector.add(Pair.of(key, value));
         }
         keyCollectors.clear();

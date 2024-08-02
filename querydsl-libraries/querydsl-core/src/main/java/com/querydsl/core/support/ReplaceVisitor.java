@@ -13,8 +13,26 @@
  */
 package com.querydsl.core.support;
 
-import com.querydsl.core.*;
-import com.querydsl.core.types.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.JoinExpression;
+import com.querydsl.core.JoinFlag;
+import com.querydsl.core.QueryFlag;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.FactoryExpressionUtils;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.SubQueryExpressionImpl;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.CollectionUtils;
 import java.util.ArrayList;
@@ -37,7 +55,7 @@ public class ReplaceVisitor<C> implements Visitor<Expression<?>, C> {
 
   @Override
   public Expression<?> visit(FactoryExpression<?> expr, C context) {
-    List<Expression<?>> args = visit(expr.getArgs(), context);
+    var args = visit(expr.getArgs(), context);
     if (args.equals(expr.getArgs())) {
       return expr;
     } else {
@@ -47,7 +65,7 @@ public class ReplaceVisitor<C> implements Visitor<Expression<?>, C> {
 
   @Override
   public Expression<?> visit(Operation<?> expr, C context) {
-    List<Expression<?>> args = visit(expr.getArgs(), context);
+    var args = visit(expr.getArgs(), context);
     if (args.equals(expr.getArgs())) {
       return expr;
     } else if (expr instanceof Predicate) {
@@ -67,9 +85,9 @@ public class ReplaceVisitor<C> implements Visitor<Expression<?>, C> {
     if (expr.getMetadata().isRoot()) {
       return expr;
     } else {
-      PathMetadata metadata = expr.getMetadata();
+      var metadata = expr.getMetadata();
       Path<?> parent = (Path) metadata.getParent().accept(this, context);
-      Object element = metadata.getElement();
+      var element = metadata.getElement();
       if (element instanceof Expression<?>) {
         element = ((Expression<?>) element).accept(this, context);
       }

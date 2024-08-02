@@ -35,6 +35,7 @@ public class Inheritance4Test extends AbstractTest {
   public class EntityWithNumber extends EntityWithComparable {
     private Long field;
 
+    @Override
     public Long getField() {
       return field;
     }
@@ -44,6 +45,7 @@ public class Inheritance4Test extends AbstractTest {
   public class EntityWithString extends EntityWithComparable {
     private String field;
 
+    @Override
     public String getField() {
       return field;
     }

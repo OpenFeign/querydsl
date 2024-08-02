@@ -31,13 +31,13 @@ public final class HashCodeVisitor implements Visitor<Integer, Void> {
 
   @Override
   public Integer visit(FactoryExpression<?> expr, Void context) {
-    int result = expr.getType().hashCode();
+    var result = expr.getType().hashCode();
     return 31 * result + expr.getArgs().hashCode();
   }
 
   @Override
   public Integer visit(Operation<?> expr, Void context) {
-    int result = expr.getOperator().name().hashCode();
+    var result = expr.getOperator().name().hashCode();
     return 31 * result + expr.getArgs().hashCode();
   }
 
@@ -58,7 +58,7 @@ public final class HashCodeVisitor implements Visitor<Integer, Void> {
 
   @Override
   public Integer visit(TemplateExpression<?> expr, Void context) {
-    int result = expr.getTemplate().hashCode();
+    var result = expr.getTemplate().hashCode();
     return 31 * result + expr.getArgs().hashCode();
   }
 }

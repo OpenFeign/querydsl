@@ -17,14 +17,17 @@ public class Enum3Test {
     FOO,
     BAR;
 
+    @Override
     public EnumImplementation getValue() {
       return this;
     }
 
+    @Override
     public String getFoo() {
       return null;
     }
 
+    @Override
     public String getBar() {
       return name();
     }

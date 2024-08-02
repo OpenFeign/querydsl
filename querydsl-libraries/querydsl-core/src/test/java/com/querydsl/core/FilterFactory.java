@@ -57,7 +57,7 @@ public class FilterFactory {
   }
 
   public Collection<Predicate> booleanFilters(BooleanExpression expr, BooleanExpression other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.add(expr.and(other));
     rv.add(expr.or(other));
     rv.add(expr.not().and(other.not()));
@@ -68,7 +68,7 @@ public class FilterFactory {
 
   public <A> Collection<Predicate> collection(
       CollectionExpressionBase<?, A> expr, CollectionExpression<?, A> other, A knownElement) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.add(expr.contains(knownElement));
     rv.add(expr.isEmpty());
     rv.add(expr.isNotEmpty());
@@ -80,7 +80,7 @@ public class FilterFactory {
 
   public <A> Collection<Predicate> array(
       ArrayExpression<A[], A> expr, ArrayExpression<A[], A> other, A knownElement) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size().gt(0));
     }
@@ -90,7 +90,7 @@ public class FilterFactory {
 
   private <A extends Comparable<A>> Collection<Predicate> comparable(
       ComparableExpression<A> expr, ComparableExpression<A> other, A knownValue) {
-    List<Predicate> rv = new ArrayList<Predicate>(exprFilters(expr, other, knownValue));
+    List<Predicate> rv = new ArrayList<>(exprFilters(expr, other, knownValue));
     rv.add(expr.gt(other));
     rv.add(expr.gt(knownValue));
     rv.add(expr.goe(other));
@@ -108,7 +108,7 @@ public class FilterFactory {
 
   private <A extends Comparable<A>> Collection<Predicate> dateOrTime(
       TemporalExpression<A> expr, TemporalExpression<A> other, A knownValue) {
-    List<Predicate> rv = new ArrayList<Predicate>();
+    List<Predicate> rv = new ArrayList<>();
     rv.add(expr.after(other));
     rv.add(expr.after(knownValue));
     rv.add(expr.before(other));
@@ -119,7 +119,7 @@ public class FilterFactory {
   @SuppressWarnings("unchecked")
   public <A extends Comparable> Collection<Predicate> date(
       DateExpression<A> expr, DateExpression<A> other, A knownValue) {
-    List<Predicate> rv = new ArrayList<Predicate>();
+    List<Predicate> rv = new ArrayList<>();
     rv.addAll(comparable(expr, other, knownValue));
     rv.addAll(dateOrTime(expr, other, knownValue));
     rv.add(expr.dayOfMonth().eq(other.dayOfMonth()));
@@ -137,7 +137,7 @@ public class FilterFactory {
   @SuppressWarnings("unchecked")
   public <A extends Comparable> Collection<Predicate> dateTime(
       DateTimeExpression<A> expr, DateTimeExpression<A> other, A knownValue) {
-    List<Predicate> rv = new ArrayList<Predicate>();
+    List<Predicate> rv = new ArrayList<>();
     rv.addAll(comparable(expr, other, knownValue));
     rv.addAll(dateOrTime(expr, other, knownValue));
     rv.add(expr.dayOfMonth().eq(1));
@@ -170,7 +170,7 @@ public class FilterFactory {
 
   private <A> Collection<BooleanExpression> exprFilters(
       SimpleExpression<A> expr, SimpleExpression<A> other, A knownValue) {
-    HashSet<BooleanExpression> rv = new HashSet<BooleanExpression>();
+    var rv = new HashSet<BooleanExpression>();
     rv.add(expr.eq(other));
     rv.add(expr.eq(knownValue));
 
@@ -181,14 +181,14 @@ public class FilterFactory {
 
   public <A, Q extends SimpleExpression<A>> Collection<Predicate> list(
       ListPath<A, Q> expr, ListExpression<A, Q> other, A knownElement) {
-    List<Predicate> rv = new ArrayList<Predicate>(collection(expr, other, knownElement));
+    List<Predicate> rv = new ArrayList<>(collection(expr, other, knownElement));
     rv.add(expr.get(0).eq(knownElement));
     return Collections.unmodifiableList(rv);
   }
 
   public <K, V> Collection<Predicate> map(
       MapExpressionBase<K, V, ?> expr, MapExpression<K, V> other, K knownKey, V knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.add(expr.containsKey(knownKey));
     rv.add(expr.containsValue(knownValue));
     rv.add(expr.get(knownKey).eq(knownValue));
@@ -204,7 +204,7 @@ public class FilterFactory {
   @SuppressWarnings("unchecked")
   public <A extends Number & Comparable<A>> Collection<Predicate> numeric(
       NumberExpression<A> expr, NumberExpression<A> other, A knownValue) {
-    List<Predicate> rv = new ArrayList<Predicate>();
+    List<Predicate> rv = new ArrayList<>();
     for (NumberExpression<?> num : projections.numeric(expr, other, knownValue, true)) {
       rv.add(num.lt(expr));
     }
@@ -249,7 +249,7 @@ public class FilterFactory {
   @SuppressWarnings("unchecked")
   public Collection<Predicate> string(
       StringExpression expr, StringExpression other, String knownValue) {
-    List<Predicate> rv = new ArrayList<Predicate>();
+    List<Predicate> rv = new ArrayList<>();
     if (expr instanceof Path && other instanceof Path) {
       rv.addAll(pathFilters(expr, other, knownValue));
     }
@@ -342,7 +342,7 @@ public class FilterFactory {
 
     if (!target.equals(Target.DERBY) && !module.equals(QuerydslModule.JDO)) {
       // https://issues.apache.org/jira/browse/DERBY-4389
-      rv.add(new Coalesce<String>(String.class, expr, other).getValue().eq("xxx"));
+      rv.add(new Coalesce<>(String.class, expr, other).getValue().eq("xxx"));
     }
 
     //        rv.add(expr.in(IntervalImpl.create("A", "Z")));
@@ -353,7 +353,7 @@ public class FilterFactory {
   @SuppressWarnings("unchecked")
   public <A extends Comparable> Collection<Predicate> time(
       TimeExpression<A> expr, TimeExpression<A> other, A knownValue) {
-    List<Predicate> rv = new ArrayList<Predicate>();
+    List<Predicate> rv = new ArrayList<>();
     rv.addAll(comparable(expr, other, knownValue));
     rv.addAll(dateOrTime(expr, other, knownValue));
     rv.add(expr.hour().eq(other.hour()));

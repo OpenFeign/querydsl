@@ -46,6 +46,7 @@ public class Inheritance7Test {
       return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }

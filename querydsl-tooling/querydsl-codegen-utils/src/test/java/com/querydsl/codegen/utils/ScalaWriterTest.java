@@ -24,7 +24,7 @@ import org.junit.Test;
 public class ScalaWriterTest {
 
   private static final Function<Parameter, Parameter> transformer =
-      new Function<Parameter, Parameter>() {
+      new Function<>() {
         @Override
         public Parameter apply(Parameter input) {
           return input;

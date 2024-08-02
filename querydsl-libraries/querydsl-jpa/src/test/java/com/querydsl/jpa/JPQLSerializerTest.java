@@ -40,9 +40,9 @@ public class JPQLSerializerTest {
   @Test
   public void and_or() {
     // A.a.id.eq(theId).and(B.b.on.eq(false).or(B.b.id.eq(otherId)));
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     Predicate pred = cat.id.eq(1).and(cat.name.eq("Kitty").or(cat.name.eq("Boris")));
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(pred);
     assertThat(serializer).hasToString("cat.id = ?1 and (cat.name = ?2 or cat.name = ?3)");
     assertThat(pred).hasToString("cat.id = 1 && (cat.name = Kitty || cat.name = Boris)");
@@ -50,8 +50,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void case1() {
-    QCat cat = QCat.cat;
-    JPQLSerializer serializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
+    var cat = QCat.cat;
+    var serializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
     Expression<?> expr =
         Expressions.cases().when(cat.toes.eq(2)).then(2).when(cat.toes.eq(3)).then(3).otherwise(4);
     serializer.handle(expr);
@@ -61,8 +61,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void case1_hibernate() {
-    QCat cat = QCat.cat;
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var cat = QCat.cat;
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     Expression<?> expr =
         Expressions.cases().when(cat.toes.eq(2)).then(2).when(cat.toes.eq(3)).then(3).otherwise(4);
     serializer.handle(expr);
@@ -72,8 +72,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void case2() {
-    QCat cat = QCat.cat;
-    JPQLSerializer serializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
+    var cat = QCat.cat;
+    var serializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
     Expression<?> expr =
         Expressions.cases()
             .when(cat.toes.eq(2))
@@ -92,8 +92,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void case2_hibernate() {
-    QCat cat = QCat.cat;
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var cat = QCat.cat;
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     Expression<?> expr =
         Expressions.cases()
             .when(cat.toes.eq(2))
@@ -112,16 +112,16 @@ public class JPQLSerializerTest {
 
   @Test
   public void count() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, cat);
     md.setProjection(cat.mate.countDistinct());
-    JPQLSerializer serializer1 = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer1 = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer1.serialize(md, true, null);
     assertThat(serializer1.toString())
         .isEqualTo("select count(count(distinct cat.mate))\n" + "from Cat cat");
 
-    JPQLSerializer serializer2 = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer2 = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer2.serialize(md, false, null);
     assertThat(serializer2.toString())
         .isEqualTo("select count(distinct cat.mate)\n" + "from Cat cat");
@@ -129,8 +129,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void fromWithCustomEntityName() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
-    EntityPath<Location> entityPath = new EntityPathBase<Location>(Location.class, "entity");
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    EntityPath<Location> entityPath = new EntityPathBase<>(Location.class, "entity");
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, entityPath);
     serializer.serialize(md, false, null);
@@ -139,8 +139,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void join_with() {
-    QCat cat = QCat.cat;
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var cat = QCat.cat;
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, cat);
     md.addJoin(JoinType.INNERJOIN, cat.mate);
@@ -152,7 +152,7 @@ public class JPQLSerializerTest {
 
   @Test
   public void normalizeNumericArgs() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     NumberPath<Double> doublePath = Expressions.numberPath(Double.class, "doublePath");
     serializer.handle(doublePath.add(1));
     serializer.handle(doublePath.between((float) 1.0, 1L));
@@ -164,8 +164,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void delete_clause_uses_dELETE_fROM() {
-    QEmployee employee = QEmployee.employee;
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var employee = QEmployee.employee;
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, employee);
     md.addWhere(employee.lastName.isNull());
@@ -176,10 +176,10 @@ public class JPQLSerializerTest {
 
   @Test
   public void delete_with_subQuery() {
-    QCat parent = QCat.cat;
-    QCat child = new QCat("kitten");
+    var parent = QCat.cat;
+    var child = new QCat("kitten");
 
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, child);
     md.addWhere(
@@ -204,21 +204,21 @@ public class JPQLSerializerTest {
 
   @Test
   public void in() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.numberPath(Integer.class, "id").in(Arrays.asList(1, 2)));
     assertThat(serializer).hasToString("id in (?1)");
   }
 
   @Test
   public void not_in() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.numberPath(Integer.class, "id").notIn(Arrays.asList(1, 2)));
     assertThat(serializer).hasToString("id not in (?1)");
   }
 
   @Test
   public void like() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.stringPath("str").contains("abc!"));
     assertThat(serializer).hasToString("str like ?1 escape '!'");
     assertThat(serializer.getConstants().get(0)).hasToString("%abc!!%");
@@ -226,7 +226,7 @@ public class JPQLSerializerTest {
 
   @Test
   public void stringContainsIc() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.stringPath("str").containsIgnoreCase("ABc!"));
     assertThat(serializer).hasToString("lower(str) like ?1 escape '!'");
     assertThat(serializer.getConstants().get(0)).hasToString("%abc!!%");
@@ -234,8 +234,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void substring() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
-    QCat cat = QCat.cat;
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var cat = QCat.cat;
     serializer.handle(cat.name.substring(cat.name.length().subtract(1), 1));
     assertThat(serializer.toString())
         .isEqualTo("substring(cat.name,length(cat.name) + ?1,?2 - (length(cat.name) - ?3))");
@@ -243,8 +243,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void nullsFirst() {
-    QCat cat = QCat.cat;
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var cat = QCat.cat;
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, cat);
     md.addOrderBy(cat.name.asc().nullsFirst());
@@ -255,8 +255,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void nullsLast() {
-    QCat cat = QCat.cat;
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var cat = QCat.cat;
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, cat);
     md.addOrderBy(cat.name.asc().nullsLast());
@@ -268,8 +268,8 @@ public class JPQLSerializerTest {
   @SuppressWarnings("unchecked")
   @Test
   public void treat() {
-    QCat cat = QCat.cat;
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var cat = QCat.cat;
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, cat);
     md.addJoin(JoinType.JOIN, cat.mate.as((Path) QDomesticCat.domesticCat));
@@ -286,8 +286,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void treated_path() {
-    QAnimal animal = QAnimal.animal;
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var animal = QAnimal.animal;
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, animal);
 
@@ -305,8 +305,8 @@ public class JPQLSerializerTest {
 
   @Test
   public void openJPA_variables() {
-    QCat cat = QCat.cat;
-    JPQLSerializer serializer = new JPQLSerializer(OpenJPATemplates.DEFAULT);
+    var cat = QCat.cat;
+    var serializer = new JPQLSerializer(OpenJPATemplates.DEFAULT);
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, cat);
     md.addJoin(JoinType.INNERJOIN, cat.mate);
@@ -318,36 +318,36 @@ public class JPQLSerializerTest {
 
   @Test
   public void visitLiteral_boolean() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.visitLiteral(Boolean.TRUE);
     assertThat(serializer).hasToString("true");
   }
 
   @Test
   public void visitLiteral_number() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.visitLiteral(1.543);
     assertThat(serializer).hasToString("1.543");
   }
 
   @Test
   public void visitLiteral_string() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.visitLiteral("abc''def");
     assertThat(serializer).hasToString("'abc''''def'");
   }
 
   @Test
   public void visitLiteral_enum() {
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.visitLiteral(JobFunction.MANAGER);
     assertThat(serializer).hasToString("com.querydsl.jpa.domain.JobFunction.MANAGER");
   }
 
   @Test
   public void substring_indexOf() {
-    QCat cat = QCat.cat;
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var cat = QCat.cat;
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     cat.name.substring(cat.name.indexOf("")).accept(serializer, null);
     assertThat(serializer).hasToString("substring(cat.name,locate(?1,cat.name)-1 + ?2)");
   }
