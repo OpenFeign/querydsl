@@ -44,20 +44,20 @@ public class JacocoTest {
 
   @Test
   public void withSimpleClass() {
-    List<CloneableKlasse> vos = new ArrayList<CloneableKlasse>();
-    for (int i = 0; i < 5; i++) {
-      CloneableKlasse vo = new CloneableKlasse();
+    List<CloneableKlasse> vos = new ArrayList<>();
+    for (var i = 0; i < 5; i++) {
+      var vo = new CloneableKlasse();
       vo.setOtherValue(i);
       vos.add(vo);
     }
-    CloneableKlasse vo = Alias.alias(CloneableKlasse.class, "vo");
+    var vo = Alias.alias(CloneableKlasse.class, "vo");
     assertThat(vo).isNotNull();
     CollQuery<?> query = new CollQuery<Void>();
     final EntityPathBase<CloneableKlasse> fromVo = Alias.$(vo);
     assertThat(fromVo).isNotNull();
     query.from(fromVo, vos);
     query.where(Alias.$(vo.getOtherValue()).eq(1));
-    List<CloneableKlasse> result = query.select(Alias.$(vo)).fetch();
+    var result = query.select(Alias.$(vo)).fetch();
 
     assertThat(result).isNotNull();
     assertThat(result).hasSize(1);

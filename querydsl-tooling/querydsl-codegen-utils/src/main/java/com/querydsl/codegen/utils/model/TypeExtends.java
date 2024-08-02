@@ -46,7 +46,7 @@ public class TypeExtends extends TypeAdapter {
       if (Types.OBJECT.equals(type)) {
         return "?";
       } else {
-        String genericName = super.getGenericName(true, packages, classes);
+        var genericName = super.getGenericName(true, packages, classes);
         return genericName == null || genericName.isEmpty() ? "?" : "? extends " + genericName;
       }
     } else {

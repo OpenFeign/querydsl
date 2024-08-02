@@ -5,7 +5,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.annotations.QueryType;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +39,7 @@ public class QueryInit6Test {
     @QueryInit("*")
     @Transient
     public Container getContainer() {
-      Component temp = this.parent;
+      var temp = this.parent;
       if (this.parent instanceof HibernateProxy proxy) {
         temp = (Component) proxy.getHibernateLazyInitializer().getImplementation();
       }
@@ -53,7 +63,7 @@ public class QueryInit6Test {
     protected Component(String id, Component parent) {
       this.id = id;
       this.parent = parent;
-      this.children = new HashSet<Component>();
+      this.children = new HashSet<>();
     }
 
     @Transient

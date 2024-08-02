@@ -13,13 +13,28 @@
  */
 package com.querydsl.sql.dml;
 
-import com.querydsl.core.*;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
-import com.querydsl.core.types.*;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.util.ResultSetAdapter;
-import com.querydsl.sql.*;
-import java.sql.*;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLBindings;
+import com.querydsl.sql.SQLListener;
+import com.querydsl.sql.SQLSerializer;
+import com.querydsl.sql.SQLTemplates;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +58,7 @@ public class SQLMergeUsingClause extends AbstractSQLClause<SQLMergeUsingClause> 
   protected SimpleExpression<?> usingExpression;
 
   protected BooleanBuilder usingOn = new BooleanBuilder();
-  protected List<SQLMergeUsingCase> whens = new ArrayList<SQLMergeUsingCase>();
+  protected List<SQLMergeUsingCase> whens = new ArrayList<>();
   protected transient String queryString;
 
   protected transient List<Object> constants;
@@ -147,7 +162,7 @@ public class SQLMergeUsingClause extends AbstractSQLClause<SQLMergeUsingClause> 
   }
 
   protected <T> T executeWithKey(Class<T> type, @Nullable Path<T> path) {
-    ResultSet rs = executeWithKeys();
+    var rs = executeWithKeys();
     try {
       if (rs.next()) {
         return configuration.get(rs, path, 1, type);
@@ -183,7 +198,7 @@ public class SQLMergeUsingClause extends AbstractSQLClause<SQLMergeUsingClause> 
     ResultSet rs = null;
     try {
       rs = executeWithKeys();
-      List<T> rv = new ArrayList<T>();
+      List<T> rv = new ArrayList<>();
       while (rs.next()) {
         rv.add(configuration.get(rs, path, 1, type));
       }
@@ -215,7 +230,7 @@ public class SQLMergeUsingClause extends AbstractSQLClause<SQLMergeUsingClause> 
       listeners.executed(context);
 
       final Statement stmt2 = stmt;
-      ResultSet rs = stmt.getGeneratedKeys();
+      var rs = stmt.getGeneratedKeys();
       return new ResultSetAdapter(rs) {
         @Override
         public void close() throws SQLException {
@@ -243,11 +258,12 @@ public class SQLMergeUsingClause extends AbstractSQLClause<SQLMergeUsingClause> 
 
   @Override
   public List<SQLBindings> getSQL() {
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeMergeUsing(metadata, entity, usingExpression, usingOn.getValue(), whens);
     return Collections.singletonList(createBindings(metadata, serializer));
   }
 
+  @Override
   public int getBatchCount() {
     return 0;
   }
@@ -259,9 +275,9 @@ public class SQLMergeUsingClause extends AbstractSQLClause<SQLMergeUsingClause> 
   }
 
   protected PreparedStatement createStatement(boolean withKeys) throws SQLException {
-    boolean addBatches = !configuration.getUseLiterals();
+    var addBatches = !configuration.getUseLiterals();
     listeners.preRender(context);
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     PreparedStatement stmt = null;
 
     serializer.serializeMergeUsing(metadata, entity, usingExpression, usingOn.getValue(), whens);
@@ -300,7 +316,7 @@ public class SQLMergeUsingClause extends AbstractSQLClause<SQLMergeUsingClause> 
       listeners.notifyMergeUsing(entity, metadata, usingExpression, usingOn.getValue(), whens);
 
       listeners.preExecute(context);
-      int rc = stmt.executeUpdate();
+      var rc = stmt.executeUpdate();
       listeners.executed(context);
       return rc;
     } catch (SQLException e) {
@@ -347,7 +363,7 @@ public class SQLMergeUsingClause extends AbstractSQLClause<SQLMergeUsingClause> 
 
   @Override
   public String toString() {
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeMergeUsing(metadata, entity, usingExpression, usingOn.getValue(), whens);
     return serializer.toString();
   }

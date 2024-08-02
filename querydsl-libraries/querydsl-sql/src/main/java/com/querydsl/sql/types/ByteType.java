@@ -40,7 +40,7 @@ public class ByteType extends AbstractType<Byte> {
 
   @Override
   public Byte getValue(ResultSet rs, int startIndex) throws SQLException {
-    byte val = rs.getByte(startIndex);
+    var val = rs.getByte(startIndex);
     return rs.wasNull() ? null : val;
   }
 

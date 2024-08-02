@@ -70,7 +70,7 @@ public abstract class AbstractR2DBCClause<C extends AbstractR2DBCClause<C>>
   public abstract void clear();
 
   protected SQLBindings createBindings(QueryMetadata metadata, SQLSerializer serializer) {
-    String queryString = serializer.toString();
+    var queryString = serializer.toString();
     List<Object> args = new ArrayList<>();
     Map<ParamExpression<?>, Object> params = metadata.getParams();
     for (Object o : serializer.getConstants()) {
@@ -86,7 +86,7 @@ public abstract class AbstractR2DBCClause<C extends AbstractR2DBCClause<C>>
   }
 
   protected SQLSerializer createSerializer(boolean dml) {
-    SQLSerializer serializer = new SQLSerializer(configuration, dml);
+    var serializer = new SQLSerializer(configuration, dml);
     serializer.setUseLiterals(useLiterals);
     return serializer;
   }
@@ -130,7 +130,7 @@ public abstract class AbstractR2DBCClause<C extends AbstractR2DBCClause<C>>
           "Expected " + objects.size() + " paths, " + "but got " + constantPaths.size());
     }
 
-    for (int i = 0; i < objects.size(); i++) {
+    for (var i = 0; i < objects.size(); i++) {
       Object o = objects.get(i);
       if (o instanceof ParamExpression) {
         if (!params.containsKey(o)) {
@@ -145,7 +145,7 @@ public abstract class AbstractR2DBCClause<C extends AbstractR2DBCClause<C>>
 
   protected void logQuery(Logger logger, String queryString, Collection<Object> parameters) {
     if (logger.isLoggable(Level.FINE)) {
-      String normalizedQuery = queryString.replace('\n', ' ');
+      var normalizedQuery = queryString.replace('\n', ' ');
       logger.info(normalizedQuery);
     }
   }

@@ -41,11 +41,10 @@ public class DoubleType extends AbstractType<Double, Number> {
     return Number.class;
   }
 
+  @Override
   protected Double fromDbValue(Number value) {
-    if (Integer.class.isAssignableFrom(value.getClass())) {
-      return value.doubleValue();
-    }
-    if (BigDecimal.class.isAssignableFrom(value.getClass())) {
+    if (Integer.class.isAssignableFrom(value.getClass())
+        || BigDecimal.class.isAssignableFrom(value.getClass())) {
       return value.doubleValue();
     }
     return (Double) value;

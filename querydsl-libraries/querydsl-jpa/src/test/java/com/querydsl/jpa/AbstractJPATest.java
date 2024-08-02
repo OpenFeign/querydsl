@@ -144,7 +144,7 @@ public abstract class AbstractJPATest {
 
   private static final java.sql.Time time;
 
-  private final List<Cat> savedCats = new ArrayList<Cat>();
+  private final List<Cat> savedCats = new ArrayList<>();
 
   static {
     var cal = Calendar.getInstance();
@@ -204,7 +204,7 @@ public abstract class AbstractJPATest {
     savedCats.add(cat);
 
     var show = new Show(1);
-    show.acts = new HashMap<String, String>();
+    show.acts = new HashMap<>();
     show.acts.put("a", "A");
     show.acts.put("b", "B");
     save(show);
@@ -396,7 +396,7 @@ public abstract class AbstractJPATest {
     var results =
         query()
             .from(cat)
-            .select(new ArrayConstructorExpression<String>(String[].class, cat.name))
+            .select(new ArrayConstructorExpression<>(String[].class, cat.name))
             .fetch();
     assertThat(results).isNotEmpty();
     for (String[] result : results) {
@@ -1711,7 +1711,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void params() {
-    var name = new Param<String>(String.class, "name");
+    var name = new Param<>(String.class, "name");
     assertThat(
             query()
                 .from(cat)
@@ -1724,7 +1724,7 @@ public abstract class AbstractJPATest {
 
   @Test
   public void params_anon() {
-    var name = new Param<String>(String.class);
+    var name = new Param<>(String.class);
     assertThat(
             query()
                 .from(cat)
@@ -1737,7 +1737,7 @@ public abstract class AbstractJPATest {
 
   @Test(expected = ParamNotSetException.class)
   public void params_not_set() {
-    var name = new Param<String>(String.class, "name");
+    var name = new Param<>(String.class, "name");
     assertThat(query().from(cat).where(cat.name.eq(name)).select(cat.name).fetchFirst())
         .isEqualTo("Bob123");
   }

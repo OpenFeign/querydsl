@@ -15,7 +15,6 @@ package com.querydsl.core.group.guava;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.group.AbstractGroupByTransformer;
@@ -48,20 +47,20 @@ public class GroupByMultimap<K, V, R extends Multimap<K, V>>
 
     // create groups
     FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-    boolean hasGroups = false;
+    var hasGroups = false;
     for (Expression<?> e : expr.getArgs()) {
       hasGroups |= e instanceof GroupExpression;
     }
     if (hasGroups) {
       expr = withoutGroupExpressions(expr);
     }
-    CloseableIterator<Tuple> iter = query.select(expr).iterate();
+    var iter = query.select(expr).iterate();
     try {
       while (iter.hasNext()) {
         @SuppressWarnings("unchecked") // This type is mandated by the key type
-        K[] row = (K[]) iter.next().toArray();
-        K groupId = row[0];
-        GroupImpl group = new GroupImpl(groupExpressions, maps);
+        var row = (K[]) iter.next().toArray();
+        var groupId = row[0];
+        var group = new GroupImpl(groupExpressions, maps);
         groups.put(groupId, group);
         group.add(row);
       }

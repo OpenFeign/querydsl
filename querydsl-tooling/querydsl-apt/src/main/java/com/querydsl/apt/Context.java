@@ -26,19 +26,19 @@ import javax.lang.model.element.TypeElement;
  */
 class Context {
 
-  final Map<String, EntityType> supertypes = new HashMap<String, EntityType>();
+  final Map<String, EntityType> supertypes = new HashMap<>();
 
-  final Map<String, EntityType> allTypes = new HashMap<String, EntityType>();
+  final Map<String, EntityType> allTypes = new HashMap<>();
 
-  final Map<String, EntityType> projectionTypes = new HashMap<String, EntityType>();
+  final Map<String, EntityType> projectionTypes = new HashMap<>();
 
-  final Map<String, EntityType> embeddableTypes = new HashMap<String, EntityType>();
+  final Map<String, EntityType> embeddableTypes = new HashMap<>();
 
-  final Map<String, EntityType> entityTypes = new HashMap<String, EntityType>();
+  final Map<String, EntityType> entityTypes = new HashMap<>();
 
-  final Map<String, EntityType> extensionTypes = new HashMap<String, EntityType>();
+  final Map<String, EntityType> extensionTypes = new HashMap<>();
 
-  final Map<String, Set<TypeElement>> typeElements = new HashMap<String, Set<TypeElement>>();
+  final Map<String, Set<TypeElement>> typeElements = new HashMap<>();
 
   public void clean() {
     for (String key : supertypes.keySet()) {

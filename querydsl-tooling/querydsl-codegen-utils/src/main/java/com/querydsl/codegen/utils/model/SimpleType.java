@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class SimpleType implements Type {
 
-  private static final Map<String, Class<?>> PRIMITIVES = new HashMap<String, Class<?>>();
+  private static final Map<String, Class<?>> PRIMITIVES = new HashMap<>();
 
   static {
     for (Class<?> cl :
@@ -143,8 +143,8 @@ public class SimpleType implements Type {
   @Override
   public Type asArrayType() {
     if (arrayType == null) {
-      String newFullName = getFullName() + "[]";
-      String newSimpleName = getSimpleName() + "[]";
+      var newFullName = getFullName() + "[]";
+      var newSimpleName = getSimpleName() + "[]";
       arrayType =
           new SimpleType(
               TypeCategory.ARRAY, newFullName, getPackageName(), newSimpleName, false, false);
@@ -157,13 +157,14 @@ public class SimpleType implements Type {
     if (o == this) {
       return true;
     } else if (o instanceof Type) {
-      Type t = (Type) o;
+      var t = (Type) o;
       return t.getFullName().equals(fullName) && t.getParameters().equals(parameters);
     } else {
       return false;
     }
   }
 
+  @Override
   public TypeCategory getCategory() {
     return category;
   }
@@ -172,8 +173,8 @@ public class SimpleType implements Type {
   public Type getComponentType() {
     if (fullName.endsWith("[]")) {
       if (componentType == null) {
-        String newFullName = fullName.substring(0, fullName.length() - 2);
-        String newSimpleName = simpleName.substring(0, simpleName.length() - 2);
+        var newFullName = fullName.substring(0, fullName.length() - 2);
+        var newSimpleName = simpleName.substring(0, simpleName.length() - 2);
         componentType =
             new SimpleType(
                 TypeCategory.SIMPLE, newFullName, getPackageName(), newSimpleName, false, false);
@@ -187,8 +188,8 @@ public class SimpleType implements Type {
   @Override
   public Type getEnclosingType() {
     if (enclosingType == null && memberClass) {
-      String newLocalName = localName.substring(0, localName.lastIndexOf('.'));
-      String newSimpleName = newLocalName.substring(newLocalName.lastIndexOf('.') + 1);
+      var newLocalName = localName.substring(0, localName.lastIndexOf('.'));
+      var newSimpleName = newLocalName.substring(newLocalName.lastIndexOf('.') + 1);
       enclosingType = new SimpleType(outerClassName, packageName, newSimpleName);
     }
     return enclosingType;
@@ -210,10 +211,10 @@ public class SimpleType implements Type {
     if (parameters.isEmpty()) {
       return getRawName(packages, classes);
     } else {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       builder.append(getRawName(packages, classes));
       builder.append("<");
-      boolean first = true;
+      var first = true;
       for (Type parameter : parameters) {
         if (!first) {
           builder.append(", ");

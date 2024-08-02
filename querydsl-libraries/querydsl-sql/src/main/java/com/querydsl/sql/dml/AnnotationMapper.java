@@ -49,16 +49,16 @@ public class AnnotationMapper implements Mapper<Object> {
   @Override
   public Map<Path<?>, Object> createMap(RelationalPath<?> path, Object object) {
     try {
-      Map<String, Path<?>> columnToPath = new HashMap<String, Path<?>>();
+      Map<String, Path<?>> columnToPath = new HashMap<>();
       for (Path<?> column : path.getColumns()) {
         columnToPath.put(ColumnMetadata.getName(column), column);
       }
-      Map<Path<?>, Object> values = new HashMap<Path<?>, Object>();
+      Map<Path<?>, Object> values = new HashMap<>();
       for (Field field : ReflectionUtils.getFields(object.getClass())) {
-        Column ann = field.getAnnotation(Column.class);
+        var ann = field.getAnnotation(Column.class);
         if (ann != null) {
           field.setAccessible(true);
-          Object propertyValue = field.get(object);
+          var propertyValue = field.get(object);
           if (propertyValue != null) {
             if (columnToPath.containsKey(ann.value())) {
               values.put(columnToPath.get(ann.value()), propertyValue);

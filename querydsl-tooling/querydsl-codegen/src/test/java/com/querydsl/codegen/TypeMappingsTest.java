@@ -29,11 +29,11 @@ public class TypeMappingsTest {
   @Test
   public void getPathType_of_innerClass() {
     TypeMappings typeMappings = new JavaTypeMappings();
-    EntityType model = new EntityType(new ClassType(TypeMappingsTest.class));
-    EntityType type = new EntityType(new ClassType(Entity.class));
+    var model = new EntityType(new ClassType(TypeMappingsTest.class));
+    var type = new EntityType(new ClassType(Entity.class));
     typeMappings.register(type, new QueryTypeFactoryImpl("Q", "", "").create(type));
 
-    Type pathType = typeMappings.getPathType(type, model, false);
+    var pathType = typeMappings.getPathType(type, model, false);
     assertThat(pathType.getSimpleName()).isEqualTo("QTypeMappingsTest_Entity");
   }
 
@@ -46,16 +46,16 @@ public class TypeMappingsTest {
 
   @Test
   public void testGenericTypeRegistration() {
-    SimpleType rawListType = new SimpleType(List.class.getName());
-    SimpleType integerListType =
+    var rawListType = new SimpleType(List.class.getName());
+    var integerListType =
         new SimpleType(
             rawListType, Collections.<Type>singletonList(new SimpleType(Integer.class.getName())));
-    SimpleType longListType =
+    var longListType =
         new SimpleType(
             rawListType, Collections.<Type>singletonList(new SimpleType(Long.class.getName())));
 
-    SimpleType integerListTypeExpression = new SimpleType("integerListTypeExpression");
-    SimpleType longListTypeExpression = new SimpleType("longListTypeExpression");
+    var integerListTypeExpression = new SimpleType("integerListTypeExpression");
+    var longListTypeExpression = new SimpleType("longListTypeExpression");
 
     TypeMappings typeMappings = new JavaTypeMappings();
     typeMappings.register(integerListType, integerListTypeExpression);

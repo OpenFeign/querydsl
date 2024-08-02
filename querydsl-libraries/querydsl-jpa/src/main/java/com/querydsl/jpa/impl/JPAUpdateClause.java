@@ -26,7 +26,6 @@ import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
-import jakarta.persistence.Query;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,10 +60,10 @@ public class JPAUpdateClause implements UpdateClause<JPAUpdateClause> {
 
   @Override
   public long execute() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, entityManager);
+    var serializer = new JPQLSerializer(templates, entityManager);
     serializer.serializeForUpdate(queryMixin.getMetadata(), updates);
 
-    Query query = entityManager.createQuery(serializer.toString());
+    var query = entityManager.createQuery(serializer.toString());
     if (lockMode != null) {
       query.setLockMode(lockMode);
     }
@@ -101,7 +100,7 @@ public class JPAUpdateClause implements UpdateClause<JPAUpdateClause> {
   @SuppressWarnings({"unchecked", "rawtypes"})
   @Override
   public JPAUpdateClause set(List<? extends Path<?>> paths, List<?> values) {
-    for (int i = 0; i < paths.size(); i++) {
+    for (var i = 0; i < paths.size(); i++) {
       if (values.get(i) != null) {
         updates.put(paths.get(i), Expressions.constant(values.get(i)));
       } else {
@@ -126,7 +125,7 @@ public class JPAUpdateClause implements UpdateClause<JPAUpdateClause> {
 
   @Override
   public String toString() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, entityManager);
+    var serializer = new JPQLSerializer(templates, entityManager);
     serializer.serializeForUpdate(queryMixin.getMetadata(), updates);
     return serializer.toString();
   }

@@ -40,7 +40,7 @@ public class LongType extends AbstractType<Long> {
 
   @Override
   public Long getValue(ResultSet rs, int startIndex) throws SQLException {
-    long val = rs.getLong(startIndex);
+    var val = rs.getLong(startIndex);
     return rs.wasNull() ? null : val;
   }
 

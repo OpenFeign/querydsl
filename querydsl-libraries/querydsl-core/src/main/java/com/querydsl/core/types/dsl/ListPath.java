@@ -13,7 +13,13 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ParameterizedPathImpl;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathImpl;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathMetadataFactory;
+import com.querydsl.core.types.Visitor;
 import java.lang.reflect.AnnotatedElement;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +38,7 @@ public class ListPath<E, Q extends SimpleExpression<? super E>>
 
   private static final long serialVersionUID = 3302301599074388860L;
 
-  private final Map<Integer, Q> cache = new HashMap<Integer, Q>();
+  private final Map<Integer, Q> cache = new HashMap<>();
 
   private final Class<E> elementType;
 
@@ -58,7 +64,7 @@ public class ListPath<E, Q extends SimpleExpression<? super E>>
   @SuppressWarnings("unchecked")
   protected ListPath(
       Class<? super E> elementType, Class<Q> queryType, PathMetadata metadata, PathInits inits) {
-    super(new ParameterizedPathImpl<List<E>>((Class) List.class, metadata, elementType), inits);
+    super(new ParameterizedPathImpl<>((Class) List.class, metadata, elementType), inits);
     this.elementType = (Class<E>) elementType;
     this.queryType = queryType;
     this.pathMixin = (PathImpl<List<E>>) mixin;
@@ -86,13 +92,13 @@ public class ListPath<E, Q extends SimpleExpression<? super E>>
   }
 
   private Q create(int index) {
-    PathMetadata md = forListAccess(index);
+    var md = forListAccess(index);
     return newInstance(queryType, md);
   }
 
   @Override
   public Q get(Expression<Integer> index) {
-    PathMetadata md = forListAccess(index);
+    var md = forListAccess(index);
     return newInstance(queryType, md);
   }
 
@@ -101,7 +107,7 @@ public class ListPath<E, Q extends SimpleExpression<? super E>>
     if (cache.containsKey(index)) {
       return cache.get(index);
     } else {
-      Q rv = create(index);
+      var rv = create(index);
       cache.put(index, rv);
       return rv;
     }

@@ -42,7 +42,7 @@ public class JPACollectionAnyVisitorTest {
 
   @Test
   public void nested_any_booleanOperation() {
-    QCompany company = QCompany.company;
+    var company = QCompany.company;
     Predicate predicate = company.departments.any().employees.any().firstName.eq("Bob");
     assertThat(serialize(predicate))
         .isEqualTo(
@@ -81,7 +81,7 @@ public class JPACollectionAnyVisitorTest {
 
   @Test
   public void simple_booleanOperation_elementCollection() {
-    QEmployee employee = QEmployee.employee;
+    var employee = QEmployee.employee;
     Predicate predicate = employee.jobFunctions.any().stringValue().eq("CODER");
     assertThat(serialize(predicate))
         .isEqualTo(
@@ -141,7 +141,7 @@ public class JPACollectionAnyVisitorTest {
     //        query.where(anyDog.gender.eq("M"));
     //        List<Person> foundOwners = query.fetch(QPerson.person);
 
-    QDomesticCat anyCat = QCat.cat.kittens.any().as(QDomesticCat.class);
+    var anyCat = QCat.cat.kittens.any().as(QDomesticCat.class);
     Predicate predicate = anyCat.name.eq("X");
 
     assertThat(serialize(predicate))
@@ -155,7 +155,7 @@ public class JPACollectionAnyVisitorTest {
 
   private String serialize(Expression<?> expression) {
     Expression<?> transformed = expression.accept(new JPACollectionAnyVisitor(), new Context());
-    JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT, null);
     serializer.handle(transformed);
     return serializer.toString();
   }

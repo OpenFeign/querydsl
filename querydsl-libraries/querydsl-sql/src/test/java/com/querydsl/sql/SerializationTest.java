@@ -13,7 +13,9 @@
  */
 package com.querydsl.sql;
 
-import static com.querydsl.sql.SQLExpressions.*;
+import static com.querydsl.sql.SQLExpressions.select;
+import static com.querydsl.sql.SQLExpressions.selectOne;
+import static com.querydsl.sql.SQLExpressions.union;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Expression;
@@ -65,7 +67,7 @@ public class SerializationTest {
 
   @Test
   public void update() {
-    SQLUpdateClause updateClause = new SQLUpdateClause(connection, SQLTemplates.DEFAULT, survey);
+    var updateClause = new SQLUpdateClause(connection, SQLTemplates.DEFAULT, survey);
     updateClause.set(survey.id, 1);
     updateClause.set(survey.name, (String) null);
     assertThat(updateClause).hasToString("update SURVEY\nset ID = ?, NAME = ?");
@@ -73,7 +75,7 @@ public class SerializationTest {
 
   @Test
   public void update_where() {
-    SQLUpdateClause updateClause = new SQLUpdateClause(connection, SQLTemplates.DEFAULT, survey);
+    var updateClause = new SQLUpdateClause(connection, SQLTemplates.DEFAULT, survey);
     updateClause.set(survey.id, 1);
     updateClause.set(survey.name, (String) null);
     updateClause.where(survey.name.eq("XXX"));
@@ -83,7 +85,7 @@ public class SerializationTest {
 
   @Test
   public void insert() {
-    SQLInsertClause insertClause = new SQLInsertClause(connection, SQLTemplates.DEFAULT, survey);
+    var insertClause = new SQLInsertClause(connection, SQLTemplates.DEFAULT, survey);
     insertClause.set(survey.id, 1);
     insertClause.set(survey.name, (String) null);
     assertThat(insertClause).hasToString("insert into SURVEY (ID, NAME)\nvalues (?, ?)");
@@ -91,9 +93,9 @@ public class SerializationTest {
 
   @Test
   public void delete_with_subQuery_exists() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
-    SQLDeleteClause delete = new SQLDeleteClause(connection, SQLTemplates.DEFAULT, survey1);
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
+    var delete = new SQLDeleteClause(connection, SQLTemplates.DEFAULT, survey1);
     delete.where(
         survey1.name.eq("XXX"),
         selectOne().from(employee).where(survey1.id.eq(employee.id)).exists());
@@ -110,7 +112,7 @@ public class SerializationTest {
   @Test
   public void nextval() {
     SubQueryExpression<?> sq = select(SQLExpressions.nextval("myseq")).from(QSurvey.survey);
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.serialize(sq.getMetadata(), false);
     assertThat(serializer).hasToString("select nextval('myseq')\nfrom SURVEY SURVEY");
   }
@@ -119,14 +121,14 @@ public class SerializationTest {
   public void functionCall() {
     RelationalFunctionCall<String> func =
         SQLExpressions.relationalFunctionCall(String.class, "TableValuedFunction", "parameter");
-    PathBuilder<String> funcAlias = new PathBuilder<String>(String.class, "tokFunc");
+    var funcAlias = new PathBuilder<>(String.class, "tokFunc");
     SubQueryExpression<?> expr =
         select(survey.name)
             .from(survey)
             .join(func, funcAlias)
             .on(survey.name.like(funcAlias.getString("prop")).not());
 
-    SQLSerializer serializer = new SQLSerializer(new Configuration(new SQLServerTemplates()));
+    var serializer = new SQLSerializer(new Configuration(new SQLServerTemplates()));
     serializer.serialize(expr.getMetadata(), false);
     assertThat(serializer.toString())
         .isEqualTo(
@@ -142,7 +144,7 @@ public class SerializationTest {
   public void functionCall2() {
     RelationalFunctionCall<String> func =
         SQLExpressions.relationalFunctionCall(String.class, "TableValuedFunction", "parameter");
-    PathBuilder<String> funcAlias = new PathBuilder<String>(String.class, "tokFunc");
+    var funcAlias = new PathBuilder<>(String.class, "tokFunc");
     SQLQuery<?> q = new SQLQuery<Void>(SQLServerTemplates.DEFAULT);
     q.from(survey).join(func, funcAlias).on(survey.name.like(funcAlias.getString("prop")).not());
 
@@ -159,7 +161,7 @@ public class SerializationTest {
   public void functionCall3() {
     RelationalFunctionCall<String> func =
         SQLExpressions.relationalFunctionCall(String.class, "TableValuedFunction", "parameter");
-    PathBuilder<String> funcAlias = new PathBuilder<String>(String.class, "tokFunc");
+    var funcAlias = new PathBuilder<>(String.class, "tokFunc");
     SQLQuery<?> q = new SQLQuery<Void>(HSQLDBTemplates.DEFAULT);
     q.from(survey).join(func, funcAlias).on(survey.name.like(funcAlias.getString("prop")).not());
 
@@ -227,7 +229,7 @@ public class SerializationTest {
 
   @Test
   public void with() {
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey2 = new QSurvey("survey2");
     SQLQuery<?> q = new SQLQuery<Void>();
     q.with(survey, survey.id, survey.name).as(select(survey2.id, survey2.name).from(survey2));
 
@@ -243,7 +245,7 @@ public class SerializationTest {
 
   @Test
   public void with_complex() {
-    QSurvey s = new QSurvey("s");
+    var s = new QSurvey("s");
     SQLQuery<?> q = new SQLQuery<Void>();
     q.with(s, s.id, s.name)
         .as(select(survey.id, survey.name).from(survey))
@@ -262,8 +264,8 @@ public class SerializationTest {
 
   @Test
   public void with_tuple() {
-    PathBuilder<Survey> survey = new PathBuilder<Survey>(Survey.class, "SURVEY");
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey = new PathBuilder<>(Survey.class, "SURVEY");
+    var survey2 = new QSurvey("survey2");
     SQLQuery<?> q = new SQLQuery<Void>();
     q.with(survey, survey.get(survey2.id), survey.get(survey2.name))
         .as(select(survey2.id, survey2.name).from(survey2));
@@ -280,7 +282,7 @@ public class SerializationTest {
 
   @Test
   public void with_tuple2() {
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey2 = new QSurvey("survey2");
     SQLQuery<?> q = new SQLQuery<Void>();
     q.with(survey, survey.id, survey.name).as(select(survey2.id, survey2.name).from(survey2));
 
@@ -296,7 +298,7 @@ public class SerializationTest {
 
   @Test
   public void with_singleColumn() {
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey2 = new QSurvey("survey2");
     SQLQuery<?> q = new SQLQuery<Void>();
     q.with(survey, new Path<?>[] {survey.id}).as(select(survey2.id).from(survey2));
 

@@ -90,7 +90,7 @@ public class WindowFunctionTest {
   public void rows_between() {
     NumberPath<Long> path = Expressions.numberPath(Long.class, "path");
     NumberPath<Integer> intPath = Expressions.numberPath(Integer.class, "intPath");
-    WindowFunction<Long> wf = SQLExpressions.sum(path).over().orderBy(path);
+    var wf = SQLExpressions.sum(path).over().orderBy(path);
 
     assertThat(toString(wf.rows().between().currentRow().unboundedFollowing()))
         .isEqualTo(
@@ -108,7 +108,7 @@ public class WindowFunctionTest {
   @Test
   public void rows_unboundedPreceding() {
     NumberPath<Long> path = Expressions.numberPath(Long.class, "path");
-    WindowFunction<Long> wf = SQLExpressions.sum(path).over().orderBy(path);
+    var wf = SQLExpressions.sum(path).over().orderBy(path);
 
     assertThat(toString(wf.rows().unboundedPreceding()))
         .isEqualTo("sum(path) over (order by path asc rows unbounded preceding)");
@@ -117,7 +117,7 @@ public class WindowFunctionTest {
   @Test
   public void rows_currentRow() {
     NumberPath<Long> path = Expressions.numberPath(Long.class, "path");
-    WindowFunction<Long> wf = SQLExpressions.sum(path).over().orderBy(path);
+    var wf = SQLExpressions.sum(path).over().orderBy(path);
 
     assertThat(toString(wf.rows().currentRow()))
         .isEqualTo("sum(path) over (order by path asc rows current row)");
@@ -127,7 +127,7 @@ public class WindowFunctionTest {
   public void rows_precedingRow() {
     NumberPath<Long> path = Expressions.numberPath(Long.class, "path");
     NumberPath<Integer> intPath = Expressions.numberPath(Integer.class, "intPath");
-    WindowFunction<Long> wf = SQLExpressions.sum(path).over().orderBy(path);
+    var wf = SQLExpressions.sum(path).over().orderBy(path);
 
     assertThat(toString(wf.rows().preceding(intPath)))
         .isEqualTo("sum(path) over (order by path asc rows preceding intPath)");

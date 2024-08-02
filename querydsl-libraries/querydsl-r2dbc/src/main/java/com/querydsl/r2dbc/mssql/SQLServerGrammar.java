@@ -23,8 +23,8 @@ final class SQLServerGrammar {
   private SQLServerGrammar() {}
 
   static String tableHints(SQLServerTableHints... tableHints) {
-    StringBuilder hints = new StringBuilder(" with ").append("(");
-    for (int i = 0; i < tableHints.length; i++) {
+    var hints = new StringBuilder(" with ").append("(");
+    for (var i = 0; i < tableHints.length; i++) {
       if (i > 0) {
         hints.append(", ");
       }

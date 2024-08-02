@@ -13,7 +13,6 @@
  */
 package com.querydsl.core.group;
 
-import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -47,20 +46,20 @@ public class GroupByGenericMap<K, V, RES extends Map<K, V>>
 
     // create groups
     FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-    boolean hasGroups = false;
+    var hasGroups = false;
     for (Expression<?> e : expr.getArgs()) {
       hasGroups |= e instanceof GroupExpression;
     }
     if (hasGroups) {
       expr = withoutGroupExpressions(expr);
     }
-    CloseableIterator<Tuple> iter = query.select(expr).iterate();
+    var iter = query.select(expr).iterate();
     try {
       while (iter.hasNext()) {
         @SuppressWarnings("unchecked") // This type is mandated by the key type
-        K[] row = (K[]) iter.next().toArray();
-        K groupId = row[0];
-        GroupImpl group = (GroupImpl) groups.get(groupId);
+        var row = (K[]) iter.next().toArray();
+        var groupId = row[0];
+        var group = (GroupImpl) groups.get(groupId);
         if (group == null) {
           group = new GroupImpl(groupExpressions, maps);
           groups.put(groupId, group);

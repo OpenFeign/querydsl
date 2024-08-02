@@ -34,7 +34,7 @@ public final class CollQueryFactory {
    * @return delete clause
    */
   public static <A> CollDeleteClause<A> delete(Path<A> path, Collection<A> col) {
-    return new CollDeleteClause<A>(path, col);
+    return new CollDeleteClause<>(path, col);
   }
 
   /**
@@ -81,7 +81,7 @@ public final class CollQueryFactory {
    * @return query
    */
   public static <A> CollUpdateClause<A> update(Path<A> path, Iterable<A> col) {
-    return new CollUpdateClause<A>(path, col);
+    return new CollUpdateClause<>(path, col);
   }
 
   private CollQueryFactory() {}

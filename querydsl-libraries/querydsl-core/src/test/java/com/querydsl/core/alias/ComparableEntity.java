@@ -20,6 +20,7 @@ public class ComparableEntity implements Comparable<ComparableEntity> {
     return 0;
   }
 
+  @Override
   public boolean equals(Object o) {
     return o == this;
   }

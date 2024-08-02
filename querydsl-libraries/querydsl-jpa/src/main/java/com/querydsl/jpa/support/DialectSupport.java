@@ -21,9 +21,7 @@ import com.querydsl.sql.SQLTemplates;
 import java.util.HashMap;
 import java.util.Map;
 import org.hibernate.boot.model.FunctionContributions;
-import org.hibernate.query.sqm.function.SqmFunctionRegistry;
 import org.hibernate.type.BasicTypeReference;
-import org.hibernate.type.BasicTypeRegistry;
 
 final class DialectSupport {
 
@@ -48,7 +46,7 @@ final class DialectSupport {
   }
 
   public static String convert(Template template) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     for (Template.Element element : template.getElements()) {
       if (element instanceof Template.AsString) {
         builder.append("?").append(((Template.AsString) element).getIndex() + 1);
@@ -67,12 +65,10 @@ final class DialectSupport {
 
   public static void extendRegistry(
       SQLTemplates templates, FunctionContributions functionContributions) {
-    SqmFunctionRegistry functionRegistry = functionContributions.getFunctionRegistry();
-    Map<String, DialectSupport.DialectFunctionTemplate> functions =
-        DialectSupport.createPatterns(templates);
+    var functionRegistry = functionContributions.getFunctionRegistry();
+    var functions = DialectSupport.createPatterns(templates);
 
-    BasicTypeRegistry basicTypeRegistry =
-        functionContributions.getTypeConfiguration().getBasicTypeRegistry();
+    var basicTypeRegistry = functionContributions.getTypeConfiguration().getBasicTypeRegistry();
     functions.forEach(
         (name, template) ->
             functionRegistry.registerPattern(
@@ -83,10 +79,9 @@ final class DialectSupport {
       String name,
       DialectSupport.DialectFunctionTemplate template,
       FunctionContributions functionContributions) {
-    SqmFunctionRegistry functionRegistry = functionContributions.getFunctionRegistry();
+    var functionRegistry = functionContributions.getFunctionRegistry();
 
-    BasicTypeRegistry basicTypeRegistry =
-        functionContributions.getTypeConfiguration().getBasicTypeRegistry();
+    var basicTypeRegistry = functionContributions.getTypeConfiguration().getBasicTypeRegistry();
     functionRegistry.registerPattern(
         name, template.pattern(), basicTypeRegistry.resolve(template.type()));
   }

@@ -16,7 +16,6 @@ import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.JPQLSubQuery;
 import org.junit.Test;
 
 public class PackagelessEntityTest {
@@ -26,7 +25,7 @@ public class PackagelessEntityTest {
   public void packageLess_path() {
     PathBuilder<PackagelessEntityTest> builder =
         new PathBuilder(PackagelessEntityTest.class, "entity");
-    JPQLSubQuery<PackagelessEntityTest> query = select(builder).from(builder);
+    var query = select(builder).from(builder);
     assertThat(query).hasToString("select entity\nfrom PackagelessEntityTest entity");
   }
 }

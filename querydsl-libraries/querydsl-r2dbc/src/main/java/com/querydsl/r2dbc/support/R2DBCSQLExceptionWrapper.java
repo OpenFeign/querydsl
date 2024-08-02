@@ -30,10 +30,10 @@ class R2DBCSQLExceptionWrapper extends AbstractR2DBCExceptionWrapper {
       return new QueryException(exception);
     }
 
-    SQLException sqlException = (SQLException) exception;
+    var sqlException = (SQLException) exception;
 
-    QueryException rv = new QueryException(sqlException);
-    SQLException linkedException = sqlException.getNextException();
+    var rv = new QueryException(sqlException);
+    var linkedException = sqlException.getNextException();
     while (linkedException != null) {
       rv.addSuppressed(linkedException);
       linkedException = linkedException.getNextException();
@@ -47,10 +47,10 @@ class R2DBCSQLExceptionWrapper extends AbstractR2DBCExceptionWrapper {
       return new QueryException(message, exception);
     }
 
-    SQLException sqlException = (SQLException) exception;
+    var sqlException = (SQLException) exception;
 
-    QueryException rv = new QueryException(message, sqlException);
-    SQLException linkedException = sqlException.getNextException();
+    var rv = new QueryException(message, sqlException);
+    var linkedException = sqlException.getNextException();
     while (linkedException != null) {
       rv.addSuppressed(linkedException);
       linkedException = linkedException.getNextException();

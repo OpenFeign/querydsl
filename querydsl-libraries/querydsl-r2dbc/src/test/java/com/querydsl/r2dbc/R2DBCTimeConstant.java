@@ -30,7 +30,7 @@ public final class R2DBCTimeConstant<D extends LocalTime> extends LocalTimeExpre
   private static final long serialVersionUID = -7835941761930555480L;
 
   public static <D extends LocalTime> LocalTimeExpression<D> create(D time) {
-    return new R2DBCTimeConstant<D>(time);
+    return new R2DBCTimeConstant<>(time);
   }
 
   private final D time;
@@ -38,7 +38,7 @@ public final class R2DBCTimeConstant<D extends LocalTime> extends LocalTimeExpre
   @SuppressWarnings("unchecked")
   public R2DBCTimeConstant(D time) {
     super(ConstantImpl.create(time));
-    this.time = (D) time;
+    this.time = time;
   }
 
   @Override

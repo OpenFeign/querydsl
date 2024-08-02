@@ -10,18 +10,18 @@ public class JDOExporterMojoTest {
 
   @Test
   public void execute() throws Exception {
-    MavenProject mavenProject = new MavenProject();
+    var mavenProject = new MavenProject();
     mavenProject.getBuild().setOutputDirectory("target/classes");
     mavenProject.getBuild().setTestOutputDirectory("target/test-classes");
 
-    JDOExporterMojo mojo = new JDOExporterMojo();
+    var mojo = new JDOExporterMojo();
     mojo.setTargetFolder(new File("target/generated-test-data3"));
     mojo.setPackages(new String[] {"com.querydsl.maven"});
     mojo.setProject(mavenProject);
     mojo.setTestClasspath(true);
     mojo.execute();
 
-    File file = new File("target/generated-test-data3/com/querydsl/maven/QEntity.java");
+    var file = new File("target/generated-test-data3/com/querydsl/maven/QEntity.java");
     assertThat(file).exists();
   }
 }

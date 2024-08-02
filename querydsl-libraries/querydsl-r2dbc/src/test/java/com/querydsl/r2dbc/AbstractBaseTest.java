@@ -49,8 +49,8 @@ public abstract class AbstractBaseTest {
 
     @Override
     protected SQLSerializer serialize(boolean countRow) {
-      SQLSerializer serializer = super.serialize(countRow);
-      String rv = serializer.toString();
+      var serializer = super.serialize(countRow);
+      var rv = serializer.toString();
       if (expectedQuery != null) {
         assertThat(rv.replace('\n', ' ')).isEqualTo(expectedQuery);
         expectedQuery = null;
@@ -59,8 +59,9 @@ public abstract class AbstractBaseTest {
       return serializer;
     }
 
+    @Override
     public TestQuery<T> clone(Connection conn) {
-      TestQuery<T> q = new TestQuery<T>(conn, getConfiguration(), getMetadata().clone());
+      var q = new TestQuery<T>(conn, getConfiguration(), getMetadata().clone());
       q.union = union;
       q.unionAll = unionAll;
       q.firstUnionSubQuery = firstUnionSubQuery;
@@ -92,22 +93,22 @@ public abstract class AbstractBaseTest {
   }
 
   protected R2DBCUpdateClause update(RelationalPath<?> e) {
-    R2DBCUpdateClause sqlUpdateClause = new R2DBCUpdateClause(connection, configuration, e);
+    var sqlUpdateClause = new R2DBCUpdateClause(connection, configuration, e);
     return sqlUpdateClause;
   }
 
   protected R2DBCInsertClause insert(RelationalPath<?> e) {
-    R2DBCInsertClause sqlInsertClause = new R2DBCInsertClause(connection, configuration, e);
+    var sqlInsertClause = new R2DBCInsertClause(connection, configuration, e);
     return sqlInsertClause;
   }
 
   protected R2DBCInsertClause insert(RelationalPath<?> e, R2DBCQuery<?> sq) {
-    R2DBCInsertClause sqlInsertClause = new R2DBCInsertClause(connection, configuration, e, sq);
+    var sqlInsertClause = new R2DBCInsertClause(connection, configuration, e, sq);
     return sqlInsertClause;
   }
 
   protected R2DBCDeleteClause delete(RelationalPath<?> e) {
-    R2DBCDeleteClause sqlDeleteClause = new R2DBCDeleteClause(connection, configuration, e);
+    var sqlDeleteClause = new R2DBCDeleteClause(connection, configuration, e);
     return sqlDeleteClause;
   }
 
@@ -118,13 +119,12 @@ public abstract class AbstractBaseTest {
   }
 
   protected R2DBCQuery<?> query() {
-    R2DBCQuery<Void> testQuery = new TestQuery<Void>(connection, configuration);
+    R2DBCQuery<Void> testQuery = new TestQuery<>(connection, configuration);
     return testQuery;
   }
 
   protected TestQuery<?> testQuery() {
-    TestQuery<Void> testQuery =
-        new TestQuery<Void>(connection, configuration, new DefaultQueryMetadata());
+    var testQuery = new TestQuery<>(connection, configuration, new DefaultQueryMetadata());
     return testQuery;
   }
 

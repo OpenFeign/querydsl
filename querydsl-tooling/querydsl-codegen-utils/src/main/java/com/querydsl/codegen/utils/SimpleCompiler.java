@@ -23,7 +23,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import javax.lang.model.SourceVersion;
-import javax.tools.*;
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 
 /**
  * SimpleCompiler provides a convenience wrapper of the JavaCompiler interface with automatic
@@ -98,7 +103,7 @@ public class SimpleCompiler implements JavaCompiler {
     }
 
     // no classpath given
-    List<String> args = new ArrayList<String>(arguments.length + 2);
+    List<String> args = new ArrayList<>(arguments.length + 2);
     args.add("-classpath");
     args.add(getClasspath());
     for (String arg : arguments) {

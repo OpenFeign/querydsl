@@ -81,12 +81,12 @@ public final class FactoryExpressionUtils {
   }
 
   public static FactoryExpression<?> wrap(List<? extends Expression<?>> projection) {
-    boolean usesFactoryExpressions = false;
+    var usesFactoryExpressions = false;
     for (Expression<?> e : projection) {
       usesFactoryExpressions |= e instanceof FactoryExpression;
     }
     if (usesFactoryExpressions) {
-      return wrap(new ArrayConstructorExpression<Object>(projection.toArray(new Expression<?>[0])));
+      return wrap(new ArrayConstructorExpression<>(projection.toArray(new Expression<?>[0])));
     } else {
       return null;
     }
@@ -94,7 +94,7 @@ public final class FactoryExpressionUtils {
 
   public static <T> FactoryExpression<T> wrap(
       FactoryExpression<T> expr, List<Expression<?>> conversions) {
-    return new FactoryExpressionAdapter<T>(expr, conversions);
+    return new FactoryExpressionAdapter<>(expr, conversions);
   }
 
   public static <T> FactoryExpression<T> wrap(FactoryExpression<T> expr) {
@@ -103,14 +103,14 @@ public final class FactoryExpressionUtils {
         arg = ((ProjectionRole) arg).getProjection();
       }
       if (arg instanceof FactoryExpression<?>) {
-        return new FactoryExpressionAdapter<T>(expr);
+        return new FactoryExpressionAdapter<>(expr);
       }
     }
     return expr;
   }
 
   private static List<Expression<?>> expand(List<Expression<?>> exprs) {
-    List<Expression<?>> rv = new ArrayList<Expression<?>>(exprs.size());
+    List<Expression<?>> rv = new ArrayList<>(exprs.size());
     for (Expression<?> expr : exprs) {
       if (expr instanceof ProjectionRole) {
         expr = ((ProjectionRole) expr).getProjection();
@@ -125,7 +125,7 @@ public final class FactoryExpressionUtils {
   }
 
   private static int countArguments(FactoryExpression<?> expr) {
-    int counter = 0;
+    var counter = 0;
     for (Expression<?> arg : expr.getArgs()) {
       if (arg instanceof ProjectionRole) {
         arg = ((ProjectionRole) arg).getProjection();
@@ -140,17 +140,17 @@ public final class FactoryExpressionUtils {
   }
 
   private static Object[] compress(List<Expression<?>> exprs, Object[] args) {
-    Object[] rv = new Object[exprs.size()];
-    int offset = 0;
-    for (int i = 0; i < exprs.size(); i++) {
+    var rv = new Object[exprs.size()];
+    var offset = 0;
+    for (var i = 0; i < exprs.size(); i++) {
       Expression<?> expr = exprs.get(i);
       if (expr instanceof ProjectionRole) {
         expr = ((ProjectionRole) expr).getProjection();
       }
       if (expr instanceof FactoryExpression<?>) {
         FactoryExpression<?> fe = (FactoryExpression<?>) expr;
-        int fullArgsLength = countArguments(fe);
-        Object[] compressed =
+        var fullArgsLength = countArguments(fe);
+        var compressed =
             compress(fe.getArgs(), ArrayUtils.subarray(args, offset, offset + fullArgsLength));
         rv[i] = fe.newInstance(compressed);
         offset += fullArgsLength;

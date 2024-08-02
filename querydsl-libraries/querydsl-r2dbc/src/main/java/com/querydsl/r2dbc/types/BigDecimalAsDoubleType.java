@@ -38,7 +38,7 @@ public class BigDecimalAsDoubleType extends AbstractType<BigDecimal, BigDecimal>
 
   @Override
   public BigDecimal getValue(Row row, int startIndex) {
-    Double val = row.get(startIndex, Double.class);
+    var val = row.get(startIndex, Double.class);
     return val == null ? null : BigDecimal.valueOf(val);
   }
 

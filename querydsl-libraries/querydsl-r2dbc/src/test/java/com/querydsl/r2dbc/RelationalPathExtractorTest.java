@@ -17,7 +17,7 @@ public class RelationalPathExtractorTest {
 
   @Test
   public void simpleQuery() {
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee2 = new QEmployee("employee2");
     R2DBCQuery<?> query = query().from(employee, employee2);
 
     assertThat(RelationalPathExtractor.extract(query.getMetadata()))
@@ -26,7 +26,7 @@ public class RelationalPathExtractorTest {
 
   @Test
   public void joins() {
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee2 = new QEmployee("employee2");
     R2DBCQuery<?> query =
         query().from(employee).innerJoin(employee2).on(employee.superiorId.eq(employee2.id));
 
@@ -46,7 +46,7 @@ public class RelationalPathExtractorTest {
 
   @Test
   public void subQuery2() {
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee2 = new QEmployee("employee2");
     R2DBCQuery<?> query =
         query()
             .from(employee)

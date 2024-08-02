@@ -54,7 +54,7 @@ public class NumberConversions<T> extends FactoryExpressionBase<T> {
 
   private <E extends Enum<E>> Enum<E>[] getValues(Class<E> enumClass) {
     @SuppressWarnings("unchecked") // Class<E> -> E[]
-    Enum<E>[] values = (Enum<E>[]) this.values.get(enumClass);
+    var values = (Enum<E>[]) this.values.get(enumClass);
     if (values == null) {
       values = enumClass.getEnumConstants();
       this.values.put(enumClass, values);
@@ -65,7 +65,7 @@ public class NumberConversions<T> extends FactoryExpressionBase<T> {
   @Override
   @SuppressWarnings("unchecked")
   public T newInstance(Object... args) {
-    for (int i = 0; i < args.length; i++) {
+    for (var i = 0; i < args.length; i++) {
       Class<?> type = expr.getArgs().get(i).getType();
       if (Enum.class.isAssignableFrom(type) && !type.isInstance(args[i])) {
         if (args[i] instanceof String) {

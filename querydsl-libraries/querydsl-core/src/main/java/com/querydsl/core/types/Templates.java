@@ -44,9 +44,9 @@ public class Templates {
 
   public static final Templates DEFAULT = new Templates();
 
-  private final Map<Operator, Template> templates = new IdentityHashMap<Operator, Template>(150);
+  private final Map<Operator, Template> templates = new IdentityHashMap<>(150);
 
-  private final Map<Operator, Integer> precedence = new IdentityHashMap<Operator, Integer>(150);
+  private final Map<Operator, Integer> precedence = new IdentityHashMap<>(150);
 
   private final TemplateFactory templateFactory;
 

@@ -1,7 +1,18 @@
 package com.querydsl.apt.domain;
 
 import com.querydsl.core.annotations.QueryInit;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
 import java.util.Collection;
 import org.junit.Test;
 
@@ -96,7 +107,7 @@ public class DeepInitializationTest {
 
   @Test
   public void init_via_parent() {
-    QDeepInitializationTest_Parent parent = QDeepInitializationTest_Parent.parent;
+    var parent = QDeepInitializationTest_Parent.parent;
     parent.children.any().subChild.myEmbeddable.number.eq("Test");
   }
 }

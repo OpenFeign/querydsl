@@ -122,6 +122,7 @@ public abstract class LocalDateExpression<T extends Comparable> extends Temporal
    *
    * @return max(this)
    */
+  @Override
   public LocalDateExpression<T> max() {
     if (max == null) {
       max = R2DBCExpressions.localDateOperation(getType(), Ops.AggOps.MAX_AGG, mixin);
@@ -134,6 +135,7 @@ public abstract class LocalDateExpression<T extends Comparable> extends Temporal
    *
    * @return min(this)
    */
+  @Override
   public LocalDateExpression<T> min() {
     if (min == null) {
       min = R2DBCExpressions.localDateOperation(getType(), Ops.AggOps.MIN_AGG, mixin);

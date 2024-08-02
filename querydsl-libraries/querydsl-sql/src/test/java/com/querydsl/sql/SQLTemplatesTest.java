@@ -15,7 +15,11 @@ package com.querydsl.sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Template;
+import com.querydsl.core.types.TemplateFactory;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import java.sql.Date;
@@ -39,10 +43,10 @@ public class SQLTemplatesTest {
 
   @Test
   public void test() {
-    Template template = TemplateFactory.DEFAULT.create("fetch first {0s} rows only");
+    var template = TemplateFactory.DEFAULT.create("fetch first {0s} rows only");
     assertThat(template.getElements().get(1) instanceof Template.AsString).isTrue();
 
-    SQLSerializer serializer = new SQLSerializer(new Configuration(new DerbyTemplates()));
+    var serializer = new SQLSerializer(new Configuration(new DerbyTemplates()));
     serializer.handle(Expressions.template(Object.class, template, ConstantImpl.create(5)));
     assertThat(serializer).hasToString("fetch first 5 rows only");
   }
@@ -54,8 +58,8 @@ public class SQLTemplatesTest {
 
   @Test
   public void asLiteral() {
-    SQLTemplates templates = SQLTemplates.DEFAULT;
-    Configuration conf = new Configuration(templates);
+    var templates = SQLTemplates.DEFAULT;
+    var conf = new Configuration(templates);
     assertMatches(DATE, conf.asLiteral(new Date(0)));
     assertMatches(TIME, conf.asLiteral(new Time(0)));
     assertMatches(DATETIME, conf.asLiteral(new Timestamp(0)));
@@ -63,8 +67,8 @@ public class SQLTemplatesTest {
 
   @Test
   public void asLiteral_jsr310Time() {
-    SQLTemplates templates = SQLTemplates.DEFAULT;
-    Configuration conf = new Configuration(templates);
+    var templates = SQLTemplates.DEFAULT;
+    var conf = new Configuration(templates);
     assertMatches(DATE, conf.asLiteral(LocalDate.now()));
     assertMatches(TIME, conf.asLiteral(LocalTime.now()));
     assertMatches(DATETIME, conf.asLiteral(LocalDateTime.now()));
@@ -72,7 +76,7 @@ public class SQLTemplatesTest {
 
   @Test
   public void quote() {
-    SQLTemplates templates = SQLTemplates.DEFAULT;
+    var templates = SQLTemplates.DEFAULT;
     // non quoted
     assertThat(templates.quoteIdentifier("employee")).isEqualTo("employee");
     assertThat(templates.quoteIdentifier("Employee")).isEqualTo("Employee");
@@ -87,9 +91,9 @@ public class SQLTemplatesTest {
   public void quoting_performance() {
     // 385 -> 63
     SQLTemplates templates = new H2Templates();
-    long start = System.currentTimeMillis();
-    int iterations = 1000000;
-    for (int i = 0; i < iterations; i++) {
+    var start = System.currentTimeMillis();
+    var iterations = 1000000;
+    for (var i = 0; i < iterations; i++) {
       templates.quoteIdentifier("companies");
     }
     System.err.println(System.currentTimeMillis() - start);
@@ -116,7 +120,7 @@ public class SQLTemplatesTest {
   public void numeric_operations() {
     NumberPath<Integer> intPath = Expressions.numberPath(Integer.class, "intPath");
     NumberPath<Integer> intPath2 = Expressions.numberPath(Integer.class, "intPath2");
-    SQLSerializer serializer = new SQLSerializer(new Configuration(SQLTemplates.DEFAULT));
+    var serializer = new SQLSerializer(new Configuration(SQLTemplates.DEFAULT));
     serializer.handle(intPath.subtract(intPath2.add(2)));
     assertThat(serializer).hasToString("intPath - (intPath2 + ?)");
   }

@@ -3,7 +3,6 @@ package com.querydsl.sql;
 import static com.querydsl.sql.Constants.employee;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.testutil.H2;
 import com.querydsl.sql.domain.Employee;
 import java.sql.SQLException;
@@ -20,7 +19,7 @@ public class SQLCloseListenerTest {
   @Before
   public void setUp() throws SQLException, ClassNotFoundException {
     Connections.initH2();
-    Configuration conf = new Configuration(H2Templates.DEFAULT);
+    var conf = new Configuration(H2Templates.DEFAULT);
     conf.addListener(SQLCloseListener.DEFAULT);
     query = new SQLQuery<Void>(Connections.getConnection(), conf).select(employee).from(employee);
   }
@@ -52,7 +51,7 @@ public class SQLCloseListenerTest {
 
   @Test
   public void iterate() {
-    try (CloseableIterator<Employee> it = query.iterate()) {
+    try (var it = query.iterate()) {
       while (it.hasNext()) {
         it.next();
       }

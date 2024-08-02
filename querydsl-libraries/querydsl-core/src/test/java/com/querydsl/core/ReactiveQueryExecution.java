@@ -18,7 +18,17 @@ import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.MapExpression;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CollectionExpressionBase;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.DateTimeExpression;
+import com.querydsl.core.types.dsl.ListExpression;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.MapExpressionBase;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.TimeExpression;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,9 +42,9 @@ import org.junit.Assert;
  */
 public abstract class ReactiveQueryExecution {
 
-  private final List<String> errors = new ArrayList<String>();
+  private final List<String> errors = new ArrayList<>();
 
-  private final List<String> failures = new ArrayList<String>();
+  private final List<String> failures = new ArrayList<>();
 
   private final MatchingFiltersFactory matchers;
 
@@ -87,7 +97,7 @@ public abstract class ReactiveQueryExecution {
   }
 
   private Throwable addError(Expression<?> expr, Throwable throwable) {
-    StringBuilder error = new StringBuilder();
+    var error = new StringBuilder();
     error.append(expr + " failed : \n");
     error.append(" " + throwable.getClass().getName() + " : " + throwable.getMessage() + "\n");
     if (throwable.getCause() != null) {
@@ -104,7 +114,7 @@ public abstract class ReactiveQueryExecution {
         total++;
         try {
           // filter
-          int results = runFilter(f);
+          var results = runFilter(f);
 
           // filter distinct
           runFilterDistinct(f);
@@ -185,7 +195,7 @@ public abstract class ReactiveQueryExecution {
       }
 
       // construct String for Assert.fail()
-      StringBuffer buffer = new StringBuffer("Failed with ");
+      var buffer = new StringBuffer("Failed with ");
       if (!failures.isEmpty()) {
         buffer.append(failures.size()).append(" failure(s) ");
         if (!errors.isEmpty()) {

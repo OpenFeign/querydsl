@@ -52,6 +52,7 @@ public class Examples {
       return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }
@@ -60,6 +61,6 @@ public class Examples {
   @QueryEntity
   public static class OrderBys {
 
-    @QueryEmbedded List<OrderSpecifier<?>> orderBy = new ArrayList<OrderSpecifier<?>>();
+    @QueryEmbedded List<OrderSpecifier<?>> orderBy = new ArrayList<>();
   }
 }

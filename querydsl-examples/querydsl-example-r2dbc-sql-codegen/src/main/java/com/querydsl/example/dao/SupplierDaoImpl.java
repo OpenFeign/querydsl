@@ -32,7 +32,7 @@ public class SupplierDaoImpl implements SupplierDao {
 
   @Override
   public Mono<Supplier> save(Supplier p) {
-    Long id = p.getId();
+    var id = p.getId();
 
     if (id == null) {
       return insert(p);

@@ -13,7 +13,11 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -554,6 +558,7 @@ public abstract class StringExpression extends LiteralExpression<String> {
    *
    * @return max(this)
    */
+  @Override
   public StringExpression max() {
     if (max == null) {
       max = Expressions.stringOperation(Ops.AggOps.MAX_AGG, mixin);
@@ -876,7 +881,7 @@ public abstract class StringExpression extends LiteralExpression<String> {
    */
   @Override
   public StringExpression coalesce(Expression<String> expr) {
-    Coalesce<String> coalesce = new Coalesce<String>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(expr);
     return coalesce.asString();
   }
@@ -890,7 +895,7 @@ public abstract class StringExpression extends LiteralExpression<String> {
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
   public StringExpression coalesce(Expression<?>... exprs) {
-    Coalesce<String> coalesce = new Coalesce<String>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);
     }
@@ -905,7 +910,7 @@ public abstract class StringExpression extends LiteralExpression<String> {
    */
   @Override
   public StringExpression coalesce(String arg) {
-    Coalesce<String> coalesce = new Coalesce<String>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(arg);
     return coalesce.asString();
   }
@@ -918,7 +923,7 @@ public abstract class StringExpression extends LiteralExpression<String> {
    */
   @Override
   public StringExpression coalesce(String... args) {
-    Coalesce<String> coalesce = new Coalesce<String>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (String arg : args) {
       coalesce.add(arg);
     }

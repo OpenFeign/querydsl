@@ -18,7 +18,6 @@ import com.querydsl.codegen.utils.model.Type;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,8 +30,12 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.*;
+import org.eclipse.jdt.internal.compiler.ClassFile;
+import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.jdt.internal.compiler.Compiler;
+import org.eclipse.jdt.internal.compiler.DefaultErrorHandlingPolicies;
+import org.eclipse.jdt.internal.compiler.ICompilerRequestor;
+import org.eclipse.jdt.internal.compiler.IProblemFactory;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileReader;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFormatException;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
@@ -58,7 +61,7 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
   private final CompilerOptions compilerOptions;
 
   public static CompilerOptions getDefaultCompilerOptions() {
-    String javaSpecVersion = System.getProperty("java.specification.version");
+    var javaSpecVersion = System.getProperty("java.specification.version");
     Map<String, String> settings = new HashMap<>();
     settings.put(CompilerOptions.OPTION_Source, javaSpecVersion);
     settings.put(CompilerOptions.OPTION_TargetPlatform, javaSpecVersion);
@@ -79,6 +82,7 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
     this.compilerOptions = compilerOptions;
   }
 
+  @Override
   protected void compile(
       String source,
       ClassType projectionType,
@@ -91,9 +95,9 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
     source = createSource(source, projectionType, names, types, id, constants);
 
     // compile
-    final char[] targetContents = source.toCharArray();
-    final String targetName = id;
-    final ICompilationUnit[] targetCompilationUnits =
+    final var targetContents = source.toCharArray();
+    final var targetName = id;
+    final var targetCompilationUnits =
         new ICompilationUnit[] {
           new ICompilationUnit() {
             @Override
@@ -173,7 +177,7 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
               is = loader.getResourceAsStream(result);
               if (is == null) {
                 // use our normal class loader now...
-                String resourceName = result.replace('.', '/') + ".class";
+                var resourceName = result.replace('.', '/') + ".class";
                 is = parentClassLoader.getResourceAsStream(resourceName);
                 if (is == null && !result.contains(".")) {
                   // we couldn't find the class, and it has no package; is it a core class?
@@ -194,13 +198,13 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
           @Override
           public boolean isPackage(char[][] parentPackageName, char[] packageName) {
             // if the parent is a class, the child can't be a package
-            String parent = join(parentPackageName, '.');
+            var parent = join(parentPackageName, '.');
             if (isClass(parent)) {
               return false;
             }
 
             // if the child is a class, it's not a package
-            String qualifiedName = (parent.isEmpty() ? "" : parent + ".") + new String(packageName);
+            var qualifiedName = (parent.isEmpty() ? "" : parent + ".") + new String(packageName);
             return !isClass(qualifiedName);
           }
 
@@ -208,7 +212,7 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
           public void cleanup() {}
 
           private NameEnvironmentAnswer findType(String className) {
-            String resourceName = className.replace('.', '/') + ".class";
+            var resourceName = className.replace('.', '/') + ".class";
             InputStream is = null;
             try {
               // we're only asking ECJ to compile a single class; we shouldn't need this
@@ -223,16 +227,15 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
 
               if (is != null) {
 
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                var buffer = new ByteArrayOutputStream();
                 int nRead;
-                byte[] data = new byte[1024];
+                var data = new byte[1024];
                 while ((nRead = is.read(data, 0, data.length)) != -1) {
                   buffer.write(data, 0, nRead);
                 }
                 buffer.flush();
 
-                ClassFileReader cfr =
-                    new ClassFileReader(buffer.toByteArray(), className.toCharArray(), true);
+                var cfr = new ClassFileReader(buffer.toByteArray(), className.toCharArray(), true);
                 return new NameEnvironmentAnswer(cfr, null);
               } else {
                 return null;
@@ -264,14 +267,14 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
             } else {
               for (ClassFile clazz : result.getClassFiles()) {
                 try {
-                  MemJavaFileObject jfo =
+                  var jfo =
                       (MemJavaFileObject)
                           fileManager.getJavaFileForOutput(
                               StandardLocation.CLASS_OUTPUT,
                               new String(clazz.fileName()),
                               JavaFileObject.Kind.CLASS,
                               null);
-                  OutputStream os = jfo.openOutputStream();
+                  var os = jfo.openOutputStream();
                   os.write(clazz.getBytes());
                 } catch (IOException ex) {
                   throw new RuntimeException(ex);
@@ -283,16 +286,16 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
 
     problemList.clear();
 
-    IErrorHandlingPolicy policy = DefaultErrorHandlingPolicies.exitAfterAllProblems();
+    var policy = DefaultErrorHandlingPolicies.exitAfterAllProblems();
     IProblemFactory problemFactory = new DefaultProblemFactory(Locale.getDefault());
 
     try {
       // Compiler compiler = new Compiler(env, policy, getCompilerOptions(), requestor,
       // problemFactory, true);
-      Compiler compiler = new Compiler(env, policy, compilerOptions, requestor, problemFactory);
+      var compiler = new Compiler(env, policy, compilerOptions, requestor, problemFactory);
       compiler.compile(targetCompilationUnits);
       if (!problemList.isEmpty()) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         for (String problem : problemList) {
           sb.append("\t").append(problem).append("\n");
         }
@@ -304,7 +307,7 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
       // if we encountered a ClassFormatException, box it as an IOException and throw it
       // otherwise, it's a legit RuntimeException,
       //    not one of our checked exceptions boxed as unchecked; just rethrow
-      Throwable cause = ex.getCause();
+      var cause = ex.getCause();
       if (cause != null) {
         if (cause instanceof IOException) {
           throw (IOException) cause;

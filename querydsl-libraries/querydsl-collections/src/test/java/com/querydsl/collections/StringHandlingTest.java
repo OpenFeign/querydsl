@@ -19,7 +19,6 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import org.junit.Test;
 
@@ -37,8 +36,7 @@ public class StringHandlingTest extends AbstractQueryTest {
 
   @Test
   public void equalsIgnoreCase() {
-    Iterator<String> res =
-        Arrays.asList("petER - PETer", "THomas - thOMAS", "joHAN - JOhan").iterator();
+    var res = Arrays.asList("petER - PETer", "THomas - thOMAS", "joHAN - JOhan").iterator();
     for (Tuple arr :
         query().from(a, data1).from(b, data2).where(a.equalsIgnoreCase(b)).select(a, b).fetch()) {
       assertThat(arr.get(a) + " - " + arr.get(b)).isEqualTo(res.next());

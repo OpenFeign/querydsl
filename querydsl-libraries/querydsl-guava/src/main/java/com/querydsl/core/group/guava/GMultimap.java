@@ -39,7 +39,7 @@ abstract class GMultimap<K, V, M extends Multimap<K, V>>
   protected abstract M createMap();
 
   public static <T, U> GMultimap<T, U, Multimap<T, U>> createLinked(QPair<T, U> expr) {
-    return new GMultimap<T, U, Multimap<T, U>>(expr) {
+    return new GMultimap<>(expr) {
       @Override
       protected Multimap<T, U> createMap() {
         return LinkedHashMultimap.create();
@@ -49,7 +49,7 @@ abstract class GMultimap<K, V, M extends Multimap<K, V>>
 
   public static <T extends Comparable<? super T>, U extends Comparable<? super U>>
       GMultimap<T, U, SortedSetMultimap<T, U>> createSorted(QPair<T, U> expr) {
-    return new GMultimap<T, U, SortedSetMultimap<T, U>>(expr) {
+    return new GMultimap<>(expr) {
       @Override
       protected SortedSetMultimap<T, U> createMap() {
         return TreeMultimap.create();
@@ -61,7 +61,7 @@ abstract class GMultimap<K, V, M extends Multimap<K, V>>
       QPair<T, U> expr,
       final Comparator<? super T> comparator,
       final Comparator<? super U> comparator2) {
-    return new GMultimap<T, U, SortedSetMultimap<T, U>>(expr) {
+    return new GMultimap<>(expr) {
       @Override
       protected SortedSetMultimap<T, U> createMap() {
         return TreeMultimap.create(comparator, comparator2);
@@ -71,7 +71,7 @@ abstract class GMultimap<K, V, M extends Multimap<K, V>>
 
   @Override
   public GroupCollector<Pair<K, V>, M> createGroupCollector() {
-    return new GroupCollector<Pair<K, V>, M>() {
+    return new GroupCollector<>() {
 
       private final M map = createMap();
 
@@ -96,11 +96,10 @@ abstract class GMultimap<K, V, M extends Multimap<K, V>>
 
       private final GroupCollector<Pair<T, U>, R> groupCollector;
 
-      private final Map<K, GroupCollector<K, T>> keyCollectors =
-          new LinkedHashMap<K, GroupCollector<K, T>>();
+      private final Map<K, GroupCollector<K, T>> keyCollectors = new LinkedHashMap<>();
 
       private final Map<GroupCollector<K, T>, GroupCollector<V, U>> valueCollectors =
-          new HashMap<GroupCollector<K, T>, GroupCollector<V, U>>();
+          new HashMap<>();
 
       GroupCollectorImpl() {
         this.groupCollector = mixin.createGroupCollector();
@@ -108,28 +107,28 @@ abstract class GMultimap<K, V, M extends Multimap<K, V>>
 
       @Override
       public void add(Pair<K, V> pair) {
-        K first = pair.getFirst();
-        GroupCollector<K, T> keyCollector = keyCollectors.get(first);
+        var first = pair.getFirst();
+        var keyCollector = keyCollectors.get(first);
         if (keyCollector == null) {
           keyCollector = keyExpression.createGroupCollector();
           keyCollectors.put(first, keyCollector);
         }
         keyCollector.add(first);
-        GroupCollector<V, U> valueCollector = valueCollectors.get(keyCollector);
+        var valueCollector = valueCollectors.get(keyCollector);
         if (valueCollector == null) {
           valueCollector = valueExpression.createGroupCollector();
           valueCollectors.put(keyCollector, valueCollector);
         }
-        V second = pair.getSecond();
+        var second = pair.getSecond();
         valueCollector.add(second);
       }
 
       @Override
       public R get() {
         for (GroupCollector<K, T> keyCollector : keyCollectors.values()) {
-          T key = keyCollector.get();
-          GroupCollector<V, U> valueCollector = valueCollectors.remove(keyCollector);
-          U value = valueCollector.get();
+          var key = keyCollector.get();
+          var valueCollector = valueCollectors.remove(keyCollector);
+          var value = valueCollector.get();
           groupCollector.add(Pair.of(key, value));
         }
         keyCollectors.clear();

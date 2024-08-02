@@ -24,7 +24,7 @@ public class ExportOracleTest extends ExportBaseTest {
 
   @BeforeClass
   public static void setUpClass() throws Exception {
-    TimeZone tz = TimeZone.getDefault();
+    var tz = TimeZone.getDefault();
     try {
       // change time zone to work around ORA-01882
       // see https://gist.github.com/jarek-przygodzki/cbea3cedae3aef2bbbe0ff6b057e8321

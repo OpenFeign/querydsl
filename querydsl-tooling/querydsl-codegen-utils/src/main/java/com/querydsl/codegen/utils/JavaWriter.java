@@ -65,11 +65,11 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
 
   private static final String PUBLIC_STATIC_FINAL = "public static final ";
 
-  private final Set<String> classes = new HashSet<String>();
+  private final Set<String> classes = new HashSet<>();
 
-  private final Set<String> packages = new HashSet<String>();
+  private final Set<String> packages = new HashSet<>();
 
-  private final Stack<Type> types = new Stack<Type>();
+  private final Stack<Type> types = new Stack<>();
 
   public JavaWriter(Appendable appendable) {
     super(appendable, 4);
@@ -79,10 +79,10 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
   @Override
   public JavaWriter annotation(Annotation annotation) throws IOException {
     beginLine().append("@").appendType(annotation.annotationType());
-    Method[] methods = annotation.annotationType().getDeclaredMethods();
+    var methods = annotation.annotationType().getDeclaredMethods();
     if (methods.length == 1 && methods[0].getName().equals("value")) {
       try {
-        Object value = methods[0].invoke(annotation);
+        var value = methods[0].invoke(annotation);
         append("(");
         annotationConstant(value);
         append(")");
@@ -94,10 +94,10 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
         throw new CodegenException(e);
       }
     } else {
-      boolean first = true;
+      var first = true;
       for (Method method : methods) {
         try {
-          Object value = method.invoke(annotation);
+          var value = method.invoke(annotation);
           if (value == null || value.equals(method.getDefaultValue())) {
             continue;
           } else if (value.getClass().isArray()
@@ -135,7 +135,7 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
   private void annotationConstant(Object value) throws IOException {
     if (value.getClass().isArray()) {
       append("{");
-      boolean first = true;
+      var first = true;
       for (Object o : (Object[]) value) {
         if (!first) {
           append(", ");
@@ -159,7 +159,7 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
             .append(enumValue.name());
       }
     } else if (value instanceof String) {
-      String escaped = StringUtils.escapeJava(value.toString());
+      var escaped = StringUtils.escapeJava(value.toString());
       append(Symbols.QUOTE).append(escaped.replace("\\/", "/")).append(Symbols.QUOTE);
     } else {
       throw new IllegalArgumentException("Unsupported annotation value : " + value);
@@ -189,7 +189,7 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
     }
     if (interfaces.length > 0) {
       append(IMPLEMENTS);
-      for (int i = 0; i < interfaces.length; i++) {
+      for (var i = 0; i < interfaces.length; i++) {
         if (i > 0) {
           append(Symbols.COMMA);
         }
@@ -226,7 +226,7 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
     beginLine(PUBLIC_INTERFACE, type.getGenericName(false, packages, classes));
     if (interfaces.length > 0) {
       append(EXTENDS);
-      for (int i = 0; i < interfaces.length; i++) {
+      for (var i = 0; i < interfaces.length; i++) {
         if (i > 0) {
           append(Symbols.COMMA);
         }
@@ -395,7 +395,7 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
   private <T> JavaWriter params(Collection<T> parameters, Function<T, Parameter> transformer)
       throws IOException {
     append("(");
-    boolean first = true;
+    var first = true;
     for (T param : parameters) {
       if (!first) {
         append(Symbols.COMMA);
@@ -409,7 +409,7 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
 
   private JavaWriter params(Parameter... params) throws IOException {
     append("(");
-    for (int i = 0; i < params.length; i++) {
+    for (var i = 0; i < params.length; i++) {
       if (i > 0) {
         append(Symbols.COMMA);
       }
@@ -505,8 +505,8 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
   }
 
   private <T> Parameter[] transform(Collection<T> parameters, Function<T, Parameter> transformer) {
-    Parameter[] rv = new Parameter[parameters.size()];
-    int i = 0;
+    var rv = new Parameter[parameters.size()];
+    var i = 0;
     for (T value : parameters) {
       rv[i++] = transformer.apply(value);
     }

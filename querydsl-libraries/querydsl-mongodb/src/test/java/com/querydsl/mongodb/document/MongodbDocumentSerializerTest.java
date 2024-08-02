@@ -75,7 +75,7 @@ public class MongodbDocumentSerializerTest {
           }
         };
 
-    entityPath = new PathBuilder<Object>(Object.class, "obj");
+    entityPath = new PathBuilder<>(Object.class, "obj");
     title = entityPath.getString("title");
     year = entityPath.getNumber("year", Integer.class);
     gross = entityPath.getNumber("gross", Double.class);
@@ -89,7 +89,7 @@ public class MongodbDocumentSerializerTest {
 
   @Test
   public void paths() {
-    QUser user = QUser.user;
+    var user = QUser.user;
     assertThat(serializer.visit(user, null)).isEqualTo("user");
     assertThat(serializer.visit(user.addresses, null)).isEqualTo("addresses");
     assertThat(serializer.visit(user.addresses.any(), null)).isEqualTo("addresses");
@@ -99,20 +99,20 @@ public class MongodbDocumentSerializerTest {
 
   @Test
   public void indexedAccess() {
-    QUser user = QUser.user;
+    var user = QUser.user;
     assertThat(serializer.visit(user.addresses.get(0).street, null))
         .isEqualTo("addresses.0.street");
   }
 
   @Test
   public void collectionAny() {
-    QUser user = QUser.user;
+    var user = QUser.user;
     assertQuery(user.addresses.any().street.eq("Aakatu"), document("addresses.street", "Aakatu"));
   }
 
   @Test
   public void collectionIsEmpty() {
-    Document expected =
+    var expected =
         document(
             "$or",
             Arrays.asList(
@@ -123,7 +123,7 @@ public class MongodbDocumentSerializerTest {
 
   @Test
   public void collectionIsNotEmpty() {
-    Document expected =
+    var expected =
         document(
             "$nor",
             Arrays.asList(
@@ -195,7 +195,7 @@ public class MongodbDocumentSerializerTest {
 
   @Test
   public void orderBy() {
-    Document orderBy = serializer.toSort(sortList(year.asc()));
+    var orderBy = serializer.toSort(sortList(year.asc()));
     assertThat(orderBy).isEqualTo(document("year", 1));
 
     orderBy = serializer.toSort(sortList(year.desc()));
@@ -266,15 +266,15 @@ public class MongodbDocumentSerializerTest {
 
   @Test
   public void objectId() {
-    ObjectId id = new ObjectId();
-    QPerson person = QPerson.person;
+    var id = new ObjectId();
+    var person = QPerson.person;
     assertQuery(person.id.eq(id), document("id", id));
     assertQuery(person.addressId.eq(id), document("addressId", id));
   }
 
   @Test
   public void path() {
-    QUser user = QUser.user;
+    var user = QUser.user;
     assertThat(serializer.visit(user.firstName, null)).isEqualTo("firstName");
     assertThat(serializer.visit(user.as(QUser.class).firstName, null)).isEqualTo("firstName");
     assertThat(serializer.visit(user.mainAddress().street, null)).isEqualTo("mainAddress.street");
@@ -287,7 +287,7 @@ public class MongodbDocumentSerializerTest {
   }
 
   private void assertQuery(Expression<?> e, Document expected) {
-    Document result = (Document) serializer.handle(e);
+    var result = (Document) serializer.handle(e);
     assertThat(result.toJson()).isEqualTo(expected.toJson());
   }
 

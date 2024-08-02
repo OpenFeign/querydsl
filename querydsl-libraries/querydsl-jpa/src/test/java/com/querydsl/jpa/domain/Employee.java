@@ -13,7 +13,16 @@
  */
 package com.querydsl.jpa.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -32,5 +41,5 @@ public class Employee {
   @Enumerated(EnumType.STRING)
   @Column(name = "jobfunction")
   @ElementCollection(fetch = FetchType.EAGER)
-  public Collection<JobFunction> jobFunctions = new HashSet<JobFunction>();
+  public Collection<JobFunction> jobFunctions = new HashSet<>();
 }

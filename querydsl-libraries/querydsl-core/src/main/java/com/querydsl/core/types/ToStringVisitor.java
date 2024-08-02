@@ -35,9 +35,9 @@ public final class ToStringVisitor implements Visitor<String, Templates> {
 
   @Override
   public String visit(FactoryExpression<?> e, Templates templates) {
-    final StringBuilder builder = new StringBuilder();
+    final var builder = new StringBuilder();
     builder.append("new ").append(e.getType().getSimpleName()).append("(");
-    boolean first = true;
+    var first = true;
     for (Expression<?> arg : e.getArgs()) {
       if (!first) {
         builder.append(", ");
@@ -53,10 +53,10 @@ public final class ToStringVisitor implements Visitor<String, Templates> {
   public String visit(Operation<?> o, Templates templates) {
     final Template template = templates.getTemplate(o.getOperator());
     if (template != null) {
-      final int precedence = templates.getPrecedence(o.getOperator());
-      final StringBuilder builder = new StringBuilder();
+      final var precedence = templates.getPrecedence(o.getOperator());
+      final var builder = new StringBuilder();
       for (Template.Element element : template.getElements()) {
-        final Object rv = element.convert(o.getArgs());
+        final var rv = element.convert(o.getArgs());
         if (rv instanceof Expression) {
           if (precedence > -1 && rv instanceof Operation) {
             if (precedence < templates.getPrecedence(((Operation<?>) rv).getOperator())) {
@@ -88,14 +88,14 @@ public final class ToStringVisitor implements Visitor<String, Templates> {
   @Override
   public String visit(Path<?> p, Templates templates) {
     final Path<?> parent = p.getMetadata().getParent();
-    final Object elem = p.getMetadata().getElement();
+    final var elem = p.getMetadata().getElement();
     if (parent != null) {
       Template pattern = templates.getTemplate(p.getMetadata().getPathType());
       if (pattern != null) {
         final List<?> args = Arrays.asList(parent, elem);
-        final StringBuilder builder = new StringBuilder();
+        final var builder = new StringBuilder();
         for (Template.Element element : pattern.getElements()) {
-          Object rv = element.convert(args);
+          var rv = element.convert(args);
           if (rv instanceof Expression) {
             builder.append(((Expression<?>) rv).accept(this, templates));
           } else {
@@ -118,9 +118,9 @@ public final class ToStringVisitor implements Visitor<String, Templates> {
 
   @Override
   public String visit(TemplateExpression<?> expr, Templates templates) {
-    final StringBuilder builder = new StringBuilder();
+    final var builder = new StringBuilder();
     for (Template.Element element : expr.getTemplate().getElements()) {
-      Object rv = element.convert(expr.getArgs());
+      var rv = element.convert(expr.getArgs());
       if (rv instanceof Expression) {
         builder.append(((Expression<?>) rv).accept(this, templates));
       } else {

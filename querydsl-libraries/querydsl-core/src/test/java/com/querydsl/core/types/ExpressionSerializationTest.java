@@ -9,13 +9,13 @@ public class ExpressionSerializationTest {
 
   @Test
   public void serialize() throws ClassNotFoundException, IOException {
-    QTuple e = new QTuple(Expressions.stringPath("x"), Expressions.numberPath(Integer.class, "y"));
+    var e = new QTuple(Expressions.stringPath("x"), Expressions.numberPath(Integer.class, "y"));
     serialize(e);
     serialize(e.newInstance("a", 1));
   }
 
   private void serialize(Object obj) throws IOException, ClassNotFoundException {
-    Object obj2 = Serialization.serialize(obj);
+    var obj2 = Serialization.serialize(obj);
     obj2.hashCode();
   }
 }

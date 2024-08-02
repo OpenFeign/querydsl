@@ -13,8 +13,12 @@
  */
 package com.querydsl.sql.dml;
 
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.dml.UpdateClause;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
@@ -23,12 +27,17 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLBindings;
-import com.querydsl.sql.SQLSerializer;
 import com.querydsl.sql.types.Null;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.Range;
@@ -46,7 +55,7 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
 
   protected final RelationalPath<?> entity;
 
-  protected final List<SQLUpdateBatch> batches = new ArrayList<SQLUpdateBatch>();
+  protected final List<SQLUpdateBatch> batches = new ArrayList<>();
 
   protected Map<Path<?>, Expression<?>> updates = new LinkedHashMap<>();
 
@@ -117,7 +126,7 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
 
   protected PreparedStatement createStatement() throws SQLException {
     listeners.preRender(context);
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeUpdate(metadata, entity, updates);
     queryString = serializer.toString();
     constants = serializer.getConstants();
@@ -126,7 +135,7 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
     listeners.prepared(context);
 
     listeners.prePrepare(context);
-    PreparedStatement stmt = connection().prepareStatement(queryString);
+    var stmt = connection().prepareStatement(queryString);
     setParameters(
         stmt, serializer.getConstants(), serializer.getConstantPaths(), metadata.getParams());
     context.addPreparedStatement(stmt);
@@ -136,9 +145,9 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
   }
 
   protected Collection<PreparedStatement> createStatements() throws SQLException {
-    boolean addBatches = !configuration.getUseLiterals();
+    var addBatches = !configuration.getUseLiterals();
     listeners.preRender(context);
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeUpdate(batches.get(0).getMetadata(), entity, batches.get(0).getUpdates());
     queryString = serializer.toString();
     constants = serializer.getConstants();
@@ -150,7 +159,7 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
 
     // add first batch
     listeners.prePrepare(context);
-    PreparedStatement stmt = connection().prepareStatement(queryString);
+    var stmt = connection().prepareStatement(queryString);
     setParameters(
         stmt, serializer.getConstants(), serializer.getConstantPaths(), metadata.getParams());
     if (addBatches) {
@@ -161,7 +170,7 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
     listeners.prepared(context);
 
     // add other batches
-    for (int i = 1; i < batches.size(); i++) {
+    for (var i = 1; i < batches.size(); i++) {
       listeners.preRender(context);
       serializer = createSerializer();
       serializer.serializeUpdate(batches.get(i).getMetadata(), entity, batches.get(i).getUpdates());
@@ -198,7 +207,7 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
         listeners.notifyUpdate(entity, metadata, updates);
 
         listeners.preExecute(context);
-        int rc = stmt.executeUpdate();
+        var rc = stmt.executeUpdate();
         listeners.executed(context);
         return rc;
       } else {
@@ -206,7 +215,7 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
         listeners.notifyUpdates(entity, batches);
 
         listeners.preExecute(context);
-        long rc = executeBatch(stmts);
+        var rc = executeBatch(stmts);
         listeners.executed(context);
         return rc;
       }
@@ -228,13 +237,13 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
   @Override
   public List<SQLBindings> getSQL() {
     if (batches.isEmpty()) {
-      SQLSerializer serializer = createSerializer();
+      var serializer = createSerializer();
       serializer.serializeUpdate(metadata, entity, updates);
       return Collections.singletonList(createBindings(metadata, serializer));
     } else {
       List<SQLBindings> builder = new ArrayList<>();
       for (SQLUpdateBatch batch : batches) {
-        SQLSerializer serializer = createSerializer();
+        var serializer = createSerializer();
         serializer.serializeUpdate(batch.getMetadata(), entity, batch.getUpdates());
         builder.add(createBindings(metadata, serializer));
       }
@@ -272,7 +281,7 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
 
   @Override
   public C set(List<? extends Path<?>> paths, List<?> values) {
-    for (int i = 0; i < paths.size(); i++) {
+    for (var i = 0; i < paths.size(); i++) {
       if (values.get(i) instanceof Expression) {
         updates.put(paths.get(i), (Expression<?>) values.get(i));
       } else if (values.get(i) != null) {
@@ -304,7 +313,7 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
 
   @Override
   public String toString() {
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeUpdate(metadata, entity, updates);
     return serializer.toString();
   }
@@ -330,11 +339,11 @@ public abstract class AbstractSQLUpdateClause<C extends AbstractSQLUpdateClause<
    */
   @SuppressWarnings({"rawtypes", "unchecked"})
   public <T> C populate(T obj, Mapper<T> mapper) {
-    Collection<? extends Path<?>> primaryKeyColumns =
+    var primaryKeyColumns =
         entity.getPrimaryKey() != null
             ? entity.getPrimaryKey().getLocalColumns()
             : Collections.<Path<?>>emptyList();
-    Map<Path<?>, Object> values = mapper.createMap(entity, obj);
+    var values = mapper.createMap(entity, obj);
     for (Map.Entry<Path<?>, Object> entry : values.entrySet()) {
       if (!primaryKeyColumns.contains(entry.getKey())) {
         set((Path) entry.getKey(), entry.getValue());

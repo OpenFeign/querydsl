@@ -59,7 +59,7 @@ public class GenericSignatureTest {
 
   @Test
   public void test() {
-    QGenericSignatureTest_Entity entity = QGenericSignatureTest_Entity.entity;
+    var entity = QGenericSignatureTest_Entity.entity;
     // collection
     assertThat(entity.rawCollection.getParameter(0)).isEqualTo(Entity.class);
     assertThat(entity.genericCollection.getParameter(0)).isEqualTo(Entity.class);

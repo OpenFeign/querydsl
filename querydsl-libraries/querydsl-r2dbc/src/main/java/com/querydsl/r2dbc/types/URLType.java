@@ -35,7 +35,7 @@ public class URLType extends AbstractType<URL, String> {
 
   @Override
   public URL getValue(Row row, int startIndex) {
-    String val = row.get(startIndex, String.class);
+    var val = row.get(startIndex, String.class);
     try {
       return val != null ? new URL(val) : null;
     } catch (MalformedURLException e) {

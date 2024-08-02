@@ -34,7 +34,7 @@ public final class Parameter {
     if (o == this) {
       return true;
     } else if (o instanceof Parameter) {
-      Parameter t = (Parameter) o;
+      var t = (Parameter) o;
       return type.equals(t.type) && name.equals(t.name);
     } else {
       return false;

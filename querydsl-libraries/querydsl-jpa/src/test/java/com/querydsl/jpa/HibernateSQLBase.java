@@ -25,7 +25,6 @@ import com.querydsl.jpa.hibernate.sql.HibernateSQLQuery;
 import com.querydsl.jpa.testutil.HibernateTestRunner;
 import com.querydsl.sql.SQLTemplates;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -69,20 +68,20 @@ public class HibernateSQLBase extends AbstractSQLTest implements HibernateTest {
 
   @Test
   public void entityQueries_createQuery() {
-    SAnimal_ cat = new SAnimal_("cat");
-    QCat catEntity = QCat.cat;
+    var cat = new SAnimal_("cat");
+    var catEntity = QCat.cat;
 
-    Query query = query().from(cat).select(catEntity).createQuery();
+    var query = query().from(cat).select(catEntity).createQuery();
     assertThat(query.list()).hasSize(6);
   }
 
   @Test
   @ExcludeIn(Target.MYSQL)
   public void entityQueries_createQuery2() {
-    SAnimal_ cat = new SAnimal_("CAT");
-    QCat catEntity = QCat.cat;
+    var cat = new SAnimal_("CAT");
+    var catEntity = QCat.cat;
 
-    Query query = query().from(cat).select(catEntity).createQuery();
+    var query = query().from(cat).select(catEntity).createQuery();
     assertThat(query.list()).hasSize(6);
   }
 }

@@ -14,7 +14,12 @@
 package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 /**
  * A group of rows. Group is build according to GroupDefinitions.

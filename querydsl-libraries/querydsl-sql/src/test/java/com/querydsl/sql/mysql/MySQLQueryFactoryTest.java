@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.SQLExpressions;
 import com.querydsl.sql.SQLTemplates;
-import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.domain.QSurvey;
 import java.sql.Connection;
 import java.util.function.Supplier;
@@ -57,28 +56,27 @@ public class MySQLQueryFactoryTest {
 
   @Test
   public void insertIgnore() {
-    SQLInsertClause clause = queryFactory.insertIgnore(QSurvey.survey);
+    var clause = queryFactory.insertIgnore(QSurvey.survey);
     assertThat(clause).hasToString("insert ignore into SURVEY\nvalues ()");
   }
 
   @Test
   public void insertOnDuplicateKeyUpdate() {
-    SQLInsertClause clause = queryFactory.insertOnDuplicateKeyUpdate(QSurvey.survey, "c = c+1");
+    var clause = queryFactory.insertOnDuplicateKeyUpdate(QSurvey.survey, "c = c+1");
     assertThat(clause.toString())
         .isEqualTo("insert into SURVEY\nvalues () on duplicate key update c = c+1");
   }
 
   @Test
   public void insertOnDuplicateKeyUpdate2() {
-    SQLInsertClause clause =
-        queryFactory.insertOnDuplicateKeyUpdate(QSurvey.survey, QSurvey.survey.id.eq(2));
+    var clause = queryFactory.insertOnDuplicateKeyUpdate(QSurvey.survey, QSurvey.survey.id.eq(2));
     assertThat(clause.toString())
         .isEqualTo("insert into SURVEY\nvalues () on duplicate key update SURVEY.ID = ?");
   }
 
   @Test
   public void insertOnDuplicateKeyUpdate_multiple() {
-    SQLInsertClause clause =
+    var clause =
         queryFactory.insertOnDuplicateKeyUpdate(
             QSurvey.survey,
             SQLExpressions.set(QSurvey.survey.id, 2),
@@ -93,7 +91,7 @@ public class MySQLQueryFactoryTest {
 
   @Test
   public void insertOnDuplicateKeyUpdate_values() {
-    SQLInsertClause clause =
+    var clause =
         queryFactory.insertOnDuplicateKeyUpdate(
             QSurvey.survey, SQLExpressions.set(QSurvey.survey.name, QSurvey.survey.name));
     assertThat(clause.toString())
@@ -106,7 +104,7 @@ public class MySQLQueryFactoryTest {
 
   @Test
   public void insertOnDuplicateKeyUpdate_null() {
-    SQLInsertClause clause =
+    var clause =
         queryFactory.insertOnDuplicateKeyUpdate(
             QSurvey.survey, SQLExpressions.set(QSurvey.survey.name, (String) null));
     assertThat(clause.toString())

@@ -16,7 +16,6 @@ package com.querydsl.core.types;
 import static com.querydsl.core.util.CollectionUtils.add;
 
 import com.querydsl.core.JoinExpression;
-import com.querydsl.core.QueryMetadata;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -82,8 +81,8 @@ public final class ValidatingVisitor
 
   @Override
   public Set<Expression<?>> visit(SubQueryExpression<?> expr, Set<Expression<?>> known) {
-    Set<Expression<?>> old = known;
-    final QueryMetadata md = expr.getMetadata();
+    var old = known;
+    final var md = expr.getMetadata();
     known = visitJoins(md.getJoins(), known);
     if (md.getProjection() != null) {
       known = md.getProjection().accept(this, known);

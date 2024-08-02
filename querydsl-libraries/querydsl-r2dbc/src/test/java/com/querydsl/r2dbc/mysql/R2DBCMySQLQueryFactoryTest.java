@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.r2dbc.R2DBCConnectionProvider;
 import com.querydsl.r2dbc.R2DBCExpressions;
 import com.querydsl.r2dbc.SQLTemplates;
-import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import com.querydsl.r2dbc.domain.QSurvey;
 import io.r2dbc.spi.Connection;
 import org.easymock.EasyMock;
@@ -58,28 +57,27 @@ public class R2DBCMySQLQueryFactoryTest {
 
   @Test
   public void insertIgnore() {
-    R2DBCInsertClause clause = queryFactory.insertIgnore(QSurvey.survey);
+    var clause = queryFactory.insertIgnore(QSurvey.survey);
     assertThat(clause).hasToString("insert ignore into SURVEY\nvalues ()");
   }
 
   @Test
   public void insertOnDuplicateKeyUpdate() {
-    R2DBCInsertClause clause = queryFactory.insertOnDuplicateKeyUpdate(QSurvey.survey, "c = c+1");
+    var clause = queryFactory.insertOnDuplicateKeyUpdate(QSurvey.survey, "c = c+1");
     assertThat(clause.toString())
         .isEqualTo("insert into SURVEY\nvalues () on duplicate key update c = c+1");
   }
 
   @Test
   public void insertOnDuplicateKeyUpdate2() {
-    R2DBCInsertClause clause =
-        queryFactory.insertOnDuplicateKeyUpdate(QSurvey.survey, QSurvey.survey.id.eq(2));
+    var clause = queryFactory.insertOnDuplicateKeyUpdate(QSurvey.survey, QSurvey.survey.id.eq(2));
     assertThat(clause.toString())
         .isEqualTo("insert into SURVEY\nvalues () on duplicate key update SURVEY.ID = ?");
   }
 
   @Test
   public void insertOnDuplicateKeyUpdate_multiple() {
-    R2DBCInsertClause clause =
+    var clause =
         queryFactory.insertOnDuplicateKeyUpdate(
             QSurvey.survey,
             R2DBCExpressions.set(QSurvey.survey.id, 2),
@@ -94,7 +92,7 @@ public class R2DBCMySQLQueryFactoryTest {
 
   @Test
   public void insertOnDuplicateKeyUpdate_values() {
-    R2DBCInsertClause clause =
+    var clause =
         queryFactory.insertOnDuplicateKeyUpdate(
             QSurvey.survey, R2DBCExpressions.set(QSurvey.survey.name, QSurvey.survey.name));
     assertThat(clause.toString())
@@ -107,7 +105,7 @@ public class R2DBCMySQLQueryFactoryTest {
 
   @Test
   public void insertOnDuplicateKeyUpdate_null() {
-    R2DBCInsertClause clause =
+    var clause =
         queryFactory.insertOnDuplicateKeyUpdate(
             QSurvey.survey, R2DBCExpressions.set(QSurvey.survey.name, (String) null));
     assertThat(clause.toString())

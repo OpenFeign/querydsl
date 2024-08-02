@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import org.junit.Test;
 
 public class FirebirdTemplatesTest extends AbstractSQLTemplatesTest {
@@ -38,9 +37,9 @@ public class FirebirdTemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   @Override
   public void union() {
-    NumberExpression<Integer> one = Expressions.ONE;
-    NumberExpression<Integer> two = Expressions.TWO;
-    NumberExpression<Integer> three = Expressions.THREE;
+    var one = Expressions.ONE;
+    var two = Expressions.TWO;
+    var three = Expressions.THREE;
     Path<Integer> col1 = Expressions.numberPath(Integer.class, "col1");
     Union union = query.union(select(one.as(col1)), select(two), select(three));
 
@@ -64,11 +63,11 @@ public class FirebirdTemplatesTest extends AbstractSQLTemplatesTest {
     // AND
     // OR
 
-    int p1 = getPrecedence(Ops.CONCAT);
-    int p2 = getPrecedence(Ops.NEGATE);
-    int p3 = getPrecedence(Ops.MULT, Ops.DIV);
-    int p4 = getPrecedence(Ops.SUB, Ops.ADD);
-    int p5 =
+    var p1 = getPrecedence(Ops.CONCAT);
+    var p2 = getPrecedence(Ops.NEGATE);
+    var p3 = getPrecedence(Ops.MULT, Ops.DIV);
+    var p4 = getPrecedence(Ops.SUB, Ops.ADD);
+    var p5 =
         getPrecedence(
             Ops.EQ,
             Ops.GOE,
@@ -82,10 +81,10 @@ public class FirebirdTemplatesTest extends AbstractSQLTemplatesTest {
             Ops.LIKE,
             Ops.LIKE_ESCAPE,
             Ops.BETWEEN);
-    int p6 = getPrecedence(Ops.NOT);
-    int p7 = getPrecedence(Ops.AND);
-    int p8 = getPrecedence(Ops.XOR, Ops.XNOR);
-    int p9 = getPrecedence(Ops.OR);
+    var p6 = getPrecedence(Ops.NOT);
+    var p7 = getPrecedence(Ops.AND);
+    var p8 = getPrecedence(Ops.XOR, Ops.XNOR);
+    var p9 = getPrecedence(Ops.OR);
 
     assertThat(p1 < p2).isTrue();
     assertThat(p2 < p3).isTrue();

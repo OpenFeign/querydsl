@@ -26,7 +26,7 @@ public class PathBuilderTest {
 
   @Test
   public void getEnum() {
-    PathBuilder<User> entityPath = new PathBuilder<User>(User.class, "entity");
+    var entityPath = new PathBuilder<>(User.class, "entity");
     EnumPath<Gender> enumPath = entityPath.getEnum("gender", Gender.class);
     assertThat(enumPath.ordinal()).isNotNull();
     assertThat(entityPath.get(enumPath)).isEqualTo(enumPath);
@@ -34,17 +34,17 @@ public class PathBuilderTest {
 
   @Test
   public void getByExample() {
-    User user = new User();
+    var user = new User();
     user.setFirstName("firstName");
     user.setLastName("lastName");
-    String byExample = getByExample(user).toString();
+    var byExample = getByExample(user).toString();
     assertThat(byExample).contains("entity.lastName = lastName");
     assertThat(byExample).contains("entity.firstName = firstName");
   }
 
   @Test
   public void getArray() {
-    PathBuilder<User> entityPath = new PathBuilder<User>(User.class, "entity");
+    var entityPath = new PathBuilder<>(User.class, "entity");
     ArrayPath<String[], String> array = entityPath.getArray("array", String[].class);
     assertThat(array.getType()).isEqualTo(String[].class);
     assertThat(array.getElementType()).isEqualTo(String.class);
@@ -52,22 +52,22 @@ public class PathBuilderTest {
 
   @Test
   public void getList() {
-    PathBuilder<User> entityPath = new PathBuilder<User>(User.class, "entity");
+    var entityPath = new PathBuilder<>(User.class, "entity");
     entityPath.getList("list", String.class, StringPath.class).get(0).lower();
     entityPath.getList("list", String.class).get(0);
   }
 
   @Test
   public void getMap() {
-    PathBuilder<User> entityPath = new PathBuilder<User>(User.class, "entity");
+    var entityPath = new PathBuilder<>(User.class, "entity");
     entityPath.getMap("map", String.class, String.class, StringPath.class).get("").lower();
     entityPath.getMap("map", String.class, String.class).get("");
   }
 
   @SuppressWarnings("unchecked")
   private <T> BooleanBuilder getByExample(T entity) {
-    PathBuilder<T> entityPath = new PathBuilder<T>((Class<T>) entity.getClass(), "entity");
-    BooleanBuilder conditions = new BooleanBuilder();
+    var entityPath = new PathBuilder<>((Class<T>) entity.getClass(), "entity");
+    var conditions = new BooleanBuilder();
     Map<String, Object> beanMap = new BeanMap(entity);
     for (Map.Entry<String, Object> entry : beanMap.entrySet()) {
       if (!entry.getKey().equals("class")) {
@@ -81,10 +81,10 @@ public class PathBuilderTest {
 
   @Test
   public void get() {
-    PathBuilder<User> entity = new PathBuilder<User>(User.class, "entity");
-    NumberPath<Integer> intPath = new NumberPath<Integer>(Integer.class, "int");
-    StringPath strPath = new StringPath("str");
-    BooleanPath booleanPath = new BooleanPath("boolean");
+    var entity = new PathBuilder<>(User.class, "entity");
+    var intPath = new NumberPath<>(Integer.class, "int");
+    var strPath = new StringPath("str");
+    var booleanPath = new BooleanPath("boolean");
 
     assertThat(entity.get(intPath)).hasToString("entity.int");
     assertThat(entity.get(strPath)).hasToString("entity.str");
@@ -95,7 +95,7 @@ public class PathBuilderTest {
 
   @Test
   public void various() {
-    PathBuilder<User> entity = new PathBuilder<User>(User.class, "entity");
+    var entity = new PathBuilder<>(User.class, "entity");
     entity.getBoolean("boolean");
     entity.getCollection("col", User.class);
     entity.getComparable("comparable", Comparable.class);
@@ -112,8 +112,8 @@ public class PathBuilderTest {
 
   @Test
   public void calling_get_with_the_same_name_and_different_types_returns_correct_type() {
-    PathBuilder<User> entity = new PathBuilder<User>(User.class, "entity");
-    String pathName = "some_path";
+    var entity = new PathBuilder<>(User.class, "entity");
+    var pathName = "some_path";
     assertThat(entity.get(pathName).getType()).isEqualTo(Object.class);
     assertThat(entity.get(pathName, Integer.class).getType()).isEqualTo(Integer.class);
     assertThat(entity.get(pathName, User.class).getType()).isEqualTo(User.class);
@@ -122,9 +122,8 @@ public class PathBuilderTest {
   @Test
   public void
       calling_get_with_the_same_name_and_different_types_returns_specific_type_when_validating() {
-    PathBuilder<User> entity =
-        new PathBuilder<User>(User.class, "entity", PathBuilderValidator.FIELDS);
-    String pathName = "username";
+    var entity = new PathBuilder<>(User.class, "entity", PathBuilderValidator.FIELDS);
+    var pathName = "username";
     assertThat(entity.get(pathName).getType()).isEqualTo(String.class);
     assertThat(entity.get(pathName, Comparable.class).getType()).isEqualTo(String.class);
     assertThat(entity.get(pathName, Object.class).getType()).isEqualTo(String.class);

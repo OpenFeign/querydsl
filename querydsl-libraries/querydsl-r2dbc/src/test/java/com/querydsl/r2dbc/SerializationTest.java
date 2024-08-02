@@ -64,8 +64,7 @@ public class SerializationTest {
 
   @Test
   public void update() {
-    R2DBCUpdateClause updateClause =
-        new R2DBCUpdateClause(connection, SQLTemplates.DEFAULT, survey);
+    var updateClause = new R2DBCUpdateClause(connection, SQLTemplates.DEFAULT, survey);
     updateClause.set(survey.id, 1);
     updateClause.set(survey.name, (String) null);
     assertThat(updateClause).hasToString("update SURVEY\nset ID = ?, NAME = ?");
@@ -73,8 +72,7 @@ public class SerializationTest {
 
   @Test
   public void update_where() {
-    R2DBCUpdateClause updateClause =
-        new R2DBCUpdateClause(connection, SQLTemplates.DEFAULT, survey);
+    var updateClause = new R2DBCUpdateClause(connection, SQLTemplates.DEFAULT, survey);
     updateClause.set(survey.id, 1);
     updateClause.set(survey.name, (String) null);
     updateClause.where(survey.name.eq("XXX"));
@@ -84,8 +82,7 @@ public class SerializationTest {
 
   @Test
   public void insert() {
-    R2DBCInsertClause insertClause =
-        new R2DBCInsertClause(connection, SQLTemplates.DEFAULT, survey);
+    var insertClause = new R2DBCInsertClause(connection, SQLTemplates.DEFAULT, survey);
     insertClause.set(survey.id, 1);
     insertClause.set(survey.name, (String) null);
     assertThat(insertClause).hasToString("insert into SURVEY (ID, NAME)\nvalues (?, ?)");
@@ -93,9 +90,9 @@ public class SerializationTest {
 
   @Test
   public void delete_with_subQuery_exists() {
-    QSurvey survey1 = new QSurvey("s1");
-    QEmployee employee = new QEmployee("e");
-    R2DBCDeleteClause delete = new R2DBCDeleteClause(connection, SQLTemplates.DEFAULT, survey1);
+    var survey1 = new QSurvey("s1");
+    var employee = new QEmployee("e");
+    var delete = new R2DBCDeleteClause(connection, SQLTemplates.DEFAULT, survey1);
     delete.where(
         survey1.name.eq("XXX"),
         R2DBCExpressions.selectOne().from(employee).where(survey1.id.eq(employee.id)).exists());
@@ -113,7 +110,7 @@ public class SerializationTest {
   public void nextval() {
     SubQueryExpression<?> sq =
         R2DBCExpressions.select(R2DBCExpressions.nextval("myseq")).from(QSurvey.survey);
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.serialize(sq.getMetadata(), false);
     assertThat(serializer).hasToString("select nextval('myseq')\nfrom SURVEY SURVEY");
   }
@@ -122,14 +119,14 @@ public class SerializationTest {
   public void functionCall() {
     R2DBCRelationalFunctionCall<String> func =
         R2DBCExpressions.relationalFunctionCall(String.class, "TableValuedFunction", "parameter");
-    PathBuilder<String> funcAlias = new PathBuilder<String>(String.class, "tokFunc");
+    var funcAlias = new PathBuilder<>(String.class, "tokFunc");
     SubQueryExpression<?> expr =
         R2DBCExpressions.select(survey.name)
             .from(survey)
             .join(func, funcAlias)
             .on(survey.name.like(funcAlias.getString("prop")).not());
 
-    SQLSerializer serializer = new SQLSerializer(new Configuration(new SQLServerTemplates()));
+    var serializer = new SQLSerializer(new Configuration(new SQLServerTemplates()));
     serializer.serialize(expr.getMetadata(), false);
     assertThat(serializer.toString())
         .isEqualTo(
@@ -145,7 +142,7 @@ public class SerializationTest {
   public void functionCall2() {
     R2DBCRelationalFunctionCall<String> func =
         R2DBCExpressions.relationalFunctionCall(String.class, "TableValuedFunction", "parameter");
-    PathBuilder<String> funcAlias = new PathBuilder<String>(String.class, "tokFunc");
+    var funcAlias = new PathBuilder<>(String.class, "tokFunc");
     R2DBCQuery<?> q = new R2DBCQuery<Void>(SQLServerTemplates.DEFAULT);
     q.from(survey).join(func, funcAlias).on(survey.name.like(funcAlias.getString("prop")).not());
 
@@ -221,7 +218,7 @@ public class SerializationTest {
 
   @Test
   public void with() {
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey2 = new QSurvey("survey2");
     R2DBCQuery<?> q = new R2DBCQuery<Void>();
     q.with(survey, survey.id, survey.name)
         .as(R2DBCExpressions.select(survey2.id, survey2.name).from(survey2));
@@ -238,7 +235,7 @@ public class SerializationTest {
 
   @Test
   public void with_complex() {
-    QSurvey s = new QSurvey("s");
+    var s = new QSurvey("s");
     R2DBCQuery<?> q = new R2DBCQuery<Void>();
     q.with(s, s.id, s.name)
         .as(R2DBCExpressions.select(survey.id, survey.name).from(survey))
@@ -257,8 +254,8 @@ public class SerializationTest {
 
   @Test
   public void with_tuple() {
-    PathBuilder<Survey> survey = new PathBuilder<Survey>(Survey.class, "SURVEY");
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey = new PathBuilder<>(Survey.class, "SURVEY");
+    var survey2 = new QSurvey("survey2");
     R2DBCQuery<?> q = new R2DBCQuery<Void>();
     q.with(survey, survey.get(survey2.id), survey.get(survey2.name))
         .as(R2DBCExpressions.select(survey2.id, survey2.name).from(survey2));
@@ -275,7 +272,7 @@ public class SerializationTest {
 
   @Test
   public void with_tuple2() {
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey2 = new QSurvey("survey2");
     R2DBCQuery<?> q = new R2DBCQuery<Void>();
     q.with(survey, survey.id, survey.name)
         .as(R2DBCExpressions.select(survey2.id, survey2.name).from(survey2));
@@ -292,7 +289,7 @@ public class SerializationTest {
 
   @Test
   public void with_singleColumn() {
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey2 = new QSurvey("survey2");
     R2DBCQuery<?> q = new R2DBCQuery<Void>();
     q.with(survey, new Path<?>[] {survey.id}).as(R2DBCExpressions.select(survey2.id).from(survey2));
 

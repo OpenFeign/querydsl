@@ -37,7 +37,7 @@ public class QueryInit5Test {
     // QChild c = QParent.parent.as(QChild.class)
     assertThat(QQueryInit5Test_Parent.parent.z.entity).isNotNull();
 
-    QQueryInit5Test_Child child = QQueryInit5Test_Parent.parent.as(QQueryInit5Test_Child.class);
+    var child = QQueryInit5Test_Parent.parent.as(QQueryInit5Test_Child.class);
     assertThat(child.z.entity).isNotNull();
     assertThat(child.y.entity).isNotNull();
   }

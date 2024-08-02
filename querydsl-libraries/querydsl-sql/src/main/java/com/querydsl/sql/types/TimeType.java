@@ -13,7 +13,11 @@
  */
 package com.querydsl.sql.types;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Types;
 
 /**
  * {@code TimeType} maps Time to Time on the JDBC level

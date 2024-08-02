@@ -31,7 +31,7 @@ public class GMax<T extends Comparable<? super T>> extends AbstractGroupExpressi
 
   @Override
   public GroupCollector<T, T> createGroupCollector() {
-    return new GroupCollector<T, T>() {
+    return new GroupCollector<>() {
       private T max;
 
       @Override

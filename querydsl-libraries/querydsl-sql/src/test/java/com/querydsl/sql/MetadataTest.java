@@ -1,6 +1,5 @@
 package com.querydsl.sql;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,7 +39,7 @@ public class MetadataTest {
   }
 
   private void printMetadata() throws SQLException {
-    Connection conn = Connections.getConnection();
+    var conn = Connections.getConnection();
     System.out.println(conn.getMetaData().getDatabaseProductName());
     Connections.close();
   }

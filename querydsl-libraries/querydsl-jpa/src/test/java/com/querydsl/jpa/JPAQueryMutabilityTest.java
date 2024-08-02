@@ -14,7 +14,6 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.querydsl.core.QueryMutability;
 import com.querydsl.jpa.domain.Cat;
@@ -58,14 +57,14 @@ public class JPAQueryMutabilityTest implements JPATest {
     entityManager.persist(new Cat("Beck", 1));
     entityManager.flush();
 
-    SAnimal_ cat = new SAnimal_("cat");
+    var cat = new SAnimal_("cat");
     JPASQLQuery<?> query = query().from(cat);
     new QueryMutability(query).test(cat.id, cat.name);
   }
 
   @Test
   public void clone_() {
-    SAnimal_ cat = new SAnimal_("cat");
+    var cat = new SAnimal_("cat");
     JPASQLQuery<?> query = query().from(cat).where(cat.name.isNotNull());
     JPASQLQuery<?> query2 = query.clone(entityManager);
     assertThat(query2.getMetadata().getJoins()).isEqualTo(query.getMetadata().getJoins());

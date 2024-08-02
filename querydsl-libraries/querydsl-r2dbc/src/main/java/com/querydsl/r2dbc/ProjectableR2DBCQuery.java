@@ -13,15 +13,40 @@
  */
 package com.querydsl.r2dbc;
 
-import com.querydsl.core.*;
+import com.querydsl.core.JoinFlag;
+import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.Query;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
+import com.querydsl.core.ReactiveFetchableQuery;
 import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.support.ReactiveFetchableSubQueryBase;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.ParamNotSetException;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathExtractor;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Wildcard;
-import com.querydsl.sql.*;
-import java.util.*;
+import com.querydsl.sql.ForeignKey;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLBindings;
+import com.querydsl.sql.SQLOps;
+import com.querydsl.sql.WithBuilder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 import reactor.core.publisher.Mono;
 
@@ -153,7 +178,7 @@ public abstract class ProjectableR2DBCQuery<T, Q extends ProjectableR2DBCQuery<T
   @Override
   //    @SuppressWarnings({"unchecked", "rawtypes"})
   public Q from(SubQueryExpression<?> subQuery, Path<?> alias) {
-    return (Q) queryMixin.from(ExpressionUtils.as((Expression) subQuery, alias));
+    return queryMixin.from(ExpressionUtils.as((Expression) subQuery, alias));
   }
 
   @Override
@@ -338,7 +363,7 @@ public abstract class ProjectableR2DBCQuery<T, Q extends ProjectableR2DBCQuery<T
    */
   @SuppressWarnings("unchecked")
   public <RT> Q union(Path<?> alias, SubQueryExpression<RT>... sq) {
-    return from((Expression) UnionUtils.union(Arrays.asList(sq), (Path) alias, false));
+    return from(UnionUtils.union(Arrays.asList(sq), (Path) alias, false));
   }
 
   /**
@@ -375,7 +400,7 @@ public abstract class ProjectableR2DBCQuery<T, Q extends ProjectableR2DBCQuery<T
    */
   @SuppressWarnings("unchecked")
   public <RT> Q unionAll(Path<?> alias, SubQueryExpression<RT>... sq) {
-    return from((Expression) UnionUtils.union(Arrays.asList(sq), (Path) alias, true));
+    return from(UnionUtils.union(Arrays.asList(sq), (Path) alias, true));
   }
 
   @Override
@@ -424,7 +449,7 @@ public abstract class ProjectableR2DBCQuery<T, Q extends ProjectableR2DBCQuery<T
     Expression<?> columnsCombined = ExpressionUtils.list(Object.class, columns);
     Expression<?> aliasCombined =
         Expressions.operation(alias.getType(), SQLOps.WITH_COLUMNS, alias, columnsCombined);
-    return new WithBuilder<Q>(queryMixin, aliasCombined);
+    return new WithBuilder<>(queryMixin, aliasCombined);
   }
 
   protected void clone(Q query) {
@@ -460,15 +485,15 @@ public abstract class ProjectableR2DBCQuery<T, Q extends ProjectableR2DBCQuery<T
 
   @SuppressWarnings("unchecked")
   protected SQLSerializer serialize(boolean forCountRow) {
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     if (union != null) {
       if (queryMixin.getMetadata().getProjection() == null
           || expandProjection(queryMixin.getMetadata().getProjection())
               .equals(expandProjection(firstUnionSubQuery.getMetadata().getProjection()))) {
         serializer.serializeUnion(union, queryMixin.getMetadata(), unionAll);
       } else {
-        QueryMixin<Q> mixin2 = new QueryMixin<Q>(queryMixin.getMetadata().clone());
-        Set<Path<?>> paths = getRootPaths(expandProjection(mixin2.getMetadata().getProjection()));
+        var mixin2 = new QueryMixin<>(queryMixin.getMetadata().clone());
+        var paths = getRootPaths(expandProjection(mixin2.getMetadata().getProjection()));
         if (paths.isEmpty()) {
           mixin2.from(ExpressionUtils.as((Expression) union, defaultQueryAlias));
         } else if (paths.size() == 1) {
@@ -510,7 +535,7 @@ public abstract class ProjectableR2DBCQuery<T, Q extends ProjectableR2DBCQuery<T
 
   @Override
   public String toString() {
-    SQLSerializer serializer = serialize(false);
+    var serializer = serialize(false);
     return serializer.toString().trim();
   }
 }

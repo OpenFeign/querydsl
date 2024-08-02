@@ -13,8 +13,12 @@
  */
 package com.querydsl.r2dbc.dml;
 
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.dml.ReactiveUpdateClause;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
@@ -32,7 +36,10 @@ import com.querydsl.sql.SQLBindings;
 import com.querydsl.sql.dml.Mapper;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.Statement;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.Range;
 import reactor.core.publisher.Mono;
@@ -105,7 +112,7 @@ public abstract class AbstractR2DBCUpdateClause<C extends AbstractR2DBCUpdateCla
   }
 
   protected Statement createStatement(Connection connection) {
-    SQLSerializer serializer = createSerializerAndSerialize(null);
+    var serializer = createSerializerAndSerialize(null);
     return prepareStatementAndSetParameters(connection, serializer);
   }
 
@@ -122,7 +129,7 @@ public abstract class AbstractR2DBCUpdateClause<C extends AbstractR2DBCUpdateCla
 
   @Override
   public List<SQLBindings> getSQL() {
-    SQLSerializer serializer = createSerializer(true);
+    var serializer = createSerializer(true);
     serializer.serializeUpdate(metadata, entity, updates);
     return Collections.singletonList(createBindings(metadata, serializer));
   }
@@ -157,7 +164,7 @@ public abstract class AbstractR2DBCUpdateClause<C extends AbstractR2DBCUpdateCla
 
   @Override
   public C set(List<? extends Path<?>> paths, List<?> values) {
-    for (int i = 0; i < paths.size(); i++) {
+    for (var i = 0; i < paths.size(); i++) {
       if (values.get(i) instanceof Expression) {
         updates.put(paths.get(i), (Expression<?>) values.get(i));
       } else if (values.get(i) != null) {
@@ -189,7 +196,7 @@ public abstract class AbstractR2DBCUpdateClause<C extends AbstractR2DBCUpdateCla
 
   @Override
   public String toString() {
-    SQLSerializer serializer = createSerializer(true);
+    var serializer = createSerializer(true);
     serializer.serializeUpdate(metadata, entity, updates);
     return serializer.toString();
   }
@@ -215,11 +222,11 @@ public abstract class AbstractR2DBCUpdateClause<C extends AbstractR2DBCUpdateCla
    */
   @SuppressWarnings({"rawtypes", "unchecked"})
   public <T> C populate(T obj, Mapper<T> mapper) {
-    Collection<? extends Path<?>> primaryKeyColumns =
+    var primaryKeyColumns =
         entity.getPrimaryKey() != null
             ? entity.getPrimaryKey().getLocalColumns()
             : Collections.emptyList();
-    Map<Path<?>, Object> values = mapper.createMap(entity, obj);
+    var values = mapper.createMap(entity, obj);
     for (Map.Entry<Path<?>, Object> entry : values.entrySet()) {
       if (!primaryKeyColumns.contains(entry.getKey())) {
         set((Path) entry.getKey(), entry.getValue());
@@ -234,22 +241,22 @@ public abstract class AbstractR2DBCUpdateClause<C extends AbstractR2DBCUpdateCla
   }
 
   private SQLSerializer createSerializerAndSerialize(R2DBCUpdateBatch batch) {
-    SQLSerializer serializer = createSerializer(true);
+    var serializer = createSerializer(true);
     serializer.serializeUpdate(metadata, entity, updates);
     return serializer;
   }
 
   private Statement prepareStatementAndSetParameters(
       Connection connection, SQLSerializer serializer) {
-    String originalSql = serializer.toString();
-    List<Object> constants = serializer.getConstants();
+    var originalSql = serializer.toString();
+    var constants = serializer.getConstants();
     queryString =
         R2dbcUtils.replaceBindingArguments(
             configuration.getBindMarkerFactory().create(), constants, originalSql);
 
     logQuery(logger, queryString, serializer.getConstants());
 
-    Statement statement = connection.createStatement(queryString);
+    var statement = connection.createStatement(queryString);
     BindTarget bindTarget = new StatementWrapper(statement);
 
     setParameters(

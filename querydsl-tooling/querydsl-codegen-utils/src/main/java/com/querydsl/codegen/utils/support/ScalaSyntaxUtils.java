@@ -25,7 +25,7 @@ public final class ScalaSyntaxUtils {
   private ScalaSyntaxUtils() {}
 
   private static final Set<String> reserved =
-      new HashSet<String>(
+      new HashSet<>(
           Arrays.asList(
               "abstract",
               "do",

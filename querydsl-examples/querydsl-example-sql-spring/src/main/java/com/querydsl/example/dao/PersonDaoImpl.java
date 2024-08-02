@@ -30,7 +30,7 @@ public class PersonDaoImpl implements PersonDao {
 
   @Override
   public Person save(Person p) {
-    Long id = p.getId();
+    var id = p.getId();
 
     if (id == null) {
       id = queryFactory.insert(person).populate(p).executeWithKey(person.id);

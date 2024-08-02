@@ -12,9 +12,9 @@ public class LocalDateTimeTest {
 
   @Test
   public void set() throws SQLException {
-    LocalDateTime value = LocalDateTime.now();
+    var value = LocalDateTime.now();
 
-    PreparedStatement stmt = EasyMock.createNiceMock(PreparedStatement.class);
+    var stmt = (PreparedStatement) EasyMock.createNiceMock(PreparedStatement.class);
     stmt.setObject(0, value);
     EasyMock.replay(stmt);
 

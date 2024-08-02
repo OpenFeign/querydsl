@@ -61,8 +61,7 @@ public class JPASQLQuery<T> extends AbstractJPASQLQuery<T, JPASQLQuery<T>> {
 
   @Override
   public JPASQLQuery<T> clone(EntityManager entityManager) {
-    JPASQLQuery<T> q =
-        new JPASQLQuery<T>(entityManager, configuration, queryHandler, getMetadata().clone());
+    var q = new JPASQLQuery<T>(entityManager, configuration, queryHandler, getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -71,7 +70,7 @@ public class JPASQLQuery<T> extends AbstractJPASQLQuery<T, JPASQLQuery<T>> {
   public <U> JPASQLQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    JPASQLQuery<U> newType = (JPASQLQuery<U>) this;
+    var newType = (JPASQLQuery<U>) this;
     return newType;
   }
 
@@ -79,7 +78,7 @@ public class JPASQLQuery<T> extends AbstractJPASQLQuery<T, JPASQLQuery<T>> {
   public JPASQLQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    JPASQLQuery<Tuple> newType = (JPASQLQuery<Tuple>) this;
+    var newType = (JPASQLQuery<Tuple>) this;
     return newType;
   }
 }

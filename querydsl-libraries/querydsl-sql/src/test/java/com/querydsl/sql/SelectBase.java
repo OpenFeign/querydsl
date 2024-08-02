@@ -38,13 +38,11 @@ import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.Pair;
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryException;
 import com.querydsl.core.QueryExecution;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.QuerydslModule;
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
@@ -65,7 +63,6 @@ import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.QTuple;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Coalesce;
@@ -80,7 +77,6 @@ import com.querydsl.core.types.dsl.Param;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.core.types.dsl.StringExpressions;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.sql.domain.Employee;
 import com.querydsl.sql.domain.IdName;
@@ -90,9 +86,7 @@ import com.querydsl.sql.domain.QIdName;
 import com.querydsl.sql.domain.QNumberTest;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -233,10 +227,10 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void arithmetic2() {
-    NumberExpression<Integer> one = Expressions.ONE;
-    NumberExpression<Integer> two = Expressions.TWO;
-    NumberExpression<Integer> three = Expressions.THREE;
-    NumberExpression<Integer> four = Expressions.FOUR;
+    var one = Expressions.ONE;
+    var two = Expressions.TWO;
+    var three = Expressions.THREE;
+    var four = Expressions.FOUR;
     arithmeticTests(one, two, three, four);
   }
 
@@ -257,7 +251,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @IncludeIn(POSTGRESQL) // TODO generalize array literal projections
   public void array() {
     Expression<Integer[]> expr = Expressions.template(Integer[].class, "'{1,2,3}'::int[]");
-    Integer[] result = firstResult(expr);
+    var result = firstResult(expr);
     assertThat(result.length).isEqualTo(3);
     assertThat(result[0].intValue()).isEqualTo(1);
     assertThat(result[1].intValue()).isEqualTo(2);
@@ -268,7 +262,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @IncludeIn(POSTGRESQL) // TODO generalize array literal projections
   public void array2() {
     Expression<int[]> expr = Expressions.template(int[].class, "'{1,2,3}'::int[]");
-    int[] result = firstResult(expr);
+    var result = firstResult(expr);
     assertThat(result.length).isEqualTo(3);
     assertThat(result[0]).isEqualTo(1);
     assertThat(result[1]).isEqualTo(2);
@@ -284,10 +278,10 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void array_projection() {
-    List<String[]> results =
+    var results =
         query()
             .from(employee)
-            .select(new ArrayConstructorExpression<String>(String[].class, employee.firstname))
+            .select(new ArrayConstructorExpression<>(String[].class, employee.firstname))
             .fetch();
     assertThat(results).isNotEmpty();
     for (String[] result : results) {
@@ -297,8 +291,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void beans() {
-    List<Beans> rows =
-        query().from(employee, employee2).select(new QBeans(employee, employee2)).fetch();
+    var rows = query().from(employee, employee2).select(new QBeans(employee, employee2)).fetch();
     assertThat(rows).isNotEmpty();
     for (Beans row : rows) {
       assertThat(row.get(employee).getClass()).isEqualTo(Employee.class);
@@ -345,8 +338,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void case_() {
     NumberExpression<Float> numExpression =
         employee.salary.floatValue().divide(employee2.salary.floatValue()).multiply(100.1);
-    NumberExpression<Float> numExpression2 =
-        employee.id.when(0).then(0.0F).otherwise(numExpression);
+    var numExpression2 = employee.id.when(0).then(0.0F).otherwise(numExpression);
     assertThat(
             query()
                 .from(employee, employee2)
@@ -379,7 +371,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void coalesce() {
-    Coalesce<String> c = new Coalesce<String>(employee.firstname, employee.lastname).add("xxx");
+    var c = new Coalesce<String>(employee.firstname, employee.lastname).add("xxx");
     assertThat(query().from(employee).where(c.getValue().eq("xxx")).select(employee.id).fetch())
         .isEqualTo(Collections.emptyList());
   }
@@ -408,8 +400,8 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void complex_boolean() {
-    BooleanExpression first = employee.firstname.eq("Mike").and(employee.lastname.eq("Smith"));
-    BooleanExpression second = employee.firstname.eq("Joe").and(employee.lastname.eq("Divis"));
+    var first = employee.firstname.eq("Mike").and(employee.lastname.eq("Smith"));
+    var second = employee.firstname.eq("Joe").and(employee.lastname.eq("Divis"));
     assertThat(query().from(employee).where(first.or(second)).fetchCount()).isEqualTo(2);
 
     assertThat(
@@ -428,7 +420,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     // alias for the salary
     NumberPath<BigDecimal> sal = Expressions.numberPath(BigDecimal.class, "sal");
     // alias for the subquery
-    PathBuilder<BigDecimal> sq = new PathBuilder<BigDecimal>(BigDecimal.class, "sq");
+    var sq = new PathBuilder<BigDecimal>(BigDecimal.class, "sq");
     // query execution
     query()
         .from(
@@ -452,7 +444,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void constructor_projection2() {
-    List<SimpleProjection> projections =
+    var projections =
         query()
             .from(employee)
             .select(
@@ -526,7 +518,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void custom_projection() {
-    List<Projection> tuples =
+    var tuples =
         query()
             .from(employee)
             .select(new QProjection(employee.firstname, employee.lastname))
@@ -557,15 +549,13 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   private void dates(boolean literals) throws SQLException {
-    java.time.Instant javaInstant =
-        java.time.Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
-    java.time.LocalDateTime javaDateTime =
-        java.time.LocalDateTime.ofInstant(javaInstant, java.time.ZoneId.of("Z"));
-    java.time.LocalDate javaDate = javaDateTime.toLocalDate();
-    java.time.LocalTime javaTime = javaDateTime.toLocalTime();
-    long ts = javaInstant.toEpochMilli();
-    long tsDate = javaInstant.truncatedTo(ChronoUnit.DAYS).toEpochMilli();
-    long tsTime = javaTime.toNanoOfDay() / 1000;
+    var javaInstant = java.time.Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
+    var javaDateTime = java.time.LocalDateTime.ofInstant(javaInstant, java.time.ZoneId.of("Z"));
+    var javaDate = javaDateTime.toLocalDate();
+    var javaTime = javaDateTime.toLocalTime();
+    var ts = javaInstant.toEpochMilli();
+    var tsDate = javaInstant.truncatedTo(ChronoUnit.DAYS).toEpochMilli();
+    var tsTime = javaTime.toNanoOfDay() / 1000;
 
     List<Object> data = new ArrayList<>();
     data.add(Constants.date);
@@ -638,7 +628,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     Map<Object, Object> failures = new IdentityHashMap<>();
     for (Object dt : data) {
       try {
-        Object dt2 = firstResult(Expressions.constant(dt));
+        var dt2 = firstResult(Expressions.constant(dt));
         if (!dt.equals(dt2)) {
           failures.put(dt, dt2);
         }
@@ -648,7 +638,7 @@ public abstract class SelectBase extends AbstractBaseTest {
       }
     }
     if (!failures.isEmpty()) {
-      StringBuilder message = new StringBuilder();
+      var message = new StringBuilder();
       for (Map.Entry<Object, Object> entry : failures.entrySet()) {
         message
             .append(
@@ -669,10 +659,10 @@ public abstract class SelectBase extends AbstractBaseTest {
   @ExcludeIn({SQLITE})
   public void date_add() {
     SQLQuery<?> query = query().from(employee);
-    Date date1 = query.select(employee.datefield).fetchFirst();
-    Date date2 = query.select(SQLExpressions.addYears(employee.datefield, 1)).fetchFirst();
-    Date date3 = query.select(SQLExpressions.addMonths(employee.datefield, 1)).fetchFirst();
-    Date date4 = query.select(SQLExpressions.addDays(employee.datefield, 1)).fetchFirst();
+    var date1 = query.select(employee.datefield).fetchFirst();
+    var date2 = query.select(SQLExpressions.addYears(employee.datefield, 1)).fetchFirst();
+    var date3 = query.select(SQLExpressions.addMonths(employee.datefield, 1)).fetchFirst();
+    var date4 = query.select(SQLExpressions.addDays(employee.datefield, 1)).fetchFirst();
 
     assertThat(date2.getTime() > date1.getTime()).isTrue();
     assertThat(date3.getTime() > date1.getTime()).isTrue();
@@ -683,7 +673,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @ExcludeIn({SQLITE})
   public void date_add_Timestamp() {
     List<Expression<?>> exprs = new ArrayList<>();
-    DateTimeExpression<java.util.Date> dt = Expressions.currentTimestamp();
+    var dt = Expressions.currentTimestamp();
 
     add(exprs, SQLExpressions.addYears(dt, 1));
     add(exprs, SQLExpressions.addMonths(dt, 1), ORACLE);
@@ -700,7 +690,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({DB2, SQLITE, TERADATA})
   public void date_diff() {
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee2 = new QEmployee("employee2");
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
     SQLQuery<?> query2 =
         query().from(employee, employee2).orderBy(employee.id.asc(), employee2.id.desc());
@@ -714,8 +704,8 @@ public abstract class SelectBase extends AbstractBaseTest {
     add(dps, DatePart.minute, HSQLDB);
     add(dps, DatePart.second, HSQLDB);
 
-    LocalDate localDate = LocalDate.of(1970, 1, 10);
-    Date date =
+    var localDate = LocalDate.of(1970, 1, 10);
+    var date =
         new Date(localDate.atStartOfDay(java.time.ZoneId.of("Z")).toInstant().toEpochMilli());
 
     for (DatePart dp : dps) {
@@ -728,7 +718,7 @@ public abstract class SelectBase extends AbstractBaseTest {
       assertThat(-diff2).isEqualTo(diff1);
     }
 
-    Timestamp timestamp = new Timestamp(new java.util.Date().getTime());
+    var timestamp = new Timestamp(new java.util.Date().getTime());
     for (DatePart dp : dps) {
       query
           .select(SQLExpressions.datediff(dp, Expressions.currentTimestamp(), timestamp))
@@ -743,8 +733,8 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void date_diff2() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
 
-    LocalDate localDate = LocalDate.of(1970, 1, 10);
-    Date date =
+    var localDate = LocalDate.of(1970, 1, 10);
+    var date =
         new Date(localDate.atStartOfDay(java.time.ZoneId.of("Z")).toInstant().toEpochMilli());
 
     int years =
@@ -778,7 +768,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({SQLITE, H2}) // FIXME
   public void date_trunc() {
-    DateTimeExpression<java.util.Date> expr = DateTimeExpression.currentTimestamp();
+    var expr = DateTimeExpression.currentTimestamp();
 
     List<DatePart> dps = new ArrayList<>();
     add(dps, DatePart.year);
@@ -800,7 +790,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     DateTimeExpression<LocalDateTime> expr =
         DateTimeExpression.currentTimestamp(LocalDateTime.class);
 
-    Tuple tuple =
+    var tuple =
         firstResult(
             expr,
             SQLExpressions.datetrunc(DatePart.year, expr),
@@ -897,17 +887,15 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void distinct_count() {
-    long count1 = query().from(employee).distinct().fetchCount();
-    long count2 = query().from(employee).distinct().fetchCount();
+    var count1 = query().from(employee).distinct().fetchCount();
+    var count2 = query().from(employee).distinct().fetchCount();
     assertThat(count2).isEqualTo(count1);
   }
 
   @Test
   public void distinct_list() {
-    List<Integer> lengths1 =
-        query().from(employee).distinct().select(employee.firstname.length()).fetch();
-    List<Integer> lengths2 =
-        query().from(employee).distinct().select(employee.firstname.length()).fetch();
+    var lengths1 = query().from(employee).distinct().select(employee.firstname.length()).fetch();
+    var lengths2 = query().from(employee).distinct().select(employee.firstname.length()).fetch();
     assertThat(lengths2).isEqualTo(lengths1);
   }
 
@@ -918,7 +906,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void duplicate_columns_In_Subquery() {
-    QEmployee employee2 = new QEmployee("e2");
+    var employee2 = new QEmployee("e2");
     assertThat(
             query()
                 .from(employee)
@@ -955,7 +943,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void getResultSet() throws IOException, SQLException {
-    ResultSet results = query().select(survey.id, survey.name).from(survey).getResults();
+    var results = query().select(survey.id, survey.name).from(survey).getResults();
     while (results.next()) {
       assertThat(results.getObject(1)).isNotNull();
       assertThat(results.getObject(2)).isNotNull();
@@ -967,7 +955,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void groupBy_superior() {
     SQLQuery<?> qry = query().from(employee).innerJoin(employee._superiorIdKey, employee2);
 
-    QTuple subordinates = Projections.tuple(employee2.id, employee2.firstname, employee2.lastname);
+    var subordinates = Projections.tuple(employee2.id, employee2.firstname, employee2.lastname);
 
     Map<Integer, Group> results =
         qry.transform(
@@ -980,7 +968,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(results).hasSize(2);
 
     // Mike Smith
-    Group group = results.get(1);
+    var group = results.get(1);
     assertThat(group.getOne(employee.firstname)).isEqualTo("Mike");
     assertThat(group.getOne(employee.lastname)).isEqualTo("Smith");
 
@@ -1026,9 +1014,9 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({FIREBIRD})
   public void groupBy_count() {
-    List<Integer> ids = query().from(employee).groupBy(employee.id).select(employee.id).fetch();
-    long count = query().from(employee).groupBy(employee.id).fetchCount();
-    QueryResults<Integer> results =
+    var ids = query().from(employee).groupBy(employee.id).select(employee.id).fetch();
+    var count = query().from(employee).groupBy(employee.id).fetchCount();
+    var results =
         query().from(employee).groupBy(employee.id).limit(1).select(employee.id).fetchResults();
 
     assertThat(ids).hasSize(10);
@@ -1040,9 +1028,9 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({FIREBIRD, SQLSERVER, TERADATA})
   public void groupBy_Distinct_count() {
-    List<Integer> ids =
+    var ids =
         query().from(employee).groupBy(employee.id).distinct().select(Expressions.ONE).fetch();
-    QueryResults<Integer> results =
+    var results =
         query()
             .from(employee)
             .groupBy(employee.id)
@@ -1093,7 +1081,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @ExcludeIn({DERBY, FIREBIRD, SQLITE, SQLSERVER, TERADATA})
   public void in_long_list() {
     List<Integer> ids = new ArrayList<>();
-    for (int i = 0; i < 20000; i++) {
+    for (var i = 0; i < 20000; i++) {
       ids.add(i);
     }
     assertThat(query().from(employee).where(employee.id.in(ids)).fetchCount())
@@ -1104,7 +1092,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @ExcludeIn({DERBY, FIREBIRD, SQLITE, SQLSERVER, TERADATA})
   public void notIn_long_list() {
     List<Integer> ids = new ArrayList<>();
-    for (int i = 0; i < 20000; i++) {
+    for (var i = 0; i < 20000; i++) {
       ids.add(i);
     }
     assertThat(query().from(employee).where(employee.id.notIn(ids)).fetchCount()).isEqualTo(0);
@@ -1125,8 +1113,8 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({MYSQL, TERADATA})
   public void in_subqueries() {
-    QEmployee e1 = new QEmployee("e1");
-    QEmployee e2 = new QEmployee("e2");
+    var e1 = new QEmployee("e1");
+    var e2 = new QEmployee("e2");
     assertThat(
             query()
                 .from(employee)
@@ -1140,7 +1128,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void notIn_empty() {
-    long count = query().from(employee).fetchCount();
+    var count = query().from(employee).fetchCount();
     assertThat(
             query().from(employee).where(employee.id.notIn(Collections.emptyList())).fetchCount())
         .isEqualTo(count);
@@ -1370,7 +1358,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void listResults() {
-    QueryResults<Integer> results =
+    var results =
         query()
             .from(employee)
             .limit(10)
@@ -1383,7 +1371,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void listResults2() {
-    QueryResults<Integer> results =
+    var results =
         query()
             .from(employee)
             .limit(2)
@@ -1396,7 +1384,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void listResults_factoryExpression() {
-    QueryResults<Employee> results =
+    var results =
         query()
             .from(employee)
             .limit(10)
@@ -1456,7 +1444,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @SuppressWarnings("serial")
   public void mappingProjection() {
-    List<Pair<String, String>> pairs =
+    var pairs =
         query()
             .from(employee)
             .select(
@@ -1488,7 +1476,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   private void math(Expression<Double> expr) {
-    double precision = 0.001;
+    var precision = 0.001;
     assertThat(firstResult(MathExpressions.acos(expr)))
         .isCloseTo(Math.acos(0.5), within(precision));
     assertThat(firstResult(MathExpressions.asin(expr)))
@@ -1532,7 +1520,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     NumberTemplate<Double> four = Expressions.numberTemplate(Double.class, "4.0");
     NumberTemplate<Double> five = Expressions.numberTemplate(Double.class, "5.0");
     NumberTemplate<Double> six = Expressions.numberTemplate(Double.class, "6.0");
-    Double num =
+    var num =
         query()
             .select(one.add(two.multiply(three)).subtract(four.divide(five)).add(six.mod(three)))
             .fetchFirst();
@@ -1541,8 +1529,8 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void nested_tuple_projection() {
-    Concatenation concat = new Concatenation(employee.firstname, employee.lastname);
-    List<Tuple> tuples =
+    var concat = new Concatenation(employee.firstname, employee.lastname);
+    var tuples =
         query().from(employee).select(employee.firstname, employee.lastname, concat).fetch();
     assertThat(tuples).isNotEmpty();
     for (Tuple tuple : tuples) {
@@ -1595,7 +1583,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({DERBY, FIREBIRD, POSTGRESQL})
   public void number_as_boolean() {
-    QNumberTest numberTest = QNumberTest.numberTest;
+    var numberTest = QNumberTest.numberTest;
     delete(numberTest).execute();
     insert(numberTest).set(numberTest.col1Boolean, true).execute();
     insert(numberTest).set(numberTest.col1Number, (byte) 1).execute();
@@ -1605,7 +1593,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void number_as_boolean_Null() {
-    QNumberTest numberTest = QNumberTest.numberTest;
+    var numberTest = QNumberTest.numberTest;
     delete(numberTest).execute();
     insert(numberTest).setNull(numberTest.col1Boolean).execute();
     insert(numberTest).setNull(numberTest.col1Number).execute();
@@ -1667,7 +1655,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void params() {
-    Param<String> name = new Param<String>(String.class, "name");
+    var name = new Param<String>(String.class, "name");
     assertThat(
             query()
                 .from(employee)
@@ -1680,7 +1668,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void params_anon() {
-    Param<String> name = new Param<String>(String.class);
+    var name = new Param<String>(String.class);
     assertThat(
             query()
                 .from(employee)
@@ -1693,7 +1681,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test(expected = ParamNotSetException.class)
   public void params_not_set() {
-    Param<String> name = new Param<String>(String.class, "name");
+    var name = new Param<String>(String.class, "name");
     assertThat(
             query()
                 .from(employee)
@@ -1714,7 +1702,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         group by e.LASTNAME having salarySum > ?\
         """;
 
-    NumberExpression<BigDecimal> salarySum = employee.salary.sumBigDecimal().as("salarySum");
+    var salarySum = employee.salary.sumBigDecimal().as("salarySum");
     query()
         .from(employee)
         .groupBy(employee.lastname)
@@ -1737,23 +1725,23 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void precedence() {
-    StringPath fn = employee.firstname;
-    StringPath ln = employee.lastname;
+    var fn = employee.firstname;
+    var ln = employee.lastname;
     Predicate where = fn.eq("Mike").and(ln.eq("Smith")).or(fn.eq("Joe").and(ln.eq("Divis")));
     assertThat(query().from(employee).where(where).fetchCount()).isEqualTo(2L);
   }
 
   @Test
   public void precedence2() {
-    StringPath fn = employee.firstname;
-    StringPath ln = employee.lastname;
+    var fn = employee.firstname;
+    var ln = employee.lastname;
     Predicate where = fn.eq("Mike").and(ln.eq("Smith").or(fn.eq("Joe")).and(ln.eq("Divis")));
     assertThat(query().from(employee).where(where).fetchCount()).isEqualTo(0L);
   }
 
   @Test
   public void projection() throws IOException {
-    CloseableIterator<Tuple> results = query().from(survey).select(survey.all()).iterate();
+    var results = query().from(survey).select(survey.all()).iterate();
     assertThat(results).hasNext();
     while (results.hasNext()) {
       assertThat(results.next().size()).isEqualTo(3);
@@ -1778,8 +1766,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void projection2() throws IOException {
-    CloseableIterator<Tuple> results =
-        query().from(survey).select(survey.id, survey.name).iterate();
+    var results = query().from(survey).select(survey.id, survey.name).iterate();
     assertThat(results).hasNext();
     while (results.hasNext()) {
       assertThat(results.next().size()).isEqualTo(2);
@@ -1789,7 +1776,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void projection3() throws IOException {
-    CloseableIterator<String> names = query().from(survey).select(survey.name).iterate();
+    var names = query().from(survey).select(survey.name).iterate();
     assertThat(names).hasNext();
     while (names.hasNext()) {
       System.out.println(names.next());
@@ -1799,8 +1786,8 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void qBeanUsage() {
-    PathBuilder<Object[]> sq = new PathBuilder<Object[]>(Object[].class, "sq");
-    List<Survey> surveys =
+    var sq = new PathBuilder<Object[]>(Object[].class, "sq");
+    var surveys =
         query()
             .from(query().from(survey).select(survey.all()).as("sq"))
             .select(
@@ -1851,7 +1838,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void relationalPath_projection() {
-    List<Tuple> results =
+    var results =
         query()
             .from(employee, employee2)
             .where(employee.id.eq(employee2.id))
@@ -2002,7 +1989,7 @@ public abstract class SelectBase extends AbstractBaseTest {
                   .fetch())
           .hasSize(1);
     } else {
-      QueryException e =
+      var e =
           assertThrows(
               QueryException.class,
               () ->
@@ -2029,7 +2016,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void serialization2() throws Exception {
-    List<Tuple> rows = query().from(survey).select(survey.id, survey.name).fetch();
+    var rows = query().from(survey).select(survey.id, survey.name).fetch();
     serialize(rows);
   }
 
@@ -2090,7 +2077,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     standardTest.runNumericTests(employee.salary, employee2.salary, new BigDecimal("30000.00"));
 
     standardTest.runStringTests(employee.firstname, employee2.firstname, "Jennifer");
-    Target target = Connections.getTarget();
+    var target = Connections.getTarget();
     if (target != SQLITE) {
       standardTest.runTimeTests(employee.timefield, employee2.timefield, time);
     }
@@ -2101,7 +2088,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @IncludeIn(H2)
   public void standardTest_turkish() {
-    Locale defaultLocale = Locale.getDefault();
+    var defaultLocale = Locale.getDefault();
     Locale.setDefault(Locale.of("tr", "TR"));
     try {
       standardTest();
@@ -2262,25 +2249,24 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void transform_groupBy() {
-    QEmployee employee = new QEmployee("employee");
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee = new QEmployee("employee");
+    var employee2 = new QEmployee("employee2");
     Map<Integer, Map<Integer, Employee>> results =
         query()
             .from(employee, employee2)
             .transform(GroupBy.groupBy(employee.id).as(GroupBy.map(employee2.id, employee2)));
 
-    int count = (int) query().from(employee).fetchCount();
+    var count = (int) query().from(employee).fetchCount();
     assertThat(results).hasSize(count);
     for (Map.Entry<Integer, Map<Integer, Employee>> entry : results.entrySet()) {
-      Map<Integer, Employee> employees = entry.getValue();
+      var employees = entry.getValue();
       assertThat(employees).hasSize(count);
     }
   }
 
   @Test
   public void tuple_projection() {
-    List<Tuple> tuples =
-        query().from(employee).select(employee.firstname, employee.lastname).fetch();
+    var tuples = query().from(employee).select(employee.firstname, employee.lastname).fetch();
     assertThat(tuples).isNotEmpty();
     for (Tuple tuple : tuples) {
       assertThat(tuple.get(employee.firstname)).isNotNull();
@@ -2326,7 +2312,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void unique_Constructor_projection() {
-    IdName idAndName =
+    var idAndName =
         query().from(survey).limit(1).select(new QIdName(survey.id, survey.name)).fetchFirst();
     assertThat(idAndName).isNotNull();
     assertThat(idAndName.getId()).isNotNull();
@@ -2335,14 +2321,14 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void unique_single() {
-    String s = query().from(survey).limit(1).select(survey.name).fetchFirst();
+    var s = query().from(survey).limit(1).select(survey.name).fetchFirst();
     assertThat(s).isNotNull();
   }
 
   @Test
   public void unique_wildcard() {
     // unique wildcard
-    Tuple row = query().from(survey).limit(1).select(survey.all()).fetchFirst();
+    var row = query().from(survey).limit(1).select(survey.all()).fetchFirst();
     assertThat(row).isNotNull();
     assertThat(row.size()).isEqualTo(3);
     assertThat(row.get(0, Object.class)).isNotNull();
@@ -2396,7 +2382,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @IncludeIn({HSQLDB, ORACLE, POSTGRESQL})
   public void with2() {
-    QEmployee employee3 = new QEmployee("e3");
+    var employee3 = new QEmployee("e3");
     assertThat(
             query()
                 .with(
@@ -2506,8 +2492,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void wildcard_all2() {
     assertThat(
             query()
-                .from(
-                    new RelationalPathBase<Object>(Object.class, "employee", "public", "EMPLOYEE"))
+                .from(new RelationalPathBase<>(Object.class, "employee", "public", "EMPLOYEE"))
                 .select(Wildcard.all)
                 .fetch())
         .hasSize(10);
@@ -2525,8 +2510,8 @@ public abstract class SelectBase extends AbstractBaseTest {
   @Test
   @IncludeIn(ORACLE)
   public void withinGroup() {
-    List<WithinGroup<?>> exprs = new ArrayList<WithinGroup<?>>();
-    NumberPath<Integer> path = survey.id;
+    List<WithinGroup<?>> exprs = new ArrayList<>();
+    var path = survey.id;
 
     // two args
     add(exprs, SQLExpressions.cumeDist(2, 3));
@@ -2574,11 +2559,11 @@ public abstract class SelectBase extends AbstractBaseTest {
   public void statementOptions() {
 
     // Set a query factory with a predefined StatementOptions
-    StatementOptions options1 = StatementOptions.builder().setFetchSize(24).setMaxRows(500).build();
-    Connection connection = Connections.getConnection();
-    Configuration configuration = Connections.getConfiguration();
+    var options1 = StatementOptions.builder().setFetchSize(24).setMaxRows(500).build();
+    var connection = Connections.getConnection();
+    var configuration = Connections.getConfiguration();
     configuration = new Configuration(configuration.getTemplates(), options1);
-    SQLQueryFactory sqlQueryFactory = new SQLQueryFactory(configuration, () -> connection);
+    var sqlQueryFactory = new SQLQueryFactory(configuration, () -> connection);
 
     // Check that a query created with the query factory gets the predefined StatementOptions passed
     // to the factory when it was created
@@ -2598,7 +2583,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     query.select(employee.id).fetch();
 
     // Check that we can override the statement options on a per-query basis
-    StatementOptions options2 = StatementOptions.builder().setFetchSize(15).setMaxRows(150).build();
+    var options2 = StatementOptions.builder().setFetchSize(15).setMaxRows(150).build();
     query = sqlQueryFactory.from(employee).orderBy(employee.id.asc()).statementOptions(options2);
 
     query.addListener(
@@ -2618,8 +2603,8 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   public void getResults() throws SQLException, InterruptedException {
-    final AtomicLong endCalled = new AtomicLong(0);
-    SQLQuery<Integer> query = query().select(employee.id).from(employee);
+    final var endCalled = new AtomicLong(0);
+    var query = query().select(employee.id).from(employee);
     query.addListener(
         new SQLBaseListener() {
           @Override
@@ -2627,8 +2612,8 @@ public abstract class SelectBase extends AbstractBaseTest {
             endCalled.set(System.currentTimeMillis());
           }
         });
-    ResultSet results = query.getResults(employee.id);
-    long getResultsCalled = System.currentTimeMillis();
+    var results = query.getResults(employee.id);
+    var getResultsCalled = System.currentTimeMillis();
     Thread.sleep(100);
     results.close();
     assertThat(endCalled.get() - getResultsCalled >= 100).isTrue();

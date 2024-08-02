@@ -42,7 +42,7 @@ public final class DefaultR2DBCExceptionTranslator implements R2DBCExceptionTran
 
   @Override
   public RuntimeException translate(String sql, List<Object> bindings, Throwable e) {
-    String message = "Caught " + e.getClass().getSimpleName() + " for " + sql;
+    var message = "Caught " + e.getClass().getSimpleName() + " for " + sql;
     if (containsAdditionalExceptions(e)) {
       return WRAPPER.wrap(message, e);
     } else {
@@ -55,7 +55,7 @@ public final class DefaultR2DBCExceptionTranslator implements R2DBCExceptionTran
       return false;
     }
 
-    SQLException sqlException = (SQLException) e;
+    var sqlException = (SQLException) e;
     return sqlException.getNextException() != null;
   }
 

@@ -23,7 +23,6 @@ import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
-import jakarta.persistence.Query;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -54,10 +53,10 @@ public class JPADeleteClause implements DeleteClause<JPADeleteClause> {
 
   @Override
   public long execute() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, entityManager);
+    var serializer = new JPQLSerializer(templates, entityManager);
     serializer.serializeForDelete(queryMixin.getMetadata());
 
-    Query query = entityManager.createQuery(serializer.toString());
+    var query = entityManager.createQuery(serializer.toString());
     if (lockMode != null) {
       query.setLockMode(lockMode);
     }
@@ -80,7 +79,7 @@ public class JPADeleteClause implements DeleteClause<JPADeleteClause> {
 
   @Override
   public String toString() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, entityManager);
+    var serializer = new JPQLSerializer(templates, entityManager);
     serializer.serializeForDelete(queryMixin.getMetadata());
     return serializer.toString();
   }

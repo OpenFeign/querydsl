@@ -15,7 +15,14 @@ package com.querydsl.apt.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +38,7 @@ public class PropertiesTest {
   public static class Customer extends AbstractEntity {
 
     private String name;
-    private List<Pizza> pizzas = new ArrayList<Pizza>(0);
+    private List<Pizza> pizzas = new ArrayList<>(0);
 
     @Column
     public String getName() {
@@ -58,7 +65,7 @@ public class PropertiesTest {
 
     private Date orderTime;
     private Customer customer;
-    private List<Topping> toppings = new ArrayList<Topping>(0);
+    private List<Topping> toppings = new ArrayList<>(0);
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)

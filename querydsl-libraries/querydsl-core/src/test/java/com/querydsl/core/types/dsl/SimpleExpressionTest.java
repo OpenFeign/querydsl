@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
-import java.lang.reflect.Method;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,10 +61,10 @@ public class SimpleExpressionTest {
             TimeExpression.class);
 
     for (Class<?> cl : classes) {
-      Method asPath = cl.getDeclaredMethod("as", Path.class);
+      var asPath = cl.getDeclaredMethod("as", Path.class);
       assertThat(asPath.getReturnType()).isEqualTo(cl);
 
-      Method asString = cl.getDeclaredMethod("as", String.class);
+      var asString = cl.getDeclaredMethod("as", String.class);
       assertThat(asString.getReturnType()).isEqualTo(cl);
     }
   }
@@ -73,7 +72,7 @@ public class SimpleExpressionTest {
   @SuppressWarnings("unchecked")
   @Test
   public void various() {
-    List<DslExpression<?>> paths = new ArrayList<DslExpression<?>>();
+    List<DslExpression<?>> paths = new ArrayList<>();
     paths.add(new ArrayPath(String[].class, "p"));
     paths.add(new BeanPath(Object.class, "p"));
     paths.add(new BooleanPath("p"));
@@ -102,6 +101,6 @@ public class SimpleExpressionTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void eq_null() {
-    new SimplePath<Object>(Object.class, "path").eq((Object) null);
+    new SimplePath<>(Object.class, "path").eq((Object) null);
   }
 }

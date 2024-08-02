@@ -29,13 +29,13 @@ import java.util.ServiceLoader;
  */
 public abstract class AbstractModule {
 
-  private final Map<Class<?>, Object> instances = new HashMap<Class<?>, Object>();
+  private final Map<Class<?>, Object> instances = new HashMap<>();
 
-  private final Map<Class<?>, Class<?>> bindings = new HashMap<Class<?>, Class<?>>();
+  private final Map<Class<?>, Class<?>> bindings = new HashMap<>();
 
-  private final Map<String, Object> namedInstances = new HashMap<String, Object>();
+  private final Map<String, Object> namedInstances = new HashMap<>();
 
-  private final Map<String, Class<?>> namedBindings = new HashMap<String, Class<?>>();
+  private final Map<String, Class<?>> namedBindings = new HashMap<>();
 
   public AbstractModule() {
     configure();
@@ -91,7 +91,7 @@ public abstract class AbstractModule {
       return (T) instances.get(iface);
     } else if (bindings.containsKey(iface)) {
       Class<?> implementation = bindings.get(iface);
-      T instance = (T) createInstance(implementation);
+      var instance = (T) createInstance(implementation);
       instances.put(iface, instance);
       return instance;
     } else {
@@ -106,7 +106,7 @@ public abstract class AbstractModule {
     } else if (namedBindings.containsKey(name)) {
       Class<?> implementation = namedBindings.get(name);
       if (implementation != null) {
-        T instance = (T) createInstance(implementation);
+        var instance = (T) createInstance(implementation);
         namedInstances.put(name, instance);
         return instance;
       } else {
@@ -137,9 +137,9 @@ public abstract class AbstractModule {
     }
 
     if (constructor != null) {
-      Object[] args = new Object[constructor.getParameterTypes().length];
-      for (int i = 0; i < constructor.getParameterTypes().length; i++) {
-        Named named = getNamedAnnotation(constructor.getParameterAnnotations()[i]);
+      var args = new Object[constructor.getParameterTypes().length];
+      for (var i = 0; i < constructor.getParameterTypes().length; i++) {
+        var named = getNamedAnnotation(constructor.getParameterAnnotations()[i]);
         if (named != null) {
           args[i] = get(constructor.getParameterTypes()[i], named.value());
         } else {

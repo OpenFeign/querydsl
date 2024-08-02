@@ -13,9 +13,9 @@ public class ParameterTest {
 
   @Test
   public void test() {
-    Parameter param1 = new Parameter("test", new ClassType(TypeCategory.STRING, String.class));
-    Parameter param2 = new Parameter("test2", new ClassType(TypeCategory.STRING, String.class));
-    Parameter param3 = new Parameter("test2", new ClassType(TypeCategory.NUMERIC, Integer.class));
+    var param1 = new Parameter("test", new ClassType(TypeCategory.STRING, String.class));
+    var param2 = new Parameter("test2", new ClassType(TypeCategory.STRING, String.class));
+    var param3 = new Parameter("test2", new ClassType(TypeCategory.NUMERIC, Integer.class));
 
     assertThat(param1.equals(param2)).isFalse();
     assertThat(param1.equals(param3)).isFalse();

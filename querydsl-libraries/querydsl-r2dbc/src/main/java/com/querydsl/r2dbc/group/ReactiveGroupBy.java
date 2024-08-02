@@ -15,10 +15,26 @@ package com.querydsl.r2dbc.group;
 
 import com.mysema.commons.lang.Pair;
 import com.querydsl.core.ResultTransformer;
-import com.querydsl.core.group.*;
+import com.querydsl.core.group.AbstractGroupExpression;
+import com.querydsl.core.group.GAvg;
+import com.querydsl.core.group.GList;
+import com.querydsl.core.group.GMap;
+import com.querydsl.core.group.GMax;
+import com.querydsl.core.group.GMin;
+import com.querydsl.core.group.GOne;
+import com.querydsl.core.group.GSet;
+import com.querydsl.core.group.GSum;
+import com.querydsl.core.group.GroupExpression;
+import com.querydsl.core.group.MixinGroupExpression;
+import com.querydsl.core.group.QPair;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 /**
  * {@code GroupBy} provides factory methods for {@link ResultTransformer} and {@link
@@ -45,7 +61,7 @@ public final class ReactiveGroupBy {
    * @return builder for further specification
    */
   public static <K> ReactiveGroupByBuilder<K> groupBy(Expression<K> key) {
-    return new ReactiveGroupByBuilder<K>(key);
+    return new ReactiveGroupByBuilder<>(key);
   }
 
   /**
@@ -55,7 +71,7 @@ public final class ReactiveGroupBy {
    * @return builder for further specification
    */
   public static ReactiveGroupByBuilder<List<?>> groupBy(Expression<?>... keys) {
-    return new ReactiveGroupByBuilder<List<?>>(Projections.list(keys));
+    return new ReactiveGroupByBuilder<>(Projections.list(keys));
   }
 
   /**
@@ -68,7 +84,7 @@ public final class ReactiveGroupBy {
    */
   public static <E extends Comparable<? super E>> AbstractGroupExpression<E, E> min(
       Expression<E> expression) {
-    return new GMin<E>(expression);
+    return new GMin<>(expression);
   }
 
   /**
@@ -80,7 +96,7 @@ public final class ReactiveGroupBy {
    * @return wrapper expression
    */
   public static <E extends Number> AbstractGroupExpression<E, E> sum(Expression<E> expression) {
-    return new GSum<E>(expression);
+    return new GSum<>(expression);
   }
 
   /**
@@ -92,7 +108,7 @@ public final class ReactiveGroupBy {
    * @return wrapper expression
    */
   public static <E extends Number> AbstractGroupExpression<E, E> avg(Expression<E> expression) {
-    return new GAvg<E>(expression);
+    return new GAvg<>(expression);
   }
 
   /**
@@ -105,7 +121,7 @@ public final class ReactiveGroupBy {
    */
   public static <E extends Comparable<? super E>> AbstractGroupExpression<E, E> max(
       Expression<E> expression) {
-    return new GMax<E>(expression);
+    return new GMax<>(expression);
   }
 
   /**
@@ -116,7 +132,7 @@ public final class ReactiveGroupBy {
    * @return wrapper expression
    */
   public static <E> AbstractGroupExpression<E, List<E>> list(Expression<E> expression) {
-    return new GList<E>(expression);
+    return new GList<>(expression);
   }
 
   /**
@@ -129,7 +145,7 @@ public final class ReactiveGroupBy {
    */
   public static <E, F> AbstractGroupExpression<E, List<F>> list(
       GroupExpression<E, F> groupExpression) {
-    return new MixinGroupExpression<E, F, List<F>>(groupExpression, new GList<F>(groupExpression));
+    return new MixinGroupExpression<>(groupExpression, new GList<>(groupExpression));
   }
 
   /**
@@ -151,8 +167,7 @@ public final class ReactiveGroupBy {
    * @return wrapper expression
    */
   public static <E, F> GroupExpression<E, Set<F>> set(GroupExpression<E, F> groupExpression) {
-    return new MixinGroupExpression<E, F, Set<F>>(
-        groupExpression, GSet.createLinked(groupExpression));
+    return new MixinGroupExpression<>(groupExpression, GSet.createLinked(groupExpression));
   }
 
   /**
@@ -177,8 +192,7 @@ public final class ReactiveGroupBy {
    */
   public static <E, F extends Comparable<? super F>> GroupExpression<E, SortedSet<F>> sortedSet(
       GroupExpression<E, F> groupExpression) {
-    return new MixinGroupExpression<E, F, SortedSet<F>>(
-        groupExpression, GSet.createSorted(groupExpression));
+    return new MixinGroupExpression<>(groupExpression, GSet.createSorted(groupExpression));
   }
 
   /**
@@ -202,7 +216,7 @@ public final class ReactiveGroupBy {
    */
   public static <E, F> GroupExpression<E, SortedSet<F>> sortedSet(
       GroupExpression<E, F> groupExpression, Comparator<? super F> comparator) {
-    return new MixinGroupExpression<E, F, SortedSet<F>>(
+    return new MixinGroupExpression<>(
         groupExpression, GSet.createSorted(groupExpression, comparator));
   }
 
@@ -227,7 +241,7 @@ public final class ReactiveGroupBy {
    */
   public static <K, V, T> AbstractGroupExpression<Pair<K, V>, Map<T, V>> map(
       GroupExpression<K, T> key, Expression<V> value) {
-    return map(key, new GOne<V>(value));
+    return map(key, new GOne<>(value));
   }
 
   /**
@@ -239,7 +253,7 @@ public final class ReactiveGroupBy {
    */
   public static <K, V, U> AbstractGroupExpression<Pair<K, V>, Map<K, U>> map(
       Expression<K> key, GroupExpression<V, U> value) {
-    return map(new GOne<K>(key), value);
+    return map(new GOne<>(key), value);
   }
 
   /**
@@ -251,8 +265,7 @@ public final class ReactiveGroupBy {
    */
   public static <K, V, T, U> AbstractGroupExpression<Pair<K, V>, Map<T, U>> map(
       GroupExpression<K, T> key, GroupExpression<V, U> value) {
-    return new GMap.Mixin<K, V, T, U, Map<T, U>>(
-        key, value, GMap.createLinked(QPair.create(key, value)));
+    return new GMap.Mixin<>(key, value, GMap.createLinked(QPair.create(key, value)));
   }
 
   /**
@@ -278,7 +291,7 @@ public final class ReactiveGroupBy {
   public static <K, V, T extends Comparable<? super T>>
       AbstractGroupExpression<Pair<K, V>, SortedMap<T, V>> sortedMap(
           GroupExpression<K, T> key, Expression<V> value) {
-    return sortedMap(key, new GOne<V>(value));
+    return sortedMap(key, new GOne<>(value));
   }
 
   /**
@@ -291,7 +304,7 @@ public final class ReactiveGroupBy {
   public static <K extends Comparable<? super K>, V, U>
       AbstractGroupExpression<Pair<K, V>, SortedMap<K, U>> sortedMap(
           Expression<K> key, GroupExpression<V, U> value) {
-    return sortedMap(new GOne<K>(key), value);
+    return sortedMap(new GOne<>(key), value);
   }
 
   /**
@@ -304,8 +317,7 @@ public final class ReactiveGroupBy {
   public static <K, V, T extends Comparable<? super T>, U>
       AbstractGroupExpression<Pair<K, V>, SortedMap<T, U>> sortedMap(
           GroupExpression<K, T> key, GroupExpression<V, U> value) {
-    return new GMap.Mixin<K, V, T, U, SortedMap<T, U>>(
-        key, value, GMap.createSorted(QPair.create(key, value)));
+    return new GMap.Mixin<>(key, value, GMap.createSorted(QPair.create(key, value)));
   }
 
   /**
@@ -331,7 +343,7 @@ public final class ReactiveGroupBy {
    */
   public static <K, V, T> AbstractGroupExpression<Pair<K, V>, SortedMap<T, V>> sortedMap(
       GroupExpression<K, T> key, Expression<V> value, Comparator<? super T> comparator) {
-    return sortedMap(key, new GOne<V>(value), comparator);
+    return sortedMap(key, new GOne<>(value), comparator);
   }
 
   /**
@@ -344,7 +356,7 @@ public final class ReactiveGroupBy {
    */
   public static <K, V, U> AbstractGroupExpression<Pair<K, V>, SortedMap<K, U>> sortedMap(
       Expression<K> key, GroupExpression<V, U> value, Comparator<? super K> comparator) {
-    return sortedMap(new GOne<K>(key), value, comparator);
+    return sortedMap(new GOne<>(key), value, comparator);
   }
 
   /**
@@ -357,8 +369,7 @@ public final class ReactiveGroupBy {
    */
   public static <K, V, T, U> AbstractGroupExpression<Pair<K, V>, SortedMap<T, U>> sortedMap(
       GroupExpression<K, T> key, GroupExpression<V, U> value, Comparator<? super T> comparator) {
-    return new GMap.Mixin<K, V, T, U, SortedMap<T, U>>(
-        key, value, GMap.createSorted(QPair.create(key, value), comparator));
+    return new GMap.Mixin<>(key, value, GMap.createSorted(QPair.create(key, value), comparator));
   }
 
   private ReactiveGroupBy() {}

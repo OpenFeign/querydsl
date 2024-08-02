@@ -43,7 +43,7 @@ public class HibernateDeleteClause implements DeleteClause<HibernateDeleteClause
 
   private final JPQLTemplates templates;
 
-  private final Map<Path<?>, LockMode> lockModes = new HashMap<Path<?>, LockMode>();
+  private final Map<Path<?>, LockMode> lockModes = new HashMap<>();
 
   public HibernateDeleteClause(Session session, EntityPath<?> entity) {
     this(new DefaultSessionHolder(session), entity, HQLTemplates.DEFAULT);
@@ -66,7 +66,7 @@ public class HibernateDeleteClause implements DeleteClause<HibernateDeleteClause
 
   @Override
   public long execute() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, null);
+    var serializer = new JPQLSerializer(templates, null);
     serializer.serializeForDelete(queryMixin.getMetadata());
 
     Query query = session.createQuery(serializer.toString());
@@ -95,7 +95,7 @@ public class HibernateDeleteClause implements DeleteClause<HibernateDeleteClause
 
   @Override
   public String toString() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, null);
+    var serializer = new JPQLSerializer(templates, null);
     serializer.serializeForDelete(queryMixin.getMetadata());
     return serializer.toString();
   }

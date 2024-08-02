@@ -40,7 +40,7 @@ public class IntegerType extends AbstractType<Integer> {
 
   @Override
   public Integer getValue(ResultSet rs, int startIndex) throws SQLException {
-    int val = rs.getInt(startIndex);
+    var val = rs.getInt(startIndex);
     return rs.wasNull() ? null : val;
   }
 

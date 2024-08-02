@@ -59,8 +59,7 @@ public class R2DBCPostgreQuery<T> extends AbstractR2DBCPostgreQuery<T, R2DBCPost
 
   @Override
   public R2DBCPostgreQuery<T> clone(Connection conn) {
-    R2DBCPostgreQuery<T> q =
-        new R2DBCPostgreQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    var q = new R2DBCPostgreQuery<T>(conn, getConfiguration(), getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -69,7 +68,7 @@ public class R2DBCPostgreQuery<T> extends AbstractR2DBCPostgreQuery<T, R2DBCPost
   public <U> R2DBCPostgreQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    R2DBCPostgreQuery<U> newType = (R2DBCPostgreQuery<U>) this;
+    var newType = (R2DBCPostgreQuery<U>) this;
     return newType;
   }
 
@@ -77,7 +76,7 @@ public class R2DBCPostgreQuery<T> extends AbstractR2DBCPostgreQuery<T, R2DBCPost
   public R2DBCPostgreQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    R2DBCPostgreQuery<Tuple> newType = (R2DBCPostgreQuery<Tuple>) this;
+    var newType = (R2DBCPostgreQuery<Tuple>) this;
     return newType;
   }
 }

@@ -36,10 +36,10 @@ public final class Constants {
   public static final QSurvey survey2 = new QSurvey("s2");
 
   static {
-    LocalDate localDate = LocalDate.of(2000, 2, 10);
+    var localDate = LocalDate.of(2000, 2, 10);
     date = new java.sql.Date(localDate.atStartOfDay(ZoneId.of("Z")).toInstant().toEpochMilli());
 
-    Calendar cal = Calendar.getInstance();
+    var cal = Calendar.getInstance();
     cal.set(1970, 0, 1, 3, 4);
     cal.set(Calendar.SECOND, 30);
     cal.set(Calendar.MILLISECOND, 0);

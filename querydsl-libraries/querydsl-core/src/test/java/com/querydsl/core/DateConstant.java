@@ -29,7 +29,7 @@ public final class DateConstant<D extends java.util.Date> extends DateExpression
   private static final long serialVersionUID = -5745611667058255826L;
 
   public static <D extends java.util.Date> DateExpression<D> create(D date) {
-    return new DateConstant<D>(date);
+    return new DateConstant<>(date);
   }
 
   private final D date;

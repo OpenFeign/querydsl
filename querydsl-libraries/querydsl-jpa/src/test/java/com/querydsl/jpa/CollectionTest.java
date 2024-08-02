@@ -13,7 +13,8 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.jpa.Constants.*;
+import static com.querydsl.jpa.Constants.cat;
+import static com.querydsl.jpa.Constants.cat1;
 
 import com.querydsl.jpa.domain.Cat;
 import org.junit.Test;

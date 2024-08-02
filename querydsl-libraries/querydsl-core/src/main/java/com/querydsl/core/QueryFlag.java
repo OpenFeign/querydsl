@@ -104,7 +104,7 @@ public class QueryFlag implements Serializable {
     if (obj == this) {
       return true;
     } else if (obj instanceof QueryFlag) {
-      QueryFlag other = (QueryFlag) obj;
+      var other = (QueryFlag) obj;
       return other.position.equals(position) && other.flag.equals(flag);
     } else {
       return false;

@@ -43,14 +43,14 @@ class JPASubQuery<T> extends JPAQueryBase<T, JPASubQuery<T>> implements JPQLSubQ
 
   @Override
   public JPASubQuery<T> clone() {
-    return new JPASubQuery<T>(getMetadata().clone());
+    return new JPASubQuery<>(getMetadata().clone());
   }
 
   @Override
   public <U> JPASubQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    JPASubQuery<U> newType = (JPASubQuery<U>) this;
+    var newType = (JPASubQuery<U>) this;
     return newType;
   }
 
@@ -58,7 +58,7 @@ class JPASubQuery<T> extends JPAQueryBase<T, JPASubQuery<T>> implements JPQLSubQ
   public JPASubQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    JPASubQuery<Tuple> newType = (JPASubQuery<Tuple>) this;
+    var newType = (JPASubQuery<Tuple>) this;
     return newType;
   }
 

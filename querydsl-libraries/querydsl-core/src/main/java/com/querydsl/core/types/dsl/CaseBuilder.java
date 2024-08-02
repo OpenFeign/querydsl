@@ -13,7 +13,11 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.NullExpression;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Predicate;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -64,7 +68,7 @@ public final class CaseBuilder {
    */
   public abstract static class Cases<A, Q extends Expression<A>> {
 
-    private final List<CaseElement<A>> cases = new ArrayList<CaseElement<A>>();
+    private final List<CaseElement<A>> cases = new ArrayList<>();
 
     private final Class<? extends A> type;
 
@@ -73,7 +77,7 @@ public final class CaseBuilder {
     }
 
     Cases<A, Q> addCase(Predicate condition, Expression<A> expr) {
-      cases.add(0, new CaseElement<A>(condition, expr));
+      cases.add(0, new CaseElement<>(condition, expr));
       return this;
     }
 
@@ -93,7 +97,7 @@ public final class CaseBuilder {
       if (expr == null) {
         expr = (Expression) NullExpression.DEFAULT;
       }
-      cases.add(0, new CaseElement<A>(null, expr));
+      cases.add(0, new CaseElement<>(null, expr));
       Expression<A> last = null;
       for (CaseElement<A> element : cases) {
         if (last == null) {
@@ -108,7 +112,7 @@ public final class CaseBuilder {
     }
 
     public CaseWhen<A, Q> when(Predicate b) {
-      return new CaseWhen<A, Q>(this, b);
+      return new CaseWhen<>(this, b);
     }
   }
 

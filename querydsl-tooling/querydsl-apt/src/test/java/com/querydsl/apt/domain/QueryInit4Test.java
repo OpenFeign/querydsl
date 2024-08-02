@@ -61,7 +61,7 @@ public class QueryInit4Test {
 
   @Test
   public void test() {
-    QQueryInit4Test_Tenant tenant = QQueryInit4Test_Tenant.tenant;
+    var tenant = QQueryInit4Test_Tenant.tenant;
     assertThat(tenant.userTenantApplications.any().user.id).isNotNull();
     assertThat(tenant.userTenantApplications.any().tenant.id).isNotNull();
     assertThat(tenant.userTenantApplications.any().user.primaryTenant.id).isNotNull();

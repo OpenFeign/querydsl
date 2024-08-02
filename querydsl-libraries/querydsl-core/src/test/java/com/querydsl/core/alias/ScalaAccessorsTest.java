@@ -22,7 +22,7 @@ public class ScalaAccessorsTest {
 
   @Test
   public void scalaAccessors() {
-    ScalaAccessors scalaAccessors = Alias.alias(ScalaAccessors.class);
+    var scalaAccessors = Alias.alias(ScalaAccessors.class);
     assertThat($(scalaAccessors.firstName())).hasToString("scalaAccessors.firstName");
     assertThat($(scalaAccessors.lastName())).hasToString("scalaAccessors.lastName");
   }

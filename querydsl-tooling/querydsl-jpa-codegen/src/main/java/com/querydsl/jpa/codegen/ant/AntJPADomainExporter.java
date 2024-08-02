@@ -14,9 +14,7 @@
 package com.querydsl.jpa.codegen.ant;
 
 import com.querydsl.jpa.codegen.JPADomainExporter;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import jakarta.persistence.metamodel.Metamodel;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -55,7 +53,7 @@ public class AntJPADomainExporter {
 
   /** Set of additional properties to use when creating the JPA entity manager factory */
   public static class Configuration {
-    private Map<String, String> properties = new HashMap<String, String>();
+    private Map<String, String> properties = new HashMap<>();
 
     public Map<String, String> getProperties() {
       return properties;
@@ -138,13 +136,12 @@ public class AntJPADomainExporter {
     // We can assume we have the named persistence unit and its mapping file in our classpath,
     // but we may have to allow some properties in that persistence unit to be overridden before
     // we can successfully get that persistence unit's metamodel.
-    Map<String, String> properties = (configuration != null) ? configuration.getProperties() : null;
-    EntityManagerFactory emf =
-        Persistence.createEntityManagerFactory(persistenceUnitName, properties);
+    var properties = (configuration != null) ? configuration.getProperties() : null;
+    var emf = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
 
     // Now we can get the persistence unit's metamodel and export it to Querydsl query types.
-    Metamodel configuration = emf.getMetamodel();
-    JPADomainExporter exporter =
+    var configuration = emf.getMetamodel();
+    var exporter =
         new JPADomainExporter(namePrefix, nameSuffix, new File(targetFolder), configuration);
     try {
       exporter.execute();

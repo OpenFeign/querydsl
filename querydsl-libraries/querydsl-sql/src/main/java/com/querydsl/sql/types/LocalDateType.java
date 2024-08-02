@@ -1,6 +1,9 @@
 package com.querydsl.sql.types;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import org.jetbrains.annotations.Nullable;
 

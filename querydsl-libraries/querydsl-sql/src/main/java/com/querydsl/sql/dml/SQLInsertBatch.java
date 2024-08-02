@@ -35,8 +35,8 @@ public class SQLInsertBatch {
 
   public SQLInsertBatch(
       List<Path<?>> c, List<Expression<?>> v, @Nullable SubQueryExpression<?> sq) {
-    columns = new ArrayList<Path<?>>(c);
-    values = new ArrayList<Expression<?>>(v);
+    columns = new ArrayList<>(c);
+    values = new ArrayList<>(v);
     subQuery = sq;
   }
 

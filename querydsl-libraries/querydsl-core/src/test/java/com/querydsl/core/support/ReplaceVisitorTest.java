@@ -13,7 +13,8 @@ import org.junit.Test;
 public class ReplaceVisitorTest {
 
   private static final ReplaceVisitor<Void> visitor =
-      new ReplaceVisitor<Void>() {
+      new ReplaceVisitor<>() {
+        @Override
         public Expression<?> visit(Path<?> expr, @Nullable Void context) {
           if (expr.getMetadata().isRoot()) {
             return ExpressionUtils.path(expr.getType(), expr.getMetadata().getName() + "_");

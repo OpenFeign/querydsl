@@ -44,14 +44,14 @@ public class ReactiveGroupByList<K, V> extends ReactiveAbstractGroupByTransforme
   public Flux<V> transform(ReactiveFetchableQuery<?, ?> query) {
     // create groups
     FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-    boolean hasGroups = false;
+    var hasGroups = false;
     for (Expression<?> e : expr.getArgs()) {
       hasGroups |= e instanceof GroupExpression;
     }
     if (hasGroups) {
       expr = withoutGroupExpressions(expr);
     }
-    final Flux<Tuple> result = query.select(expr).fetch();
+    final var result = query.select(expr).fetch();
 
     return result
         .collectList()
@@ -62,7 +62,7 @@ public class ReactiveGroupByList<K, V> extends ReactiveAbstractGroupByTransforme
               K groupId = null;
 
               for (Tuple tuple : tuples) {
-                K[] row = (K[]) tuple.toArray();
+                var row = (K[]) tuple.toArray();
                 if (group == null) {
                   group = new GroupImpl(groupExpressions, maps);
                   groupId = row[0];

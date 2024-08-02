@@ -13,28 +13,61 @@
  */
 package com.querydsl.apt;
 
-import static com.querydsl.apt.APTOptions.*;
+import static com.querydsl.apt.APTOptions.QUERYDSL_CREATE_DEFAULT_VARIABLE;
+import static com.querydsl.apt.APTOptions.QUERYDSL_ENTITY_ACCESSORS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_EXCLUDED_CLASSES;
+import static com.querydsl.apt.APTOptions.QUERYDSL_EXCLUDED_PACKAGES;
+import static com.querydsl.apt.APTOptions.QUERYDSL_GENERATED_ANNOTATION_CLASS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_INCLUDED_CLASSES;
+import static com.querydsl.apt.APTOptions.QUERYDSL_INCLUDED_PACKAGES;
+import static com.querydsl.apt.APTOptions.QUERYDSL_LIST_ACCESSORS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_LOG_INFO;
+import static com.querydsl.apt.APTOptions.QUERYDSL_MAP_ACCESSORS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_PACKAGE_SUFFIX;
+import static com.querydsl.apt.APTOptions.QUERYDSL_PREFIX;
+import static com.querydsl.apt.APTOptions.QUERYDSL_SUFFIX;
+import static com.querydsl.apt.APTOptions.QUERYDSL_UNKNOWN_AS_EMBEDDABLE;
+import static com.querydsl.apt.APTOptions.QUERYDSL_USE_FIELDS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_USE_GETTERS;
+import static com.querydsl.apt.APTOptions.QUERYDSL_VARIABLE_NAME_FUNCTION_CLASS;
 
-import com.querydsl.codegen.*;
+import com.querydsl.codegen.Delegate;
+import com.querydsl.codegen.EntityType;
+import com.querydsl.codegen.Property;
+import com.querydsl.codegen.QueryTypeFactory;
+import com.querydsl.codegen.Serializer;
+import com.querydsl.codegen.Supertype;
+import com.querydsl.codegen.TypeMappings;
 import com.querydsl.codegen.utils.JavaWriter;
-import com.querydsl.codegen.utils.model.Parameter;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.core.annotations.QueryDelegate;
 import com.querydsl.core.annotations.QueryExclude;
 import com.querydsl.core.annotations.QueryProjection;
 import java.io.IOException;
-import java.io.Writer;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic.Kind;
 
@@ -78,9 +111,9 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
 
     conf = createConfiguration(roundEnv);
     context = new Context();
-    Set<Class<? extends Annotation>> entityAnnotations = conf.getEntityAnnotations();
-    TypeMappings typeMappings = conf.getTypeMappings();
-    QueryTypeFactory queryTypeFactory = conf.getQueryTypeFactory();
+    var entityAnnotations = conf.getEntityAnnotations();
+    var typeMappings = conf.getTypeMappings();
+    var queryTypeFactory = conf.getQueryTypeFactory();
     this.typeFactory = createTypeFactory(entityAnnotations, typeMappings, queryTypeFactory);
     elementHandler = createElementHandler(typeMappings, queryTypeFactory);
     this.roundEnv = roundEnv;
@@ -116,7 +149,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   protected void processAnnotations() {
     processExclusions();
 
-    Set<TypeElement> elements = collectElements();
+    var elements = collectElements();
 
     // create meta models
     for (Element element : elements) {
@@ -127,11 +160,11 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     }
 
     // add properties
-    boolean embeddableAnn = conf.getEmbeddableAnnotation() != null;
-    boolean altEntityAnn = conf.getAlternativeEntityAnnotation() != null;
-    boolean superAnn = conf.getSuperTypeAnnotation() != null;
+    var embeddableAnn = conf.getEmbeddableAnnotation() != null;
+    var altEntityAnn = conf.getAlternativeEntityAnnotation() != null;
+    var superAnn = conf.getSuperTypeAnnotation() != null;
     for (TypeElement element : elements) {
-      EntityType entityType = elementHandler.handleEntityType(element);
+      var entityType = elementHandler.handleEntityType(element);
       registerTypeElement(entityType.getFullName(), element);
       if (typeFactory.isSimpleTypeEntity(element, conf.getEntityAnnotation())) {
         context.entityTypes.put(entityType.getFullName(), entityType);
@@ -151,10 +184,10 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     }
 
     // track also methods from external entity types
-    for (EntityType entityType : new ArrayList<EntityType>(typeFactory.getEntityTypes())) {
-      String fullName = entityType.getFullName();
+    for (EntityType entityType : new ArrayList<>(typeFactory.getEntityTypes())) {
+      var fullName = entityType.getFullName();
       if (!context.allTypes.keySet().contains(fullName)) {
-        TypeElement element = processingEnv.getElementUtils().getTypeElement(fullName);
+        var element = processingEnv.getElementUtils().getTypeElement(fullName);
         if (element != null) {
           elementHandler.handleEntityType(element);
         }
@@ -168,7 +201,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     }
 
     // add properties from parents
-    Set<EntityType> handled = new HashSet<EntityType>();
+    Set<EntityType> handled = new HashSet<>();
     for (EntityType entityType : context.allTypes.values()) {
       addSupertypeFields(entityType, handled);
     }
@@ -182,16 +215,15 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private void addExternalParents(EntityType entityType) {
-    Deque<Type> superTypes = new ArrayDeque<Type>();
+    Deque<Type> superTypes = new ArrayDeque<>();
     if (entityType.getSuperType() != null) {
       superTypes.push(entityType.getSuperType().getType());
     }
 
     while (!superTypes.isEmpty()) {
-      Type superType = superTypes.pop();
+      var superType = superTypes.pop();
       if (!context.allTypes.containsKey(superType.getFullName())) {
-        TypeElement typeElement =
-            processingEnv.getElementUtils().getTypeElement(superType.getFullName());
+        var typeElement = processingEnv.getElementUtils().getTypeElement(superType.getFullName());
         if (typeElement == null) {
           throw new IllegalStateException("Found no type for " + superType.getFullName());
         }
@@ -199,7 +231,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
             && !TypeUtils.hasAnnotationOfType(typeElement, conf.getEntityAnnotations())) {
           continue;
         }
-        EntityType superEntityType = elementHandler.handleEntityType(typeElement);
+        var superEntityType = elementHandler.handleEntityType(typeElement);
         if (superEntityType.getSuperType() != null) {
           superTypes.push(superEntityType.getSuperType().getType());
         }
@@ -211,7 +243,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   protected Set<TypeElement> collectElements() {
 
     // from delegate methods
-    Set<TypeElement> elements = new HashSet<TypeElement>(processDelegateMethods());
+    Set<TypeElement> elements = new HashSet<>(processDelegateMethods());
 
     // from class annotations
     for (Class<? extends Annotation> annotation : conf.getEntityAnnotations()) {
@@ -225,8 +257,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     // from package annotations
     if (conf.getEntitiesAnnotation() != null) {
       for (Element element : getElements(conf.getEntitiesAnnotation())) {
-        AnnotationMirror mirror =
-            TypeUtils.getAnnotationMirrorOfType(element, conf.getEntitiesAnnotation());
+        var mirror = TypeUtils.getAnnotationMirrorOfType(element, conf.getEntitiesAnnotation());
         elements.addAll(TypeUtils.getAnnotationValuesAsElements(mirror, "value"));
       }
     }
@@ -249,11 +280,11 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     // register possible embedded types of non-tracked supertypes
     if (conf.getEmbeddedAnnotation() != null) {
       Class<? extends Annotation> embedded = conf.getEmbeddedAnnotation();
-      Set<TypeElement> embeddedElements = new HashSet<TypeElement>();
+      Set<TypeElement> embeddedElements = new HashSet<>();
       for (TypeElement element : elements) {
-        TypeMirror superTypeMirror = element.getSuperclass();
+        var superTypeMirror = element.getSuperclass();
         while (superTypeMirror != null) {
-          TypeElement superTypeElement =
+          var superTypeElement =
               (TypeElement) processingEnv.getTypeUtils().asElement(superTypeMirror);
           if (superTypeElement != null) {
             List<? extends Element> enclosed = superTypeElement.getEnclosedElements();
@@ -284,11 +315,11 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private Set<TypeElement> getAnnotationlessSupertypes(Set<TypeElement> elements) {
-    Set<TypeElement> rv = new HashSet<TypeElement>();
+    Set<TypeElement> rv = new HashSet<>();
     for (TypeElement element : elements) {
-      TypeMirror superTypeMirror = element.getSuperclass();
+      var superTypeMirror = element.getSuperclass();
       while (superTypeMirror != null) {
-        TypeElement superTypeElement =
+        var superTypeElement =
             (TypeElement) processingEnv.getTypeUtils().asElement(superTypeMirror);
         if (superTypeElement != null
             && !superTypeElement.toString().startsWith("java.lang.")
@@ -307,25 +338,25 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private void registerTypeElement(String entityName, TypeElement element) {
-    Set<TypeElement> elements =
+    var elements =
         context.typeElements.computeIfAbsent(entityName, k -> new HashSet<TypeElement>());
     elements.add(element);
   }
 
   private void processProjectionTypes(Set<TypeElement> elements) {
-    Set<Element> visited = new HashSet<Element>();
+    Set<Element> visited = new HashSet<>();
     for (Element element : getElements(QueryProjection.class)) {
       if (element.getKind() == ElementKind.CONSTRUCTOR) {
-        Element parent = element.getEnclosingElement();
+        var parent = element.getEnclosingElement();
         if (!elements.contains(parent) && !visited.contains(parent)) {
-          EntityType model = elementHandler.handleProjectionType((TypeElement) parent, true);
+          var model = elementHandler.handleProjectionType((TypeElement) parent, true);
           registerTypeElement(model.getFullName(), (TypeElement) parent);
           context.projectionTypes.put(model.getFullName(), model);
           visited.add(parent);
         }
       }
       if (element.getKind().isClass() && !visited.contains(element)) {
-        EntityType model = elementHandler.handleProjectionType((TypeElement) element, false);
+        var model = elementHandler.handleProjectionType((TypeElement) element, false);
         registerTypeElement(model.getFullName(), (TypeElement) element);
         context.projectionTypes.put(model.getFullName(), model);
         visited.add(element);
@@ -334,7 +365,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private Set<TypeElement> getEmbeddedTypes() {
-    Set<TypeElement> elements = new HashSet<TypeElement>();
+    Set<TypeElement> elements = new HashSet<>();
     // only creation
     for (Element element : getElements(conf.getEmbeddedAnnotation())) {
       handleEmbeddedType(element, elements);
@@ -343,11 +374,11 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private void handleEmbeddedType(Element element, Set<TypeElement> elements) {
-    TypeMirror type = element.asType();
+    var type = element.asType();
     if (element.getKind() == ElementKind.METHOD) {
       type = ((ExecutableElement) element).getReturnType();
     }
-    String typeName = type.toString();
+    var typeName = type.toString();
 
     if (typeName.startsWith(Collection.class.getName())
         || typeName.startsWith(List.class.getName())
@@ -358,7 +389,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
       type = ((DeclaredType) type).getTypeArguments().get(1);
     }
 
-    TypeElement typeElement = typeExtractor.visit(type);
+    var typeElement = typeExtractor.visit(type);
 
     if (typeElement != null
         && !TypeUtils.hasAnnotationOfType(typeElement, conf.getEntityAnnotations())) {
@@ -369,21 +400,21 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private Set<TypeElement> getTypeFromProperties(Set<TypeElement> parents) {
-    Set<TypeElement> elements = new HashSet<TypeElement>();
+    Set<TypeElement> elements = new HashSet<>();
     for (Element element : parents) {
       if (element instanceof TypeElement) {
         processFromProperties((TypeElement) element, elements);
       }
     }
 
-    Iterator<TypeElement> iterator = elements.iterator();
+    var iterator = elements.iterator();
     while (iterator.hasNext()) {
-      TypeElement element = iterator.next();
-      String name = element.getQualifiedName().toString();
+      var element = iterator.next();
+      var name = element.getQualifiedName().toString();
       if (name.startsWith("java.")) {
         iterator.remove();
       } else {
-        boolean annotated = false;
+        var annotated = false;
         for (Class<? extends Annotation> annotation : conf.getEntityAnnotations()) {
           annotated |= element.getAnnotation(annotation) != null;
         }
@@ -398,12 +429,12 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
 
   private void processFromProperties(TypeElement type, Set<TypeElement> types) {
     List<? extends Element> children = type.getEnclosedElements();
-    VisitorConfig config = conf.getConfig(type, children);
+    var config = conf.getConfig(type, children);
 
     // fields
     if (config.visitFieldProperties()) {
       for (VariableElement field : ElementFilter.fieldsIn(children)) {
-        TypeElement typeElement = typeExtractor.visit(field.asType());
+        var typeElement = typeExtractor.visit(field.asType());
         if (typeElement != null) {
           types.add(typeElement);
         }
@@ -413,9 +444,9 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     // getters
     if (config.visitMethodProperties()) {
       for (ExecutableElement method : ElementFilter.methodsIn(children)) {
-        String name = method.getSimpleName().toString();
+        var name = method.getSimpleName().toString();
         if ((name.startsWith("get") || name.startsWith("is")) && method.getParameters().isEmpty()) {
-          TypeElement typeElement = typeExtractor.visit(method.getReturnType());
+          var typeElement = typeExtractor.visit(method.getReturnType());
           if (typeElement != null) {
             types.add(typeElement);
           }
@@ -427,7 +458,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   private void addSupertypeFields(EntityType model, Set<EntityType> handled) {
     if (handled.add(model)) {
       for (Supertype supertype : model.getSuperTypes()) {
-        EntityType entityType = context.allTypes.get(supertype.getType().getFullName());
+        var entityType = context.allTypes.get(supertype.getType().getFullName());
         if (entityType != null) {
           addSupertypeFields(entityType, handled);
           supertype.setEntityType(entityType);
@@ -451,22 +482,22 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
 
   private Set<TypeElement> processDelegateMethods() {
     Set<? extends Element> delegateMethods = getElements(QueryDelegate.class);
-    Set<TypeElement> typeElements = new HashSet<TypeElement>();
+    Set<TypeElement> typeElements = new HashSet<>();
 
     for (Element delegateMethod : delegateMethods) {
-      ExecutableElement method = (ExecutableElement) delegateMethod;
-      Element element = delegateMethod.getEnclosingElement();
-      String name = method.getSimpleName().toString();
+      var method = (ExecutableElement) delegateMethod;
+      var element = delegateMethod.getEnclosingElement();
+      var name = method.getSimpleName().toString();
       Type delegateType = typeFactory.getType(element.asType(), true);
       Type returnType = typeFactory.getType(method.getReturnType(), true);
-      List<Parameter> parameters = elementHandler.transformParams(method.getParameters());
+      var parameters = elementHandler.transformParams(method.getParameters());
       // remove first element
       parameters = parameters.subList(1, parameters.size());
 
       EntityType entityType = null;
       for (AnnotationMirror annotation : delegateMethod.getAnnotationMirrors()) {
         if (TypeUtils.isAnnotationMirrorOfType(annotation, QueryDelegate.class)) {
-          TypeMirror type = TypeUtils.getAnnotationValueAsTypeMirror(annotation, "value");
+          var type = TypeUtils.getAnnotationValueAsTypeMirror(annotation, "value");
           if (type != null) {
             entityType = typeFactory.getEntityType(type, true);
           }
@@ -477,9 +508,8 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
         registerTypeElement(entityType.getFullName(), (TypeElement) element);
         entityType.addDelegate(
             new Delegate(entityType, delegateType, name, parameters, returnType));
-        TypeElement typeElement =
-            processingEnv.getElementUtils().getTypeElement(entityType.getFullName());
-        boolean isAnnotated = false;
+        var typeElement = processingEnv.getElementUtils().getTypeElement(entityType.getFullName());
+        var isAnnotated = false;
         for (Class<? extends Annotation> ann : conf.getEntityAnnotations()) {
           if (typeElement.getAnnotation(ann) != null) {
             isAnnotated = true;
@@ -519,8 +549,8 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   protected void validateInits(EntityType entityType, Property property) {
     for (String init : property.getInits()) {
       if (!init.startsWith("*") && property.getType() instanceof EntityType) {
-        String initProperty = init.contains(".") ? init.substring(0, init.indexOf('.')) : init;
-        Set<String> propertyNames = ((EntityType) property.getType()).getPropertyNames();
+        var initProperty = init.contains(".") ? init.substring(0, init.indexOf('.')) : init;
+        var propertyNames = ((EntityType) property.getType()).getPropertyNames();
         if (!propertyNames.contains(initProperty)) {
           processingEnv
               .getMessager()
@@ -599,9 +629,9 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private void setLogInfo() {
-    boolean hasProperty = processingEnv.getOptions().containsKey(QUERYDSL_LOG_INFO);
+    var hasProperty = processingEnv.getOptions().containsKey(QUERYDSL_LOG_INFO);
     if (hasProperty) {
-      String val = processingEnv.getOptions().get(QUERYDSL_LOG_INFO);
+      var val = processingEnv.getOptions().get(QUERYDSL_LOG_INFO);
       shouldLogInfo = Boolean.parseBoolean(val);
     }
   }
@@ -615,7 +645,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   private void serialize(Serializer serializer, Collection<EntityType> models) {
     for (EntityType model : models) {
       try {
-        String className = getClassName(model);
+        var className = getClassName(model);
 
         // skip if type is excluded class or in excluded package
         if (conf.isExcludedPackage(model.getPackageName())
@@ -623,15 +653,14 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
           continue;
         }
 
-        Set<TypeElement> elements = context.typeElements.get(model.getFullName());
+        var elements = context.typeElements.get(model.getFullName());
 
         if (elements == null) {
-          elements = new HashSet<TypeElement>();
+          elements = new HashSet<>();
         }
         for (Property property : model.getProperties()) {
           if (property.getType().getCategory() == TypeCategory.CUSTOM) {
-            Set<TypeElement> customElements =
-                context.typeElements.get(property.getType().getFullName());
+            var customElements = context.typeElements.get(property.getType().getFullName());
             if (customElements != null) {
               elements.addAll(customElements);
             }
@@ -639,8 +668,8 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
         }
 
         logInfo("Generating " + className + " for " + elements);
-        try (Writer writer = conf.getFiler().createFile(processingEnv, className, elements)) {
-          SerializerConfig serializerConfig = conf.getSerializerConfig(model);
+        try (var writer = conf.getFiler().createFile(processingEnv, className, elements)) {
+          var serializerConfig = conf.getSerializerConfig(model);
           serializer.serialize(model, serializerConfig, new JavaWriter(writer));
         }
 
@@ -652,8 +681,8 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   protected String getClassName(EntityType model) {
-    Type type = conf.getTypeMappings().getPathType(model, model, true);
-    String packageName = type.getPackageName();
+    var type = conf.getTypeMappings().getPathType(model, model, true);
+    var packageName = type.getPackageName();
     return packageName.isEmpty()
         ? type.getSimpleName()
         : (packageName + "." + type.getSimpleName());

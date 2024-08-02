@@ -39,8 +39,8 @@ public class ForeignKeyBuilder {
   }
 
   public CreateTableClause references(String table, String... parentColumns) {
-    ForeignKeyData foreignKey = new ForeignKeyData(name, templates.quoteIdentifier(table));
-    for (int i = 0; i < parentColumns.length; i++) {
+    var foreignKey = new ForeignKeyData(name, templates.quoteIdentifier(table));
+    for (var i = 0; i < parentColumns.length; i++) {
       foreignKey.add(
           templates.quoteIdentifier(foreignColumns[i]),
           templates.quoteIdentifier(parentColumns[i]));

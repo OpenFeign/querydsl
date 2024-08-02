@@ -13,8 +13,12 @@
  */
 package com.querydsl.sql.dml;
 
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.dml.DeleteClause;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
@@ -22,11 +26,15 @@ import com.querydsl.core.types.ValidatingVisitor;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLBindings;
-import com.querydsl.sql.SQLSerializer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.Range;
@@ -50,7 +58,7 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
 
   protected final RelationalPath<?> entity;
 
-  protected final List<QueryMetadata> batches = new ArrayList<QueryMetadata>();
+  protected final List<QueryMetadata> batches = new ArrayList<>();
 
   protected DefaultQueryMetadata metadata = new DefaultQueryMetadata();
 
@@ -121,7 +129,7 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
 
   protected PreparedStatement createStatement() throws SQLException {
     listeners.preRender(context);
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeDelete(metadata, entity);
     queryString = serializer.toString();
     constants = serializer.getConstants();
@@ -130,7 +138,7 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
     listeners.rendered(context);
 
     listeners.prePrepare(context);
-    PreparedStatement stmt = connection().prepareStatement(queryString);
+    var stmt = connection().prepareStatement(queryString);
     setParameters(
         stmt, serializer.getConstants(), serializer.getConstantPaths(), metadata.getParams());
 
@@ -141,9 +149,9 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
   }
 
   protected Collection<PreparedStatement> createStatements() throws SQLException {
-    boolean addBatches = !configuration.getUseLiterals();
+    var addBatches = !configuration.getUseLiterals();
     listeners.preRender(context);
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeDelete(batches.get(0), entity);
     queryString = serializer.toString();
     constants = serializer.getConstants();
@@ -155,7 +163,7 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
 
     // add first batch
     listeners.prePrepare(context);
-    PreparedStatement stmt = connection().prepareStatement(queryString);
+    var stmt = connection().prepareStatement(queryString);
     setParameters(
         stmt, serializer.getConstants(), serializer.getConstantPaths(), metadata.getParams());
     if (addBatches) {
@@ -166,7 +174,7 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
     listeners.prepared(context);
 
     // add other batches
-    for (int i = 1; i < batches.size(); i++) {
+    for (var i = 1; i < batches.size(); i++) {
       listeners.preRender(context);
       serializer = createSerializer();
       serializer.serializeDelete(batches.get(i), entity);
@@ -202,7 +210,7 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
         listeners.notifyDelete(entity, metadata);
 
         listeners.preExecute(context);
-        int rc = stmt.executeUpdate();
+        var rc = stmt.executeUpdate();
         listeners.executed(context);
         return rc;
       } else {
@@ -210,7 +218,7 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
         listeners.notifyDeletes(entity, batches);
 
         listeners.preExecute(context);
-        long rc = executeBatch(stmts);
+        var rc = executeBatch(stmts);
         listeners.executed(context);
         return rc;
       }
@@ -232,13 +240,13 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
   @Override
   public List<SQLBindings> getSQL() {
     if (batches.isEmpty()) {
-      SQLSerializer serializer = createSerializer();
+      var serializer = createSerializer();
       serializer.serializeDelete(metadata, entity);
       return Collections.singletonList(createBindings(metadata, serializer));
     } else {
       List<SQLBindings> builder = new ArrayList<>();
       for (QueryMetadata metadata : batches) {
-        SQLSerializer serializer = createSerializer();
+        var serializer = createSerializer();
         serializer.serializeDelete(metadata, entity);
         builder.add(createBindings(metadata, serializer));
       }
@@ -271,7 +279,7 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
 
   @Override
   public String toString() {
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeDelete(metadata, entity);
     return serializer.toString();
   }

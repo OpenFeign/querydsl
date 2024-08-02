@@ -13,7 +13,12 @@
  */
 package com.querydsl.sql;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.MutableExpressionBase;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimpleExpression;
@@ -52,7 +57,7 @@ public class WithinGroup<T> extends SimpleOperation<T> {
 
     @Nullable private transient volatile SimpleExpression<T> value;
 
-    private final List<OrderSpecifier<?>> orderBy = new ArrayList<OrderSpecifier<?>>();
+    private final List<OrderSpecifier<?>> orderBy = new ArrayList<>();
 
     public OrderBy() {
       super(WithinGroup.this.getType());
@@ -61,9 +66,9 @@ public class WithinGroup<T> extends SimpleOperation<T> {
     @SuppressWarnings("unchecked")
     public SimpleExpression<T> getValue() {
       if (value == null) {
-        int size = 0;
+        var size = 0;
         List<Expression<?>> args = new ArrayList<>();
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         builder.append("{0} within group (");
         args.add(WithinGroup.this);
         size++;

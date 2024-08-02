@@ -51,15 +51,15 @@ public final class DefaultQueryHandler implements QueryHandler {
       Query query, @Nullable final FactoryExpression<?> projection) {
     Iterator<T> iterator = query.getResultList().iterator();
     if (projection != null) {
-      return new TransformingIterator<T>(iterator, projection);
+      return new TransformingIterator<>(iterator, projection);
     } else {
-      return new IteratorAdapter<T>(iterator);
+      return new IteratorAdapter<>(iterator);
     }
   }
 
   @Override
   public <T> Stream<T> stream(Query query, @Nullable FactoryExpression<?> projection) {
-    final Stream resultStream = query.getResultStream();
+    final var resultStream = query.getResultStream();
     if (projection != null) {
       return resultStream.map(
           element ->

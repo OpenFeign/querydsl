@@ -1,7 +1,21 @@
 package com.querydsl.sql.suites;
 
 import com.querydsl.core.testutil.DB2;
-import com.querydsl.sql.*;
+import com.querydsl.sql.BeanPopulationBase;
+import com.querydsl.sql.Connections;
+import com.querydsl.sql.DB2Templates;
+import com.querydsl.sql.DeleteBase;
+import com.querydsl.sql.InsertBase;
+import com.querydsl.sql.KeywordQuotingBase;
+import com.querydsl.sql.LikeEscapeBase;
+import com.querydsl.sql.MergeBase;
+import com.querydsl.sql.MergeUsingBase;
+import com.querydsl.sql.SelectBase;
+import com.querydsl.sql.SelectWindowFunctionsBase;
+import com.querydsl.sql.SubqueriesBase;
+import com.querydsl.sql.TypesBase;
+import com.querydsl.sql.UnionBase;
+import com.querydsl.sql.UpdateBase;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
 

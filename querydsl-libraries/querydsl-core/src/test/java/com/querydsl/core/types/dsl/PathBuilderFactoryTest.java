@@ -21,7 +21,7 @@ public class PathBuilderFactoryTest {
 
   @Test
   public void create() {
-    PathBuilderFactory factory = new PathBuilderFactory("");
+    var factory = new PathBuilderFactory("");
     PathBuilder<Object> pathBuilder = factory.create(Object.class);
     assertThat(pathBuilder).hasToString("object");
     assertThat(pathBuilder.getType()).isEqualTo(Object.class);
@@ -33,7 +33,7 @@ public class PathBuilderFactoryTest {
 
   @Test
   public void create_withSuffix() {
-    PathBuilderFactory factory = new PathBuilderFactory("_");
+    var factory = new PathBuilderFactory("_");
     PathBuilder<Object> pathBuilder = factory.create(Object.class);
     assertThat(pathBuilder).hasToString("object_");
     assertThat(pathBuilder.getType()).isEqualTo(Object.class);

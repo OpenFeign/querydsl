@@ -55,7 +55,7 @@ public class GenericExporterTest {
     exporter.setKeywords(Keywords.JPA);
     exporter.setTargetFolder(folder.getRoot());
     exporter.export(getClass().getPackage());
-    String str =
+    var str =
         new String(
             Files.readAllBytes(
                 new File(folder.getRoot(), "com/querydsl/codegen/QGroup.java").toPath()),
@@ -168,8 +168,8 @@ public class GenericExporterTest {
   @Test
   public void export_propertyHandling() throws IOException {
     for (PropertyHandling ph : PropertyHandling.values()) {
-      File f = folder.newFolder();
-      GenericExporter e = new GenericExporter();
+      var f = folder.newFolder();
+      var e = new GenericExporter();
       e.setTargetFolder(f);
       e.setPropertyHandling(ph);
       e.export(getClass().getPackage());

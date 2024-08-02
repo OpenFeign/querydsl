@@ -29,7 +29,7 @@ public final class TimeConstant<D extends java.util.Date> extends TimeExpression
   private static final long serialVersionUID = -7835941761930555480L;
 
   public static <D extends java.util.Date> TimeExpression<D> create(D time) {
-    return new TimeConstant<D>(time);
+    return new TimeConstant<>(time);
   }
 
   private final Calendar calendar;

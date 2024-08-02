@@ -3,7 +3,12 @@ package com.querydsl.r2dbc.types;
 import com.querydsl.r2dbc.binding.BindMarker;
 import com.querydsl.r2dbc.binding.BindTarget;
 import java.sql.Types;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
@@ -37,7 +42,7 @@ public class JSR310LocalDateTimeType extends AbstractJSR310DateTimeType<LocalDat
     try {
       super.setValue(bindMarker, bindTarget, value);
     } catch (Exception e) {
-      Instant i = value.toInstant(ZoneOffset.UTC);
+      var i = value.toInstant(ZoneOffset.UTC);
 
       bindMarker.bind(bindTarget, i);
     }

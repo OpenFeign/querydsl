@@ -63,7 +63,7 @@ public class HierarchyTest {
 
   @Test
   public void test() {
-    QHierarchyTest_B2 qb2 = QHierarchyTest_A2.a2.b;
+    var qb2 = QHierarchyTest_A2.a2.b;
     assertThat(qb2).isNotNull();
   }
 }

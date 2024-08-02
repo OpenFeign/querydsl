@@ -32,7 +32,7 @@ public class PersonDaoImpl implements PersonDao {
 
   @Override
   public Mono<Person> save(Person p) {
-    Long id = p.getId();
+    var id = p.getId();
 
     if (id == null) {
       return insert(p);

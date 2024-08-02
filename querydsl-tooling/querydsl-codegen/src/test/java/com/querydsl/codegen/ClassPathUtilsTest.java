@@ -17,22 +17,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.SomeClass;
 import java.io.IOException;
-import java.util.Set;
 import org.junit.Test;
 
 public class ClassPathUtilsTest {
 
   @Test
   public void scanPackage() throws IOException {
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    Set<Class<?>> classes = ClassPathUtils.scanPackage(classLoader, SomeClass.class.getPackage());
+    var classLoader = Thread.currentThread().getContextClassLoader();
+    var classes = ClassPathUtils.scanPackage(classLoader, SomeClass.class.getPackage());
     assertThat(classes).isNotEmpty();
   }
 
   @Test
   public void scanPackage_check_initialized() throws IOException {
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    Set<Class<?>> classes = ClassPathUtils.scanPackage(classLoader, getClass().getPackage());
+    var classLoader = Thread.currentThread().getContextClassLoader();
+    var classes = ClassPathUtils.scanPackage(classLoader, getClass().getPackage());
     assertThat(classes).isNotEmpty();
     assertThat(SomeOtherClass2.property).isEqualTo("XXX");
   }

@@ -25,7 +25,7 @@ public class DependenciesTest {
   @Test
   @Ignore
   public void test() throws IOException {
-    JDepend jdepend = new JDepend();
+    var jdepend = new JDepend();
     jdepend.addDirectory("target/classes/com/querydsl/sql");
     jdepend.addDirectory("target/classes/com/querydsl/sql/ddl");
     jdepend.addDirectory("target/classes/com/querydsl/sql/dml");

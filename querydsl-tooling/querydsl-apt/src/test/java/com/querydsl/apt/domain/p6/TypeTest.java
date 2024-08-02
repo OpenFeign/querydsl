@@ -21,8 +21,8 @@ public class TypeTest {
 
   @Test
   public void test() {
-    QType1 type1 = QType1.type1;
-    QType2 type2 = QType2.type2;
+    var type1 = QType1.type1;
+    var type2 = QType2.type2;
     assertThat(type1.property.getType()).isEqualTo(type2.getType());
     assertThat(type1.property.getClass()).isEqualTo(type2.getClass());
   }

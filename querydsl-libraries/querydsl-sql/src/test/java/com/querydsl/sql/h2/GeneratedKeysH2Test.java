@@ -18,7 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.sql.H2Templates;
 import com.querydsl.sql.QGeneratedKeysEntity;
 import com.querydsl.sql.dml.SQLInsertClause;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collections;
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +36,7 @@ public class GeneratedKeysH2Test {
   @Before
   public void setUp() throws ClassNotFoundException, SQLException {
     Class.forName("org.h2.Driver");
-    String url = "jdbc:h2:./target/h2-gen;MODE=legacy";
+    var url = "jdbc:h2:./target/h2-gen;MODE=legacy";
     conn = DriverManager.getConnection(url, "sa", "");
     stmt = conn.createStatement();
   }
@@ -57,10 +60,10 @@ public class GeneratedKeysH2Test {
         NAME varchar(30))\
         """);
 
-    QGeneratedKeysEntity entity = new QGeneratedKeysEntity("entity");
-    SQLInsertClause insertClause = new SQLInsertClause(conn, new H2Templates(), entity);
-    ResultSet rs = insertClause.set(entity.name, "Hello").executeWithKeys();
-    ResultSetMetaData md = rs.getMetaData();
+    var entity = new QGeneratedKeysEntity("entity");
+    var insertClause = new SQLInsertClause(conn, new H2Templates(), entity);
+    var rs = insertClause.set(entity.name, "Hello").executeWithKeys();
+    var md = rs.getMetaData();
     System.out.println(md.getColumnName(1));
 
     assertThat(rs.next()).isTrue();

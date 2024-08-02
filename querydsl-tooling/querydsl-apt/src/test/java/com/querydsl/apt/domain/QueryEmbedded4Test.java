@@ -53,6 +53,7 @@ public class QueryEmbedded4Test {
       return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }

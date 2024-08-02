@@ -15,9 +15,12 @@ package com.querydsl.r2dbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.sql.SQLOps;
 import org.junit.Test;
 
@@ -39,9 +42,9 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   @Override
   public void union() {
-    NumberExpression<Integer> one = Expressions.ONE;
-    NumberExpression<Integer> two = Expressions.TWO;
-    NumberExpression<Integer> three = Expressions.THREE;
+    var one = Expressions.ONE;
+    var two = Expressions.TWO;
+    var three = Expressions.THREE;
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union =
         query.union(
@@ -99,18 +102,18 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
   public void precedence() {
     // 1  ~ (Bitwise NOT)
     // 2  (Multiply), / (Division), % (Modulo)
-    int p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
+    var p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
     // 3 + (Positive), - (Negative), + (Add), (+ Concatenate), - (Subtract), & (Bitwise AND), ^
     // (Bitwise Exclusive OR), | (Bitwise OR)
-    int p3 = getPrecedence(Ops.NEGATE, Ops.ADD, Ops.SUB, Ops.CONCAT);
+    var p3 = getPrecedence(Ops.NEGATE, Ops.ADD, Ops.SUB, Ops.CONCAT);
     // 4 =, >, <, >=, <=, <>, !=, !>, !< (Comparison operators)
-    int p4 = getPrecedence(Ops.EQ, Ops.GT, Ops.LT, Ops.GOE, Ops.LOE, Ops.NE);
+    var p4 = getPrecedence(Ops.EQ, Ops.GT, Ops.LT, Ops.GOE, Ops.LOE, Ops.NE);
     // 5 NOT
-    int p5 = getPrecedence(Ops.NOT);
+    var p5 = getPrecedence(Ops.NOT);
     // 6 AND
-    int p6 = getPrecedence(Ops.AND);
+    var p6 = getPrecedence(Ops.AND);
     // 7 ALL, ANY, BETWEEN, IN, LIKE, OR, SOME
-    int p7 = getPrecedence(Ops.BETWEEN, Ops.IN, Ops.LIKE, Ops.LIKE_ESCAPE, Ops.OR);
+    var p7 = getPrecedence(Ops.BETWEEN, Ops.IN, Ops.LIKE, Ops.LIKE_ESCAPE, Ops.OR);
     // 8 = (Assignment)
 
     assertThat(p2 < p3).isTrue();

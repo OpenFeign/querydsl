@@ -8,7 +8,7 @@ public class MonitoredCompanyTest {
 
   @Test
   public void test() {
-    QMonitoredCompany monitoredCompany = QMonitoredCompany.monitoredCompany;
+    var monitoredCompany = QMonitoredCompany.monitoredCompany;
     assertThat(monitoredCompany.companyGroup).isNotNull();
     assertThat(monitoredCompany.companyGroup.mainCompany).isNotNull();
   }

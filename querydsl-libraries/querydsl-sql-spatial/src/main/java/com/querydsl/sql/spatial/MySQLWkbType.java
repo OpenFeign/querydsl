@@ -22,8 +22,6 @@ import org.geolatte.geom.ByteBuffer;
 import org.geolatte.geom.ByteOrder;
 import org.geolatte.geom.Geometry;
 import org.geolatte.geom.codec.Wkb;
-import org.geolatte.geom.codec.WkbDecoder;
-import org.geolatte.geom.codec.WkbEncoder;
 import org.geolatte.geom.codec.Wkt;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,14 +43,14 @@ class MySQLWkbType extends AbstractType<Geometry> {
   @Override
   @Nullable
   public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
-    byte[] bytes = rs.getBytes(startIndex);
+    var bytes = rs.getBytes(startIndex);
     if (bytes != null) {
-      byte[] wkb = new byte[bytes.length - 4];
+      var wkb = new byte[bytes.length - 4];
       System.arraycopy(bytes, 4, wkb, 0, wkb.length);
-      int srid =
+      var srid =
           bytes[3] << 24 | (bytes[2] & 0xff) << 16 | (bytes[1] & 0xff) << 8 | (bytes[0] & 0xff);
       // TODO make sure srid is set
-      WkbDecoder decoder = Wkb.newDecoder(Wkb.Dialect.POSTGIS_EWKB_1);
+      var decoder = Wkb.newDecoder(Wkb.Dialect.POSTGIS_EWKB_1);
       return decoder.decode(ByteBuffer.from(wkb));
     } else {
       return null;
@@ -61,13 +59,13 @@ class MySQLWkbType extends AbstractType<Geometry> {
 
   @Override
   public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
-    WkbEncoder encoder = Wkb.newEncoder(Wkb.Dialect.POSTGIS_EWKB_1);
-    ByteBuffer buffer = encoder.encode(value, byteOrder);
-    int srid = value.getSRID();
+    var encoder = Wkb.newEncoder(Wkb.Dialect.POSTGIS_EWKB_1);
+    var buffer = encoder.encode(value, byteOrder);
+    var srid = value.getSRID();
 
     // prepend srid into first 4 bytes
-    byte[] wkb = buffer.toByteArray();
-    byte[] bytes = new byte[wkb.length + 4];
+    var wkb = buffer.toByteArray();
+    var bytes = new byte[wkb.length + 4];
     bytes[3] = (byte) ((srid >> 24) & 0xFF);
     bytes[2] = (byte) ((srid >> 16) & 0xFF);
     bytes[1] = (byte) ((srid >> 8) & 0xFF);
@@ -79,7 +77,7 @@ class MySQLWkbType extends AbstractType<Geometry> {
 
   @Override
   public String getLiteral(Geometry geometry) {
-    String str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry);
+    var str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry);
     if (geometry.getSRID() > -1) {
       return "GeomFromText('" + str + "', " + geometry.getSRID() + ")";
     } else {

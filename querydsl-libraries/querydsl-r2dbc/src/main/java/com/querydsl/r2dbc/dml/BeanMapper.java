@@ -48,12 +48,12 @@ public class BeanMapper extends AbstractMapper<Object> {
   public Map<Path<?>, Object> createMap(RelationalPath<?> entity, Object bean) {
     Map<Path<?>, Object> values = new LinkedHashMap<>();
     Map<String, Object> map = new BeanMap(bean);
-    Map<String, Path<?>> columns = getColumns(entity);
+    var columns = getColumns(entity);
     // populate in column order
     for (Map.Entry<String, Path<?>> entry : columns.entrySet()) {
       Path<?> path = entry.getValue();
       if (map.containsKey(entry.getKey())) {
-        Object value = map.get(entry.getKey());
+        var value = map.get(entry.getKey());
         if (value != null) {
           values.put(path, value);
         } else if (withNullBindings && !isPrimaryKeyColumn(entity, path)) {

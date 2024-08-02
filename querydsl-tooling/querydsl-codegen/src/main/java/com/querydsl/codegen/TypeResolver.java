@@ -36,9 +36,9 @@ final class TypeResolver {
    * @return resolved type
    */
   public static Type resolve(Type type, Type declaringType, EntityType context) {
-    Type resolved = unwrap(type);
+    var resolved = unwrap(type);
 
-    String varName = getVarName(resolved);
+    var varName = getVarName(resolved);
     if (varName != null) {
       resolved = resolveVar(resolved, varName, declaringType, context);
     } else if (!resolved.getParameters().isEmpty()) {
@@ -61,9 +61,9 @@ final class TypeResolver {
   private static Type resolveVar(
       Type resolved, String varName, Type declaringType, EntityType context) {
     // get parameter index of var in declaring type
-    int index = -1;
-    for (int i = 0; i < declaringType.getParameters().size(); i++) {
-      Type param = unwrap(declaringType.getParameters().get(i));
+    var index = -1;
+    for (var i = 0; i < declaringType.getParameters().size(); i++) {
+      var param = unwrap(declaringType.getParameters().get(i));
       if (Objects.equals(getVarName(param), varName)) {
         index = i;
       }
@@ -87,10 +87,10 @@ final class TypeResolver {
   }
 
   private static Type resolveWithParameters(Type type, Type declaringType, EntityType context) {
-    Type[] params = new Type[type.getParameters().size()];
-    boolean transformed = false;
-    for (int i = 0; i < type.getParameters().size(); i++) {
-      Type param = type.getParameters().get(i);
+    var params = new Type[type.getParameters().size()];
+    var transformed = false;
+    for (var i = 0; i < type.getParameters().size(); i++) {
+      var param = type.getParameters().get(i);
       if (param != null && !param.getFullName().equals(type.getFullName())) {
         params[i] = resolve(param, declaringType, context);
         if (!params[i].equals(param)) {

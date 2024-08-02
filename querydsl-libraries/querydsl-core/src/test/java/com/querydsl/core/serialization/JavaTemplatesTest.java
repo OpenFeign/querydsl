@@ -26,7 +26,7 @@ public class JavaTemplatesTest {
   @Test
   public void mappings() {
     Templates templates = new JavaTemplates();
-    int matched = 0;
+    var matched = 0;
     for (Operator operator : Ops.values()) {
       ++matched;
       assertThat(templates.getTemplate(operator)).isNotNull();

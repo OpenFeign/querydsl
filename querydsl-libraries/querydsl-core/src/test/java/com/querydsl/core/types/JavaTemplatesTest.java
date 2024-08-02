@@ -25,13 +25,13 @@ public class JavaTemplatesTest {
     // ternary    ? :
     // assignment    = += -= *= /= %= &= ^= |= <<= >>= >>>=
 
-    int p1 = getPrecedence(Ops.NOT);
-    int p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
-    int p3 = getPrecedence(Ops.ADD, Ops.SUB);
-    int p4 = getPrecedence(Ops.LT, Ops.GT, Ops.GOE, Ops.LOE, Ops.BETWEEN, Ops.INSTANCE_OF);
-    int p5 = getPrecedence(Ops.EQ, Ops.NE);
-    int p6 = getPrecedence(Ops.AND);
-    int p7 = getPrecedence(Ops.OR);
+    var p1 = getPrecedence(Ops.NOT);
+    var p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
+    var p3 = getPrecedence(Ops.ADD, Ops.SUB);
+    var p4 = getPrecedence(Ops.LT, Ops.GT, Ops.GOE, Ops.LOE, Ops.BETWEEN, Ops.INSTANCE_OF);
+    var p5 = getPrecedence(Ops.EQ, Ops.NE);
+    var p6 = getPrecedence(Ops.AND);
+    var p7 = getPrecedence(Ops.OR);
 
     assertThat(p1 < p2).isTrue();
     assertThat(p2 < p3).isTrue();
@@ -47,8 +47,8 @@ public class JavaTemplatesTest {
   }
 
   protected int getPrecedence(Operator... ops) {
-    int precedence = templates.getPrecedence(ops[0]);
-    for (int i = 1; i < ops.length; i++) {
+    var precedence = templates.getPrecedence(ops[0]);
+    for (var i = 1; i < ops.length; i++) {
       assertThat(templates.getPrecedence(ops[i])).as(ops[i].name()).isEqualTo(precedence);
     }
     return precedence;

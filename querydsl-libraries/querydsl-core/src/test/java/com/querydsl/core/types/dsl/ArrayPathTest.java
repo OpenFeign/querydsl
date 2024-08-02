@@ -22,7 +22,7 @@ public class ArrayPathTest {
 
   @Test
   public void get() {
-    ArrayPath<String[], String> arrayPath = new ArrayPath<String[], String>(String[].class, "p");
+    var arrayPath = new ArrayPath<>(String[].class, "p");
     assertThat(arrayPath.get(ConstantImpl.create(0))).isNotNull();
   }
 }

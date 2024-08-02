@@ -8,7 +8,7 @@ import org.mongodb.morphia.annotations.Entity;
 @Entity
 public class MapEntity extends AbstractEntity {
 
-  @Embedded private Map<String, String> properties = new HashMap<String, String>();
+  @Embedded private Map<String, String> properties = new HashMap<>();
 
   public Map<String, String> getProperties() {
     return properties;

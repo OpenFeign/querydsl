@@ -16,8 +16,13 @@ package com.querydsl.sql;
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.QueryModifiers;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.FactoryExpressionUtils;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +80,7 @@ public class SQLServer2005Templates extends SQLServerTemplates {
   @Override
   public void serialize(QueryMetadata metadata, boolean forCountRow, SQLSerializer context) {
     if (!forCountRow && metadata.getModifiers().isRestricting() && !metadata.getJoins().isEmpty()) {
-      QueryModifiers mod = metadata.getModifiers();
+      var mod = metadata.getModifiers();
       if (mod.getOffset() == null) {
         // select top ...
         metadata = metadata.clone();
@@ -87,7 +92,7 @@ public class SQLServer2005Templates extends SQLServerTemplates {
       } else {
         context.append(outerQueryStart);
         metadata = metadata.clone();
-        WindowFunction<Long> rn = SQLExpressions.rowNumber().over();
+        var rn = SQLExpressions.rowNumber().over();
         for (OrderSpecifier<?> os : metadata.getOrderBy()) {
           rn.orderBy(os);
         }
@@ -120,7 +125,7 @@ public class SQLServer2005Templates extends SQLServerTemplates {
   public void serializeDelete(
       QueryMetadata metadata, RelationalPath<?> entity, SQLSerializer context) {
     // limit
-    QueryModifiers mod = metadata.getModifiers();
+    var mod = metadata.getModifiers();
     if (mod.isRestricting()) {
       metadata = metadata.clone();
       metadata.addFlag(
@@ -143,7 +148,7 @@ public class SQLServer2005Templates extends SQLServerTemplates {
       Map<Path<?>, Expression<?>> updates,
       SQLSerializer context) {
     // limit
-    QueryModifiers mod = metadata.getModifiers();
+    var mod = metadata.getModifiers();
     if (mod.isRestricting()) {
       metadata = metadata.clone();
       metadata.addFlag(

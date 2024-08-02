@@ -3,7 +3,6 @@ package com.querydsl.example.dao;
 import com.querydsl.example.dto.Person;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -13,14 +12,14 @@ public class PersonDaoTest extends AbstractDaoTest {
 
   @Test
   public void findAll() {
-    Flux<Person> setup = personDao.findAll();
+    var setup = personDao.findAll();
 
     StepVerifier.create(setup).expectNextCount(2).verifyComplete();
   }
 
   @Test
   public void findById() {
-    Mono<Person> setup = personDao.findById(testDataService.person1);
+    var setup = personDao.findById(testDataService.person1);
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
@@ -35,7 +34,7 @@ public class PersonDaoTest extends AbstractDaoTest {
 
   @Test
   public void delete() {
-    Person person = new Person();
+    var person = new Person();
     person.setEmail("john@acme.com");
 
     Mono<Person> setup =

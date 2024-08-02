@@ -14,9 +14,25 @@
 package com.querydsl.r2dbc;
 
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.*;
-import com.querydsl.sql.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.DateTimeExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.Wildcard;
+import com.querydsl.sql.DatePart;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLOps;
+import com.querydsl.sql.WindowOver;
+import com.querydsl.sql.WithinGroup;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -29,14 +45,11 @@ import java.util.Map;
 @SuppressWarnings("rawtypes")
 public final class R2DBCExpressions {
 
-  private static final Map<DatePart, Operator> DATE_ADD_OPS =
-      new EnumMap<DatePart, Operator>(DatePart.class);
+  private static final Map<DatePart, Operator> DATE_ADD_OPS = new EnumMap<>(DatePart.class);
 
-  private static final Map<DatePart, Operator> DATE_DIFF_OPS =
-      new EnumMap<DatePart, Operator>(DatePart.class);
+  private static final Map<DatePart, Operator> DATE_DIFF_OPS = new EnumMap<>(DatePart.class);
 
-  private static final Map<DatePart, Operator> DATE_TRUNC_OPS =
-      new EnumMap<DatePart, Operator>(DatePart.class);
+  private static final Map<DatePart, Operator> DATE_TRUNC_OPS = new EnumMap<>(DatePart.class);
 
   static {
     DATE_ADD_OPS.put(DatePart.year, Ops.DateTimeOps.ADD_YEARS);
@@ -67,22 +80,20 @@ public final class R2DBCExpressions {
   }
 
   private static final WindowOver<Double> cumeDist =
-      new WindowOver<Double>(Double.class, SQLOps.CUMEDIST);
+      new WindowOver<>(Double.class, SQLOps.CUMEDIST);
 
-  private static final WindowOver<Long> rank = new WindowOver<Long>(Long.class, SQLOps.RANK);
+  private static final WindowOver<Long> rank = new WindowOver<>(Long.class, SQLOps.RANK);
 
-  private static final WindowOver<Long> denseRank =
-      new WindowOver<Long>(Long.class, SQLOps.DENSERANK);
+  private static final WindowOver<Long> denseRank = new WindowOver<>(Long.class, SQLOps.DENSERANK);
 
   private static final WindowOver<Double> percentRank =
-      new WindowOver<Double>(Double.class, SQLOps.PERCENTRANK);
+      new WindowOver<>(Double.class, SQLOps.PERCENTRANK);
 
-  private static final WindowOver<Long> rowNumber =
-      new WindowOver<Long>(Long.class, SQLOps.ROWNUMBER);
+  private static final WindowOver<Long> rowNumber = new WindowOver<>(Long.class, SQLOps.ROWNUMBER);
 
   private static Expression[] convertToExpressions(Object... args) {
-    Expression<?>[] exprs = new Expression<?>[args.length];
-    for (int i = 0; i < args.length; i++) {
+    var exprs = new Expression<?>[args.length];
+    for (var i = 0; i < args.length; i++) {
       if (args[i] instanceof Expression) {
         exprs[i] = (Expression) args[i];
       } else {
@@ -269,7 +280,7 @@ public final class R2DBCExpressions {
    */
   public static <T> R2DBCRelationalFunctionCall<T> relationalFunctionCall(
       Class<? extends T> type, String function, Object... args) {
-    return new R2DBCRelationalFunctionCall<T>(type, function, args);
+    return new R2DBCRelationalFunctionCall<>(type, function, args);
   }
 
   /**
@@ -600,7 +611,7 @@ public final class R2DBCExpressions {
    * @return sum(expr)
    */
   public static <T extends Number> WindowOver<T> sum(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), Ops.AggOps.SUM_AGG, expr);
+    return new WindowOver<>(expr.getType(), Ops.AggOps.SUM_AGG, expr);
   }
 
   /**
@@ -609,7 +620,7 @@ public final class R2DBCExpressions {
    * @return count()
    */
   public static WindowOver<Long> count() {
-    return new WindowOver<Long>(Long.class, Ops.AggOps.COUNT_ALL_AGG);
+    return new WindowOver<>(Long.class, Ops.AggOps.COUNT_ALL_AGG);
   }
 
   /**
@@ -619,7 +630,7 @@ public final class R2DBCExpressions {
    * @return count(expr)
    */
   public static WindowOver<Long> count(Expression<?> expr) {
-    return new WindowOver<Long>(Long.class, Ops.AggOps.COUNT_AGG, expr);
+    return new WindowOver<>(Long.class, Ops.AggOps.COUNT_AGG, expr);
   }
 
   /**
@@ -629,7 +640,7 @@ public final class R2DBCExpressions {
    * @return count(distinct expr)
    */
   public static WindowOver<Long> countDistinct(Expression<?> expr) {
-    return new WindowOver<Long>(Long.class, Ops.AggOps.COUNT_DISTINCT_AGG, expr);
+    return new WindowOver<>(Long.class, Ops.AggOps.COUNT_DISTINCT_AGG, expr);
   }
 
   /**
@@ -639,7 +650,7 @@ public final class R2DBCExpressions {
    * @return avg(expr)
    */
   public static <T extends Number> WindowOver<T> avg(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), Ops.AggOps.AVG_AGG, expr);
+    return new WindowOver<>(expr.getType(), Ops.AggOps.AVG_AGG, expr);
   }
 
   /**
@@ -649,7 +660,7 @@ public final class R2DBCExpressions {
    * @return min(expr)
    */
   public static <T extends Comparable> WindowOver<T> min(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), Ops.AggOps.MIN_AGG, expr);
+    return new WindowOver<>(expr.getType(), Ops.AggOps.MIN_AGG, expr);
   }
 
   /**
@@ -659,7 +670,7 @@ public final class R2DBCExpressions {
    * @return max(expr)
    */
   public static <T extends Comparable> WindowOver<T> max(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), Ops.AggOps.MAX_AGG, expr);
+    return new WindowOver<>(expr.getType(), Ops.AggOps.MAX_AGG, expr);
   }
 
   /**
@@ -669,7 +680,7 @@ public final class R2DBCExpressions {
    * @return lead(expr)
    */
   public static <T> WindowOver<T> lead(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.LEAD, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.LEAD, expr);
   }
 
   /**
@@ -679,7 +690,7 @@ public final class R2DBCExpressions {
    * @return lag(expr)
    */
   public static <T> WindowOver<T> lag(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.LAG, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.LAG, expr);
   }
 
   /**
@@ -691,8 +702,7 @@ public final class R2DBCExpressions {
    * @return listagg(expr, delimiter)
    */
   public static WithinGroup<Object> listagg(Expression<?> expr, String delimiter) {
-    return new WithinGroup<Object>(
-        Object.class, SQLOps.LISTAGG, expr, ConstantImpl.create(delimiter));
+    return new WithinGroup<>(Object.class, SQLOps.LISTAGG, expr, ConstantImpl.create(delimiter));
   }
 
   /**
@@ -716,7 +726,7 @@ public final class R2DBCExpressions {
    * @return nth_value(expr, n)
    */
   public static <T> WindowOver<T> nthValue(Expression<T> expr, Expression<? extends Number> n) {
-    return new WindowOver<T>(expr.getType(), SQLOps.NTHVALUE, expr, n);
+    return new WindowOver<>(expr.getType(), SQLOps.NTHVALUE, expr, n);
   }
 
   /**
@@ -728,7 +738,7 @@ public final class R2DBCExpressions {
    */
   @SuppressWarnings("unchecked")
   public static <T extends Number & Comparable> WindowOver<T> ntile(T num) {
-    return new WindowOver<T>((Class<T>) num.getClass(), SQLOps.NTILE, ConstantImpl.create(num));
+    return new WindowOver<>((Class<T>) num.getClass(), SQLOps.NTILE, ConstantImpl.create(num));
   }
 
   /**
@@ -768,7 +778,7 @@ public final class R2DBCExpressions {
    * @return rank(args)
    */
   public static WithinGroup<Long> rank(Expression<?>... args) {
-    return new WithinGroup<Long>(Long.class, SQLOps.RANK2, args);
+    return new WithinGroup<>(Long.class, SQLOps.RANK2, args);
   }
 
   /**
@@ -808,7 +818,7 @@ public final class R2DBCExpressions {
    * @return dense_rank(args)
    */
   public static WithinGroup<Long> denseRank(Expression<?>... args) {
-    return new WithinGroup<Long>(Long.class, SQLOps.DENSERANK2, args);
+    return new WithinGroup<>(Long.class, SQLOps.DENSERANK2, args);
   }
 
   /**
@@ -855,7 +865,7 @@ public final class R2DBCExpressions {
    * @return percent_rank(args)
    */
   public static WithinGroup<Double> percentRank(Expression<?>... args) {
-    return new WithinGroup<Double>(Double.class, SQLOps.PERCENTRANK2, args);
+    return new WithinGroup<>(Double.class, SQLOps.PERCENTRANK2, args);
   }
 
   /**
@@ -878,7 +888,7 @@ public final class R2DBCExpressions {
    * @return percentile_cont(arg)
    */
   public static <T extends Number> WithinGroup<T> percentileCont(Expression<T> arg) {
-    return new WithinGroup<T>(arg.getType(), SQLOps.PERCENTILECONT, arg);
+    return new WithinGroup<>(arg.getType(), SQLOps.PERCENTILECONT, arg);
   }
 
   /**
@@ -913,7 +923,7 @@ public final class R2DBCExpressions {
    * @return percentile_disc(arg)
    */
   public static <T extends Number> WithinGroup<T> percentileDisc(Expression<T> arg) {
-    return new WithinGroup<T>(arg.getType(), SQLOps.PERCENTILEDISC, arg);
+    return new WithinGroup<>(arg.getType(), SQLOps.PERCENTILEDISC, arg);
   }
 
   /**
@@ -925,7 +935,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> regrSlope(
       Expression<? extends Number> arg1, Expression<? extends Number> arg2) {
-    return new WindowOver<Double>(Double.class, SQLOps.REGR_SLOPE, arg1, arg2);
+    return new WindowOver<>(Double.class, SQLOps.REGR_SLOPE, arg1, arg2);
   }
 
   /**
@@ -937,7 +947,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> regrIntercept(
       Expression<? extends Number> arg1, Expression<? extends Number> arg2) {
-    return new WindowOver<Double>(Double.class, SQLOps.REGR_INTERCEPT, arg1, arg2);
+    return new WindowOver<>(Double.class, SQLOps.REGR_INTERCEPT, arg1, arg2);
   }
 
   /**
@@ -950,7 +960,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> regrCount(
       Expression<? extends Number> arg1, Expression<? extends Number> arg2) {
-    return new WindowOver<Double>(Double.class, SQLOps.REGR_COUNT, arg1, arg2);
+    return new WindowOver<>(Double.class, SQLOps.REGR_COUNT, arg1, arg2);
   }
 
   /**
@@ -963,7 +973,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> regrR2(
       Expression<? extends Number> arg1, Expression<? extends Number> arg2) {
-    return new WindowOver<Double>(Double.class, SQLOps.REGR_R2, arg1, arg2);
+    return new WindowOver<>(Double.class, SQLOps.REGR_R2, arg1, arg2);
   }
 
   /**
@@ -975,7 +985,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> regrAvgx(
       Expression<? extends Number> arg1, Expression<? extends Number> arg2) {
-    return new WindowOver<Double>(Double.class, SQLOps.REGR_AVGX, arg1, arg2);
+    return new WindowOver<>(Double.class, SQLOps.REGR_AVGX, arg1, arg2);
   }
 
   /**
@@ -987,7 +997,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> regrAvgy(
       Expression<? extends Number> arg1, Expression<? extends Number> arg2) {
-    return new WindowOver<Double>(Double.class, SQLOps.REGR_AVGY, arg1, arg2);
+    return new WindowOver<>(Double.class, SQLOps.REGR_AVGY, arg1, arg2);
   }
 
   /**
@@ -1001,7 +1011,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> regrSxx(
       Expression<? extends Number> arg1, Expression<? extends Number> arg2) {
-    return new WindowOver<Double>(Double.class, SQLOps.REGR_SXX, arg1, arg2);
+    return new WindowOver<>(Double.class, SQLOps.REGR_SXX, arg1, arg2);
   }
 
   /**
@@ -1015,7 +1025,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> regrSyy(
       Expression<? extends Number> arg1, Expression<? extends Number> arg2) {
-    return new WindowOver<Double>(Double.class, SQLOps.REGR_SYY, arg1, arg2);
+    return new WindowOver<>(Double.class, SQLOps.REGR_SYY, arg1, arg2);
   }
 
   /**
@@ -1029,7 +1039,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> regrSxy(
       Expression<? extends Number> arg1, Expression<? extends Number> arg2) {
-    return new WindowOver<Double>(Double.class, SQLOps.REGR_SXY, arg1, arg2);
+    return new WindowOver<>(Double.class, SQLOps.REGR_SXY, arg1, arg2);
   }
 
   /**
@@ -1073,7 +1083,7 @@ public final class R2DBCExpressions {
    * @return cume_dist(args)
    */
   public static WithinGroup<Double> cumeDist(Expression<?>... args) {
-    return new WithinGroup<Double>(Double.class, SQLOps.CUMEDIST2, args);
+    return new WithinGroup<>(Double.class, SQLOps.CUMEDIST2, args);
   }
 
   /**
@@ -1085,7 +1095,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> corr(
       Expression<? extends Number> expr1, Expression<? extends Number> expr2) {
-    return new WindowOver<Double>(Double.class, SQLOps.CORR, expr1, expr2);
+    return new WindowOver<>(Double.class, SQLOps.CORR, expr1, expr2);
   }
 
   /**
@@ -1097,7 +1107,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> covarPop(
       Expression<? extends Number> expr1, Expression<? extends Number> expr2) {
-    return new WindowOver<Double>(Double.class, SQLOps.COVARPOP, expr1, expr2);
+    return new WindowOver<>(Double.class, SQLOps.COVARPOP, expr1, expr2);
   }
 
   /**
@@ -1109,7 +1119,7 @@ public final class R2DBCExpressions {
    */
   public static WindowOver<Double> covarSamp(
       Expression<? extends Number> expr1, Expression<? extends Number> expr2) {
-    return new WindowOver<Double>(Double.class, SQLOps.COVARSAMP, expr1, expr2);
+    return new WindowOver<>(Double.class, SQLOps.COVARSAMP, expr1, expr2);
   }
 
   /**
@@ -1119,7 +1129,7 @@ public final class R2DBCExpressions {
    * @return ratio_to_report(expr)
    */
   public static <T> WindowOver<T> ratioToReport(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.RATIOTOREPORT, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.RATIOTOREPORT, expr);
   }
 
   /**
@@ -1138,7 +1148,7 @@ public final class R2DBCExpressions {
    * @return stddev(expr)
    */
   public static <T extends Number> WindowOver<T> stddev(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.STDDEV, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.STDDEV, expr);
   }
 
   /**
@@ -1148,7 +1158,7 @@ public final class R2DBCExpressions {
    * @return stddev(distinct expr)
    */
   public static <T extends Number> WindowOver<T> stddevDistinct(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.STDDEV_DISTINCT, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.STDDEV_DISTINCT, expr);
   }
 
   /**
@@ -1159,7 +1169,7 @@ public final class R2DBCExpressions {
    * @return stddev_pop(expr)
    */
   public static <T extends Number> WindowOver<T> stddevPop(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.STDDEVPOP, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.STDDEVPOP, expr);
   }
 
   /**
@@ -1170,7 +1180,7 @@ public final class R2DBCExpressions {
    * @return stddev_samp(expr)
    */
   public static <T extends Number> WindowOver<T> stddevSamp(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.STDDEVSAMP, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.STDDEVSAMP, expr);
   }
 
   /**
@@ -1180,7 +1190,7 @@ public final class R2DBCExpressions {
    * @return variance(expr)
    */
   public static <T extends Number> WindowOver<T> variance(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.VARIANCE, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.VARIANCE, expr);
   }
 
   /**
@@ -1190,7 +1200,7 @@ public final class R2DBCExpressions {
    * @return var_pop(expr)
    */
   public static <T extends Number> WindowOver<T> varPop(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.VARPOP, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.VARPOP, expr);
   }
 
   /**
@@ -1200,7 +1210,7 @@ public final class R2DBCExpressions {
    * @return var_samp(expr)
    */
   public static <T extends Number> WindowOver<T> varSamp(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.VARSAMP, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.VARSAMP, expr);
   }
 
   /**
@@ -1210,7 +1220,7 @@ public final class R2DBCExpressions {
    * @return first_value(expr)
    */
   public static <T> WindowOver<T> firstValue(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.FIRSTVALUE, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.FIRSTVALUE, expr);
   }
 
   /**
@@ -1220,7 +1230,7 @@ public final class R2DBCExpressions {
    * @return last_value(expr)
    */
   public static <T> WindowOver<T> lastValue(Expression<T> expr) {
-    return new WindowOver<T>(expr.getType(), SQLOps.LASTVALUE, expr);
+    return new WindowOver<>(expr.getType(), SQLOps.LASTVALUE, expr);
   }
 
   /**
@@ -1298,7 +1308,7 @@ public final class R2DBCExpressions {
    */
   public static <T extends Comparable<?>> LocalDateOperation<T> localDateOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new LocalDateOperation<T>(type, operator, args);
+    return new LocalDateOperation<>(type, operator, args);
   }
 
   /**
@@ -1311,7 +1321,7 @@ public final class R2DBCExpressions {
    */
   public static <T extends Comparable<?>> LocalDateTimeOperation<T> localDateTimeOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new LocalDateTimeOperation<T>(type, operator, args);
+    return new LocalDateTimeOperation<>(type, operator, args);
   }
 
   /**
@@ -1324,7 +1334,7 @@ public final class R2DBCExpressions {
    */
   public static <T extends Comparable<?>> LocalTimeOperation<T> localTimeOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new LocalTimeOperation<T>(type, operator, args);
+    return new LocalTimeOperation<>(type, operator, args);
   }
 
   private R2DBCExpressions() {}

@@ -49,7 +49,7 @@ public final class RelationalPathUtils {
   }
 
   private static <T> FactoryExpression<T> createBeanProjection(RelationalPath<T> path) {
-    Map<String, Expression<?>> bindings = new LinkedHashMap<String, Expression<?>>();
+    Map<String, Expression<?>> bindings = new LinkedHashMap<>();
     for (Path<?> column : path.getColumns()) {
       bindings.put(column.getMetadata().getName(), column);
     }

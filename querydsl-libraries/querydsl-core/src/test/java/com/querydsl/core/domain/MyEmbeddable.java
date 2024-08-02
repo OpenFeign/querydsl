@@ -20,10 +20,12 @@ public class MyEmbeddable implements Comparable<MyEmbeddable> {
 
   private int foo;
 
+  @Override
   public int compareTo(MyEmbeddable individualToCompare) {
     return -1;
   }
 
+  @Override
   public boolean equals(Object o) {
     return o == this;
   }

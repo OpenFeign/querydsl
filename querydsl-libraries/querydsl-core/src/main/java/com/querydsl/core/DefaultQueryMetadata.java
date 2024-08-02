@@ -13,9 +13,20 @@
  */
 package com.querydsl.core;
 
-import static com.querydsl.core.util.CollectionUtils.*;
+import static com.querydsl.core.util.CollectionUtils.addSorted;
+import static com.querydsl.core.util.CollectionUtils.copyOf;
+import static com.querydsl.core.util.CollectionUtils.copyOfSorted;
+import static com.querydsl.core.util.CollectionUtils.put;
+import static com.querydsl.core.util.CollectionUtils.removeSorted;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.ParamsVisitor;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.ValidatingVisitor;
 import com.querydsl.core.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -203,7 +214,7 @@ public class DefaultQueryMetadata implements QueryMetadata, Cloneable {
   @Override
   public QueryMetadata clone() {
     try {
-      DefaultQueryMetadata clone = (DefaultQueryMetadata) super.clone();
+      var clone = (DefaultQueryMetadata) super.clone();
       clone.exprInJoins = copyOf(exprInJoins);
       clone.groupBy = copyOf(groupBy);
       clone.having = having;
@@ -368,7 +379,7 @@ public class DefaultQueryMetadata implements QueryMetadata, Cloneable {
   @Override
   public boolean equals(Object o) {
     if (o instanceof QueryMetadata) {
-      QueryMetadata q = (QueryMetadata) o;
+      var q = (QueryMetadata) o;
       return q.getFlags().equals(flags)
           && q.getGroupBy().equals(groupBy)
           && Objects.equals(q.getHaving(), having)

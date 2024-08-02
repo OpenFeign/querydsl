@@ -49,7 +49,7 @@ public class ECJEvaluatorFactoryTest {
   @Test
   public void Simple() {
     for (String expr : Arrays.asList("a.equals(b)", "a.startsWith(b)", "a.equalsIgnoreCase(b)")) {
-      long start = System.currentTimeMillis();
+      var start = System.currentTimeMillis();
       evaluate(
           expr,
           boolean.class,
@@ -57,12 +57,12 @@ public class ECJEvaluatorFactoryTest {
           strings,
           Arrays.asList("a", "b"),
           Collections.<String, Object>emptyMap());
-      long duration = System.currentTimeMillis() - start;
+      var duration = System.currentTimeMillis() - start;
       System.err.println(expr + " took " + duration + "ms\n");
     }
 
     for (String expr : Arrays.asList("a != b", "a < b", "a > b", "a <= b", "a >= b")) {
-      long start = System.currentTimeMillis();
+      var start = System.currentTimeMillis();
       evaluate(
           expr,
           boolean.class,
@@ -70,7 +70,7 @@ public class ECJEvaluatorFactoryTest {
           ints,
           Arrays.asList(0, 1),
           Collections.<String, Object>emptyMap());
-      long duration = System.currentTimeMillis() - start;
+      var duration = System.currentTimeMillis() - start;
       System.err.println(expr + " took " + duration + "ms\n");
     }
   }
@@ -95,7 +95,7 @@ public class ECJEvaluatorFactoryTest {
 
   @Test
   public void WithConstants() {
-    Map<String, Object> constants = new HashMap<String, Object>();
+    Map<String, Object> constants = new HashMap<>();
     constants.put("x", "Hello World");
     List<Class<?>> types = Arrays.<Class<?>>asList(String.class);
     List<String> names = Arrays.asList("a");

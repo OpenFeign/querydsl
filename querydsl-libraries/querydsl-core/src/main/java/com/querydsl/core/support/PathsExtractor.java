@@ -13,7 +13,15 @@
  */
 package com.querydsl.core.support;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.core.types.Visitor;
 import java.util.Collection;
 import java.util.List;
 

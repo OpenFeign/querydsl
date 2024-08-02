@@ -13,7 +13,10 @@
  */
 package com.querydsl.sql.types;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  * {@code XMLAsStringType} maps String to SQLXML on the JDBC level
@@ -32,7 +35,7 @@ public class XMLAsStringType extends AbstractType<String> {
 
   @Override
   public String getValue(ResultSet rs, int startIndex) throws SQLException {
-    SQLXML value = rs.getSQLXML(startIndex);
+    var value = rs.getSQLXML(startIndex);
     return value != null ? value.getString() : null;
   }
 
@@ -43,7 +46,7 @@ public class XMLAsStringType extends AbstractType<String> {
 
   @Override
   public void setValue(PreparedStatement st, int startIndex, String value) throws SQLException {
-    SQLXML xml = st.getConnection().createSQLXML();
+    var xml = st.getConnection().createSQLXML();
     xml.setString(value);
     st.setSQLXML(startIndex, xml);
   }

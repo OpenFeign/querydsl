@@ -3,7 +3,6 @@ package com.querydsl.example.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.dto.Supplier;
-import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +12,7 @@ public class SupplierDaoTest extends AbstractDaoTest {
 
   @Test
   public void findAll() {
-    List<Supplier> suppliers = supplierDao.findAll();
+    var suppliers = supplierDao.findAll();
     assertThat(suppliers).isNotEmpty();
   }
 
@@ -24,13 +23,13 @@ public class SupplierDaoTest extends AbstractDaoTest {
 
   @Test
   public void update() {
-    Supplier supplier = supplierDao.findById(1);
+    var supplier = supplierDao.findById(1);
     supplierDao.save(supplier);
   }
 
   @Test
   public void delete() {
-    Supplier supplier = new Supplier();
+    var supplier = new Supplier();
     supplierDao.save(supplier);
     assertThat(supplier.getId()).isNotNull();
     supplierDao.delete(supplier);

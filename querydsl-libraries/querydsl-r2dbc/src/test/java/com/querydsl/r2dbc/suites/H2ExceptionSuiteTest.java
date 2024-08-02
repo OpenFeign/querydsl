@@ -43,17 +43,17 @@ public class H2ExceptionSuiteTest extends AbstractBaseTest {
 
   @Test
   public void sQLExceptionCreationTranslated() {
-    SQLException e1 = new SQLException("Exception #1", "42001", 181);
-    SQLException e2 = new SQLException("Exception #2", "HY000", 1030);
+    var e1 = new SQLException("Exception #1", "42001", 181);
+    var e2 = new SQLException("Exception #2", "HY000", 1030);
     e1.setNextException(e2);
-    SQLException sqlException = new SQLException("Batch operation failed");
+    var sqlException = new SQLException("Batch operation failed");
     sqlException.setNextException(e1);
-    RuntimeException result = exceptionTranslator.translate(sqlException);
+    var result = exceptionTranslator.translate(sqlException);
     inspectExceptionResult(result);
   }
 
   private void inspectExceptionResult(Exception result) {
-    String stackTraceAsString = Throwables.getStackTraceAsString(result);
+    var stackTraceAsString = Throwables.getStackTraceAsString(result);
     assertThat(stackTraceAsString).contains("Suppressed:");
   }
 }

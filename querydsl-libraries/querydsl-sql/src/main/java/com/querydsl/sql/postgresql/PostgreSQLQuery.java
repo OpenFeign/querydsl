@@ -59,7 +59,7 @@ public class PostgreSQLQuery<T> extends AbstractPostgreSQLQuery<T, PostgreSQLQue
 
   @Override
   public PostgreSQLQuery<T> clone(Connection conn) {
-    PostgreSQLQuery<T> q = new PostgreSQLQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    var q = new PostgreSQLQuery<T>(conn, getConfiguration(), getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -68,7 +68,7 @@ public class PostgreSQLQuery<T> extends AbstractPostgreSQLQuery<T, PostgreSQLQue
   public <U> PostgreSQLQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    PostgreSQLQuery<U> newType = (PostgreSQLQuery<U>) this;
+    var newType = (PostgreSQLQuery<U>) this;
     return newType;
   }
 
@@ -76,7 +76,7 @@ public class PostgreSQLQuery<T> extends AbstractPostgreSQLQuery<T, PostgreSQLQue
   public PostgreSQLQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    PostgreSQLQuery<Tuple> newType = (PostgreSQLQuery<Tuple>) this;
+    var newType = (PostgreSQLQuery<Tuple>) this;
     return newType;
   }
 }

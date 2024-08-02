@@ -23,11 +23,11 @@ public class CollUpdateClauseTest {
 
   @Test
   public void execute() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     List<Cat> cats =
         Arrays.asList(new Cat("Ann"), new Cat("Bob"), new Cat("John"), new Cat("Carl"));
 
-    CollUpdateClause<Cat> updateClause = new CollUpdateClause<Cat>(cat, cats);
+    var updateClause = new CollUpdateClause<>(cat, cats);
     updateClause.where(cat.name.eq("Bob"));
     updateClause.set(cat.name, "Bobby");
     assertThat(updateClause.execute()).isEqualTo(1);

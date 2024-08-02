@@ -121,10 +121,13 @@ public interface JPQLSubQuery<T> extends SubQueryExpression<T> {
 
   BooleanOperation isNotNull();
 
+  @Override
   QueryMetadata getMetadata();
 
+  @Override
   <R, C> R accept(Visitor<R, C> v, C context);
 
+  @Override
   Class<T> getType();
 
   BooleanExpression in(Collection<? extends T> right);

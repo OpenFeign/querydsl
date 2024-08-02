@@ -33,7 +33,7 @@ public class GSum<T extends Number> extends AbstractGroupExpression<T, T> {
 
   @Override
   public GroupCollector<T, T> createGroupCollector() {
-    return new GroupCollector<T, T>() {
+    return new GroupCollector<>() {
       private BigDecimal sum = BigDecimal.ZERO;
 
       @Override

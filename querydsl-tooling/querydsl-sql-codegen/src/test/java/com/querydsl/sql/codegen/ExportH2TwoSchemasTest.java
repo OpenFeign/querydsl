@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.sql.SQLException;
-import java.sql.Statement;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -27,7 +26,7 @@ public class ExportH2TwoSchemasTest {
   public static void setUpClass() throws Exception {
     Connections.initH2();
 
-    Statement stmt = Connections.getStatement();
+    var stmt = Connections.getStatement();
     stmt.execute("create schema if not exists newschema");
     stmt.execute(
         """
@@ -43,15 +42,15 @@ public class ExportH2TwoSchemasTest {
 
   @Test
   public void export() throws SQLException, MalformedURLException, IOException {
-    MetadataExporterConfigImpl config = new MetadataExporterConfigImpl();
+    var config = new MetadataExporterConfigImpl();
     config.setSchemaPattern(null);
     config.setPackageName("test");
     config.setTargetFolder(folder.getRoot());
 
-    MetaDataExporter exporter = new MetaDataExporter(config);
+    var exporter = new MetaDataExporter(config);
     exporter.export(Connections.getConnection().getMetaData());
 
-    String contents =
+    var contents =
         new String(
             Files.readAllBytes(new File(folder.getRoot(), "test/QSurvey.java").toPath()),
             StandardCharsets.UTF_8);

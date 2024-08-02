@@ -29,7 +29,7 @@ public final class DefaultVariableNameFunction implements Function<EntityType, S
 
   @Override
   public String apply(EntityType entity) {
-    String uncapSimpleName = StringUtils.uncapitalize(entity.getInnerType().getSimpleName());
+    var uncapSimpleName = StringUtils.uncapitalize(entity.getInnerType().getSimpleName());
     if (SourceVersion.isKeyword(uncapSimpleName)) {
       uncapSimpleName = uncapSimpleName + "$";
     }

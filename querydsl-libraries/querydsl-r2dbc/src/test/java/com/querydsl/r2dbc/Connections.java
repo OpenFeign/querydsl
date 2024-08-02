@@ -15,13 +15,15 @@ package com.querydsl.r2dbc;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.r2dbc.binding.BindMarkers;
 import com.querydsl.r2dbc.binding.BindTarget;
 import com.querydsl.r2dbc.binding.StatementWrapper;
 import com.querydsl.r2dbc.ddl.CreateTableClause;
 import com.querydsl.r2dbc.ddl.DropTableClause;
 import com.querydsl.r2dbc.domain.QEmployee;
-import io.r2dbc.spi.*;
+import io.r2dbc.spi.Connection;
+import io.r2dbc.spi.ConnectionFactories;
+import io.r2dbc.spi.ConnectionFactory;
+import io.r2dbc.spi.Result;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -40,11 +42,11 @@ public final class Connections {
 
   public static final int TEST_ROW_COUNT = 100;
 
-  private static ThreadLocal<Connection> connHolder = new ThreadLocal<Connection>();
+  private static ThreadLocal<Connection> connHolder = new ThreadLocal<>();
 
-  private static ThreadLocal<Target> targetHolder = new ThreadLocal<Target>();
+  private static ThreadLocal<Target> targetHolder = new ThreadLocal<>();
 
-  private static ThreadLocal<Configuration> configurationHolder = new ThreadLocal<Configuration>();
+  private static ThreadLocal<Configuration> configurationHolder = new ThreadLocal<>();
 
   // datetest
   private static final String CREATE_TABLE_DATETEST = "create table DATE_TEST(DATE_TEST date)";
@@ -96,23 +98,22 @@ public final class Connections {
   }
 
   public static R2DBCConnectionProvider getH2() {
-    String url = "r2dbc:h2:file://././target/h2-test;LOCK_MODE=0;AUTO_SERVER=TRUE;MODE=legacy";
+    var url = "r2dbc:h2:file://././target/h2-test;LOCK_MODE=0;AUTO_SERVER=TRUE;MODE=legacy";
     return getR2DBCConnectionProvider(url);
   }
 
   public static R2DBCConnectionProvider getMySQL() {
-    String url =
-        "r2dbc:mysql://querydsl:querydsl@localhost:3306/querydsl?useLegacyDatetimeCode=false";
+    var url = "r2dbc:mysql://querydsl:querydsl@localhost:3306/querydsl?useLegacyDatetimeCode=false";
     return getR2DBCConnectionProvider(url);
   }
 
   public static R2DBCConnectionProvider getPostgreSQL() {
-    String url = "r2dbc:postgresql://querydsl:querydsl@localhost:5433/querydsl";
+    var url = "r2dbc:postgresql://querydsl:querydsl@localhost:5433/querydsl";
     return getR2DBCConnectionProvider(url);
   }
 
   public static R2DBCConnectionProvider getSQLServer() {
-    String url = "r2dbc:mssql://sa:Password1!@localhost:1433/tempdb";
+    var url = "r2dbc:mssql://sa:Password1!@localhost:1433/tempdb";
     return getR2DBCConnectionProvider(url);
   }
 
@@ -129,7 +130,7 @@ public final class Connections {
   }
 
   public static Mono<Result> execute(Connection connection, String query) {
-    Statement statement = connection.createStatement(query);
+    var statement = connection.createStatement(query);
     return Mono.from(statement.execute());
   }
 
@@ -197,8 +198,8 @@ public final class Connections {
   public static void initH2() {
     targetHolder.set(Target.H2);
     SQLTemplates templates = new H2Templates();
-    R2DBCConnectionProvider c = getH2();
-    Connection connection = c.getConnection().block();
+    var c = getH2();
+    var connection = c.getConnection().block();
     connHolder.set(connection);
 
     if (h2Inited) {
@@ -251,20 +252,22 @@ public final class Connections {
     //        }
 
     List<Object> constants = Arrays.asList(0);
-    String sql =
+    var sql =
         R2dbcUtils.replaceBindingArguments(
             getConfiguration().getBindMarkerFactory().create(),
             constants,
             quote(INSERT_INTO_TEST_VALUES, "TEST"));
-    Statement pstmt = connection.createStatement(sql);
+    var pstmt = connection.createStatement(sql);
 
     BindTarget bindTarget = new StatementWrapper(pstmt);
 
-    for (int i = 0; i < TEST_ROW_COUNT; i++) {
-      BindMarkers bindMarkers = getConfiguration().getBindMarkerFactory().create();
+    for (var i = 0; i < TEST_ROW_COUNT; i++) {
+      var bindMarkers = getConfiguration().getBindMarkerFactory().create();
       getConfiguration()
           .set(bindMarkers.next(), bindTarget, Expressions.stringPath("name"), "name" + i);
-      if (i < (TEST_ROW_COUNT - 1)) pstmt.add();
+      if (i < (TEST_ROW_COUNT - 1)) {
+        pstmt.add();
+      }
     }
 
     setup = setup.concatWith(Mono.from(pstmt.execute()).then());
@@ -277,8 +280,8 @@ public final class Connections {
   public static void initMySQL() {
     targetHolder.set(Target.MYSQL);
     //        SQLTemplates templates = new MySQLTemplates();
-    R2DBCConnectionProvider c = getMySQL();
-    Connection connection = c.getConnection().block();
+    var c = getMySQL();
+    var connection = c.getConnection().block();
     connHolder.set(connection);
 
     if (mysqlInited) {
@@ -337,18 +340,20 @@ public final class Connections {
     }
 
     List<Object> constants = Arrays.asList(0);
-    String sql =
+    var sql =
         R2dbcUtils.replaceBindingArguments(
             getConfiguration().getBindMarkerFactory().create(), constants, INSERT_INTO_TEST_VALUES);
-    Statement pstmt = connection.createStatement(sql);
+    var pstmt = connection.createStatement(sql);
 
     BindTarget bindTarget = new StatementWrapper(pstmt);
 
-    for (int i = 0; i < TEST_ROW_COUNT; i++) {
-      BindMarkers bindMarkers = getConfiguration().getBindMarkerFactory().create();
+    for (var i = 0; i < TEST_ROW_COUNT; i++) {
+      var bindMarkers = getConfiguration().getBindMarkerFactory().create();
       getConfiguration()
           .set(bindMarkers.next(), bindTarget, Expressions.stringPath("name"), "name" + i);
-      if (i < (TEST_ROW_COUNT - 1)) pstmt.add();
+      if (i < (TEST_ROW_COUNT - 1)) {
+        pstmt.add();
+      }
     }
 
     setup = setup.concatWith(Mono.from(pstmt.execute()).then());
@@ -362,8 +367,8 @@ public final class Connections {
     targetHolder.set(Target.POSTGRESQL);
     SQLTemplates templates = new PostgreSQLTemplates(true);
     // NOTE : unquoted identifiers are converted to lower case in PostgreSQL
-    R2DBCConnectionProvider c = getPostgreSQL();
-    Connection connection = c.getConnection().block();
+    var c = getPostgreSQL();
+    var connection = c.getConnection().block();
     connHolder.set(connection);
 
     if (postgresqlInited) {
@@ -430,17 +435,17 @@ public final class Connections {
     }
 
     List<Object> constants = Arrays.asList(0);
-    String sql =
+    var sql =
         R2dbcUtils.replaceBindingArguments(
             getConfiguration().getBindMarkerFactory().create(),
             constants,
             quote(INSERT_INTO_TEST_VALUES, "TEST"));
-    Statement pstmt = connection.createStatement(sql);
+    var pstmt = connection.createStatement(sql);
 
     BindTarget bindTarget = new StatementWrapper(pstmt);
 
-    for (int i = 0; i < TEST_ROW_COUNT; i++) {
-      BindMarkers bindMarkers = getConfiguration().getBindMarkerFactory().create();
+    for (var i = 0; i < TEST_ROW_COUNT; i++) {
+      var bindMarkers = getConfiguration().getBindMarkerFactory().create();
       getConfiguration()
           .set(bindMarkers.next(), bindTarget, Expressions.stringPath("name"), "name" + i);
       pstmt.add();
@@ -456,8 +461,8 @@ public final class Connections {
   public static void initSQLServer() {
     targetHolder.set(Target.SQLSERVER);
     SQLTemplates templates = new SQLServerTemplates();
-    R2DBCConnectionProvider c = getSQLServer();
-    Connection connection = c.getConnection().block();
+    var c = getSQLServer();
+    var connection = c.getConnection().block();
     connHolder.set(connection);
 
     if (sqlServerInited) {
@@ -501,20 +506,22 @@ public final class Connections {
     }
 
     List<Object> constants = Arrays.asList(0);
-    String sql =
+    var sql =
         R2dbcUtils.replaceBindingArguments(
             getConfiguration().getBindMarkerFactory().create(),
             constants,
             quote(INSERT_INTO_TEST_VALUES, "TEST"));
-    Statement pstmt = connection.createStatement(sql);
+    var pstmt = connection.createStatement(sql);
 
     BindTarget bindTarget = new StatementWrapper(pstmt);
 
-    for (int i = 0; i < TEST_ROW_COUNT; i++) {
-      BindMarkers bindMarkers = getConfiguration().getBindMarkerFactory().create();
+    for (var i = 0; i < TEST_ROW_COUNT; i++) {
+      var bindMarkers = getConfiguration().getBindMarkerFactory().create();
       getConfiguration()
           .set(bindMarkers.next(), bindTarget, Expressions.stringPath("name"), "name" + i);
-      if (i < (TEST_ROW_COUNT - 1)) pstmt.add();
+      if (i < (TEST_ROW_COUNT - 1)) {
+        pstmt.add();
+      }
     }
 
     setup = setup.concatWith(Mono.from(pstmt.execute()).then());
@@ -532,16 +539,16 @@ public final class Connections {
       String lastName,
       double salary,
       int superiorId) {
-    Configuration configuration = configurationHolder.get();
+    var configuration = configurationHolder.get();
 
     List<Object> constants = Arrays.asList(0, 1, 2, 3, 4, 5, 6);
-    String sql =
+    var sql =
         R2dbcUtils.replaceBindingArguments(
             configuration.getBindMarkerFactory().create(), constants, originalSql);
 
-    Statement statement = connection.createStatement(sql);
+    var statement = connection.createStatement(sql);
     BindTarget bindTarget = new StatementWrapper(statement);
-    BindMarkers bindMarkers = configuration.getBindMarkerFactory().create();
+    var bindMarkers = configuration.getBindMarkerFactory().create();
 
     configuration.set(bindMarkers.next(), bindTarget, QEmployee.employee.id, id);
     configuration.set(bindMarkers.next(), bindTarget, QEmployee.employee.firstname, firstName);
@@ -579,7 +586,7 @@ public final class Connections {
   }
 
   private static String quote(String sql, String... identifiers) {
-    String rv = sql;
+    var rv = sql;
     for (String id : identifiers) {
       rv = rv.replace(id, "" + id + "");
     }

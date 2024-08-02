@@ -20,7 +20,7 @@ import org.junit.Test;
 public class NullSafeComparableComparatorTest {
 
   private final NullSafeComparableComparator<String> comparator =
-      new NullSafeComparableComparator<String>();
+      new NullSafeComparableComparator<>();
 
   @Test
   public void null_before_object() {

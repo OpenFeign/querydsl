@@ -34,7 +34,7 @@ public class OriginalNamingStrategy extends AbstractNamingStrategy {
 
   @Override
   public String getDefaultVariableName(EntityType entityType) {
-    String escaped = escape(entityType, entityType.getData().get("table").toString());
+    var escaped = escape(entityType, entityType.getData().get("table").toString());
     return normalizeJavaName(escaped);
   }
 

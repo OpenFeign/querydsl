@@ -14,7 +14,10 @@
 package com.querydsl.sql.types;
 
 import com.querydsl.core.util.PrimitiveUtils;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -26,8 +29,8 @@ public class ArrayType<T> extends AbstractType<T> {
 
   private static void copy(Object source, Object target, int length) {
     // Note: System.arrayCopy doesn't handle copying from/to primitive arrays properly
-    for (int i = 0; i < length; i++) {
-      Object val = java.lang.reflect.Array.get(source, i);
+    for (var i = 0; i < length; i++) {
+      var val = java.lang.reflect.Array.get(source, i);
       java.lang.reflect.Array.set(target, i, val);
     }
   }
@@ -54,7 +57,7 @@ public class ArrayType<T> extends AbstractType<T> {
   @Nullable
   @Override
   public T getValue(ResultSet rs, int startIndex) throws SQLException {
-    Array arr = rs.getArray(startIndex);
+    var arr = rs.getArray(startIndex);
     if (arr != null) {
       /*
        * The Javadoc for getArray() is annoyingly ambiguous about what it returns.
@@ -75,10 +78,10 @@ public class ArrayType<T> extends AbstractType<T> {
        * Note that we cannot cast arr.getArray() to Object[] because, if the returned
        * array is a primitive array, that would cause ClassCastException.
        */
-      Object rv = arr.getArray();
+      var rv = arr.getArray();
       if (!type.isAssignableFrom(rv.getClass())) {
-        int length = java.lang.reflect.Array.getLength(rv);
-        Object rv2 = java.lang.reflect.Array.newInstance(type.getComponentType(), length);
+        var length = java.lang.reflect.Array.getLength(rv);
+        var rv2 = java.lang.reflect.Array.newInstance(type.getComponentType(), length);
         copy(rv, rv2, length);
         return (T) rv2;
       } else {
@@ -94,13 +97,13 @@ public class ArrayType<T> extends AbstractType<T> {
   public void setValue(PreparedStatement st, int startIndex, T value) throws SQLException {
     if (convertPrimitives) {
       // primitives in
-      int length = java.lang.reflect.Array.getLength(value);
-      Object value2 =
+      var length = java.lang.reflect.Array.getLength(value);
+      var value2 =
           java.lang.reflect.Array.newInstance(PrimitiveUtils.wrap(type.getComponentType()), length);
       copy(value, value2, length);
       value = (T) value2;
     }
-    Array arr = st.getConnection().createArrayOf(typeName, (Object[]) value);
+    var arr = st.getConnection().createArrayOf(typeName, (Object[]) value);
     st.setArray(startIndex, arr);
   }
 }

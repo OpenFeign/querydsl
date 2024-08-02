@@ -44,7 +44,7 @@ public class PathBuilder<T> extends EntityPathBase<T> {
   private static final long serialVersionUID = -1666357914232685088L;
 
   private final ConcurrentHashMap<SimpleEntry<String, Class<?>>, PathBuilder<?>> properties =
-      new ConcurrentHashMap<SimpleEntry<String, Class<?>>, PathBuilder<?>>();
+      new ConcurrentHashMap<>();
 
   private final ConcurrentHashMap<Path<?>, Object> propertyMetadata =
       new ConcurrentHashMap<Path<?>, Object>();
@@ -107,7 +107,7 @@ public class PathBuilder<T> extends EntityPathBase<T> {
 
   @SuppressWarnings("unchecked")
   protected <A> Class<? extends A> validate(String property, Class<A> propertyType) {
-    Class<A> validatedType = (Class<A>) validator.validate(getType(), property, propertyType);
+    var validatedType = (Class<A>) validator.validate(getType(), property, propertyType);
     if (validatedType != null) {
       return validatedType;
     } else {
@@ -128,8 +128,8 @@ public class PathBuilder<T> extends EntityPathBase<T> {
    */
   @SuppressWarnings("unchecked")
   public PathBuilder<Object> get(String property) {
-    SimpleEntry<String, Class<?>> entry = new SimpleEntry<String, Class<?>>(property, Object.class);
-    PathBuilder<Object> path = (PathBuilder<Object>) properties.get(entry);
+    SimpleEntry<String, Class<?>> entry = new SimpleEntry<>(property, Object.class);
+    var path = (PathBuilder<Object>) properties.get(entry);
     PathBuilder<?> existingPath = null;
     if (path == null) {
       Class<?> vtype = validate(property, Object.class);
@@ -149,12 +149,12 @@ public class PathBuilder<T> extends EntityPathBase<T> {
    */
   @SuppressWarnings("unchecked")
   public <A> PathBuilder<A> get(String property, Class<A> type) {
-    SimpleEntry<String, Class<?>> entry = new SimpleEntry<String, Class<?>>(property, type);
-    PathBuilder<A> path = (PathBuilder<A>) properties.get(entry);
+    SimpleEntry<String, Class<?>> entry = new SimpleEntry<>(property, type);
+    var path = (PathBuilder<A>) properties.get(entry);
     PathBuilder<?> existingPath = null;
     if (path == null) {
       Class<? extends A> vtype = validate(property, type);
-      path = new PathBuilder<A>(vtype, forProperty(property), validator);
+      path = new PathBuilder<>(vtype, forProperty(property), validator);
       existingPath = properties.putIfAbsent(entry, path);
     }
     return existingPath == null ? path : (PathBuilder<A>) existingPath;
@@ -181,7 +181,7 @@ public class PathBuilder<T> extends EntityPathBase<T> {
    * @return property path
    */
   public BooleanPath get(BooleanPath path) {
-    BooleanPath newPath = getBoolean(toString(path));
+    var newPath = getBoolean(toString(path));
     return addMetadataOf(newPath, path);
   }
 
@@ -482,7 +482,7 @@ public class PathBuilder<T> extends EntityPathBase<T> {
    * @return property path
    */
   public StringPath get(StringPath path) {
-    StringPath newPath = getString(toString(path));
+    var newPath = getString(toString(path));
     return addMetadataOf(newPath, path);
   }
 

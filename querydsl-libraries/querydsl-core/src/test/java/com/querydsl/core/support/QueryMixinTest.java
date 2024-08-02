@@ -16,7 +16,6 @@ package com.querydsl.core.support;
 import static com.querydsl.core.alias.Alias.$;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.JoinExpression;
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.domain.QCommonPersistence;
 import com.querydsl.core.types.PathMetadataFactory;
@@ -42,7 +41,7 @@ public class QueryMixinTest {
     mixin.on(entity.version.isNull(), entity.version.isNotNull());
 
     assertThat(mixin.getMetadata().getJoins()).hasSize(1);
-    JoinExpression je = mixin.getMetadata().getJoins().getFirst();
+    var je = mixin.getMetadata().getJoins().getFirst();
     assertThat(je.getTarget()).isEqualTo(entity);
     assertThat(je.getCondition())
         .isEqualTo(Expressions.allOf(entity.version.isNull(), entity.version.isNotNull()));
@@ -53,17 +52,17 @@ public class QueryMixinTest {
     mixin.innerJoin(entity);
 
     assertThat(mixin.getMetadata().getJoins()).hasSize(1);
-    JoinExpression je = mixin.getMetadata().getJoins().getFirst();
+    var je = mixin.getMetadata().getJoins().getFirst();
     assertThat(je.getTarget()).isEqualTo(entity);
     assertThat(je.getCondition()).isNull();
   }
 
   @Test
   public void innerJoin() {
-    DummyEntity e = Alias.alias(DummyEntity.class);
-    DummyEntity e2 = Alias.alias(DummyEntity.class, "e2");
-    DummyEntity e3 = Alias.alias(DummyEntity.class, "e3");
-    DummyEntity e4 = Alias.alias(DummyEntity.class, "e4");
+    var e = Alias.alias(DummyEntity.class);
+    var e2 = Alias.alias(DummyEntity.class, "e2");
+    var e3 = Alias.alias(DummyEntity.class, "e3");
+    var e4 = Alias.alias(DummyEntity.class, "e4");
 
     // inner join
     mixin.innerJoin($(e));
@@ -78,10 +77,10 @@ public class QueryMixinTest {
 
   @Test
   public void join() {
-    DummyEntity e = Alias.alias(DummyEntity.class);
-    DummyEntity e2 = Alias.alias(DummyEntity.class, "e2");
-    DummyEntity e3 = Alias.alias(DummyEntity.class, "e3");
-    DummyEntity e4 = Alias.alias(DummyEntity.class, "e4");
+    var e = Alias.alias(DummyEntity.class);
+    var e2 = Alias.alias(DummyEntity.class, "e2");
+    var e3 = Alias.alias(DummyEntity.class, "e3");
+    var e4 = Alias.alias(DummyEntity.class, "e4");
 
     // inner join
     mixin.innerJoin($(e));
@@ -96,8 +95,8 @@ public class QueryMixinTest {
 
   @Test
   public void joins() {
-    DummyEntity e = Alias.alias(DummyEntity.class);
-    DummyEntity e2 = Alias.alias(DummyEntity.class, "e2");
+    var e = Alias.alias(DummyEntity.class);
+    var e2 = Alias.alias(DummyEntity.class, "e2");
 
     mixin.join($(e));
     mixin.on($(e).isNotNull());
@@ -109,10 +108,10 @@ public class QueryMixinTest {
 
   @Test
   public void leftJoin() {
-    DummyEntity e = Alias.alias(DummyEntity.class);
-    DummyEntity e2 = Alias.alias(DummyEntity.class, "e2");
-    DummyEntity e3 = Alias.alias(DummyEntity.class, "e3");
-    DummyEntity e4 = Alias.alias(DummyEntity.class, "e4");
+    var e = Alias.alias(DummyEntity.class);
+    var e2 = Alias.alias(DummyEntity.class, "e2");
+    var e3 = Alias.alias(DummyEntity.class, "e3");
+    var e4 = Alias.alias(DummyEntity.class, "e4");
 
     // left join
     mixin.leftJoin($(e));
@@ -127,10 +126,10 @@ public class QueryMixinTest {
 
   @Test
   public void rightJoin() {
-    DummyEntity e = Alias.alias(DummyEntity.class);
-    DummyEntity e2 = Alias.alias(DummyEntity.class, "e2");
-    DummyEntity e3 = Alias.alias(DummyEntity.class, "e3");
-    DummyEntity e4 = Alias.alias(DummyEntity.class, "e4");
+    var e = Alias.alias(DummyEntity.class);
+    var e2 = Alias.alias(DummyEntity.class, "e2");
+    var e3 = Alias.alias(DummyEntity.class, "e3");
+    var e4 = Alias.alias(DummyEntity.class, "e4");
 
     // right join
     mixin.rightJoin($(e));
@@ -145,10 +144,10 @@ public class QueryMixinTest {
 
   @Test
   public void fullJoin() {
-    DummyEntity e = Alias.alias(DummyEntity.class);
-    DummyEntity e2 = Alias.alias(DummyEntity.class, "e2");
-    DummyEntity e3 = Alias.alias(DummyEntity.class, "e3");
-    DummyEntity e4 = Alias.alias(DummyEntity.class, "e4");
+    var e = Alias.alias(DummyEntity.class);
+    var e2 = Alias.alias(DummyEntity.class, "e2");
+    var e3 = Alias.alias(DummyEntity.class, "e3");
+    var e4 = Alias.alias(DummyEntity.class, "e4");
 
     // full join
     mixin.fullJoin($(e));

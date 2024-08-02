@@ -18,7 +18,11 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.sql.*;
+import com.querydsl.sql.AbstractSQLQueryFactory;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.MySQLTemplates;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.dml.SQLInsertClause;
 import java.sql.Connection;
 import java.util.function.Supplier;
@@ -49,7 +53,7 @@ public class MySQLQueryFactory extends AbstractSQLQueryFactory<MySQLQuery<?>> {
    * @return insert clause
    */
   public SQLInsertClause insertIgnore(RelationalPath<?> entity) {
-    SQLInsertClause insert = insert(entity);
+    var insert = insert(entity);
     insert.addFlag(Position.START_OVERRIDE, "insert ignore into ");
     return insert;
   }
@@ -62,7 +66,7 @@ public class MySQLQueryFactory extends AbstractSQLQueryFactory<MySQLQuery<?>> {
    * @return insert clause
    */
   public SQLInsertClause insertOnDuplicateKeyUpdate(RelationalPath<?> entity, String clause) {
-    SQLInsertClause insert = insert(entity);
+    var insert = insert(entity);
     insert.addFlag(Position.END, " on duplicate key update " + clause);
     return insert;
   }
@@ -76,7 +80,7 @@ public class MySQLQueryFactory extends AbstractSQLQueryFactory<MySQLQuery<?>> {
    */
   public SQLInsertClause insertOnDuplicateKeyUpdate(
       RelationalPath<?> entity, Expression<?> clause) {
-    SQLInsertClause insert = insert(entity);
+    var insert = insert(entity);
     insert.addFlag(
         Position.END,
         ExpressionUtils.template(String.class, " on duplicate key update {0}", clause));
@@ -92,9 +96,9 @@ public class MySQLQueryFactory extends AbstractSQLQueryFactory<MySQLQuery<?>> {
    */
   public SQLInsertClause insertOnDuplicateKeyUpdate(
       RelationalPath<?> entity, Expression<?>... clauses) {
-    SQLInsertClause insert = insert(entity);
-    StringBuilder flag = new StringBuilder(" on duplicate key update ");
-    for (int i = 0; i < clauses.length; i++) {
+    var insert = insert(entity);
+    var flag = new StringBuilder(" on duplicate key update ");
+    for (var i = 0; i < clauses.length; i++) {
       flag.append(i > 0 ? ", " : "").append("{").append(i).append("}");
     }
     insert.addFlag(Position.END, ExpressionUtils.template(String.class, flag.toString(), clauses));

@@ -27,9 +27,9 @@ public class Context {
 
   public boolean replace;
 
-  public final List<Path<?>> paths = new ArrayList<Path<?>>();
+  public final List<Path<?>> paths = new ArrayList<>();
 
-  public final List<EntityPath<?>> replacements = new ArrayList<EntityPath<?>>();
+  public final List<EntityPath<?>> replacements = new ArrayList<>();
 
   public void add(Path<?> anyPath, EntityPath<?> replacement) {
     replace = true;

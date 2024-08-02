@@ -9,6 +9,7 @@ public class JSR310ZonedDateTimeTypeTest extends AbstractJSR310DateTimeTypeTest<
     super(new JSR310ZonedDateTimeType());
   }
 
+  @Override
   @Test
   public void set() {
     //        ZonedDateTime value = ZonedDateTime.now();
@@ -22,6 +23,7 @@ public class JSR310ZonedDateTimeTypeTest extends AbstractJSR310DateTimeTypeTest<
     //        EasyMock.verify(stmt);
   }
 
+  @Override
   @Test
   public void get() {
     //        ResultSet resultSet = EasyMock.createNiceMock(ResultSet.class);

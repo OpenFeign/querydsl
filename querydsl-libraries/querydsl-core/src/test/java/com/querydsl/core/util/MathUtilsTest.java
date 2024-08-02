@@ -59,7 +59,7 @@ public class MathUtilsTest {
 
   @Test
   public void cast_returns_null_when_input_is_null() {
-    Integer result = MathUtils.cast(null, Integer.class);
+    var result = MathUtils.cast(null, Integer.class);
     assertThat(result).isNull();
   }
 
@@ -80,7 +80,7 @@ public class MathUtilsTest {
   }
 
   private static <N extends Number> void checkSame(N value, Class<N> targetClass) {
-    N target = MathUtils.cast(value, targetClass);
+    var target = MathUtils.cast(value, targetClass);
     assertThat(target).isSameAs(value);
   }
 }

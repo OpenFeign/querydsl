@@ -37,9 +37,9 @@ public class CaseForEqBuilderTest {
 
   @Test
   public void numberTyped() {
-    Customer c = alias(Customer.class, "customer");
+    var c = alias(Customer.class, "customer");
 
-    NumberExpression<Integer> cases =
+    var cases =
         $(c.getAnnualSpending())
             .when(1000L)
             .then(1)
@@ -63,9 +63,9 @@ public class CaseForEqBuilderTest {
 
   @Test
   public void stringTyped() {
-    Customer c = alias(Customer.class, "customer");
+    var c = alias(Customer.class, "customer");
 
-    StringExpression cases =
+    var cases =
         $(c.getAnnualSpending())
             .when(1000L)
             .then("bronze")
@@ -80,18 +80,18 @@ public class CaseForEqBuilderTest {
 
   @Test
   public void booleanTyped() {
-    Customer c = alias(Customer.class, "customer");
+    var c = alias(Customer.class, "customer");
 
-    BooleanExpression cases = $(c.getAnnualSpending()).when(1000L).then(true).otherwise(false);
+    var cases = $(c.getAnnualSpending()).when(1000L).then(true).otherwise(false);
 
     assertThat(cases).isNotNull();
   }
 
   @Test
   public void dateType() {
-    Customer c = alias(Customer.class, "customer");
+    var c = alias(Customer.class, "customer");
 
-    DateExpression<java.sql.Date> cases =
+    var cases =
         $(c.getAnnualSpending())
             .when(1000L)
             .then(new java.sql.Date(0))
@@ -102,9 +102,9 @@ public class CaseForEqBuilderTest {
 
   @Test
   public void dateTimeType() {
-    Customer c = alias(Customer.class, "customer");
+    var c = alias(Customer.class, "customer");
 
-    DateTimeExpression<java.util.Date> cases =
+    var cases =
         $(c.getAnnualSpending())
             .when(1000L)
             .then(new java.util.Date(0))
@@ -115,20 +115,18 @@ public class CaseForEqBuilderTest {
 
   @Test
   public void timeType() {
-    Customer c = alias(Customer.class, "customer");
+    var c = alias(Customer.class, "customer");
 
-    TimeExpression<Time> cases =
-        $(c.getAnnualSpending()).when(1000L).then(new Time(0)).otherwise(new Time(0));
+    var cases = $(c.getAnnualSpending()).when(1000L).then(new Time(0)).otherwise(new Time(0));
 
     assertThat(cases).isNotNull();
   }
 
   @Test
   public void enumType() {
-    Customer c = alias(Customer.class, "customer");
+    var c = alias(Customer.class, "customer");
 
-    EnumExpression<EnumExample> cases =
-        $(c.getAnnualSpending()).when(1000L).then(EnumExample.A).otherwise(EnumExample.B);
+    var cases = $(c.getAnnualSpending()).when(1000L).then(EnumExample.A).otherwise(EnumExample.B);
 
     assertThat(cases).isNotNull();
   }

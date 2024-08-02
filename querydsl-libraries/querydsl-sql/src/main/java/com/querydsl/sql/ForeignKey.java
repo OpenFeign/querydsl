@@ -16,7 +16,13 @@ package com.querydsl.sql;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.annotations.Immutable;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.ProjectionRole;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.CollectionUtils;
@@ -69,9 +75,9 @@ public final class ForeignKey<E> implements Serializable, ProjectionRole<Tuple> 
 
   @SuppressWarnings("unchecked")
   public Predicate on(RelationalPath<E> entity) {
-    BooleanBuilder builder = new BooleanBuilder();
-    for (int i = 0; i < localColumns.size(); i++) {
-      Expression<Object> local = (Expression<Object>) localColumns.get(i);
+    var builder = new BooleanBuilder();
+    for (var i = 0; i < localColumns.size(); i++) {
+      var local = (Expression<Object>) localColumns.get(i);
       Expression<?> foreign = ExpressionUtils.path(local.getType(), entity, foreignColumns.get(i));
       builder.and(ExpressionUtils.eq(local, foreign));
     }

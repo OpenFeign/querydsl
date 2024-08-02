@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.fail;
 public final class TemplatesTestUtils {
 
   public static void testPrecedence(Templates templates) {
-    int likePrecedence = templates.getPrecedence(Ops.LIKE);
-    int eqPrecedence = templates.getPrecedence(Ops.EQ);
+    var likePrecedence = templates.getPrecedence(Ops.LIKE);
+    var eqPrecedence = templates.getPrecedence(Ops.EQ);
     if (templates.getPrecedence(Ops.EQ_IGNORE_CASE) != eqPrecedence) {
       fail(
           "",
@@ -15,8 +15,8 @@ public final class TemplatesTestUtils {
     }
     for (Operator op : Ops.values()) {
       Template template = templates.getTemplate(op);
-      String str = template.toString();
-      int precedence = templates.getPrecedence(op);
+      var str = template.toString();
+      var precedence = templates.getPrecedence(op);
       if (str.contains(" like ") && precedence != likePrecedence) {
         fail("Unexpected precedence for " + op + " with template " + template);
       } else if (!str.contains("(") && !str.contains(".") && precedence < 0) {

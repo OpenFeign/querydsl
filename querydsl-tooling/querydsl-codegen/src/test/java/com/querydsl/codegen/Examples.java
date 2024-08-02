@@ -4,7 +4,12 @@ import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.OrderSpecifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Examples {
 
@@ -51,6 +56,7 @@ public class Examples {
       return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }
@@ -86,7 +92,7 @@ public class Examples {
   @QueryEntity
   public static class OrderBys {
 
-    List<OrderSpecifier<?>> orderBy = new ArrayList<OrderSpecifier<?>>();
+    List<OrderSpecifier<?>> orderBy = new ArrayList<>();
   }
 
   @QueryEntity

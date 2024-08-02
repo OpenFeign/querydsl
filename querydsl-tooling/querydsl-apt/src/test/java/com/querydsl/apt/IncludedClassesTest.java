@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import org.junit.Test;
 
 public class IncludedClassesTest extends AbstractProcessorTest {
@@ -28,7 +27,7 @@ public class IncludedClassesTest extends AbstractProcessorTest {
 
   @Test
   public void process() throws IOException {
-    List<String> classes = getFiles(packagePath);
+    var classes = getFiles(packagePath);
     process(QuerydslAnnotationProcessor.class, classes, "includedClasses");
 
     assertThat(

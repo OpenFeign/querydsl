@@ -79,8 +79,8 @@ public class ExtendedSQLTest {
     //         FOR UPDATE
     //          OF FIRST_NAME, LAST_NAME
 
-    QAuthor author = QAuthor.author;
-    QBook book = QBook.book;
+    var author = QAuthor.author;
+    var book = QBook.book;
     R2DBCMySQLQuery<?> query = new R2DBCMySQLQuery<Void>(null);
     query
         .from(author)
@@ -99,7 +99,7 @@ public class ExtendedSQLTest {
         .getMetadata()
         .setProjection(Projections.tuple(author.firstName, author.lastName, Wildcard.count));
 
-    SQLSerializer serializer = new SQLSerializer(new Configuration(new MySQLTemplates()));
+    var serializer = new SQLSerializer(new Configuration(new MySQLTemplates()));
     serializer.serialize(query.getMetadata(), false);
 
     assertThat(serializer.toString())

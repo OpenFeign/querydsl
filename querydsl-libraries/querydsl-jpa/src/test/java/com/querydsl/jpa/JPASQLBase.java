@@ -27,7 +27,6 @@ import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
 import com.querydsl.sql.SQLTemplates;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -91,26 +90,26 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
 
   @Test
   public void entityQueries_createQuery() {
-    Query query = query().from(cat).select(catEntity).createQuery();
+    var query = query().from(cat).select(catEntity).createQuery();
     assertThat(query.getResultList()).hasSize(6);
   }
 
   @Test
   @ExcludeIn(Target.MYSQL)
   public void entityQueries_createQuery2() {
-    SAnimal_ cat = new SAnimal_("CAT");
+    var cat = new SAnimal_("CAT");
 
-    Query query = query().from(cat).select(catEntity).createQuery();
+    var query = query().from(cat).select(catEntity).createQuery();
     assertThat(query.getResultList()).hasSize(6);
   }
 
   @Test
   public void should_fetch_results_with_factory_expression() {
-    final long expectedTotalResultCount = 6;
-    final HashMap<String, Expression<?>> bindings = new HashMap<String, Expression<?>>();
+    final var expectedTotalResultCount = 6L;
+    final var bindings = new HashMap<String, Expression<?>>();
     bindings.put("name", cat.name);
 
-    final long actualTotalResultCount =
+    final var actualTotalResultCount =
         query().from(cat).select(Projections.bean(Cat.class, bindings)).fetchResults().getTotal();
 
     assertThat(actualTotalResultCount).isEqualTo(expectedTotalResultCount);
@@ -118,9 +117,9 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
 
   @Test
   public void should_get_grouped_list_by_using_fetch_results() {
-    final long expectedCatColorKindCount = 1;
+    final var expectedCatColorKindCount = 1L;
 
-    final long actualCatColorKindCount =
+    final var actualCatColorKindCount =
         query()
             .from(cat)
             .select(catEntity.color)
@@ -133,9 +132,9 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
 
   @Test
   public void should_get_black_cat_count_by_using_group_by_and_having() {
-    final long expectedTabbyCatCount = 2L;
-    final Cat tabbyColorCatFoo = new Cat("Foo", 7, Color.TABBY);
-    final Cat tabbyColorCatBar = new Cat("Bar", 8, Color.TABBY);
+    final var expectedTabbyCatCount = 2L;
+    final var tabbyColorCatFoo = new Cat("Foo", 7, Color.TABBY);
+    final var tabbyColorCatBar = new Cat("Bar", 8, Color.TABBY);
 
     insertEntitiesForTest(Arrays.asList(tabbyColorCatFoo, tabbyColorCatBar));
 

@@ -9,8 +9,8 @@ public class CoalesceTest {
 
   @Test
   public void coalesce_supports_subquery() {
-    Coalesce<String> coalesce =
-        new Coalesce<String>(
+    var coalesce =
+        new Coalesce<>(
             SQLExpressions.select(QCompanies.companies.name).from(QCompanies.companies),
             QCompanies.companies.name);
     assertThat(SQLExpressions.select(coalesce).toString())

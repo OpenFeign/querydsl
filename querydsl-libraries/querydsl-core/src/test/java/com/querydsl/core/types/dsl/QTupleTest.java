@@ -15,7 +15,6 @@ package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QTuple;
 import org.junit.Test;
@@ -24,7 +23,7 @@ public class QTupleTest {
 
   private StringPath first = new StringPath("x");
 
-  private NumberPath<Integer> second = new NumberPath<Integer>(Integer.class, "y");
+  private NumberPath<Integer> second = new NumberPath<>(Integer.class, "y");
 
   private BooleanPath third = new BooleanPath("z");
 
@@ -32,7 +31,7 @@ public class QTupleTest {
 
   @Test
   public void newInstanceObjectArray() {
-    Tuple tuple = tupleExpression.newInstance("1", 42, true);
+    var tuple = tupleExpression.newInstance("1", 42, true);
     assertThat(tuple.size()).isEqualTo(3);
     assertThat(tuple.get(0, String.class)).isEqualTo("1");
     assertThat(tuple.get(1, Integer.class)).isEqualTo(Integer.valueOf(42));

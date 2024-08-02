@@ -15,7 +15,12 @@ package com.querydsl.core.types.dsl;
 
 import com.querydsl.core.types.PathMetadata;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@code PathInits} defines path initializations that can be attached to properties via QueryInit
@@ -37,11 +42,11 @@ public class PathInits implements Serializable {
 
   private final PathInits defaultValue;
 
-  private final Map<String, PathInits> propertyToInits = new HashMap<String, PathInits>();
+  private final Map<String, PathInits> propertyToInits = new HashMap<>();
 
   public PathInits(String... initStrs) {
-    boolean initAllProps = false;
-    PathInits defaultValue = DEFAULT;
+    var initAllProps = false;
+    var defaultValue = DEFAULT;
 
     Map<String, Collection<String>> properties = new HashMap<>();
     for (String initStr : initStrs) {
@@ -51,19 +56,19 @@ public class PathInits implements Serializable {
         initAllProps = true;
         defaultValue = new PathInits(initStr.substring(2));
       } else {
-        String key = initStr;
+        var key = initStr;
         List<String> inits = Collections.emptyList();
         if (initStr.contains(".")) {
           key = initStr.substring(0, initStr.indexOf('.'));
           inits = Collections.singletonList(initStr.substring(key.length() + 1));
         }
-        Collection<String> values = properties.computeIfAbsent(key, k -> new ArrayList<String>());
+        var values = properties.computeIfAbsent(key, k -> new ArrayList<String>());
         values.addAll(inits);
       }
     }
 
     for (Map.Entry<String, Collection<String>> entry : properties.entrySet()) {
-      PathInits inits = new PathInits(entry.getValue().toArray(new String[0]));
+      var inits = new PathInits(entry.getValue().toArray(new String[0]));
       propertyToInits.put(entry.getKey(), inits);
     }
 

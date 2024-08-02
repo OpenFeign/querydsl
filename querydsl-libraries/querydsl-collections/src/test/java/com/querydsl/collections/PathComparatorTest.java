@@ -18,17 +18,17 @@ public class PathComparatorTest {
 
   @Test
   public void equalReference() {
-    Car car = new Car();
+    var car = new Car();
     assertThat(comparator.compare(car, car)).isEqualTo(0);
   }
 
   @Test
   public void semanticallyEqual() {
-    Car car = new Car();
+    var car = new Car();
     car.setModel("car");
     car.setHorsePower(50);
 
-    Car similarCar = new Car();
+    var similarCar = new Car();
     similarCar.setModel("car");
     similarCar.setHorsePower(50);
 
@@ -47,10 +47,10 @@ public class PathComparatorTest {
 
   @Test
   public void compareOnValue() {
-    Car car = new Car();
+    var car = new Car();
     car.setHorsePower(50);
 
-    Car betterCar = new Car();
+    var betterCar = new Car();
     betterCar.setHorsePower(150);
 
     assertThat(comparator.compare(car, betterCar)).isEqualTo(-1);

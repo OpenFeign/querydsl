@@ -75,7 +75,7 @@ public class TeradataQuery<T> extends AbstractTeradataQuery<T, TeradataQuery<T>>
 
   @Override
   public TeradataQuery<T> clone(Connection conn) {
-    TeradataQuery<T> q = new TeradataQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    var q = new TeradataQuery<T>(conn, getConfiguration(), getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -84,7 +84,7 @@ public class TeradataQuery<T> extends AbstractTeradataQuery<T, TeradataQuery<T>>
   public <U> TeradataQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    TeradataQuery<U> newType = (TeradataQuery<U>) this;
+    var newType = (TeradataQuery<U>) this;
     return newType;
   }
 
@@ -92,7 +92,7 @@ public class TeradataQuery<T> extends AbstractTeradataQuery<T, TeradataQuery<T>>
   public TeradataQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    TeradataQuery<Tuple> newType = (TeradataQuery<Tuple>) this;
+    var newType = (TeradataQuery<Tuple>) this;
     return newType;
   }
 }

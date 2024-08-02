@@ -14,7 +14,6 @@
 package com.querydsl.sql;
 
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.types.Ops;
 import java.sql.Types;
 
@@ -129,7 +128,7 @@ public class TeradataTemplates extends SQLTemplates {
 
   @Override
   protected void serializeModifiers(QueryMetadata metadata, SQLSerializer context) {
-    QueryModifiers mod = metadata.getModifiers();
+    var mod = metadata.getModifiers();
     context.append(limitOffsetStart);
     if (!metadata.getOrderBy().isEmpty()) {
       context.handleOrderBy(metadata.getOrderBy());

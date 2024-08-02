@@ -88,7 +88,7 @@ public abstract class EnumExpression<T extends Enum<T>> extends LiteralExpressio
   @Override
   @SuppressWarnings({"unchecked"})
   public EnumExpression<T> coalesce(Expression<T> expr) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(expr);
     return (EnumExpression<T>) coalesce.asEnum();
   }
@@ -102,7 +102,7 @@ public abstract class EnumExpression<T extends Enum<T>> extends LiteralExpressio
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
   public EnumExpression<T> coalesce(Expression<?>... exprs) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);
     }
@@ -118,7 +118,7 @@ public abstract class EnumExpression<T extends Enum<T>> extends LiteralExpressio
   @Override
   @SuppressWarnings({"unchecked"})
   public EnumExpression<T> coalesce(T arg) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(arg);
     return (EnumExpression<T>) coalesce.asEnum();
   }
@@ -132,7 +132,7 @@ public abstract class EnumExpression<T extends Enum<T>> extends LiteralExpressio
   @Override
   @SuppressWarnings({"unchecked"})
   public EnumExpression<T> coalesce(T... args) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (T arg : args) {
       coalesce.add(arg);
     }

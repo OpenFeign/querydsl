@@ -13,7 +13,11 @@
  */
 package com.querydsl.r2dbc;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Template;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.core.types.TemplateFactory;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import java.util.List;
 
@@ -29,10 +33,10 @@ public class R2DBCRelationalFunctionCall<T> extends SimpleExpression<T>
   private static final long serialVersionUID = 256739044928186923L;
 
   private static Template createTemplate(String function, int argCount) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     builder.append(function);
     builder.append("(");
-    for (int i = 0; i < argCount; i++) {
+    for (var i = 0; i < argCount; i++) {
       if (i > 0) {
         builder.append(", ");
       }

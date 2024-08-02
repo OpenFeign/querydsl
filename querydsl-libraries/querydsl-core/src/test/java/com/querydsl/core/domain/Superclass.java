@@ -8,8 +8,7 @@ import java.util.List;
 @QueryEntity
 public class Superclass {
 
-  @QueryEmbedded
-  private List<IdNamePair<String>> fooOfSuperclass = new ArrayList<IdNamePair<String>>();
+  @QueryEmbedded private List<IdNamePair<String>> fooOfSuperclass = new ArrayList<>();
 
   public List<IdNamePair<String>> getFooOfSuperclass() {
     return fooOfSuperclass;

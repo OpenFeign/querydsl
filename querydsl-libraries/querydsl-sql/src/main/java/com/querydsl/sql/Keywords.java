@@ -26,7 +26,7 @@ public final class Keywords {
   private Keywords() {}
 
   private static Set<String> readLines(String path) {
-    try (BufferedReader bufferedReader =
+    try (var bufferedReader =
         new BufferedReader(
             new InputStreamReader(Keywords.class.getResourceAsStream("/keywords/" + path))); ) {
       return bufferedReader

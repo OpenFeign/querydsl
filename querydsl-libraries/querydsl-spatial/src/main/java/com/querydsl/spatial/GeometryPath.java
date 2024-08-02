@@ -13,9 +13,22 @@
  */
 package com.querydsl.spatial;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathImpl;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathMetadataFactory;
+import com.querydsl.core.types.Visitor;
 import java.lang.reflect.AnnotatedElement;
-import org.geolatte.geom.*;
+import org.geolatte.geom.Geometry;
+import org.geolatte.geom.GeometryCollection;
+import org.geolatte.geom.LineString;
+import org.geolatte.geom.LinearRing;
+import org.geolatte.geom.MultiLineString;
+import org.geolatte.geom.MultiPoint;
+import org.geolatte.geom.MultiPolygon;
+import org.geolatte.geom.Point;
+import org.geolatte.geom.Polygon;
 
 /**
  * {@code GeometryPath} extends {@link GeometryExpression} to implement the {@link Path} interface
@@ -76,56 +89,56 @@ public class GeometryPath<T extends Geometry> extends GeometryExpression<T> impl
 
   public GeometryCollectionPath<GeometryCollection> asCollection() {
     if (collection == null) {
-      collection = new GeometryCollectionPath<GeometryCollection>(pathMixin.getMetadata());
+      collection = new GeometryCollectionPath<>(pathMixin.getMetadata());
     }
     return collection;
   }
 
   public LinearRingPath<LinearRing> asLinearRing() {
     if (linearRing == null) {
-      linearRing = new LinearRingPath<LinearRing>(pathMixin.getMetadata());
+      linearRing = new LinearRingPath<>(pathMixin.getMetadata());
     }
     return linearRing;
   }
 
   public LineStringPath<LineString> asLineString() {
     if (lineString == null) {
-      lineString = new LineStringPath<LineString>(pathMixin.getMetadata());
+      lineString = new LineStringPath<>(pathMixin.getMetadata());
     }
     return lineString;
   }
 
   public MultiLineStringPath<MultiLineString> asMultiLineString() {
     if (multiLineString == null) {
-      multiLineString = new MultiLineStringPath<MultiLineString>(pathMixin.getMetadata());
+      multiLineString = new MultiLineStringPath<>(pathMixin.getMetadata());
     }
     return multiLineString;
   }
 
   public MultiPointPath<MultiPoint> asMultiPoint() {
     if (multiPoint == null) {
-      multiPoint = new MultiPointPath<MultiPoint>(pathMixin.getMetadata());
+      multiPoint = new MultiPointPath<>(pathMixin.getMetadata());
     }
     return multiPoint;
   }
 
   public MultiPolygonPath<MultiPolygon> asMultiPolygon() {
     if (multiPolygon == null) {
-      multiPolygon = new MultiPolygonPath<MultiPolygon>(pathMixin.getMetadata());
+      multiPolygon = new MultiPolygonPath<>(pathMixin.getMetadata());
     }
     return multiPolygon;
   }
 
   public PointPath<Point> asPoint() {
     if (point == null) {
-      point = new PointPath<Point>(pathMixin.getMetadata());
+      point = new PointPath<>(pathMixin.getMetadata());
     }
     return point;
   }
 
   public PolygonPath<Polygon> asPolygon() {
     if (polygon == null) {
-      polygon = new PolygonPath<Polygon>(pathMixin.getMetadata());
+      polygon = new PolygonPath<>(pathMixin.getMetadata());
     }
     return polygon;
   }

@@ -13,7 +13,9 @@
  */
 package com.querydsl.sql;
 
-import static com.querydsl.sql.SQLExpressions.*;
+import static com.querydsl.sql.SQLExpressions.select;
+import static com.querydsl.sql.SQLExpressions.union;
+import static com.querydsl.sql.SQLExpressions.unionAll;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Expression;

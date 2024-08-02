@@ -66,25 +66,24 @@ public class ExtendedBeanSerializer extends BeanSerializer {
   @SuppressWarnings("unchecked")
   @Override
   protected void bodyEnd(EntityType model, CodeWriter writer) throws IOException {
-    Collection<PrimaryKeyData> primaryKeys =
-        (Collection<PrimaryKeyData>) model.getData().get(PrimaryKeyData.class);
+    var primaryKeys = (Collection<PrimaryKeyData>) model.getData().get(PrimaryKeyData.class);
 
     if (primaryKeys == null || primaryKeys.isEmpty()) {
       return;
     }
 
-    Map<String, Property> columnToProperty = new HashMap<String, Property>();
+    Map<String, Property> columnToProperty = new HashMap<>();
     for (Property property : model.getProperties()) {
       columnToProperty.put(property.getAnnotation(Column.class).value(), property);
     }
 
-    StringBuilder anyColumnIsNull = new StringBuilder();
-    StringBuilder columnEquals = new StringBuilder();
-    List<String> properties = new ArrayList<String>();
+    var anyColumnIsNull = new StringBuilder();
+    var columnEquals = new StringBuilder();
+    List<String> properties = new ArrayList<>();
     for (PrimaryKeyData pk : primaryKeys) {
       for (String column : pk.getColumns()) {
-        Property property = columnToProperty.get(column);
-        String propName = property.getEscapedName();
+        var property = columnToProperty.get(column);
+        var propName = property.getEscapedName();
         if (anyColumnIsNull.length() > 0) {
           anyColumnIsNull.append(" || ");
           columnEquals.append(" && ");
@@ -125,24 +124,23 @@ public class ExtendedBeanSerializer extends BeanSerializer {
 
   @Override
   protected void addToString(EntityType model, CodeWriter writer) throws IOException {
-    Collection<PrimaryKeyData> primaryKeys =
-        (Collection<PrimaryKeyData>) model.getData().get(PrimaryKeyData.class);
+    var primaryKeys = (Collection<PrimaryKeyData>) model.getData().get(PrimaryKeyData.class);
 
     if (primaryKeys == null || primaryKeys.isEmpty()) {
       super.addToString(model, writer);
       return;
     }
 
-    StringBuilder toString = new StringBuilder();
-    Map<String, Property> columnToProperty = new HashMap<String, Property>();
+    var toString = new StringBuilder();
+    Map<String, Property> columnToProperty = new HashMap<>();
     for (Property property : model.getProperties()) {
       columnToProperty.put(property.getAnnotation(Column.class).value(), property);
     }
 
     for (PrimaryKeyData pk : primaryKeys) {
       for (String column : pk.getColumns()) {
-        Property property = columnToProperty.get(column);
-        String propName = property.getEscapedName();
+        var property = columnToProperty.get(column);
+        var propName = property.getEscapedName();
         if (toString.length() > 0) {
           toString.append("+ \";\" + ");
         } else {

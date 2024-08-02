@@ -37,7 +37,7 @@ public class BigIntegerType extends AbstractType<BigInteger> {
 
   @Override
   public BigInteger getValue(ResultSet rs, int startIndex) throws SQLException {
-    BigDecimal bd = rs.getBigDecimal(startIndex);
+    var bd = rs.getBigDecimal(startIndex);
     return bd != null ? bd.toBigInteger() : null;
   }
 

@@ -25,7 +25,7 @@ public class DateConstantTest {
   @Test
   public void test() {
     // 1.1.2000
-    Calendar cal = Calendar.getInstance();
+    var cal = Calendar.getInstance();
     cal.set(Calendar.DAY_OF_MONTH, 1);
     cal.set(Calendar.MONTH, 0);
     cal.set(Calendar.YEAR, 2000);

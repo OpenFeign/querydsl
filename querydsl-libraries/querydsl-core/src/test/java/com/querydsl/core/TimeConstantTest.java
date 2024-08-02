@@ -24,7 +24,7 @@ public class TimeConstantTest {
 
   @Test
   public void test() {
-    Calendar cal = Calendar.getInstance();
+    var cal = Calendar.getInstance();
     cal.set(Calendar.HOUR_OF_DAY, 13);
     cal.set(Calendar.MINUTE, 30);
     cal.set(Calendar.SECOND, 12);

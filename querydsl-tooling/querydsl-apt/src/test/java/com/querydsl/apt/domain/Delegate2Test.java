@@ -41,7 +41,7 @@ public class Delegate2Test {
 
   @Test
   public void test() {
-    QDelegate2Test_Entity entity = QDelegate2Test_Entity.entity;
+    var entity = QDelegate2Test_Entity.entity;
     assertThat(entity.point.geoDistance(new Point())).isNotNull();
   }
 }

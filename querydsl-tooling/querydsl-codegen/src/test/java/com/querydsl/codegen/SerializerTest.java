@@ -15,11 +15,23 @@ package com.querydsl.codegen;
 
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.StringUtils;
-import com.querydsl.codegen.utils.model.*;
+import com.querydsl.codegen.utils.model.ClassType;
+import com.querydsl.codegen.utils.model.Constructor;
+import com.querydsl.codegen.utils.model.Parameter;
+import com.querydsl.codegen.utils.model.SimpleType;
+import com.querydsl.codegen.utils.model.Type;
+import com.querydsl.codegen.utils.model.TypeCategory;
+import com.querydsl.codegen.utils.model.TypeExtends;
+import com.querydsl.codegen.utils.model.TypeSuper;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -86,10 +98,8 @@ public class SerializerTest {
     }
 
     // constructor
-    Parameter firstName =
-        new Parameter("firstName", new ClassType(TypeCategory.STRING, String.class));
-    Parameter lastName =
-        new Parameter("lastName", new ClassType(TypeCategory.STRING, String.class));
+    var firstName = new Parameter("firstName", new ClassType(TypeCategory.STRING, String.class));
+    var lastName = new Parameter("lastName", new ClassType(TypeCategory.STRING, String.class));
     type.addConstructor(new Constructor(Arrays.asList(firstName, lastName)));
   }
 

@@ -14,14 +14,19 @@
 package com.querydsl.jpa.codegen;
 
 import com.querydsl.codegen.EntityType;
-import com.querydsl.codegen.Property;
 import com.querydsl.codegen.SerializerConfig;
 import com.querydsl.codegen.SimpleSerializerConfig;
 import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import jakarta.persistence.Temporal;
-import jakarta.persistence.metamodel.*;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.EmbeddableType;
+import jakarta.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.MapAttribute;
+import jakarta.persistence.metamodel.MappedSuperclassType;
+import jakarta.persistence.metamodel.Metamodel;
+import jakarta.persistence.metamodel.PluralAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
@@ -174,7 +179,7 @@ public class JPADomainExporter extends AbstractDomainExporter {
 
     // handle properties
     for (Map.Entry<ManagedType<?>, EntityType> entry : types.entrySet()) {
-      EntityType entityType = entry.getValue();
+      var entityType = entry.getValue();
       for (Attribute<?, ?> attribute : entry.getKey().getDeclaredAttributes()) {
         handleProperty(entityType, entityType.getJavaClass(), attribute);
       }
@@ -189,9 +194,9 @@ public class JPADomainExporter extends AbstractDomainExporter {
     } catch (MappingException e) {
       // ignore
     }
-    Type propertyType = getType(cl, clazz, p.getName());
+    var propertyType = getType(cl, clazz, p.getName());
 
-    AnnotatedElement annotated = getAnnotatedElement(cl, p.getName());
+    var annotated = getAnnotatedElement(cl, p.getName());
     propertyType = getTypeOverride(propertyType, annotated);
     if (propertyType == null) {
       return;
@@ -200,8 +205,8 @@ public class JPADomainExporter extends AbstractDomainExporter {
     if (p.isCollection()) {
       if (p instanceof MapAttribute) {
         MapAttribute<?, ?, ?> map = (MapAttribute<?, ?, ?>) p;
-        Type keyType = typeFactory.get(map.getKeyJavaType());
-        Type valueType = typeFactory.get(map.getElementType().getJavaType());
+        var keyType = typeFactory.get(map.getKeyJavaType());
+        var valueType = typeFactory.get(map.getElementType().getJavaType());
         valueType = getPropertyType(p, valueType);
         propertyType =
             new SimpleType(
@@ -209,7 +214,7 @@ public class JPADomainExporter extends AbstractDomainExporter {
                 normalize(keyType, propertyType.getParameters().get(0)),
                 normalize(valueType, propertyType.getParameters().get(1)));
       } else {
-        Type valueType =
+        var valueType =
             typeFactory.get(((PluralAttribute<?, ?, ?>) p).getElementType().getJavaType());
         valueType = getPropertyType(p, valueType);
         propertyType =
@@ -219,12 +224,12 @@ public class JPADomainExporter extends AbstractDomainExporter {
       propertyType = getPropertyType(p, propertyType);
     }
 
-    Property property = createProperty(entityType, p.getName(), propertyType, annotated);
+    var property = createProperty(entityType, p.getName(), propertyType, annotated);
     entityType.addProperty(property);
   }
 
   private Type getPropertyType(Attribute<?, ?> p, Type propertyType) {
-    Temporal temporal = ((AnnotatedElement) p.getJavaMember()).getAnnotation(Temporal.class);
+    var temporal = ((AnnotatedElement) p.getJavaMember()).getAnnotation(Temporal.class);
     if (temporal != null) {
       switch (temporal.value()) {
         case DATE:

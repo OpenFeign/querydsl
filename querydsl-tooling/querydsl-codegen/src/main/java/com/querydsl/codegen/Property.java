@@ -15,7 +15,12 @@ package com.querydsl.codegen;
 
 import com.querydsl.codegen.utils.model.Type;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import javax.lang.model.SourceVersion;
 
 /**
@@ -33,9 +38,9 @@ public final class Property implements Comparable<Property> {
 
   private final String name, escapedName;
 
-  private final Map<Class<?>, Annotation> annotations = new HashMap<Class<?>, Annotation>();
+  private final Map<Class<?>, Annotation> annotations = new HashMap<>();
 
-  private final Map<Object, Object> data = new HashMap<Object, Object>();
+  private final Map<Object, Object> data = new HashMap<>();
 
   private final Type type;
 
@@ -82,7 +87,7 @@ public final class Property implements Comparable<Property> {
 
   @Override
   public int compareTo(Property o) {
-    int rv = name.compareToIgnoreCase(o.getName());
+    var rv = name.compareToIgnoreCase(o.getName());
     if (rv == 0) {
       return name.compareTo(o.getName());
     } else {
@@ -92,7 +97,7 @@ public final class Property implements Comparable<Property> {
 
   public Property createCopy(EntityType targetModel) {
     if (!declaringType.getParameters().isEmpty()) {
-      Type newType = TypeResolver.resolve(type, declaringType, targetModel);
+      var newType = TypeResolver.resolve(type, declaringType, targetModel);
       if (!newType.equals(type) || !newType.getClass().equals(type.getClass())) {
         return new Property(targetModel, name, newType, inits, false);
       } else {
@@ -122,7 +127,7 @@ public final class Property implements Comparable<Property> {
     if (o == this) {
       return true;
     } else if (o instanceof Property) {
-      Property p = (Property) o;
+      var p = (Property) o;
       return p.name.equals(name) && p.type.equals(type);
     } else {
       return false;

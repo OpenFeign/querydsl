@@ -19,13 +19,32 @@ import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.dml.InsertClause;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.ResultSetAdapter;
-import com.querydsl.sql.*;
+import com.querydsl.sql.ColumnMetadata;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLBindings;
+import com.querydsl.sql.SQLQuery;
+import com.querydsl.sql.SQLSerializer;
 import com.querydsl.sql.types.Null;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -49,11 +68,11 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
 
   @Nullable protected SQLQuery<?> subQueryBuilder;
 
-  protected final List<SQLInsertBatch> batches = new ArrayList<SQLInsertBatch>();
+  protected final List<SQLInsertBatch> batches = new ArrayList<>();
 
-  protected final List<Path<?>> columns = new ArrayList<Path<?>>();
+  protected final List<Path<?>> columns = new ArrayList<>();
 
-  protected final List<Expression<?>> values = new ArrayList<Expression<?>>();
+  protected final List<Expression<?>> values = new ArrayList<>();
 
   protected transient String queryString;
 
@@ -223,7 +242,7 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
     ResultSet rs = null;
     try {
       rs = executeWithKeys();
-      List<T> rv = new ArrayList<T>();
+      List<T> rv = new ArrayList<>();
       while (rs.next()) {
         rv.add(configuration.get(rs, path, 1, type));
       }
@@ -240,7 +259,7 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
 
   protected PreparedStatement createStatement(boolean withKeys) throws SQLException {
     listeners.preRender(context);
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     if (subQueryBuilder != null) {
       subQuery = subQueryBuilder.select(values.toArray(new Expression[0])).clone();
       values.clear();
@@ -257,7 +276,7 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
   }
 
   protected Collection<PreparedStatement> createStatements(boolean withKeys) throws SQLException {
-    boolean addBatches = !configuration.getUseLiterals();
+    var addBatches = !configuration.getUseLiterals();
     listeners.preRender(context);
 
     if (subQueryBuilder != null) {
@@ -268,14 +287,14 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
     Map<String, PreparedStatement> stmts = new HashMap<>();
 
     // add first batch
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     serializer.serializeInsert(
         metadata,
         entity,
         batches.get(0).getColumns(),
         batches.get(0).getValues(),
         batches.get(0).getSubQuery());
-    PreparedStatement stmt = prepareStatementAndSetParameters(serializer, withKeys);
+    var stmt = prepareStatementAndSetParameters(serializer, withKeys);
     if (addBatches) {
       stmt.addBatch();
     }
@@ -284,8 +303,8 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
     listeners.rendered(context);
 
     // add other batches
-    for (int i = 1; i < batches.size(); i++) {
-      SQLInsertBatch batch = batches.get(i);
+    for (var i = 1; i < batches.size(); i++) {
+      var batch = batches.get(i);
 
       listeners.preRender(context);
       serializer = createSerializer();
@@ -320,10 +339,10 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
     PreparedStatement stmt;
     if (withKeys) {
       if (entity.getPrimaryKey() != null) {
-        String[] target = new String[entity.getPrimaryKey().getLocalColumns().size()];
-        for (int i = 0; i < target.length; i++) {
+        var target = new String[entity.getPrimaryKey().getLocalColumns().size()];
+        for (var i = 0; i < target.length; i++) {
           Path<?> path = entity.getPrimaryKey().getLocalColumns().get(i);
-          String column = ColumnMetadata.getName(path);
+          var column = ColumnMetadata.getName(path);
           column = configuration.getColumnOverride(entity.getSchemaAndTable(), column);
           target[i] = column;
         }
@@ -366,7 +385,7 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
         stmt.executeUpdate();
         listeners.executed(context);
       } else {
-        Collection<PreparedStatement> stmts = createStatements(true);
+        var stmts = createStatements(true);
         if (stmts != null && stmts.size() > 1) {
           throw new IllegalStateException(
               "executeWithKeys called with batch statement and multiple SQL strings");
@@ -380,7 +399,7 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
       }
 
       final Statement stmt2 = stmt;
-      ResultSet rs = stmt.getGeneratedKeys();
+      var rs = stmt.getGeneratedKeys();
       return new ResultSetAdapter(rs) {
         @Override
         public void close() throws SQLException {
@@ -412,7 +431,7 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
         listeners.notifyInsert(entity, metadata, columns, values, subQuery);
 
         listeners.preExecute(context);
-        int rc = stmt.executeUpdate();
+        var rc = stmt.executeUpdate();
         listeners.executed(context);
         return rc;
       } else if (batchToBulk) {
@@ -420,7 +439,7 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
         listeners.notifyInserts(entity, metadata, batches);
 
         listeners.preExecute(context);
-        int rc = stmt.executeUpdate();
+        var rc = stmt.executeUpdate();
         listeners.executed(context);
         return rc;
       } else {
@@ -428,7 +447,7 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
         listeners.notifyInserts(entity, metadata, batches);
 
         listeners.preExecute(context);
-        long rc = executeBatch(stmts);
+        var rc = executeBatch(stmts);
         listeners.executed(context);
         return rc;
       }
@@ -450,17 +469,17 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
   @Override
   public List<SQLBindings> getSQL() {
     if (batches.isEmpty()) {
-      SQLSerializer serializer = createSerializer();
+      var serializer = createSerializer();
       serializer.serializeInsert(metadata, entity, columns, values, subQuery);
       return Collections.singletonList(createBindings(metadata, serializer));
     } else if (batchToBulk) {
-      SQLSerializer serializer = createSerializer();
+      var serializer = createSerializer();
       serializer.serializeInsert(metadata, entity, batches);
       return Collections.singletonList(createBindings(metadata, serializer));
     } else {
       List<SQLBindings> builder = new ArrayList<>();
       for (SQLInsertBatch batch : batches) {
-        SQLSerializer serializer = createSerializer();
+        var serializer = createSerializer();
         serializer.serializeInsert(
             metadata, entity, batch.getColumns(), batch.getValues(), batch.getSubQuery());
         builder.add(createBindings(metadata, serializer));
@@ -521,7 +540,7 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
 
   @Override
   public String toString() {
-    SQLSerializer serializer = createSerializer();
+    var serializer = createSerializer();
     if (!batches.isEmpty() && batchToBulk) {
       serializer.serializeInsert(metadata, entity, batches);
     } else {
@@ -550,7 +569,7 @@ public abstract class AbstractSQLInsertClause<C extends AbstractSQLInsertClause<
    */
   @SuppressWarnings("rawtypes")
   public <T> C populate(T obj, Mapper<T> mapper) {
-    Map<Path<?>, Object> values = mapper.createMap(entity, obj);
+    var values = mapper.createMap(entity, obj);
     for (Map.Entry<Path<?>, Object> entry : values.entrySet()) {
       set((Path) entry.getKey(), entry.getValue());
     }

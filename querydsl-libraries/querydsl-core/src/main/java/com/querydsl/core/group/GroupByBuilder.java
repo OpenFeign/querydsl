@@ -52,7 +52,7 @@ public class GroupByBuilder<K> {
    * @return new result transformer
    */
   public ResultTransformer<Map<K, Group>> as(Expression<?>... expressions) {
-    return new GroupByMap<K, Group>(key, expressions);
+    return new GroupByMap<>(key, expressions);
   }
 
   /**
@@ -64,7 +64,7 @@ public class GroupByBuilder<K> {
    */
   public <RES extends Map<K, Group>> ResultTransformer<RES> as(
       Supplier<RES> mapFactory, Expression<?>... expressions) {
-    return new GroupByGenericMap<K, Group, RES>(mapFactory, key, expressions);
+    return new GroupByGenericMap<>(mapFactory, key, expressions);
   }
 
   /**
@@ -74,7 +74,7 @@ public class GroupByBuilder<K> {
    * @return new result transformer
    */
   public ResultTransformer<CloseableIterator<Group>> iterate(Expression<?>... expressions) {
-    return new GroupByIterate<K, Group>(key, expressions);
+    return new GroupByIterate<>(key, expressions);
   }
 
   /**
@@ -84,7 +84,7 @@ public class GroupByBuilder<K> {
    * @return new result transformer
    */
   public ResultTransformer<List<Group>> list(Expression<?>... expressions) {
-    return new GroupByList<K, Group>(key, expressions);
+    return new GroupByList<>(key, expressions);
   }
 
   /**
@@ -96,7 +96,7 @@ public class GroupByBuilder<K> {
    */
   public <RES extends Collection<Group>> ResultTransformer<RES> collection(
       Supplier<RES> resultFactory, Expression<?>... expressions) {
-    return new GroupByGenericCollection<K, Group, RES>(resultFactory, key, expressions);
+    return new GroupByGenericCollection<>(resultFactory, key, expressions);
   }
 
   /**
@@ -108,10 +108,10 @@ public class GroupByBuilder<K> {
   @SuppressWarnings("unchecked")
   public <V> ResultTransformer<Map<K, V>> as(Expression<V> expression) {
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByMap<K, V>(key, expression) {
+    return new GroupByMap<>(key, expression) {
       @Override
       protected Map<K, V> transform(Map<K, Group> groups) {
-        Map<K, V> results = new LinkedHashMap<K, V>((int) Math.ceil(groups.size() / 0.75), 0.75f);
+        Map<K, V> results = new LinkedHashMap<>((int) Math.ceil(groups.size() / 0.75), 0.75f);
         for (Map.Entry<K, Group> entry : groups.entrySet()) {
           results.put(entry.getKey(), entry.getValue().getOne(lookup));
         }
@@ -130,10 +130,10 @@ public class GroupByBuilder<K> {
   public <V, RES extends Map<K, V>> ResultTransformer<RES> as(
       final Supplier<RES> mapFactory, Expression<V> expression) {
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByGenericMap<K, V, RES>(mapFactory, key, expression) {
+    return new GroupByGenericMap<>(mapFactory, key, expression) {
       @Override
       protected RES transform(Map<K, Group> groups) {
-        RES results = mapFactory.get();
+        var results = mapFactory.get();
         for (Map.Entry<K, Group> entry : groups.entrySet()) {
           results.put(entry.getKey(), entry.getValue().getOne(lookup));
         }
@@ -150,7 +150,7 @@ public class GroupByBuilder<K> {
    */
   public <V> ResultTransformer<CloseableIterator<V>> iterate(Expression<V> expression) {
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByIterate<K, V>(key, expression) {
+    return new GroupByIterate<>(key, expression) {
       @Override
       protected V transform(Group group) {
         return group.getOne(lookup);
@@ -166,7 +166,7 @@ public class GroupByBuilder<K> {
    */
   public <V> ResultTransformer<List<V>> list(Expression<V> expression) {
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByList<K, V>(key, expression) {
+    return new GroupByList<>(key, expression) {
       @Override
       protected V transform(Group group) {
         return group.getOne(lookup);
@@ -183,7 +183,7 @@ public class GroupByBuilder<K> {
   public <V, RES extends Collection<V>> ResultTransformer<RES> collection(
       Supplier<RES> resultFactory, Expression<V> expression) {
     final Expression<V> lookup = getLookup(expression);
-    return new GroupByGenericCollection<K, V, RES>(resultFactory, key, expression) {
+    return new GroupByGenericCollection<>(resultFactory, key, expression) {
       @Override
       protected V transform(Group group) {
         return group.getOne(lookup);
@@ -209,12 +209,12 @@ public class GroupByBuilder<K> {
    */
   public <V> ResultTransformer<Map<K, V>> as(FactoryExpression<V> expression) {
     final FactoryExpression<?> transformation = FactoryExpressionUtils.wrap(expression);
-    List<Expression<?>> args = transformation.getArgs();
+    var args = transformation.getArgs();
     return new GroupByMap<K, V>(key, args.toArray(new Expression<?>[0])) {
 
       @Override
       protected Map<K, V> transform(Map<K, Group> groups) {
-        Map<K, V> results = new LinkedHashMap<K, V>((int) Math.ceil(groups.size() / 0.75), 0.75f);
+        Map<K, V> results = new LinkedHashMap<>((int) Math.ceil(groups.size() / 0.75), 0.75f);
         for (Map.Entry<K, Group> entry : groups.entrySet()) {
           results.put(entry.getKey(), transform(entry.getValue()));
         }
@@ -224,8 +224,8 @@ public class GroupByBuilder<K> {
       @SuppressWarnings("unchecked")
       protected V transform(Group group) {
         // XXX Isn't group.toArray() suitable here?
-        List<Object> args = new ArrayList<Object>(groupExpressions.size() - 1);
-        for (int i = 1; i < groupExpressions.size(); i++) {
+        List<Object> args = new ArrayList<>(groupExpressions.size() - 1);
+        for (var i = 1; i < groupExpressions.size(); i++) {
           args.add(group.getGroup(groupExpressions.get(i)));
         }
         return (V) transformation.newInstance(args.toArray());
@@ -241,13 +241,13 @@ public class GroupByBuilder<K> {
    */
   public <V> ResultTransformer<CloseableIterator<V>> iterate(FactoryExpression<V> expression) {
     final FactoryExpression<V> transformation = FactoryExpressionUtils.wrap(expression);
-    List<Expression<?>> args = transformation.getArgs();
-    return new GroupByIterate<K, V>(key, args.toArray(new Expression<?>[0])) {
+    var args = transformation.getArgs();
+    return new GroupByIterate<>(key, args.toArray(new Expression<?>[0])) {
       @Override
       protected V transform(Group group) {
         // XXX Isn't group.toArray() suitable here?
-        List<Object> args = new ArrayList<Object>(groupExpressions.size() - 1);
-        for (int i = 1; i < groupExpressions.size(); i++) {
+        List<Object> args = new ArrayList<>(groupExpressions.size() - 1);
+        for (var i = 1; i < groupExpressions.size(); i++) {
           args.add(group.getGroup(groupExpressions.get(i)));
         }
         return transformation.newInstance(args.toArray());
@@ -263,13 +263,13 @@ public class GroupByBuilder<K> {
    */
   public <V> ResultTransformer<List<V>> list(FactoryExpression<V> expression) {
     final FactoryExpression<V> transformation = FactoryExpressionUtils.wrap(expression);
-    List<Expression<?>> args = transformation.getArgs();
-    return new GroupByList<K, V>(key, args.toArray(new Expression<?>[0])) {
+    var args = transformation.getArgs();
+    return new GroupByList<>(key, args.toArray(new Expression<?>[0])) {
       @Override
       protected V transform(Group group) {
         // XXX Isn't group.toArray() suitable here?
-        List<Object> args = new ArrayList<Object>(groupExpressions.size() - 1);
-        for (int i = 1; i < groupExpressions.size(); i++) {
+        List<Object> args = new ArrayList<>(groupExpressions.size() - 1);
+        for (var i = 1; i < groupExpressions.size(); i++) {
           args.add(group.getGroup(groupExpressions.get(i)));
         }
         return transformation.newInstance(args.toArray());
@@ -286,14 +286,14 @@ public class GroupByBuilder<K> {
   public <V, RES extends Collection<V>> ResultTransformer<RES> collection(
       Supplier<RES> resultFactory, FactoryExpression<V> expression) {
     final FactoryExpression<V> transformation = FactoryExpressionUtils.wrap(expression);
-    List<Expression<?>> args = transformation.getArgs();
-    return new GroupByGenericCollection<K, V, RES>(
+    var args = transformation.getArgs();
+    return new GroupByGenericCollection<>(
         resultFactory, key, args.toArray(new Expression<?>[args.size()])) {
       @Override
       protected V transform(Group group) {
         // XXX Isn't group.toArray() suitable here?
-        List<Object> args = new ArrayList<Object>(groupExpressions.size() - 1);
-        for (int i = 1; i < groupExpressions.size(); i++) {
+        List<Object> args = new ArrayList<>(groupExpressions.size() - 1);
+        for (var i = 1; i < groupExpressions.size(); i++) {
           args.add(group.getGroup(groupExpressions.get(i)));
         }
         return transformation.newInstance(args.toArray());

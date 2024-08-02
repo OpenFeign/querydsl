@@ -30,7 +30,20 @@ import static com.querydsl.apt.APTOptions.QUERYDSL_USE_FIELDS;
 import static com.querydsl.apt.APTOptions.QUERYDSL_USE_GETTERS;
 import static com.querydsl.apt.APTOptions.QUERYDSL_VARIABLE_NAME_FUNCTION_CLASS;
 
-import com.querydsl.codegen.*;
+import com.querydsl.codegen.CodegenModule;
+import com.querydsl.codegen.DefaultVariableNameFunction;
+import com.querydsl.codegen.EmbeddableSerializer;
+import com.querydsl.codegen.EntitySerializer;
+import com.querydsl.codegen.EntityType;
+import com.querydsl.codegen.Filer;
+import com.querydsl.codegen.GeneratedAnnotationResolver;
+import com.querydsl.codegen.ProjectionSerializer;
+import com.querydsl.codegen.QueryTypeFactory;
+import com.querydsl.codegen.Serializer;
+import com.querydsl.codegen.SerializerConfig;
+import com.querydsl.codegen.SimpleSerializerConfig;
+import com.querydsl.codegen.SupertypeSerializer;
+import com.querydsl.codegen.TypeMappings;
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.core.annotations.Config;
 import com.querydsl.core.annotations.QueryProjection;
@@ -72,8 +85,7 @@ public class DefaultConfiguration implements Configuration {
 
   private final SerializerConfig defaultSerializerConfig;
 
-  private final Map<String, SerializerConfig> packageToConfig =
-      new HashMap<String, SerializerConfig>();
+  private final Map<String, SerializerConfig> packageToConfig = new HashMap<>();
 
   protected final Class<? extends Annotation> entityAnn;
 
@@ -88,11 +100,9 @@ public class DefaultConfiguration implements Configuration {
 
   @Nullable protected Class<? extends Annotation> altEntityAnn;
 
-  private final Set<Class<? extends Annotation>> entityAnnotations =
-      new HashSet<Class<? extends Annotation>>();
+  private final Set<Class<? extends Annotation>> entityAnnotations = new HashSet<>();
 
-  private final Map<String, SerializerConfig> typeToConfig =
-      new HashMap<String, SerializerConfig>();
+  private final Map<String, SerializerConfig> typeToConfig = new HashMap<>();
 
   private boolean useFields = true, useGetters = true;
 
@@ -187,10 +197,10 @@ public class DefaultConfiguration implements Configuration {
       @Nullable Class<? extends Annotation> embeddedAnn,
       @Nullable Class<? extends Annotation> skipAnn,
       CodegenModule codegenModule) {
-    this.excludedClasses = new HashSet<String>();
-    this.excludedPackages = new HashSet<String>();
-    this.includedClasses = new HashSet<String>();
-    this.includedPackages = new HashSet<String>();
+    this.excludedClasses = new HashSet<>();
+    this.excludedPackages = new HashSet<>();
+    this.includedClasses = new HashSet<>();
+    this.includedPackages = new HashSet<>();
     module = codegenModule;
     module.bind(ProcessingEnvironment.class, processingEnvironment);
     module.bind(RoundEnvironment.class, roundEnv);
@@ -210,20 +220,20 @@ public class DefaultConfiguration implements Configuration {
       entityAnnotations.add(embeddableAnn);
     }
     for (Element element : roundEnv.getElementsAnnotatedWith(Config.class)) {
-      Config querydslConfig = element.getAnnotation(Config.class);
-      SerializerConfig config = SimpleSerializerConfig.getConfig(querydslConfig);
+      var querydslConfig = element.getAnnotation(Config.class);
+      var config = SimpleSerializerConfig.getConfig(querydslConfig);
       if (element instanceof PackageElement) {
-        PackageElement packageElement = (PackageElement) element;
+        var packageElement = (PackageElement) element;
         packageToConfig.put(packageElement.getQualifiedName().toString(), config);
       } else if (element instanceof TypeElement) {
-        TypeElement typeElement = (TypeElement) element;
+        var typeElement = (TypeElement) element;
         typeToConfig.put(typeElement.getQualifiedName().toString(), config);
       }
     }
-    boolean entityAccessors = false;
-    boolean listAccessors = false;
-    boolean mapAccessors = false;
-    boolean createDefaultVariable = true;
+    var entityAccessors = false;
+    var listAccessors = false;
+    var mapAccessors = false;
+    var createDefaultVariable = true;
 
     if (options.containsKey(QUERYDSL_ENTITY_ACCESSORS)) {
       entityAccessors = Boolean.parseBoolean(options.get(QUERYDSL_ENTITY_ACCESSORS));
@@ -253,7 +263,7 @@ public class DefaultConfiguration implements Configuration {
     }
 
     if (options.containsKey(QUERYDSL_EXCLUDED_PACKAGES)) {
-      String packageString = options.get(QUERYDSL_EXCLUDED_PACKAGES);
+      var packageString = options.get(QUERYDSL_EXCLUDED_PACKAGES);
       if (!StringUtils.isNullOrEmpty(packageString)) {
         List<String> packages = Arrays.asList(packageString.split(","));
         excludedPackages.addAll(packages);
@@ -261,7 +271,7 @@ public class DefaultConfiguration implements Configuration {
     }
 
     if (options.containsKey(QUERYDSL_EXCLUDED_CLASSES)) {
-      String classString = options.get(QUERYDSL_EXCLUDED_CLASSES);
+      var classString = options.get(QUERYDSL_EXCLUDED_CLASSES);
       if (!StringUtils.isNullOrEmpty(classString)) {
         List<String> classes = Arrays.asList(classString.split(","));
         excludedClasses.addAll(classes);
@@ -269,7 +279,7 @@ public class DefaultConfiguration implements Configuration {
     }
 
     if (options.containsKey(QUERYDSL_INCLUDED_PACKAGES)) {
-      String packageString = options.get(QUERYDSL_INCLUDED_PACKAGES);
+      var packageString = options.get(QUERYDSL_INCLUDED_PACKAGES);
       if (!StringUtils.isNullOrEmpty(packageString)) {
         List<String> packages = Arrays.asList(packageString.split(","));
         includedPackages.addAll(packages);
@@ -277,7 +287,7 @@ public class DefaultConfiguration implements Configuration {
     }
 
     if (options.containsKey(QUERYDSL_INCLUDED_CLASSES)) {
-      String classString = options.get(QUERYDSL_INCLUDED_CLASSES);
+      var classString = options.get(QUERYDSL_INCLUDED_CLASSES);
       if (!StringUtils.isNullOrEmpty(classString)) {
         List<String> classes = Arrays.asList(classString.split(","));
         includedClasses.addAll(classes);
@@ -295,7 +305,7 @@ public class DefaultConfiguration implements Configuration {
     if (options.containsKey(QUERYDSL_VARIABLE_NAME_FUNCTION_CLASS)) {
       try {
         @SuppressWarnings("unchecked")
-        Class<Function<EntityType, String>> variableNameFunctionClass =
+        var variableNameFunctionClass =
             (Class<Function<EntityType, String>>)
                 Class.forName(options.get(QUERYDSL_VARIABLE_NAME_FUNCTION_CLASS));
         variableNameFunction = variableNameFunctionClass.getDeclaredConstructor().newInstance();
@@ -541,7 +551,7 @@ public class DefaultConfiguration implements Configuration {
   @Override
   public boolean isExcludedPackage(@NotNull String packageName) {
     if (!includedPackages.isEmpty()) {
-      boolean included = false;
+      var included = false;
       for (String includedPackage : includedPackages) {
         if (packageName.startsWith(includedPackage)) {
           included = true;

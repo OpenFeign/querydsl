@@ -29,9 +29,7 @@ import com.querydsl.jpa.testutil.HibernateTestRunner;
 import java.util.Arrays;
 import java.util.List;
 import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -47,9 +45,9 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
       public void parse() {
         try {
           System.out.println("query : " + toString().replace('\n', ' '));
-          JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+          var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
           serializer.serialize(getMetadata(), false, null);
-          Query query = session.createQuery(serializer.toString());
+          var query = session.createQuery(serializer.toString());
           HibernateUtil.setConstants(query, serializer.getConstants(), getMetadata().getParams());
           query.list();
         } catch (Exception e) {
@@ -103,9 +101,9 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
     session.save(new Cat("Bob", 10));
     session.save(new Cat("Steve", 11));
 
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     HibernateQuery<?> query = new HibernateQuery<Void>(session);
-    ScrollableResults results = query.from(cat).select(cat).scroll(ScrollMode.SCROLL_INSENSITIVE);
+    var results = query.from(cat).select(cat).scroll(ScrollMode.SCROLL_INSENSITIVE);
     while (results.next()) {
       assertThat(((Object[]) results.get())[0]).isNotNull();
     }
@@ -116,8 +114,8 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
   public void insert() {
     session.save(new Cat("Bob", 10));
 
-    QCat cat = QCat.cat;
-    long amount = insert(cat).set(cat.name, "Bobby").set(cat.alive, false).execute();
+    var cat = QCat.cat;
+    var amount = insert(cat).set(cat.name, "Bobby").set(cat.alive, false).execute();
     assertThat(amount).isEqualTo(1);
 
     assertThat(query().from(cat).where(cat.name.eq("Bobby")).fetchCount()).isEqualTo(1L);
@@ -127,8 +125,8 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
   public void insert2() {
     session.save(new Cat("Bob", 10));
 
-    QCat cat = QCat.cat;
-    long amount = insert(cat).columns(cat.name, cat.alive).values("Bobby", false).execute();
+    var cat = QCat.cat;
+    var amount = insert(cat).columns(cat.name, cat.alive).values("Bobby", false).execute();
     assertThat(amount).isEqualTo(1);
 
     assertThat(query().from(cat).where(cat.name.eq("Bobby")).fetchCount()).isEqualTo(1L);
@@ -138,10 +136,10 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
   public void insert3() {
     session.save(new Cat("Bob", 10));
 
-    QCat cat = QCat.cat;
-    QCat bob = new QCat("Bob");
+    var cat = QCat.cat;
+    var bob = new QCat("Bob");
 
-    long amount =
+    var amount =
         insert(cat)
             .columns(cat.name, cat.alive)
             .select(JPAExpressions.select(bob.name, bob.alive).from(bob))
@@ -156,8 +154,8 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
     session.save(new Cat("Bob", 10));
     session.save(new Cat("Steve", 11));
 
-    QCat cat = QCat.cat;
-    long amount =
+    var cat = QCat.cat;
+    var amount =
         update(cat)
             .where(cat.name.eq("Bob"))
             .set(cat.name, "Bobby")
@@ -173,8 +171,8 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
     session.save(new Cat("Bob", 10));
     session.save(new Cat("Steve", 11));
 
-    QCat cat = QCat.cat;
-    long amount =
+    var cat = QCat.cat;
+    var amount =
         update(cat)
             .where(cat.name.eq("Bob"))
             .set(cat.name, (String) null)
@@ -188,8 +186,8 @@ public class IntegrationBase extends ParsingTest implements HibernateTest {
     session.save(new Cat("Bob", 10));
     session.save(new Cat("Steve", 11));
 
-    QCat cat = QCat.cat;
-    long amount = delete(cat).where(cat.name.eq("Bob")).execute();
+    var cat = QCat.cat;
+    var amount = delete(cat).where(cat.name.eq("Bob")).execute();
     assertThat(amount).isEqualTo(1);
   }
 

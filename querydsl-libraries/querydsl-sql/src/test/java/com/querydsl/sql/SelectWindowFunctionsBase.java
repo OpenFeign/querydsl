@@ -1,7 +1,12 @@
 package com.querydsl.sql;
 
-import static com.querydsl.core.Target.*;
-import static com.querydsl.sql.Constants.*;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.SQLSERVER;
+import static com.querydsl.core.Target.TERADATA;
+import static com.querydsl.sql.Constants.employee;
+import static com.querydsl.sql.Constants.employee2;
+import static com.querydsl.sql.Constants.survey;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.testutil.ExcludeIn;
@@ -22,10 +27,10 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   @Test
   @ExcludeIn(SQLSERVER) // FIXME
   public void windowFunctions() {
-    NumberPath<Integer> path = survey.id;
+    var path = survey.id;
     NumberPath<?> path2 = survey.id;
 
-    List<WindowOver<?>> exprs = new ArrayList<WindowOver<?>>();
+    List<WindowOver<?>> exprs = new ArrayList<>();
     add(exprs, SQLExpressions.avg(path));
     add(exprs, SQLExpressions.count(path));
     add(exprs, SQLExpressions.corr(path, path2));
@@ -61,7 +66,7 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   public void windowFunctions_manual_paging() {
     Expression<Long> rowNumber =
         SQLExpressions.rowNumber().over().orderBy(employee.lastname.asc()).as("rn");
-    Expression<Object[]> all = Wildcard.all;
+    var all = Wildcard.all;
 
     // simple
     System.out.println("#1");
@@ -73,8 +78,7 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
 
     // with subquery, generic alias
     System.out.println("#2");
-    SQLQuery<Tuple> sub =
-        query().from(employee).select(employee.firstname, employee.lastname, rowNumber);
+    var sub = query().from(employee).select(employee.firstname, employee.lastname, rowNumber);
     SimplePath<Tuple> subAlias = Expressions.path(Tuple.class, "s");
     for (Object[] row : query().from(sub.as(subAlias)).select(all).fetch()) {
       System.out.println(Arrays.asList(row));
@@ -92,8 +96,7 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
 
     // with subquery, specific alias
     System.out.println("#4");
-    SQLQuery<Tuple> sub3 =
-        query().from(employee).select(employee.firstname, employee.lastname, rowNumber);
+    var sub3 = query().from(employee).select(employee.firstname, employee.lastname, rowNumber);
     for (Tuple row :
         query().from(sub3.as(employee2)).select(employee2.firstname, employee2.lastname).fetch()) {
       System.out.println(Collections.singletonList(row));
@@ -103,8 +106,8 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   @Test
   @IncludeIn(ORACLE)
   public void windowFunctions_keep() {
-    List<WindowOver<?>> exprs = new ArrayList<WindowOver<?>>();
-    NumberPath<Integer> path = survey.id;
+    List<WindowOver<?>> exprs = new ArrayList<>();
+    var path = survey.id;
 
     add(exprs, SQLExpressions.avg(path));
     add(exprs, SQLExpressions.count(path));
@@ -121,8 +124,8 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   @Test
   @ExcludeIn({DB2, SQLSERVER})
   public void windowFunctions_regr() {
-    List<WindowOver<?>> exprs = new ArrayList<WindowOver<?>>();
-    NumberPath<Integer> path = survey.id;
+    List<WindowOver<?>> exprs = new ArrayList<>();
+    var path = survey.id;
     NumberPath<?> path2 = survey.id;
 
     add(exprs, SQLExpressions.regrSlope(path, path2), SQLSERVER);
@@ -142,8 +145,8 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   @Test
   @IncludeIn(ORACLE)
   public void windowFunctions_oracle() {
-    List<WindowOver<?>> exprs = new ArrayList<WindowOver<?>>();
-    NumberPath<Integer> path = survey.id;
+    List<WindowOver<?>> exprs = new ArrayList<>();
+    var path = survey.id;
     add(exprs, SQLExpressions.countDistinct(path));
     add(exprs, SQLExpressions.ratioToReport(path));
     add(exprs, SQLExpressions.stddevDistinct(path));

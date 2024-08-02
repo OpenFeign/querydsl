@@ -10,7 +10,11 @@ import com.querydsl.codegen.GenericExporter;
 import com.querydsl.codegen.Keywords;
 import com.querydsl.codegen.PropertyHandling;
 import com.querydsl.core.domain.A;
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -31,11 +35,11 @@ public class GenericExporterTest extends AbstractProcessorTest {
     process(QuerydslAnnotationProcessor.class, CLASSES, "QuerydslAnnotationProcessor");
 
     // via GenericExporter
-    GenericExporter exporter = new GenericExporter();
+    var exporter = new GenericExporter();
     exporter.setTargetFolder(new File("target/GenericExporterTest"));
     exporter.export(AbstractEntityTest.class.getPackage(), A.class.getPackage());
 
-    List<String> expected = new ArrayList<String>();
+    List<String> expected = new ArrayList<>();
     // delegates are not supported
     expected.add("QDelegateTest_SimpleUser.java");
     expected.add("QDelegateTest_SimpleUser2.java");
@@ -56,7 +60,7 @@ public class GenericExporterTest extends AbstractProcessorTest {
     process(HibernateAnnotationProcessor.class, CLASSES, "HibernateAnnotationProcessor");
 
     // via GenericExporter
-    GenericExporter exporter = new GenericExporter();
+    var exporter = new GenericExporter();
     exporter.setKeywords(Keywords.JPA);
     exporter.setEntityAnnotation(Entity.class);
     exporter.setEmbeddableAnnotation(Embeddable.class);
@@ -68,7 +72,7 @@ public class GenericExporterTest extends AbstractProcessorTest {
     exporter.setPropertyHandling(PropertyHandling.JPA);
     exporter.export(AbstractEntityTest.class.getPackage(), A.class.getPackage());
 
-    List<String> expected = new ArrayList<String>();
+    List<String> expected = new ArrayList<>();
     // GenericExporter doesn't include field/method selection
     expected.add("QTemporalTest_MyEntity.java");
     expected.add("QTemporal2Test_Cheque.java");
@@ -91,7 +95,7 @@ public class GenericExporterTest extends AbstractProcessorTest {
 
   @Test
   public void execute3() {
-    GenericExporter exporter = new GenericExporter();
+    var exporter = new GenericExporter();
     exporter.setKeywords(Keywords.JPA);
     exporter.setEntityAnnotation(Entity.class);
     exporter.setEmbeddableAnnotation(Embeddable.class);
@@ -108,7 +112,7 @@ public class GenericExporterTest extends AbstractProcessorTest {
 
   @Test
   public void execute4() throws IOException {
-    GenericExporter exporter = new GenericExporter();
+    var exporter = new GenericExporter();
     exporter.setKeywords(Keywords.JPA);
     exporter.setEntityAnnotation(Entity.class);
     exporter.setEmbeddableAnnotation(Embeddable.class);
@@ -122,16 +126,16 @@ public class GenericExporterTest extends AbstractProcessorTest {
 
   private void execute(List<String> expected, String genericExporterFolder, String aptFolder)
       throws IOException {
-    List<String> failures = new ArrayList<String>();
-    int successes = 0;
+    List<String> failures = new ArrayList<>();
+    var successes = 0;
     for (File file :
         new File("target/" + genericExporterFolder + "/com/querydsl/apt/domain").listFiles()) {
-      File other = new File("target/" + aptFolder + "/com/querydsl/apt/domain", file.getName());
+      var other = new File("target/" + aptFolder + "/com/querydsl/apt/domain", file.getName());
       if (!other.exists() || !other.isFile()) {
         continue;
       }
-      String result1 = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-      String result2 = new String(Files.readAllBytes(other.toPath()), StandardCharsets.UTF_8);
+      var result1 = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+      var result2 = new String(Files.readAllBytes(other.toPath()), StandardCharsets.UTF_8);
       if (!result1.equals(result2)) {
         if (!expected.contains(file.getName())) {
           System.err.println(file.getName());

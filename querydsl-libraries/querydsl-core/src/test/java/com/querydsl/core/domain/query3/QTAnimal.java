@@ -17,7 +17,14 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
 import com.querydsl.core.domain.Animal;
 import com.querydsl.core.types.PathMetadata;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.BeanPath;
+import com.querydsl.core.types.dsl.BooleanPath;
+import com.querydsl.core.types.dsl.DatePath;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.TimePath;
 import java.util.Date;
 
 /** QAnimal is a Querydsl query type for Animal */

@@ -13,7 +13,6 @@
  */
 package com.querydsl.codegen;
 
-import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.ScalaWriter;
 import com.querydsl.codegen.utils.model.Parameter;
@@ -142,7 +141,7 @@ public class GenericExporter {
 
   private final ClassLoader classLoader;
 
-  private Set<File> generatedFiles = new HashSet<File>();
+  private Set<File> generatedFiles = new HashSet<>();
 
   private boolean strictMode;
 
@@ -189,8 +188,8 @@ public class GenericExporter {
    * @param packages packages to be scanned
    */
   public void export(Package... packages) {
-    String[] pkgs = new String[packages.length];
-    for (int i = 0; i < packages.length; i++) {
+    var pkgs = new String[packages.length];
+    for (var i = 0; i < packages.length; i++) {
       pkgs[i] = packages[i].getName();
     }
     export(pkgs);
@@ -262,7 +261,7 @@ public class GenericExporter {
     }
 
     // merge supertype fields into subtypes
-    Set<EntityType> handled = new HashSet<EntityType>();
+    Set<EntityType> handled = new HashSet<>();
     for (EntityType type : superTypes.values()) {
       addSupertypeFields(type, allTypes, handled);
     }
@@ -313,7 +312,7 @@ public class GenericExporter {
       EntityType model, Map<String, EntityType> superTypes, Set<EntityType> handled) {
     if (handled.add(model)) {
       for (Supertype supertype : model.getSuperTypes()) {
-        EntityType entityType = superTypes.get(supertype.getType().getFullName());
+        var entityType = superTypes.get(supertype.getType().getFullName());
         if (entityType == null) {
           if (supertype.getType().getPackageName().startsWith("java.")) {
             // skip internal supertypes
@@ -322,7 +321,7 @@ public class GenericExporter {
           // FIXME this misses the generics
           Class<?> cl = supertype.getType().getJavaClass();
           typeFactory.addEmbeddableType(cl);
-          entityType = createEntityType(cl, new HashMap<Class<?>, EntityType>());
+          entityType = createEntityType(cl, new HashMap<>());
           addProperties(cl, entityType);
         }
         addSupertypeFields(entityType, superTypes, handled);
@@ -345,12 +344,12 @@ public class GenericExporter {
     if (types.get(cl) != null) {
       return types.get(cl);
     } else {
-      EntityType type = allTypes.get(ClassUtils.getFullName(cl));
+      var type = allTypes.get(ClassUtils.getFullName(cl));
       if (type == null) {
         type = typeFactory.getEntityType(cl);
       }
       types.put(cl, type);
-      String fullName = ClassUtils.getFullName(cl);
+      var fullName = ClassUtils.getFullName(cl);
       if (!allTypes.containsKey(fullName)) {
         allTypes.put(fullName, type);
       }
@@ -359,7 +358,7 @@ public class GenericExporter {
 
       if (strictMode && cl.getSuperclass() != null) {
         @SuppressWarnings("unchecked")
-        Class<? extends Annotation>[] annotations =
+        var annotations =
             (Class<? extends Annotation>[])
                 new Class<?>[] {entityAnnotation, supertypeAnnotation, embeddableAnnotation};
         if (!containsAny(cl.getSuperclass(), annotations)) {
@@ -387,18 +386,18 @@ public class GenericExporter {
   }
 
   private void addConstructors(Class<?> cl, EntityType type) {
-    final Constructor<?>[] constructors = cl.getConstructors();
+    final var constructors = cl.getConstructors();
     Arrays.sort(constructors, Comparator.comparing(Constructor::toString));
     for (Constructor<?> constructor : constructors) {
       if (constructor.isAnnotationPresent(QueryProjection.class)) {
         List<Parameter> parameters = new ArrayList<>();
-        for (int i = 0; i < constructor.getParameterTypes().length; i++) {
-          Type parameterType =
+        for (var i = 0; i < constructor.getParameterTypes().length; i++) {
+          var parameterType =
               typeFactory.get(
                   constructor.getParameterTypes()[i], constructor.getGenericParameterTypes()[i]);
           for (Annotation annotation : constructor.getParameterAnnotations()[i]) {
             if (annotation.annotationType().equals(QueryType.class)) {
-              QueryType queryType = (QueryType) annotation;
+              var queryType = (QueryType) annotation;
               parameterType = parameterType.as(TypeCategory.valueOf(queryType.value().name()));
             }
           }
@@ -413,7 +412,7 @@ public class GenericExporter {
     Map<String, Type> types = new HashMap<>();
     Map<String, Annotations> annotations = new HashMap<>();
 
-    PropertyHandling.Config config = propertyHandling.getConfig(cl);
+    var config = propertyHandling.getConfig(cl);
 
     // fields
     if (config.isFields()) {
@@ -423,11 +422,10 @@ public class GenericExporter {
               && !field.isAnnotationPresent(QueryType.class)) {
             continue;
           }
-          AnnotatedElement annotated =
-              ReflectionUtils.getAnnotatedElement(cl, field.getName(), field.getType());
-          Type propertyType =
+          var annotated = ReflectionUtils.getAnnotatedElement(cl, field.getName(), field.getType());
+          var propertyType =
               getPropertyType(cl, annotated, field.getType(), field.getGenericType());
-          Annotations ann = new Annotations(field);
+          var ann = new Annotations(field);
           types.put(field.getName(), propertyType);
           annotations.put(field.getName(), ann);
         }
@@ -437,7 +435,7 @@ public class GenericExporter {
     // getters
     if (config.isMethods()) {
       for (Method method : cl.getDeclaredMethods()) {
-        String name = method.getName();
+        var name = method.getName();
         if (method.getParameterTypes().length == 0
             && !Modifier.isStatic(method.getModifiers())
             && !method.isBridge()
@@ -449,12 +447,12 @@ public class GenericExporter {
           } else {
             propertyName = BeanUtils.uncapitalize(name.substring(2));
           }
-          Type propertyType =
+          var propertyType =
               getPropertyType(cl, method, method.getReturnType(), method.getGenericReturnType());
           if (!types.containsKey(propertyName) || !useFieldTypes) {
             types.put(propertyName, propertyType);
           }
-          Annotations ann = annotations.get(propertyName);
+          var ann = annotations.get(propertyName);
           if (ann == null) {
             ann = new Annotations();
             annotations.put(propertyName, ann);
@@ -465,7 +463,7 @@ public class GenericExporter {
     }
 
     for (Map.Entry<String, Type> entry : types.entrySet()) {
-      Annotations ann = annotations.get(entry.getKey());
+      var ann = annotations.get(entry.getKey());
       Property property = createProperty(type, entry.getKey(), entry.getValue(), ann);
       if (property != null) {
         type.addProperty(property);
@@ -488,7 +486,7 @@ public class GenericExporter {
         if (!embeddableTypes.containsKey(embeddableType)
             && !entityTypes.containsKey(embeddableType)
             && !superTypes.containsKey(embeddableType)) {
-          EntityType entityType = createEntityType(embeddableType, embeddableTypes);
+          var entityType = createEntityType(embeddableType, embeddableTypes);
           addProperties(embeddableType, entityType);
           if (embeddableType == type) {
             propertyType = entityType;
@@ -500,7 +498,7 @@ public class GenericExporter {
       propertyType = typeFactory.get(type, annotated, genericType);
       if (propertyType instanceof EntityType
           && !allTypes.containsKey(ClassUtils.getFullName(type))) {
-        String fullName = ClassUtils.getFullName(type);
+        var fullName = ClassUtils.getFullName(type);
         if (!allTypes.containsKey(fullName)) {
           allTypes.put(fullName, (EntityType) propertyType);
         }
@@ -521,7 +519,7 @@ public class GenericExporter {
       inits = Arrays.asList(annotated.getAnnotation(QueryInit.class).value());
     }
     if (annotated.isAnnotationPresent(QueryType.class)) {
-      QueryType queryType = annotated.getAnnotation(QueryType.class);
+      var queryType = annotated.getAnnotation(QueryType.class);
       if (queryType.value().equals(PropertyType.NONE)) {
         return null;
       }
@@ -567,17 +565,17 @@ public class GenericExporter {
   private void serialize(Serializer serializer, Map<Class<?>, EntityType> types)
       throws IOException {
     for (Map.Entry<Class<?>, EntityType> entityType : types.entrySet()) {
-      Type type = typeMappings.getPathType(entityType.getValue(), entityType.getValue(), true);
-      String packageName = type.getPackageName();
-      String className =
+      var type = typeMappings.getPathType(entityType.getValue(), entityType.getValue(), true);
+      var packageName = type.getPackageName();
+      var className =
           packageName.length() > 0
               ? (packageName + "." + type.getSimpleName())
               : type.getSimpleName();
-      SerializerConfig config = serializerConfig;
+      var config = serializerConfig;
       if (entityType.getKey().isAnnotationPresent(Config.class)) {
         config = SimpleSerializerConfig.getConfig(entityType.getKey().getAnnotation(Config.class));
       }
-      String fileSuffix = createScalaSources ? ".scala" : ".java";
+      var fileSuffix = createScalaSources ? ".scala" : ".java";
       write(serializer, className.replace('.', '/') + fileSuffix, config, entityType.getValue());
     }
   }
@@ -585,10 +583,10 @@ public class GenericExporter {
   private void write(
       Serializer serializer, String path, SerializerConfig serializerConfig, EntityType type)
       throws IOException {
-    File targetFile = new File(targetFolder, path);
+    var targetFile = new File(targetFolder, path);
     generatedFiles.add(targetFile);
-    try (Writer w = writerFor(targetFile)) {
-      CodeWriter writer = createScalaSources ? new ScalaWriter(w) : new JavaWriter(w);
+    try (var w = writerFor(targetFile)) {
+      var writer = createScalaSources ? new ScalaWriter(w) : new JavaWriter(w);
       serializer.serialize(type, serializerConfig, writer);
     }
   }

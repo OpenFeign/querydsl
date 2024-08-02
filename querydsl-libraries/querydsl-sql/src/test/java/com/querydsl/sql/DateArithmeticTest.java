@@ -14,7 +14,7 @@ import org.junit.experimental.categories.Category;
 public class DateArithmeticTest {
 
   private String serialize(Expression<?> expr, SQLTemplates templates) {
-    SQLSerializer serializer = new SQLSerializer(new Configuration(templates));
+    var serializer = new SQLSerializer(new Configuration(templates));
     serializer.handle(expr);
     return serializer.toString();
   }

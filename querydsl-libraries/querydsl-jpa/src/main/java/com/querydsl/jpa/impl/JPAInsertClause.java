@@ -26,7 +26,6 @@ import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
-import jakarta.persistence.Query;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -45,9 +44,9 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
 
   private final Map<Path<?>, Expression<?>> inserts = new LinkedHashMap<>();
 
-  private final List<Path<?>> columns = new ArrayList<Path<?>>();
+  private final List<Path<?>> columns = new ArrayList<>();
 
-  private final List<Object> values = new ArrayList<Object>();
+  private final List<Object> values = new ArrayList<>();
 
   private final EntityManager entityManager;
 
@@ -69,7 +68,7 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
 
   @Override
   public long execute() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, entityManager);
+    var serializer = new JPQLSerializer(templates, entityManager);
     serializer.serializeForInsert(
         queryMixin.getMetadata(),
         inserts.isEmpty() ? columns : inserts.keySet(),
@@ -77,7 +76,7 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
         subQuery,
         inserts);
 
-    Query query = entityManager.createQuery(serializer.toString());
+    var query = entityManager.createQuery(serializer.toString());
     if (lockMode != null) {
       query.setLockMode(lockMode);
     }
@@ -92,7 +91,7 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
 
   @Override
   public String toString() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, entityManager);
+    var serializer = new JPQLSerializer(templates, entityManager);
     serializer.serializeForInsert(
         queryMixin.getMetadata(),
         inserts.isEmpty() ? columns : inserts.keySet(),

@@ -26,7 +26,7 @@ public final class Naming {
     if (isKeyword(s)) {
       return s + reservedSuffix;
     } else {
-      StringBuilder sb = new StringBuilder(s.length() + 1);
+      var sb = new StringBuilder(s.length() + 1);
       for (char c : s.toCharArray()) {
         if (!Character.isJavaIdentifierPart(c)) {
           sb.append("_");

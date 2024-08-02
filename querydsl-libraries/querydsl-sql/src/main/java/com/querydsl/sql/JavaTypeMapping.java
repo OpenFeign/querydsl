@@ -15,10 +15,40 @@ package com.querydsl.sql;
 
 import com.querydsl.core.util.PrimitiveUtils;
 import com.querydsl.core.util.ReflectionUtils;
-import com.querydsl.sql.types.*;
+import com.querydsl.sql.types.BigDecimalType;
+import com.querydsl.sql.types.BigIntegerType;
+import com.querydsl.sql.types.BlobType;
+import com.querydsl.sql.types.BooleanType;
+import com.querydsl.sql.types.ByteType;
+import com.querydsl.sql.types.BytesType;
+import com.querydsl.sql.types.CalendarType;
+import com.querydsl.sql.types.CharacterType;
+import com.querydsl.sql.types.ClobType;
+import com.querydsl.sql.types.CurrencyType;
+import com.querydsl.sql.types.DateType;
+import com.querydsl.sql.types.DoubleType;
+import com.querydsl.sql.types.FloatType;
+import com.querydsl.sql.types.InstantType;
+import com.querydsl.sql.types.IntegerType;
+import com.querydsl.sql.types.LocalDateTimeType;
+import com.querydsl.sql.types.LocalDateType;
+import com.querydsl.sql.types.LocalTimeType;
+import com.querydsl.sql.types.LocaleType;
+import com.querydsl.sql.types.LongType;
+import com.querydsl.sql.types.ObjectType;
+import com.querydsl.sql.types.OffsetDateTimeType;
+import com.querydsl.sql.types.OffsetTimeType;
+import com.querydsl.sql.types.ShortType;
+import com.querydsl.sql.types.StringType;
+import com.querydsl.sql.types.TimeType;
+import com.querydsl.sql.types.TimestampType;
+import com.querydsl.sql.types.Type;
+import com.querydsl.sql.types.URLType;
+import com.querydsl.sql.types.UtilDateType;
+import com.querydsl.sql.types.UtilUUIDType;
+import com.querydsl.sql.types.ZonedDateTimeType;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -30,7 +60,7 @@ class JavaTypeMapping {
 
   private static final Type<Object> DEFAULT = new ObjectType();
 
-  private static final Map<Class<?>, Type<?>> defaultTypes = new HashMap<Class<?>, Type<?>>();
+  private static final Map<Class<?>, Type<?>> defaultTypes = new HashMap<>();
 
   static {
     registerDefault(new BigIntegerType());
@@ -74,16 +104,15 @@ class JavaTypeMapping {
     }
   }
 
-  private final Map<Class<?>, Type<?>> typeByClass = new HashMap<Class<?>, Type<?>>();
+  private final Map<Class<?>, Type<?>> typeByClass = new HashMap<>();
 
-  private final Map<Class<?>, Type<?>> resolvedTypesByClass = new HashMap<Class<?>, Type<?>>();
+  private final Map<Class<?>, Type<?>> resolvedTypesByClass = new HashMap<>();
 
-  private final Map<String, Map<String, Type<?>>> typeByColumn =
-      new HashMap<String, Map<String, Type<?>>>();
+  private final Map<String, Map<String, Type<?>>> typeByColumn = new HashMap<>();
 
   @Nullable
   public Type<?> getType(String table, String column) {
-    Map<String, Type<?>> columns = typeByColumn.get(table);
+    var columns = typeByColumn.get(table);
     if (columns != null) {
       return columns.get(column);
     } else {
@@ -119,7 +148,7 @@ class JavaTypeMapping {
     } while (!cl.equals(Object.class));
 
     // Look for a registered type in any implemented interfaces
-    Set<Class<?>> interfaces = ReflectionUtils.getImplementedInterfaces(clazz);
+    var interfaces = ReflectionUtils.getImplementedInterfaces(clazz);
     for (Class<?> itf : interfaces) {
       if (typeByClass.containsKey(itf)) {
         return typeByClass.get(itf);
@@ -141,8 +170,7 @@ class JavaTypeMapping {
   }
 
   public void setType(String table, String column, Type<?> type) {
-    Map<String, Type<?>> columns =
-        typeByColumn.computeIfAbsent(table, k -> new HashMap<String, Type<?>>());
+    var columns = typeByColumn.computeIfAbsent(table, k -> new HashMap<String, Type<?>>());
     columns.put(column, type);
   }
 }

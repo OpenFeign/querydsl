@@ -9,6 +9,7 @@ public class JSR310LocalTimeTypeTest extends AbstractJSR310DateTimeTypeTest<Loca
     super(new JSR310LocalTimeType());
   }
 
+  @Override
   @Test
   public void set() {
     //        LocalTime value = LocalTime.now();
@@ -22,6 +23,7 @@ public class JSR310LocalTimeTypeTest extends AbstractJSR310DateTimeTypeTest<Loca
     //        EasyMock.verify(stmt);
   }
 
+  @Override
   @Test
   public void get() {
     //        ResultSet resultSet = EasyMock.createNiceMock(ResultSet.class);

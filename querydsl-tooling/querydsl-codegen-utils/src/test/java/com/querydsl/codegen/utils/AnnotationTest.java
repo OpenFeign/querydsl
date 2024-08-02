@@ -23,17 +23,17 @@ public class AnnotationTest {
   @Test
   public void ClassAnnotation() throws IOException {
     writer.annotation(getClass().getAnnotation(Annotation.class));
-    String option1 =
+    var option1 =
         """
-        @com.querydsl.codegen.utils.Annotation(clazz=com.querydsl.codegen.utils.AnnotationTest.class,\
-         prop2=false)\
-        """;
-    String option2 =
+@com.querydsl.codegen.utils.Annotation(clazz=com.querydsl.codegen.utils.AnnotationTest.class,\
+ prop2=false)\
+""";
+    var option2 =
         """
         @com.querydsl.codegen.utils.Annotation(prop2=false,\
          clazz=com.querydsl.codegen.utils.AnnotationTest.class)\
         """;
-    String serialized = w.toString().trim();
+    var serialized = w.toString().trim();
     assertThat(serialized.equals(option1) || serialized.equals(option2)).isTrue();
   }
 

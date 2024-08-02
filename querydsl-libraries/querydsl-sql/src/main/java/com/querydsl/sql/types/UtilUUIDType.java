@@ -48,7 +48,7 @@ public class UtilUUIDType extends AbstractType<UUID> {
   @Override
   public UUID getValue(ResultSet rs, int startIndex) throws SQLException {
     if (asString) {
-      String str = rs.getString(startIndex);
+      var str = rs.getString(startIndex);
       return str != null ? UUID.fromString(str) : null;
     } else {
       return rs.getObject(startIndex, UUID.class);

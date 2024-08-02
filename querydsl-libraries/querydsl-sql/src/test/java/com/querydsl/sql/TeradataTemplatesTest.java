@@ -52,16 +52,16 @@ public class TeradataTemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void precedence() {
     // +, - (unary)
-    int p1 = getPrecedence(Ops.NEGATE);
+    var p1 = getPrecedence(Ops.NEGATE);
     // ** (exponentation)
     // * / MOD
-    int p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
+    var p2 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
     // +, - (binary)
-    int p3 = getPrecedence(Ops.ADD, Ops.SUB);
+    var p3 = getPrecedence(Ops.ADD, Ops.SUB);
     // concat
-    int p4 = getPrecedence(Ops.CONCAT);
+    var p4 = getPrecedence(Ops.CONCAT);
     // EQ, NE, GT, LE, LT, GE, IN, NOT IN, BEWEEN, LIKE
-    int p5 =
+    var p5 =
         getPrecedence(
             Ops.EQ,
             Ops.NE,
@@ -75,11 +75,11 @@ public class TeradataTemplatesTest extends AbstractSQLTemplatesTest {
             Ops.LIKE,
             Ops.LIKE_ESCAPE);
     // NOT
-    int p6 = getPrecedence(Ops.NOT);
+    var p6 = getPrecedence(Ops.NOT);
     // AND
-    int p7 = getPrecedence(Ops.AND);
+    var p7 = getPrecedence(Ops.AND);
     // OR
-    int p8 = getPrecedence(Ops.OR);
+    var p8 = getPrecedence(Ops.OR);
 
     assertThat(p1 < p2).isTrue();
     assertThat(p2 < p3).isTrue();

@@ -58,7 +58,7 @@ public class MySQLQuery<T> extends AbstractMySQLQuery<T, MySQLQuery<T>> {
 
   @Override
   public MySQLQuery<T> clone(Connection conn) {
-    MySQLQuery<T> q = new MySQLQuery<T>(conn, getConfiguration(), getMetadata().clone());
+    var q = new MySQLQuery<T>(conn, getConfiguration(), getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -68,7 +68,7 @@ public class MySQLQuery<T> extends AbstractMySQLQuery<T, MySQLQuery<T>> {
     queryMixin.setProjection(expr);
 
     @SuppressWarnings("unchecked")
-    MySQLQuery<U> res = (MySQLQuery<U>) this;
+    var res = (MySQLQuery<U>) this;
     return res;
   }
 
@@ -77,7 +77,7 @@ public class MySQLQuery<T> extends AbstractMySQLQuery<T, MySQLQuery<T>> {
     queryMixin.setProjection(exprs);
 
     @SuppressWarnings("unchecked")
-    MySQLQuery<Tuple> res = (MySQLQuery<Tuple>) this;
+    var res = (MySQLQuery<Tuple>) this;
     return res;
   }
 }

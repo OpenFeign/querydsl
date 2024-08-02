@@ -33,9 +33,9 @@ public class PropertyTest {
             "DomainClass",
             false,
             false);
-    EntityType type = new EntityType(typeModel);
-    Property p1 = new Property(type, "property", type, Collections.<String>emptyList());
-    Property p2 = new Property(type, "property", type, Collections.<String>emptyList());
+    var type = new EntityType(typeModel);
+    var p1 = new Property(type, "property", type, Collections.<String>emptyList());
+    var p2 = new Property(type, "property", type, Collections.<String>emptyList());
     assertThat(p1).isEqualTo(p1);
     assertThat(p2).isEqualTo(p1);
     assertThat(p2.hashCode()).isEqualTo(p1.hashCode());
@@ -51,8 +51,8 @@ public class PropertyTest {
             "DomainClass",
             false,
             false);
-    EntityType type = new EntityType(typeModel);
-    Property property = new Property(type, "boolean", type, Collections.<String>emptyList());
+    var type = new EntityType(typeModel);
+    var property = new Property(type, "boolean", type, Collections.<String>emptyList());
     assertThat(property.getEscapedName()).isEqualTo("boolean$");
   }
 }

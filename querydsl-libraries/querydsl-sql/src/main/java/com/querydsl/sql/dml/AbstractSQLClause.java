@@ -18,8 +18,18 @@ import com.querydsl.core.dml.DMLClause;
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.Path;
-import com.querydsl.sql.*;
-import java.sql.*;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLBindings;
+import com.querydsl.sql.SQLListener;
+import com.querydsl.sql.SQLListenerContextImpl;
+import com.querydsl.sql.SQLListeners;
+import com.querydsl.sql.SQLSerializer;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -87,7 +97,7 @@ public abstract class AbstractSQLClause<C extends AbstractSQLClause<C>> implemen
    */
   protected SQLListenerContextImpl startContext(
       Connection connection, QueryMetadata metadata, RelationalPath<?> entity) {
-    SQLListenerContextImpl context = new SQLListenerContextImpl(metadata, connection, entity);
+    var context = new SQLListenerContextImpl(metadata, connection, entity);
     listeners.start(context);
     return context;
   }
@@ -114,7 +124,7 @@ public abstract class AbstractSQLClause<C extends AbstractSQLClause<C>> implemen
   }
 
   protected SQLBindings createBindings(QueryMetadata metadata, SQLSerializer serializer) {
-    String queryString = serializer.toString();
+    var queryString = serializer.toString();
     List<Object> args = new ArrayList<>();
     Map<ParamExpression<?>, Object> params = metadata.getParams();
     for (Object o : serializer.getConstants()) {
@@ -130,7 +140,7 @@ public abstract class AbstractSQLClause<C extends AbstractSQLClause<C>> implemen
   }
 
   protected SQLSerializer createSerializer() {
-    SQLSerializer serializer = new SQLSerializer(configuration, true);
+    var serializer = new SQLSerializer(configuration, true);
     serializer.setUseLiterals(useLiterals);
     return serializer;
   }
@@ -159,7 +169,7 @@ public abstract class AbstractSQLClause<C extends AbstractSQLClause<C>> implemen
       throw new IllegalArgumentException(
           "Expected " + objects.size() + " paths, " + "but got " + constantPaths.size());
     }
-    for (int i = 0; i < objects.size(); i++) {
+    for (var i = 0; i < objects.size(); i++) {
       Object o = objects.get(i);
       try {
         if (o instanceof ParamExpression) {
@@ -182,7 +192,7 @@ public abstract class AbstractSQLClause<C extends AbstractSQLClause<C>> implemen
       stmt.executeBatch();
       return stmt.getUpdateCount();
     } else {
-      long rv = 0;
+      var rv = 0L;
       for (int i : stmt.executeBatch()) {
         rv += i;
       }
@@ -191,7 +201,7 @@ public abstract class AbstractSQLClause<C extends AbstractSQLClause<C>> implemen
   }
 
   protected long executeBatch(Collection<PreparedStatement> stmts) throws SQLException {
-    long rv = 0;
+    var rv = 0L;
     for (PreparedStatement stmt : stmts) {
       rv += executeBatch(stmt);
     }
@@ -222,7 +232,7 @@ public abstract class AbstractSQLClause<C extends AbstractSQLClause<C>> implemen
 
   protected void logQuery(Logger logger, String queryString, Collection<Object> parameters) {
     if (logger.isLoggable(Level.FINE)) {
-      String normalizedQuery = queryString.replace('\n', ' ');
+      var normalizedQuery = queryString.replace('\n', ' ');
       logger.fine(normalizedQuery);
     }
   }

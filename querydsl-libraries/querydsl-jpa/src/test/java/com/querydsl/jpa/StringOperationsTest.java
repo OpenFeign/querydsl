@@ -13,14 +13,15 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.jpa.Constants.*;
+import static com.querydsl.jpa.Constants.cat;
+import static com.querydsl.jpa.Constants.cust;
+import static com.querydsl.jpa.Constants.kitten;
 
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringPath;
 import org.junit.Test;
 
 public class StringOperationsTest extends AbstractQueryTest {
@@ -54,7 +55,7 @@ public class StringOperationsTest extends AbstractQueryTest {
 
   @Test
   public void indexOf2() {
-    StringPath str = QCat.cat.name;
+    var str = QCat.cat.name;
     assertToString(
         "substring(cat.name,1,locate(?1,cat.name)-1 - ?2)", str.substring(0, str.indexOf("x")));
   }

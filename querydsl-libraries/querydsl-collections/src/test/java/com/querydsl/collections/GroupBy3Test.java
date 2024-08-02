@@ -2,13 +2,15 @@ package com.querydsl.collections;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.set;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.annotations.QueryEntity;
-import com.querydsl.core.group.Group;
 import com.querydsl.core.types.Projections;
 import java.util.Map;
 import java.util.Set;
@@ -35,9 +37,9 @@ public class GroupBy3Test {
 
   @Test
   public void nested_expressions() {
-    QGroupBy3Test_RiskAnalysis riskAnalysis = QGroupBy3Test_RiskAnalysis.riskAnalysis;
-    QGroupBy3Test_AssetThreat assetThreat = QGroupBy3Test_AssetThreat.assetThreat;
-    QGroupBy3Test_Threat threat = QGroupBy3Test_Threat.threat;
+    var riskAnalysis = QGroupBy3Test_RiskAnalysis.riskAnalysis;
+    var assetThreat = QGroupBy3Test_AssetThreat.assetThreat;
+    var threat = QGroupBy3Test_Threat.threat;
 
     ResultTransformer<Map<String, RiskAnalysis>> transformer =
         groupBy(riskAnalysis.id)
@@ -51,8 +53,8 @@ public class GroupBy3Test {
                             set(Projections.bean(Threat.class, threat.id)).as("threats")))
                         .as("assetThreats")));
 
-    CloseableIterator iter = createMock(CloseableIterator.class);
-    FetchableQuery projectable = createMock(FetchableQuery.class);
+    var iter = (CloseableIterator) createMock(CloseableIterator.class);
+    var projectable = (FetchableQuery) createMock(FetchableQuery.class);
     expect(
             projectable.select(
                 Projections.tuple(
@@ -72,11 +74,11 @@ public class GroupBy3Test {
 
   @Test
   public void alias_usage() {
-    QGroupBy3Test_RiskAnalysis riskAnalysis = QGroupBy3Test_RiskAnalysis.riskAnalysis;
-    QGroupBy3Test_AssetThreat assetThreat = QGroupBy3Test_AssetThreat.assetThreat;
-    QGroupBy3Test_Threat threat = QGroupBy3Test_Threat.threat;
+    var riskAnalysis = QGroupBy3Test_RiskAnalysis.riskAnalysis;
+    var assetThreat = QGroupBy3Test_AssetThreat.assetThreat;
+    var threat = QGroupBy3Test_Threat.threat;
 
-    ResultTransformer<Map<String, Group>> transformer =
+    var transformer =
         groupBy(riskAnalysis.id)
             .as(
                 riskAnalysis.id,
@@ -87,8 +89,8 @@ public class GroupBy3Test {
                             set(Projections.bean(Threat.class, threat.id)).as("threats"))
                         .as("assetThreats")));
 
-    CloseableIterator iter = createMock(CloseableIterator.class);
-    FetchableQuery projectable = createMock(FetchableQuery.class);
+    var iter = (CloseableIterator) createMock(CloseableIterator.class);
+    var projectable = (FetchableQuery) createMock(FetchableQuery.class);
     expect(
             projectable.select(
                 Projections.tuple(

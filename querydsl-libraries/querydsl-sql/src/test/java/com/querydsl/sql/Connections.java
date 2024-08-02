@@ -16,7 +16,12 @@ package com.querydsl.sql;
 import com.querydsl.core.Target;
 import com.querydsl.sql.ddl.CreateTableClause;
 import com.querydsl.sql.ddl.DropTableClause;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 import org.hsqldb.types.Types;
@@ -28,11 +33,11 @@ public final class Connections {
 
   public static final int TEST_ROW_COUNT = 100;
 
-  private static ThreadLocal<Connection> connHolder = new ThreadLocal<Connection>();
+  private static ThreadLocal<Connection> connHolder = new ThreadLocal<>();
 
-  private static ThreadLocal<Target> targetHolder = new ThreadLocal<Target>();
+  private static ThreadLocal<Target> targetHolder = new ThreadLocal<>();
 
-  private static ThreadLocal<Configuration> configurationHolder = new ThreadLocal<Configuration>();
+  private static ThreadLocal<Configuration> configurationHolder = new ThreadLocal<>();
 
   // datetest
   private static final String CREATE_TABLE_DATETEST = "create table DATE_TEST(DATE_TEST date)";
@@ -57,7 +62,7 @@ public final class Connections {
 
   private static final String INSERT_INTO_TEST_VALUES = "insert into TEST values(?)";
 
-  private static ThreadLocal<Statement> stmtHolder = new ThreadLocal<Statement>();
+  private static ThreadLocal<Statement> stmtHolder = new ThreadLocal<>();
 
   private static boolean db2Inited,
       derbyInited,
@@ -99,62 +104,62 @@ public final class Connections {
 
   private static Connection getDB2() throws SQLException, ClassNotFoundException {
     Class.forName("com.ibm.db2.jcc.DB2Driver");
-    String url = "jdbc:db2://localhost:50000/sample";
+    var url = "jdbc:db2://localhost:50000/sample";
     return DriverManager.getConnection(url, "db2inst1", "a3sd!fDj");
   }
 
   private static Connection getDerby() throws SQLException, ClassNotFoundException {
     Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
-    String url = "jdbc:derby:target/demoDB;create=true";
+    var url = "jdbc:derby:target/demoDB;create=true";
     return DriverManager.getConnection(url, "", "");
   }
 
   private static Connection getFirebird() throws SQLException, ClassNotFoundException {
     Class.forName("org.firebirdsql.jdbc.FBDriver");
-    String url = "jdbc:firebirdsql:localhost/3050:/firebird/data/querydsl.fdb";
+    var url = "jdbc:firebirdsql:localhost/3050:/firebird/data/querydsl.fdb";
     return DriverManager.getConnection(url, "sysdba", "masterkey");
   }
 
   private static Connection getHSQL() throws SQLException, ClassNotFoundException {
     Class.forName("org.hsqldb.jdbcDriver");
-    String url = "jdbc:hsqldb:target/tutorial";
+    var url = "jdbc:hsqldb:target/tutorial";
     return DriverManager.getConnection(url, "sa", "");
   }
 
   public static Connection getH2() throws SQLException, ClassNotFoundException {
     Class.forName("org.h2.Driver");
-    String url = "jdbc:h2:./target/h2-test;LOCK_MODE=0;AUTO_SERVER=TRUE;MODE=legacy";
+    var url = "jdbc:h2:./target/h2-test;LOCK_MODE=0;AUTO_SERVER=TRUE;MODE=legacy";
     return DriverManager.getConnection(url, "sa", "");
   }
 
   private static Connection getMySQL() throws SQLException, ClassNotFoundException {
     Class.forName("com.mysql.jdbc.Driver");
-    String url = "jdbc:mysql://localhost:3306/querydsl?useLegacyDatetimeCode=false";
+    var url = "jdbc:mysql://localhost:3306/querydsl?useLegacyDatetimeCode=false";
     return DriverManager.getConnection(url, "querydsl", "querydsl");
   }
 
   private static Connection getOracle() throws SQLException, ClassNotFoundException {
     Class.forName("oracle.jdbc.driver.OracleDriver");
-    String url = "jdbc:oracle:thin:@localhost:1521/XEPDB1";
+    var url = "jdbc:oracle:thin:@localhost:1521/XEPDB1";
     return DriverManager.getConnection(url, "querydsl", "querydsl");
   }
 
   private static Connection getPostgreSQL() throws ClassNotFoundException, SQLException {
     Class.forName("org.postgresql.Driver");
-    String url = "jdbc:postgresql://localhost:5432/querydsl";
+    var url = "jdbc:postgresql://localhost:5432/querydsl";
     return DriverManager.getConnection(url, "querydsl", "querydsl");
   }
 
   private static Connection getSQLServer() throws ClassNotFoundException, SQLException {
     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-    String url =
+    var url =
         "jdbc:sqlserver://localhost:1433;databaseName=tempdb;sendTimeAsDatetime=false;trustServerCertificate=true";
     return DriverManager.getConnection(url, "sa", "Password1!");
   }
 
   private static Connection getCubrid() throws ClassNotFoundException, SQLException {
     Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
-    String url = "jdbc:cubrid:localhost:30000:demodb:public::";
+    var url = "jdbc:cubrid:localhost:30000:demodb:public::";
     return DriverManager.getConnection(url);
   }
 
@@ -255,9 +260,9 @@ public final class Connections {
   public static void initCubrid() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.CUBRID);
     // SQLTemplates templates = new MySQLTemplates();
-    Connection c = getCubrid();
+    var c = getCubrid();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (cubridInited) {
@@ -278,8 +283,8 @@ public final class Connections {
     // test
     stmt.execute("drop table if exists \"TEST\"");
     stmt.execute("create table \"TEST\"(NAME varchar(255))");
-    try (PreparedStatement pstmt = c.prepareStatement("insert into \"TEST\" values(?)")) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    try (var pstmt = c.prepareStatement("insert into \"TEST\" values(?)")) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -325,9 +330,9 @@ public final class Connections {
   public static void initDB2() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.DB2);
     SQLTemplates templates = new DB2Templates();
-    Connection c = getDB2();
+    var c = getDB2();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (db2Inited) {
@@ -349,8 +354,8 @@ public final class Connections {
     dropTable(templates, "TEST");
     stmt.execute(CREATE_TABLE_TEST);
     stmt.execute("create index test_name on test(name)");
-    try (PreparedStatement pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    try (var pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -385,9 +390,9 @@ public final class Connections {
   public static void initDerby() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.DERBY);
     SQLTemplates templates = new DerbyTemplates();
-    Connection c = getDerby();
+    var c = getDerby();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (derbyInited) {
@@ -413,8 +418,8 @@ public final class Connections {
     dropTable(templates, "TEST");
     stmt.execute(CREATE_TABLE_TEST);
     stmt.execute("create index test_name on test(name)");
-    try (PreparedStatement pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    try (var pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -449,9 +454,9 @@ public final class Connections {
   public static void initFirebird() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.FIREBIRD);
     SQLTemplates templates = new FirebirdTemplates();
-    Connection c = getFirebird();
+    var c = getFirebird();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (firebirdInited) {
@@ -515,8 +520,8 @@ public final class Connections {
     // test
     dropTable(templates, "TEST");
     stmt.execute(CREATE_TABLE_TEST);
-    try (PreparedStatement pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    try (var pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -582,9 +587,9 @@ public final class Connections {
   public static void initH2() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.H2);
     SQLTemplates templates = new H2Templates();
-    Connection c = getH2();
+    var c = getH2();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (h2Inited) {
@@ -629,8 +634,8 @@ public final class Connections {
     // test
     stmt.execute("drop table TEST if exists");
     stmt.execute(CREATE_TABLE_TEST);
-    try (PreparedStatement pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    try (var pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -663,9 +668,9 @@ public final class Connections {
   public static void initHSQL() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.HSQLDB);
     SQLTemplates templates = new HSQLDBTemplates();
-    Connection c = getHSQL();
+    var c = getHSQL();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (hsqlInited) {
@@ -702,8 +707,8 @@ public final class Connections {
     // test
     stmt.execute("drop table TEST if exists");
     stmt.execute(CREATE_TABLE_TEST);
-    try (PreparedStatement pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    try (var pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -736,9 +741,9 @@ public final class Connections {
   public static void initMySQL() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.MYSQL);
     // SQLTemplates templates = new MySQLTemplates();
-    Connection c = getMySQL();
+    var c = getMySQL();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (mysqlInited) {
@@ -770,8 +775,8 @@ public final class Connections {
     // test
     stmt.execute("drop table if exists TEST");
     stmt.execute(CREATE_TABLE_TEST);
-    try (PreparedStatement pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    try (var pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -817,9 +822,9 @@ public final class Connections {
   public static void initOracle() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.ORACLE);
     SQLTemplates templates = new OracleTemplates();
-    Connection c = getOracle();
+    var c = getOracle();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (oracleInited) {
@@ -863,9 +868,9 @@ public final class Connections {
     // test
     dropTable(templates, "TEST");
     stmt.execute("create table TEST(name varchar(255))");
-    String sql = "insert into TEST values(?)";
-    PreparedStatement pstmt = c.prepareStatement(sql);
-    for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    var sql = "insert into TEST values(?)";
+    var pstmt = c.prepareStatement(sql);
+    for (var i = 0; i < TEST_ROW_COUNT; i++) {
       pstmt.setString(1, "name" + i);
       pstmt.addBatch();
     }
@@ -909,9 +914,9 @@ public final class Connections {
     targetHolder.set(Target.POSTGRESQL);
     SQLTemplates templates = new PostgreSQLTemplates(true);
     // NOTE : unquoted identifiers are converted to lower case in PostgreSQL
-    Connection c = getPostgreSQL();
+    var c = getPostgreSQL();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (postgresqlInited) {
@@ -971,9 +976,9 @@ public final class Connections {
     // test
     dropTable(templates, "TEST");
     stmt.execute(quote(CREATE_TABLE_TEST, "TEST", "NAME"));
-    String sql = quote(INSERT_INTO_TEST_VALUES, "TEST");
-    try (PreparedStatement pstmt = c.prepareStatement(sql)) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    var sql = quote(INSERT_INTO_TEST_VALUES, "TEST");
+    try (var pstmt = c.prepareStatement(sql)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -1011,9 +1016,9 @@ public final class Connections {
   public static void initSQLite() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.SQLITE);
     //        SQLTemplates templates = new SQLiteTemplates();
-    Connection c = getSQLite();
+    var c = getSQLite();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (sqliteInited) {
@@ -1038,8 +1043,8 @@ public final class Connections {
     // test
     stmt.execute("drop table if exists TEST");
     stmt.execute(CREATE_TABLE_TEST);
-    try (PreparedStatement pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    try (var pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -1084,9 +1089,9 @@ public final class Connections {
   public static void initSQLServer() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.SQLSERVER);
     SQLTemplates templates = new SQLServerTemplates();
-    Connection c = getSQLServer();
+    var c = getSQLServer();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (sqlServerInited) {
@@ -1112,8 +1117,8 @@ public final class Connections {
     // test
     dropTable(templates, "TEST");
     stmt.execute(CREATE_TABLE_TEST);
-    try (PreparedStatement pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    try (var pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -1145,16 +1150,16 @@ public final class Connections {
   public static void initTeradata() throws SQLException, ClassNotFoundException {
     targetHolder.set(Target.TERADATA);
     SQLTemplates templates = new TeradataTemplates();
-    Connection c = getTeradata();
+    var c = getTeradata();
     connHolder.set(c);
-    Statement stmt = c.createStatement();
+    var stmt = c.createStatement();
     stmtHolder.set(stmt);
 
     if (teradataInited) {
       return;
     }
 
-    String identity = "GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1)";
+    var identity = "GENERATED ALWAYS AS IDENTITY(START WITH 1 INCREMENT BY 1)";
 
     // shapes
     dropTable(templates, "SHAPES");
@@ -1176,8 +1181,8 @@ public final class Connections {
     // test
     dropTable(templates, "TEST");
     stmt.execute(CREATE_TABLE_TEST);
-    try (PreparedStatement pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
-      for (int i = 0; i < TEST_ROW_COUNT; i++) {
+    try (var pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
         pstmt.setString(1, "name" + i);
         pstmt.addBatch();
       }
@@ -1220,7 +1225,7 @@ public final class Connections {
   static void addEmployee(
       String sql, int id, String firstName, String lastName, double salary, int superiorId)
       throws SQLException {
-    PreparedStatement stmt = connHolder.get().prepareStatement(sql);
+    var stmt = connHolder.get().prepareStatement(sql);
     stmt.setInt(1, id);
     stmt.setString(2, firstName);
     stmt.setString(3, lastName);
@@ -1254,7 +1259,7 @@ public final class Connections {
   }
 
   private static String quote(String sql, String... identifiers) {
-    String rv = sql;
+    var rv = sql;
     for (String id : identifiers) {
       rv = rv.replace(id, "\"" + id + "\"");
     }

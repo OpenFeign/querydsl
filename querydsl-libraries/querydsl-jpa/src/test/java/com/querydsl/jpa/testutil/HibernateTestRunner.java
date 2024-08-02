@@ -19,7 +19,6 @@ import com.querydsl.core.Target;
 import com.querydsl.jpa.HibernateTest;
 import com.querydsl.jpa.Mode;
 import com.querydsl.jpa.domain.Domain;
-import java.io.InputStream;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
@@ -64,7 +63,7 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
                     HibernateTest.class))
         .isTrue();
 
-    List<MethodRule> rules = super.rules(test);
+    var rules = super.rules(test);
     rules.add(
         new MethodRule() {
           @Override
@@ -89,7 +88,7 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
       super.run(notifier);
     } catch (Exception e) {
       e.printStackTrace();
-      Failure failure =
+      var failure =
           new Failure(Description.createSuiteDescription(getTestClass().getJavaClass()), e);
       notifier.fireTestFailure(failure);
     } finally {
@@ -101,17 +100,17 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
     Mode.mode.set("hsqldb");
     Mode.target.set(Target.HSQLDB);
 
-    Configuration cfg = new Configuration();
+    var cfg = new Configuration();
     for (Class<?> cl : Domain.classes) {
       cfg.addAnnotatedClass(cl);
     }
-    String mode = Mode.mode.get() + ".properties";
+    var mode = Mode.mode.get() + ".properties";
     isDerby = mode.contains("derby");
     if (isDerby) {
       Class.forName("org.apache.derby.jdbc.EmbeddedDriver").getDeclaredConstructor().newInstance();
     }
-    Properties props = new Properties();
-    InputStream is = HibernateTestRunner.class.getResourceAsStream(mode);
+    var props = new Properties();
+    var is = HibernateTestRunner.class.getResourceAsStream(mode);
     if (is == null) {
       throw new IllegalArgumentException("No configuration available at classpath:" + mode);
     }

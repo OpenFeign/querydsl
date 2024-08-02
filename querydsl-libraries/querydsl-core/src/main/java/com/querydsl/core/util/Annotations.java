@@ -26,8 +26,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Annotations implements AnnotatedElement {
 
-  private final Map<Class<? extends Annotation>, Annotation> annotations =
-      new HashMap<Class<? extends Annotation>, Annotation>();
+  private final Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<>();
 
   public Annotations(AnnotatedElement... elements) {
     for (AnnotatedElement element : elements) {

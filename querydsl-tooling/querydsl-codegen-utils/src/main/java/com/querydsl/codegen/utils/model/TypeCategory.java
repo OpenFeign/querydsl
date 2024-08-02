@@ -75,7 +75,7 @@ public enum TypeCategory {
 
   TypeCategory(TypeCategory superType, String... types) {
     this.superType = superType;
-    this.types = new HashSet<String>(types.length);
+    this.types = new HashSet<>(types.length);
     for (String type : types) {
       this.types.add(type);
     }

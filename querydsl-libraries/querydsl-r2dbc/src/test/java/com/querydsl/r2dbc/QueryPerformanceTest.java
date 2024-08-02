@@ -7,8 +7,6 @@ import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.testutil.H2;
 import com.querydsl.core.testutil.Performance;
-import io.r2dbc.spi.Connection;
-import io.r2dbc.spi.Statement;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import org.junit.AfterClass;
@@ -21,7 +19,6 @@ import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import reactor.core.publisher.Mono;
@@ -48,15 +45,15 @@ public class QueryPerformanceTest {
   @BeforeClass
   public static void setUpClass() {
     Connections.initH2();
-    Connection conn = Connections.getConnection();
-    Statement stmt =
+    var conn = Connections.getConnection();
+    var stmt =
         conn.createStatement(
             "create or replace table companies (id identity, name varchar(30) unique not null);");
     Mono.from(stmt.execute()).block();
 
-    Statement pstmt = conn.createStatement("insert into companies (name) values (?)");
-    final int iterations = 1000000;
-    for (int i = 0; i < iterations; i++) {
+    var pstmt = conn.createStatement("insert into companies (name) values (?)");
+    final var iterations = 1000000;
+    for (var i = 0; i < iterations; i++) {
       pstmt.bind(1, String.valueOf(i));
       Mono.from(pstmt.execute()).block();
     }
@@ -66,8 +63,8 @@ public class QueryPerformanceTest {
 
   @AfterClass
   public static void tearDownClass() {
-    Connection conn = Connections.getConnection();
-    Statement stmt = conn.createStatement("drop table companies");
+    var conn = Connections.getConnection();
+    var stmt = conn.createStatement("drop table companies");
     Mono.from(stmt.execute()).block();
   }
 
@@ -108,12 +105,12 @@ public class QueryPerformanceTest {
   @BenchmarkMode(Mode.AverageTime)
   @OutputTimeUnit(TimeUnit.MICROSECONDS)
   public void querydsl1() throws Exception {
-    QCompanies companies = QCompanies.companies;
+    var companies = QCompanies.companies;
     R2DBCQuery<?> query =
         new R2DBCQuery<Void>(Connections.getConnection(), conf, new DefaultQueryMetadata());
     query
         .from(companies)
-        .where(companies.id.eq((long) ThreadLocalRandom.current().nextLong()))
+        .where(companies.id.eq(ThreadLocalRandom.current().nextLong()))
         .select(companies.name)
         .fetch()
         .collectList()
@@ -158,12 +155,12 @@ public class QueryPerformanceTest {
   @BenchmarkMode(Mode.AverageTime)
   @OutputTimeUnit(TimeUnit.MICROSECONDS)
   public void querydsl14() throws Exception {
-    QCompanies companies = QCompanies.companies;
+    var companies = QCompanies.companies;
     R2DBCQuery<?> query =
         new R2DBCQuery<Void>(Connections.getConnection(), conf, new DefaultQueryMetadata());
     query
         .from(companies)
-        .where(companies.id.eq((long) ThreadLocalRandom.current().nextLong()))
+        .where(companies.id.eq(ThreadLocalRandom.current().nextLong()))
         .select(companies.name)
         .fetch()
         .collectList()
@@ -174,12 +171,12 @@ public class QueryPerformanceTest {
   @BenchmarkMode(Mode.AverageTime)
   @OutputTimeUnit(TimeUnit.MICROSECONDS)
   public void querydsl15() throws Exception {
-    QCompanies companies = QCompanies.companies;
+    var companies = QCompanies.companies;
     R2DBCQuery<?> query =
         new R2DBCQuery<Void>(Connections.getConnection(), conf, new DefaultQueryMetadata());
     query
         .from(companies)
-        .where(companies.id.eq((long) ThreadLocalRandom.current().nextLong()))
+        .where(companies.id.eq(ThreadLocalRandom.current().nextLong()))
         .select(companies.id, companies.name)
         .fetch()
         .collectList()
@@ -190,7 +187,7 @@ public class QueryPerformanceTest {
   @BenchmarkMode(Mode.AverageTime)
   @OutputTimeUnit(TimeUnit.MICROSECONDS)
   public void querydsl2() throws Exception {
-    QCompanies companies = QCompanies.companies;
+    var companies = QCompanies.companies;
     R2DBCQuery<?> query = new R2DBCQuery<Void>(Connections.getConnection(), conf);
     query
         .from(companies)
@@ -221,7 +218,7 @@ public class QueryPerformanceTest {
   @BenchmarkMode(Mode.AverageTime)
   @OutputTimeUnit(TimeUnit.MICROSECONDS)
   public void querydsl23() throws Exception {
-    QCompanies companies = QCompanies.companies;
+    var companies = QCompanies.companies;
     R2DBCQuery<?> query =
         new R2DBCQuery<Void>(Connections.getConnection(), conf, new DefaultQueryMetadata());
 
@@ -238,13 +235,13 @@ public class QueryPerformanceTest {
   @BenchmarkMode(Mode.AverageTime)
   @OutputTimeUnit(TimeUnit.MICROSECONDS)
   public void serialization() throws Exception {
-    QCompanies companies = QCompanies.companies;
+    var companies = QCompanies.companies;
     final QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, companies);
     md.addWhere(companies.id.eq(1L));
     md.setProjection(companies.name);
 
-    SQLSerializer serializer = new SQLSerializer(conf);
+    var serializer = new SQLSerializer(conf);
     serializer.serialize(md, false);
     serializer.getConstants();
     serializer.getConstantPaths();
@@ -253,7 +250,7 @@ public class QueryPerformanceTest {
 
   @Test
   public void launchBenchmark() throws Exception {
-    Options opt =
+    var opt =
         new OptionsBuilder()
             .include(this.getClass().getName() + ".*")
             .mode(Mode.AverageTime)

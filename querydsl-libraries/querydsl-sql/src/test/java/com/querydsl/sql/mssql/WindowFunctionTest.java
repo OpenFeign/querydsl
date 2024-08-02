@@ -21,7 +21,6 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLSerializer;
 import com.querydsl.sql.SQLTemplates;
-import com.querydsl.sql.WindowFunction;
 import org.junit.Test;
 
 public class WindowFunctionTest {
@@ -38,7 +37,7 @@ public class WindowFunctionTest {
 
   @Test
   public void mutable() {
-    WindowFunction<Long> rn = rowNumber().over().orderBy(employee.firstname);
+    var rn = rowNumber().over().orderBy(employee.firstname);
     assertThat(toString(rn)).isEqualTo("row_number() over (order by e.FIRSTNAME asc)");
     assertThat(toString(rn.orderBy(employee.lastname)))
         .isEqualTo("row_number() over (order by e.FIRSTNAME asc, e.LASTNAME asc)");

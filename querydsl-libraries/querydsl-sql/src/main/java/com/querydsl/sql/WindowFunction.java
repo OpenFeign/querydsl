@@ -13,7 +13,12 @@
  */
 package com.querydsl.sql;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.MutableExpressionBase;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.Expressions;
@@ -37,9 +42,9 @@ public class WindowFunction<A> extends MutableExpressionBase<A> {
 
   private static final long serialVersionUID = -4130672293308756779L;
 
-  private final List<OrderSpecifier<?>> orderBy = new ArrayList<OrderSpecifier<?>>();
+  private final List<OrderSpecifier<?>> orderBy = new ArrayList<>();
 
-  private final List<Expression<?>> partitionBy = new ArrayList<Expression<?>>();
+  private final List<Expression<?>> partitionBy = new ArrayList<>();
 
   private final Expression<A> target;
 
@@ -56,15 +61,15 @@ public class WindowFunction<A> extends MutableExpressionBase<A> {
 
   public SimpleExpression<A> getValue() {
     if (value == null) {
-      int size = 0;
+      var size = 0;
       List<Expression<?>> args = new ArrayList<>();
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       builder.append("{0} over (");
       args.add(target);
       size++;
       if (!partitionBy.isEmpty()) {
         builder.append(PARTITION_BY);
-        boolean first = true;
+        var first = true;
         for (Expression<?> expr : partitionBy) {
           if (!first) {
             builder.append(", ");
@@ -188,13 +193,13 @@ public class WindowFunction<A> extends MutableExpressionBase<A> {
 
   public WindowRows<A> rows() {
     value = null;
-    int offset = orderBy.size() + partitionBy.size() + 1;
-    return new WindowRows<A>(this, " rows", offset);
+    var offset = orderBy.size() + partitionBy.size() + 1;
+    return new WindowRows<>(this, " rows", offset);
   }
 
   public WindowRows<A> range() {
     value = null;
-    int offset = orderBy.size() + partitionBy.size() + 1;
-    return new WindowRows<A>(this, " range", offset);
+    var offset = orderBy.size() + partitionBy.size() + 1;
+    return new WindowRows<>(this, " range", offset);
   }
 }

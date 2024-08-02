@@ -29,8 +29,8 @@ public class ArrayType<T> extends AbstractType<T, T> {
 
   private static void copy(Object source, Object target, int length) {
     // Note: System.arrayCopy doesn't handle copying from/to primitive arrays properly
-    for (int i = 0; i < length; i++) {
-      Object val = java.lang.reflect.Array.get(source, i);
+    for (var i = 0; i < length; i++) {
+      var val = java.lang.reflect.Array.get(source, i);
       java.lang.reflect.Array.set(target, i, val);
     }
   }
@@ -57,14 +57,14 @@ public class ArrayType<T> extends AbstractType<T, T> {
   @Nullable
   @Override
   public T getValue(Row row, int startIndex) {
-    T[] value = (T[]) row.get(startIndex);
+    var value = (T[]) row.get(startIndex);
     if (value == null) {
       return null;
     }
 
     if (convertPrimitives) {
       // primitives out
-      Object rv2 = java.lang.reflect.Array.newInstance(type.getComponentType(), value.length);
+      var rv2 = java.lang.reflect.Array.newInstance(type.getComponentType(), value.length);
       copy(value, rv2, value.length);
       return (T) rv2;
     }
@@ -76,8 +76,8 @@ public class ArrayType<T> extends AbstractType<T, T> {
   public void setValue(BindMarker bindMarker, BindTarget bindTarget, T value) {
     if (convertPrimitives) {
       // primitives in
-      int length = java.lang.reflect.Array.getLength(value);
-      Object value2 =
+      var length = java.lang.reflect.Array.getLength(value);
+      var value2 =
           java.lang.reflect.Array.newInstance(PrimitiveUtils.wrap(type.getComponentType()), length);
       copy(value, value2, length);
       value = (T) value2;

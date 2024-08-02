@@ -23,8 +23,8 @@ public class InnerClassesTest {
             "QEntity",
             entityType);
 
-    StringWriter str = new StringWriter();
-    JavaWriter writer = new JavaWriter(str);
+    var str = new StringWriter();
+    var writer = new JavaWriter(str);
     writer.beginClass(type);
     writer.end();
 
@@ -33,8 +33,8 @@ public class InnerClassesTest {
 
   @Test
   public void Java() {
-    StringWriter str = new StringWriter();
-    JavaWriter writer = new JavaWriter(str);
+    var str = new StringWriter();
+    var writer = new JavaWriter(str);
 
     assertThat(writer.getRawName(new ClassType(Entity.class)))
         .isEqualTo("com.querydsl.codegen.utils.InnerClassesTest.Entity");
@@ -42,8 +42,8 @@ public class InnerClassesTest {
 
   @Test
   public void Scala() {
-    StringWriter str = new StringWriter();
-    ScalaWriter writer = new ScalaWriter(str);
+    var str = new StringWriter();
+    var writer = new ScalaWriter(str);
 
     assertThat(writer.getRawName(new ClassType(Entity.class)))
         .isEqualTo("com.querydsl.codegen.utils.InnerClassesTest$Entity");

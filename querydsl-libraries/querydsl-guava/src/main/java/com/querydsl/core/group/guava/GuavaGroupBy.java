@@ -41,7 +41,7 @@ public final class GuavaGroupBy extends GroupBy {
    * @return builder for further specification
    */
   public static <K> GuavaGroupByBuilder<K> groupBy(Expression<K> key) {
-    return new GuavaGroupByBuilder<K>(key);
+    return new GuavaGroupByBuilder<>(key);
   }
 
   /**
@@ -65,7 +65,7 @@ public final class GuavaGroupBy extends GroupBy {
    */
   public static <K, V, T> AbstractGroupExpression<Pair<K, V>, Multimap<T, V>> multimap(
       GroupExpression<K, T> key, Expression<V> value) {
-    return multimap(key, new GOne<V>(value));
+    return multimap(key, new GOne<>(value));
   }
 
   /**
@@ -77,7 +77,7 @@ public final class GuavaGroupBy extends GroupBy {
    */
   public static <K, V, U> AbstractGroupExpression<Pair<K, V>, Multimap<K, U>> multimap(
       Expression<K> key, GroupExpression<V, U> value) {
-    return multimap(new GOne<K>(key), value);
+    return multimap(new GOne<>(key), value);
   }
 
   /**
@@ -89,8 +89,7 @@ public final class GuavaGroupBy extends GroupBy {
    */
   public static <K, V, T, U> AbstractGroupExpression<Pair<K, V>, Multimap<T, U>> multimap(
       GroupExpression<K, T> key, GroupExpression<V, U> value) {
-    return new GMultimap.Mixin<K, V, T, U, Multimap<T, U>>(
-        key, value, GMultimap.createLinked(QPair.create(key, value)));
+    return new GMultimap.Mixin<>(key, value, GMultimap.createLinked(QPair.create(key, value)));
   }
 
   /**
@@ -116,7 +115,7 @@ public final class GuavaGroupBy extends GroupBy {
   public static <K, V, T extends Comparable<? super T>>
       AbstractGroupExpression<Pair<K, V>, SortedSetMultimap<T, V>> sortedSetMultimap(
           GroupExpression<K, T> key, Expression<V> value) {
-    return sortedSetMultimap(key, (GroupExpression) new GOne<V>(value));
+    return sortedSetMultimap(key, (GroupExpression) new GOne<>(value));
   }
 
   /**
@@ -129,7 +128,7 @@ public final class GuavaGroupBy extends GroupBy {
   public static <K extends Comparable<? super K>, V, U>
       AbstractGroupExpression<Pair<K, V>, SortedSetMultimap<K, U>> sortedSetMultimap(
           Expression<K> key, GroupExpression<V, U> value) {
-    return sortedSetMultimap(new GOne<K>(key), (GroupExpression) value);
+    return sortedSetMultimap(new GOne<>(key), (GroupExpression) value);
   }
 
   /**
@@ -142,8 +141,7 @@ public final class GuavaGroupBy extends GroupBy {
   public static <K, V, T extends Comparable<? super T>, U extends Comparable<? super U>>
       AbstractGroupExpression<Pair<K, V>, SortedSetMultimap<T, U>> sortedSetMultimap(
           GroupExpression<K, T> key, GroupExpression<V, U> value) {
-    return new GMultimap.Mixin<K, V, T, U, SortedSetMultimap<T, U>>(
-        key, value, GMultimap.createSorted(QPair.create(key, value)));
+    return new GMultimap.Mixin<>(key, value, GMultimap.createSorted(QPair.create(key, value)));
   }
 
   /**
@@ -179,7 +177,7 @@ public final class GuavaGroupBy extends GroupBy {
           Expression<V> value,
           Comparator<? super T> comparator,
           Comparator<? super V> valueComparator) {
-    return sortedSetMultimap(key, new GOne<V>(value), comparator, valueComparator);
+    return sortedSetMultimap(key, new GOne<>(value), comparator, valueComparator);
   }
 
   /**
@@ -197,7 +195,7 @@ public final class GuavaGroupBy extends GroupBy {
           GroupExpression<V, U> value,
           Comparator<? super K> keyComparator,
           Comparator<? super U> valueComparator) {
-    return sortedSetMultimap(new GOne<K>(key), value, keyComparator, valueComparator);
+    return sortedSetMultimap(new GOne<>(key), value, keyComparator, valueComparator);
   }
 
   /**
@@ -215,7 +213,7 @@ public final class GuavaGroupBy extends GroupBy {
           GroupExpression<V, U> value,
           Comparator<? super T> keyComparator,
           Comparator<? super U> valueComparator) {
-    return new GMultimap.Mixin<K, V, T, U, SortedSetMultimap<T, U>>(
+    return new GMultimap.Mixin<>(
         key,
         value,
         GMultimap.createSorted(QPair.create(key, value), keyComparator, valueComparator));
@@ -244,7 +242,7 @@ public final class GuavaGroupBy extends GroupBy {
    */
   public static <R, C, V, W> AbstractGroupExpression<Pair<Pair<R, C>, V>, Table<W, C, V>> table(
       GroupExpression<R, W> row, Expression<C> column, Expression<V> value) {
-    return table(row, new GOne<C>(column), new GOne<V>(value));
+    return table(row, new GOne<>(column), new GOne<>(value));
   }
 
   /**
@@ -257,7 +255,7 @@ public final class GuavaGroupBy extends GroupBy {
    */
   public static <R, C, V, W, X> AbstractGroupExpression<Pair<Pair<R, C>, V>, Table<W, X, V>> table(
       GroupExpression<R, W> row, GroupExpression<C, X> column, Expression<V> value) {
-    return table(row, column, new GOne<V>(value));
+    return table(row, column, new GOne<>(value));
   }
 
   /**
@@ -270,7 +268,7 @@ public final class GuavaGroupBy extends GroupBy {
    */
   public static <R, C, V, W> AbstractGroupExpression<Pair<Pair<R, C>, V>, Table<R, W, V>> table(
       Expression<R> row, GroupExpression<C, W> column, Expression<V> value) {
-    return table(new GOne<R>(row), column, new GOne<V>(value));
+    return table(new GOne<>(row), column, new GOne<>(value));
   }
 
   /**
@@ -283,7 +281,7 @@ public final class GuavaGroupBy extends GroupBy {
    */
   public static <R, C, V, W, X> AbstractGroupExpression<Pair<Pair<R, C>, V>, Table<R, X, W>> table(
       Expression<R> row, GroupExpression<C, X> column, GroupExpression<V, W> value) {
-    return table(new GOne<R>(row), column, value);
+    return table(new GOne<>(row), column, value);
   }
 
   /**
@@ -296,7 +294,7 @@ public final class GuavaGroupBy extends GroupBy {
    */
   public static <R, C, V, W, X> AbstractGroupExpression<Pair<Pair<R, C>, V>, Table<X, C, W>> table(
       GroupExpression<R, X> row, Expression<C> column, GroupExpression<V, W> value) {
-    return table(row, new GOne<C>(column), value);
+    return table(row, new GOne<>(column), value);
   }
 
   /**
@@ -309,7 +307,7 @@ public final class GuavaGroupBy extends GroupBy {
    */
   public static <R, C, V, W> AbstractGroupExpression<Pair<Pair<R, C>, V>, Table<R, C, W>> table(
       Expression<R> row, Expression<C> column, GroupExpression<V, W> value) {
-    return table(new GOne<R>(row), new GOne<C>(column), value);
+    return table(new GOne<>(row), new GOne<>(column), value);
   }
 
   /**
@@ -323,7 +321,7 @@ public final class GuavaGroupBy extends GroupBy {
   public static <R, C, V, T, U, W>
       AbstractGroupExpression<Pair<Pair<R, C>, V>, Table<T, U, W>> table(
           GroupExpression<R, T> row, GroupExpression<C, U> column, GroupExpression<V, W> value) {
-    return new GTable.Mixin<R, C, V, T, U, W, Table<T, U, W>>(
+    return new GTable.Mixin<>(
         row, column, value, GTable.create(QPair.create(QPair.create(row, column), value)));
   }
 
@@ -362,7 +360,7 @@ public final class GuavaGroupBy extends GroupBy {
           Comparator<? super W> rowComparator,
           Comparator<? super C> columnComparator) {
     return GuavaGroupBy.<R, C, V, W, C, V>sortedTable(
-        row, new GOne<C>(column), new GOne<V>(value), rowComparator, columnComparator);
+        row, new GOne<>(column), new GOne<>(value), rowComparator, columnComparator);
   }
 
   /**
@@ -381,7 +379,7 @@ public final class GuavaGroupBy extends GroupBy {
           Comparator<? super W> rowComparator,
           Comparator<? super X> columnComparator) {
     return GuavaGroupBy.<R, C, V, W, X, V>sortedTable(
-        row, column, new GOne<V>(value), rowComparator, columnComparator);
+        row, column, new GOne<>(value), rowComparator, columnComparator);
   }
 
   /**
@@ -400,7 +398,7 @@ public final class GuavaGroupBy extends GroupBy {
           Comparator<? super R> rowComparator,
           Comparator<? super W> columnComparator) {
     return GuavaGroupBy.<R, C, V, R, W, V>sortedTable(
-        new GOne<R>(row), column, new GOne<V>(value), rowComparator, columnComparator);
+        new GOne<>(row), column, new GOne<>(value), rowComparator, columnComparator);
   }
 
   /**
@@ -419,7 +417,7 @@ public final class GuavaGroupBy extends GroupBy {
           Comparator<? super R> rowComparator,
           Comparator<? super X> columnComparator) {
     return GuavaGroupBy.<R, C, V, R, X, W>sortedTable(
-        new GOne<R>(row), column, value, rowComparator, columnComparator);
+        new GOne<>(row), column, value, rowComparator, columnComparator);
   }
 
   /**
@@ -437,7 +435,7 @@ public final class GuavaGroupBy extends GroupBy {
           GroupExpression<V, W> value,
           Comparator<? super X> rowComparator,
           Comparator<? super C> columnComparator) {
-    return sortedTable(row, new GOne<C>(column), value, rowComparator, columnComparator);
+    return sortedTable(row, new GOne<>(column), value, rowComparator, columnComparator);
   }
 
   /**
@@ -456,7 +454,7 @@ public final class GuavaGroupBy extends GroupBy {
           Comparator<? super R> rowComparator,
           Comparator<? super C> columnComparator) {
     return GuavaGroupBy.<R, C, V, R, C, W>sortedTable(
-        new GOne<R>(row), new GOne<C>(column), value, rowComparator, columnComparator);
+        new GOne<>(row), new GOne<>(column), value, rowComparator, columnComparator);
   }
 
   /**
@@ -474,7 +472,7 @@ public final class GuavaGroupBy extends GroupBy {
           GroupExpression<V, W> value,
           Comparator<? super T> rowComparator,
           Comparator<? super U> columnComparator) {
-    return new GTable.Mixin<R, C, V, T, U, W, TreeBasedTable<T, U, W>>(
+    return new GTable.Mixin<>(
         row,
         column,
         value,

@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.jpa.Constants.*;
+import static com.querydsl.jpa.Constants.cat;
 
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;

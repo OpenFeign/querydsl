@@ -29,7 +29,7 @@ public class QueryMutabilityTest {
           IllegalAccessException,
           InvocationTargetException,
           IOException {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     CollQuery<?> query = new CollQuery<Void>();
     query.from(cat, Collections.<Cat>emptyList());
     new QueryMutability(query).test(cat.id, cat.name);

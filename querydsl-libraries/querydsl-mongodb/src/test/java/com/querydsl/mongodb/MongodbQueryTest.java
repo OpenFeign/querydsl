@@ -25,11 +25,29 @@ import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.mongodb.domain.*;
+import com.querydsl.mongodb.domain.Address;
+import com.querydsl.mongodb.domain.City;
+import com.querydsl.mongodb.domain.Country;
+import com.querydsl.mongodb.domain.Dates;
+import com.querydsl.mongodb.domain.Item;
+import com.querydsl.mongodb.domain.MapEntity;
+import com.querydsl.mongodb.domain.QAddress;
+import com.querydsl.mongodb.domain.QCountry;
+import com.querydsl.mongodb.domain.QDates;
+import com.querydsl.mongodb.domain.QItem;
+import com.querydsl.mongodb.domain.QMapEntity;
+import com.querydsl.mongodb.domain.QUser;
+import com.querydsl.mongodb.domain.User;
 import com.querydsl.mongodb.domain.User.Gender;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -566,7 +584,7 @@ public class MongodbQueryTest {
   public void various() {
     var list = user.addresses;
     var str = user.lastName;
-    List<Predicate> predicates = new ArrayList<Predicate>();
+    List<Predicate> predicates = new ArrayList<>();
     predicates.add(str.between("a", "b"));
     predicates.add(str.contains("a"));
     predicates.add(str.containsIgnoreCase("a"));
@@ -682,7 +700,7 @@ public class MongodbQueryTest {
   }
 
   private <T> MorphiaQuery<T> where(EntityPath<T> entity, Predicate... e) {
-    return new MorphiaQuery<T>(morphia, ds, entity).where(e);
+    return new MorphiaQuery<>(morphia, ds, entity).where(e);
   }
 
   private MorphiaQuery<User> where(Predicate... e) {
@@ -690,15 +708,15 @@ public class MongodbQueryTest {
   }
 
   private MorphiaQuery<User> query() {
-    return new MorphiaQuery<User>(morphia, ds, user);
+    return new MorphiaQuery<>(morphia, ds, user);
   }
 
   private <T> MorphiaQuery<T> query(EntityPath<T> path) {
-    return new MorphiaQuery<T>(morphia, ds, path);
+    return new MorphiaQuery<>(morphia, ds, path);
   }
 
   private <T> MorphiaQuery<T> query(Class<? extends T> clazz) {
-    return new MorphiaQuery<T>(morphia, ds, clazz);
+    return new MorphiaQuery<>(morphia, ds, clazz);
   }
 
   private void assertQuery(MorphiaQuery<User> query, User... expected) {

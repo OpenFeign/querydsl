@@ -127,7 +127,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
             query().from(cat).select(cat.name, cat.birthdate).createQuery().getResultList());
     assertThat(rows).hasNext();
     while (rows.hasNext()) {
-      Tuple row = rows.next();
+      var row = rows.next();
       assertThat(row.size()).isEqualTo(2);
     }
     rows.close();

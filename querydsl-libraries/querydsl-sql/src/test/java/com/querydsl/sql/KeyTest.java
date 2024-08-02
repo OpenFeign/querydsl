@@ -90,10 +90,10 @@ public class KeyTest {
 
   @Test
   public void test() {
-    QUser user = new QUser("user");
-    QUser user2 = new QUser("user2");
-    QDepartment department = new QDepartment("department");
-    QCompany company = new QCompany("company");
+    var user = new QUser("user");
+    var user2 = new QUser("user2");
+    var department = new QDepartment("department");
+    var company = new QCompany("company");
 
     // superiorId -> id
     selectOne().from(user).innerJoin(user.superiorIdKey, user2);

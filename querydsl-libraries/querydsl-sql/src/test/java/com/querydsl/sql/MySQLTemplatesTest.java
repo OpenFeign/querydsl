@@ -29,8 +29,8 @@ public class MySQLTemplatesTest extends AbstractSQLTemplatesTest {
   @SuppressWarnings("unchecked")
   @Test
   public void test() {
-    SQLTemplates templates = MySQLTemplates.builder().printSchema().build();
-    Configuration conf = new Configuration(templates);
+    var templates = MySQLTemplates.builder().printSchema().build();
+    var conf = new Configuration(templates);
     System.out.println(new SQLQuery(conf).from(survey1).toString());
   }
 
@@ -62,17 +62,17 @@ public class MySQLTemplatesTest extends AbstractSQLTemplatesTest {
     // BINARY, COLLATE
     // !
     // - (unary minus), ~ (unary bit inversion)
-    int p0 = getPrecedence(Ops.NEGATE);
+    var p0 = getPrecedence(Ops.NEGATE);
     // ^
     // *, /, DIV, %, MOD
-    int p1 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
+    var p1 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
     // -, +
-    int p2 = getPrecedence(Ops.SUB, Ops.ADD);
+    var p2 = getPrecedence(Ops.SUB, Ops.ADD);
     // <<, >>
     // &
     // |
     // = (comparison), <=>, >=, >, <=, <, <>, !=, IS, LIKE, REGEXP, IN
-    int p3 =
+    var p3 =
         getPrecedence(
             Ops.EQ,
             Ops.GOE,
@@ -86,15 +86,15 @@ public class MySQLTemplatesTest extends AbstractSQLTemplatesTest {
             Ops.LIKE,
             Ops.LIKE_ESCAPE);
     // BETWEEN, CASE, WHEN, THEN, ELSE
-    int p4 = getPrecedence(Ops.BETWEEN, Ops.CASE, Ops.CASE_ELSE);
+    var p4 = getPrecedence(Ops.BETWEEN, Ops.CASE, Ops.CASE_ELSE);
     // NOT
-    int p5 = getPrecedence(Ops.NOT);
+    var p5 = getPrecedence(Ops.NOT);
     // &&, AND
-    int p6 = getPrecedence(Ops.AND);
+    var p6 = getPrecedence(Ops.AND);
     // XOR
-    int p7 = getPrecedence(Ops.XOR, Ops.XNOR);
+    var p7 = getPrecedence(Ops.XOR, Ops.XNOR);
     // ||, OR
-    int p8 = getPrecedence(Ops.OR);
+    var p8 = getPrecedence(Ops.OR);
     // = (assignment), :=
 
     assertThat(p0 < p1).isTrue();

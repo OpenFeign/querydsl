@@ -45,7 +45,7 @@ public class MixinGroupExpression<E, F, R> extends AbstractGroupExpression<E, R>
     @Override
     public R get() {
       if (groupCollector != null) {
-        F output = groupCollector.get();
+        var output = groupCollector.get();
         mixinGroupCollector.add(output);
         groupCollector = null;
       }

@@ -13,9 +13,22 @@
  */
 package com.querydsl.spatial;
 
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.*;
-import org.geolatte.geom.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.OperationImpl;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.PathImpl;
+import com.querydsl.core.types.Visitor;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import org.geolatte.geom.Geometry;
+import org.geolatte.geom.GeometryCollection;
+import org.geolatte.geom.LineString;
+import org.geolatte.geom.Point;
+import org.geolatte.geom.Polygon;
 
 /** GeometryExpressions contains static functions for GEO operations */
 public final class GeometryExpressions {
@@ -215,7 +228,7 @@ public final class GeometryExpressions {
    * @return operation expression
    */
   public static GeometryExpression<Geometry> geometryOperation(Operator op, Expression<?>... args) {
-    return new GeometryOperation<Geometry>(Geometry.class, op, args);
+    return new GeometryOperation<>(Geometry.class, op, args);
   }
 
   /**
@@ -227,7 +240,7 @@ public final class GeometryExpressions {
    */
   public static <T extends Geometry> GeometryExpression<T> geometryOperation(
       Class<? extends T> type, Operator op, Expression<?>... args) {
-    return new GeometryOperation<T>(type, op, args);
+    return new GeometryOperation<>(type, op, args);
   }
 
   /**
@@ -239,7 +252,7 @@ public final class GeometryExpressions {
    */
   public static LineStringExpression<LineString> lineStringOperation(
       Operator op, Expression<?>... args) {
-    return new LineStringOperation<LineString>(LineString.class, op, args);
+    return new LineStringOperation<>(LineString.class, op, args);
   }
 
   /**
@@ -250,7 +263,7 @@ public final class GeometryExpressions {
    * @return operation expression
    */
   public static PointExpression<Point> pointOperation(Operator op, Expression<?>... args) {
-    return new PointOperation<Point>(Point.class, op, args);
+    return new PointOperation<>(Point.class, op, args);
   }
 
   /**
@@ -261,7 +274,7 @@ public final class GeometryExpressions {
    * @return operation expression
    */
   public static PolygonExpression<Polygon> polygonOperation(Operator op, Expression<?>... args) {
-    return new PolygonOperation<Polygon>(Polygon.class, op, args);
+    return new PolygonOperation<>(Polygon.class, op, args);
   }
 
   /**
@@ -273,11 +286,11 @@ public final class GeometryExpressions {
   public static <T extends Geometry> GeometryExpression<T> asGeometry(Expression<T> expr) {
     Expression<T> underlyingMixin = ExpressionUtils.extract(expr);
     if (underlyingMixin instanceof PathImpl) {
-      return new GeometryPath<T>((PathImpl<T>) underlyingMixin);
+      return new GeometryPath<>((PathImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof OperationImpl) {
-      return new GeometryOperation<T>((OperationImpl<T>) underlyingMixin);
+      return new GeometryOperation<>((OperationImpl<T>) underlyingMixin);
     } else {
-      return new GeometryExpression<T>(underlyingMixin) {
+      return new GeometryExpression<>(underlyingMixin) {
 
         private static final long serialVersionUID = -6714044005570420009L;
 

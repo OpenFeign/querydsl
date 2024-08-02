@@ -17,9 +17,9 @@ public class ForeignKeyData implements KeyData {
 
   private final String table;
 
-  private final List<String> foreignColumns = new ArrayList<String>();
+  private final List<String> foreignColumns = new ArrayList<>();
 
-  private final List<String> parentColumns = new ArrayList<String>();
+  private final List<String> parentColumns = new ArrayList<>();
 
   public ForeignKeyData(String name, String parentTable) {
     this.name = name;
@@ -31,18 +31,22 @@ public class ForeignKeyData implements KeyData {
     parentColumns.add(parentColumn);
   }
 
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public String getTable() {
     return table;
   }
 
+  @Override
   public List<String> getForeignColumns() {
     return foreignColumns;
   }
 
+  @Override
   public List<String> getParentColumns() {
     return parentColumns;
   }

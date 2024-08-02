@@ -15,9 +15,18 @@ package com.querydsl.collections;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.mysema.commons.lang.IteratorAdapter;
-import com.querydsl.core.*;
+import com.querydsl.core.FetchableQuery;
+import com.querydsl.core.JoinType;
+import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.support.FetchableQueryBase;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.MapExpression;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -35,15 +44,14 @@ import java.util.stream.Stream;
 public abstract class AbstractCollQuery<T, Q extends AbstractCollQuery<T, Q>>
     extends FetchableQueryBase<T, Q> implements FetchableQuery<T, Q> {
 
-  private final Map<Expression<?>, Iterable<?>> iterables =
-      new HashMap<Expression<?>, Iterable<?>>();
+  private final Map<Expression<?>, Iterable<?>> iterables = new HashMap<>();
 
   private final QueryEngine queryEngine;
 
   public AbstractCollQuery(QueryMetadata metadata, QueryEngine queryEngine) {
-    super(new CollQueryMixin<Q>(metadata));
+    super(new CollQueryMixin<>(metadata));
     @SuppressWarnings("unchecked") // Q is this + subtype
-    Q self = (Q) this;
+    var self = (Q) this;
     this.queryMixin.setSelf(self);
     this.queryEngine = queryEngine;
   }
@@ -171,8 +179,8 @@ public abstract class AbstractCollQuery<T, Q extends AbstractCollQuery<T, Q>>
   @Override
   public CloseableIterator<T> iterate() {
     @SuppressWarnings("unchecked") // This is the built type
-    Expression<T> projection = (Expression<T>) queryMixin.getMetadata().getProjection();
-    return new IteratorAdapter<T>(fetch().iterator());
+    var projection = (Expression<T>) queryMixin.getMetadata().getProjection();
+    return new IteratorAdapter<>(fetch().iterator());
   }
 
   @Override
@@ -183,18 +191,18 @@ public abstract class AbstractCollQuery<T, Q extends AbstractCollQuery<T, Q>>
   @Override
   public List<T> fetch() {
     @SuppressWarnings("unchecked") // This is the built type
-    Expression<T> projection = (Expression<T>) queryMixin.getMetadata().getProjection();
+    var projection = (Expression<T>) queryMixin.getMetadata().getProjection();
     return queryEngine.list(getMetadata(), iterables, projection);
   }
 
   @Override
   public QueryResults<T> fetchResults() {
     @SuppressWarnings("unchecked") // This is the built type
-    Expression<T> projection = (Expression<T>) queryMixin.getMetadata().getProjection();
-    long count = queryEngine.count(getMetadata(), iterables);
+    var projection = (Expression<T>) queryMixin.getMetadata().getProjection();
+    var count = queryEngine.count(getMetadata(), iterables);
     if (count > 0L) {
       List<T> list = queryEngine.list(getMetadata(), iterables, projection);
-      return new QueryResults<T>(list, getMetadata().getModifiers(), count);
+      return new QueryResults<>(list, getMetadata().getModifiers(), count);
     } else {
       return QueryResults.<T>emptyResults();
     }

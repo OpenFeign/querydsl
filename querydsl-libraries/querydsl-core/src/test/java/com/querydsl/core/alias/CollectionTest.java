@@ -23,7 +23,7 @@ public class CollectionTest {
 
   @Test
   public void collectionUsage() {
-    DomainType domainType = Alias.alias(DomainType.class);
+    var domainType = Alias.alias(DomainType.class);
     assertThat($(domainType.getCollection()).any().eq(domainType).toString())
         .isEqualTo("any(domainType.collection) = domainType");
     assertThat($(domainType.getSet()).any().eq(domainType).toString())
@@ -46,7 +46,7 @@ public class CollectionTest {
 
   @Test
   public void collectionUsage_types() {
-    DomainType domainType = Alias.alias(DomainType.class);
+    var domainType = Alias.alias(DomainType.class);
     assertThat($(domainType.getCollection()).any().getType()).isEqualTo(DomainType.class);
     assertThat($(domainType.getSet()).any().getType()).isEqualTo(DomainType.class);
     assertThat($(domainType.getList()).any().getType()).isEqualTo(DomainType.class);

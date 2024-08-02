@@ -109,7 +109,7 @@ public class QMap extends FactoryExpressionBase<Map<Expression<?>, ?>> {
   @Nullable
   public Map<Expression<?>, ?> newInstance(Object... args) {
     Map<Expression<?>, Object> map = new HashMap<>();
-    for (int i = 0; i < args.length; i++) {
+    for (var i = 0; i < args.length; i++) {
       map.put(this.args.get(i), args[i]);
     }
     return map;

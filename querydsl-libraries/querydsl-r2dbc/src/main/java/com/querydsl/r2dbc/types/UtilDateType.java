@@ -14,7 +14,10 @@
 package com.querydsl.r2dbc.types;
 
 import java.sql.Types;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.Date;
 
@@ -50,23 +53,22 @@ public class UtilDateType extends AbstractDateTimeType<Date, Temporal> {
 
   @Override
   protected LocalDateTime toDbValue(Date value) {
-    return LocalDateTime.ofInstant(value.toInstant(), ZoneOffset.systemDefault());
+    return LocalDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
   }
 
   @Override
   protected Date fromDbValue(Temporal value) {
     if (LocalDate.class.isAssignableFrom(value.getClass())) {
-      Instant instant =
-          ((LocalDate) value).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant();
+      var instant = ((LocalDate) value).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
       return Date.from(instant);
     }
 
     if (LocalDateTime.class.isAssignableFrom(value.getClass())) {
-      Instant instant = ((LocalDateTime) value).atZone(ZoneId.systemDefault()).toInstant();
+      var instant = ((LocalDateTime) value).atZone(ZoneId.systemDefault()).toInstant();
       return Date.from(instant);
     }
 
-    Instant instant = Instant.from(value);
+    var instant = Instant.from(value);
     return Date.from(instant);
   }
 }

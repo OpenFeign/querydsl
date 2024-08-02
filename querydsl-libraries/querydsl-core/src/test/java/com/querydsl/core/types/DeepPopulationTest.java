@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringPath;
 import java.util.Collections;
 import org.junit.Test;
 
@@ -59,10 +58,10 @@ public class DeepPopulationTest {
 
   @Test
   public void deep_population_via_qBean() {
-    StringPath name = Expressions.stringPath("name");
-    StringPath id = Expressions.stringPath("id");
-    QBean<Entity2> entity2Bean = new QBean<Entity2>(Entity2.class, name, id);
-    QBean<Entity1> entity1Bean =
+    var name = Expressions.stringPath("name");
+    var id = Expressions.stringPath("id");
+    var entity2Bean = new QBean<Entity2>(Entity2.class, name, id);
+    var entity1Bean =
         new QBean<Entity1>(Entity1.class, Collections.singletonMap("entity2", entity2Bean));
 
     Entity1 entity1 = FactoryExpressionUtils.wrap(entity1Bean).newInstance("nameX", "idX");
@@ -72,10 +71,10 @@ public class DeepPopulationTest {
 
   @Test
   public void deep_population_via_qTuple() {
-    StringPath name = Expressions.stringPath("name");
-    StringPath id = Expressions.stringPath("id");
-    QBean<Entity2> entity2Bean = new QBean<Entity2>(Entity2.class, name, id);
-    QTuple tupleExpr = new QTuple(entity2Bean);
+    var name = Expressions.stringPath("name");
+    var id = Expressions.stringPath("id");
+    var entity2Bean = new QBean<Entity2>(Entity2.class, name, id);
+    var tupleExpr = new QTuple(entity2Bean);
 
     Tuple tuple = FactoryExpressionUtils.wrap(tupleExpr).newInstance("nameX", "idX");
     assertThat(tuple.get(entity2Bean).getName()).isEqualTo("nameX");

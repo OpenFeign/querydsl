@@ -16,7 +16,14 @@ package com.querydsl.jpa;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.ReplaceVisitor;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.ParameterizedExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathType;
 import com.querydsl.core.types.dsl.Expressions;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +48,7 @@ class JPAMapAccessVisitor extends ReplaceVisitor<Void> {
     if (expr.getOperator() == Ops.CONTAINS_KEY) {
       ParameterizedExpression map = (ParameterizedExpression<?>) expr.getArg(0);
       Expression key = expr.getArg(1);
-      Path replacement =
+      var replacement =
           ExpressionUtils.path(
               map.getParameter(1),
               ExpressionUtils.createRootVariable((Path<?>) map, Math.abs(expr.hashCode())));
@@ -63,14 +70,14 @@ class JPAMapAccessVisitor extends ReplaceVisitor<Void> {
   @Override
   public Expression<?> visit(Path<?> expr, @Nullable Void context) {
     expr = (Path<?>) super.visit(expr, null);
-    PathMetadata pathMetadata = expr.getMetadata();
+    var pathMetadata = expr.getMetadata();
     if (pathMetadata.getPathType() == PathType.MAPVALUE
         || pathMetadata.getPathType() == PathType.MAPVALUE_CONSTANT) {
       Path<?> replacement = replacements.get(expr);
       if (replacement == null) {
         // join parent as path123 on key(path123) = ...
         Path parent = shorten(pathMetadata.getParent(), true);
-        ParameterizedExpression parExpr = (ParameterizedExpression) pathMetadata.getParent();
+        var parExpr = (ParameterizedExpression) pathMetadata.getParent();
         replacement =
             ExpressionUtils.path(
                 parExpr.getParameter(1),

@@ -65,13 +65,13 @@ public class ArrayPath<A, E> extends SimpleExpression<A> implements Path<A>, Arr
 
   @Override
   public SimplePath<E> get(Expression<Integer> index) {
-    PathMetadata md = PathMetadataFactory.forArrayAccess(pathMixin, index);
+    var md = PathMetadataFactory.forArrayAccess(pathMixin, index);
     return Expressions.path(componentType, md);
   }
 
   @Override
   public SimplePath<E> get(@Range(from = 0, to = Integer.MAX_VALUE) int index) {
-    PathMetadata md = PathMetadataFactory.forArrayAccess(pathMixin, index);
+    var md = PathMetadataFactory.forArrayAccess(pathMixin, index);
     return Expressions.path(componentType, md);
   }
 

@@ -41,13 +41,13 @@ class QueryDslRepositoryIntegrationTests {
   @Test
   void testWithQueryDsl() {
 
-    Country de = new Country();
+    var de = new Country();
     de.code = "de";
     de.name = "Deutschland";
 
     countryRepository.save(de);
 
-    Country found = countryRepository.findOneBy("Deutschland");
+    var found = countryRepository.findOneBy("Deutschland");
 
     assertThat(found).isNotNull();
     assertThat(found.id).isEqualTo(de.id);

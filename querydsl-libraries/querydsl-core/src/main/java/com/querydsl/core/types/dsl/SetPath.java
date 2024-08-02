@@ -13,7 +13,12 @@
  */
 package com.querydsl.core.types.dsl;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ParameterizedPathImpl;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathImpl;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathMetadataFactory;
+import com.querydsl.core.types.Visitor;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Set;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +58,7 @@ public class SetPath<E, Q extends SimpleExpression<? super E>>
   @SuppressWarnings("unchecked")
   protected SetPath(
       Class<? super E> type, Class<Q> queryType, PathMetadata metadata, PathInits inits) {
-    super(new ParameterizedPathImpl<Set<E>>((Class) Set.class, metadata, type), inits);
+    super(new ParameterizedPathImpl<>((Class) Set.class, metadata, type), inits);
     this.elementType = (Class<E>) type;
     this.queryType = queryType;
     this.pathMixin = (PathImpl<Set<E>>) mixin;

@@ -46,9 +46,9 @@ public class CompilationOverheadTest {
   }
 
   private void query(BooleanExpression condition) {
-    long start = System.currentTimeMillis();
+    var start = System.currentTimeMillis();
     CollQueryFactory.from(cat, Collections.<Cat>emptyList()).where(condition).fetch();
-    long duration = System.currentTimeMillis() - start;
+    var duration = System.currentTimeMillis() - start;
     System.out.println(condition + " : " + duration + "ms");
   }
 }

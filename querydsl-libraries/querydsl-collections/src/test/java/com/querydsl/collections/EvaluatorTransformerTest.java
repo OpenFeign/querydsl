@@ -28,14 +28,13 @@ public class EvaluatorTransformerTest {
   @SuppressWarnings("unchecked")
   @Test
   public void test() {
-    DefaultEvaluatorFactory evaluatorFactory =
-        new DefaultEvaluatorFactory(CollQueryTemplates.DEFAULT);
-    QCat cat = QCat.cat;
+    var evaluatorFactory = new DefaultEvaluatorFactory(CollQueryTemplates.DEFAULT);
+    var cat = QCat.cat;
     Evaluator projectionEvaluator =
         evaluatorFactory.create(metadata, Collections.singletonList(cat), cat.name);
-    EvaluatorFunction transformer = new EvaluatorFunction(projectionEvaluator);
+    var transformer = new EvaluatorFunction(projectionEvaluator);
 
-    Cat c = new Cat("Kitty");
+    var c = new Cat("Kitty");
     assertThat(transformer.apply(c)).isEqualTo("Kitty");
   }
 }

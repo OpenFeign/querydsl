@@ -14,11 +14,11 @@ public class JPAProviderRule implements TestRule {
 
   @Override
   public Statement apply(Statement base, Description description) {
-    NoEclipseLink noEclipseLink = description.getAnnotation(NoEclipseLink.class);
-    NoOpenJPA noOpenJPA = description.getAnnotation(NoOpenJPA.class);
-    NoBatooJPA noBatooJPA = description.getAnnotation(NoBatooJPA.class);
-    NoHibernate noHibernate = description.getAnnotation(NoHibernate.class);
-    String mode = Mode.mode.get();
+    var noEclipseLink = description.getAnnotation(NoEclipseLink.class);
+    var noOpenJPA = description.getAnnotation(NoOpenJPA.class);
+    var noBatooJPA = description.getAnnotation(NoBatooJPA.class);
+    var noHibernate = description.getAnnotation(NoHibernate.class);
+    var mode = Mode.mode.get();
     if (mode == null) {
       return base;
     } else if (noEclipseLink != null

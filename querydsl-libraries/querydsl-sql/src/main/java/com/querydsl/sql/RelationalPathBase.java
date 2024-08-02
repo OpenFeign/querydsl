@@ -13,7 +13,13 @@
  */
 package com.querydsl.sql;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -64,34 +70,32 @@ public class RelationalPathBase<T> extends BeanPath<T> implements RelationalPath
   }
 
   protected PrimaryKey<T> createPrimaryKey(Path<?>... columns) {
-    primaryKey = new PrimaryKey<T>(this, columns);
+    primaryKey = new PrimaryKey<>(this, columns);
     return primaryKey;
   }
 
   protected <F> ForeignKey<F> createForeignKey(Path<?> local, String foreign) {
-    ForeignKey<F> foreignKey = new ForeignKey<F>(this, local, foreign);
+    var foreignKey = new ForeignKey<F>(this, local, foreign);
     foreignKeys.add(foreignKey);
     return foreignKey;
   }
 
   protected <F> ForeignKey<F> createForeignKey(
       List<? extends Path<?>> local, List<String> foreign) {
-    ForeignKey<F> foreignKey =
-        new ForeignKey<F>(this, new ArrayList<>(local), new ArrayList<>(foreign));
+    var foreignKey = new ForeignKey<F>(this, new ArrayList<>(local), new ArrayList<>(foreign));
     foreignKeys.add(foreignKey);
     return foreignKey;
   }
 
   protected <F> ForeignKey<F> createInvForeignKey(Path<?> local, String foreign) {
-    ForeignKey<F> foreignKey = new ForeignKey<F>(this, local, foreign);
+    var foreignKey = new ForeignKey<F>(this, local, foreign);
     inverseForeignKeys.add(foreignKey);
     return foreignKey;
   }
 
   protected <F> ForeignKey<F> createInvForeignKey(
       List<? extends Path<?>> local, List<String> foreign) {
-    ForeignKey<F> foreignKey =
-        new ForeignKey<F>(this, new ArrayList<>(local), new ArrayList<>(foreign));
+    var foreignKey = new ForeignKey<F>(this, new ArrayList<>(local), new ArrayList<>(foreign));
     inverseForeignKeys.add(foreignKey);
     return foreignKey;
   }
@@ -198,7 +202,7 @@ public class RelationalPathBase<T> extends BeanPath<T> implements RelationalPath
       throw new UnsupportedOperationException("Size mismatch for primary key columns");
     }
     BooleanExpression rv = null;
-    for (int i = 0; i < pk1.getLocalColumns().size(); i++) {
+    for (var i = 0; i < pk1.getLocalColumns().size(); i++) {
       BooleanExpression pred =
           Expressions.booleanOperation(
               op, pk1.getLocalColumns().get(i), pk2.getLocalColumns().get(i));

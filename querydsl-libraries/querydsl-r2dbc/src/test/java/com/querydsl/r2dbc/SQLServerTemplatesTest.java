@@ -20,7 +20,6 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.sql.SQLOps;
 import org.junit.Test;
 
@@ -42,9 +41,9 @@ public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   @Override
   public void union() {
-    NumberExpression<Integer> one = Expressions.ONE;
-    NumberExpression<Integer> two = Expressions.TWO;
-    NumberExpression<Integer> three = Expressions.THREE;
+    var one = Expressions.ONE;
+    var two = Expressions.TWO;
+    var three = Expressions.THREE;
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union =
         query.union(

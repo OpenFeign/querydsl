@@ -22,7 +22,7 @@ public class ArrayUtilsTest {
 
   @Test
   public void test() {
-    Object[] array = ArrayUtils.combine(5, new Object[] {"a", "b"}, new Object[] {"c", "d", "e"});
+    var array = ArrayUtils.combine(5, new Object[] {"a", "b"}, new Object[] {"c", "d", "e"});
     assertThat(Arrays.asList(array)).isEqualTo(Arrays.asList("a", "b", "c", "d", "e"));
   }
 }

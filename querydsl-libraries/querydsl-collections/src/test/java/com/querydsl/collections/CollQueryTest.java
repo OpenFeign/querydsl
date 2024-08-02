@@ -22,12 +22,10 @@ import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.StringPath;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import org.junit.Test;
 
 public class CollQueryTest extends AbstractQueryTest {
@@ -147,8 +145,8 @@ public class CollQueryTest extends AbstractQueryTest {
 
   @Test
   public void various() {
-    StringPath a = Expressions.stringPath("a");
-    StringPath b = Expressions.stringPath("b");
+    var a = Expressions.stringPath("a");
+    var b = Expressions.stringPath("b");
     for (Tuple strs :
         from(a, "aa", "bb", "cc")
             .from(b, Arrays.asList("a", "b"))
@@ -172,7 +170,7 @@ public class CollQueryTest extends AbstractQueryTest {
   @Test
   public void bigDecimals() {
     NumberPath<BigDecimal> a = Expressions.numberPath(BigDecimal.class, "cost");
-    List<BigDecimal> nums =
+    var nums =
         from(a, new BigDecimal("2.1"), new BigDecimal("20.21"), new BigDecimal("44.4"))
             .where(a.lt(new BigDecimal("35.1")))
             .select(a)

@@ -15,7 +15,6 @@ package com.querydsl.jpa.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +24,6 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Properties;
-import java.util.Set;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -40,12 +38,12 @@ public class JPADomainExporterTest {
 
   @Parameters
   public static Collection<Object[]> generateFiles() throws Exception {
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("h2", new Properties());
-    Path outputFolder = Files.createTempDirectory("jpa-exporter-test");
-    JPADomainExporter exporter = new JPADomainExporter(outputFolder.toFile(), emf.getMetamodel());
+    var emf = Persistence.createEntityManagerFactory("h2", new Properties());
+    var outputFolder = Files.createTempDirectory("jpa-exporter-test");
+    var exporter = new JPADomainExporter(outputFolder.toFile(), emf.getMetamodel());
     exporter.execute();
 
-    Set<File> files = exporter.getGeneratedFiles();
+    var files = exporter.getGeneratedFiles();
     assertThat(files).isNotEmpty();
 
     return files.stream()
@@ -67,10 +65,10 @@ public class JPADomainExporterTest {
 
   @Test
   public void test() throws IOException {
-    Path relativeFile = outputFolder.relativize(file.toPath());
-    Path origFile = origRoot.toPath().resolve(relativeFile);
-    String reference = new String(Files.readAllBytes(origFile), StandardCharsets.UTF_8);
-    String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+    var relativeFile = outputFolder.relativize(file.toPath());
+    var origFile = origRoot.toPath().resolve(relativeFile);
+    var reference = new String(Files.readAllBytes(origFile), StandardCharsets.UTF_8);
+    var content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
     assertThat(content).as("Mismatch for " + file.getName() + "\n").isEqualTo(reference);
   }
 }

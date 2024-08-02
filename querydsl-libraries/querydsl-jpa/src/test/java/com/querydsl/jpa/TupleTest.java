@@ -26,7 +26,7 @@ public class TupleTest extends AbstractQueryTest {
   @Test
   @Ignore // FIXME
   public void test() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
 
     SubQueryExpression<?> subQuery =
         select(cat.birthdate, cat.name, cat.mate)

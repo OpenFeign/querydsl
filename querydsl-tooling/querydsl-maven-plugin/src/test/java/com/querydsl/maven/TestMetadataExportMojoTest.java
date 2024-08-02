@@ -28,7 +28,7 @@ public class TestMetadataExportMojoTest {
   private final String url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy";
 
   private TestMetadataExportMojo setupMojoWith(MavenProject project) {
-    TestMetadataExportMojo mojo = new TestMetadataExportMojo();
+    var mojo = new TestMetadataExportMojo();
     mojo.setProject(project);
     mojo.setJdbcDriver("org.h2.Driver");
     mojo.setJdbcUrl(url);
@@ -47,9 +47,9 @@ public class TestMetadataExportMojoTest {
 
   @Test
   public void execute() throws Exception {
-    MavenProject project = new MavenProject();
-    TestMetadataExportMojo mojo = setupMojoWith(project);
-    File target = new File("target/export4").getCanonicalFile();
+    var project = new MavenProject();
+    var mojo = setupMojoWith(project);
+    var target = new File("target/export4").getCanonicalFile();
     mojo.setTargetFolder(target.getAbsolutePath());
     mojo.execute();
 
@@ -61,12 +61,12 @@ public class TestMetadataExportMojoTest {
 
   @Test
   public void defaultGeneratedAnnotation() throws Exception {
-    MavenProject project = new MavenProject();
-    TestMetadataExportMojo mojo = setupMojoWith(project);
+    var project = new MavenProject();
+    var mojo = setupMojoWith(project);
     mojo.execute();
 
-    File sourceFile = new File("target/export4/com/example/QInformationSchemaCatalogName.java");
-    String sourceFileContent = FileUtils.fileRead(sourceFile);
+    var sourceFile = new File("target/export4/com/example/QInformationSchemaCatalogName.java");
+    var sourceFileContent = FileUtils.fileRead(sourceFile);
     assertThat(sourceFileContent)
         .contains("@" + GeneratedAnnotationResolver.resolveDefault().getSimpleName());
   }
@@ -74,13 +74,13 @@ public class TestMetadataExportMojoTest {
   @Test
   public void providedGeneratedAnnotation() throws Exception {
     Class<? extends Annotation> annotationClass = com.querydsl.core.annotations.Generated.class;
-    MavenProject project = new MavenProject();
-    TestMetadataExportMojo mojo = setupMojoWith(project);
+    var project = new MavenProject();
+    var mojo = setupMojoWith(project);
     mojo.setGeneratedAnnotationClass(annotationClass.getName());
     mojo.execute();
 
-    File sourceFile = new File("target/export4/com/example/QInformationSchemaCatalogName.java");
-    String sourceFileContent = FileUtils.fileRead(sourceFile);
+    var sourceFile = new File("target/export4/com/example/QInformationSchemaCatalogName.java");
+    var sourceFileContent = FileUtils.fileRead(sourceFile);
     assertThat(sourceFileContent).contains("@" + annotationClass.getSimpleName());
   }
 }

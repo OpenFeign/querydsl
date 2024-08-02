@@ -13,7 +13,12 @@
  */
 package com.querydsl.apt.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OneToOne;
 import org.junit.Ignore;
 
 @Ignore
@@ -41,10 +46,12 @@ public class Hierarchy2Test {
 
     @Basic int foo;
 
+    @Override
     public int compareTo(MyEmbeddable individualToCompare) {
       return -1;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }

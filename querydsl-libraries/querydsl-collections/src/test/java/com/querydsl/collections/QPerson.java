@@ -8,7 +8,7 @@ public class QPerson extends BeanPath<Person> {
 
   public final StringPath name = createString("name");
 
-  public static QPerson car = new QPerson(new BeanPath<Person>(Person.class, "person"));
+  public static QPerson car = new QPerson(new BeanPath<>(Person.class, "person"));
 
   public QPerson(BeanPath<? extends Person> entity) {
     super(entity.getType(), entity.getMetadata());

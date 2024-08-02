@@ -67,8 +67,7 @@ public class ExtendedSQLQuery<T> extends AbstractSQLQuery<T, ExtendedSQLQuery<T>
 
   @Override
   public ExtendedSQLQuery<T> clone(Connection connection) {
-    ExtendedSQLQuery<T> query =
-        new ExtendedSQLQuery<T>(connection, getConfiguration(), getMetadata().clone());
+    var query = new ExtendedSQLQuery<T>(connection, getConfiguration(), getMetadata().clone());
     query.clone(this);
     return query;
   }
@@ -77,7 +76,7 @@ public class ExtendedSQLQuery<T> extends AbstractSQLQuery<T, ExtendedSQLQuery<T>
   public <U> ExtendedSQLQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    ExtendedSQLQuery<U> newType = (ExtendedSQLQuery<U>) this;
+    var newType = (ExtendedSQLQuery<U>) this;
     return newType;
   }
 
@@ -85,7 +84,7 @@ public class ExtendedSQLQuery<T> extends AbstractSQLQuery<T, ExtendedSQLQuery<T>
   public ExtendedSQLQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    ExtendedSQLQuery<Tuple> newType = (ExtendedSQLQuery<Tuple>) this;
+    var newType = (ExtendedSQLQuery<Tuple>) this;
     return newType;
   }
 }

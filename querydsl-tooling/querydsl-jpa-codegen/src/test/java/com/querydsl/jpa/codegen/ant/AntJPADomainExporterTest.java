@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Set;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -23,25 +21,25 @@ public class AntJPADomainExporterTest {
 
   @Test
   public void test() throws IOException {
-    AntJPADomainExporter exporter = new AntJPADomainExporter();
+    var exporter = new AntJPADomainExporter();
     exporter.setNamePrefix("Q");
     exporter.setNameSuffix("");
-    Path outputFolder = folder.getRoot().toPath();
+    var outputFolder = folder.getRoot().toPath();
     exporter.setTargetFolder(outputFolder.toFile().getAbsolutePath());
     exporter.setPersistenceUnitName("h2");
     exporter.execute();
 
-    File origRoot =
+    var origRoot =
         new File(
             "../../querydsl-libraries/querydsl-jpa/target/generated-test-sources/test-annotations");
-    Set<File> files = exporter.getGeneratedFiles();
+    var files = exporter.getGeneratedFiles();
     assertThat(files).isNotEmpty();
     for (File file : files) {
-      Path relativeFile = outputFolder.relativize(file.toPath());
-      Path origFile = origRoot.toPath().resolve(relativeFile);
-      String reference =
+      var relativeFile = outputFolder.relativize(file.toPath());
+      var origFile = origRoot.toPath().resolve(relativeFile);
+      var reference =
           new String(java.nio.file.Files.readAllBytes(origFile), StandardCharsets.UTF_8);
-      String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+      var content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
       errors.checkThat("Mismatch for " + file.getPath(), content, is(equalTo(reference)));
     }
   }

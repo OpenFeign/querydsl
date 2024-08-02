@@ -33,15 +33,15 @@ public class EntityExtensionsTest extends AbstractProcessorTest {
 
   @Test
   public void handles_entity_extensions_correctly() throws IOException, InterruptedException {
-    File source = new File(packagePath, "EntityWithExtensions.java");
-    File source2 = new File(packagePath, "EntityExtensions.java");
+    var source = new File(packagePath, "EntityWithExtensions.java");
+    var source2 = new File(packagePath, "EntityExtensions.java");
     List<String> sources = Arrays.asList(source.getPath(), source2.getPath());
-    File qType = new File("target/overwrite2/com/querydsl/apt/QEntityWithExtensions.java");
+    var qType = new File("target/overwrite2/com/querydsl/apt/QEntityWithExtensions.java");
 
     // QEntityWithExtensions is generated
     process(QuerydslAnnotationProcessor.class, sources, "overwrite2");
     assertThat(qType).exists();
-    long modified = qType.lastModified();
+    var modified = qType.lastModified();
     Thread.sleep(1000);
     assertThat(new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8))
         .contains("extension()");

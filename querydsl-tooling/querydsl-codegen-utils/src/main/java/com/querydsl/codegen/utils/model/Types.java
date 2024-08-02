@@ -104,7 +104,7 @@ public final class Types {
           TypeCategory.TIME, "java.time.LocalTime", "java.time", "LocalTime", false, false);
 
   static {
-    Map<Type, Type> primitives = new HashMap<Type, Type>();
+    Map<Type, Type> primitives = new HashMap<>();
     primitives.put(BOOLEAN, BOOLEAN_P);
     primitives.put(BYTE, BYTE_P);
     primitives.put(CHARACTER, CHAR);

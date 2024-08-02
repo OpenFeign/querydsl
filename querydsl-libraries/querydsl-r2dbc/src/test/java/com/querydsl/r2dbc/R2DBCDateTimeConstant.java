@@ -30,7 +30,7 @@ public final class R2DBCDateTimeConstant<D extends LocalDateTime> extends LocalD
   private static final long serialVersionUID = 4578416585568476532L;
 
   public static <D extends LocalDateTime> LocalDateTimeExpression<D> create(D date) {
-    return new R2DBCDateTimeConstant<D>(date);
+    return new R2DBCDateTimeConstant<>(date);
   }
 
   private final LocalDateTime localDateTime;

@@ -42,7 +42,7 @@ class SQLServerGeometryType extends AbstractType<Geometry> {
   @Override
   @Nullable
   public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
-    byte[] bytes = rs.getBytes(startIndex);
+    var bytes = rs.getBytes(startIndex);
     if (bytes != null) {
       return Decoders.decode(bytes);
     } else {
@@ -52,13 +52,13 @@ class SQLServerGeometryType extends AbstractType<Geometry> {
 
   @Override
   public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
-    byte[] bytes = Encoders.encode(value);
+    var bytes = Encoders.encode(value);
     st.setBytes(startIndex, bytes);
   }
 
   @Override
   public String getLiteral(Geometry geometry) {
-    String str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry);
+    var str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry);
     if (geometry.getSRID() > -1) {
       return "geometry::STGeomFromText('" + str + "', " + geometry.getSRID() + ")";
     } else {

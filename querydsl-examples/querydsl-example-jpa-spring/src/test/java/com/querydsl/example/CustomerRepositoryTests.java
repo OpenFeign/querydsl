@@ -18,7 +18,6 @@ package com.querydsl.example;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +32,10 @@ public class CustomerRepositoryTests {
 
   @Test
   public void testFindByLastName() {
-    Customer customer = new Customer("first", "last");
+    var customer = new Customer("first", "last");
     customers.save(customer);
 
-    List<Customer> findByLastName = customers.findByLastName(customer.getLastName());
+    var findByLastName = customers.findByLastName(customer.getLastName());
 
     assertThat(findByLastName)
         .extracting(Customer::getLastName)

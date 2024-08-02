@@ -13,9 +13,26 @@
  */
 package com.querydsl.core.support;
 
-import com.querydsl.core.*;
-import com.querydsl.core.types.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.JoinFlag;
+import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryModifiers;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.FactoryExpressionUtils.FactoryExpressionAdapter;
+import com.querydsl.core.types.MapExpression;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.ProjectionRole;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.SubQueryExpression;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -41,7 +58,7 @@ public class QueryMixin<T> {
   private final boolean expandAnyPaths;
 
   private final ReplaceVisitor<Void> replaceVisitor =
-      new ReplaceVisitor<Void>() {
+      new ReplaceVisitor<>() {
         @Override
         public Expression<?> visit(Path<?> expr, @Nullable Void context) {
           return normalizePath(expr);
@@ -116,10 +133,10 @@ public class QueryMixin<T> {
   }
 
   private Path<?> normalizePath(Path<?> expr) {
-    Context context = new Context();
+    var context = new Context();
     Path<?> replaced = (Path<?>) expr.accept(collectionAnyVisitor, context);
     if (!replaced.equals(expr)) {
-      for (int i = 0; i < context.paths.size(); i++) {
+      for (var i = 0; i < context.paths.size(); i++) {
         Path path = context.paths.get(i).getMetadata().getParent();
         Path replacement = context.replacements.get(i);
         this.innerJoin(path, replacement);

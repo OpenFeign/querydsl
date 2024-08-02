@@ -22,8 +22,7 @@ import org.junit.Test;
 public class ListPathTest {
 
   private ListPath<String, StringPath> stringPath =
-      new ListPath<String, StringPath>(
-          String.class, StringPath.class, PathMetadataFactory.forVariable("stringPath"));
+      new ListPath<>(String.class, StringPath.class, PathMetadataFactory.forVariable("stringPath"));
 
   @Test
   public void toString_() {

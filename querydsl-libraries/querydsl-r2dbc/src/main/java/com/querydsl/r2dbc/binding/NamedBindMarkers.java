@@ -41,7 +41,7 @@ class NamedBindMarkers implements BindMarkers {
   @Override
   public BindMarker next() {
 
-    String name = nextName();
+    var name = nextName();
 
     return new NamedBindMarker(prefix + name, name);
   }
@@ -52,7 +52,7 @@ class NamedBindMarkers implements BindMarkers {
       throw new IllegalArgumentException("Name hint must not be null");
     }
 
-    String name = nextName() + hintFilterFunction.apply(hint);
+    var name = nextName() + hintFilterFunction.apply(hint);
 
     if (name.length() > nameLimit) {
       name = name.substring(0, nameLimit);
@@ -63,7 +63,7 @@ class NamedBindMarkers implements BindMarkers {
 
   private String nextName() {
 
-    int index = COUNTER_INCREMENTER.getAndIncrement(this);
+    var index = COUNTER_INCREMENTER.getAndIncrement(this);
     return namePrefix + index;
   }
 

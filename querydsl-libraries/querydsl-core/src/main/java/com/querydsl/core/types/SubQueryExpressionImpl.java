@@ -35,12 +35,13 @@ public class SubQueryExpressionImpl<T> extends ExpressionBase<T> implements SubQ
     this.metadata = metadata;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public final boolean equals(Object o) {
     if (o == this) {
       return true;
     } else if (o instanceof SubQueryExpression) {
-      SubQueryExpression<T> s = (SubQueryExpression<T>) o;
+      var s = (SubQueryExpression<T>) o;
       return s.getMetadata().equals(metadata);
     } else {
       return false;

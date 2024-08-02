@@ -53,17 +53,17 @@ public class HibernateHandler implements QueryHandler {
     try {
       org.hibernate.query.Query<?> unwrappedQuery = query.unwrap(org.hibernate.query.Query.class);
       CloseableIterator<T> iterator =
-          new ScrollableResultsIterator<T>((List<T>) unwrappedQuery.getResultList());
+          new ScrollableResultsIterator<>((List<T>) unwrappedQuery.getResultList());
       if (projection != null) {
-        iterator = new TransformingIterator<T>(iterator, projection);
+        iterator = new TransformingIterator<>(iterator, projection);
       }
       return iterator;
     } catch (PersistenceException e) {
       Iterator<T> iterator = query.getResultList().iterator();
       if (projection != null) {
-        return new TransformingIterator<T>(iterator, projection);
+        return new TransformingIterator<>(iterator, projection);
       } else {
-        return new IteratorAdapter<T>(iterator);
+        return new IteratorAdapter<>(iterator);
       }
     }
   }
@@ -71,7 +71,7 @@ public class HibernateHandler implements QueryHandler {
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
   public <T> Stream<T> stream(Query query, @Nullable FactoryExpression<?> projection) {
-    final Stream resultStream = query.getResultStream();
+    final var resultStream = query.getResultStream();
     if (projection != null) {
       return resultStream.map(
           element ->

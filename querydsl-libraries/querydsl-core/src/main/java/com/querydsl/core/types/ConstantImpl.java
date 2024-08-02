@@ -45,17 +45,17 @@ public final class ConstantImpl<T> extends ExpressionBase<T> implements Constant
     @SuppressWarnings({"rawtypes", "unchecked"}) // generic array creation not possible
     private static final Constant<Short>[] SHORTS = new Constant[CACHE_SIZE];
 
-    private static final Constant<Boolean> FALSE = new ConstantImpl<Boolean>(Boolean.FALSE);
+    private static final Constant<Boolean> FALSE = new ConstantImpl<>(Boolean.FALSE);
 
-    private static final Constant<Boolean> TRUE = new ConstantImpl<Boolean>(Boolean.TRUE);
+    private static final Constant<Boolean> TRUE = new ConstantImpl<>(Boolean.TRUE);
 
     static {
-      for (int i = 0; i < CACHE_SIZE; i++) {
-        INTEGERS[i] = new ConstantImpl<Integer>(Integer.class, i);
-        SHORTS[i] = new ConstantImpl<Short>(Short.class, (short) i);
-        BYTES[i] = new ConstantImpl<Byte>(Byte.class, (byte) i);
-        CHARACTERS[i] = new ConstantImpl<Character>(Character.class, (char) i);
-        LONGS[i] = new ConstantImpl<Long>(Long.class, (long) i);
+      for (var i = 0; i < CACHE_SIZE; i++) {
+        INTEGERS[i] = new ConstantImpl<>(Integer.class, i);
+        SHORTS[i] = new ConstantImpl<>(Short.class, (short) i);
+        BYTES[i] = new ConstantImpl<>(Byte.class, (byte) i);
+        CHARACTERS[i] = new ConstantImpl<>(Character.class, (char) i);
+        LONGS[i] = new ConstantImpl<>(Long.class, (long) i);
       }
     }
   }
@@ -68,7 +68,7 @@ public final class ConstantImpl<T> extends ExpressionBase<T> implements Constant
     if (i >= 0) {
       return Constants.BYTES[i];
     } else {
-      return new ConstantImpl<Byte>(Byte.class, i);
+      return new ConstantImpl<>(Byte.class, i);
     }
   }
 
@@ -76,7 +76,7 @@ public final class ConstantImpl<T> extends ExpressionBase<T> implements Constant
     if (i < CACHE_SIZE) {
       return Constants.CHARACTERS[i];
     } else {
-      return new ConstantImpl<Character>(Character.class, i);
+      return new ConstantImpl<>(Character.class, i);
     }
   }
 
@@ -84,7 +84,7 @@ public final class ConstantImpl<T> extends ExpressionBase<T> implements Constant
     if (i >= 0 && i < CACHE_SIZE) {
       return Constants.INTEGERS[i];
     } else {
-      return new ConstantImpl<Integer>(Integer.class, i);
+      return new ConstantImpl<>(Integer.class, i);
     }
   }
 
@@ -92,7 +92,7 @@ public final class ConstantImpl<T> extends ExpressionBase<T> implements Constant
     if (i >= 0 && i < CACHE_SIZE) {
       return Constants.LONGS[(int) i];
     } else {
-      return new ConstantImpl<Long>(Long.class, i);
+      return new ConstantImpl<>(Long.class, i);
     }
   }
 
@@ -100,16 +100,16 @@ public final class ConstantImpl<T> extends ExpressionBase<T> implements Constant
     if (i >= 0 && i < CACHE_SIZE) {
       return Constants.SHORTS[i];
     } else {
-      return new ConstantImpl<Short>(Short.class, i);
+      return new ConstantImpl<>(Short.class, i);
     }
   }
 
   public static <T> Constant<T> create(T obj) {
-    return new ConstantImpl<T>(obj);
+    return new ConstantImpl<>(obj);
   }
 
   public static <T> Constant<T> create(Class<T> type, T constant) {
-    return new ConstantImpl<T>(type, constant);
+    return new ConstantImpl<>(type, constant);
   }
 
   private final T constant;

@@ -5,7 +5,6 @@ import com.querydsl.example.dto.ProductL10n;
 import java.util.Set;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -17,14 +16,14 @@ public class ProductDaoTest extends AbstractDaoTest {
 
   @Test
   public void findAll() {
-    Flux<Product> setup = productDao.findAll();
+    var setup = productDao.findAll();
 
     StepVerifier.create(setup).expectNextCount(2).verifyComplete();
   }
 
   @Test
   public void findById() {
-    Mono<Product> setup = productDao.findById(testDataService.product1);
+    var setup = productDao.findById(testDataService.product1);
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
@@ -39,7 +38,7 @@ public class ProductDaoTest extends AbstractDaoTest {
 
   @Test
   public void delete() {
-    Product product = new Product();
+    var product = new Product();
     product.setName("ProductX");
     product.setLocalizations(Set.of(new ProductL10n()));
 

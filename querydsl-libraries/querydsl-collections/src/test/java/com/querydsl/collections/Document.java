@@ -9,7 +9,7 @@ public class Document {
 
   private Long id;
 
-  private List<String> meshThesaurusTerms = new ArrayList<String>();
+  private List<String> meshThesaurusTerms = new ArrayList<>();
 
   public Long getId() {
     return id;

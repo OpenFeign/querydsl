@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
-import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
@@ -20,7 +19,7 @@ import org.junit.Test;
 
 public class JPAQueryMixinTest {
 
-  private JPAQueryMixin<?> mixin = new JPAQueryMixin<Object>();
+  private JPAQueryMixin<?> mixin = new JPAQueryMixin<>();
 
   @Test
   public void where_null() {
@@ -29,12 +28,12 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy() {
-    QCat cat = QCat.cat;
-    QCat catMate = new QCat("cat_mate");
+    var cat = QCat.cat;
+    var catMate = new QCat("cat_mate");
     mixin.from(cat);
     mixin.orderBy(cat.mate.name.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(
             Arrays.asList(
@@ -45,13 +44,13 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy_nonRoot_twice() {
-    QDepartment department = QDepartment.department;
-    QCompany departmentCompany = new QCompany("department_company");
-    QEmployee departmentCompanyCeo = new QEmployee("department_company_ceo");
+    var department = QDepartment.department;
+    var departmentCompany = new QCompany("department_company");
+    var departmentCompanyCeo = new QEmployee("department_company_ceo");
     mixin.from(department);
     mixin.orderBy(department.company.ceo.firstName.asc(), department.company.ceo.lastName.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(
             Arrays.asList(
@@ -67,12 +66,12 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy_where() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     mixin.from(cat);
     mixin.where(cat.mate.name.isNotNull());
     mixin.orderBy(cat.mate.name.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, cat)));
     assertThat(md.getOrderBy()).isEqualTo(Collections.singletonList(cat.mate.name.asc()));
@@ -80,12 +79,12 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy_groupBy() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     mixin.from(cat);
     mixin.groupBy(cat.mate.name);
     mixin.orderBy(cat.mate.name.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, cat)));
     assertThat(md.getOrderBy()).isEqualTo(Collections.singletonList(cat.mate.name.asc()));
@@ -93,12 +92,12 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy_operation() {
-    QCat cat = QCat.cat;
-    QCat catMate = new QCat("cat_mate");
+    var cat = QCat.cat;
+    var catMate = new QCat("cat_mate");
     mixin.from(cat);
     mixin.orderBy(cat.mate.name.lower().asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(
             Arrays.asList(
@@ -109,13 +108,13 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy_long() {
-    QCat cat = QCat.cat;
-    QCat catMate = new QCat("cat_mate");
-    QCat catMateMate = new QCat("cat_mate_mate");
+    var cat = QCat.cat;
+    var catMate = new QCat("cat_mate");
+    var catMateMate = new QCat("cat_mate_mate");
     mixin.from(cat);
     mixin.orderBy(cat.mate.mate.name.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(
             Arrays.asList(
@@ -127,13 +126,13 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy_reuse() {
-    QCat cat = QCat.cat;
-    QCat mate = new QCat("mate");
+    var cat = QCat.cat;
+    var mate = new QCat("mate");
     mixin.from(cat);
     mixin.leftJoin(cat.mate, mate);
     mixin.orderBy(cat.mate.name.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(
             Arrays.asList(
@@ -144,14 +143,14 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy_long_reuse() {
-    QCat cat = QCat.cat;
-    QCat mate = new QCat("mate");
-    QCat mateMate = new QCat("mate_mate");
+    var cat = QCat.cat;
+    var mate = new QCat("mate");
+    var mateMate = new QCat("mate_mate");
     mixin.from(cat);
     mixin.leftJoin(cat.mate, mate);
     mixin.orderBy(cat.mate.mate.name.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(
             Arrays.asList(
@@ -163,12 +162,12 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy_any() {
-    QCat cat = QCat.cat;
-    QCat catKittens = new QCat("cat_kittens");
+    var cat = QCat.cat;
+    var catKittens = new QCat("cat_kittens");
     mixin.from(cat);
     mixin.orderBy(cat.kittens.any().name.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(
             Arrays.asList(
@@ -179,11 +178,11 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy_embeddable() {
-    QBookVersion bookVersion = QBookVersion.bookVersion;
+    var bookVersion = QBookVersion.bookVersion;
     mixin.from(bookVersion);
     mixin.orderBy(bookVersion.definition.name.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, bookVersion)));
     assertThat(md.getOrderBy())
@@ -193,12 +192,12 @@ public class JPAQueryMixinTest {
   @SuppressWarnings("unchecked")
   @Test
   public void orderBy_embeddable2() {
-    QArticle article = QArticle.article;
-    QArticle articleContentArticle = new QArticle("article_content_article");
+    var article = QArticle.article;
+    var articleContentArticle = new QArticle("article_content_article");
     mixin.from(article);
     mixin.orderBy(article.content.article.name.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(
             Arrays.asList(
@@ -212,12 +211,12 @@ public class JPAQueryMixinTest {
   @SuppressWarnings("unchecked")
   @Test
   public void orderBy_embeddable_collection() {
-    QBookVersion bookVersion = QBookVersion.bookVersion;
-    QBookMark bookMark = new QBookMark("bookVersion_definition_bookMarks");
+    var bookVersion = QBookVersion.bookVersion;
+    var bookMark = new QBookMark("bookVersion_definition_bookMarks");
     mixin.from(bookVersion);
     mixin.orderBy(bookVersion.definition.bookMarks.any().comment.asc());
 
-    QueryMetadata md = mixin.getMetadata();
+    var md = mixin.getMetadata();
     assertThat(md.getJoins())
         .isEqualTo(Collections.singletonList(new JoinExpression(JoinType.DEFAULT, bookVersion)));
     assertThat(md.getOrderBy())
@@ -228,7 +227,7 @@ public class JPAQueryMixinTest {
 
   @Test
   public void orderBy_nullsLast() {
-    QCat cat = QCat.cat;
+    var cat = QCat.cat;
     mixin.from(cat);
     mixin.orderBy(cat.mate.name.asc().nullsLast());
     assertThat(mixin.getMetadata().getOrderBy().get(0).getNullHandling())

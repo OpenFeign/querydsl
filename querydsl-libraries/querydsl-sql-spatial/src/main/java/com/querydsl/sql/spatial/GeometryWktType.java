@@ -38,7 +38,7 @@ class GeometryWktType extends AbstractType<Geometry> {
   @Override
   @Nullable
   public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
-    String str = rs.getString(startIndex);
+    var str = rs.getString(startIndex);
     if (str != null) {
       return Wkt.newDecoder(Wkt.Dialect.POSTGIS_EWKT_1).decode(str);
     } else {
@@ -48,7 +48,7 @@ class GeometryWktType extends AbstractType<Geometry> {
 
   @Override
   public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
-    String str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(value);
+    var str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(value);
     st.setString(startIndex, str);
   }
 

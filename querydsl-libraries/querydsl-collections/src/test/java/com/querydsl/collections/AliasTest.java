@@ -14,14 +14,15 @@
 package com.querydsl.collections;
 
 import static com.querydsl.collections.CollQueryFactory.from;
-import static com.querydsl.core.alias.Alias.*;
+import static com.querydsl.core.alias.Alias.$;
+import static com.querydsl.core.alias.Alias.alias;
+import static com.querydsl.core.alias.Alias.var;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.StringPath;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -30,6 +31,7 @@ import org.junit.Test;
 
 public class AliasTest extends AbstractQueryTest {
 
+  @Override
   @Before
   public void setUp() {
     myInts.add(1);
@@ -43,12 +45,12 @@ public class AliasTest extends AbstractQueryTest {
   @Test
   public void aliasVariations1() {
     // 1st
-    QCat cat = new QCat("cat");
+    var cat = new QCat("cat");
     assertThat(from(cat, cats).where(cat.kittens.size().gt(0)).select(cat.name).fetch())
         .isEqualTo(Arrays.asList("Kitty", "Bob", "Alex", "Francis"));
 
     // 2nd
-    Cat c = alias(Cat.class, "cat");
+    var c = alias(Cat.class, "cat");
     assertThat(from(c, cats).where($(c.getKittens()).size().gt(0)).select($(c.getName())).fetch())
         .isEqualTo(Arrays.asList("Kitty", "Bob", "Alex", "Francis"));
   }
@@ -56,20 +58,20 @@ public class AliasTest extends AbstractQueryTest {
   @Test
   public void aliasVariations2() {
     // 1st
-    QCat cat = new QCat("cat");
+    var cat = new QCat("cat");
     assertThat(from(cat, cats).where(cat.name.matches("fri.*")).select(cat.name).fetch()).isEmpty();
 
     // 2nd
-    Cat c = alias(Cat.class, "cat");
+    var c = alias(Cat.class, "cat");
     assertThat(from(c, cats).where($(c.getName()).matches("fri.*")).select($(c.getName())).fetch())
         .isEqualTo(Collections.emptyList());
   }
 
   @Test
   public void alias3() {
-    QCat cat = new QCat("cat");
-    Cat other = new Cat();
-    Cat c = alias(Cat.class, "cat");
+    var cat = new QCat("cat");
+    var other = new Cat();
+    var c = alias(Cat.class, "cat");
 
     // 1
     from(c, cats).where($(c.getBirthdate()).gt(new Date())).select($(c)).iterate();
@@ -124,7 +126,7 @@ public class AliasTest extends AbstractQueryTest {
 
   @Test
   public void various1() {
-    StringPath str = Expressions.stringPath("str");
+    var str = Expressions.stringPath("str");
     assertThat(from(str, "a", "ab", "cd", "de").where(str.startsWith("a")).select(str).fetch())
         .isEqualTo(Arrays.asList("a", "ab"));
   }

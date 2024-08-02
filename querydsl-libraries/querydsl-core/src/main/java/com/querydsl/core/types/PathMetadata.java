@@ -49,7 +49,7 @@ public final class PathMetadata implements Serializable {
     if (obj == this) {
       return true;
     } else if (obj instanceof PathMetadata) {
-      PathMetadata p = (PathMetadata) obj;
+      var p = (PathMetadata) obj;
       return element.equals(p.element)
           && pathType == p.pathType
           && Objects.equals(parent, p.parent);

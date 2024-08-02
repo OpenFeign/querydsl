@@ -17,7 +17,6 @@ import com.querydsl.jpa.impl.JPAProvider;
 import com.querydsl.jpa.impl.JPAUtil;
 import com.querydsl.jpa.testutil.JPATestRunner;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
@@ -39,9 +38,9 @@ public class JPAIntegrationBase extends ParsingTest implements JPATest {
     return new QueryHelper<Void>(templates) {
       @Override
       public void parse() {
-        JPQLSerializer serializer = new JPQLSerializer(templates);
+        var serializer = new JPQLSerializer(templates);
         serializer.serialize(getMetadata(), false, null);
-        Query query = em.createQuery(serializer.toString());
+        var query = em.createQuery(serializer.toString());
         JPAUtil.setConstants(query, serializer.getConstants(), getMetadata().getParams());
         try {
           query.getResultList();

@@ -9,6 +9,7 @@ public class JSR310OffsetTimeTypeTest extends AbstractJSR310DateTimeTypeTest<Off
     super(new JSR310OffsetTimeType());
   }
 
+  @Override
   @Test
   public void set() {
     //        OffsetTime value = OffsetTime.now();
@@ -23,6 +24,7 @@ public class JSR310OffsetTimeTypeTest extends AbstractJSR310DateTimeTypeTest<Off
     //        EasyMock.verify(stmt);
   }
 
+  @Override
   @Test
   public void get() {
     //        ResultSet resultSet = EasyMock.createNiceMock(ResultSet.class);

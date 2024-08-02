@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Templates;
 import io.github.classgraph.ClassGraph;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -41,14 +40,13 @@ public class TemplatesTestBase {
 
   @Test
   public void default_instance() {
-    List<Class<?>> templates =
-        querydsl.scan().getSubclasses(Templates.class.getName()).loadClasses();
+    var templates = querydsl.scan().getSubclasses(Templates.class.getName()).loadClasses();
     Set<Class<?>> moduleSpecific =
         templates.stream().filter(MODULE_SPECIFIC).collect(Collectors.toSet());
 
     for (Class<?> template : moduleSpecific) {
       try {
-        Templates defaultInstance = (Templates) template.getField("DEFAULT").get(null);
+        var defaultInstance = (Templates) template.getField("DEFAULT").get(null);
         errorCollector.checkSucceeds(() -> assertThat(defaultInstance).isInstanceOf(template));
       } catch (Exception ex) {
         errorCollector.addError(ex);

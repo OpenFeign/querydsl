@@ -15,7 +15,6 @@ package com.querydsl.core.group.guava;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.group.AbstractGroupByTransformer;
@@ -52,21 +51,21 @@ public class GroupByTable<R, C, V, RES extends Table<R, C, V>>
 
     // create groups
     FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-    boolean hasGroups = false;
+    var hasGroups = false;
     for (Expression<?> e : expr.getArgs()) {
       hasGroups |= e instanceof GroupExpression;
     }
     if (hasGroups) {
       expr = withoutGroupExpressions(expr);
     }
-    CloseableIterator<Tuple> iter = query.select(expr).iterate();
+    var iter = query.select(expr).iterate();
     try {
       while (iter.hasNext()) {
         @SuppressWarnings("unchecked") // This type is mandated by the key type
-        Object[] row = iter.next().toArray();
-        R groupId = (R) row[0];
-        Object rowId = row[1];
-        GroupImpl group = (GroupImpl) groups.get(groupId, rowId);
+        var row = iter.next().toArray();
+        var groupId = (R) row[0];
+        var rowId = row[1];
+        var group = (GroupImpl) groups.get(groupId, rowId);
         if (group == null) {
           group = new GroupImpl(groupExpressions, maps);
           groups.put(groupId, rowId, group);

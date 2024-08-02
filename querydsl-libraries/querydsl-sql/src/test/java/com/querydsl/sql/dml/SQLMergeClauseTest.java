@@ -10,8 +10,8 @@ public class SQLMergeClauseTest {
 
   @Test
   public void clear() {
-    KeyAccessorsTest.QEmployee emp1 = new KeyAccessorsTest.QEmployee("emp1");
-    SQLMergeClause merge = new SQLMergeClause(null, new H2Templates(), emp1);
+    var emp1 = new KeyAccessorsTest.QEmployee("emp1");
+    var merge = new SQLMergeClause(null, new H2Templates(), emp1);
     merge.set(emp1.id, 1);
     merge.addBatch();
     assertThat(merge.getBatchCount()).isEqualTo(1);

@@ -13,8 +13,20 @@
  */
 package com.querydsl.core.util;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -66,7 +78,7 @@ public final class ReflectionUtils {
 
   @Nullable
   public static Method getGetterOrNull(Class<?> beanClass, String name, Class<?> type) {
-    String methodName =
+    var methodName =
         ((type.equals(Boolean.class) || type.equals(boolean.class)) ? "is" : "get")
             + BeanUtils.capitalize(name);
     while (beanClass != null && !beanClass.equals(Object.class)) {
@@ -111,7 +123,7 @@ public final class ReflectionUtils {
 
   private static Class<?> asClass(Type type) {
     if (type instanceof WildcardType) {
-      WildcardType wildcardType = (WildcardType) type;
+      var wildcardType = (WildcardType) type;
       if (wildcardType.getUpperBounds()[0] instanceof Class) {
         return (Class<?>) wildcardType.getUpperBounds()[0];
       } else if (wildcardType.getUpperBounds()[0] instanceof ParameterizedType) {
@@ -124,7 +136,7 @@ public final class ReflectionUtils {
     } else if (type instanceof ParameterizedType) {
       return (Class<?>) ((ParameterizedType) type).getRawType();
     } else if (type instanceof GenericArrayType) {
-      Type component = ((GenericArrayType) type).getGenericComponentType();
+      var component = ((GenericArrayType) type).getGenericComponentType();
       return Array.newInstance(asClass(component), 0).getClass();
     } else if (type instanceof Class) {
       return (Class<?>) type;
@@ -134,7 +146,7 @@ public final class ReflectionUtils {
   }
 
   public static Set<Class<?>> getSuperClasses(Class<?> cl) {
-    Set<Class<?>> classes = new HashSet<Class<?>>();
+    Set<Class<?>> classes = new HashSet<>();
     Class<?> c = cl;
     while (c != null) {
       classes.add(c);
@@ -144,7 +156,7 @@ public final class ReflectionUtils {
   }
 
   public static Set<Field> getFields(Class<?> cl) {
-    Set<Field> fields = new HashSet<Field>();
+    Set<Field> fields = new HashSet<>();
     Class<?> c = cl;
     while (c != null) {
       fields.addAll(Arrays.asList(c.getDeclaredFields()));
@@ -154,8 +166,8 @@ public final class ReflectionUtils {
   }
 
   public static Set<Class<?>> getImplementedInterfaces(Class<?> cl) {
-    Set<Class<?>> interfaces = new HashSet<Class<?>>();
-    Deque<Class<?>> classes = new ArrayDeque<Class<?>>();
+    Set<Class<?>> interfaces = new HashSet<>();
+    Deque<Class<?>> classes = new ArrayDeque<>();
     classes.add(cl);
     while (!classes.isEmpty()) {
       Class<?> c = classes.pop();

@@ -47,7 +47,7 @@ public class NumericBooleanType extends AbstractType<Boolean, Integer> {
   @Override
   @Nullable
   public Boolean getValue(Row row, int startIndex) {
-    Number num = row.get(startIndex, Number.class);
+    var num = row.get(startIndex, Number.class);
     return num != null ? num.intValue() == 1 : null;
   }
 

@@ -13,7 +13,6 @@ import com.querydsl.example.dto.Product;
 import com.querydsl.example.dto.ProductL10n;
 import com.querydsl.example.dto.Supplier;
 import com.querydsl.r2dbc.R2DBCQueryFactory;
-import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import com.querydsl.r2dbc.group.ReactiveGroupBy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +56,7 @@ public class ProductDaoImpl implements ProductDao {
 
   @Override
   public Mono<Product> save(Product p) {
-    Long id = p.getId();
+    var id = p.getId();
 
     if (id == null) {
       return insert(p);
@@ -71,7 +70,7 @@ public class ProductDaoImpl implements ProductDao {
         .executeWithKey(product.id)
         .flatMapIterable(
             id -> {
-              R2DBCInsertClause insert = queryFactory.insert(productL10n);
+              var insert = queryFactory.insert(productL10n);
               return p.getLocalizations().stream()
                   .map(
                       l10n ->
@@ -93,7 +92,7 @@ public class ProductDaoImpl implements ProductDao {
   }
 
   public Mono<Product> update(Product p) {
-    Long id = p.getId();
+    var id = p.getId();
 
     return populate(queryFactory.update(product), p)
         .where(product.id.eq(id))
@@ -107,7 +106,7 @@ public class ProductDaoImpl implements ProductDao {
                   .execute()
                   .flatMapIterable(
                       ___ -> {
-                        R2DBCInsertClause insert = queryFactory.insert(productL10n);
+                        var insert = queryFactory.insert(productL10n);
                         return p.getLocalizations().stream()
                             .map(
                                 l10n ->

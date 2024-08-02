@@ -37,9 +37,9 @@ public class SQLMergeBatch {
 
   public SQLMergeBatch(
       List<Path<?>> k, List<Path<?>> c, List<Expression<?>> v, @Nullable SubQueryExpression<?> sq) {
-    keys = new ArrayList<Path<?>>(k);
-    columns = new ArrayList<Path<?>>(c);
-    values = new ArrayList<Expression<?>>(v);
+    keys = new ArrayList<>(k);
+    columns = new ArrayList<>(c);
+    values = new ArrayList<>(v);
     subQuery = sq;
   }
 

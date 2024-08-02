@@ -73,6 +73,7 @@ public interface Tuple {
    * implementations, equality check should use {@code java.util.Arrays#equals(Object[], Object[])}
    * with {@code #toArray()} as parameters.
    */
+  @Override
   boolean equals(Object o);
 
   /**
@@ -80,5 +81,6 @@ public interface Tuple {
    * implementations, hashCode should use {@code java.util.Arrays#hashCode(Object[])} with {@code
    * #toArray()} as parameter.
    */
+  @Override
   int hashCode();
 }

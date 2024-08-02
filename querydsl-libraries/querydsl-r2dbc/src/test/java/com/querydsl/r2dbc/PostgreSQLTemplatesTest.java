@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import org.junit.Test;
 
 public class PostgreSQLTemplatesTest extends AbstractSQLTemplatesTest {
@@ -28,18 +27,20 @@ public class PostgreSQLTemplatesTest extends AbstractSQLTemplatesTest {
     return new PostgreSQLTemplates();
   }
 
+  @Override
   @Test
   public void noFrom() {
     query.getMetadata().setProjection(Expressions.ONE);
     assertThat(query).hasToString("select 1");
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   @Test
   public void union() {
-    NumberExpression<Integer> one = Expressions.ONE;
-    NumberExpression<Integer> two = Expressions.TWO;
-    NumberExpression<Integer> three = Expressions.THREE;
+    var one = Expressions.ONE;
+    var two = Expressions.TWO;
+    var three = Expressions.THREE;
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union =
         query.union(
@@ -56,34 +57,34 @@ public class PostgreSQLTemplatesTest extends AbstractSQLTemplatesTest {
     //        ::    left    PostgreSQL-style typecast
     // [ ]    left    array element selection
     // + -    right    unary plus, unary minus
-    int p0 = getPrecedence(Ops.NEGATE);
+    var p0 = getPrecedence(Ops.NEGATE);
     //        ^    left    exponentiation
     //        * / %    left    multiplication, division, modulo
-    int p1 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
+    var p1 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
     // + -    left    addition, subtraction
-    int p2 = getPrecedence(Ops.ADD, Ops.SUB);
+    var p2 = getPrecedence(Ops.ADD, Ops.SUB);
     // IS         IS TRUE, IS FALSE, IS NULL, etc
-    int p3 = getPrecedence(Ops.IS_NULL, Ops.IS_NOT_NULL);
+    var p3 = getPrecedence(Ops.IS_NULL, Ops.IS_NOT_NULL);
     // ISNULL         test for null
     // NOTNULL         test for not null
     // (any other)    left    all other native and user-defined operators
     // IN         set membership
-    int p4 = getPrecedence(Ops.IN);
+    var p4 = getPrecedence(Ops.IN);
     // BETWEEN         range containment
-    int p5 = getPrecedence(Ops.BETWEEN);
+    var p5 = getPrecedence(Ops.BETWEEN);
     // OVERLAPS         time interval overlap
     // LIKE ILIKE SIMILAR         string pattern matching
-    int p6 = getPrecedence(Ops.LIKE, Ops.LIKE_ESCAPE);
+    var p6 = getPrecedence(Ops.LIKE, Ops.LIKE_ESCAPE);
     // < >         less than, greater than
-    int p7 = getPrecedence(Ops.LT, Ops.GT);
+    var p7 = getPrecedence(Ops.LT, Ops.GT);
     //        =    right    equality, assignment
-    int p8 = getPrecedence(Ops.EQ);
+    var p8 = getPrecedence(Ops.EQ);
     // NOT    right    logical negation
-    int p9 = getPrecedence(Ops.NOT);
+    var p9 = getPrecedence(Ops.NOT);
     // AND    left    logical conjunction
-    int p10 = getPrecedence(Ops.AND);
+    var p10 = getPrecedence(Ops.AND);
     // OR    left    logical disjunction
-    int p11 = getPrecedence(Ops.OR);
+    var p11 = getPrecedence(Ops.OR);
 
     assertThat(p0 < p1).isTrue();
     assertThat(p1 < p2).isTrue();

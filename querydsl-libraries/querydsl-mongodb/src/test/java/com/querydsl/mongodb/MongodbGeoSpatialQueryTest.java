@@ -23,7 +23,6 @@ import com.querydsl.mongodb.domain.GeoEntity;
 import com.querydsl.mongodb.domain.QGeoEntity;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
 import java.net.UnknownHostException;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -57,7 +56,7 @@ public class MongodbGeoSpatialQueryTest {
     ds.save(new GeoEntity(20.0, 50.0));
     ds.save(new GeoEntity(30.0, 50.0));
 
-    List<GeoEntity> entities = query().where(geoEntity.location.near(50.0, 50.0)).fetch();
+    var entities = query().where(geoEntity.location.near(50.0, 50.0)).fetch();
     assertThat(entities.getFirst().getLocation()[0]).isCloseTo(30.0, within(0.1));
     assertThat(entities.get(1).getLocation()[0]).isCloseTo(20.0, within(0.1));
     assertThat(entities.get(2).getLocation()[0]).isCloseTo(10.0, within(0.1));
@@ -69,7 +68,7 @@ public class MongodbGeoSpatialQueryTest {
     ds.save(new GeoEntity(20.0, 50.0));
     ds.save(new GeoEntity(30.0, 50.0));
 
-    List<GeoEntity> entities =
+    var entities =
         query().where(MongodbExpressions.nearSphere(geoEntity.location, 50.0, 50.0)).fetch();
     assertThat(entities.getFirst().getLocation()[0]).isCloseTo(30.0, within(0.1));
     assertThat(entities.get(1).getLocation()[0]).isCloseTo(20.0, within(0.1));
@@ -82,7 +81,7 @@ public class MongodbGeoSpatialQueryTest {
     ds.save(new GeoEntity(20.0, 50.0));
     ds.save(new GeoEntity(30.0, 50.0));
 
-    List<GeoEntity> entities =
+    var entities =
         query().where(MongodbExpressions.withinBox(geoEntity.location, 0, 0, 20, 50)).fetch();
     assertThat(entities).hasSize(2);
     assertThat(entities.getFirst().getLocation()[0]).isCloseTo(10.0, within(0.1));
@@ -95,13 +94,13 @@ public class MongodbGeoSpatialQueryTest {
     ds.save(new GeoEntity(20.0, 50.0));
     ds.save(new GeoEntity(30.0, 50.0));
 
-    List<GeoEntity> entities =
+    var entities =
         query().where(MongodbExpressions.geoIntersects(geoEntity.location, 20.0, 50.0)).fetch();
     assertThat(entities).hasSize(1);
     assertThat(entities.getFirst().getLocation()[0]).isCloseTo(20.0, within(0.1));
   }
 
   private MorphiaQuery<GeoEntity> query() {
-    return new MorphiaQuery<GeoEntity>(morphia, ds, geoEntity);
+    return new MorphiaQuery<>(morphia, ds, geoEntity);
   }
 }

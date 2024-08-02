@@ -31,7 +31,7 @@ public class GOne<T> extends AbstractGroupExpression<T, T> {
 
   @Override
   public GroupCollector<T, T> createGroupCollector() {
-    return new GroupCollector<T, T>() {
+    return new GroupCollector<>() {
       private boolean first = true;
 
       private T val;

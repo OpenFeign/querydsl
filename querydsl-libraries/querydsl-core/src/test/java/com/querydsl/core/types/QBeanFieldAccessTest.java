@@ -15,7 +15,12 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.BooleanPath;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.PathBuilderFactory;
+import com.querydsl.core.types.dsl.StringPath;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.Before;
@@ -53,8 +58,8 @@ public class QBeanFieldAccessTest {
 
   @Test
   public void with_class_and_exprs_using_fields() {
-    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, name, age, married);
-    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    var beanProjection = new QBean<>(Entity.class, true, name, age, married);
+    var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.name).isEqualTo("Fritz");
     assertThat(bean.age).isEqualTo(30);
     assertThat(bean.married).isTrue();
@@ -63,7 +68,7 @@ public class QBeanFieldAccessTest {
   @Test
   public void with_path_and_exprs_using_fields() {
     QBean<Entity> beanProjection = Projections.fields(entity, name, age, married);
-    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.name).isEqualTo("Fritz");
     assertThat(bean.age).isEqualTo(30);
     assertThat(bean.married).isTrue();
@@ -71,12 +76,12 @@ public class QBeanFieldAccessTest {
 
   @Test
   public void with_class_and_map_using_fields() {
-    Map<String, Expression<?>> bindings = new LinkedHashMap<String, Expression<?>>();
+    Map<String, Expression<?>> bindings = new LinkedHashMap<>();
     bindings.put("name", name);
     bindings.put("age", age);
     bindings.put("married", married);
-    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, bindings);
-    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    var beanProjection = new QBean<>(Entity.class, true, bindings);
+    var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.name).isEqualTo("Fritz");
     assertThat(bean.age).isEqualTo(30);
     assertThat(bean.married).isTrue();
@@ -84,10 +89,9 @@ public class QBeanFieldAccessTest {
 
   @Test
   public void with_class_and_alias_using_fields() {
-    StringPath name2 = Expressions.stringPath("name2");
-    QBean<Entity> beanProjection =
-        new QBean<Entity>(Entity.class, true, name.as(name2), age, married);
-    Entity bean = beanProjection.newInstance("Fritz", 30, true);
+    var name2 = Expressions.stringPath("name2");
+    var beanProjection = new QBean<>(Entity.class, true, name.as(name2), age, married);
+    var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.name).isNull();
     assertThat(bean.name2).isEqualTo("Fritz");
     assertThat(bean.age).isEqualTo(30);
@@ -96,10 +100,10 @@ public class QBeanFieldAccessTest {
 
   @Test
   public void with_nested_factoryExpression() {
-    Map<String, Expression<?>> bindings = new LinkedHashMap<String, Expression<?>>();
+    Map<String, Expression<?>> bindings = new LinkedHashMap<>();
     bindings.put("age", age);
     bindings.put("name", new Concatenation(name, name2));
-    QBean<Entity> beanProjection = new QBean<Entity>(Entity.class, true, bindings);
+    var beanProjection = new QBean<>(Entity.class, true, bindings);
     FactoryExpression<Entity> wrappedProjection = FactoryExpressionUtils.wrap(beanProjection);
     Entity bean = wrappedProjection.newInstance(30, "Fri", "tz");
     assertThat(bean.name).isEqualTo("Fritz");

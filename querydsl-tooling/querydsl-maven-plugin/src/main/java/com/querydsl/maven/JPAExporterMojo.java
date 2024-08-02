@@ -15,7 +15,11 @@ package com.querydsl.maven;
 
 import com.querydsl.codegen.GenericExporter;
 import com.querydsl.codegen.PropertyHandling;
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 

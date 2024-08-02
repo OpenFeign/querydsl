@@ -13,7 +13,9 @@
  */
 package com.querydsl.jpa;
 
-import static com.querydsl.jpa.Constants.*;
+import static com.querydsl.jpa.Constants.cat;
+import static com.querydsl.jpa.Constants.cust;
+import static com.querydsl.jpa.Constants.kitten;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -66,10 +68,10 @@ public class BooleanOperationsTest extends AbstractQueryTest {
 
   @Test
   public void booleanBuilder1() {
-    BooleanBuilder bb1 = new BooleanBuilder();
+    var bb1 = new BooleanBuilder();
     bb1.and(cat.eq(cat));
 
-    BooleanBuilder bb2 = new BooleanBuilder();
+    var bb2 = new BooleanBuilder();
     bb2.or(cat.eq(cat));
     bb2.or(cat.eq(cat));
 
@@ -78,10 +80,10 @@ public class BooleanOperationsTest extends AbstractQueryTest {
 
   @Test
   public void booleanBuilder2() {
-    BooleanBuilder bb1 = new BooleanBuilder();
+    var bb1 = new BooleanBuilder();
     bb1.and(cat.eq(cat));
 
-    BooleanBuilder bb2 = new BooleanBuilder();
+    var bb2 = new BooleanBuilder();
     bb2.or(cat.eq(cat));
     bb2.or(cat.eq(cat));
 

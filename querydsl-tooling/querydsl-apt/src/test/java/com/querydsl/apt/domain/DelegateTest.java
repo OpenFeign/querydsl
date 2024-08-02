@@ -67,7 +67,7 @@ public class DelegateTest {
 
   @Test
   public void user() {
-    QDelegateTest_User user = QDelegateTest_User.user;
+    var user = QDelegateTest_User.user;
     assertThat(user.isManagedBy(new User())).isNotNull();
     assertThat(user.isManagedBy(user)).isNotNull();
     assertThat(user.simpleMethod()).isNotNull();
@@ -76,7 +76,7 @@ public class DelegateTest {
 
   @Test
   public void simpleUser() {
-    QDelegateTest_SimpleUser user = QDelegateTest_SimpleUser.simpleUser;
+    var user = QDelegateTest_SimpleUser.simpleUser;
     assertThat(user.isManagedBy(new User())).isNotNull();
     assertThat(user.isManagedBy(user._super)).isNotNull();
     assertThat(user.getName()).isEqualTo(user.name);
@@ -84,7 +84,7 @@ public class DelegateTest {
 
   @Test
   public void simpleUser2() {
-    QDelegateTest_SimpleUser2 user = QDelegateTest_SimpleUser2.simpleUser2;
+    var user = QDelegateTest_SimpleUser2.simpleUser2;
     assertThat(user.isManagedBy(new User())).isNotNull();
     assertThat(user.isManagedBy(user._super._super)).isNotNull();
     assertThat(user.getName()).isEqualTo(user.name);

@@ -16,8 +16,31 @@ package com.querydsl.codegen;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.BooleanPath;
+import com.querydsl.core.types.dsl.BooleanTemplate;
+import com.querydsl.core.types.dsl.ComparableExpression;
+import com.querydsl.core.types.dsl.ComparablePath;
+import com.querydsl.core.types.dsl.ComparableTemplate;
+import com.querydsl.core.types.dsl.DatePath;
+import com.querydsl.core.types.dsl.DateTemplate;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.DateTimeTemplate;
+import com.querydsl.core.types.dsl.EnumExpression;
+import com.querydsl.core.types.dsl.EnumPath;
+import com.querydsl.core.types.dsl.EnumTemplate;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.NumberTemplate;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.core.types.dsl.SimpleTemplate;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.core.types.dsl.TemporalExpression;
+import com.querydsl.core.types.dsl.TimePath;
+import com.querydsl.core.types.dsl.TimeTemplate;
 
 /**
  * {@code JavaTypeMappings} defines mappings from {@link TypeCategory} instances to {@link

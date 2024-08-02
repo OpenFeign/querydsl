@@ -16,7 +16,6 @@ package com.querydsl.sql;
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
@@ -207,7 +206,7 @@ public class SQLServerTemplates extends SQLTemplates {
 
   @Override
   protected String escapeForLike(String str) {
-    final StringBuilder rv = new StringBuilder(str.length() + 3);
+    final var rv = new StringBuilder(str.length() + 3);
     for (char ch : str.toCharArray()) {
       if (ch == getEscapeChar() || ch == '%' || ch == '_' || ch == '[') {
         rv.append(getEscapeChar());
@@ -220,7 +219,7 @@ public class SQLServerTemplates extends SQLTemplates {
   @Override
   public void serialize(QueryMetadata metadata, boolean forCountRow, SQLSerializer context) {
     if (!forCountRow && metadata.getModifiers().isRestricting() && !metadata.getJoins().isEmpty()) {
-      QueryModifiers mod = metadata.getModifiers();
+      var mod = metadata.getModifiers();
       if (mod.getOffset() == null) {
         // select top ...
         metadata = metadata.clone();

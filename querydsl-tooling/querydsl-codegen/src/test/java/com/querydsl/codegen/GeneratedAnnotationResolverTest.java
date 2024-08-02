@@ -12,7 +12,7 @@ public class GeneratedAnnotationResolverTest {
 
   @Test
   public void resolveCustom() {
-    String customClass = "some.random.Class";
+    var customClass = "some.random.Class";
     Class<? extends Annotation> resolvedAnnotationClass =
         GeneratedAnnotationResolver.resolve(customClass);
     assertThat(resolvedAnnotationClass).isNotNull();

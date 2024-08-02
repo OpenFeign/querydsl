@@ -90,12 +90,12 @@ public class QBean2Test {
 
   @Test
   public void newInstance() {
-    QPerson p = QPerson.person;
+    var p = QPerson.person;
     QBean<Person> projection =
         Projections.bean(
             Person.class, p.id, p.firstName.as("firstName"), p.lastName.as("lastName"));
 
-    Person person = projection.newInstance(3, "John", "Doe");
+    var person = projection.newInstance(3, "John", "Doe");
     assertThat(person.getId()).isEqualTo(3);
     assertThat(person.getFirstName()).isEqualTo("John");
     assertThat(person.getLastName()).isEqualTo("Doe");

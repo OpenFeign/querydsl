@@ -48,7 +48,7 @@ public class BeanSerializer implements Serializer {
   public static final boolean DEFAULT_PROPERTY_ANNOTATIONS = true;
 
   private static final Function<Property, Parameter> propertyToParameter =
-      new Function<Property, Parameter>() {
+      new Function<>() {
         @Override
         public Parameter apply(Property input) {
           return new Parameter(input.getName(), input.getType());
@@ -143,7 +143,7 @@ public class BeanSerializer implements Serializer {
   @Override
   public void serialize(EntityType model, SerializerConfig serializerConfig, CodeWriter writer)
       throws IOException {
-    String simpleName = model.getSimpleName();
+    var simpleName = model.getSimpleName();
 
     // package
     if (!model.getPackageName().isEmpty()) {
@@ -151,7 +151,7 @@ public class BeanSerializer implements Serializer {
     }
 
     // imports
-    Set<String> importedClasses = getAnnotationTypes(model);
+    var importedClasses = getAnnotationTypes(model);
     for (Type iface : interfaces) {
       importedClasses.add(iface.getFullName());
     }
@@ -189,7 +189,7 @@ public class BeanSerializer implements Serializer {
       if (printSupertype && model.getSuperType() != null) {
         superType = model.getSuperType().getType();
       }
-      Type[] ifaces = interfaces.toArray(new Type[0]);
+      var ifaces = interfaces.toArray(new Type[0]);
       writer.beginClass(model, superType, ifaces);
     } else if (printSupertype && model.getSuperType() != null) {
       writer.beginClass(model, model.getSuperType().getType());
@@ -215,13 +215,13 @@ public class BeanSerializer implements Serializer {
 
     // accessors
     for (Property property : model.getProperties()) {
-      String propertyName = property.getEscapedName();
+      var propertyName = property.getEscapedName();
       // getter
       writer.beginPublicMethod(property.getType(), "get" + BeanUtils.capitalize(propertyName));
       writer.line("return ", propertyName, ";");
       writer.end();
       // setter
-      Parameter parameter = new Parameter(propertyName, property.getType());
+      var parameter = new Parameter(propertyName, property.getType());
       writer.beginPublicMethod(Types.VOID, "set" + BeanUtils.capitalize(propertyName), parameter);
       writer.line("this.", propertyName, " = ", propertyName, ";");
       writer.end();
@@ -252,9 +252,9 @@ public class BeanSerializer implements Serializer {
   protected void addToString(EntityType model, CodeWriter writer) throws IOException {
     writer.line("@Override");
     writer.beginPublicMethod(Types.STRING, "toString");
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     for (Property property : model.getProperties()) {
-      String propertyName = property.getEscapedName();
+      var propertyName = property.getEscapedName();
       if (builder.length() > 0) {
         builder.append(" + \", ");
       } else {
@@ -280,7 +280,7 @@ public class BeanSerializer implements Serializer {
   }
 
   private Set<String> getAnnotationTypes(EntityType model) {
-    Set<String> imports = new HashSet<String>();
+    Set<String> imports = new HashSet<>();
     for (Annotation annotation : model.getAnnotations()) {
       imports.add(annotation.annotationType().getName());
     }

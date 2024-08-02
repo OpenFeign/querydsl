@@ -15,7 +15,11 @@ package com.querydsl.apt.hibernate;
 
 import com.querydsl.apt.Configuration;
 import com.querydsl.apt.jpa.JPAAnnotationProcessor;
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import java.lang.annotation.Annotation;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;

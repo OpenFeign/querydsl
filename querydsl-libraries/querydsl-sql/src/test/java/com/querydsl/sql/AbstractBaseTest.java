@@ -51,8 +51,8 @@ public abstract class AbstractBaseTest {
 
     @Override
     protected SQLSerializer serialize(boolean countRow) {
-      SQLSerializer serializer = super.serialize(countRow);
-      String rv = serializer.toString();
+      var serializer = super.serialize(countRow);
+      var rv = serializer.toString();
       if (expectedQuery != null) {
         assertThat(rv.replace('\n', ' ')).isEqualTo(expectedQuery);
         expectedQuery = null;
@@ -61,8 +61,9 @@ public abstract class AbstractBaseTest {
       return serializer;
     }
 
+    @Override
     public TestQuery<T> clone(Connection conn) {
-      TestQuery<T> q = new TestQuery<T>(conn, getConfiguration(), getMetadata().clone());
+      var q = new TestQuery<T>(conn, getConfiguration(), getMetadata().clone());
       q.union = union;
       q.unionAll = unionAll;
       q.firstUnionSubQuery = firstUnionSubQuery;
@@ -101,31 +102,31 @@ public abstract class AbstractBaseTest {
   }
 
   protected SQLUpdateClause update(RelationalPath<?> e) {
-    SQLUpdateClause sqlUpdateClause = new SQLUpdateClause(connection, configuration, e);
+    var sqlUpdateClause = new SQLUpdateClause(connection, configuration, e);
     sqlUpdateClause.addListener(new TestLoggingListener());
     return sqlUpdateClause;
   }
 
   protected SQLInsertClause insert(RelationalPath<?> e) {
-    SQLInsertClause sqlInsertClause = new SQLInsertClause(connection, configuration, e);
+    var sqlInsertClause = new SQLInsertClause(connection, configuration, e);
     sqlInsertClause.addListener(new TestLoggingListener());
     return sqlInsertClause;
   }
 
   protected SQLInsertClause insert(RelationalPath<?> e, SQLQuery<?> sq) {
-    SQLInsertClause sqlInsertClause = new SQLInsertClause(connection, configuration, e, sq);
+    var sqlInsertClause = new SQLInsertClause(connection, configuration, e, sq);
     sqlInsertClause.addListener(new TestLoggingListener());
     return sqlInsertClause;
   }
 
   protected SQLDeleteClause delete(RelationalPath<?> e) {
-    SQLDeleteClause sqlDeleteClause = new SQLDeleteClause(connection, configuration, e);
+    var sqlDeleteClause = new SQLDeleteClause(connection, configuration, e);
     sqlDeleteClause.addListener(new TestLoggingListener());
     return sqlDeleteClause;
   }
 
   protected SQLMergeClause merge(RelationalPath<?> e) {
-    SQLMergeClause sqlMergeClause = new SQLMergeClause(connection, configuration, e);
+    var sqlMergeClause = new SQLMergeClause(connection, configuration, e);
     sqlMergeClause.addListener(new TestLoggingListener());
     return sqlMergeClause;
   }
@@ -137,13 +138,13 @@ public abstract class AbstractBaseTest {
   }
 
   protected SQLInsertClause mysqlReplace(RelationalPath<?> path) {
-    MySQLReplaceClause mySQLReplaceClause = new MySQLReplaceClause(connection, configuration, path);
+    var mySQLReplaceClause = new MySQLReplaceClause(connection, configuration, path);
     mySQLReplaceClause.addListener(new TestLoggingListener());
     return mySQLReplaceClause;
   }
 
   protected SQLQuery<?> query() {
-    SQLQuery<Void> testQuery = new TestQuery<Void>(connection, configuration);
+    SQLQuery<Void> testQuery = new TestQuery<>(connection, configuration);
     testQuery.addListener(new TestLoggingListener());
     return testQuery;
   }
@@ -155,14 +156,13 @@ public abstract class AbstractBaseTest {
   }
 
   protected TestQuery<?> testQuery() {
-    TestQuery<Void> testQuery =
-        new TestQuery<Void>(connection, configuration, new DefaultQueryMetadata());
+    var testQuery = new TestQuery<>(connection, configuration, new DefaultQueryMetadata());
     testQuery.addListener(new TestLoggingListener());
     return testQuery;
   }
 
   protected long execute(DMLClause<?>... clauses) {
-    long execute = 0;
+    var execute = 0L;
     for (DMLClause<?> clause : clauses) {
       execute += clause.execute();
     }

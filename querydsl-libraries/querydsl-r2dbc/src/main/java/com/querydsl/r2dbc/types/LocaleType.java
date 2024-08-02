@@ -44,12 +44,12 @@ public class LocaleType extends AbstractType<Locale, String> {
   @Override
   @Nullable
   public Locale getValue(Row row, int startIndex) {
-    String val = row.get(startIndex, String.class);
+    var val = row.get(startIndex, String.class);
     return val != null ? toLocale(val) : null;
   }
 
   public static Locale toLocale(String val) {
-    String[] tokens = LOCALE.split(val);
+    var tokens = LOCALE.split(val);
     switch (tokens.length) {
       case 1:
         return new Locale(tokens[0]);

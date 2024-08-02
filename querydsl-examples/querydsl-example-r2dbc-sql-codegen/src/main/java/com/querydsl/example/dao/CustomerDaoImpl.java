@@ -14,7 +14,6 @@ import com.querydsl.example.dto.Customer;
 import com.querydsl.example.dto.CustomerAddress;
 import com.querydsl.example.dto.Person;
 import com.querydsl.r2dbc.R2DBCQueryFactory;
-import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import com.querydsl.r2dbc.group.ReactiveGroupBy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +53,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
   @Override
   public Mono<Customer> save(Customer c) {
-    Long id = c.getId();
+    var id = c.getId();
 
     if (id == null) {
       return insert(c);
@@ -124,7 +123,7 @@ public class CustomerDaoImpl implements CustomerDao {
                   .execute()
                   .flatMap(
                       __ -> {
-                        R2DBCInsertClause insert = queryFactory.insert(customerAddress);
+                        var insert = queryFactory.insert(customerAddress);
                         return Flux.fromIterable(c.getAddresses())
                             .flatMap(
                                 ca -> {

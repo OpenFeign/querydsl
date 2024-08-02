@@ -22,7 +22,6 @@ import com.querydsl.codegen.QueryTypeFactory;
 import com.querydsl.codegen.Serializer;
 import com.querydsl.codegen.SimpleSerializerConfig;
 import com.querydsl.codegen.TypeMappings;
-import com.querydsl.codegen.utils.CodeWriter;
 import com.querydsl.codegen.utils.JavaWriter;
 import com.querydsl.codegen.utils.ScalaWriter;
 import com.querydsl.codegen.utils.model.ClassType;
@@ -32,7 +31,6 @@ import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.sql.ColumnImpl;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.Configuration;
-import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.SQLTemplatesRegistry;
 import com.querydsl.sql.SchemaAndTable;
 import com.querydsl.sql.codegen.support.CustomType;
@@ -88,11 +86,11 @@ public class MetaDataExporter {
 
   private final SQLCodegenModule module = new SQLCodegenModule();
 
-  private final Set<String> classes = new HashSet<String>();
+  private final Set<String> classes = new HashSet<>();
 
   @Nullable private String beanPackageName;
 
-  private final Map<EntityType, Type> entityToWrapped = new HashMap<EntityType, Type>();
+  private final Map<EntityType, Type> entityToWrapped = new HashMap<>();
 
   private Serializer serializer;
 
@@ -118,8 +116,8 @@ public class MetaDataExporter {
     EntityType classModel;
 
     if (beanSerializer == null) {
-      String packageName = normalizePackage(module.getPackageName(), schemaAndTable);
-      String simpleName = module.getPrefix() + className + module.getSuffix();
+      var packageName = normalizePackage(module.getPackageName(), schemaAndTable);
+      var simpleName = module.getPrefix() + className + module.getSuffix();
       Type classTypeModel =
           new SimpleType(
               TypeCategory.ENTITY,
@@ -135,8 +133,8 @@ public class MetaDataExporter {
       typeMappings.register(classModel, classModel);
 
     } else {
-      String beanPackage = normalizePackage(beanPackageName, schemaAndTable);
-      String simpleName = module.getBeanPrefix() + className + module.getBeanSuffix();
+      var beanPackage = normalizePackage(beanPackageName, schemaAndTable);
+      var simpleName = module.getBeanPrefix() + className + module.getBeanSuffix();
       Type classTypeModel =
           new SimpleType(
               TypeCategory.ENTITY,
@@ -150,7 +148,7 @@ public class MetaDataExporter {
               classTypeModel,
               module.get(Function.class, CodegenModule.VARIABLE_NAME_FUNCTION_CLASS));
 
-      Type mappedType = queryTypeFactory.create(classModel);
+      var mappedType = queryTypeFactory.create(classModel);
       entityToWrapped.put(classModel, mappedType);
       typeMappings.register(classModel, mappedType);
     }
@@ -161,7 +159,7 @@ public class MetaDataExporter {
   }
 
   private String normalizePackage(String packageName, SchemaAndTable schemaAndTable) {
-    String rval = packageName;
+    var rval = packageName;
     if (config.isSchemaToPackage()) {
       rval = namingStrategy.getPackage(rval, schemaAndTable);
     }
@@ -211,7 +209,7 @@ public class MetaDataExporter {
     beanSerializer = module.get(Serializer.class, SQLCodegenModule.BEAN_SERIALIZER);
     namingStrategy = module.get(NamingStrategy.class);
 
-    SQLTemplates templates = sqlTemplatesRegistry.getTemplates(md);
+    var templates = sqlTemplatesRegistry.getTemplates(md);
     if (templates != null) {
       configuration.setTemplates(templates);
     } else {
@@ -239,13 +237,13 @@ public class MetaDataExporter {
     String[] typesArray = null;
 
     if (config.getTableTypesToExport() != null && !config.getTableTypesToExport().isEmpty()) {
-      List<String> types = new ArrayList<String>();
+      List<String> types = new ArrayList<>();
       for (String tableType : config.getTableTypesToExport().split(",")) {
         types.add(tableType.trim());
       }
       typesArray = types.toArray(new String[0]);
     } else if (!config.isExportAll()) {
-      List<String> types = new ArrayList<String>(2);
+      List<String> types = new ArrayList<>(2);
       if (config.isExportTables()) {
         types.add("TABLE");
       }
@@ -255,9 +253,9 @@ public class MetaDataExporter {
       typesArray = types.toArray(new String[0]);
     }
 
-    List<String> catalogs = patternAsList(config.getCatalogPattern());
-    List<String> schemas = patternAsList(config.getSchemaPattern());
-    List<String> tables = patternAsList(config.getTableNamePattern());
+    var catalogs = patternAsList(config.getCatalogPattern());
+    var schemas = patternAsList(config.getSchemaPattern());
+    var tables = patternAsList(config.getTableNamePattern());
 
     for (String catalog : catalogs) {
       catalog = trimIfNonNull(catalog);
@@ -272,7 +270,9 @@ public class MetaDataExporter {
   }
 
   private void configureModule() {
-    if (config.getNamePrefix() != null) module.bind(CodegenModule.PREFIX, config.getNamePrefix());
+    if (config.getNamePrefix() != null) {
+      module.bind(CodegenModule.PREFIX, config.getNamePrefix());
+    }
 
     if (config.getNameSuffix() != null) {
       module.bind(CodegenModule.SUFFIX, config.getNameSuffix());
@@ -294,8 +294,9 @@ public class MetaDataExporter {
 
     module.bind(SQLCodegenModule.SCHEMA_TO_PACKAGE, config.isSchemaToPackage());
 
-    if (config.getImports() != null && !config.getImports().isEmpty())
-      module.bind(CodegenModule.IMPORTS, new HashSet<String>(config.getImports()));
+    if (config.getImports() != null && !config.getImports().isEmpty()) {
+      module.bind(CodegenModule.IMPORTS, new HashSet<>(config.getImports()));
+    }
 
     module.bindInstance(
         CodegenModule.GENERATED_ANNOTATION_CLASS,
@@ -313,15 +314,15 @@ public class MetaDataExporter {
         }
       }
       if (serializer instanceof BeanSerializer) {
-        BeanSerializer bserializer = (BeanSerializer) serializer;
+        var bserializer = (BeanSerializer) serializer;
         if (config.getBeanInterfaces() != null) {
           for (String iface : config.getBeanInterfaces()) {
-            int sepIndex = iface.lastIndexOf('.');
+            var sepIndex = iface.lastIndexOf('.');
             if (sepIndex < 0) {
               bserializer.addInterface(new SimpleType(iface));
             } else {
-              String packageName = iface.substring(0, sepIndex);
-              String simpleName = iface.substring(sepIndex + 1);
+              var packageName = iface.substring(0, sepIndex);
+              var simpleName = iface.substring(sepIndex + 1);
               bserializer.addInterface(new SimpleType(iface, packageName, simpleName));
             }
           }
@@ -359,10 +360,11 @@ public class MetaDataExporter {
       }
     }
 
-    if (config.getColumnComparatorClass() != null)
+    if (config.getColumnComparatorClass() != null) {
       module.bind(
           SQLCodegenModule.COLUMN_COMPARATOR,
           config.getColumnComparatorClass().asSubclass(Comparator.class));
+    }
 
     if (config.getSerializerClass() != null) {
       module.bind(Serializer.class, config.getSerializerClass());
@@ -392,7 +394,7 @@ public class MetaDataExporter {
       String tablePattern,
       String[] types)
       throws SQLException {
-    try (ResultSet tables = md.getTables(catalogPattern, schemaPattern, tablePattern, types)) {
+    try (var tables = md.getTables(catalogPattern, schemaPattern, tablePattern, types)) {
       while (tables.next()) {
         handleTable(md, tables);
       }
@@ -405,17 +407,17 @@ public class MetaDataExporter {
 
   private void handleColumn(EntityType classModel, String tableName, ResultSet columns)
       throws SQLException {
-    String columnName = normalize(columns.getString("COLUMN_NAME"));
-    String normalizedColumnName = namingStrategy.normalizeColumnName(columnName);
-    int columnType = columns.getInt("DATA_TYPE");
-    String typeName = columns.getString("TYPE_NAME");
-    Number columnSize = (Number) columns.getObject("COLUMN_SIZE");
-    Number columnDigits = (Number) columns.getObject("DECIMAL_DIGITS");
-    int columnIndex = columns.getInt("ORDINAL_POSITION");
-    int nullable = columns.getInt("NULLABLE");
-    String columnDefaultValue = columns.getString("COLUMN_DEF");
+    var columnName = normalize(columns.getString("COLUMN_NAME"));
+    var normalizedColumnName = namingStrategy.normalizeColumnName(columnName);
+    var columnType = columns.getInt("DATA_TYPE");
+    var typeName = columns.getString("TYPE_NAME");
+    var columnSize = (Number) columns.getObject("COLUMN_SIZE");
+    var columnDigits = (Number) columns.getObject("DECIMAL_DIGITS");
+    var columnIndex = columns.getInt("ORDINAL_POSITION");
+    var nullable = columns.getInt("NULLABLE");
+    var columnDefaultValue = columns.getString("COLUMN_DEF");
 
-    String propertyName = namingStrategy.getPropertyName(normalizedColumnName, classModel);
+    var propertyName = namingStrategy.getPropertyName(normalizedColumnName, classModel);
     Class<?> clazz =
         configuration.getJavaType(
             columnType,
@@ -427,15 +429,15 @@ public class MetaDataExporter {
     if (clazz == null) {
       clazz = Object.class;
     }
-    TypeCategory fieldType = TypeCategory.get(clazz.getName());
+    var fieldType = TypeCategory.get(clazz.getName());
     if (Number.class.isAssignableFrom(clazz)) {
       fieldType = TypeCategory.NUMERIC;
     } else if (Enum.class.isAssignableFrom(clazz)) {
       fieldType = TypeCategory.ENUM;
     }
     Type typeModel = new ClassType(fieldType, clazz);
-    Property property = createProperty(classModel, normalizedColumnName, propertyName, typeModel);
-    ColumnMetadata column =
+    var property = createProperty(classModel, normalizedColumnName, propertyName, typeModel);
+    var column =
         ColumnMetadata.named(normalizedColumnName).ofType(columnType).withIndex(columnIndex);
     if (nullable == DatabaseMetaData.columnNoNulls) {
       column = column.notNull();
@@ -455,7 +457,7 @@ public class MetaDataExporter {
       if (nullable == DatabaseMetaData.columnNoNulls && columnDefaultValue == null) {
         property.addAnnotation(new NotNullImpl());
       }
-      int size = columns.getInt("COLUMN_SIZE");
+      var size = columns.getInt("COLUMN_SIZE");
       if (size > 0 && clazz.equals(String.class)) {
         property.addAnnotation(new SizeImpl(0, size));
       }
@@ -464,27 +466,26 @@ public class MetaDataExporter {
   }
 
   private void handleTable(DatabaseMetaData md, ResultSet tables) throws SQLException {
-    String catalog = tables.getString("TABLE_CAT");
-    String schema = tables.getString("TABLE_SCHEM");
-    String schemaName = normalize(tables.getString("TABLE_SCHEM"));
-    String tableName = normalize(tables.getString("TABLE_NAME"));
+    var catalog = tables.getString("TABLE_CAT");
+    var schema = tables.getString("TABLE_SCHEM");
+    var schemaName = normalize(tables.getString("TABLE_SCHEM"));
+    var tableName = normalize(tables.getString("TABLE_NAME"));
 
-    String normalizedSchemaName = namingStrategy.normalizeSchemaName(schemaName);
-    String normalizedTableName = namingStrategy.normalizeTableName(tableName);
+    var normalizedSchemaName = namingStrategy.normalizeSchemaName(schemaName);
+    var normalizedTableName = namingStrategy.normalizeTableName(tableName);
 
-    SchemaAndTable schemaAndTable = new SchemaAndTable(normalizedSchemaName, normalizedTableName);
+    var schemaAndTable = new SchemaAndTable(normalizedSchemaName, normalizedTableName);
 
     if (!namingStrategy.shouldGenerateClass(schemaAndTable)) {
       return;
     }
 
-    String className = namingStrategy.getClassName(schemaAndTable);
-    EntityType classModel = createEntityType(schemaAndTable, className);
+    var className = namingStrategy.getClassName(schemaAndTable);
+    var classModel = createEntityType(schemaAndTable, className);
 
     if (config.isExportPrimaryKeys()) {
       // collect primary keys
-      Map<String, PrimaryKeyData> primaryKeyData =
-          keyDataFactory.getPrimaryKeys(md, catalog, schema, tableName);
+      var primaryKeyData = keyDataFactory.getPrimaryKeys(md, catalog, schema, tableName);
       if (!primaryKeyData.isEmpty()) {
         classModel.getData().put(PrimaryKeyData.class, primaryKeyData.values());
       }
@@ -493,10 +494,9 @@ public class MetaDataExporter {
     if (config.isExportForeignKeys()) {
       if (config.isExportDirectForeignKeys()) {
         // collect foreign keys
-        Map<String, ForeignKeyData> foreignKeyData =
-            keyDataFactory.getImportedKeys(md, catalog, schema, tableName);
+        var foreignKeyData = keyDataFactory.getImportedKeys(md, catalog, schema, tableName);
         if (!foreignKeyData.isEmpty()) {
-          Collection<ForeignKeyData> foreignKeysToGenerate = new LinkedHashSet<ForeignKeyData>();
+          Collection<ForeignKeyData> foreignKeysToGenerate = new LinkedHashSet<>();
           for (ForeignKeyData fkd : foreignKeyData.values()) {
             if (namingStrategy.shouldGenerateForeignKey(schemaAndTable, fkd)) {
               foreignKeysToGenerate.add(fkd);
@@ -511,8 +511,7 @@ public class MetaDataExporter {
 
       if (config.isExportInverseForeignKeys()) {
         // collect inverse foreign keys
-        Map<String, InverseForeignKeyData> inverseForeignKeyData =
-            keyDataFactory.getExportedKeys(md, catalog, schema, tableName);
+        var inverseForeignKeyData = keyDataFactory.getExportedKeys(md, catalog, schema, tableName);
         if (!inverseForeignKeyData.isEmpty()) {
           classModel.getData().put(InverseForeignKeyData.class, inverseForeignKeyData.values());
         }
@@ -520,7 +519,7 @@ public class MetaDataExporter {
     }
 
     // collect columns
-    try (ResultSet columns = md.getColumns(catalog, schema, tableName.replace("/", "//"), null)) {
+    try (var columns = md.getColumns(catalog, schema, tableName.replace("/", "//"), null)) {
       while (columns.next()) {
         handleColumn(classModel, tableName, columns);
       }
@@ -542,11 +541,11 @@ public class MetaDataExporter {
 
   private void serialize(EntityType type, SchemaAndTable schemaAndTable) {
     try {
-      String fileSuffix = config.isCreateScalaSources() ? ".scala" : ".java";
+      var fileSuffix = config.isCreateScalaSources() ? ".scala" : ".java";
 
       if (beanSerializer != null) {
-        String packageName = normalizePackage(beanPackageName, schemaAndTable);
-        String path = packageName.replace('.', '/') + "/" + type.getSimpleName() + fileSuffix;
+        var packageName = normalizePackage(beanPackageName, schemaAndTable);
+        var path = packageName.replace('.', '/') + "/" + type.getSimpleName() + fileSuffix;
         write(
             beanSerializer,
             new File(
@@ -556,11 +555,11 @@ public class MetaDataExporter {
                 path),
             type);
 
-        String otherPath = entityToWrapped.get(type).getFullName().replace('.', '/') + fileSuffix;
+        var otherPath = entityToWrapped.get(type).getFullName().replace('.', '/') + fileSuffix;
         write(serializer, new File(config.getTargetFolder(), otherPath), type);
       } else {
-        String packageName = normalizePackage(module.getPackageName(), schemaAndTable);
-        String path = packageName.replace('.', '/') + "/" + type.getSimpleName() + fileSuffix;
+        var packageName = normalizePackage(module.getPackageName(), schemaAndTable);
+        var path = packageName.replace('.', '/') + "/" + type.getSimpleName() + fileSuffix;
         write(serializer, new File(config.getTargetFolder(), path), type);
       }
 
@@ -576,15 +575,15 @@ public class MetaDataExporter {
               + targetFile.getPath()
               + ", please check your configuration");
     }
-    StringWriter w = new StringWriter();
-    CodeWriter writer = config.isCreateScalaSources() ? new ScalaWriter(w) : new JavaWriter(w);
+    var w = new StringWriter();
+    var writer = config.isCreateScalaSources() ? new ScalaWriter(w) : new JavaWriter(w);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, writer);
 
     // conditional creation
-    boolean generate = true;
-    byte[] bytes = w.toString().getBytes(config.getSourceEncoding());
+    var generate = true;
+    var bytes = w.toString().getBytes(config.getSourceEncoding());
     if (targetFile.exists() && targetFile.length() == bytes.length) {
-      String str = new String(Files.readAllBytes(targetFile.toPath()), config.getSourceEncoding());
+      var str = new String(Files.readAllBytes(targetFile.toPath()), config.getSourceEncoding());
       if (str.equals(w.toString())) {
         generate = false;
       }

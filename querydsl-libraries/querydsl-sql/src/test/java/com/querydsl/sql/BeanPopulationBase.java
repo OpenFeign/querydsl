@@ -13,7 +13,14 @@
  */
 package com.querydsl.sql;
 
-import static com.querydsl.core.Target.*;
+import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.DB2;
+import static com.querydsl.core.Target.DERBY;
+import static com.querydsl.core.Target.ORACLE;
+import static com.querydsl.core.Target.POSTGRESQL;
+import static com.querydsl.core.Target.SQLITE;
+import static com.querydsl.core.Target.SQLSERVER;
+import static com.querydsl.core.Target.TERADATA;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
@@ -36,7 +43,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
   @Test
   public void custom_projection() {
     // Insert
-    Employee employee = new Employee();
+    var employee = new Employee();
     employee.setFirstname("John");
     Integer id = insert(e).populate(employee).executeWithKey(e.id);
     employee.setId(id);
@@ -47,7 +54,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
         .isEqualTo(1L);
 
     // Query
-    Employee smith =
+    var smith =
         extQuery()
             .from(e)
             .where(e.lastname.eq("S"))
@@ -67,7 +74,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
     assertThat(smith.getLastname()).isEqualTo("S");
 
     // Query into custom type
-    OtherEmployee other =
+    var other =
         extQuery()
             .from(e)
             .where(e.lastname.eq("S"))
@@ -83,7 +90,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
   @Test
   public void insert_update_query_and_delete() {
     // Insert
-    Employee employee = new Employee();
+    var employee = new Employee();
     employee.setFirstname("John");
     Integer id = insert(e).populate(employee).executeWithKey(e.id);
     assertThat(id).isNotNull();
@@ -95,7 +102,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
         .isEqualTo(1L);
 
     // Query
-    Employee smith = query().from(e).where(e.lastname.eq("S")).limit(1).select(e).fetchFirst();
+    var smith = query().from(e).where(e.lastname.eq("S")).limit(1).select(e).fetchFirst();
     assertThat(smith.getFirstname()).isEqualTo("John");
 
     // Delete (no changes needed)
@@ -104,7 +111,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
 
   @Test
   public void populate_with_beanMapper() {
-    Employee employee = new Employee();
+    var employee = new Employee();
     employee.setFirstname("John");
     insert(e).populate(employee, new BeanMapper()).execute();
   }

@@ -14,7 +14,6 @@ import com.querydsl.example.dto.Customer;
 import com.querydsl.example.dto.CustomerAddress;
 import com.querydsl.example.dto.Person;
 import com.querydsl.sql.SQLQueryFactory;
-import com.querydsl.sql.dml.SQLInsertClause;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +41,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
   @Override
   public Customer findById(long id) {
-    List<Customer> customers = findAll(customer.id.eq(id));
+    var customers = findAll(customer.id.eq(id));
     return customers.isEmpty() ? null : customers.get(0);
   }
 
@@ -59,7 +58,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
   @Override
   public Customer save(Customer c) {
-    Long id = c.getId();
+    var id = c.getId();
 
     if (id == null) {
       id =
@@ -81,7 +80,7 @@ public class CustomerDaoImpl implements CustomerDao {
       queryFactory.delete(customerAddress).where(customerAddress.customerId.eq(id)).execute();
     }
 
-    SQLInsertClause insert = queryFactory.insert(customerAddress);
+    var insert = queryFactory.insert(customerAddress);
     for (CustomerAddress ca : c.getAddresses()) {
       if (ca.getAddress().getId() == null) {
         ca.getAddress()

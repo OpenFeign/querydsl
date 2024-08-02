@@ -40,22 +40,22 @@ public class MongodbJoinTest {
   public void before() throws UnknownHostException, MongoException {
     ds.delete(ds.createQuery(User.class));
 
-    User friend1 = new User("Max", null);
-    User friend2 = new User("Jack", null);
-    User friend3 = new User("Bob", null);
+    var friend1 = new User("Max", null);
+    var friend2 = new User("Jack", null);
+    var friend3 = new User("Bob", null);
     ds.save(friend1, friend2, friend3);
 
-    User user1 = new User("Jane", null, friend1);
-    User user2 = new User("Mary", null, user1);
-    User user3 = new User("Ann", null, friend3);
+    var user1 = new User("Jane", null, friend1);
+    var user2 = new User("Mary", null, user1);
+    var user3 = new User("Ann", null, friend3);
     ds.save(user1, user2, user3);
 
-    User user4 = new User("Mike", null);
+    var user4 = new User("Mike", null);
     user4.setFriend(user2);
     user4.setEnemy(user3);
     ds.save(user4);
 
-    User user5 = new User("Bart", null);
+    var user5 = new User("Bart", null);
     user5.addFriend(user2);
     user5.addFriend(user3);
     ds.save(user5);
@@ -258,7 +258,7 @@ public class MongodbJoinTest {
   }
 
   private MorphiaQuery<User> query() {
-    return new MorphiaQuery<User>(morphia, ds, user);
+    return new MorphiaQuery<>(morphia, ds, user);
   }
 
   private MorphiaQuery<User> where(Predicate... e) {

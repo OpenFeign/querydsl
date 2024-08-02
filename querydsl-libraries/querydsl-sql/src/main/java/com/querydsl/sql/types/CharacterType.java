@@ -35,7 +35,7 @@ public class CharacterType extends AbstractType<Character> {
 
   @Override
   public Character getValue(ResultSet rs, int startIndex) throws SQLException {
-    String str = rs.getString(startIndex);
+    var str = rs.getString(startIndex);
     return str != null ? str.charAt(0) : null;
   }
 

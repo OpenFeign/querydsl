@@ -40,7 +40,7 @@ public class SQLTemplatesRegistry {
    * @throws SQLException
    */
   public SQLTemplates.Builder getBuilder(DatabaseMetaData md) throws SQLException {
-    String name = md.getDatabaseProductName().toLowerCase();
+    var name = md.getDatabaseProductName().toLowerCase();
     if (name.equals("h2")) {
       return H2Templates.builder();
     } else if (name.equals("mysql")) {

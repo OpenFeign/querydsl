@@ -21,7 +21,6 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -81,9 +80,9 @@ public final class ConstructorUtils {
   public static Class<?>[] getConstructorParameters(Class<?> type, Class<?>[] givenTypes) {
     next_constructor:
     for (Constructor<?> constructor : type.getConstructors()) {
-      int matches = 0;
-      Class<?>[] parameters = constructor.getParameterTypes();
-      Iterator<Class<?>> parameterIterator = Arrays.asList(parameters).iterator();
+      var matches = 0;
+      var parameters = constructor.getParameterTypes();
+      var parameterIterator = Arrays.asList(parameters).iterator();
       if (!isEmpty(givenTypes) && !isEmpty(parameters)) {
         Class<?> parameter = null;
         for (Class<?> argument : givenTypes) {
@@ -183,18 +182,18 @@ public final class ConstructorUtils {
       if (isEmpty(args)) {
         return args;
       }
-      int current = 0;
+      var current = 0;
 
       // constructor args
-      Object[] cargs = new Object[paramTypes.length];
-      for (int i = 0; i < cargs.length - 1; i++) {
+      var cargs = new Object[paramTypes.length];
+      for (var i = 0; i < cargs.length - 1; i++) {
         set(cargs, i, args[current++]);
       }
       // array with vargs
-      int size = args.length - cargs.length + 1;
-      Object vargs = Array.newInstance(componentType, size);
+      var size = args.length - cargs.length + 1;
+      var vargs = Array.newInstance(componentType, size);
       cargs[cargs.length - 1] = vargs;
-      for (int i = 0; i < Array.getLength(vargs); i++) {
+      for (var i = 0; i < Array.getLength(vargs); i++) {
         set(vargs, i, args[current++]);
       }
       return cargs;
@@ -213,8 +212,8 @@ public final class ConstructorUtils {
     PrimitiveTransformer(Constructor<?> constructor) {
       super(constructor);
       Set<Integer> builder = new TreeSet<>();
-      Class<?>[] parameterTypes = constructor.getParameterTypes();
-      for (int location = 0; location < parameterTypes.length; location++) {
+      var parameterTypes = constructor.getParameterTypes();
+      for (var location = 0; location < parameterTypes.length; location++) {
         Class<?> parameterType = parameterTypes[location];
 
         if (parameterType.isPrimitive()) {
@@ -263,7 +262,7 @@ public final class ConstructorUtils {
       if (isEmpty(args)) {
         return args;
       }
-      for (int i = paramTypes.length - 1; i < args.length; i++) {
+      for (var i = paramTypes.length - 1; i < args.length; i++) {
         if (args[i] == null) {
           args[i] = defaultInstance;
         }

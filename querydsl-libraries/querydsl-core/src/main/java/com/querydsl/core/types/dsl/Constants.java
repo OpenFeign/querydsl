@@ -20,7 +20,7 @@ import java.util.Set;
 final class Constants {
 
   private static final Set<Class<?>> typedClasses =
-      new HashSet<Class<?>>(
+      new HashSet<>(
           Arrays.<Class<?>>asList(
               ArrayPath.class,
               PathBuilder.class,

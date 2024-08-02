@@ -17,7 +17,11 @@ import static com.querydsl.sql.SQLExpressions.select;
 import static com.querydsl.sql.SQLExpressions.union;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.Wildcard;
@@ -34,14 +38,17 @@ public class SQLSubQueryTest {
   public void unknownOperator() {
     Operator op =
         new Operator() {
+          @Override
           public String name() {
             return "unknownfn";
           }
 
+          @Override
           public String toString() {
             return name();
           }
 
+          @Override
           public Class<?> getType() {
             return Object.class;
           }
@@ -64,11 +71,11 @@ public class SQLSubQueryTest {
 
   @Test
   public void list_entity() {
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee2 = new QEmployee("employee2");
     Expression<?> expr =
         select(employee, employee2.id).from(employee).innerJoin(employee.superiorIdKey, employee2);
 
-    SQLSerializer serializer = new SQLSerializer(new Configuration(SQLTemplates.DEFAULT));
+    var serializer = new SQLSerializer(new Configuration(SQLTemplates.DEFAULT));
     serializer.handle(expr);
 
     assertThat(serializer.toString())
@@ -118,9 +125,9 @@ on EMPLOYEE.SUPERIOR_ID = employee2.ID)\
   @Test
   public void complex() {
     // related to #584795
-    QSurvey survey = new QSurvey("survey");
-    QEmployee emp1 = new QEmployee("emp1");
-    QEmployee emp2 = new QEmployee("emp2");
+    var survey = new QSurvey("survey");
+    var emp1 = new QEmployee("emp1");
+    var emp2 = new QEmployee("emp2");
     SubQueryExpression<?> subQuery =
         select(survey.id, emp2.firstname)
             .from(survey)
@@ -136,7 +143,7 @@ on EMPLOYEE.SUPERIOR_ID = employee2.ID)\
   public void validate() {
     NumberPath<Long> operatorTotalPermits =
         Expressions.numberPath(Long.class, "operator_total_permits");
-    QSurvey survey = new QSurvey("survey");
+    var survey = new QSurvey("survey");
 
     // select survey.name, count(*) as operator_total_permits
     // from survey
@@ -160,7 +167,7 @@ on EMPLOYEE.SUPERIOR_ID = employee2.ID)\
   @SuppressWarnings("unchecked")
   @Test
   public void union1() {
-    QSurvey survey = QSurvey.survey;
+    var survey = QSurvey.survey;
     SubQueryExpression<Integer> q1 = select(survey.id).from(survey);
     SubQueryExpression<Integer> q2 = select(survey.id).from(survey);
     union(q1, q2);
@@ -170,11 +177,11 @@ on EMPLOYEE.SUPERIOR_ID = employee2.ID)\
   @SuppressWarnings("unchecked")
   @Test
   public void union1_with() {
-    QSurvey survey1 = new QSurvey("survey1");
-    QSurvey survey2 = new QSurvey("survey2");
-    QSurvey survey3 = new QSurvey("survey3");
+    var survey1 = new QSurvey("survey1");
+    var survey2 = new QSurvey("survey2");
+    var survey3 = new QSurvey("survey3");
 
-    SQLQuery<Void> query = new SQLQuery<Void>();
+    var query = new SQLQuery<>();
     query.with(survey1, select(survey1.all()).from(survey1));
     query.union(select(survey2.all()).from(survey2), select(survey3.all()).from(survey3));
 

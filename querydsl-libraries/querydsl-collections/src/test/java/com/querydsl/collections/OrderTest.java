@@ -58,7 +58,7 @@ public class OrderTest extends AbstractQueryTest {
   public void with_count() {
     CollQuery<?> q = new CollQuery<Void>();
     q.from(cat, cats);
-    long size = q.distinct().fetchCount();
+    var size = q.distinct().fetchCount();
     assertThat(size > 0).isTrue();
     q.offset(0).limit(10);
     q.orderBy(cat.name.asc());
@@ -68,9 +68,9 @@ public class OrderTest extends AbstractQueryTest {
 
   @Test
   public void with_null() {
-    Cat unknown = new Cat();
-    Cat bob = new Cat("Bob");
-    Cat alex = new Cat("Alex");
+    var unknown = new Cat();
+    var bob = new Cat("Bob");
+    var alex = new Cat("Alex");
     List<Cat> cats = Arrays.asList(alex, unknown, bob);
     assertThat(query().from(cat, cats).orderBy(cat.name.asc()).select(cat).fetch())
         .isEqualTo(Arrays.asList(unknown, alex, bob));
@@ -80,9 +80,9 @@ public class OrderTest extends AbstractQueryTest {
 
   @Test
   public void with_nulls_last() {
-    Cat unknown = new Cat();
-    Cat bob = new Cat("Bob");
-    Cat alex = new Cat("Alex");
+    var unknown = new Cat();
+    var bob = new Cat("Bob");
+    var alex = new Cat("Alex");
     List<Cat> cats = Arrays.asList(alex, unknown, bob);
     assertThat(
             query()

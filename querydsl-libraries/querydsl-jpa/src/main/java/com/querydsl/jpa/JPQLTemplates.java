@@ -220,7 +220,7 @@ public class JPQLTemplates extends Templates {
   }
 
   private String escapeLiteral(String str) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     for (char ch : str.toCharArray()) {
       if (ch == '\n') {
         builder.append("\\n");

@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.StringExpression;
-import java.lang.reflect.Field;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -37,7 +36,7 @@ public class PathMetadataTest {
   @SuppressWarnings("unchecked")
   @Test
   public void test() throws Exception {
-    Field field = ConstantImpl.class.getDeclaredField("STRINGS");
+    var field = ConstantImpl.class.getDeclaredField("STRINGS");
     field.setAccessible(true);
     Map<String, StringExpression> cache = (Map) field.get(null);
     System.out.println(cache.size() + " entries in ConstantImpl string cache");

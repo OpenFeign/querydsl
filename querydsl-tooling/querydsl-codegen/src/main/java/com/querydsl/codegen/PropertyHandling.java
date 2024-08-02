@@ -54,8 +54,8 @@ public enum PropertyHandling {
   JDO {
     @Override
     public Config getConfig(Class<?> type) {
-      boolean fields = false;
-      boolean methods = false;
+      var fields = false;
+      var methods = false;
       for (Field field : type.getDeclaredFields()) {
         fields |= hasAnnotations(field, "javax.jdo.annotations.");
       }
@@ -69,8 +69,8 @@ public enum PropertyHandling {
   JPA {
     @Override
     public Config getConfig(Class<?> type) {
-      boolean fields = false;
-      boolean methods = false;
+      var fields = false;
+      var methods = false;
       for (Field field : type.getDeclaredFields()) {
         fields |= hasAnnotations(field, "jakarta.persistence.");
       }

@@ -19,9 +19,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.alias.Alias;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryTransient;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadataFactory;
+import com.querydsl.core.types.Templates;
+import com.querydsl.core.types.ToStringVisitor;
 import com.querydsl.core.util.Annotations;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -72,8 +75,8 @@ public class PathTest {
 
   @Test
   public void getAnnotatedElement() {
-    Entity entity = Alias.alias(Entity.class);
-    AnnotatedElement element = $(entity).getAnnotatedElement();
+    var entity = Alias.alias(Entity.class);
+    var element = $(entity).getAnnotatedElement();
 
     // type
     assertThat(element).isEqualTo(Entity.class);
@@ -81,11 +84,11 @@ public class PathTest {
 
   @Test
   public void getAnnotatedElement_for_property() {
-    Entity entity = Alias.alias(Entity.class);
-    AnnotatedElement property1 = $(entity.getProperty1()).getAnnotatedElement();
-    AnnotatedElement property2 = $(entity.getProperty2()).getAnnotatedElement();
-    AnnotatedElement property3 = $(entity.getProperty3()).getAnnotatedElement();
-    AnnotatedElement property4 = $(entity.getProperty4()).getAnnotatedElement();
+    var entity = Alias.alias(Entity.class);
+    var property1 = $(entity.getProperty1()).getAnnotatedElement();
+    var property2 = $(entity.getProperty2()).getAnnotatedElement();
+    var property3 = $(entity.getProperty3()).getAnnotatedElement();
+    var property4 = $(entity.getProperty4()).getAnnotatedElement();
 
     // property (field)
     assertThat(property1.getClass()).isEqualTo(Annotations.class);
@@ -107,8 +110,8 @@ public class PathTest {
   public void equals() {
     assertThat(new StringPath("s")).isEqualTo(new StringPath("s"));
     assertThat(new BooleanPath("b")).isEqualTo(new BooleanPath("b"));
-    assertThat(new NumberPath<Integer>(Integer.class, "n"))
-        .isEqualTo(new NumberPath<Integer>(Integer.class, "n"));
+    assertThat(new NumberPath<>(Integer.class, "n"))
+        .isEqualTo(new NumberPath<>(Integer.class, "n"));
 
     assertThat(ExpressionUtils.path(String.class, "p"))
         .isEqualTo(new ArrayPath(String[].class, "p"));
@@ -129,7 +132,7 @@ public class PathTest {
   @Test
   public void various_properties() {
     Path<?> parent = ExpressionUtils.path(Object.class, "parent");
-    List<Path<?>> paths = new ArrayList<Path<?>>();
+    List<Path<?>> paths = new ArrayList<>();
     paths.add(new ArrayPath(String[].class, parent, "p"));
     paths.add(new BeanPath(Object.class, parent, "p"));
     paths.add(new BooleanPath(parent, "p"));
@@ -162,7 +165,7 @@ public class PathTest {
   @SuppressWarnings("unchecked")
   @Test
   public void various() {
-    List<Path<?>> paths = new ArrayList<Path<?>>();
+    List<Path<?>> paths = new ArrayList<>();
     paths.add(new ArrayPath(String[].class, "p"));
     paths.add(new BeanPath(Object.class, "p"));
     paths.add(new BooleanPath("p"));

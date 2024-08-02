@@ -7,7 +7,7 @@ public class SQLQueryTest {
 
   @Test(expected = IllegalStateException.class)
   public void noConnection() {
-    QSurvey survey = QSurvey.survey;
+    var survey = QSurvey.survey;
     SQLExpressions.select(survey.id).from(survey).fetch();
   }
 }

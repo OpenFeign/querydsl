@@ -109,11 +109,11 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
         logger.warning(
             "Fetchable#fetchCount() was computed in memory! See the Javadoc for"
                 + " AbstractJPAQuery#fetchCount for more details.");
-        Query query = createQuery(null, false);
+        var query = createQuery(null, false);
         return query.getResultList().size();
       }
 
-      Query query = createQuery(null, true);
+      var query = createQuery(null, true);
       return (Long) query.getSingleResult();
     } finally {
       reset();
@@ -130,10 +130,10 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   }
 
   protected Query createQuery(@Nullable QueryModifiers modifiers, boolean forCount) {
-    JPQLSerializer serializer = serialize(forCount);
-    String queryString = serializer.toString();
+    var serializer = serialize(forCount);
+    var queryString = serializer.toString();
     logQuery(queryString);
-    Query query = entityManager.createQuery(queryString);
+    var query = entityManager.createQuery(queryString);
     JPAUtil.setConstants(query, serializer.getConstants(), getMetadata().getParams());
     if (modifiers != null && modifiers.isRestricting()) {
       Integer limit = modifiers.getLimitAsInteger();
@@ -179,7 +179,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
     // TODO : use lazy fetch here?
     if (projection != null) {
       List<?> results = query.getResultList();
-      List<Object> rv = new ArrayList<Object>(results.size());
+      List<Object> rv = new ArrayList<>(results.size());
       for (Object o : results) {
         if (o != null) {
           if (!o.getClass().isArray()) {
@@ -205,7 +205,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   @Nullable
   private Object getSingleResult(Query query) {
     if (projection != null) {
-      Object result = query.getSingleResult();
+      var result = query.getSingleResult();
       if (result != null) {
         if (!result.getClass().isArray()) {
           result = new Object[] {result};
@@ -222,7 +222,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   @Override
   public CloseableIterator<T> iterate() {
     try {
-      Query query = createQuery();
+      var query = createQuery();
       return queryHandler.iterate(query, projection);
     } finally {
       reset();
@@ -232,7 +232,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   @Override
   public Stream<T> stream() {
     try {
-      Query query = createQuery();
+      var query = createQuery();
       return queryHandler.stream(query, projection);
     } finally {
       reset();
@@ -243,7 +243,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   @SuppressWarnings("unchecked")
   public List<T> fetch() {
     try {
-      Query query = createQuery();
+      var query = createQuery();
       return (List<T>) getResultList(query);
     } finally {
       reset();
@@ -283,32 +283,32 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   @Deprecated
   public QueryResults<T> fetchResults() {
     try {
-      QueryModifiers modifiers = getMetadata().getModifiers();
+      var modifiers = getMetadata().getModifiers();
       if (getMetadata().getGroupBy().size() > 1 || getMetadata().getHaving() != null) {
         logger.warning(
             "Fetchable#fetchResults() was computed in memory! See the Javadoc for"
                 + " AbstractJPAQuery#fetchResults for more details.");
-        Query query = createQuery(null, false);
+        var query = createQuery(null, false);
         @SuppressWarnings("unchecked")
         List<T> resultList = query.getResultList();
-        int offset = modifiers.getOffsetAsInteger() == null ? 0 : modifiers.getOffsetAsInteger();
-        int limit =
+        var offset = modifiers.getOffsetAsInteger() == null ? 0 : modifiers.getOffsetAsInteger();
+        var limit =
             modifiers.getLimitAsInteger() == null
                 ? resultList.size()
                 : modifiers.getLimitAsInteger();
-        return new QueryResults<T>(
+        return new QueryResults<>(
             resultList.subList(offset, Math.min(resultList.size(), offset + limit)),
             modifiers,
             resultList.size());
       }
 
-      Query countQuery = createQuery(null, true);
+      var countQuery = createQuery(null, true);
       long total = (Long) countQuery.getSingleResult();
       if (total > 0) {
-        Query query = createQuery(modifiers, false);
+        var query = createQuery(modifiers, false);
         @SuppressWarnings("unchecked")
-        List<T> list = (List<T>) getResultList(query);
-        return new QueryResults<T>(list, modifiers, total);
+        var list = (List<T>) getResultList(query);
+        return new QueryResults<>(list, modifiers, total);
       } else {
         return QueryResults.emptyResults();
       }
@@ -319,7 +319,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
 
   protected void logQuery(String queryString) {
     if (logger.isLoggable(Level.FINEST)) {
-      String normalizedQuery = queryString.replace('\n', ' ');
+      var normalizedQuery = queryString.replace('\n', ' ');
       logger.finest(normalizedQuery);
     }
   }
@@ -332,7 +332,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   @Override
   public T fetchOne() throws NonUniqueResultException {
     try {
-      Query query = createQuery(getMetadata().getModifiers(), false);
+      var query = createQuery(getMetadata().getModifiers(), false);
       return (T) getSingleResult(query);
     } catch (jakarta.persistence.NoResultException e) {
       logger.log(Level.FINEST, e.getMessage(), e);

@@ -40,7 +40,7 @@ public class ShortType extends AbstractType<Short> {
 
   @Override
   public Short getValue(ResultSet rs, int startIndex) throws SQLException {
-    short val = rs.getShort(startIndex);
+    var val = rs.getShort(startIndex);
     return rs.wasNull() ? null : val;
   }
 

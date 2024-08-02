@@ -28,7 +28,7 @@ public final class DateTimeConstant<D extends java.util.Date> extends DateTimeEx
   private static final long serialVersionUID = 4578416585568476532L;
 
   public static <D extends java.util.Date> DateTimeExpression<D> create(D date) {
-    return new DateTimeConstant<D>(date);
+    return new DateTimeConstant<>(date);
   }
 
   private final DateConstant<D> date;
@@ -38,8 +38,8 @@ public final class DateTimeConstant<D extends java.util.Date> extends DateTimeEx
   @SuppressWarnings("unchecked")
   public DateTimeConstant(D date) {
     super(ConstantImpl.create(date));
-    this.date = new DateConstant<D>(date);
-    this.time = new TimeConstant<D>(date);
+    this.date = new DateConstant<>(date);
+    this.time = new TimeConstant<>(date);
   }
 
   @Override

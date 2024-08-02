@@ -42,7 +42,7 @@ public class TrueFalseType extends AbstractType<Boolean> {
   @Override
   @Nullable
   public Boolean getValue(ResultSet rs, int startIndex) throws SQLException {
-    String str = rs.getString(startIndex);
+    var str = rs.getString(startIndex);
     return str != null ? str.equalsIgnoreCase("T") : null;
   }
 

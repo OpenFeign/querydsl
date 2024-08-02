@@ -4,14 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Operator;
 import com.querydsl.spatial.SpatialOps;
-import java.util.Map;
 import org.junit.Test;
 
 public class HibernateSpatialSupportTest {
 
   @Test
   public void allMapped() {
-    Map<Operator, String> mapping = HibernateSpatialSupport.getSpatialOps();
+    var mapping = HibernateSpatialSupport.getSpatialOps();
     for (Operator operator : SpatialOps.values()) {
       assertThat(mapping.containsKey(operator)).as(operator + " missing").isTrue();
     }
@@ -19,7 +18,7 @@ public class HibernateSpatialSupportTest {
 
   @Test
   public void checkOperationsCorrectlyMapped() {
-    Map<Operator, String> mapping = HibernateSpatialSupport.getSpatialOps();
+    var mapping = HibernateSpatialSupport.getSpatialOps();
 
     assertThat(mapping).containsEntry(SpatialOps.DIMENSION, "dimension({0})");
     assertThat(mapping).containsEntry(SpatialOps.GEOMETRY_TYPE, "geometrytype({0}, {1})");

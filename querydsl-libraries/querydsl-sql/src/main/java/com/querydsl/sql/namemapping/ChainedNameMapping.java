@@ -39,7 +39,7 @@ public class ChainedNameMapping implements NameMapping {
   @Override
   public Optional<String> getColumnOverride(SchemaAndTable key, String column) {
     for (NameMapping nameMapping : nameMappings) {
-      Optional<String> overriddenColumnName = nameMapping.getColumnOverride(key, column);
+      var overriddenColumnName = nameMapping.getColumnOverride(key, column);
       if (overriddenColumnName.isPresent()) {
         return overriddenColumnName;
       }
@@ -50,7 +50,7 @@ public class ChainedNameMapping implements NameMapping {
   @Override
   public Optional<SchemaAndTable> getOverride(SchemaAndTable key) {
     for (NameMapping nameMapping : nameMappings) {
-      Optional<SchemaAndTable> overridden = nameMapping.getOverride(key);
+      var overridden = nameMapping.getOverride(key);
       if (overridden.isPresent()) {
         return overridden;
       }

@@ -27,8 +27,8 @@ import org.junit.Test;
 public class RelationalFunctionCallTest {
 
   private static Expression[] serializeCollection(String... tokens) {
-    Expression[] rv = new Expression[tokens.length];
-    for (int i = 0; i < tokens.length; i++) {
+    var rv = new Expression[tokens.length];
+    for (var i = 0; i < tokens.length; i++) {
       rv[i] = ConstantImpl.create(tokens[i]);
     }
     return rv;
@@ -40,15 +40,15 @@ public class RelationalFunctionCallTest {
 
     TokenizeFunction(String alias, String... tokens) {
       super(String.class, "tokenize", serializeCollection(tokens));
-      this.alias = new PathBuilder<String>(String.class, alias);
+      this.alias = new PathBuilder<>(String.class, alias);
       this.token = Expressions.stringPath(this.alias, "token");
     }
   }
 
   @Test
   public void validation() {
-    QSurvey survey = QSurvey.survey;
-    TokenizeFunction func = new TokenizeFunction("func", "a", "b");
+    var survey = QSurvey.survey;
+    var func = new TokenizeFunction("func", "a", "b");
     SQLQuery<?> sub = selectOne().from(func.as(func.alias)).where(survey.name.like(func.token));
     System.out.println(sub);
   }
@@ -62,7 +62,7 @@ public class RelationalFunctionCallTest {
 
   @Test
   public void twoArgs() {
-    StringPath str = Expressions.stringPath("str");
+    var str = Expressions.stringPath("str");
     RelationalFunctionCall<String> functionCall =
         SQLExpressions.relationalFunctionCall(String.class, "getElements", "a", str);
     assertThat(functionCall.getTemplate()).hasToString("getElements({0}, {1})");

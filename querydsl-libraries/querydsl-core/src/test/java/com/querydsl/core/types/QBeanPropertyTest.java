@@ -45,29 +45,29 @@ public class QBeanPropertyTest {
 
   @Test
   public void field_access() {
-    PathBuilder<Entity> entity = new PathBuilder<Entity>(Entity.class, "entity");
-    QBean<Entity> beanProjection =
-        new QBean<Entity>(
+    var entity = new PathBuilder<>(Entity.class, "entity");
+    var beanProjection =
+        new QBean<>(
             Entity.class,
             true,
             entity.getNumber("cId", Integer.class),
             entity.getNumber("eId", Integer.class));
 
-    Entity bean = beanProjection.newInstance(1, 2);
+    var bean = beanProjection.newInstance(1, 2);
     assertThat(bean.getcId()).isEqualTo(Integer.valueOf(1));
     assertThat(bean.geteId()).isEqualTo(Integer.valueOf(2));
   }
 
   @Test
   public void property_access() {
-    PathBuilder<Entity> entity = new PathBuilder<Entity>(Entity.class, "entity");
-    QBean<Entity> beanProjection =
-        new QBean<Entity>(
+    var entity = new PathBuilder<>(Entity.class, "entity");
+    var beanProjection =
+        new QBean<>(
             Entity.class,
             entity.getNumber("cId", Integer.class),
             entity.getNumber("eId", Integer.class));
 
-    Entity bean = beanProjection.newInstance(1, 2);
+    var bean = beanProjection.newInstance(1, 2);
     assertThat(bean.getcId()).isEqualTo(Integer.valueOf(1));
     assertThat(bean.geteId()).isEqualTo(Integer.valueOf(2));
   }

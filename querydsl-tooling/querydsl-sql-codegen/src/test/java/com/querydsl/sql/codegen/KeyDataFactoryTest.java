@@ -16,13 +16,7 @@ package com.querydsl.sql.codegen;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.AbstractJDBCTest;
-import com.querydsl.sql.codegen.support.ForeignKeyData;
-import com.querydsl.sql.codegen.support.InverseForeignKeyData;
-import com.querydsl.sql.codegen.support.PrimaryKeyData;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.Map;
 import org.junit.Test;
 
 public class KeyDataFactoryTest extends AbstractJDBCTest {
@@ -54,29 +48,25 @@ public class KeyDataFactoryTest extends AbstractJDBCTest {
         CONSTRAINT FK_superior1 FOREIGN KEY (superior_id2) REFERENCES employee(id))\
         """);
 
-    KeyDataFactory keyDataFactory =
-        new KeyDataFactory(new DefaultNamingStrategy(), "Q", "", "test", false);
+    var keyDataFactory = new KeyDataFactory(new DefaultNamingStrategy(), "Q", "", "test", false);
 
-    DatabaseMetaData md = connection.getMetaData();
+    var md = connection.getMetaData();
 
     // EMPLOYEE
 
     // primary key
-    Map<String, PrimaryKeyData> primaryKeys =
-        keyDataFactory.getPrimaryKeys(md, null, null, "EMPLOYEE");
+    var primaryKeys = keyDataFactory.getPrimaryKeys(md, null, null, "EMPLOYEE");
     assertThat(primaryKeys).isNotEmpty();
     // inverse foreign keys sorted in abc
-    Map<String, InverseForeignKeyData> exportedKeys =
-        keyDataFactory.getExportedKeys(md, null, null, "EMPLOYEE");
+    var exportedKeys = keyDataFactory.getExportedKeys(md, null, null, "EMPLOYEE");
     assertThat(exportedKeys).hasSize(2);
-    Iterator<String> exportedKeysIterator = exportedKeys.keySet().iterator();
+    var exportedKeysIterator = exportedKeys.keySet().iterator();
     assertThat(exportedKeysIterator.next()).isEqualTo("FK_SUPERIOR1");
     assertThat(exportedKeysIterator.next()).isEqualTo("FK_SUPERIOR2");
     // foreign keys sorted in abc
-    Map<String, ForeignKeyData> importedKeys =
-        keyDataFactory.getImportedKeys(md, null, null, "EMPLOYEE");
+    var importedKeys = keyDataFactory.getImportedKeys(md, null, null, "EMPLOYEE");
     assertThat(importedKeys).hasSize(3);
-    Iterator<String> importedKeysIterator = importedKeys.keySet().iterator();
+    var importedKeysIterator = importedKeys.keySet().iterator();
     assertThat(importedKeysIterator.next()).isEqualTo("FK_SUPERIOR1");
     assertThat(importedKeysIterator.next()).isEqualTo("FK_SUPERIOR2");
     assertThat(importedKeysIterator.next()).isEqualTo("FK_SURVEY");

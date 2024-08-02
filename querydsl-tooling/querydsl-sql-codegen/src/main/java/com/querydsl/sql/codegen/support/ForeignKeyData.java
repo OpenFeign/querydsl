@@ -33,9 +33,9 @@ public class ForeignKeyData implements KeyData {
 
   @Nullable private final Type type;
 
-  private final List<String> foreignColumns = new ArrayList<String>();
+  private final List<String> foreignColumns = new ArrayList<>();
 
-  private final List<String> parentColumns = new ArrayList<String>();
+  private final List<String> parentColumns = new ArrayList<>();
 
   public ForeignKeyData(
       String name, @Nullable String schema, String parentTable, @Nullable Type type) {

@@ -15,7 +15,17 @@ package com.querydsl.sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.sql.types.*;
+import com.querydsl.sql.types.BlobType;
+import com.querydsl.sql.types.BooleanType;
+import com.querydsl.sql.types.ByteType;
+import com.querydsl.sql.types.CharacterType;
+import com.querydsl.sql.types.DoubleType;
+import com.querydsl.sql.types.FloatType;
+import com.querydsl.sql.types.InputStreamType;
+import com.querydsl.sql.types.IntegerType;
+import com.querydsl.sql.types.LongType;
+import com.querydsl.sql.types.ObjectType;
+import com.querydsl.sql.types.ShortType;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import org.junit.Test;

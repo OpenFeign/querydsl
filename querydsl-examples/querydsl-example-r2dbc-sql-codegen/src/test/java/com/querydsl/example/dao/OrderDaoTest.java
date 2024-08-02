@@ -6,7 +6,6 @@ import com.querydsl.example.dto.OrderProduct;
 import java.util.Set;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -16,14 +15,14 @@ public class OrderDaoTest extends AbstractDaoTest {
 
   @Test
   public void findAll() {
-    Flux<Order> setup = orderDao.findAll();
+    var setup = orderDao.findAll();
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
 
   @Test
   public void findById() {
-    Mono<Order> setup = orderDao.findById(testDataService.order1);
+    var setup = orderDao.findById(testDataService.order1);
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
@@ -38,14 +37,14 @@ public class OrderDaoTest extends AbstractDaoTest {
 
   @Test
   public void delete() {
-    OrderProduct orderProduct = new OrderProduct();
+    var orderProduct = new OrderProduct();
     orderProduct.setProductId(testDataService.product1);
     orderProduct.setQuantity(1);
 
     // FIXME
-    CustomerPaymentMethod paymentMethod = new CustomerPaymentMethod();
+    var paymentMethod = new CustomerPaymentMethod();
 
-    Order order = new Order();
+    var order = new Order();
     order.setCustomerPaymentMethod(paymentMethod);
     order.setOrderProducts(Set.of(orderProduct));
 

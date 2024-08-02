@@ -44,9 +44,9 @@ public abstract class AbstractQueryTest {
 
   protected List<Cat> cats = Arrays.asList(c1, c2, c3, c4);
 
-  protected List<Integer> ints = new ArrayList<Integer>();
+  protected List<Integer> ints = new ArrayList<>();
 
-  protected List<Integer> myInts = new ArrayList<Integer>();
+  protected List<Integer> myInts = new ArrayList<>();
 
   protected TestQuery<?> last;
 
@@ -57,8 +57,8 @@ public abstract class AbstractQueryTest {
   }
 
   protected List<Cat> cats(int size) {
-    List<Cat> cats = new ArrayList<Cat>(size);
-    for (int i = 0; i < size / 2; i++) {
+    List<Cat> cats = new ArrayList<>(size);
+    for (var i = 0; i < size / 2; i++) {
       cats.add(new Cat("Kate" + (i + 1)));
       cats.add(new Cat("Bob" + (i + 1)));
     }
@@ -72,7 +72,7 @@ public abstract class AbstractQueryTest {
 
   static class TestQuery<T> extends AbstractCollQuery<T, TestQuery<T>> {
 
-    List<Object> res = new ArrayList<Object>();
+    List<Object> res = new ArrayList<>();
 
     TestQuery() {
       super(new DefaultQueryMetadata(), DefaultQueryEngine.getDefault());
@@ -80,7 +80,7 @@ public abstract class AbstractQueryTest {
 
     @Override
     public List<T> fetch() {
-      List<T> rv = super.fetch();
+      var rv = super.fetch();
       res.addAll(rv);
       return rv;
     }
@@ -89,7 +89,7 @@ public abstract class AbstractQueryTest {
     public <U> TestQuery<U> select(Expression<U> expr) {
       queryMixin.setProjection(expr);
       @SuppressWarnings("unchecked") // This is the new projection's type
-      TestQuery<U> newType = (TestQuery<U>) queryMixin.getSelf();
+      var newType = (TestQuery<U>) queryMixin.getSelf();
       return newType;
     }
 
@@ -97,7 +97,7 @@ public abstract class AbstractQueryTest {
     public TestQuery<Tuple> select(Expression<?>... exprs) {
       queryMixin.setProjection(exprs);
       @SuppressWarnings("unchecked") // This is the new projection's type
-      TestQuery<Tuple> newType = (TestQuery<Tuple>) queryMixin.getSelf();
+      var newType = (TestQuery<Tuple>) queryMixin.getSelf();
       return newType;
     }
   }

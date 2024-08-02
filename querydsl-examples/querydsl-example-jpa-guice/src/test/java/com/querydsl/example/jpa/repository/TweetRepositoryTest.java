@@ -19,18 +19,18 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
 
   @Test
   public void save_and_find_by_id() {
-    User poster = new User("dr_frank");
+    var poster = new User("dr_frank");
     userRepository.save(poster);
 
-    String content = "I am alive! #YOLO";
-    Tweet tweet = new Tweet(poster, content, Collections.<User>emptyList(), null);
+    var content = "I am alive! #YOLO";
+    var tweet = new Tweet(poster, content, Collections.<User>emptyList(), null);
     repository.save(tweet);
     assertThat(repository.findById(tweet.getId()).getContent()).isEqualTo(content);
   }
 
   @Test
   public void find_list_by_predicate() {
-    User poster = new User("dr_frank");
+    var poster = new User("dr_frank");
     userRepository.save(poster);
 
     repository.save(new Tweet(poster, "It is a alive! #YOLO", Collections.<User>emptyList(), null));
@@ -41,7 +41,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
 
   @Test
   public void find_list_by_predicate_with_hibernate() {
-    User poster = new User("dr_frank");
+    var poster = new User("dr_frank");
     userRepository.save(poster);
 
     repository.save(new Tweet(poster, "It is a alive! #YOLO", Collections.<User>emptyList(), null));
@@ -57,9 +57,9 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     for (String username : usernames) {
       users.add(userRepository.save(new User(username)));
     }
-    User poster = new User("duplo");
+    var poster = new User("duplo");
     userRepository.save(poster);
-    for (int i = 0; i < 100; i++) {
+    for (var i = 0; i < 100; i++) {
       repository.save(new Tweet(poster, "spamming @dr_frank " + i, users.subList(0, 1), null));
     }
     assertThat(repository.findAll(tweet.mentions.contains(users.get(1)))).isEmpty();
@@ -78,9 +78,9 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
     for (String username : usernames) {
       users.add(userRepository.save(new User(username)));
     }
-    User poster = new User("duplo");
+    var poster = new User("duplo");
     userRepository.save(poster);
-    for (int i = 0; i < 100; i++) {
+    for (var i = 0; i < 100; i++) {
       repository.save(new Tweet(poster, "spamming @dr_frank " + i, users.subList(0, 1), null));
     }
     assertThat(repository.findAllWithHibernateQuery(tweet.mentions.contains(users.get(1))))

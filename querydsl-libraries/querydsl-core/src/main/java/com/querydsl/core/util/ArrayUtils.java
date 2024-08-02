@@ -24,7 +24,7 @@ public final class ArrayUtils {
 
   @SuppressWarnings("unchecked")
   public static <T> T[] combine(Class<T> type, T first, T second, T... rest) {
-    T[] array = (T[]) Array.newInstance(type, rest.length + 2);
+    var array = (T[]) Array.newInstance(type, rest.length + 2);
     array[0] = first;
     array[1] = second;
     System.arraycopy(rest, 0, array, 2, rest.length);
@@ -33,15 +33,15 @@ public final class ArrayUtils {
 
   @SuppressWarnings("unchecked")
   public static <T> T[] combine(Class<T> type, T first, T... rest) {
-    T[] array = (T[]) Array.newInstance(type, rest.length + 1);
+    var array = (T[]) Array.newInstance(type, rest.length + 1);
     array[0] = first;
     System.arraycopy(rest, 0, array, 1, rest.length);
     return array;
   }
 
   public static Object[] combine(int size, Object[]... arrays) {
-    int offset = 0;
-    Object[] target = new Object[size];
+    var offset = 0;
+    var target = new Object[size];
     for (Object[] arr : arrays) {
       System.arraycopy(arr, 0, target, offset, arr.length);
       offset += arr.length;
@@ -52,12 +52,12 @@ public final class ArrayUtils {
   // copied and modified from commons-lang-2.3
   // originally licensed under ASL 2.0
   public static Object[] subarray(Object[] array, int startIndexInclusive, int endIndexExclusive) {
-    int newSize = endIndexExclusive - startIndexInclusive;
+    var newSize = endIndexExclusive - startIndexInclusive;
     Class<?> type = array.getClass().getComponentType();
     if (newSize <= 0) {
       return (Object[]) Array.newInstance(type, 0);
     }
-    Object[] subarray = (Object[]) Array.newInstance(type, newSize);
+    var subarray = (Object[]) Array.newInstance(type, newSize);
     System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
     return subarray;
   }

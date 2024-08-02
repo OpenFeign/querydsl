@@ -13,7 +13,11 @@
  */
 package com.querydsl.codegen;
 
-import com.querydsl.codegen.utils.model.*;
+import com.querydsl.codegen.utils.model.ClassType;
+import com.querydsl.codegen.utils.model.SimpleType;
+import com.querydsl.codegen.utils.model.Type;
+import com.querydsl.codegen.utils.model.TypeCategory;
+import com.querydsl.codegen.utils.model.TypeExtends;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.TemplateExpression;
@@ -30,18 +34,15 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class TypeMappings {
 
-  private final Map<Type, Type> genericQueryTypes = new HashMap<Type, Type>();
+  private final Map<Type, Type> genericQueryTypes = new HashMap<>();
 
-  private final Map<String, Type> queryTypes = new HashMap<String, Type>();
+  private final Map<String, Type> queryTypes = new HashMap<>();
 
-  private final Map<TypeCategory, Type> exprTypes =
-      new EnumMap<TypeCategory, Type>(TypeCategory.class);
+  private final Map<TypeCategory, Type> exprTypes = new EnumMap<>(TypeCategory.class);
 
-  private final Map<TypeCategory, Type> pathTypes =
-      new EnumMap<TypeCategory, Type>(TypeCategory.class);
+  private final Map<TypeCategory, Type> pathTypes = new EnumMap<>(TypeCategory.class);
 
-  private final Map<TypeCategory, Type> templateTypes =
-      new EnumMap<TypeCategory, Type>(TypeCategory.class);
+  private final Map<TypeCategory, Type> templateTypes = new EnumMap<>(TypeCategory.class);
 
   public Type getTemplateType(Type type, EntityType model, boolean raw) {
     return getTemplateType(type, model, raw, false, false);
@@ -89,7 +90,7 @@ public abstract class TypeMappings {
       boolean raw,
       boolean rawParameters,
       boolean extend) {
-    Type exprType = types.get(type.getCategory());
+    var exprType = types.get(type.getCategory());
     return getQueryType(type, model, exprType, raw, rawParameters, extend);
   }
 
@@ -100,7 +101,7 @@ public abstract class TypeMappings {
       boolean raw,
       boolean rawParameters,
       boolean extend) {
-    TypeCategory category = type.getCategory();
+    var category = type.getCategory();
     if (raw && category != TypeCategory.ENTITY && category != TypeCategory.CUSTOM) {
       return exprType;
 

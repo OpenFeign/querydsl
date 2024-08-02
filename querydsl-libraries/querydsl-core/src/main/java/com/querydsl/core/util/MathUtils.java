@@ -29,8 +29,8 @@ public final class MathUtils {
 
   @SuppressWarnings("unchecked")
   public static <D extends Number> D result(D num1, Number num2, Operator operator) {
-    BigDecimal d1 = toBigDecimal(num1);
-    BigDecimal d2 = toBigDecimal(num2);
+    var d1 = toBigDecimal(num1);
+    var d2 = toBigDecimal(num2);
     if (operator == Ops.ADD) {
       return MathUtils.cast(d1.add(d2), (Class<D>) num1.getClass());
     } else if (operator == Ops.SUB) {
@@ -46,13 +46,13 @@ public final class MathUtils {
 
   @SuppressWarnings("unchecked")
   public static <D extends Number> D sum(D num1, Number num2) {
-    BigDecimal res = toBigDecimal(num1).add(toBigDecimal(num2));
+    var res = toBigDecimal(num1).add(toBigDecimal(num2));
     return MathUtils.cast(res, (Class<D>) num1.getClass());
   }
 
   @SuppressWarnings("unchecked")
   public static <D extends Number> D difference(D num1, Number num2) {
-    BigDecimal res = toBigDecimal(num1).subtract(toBigDecimal(num2));
+    var res = toBigDecimal(num1).subtract(toBigDecimal(num2));
     return MathUtils.cast(res, (Class<D>) num1.getClass());
   }
 

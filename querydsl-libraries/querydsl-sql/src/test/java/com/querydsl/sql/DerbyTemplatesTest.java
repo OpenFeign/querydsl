@@ -41,13 +41,13 @@ public class DerbyTemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   public void precedence() {
     // unary + and -
-    int p1 = getPrecedence(Ops.NEGATE);
+    var p1 = getPrecedence(Ops.NEGATE);
     // *, /, || (concatenation)
-    int p2 = getPrecedence(Ops.MULT, Ops.DIV);
+    var p2 = getPrecedence(Ops.MULT, Ops.DIV);
     // binary + and -
-    int p3 = getPrecedence(Ops.ADD, Ops.SUB);
+    var p3 = getPrecedence(Ops.ADD, Ops.SUB);
     // comparisons, quantified comparisons, EXISTS, IN, IS NULL, LIKE, BETWEEN, IS
-    int p4 =
+    var p4 =
         getPrecedence(
             Ops.EQ,
             Ops.NE,
@@ -62,11 +62,11 @@ public class DerbyTemplatesTest extends AbstractSQLTemplatesTest {
             Ops.BETWEEN,
             Ops.IS_NOT_NULL);
     // NOT
-    int p5 = getPrecedence(Ops.NOT);
+    var p5 = getPrecedence(Ops.NOT);
     // AND
-    int p6 = getPrecedence(Ops.AND);
+    var p6 = getPrecedence(Ops.AND);
     // OR
-    int p7 = getPrecedence(Ops.OR);
+    var p7 = getPrecedence(Ops.OR);
 
     assertThat(p1 < p2).isTrue();
     assertThat(p2 < p3).isTrue();

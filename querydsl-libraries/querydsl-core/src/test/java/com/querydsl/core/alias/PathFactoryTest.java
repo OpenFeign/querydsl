@@ -90,13 +90,13 @@ public class PathFactoryTest {
 
   @Test
   public void createBooleanPath() {
-    Path<Boolean> path = pathFactory.createBooleanPath(metadata);
+    var path = pathFactory.createBooleanPath(metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
   public void createStringPath() {
-    Path<String> path = pathFactory.createStringPath(metadata);
+    var path = pathFactory.createStringPath(metadata);
     assertThat(path).isNotNull();
   }
 

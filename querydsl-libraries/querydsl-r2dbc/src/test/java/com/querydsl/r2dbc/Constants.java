@@ -46,7 +46,7 @@ public final class Constants {
     localDate = LocalDate.of(2000, 2, 10);
     date = java.sql.Date.valueOf(localDate);
 
-    Calendar cal = Calendar.getInstance();
+    var cal = Calendar.getInstance();
     cal.set(1970, 0, 1, 3, 4);
     cal.set(Calendar.SECOND, 30);
     cal.set(Calendar.MILLISECOND, 0);

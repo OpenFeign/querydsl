@@ -15,7 +15,11 @@ package com.querydsl.sql;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.Fetchable;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
 import java.util.List;
 
 /**
@@ -39,6 +43,7 @@ public interface Union<RT> extends SubQueryExpression<RT>, Fetchable<RT> {
    *
    * @return result iterator
    */
+  @Override
   CloseableIterator<RT> iterate();
 
   /**

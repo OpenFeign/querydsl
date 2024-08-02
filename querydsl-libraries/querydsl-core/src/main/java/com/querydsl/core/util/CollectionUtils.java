@@ -154,12 +154,12 @@ public final class CollectionUtils {
   }
 
   public static <T> List<T> add(List<T> list, T element) {
-    final int size = list.size();
+    final var size = list.size();
     if (size == 0) {
       return Collections.singletonList(element);
     } else if (isUnmodifiableType(list.getClass())) {
       if (size == 1) {
-        final T val = list.get(0);
+        final var val = list.get(0);
         list = new ArrayList<>();
         list.add(val);
       } else {
@@ -179,12 +179,12 @@ public final class CollectionUtils {
   }
 
   public static <T> Set<T> add(Set<T> set, T element) {
-    final int size = set.size();
+    final var size = set.size();
     if (size == 0) {
       return Collections.singleton(element);
     } else if (isUnmodifiableType(set.getClass())) {
       if (size == 1) {
-        final T val = set.iterator().next();
+        final var val = set.iterator().next();
         set = new HashSet<>();
         set.add(val);
       } else {
@@ -204,12 +204,12 @@ public final class CollectionUtils {
   }
 
   public static <T> Set<T> addSorted(Set<T> set, T element) {
-    final int size = set.size();
+    final var size = set.size();
     if (size == 0) {
       return Collections.singleton(element);
     } else if (isUnmodifiableType(set.getClass())) {
       if (size == 1) {
-        final T val = set.iterator().next();
+        final var val = set.iterator().next();
         set = new LinkedHashSet<>();
         set.add(val);
       } else {
@@ -221,7 +221,7 @@ public final class CollectionUtils {
   }
 
   public static <T> Set<T> removeSorted(Set<T> set, T element) {
-    final int size = set.size();
+    final var size = set.size();
     if (size == 0 || (size == 1 && set.contains(element))) {
       return Collections.emptySet();
     } else {
@@ -239,7 +239,7 @@ public final class CollectionUtils {
   }
 
   public static <K, V> Map<K, V> put(Map<K, V> map, K key, V value) {
-    final int size = map.size();
+    final var size = map.size();
     if (size == 0) {
       return Collections.singletonMap(key, value);
     } else if (isUnmodifiableType(map.getClass())) {

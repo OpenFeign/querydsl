@@ -22,14 +22,14 @@ import org.junit.Test;
 
 public class NumberPathTest {
 
-  private NumberPath<Byte> bytePath = new NumberPath<Byte>(Byte.class, "bytePath");
+  private NumberPath<Byte> bytePath = new NumberPath<>(Byte.class, "bytePath");
 
   @SuppressWarnings("unchecked")
   @Test
   public void bytePath_in() {
     Operation<?> operation = (Operation<?>) bytePath.in(1, 2, 3);
-    Constant<List<Byte>> rightArg = (Constant<List<Byte>>) operation.getArg(1);
-    List<Byte> numbers = rightArg.getConstant();
+    var rightArg = (Constant<List<Byte>>) operation.getArg(1);
+    var numbers = rightArg.getConstant();
     assertThat(numbers.getFirst()).isEqualTo(Byte.valueOf((byte) 1));
     assertThat(numbers.get(1)).isEqualTo(Byte.valueOf((byte) 2));
     assertThat(numbers.get(2)).isEqualTo(Byte.valueOf((byte) 3));
@@ -39,8 +39,8 @@ public class NumberPathTest {
   @Test
   public void bytePath_notIn() {
     Operation<?> operation = (Operation<?>) bytePath.notIn(1, 2, 3);
-    Constant<List<Byte>> rightArg = (Constant<List<Byte>>) operation.getArg(1);
-    List<Byte> numbers = rightArg.getConstant();
+    var rightArg = (Constant<List<Byte>>) operation.getArg(1);
+    var numbers = rightArg.getConstant();
     assertThat(numbers.getFirst()).isEqualTo(Byte.valueOf((byte) 1));
     assertThat(numbers.get(1)).isEqualTo(Byte.valueOf((byte) 2));
     assertThat(numbers.get(2)).isEqualTo(Byte.valueOf((byte) 3));

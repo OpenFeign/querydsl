@@ -5,7 +5,12 @@ import com.querydsl.r2dbc.binding.BindTarget;
 import io.r2dbc.spi.Row;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +43,7 @@ public class JSR310InstantType extends AbstractJSR310DateTimeType<Instant> {
     try {
       return super.getValue(row, startIndex);
     } catch (Exception e) {
-      Timestamp timestamp = row.get(startIndex, Timestamp.class);
+      var timestamp = row.get(startIndex, Timestamp.class);
       return timestamp != null ? timestamp.toInstant().atOffset(ZoneOffset.UTC).toInstant() : null;
     }
   }

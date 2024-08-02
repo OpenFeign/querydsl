@@ -16,7 +16,6 @@ package com.querydsl.r2dbc.types;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mysema.commons.lang.Pair;
-import com.querydsl.r2dbc.binding.BindMarker;
 import com.querydsl.r2dbc.binding.BindMarkersFactory;
 import com.querydsl.r2dbc.binding.BindTarget;
 import com.querydsl.r2dbc.binding.StatementWrapper;
@@ -95,7 +94,7 @@ public class TypeTest implements InvocationHandler {
   @SuppressWarnings("unchecked")
   @Test
   public void test() throws MalformedURLException {
-    List<Pair<?, ?>> valueAndType = new ArrayList<Pair<?, ?>>();
+    List<Pair<?, ?>> valueAndType = new ArrayList<>();
     valueAndType.add(Pair.of(new BigDecimal("1"), new BigDecimalType()));
     valueAndType.add(Pair.of(new BigInteger("2"), new BigIntegerType()));
     valueAndType.add(Pair.of(new BigDecimal("1.0"), new BigDecimalAsDoubleType()));
@@ -127,21 +126,21 @@ public class TypeTest implements InvocationHandler {
     //        valueAndType.add(Pair.of(new LocalDate(), new LocalDateType()));
     //        valueAndType.add(Pair.of(new LocalTime(), new LocalTimeType()));
 
-    valueAndType.add(Pair.of(Gender.MALE, new EnumByNameType<Gender>(Gender.class)));
-    valueAndType.add(Pair.of(Gender.MALE, new EnumByOrdinalType<Gender>(Gender.class)));
+    valueAndType.add(Pair.of(Gender.MALE, new EnumByNameType<>(Gender.class)));
+    valueAndType.add(Pair.of(Gender.MALE, new EnumByOrdinalType<>(Gender.class)));
 
     valueAndType.add(Pair.of(EasyMock.createNiceMock(Blob.class), new BlobType()));
     valueAndType.add(Pair.of(EasyMock.createNiceMock(Clob.class), new ClobType()));
 
     valueAndType.add(Pair.of(UUID.randomUUID(), new UtilUUIDType()));
     //        valueAndType.add(Pair.of(UUID.randomUUID(), new UtilUUIDType(false)));
-    BindMarker bindMarker = BindMarkersFactory.anonymous("?").create().next();
+    var bindMarker = BindMarkersFactory.anonymous("?").create().next();
 
     for (Pair pair : valueAndType) {
       BindTarget bindTarget = new StatementWrapper(statement);
 
       value = null;
-      Type type = (Type) pair.getSecond();
+      var type = (Type) pair.getSecond();
       assertThat(type.getValue(resultSet, 0)).as(type.toString()).isNull();
       type.setValue(bindMarker, bindTarget, pair.getFirst());
       assertThat(type.getValue(resultSet, 0)).isEqualTo(pair.getFirst());

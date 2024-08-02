@@ -18,7 +18,6 @@ import com.querydsl.codegen.utils.Evaluator;
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.types.ArrayConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Operation;
@@ -70,7 +69,7 @@ public class DefaultQueryEngine implements QueryEngine {
 
   @Override
   public boolean exists(QueryMetadata metadata, Map<Expression<?>, Iterable<?>> iterables) {
-    QueryModifiers modifiers = metadata.getModifiers();
+    var modifiers = metadata.getModifiers();
     metadata.setLimit(1L);
     try {
       if (metadata.getJoins().size() == 1) {
@@ -94,7 +93,7 @@ public class DefaultQueryEngine implements QueryEngine {
   }
 
   private <T> List<T> distinct(List<T> list) {
-    List<T> rv = new ArrayList<T>(list.size());
+    List<T> rv = new ArrayList<>(list.size());
     if (!list.isEmpty() && list.get(0) != null && list.get(0).getClass().isArray()) {
       Set set = new HashSet(list.size());
       for (T o : list) {
@@ -116,9 +115,8 @@ public class DefaultQueryEngine implements QueryEngine {
   private List evaluateMultipleSources(
       QueryMetadata metadata, Map<Expression<?>, Iterable<?>> iterables, boolean count) {
     // from where
-    Evaluator<List<Object[]>> ev =
-        evaluatorFactory.createEvaluator(metadata, metadata.getJoins(), metadata.getWhere());
-    List<Iterable<?>> iterableList = new ArrayList<Iterable<?>>(metadata.getJoins().size());
+    var ev = evaluatorFactory.createEvaluator(metadata, metadata.getJoins(), metadata.getWhere());
+    List<Iterable<?>> iterableList = new ArrayList<>(metadata.getJoins().size());
     for (JoinExpression join : metadata.getJoins()) {
       if (join.getType() == JoinType.DEFAULT) {
         iterableList.add(iterables.get(join.getTarget()));
@@ -127,12 +125,12 @@ public class DefaultQueryEngine implements QueryEngine {
     List<?> list = ev.evaluate(iterableList.toArray());
 
     if (!count && !list.isEmpty()) {
-      List<Expression<?>> sources = new ArrayList<Expression<?>>(metadata.getJoins().size());
+      List<Expression<?>> sources = new ArrayList<>(metadata.getJoins().size());
       for (JoinExpression join : metadata.getJoins()) {
         if (join.getType() == JoinType.DEFAULT) {
           sources.add(join.getTarget());
         } else {
-          Operation target = (Operation) join.getTarget();
+          var target = (Operation) join.getTarget();
           sources.add(target.getArg(1));
         }
       }
@@ -212,14 +210,14 @@ public class DefaultQueryEngine implements QueryEngine {
     // create a projection for the order
     List<OrderSpecifier<?>> orderBy = metadata.getOrderBy();
     Expression<Object>[] orderByExpr = new Expression[orderBy.size()];
-    boolean[] directions = new boolean[orderBy.size()];
-    boolean[] nullsLast = new boolean[orderBy.size()];
-    for (int i = 0; i < orderBy.size(); i++) {
+    var directions = new boolean[orderBy.size()];
+    var nullsLast = new boolean[orderBy.size()];
+    for (var i = 0; i < orderBy.size(); i++) {
       orderByExpr[i] = (Expression) orderBy.get(i).getTarget();
       directions[i] = orderBy.get(i).getOrder() == Order.ASC;
       nullsLast[i] = orderBy.get(i).getNullHandling() == OrderSpecifier.NullHandling.NullsLast;
     }
-    Expression<?> expr = new ArrayConstructorExpression<Object>(Object[].class, orderByExpr);
+    Expression<?> expr = new ArrayConstructorExpression<>(Object[].class, orderByExpr);
     Evaluator orderEvaluator = evaluatorFactory.create(metadata, sources, expr);
     list.sort(new MultiComparator(orderEvaluator, directions, nullsLast));
   }

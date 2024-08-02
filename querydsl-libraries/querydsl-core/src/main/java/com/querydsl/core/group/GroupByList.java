@@ -13,7 +13,6 @@
  */
 package com.querydsl.core.group;
 
-import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -41,21 +40,21 @@ public class GroupByList<K, V> extends AbstractGroupByTransformer<K, List<V>> {
   public List<V> transform(FetchableQuery<?, ?> query) {
     // create groups
     FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-    boolean hasGroups = false;
+    var hasGroups = false;
     for (Expression<?> e : expr.getArgs()) {
       hasGroups |= e instanceof GroupExpression;
     }
     if (hasGroups) {
       expr = withoutGroupExpressions(expr);
     }
-    final CloseableIterator<Tuple> iter = query.select(expr).iterate();
+    final var iter = query.select(expr).iterate();
 
     List<V> list = new ArrayList<>();
     GroupImpl group = null;
     K groupId = null;
     while (iter.hasNext()) {
       @SuppressWarnings("unchecked") // This type is mandated by the key type
-      K[] row = (K[]) iter.next().toArray();
+      var row = (K[]) iter.next().toArray();
       if (group == null) {
         group = new GroupImpl(groupExpressions, maps);
         groupId = row[0];

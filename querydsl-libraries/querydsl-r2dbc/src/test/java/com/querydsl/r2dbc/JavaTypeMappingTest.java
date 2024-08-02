@@ -15,7 +15,17 @@ package com.querydsl.r2dbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.r2dbc.types.*;
+import com.querydsl.r2dbc.types.BlobType;
+import com.querydsl.r2dbc.types.BooleanType;
+import com.querydsl.r2dbc.types.ByteType;
+import com.querydsl.r2dbc.types.CharacterType;
+import com.querydsl.r2dbc.types.DoubleType;
+import com.querydsl.r2dbc.types.FloatType;
+import com.querydsl.r2dbc.types.InputStreamType;
+import com.querydsl.r2dbc.types.IntegerType;
+import com.querydsl.r2dbc.types.LongType;
+import com.querydsl.r2dbc.types.ObjectType;
+import com.querydsl.r2dbc.types.ShortType;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import org.junit.Test;

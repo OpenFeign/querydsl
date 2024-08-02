@@ -59,7 +59,7 @@ public final class ParamsVisitor implements Visitor<Void, QueryMetadata> {
 
   @Override
   public Void visit(SubQueryExpression<?> expr, QueryMetadata context) {
-    QueryMetadata md = expr.getMetadata();
+    var md = expr.getMetadata();
     for (Map.Entry<ParamExpression<?>, Object> entry : md.getParams().entrySet()) {
       context.setParam((ParamExpression) entry.getKey(), entry.getValue());
     }

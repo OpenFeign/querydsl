@@ -45,7 +45,7 @@ public class SQLServerQueryTest {
 
   @Test
   public void tableHints_multiple2() {
-    QSurvey survey2 = new QSurvey("survey2");
+    var survey2 = new QSurvey("survey2");
     SQLServerQuery<?> query = new SQLServerQuery<Void>(null, new SQLServerTemplates());
     query
         .from(survey)
@@ -63,8 +63,8 @@ public class SQLServerQueryTest {
 
   @Test
   public void join_tableHints_single() {
-    QEmployee employee1 = QEmployee.employee;
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee1 = QEmployee.employee;
+    var employee2 = new QEmployee("employee2");
     SQLServerQuery<?> query = new SQLServerQuery<Void>(null, new SQLServerTemplates());
     query
         .from(employee1)
@@ -83,8 +83,8 @@ public class SQLServerQueryTest {
 
   @Test
   public void join_tableHints_multiple() {
-    QEmployee employee1 = QEmployee.employee;
-    QEmployee employee2 = new QEmployee("employee2");
+    var employee1 = QEmployee.employee;
+    var employee2 = new QEmployee("employee2");
     SQLServerQuery<?> query = new SQLServerQuery<Void>(null, new SQLServerTemplates());
     query
         .from(employee1)

@@ -16,7 +16,11 @@ package com.querydsl.apt.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.ArrayPath;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.MapPath;
+import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.core.types.dsl.StringPath;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;

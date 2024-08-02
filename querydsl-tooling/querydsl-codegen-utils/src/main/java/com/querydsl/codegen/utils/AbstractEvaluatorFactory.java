@@ -31,7 +31,7 @@ import java.util.WeakHashMap;
  */
 public abstract class AbstractEvaluatorFactory implements EvaluatorFactory {
 
-  private final Map<String, Method> cache = new WeakHashMap<String, Method>();
+  private final Map<String, Method> cache = new WeakHashMap<>();
 
   protected ClassLoader loader;
 
@@ -72,15 +72,15 @@ public abstract class AbstractEvaluatorFactory implements EvaluatorFactory {
       Map<String, Object> constants)
       throws IOException {
     // create source
-    StringWriter writer = new StringWriter();
-    JavaWriter javaw = new JavaWriter(writer);
-    SimpleType idType = new SimpleType(id, "", id);
+    var writer = new StringWriter();
+    var javaw = new JavaWriter(writer);
+    var idType = new SimpleType(id, "", id);
     javaw.beginClass(idType, null);
-    Parameter[] params = new Parameter[names.length + constants.size()];
-    for (int i = 0; i < names.length; i++) {
+    var params = new Parameter[names.length + constants.size()];
+    for (var i = 0; i < names.length; i++) {
       params[i] = new Parameter(names[i], types[i]);
     }
-    int i = names.length;
+    var i = names.length;
     for (Map.Entry<String, Object> entry : constants.entrySet()) {
       Type type =
           new ClassType(TypeCategory.SIMPLE, ClassUtils.normalize(entry.getValue().getClass()));
@@ -101,8 +101,8 @@ public abstract class AbstractEvaluatorFactory implements EvaluatorFactory {
       String[] names,
       Class<?>[] classes,
       Map<String, Object> constants) {
-    Type[] types = new Type[classes.length];
-    for (int i = 0; i < types.length; i++) {
+    var types = new Type[classes.length];
+    for (var i = 0; i < types.length; i++) {
       types[i] = new ClassType(TypeCategory.SIMPLE, classes[i]);
     }
     return createEvaluator(
@@ -135,8 +135,8 @@ public abstract class AbstractEvaluatorFactory implements EvaluatorFactory {
       Class<?>[] classes,
       Map<String, Object> constants) {
     try {
-      final String id = toId(source, projection.getJavaClass(), types, constants.values());
-      Method method = cache.get(id);
+      final var id = toId(source, projection.getJavaClass(), types, constants.values());
+      var method = cache.get(id);
 
       if (method == null) {
         Class<?> clazz;
@@ -183,7 +183,7 @@ public abstract class AbstractEvaluatorFactory implements EvaluatorFactory {
 
   protected String toId(
       String source, Class<?> returnType, Type[] types, Collection<Object> constants) {
-    StringBuilder b = new StringBuilder(128);
+    var b = new StringBuilder(128);
     b.append("Q");
     b.append("_").append(source.hashCode());
     b.append("_").append(returnType.getName().hashCode());

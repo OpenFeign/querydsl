@@ -13,8 +13,23 @@
  */
 package com.querydsl.core;
 
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.CollectionExpression;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.MapExpression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.ArrayExpression;
+import com.querydsl.core.types.dsl.CollectionExpressionBase;
+import com.querydsl.core.types.dsl.ComparableExpression;
+import com.querydsl.core.types.dsl.DateExpression;
+import com.querydsl.core.types.dsl.DateTimeExpression;
+import com.querydsl.core.types.dsl.ListExpression;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.MapExpressionBase;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.TimeExpression;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,7 +53,7 @@ public class MatchingFiltersFactory {
       ArrayExpression<A[], A> other,
       A knownElement,
       A missingElement) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     //        rv.add(expr.isEmpty().not());
     if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.size().gt(0));
@@ -51,7 +66,7 @@ public class MatchingFiltersFactory {
       CollectionExpression<?, A> other,
       A knownElement,
       A missingElement) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     if (!module.equals(QuerydslModule.RDFBEAN)) {
       rv.add(expr.contains(knownElement));
       rv.add(expr.contains(missingElement).not());
@@ -64,7 +79,7 @@ public class MatchingFiltersFactory {
   @SuppressWarnings("unchecked")
   private <A extends Comparable> Collection<Predicate> comparable(
       ComparableExpression<A> expr, Expression<A> other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.add(expr.eq(other));
     rv.add(expr.goe(other));
     rv.add(expr.loe(other));
@@ -74,7 +89,7 @@ public class MatchingFiltersFactory {
 
   public Collection<Predicate> date(
       DateExpression<java.sql.Date> expr, DateExpression<java.sql.Date> other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>(comparable(expr, other));
+    var rv = new HashSet<>(comparable(expr, other));
     rv.add(expr.dayOfMonth().eq(other.dayOfMonth()));
 
     if (!target.equals(Target.DERBY)
@@ -104,7 +119,7 @@ public class MatchingFiltersFactory {
       DateExpression<java.sql.Date> expr,
       DateExpression<java.sql.Date> other,
       java.sql.Date knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(date(expr, other));
     rv.addAll(date(expr, DateConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
@@ -112,7 +127,7 @@ public class MatchingFiltersFactory {
 
   public Collection<Predicate> dateTime(
       DateTimeExpression<java.util.Date> expr, DateTimeExpression<java.util.Date> other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>(comparable(expr, other));
+    var rv = new HashSet<>(comparable(expr, other));
     rv.add(expr.milliSecond().eq(other.milliSecond()));
     rv.add(expr.second().eq(other.second()));
     rv.add(expr.minute().eq(other.minute()));
@@ -145,7 +160,7 @@ public class MatchingFiltersFactory {
       DateTimeExpression<java.util.Date> expr,
       DateTimeExpression<java.util.Date> other,
       java.util.Date knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(dateTime(expr, other));
     rv.addAll(dateTime(expr, DateTimeConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
@@ -163,7 +178,7 @@ public class MatchingFiltersFactory {
       V knownValue,
       K missingKey,
       V missingValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.add(expr.containsKey(knownKey));
     rv.add(expr.containsKey(missingKey).not());
     rv.add(expr.containsValue(knownValue));
@@ -176,7 +191,7 @@ public class MatchingFiltersFactory {
 
   public <A extends Number & Comparable<A>> Collection<Predicate> numeric(
       NumberExpression<A> expr, NumberExpression<A> other, A knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(numeric(expr, other));
     rv.addAll(numeric(expr, NumberConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
@@ -184,7 +199,7 @@ public class MatchingFiltersFactory {
 
   public <A extends Number & Comparable<A>> Collection<Predicate> numeric(
       NumberExpression<A> expr, NumberExpression<A> other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.add(expr.eq(other));
     rv.add(expr.goe(other));
     rv.add(expr.gt(other.subtract(1)));
@@ -197,7 +212,7 @@ public class MatchingFiltersFactory {
   }
 
   public Collection<Predicate> string(StringExpression expr, StringExpression other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     if (module != QuerydslModule.LUCENE) {
       rv.addAll(comparable(expr, other));
 
@@ -306,7 +321,7 @@ public class MatchingFiltersFactory {
 
   public Collection<Predicate> string(
       StringExpression expr, StringExpression other, String knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(string(expr, other));
     rv.addAll(string(expr, StringConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
@@ -314,7 +329,7 @@ public class MatchingFiltersFactory {
 
   public Collection<Predicate> time(
       TimeExpression<java.sql.Time> expr, TimeExpression<java.sql.Time> other) {
-    HashSet<Predicate> rv = new HashSet<Predicate>(comparable(expr, other));
+    var rv = new HashSet<>(comparable(expr, other));
     rv.add(expr.milliSecond().eq(other.milliSecond()));
     rv.add(expr.second().eq(other.second()));
     rv.add(expr.minute().eq(other.minute()));
@@ -326,7 +341,7 @@ public class MatchingFiltersFactory {
       TimeExpression<java.sql.Time> expr,
       TimeExpression<java.sql.Time> other,
       java.sql.Time knownValue) {
-    HashSet<Predicate> rv = new HashSet<Predicate>();
+    var rv = new HashSet<Predicate>();
     rv.addAll(time(expr, other));
     rv.addAll(time(expr, TimeConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);

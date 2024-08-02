@@ -1,7 +1,20 @@
 package com.querydsl.example.config;
 
-import com.querydsl.example.dao.*;
-import com.querydsl.example.dto.*;
+import com.querydsl.example.dao.CustomerDao;
+import com.querydsl.example.dao.OrderDao;
+import com.querydsl.example.dao.PersonDao;
+import com.querydsl.example.dao.ProductDao;
+import com.querydsl.example.dao.SupplierDao;
+import com.querydsl.example.dto.Address;
+import com.querydsl.example.dto.Customer;
+import com.querydsl.example.dto.CustomerAddress;
+import com.querydsl.example.dto.CustomerPaymentMethod;
+import com.querydsl.example.dto.Order;
+import com.querydsl.example.dto.OrderProduct;
+import com.querydsl.example.dto.Person;
+import com.querydsl.example.dto.Product;
+import com.querydsl.example.dto.ProductL10n;
+import com.querydsl.example.dto.Supplier;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,34 +34,34 @@ public class TestDataServiceImpl implements TestDataService {
   @Override
   public void addTestData() {
     // suppliers
-    Supplier supplier = new Supplier();
+    var supplier = new Supplier();
     supplier.setCode("acme");
     supplier.setName("ACME");
     supplierDao.save(supplier);
 
-    Supplier supplier2 = new Supplier();
+    var supplier2 = new Supplier();
     supplier2.setCode("bigs");
     supplier2.setName("BigS");
     supplierDao.save(supplier2);
 
     // products
-    Product product = new Product();
+    var product = new Product();
     product.setName("Screwdriver");
     product.setPrice(12.0);
     product.setSupplier(supplier);
 
-    ProductL10n l10nEn = new ProductL10n();
+    var l10nEn = new ProductL10n();
     l10nEn.setLang("en");
     l10nEn.setName("Screwdriver");
 
-    ProductL10n l10nDe = new ProductL10n();
+    var l10nDe = new ProductL10n();
     l10nDe.setLang("de");
     l10nDe.setName("Schraubenzieher");
 
-    product.setLocalizations(new HashSet<ProductL10n>(Arrays.asList(l10nEn, l10nDe)));
+    product.setLocalizations(new HashSet<>(Arrays.asList(l10nEn, l10nDe)));
     productDao.save(product);
 
-    Product product2 = new Product();
+    var product2 = new Product();
     product2.setName("Hammer");
     product2.setPrice(5.0);
     product2.setSupplier(supplier2);
@@ -61,55 +74,55 @@ public class TestDataServiceImpl implements TestDataService {
     productDao.save(product2);
 
     // persons
-    Person person = new Person();
+    var person = new Person();
     person.setFirstName("John");
     person.setLastName("Doe");
     person.setEmail("john.doe@aexample.com");
     personDao.save(person);
 
-    Person person2 = new Person();
+    var person2 = new Person();
     person2.setFirstName("Mary");
     person2.setLastName("Blue");
     person2.setEmail("mary.blue@example.com");
     personDao.save(person2);
 
     // customers
-    Address address = new Address();
+    var address = new Address();
     address.setStreet("Mainstreet 1");
     address.setZip("00100");
     address.setTown("Helsinki");
     address.setCountry("FI");
 
-    CustomerAddress customerAddress = new CustomerAddress();
+    var customerAddress = new CustomerAddress();
     customerAddress.setAddress(address);
     customerAddress.setAddressTypeCode("office");
     customerAddress.setFromDate(LocalDate.now());
 
-    Customer customer = new Customer();
+    var customer = new Customer();
     customer.setAddresses(Collections.singleton(customerAddress));
     customer.setContactPerson(person);
     customer.setName("SmallS");
     customerDao.save(customer);
 
-    Customer customer2 = new Customer();
+    var customer2 = new Customer();
     customer2.setAddresses(Collections.<CustomerAddress>emptySet());
     customer2.setContactPerson(person);
     customer2.setName("MediumM");
     customerDao.save(customer2);
 
     // orders
-    OrderProduct orderProduct = new OrderProduct();
+    var orderProduct = new OrderProduct();
     orderProduct.setComments("my comments");
     orderProduct.setProductId(product.getId());
     orderProduct.setQuantity(4);
 
-    CustomerPaymentMethod paymentMethod = new CustomerPaymentMethod();
+    var paymentMethod = new CustomerPaymentMethod();
     paymentMethod.setCardNumber("11111111111");
     paymentMethod.setCustomerId(customer.getId());
     paymentMethod.setFromDate(LocalDate.now());
     paymentMethod.setPaymentMethodCode("abc");
 
-    Order order = new Order();
+    var order = new Order();
     order.setCustomerPaymentMethod(paymentMethod);
     order.setOrderPlacedDate(LocalDate.now());
     order.setOrderProducts(Collections.singleton(orderProduct));

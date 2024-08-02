@@ -13,14 +13,22 @@
  */
 package com.querydsl.sql;
 
-import static com.querydsl.sql.SQLExpressions.*;
+import static com.querydsl.sql.SQLExpressions.select;
+import static com.querydsl.sql.SQLExpressions.selectOne;
+import static com.querydsl.sql.SQLExpressions.union;
+import static com.querydsl.sql.SQLExpressions.unionAll;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QEmployeeNoPK;
@@ -42,14 +50,14 @@ public class SQLSerializerTest {
 
   @Test
   public void count() {
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(employee.id.count().add(employee.id.countDistinct()));
     assertThat(serializer).hasToString("count(EMPLOYEE.ID) + count(distinct EMPLOYEE.ID)");
   }
 
   @Test
   public void countDistinct() {
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     SQLQuery<?> query = new SQLQuery<Void>();
     query.from(QEmployeeNoPK.employee);
     query.distinct();
@@ -66,8 +74,8 @@ from EMPLOYEE EMPLOYEE) internal\
 
   @Test
   public void countDistinct_postgreSQL() {
-    Configuration postgresql = new Configuration(new PostgreSQLTemplates());
-    SQLSerializer serializer = new SQLSerializer(postgresql);
+    var postgresql = new Configuration(new PostgreSQLTemplates());
+    var serializer = new SQLSerializer(postgresql);
     SQLQuery<?> query = new SQLQuery<Void>();
     query.from(QEmployeeNoPK.employee);
     query.distinct();
@@ -86,10 +94,10 @@ from EMPLOYEE EMPLOYEE) internal\
   public void dynamicQuery() {
     Path<Object> userPath = Expressions.path(Object.class, "user");
     NumberPath<Long> idPath = Expressions.numberPath(Long.class, userPath, "id");
-    StringPath usernamePath = Expressions.stringPath(userPath, "username");
+    var usernamePath = Expressions.stringPath(userPath, "username");
     Expression<?> sq = select(idPath, usernamePath).from(userPath).where(idPath.eq(1L));
 
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(sq);
     // USER is a reserved word in ANSI SQL 2008
     assertThat(serializer.toString())
@@ -103,12 +111,12 @@ from EMPLOYEE EMPLOYEE) internal\
 
   @Test
   public void dynamicQuery2() {
-    PathBuilder<Object> userPath = new PathBuilder<Object>(Object.class, "user");
+    var userPath = new PathBuilder<Object>(Object.class, "user");
     NumberPath<Long> idPath = userPath.getNumber("id", Long.class);
-    StringPath usernamePath = userPath.getString("username");
+    var usernamePath = userPath.getString("username");
     Expression<?> sq = select(idPath, usernamePath).from(userPath).where(idPath.eq(1L));
 
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(sq);
     // USER is a reserved word in ANSI SQL 2008
     assertThat(serializer.toString())
@@ -122,10 +130,10 @@ from EMPLOYEE EMPLOYEE) internal\
 
   @Test
   public void in() {
-    StringPath path = Expressions.stringPath("str");
+    var path = Expressions.stringPath("str");
     Expression<?> expr = ExpressionUtils.in(path, Arrays.asList("1", "2", "3"));
 
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(expr);
     assertThat(serializer.getConstantPaths()).isEqualTo(Arrays.asList(path, path, path));
     assertThat(serializer.getConstants()).hasSize(3);
@@ -135,9 +143,9 @@ from EMPLOYEE EMPLOYEE) internal\
   public void fullJoinWithoutCodeGeneration() {
     SQLQuery<?> sqlQuery = queryForMYSQLTemplate();
 
-    PathBuilder<Object> customerPath = new PathBuilder<Object>(Object.class, "customer");
-    PathBuilder<Object> deptPath = new PathBuilder<Object>(Object.class, "department");
-    Path<Object> deptAliasPath = new PathBuilder<Object>(Object.class, "d");
+    var customerPath = new PathBuilder<Object>(Object.class, "customer");
+    var deptPath = new PathBuilder<Object>(Object.class, "department");
+    Path<Object> deptAliasPath = new PathBuilder<>(Object.class, "d");
     sqlQuery = sqlQuery.from(customerPath.as("c"));
     NumberPath<Long> idPath = Expressions.numberPath(Long.class, deptAliasPath, "id");
 
@@ -151,9 +159,9 @@ from EMPLOYEE EMPLOYEE) internal\
   public void innerJoinWithoutCodeGeneration() {
     SQLQuery<?> sqlQuery = queryForMYSQLTemplate();
 
-    PathBuilder<Object> customerPath = new PathBuilder<Object>(Object.class, "customer");
-    PathBuilder<Object> deptPath = new PathBuilder<Object>(Object.class, "department");
-    Path<Object> deptAliasPath = new PathBuilder<Object>(Object.class, "d");
+    var customerPath = new PathBuilder<Object>(Object.class, "customer");
+    var deptPath = new PathBuilder<Object>(Object.class, "department");
+    Path<Object> deptAliasPath = new PathBuilder<>(Object.class, "d");
     sqlQuery = sqlQuery.from(customerPath.as("c"));
     NumberPath<Long> idPath = Expressions.numberPath(Long.class, deptAliasPath, "id");
 
@@ -167,9 +175,9 @@ from EMPLOYEE EMPLOYEE) internal\
   public void joinWithoutCodeGeneration() {
     SQLQuery<?> sqlQuery = queryForMYSQLTemplate();
 
-    PathBuilder<Object> customerPath = new PathBuilder<Object>(Object.class, "customer");
-    PathBuilder<Object> deptPath = new PathBuilder<Object>(Object.class, "department");
-    Path<Object> deptAliasPath = new PathBuilder<Object>(Object.class, "d");
+    var customerPath = new PathBuilder<Object>(Object.class, "customer");
+    var deptPath = new PathBuilder<Object>(Object.class, "department");
+    Path<Object> deptAliasPath = new PathBuilder<>(Object.class, "d");
     sqlQuery = sqlQuery.from(customerPath.as("c"));
     NumberPath<Long> idPath = Expressions.numberPath(Long.class, deptAliasPath, "id");
 
@@ -183,9 +191,9 @@ from EMPLOYEE EMPLOYEE) internal\
   public void leftJoinWithoutCodeGeneration() {
     SQLQuery<?> sqlQuery = queryForMYSQLTemplate();
 
-    PathBuilder<Object> customerPath = new PathBuilder<Object>(Object.class, "customer");
-    PathBuilder<Object> deptPath = new PathBuilder<Object>(Object.class, "department");
-    Path<Object> deptAliasPath = new PathBuilder<Object>(Object.class, "d");
+    var customerPath = new PathBuilder<Object>(Object.class, "customer");
+    var deptPath = new PathBuilder<Object>(Object.class, "department");
+    Path<Object> deptAliasPath = new PathBuilder<>(Object.class, "d");
     sqlQuery = sqlQuery.from(customerPath.as("c"));
     NumberPath<Long> idPath = Expressions.numberPath(Long.class, deptAliasPath, "id");
 
@@ -197,13 +205,13 @@ from EMPLOYEE EMPLOYEE) internal\
 
   @Test
   public void or_in() {
-    StringPath path = Expressions.stringPath("str");
+    var path = Expressions.stringPath("str");
     Expression<?> expr =
         ExpressionUtils.anyOf(
             ExpressionUtils.in(path, Arrays.asList("1", "2", "3")),
             ExpressionUtils.in(path, Arrays.asList("4", "5", "6")));
 
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(expr);
     assertThat(serializer.getConstantPaths())
         .isEqualTo(Arrays.asList(path, path, path, path, path, path));
@@ -213,15 +221,15 @@ from EMPLOYEE EMPLOYEE) internal\
   @Test
   public void some() {
     // select some((e.FIRSTNAME is not null)) from EMPLOYEE
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(SQLExpressions.any(employee.firstname.isNotNull()));
     assertThat(serializer).hasToString("some(EMPLOYEE.FIRSTNAME is not null)");
   }
 
   @Test
   public void startsWith() {
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
-    QSurvey s1 = new QSurvey("s1");
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
+    var s1 = new QSurvey("s1");
     serializer.handle(s1.name.startsWith("X"));
     assertThat(serializer).hasToString("s1.NAME like ? escape '\\'");
     assertThat(serializer.getConstants()).isEqualTo(Collections.singletonList("X%"));
@@ -275,7 +283,7 @@ from EMPLOYEE EMPLOYEE) internal\
   @Test
   public void keyword_after_dot() {
     SQLQuery<?> query = new SQLQuery<Void>(MySQLTemplates.DEFAULT);
-    PathBuilder<Survey> surveyBuilder = new PathBuilder<Survey>(Survey.class, "survey");
+    var surveyBuilder = new PathBuilder<Survey>(Survey.class, "survey");
     query.from(surveyBuilder).where(surveyBuilder.get("not").isNotNull());
     assertThat(query.toString()).doesNotContain("`");
   }
@@ -283,14 +291,14 @@ from EMPLOYEE EMPLOYEE) internal\
   @Test
   public void like() {
     Expression<?> expr = Expressions.stringTemplate("'%a%'").contains("%a%");
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.handle(expr);
     assertThat(serializer).hasToString("'%a%' like ? escape '\\'");
   }
 
   @Test
   public void override() {
-    Configuration conf = new Configuration(new DerbyTemplates());
+    var conf = new Configuration(new DerbyTemplates());
     conf.registerTableOverride("SURVEY", "surveys");
 
     SQLQuery<?> query = new SQLQuery<Void>(conf);
@@ -300,7 +308,7 @@ from EMPLOYEE EMPLOYEE) internal\
 
   @Test
   public void columnOverrides() {
-    Configuration conf = new Configuration(new DerbyTemplates());
+    var conf = new Configuration(new DerbyTemplates());
     conf.registerColumnOverride("SURVEY", "NAME", "LABEL");
 
     SQLQuery<?> query = new SQLQuery<Void>(conf);
@@ -310,7 +318,7 @@ from EMPLOYEE EMPLOYEE) internal\
 
   @Test
   public void columnOverrides2() {
-    Configuration conf = new Configuration(new DerbyTemplates());
+    var conf = new Configuration(new DerbyTemplates());
     conf.registerColumnOverride("PUBLIC", "SURVEY", "NAME", "LABEL");
 
     SQLQuery<?> query = new SQLQuery<Void>(conf);
@@ -321,8 +329,8 @@ from EMPLOYEE EMPLOYEE) internal\
   @Test
   public void complex_subQuery() {
     // create sub queries
-    List<SubQueryExpression<Tuple>> sq = new ArrayList<SubQueryExpression<Tuple>>();
-    String[] strs = new String[] {"a", "b", "c"};
+    List<SubQueryExpression<Tuple>> sq = new ArrayList<>();
+    var strs = new String[] {"a", "b", "c"};
     for (String str : strs) {
       Expression<Boolean> alias =
           Expressions.cases().when(survey.name.eq(str)).then(true).otherwise(false);
@@ -330,26 +338,26 @@ from EMPLOYEE EMPLOYEE) internal\
     }
 
     // master query
-    PathBuilder<Tuple> subAlias = new PathBuilder<Tuple>(Tuple.class, "sub");
+    var subAlias = new PathBuilder<Tuple>(Tuple.class, "sub");
     SubQueryExpression<?> master =
         selectOne().from(union(sq).as(subAlias)).groupBy(subAlias.get("prop1"));
 
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.serialize(master.getMetadata(), false);
     System.err.println(serializer);
   }
 
   @Test
   public void boolean_() {
-    QSurvey s = new QSurvey("s");
-    BooleanBuilder bb1 = new BooleanBuilder();
+    var s = new QSurvey("s");
+    var bb1 = new BooleanBuilder();
     bb1.and(s.name.eq(s.name));
 
-    BooleanBuilder bb2 = new BooleanBuilder();
+    var bb2 = new BooleanBuilder();
     bb2.or(s.name.eq(s.name));
     bb2.or(s.name.eq(s.name));
 
-    String str = new SQLSerializer(Configuration.DEFAULT).handle(bb1.and(bb2)).toString();
+    var str = new SQLSerializer(Configuration.DEFAULT).handle(bb1.and(bb2)).toString();
     assertThat(str).isEqualTo("s.NAME = s.NAME and (s.NAME = s.NAME or s.NAME = s.NAME)");
   }
 
@@ -358,7 +366,7 @@ from EMPLOYEE EMPLOYEE) internal\
     Expression<?> expr =
         Expressions.list(survey.id, survey.name).in(select(survey.id, survey.name).from(survey));
 
-    String str = new SQLSerializer(Configuration.DEFAULT).handle(expr).toString();
+    var str = new SQLSerializer(Configuration.DEFAULT).handle(expr).toString();
     assertThat(str)
         .isEqualTo(
             "(SURVEY.ID, SURVEY.NAME) in (select SURVEY.ID, SURVEY.NAME\nfrom SURVEY SURVEY)");
@@ -374,8 +382,8 @@ from EMPLOYEE EMPLOYEE) internal\
         where employee.superior_id = sub.id)
     select * from sub;*/
 
-    QEmployee e = QEmployee.employee;
-    PathBuilder<Tuple> sub = new PathBuilder<Tuple>(Tuple.class, "sub");
+    var e = QEmployee.employee;
+    var sub = new PathBuilder<Tuple>(Tuple.class, "sub");
     SQLQuery<?> query = new SQLQuery<Void>(SQLTemplates.DEFAULT);
     query
         .withRecursive(
@@ -387,9 +395,9 @@ from EMPLOYEE EMPLOYEE) internal\
                     .where(e.superiorId.eq(sub.get(e.id)))))
         .from(sub);
 
-    QueryMetadata md = query.getMetadata();
+    var md = query.getMetadata();
     md.setProjection(Wildcard.all);
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.serialize(md, false);
     assertThat(serializer.toString())
         .isEqualTo(
@@ -416,8 +424,8 @@ from EMPLOYEE EMPLOYEE) internal\
         where employee.superior_id = sub.id)
     select * from sub;*/
 
-    QEmployee e = QEmployee.employee;
-    PathBuilder<Tuple> sub = new PathBuilder<Tuple>(Tuple.class, "sub");
+    var e = QEmployee.employee;
+    var sub = new PathBuilder<Tuple>(Tuple.class, "sub");
     SQLQuery<?> query = new SQLQuery<Void>(SQLTemplates.DEFAULT);
     query
         .withRecursive(sub, sub.get(e.id), sub.get(e.firstname), sub.get(e.superiorId))
@@ -429,9 +437,9 @@ from EMPLOYEE EMPLOYEE) internal\
                     .where(e.superiorId.eq(sub.get(e.id)))))
         .from(sub);
 
-    QueryMetadata md = query.getMetadata();
+    var md = query.getMetadata();
     md.setProjection(Wildcard.all);
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.serialize(md, false);
     assertThat(serializer.toString())
         .isEqualTo(
@@ -450,10 +458,10 @@ from sub\
 
   @Test
   public void useLiterals() {
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.setUseLiterals(true);
 
-    int offset = TimeZone.getDefault().getRawOffset();
+    var offset = TimeZone.getDefault().getRawOffset();
     Expression<?> expr =
         SQLExpressions.datediff(DatePart.year, employee.datefield, new java.sql.Date(-offset));
     serializer.handle(expr);
@@ -463,19 +471,19 @@ from sub\
 
   @Test
   public void select_normalization() {
-    SQLSerializer serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(Configuration.DEFAULT);
     serializer.visit(select(Expressions.stringPath("id"), Expressions.stringPath("ID")), null);
     assertThat(serializer).hasToString("(select id, ID as col__ID1\n" + "from dual)");
   }
 
   @Test
   public void noSchemaInWhere() {
-    Configuration defaultWithPrintSchema =
+    var defaultWithPrintSchema =
         new Configuration(new SQLTemplates(Keywords.DEFAULT, "\"", '\\', false, false));
     defaultWithPrintSchema.getTemplates().setPrintSchema(true);
 
-    QEmployee e = QEmployee.employee;
-    SQLDeleteClause delete =
+    var e = QEmployee.employee;
+    var delete =
         new SQLDeleteClause(
             EasyMock.<Connection>createNiceMock(Connection.class), defaultWithPrintSchema, e);
     delete.where(e.id.gt(100));
@@ -486,11 +494,10 @@ from sub\
 
   @Test
   public void schemaInWhere() {
-    Configuration derbyWithPrintSchema =
-        new Configuration(DerbyTemplates.builder().printSchema().build());
+    var derbyWithPrintSchema = new Configuration(DerbyTemplates.builder().printSchema().build());
 
-    QEmployee e = QEmployee.employee;
-    SQLDeleteClause delete =
+    var e = QEmployee.employee;
+    var delete =
         new SQLDeleteClause(
             EasyMock.<Connection>createNiceMock(Connection.class), derbyWithPrintSchema, e);
     delete.where(e.id.gt(100));

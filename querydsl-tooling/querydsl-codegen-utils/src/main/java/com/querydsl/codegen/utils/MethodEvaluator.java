@@ -33,7 +33,7 @@ public final class MethodEvaluator<T> implements Evaluator<T> {
     this.method = method;
     this.projectionType = projectionType;
     this.args = new Object[method.getParameterTypes().length];
-    int i = args.length - constants.size();
+    var i = args.length - constants.size();
     for (Object value : constants.values()) {
       args[i++] = value;
     }

@@ -17,11 +17,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.*;
-import com.querydsl.mongodb.domain.*;
+import com.querydsl.core.types.dsl.DatePath;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.mongodb.domain.QAddress;
+import com.querydsl.mongodb.domain.QDummyEntity;
+import com.querydsl.mongodb.domain.QItem;
+import com.querydsl.mongodb.domain.QPerson;
+import com.querydsl.mongodb.domain.QUser;
 import com.querydsl.mongodb.morphia.MorphiaSerializer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -55,7 +62,7 @@ public class MongodbSerializerTest {
   @Before
   public void before() {
     serializer = new MorphiaSerializer(new Morphia());
-    entityPath = new PathBuilder<Object>(Object.class, "obj");
+    entityPath = new PathBuilder<>(Object.class, "obj");
     title = entityPath.getString("title");
     year = entityPath.getNumber("year", Integer.class);
     gross = entityPath.getNumber("gross", Double.class);
@@ -69,7 +76,7 @@ public class MongodbSerializerTest {
 
   @Test
   public void paths() {
-    QUser user = QUser.user;
+    var user = QUser.user;
     assertThat(serializer.visit(user, null)).isEqualTo("user");
     assertThat(serializer.visit(user.addresses, null)).isEqualTo("addresses");
     assertThat(serializer.visit(user.addresses.any(), null)).isEqualTo("addresses");
@@ -79,33 +86,33 @@ public class MongodbSerializerTest {
 
   @Test
   public void propertyAnnotation() {
-    QDummyEntity entity = QDummyEntity.dummyEntity;
+    var entity = QDummyEntity.dummyEntity;
     assertThat(serializer.visit(entity.property, null)).isEqualTo("prop");
   }
 
   @Test
   public void indexedAccess() {
-    QUser user = QUser.user;
+    var user = QUser.user;
     assertThat(serializer.visit(user.addresses.get(0).street, null))
         .isEqualTo("addresses.0.street");
   }
 
   @Test
   public void collectionAny() {
-    QUser user = QUser.user;
+    var user = QUser.user;
     assertQuery(user.addresses.any().street.eq("Aakatu"), dbo("addresses.street", "Aakatu"));
   }
 
   @Test
   public void collectionIsEmpty() {
-    BasicDBObject expected =
+    var expected =
         dbo("$or", dblist(dbo("addresses", dblist()), dbo("addresses", dbo("$exists", false))));
     assertQuery(QUser.user.addresses.isEmpty(), expected);
   }
 
   @Test
   public void collectionIsNotEmpty() {
-    BasicDBObject expected =
+    var expected =
         dbo("$nor", dblist(dbo("addresses", dblist()), dbo("addresses", dbo("$exists", false))));
     assertQuery(QUser.user.addresses.isNotEmpty(), expected);
   }
@@ -171,7 +178,7 @@ public class MongodbSerializerTest {
 
   @Test
   public void orderBy() {
-    DBObject orderBy = serializer.toSort(sortList(year.asc()));
+    var orderBy = serializer.toSort(sortList(year.asc()));
     assertThat(orderBy).isEqualTo(dbo("year", 1));
 
     orderBy = serializer.toSort(sortList(year.desc()));
@@ -235,10 +242,10 @@ public class MongodbSerializerTest {
 
   @Test
   public void all() {
-    QItem item = QItem.item;
+    var item = QItem.item;
     List<ObjectId> objectIds = new ArrayList<>();
-    ObjectId objectId1 = new ObjectId();
-    ObjectId objectId2 = new ObjectId();
+    var objectId1 = new ObjectId();
+    var objectId2 = new ObjectId();
 
     objectIds.add(objectId1);
     objectIds.add(objectId2);
@@ -259,15 +266,15 @@ public class MongodbSerializerTest {
 
   @Test
   public void objectId() {
-    ObjectId id = new ObjectId();
-    QPerson person = QPerson.person;
+    var id = new ObjectId();
+    var person = QPerson.person;
     assertQuery(person.id.eq(id), dbo("_id", id));
     assertQuery(person.addressId.eq(id), dbo("addressId", id));
   }
 
   @Test
   public void path() {
-    QUser user = QUser.user;
+    var user = QUser.user;
     assertThat(serializer.visit(user.firstName, null)).isEqualTo("firstName");
     assertThat(serializer.visit(user.as(QUser.class).firstName, null)).isEqualTo("firstName");
     assertThat(serializer.visit(user.mainAddress().street, null)).isEqualTo("mainAddress.street");
@@ -280,7 +287,7 @@ public class MongodbSerializerTest {
   }
 
   private void assertQuery(Expression<?> e, BasicDBObject expected) {
-    BasicDBObject result = (BasicDBObject) serializer.handle(e);
+    var result = (BasicDBObject) serializer.handle(e);
     assertThat(result).hasToString(expected.toString());
   }
 
@@ -292,7 +299,7 @@ public class MongodbSerializerTest {
   }
 
   public static BasicDBList dblist(Object... contents) {
-    BasicDBList list = new BasicDBList();
+    var list = new BasicDBList();
     list.addAll(Arrays.asList(contents));
     return list;
   }

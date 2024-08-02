@@ -1,7 +1,9 @@
 package com.querydsl.sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
@@ -22,8 +24,8 @@ public class SQLListenersTest {
 
   @Test
   public void notifyQuery() {
-    SQLListener listener = createMock(SQLListener.class);
-    SQLListeners listeners = new SQLListeners();
+    var listener = (SQLListener) createMock(SQLListener.class);
+    var listeners = new SQLListeners();
     listeners.add(listener);
 
     QueryMetadata md = new DefaultQueryMetadata();
@@ -36,8 +38,8 @@ public class SQLListenersTest {
 
   @Test
   public void notifyQuery_parent() {
-    SQLListener listener = createMock(SQLListener.class);
-    SQLListeners listeners = new SQLListeners(listener);
+    var listener = (SQLListener) createMock(SQLListener.class);
+    var listeners = new SQLListeners(listener);
 
     QueryMetadata md = new DefaultQueryMetadata();
     listener.notifyQuery(md);
@@ -49,10 +51,10 @@ public class SQLListenersTest {
 
   @Test
   public void notifyQuery_detailedListener_start() {
-    SQLListenerContext sqlListenerContext = createMock(SQLListenerContext.class);
-    SQLDetailedListener listenerParent = createMock(SQLDetailedListener.class);
-    SQLDetailedListener listener1 = createMock(SQLDetailedListener.class);
-    SQLDetailedListener listener2 = createMock(SQLDetailedListener.class);
+    var sqlListenerContext = (SQLListenerContext) createMock(SQLListenerContext.class);
+    var listenerParent = (SQLDetailedListener) createMock(SQLDetailedListener.class);
+    var listener1 = (SQLDetailedListener) createMock(SQLDetailedListener.class);
+    var listener2 = (SQLDetailedListener) createMock(SQLDetailedListener.class);
 
     listenerParent.start(sqlListenerContext);
     replay(listenerParent);
@@ -63,7 +65,7 @@ public class SQLListenersTest {
     listener2.start(sqlListenerContext);
     replay(listener2);
 
-    SQLListeners listeners = new SQLListeners(listenerParent);
+    var listeners = new SQLListeners(listenerParent);
     listeners.add(listener1);
     listeners.add(listener2);
 
@@ -80,7 +82,7 @@ public class SQLListenersTest {
     SQLDetailedListener listener1 = new AssertingDetailedListener("key1", "value1");
     SQLDetailedListener listener2 = new AssertingDetailedListener("key1", "value1");
 
-    SQLListeners listeners = new SQLListeners(listenerParent);
+    var listeners = new SQLListeners(listenerParent);
     listeners.add(listener1);
     listeners.add(listener2);
 

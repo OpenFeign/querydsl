@@ -15,7 +15,6 @@
  */
 package com.querydsl.core.util;
 
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -52,9 +51,9 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
 
   private transient Object bean;
 
-  private transient Map<String, Method> readMethods = new HashMap<String, Method>();
-  private transient Map<String, Method> writeMethods = new HashMap<String, Method>();
-  private transient Map<String, Class<?>> types = new HashMap<String, Class<?>>();
+  private transient Map<String, Method> readMethods = new HashMap<>();
+  private transient Map<String, Method> writeMethods = new HashMap<>();
+  private transient Map<String, Class<?>> types = new HashMap<>();
 
   /** An empty array. Used to invoke accessors via reflection. */
   private static final Object[] NULL_ARGUMENTS = {};
@@ -63,8 +62,7 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
    * Maps primitive Class types to transformers. The transformer transform strings into the
    * appropriate primitive wrapper.
    */
-  private static final Map<Class<?>, Function<?, ?>> defaultFunctions =
-      new HashMap<Class<?>, Function<?, ?>>();
+  private static final Map<Class<?>, Function<?, ?>> defaultFunctions = new HashMap<>();
 
   static {
     defaultFunctions.put(
@@ -183,7 +181,7 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
    */
   @Override
   public Object clone() throws CloneNotSupportedException {
-    BeanMap newMap = (BeanMap) super.clone();
+    var newMap = (BeanMap) super.clone();
 
     if (bean == null) {
       // no bean, just an empty bean map at the moment.  return a newly
@@ -275,7 +273,7 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
    *     define a property with that name; or true if the bean does define a property with that name
    */
   public boolean containsKey(String name) {
-    Method method = getReadMethod(name);
+    var method = getReadMethod(name);
     return method != null;
   }
 
@@ -294,7 +292,7 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
    */
   public Object get(String name) {
     if (bean != null) {
-      Method method = getReadMethod(name);
+      var method = getReadMethod(name);
       if (method != null) {
         try {
           return method.invoke(bean, NULL_ARGUMENTS);
@@ -318,17 +316,17 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
   @Override
   public Object put(String name, Object value) {
     if (bean != null) {
-      Object oldValue = get(name);
-      Method method = getWriteMethod(name);
+      var oldValue = get(name);
+      var method = getWriteMethod(name);
       if (method == null) {
         throw new IllegalArgumentException(
             "The bean of type: " + bean.getClass().getName() + " has no property called: " + name);
       }
       try {
-        Object[] arguments = createWriteMethodArguments(method, value);
+        var arguments = createWriteMethodArguments(method, value);
         method.invoke(bean, arguments);
 
-        Object newValue = get(name);
+        var newValue = get(name);
         firePropertyChange(name, oldValue, newValue);
       } catch (InvocationTargetException | IllegalAccessException e) {
         throw new IllegalArgumentException(e.getMessage());
@@ -370,7 +368,7 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
    */
   @Override
   public Set<Entry<String, Object>> entrySet() {
-    return new AbstractSet<Entry<String, Object>>() {
+    return new AbstractSet<>() {
       @Override
       public Iterator<Entry<String, Object>> iterator() {
         return entryIterator();
@@ -390,8 +388,8 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
    */
   @Override
   public Collection<Object> values() {
-    List<Object> answer = new ArrayList<Object>(readMethods.size());
-    for (Iterator<Object> iter = valueIterator(); iter.hasNext(); ) {
+    List<Object> answer = new ArrayList<>(readMethods.size());
+    for (var iter = valueIterator(); iter.hasNext(); ) {
       answer.add(iter.next());
     }
     return answer;
@@ -427,8 +425,8 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
    * @return an iterator over the values
    */
   public Iterator<Object> valueIterator() {
-    final Iterator<String> iter = keyIterator();
-    return new Iterator<Object>() {
+    final var iter = keyIterator();
+    return new Iterator<>() {
       @Override
       public boolean hasNext() {
         return iter.hasNext();
@@ -453,8 +451,8 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
    * @return an iterator over the entries
    */
   public Iterator<Entry<String, Object>> entryIterator() {
-    final Iterator<String> iter = keyIterator();
-    return new Iterator<Entry<String, Object>>() {
+    final var iter = keyIterator();
+    return new Iterator<>() {
       @Override
       public boolean hasNext() {
         return iter.hasNext();
@@ -462,8 +460,8 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
 
       @Override
       public Entry<String, Object> next() {
-        String key = iter.next();
-        Object value = get(key);
+        var key = iter.next();
+        var value = get(key);
         return new MyMapEntry(BeanMap.this, key, value);
       }
 
@@ -540,14 +538,14 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
     Class<?> beanClass = getBean().getClass();
     try {
       // BeanInfo beanInfo = Introspector.getBeanInfo( bean, null );
-      BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
-      PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+      var beanInfo = Introspector.getBeanInfo(beanClass);
+      var propertyDescriptors = beanInfo.getPropertyDescriptors();
       if (propertyDescriptors != null) {
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
           if (propertyDescriptor != null) {
-            String name = propertyDescriptor.getName();
-            Method readMethod = propertyDescriptor.getReadMethod();
-            Method writeMethod = propertyDescriptor.getWriteMethod();
+            var name = propertyDescriptor.getName();
+            var readMethod = propertyDescriptor.getReadMethod();
+            var writeMethod = propertyDescriptor.getWriteMethod();
             Class<?> aType = propertyDescriptor.getPropertyType();
 
             if (readMethod != null) {
@@ -607,11 +605,11 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
      */
     @Override
     public Object setValue(Object value) {
-      String key = getKey();
-      Object oldValue = owner.get(key);
+      var key = getKey();
+      var oldValue = owner.get(key);
 
       owner.put(key, value);
-      Object newValue = owner.get(key);
+      var newValue = owner.get(key);
       this.value = newValue;
       return oldValue;
     }
@@ -643,7 +641,7 @@ public class BeanMap extends AbstractMap<String, Object> implements Cloneable {
       throws IllegalAccessException {
     try {
       if (value != null) {
-        Class<?>[] types = method.getParameterTypes();
+        var types = method.getParameterTypes();
         if (types != null && types.length > 0) {
           Class<?> paramType = types[0];
           if (paramType.isPrimitive()) {

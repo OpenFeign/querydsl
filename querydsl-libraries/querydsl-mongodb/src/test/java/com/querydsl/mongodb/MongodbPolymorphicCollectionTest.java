@@ -6,7 +6,11 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.mongodb.domain.*;
+import com.querydsl.mongodb.domain.Chips;
+import com.querydsl.mongodb.domain.Fish;
+import com.querydsl.mongodb.domain.Food;
+import com.querydsl.mongodb.domain.QFish;
+import com.querydsl.mongodb.domain.QFood;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
 import java.net.UnknownHostException;
 import org.junit.Before;
@@ -25,7 +29,7 @@ public class MongodbPolymorphicCollectionTest {
   private final Chips c1 = new Chips("c1");
 
   public MongodbPolymorphicCollectionTest() throws UnknownHostException, MongoException {
-    final MongoClient mongo = new MongoClient();
+    final var mongo = new MongoClient();
     morphia = new Morphia().map(Food.class);
     ds = morphia.createDatastore(mongo, "testdb");
   }
@@ -71,7 +75,7 @@ public class MongodbPolymorphicCollectionTest {
   }
 
   private MorphiaQuery<Food> query() {
-    return new MorphiaQuery<Food>(morphia, ds, QFood.food);
+    return new MorphiaQuery<>(morphia, ds, QFood.food);
   }
 
   private MorphiaQuery<Food> where(final Predicate... e) {

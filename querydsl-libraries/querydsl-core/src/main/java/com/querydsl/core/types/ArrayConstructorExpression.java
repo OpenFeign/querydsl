@@ -63,7 +63,7 @@ public class ArrayConstructorExpression<T> extends FactoryExpressionBase<T[]> {
     if (a.getClass().getComponentType().equals(elementType)) {
       return (T[]) a;
     } else {
-      T[] rv = (T[]) Array.newInstance(elementType, a.length);
+      var rv = (T[]) Array.newInstance(elementType, a.length);
       System.arraycopy(a, 0, rv, 0, a.length);
       return rv;
     }

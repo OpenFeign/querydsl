@@ -14,7 +14,10 @@
 package com.querydsl.jpa.sql;
 
 import com.mysema.commons.lang.CloseableIterator;
-import com.querydsl.core.*;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.jpa.AbstractSQLQuery;
@@ -92,8 +95,8 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
   }
 
   private Query createQuery(boolean forCount) {
-    NativeSQLSerializer serializer = (NativeSQLSerializer) serialize(forCount);
-    String queryString = serializer.toString();
+    var serializer = (NativeSQLSerializer) serialize(forCount);
+    var queryString = serializer.toString();
     logQuery(queryString);
     Expression<?> projection = queryMixin.getMetadata().getProjection();
     Query query;
@@ -110,7 +113,7 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
       query = entityManager.createNativeQuery(queryString);
     }
     if (!forCount) {
-      Map<Expression<?>, List<String>> aliases = serializer.getAliases();
+      var aliases = serializer.getAliases();
       Set<String> used = new HashSet<>();
       if (projection instanceof FactoryExpression) {
         for (Expression<?> expr : ((FactoryExpression<?>) projection).getArgs()) {
@@ -179,7 +182,7 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
     // TODO : use lazy fetch here?
     if (projection != null) {
       List<?> results = query.getResultList();
-      List<Object> rv = new ArrayList<Object>(results.size());
+      List<Object> rv = new ArrayList<>(results.size());
       for (Object o : results) {
         if (o != null) {
           Object[] arr;
@@ -189,7 +192,7 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
             arr = (Object[]) o;
           }
           if (projection.getArgs().size() < arr.length) {
-            Object[] shortened = new Object[projection.getArgs().size()];
+            var shortened = new Object[projection.getArgs().size()];
             System.arraycopy(arr, 0, shortened, 0, shortened.length);
             arr = shortened;
           }
@@ -213,7 +216,7 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
   @Nullable
   private Object getSingleResult(Query query) {
     if (projection != null) {
-      Object result = query.getSingleResult();
+      var result = query.getSingleResult();
       if (result != null) {
         if (!result.getClass().isArray()) {
           result = new Object[] {result};
@@ -231,7 +234,7 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
   @Override
   public List<T> fetch() {
     try {
-      Query query = createQuery();
+      var query = createQuery();
       return (List<T>) getResultList(query);
     } finally {
       reset();
@@ -241,7 +244,7 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
   @Override
   public CloseableIterator<T> iterate() {
     try {
-      Query query = createQuery();
+      var query = createQuery();
       return queryHandler.iterate(query, null);
     } finally {
       reset();
@@ -252,7 +255,7 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
   @SuppressWarnings("unchecked")
   public Stream<T> stream() {
     try {
-      Query query = createQuery();
+      var query = createQuery();
       return query.getResultStream();
     } finally {
       reset();
@@ -263,14 +266,14 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
   public QueryResults<T> fetchResults() {
     // TODO : handle entity projections as well
     try {
-      Query countQuery = createQuery(true);
-      long total = ((Number) countQuery.getSingleResult()).longValue();
+      var countQuery = createQuery(true);
+      var total = ((Number) countQuery.getSingleResult()).longValue();
       if (total > 0) {
-        QueryModifiers modifiers = queryMixin.getMetadata().getModifiers();
-        Query query = createQuery(false);
+        var modifiers = queryMixin.getMetadata().getModifiers();
+        var query = createQuery(false);
         @SuppressWarnings("unchecked")
-        List<T> list = (List<T>) getResultList(query);
-        return new QueryResults<T>(list, modifiers, total);
+        var list = (List<T>) getResultList(query);
+        return new QueryResults<>(list, modifiers, total);
       } else {
         return QueryResults.emptyResults();
       }
@@ -281,7 +284,7 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
 
   protected void logQuery(String queryString) {
     if (logger.isLoggable(Level.FINE)) {
-      String normalizedQuery = queryString.replace('\n', ' ');
+      var normalizedQuery = queryString.replace('\n', ' ');
       logger.fine(normalizedQuery);
     }
   }
@@ -291,7 +294,7 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
   @Override
   @SuppressWarnings("unchecked")
   public T fetchOne() throws NonUniqueResultException {
-    Query query = createQuery();
+    var query = createQuery();
     return (T) uniqueResult(query);
   }
 

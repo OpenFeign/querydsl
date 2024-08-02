@@ -229,7 +229,7 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
    */
   public <N extends Number & Comparable<?>> NumberExpression<T> divide(Expression<N> right) {
     @SuppressWarnings("unchecked")
-    Class<T> type = (Class<T>) getDivisionType(getType(), right.getType());
+    var type = (Class<T>) getDivisionType(getType(), right.getType());
     return Expressions.numberOperation(type, Ops.DIV, mixin, right);
   }
 
@@ -243,7 +243,7 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
    */
   public <N extends Number & Comparable<?>> NumberExpression<T> divide(N right) {
     @SuppressWarnings("unchecked")
-    Class<T> type = (Class<T>) getDivisionType(getType(), right.getClass());
+    var type = (Class<T>) getDivisionType(getType(), right.getClass());
     return Expressions.numberOperation(type, Ops.DIV, mixin, ConstantImpl.create(right));
   }
 
@@ -822,7 +822,7 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
   }
 
   private List<T> convert(Number... numbers) {
-    List<T> list = new ArrayList<T>(numbers.length);
+    List<T> list = new ArrayList<>(numbers.length);
     for (Number number : numbers) {
       list.add(MathUtils.cast(number, getType()));
     }
@@ -860,7 +860,7 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
   @Override
   @SuppressWarnings({"unchecked"})
   public NumberExpression<T> coalesce(Expression<T> expr) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(expr);
     return (NumberExpression<T>) coalesce.asNumber();
   }
@@ -874,7 +874,7 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
   public NumberExpression<T> coalesce(Expression<?>... exprs) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);
     }
@@ -890,7 +890,7 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
   @Override
   @SuppressWarnings({"unchecked"})
   public NumberExpression<T> coalesce(T arg) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     coalesce.add(arg);
     return (NumberExpression<T>) coalesce.asNumber();
   }
@@ -904,7 +904,7 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
   @Override
   @SuppressWarnings({"unchecked"})
   public NumberExpression<T> coalesce(T... args) {
-    Coalesce<T> coalesce = new Coalesce<T>(getType(), mixin);
+    var coalesce = new Coalesce<>(getType(), mixin);
     for (T arg : args) {
       coalesce.add(arg);
     }

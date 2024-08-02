@@ -34,8 +34,8 @@ public final class CustomFinder {
   @SuppressWarnings("unchecked")
   public static <T> List<T> findCustom(
       EntityManager em, Class<T> entityClass, Map<String, ?> filters, String sort) {
-    EntityPath<T> entityPath = new EntityPathBase<T>(entityClass, "entity");
-    BooleanBuilder builder = new BooleanBuilder();
+    EntityPath<T> entityPath = new EntityPathBase<>(entityClass, "entity");
+    var builder = new BooleanBuilder();
     for (Map.Entry<String, ?> entry : filters.entrySet()) {
       SimplePath<Object> property =
           Expressions.path((Class) entry.getValue().getClass(), entityPath, entry.getKey());

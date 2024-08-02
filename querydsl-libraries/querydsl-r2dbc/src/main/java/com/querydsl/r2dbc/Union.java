@@ -14,7 +14,11 @@
 package com.querydsl.r2dbc;
 
 import com.querydsl.core.ReactiveFetchable;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
 import reactor.core.publisher.Flux;
 
 /**

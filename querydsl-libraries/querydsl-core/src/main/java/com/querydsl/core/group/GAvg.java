@@ -41,7 +41,7 @@ public class GAvg<T extends Number> extends AbstractGroupExpression<T, T> {
 
   @Override
   public GroupCollector<T, T> createGroupCollector() {
-    return new GroupCollector<T, T>() {
+    return new GroupCollector<>() {
       private int count = 0;
       private BigDecimal sum = BigDecimal.ZERO;
 
@@ -55,7 +55,7 @@ public class GAvg<T extends Number> extends AbstractGroupExpression<T, T> {
 
       @Override
       public T get() {
-        BigDecimal avg = sum.divide(BigDecimal.valueOf(count), mathContext);
+        var avg = sum.divide(BigDecimal.valueOf(count), mathContext);
         return MathUtils.cast(avg, getType());
       }
     };

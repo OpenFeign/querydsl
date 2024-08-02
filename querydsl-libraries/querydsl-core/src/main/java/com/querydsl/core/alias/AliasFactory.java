@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
  */
 class AliasFactory {
 
-  private final ThreadLocal<Expression<?>> current = new ThreadLocal<Expression<?>>();
+  private final ThreadLocal<Expression<?>> current = new ThreadLocal<>();
 
   private final PathFactory pathFactory;
 
@@ -60,7 +60,7 @@ class AliasFactory {
   @SuppressWarnings("unchecked")
   public <A> A createAliasForExpr(Class<A> cl, Expression<? extends A> expr) {
     try {
-      final Map<Expression<?>, ManagedObject> expressionCache =
+      final var expressionCache =
           proxyCache.computeIfAbsent(cl, a -> Collections.synchronizedMap(new WeakHashMap<>()));
       return (A) expressionCache.computeIfAbsent(expr, e -> (ManagedObject) createProxy(cl, expr));
     } catch (ClassCastException e) {
@@ -125,7 +125,7 @@ class AliasFactory {
     }
     A result = null;
     if (constructor != null) {
-      Object[] initargs = new Object[constructor.getParameterCount()];
+      var initargs = new Object[constructor.getParameterCount()];
       try {
         result = (A) constructor.newInstance(initargs);
       } catch (InstantiationException

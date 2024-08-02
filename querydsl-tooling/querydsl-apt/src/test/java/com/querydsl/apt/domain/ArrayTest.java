@@ -32,7 +32,7 @@ public class ArrayTest {
 
   @Test
   public void test() {
-    QArrayTest_ArrayTestEntity entity = QArrayTest_ArrayTestEntity.arrayTestEntity;
+    var entity = QArrayTest_ArrayTestEntity.arrayTestEntity;
     assertThat(entity.entityArray.getType()).isEqualTo(ArrayTestEntity[].class);
     assertThat(entity.entityArray.get(0).getType()).isEqualTo(ArrayTestEntity.class);
   }

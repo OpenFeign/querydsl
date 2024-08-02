@@ -21,7 +21,6 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import java.util.logging.Logger;
-import org.hibernate.grammars.hql.HqlParser;
 import org.hibernate.query.hql.internal.HqlParseTreeBuilder;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,15 +46,18 @@ class QueryHelper<T> extends JPAQueryBase<T, QueryHelper<T>> {
     // do nothing
   }
 
+  @Override
   public long fetchCount() {
     return 0;
   }
 
+  @Override
   @Nullable
   public CloseableIterator<T> iterate() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   @Nullable
   public QueryResults<T> fetchResults() {
     throw new UnsupportedOperationException();
@@ -79,9 +81,9 @@ class QueryHelper<T> extends JPAQueryBase<T, QueryHelper<T>> {
     //            0,
     //            parser.getParseErrorHandler().getErrorCount());
 
-    String input = toString();
+    var input = toString();
     logger.fine("input: " + input.replace('\n', ' '));
-    HqlParser parser = HqlParseTreeBuilder.INSTANCE.buildHqlParser(input);
+    var parser = HqlParseTreeBuilder.INSTANCE.buildHqlParser(input);
     parser.statement();
   }
 
@@ -92,14 +94,14 @@ class QueryHelper<T> extends JPAQueryBase<T, QueryHelper<T>> {
 
   @Override
   public QueryHelper<T> clone() {
-    return new QueryHelper<T>(getMetadata().clone(), getTemplates());
+    return new QueryHelper<>(getMetadata().clone(), getTemplates());
   }
 
   @Override
   public <U> QueryHelper<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    QueryHelper<U> newType = (QueryHelper<U>) this;
+    var newType = (QueryHelper<U>) this;
     return newType;
   }
 
@@ -107,7 +109,7 @@ class QueryHelper<T> extends JPAQueryBase<T, QueryHelper<T>> {
   public QueryHelper<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    QueryHelper<Tuple> newType = (QueryHelper<Tuple>) this;
+    var newType = (QueryHelper<Tuple>) this;
     return newType;
   }
 }

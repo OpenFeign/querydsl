@@ -2,7 +2,11 @@ package com.querydsl.jpa.suites;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.testutil.H2;
-import com.querydsl.jpa.*;
+import com.querydsl.jpa.JPABase;
+import com.querydsl.jpa.JPAIntegrationBase;
+import com.querydsl.jpa.JPASQLBase;
+import com.querydsl.jpa.Mode;
+import com.querydsl.jpa.SerializationBase;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
 

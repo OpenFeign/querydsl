@@ -16,9 +16,16 @@ package com.querydsl.collections;
 import com.querydsl.codegen.Serializer;
 import com.querydsl.core.QueryException;
 import com.querydsl.core.support.SerializerBase;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathType;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.Template;
 import com.querydsl.core.util.PrimitiveUtils;
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -72,20 +79,20 @@ public final class CollQuerySerializer extends SerializerBase<CollQuerySerialize
 
   @Override
   public Void visit(Path<?> path, Void context) {
-    final PathType pathType = path.getMetadata().getPathType();
+    final var pathType = path.getMetadata().getPathType();
     if (pathType == PathType.PROPERTY) {
       final Path<?> parent = path.getMetadata().getParent();
-      final String property = path.getMetadata().getName();
+      final var property = path.getMetadata().getName();
       final Class<?> parentType = parent.getType();
       try {
         // getter
-        Method m = getAccessor(parentType, property);
+        var m = getAccessor(parentType, property);
         if (m != null && Modifier.isPublic(m.getModifiers())) {
           handle(parent);
           append(".").append(m.getName()).append("()");
         } else {
           // field
-          Field f = getField(parentType, property);
+          var f = getField(parentType, property);
           if (f != null && Modifier.isPublic(f.getModifiers())) {
             handle(parent);
             append(".").append(property);
@@ -108,14 +115,14 @@ public final class CollQuerySerializer extends SerializerBase<CollQuerySerialize
       append(")");
 
     } else {
-      List<Object> args = new ArrayList<Object>(2);
+      List<Object> args = new ArrayList<>(2);
       if (path.getMetadata().getParent() != null) {
         args.add(path.getMetadata().getParent());
       }
       args.add(path.getMetadata().getElement());
-      final Template template = getTemplate(pathType);
+      final var template = getTemplate(pathType);
       for (Template.Element element : template.getElements()) {
-        Object rv = element.convert(args);
+        var rv = element.convert(args);
         if (rv instanceof Expression) {
           ((Expression<?>) rv).accept(this, context);
         } else if (element.isString()) {
@@ -130,8 +137,8 @@ public final class CollQuerySerializer extends SerializerBase<CollQuerySerialize
 
   private Method getAccessor(Class<?> owner, String property) {
     try {
-      BeanInfo beanInfo = Introspector.getBeanInfo(owner);
-      PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
+      var beanInfo = Introspector.getBeanInfo(owner);
+      var descriptors = beanInfo.getPropertyDescriptors();
       for (PropertyDescriptor pd : descriptors) {
         if (pd.getName().equals(property)) {
           return pd.getReadMethod();
@@ -196,7 +203,7 @@ public final class CollQuerySerializer extends SerializerBase<CollQuerySerialize
       visitCast(operator, args.get(0), String.class);
     } else if (operator == Ops.NUMCAST) {
       @SuppressWarnings("unchecked") // this is the second argument's type
-      Constant<Class<?>> rightArg = (Constant<Class<?>>) args.get(1);
+      var rightArg = (Constant<Class<?>>) args.get(1);
 
       visitCast(operator, args.get(0), rightArg.getConstant());
     } else {

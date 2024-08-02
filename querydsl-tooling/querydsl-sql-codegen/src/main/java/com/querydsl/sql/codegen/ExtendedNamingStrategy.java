@@ -31,7 +31,7 @@ public class ExtendedNamingStrategy extends DefaultNamingStrategy {
 
   @Override
   public String getPropertyNameForForeignKey(String fkName, EntityType entityType) {
-    String[] split = SPLIT.split(fkName);
+    var split = SPLIT.split(fkName);
     if (split.length > 2) {
       return getPropertyName(split[split.length - 2], entityType);
     } else {
@@ -41,7 +41,7 @@ public class ExtendedNamingStrategy extends DefaultNamingStrategy {
 
   @Override
   public String getPropertyNameForInverseForeignKey(String fkName, EntityType entityType) {
-    String[] split = SPLIT.split(fkName);
+    var split = SPLIT.split(fkName);
     if (split.length > 2) {
       return getPropertyName(split[split.length - 1], entityType);
     } else {

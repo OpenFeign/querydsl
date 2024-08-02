@@ -16,7 +16,21 @@
 package com.querydsl.mongodb.document;
 
 import com.mongodb.DBRef;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathType;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.mongodb.MongodbOps;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,7 +58,7 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
   }
 
   public Document toSort(List<OrderSpecifier<?>> orderBys) {
-    Document sort = new Document();
+    var sort = new Document();
     for (OrderSpecifier<?> orderBy : orderBys) {
       Object key = orderBy.getTarget().accept(this, null);
       sort.append(key.toString(), orderBy.getOrder() == Order.ASC ? 1 : -1);
@@ -92,7 +106,7 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
   @SuppressWarnings("unchecked")
   @Override
   public Object visit(Operation<?> expr, Void context) {
-    Operator op = expr.getOperator();
+    var op = expr.getOperator();
     if (op == Ops.EQ) {
       if (expr.getArg(0) instanceof Operation) {
         Operation<?> lhs = (Operation<?>) expr.getArg(0);
@@ -110,16 +124,16 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
       return asDocument(asDBKey(expr, 0), "");
 
     } else if (op == Ops.AND) {
-      Queue<Map<Object, Object>> pendingDocuments = collectConnectorArgs("$and", expr);
-      List<Map<Object, Object>> unmergeableDocuments = new ArrayList<Map<Object, Object>>();
-      List<Map<Object, Object>> generatedDocuments = new ArrayList<Map<Object, Object>>();
+      var pendingDocuments = collectConnectorArgs("$and", expr);
+      List<Map<Object, Object>> unmergeableDocuments = new ArrayList<>();
+      List<Map<Object, Object>> generatedDocuments = new ArrayList<>();
 
       while (!pendingDocuments.isEmpty()) {
 
-        Map<Object, Object> lhs = pendingDocuments.poll();
+        var lhs = pendingDocuments.poll();
 
         for (Map<Object, Object> rhs : pendingDocuments) {
-          Set<Object> lhs2 = new LinkedHashSet<Object>(lhs.keySet());
+          Set<Object> lhs2 = new LinkedHashSet<>(lhs.keySet());
           lhs2.retainAll(rhs.keySet());
           if (lhs2.isEmpty()) {
             lhs.putAll(rhs);
@@ -129,8 +143,8 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
         }
 
         generatedDocuments.add(lhs);
-        pendingDocuments = new LinkedList<Map<Object, Object>>(unmergeableDocuments);
-        unmergeableDocuments = new LinkedList<Map<Object, Object>>();
+        pendingDocuments = new LinkedList<>(unmergeableDocuments);
+        unmergeableDocuments = new LinkedList<>();
       }
 
       return generatedDocuments.size() == 1
@@ -139,14 +153,14 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
     } else if (op == Ops.NOT) {
       // Handle the not's child
       Operation<?> subOperation = (Operation<?>) expr.getArg(0);
-      Operator subOp = subOperation.getOperator();
+      var subOp = subOperation.getOperator();
       if (subOp == Ops.IN) {
         return visit(
             ExpressionUtils.operation(
                 Boolean.class, Ops.NOT_IN, subOperation.getArg(0), subOperation.getArg(1)),
             context);
       } else {
-        Document arg = (Document) handle(expr.getArg(0));
+        var arg = (Document) handle(expr.getArg(0));
         return negate(arg);
       }
 
@@ -192,21 +206,21 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
           asDBKey(expr, 0), new BsonRegularExpression(asDBValue(expr, 1).toString(), "i"));
 
     } else if (op == Ops.LIKE) {
-      String regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
+      var regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
       return asDocument(asDBKey(expr, 0), new BsonRegularExpression(regex));
 
     } else if (op == Ops.LIKE_IC) {
-      String regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
+      var regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
       return asDocument(asDBKey(expr, 0), new BsonRegularExpression(regex, "i"));
 
     } else if (op == Ops.BETWEEN) {
-      Document value = new Document("$gte", asDBValue(expr, 1));
+      var value = new Document("$gte", asDBValue(expr, 1));
       value.append("$lte", asDBValue(expr, 2));
       return asDocument(asDBKey(expr, 0), value);
 
     } else if (op == Ops.IN) {
-      int constIndex = 0;
-      int exprIndex = 1;
+      var constIndex = 0;
+      var exprIndex = 1;
       if (expr.getArg(1) instanceof Constant<?>) {
         constIndex = 1;
         exprIndex = 0;
@@ -223,8 +237,8 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
       }
 
     } else if (op == Ops.NOT_IN) {
-      int constIndex = 0;
-      int exprIndex = 1;
+      var constIndex = 0;
+      var exprIndex = 1;
       if (expr.getArg(1) instanceof Constant<?>) {
         constIndex = 1;
         exprIndex = 0;
@@ -241,8 +255,8 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
       }
 
     } else if (op == Ops.COL_IS_EMPTY) {
-      List<Object> list = new ArrayList<Object>(2);
-      list.add(asDocument(asDBKey(expr, 0), new ArrayList<Object>()));
+      List<Object> list = new ArrayList<>(2);
+      list.add(asDocument(asDBKey(expr, 0), new ArrayList<>()));
       list.add(asDocument(asDBKey(expr, 0), asDocument("$exists", false)));
       return asDocument("$or", list);
 
@@ -285,13 +299,13 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
   }
 
   private Object negate(Document arg) {
-    List<Object> list = new ArrayList<Object>();
+    List<Object> list = new ArrayList<>();
     for (Map.Entry<String, Object> entry : arg.entrySet()) {
       if (entry.getKey().equals("$or")) {
         list.add(asDocument("$nor", entry.getValue()));
 
       } else if (entry.getKey().equals("$and")) {
-        List<Object> list2 = new ArrayList<Object>();
+        List<Object> list2 = new ArrayList<>();
         for (Object o : ((Collection) entry.getValue())) {
           list2.add(negate((Document) o));
         }
@@ -316,7 +330,7 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
       return asDocument(key, asDocument("$not", value));
 
     } else {
-      List<Object> list2 = new ArrayList<Object>();
+      List<Object> list2 = new ArrayList<>();
       for (Map.Entry<String, Object> entry2 : value.entrySet()) {
         list2.add(
             asDocument(key, asDocument("$not", asDocument(entry2.getKey(), entry2.getValue()))));
@@ -332,7 +346,7 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
       if (isReference(property.getMetadata().getParent())) {
         return asReferenceKey(property.getMetadata().getParent().getType(), constant.getConstant());
       } else if (constant.getType().equals(String.class) && isImplicitObjectIdConversion()) {
-        String id = (String) constant.getConstant();
+        var id = (String) constant.getConstant();
         return ObjectId.isValid(id) ? new ObjectId(id) : id;
       }
     }
@@ -359,7 +373,7 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
 
   @Override
   public String visit(Path<?> expr, Void context) {
-    PathMetadata metadata = expr.getMetadata();
+    var metadata = expr.getMetadata();
     if (metadata.getParent() != null) {
       Path<?> parent = metadata.getParent();
       if (parent.getMetadata().getPathType() == PathType.DELEGATE) {
@@ -368,8 +382,8 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
       if (metadata.getPathType() == PathType.COLLECTION_ANY) {
         return visit(parent, context);
       } else if (parent.getMetadata().getPathType() != PathType.VARIABLE) {
-        String rv = getKeyForPath(expr, metadata);
-        String parentStr = visit(parent, context);
+        var rv = getKeyForPath(expr, metadata);
+        var parentStr = visit(parent, context);
         return rv != null ? parentStr + "." + rv : parentStr;
       }
     }
@@ -392,9 +406,9 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
 
   private Queue<Map<Object, Object>> collectConnectorArgs(String operator, Operation<?> operation) {
 
-    Queue<Map<Object, Object>> pendingDocuments = new LinkedList<Map<Object, Object>>();
+    Queue<Map<Object, Object>> pendingDocuments = new LinkedList<>();
     for (Expression<?> exp : operation.getArgs()) {
-      Map<Object, Object> document = (Map<Object, Object>) handle(exp);
+      var document = (Map<Object, Object>) handle(exp);
       if (document.keySet().size() == 1 && document.containsKey(operator)) {
         pendingDocuments.addAll((Collection<Map<Object, Object>>) document.get(operator));
       } else {

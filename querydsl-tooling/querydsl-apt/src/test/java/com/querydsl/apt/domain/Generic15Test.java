@@ -11,7 +11,7 @@ public class Generic15Test extends AbstractTest {
   @MappedSuperclass
   public abstract static class Compound<T extends Containable> {
 
-    private Set<T> containables = new HashSet<T>();
+    private Set<T> containables = new HashSet<>();
   }
 
   @MappedSuperclass

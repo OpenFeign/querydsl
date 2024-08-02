@@ -13,7 +13,10 @@
  */
 package com.querydsl.sql;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
 import java.util.List;
 
 /**
@@ -24,9 +27,9 @@ import java.util.List;
 final class UnionUtils {
 
   public static <T> Expression<T> union(List<SubQueryExpression<T>> union, boolean unionAll) {
-    final Operator operator = unionAll ? SQLOps.UNION_ALL : SQLOps.UNION;
+    final var operator = unionAll ? SQLOps.UNION_ALL : SQLOps.UNION;
     Expression<T> rv = union.get(0);
-    for (int i = 1; i < union.size(); i++) {
+    for (var i = 1; i < union.size(); i++) {
       rv = ExpressionUtils.operation(rv.getType(), operator, rv, union.get(i));
     }
     return rv;

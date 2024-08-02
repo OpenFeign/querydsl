@@ -21,7 +21,7 @@ import org.junit.Test;
 public class MapPathTest {
 
   private MapPath<String, String, StringPath> mapPath =
-      new MapPath<String, String, StringPath>(String.class, String.class, StringPath.class, "p");
+      new MapPath<>(String.class, String.class, StringPath.class, "p");
 
   @Test
   public void get() {

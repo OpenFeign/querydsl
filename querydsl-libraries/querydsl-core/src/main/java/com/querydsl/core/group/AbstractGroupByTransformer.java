@@ -15,7 +15,12 @@ package com.querydsl.core.group;
 
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionBase;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,17 +61,16 @@ public abstract class AbstractGroupByTransformer<K, T> implements ResultTransfor
     }
   }
 
-  protected final List<GroupExpression<?, ?>> groupExpressions =
-      new ArrayList<GroupExpression<?, ?>>();
+  protected final List<GroupExpression<?, ?>> groupExpressions = new ArrayList<>();
 
-  protected final List<QPair<?, ?>> maps = new ArrayList<QPair<?, ?>>();
+  protected final List<QPair<?, ?>> maps = new ArrayList<>();
 
   protected final Expression<?>[] expressions;
 
   @SuppressWarnings("unchecked")
   protected AbstractGroupByTransformer(Expression<K> key, Expression<?>... expressions) {
-    List<Expression<?>> projection = new ArrayList<Expression<?>>(expressions.length);
-    groupExpressions.add(new GOne<K>(key));
+    List<Expression<?>> projection = new ArrayList<>(expressions.length);
+    groupExpressions.add(new GOne<>(key));
     projection.add(key);
 
     for (Expression<?> expr : expressions) {
@@ -94,7 +98,7 @@ public abstract class AbstractGroupByTransformer<K, T> implements ResultTransfor
 
   protected static FactoryExpression<Tuple> withoutGroupExpressions(
       final FactoryExpression<Tuple> expr) {
-    List<Expression<?>> args = new ArrayList<Expression<?>>(expr.getArgs().size());
+    List<Expression<?>> args = new ArrayList<>(expr.getArgs().size());
     for (Expression<?> arg : expr.getArgs()) {
       if (arg instanceof GroupExpression) {
         args.add(((GroupExpression) arg).getExpression());
@@ -102,6 +106,6 @@ public abstract class AbstractGroupByTransformer<K, T> implements ResultTransfor
         args.add(arg);
       }
     }
-    return new FactoryExpressionAdapter<Tuple>(expr, args);
+    return new FactoryExpressionAdapter<>(expr, args);
   }
 }

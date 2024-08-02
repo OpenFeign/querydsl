@@ -105,7 +105,7 @@ public final class Configuration {
               Float.class);
       for (Class<?> cl : classes) {
         int code = jdbcTypeMapping.get(cl);
-        String name = templates.getTypeNameForCode(code);
+        var name = templates.getTypeNameForCode(code);
         Class<?> arrType = Array.newInstance(cl, 0).getClass();
         javaTypeMapping.register(new ArrayType(arrType, name));
         if (PrimitiveUtils.isWrapperType(cl) && !cl.equals(Byte.class)) {
@@ -201,7 +201,7 @@ public final class Configuration {
           typeName = typeName.substring(0, typeName.indexOf("("));
         }
 
-        Integer sqlComponentType = templates.getCodeForTypeName(typeName);
+        var sqlComponentType = templates.getCodeForTypeName(typeName);
         if (sqlComponentType == null) {
           logger.warning("Found no JDBC type for " + typeName + " using OTHER instead");
           sqlComponentType = Types.OTHER;
@@ -239,7 +239,7 @@ public final class Configuration {
    */
   @Nullable
   public SchemaAndTable getOverride(SchemaAndTable key) {
-    SchemaAndTable result = nameMapping.getOverride(key).orElse(key);
+    var result = nameMapping.getOverride(key).orElse(key);
     if (schemaMapping.containsKey(key.getSchema())) {
       result = new SchemaAndTable(schemaMapping.get(key.getSchema()), result.getTable());
     }
@@ -287,7 +287,7 @@ public final class Configuration {
     if (value == null || value instanceof Null) {
       Integer sqlType = null;
       if (path != null) {
-        ColumnMetadata columnMetadata = ColumnMetadata.getColumnMetadata(path);
+        var columnMetadata = ColumnMetadata.getColumnMetadata(path);
         if (columnMetadata.hasJdbcType()) {
           sqlType = columnMetadata.getJdbcType();
         }
@@ -308,8 +308,8 @@ public final class Configuration {
         && path != null
         && !clazz.equals(Null.class)
         && path.getMetadata().getParent() instanceof RelationalPath) {
-      String table = ((RelationalPath) path.getMetadata().getParent()).getTableName();
-      String column = ColumnMetadata.getName(path);
+      var table = ((RelationalPath) path.getMetadata().getParent()).getTableName();
+      var column = ColumnMetadata.getName(path);
       Type<T> type = (Type) javaTypeMapping.getType(table, column);
       if (type != null) {
         return type;
@@ -383,7 +383,7 @@ public final class Configuration {
    */
   @Deprecated
   public String registerTableOverride(String schema, String oldTable, String newTable) {
-    SchemaAndTable st = registerTableOverride(schema, oldTable, schema, newTable);
+    var st = registerTableOverride(schema, oldTable, schema, newTable);
     return st != null ? st.getTable() : null;
   }
 
@@ -489,8 +489,8 @@ public final class Configuration {
    */
   public void registerNumeric(
       int beginTotal, int endTotal, int beginDecimal, int endDecimal, Class<?> javaType) {
-    for (int total = beginTotal; total <= endTotal; total++) {
-      for (int decimal = beginDecimal; decimal <= endDecimal; decimal++) {
+    for (var total = beginTotal; total <= endTotal; total++) {
+      for (var decimal = beginDecimal; decimal <= endDecimal; decimal++) {
         registerNumeric(total, decimal, javaType);
       }
     }

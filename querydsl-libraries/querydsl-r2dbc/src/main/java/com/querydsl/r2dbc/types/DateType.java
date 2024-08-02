@@ -71,7 +71,7 @@ public class DateType extends AbstractDateTimeType<Date, Temporal> {
     // ZoneOffset.UTC).toLocalDate());
     //        }
 
-    Instant instant = Instant.from(value);
+    var instant = Instant.from(value);
     return Date.valueOf(LocalDateTime.ofInstant(instant, ZoneOffset.UTC).toLocalDate());
   }
 }

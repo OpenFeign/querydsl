@@ -100,7 +100,7 @@ public class BeanMapTest {
 
   @Test
   public void setBean() {
-    Entity entity = new Entity();
+    var entity = new Entity();
     beanMap.setBean(entity);
     assertThat(entity == beanMap.getBean()).isTrue();
   }

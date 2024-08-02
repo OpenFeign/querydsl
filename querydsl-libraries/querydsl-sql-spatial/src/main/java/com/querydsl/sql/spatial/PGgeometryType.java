@@ -39,7 +39,7 @@ class PGgeometryType extends AbstractType<Geometry> {
   @Override
   @Nullable
   public Geometry getValue(ResultSet rs, int startIndex) throws SQLException {
-    PGgeometry obj = (PGgeometry) rs.getObject(startIndex);
+    var obj = (PGgeometry) rs.getObject(startIndex);
     if (obj == null) {
       return null;
     }
@@ -48,8 +48,8 @@ class PGgeometryType extends AbstractType<Geometry> {
 
   @Override
   public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
-    final String encode = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(value);
-    PGgeometry geometry = new PGgeometry(encode);
+    final var encode = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(value);
+    var geometry = new PGgeometry(encode);
     st.setObject(startIndex, geometry);
   }
 

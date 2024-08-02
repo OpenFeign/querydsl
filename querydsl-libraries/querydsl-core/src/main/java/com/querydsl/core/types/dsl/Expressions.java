@@ -272,7 +272,7 @@ public final class Expressions {
    */
   public static <T> SimpleTemplate<T> simpleTemplate(
       Class<? extends T> cl, Template template, List<?> args) {
-    return new SimpleTemplate<T>(cl, template, args);
+    return new SimpleTemplate<>(cl, template, args);
   }
 
   /**
@@ -324,7 +324,7 @@ public final class Expressions {
    */
   public static <T> DslTemplate<T> dslTemplate(
       Class<? extends T> cl, Template template, List<?> args) {
-    return new DslTemplate<T>(cl, template, args);
+    return new DslTemplate<>(cl, template, args);
   }
 
   /**
@@ -376,7 +376,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> ComparableTemplate<T> comparableTemplate(
       Class<? extends T> cl, Template template, List<?> args) {
-    return new ComparableTemplate<T>(cl, template, args);
+    return new ComparableTemplate<>(cl, template, args);
   }
 
   /**
@@ -428,7 +428,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> DateTemplate<T> dateTemplate(
       Class<? extends T> cl, Template template, List<?> args) {
-    return new DateTemplate<T>(cl, template, args);
+    return new DateTemplate<>(cl, template, args);
   }
 
   /**
@@ -480,7 +480,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> DateTimeTemplate<T> dateTimeTemplate(
       Class<? extends T> cl, Template template, List<?> args) {
-    return new DateTimeTemplate<T>(cl, template, args);
+    return new DateTimeTemplate<>(cl, template, args);
   }
 
   /**
@@ -532,7 +532,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> TimeTemplate<T> timeTemplate(
       Class<? extends T> cl, Template template, List<?> args) {
-    return new TimeTemplate<T>(cl, template, args);
+    return new TimeTemplate<>(cl, template, args);
   }
 
   /**
@@ -584,7 +584,7 @@ public final class Expressions {
    */
   public static <T extends Enum<T>> EnumTemplate<T> enumTemplate(
       Class<? extends T> cl, Template template, List<?> args) {
-    return new EnumTemplate<T>(cl, template, args);
+    return new EnumTemplate<>(cl, template, args);
   }
 
   /**
@@ -636,7 +636,7 @@ public final class Expressions {
    */
   public static <T extends Number & Comparable<?>> NumberTemplate<T> numberTemplate(
       Class<? extends T> cl, Template template, List<?> args) {
-    return new NumberTemplate<T>(cl, template, args);
+    return new NumberTemplate<>(cl, template, args);
   }
 
   /**
@@ -761,7 +761,7 @@ public final class Expressions {
    */
   public static <T> SimpleOperation<T> simpleOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new SimpleOperation<T>(type, operator, args);
+    return new SimpleOperation<>(type, operator, args);
   }
 
   /**
@@ -774,7 +774,7 @@ public final class Expressions {
    */
   public static <T> DslOperation<T> dslOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new DslOperation<T>(type, operator, args);
+    return new DslOperation<>(type, operator, args);
   }
 
   /**
@@ -798,7 +798,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> ComparableOperation<T> comparableOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new ComparableOperation<T>(type, operator, args);
+    return new ComparableOperation<>(type, operator, args);
   }
 
   /**
@@ -811,7 +811,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> DateOperation<T> dateOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new DateOperation<T>(type, operator, args);
+    return new DateOperation<>(type, operator, args);
   }
 
   /**
@@ -824,7 +824,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> DateTimeOperation<T> dateTimeOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new DateTimeOperation<T>(type, operator, args);
+    return new DateTimeOperation<>(type, operator, args);
   }
 
   /**
@@ -837,7 +837,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> TimeOperation<T> timeOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new TimeOperation<T>(type, operator, args);
+    return new TimeOperation<>(type, operator, args);
   }
 
   /**
@@ -850,7 +850,7 @@ public final class Expressions {
    */
   public static <T extends Number & Comparable<?>> NumberOperation<T> numberOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new NumberOperation<T>(type, operator, args);
+    return new NumberOperation<>(type, operator, args);
   }
 
   /**
@@ -907,7 +907,7 @@ public final class Expressions {
    * @return path expression
    */
   public static <T> SimplePath<T> simplePath(Class<? extends T> type, String variable) {
-    return new SimplePath<T>(type, PathMetadataFactory.forVariable(variable));
+    return new SimplePath<>(type, PathMetadataFactory.forVariable(variable));
   }
 
   /**
@@ -920,7 +920,7 @@ public final class Expressions {
    */
   public static <T> SimplePath<T> simplePath(
       Class<? extends T> type, Path<?> parent, String property) {
-    return new SimplePath<T>(type, PathMetadataFactory.forProperty(parent, property));
+    return new SimplePath<>(type, PathMetadataFactory.forProperty(parent, property));
   }
 
   /**
@@ -932,7 +932,7 @@ public final class Expressions {
    * @return path expression
    */
   public static <T> SimplePath<T> simplePath(Class<? extends T> type, PathMetadata metadata) {
-    return new SimplePath<T>(type, metadata);
+    return new SimplePath<>(type, metadata);
   }
 
   /**
@@ -943,7 +943,7 @@ public final class Expressions {
    * @return path expression
    */
   public static <T> DslPath<T> dslPath(Class<? extends T> type, String variable) {
-    return new DslPath<T>(type, PathMetadataFactory.forVariable(variable));
+    return new DslPath<>(type, PathMetadataFactory.forVariable(variable));
   }
 
   /**
@@ -955,7 +955,7 @@ public final class Expressions {
    * @return property path
    */
   public static <T> DslPath<T> dslPath(Class<? extends T> type, Path<?> parent, String property) {
-    return new DslPath<T>(type, PathMetadataFactory.forProperty(parent, property));
+    return new DslPath<>(type, PathMetadataFactory.forProperty(parent, property));
   }
 
   /**
@@ -967,7 +967,7 @@ public final class Expressions {
    * @return path expression
    */
   public static <T> DslPath<T> dslPath(Class<? extends T> type, PathMetadata metadata) {
-    return new DslPath<T>(type, metadata);
+    return new DslPath<>(type, metadata);
   }
 
   /**
@@ -979,7 +979,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> ComparablePath<T> comparablePath(
       Class<? extends T> type, String variable) {
-    return new ComparablePath<T>(type, PathMetadataFactory.forVariable(variable));
+    return new ComparablePath<>(type, PathMetadataFactory.forVariable(variable));
   }
 
   /**
@@ -992,7 +992,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> ComparablePath<T> comparablePath(
       Class<? extends T> type, Path<?> parent, String property) {
-    return new ComparablePath<T>(type, PathMetadataFactory.forProperty(parent, property));
+    return new ComparablePath<>(type, PathMetadataFactory.forProperty(parent, property));
   }
 
   /**
@@ -1005,7 +1005,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> ComparablePath<T> comparablePath(
       Class<? extends T> type, PathMetadata metadata) {
-    return new ComparablePath<T>(type, metadata);
+    return new ComparablePath<>(type, metadata);
   }
 
   /**
@@ -1017,7 +1017,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> ComparableEntityPath<T> comparableEntityPath(
       Class<? extends T> type, String variable) {
-    return new ComparableEntityPath<T>(type, PathMetadataFactory.forVariable(variable));
+    return new ComparableEntityPath<>(type, PathMetadataFactory.forVariable(variable));
   }
 
   /**
@@ -1030,7 +1030,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> ComparableEntityPath<T> comparableEntityPath(
       Class<? extends T> type, Path<?> parent, String property) {
-    return new ComparableEntityPath<T>(type, PathMetadataFactory.forProperty(parent, property));
+    return new ComparableEntityPath<>(type, PathMetadataFactory.forProperty(parent, property));
   }
 
   /**
@@ -1043,7 +1043,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> ComparableEntityPath<T> comparableEntityPath(
       Class<? extends T> type, PathMetadata metadata) {
-    return new ComparableEntityPath<T>(type, metadata);
+    return new ComparableEntityPath<>(type, metadata);
   }
 
   /**
@@ -1055,7 +1055,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> DatePath<T> datePath(
       Class<? extends T> type, String variable) {
-    return new DatePath<T>(type, PathMetadataFactory.forVariable(variable));
+    return new DatePath<>(type, PathMetadataFactory.forVariable(variable));
   }
 
   /**
@@ -1068,7 +1068,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> DatePath<T> datePath(
       Class<? extends T> type, Path<?> parent, String property) {
-    return new DatePath<T>(type, PathMetadataFactory.forProperty(parent, property));
+    return new DatePath<>(type, PathMetadataFactory.forProperty(parent, property));
   }
 
   /**
@@ -1081,7 +1081,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> DatePath<T> datePath(
       Class<? extends T> type, PathMetadata metadata) {
-    return new DatePath<T>(type, metadata);
+    return new DatePath<>(type, metadata);
   }
 
   /**
@@ -1093,7 +1093,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> DateTimePath<T> dateTimePath(
       Class<? extends T> type, String variable) {
-    return new DateTimePath<T>(type, PathMetadataFactory.forVariable(variable));
+    return new DateTimePath<>(type, PathMetadataFactory.forVariable(variable));
   }
 
   /**
@@ -1106,7 +1106,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> DateTimePath<T> dateTimePath(
       Class<? extends T> type, Path<?> parent, String property) {
-    return new DateTimePath<T>(type, PathMetadataFactory.forProperty(parent, property));
+    return new DateTimePath<>(type, PathMetadataFactory.forProperty(parent, property));
   }
 
   /**
@@ -1119,7 +1119,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> DateTimePath<T> dateTimePath(
       Class<? extends T> type, PathMetadata metadata) {
-    return new DateTimePath<T>(type, metadata);
+    return new DateTimePath<>(type, metadata);
   }
 
   /**
@@ -1131,7 +1131,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> TimePath<T> timePath(
       Class<? extends T> type, String variable) {
-    return new TimePath<T>(type, PathMetadataFactory.forVariable(variable));
+    return new TimePath<>(type, PathMetadataFactory.forVariable(variable));
   }
 
   /**
@@ -1144,7 +1144,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> TimePath<T> timePath(
       Class<? extends T> type, Path<?> parent, String property) {
-    return new TimePath<T>(type, PathMetadataFactory.forProperty(parent, property));
+    return new TimePath<>(type, PathMetadataFactory.forProperty(parent, property));
   }
 
   /**
@@ -1157,7 +1157,7 @@ public final class Expressions {
    */
   public static <T extends Comparable<?>> TimePath<T> timePath(
       Class<? extends T> type, PathMetadata metadata) {
-    return new TimePath<T>(type, metadata);
+    return new TimePath<>(type, metadata);
   }
 
   /**
@@ -1169,7 +1169,7 @@ public final class Expressions {
    */
   public static <T extends Number & Comparable<?>> NumberPath<T> numberPath(
       Class<? extends T> type, String variable) {
-    return new NumberPath<T>(type, PathMetadataFactory.forVariable(variable));
+    return new NumberPath<>(type, PathMetadataFactory.forVariable(variable));
   }
 
   /**
@@ -1182,7 +1182,7 @@ public final class Expressions {
    */
   public static <T extends Number & Comparable<?>> NumberPath<T> numberPath(
       Class<? extends T> type, Path<?> parent, String property) {
-    return new NumberPath<T>(type, PathMetadataFactory.forProperty(parent, property));
+    return new NumberPath<>(type, PathMetadataFactory.forProperty(parent, property));
   }
 
   /**
@@ -1195,7 +1195,7 @@ public final class Expressions {
    */
   public static <T extends Number & Comparable<?>> NumberPath<T> numberPath(
       Class<? extends T> type, PathMetadata metadata) {
-    return new NumberPath<T>(type, metadata);
+    return new NumberPath<>(type, metadata);
   }
 
   /**
@@ -1288,9 +1288,9 @@ public final class Expressions {
    */
   @SuppressWarnings("unchecked")
   public static <T> SimpleExpression<T> list(Class<T> clazz, SimpleExpression<?>... exprs) {
-    SimpleExpression<T> rv = (SimpleExpression<T>) exprs[0];
-    for (int i = 1; i < exprs.length; i++) {
-      rv = new SimpleOperation<T>(clazz, Ops.LIST, rv, exprs[i]);
+    var rv = (SimpleExpression<T>) exprs[0];
+    for (var i = 1; i < exprs.length; i++) {
+      rv = new SimpleOperation<>(clazz, Ops.LIST, rv, exprs[i]);
     }
     return rv;
   }
@@ -1304,9 +1304,9 @@ public final class Expressions {
    */
   @SuppressWarnings("unchecked")
   public static <T> Expression<T> list(Class<T> clazz, Expression<?>... exprs) {
-    Expression<T> rv = (Expression<T>) exprs[0];
-    for (int i = 1; i < exprs.length; i++) {
-      rv = new SimpleOperation<T>(clazz, Ops.LIST, rv, exprs[i]);
+    var rv = (Expression<T>) exprs[0];
+    for (var i = 1; i < exprs.length; i++) {
+      rv = new SimpleOperation<>(clazz, Ops.LIST, rv, exprs[i]);
     }
     return rv;
   }
@@ -1320,9 +1320,9 @@ public final class Expressions {
    */
   @SuppressWarnings("unchecked")
   public static <T> SimpleExpression<T> set(Class<T> clazz, SimpleExpression<?>... exprs) {
-    SimpleExpression<T> rv = (SimpleExpression<T>) exprs[0];
-    for (int i = 1; i < exprs.length; i++) {
-      rv = new SimpleOperation<T>(clazz, Ops.SET, rv, exprs[i]);
+    var rv = (SimpleExpression<T>) exprs[0];
+    for (var i = 1; i < exprs.length; i++) {
+      rv = new SimpleOperation<>(clazz, Ops.SET, rv, exprs[i]);
     }
     return rv;
   }
@@ -1336,9 +1336,9 @@ public final class Expressions {
    */
   @SuppressWarnings("unchecked")
   public static <T> Expression<T> set(Class<T> clazz, Expression<?>... exprs) {
-    Expression<T> rv = (Expression<T>) exprs[0];
-    for (int i = 1; i < exprs.length; i++) {
-      rv = new SimpleOperation<T>(clazz, Ops.SET, rv, exprs[i]);
+    var rv = (Expression<T>) exprs[0];
+    for (var i = 1; i < exprs.length; i++) {
+      rv = new SimpleOperation<>(clazz, Ops.SET, rv, exprs[i]);
     }
     return rv;
   }
@@ -1381,7 +1381,7 @@ public final class Expressions {
    * @return null expression
    */
   public static <T> NullExpression<T> nullExpression(Class<T> type) {
-    return new NullExpression<T>(type);
+    return new NullExpression<>(type);
   }
 
   /**
@@ -1406,7 +1406,7 @@ public final class Expressions {
    */
   public static <T extends Enum<T>> EnumOperation<T> enumOperation(
       Class<? extends T> type, Operator operator, Expression<?>... args) {
-    return new EnumOperation<T>(type, operator, args);
+    return new EnumOperation<>(type, operator, args);
   }
 
   /**
@@ -1417,7 +1417,7 @@ public final class Expressions {
    * @return path expression
    */
   public static <T extends Enum<T>> EnumPath<T> enumPath(Class<? extends T> type, String variable) {
-    return new EnumPath<T>(type, PathMetadataFactory.forVariable(variable));
+    return new EnumPath<>(type, PathMetadataFactory.forVariable(variable));
   }
 
   /**
@@ -1430,7 +1430,7 @@ public final class Expressions {
    */
   public static <T extends Enum<T>> EnumPath<T> enumPath(
       Class<? extends T> type, Path<?> parent, String property) {
-    return new EnumPath<T>(type, PathMetadataFactory.forProperty(parent, property));
+    return new EnumPath<>(type, PathMetadataFactory.forProperty(parent, property));
   }
 
   /**
@@ -1443,7 +1443,7 @@ public final class Expressions {
    */
   public static <T extends Enum<T>> EnumPath<T> enumPath(
       Class<? extends T> type, PathMetadata metadata) {
-    return new EnumPath<T>(type, metadata);
+    return new EnumPath<>(type, metadata);
   }
 
   /**
@@ -1457,7 +1457,7 @@ public final class Expressions {
    */
   public static <T> CollectionExpression<Collection<T>, T> collectionOperation(
       Class<T> elementType, Operator operator, Expression<?>... args) {
-    return new CollectionOperation<T>(elementType, operator, args);
+    return new CollectionOperation<>(elementType, operator, args);
   }
 
   /**
@@ -1472,7 +1472,7 @@ public final class Expressions {
    */
   public static <E, Q extends SimpleExpression<? super E>> CollectionPath<E, Q> collectionPath(
       Class<E> type, Class<Q> queryType, PathMetadata metadata) {
-    return new CollectionPath<E, Q>(type, queryType, metadata);
+    return new CollectionPath<>(type, queryType, metadata);
   }
 
   /**
@@ -1487,7 +1487,7 @@ public final class Expressions {
    */
   public static <E, Q extends SimpleExpression<? super E>> ListPath<E, Q> listPath(
       Class<E> type, Class<Q> queryType, PathMetadata metadata) {
-    return new ListPath<E, Q>(type, queryType, metadata);
+    return new ListPath<>(type, queryType, metadata);
   }
 
   /**
@@ -1502,7 +1502,7 @@ public final class Expressions {
    */
   public static <E, Q extends SimpleExpression<? super E>> SetPath<E, Q> setPath(
       Class<E> type, Class<Q> queryType, PathMetadata metadata) {
-    return new SetPath<E, Q>(type, queryType, metadata);
+    return new SetPath<>(type, queryType, metadata);
   }
 
   /**
@@ -1522,7 +1522,7 @@ public final class Expressions {
       Class<? super V> valueType,
       Class<E> queryType,
       PathMetadata metadata) {
-    return new MapPath<K, V, E>(keyType, valueType, queryType, metadata);
+    return new MapPath<>(keyType, valueType, queryType, metadata);
   }
 
   /**
@@ -1535,7 +1535,7 @@ public final class Expressions {
    * @return path expression
    */
   public static <A, E> ArrayPath<A, E> arrayPath(Class<A> arrayType, String variable) {
-    return new ArrayPath<A, E>(arrayType, variable);
+    return new ArrayPath<>(arrayType, variable);
   }
 
   /**
@@ -1550,7 +1550,7 @@ public final class Expressions {
    */
   public static <A, E> ArrayPath<A, E> arrayPath(
       Class<A> arrayType, Path<?> parent, String property) {
-    return new ArrayPath<A, E>(arrayType, parent, property);
+    return new ArrayPath<>(arrayType, parent, property);
   }
 
   /**
@@ -1563,7 +1563,7 @@ public final class Expressions {
    * @return path expression
    */
   public static <A, E> ArrayPath<A, E> arrayPath(Class<A> arrayType, PathMetadata metadata) {
-    return new ArrayPath<A, E>(arrayType, metadata);
+    return new ArrayPath<>(arrayType, metadata);
   }
 
   private static Template createTemplate(String template) {
@@ -1599,7 +1599,7 @@ public final class Expressions {
           if (o == this) {
             return true;
           } else if (o instanceof BooleanExpression) {
-            BooleanExpression other = (BooleanExpression) o;
+            var other = (BooleanExpression) o;
             return (other.mixin.equals(this.mixin));
           } else {
             return false;
@@ -1628,13 +1628,13 @@ public final class Expressions {
   public static <T extends Comparable<?>> ComparableExpression<T> asComparable(Expression<T> expr) {
     Expression<T> underlyingMixin = ExpressionUtils.extract(expr);
     if (underlyingMixin instanceof PathImpl) {
-      return new ComparablePath<T>((PathImpl<T>) underlyingMixin);
+      return new ComparablePath<>((PathImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof OperationImpl) {
-      return new ComparableOperation<T>((OperationImpl<T>) underlyingMixin);
+      return new ComparableOperation<>((OperationImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof TemplateExpressionImpl) {
-      return new ComparableTemplate<T>((TemplateExpressionImpl<T>) underlyingMixin);
+      return new ComparableTemplate<>((TemplateExpressionImpl<T>) underlyingMixin);
     } else {
-      return new ComparableExpression<T>(underlyingMixin) {
+      return new ComparableExpression<>(underlyingMixin) {
 
         private static final long serialVersionUID = 389920618099394430L;
 
@@ -1648,7 +1648,7 @@ public final class Expressions {
           if (o == this) {
             return true;
           } else if (o instanceof ComparableExpression) {
-            ComparableExpression other = (ComparableExpression) o;
+            var other = (ComparableExpression) o;
             return (other.mixin.equals(this.mixin));
           } else {
             return false;
@@ -1677,13 +1677,13 @@ public final class Expressions {
   public static <T extends Comparable<?>> DateExpression<T> asDate(Expression<T> expr) {
     Expression<T> underlyingMixin = ExpressionUtils.extract(expr);
     if (underlyingMixin instanceof PathImpl) {
-      return new DatePath<T>((PathImpl<T>) underlyingMixin);
+      return new DatePath<>((PathImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof OperationImpl) {
-      return new DateOperation<T>((OperationImpl<T>) underlyingMixin);
+      return new DateOperation<>((OperationImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof TemplateExpressionImpl) {
-      return new DateTemplate<T>((TemplateExpressionImpl<T>) underlyingMixin);
+      return new DateTemplate<>((TemplateExpressionImpl<T>) underlyingMixin);
     } else {
-      return new DateExpression<T>(underlyingMixin) {
+      return new DateExpression<>(underlyingMixin) {
 
         private static final long serialVersionUID = 389920618099394430L;
 
@@ -1714,13 +1714,13 @@ public final class Expressions {
   public static <T extends Comparable<?>> DateTimeExpression<T> asDateTime(Expression<T> expr) {
     Expression<T> underlyingMixin = ExpressionUtils.extract(expr);
     if (underlyingMixin instanceof PathImpl) {
-      return new DateTimePath<T>((PathImpl<T>) underlyingMixin);
+      return new DateTimePath<>((PathImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof OperationImpl) {
-      return new DateTimeOperation<T>((OperationImpl<T>) underlyingMixin);
+      return new DateTimeOperation<>((OperationImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof TemplateExpressionImpl) {
-      return new DateTimeTemplate<T>((TemplateExpressionImpl<T>) underlyingMixin);
+      return new DateTimeTemplate<>((TemplateExpressionImpl<T>) underlyingMixin);
     } else {
-      return new DateTimeExpression<T>(underlyingMixin) {
+      return new DateTimeExpression<>(underlyingMixin) {
 
         private static final long serialVersionUID = 8007203530480765244L;
 
@@ -1751,13 +1751,13 @@ public final class Expressions {
   public static <T extends Comparable<?>> TimeExpression<T> asTime(Expression<T> expr) {
     Expression<T> underlyingMixin = ExpressionUtils.extract(expr);
     if (underlyingMixin instanceof PathImpl) {
-      return new TimePath<T>((PathImpl<T>) underlyingMixin);
+      return new TimePath<>((PathImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof OperationImpl) {
-      return new TimeOperation<T>((OperationImpl<T>) underlyingMixin);
+      return new TimeOperation<>((OperationImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof TemplateExpressionImpl) {
-      return new TimeTemplate<T>((TemplateExpressionImpl<T>) underlyingMixin);
+      return new TimeTemplate<>((TemplateExpressionImpl<T>) underlyingMixin);
     } else {
-      return new TimeExpression<T>(underlyingMixin) {
+      return new TimeExpression<>(underlyingMixin) {
 
         private static final long serialVersionUID = -2402288239000668173L;
 
@@ -1788,13 +1788,13 @@ public final class Expressions {
   public static <T extends Enum<T>> EnumExpression<T> asEnum(Expression<T> expr) {
     Expression<T> underlyingMixin = ExpressionUtils.extract(expr);
     if (underlyingMixin instanceof PathImpl) {
-      return new EnumPath<T>((PathImpl<T>) underlyingMixin);
+      return new EnumPath<>((PathImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof OperationImpl) {
-      return new EnumOperation<T>((OperationImpl<T>) underlyingMixin);
+      return new EnumOperation<>((OperationImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof TemplateExpressionImpl) {
-      return new EnumTemplate<T>((TemplateExpressionImpl<T>) underlyingMixin);
+      return new EnumTemplate<>((TemplateExpressionImpl<T>) underlyingMixin);
     } else {
-      return new EnumExpression<T>(underlyingMixin) {
+      return new EnumExpression<>(underlyingMixin) {
 
         private static final long serialVersionUID = 949681836002045152L;
 
@@ -1808,7 +1808,7 @@ public final class Expressions {
           if (o == this) {
             return true;
           } else if (o instanceof EnumExpression) {
-            EnumExpression other = (EnumExpression) o;
+            var other = (EnumExpression) o;
             return (other.mixin.equals(this.mixin));
           } else {
             return false;
@@ -1838,13 +1838,13 @@ public final class Expressions {
       Expression<T> expr) {
     Expression<T> underlyingMixin = ExpressionUtils.extract(expr);
     if (underlyingMixin instanceof PathImpl) {
-      return new NumberPath<T>((PathImpl<T>) underlyingMixin);
+      return new NumberPath<>((PathImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof OperationImpl) {
-      return new NumberOperation<T>((OperationImpl<T>) underlyingMixin);
+      return new NumberOperation<>((OperationImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof TemplateExpressionImpl) {
-      return new NumberTemplate<T>((TemplateExpressionImpl<T>) underlyingMixin);
+      return new NumberTemplate<>((TemplateExpressionImpl<T>) underlyingMixin);
     } else {
-      return new NumberExpression<T>(underlyingMixin) {
+      return new NumberExpression<>(underlyingMixin) {
 
         private static final long serialVersionUID = -8712299418891960222L;
 
@@ -1858,7 +1858,7 @@ public final class Expressions {
           if (o == this) {
             return true;
           } else if (o instanceof NumberExpression) {
-            NumberExpression other = (NumberExpression) o;
+            var other = (NumberExpression) o;
             return (other.mixin.equals(this.mixin));
           } else {
             return false;
@@ -1907,7 +1907,7 @@ public final class Expressions {
           if (o == this) {
             return true;
           } else if (o instanceof StringExpression) {
-            StringExpression other = (StringExpression) o;
+            var other = (StringExpression) o;
             return (other.mixin.equals(this.mixin));
           } else {
             return false;
@@ -1936,13 +1936,13 @@ public final class Expressions {
   public static <T> SimpleExpression<T> asSimple(Expression<T> expr) {
     Expression<T> underlyingMixin = ExpressionUtils.extract(expr);
     if (underlyingMixin instanceof PathImpl) {
-      return new SimplePath<T>((PathImpl<T>) underlyingMixin);
+      return new SimplePath<>((PathImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof OperationImpl) {
-      return new SimpleOperation<T>((OperationImpl<T>) underlyingMixin);
+      return new SimpleOperation<>((OperationImpl<T>) underlyingMixin);
     } else if (underlyingMixin instanceof TemplateExpressionImpl) {
-      return new SimpleTemplate<T>((TemplateExpressionImpl<T>) underlyingMixin);
+      return new SimpleTemplate<>((TemplateExpressionImpl<T>) underlyingMixin);
     } else {
-      return new SimpleExpression<T>(underlyingMixin) {
+      return new SimpleExpression<>(underlyingMixin) {
 
         private static final long serialVersionUID = -8712299418891960222L;
 

@@ -16,13 +16,13 @@ public class AggregationTest extends AbstractQueryTest {
   @Override
   @Before
   public void setUp() {
-    Cat cat1 = new Cat();
+    var cat1 = new Cat();
     cat1.setWeight(2);
-    Cat cat2 = new Cat();
+    var cat2 = new Cat();
     cat2.setWeight(3);
-    Cat cat3 = new Cat();
+    var cat3 = new Cat();
     cat3.setWeight(4);
-    Cat cat4 = new Cat();
+    var cat4 = new Cat();
     cat4.setWeight(5);
     query = CollQueryFactory.<Cat>from(cat, Arrays.asList(cat1, cat2, cat3, cat4));
   }

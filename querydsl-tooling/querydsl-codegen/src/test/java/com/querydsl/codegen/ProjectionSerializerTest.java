@@ -41,12 +41,12 @@ public class ProjectionSerializerTest {
             "DomainClass",
             false,
             false);
-    EntityType type = new EntityType(typeModel);
+    var type = new EntityType(typeModel);
 
     // constructor
-    Parameter firstName = new Parameter("firstName", Types.STRING);
-    Parameter lastName = new Parameter("lastName", Types.STRING);
-    Parameter age = new Parameter("age", Types.INTEGER);
+    var firstName = new Parameter("firstName", Types.STRING);
+    var lastName = new Parameter("lastName", Types.STRING);
+    var age = new Parameter("age", Types.INTEGER);
     type.addConstructor(new Constructor(Arrays.asList(firstName, lastName, age)));
 
     Writer writer = new StringWriter();
@@ -67,12 +67,12 @@ public class ProjectionSerializerTest {
             "DomainClass",
             false,
             false);
-    EntityType type = new EntityType(typeModel);
+    var type = new EntityType(typeModel);
 
     Writer writer = new StringWriter();
     ProjectionSerializer serializer = new DefaultProjectionSerializer(new JavaTypeMappings());
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    String generatedSource = writer.toString();
+    var generatedSource = writer.toString();
     assertThat(generatedSource)
         .contains("import %s;".formatted(GeneratedAnnotationResolver.resolveDefault().getName()));
     assertThat(generatedSource)
@@ -90,13 +90,13 @@ public class ProjectionSerializerTest {
             "DomainClass",
             false,
             false);
-    EntityType type = new EntityType(typeModel);
+    var type = new EntityType(typeModel);
 
     Writer writer = new StringWriter();
     ProjectionSerializer serializer =
         new DefaultProjectionSerializer(new JavaTypeMappings(), Generated.class);
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    String generatedSource = writer.toString();
+    var generatedSource = writer.toString();
     assertThat(generatedSource).contains("import com.querydsl.core.annotations.Generated");
     assertThat(generatedSource)
         .containsIgnoringNewLines(

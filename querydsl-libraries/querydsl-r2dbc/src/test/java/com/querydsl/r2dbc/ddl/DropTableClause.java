@@ -7,7 +7,6 @@ package com.querydsl.r2dbc.ddl;
 
 import com.querydsl.r2dbc.Configuration;
 import io.r2dbc.spi.Connection;
-import io.r2dbc.spi.Statement;
 import reactor.core.publisher.Mono;
 
 /**
@@ -28,7 +27,7 @@ public class DropTableClause {
 
   @SuppressWarnings("SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE")
   public Mono<Void> execute() {
-    Statement statement = connection.createStatement("DROP TABLE IF EXISTS " + table);
+    var statement = connection.createStatement("DROP TABLE IF EXISTS " + table);
     return Mono.from(statement.execute()).then();
   }
 }

@@ -14,7 +14,11 @@
 package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * GSet
@@ -27,30 +31,30 @@ public abstract class GSet<T, S extends Set<T>> extends AbstractGroupExpression<
   private static final long serialVersionUID = -1575808026237160843L;
 
   public static <U> GSet<U, Set<U>> createLinked(Expression<U> expr) {
-    return new GSet<U, Set<U>>(expr) {
+    return new GSet<>(expr) {
       @Override
       protected Set<U> createSet() {
-        return new LinkedHashSet<U>();
+        return new LinkedHashSet<>();
       }
     };
   }
 
   public static <U extends Comparable<? super U>> GSet<U, SortedSet<U>> createSorted(
       Expression<U> expr) {
-    return new GSet<U, SortedSet<U>>(expr) {
+    return new GSet<>(expr) {
       @Override
       protected SortedSet<U> createSet() {
-        return new TreeSet<U>();
+        return new TreeSet<>();
       }
     };
   }
 
   public static <U> GSet<U, SortedSet<U>> createSorted(
       Expression<U> expr, final Comparator<? super U> comparator) {
-    return new GSet<U, SortedSet<U>>(expr) {
+    return new GSet<>(expr) {
       @Override
       protected SortedSet<U> createSet() {
-        return new TreeSet<U>(comparator);
+        return new TreeSet<>(comparator);
       }
     };
   }
@@ -63,7 +67,7 @@ public abstract class GSet<T, S extends Set<T>> extends AbstractGroupExpression<
 
   @Override
   public GroupCollector<T, S> createGroupCollector() {
-    return new GroupCollector<T, S>() {
+    return new GroupCollector<>() {
 
       private final S set = createSet();
 

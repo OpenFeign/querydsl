@@ -15,7 +15,6 @@ import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.codegen.utils.model.Types;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -31,7 +30,7 @@ import org.junit.Test;
 public class JavaWriterTest {
 
   private static final Function<Parameter, Parameter> transformer =
-      new Function<Parameter, Parameter>() {
+      new Function<>() {
         @Override
         public Parameter apply(Parameter input) {
           return input;
@@ -46,17 +45,17 @@ public class JavaWriterTest {
 
   private static void match(String resource, String text) throws IOException {
     // TODO : try to compile ?
-    final InputStream resourceAsStream = JavaWriterTest.class.getResourceAsStream(resource);
-    StringBuilder textBuilder = new StringBuilder();
+    final var resourceAsStream = JavaWriterTest.class.getResourceAsStream(resource);
+    var textBuilder = new StringBuilder();
     try (Reader reader =
         new BufferedReader(new InputStreamReader(resourceAsStream, StandardCharsets.UTF_8))) {
-      int c = 0;
+      var c = 0;
       while ((c = reader.read()) != -1) {
         textBuilder.append((char) c);
       }
     }
-    String expected = textBuilder.toString().replace("\r\n", System.lineSeparator()).trim();
-    String actual = text.trim();
+    var expected = textBuilder.toString().replace("\r\n", System.lineSeparator()).trim();
+    var actual = text.trim();
     assertThat(actual).isEqualTo(expected);
   }
 
@@ -105,7 +104,7 @@ public class JavaWriterTest {
 
   @Test
   public void Primitive_Arrays() {
-    ClassType byteArray = new ClassType(byte[].class);
+    var byteArray = new ClassType(byte[].class);
     assertThat(writer.getRawName(byteArray)).isEqualTo("byte[]");
   }
 

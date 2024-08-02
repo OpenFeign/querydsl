@@ -36,23 +36,23 @@ import org.jetbrains.annotations.Nullable;
  */
 public class EntityType extends TypeAdapter implements Comparable<EntityType> {
 
-  private final Map<Class<?>, Annotation> annotations = new HashMap<Class<?>, Annotation>();
+  private final Map<Class<?>, Annotation> annotations = new HashMap<>();
 
-  private final Set<Constructor> constructors = new LinkedHashSet<Constructor>();
+  private final Set<Constructor> constructors = new LinkedHashSet<>();
 
   private int escapeSuffix = 1;
 
-  private final Set<Delegate> delegates = new HashSet<Delegate>();
+  private final Set<Delegate> delegates = new HashSet<>();
 
-  private final Set<Property> properties = new TreeSet<Property>();
+  private final Set<Property> properties = new TreeSet<>();
 
-  private final Set<String> propertyNames = new HashSet<String>();
+  private final Set<String> propertyNames = new HashSet<>();
 
-  private final Set<String> escapedPropertyNames = new HashSet<String>();
+  private final Set<String> escapedPropertyNames = new HashSet<>();
 
   private final Set<Supertype> superTypes;
 
-  private final Map<Object, Object> data = new HashMap<Object, Object>();
+  private final Map<Object, Object> data = new HashMap<>();
 
   private String modifiedSimpleName;
 
@@ -62,7 +62,7 @@ public class EntityType extends TypeAdapter implements Comparable<EntityType> {
    * @param type
    */
   public EntityType(Type type) {
-    this(type, new LinkedHashSet<Supertype>(), DefaultVariableNameFunction.INSTANCE);
+    this(type, new LinkedHashSet<>(), DefaultVariableNameFunction.INSTANCE);
   }
 
   /**
@@ -72,7 +72,7 @@ public class EntityType extends TypeAdapter implements Comparable<EntityType> {
    * @param variableNameFunction the variable name function to be used
    */
   public EntityType(Type type, Function<EntityType, String> variableNameFunction) {
-    this(type, new LinkedHashSet<Supertype>(), variableNameFunction);
+    this(type, new LinkedHashSet<>(), variableNameFunction);
   }
 
   /**

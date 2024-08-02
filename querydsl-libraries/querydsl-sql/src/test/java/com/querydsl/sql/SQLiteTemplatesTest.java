@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import org.junit.Test;
 
 public class SQLiteTemplatesTest extends AbstractSQLTemplatesTest {
@@ -32,9 +31,9 @@ public class SQLiteTemplatesTest extends AbstractSQLTemplatesTest {
   @SuppressWarnings("unchecked")
   @Override
   public void union() {
-    NumberExpression<Integer> one = Expressions.ONE;
-    NumberExpression<Integer> two = Expressions.TWO;
-    NumberExpression<Integer> three = Expressions.THREE;
+    var one = Expressions.ONE;
+    var two = Expressions.TWO;
+    var three = Expressions.THREE;
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union = query.union(select(one.as(col1)), select(two), select(three));
 
@@ -46,14 +45,14 @@ public class SQLiteTemplatesTest extends AbstractSQLTemplatesTest {
   public void precedence() {
     // ||
     // *    /    %
-    int p1 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
+    var p1 = getPrecedence(Ops.MULT, Ops.DIV, Ops.MOD);
     // +    -
-    int p2 = getPrecedence(Ops.ADD, Ops.SUB);
+    var p2 = getPrecedence(Ops.ADD, Ops.SUB);
     // <<   >>   &    |
     // <    <=   >    >=
-    int p3 = getPrecedence(Ops.LT, Ops.GT, Ops.LOE, Ops.GOE);
+    var p3 = getPrecedence(Ops.LT, Ops.GT, Ops.LOE, Ops.GOE);
     // =    ==   !=   <>   IS   IS NOT   IN   LIKE   GLOB   MATCH   REGEXP
-    int p4 =
+    var p4 =
         getPrecedence(
             Ops.EQ,
             Ops.EQ_IGNORE_CASE,
@@ -64,9 +63,9 @@ public class SQLiteTemplatesTest extends AbstractSQLTemplatesTest {
             Ops.LIKE_ESCAPE,
             Ops.MATCHES);
     // AND
-    int p5 = getPrecedence(Ops.AND);
+    var p5 = getPrecedence(Ops.AND);
     //  OR
-    int p6 = getPrecedence(Ops.OR);
+    var p6 = getPrecedence(Ops.OR);
 
     assertThat(p1 < p2).isTrue();
     assertThat(p2 < p3).isTrue();

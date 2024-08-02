@@ -49,7 +49,7 @@ public class HibernateUpdateClause implements UpdateClause<HibernateUpdateClause
 
   private final JPQLTemplates templates;
 
-  private final Map<Path<?>, LockMode> lockModes = new HashMap<Path<?>, LockMode>();
+  private final Map<Path<?>, LockMode> lockModes = new HashMap<>();
 
   public HibernateUpdateClause(Session session, EntityPath<?> entity) {
     this(new DefaultSessionHolder(session), entity, HQLTemplates.DEFAULT);
@@ -72,7 +72,7 @@ public class HibernateUpdateClause implements UpdateClause<HibernateUpdateClause
 
   @Override
   public long execute() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, null);
+    var serializer = new JPQLSerializer(templates, null);
     serializer.serializeForUpdate(queryMixin.getMetadata(), updates);
 
     Query query = session.createQuery(serializer.toString());
@@ -113,7 +113,7 @@ public class HibernateUpdateClause implements UpdateClause<HibernateUpdateClause
   @SuppressWarnings("unchecked")
   @Override
   public HibernateUpdateClause set(List<? extends Path<?>> paths, List<?> values) {
-    for (int i = 0; i < paths.size(); i++) {
+    for (var i = 0; i < paths.size(); i++) {
       if (values.get(i) != null) {
         updates.put(paths.get(i), Expressions.constant(values.get(i)));
       } else {
@@ -144,7 +144,7 @@ public class HibernateUpdateClause implements UpdateClause<HibernateUpdateClause
 
   @Override
   public String toString() {
-    JPQLSerializer serializer = new JPQLSerializer(templates, null);
+    var serializer = new JPQLSerializer(templates, null);
     serializer.serializeForUpdate(queryMixin.getMetadata(), updates);
     return serializer.toString();
   }

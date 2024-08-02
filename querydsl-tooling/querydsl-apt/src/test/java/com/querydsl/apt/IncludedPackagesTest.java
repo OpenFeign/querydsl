@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import org.junit.Test;
 
 public class IncludedPackagesTest extends AbstractProcessorTest {
@@ -28,7 +27,7 @@ public class IncludedPackagesTest extends AbstractProcessorTest {
 
   @Test
   public void process() throws IOException {
-    List<String> classes = getFiles(packagePath);
+    var classes = getFiles(packagePath);
     process(QuerydslAnnotationProcessor.class, classes, "includedPackages");
 
     assertThat(new File("target/includedPackages/com/querydsl/apt/domain/p1").exists()).isFalse();

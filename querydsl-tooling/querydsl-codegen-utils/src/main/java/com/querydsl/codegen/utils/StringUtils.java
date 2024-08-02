@@ -35,7 +35,7 @@ public final class StringUtils {
   }
 
   public static String repeat(char value, int times) {
-    char[] chars = new char[times];
+    var chars = new char[times];
     Arrays.fill(chars, value);
     return new String(chars);
   }

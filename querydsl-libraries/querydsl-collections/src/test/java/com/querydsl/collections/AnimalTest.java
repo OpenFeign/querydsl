@@ -22,7 +22,7 @@ public class AnimalTest {
 
   @Test
   public void cast() {
-    QCat cat = QAnimal.animal.as(QCat.class);
+    var cat = QAnimal.animal.as(QCat.class);
     assertThat(cat.getMetadata().getElement()).isEqualTo(QAnimal.animal);
     assertThat(cat).hasToString("animal");
   }

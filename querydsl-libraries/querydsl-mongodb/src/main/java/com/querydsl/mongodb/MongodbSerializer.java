@@ -17,7 +17,21 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.PathType;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.core.types.Visitor;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +53,7 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
   }
 
   public DBObject toSort(List<OrderSpecifier<?>> orderBys) {
-    BasicDBObject sort = new BasicDBObject();
+    var sort = new BasicDBObject();
     for (OrderSpecifier<?> orderBy : orderBys) {
       Object key = orderBy.getTarget().accept(this, null);
       sort.append(key.toString(), orderBy.getOrder() == Order.ASC ? 1 : -1);
@@ -87,7 +101,7 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
   @SuppressWarnings("unchecked")
   @Override
   public Object visit(Operation<?> expr, Void context) {
-    Operator op = expr.getOperator();
+    var op = expr.getOperator();
     if (op == Ops.EQ) {
       if (expr.getArg(0) instanceof Operation) {
         Operation<?> lhs = (Operation<?>) expr.getArg(0);
@@ -105,13 +119,13 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       return asDBObject(asDBKey(expr, 0), "");
 
     } else if (op == Ops.AND) {
-      BSONObject lhs = (BSONObject) handle(expr.getArg(0));
-      BSONObject rhs = (BSONObject) handle(expr.getArg(1));
+      var lhs = (BSONObject) handle(expr.getArg(0));
+      var rhs = (BSONObject) handle(expr.getArg(1));
       if (lhs.keySet().stream().noneMatch(rhs.keySet()::contains)) {
         lhs.putAll(rhs);
         return lhs;
       } else {
-        BasicDBList list = new BasicDBList();
+        var list = new BasicDBList();
         list.add(handle(expr.getArg(0)));
         list.add(handle(expr.getArg(1)));
         return asDBObject("$and", list);
@@ -120,19 +134,19 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
     } else if (op == Ops.NOT) {
       // Handle the not's child
       Operation<?> subOperation = (Operation<?>) expr.getArg(0);
-      Operator subOp = subOperation.getOperator();
+      var subOp = subOperation.getOperator();
       if (subOp == Ops.IN) {
         return visit(
             ExpressionUtils.operation(
                 Boolean.class, Ops.NOT_IN, subOperation.getArg(0), subOperation.getArg(1)),
             context);
       } else {
-        BasicDBObject arg = (BasicDBObject) handle(expr.getArg(0));
+        var arg = (BasicDBObject) handle(expr.getArg(0));
         return negate(arg);
       }
 
     } else if (op == Ops.OR) {
-      BasicDBList list = new BasicDBList();
+      var list = new BasicDBList();
       list.add(handle(expr.getArg(0)));
       list.add(handle(expr.getArg(1)));
       return asDBObject("$or", list);
@@ -178,21 +192,21 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
           Pattern.compile(asDBValue(expr, 1).toString(), Pattern.CASE_INSENSITIVE));
 
     } else if (op == Ops.LIKE) {
-      String regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
+      var regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
       return asDBObject(asDBKey(expr, 0), Pattern.compile(regex));
 
     } else if (op == Ops.LIKE_IC) {
-      String regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
+      var regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
       return asDBObject(asDBKey(expr, 0), Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
 
     } else if (op == Ops.BETWEEN) {
-      BasicDBObject value = new BasicDBObject("$gte", asDBValue(expr, 1));
+      var value = new BasicDBObject("$gte", asDBValue(expr, 1));
       value.append("$lte", asDBValue(expr, 2));
       return asDBObject(asDBKey(expr, 0), value);
 
     } else if (op == Ops.IN) {
-      int constIndex = 0;
-      int exprIndex = 1;
+      var constIndex = 0;
+      var exprIndex = 1;
       if (expr.getArg(1) instanceof Constant<?>) {
         constIndex = 1;
         exprIndex = 0;
@@ -209,8 +223,8 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       }
 
     } else if (op == Ops.NOT_IN) {
-      int constIndex = 0;
-      int exprIndex = 1;
+      var constIndex = 0;
+      var exprIndex = 1;
       if (expr.getArg(1) instanceof Constant<?>) {
         constIndex = 1;
         exprIndex = 0;
@@ -227,7 +241,7 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       }
 
     } else if (op == Ops.COL_IS_EMPTY) {
-      BasicDBList list = new BasicDBList();
+      var list = new BasicDBList();
       list.add(asDBObject(asDBKey(expr, 0), new BasicDBList()));
       list.add(asDBObject(asDBKey(expr, 0), asDBObject("$exists", false)));
       return asDBObject("$or", list);
@@ -282,13 +296,13 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
   }
 
   private Object negate(BasicDBObject arg) {
-    BasicDBList list = new BasicDBList();
+    var list = new BasicDBList();
     for (Map.Entry<String, Object> entry : arg.entrySet()) {
       if (entry.getKey().equals("$or")) {
         list.add(asDBObject("$nor", entry.getValue()));
 
       } else if (entry.getKey().equals("$and")) {
-        BasicDBList list2 = new BasicDBList();
+        var list2 = new BasicDBList();
         for (Object o : ((BasicDBList) entry.getValue())) {
           list2.add(negate((BasicDBObject) o));
         }
@@ -312,7 +326,7 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       return asDBObject(key, asDBObject("$not", value));
 
     } else {
-      BasicDBList list2 = new BasicDBList();
+      var list2 = new BasicDBList();
       for (Map.Entry<String, Object> entry2 : value.entrySet()) {
         list2.add(
             asDBObject(key, asDBObject("$not", asDBObject(entry2.getKey(), entry2.getValue()))));
@@ -328,7 +342,7 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       if (isReference(property.getMetadata().getParent())) {
         return asReferenceKey(property.getMetadata().getParent().getType(), constant.getConstant());
       } else if (constant.getType().equals(String.class) && isImplicitObjectIdConversion()) {
-        String id = (String) constant.getConstant();
+        var id = (String) constant.getConstant();
         return ObjectId.isValid(id) ? new ObjectId(id) : id;
       }
     }
@@ -355,7 +369,7 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
 
   @Override
   public String visit(Path<?> expr, Void context) {
-    PathMetadata metadata = expr.getMetadata();
+    var metadata = expr.getMetadata();
     if (metadata.getParent() != null) {
       Path<?> parent = metadata.getParent();
       if (parent.getMetadata().getPathType() == PathType.DELEGATE) {
@@ -364,8 +378,8 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       if (metadata.getPathType() == PathType.COLLECTION_ANY) {
         return visit(parent, context);
       } else if (parent.getMetadata().getPathType() != PathType.VARIABLE) {
-        String rv = getKeyForPath(expr, metadata);
-        String parentStr = visit(parent, context);
+        var rv = getKeyForPath(expr, metadata);
+        var parentStr = visit(parent, context);
         return rv != null ? parentStr + "." + rv : parentStr;
       }
     }

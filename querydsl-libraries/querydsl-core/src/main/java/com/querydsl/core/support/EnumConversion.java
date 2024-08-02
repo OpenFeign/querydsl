@@ -59,13 +59,13 @@ public class EnumConversion<T> extends FactoryExpressionBase<T> {
     if (args[0] != null) {
       if (args[0] instanceof String || args[0] instanceof Character) {
         @SuppressWarnings("unchecked") // The expression type is an enum
-        T rv = (T) Enum.valueOf(getType().asSubclass(Enum.class), (String) args[0].toString());
+        var rv = (T) Enum.valueOf(getType().asSubclass(Enum.class), args[0].toString());
         return rv;
       } else if (args[0] instanceof Number) {
         return values[((Number) args[0]).intValue()];
       } else {
         @SuppressWarnings("unchecked")
-        T rv = (T) args[0];
+        var rv = (T) args[0];
         return rv;
       }
     } else {

@@ -1,7 +1,7 @@
 package com.querydsl.codegen.utils;
 
 import jakarta.validation.Payload;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
 import java.lang.annotation.Annotation;
 
 /**

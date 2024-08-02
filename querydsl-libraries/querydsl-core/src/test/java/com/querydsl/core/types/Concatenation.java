@@ -39,7 +39,7 @@ public class Concatenation extends FactoryExpressionBase<String> {
 
   @Override
   public String newInstance(Object... args) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     for (Object a : args) {
       builder.append(a);
     }

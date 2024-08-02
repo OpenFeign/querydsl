@@ -32,6 +32,7 @@ public class PreConfiguredNameMapping implements NameMapping {
 
   private final Map<String, Map<String, String>> tableColumns = new HashMap<>();
 
+  @Override
   public Optional<SchemaAndTable> getOverride(SchemaAndTable key) {
     if (!schemaTables.isEmpty() && key.getSchema() != null) {
       if (schemaTables.containsKey(key)) {
@@ -40,12 +41,13 @@ public class PreConfiguredNameMapping implements NameMapping {
     }
 
     if (tables.containsKey(key.getTable())) {
-      String table = tables.get(key.getTable());
+      var table = tables.get(key.getTable());
       return Optional.of(new SchemaAndTable(key.getSchema(), table));
     }
     return Optional.empty();
   }
 
+  @Override
   public Optional<String> getColumnOverride(SchemaAndTable key, String column) {
     Map<String, String> columnOverrides;
     String newColumn = null;
@@ -70,15 +72,14 @@ public class PreConfiguredNameMapping implements NameMapping {
 
   public String registerColumnOverride(
       String schema, String table, String oldColumn, String newColumn) {
-    SchemaAndTable key = new SchemaAndTable(schema, table);
-    Map<String, String> columnOverrides =
+    var key = new SchemaAndTable(schema, table);
+    var columnOverrides =
         schemaTableColumns.computeIfAbsent(key, k -> new HashMap<String, String>());
     return columnOverrides.put(oldColumn, newColumn);
   }
 
   public String registerColumnOverride(String table, String oldColumn, String newColumn) {
-    Map<String, String> columnOverrides =
-        tableColumns.computeIfAbsent(table, k -> new HashMap<String, String>());
+    var columnOverrides = tableColumns.computeIfAbsent(table, k -> new HashMap<String, String>());
     return columnOverrides.put(oldColumn, newColumn);
   }
 }

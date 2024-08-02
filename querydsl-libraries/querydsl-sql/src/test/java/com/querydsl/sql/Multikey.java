@@ -66,7 +66,7 @@ public class Multikey {
     if (!(o instanceof Multikey)) {
       return false;
     }
-    Multikey obj = (Multikey) o;
+    var obj = (Multikey) o;
     return id.equals(obj.id) && id2.equals(obj.id2) && id3.equals(obj.id3);
   }
 
@@ -75,8 +75,8 @@ public class Multikey {
     if (id == null || id2 == null || id3 == null) {
       return super.hashCode();
     }
-    final int primary = 31;
-    int result = 1;
+    final var primary = 31;
+    var result = 1;
     result = primary * result + id.hashCode();
     result = primary * result + id2.hashCode();
     result = primary * result + id3.hashCode();

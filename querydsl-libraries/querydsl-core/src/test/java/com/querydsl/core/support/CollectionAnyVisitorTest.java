@@ -38,7 +38,7 @@ public class CollectionAnyVisitorTest {
 
   @Test
   public void longer_path2() {
-    CollectionAnyVisitor visitor = new CollectionAnyVisitor();
+    var visitor = new CollectionAnyVisitor();
     assertThat(serialize(cat.kittens.any().name, visitor)).isEqualTo("cat_kittens_0.name");
     assertThat(serialize(cat.kittens.any().name, visitor)).isEqualTo("cat_kittens_1.name");
   }

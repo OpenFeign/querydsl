@@ -26,7 +26,7 @@ public class DependenciesTest {
   @Ignore
   public void test() throws IOException {
     // FIXME
-    JDepend jdepend = new JDepend();
+    var jdepend = new JDepend();
     jdepend.addDirectory("target/classes/com/querydsl/alias");
     jdepend.addDirectory("target/classes/com/querydsl/codegen");
     jdepend.addDirectory("target/classes/com/querydsl/dml");

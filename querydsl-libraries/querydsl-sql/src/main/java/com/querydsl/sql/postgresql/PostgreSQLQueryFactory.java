@@ -16,7 +16,11 @@ package com.querydsl.sql.postgresql;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.sql.*;
+import com.querydsl.sql.AbstractSQLQueryFactory;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.PostgreSQLTemplates;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLTemplates;
 import java.sql.Connection;
 import java.util.function.Supplier;
 

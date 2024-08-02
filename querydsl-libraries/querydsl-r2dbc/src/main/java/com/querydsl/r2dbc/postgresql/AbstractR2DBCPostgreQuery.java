@@ -13,7 +13,6 @@
  */
 package com.querydsl.r2dbc.postgresql;
 
-import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.types.Expression;
@@ -51,6 +50,7 @@ public abstract class AbstractR2DBCPostgreQuery<T, C extends AbstractR2DBCPostgr
    *
    * @return the current object
    */
+  @Override
   public C forShare() {
     // global forShare support was added later, delegating to super implementation
     return super.forShare();
@@ -63,7 +63,7 @@ public abstract class AbstractR2DBCPostgreQuery<T, C extends AbstractR2DBCPostgr
    * @return the current object
    */
   public C noWait() {
-    QueryFlag noWaitFlag = configuration.getTemplates().getNoWaitFlag();
+    var noWaitFlag = configuration.getTemplates().getNoWaitFlag();
     return addFlag(noWaitFlag);
   }
 
@@ -74,7 +74,7 @@ public abstract class AbstractR2DBCPostgreQuery<T, C extends AbstractR2DBCPostgr
    * @return the current object
    */
   public C of(RelationalPath<?>... paths) {
-    StringBuilder builder = new StringBuilder(" of ");
+    var builder = new StringBuilder(" of ");
     for (RelationalPath<?> path : paths) {
       if (builder.length() > 4) {
         builder.append(", ");

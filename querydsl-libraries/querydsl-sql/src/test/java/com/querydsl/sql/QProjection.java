@@ -46,19 +46,19 @@ public class QProjection extends ExpressionBase<Projection>
 
       @Override
       public <T> T get(Expression<T> expr) {
-        int index = getArgs().indexOf(expr);
+        var index = getArgs().indexOf(expr);
         return index != -1 ? (T) args[index] : null;
       }
 
       @Override
       public <T> Expression<T> getExpr(Expression<T> expr) {
-        T val = get(expr);
+        var val = get(expr);
         return val != null ? SimpleConstant.create(val) : null;
       }
 
       @Override
       public <T> Expression<T> getExpr(int index, Class<T> type) {
-        T val = (T) args[index];
+        var val = (T) args[index];
         return val != null ? SimpleConstant.create(val) : null;
       }
 

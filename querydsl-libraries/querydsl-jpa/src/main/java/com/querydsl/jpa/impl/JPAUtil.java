@@ -33,10 +33,10 @@ public final class JPAUtil {
 
   public static void setConstants(
       Query query, List<Object> constants, Map<ParamExpression<?>, Object> params) {
-    boolean hasParameters = !query.getParameters().isEmpty();
+    var hasParameters = !query.getParameters().isEmpty();
 
-    for (int i = 0; i < constants.size(); i++) {
-      Object val = constants.get(i);
+    for (var i = 0; i < constants.size(); i++) {
+      var val = constants.get(i);
 
       if (val instanceof Param) {
         Param<?> param = (Param<?>) val;
@@ -48,7 +48,7 @@ public final class JPAUtil {
 
       if (hasParameters) {
         Parameter parameter = query.getParameter(i + 1);
-        Class parameterType = parameter != null ? parameter.getParameterType() : null;
+        var parameterType = parameter != null ? parameter.getParameterType() : null;
         if (parameterType != null && !parameterType.isInstance(val)) {
           if (val instanceof Number && Number.class.isAssignableFrom(parameterType)) {
             val = MathUtils.cast((Number) val, parameterType);

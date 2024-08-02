@@ -41,7 +41,7 @@ public abstract class AbstractNamingStrategy implements NamingStrategy {
     if (schemaName == null) {
       return packageName;
     }
-    String suffix = schemaName.toLowerCase();
+    var suffix = schemaName.toLowerCase();
     if (SourceVersion.isKeyword(suffix)) {
       suffix += "_";
     }
@@ -49,9 +49,9 @@ public abstract class AbstractNamingStrategy implements NamingStrategy {
   }
 
   protected String escape(EntityType entityType, String name) {
-    int suffix = 0;
+    var suffix = 0;
     while (true) {
-      String candidate = suffix > 0 ? name + suffix : name;
+      var candidate = suffix > 0 ? name + suffix : name;
       if (entityType.getEscapedPropertyNames().contains(candidate)) {
         suffix++;
       } else {

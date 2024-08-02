@@ -16,7 +16,6 @@ package com.querydsl.sql;
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
@@ -72,7 +71,7 @@ public class SQLServer2012Templates extends SQLServerTemplates {
         && metadata.getOrderBy().isEmpty()
         && !metadata.getJoins().isEmpty()) {
       metadata = metadata.clone();
-      QueryModifiers mod = metadata.getModifiers();
+      var mod = metadata.getModifiers();
       // use top if order by is empty
       if (mod.getOffset() == null) {
         // select top ...
@@ -96,7 +95,7 @@ public class SQLServer2012Templates extends SQLServerTemplates {
   public void serializeDelete(
       QueryMetadata metadata, RelationalPath<?> entity, SQLSerializer context) {
     // limit
-    QueryModifiers mod = metadata.getModifiers();
+    var mod = metadata.getModifiers();
     if (mod.isRestricting()) {
       metadata = metadata.clone();
       metadata.addFlag(
@@ -119,7 +118,7 @@ public class SQLServer2012Templates extends SQLServerTemplates {
       Map<Path<?>, Expression<?>> updates,
       SQLSerializer context) {
     // limit
-    QueryModifiers mod = metadata.getModifiers();
+    var mod = metadata.getModifiers();
     if (mod.isRestricting()) {
       metadata = metadata.clone();
       metadata.addFlag(
@@ -138,7 +137,7 @@ public class SQLServer2012Templates extends SQLServerTemplates {
   @Override
   protected void serializeModifiers(QueryMetadata metadata, SQLSerializer context) {
     if (!metadata.getOrderBy().isEmpty()) {
-      QueryModifiers mod = metadata.getModifiers();
+      var mod = metadata.getModifiers();
       if (mod.getLimit() == null) {
         context.handle(offsetTemplate, mod.getOffset());
       } else if (mod.getOffset() == null) {

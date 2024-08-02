@@ -42,7 +42,7 @@ public class CollDeleteClause<T> implements DeleteClause<CollDeleteClause<T>> {
 
   @Override
   public long execute() {
-    int rv = 0;
+    var rv = 0;
     for (T match : query.fetch()) {
       col.remove(match);
       rv++;

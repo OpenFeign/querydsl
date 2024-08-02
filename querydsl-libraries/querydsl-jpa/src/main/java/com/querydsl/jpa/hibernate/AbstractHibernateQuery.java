@@ -61,7 +61,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
 
   protected int fetchSize = 0;
 
-  protected final Map<Path<?>, LockMode> lockModes = new HashMap<Path<?>, LockMode>();
+  protected final Map<Path<?>, LockMode> lockModes = new HashMap<>();
 
   @Nullable protected FlushMode flushMode;
 
@@ -81,10 +81,10 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
 
   @Override
   public long fetchCount() {
-    QueryModifiers modifiers = getMetadata().getModifiers();
+    var modifiers = getMetadata().getModifiers();
     try {
-      Query query = createQuery(modifiers, true);
-      Long rv = (Long) query.uniqueResult();
+      var query = createQuery(modifiers, true);
+      var rv = (Long) query.uniqueResult();
       if (rv != null) {
         return rv;
       } else {
@@ -105,8 +105,8 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   }
 
   private Query createQuery(@Nullable QueryModifiers modifiers, boolean forCount) {
-    JPQLSerializer serializer = serialize(forCount);
-    String queryString = serializer.toString();
+    var serializer = serialize(forCount);
+    var queryString = serializer.toString();
     logQuery(queryString);
     Query query = session.createQuery(queryString);
     HibernateUtil.setConstants(query, serializer.getConstants(), getMetadata().getParams());
@@ -165,8 +165,8 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   @Override
   public CloseableIterator<T> iterate() {
     try {
-      Query query = createQuery();
-      List results = query.getResultList();
+      var query = createQuery();
+      var results = query.getResultList();
       return new ScrollableResultsIterator<T>(results);
     } finally {
       reset();
@@ -176,7 +176,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   @Override
   public Stream<T> stream() {
     try {
-      Query query = createQuery();
+      var query = createQuery();
       return query.getResultStream();
     } finally {
       reset();
@@ -196,15 +196,15 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   @Override
   public QueryResults<T> fetchResults() {
     try {
-      Query countQuery = createQuery(null, true);
+      var countQuery = createQuery(null, true);
       long total = (Long) countQuery.uniqueResult();
 
       if (total > 0) {
-        QueryModifiers modifiers = getMetadata().getModifiers();
-        Query query = createQuery(modifiers, false);
+        var modifiers = getMetadata().getModifiers();
+        var query = createQuery(modifiers, false);
         @SuppressWarnings("unchecked")
         List<T> list = query.list();
-        return new QueryResults<T>(list, modifiers, total);
+        return new QueryResults<>(list, modifiers, total);
       } else {
         return QueryResults.emptyResults();
       }
@@ -215,7 +215,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
 
   protected void logQuery(String queryString) {
     if (logger.isLoggable(Level.FINE)) {
-      String normalizedQuery = queryString.replace('\n', ' ');
+      var normalizedQuery = queryString.replace('\n', ' ');
       logger.fine(normalizedQuery);
     }
   }
@@ -335,8 +335,8 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   @Override
   public T fetchOne() throws NonUniqueResultException {
     try {
-      QueryModifiers modifiers = getMetadata().getModifiers();
-      Query query = createQuery(modifiers, false);
+      var modifiers = getMetadata().getModifiers();
+      var query = createQuery(modifiers, false);
       try {
         return (T) query.uniqueResult();
       } catch (org.hibernate.NonUniqueResultException e) {

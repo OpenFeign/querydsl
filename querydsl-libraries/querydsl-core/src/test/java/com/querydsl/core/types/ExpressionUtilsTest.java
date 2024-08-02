@@ -38,7 +38,7 @@ public class ExpressionUtilsTest {
     assertThat(regex(ConstantImpl.create("%abc"))).isEqualTo(".*abc$");
     assertThat(regex(ConstantImpl.create("_"))).isEqualTo("^.$");
 
-    StringPath path = Expressions.stringPath("path");
+    var path = Expressions.stringPath("path");
     assertThat(regex(path.append("%"))).isEqualTo("path + .*");
     assertThat(regex(path.prepend("%"))).isEqualTo(".* + path");
     assertThat(regex(path.append("_"))).isEqualTo("path + .");
@@ -49,10 +49,10 @@ public class ExpressionUtilsTest {
   @Ignore
   public void likeToRegexSpeed() {
     // 4570
-    StringPath path = Expressions.stringPath("path");
-    final int iterations = 1000000;
-    long start = System.currentTimeMillis();
-    for (int i = 0; i < iterations; i++) {
+    var path = Expressions.stringPath("path");
+    final var iterations = 1000000;
+    var start = System.currentTimeMillis();
+    for (var i = 0; i < iterations; i++) {
       regex(ConstantImpl.create("%"));
       regex(ConstantImpl.create("abc%"));
       regex(ConstantImpl.create("%abc"));
@@ -62,7 +62,7 @@ public class ExpressionUtilsTest {
       regex(path.append("_"));
       regex(path.prepend("_"));
     }
-    long duration = System.currentTimeMillis() - start;
+    var duration = System.currentTimeMillis() - start;
     System.err.println(duration);
   }
 
@@ -77,7 +77,7 @@ public class ExpressionUtilsTest {
     assertThat(like(ConstantImpl.create("."))).isEqualTo("_");
     assertThat(like(ConstantImpl.create("\\."))).isEqualTo(".");
 
-    StringPath path = Expressions.stringPath("path");
+    var path = Expressions.stringPath("path");
     assertThat(like(path.append(".*"))).isEqualTo("path + %");
     assertThat(like(path.prepend(".*"))).isEqualTo("% + path");
     assertThat(like(path.append("."))).isEqualTo("path + _");
@@ -103,10 +103,10 @@ public class ExpressionUtilsTest {
   @Ignore
   public void regexToLikeSpeed() {
     // 3255
-    StringPath path = Expressions.stringPath("path");
-    final int iterations = 1000000;
-    long start = System.currentTimeMillis();
-    for (int i = 0; i < iterations; i++) {
+    var path = Expressions.stringPath("path");
+    final var iterations = 1000000;
+    var start = System.currentTimeMillis();
+    for (var i = 0; i < iterations; i++) {
       like(ConstantImpl.create(".*"));
       like(ConstantImpl.create("."));
       like(path.append(".*"));
@@ -114,7 +114,7 @@ public class ExpressionUtilsTest {
       like(path.append("."));
       like(path.prepend("."));
     }
-    long duration = System.currentTimeMillis() - start;
+    var duration = System.currentTimeMillis() - start;
     System.err.println(duration);
   }
 
@@ -149,9 +149,9 @@ public class ExpressionUtilsTest {
 
   @Test
   public void in_subQuery() {
-    String s =
+    var s =
         ExpressionUtils.in(
-                str, new SubQueryExpressionImpl<String>(String.class, new DefaultQueryMetadata()))
+                str, new SubQueryExpressionImpl<>(String.class, new DefaultQueryMetadata()))
             .toString();
     assertThat(s).startsWith("str in com.querydsl.core.DefaultQueryMetadata@c");
   }
@@ -194,9 +194,9 @@ public class ExpressionUtilsTest {
 
   @Test
   public void notIn_subQuery() {
-    String s =
+    var s =
         ExpressionUtils.notIn(
-                str, new SubQueryExpressionImpl<String>(String.class, new DefaultQueryMetadata()))
+                str, new SubQueryExpressionImpl<>(String.class, new DefaultQueryMetadata()))
             .toString();
     assertThat(s).startsWith("str not in com.querydsl.core.DefaultQueryMetadata@c");
   }

@@ -21,8 +21,7 @@ import org.junit.Test;
 public class SetPathTest {
 
   private SetPath<String, StringPath> stringPath =
-      new SetPath<String, StringPath>(
-          String.class, StringPath.class, PathMetadataFactory.forVariable("stringPath"));
+      new SetPath<>(String.class, StringPath.class, PathMetadataFactory.forVariable("stringPath"));
 
   @Test
   public void toString_() {

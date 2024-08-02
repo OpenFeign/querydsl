@@ -20,7 +20,6 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.r2dbc.dml.R2DBCDeleteClause;
 import com.querydsl.r2dbc.dml.R2DBCUpdateClause;
 import com.querydsl.sql.SQLOps;
@@ -44,9 +43,9 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
   @Test
   @Override
   public void union() {
-    NumberExpression<Integer> one = Expressions.ONE;
-    NumberExpression<Integer> two = Expressions.TWO;
-    NumberExpression<Integer> three = Expressions.THREE;
+    var one = Expressions.ONE;
+    var two = Expressions.TWO;
+    var three = Expressions.THREE;
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union =
         query.union(
@@ -79,7 +78,7 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
 
   @Test
   public void delete_limit() {
-    R2DBCDeleteClause clause = new R2DBCDeleteClause(null, createTemplates(), survey1);
+    var clause = new R2DBCDeleteClause(null, createTemplates(), survey1);
     clause.where(survey1.name.eq("Bob"));
     clause.limit(5);
     assertThat(clause).hasToString("delete top 5 from SURVEY\n" + "where SURVEY.NAME = ?");
@@ -87,7 +86,7 @@ public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
 
   @Test
   public void update_limit() {
-    R2DBCUpdateClause clause = new R2DBCUpdateClause(null, createTemplates(), survey1);
+    var clause = new R2DBCUpdateClause(null, createTemplates(), survey1);
     clause.set(survey1.name, "Bob");
     clause.limit(5);
     assertThat(clause).hasToString("update top 5 SURVEY\n" + "set NAME = ?");

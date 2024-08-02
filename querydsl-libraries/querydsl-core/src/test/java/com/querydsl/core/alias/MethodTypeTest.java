@@ -15,7 +15,6 @@ package com.querydsl.core.alias;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +24,10 @@ public class MethodTypeTest {
 
   @Test
   public void get() throws SecurityException, NoSuchMethodException {
-    Method getVal = MethodTypeTest.class.getMethod("getVal");
-    Method hashCode = Object.class.getMethod("hashCode");
-    Method size = Collection.class.getMethod("size");
-    Method toString = Object.class.getMethod("toString");
+    var getVal = MethodTypeTest.class.getMethod("getVal");
+    var hashCode = Object.class.getMethod("hashCode");
+    var size = Collection.class.getMethod("size");
+    var toString = Object.class.getMethod("toString");
 
     assertThat(MethodType.get(ManagedObject.class.getMethod("__mappedPath")))
         .isEqualTo(MethodType.GET_MAPPED_PATH);

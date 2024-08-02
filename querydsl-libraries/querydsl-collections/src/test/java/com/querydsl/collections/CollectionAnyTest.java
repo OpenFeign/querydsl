@@ -4,14 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import org.junit.Test;
 
 public class CollectionAnyTest extends AbstractQueryTest {
 
   @Test
   public void any_null() {
-    Cat a = new Cat("a");
+    var a = new Cat("a");
     a.setKittens(null);
 
     assertThat(
@@ -23,19 +22,19 @@ public class CollectionAnyTest extends AbstractQueryTest {
 
   @Test
   public void any_in_projection() {
-    Cat a = new Cat("a");
-    Cat aa = new Cat("aa");
-    Cat ab = new Cat("ab");
-    Cat ac = new Cat("ac");
+    var a = new Cat("a");
+    var aa = new Cat("aa");
+    var ab = new Cat("ab");
+    var ac = new Cat("ac");
     a.setKittens(Arrays.asList(aa, ab, ac));
 
-    Cat b = new Cat("b");
-    Cat ba = new Cat("ba");
-    Cat bb = new Cat("bb");
+    var b = new Cat("b");
+    var ba = new Cat("ba");
+    var bb = new Cat("bb");
     b.setKittens(Arrays.asList(ba, bb));
 
-    QCat cat = QCat.cat;
-    List<Cat> kittens =
+    var cat = QCat.cat;
+    var kittens =
         CollQueryFactory.<Cat>from(cat, Arrays.<Cat>asList(a, b))
             .<Cat>select(cat.kittens.any())
             .fetch();
@@ -44,19 +43,19 @@ public class CollectionAnyTest extends AbstractQueryTest {
 
   @Test
   public void any_in_projection2() {
-    Cat a = new Cat("a");
-    Cat aa = new Cat("aa");
-    Cat ab = new Cat("ab");
-    Cat ac = new Cat("ac");
+    var a = new Cat("a");
+    var aa = new Cat("aa");
+    var ab = new Cat("ab");
+    var ac = new Cat("ac");
     a.setKittens(Arrays.asList(aa, ab, ac));
 
-    Cat b = new Cat("b");
-    Cat ba = new Cat("ba");
-    Cat bb = new Cat("bb");
+    var b = new Cat("b");
+    var ba = new Cat("ba");
+    var bb = new Cat("bb");
     b.setKittens(Arrays.asList(ba, bb));
 
-    QCat cat = QCat.cat;
-    List<String> kittens =
+    var cat = QCat.cat;
+    var kittens =
         CollQueryFactory.<Cat>from(cat, Arrays.<Cat>asList(a, b))
             .select(cat.kittens.any().name)
             .fetch();
@@ -65,19 +64,19 @@ public class CollectionAnyTest extends AbstractQueryTest {
 
   @Test
   public void any_in_where_and_projection() {
-    Cat a = new Cat("a");
-    Cat aa = new Cat("aa");
-    Cat ab = new Cat("ab");
-    Cat ac = new Cat("ac");
+    var a = new Cat("a");
+    var aa = new Cat("aa");
+    var ab = new Cat("ab");
+    var ac = new Cat("ac");
     a.setKittens(Arrays.asList(aa, ab, ac));
 
-    Cat b = new Cat("b");
-    Cat ba = new Cat("ba");
-    Cat bb = new Cat("bb");
+    var b = new Cat("b");
+    var ba = new Cat("ba");
+    var bb = new Cat("bb");
     b.setKittens(Arrays.asList(ba, bb));
 
-    QCat cat = QCat.cat;
-    List<Cat> kittens =
+    var cat = QCat.cat;
+    var kittens =
         CollQueryFactory.<Cat>from(cat, Arrays.<Cat>asList(a, b))
             .where(cat.kittens.any().name.startsWith("a"))
             .select(cat.kittens.any())
@@ -88,19 +87,19 @@ public class CollectionAnyTest extends AbstractQueryTest {
 
   @Test
   public void any_in_where_and_projection2() {
-    Cat a = new Cat("a");
-    Cat aa = new Cat("aa");
-    Cat ab = new Cat("ab");
-    Cat ac = new Cat("ac");
+    var a = new Cat("a");
+    var aa = new Cat("aa");
+    var ab = new Cat("ab");
+    var ac = new Cat("ac");
     a.setKittens(Arrays.asList(aa, ab, ac));
 
-    Cat b = new Cat("b");
-    Cat ba = new Cat("ba");
-    Cat bb = new Cat("bb");
+    var b = new Cat("b");
+    var ba = new Cat("ba");
+    var bb = new Cat("bb");
     b.setKittens(Arrays.asList(ba, bb));
 
-    QCat cat = QCat.cat;
-    List<String> kittens =
+    var cat = QCat.cat;
+    var kittens =
         CollQueryFactory.<Cat>from(cat, Arrays.<Cat>asList(a, b))
             .where(cat.kittens.any().name.startsWith("a"))
             .select(cat.kittens.any().name)

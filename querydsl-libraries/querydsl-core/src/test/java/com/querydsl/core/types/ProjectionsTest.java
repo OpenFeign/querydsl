@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.QBeanPropertyTest.Entity;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.core.types.dsl.StringPath;
 import org.junit.Test;
 
 public class ProjectionsTest {
@@ -73,7 +72,7 @@ public class ProjectionsTest {
 
   @Test
   public void beanClassOfTExpressionOfQArray() {
-    PathBuilder<Entity> entity = new PathBuilder<Entity>(Entity.class, "entity");
+    var entity = new PathBuilder<Entity>(Entity.class, "entity");
     QBean<Entity> beanProjection =
         Projections.bean(
             Entity.class,
@@ -97,7 +96,7 @@ public class ProjectionsTest {
   @Test
   public void constructor_varArgs() {
     Expression<String> stringVal = ConstantImpl.create("");
-    VarArgs instance =
+    var instance =
         Projections.constructor(VarArgs.class, stringVal, stringVal).newInstance("X", "Y");
     assertThat(instance.args).containsExactly(new String[] {"X", "Y"});
   }
@@ -105,7 +104,7 @@ public class ProjectionsTest {
   @Test
   public void constructor_varArgs2() {
     Expression<String> stringVal = ConstantImpl.create("");
-    VarArgs2 instance =
+    var instance =
         Projections.constructor(VarArgs2.class, stringVal, stringVal, stringVal)
             .newInstance("X", "Y", "Z");
     assertThat(instance.arg).isEqualTo("X");
@@ -114,9 +113,9 @@ public class ProjectionsTest {
 
   @Test
   public void constructor_varArgs3() {
-    Constant<Long> longVal = ConstantImpl.create(1L);
-    Constant<Character> charVal = ConstantImpl.create('\0');
-    ProjectionExample instance =
+    var longVal = ConstantImpl.create(1L);
+    var charVal = ConstantImpl.create('\0');
+    var instance =
         Projections.constructor(
                 ProjectionExample.class,
                 longVal,
@@ -133,14 +132,14 @@ public class ProjectionsTest {
             .newInstance(null, 'm', 'y', 's', 'e', 'm', 'a', null, 'l', 't', 'd');
     assertThat((long) instance.id).isEqualTo(0L);
     // null character cannot be inserted, so a literal String can't be used.
-    String expectedText =
+    var expectedText =
         String.valueOf(new char[] {'m', 'y', 's', 'e', 'm', 'a', '\0', 'l', 't', 'd'});
     assertThat(instance.text).isEqualTo(expectedText);
   }
 
   @Test
   public void fieldsClassOfTExpressionOfQArray() {
-    PathBuilder<Entity> entity = new PathBuilder<Entity>(Entity.class, "entity");
+    var entity = new PathBuilder<Entity>(Entity.class, "entity");
     QBean<Entity> beanProjection =
         Projections.fields(
             Entity.class,
@@ -152,9 +151,9 @@ public class ProjectionsTest {
 
   @Test
   public void nested() {
-    StringPath str1 = Expressions.stringPath("str1");
-    StringPath str2 = Expressions.stringPath("str2");
-    StringPath str3 = Expressions.stringPath("str3");
+    var str1 = Expressions.stringPath("str1");
+    var str2 = Expressions.stringPath("str2");
+    var str3 = Expressions.stringPath("str3");
     FactoryExpression<Entity1> entity = Projections.constructor(Entity1.class, str1, str2);
     FactoryExpression<Entity2> wrapper = Projections.constructor(Entity2.class, str3, entity);
     FactoryExpression<Entity2> wrapped = FactoryExpressionUtils.wrap(wrapper);
@@ -174,11 +173,10 @@ public class ProjectionsTest {
 
   @Test
   public void nestedSkipNulls() {
-    StringPath str1 = Expressions.stringPath("str1");
-    StringPath str2 = Expressions.stringPath("str2");
-    StringPath str3 = Expressions.stringPath("str3");
-    FactoryExpression<Entity1> entity =
-        Projections.constructor(Entity1.class, str1, str2).skipNulls();
+    var str1 = Expressions.stringPath("str1");
+    var str2 = Expressions.stringPath("str2");
+    var str3 = Expressions.stringPath("str3");
+    var entity = Projections.constructor(Entity1.class, str1, str2).skipNulls();
     FactoryExpression<Entity2> wrapper = Projections.constructor(Entity2.class, str3, entity);
     FactoryExpression<Entity2> wrapped = FactoryExpressionUtils.wrap(wrapper);
 
@@ -197,13 +195,11 @@ public class ProjectionsTest {
 
   @Test
   public void nestedSkipNulls2() {
-    StringPath str1 = Expressions.stringPath("str1");
-    StringPath str2 = Expressions.stringPath("str2");
-    StringPath str3 = Expressions.stringPath("str3");
-    FactoryExpression<Entity1> entity =
-        Projections.constructor(Entity1.class, str1, str2).skipNulls();
-    FactoryExpression<Entity2> wrapper =
-        Projections.constructor(Entity2.class, str3, entity).skipNulls();
+    var str1 = Expressions.stringPath("str1");
+    var str2 = Expressions.stringPath("str2");
+    var str3 = Expressions.stringPath("str3");
+    var entity = Projections.constructor(Entity1.class, str1, str2).skipNulls();
+    var wrapper = Projections.constructor(Entity2.class, str3, entity).skipNulls();
     FactoryExpression<Entity2> wrapped = FactoryExpressionUtils.wrap(wrapper);
 
     Entity2 w = wrapped.newInstance("a", "b", "c");

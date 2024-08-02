@@ -32,14 +32,14 @@ public class PackageVerification {
 
   @Test
   public void verify_package() throws Exception {
-    String version = System.getProperty("version");
+    var version = System.getProperty("version");
     verify(new File("target/querydsl-mongodb-" + version + "-apt-one-jar.jar"));
   }
 
   private void verify(File oneJar) throws Exception {
     assertThat(oneJar.exists()).as(oneJar.getPath() + " doesn't exist").isTrue();
     // verify classLoader
-    URLClassLoader oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
+    var oneJarClassLoader = new URLClassLoader(new URL[] {oneJar.toURI().toURL()});
     oneJarClassLoader.loadClass(Expression.class.getName()); // querydsl-core
     oneJarClassLoader.loadClass(CodeWriter.class.getName()); // codegen
     oneJarClassLoader
@@ -50,7 +50,7 @@ public class PackageVerification {
     Class cl =
         oneJarClassLoader.loadClass(MorphiaAnnotationProcessor.class.getName()); // querydsl-apt
     cl.getDeclaredConstructor().newInstance();
-    String resourceKey = "META-INF/services/javax.annotation.processing.Processor";
+    var resourceKey = "META-INF/services/javax.annotation.processing.Processor";
     assertThat(
             new String(
                 Files.readAllBytes(Paths.get(oneJarClassLoader.findResource(resourceKey).toURI())),

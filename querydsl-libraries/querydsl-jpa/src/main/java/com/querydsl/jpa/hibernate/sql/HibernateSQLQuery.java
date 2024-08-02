@@ -58,8 +58,7 @@ public class HibernateSQLQuery<T> extends AbstractHibernateSQLQuery<T, Hibernate
 
   @Override
   protected HibernateSQLQuery<T> clone(SessionHolder sessionHolder) {
-    HibernateSQLQuery<T> q =
-        new HibernateSQLQuery<T>(sessionHolder, configuration, getMetadata().clone());
+    var q = new HibernateSQLQuery<T>(sessionHolder, configuration, getMetadata().clone());
     q.clone(this);
     return q;
   }
@@ -68,7 +67,7 @@ public class HibernateSQLQuery<T> extends AbstractHibernateSQLQuery<T, Hibernate
   public <U> HibernateSQLQuery<U> select(Expression<U> expr) {
     queryMixin.setProjection(expr);
     @SuppressWarnings("unchecked") // This is the new type
-    HibernateSQLQuery<U> newType = (HibernateSQLQuery<U>) this;
+    var newType = (HibernateSQLQuery<U>) this;
     return newType;
   }
 
@@ -76,7 +75,7 @@ public class HibernateSQLQuery<T> extends AbstractHibernateSQLQuery<T, Hibernate
   public HibernateSQLQuery<Tuple> select(Expression<?>... exprs) {
     queryMixin.setProjection(exprs);
     @SuppressWarnings("unchecked") // This is the new type
-    HibernateSQLQuery<Tuple> newType = (HibernateSQLQuery<Tuple>) this;
+    var newType = (HibernateSQLQuery<Tuple>) this;
     return newType;
   }
 }

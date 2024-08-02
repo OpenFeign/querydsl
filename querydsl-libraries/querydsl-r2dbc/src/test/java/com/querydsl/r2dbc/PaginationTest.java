@@ -14,7 +14,7 @@ import org.junit.experimental.categories.Category;
 public class PaginationTest {
 
   private String serialize(QueryMetadata metadata, SQLTemplates templates) {
-    SQLSerializer serializer = new SQLSerializer(new Configuration(templates));
+    var serializer = new SQLSerializer(new Configuration(templates));
     serializer.serialize(metadata, false);
     return serializer.toString();
   }
@@ -30,7 +30,7 @@ public class PaginationTest {
     list.add(new SQLServer2012Templates());
 
     for (SQLTemplates templates : list) {
-      QEmployee employee = QEmployee.employee;
+      var employee = QEmployee.employee;
       QueryMixin<?> query = new QueryMixin<Void>();
       query.from(employee);
       query.orderBy(employee.firstname.asc());

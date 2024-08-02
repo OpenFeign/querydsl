@@ -47,6 +47,7 @@ public class AbstractClasses2Test {
       return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }
@@ -54,10 +55,12 @@ public class AbstractClasses2Test {
 
   @Entity
   public static class Grant<P extends Party, S extends Party> extends BaseArchetype<P, S> {
+    @Override
     public int compareTo(S o) {
       return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }
@@ -65,14 +68,16 @@ public class AbstractClasses2Test {
 
   @Entity
   public static class Party extends BaseArchetype<Long, Party> {
-    @OneToMany() Set<PartyRole> roles = new HashSet<PartyRole>();
+    @OneToMany() Set<PartyRole> roles = new HashSet<>();
 
     public Party() {}
 
+    @Override
     public int compareTo(Party o) {
       return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }
@@ -84,10 +89,12 @@ public class AbstractClasses2Test {
 
     public PartyRole() {}
 
+    @Override
     public int compareTo(PartyRole o) {
       return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }

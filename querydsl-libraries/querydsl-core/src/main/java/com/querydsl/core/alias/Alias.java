@@ -16,7 +16,24 @@ package com.querydsl.core.alias;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.ArrayPath;
+import com.querydsl.core.types.dsl.BooleanPath;
+import com.querydsl.core.types.dsl.CollectionPath;
+import com.querydsl.core.types.dsl.ComparablePath;
+import com.querydsl.core.types.dsl.DatePath;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.core.types.dsl.EnumPath;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.MapPath;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.SetPath;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.TimePath;
 import com.querydsl.core.util.StringUtils;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -457,7 +474,7 @@ public final class Alias {
    */
   @SuppressWarnings("unchecked")
   public static <D> EntityPathBase<D> var(D arg) {
-    String var = "var" + arg.getClass().getSimpleName() + "_" + arg.toString().replace(' ', '_');
+    var var = "var" + arg.getClass().getSimpleName() + "_" + arg.toString().replace(' ', '_');
     return new PathBuilder<D>((Class) arg.getClass(), var);
   }
 
