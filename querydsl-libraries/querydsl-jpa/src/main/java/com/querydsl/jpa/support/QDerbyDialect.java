@@ -16,7 +16,7 @@ package com.querydsl.jpa.support;
 import com.querydsl.core.types.Ops;
 import com.querydsl.sql.DerbyTemplates;
 import org.hibernate.boot.model.FunctionContributions;
-import org.hibernate.dialect.DerbyDialect;
+import org.hibernate.community.dialect.DerbyDialect;
 
 /** {@code QDerbyDialect} extends {@code DerbyDialect} with additional functions */
 public class QDerbyDialect extends DerbyDialect {

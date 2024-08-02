@@ -77,7 +77,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
 
   @Override
   protected void save(Object entity) {
-    session.save(entity);
+    session.persist(entity);
   }
 
   @Test

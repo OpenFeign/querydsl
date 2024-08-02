@@ -223,7 +223,7 @@ public final class Template implements Serializable {
         Expression<?> expr1 = asExpression(arg1);
         Expression<?> expr2 = asExpression(arg2);
 
-        if (arg2 instanceof Number) {
+        if (arg2 instanceof Number number) {
           if (CONVERTIBLES.contains(operator)
               && expr1 instanceof com.querydsl.core.types.Operation<?> operation) {
             if (CONVERTIBLES.contains(operation.getOperator())
@@ -231,11 +231,11 @@ public final class Template implements Serializable {
               var num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
               Number num2;
               if (operator == operation.getOperator()) {
-                num2 = MathUtils.result(num1, (Number) arg2, Ops.ADD);
+                num2 = MathUtils.result(num1, number, Ops.ADD);
               } else if (operator == Ops.ADD) {
-                num2 = MathUtils.result((Number) arg2, num1, Ops.SUB);
+                num2 = MathUtils.result(number, num1, Ops.SUB);
               } else {
-                num2 = MathUtils.result(num1, (Number) arg2, Ops.SUB);
+                num2 = MathUtils.result(num1, number, Ops.SUB);
               }
               return ExpressionUtils.operation(
                   expr1.getType(), operator, operation.getArg(0), Expressions.constant(num2));
