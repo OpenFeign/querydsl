@@ -14,14 +14,11 @@
 package com.querydsl.core.group;
 
 import com.querydsl.core.FetchableQuery;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.FactoryExpression;
-import com.querydsl.core.types.FactoryExpressionUtils;
-import com.querydsl.core.types.Projections;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 /**
  * Provides aggregated results as a list
@@ -32,44 +29,27 @@ import java.util.Objects;
  */
 public class GroupByList<K, V> extends AbstractGroupByTransformer<K, List<V>> {
 
+  private final GroupByMap<K, V> mapTransformer;
+
   GroupByList(Expression<K> key, Expression<?>... expressions) {
     super(key, expressions);
+    mapTransformer =
+        new GroupByMap<K, V>(key, expressions) {
+          @Override
+          protected Map<K, V> transform(Map<K, Group> groups) {
+            var results = new LinkedHashMap<K, V>((int) Math.ceil(groups.size() / 0.75), 0.75f);
+            for (var entry : groups.entrySet()) {
+              results.put(entry.getKey(), GroupByList.this.transform(entry.getValue()));
+            }
+            return results;
+          }
+        };
   }
 
   @Override
   public List<V> transform(FetchableQuery<?, ?> query) {
-    // create groups
-    FactoryExpression<Tuple> expr = FactoryExpressionUtils.wrap(Projections.tuple(expressions));
-    var hasGroups = false;
-    for (Expression<?> e : expr.getArgs()) {
-      hasGroups |= e instanceof GroupExpression;
-    }
-    if (hasGroups) {
-      expr = withoutGroupExpressions(expr);
-    }
-    final var iter = query.select(expr).iterate();
-
-    List<V> list = new ArrayList<>();
-    GroupImpl group = null;
-    K groupId = null;
-    while (iter.hasNext()) {
-      @SuppressWarnings("unchecked") // This type is mandated by the key type
-      var row = (K[]) iter.next().toArray();
-      if (group == null) {
-        group = new GroupImpl(groupExpressions, maps);
-        groupId = row[0];
-      } else if (!Objects.equals(groupId, row[0])) {
-        list.add(transform(group));
-        group = new GroupImpl(groupExpressions, maps);
-        groupId = row[0];
-      }
-      group.add(row);
-    }
-    if (group != null) {
-      list.add(transform(group));
-    }
-    iter.close();
-    return list;
+    var result = mapTransformer.transform(query);
+    return new ArrayList<V>(result.values());
   }
 
   @SuppressWarnings("unchecked")

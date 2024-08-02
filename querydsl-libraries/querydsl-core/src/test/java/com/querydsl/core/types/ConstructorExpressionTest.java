@@ -126,13 +126,18 @@ public class ConstructorExpressionTest {
   @Test
   public void threadSafety() {
     final ConstructorExpression<String> expr = Projections.constructor(String.class);
-    Runnable invoker =
-        new Runnable() {
-          @Override
-          public void run() {
-            expr.newInstance();
-          }
-        };
+    Runnable invoker = () -> expr.newInstance();
     ThreadSafety.check(invoker, invoker);
+  }
+
+  @Test
+  public void constructorArgsShouldBeSerialized() {
+    var longArg = ConstantImpl.create(1L);
+    var stringArg = ConstantImpl.create("");
+    var projection =
+        new ConstructorExpression<ProjectionExample>(
+            ProjectionExample.class, new Class<?>[] {long.class, String.class}, longArg, stringArg);
+    var deserializationResult = Serialization.serialize(projection);
+    assertThat(deserializationResult).isEqualTo(projection);
   }
 }

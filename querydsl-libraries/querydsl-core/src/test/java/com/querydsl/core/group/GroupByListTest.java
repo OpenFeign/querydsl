@@ -134,24 +134,41 @@ public class GroupByListTest extends AbstractGroupByTest {
 
     Object postId = null;
     Map<Integer, Map<Integer, String>> posts = null;
-    List<Map<Integer, Map<Integer, String>>> expected = new LinkedList<>();
+    var expected = new LinkedList<Map<Integer, Map<Integer, String>>>();
     for (Iterator<Tuple> iterator = MAP3_RESULTS.iterate(); iterator.hasNext(); ) {
       var tuple = iterator.next();
       var array = tuple.toArray();
 
       if (posts == null || !(postId == array[0] || postId != null && postId.equals(array[0]))) {
-        posts = new LinkedHashMap<>();
-        expected.add(posts);
+        posts = findPostsById(expected, array[0]);
+        if (posts == null) {
+          posts = new LinkedHashMap<Integer, Map<Integer, String>>();
+          expected.add(posts);
+        }
       }
       postId = array[0];
       @SuppressWarnings("unchecked")
       var pair = (Pair<Integer, Pair<Integer, String>>) array[1];
       var first = pair.getFirst();
-      var comments = posts.computeIfAbsent(first, k -> new LinkedHashMap<Integer, String>());
+      var comments = posts.get(first);
+      if (comments == null) {
+        comments = new LinkedHashMap<Integer, String>();
+        posts.put(first, comments);
+      }
       var second = pair.getSecond();
       comments.put(second.getFirst(), second.getSecond());
     }
     assertThat(actual).hasToString(expected.toString());
+  }
+
+  private Map<Integer, Map<Integer, String>> findPostsById(
+      List<Map<Integer, Map<Integer, String>>> allPosts, Object postId) {
+    for (var posts : allPosts) {
+      if (posts.containsKey(postId)) {
+        return posts;
+      }
+    }
+    return null;
   }
 
   @Override
