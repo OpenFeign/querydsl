@@ -148,19 +148,17 @@ public class ConstructorExpression<T> extends FactoryExpressionBase<T> {
     }
   }
 
-    private void readObject(ObjectInputStream ois)
-            throws ClassNotFoundException, IOException {
-        ois.defaultReadObject();
-        try {
-            Field constructor = ConstructorExpression.class.getDeclaredField("constructor");
-            constructor.setAccessible(true);
-            constructor.set(this, getConstructor(getType(), parameterTypes));
-            Field transformers = ConstructorExpression.class.getDeclaredField("transformers");
-            transformers.setAccessible(true);
-            transformers.set(this, getTransformers(this.constructor));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+  private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+    ois.defaultReadObject();
+    try {
+      Field constructor = ConstructorExpression.class.getDeclaredField("constructor");
+      constructor.setAccessible(true);
+      constructor.set(this, getConstructor(getType(), parameterTypes));
+      Field transformers = ConstructorExpression.class.getDeclaredField("transformers");
+      transformers.setAccessible(true);
+      transformers.set(this, getTransformers(this.constructor));
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
-
+  }
 }
