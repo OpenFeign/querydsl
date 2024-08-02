@@ -11,17 +11,8 @@
   <artifactId>querydsl-example-sql-spring</artifactId>
   <name>Querydsl example - SQL Spring</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <!-- to match spring JDK version -->
-    <main.java.version>17</main.java.version>
-  </properties>
-
   <dependencies>
-
     <!-- spring -->
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
