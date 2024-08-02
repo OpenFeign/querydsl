@@ -120,8 +120,7 @@ public final class QueryModifiers implements Serializable {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof QueryModifiers) {
-      var qm = (QueryModifiers) o;
+    } else if (o instanceof QueryModifiers qm) {
       return Objects.equals(qm.getLimit(), limit) && Objects.equals(qm.getOffset(), offset);
     } else {
       return false;

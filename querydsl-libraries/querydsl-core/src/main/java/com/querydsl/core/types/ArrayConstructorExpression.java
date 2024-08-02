@@ -79,8 +79,7 @@ public class ArrayConstructorExpression<T> extends FactoryExpressionBase<T[]> {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof FactoryExpression<?>) {
-      FactoryExpression<?> c = (FactoryExpression<?>) obj;
+    } else if (obj instanceof FactoryExpression<?> c) {
       return args.equals(c.getArgs()) && getType().equals(c.getType());
     } else {
       return false;
