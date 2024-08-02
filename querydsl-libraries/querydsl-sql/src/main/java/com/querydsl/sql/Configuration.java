@@ -228,7 +228,7 @@ public final class Configuration {
   @Nullable
   public <T> T get(ResultSet rs, @Nullable Path<?> path, int i, Class<T> clazz)
       throws SQLException {
-    return getType(path, clazz).getValue(rs, i);
+    return getType(path, clazz).getValue(rs, i, clazz);
   }
 
   /**
@@ -596,5 +596,9 @@ public final class Configuration {
    */
   public void setTemplates(SQLTemplates templates) {
     this.templates = templates;
+  }
+
+  public Type<?> getType(String tableName, String columnName) {
+    return javaTypeMapping.getType(tableName, columnName);
   }
 }

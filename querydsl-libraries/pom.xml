@@ -23,6 +23,7 @@
     <module>querydsl-sql</module>
     <module>querydsl-sql-spatial</module>
     <module>querydsl-sql-spring</module>
+    <module>querydsl-sql-json</module>
     <!-- Reactive SQL -->
     <module>querydsl-r2dbc</module>
 

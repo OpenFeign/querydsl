@@ -1,7 +1,6 @@
 package com.querydsl.example.dao;
 
 import static com.querydsl.core.types.Projections.bean;
-import static com.querydsl.example.sql.QAddress.address;
 import static com.querydsl.example.sql.QCustomer.customer;
 import static com.querydsl.example.sql.QCustomerAddress.customerAddress;
 import static com.querydsl.example.sql.QPerson.person;
@@ -9,7 +8,6 @@ import static com.querydsl.example.sql.QPerson.person;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.QBean;
-import com.querydsl.example.dto.Address;
 import com.querydsl.example.dto.Customer;
 import com.querydsl.example.dto.CustomerAddress;
 import com.querydsl.example.dto.Person;
@@ -29,7 +27,7 @@ public class CustomerDaoImpl implements CustomerDao {
           customerAddress.addressTypeCode,
           customerAddress.fromDate,
           customerAddress.toDate,
-          bean(Address.class, address.all()).as("address"));
+          customerAddress.address);
 
   final QBean<Customer> customerBean =
       bean(
@@ -51,7 +49,6 @@ public class CustomerDaoImpl implements CustomerDao {
         .from(customer)
         .leftJoin(customer.contactPersonFk, person)
         .leftJoin(customer._customer3Fk, customerAddress)
-        .leftJoin(customerAddress.addressFk, address)
         .where(where)
         .transform(GroupBy.groupBy(customer.id).list(customerBean));
   }
@@ -82,14 +79,9 @@ public class CustomerDaoImpl implements CustomerDao {
 
     var insert = queryFactory.insert(customerAddress);
     for (CustomerAddress ca : c.getAddresses()) {
-      if (ca.getAddress().getId() == null) {
-        ca.getAddress()
-            .setId(
-                queryFactory.insert(address).populate(ca.getAddress()).executeWithKey(address.id));
-      }
       insert
           .set(customerAddress.customerId, id)
-          .set(customerAddress.addressId, ca.getAddress().getId())
+          .set(customerAddress.address, ca.getAddress())
           .set(customerAddress.addressTypeCode, ca.getAddressTypeCode())
           .set(customerAddress.fromDate, ca.getFromDate())
           .set(customerAddress.toDate, ca.getToDate())

@@ -6,6 +6,7 @@ import com.querydsl.sql.spring.SpringConnectionProvider;
 import com.querydsl.sql.spring.SpringExceptionTranslator;
 import com.querydsl.sql.types.LocalDateTimeType;
 import com.querydsl.sql.types.LocalDateType;
+import io.github.openfeign.querydsl.sql.json.types.JSONType;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -50,6 +51,7 @@ public class JdbcConfiguration {
     configuration.setExceptionTranslator(new SpringExceptionTranslator());
     configuration.register(new LocalDateTimeType());
     configuration.register(new LocalDateType());
+    configuration.register(new JSONType());
     return configuration;
   }
 

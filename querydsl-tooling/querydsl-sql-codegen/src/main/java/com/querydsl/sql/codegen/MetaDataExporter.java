@@ -426,6 +426,8 @@ public class MetaDataExporter {
             columnDigits != null ? columnDigits.intValue() : 0,
             tableName,
             columnName);
+
+    com.querydsl.sql.types.Type<?> type = configuration.getType(tableName, normalizedColumnName);
     if (clazz == null) {
       clazz = Object.class;
     }
@@ -435,7 +437,10 @@ public class MetaDataExporter {
     } else if (Enum.class.isAssignableFrom(clazz)) {
       fieldType = TypeCategory.ENUM;
     }
-    Type typeModel = new ClassType(fieldType, clazz);
+    var typeModel =
+        type instanceof com.querydsl.sql.types.SimpleType
+            ? asModel((com.querydsl.sql.types.SimpleType) type)
+            : new ClassType(fieldType, clazz);
     var property = createProperty(classModel, normalizedColumnName, propertyName, typeModel);
     var column =
         ColumnMetadata.named(normalizedColumnName).ofType(columnType).withIndex(columnIndex);
@@ -463,6 +468,14 @@ public class MetaDataExporter {
       }
     }
     classModel.addProperty(property);
+  }
+
+  private Type asModel(com.querydsl.sql.types.SimpleType st) {
+    String fullname = st.getClassname();
+    return new SimpleType(
+        fullname,
+        fullname.substring(0, fullname.lastIndexOf('.')),
+        fullname.substring(fullname.lastIndexOf('.') + 1));
   }
 
   private void handleTable(DatabaseMetaData md, ResultSet tables) throws SQLException {

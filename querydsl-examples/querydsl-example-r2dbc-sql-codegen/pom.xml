@@ -11,13 +11,6 @@
   <artifactId>querydsl-example-r2dbc-sql-codegen</artifactId>
   <name>Querydsl example - R2DBC SQL Codegen</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <!-- to match spring JDK version -->
-    <main.java.version>17</main.java.version>
-  </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -31,9 +24,7 @@
   </dependencyManagement>
 
   <dependencies>
-
     <!-- spring -->
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
