@@ -172,8 +172,7 @@ public final class TypeFactory {
       value = createOther(cl, entity, annotationHelper, annotation, parameters);
     }
 
-    if (genericType instanceof TypeVariable) {
-      var tv = (TypeVariable) genericType;
+    if (genericType instanceof TypeVariable<?> tv) {
       if (tv.getBounds().length == 1 && tv.getBounds()[0].equals(Object.class)) {
         value = new TypeSuper(tv.getName(), value);
       } else {
@@ -248,13 +247,12 @@ public final class TypeFactory {
   @SuppressWarnings("rawtypes")
   private Type getGenericParameter(Class<?> cl, java.lang.reflect.Type genericType, int i) {
     java.lang.reflect.Type parameter = ReflectionUtils.getTypeParameter(genericType, i);
-    if (parameter instanceof TypeVariable) {
-      var variable = (TypeVariable) parameter;
+    if (parameter instanceof TypeVariable<?> variable) {
       var rv = get(ReflectionUtils.getTypeParameterAsClass(genericType, i), null, parameter);
       return new TypeExtends(variable.getName(), rv);
-    } else if (parameter instanceof WildcardType
-        && ((WildcardType) parameter).getUpperBounds()[0].equals(Object.class)
-        && ((WildcardType) parameter).getLowerBounds().length == 0) {
+    } else if (parameter instanceof WildcardType type
+        && type.getUpperBounds()[0].equals(Object.class)
+        && type.getLowerBounds().length == 0) {
       return ANY;
     } else {
       var rv = get(ReflectionUtils.getTypeParameterAsClass(genericType, i), null, parameter);
@@ -280,8 +278,8 @@ public final class TypeFactory {
         var entityType = (EntityType) entry.getValue();
         if (entityType.getProperties().isEmpty()) {
           for (Type type : cache.values()) {
-            if (type.getFullName().equals(entityType.getFullName()) && type instanceof EntityType) {
-              var base = (EntityType) type;
+            if (type.getFullName().equals(entityType.getFullName())
+                && type instanceof EntityType base) {
               for (Property property : base.getProperties()) {
                 entityType.addProperty(property);
               }

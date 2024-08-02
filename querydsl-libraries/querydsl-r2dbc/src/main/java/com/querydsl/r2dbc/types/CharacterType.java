@@ -34,8 +34,8 @@ public class CharacterType extends AbstractType<Character, String> {
   @Override
   public Character getValue(Row row, int startIndex) {
     var val = row.get(startIndex);
-    if (val instanceof Character) {
-      return (Character) val;
+    if (val instanceof Character character) {
+      return character;
     }
 
     return val == null ? null : ((String) val).charAt(0);

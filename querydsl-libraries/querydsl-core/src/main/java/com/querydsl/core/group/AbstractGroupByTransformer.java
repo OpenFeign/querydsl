@@ -74,13 +74,12 @@ public abstract class AbstractGroupByTransformer<K, T> implements ResultTransfor
     projection.add(key);
 
     for (Expression<?> expr : expressions) {
-      if (expr instanceof GroupExpression<?, ?>) {
-        GroupExpression<?, ?> groupExpr = (GroupExpression<?, ?>) expr;
+      if (expr instanceof GroupExpression<?, ?> groupExpr) {
         groupExpressions.add(groupExpr);
         Expression<?> colExpression = groupExpr.getExpression();
-        if (colExpression instanceof Operation
-            && ((Operation) colExpression).getOperator() == Ops.ALIAS) {
-          projection.add(((Operation) colExpression).getArg(0));
+        if (colExpression instanceof Operation<?> operation
+            && operation.getOperator() == Ops.ALIAS) {
+          projection.add(operation.getArg(0));
         } else {
           projection.add(colExpression);
         }
@@ -100,8 +99,8 @@ public abstract class AbstractGroupByTransformer<K, T> implements ResultTransfor
       final FactoryExpression<Tuple> expr) {
     List<Expression<?>> args = new ArrayList<>(expr.getArgs().size());
     for (Expression<?> arg : expr.getArgs()) {
-      if (arg instanceof GroupExpression) {
-        args.add(((GroupExpression) arg).getExpression());
+      if (arg instanceof GroupExpression<?, ?> expression) {
+        args.add(expression.getExpression());
       } else {
         args.add(arg);
       }

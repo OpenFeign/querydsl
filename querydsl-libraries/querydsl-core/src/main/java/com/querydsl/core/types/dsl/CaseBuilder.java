@@ -160,18 +160,18 @@ public final class CaseBuilder {
     public <A> Cases<A, SimpleExpression<A>> then(Expression<A> expr) {
       if (expr instanceof Predicate) {
         return (Cases) then((Predicate) expr);
-      } else if (expr instanceof StringExpression) {
-        return (Cases) then((StringExpression) expr);
-      } else if (expr instanceof NumberExpression) {
-        return then((NumberExpression) expr);
-      } else if (expr instanceof DateExpression) {
-        return then((DateExpression) expr);
-      } else if (expr instanceof DateTimeExpression) {
-        return then((DateTimeExpression) expr);
-      } else if (expr instanceof TimeExpression) {
-        return then((TimeExpression) expr);
-      } else if (expr instanceof ComparableExpression) {
-        return then((ComparableExpression) expr);
+      } else if (expr instanceof StringExpression se) {
+        return (Cases) then(se);
+      } else if (expr instanceof NumberExpression ne) {
+        return then(ne);
+      } else if (expr instanceof DateExpression de) {
+        return then(de);
+      } else if (expr instanceof DateTimeExpression dte) {
+        return then(dte);
+      } else if (expr instanceof TimeExpression te) {
+        return then(te);
+      } else if (expr instanceof ComparableExpression ce) {
+        return then(ce);
       } else {
         return thenSimple(expr);
       }

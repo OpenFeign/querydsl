@@ -39,10 +39,9 @@ public class StringAsObjectType extends AbstractType<String> {
   @Override
   public String getValue(ResultSet rs, int startIndex) throws SQLException {
     var o = rs.getObject(startIndex);
-    if (o instanceof String) {
-      return (String) o;
-    } else if (o instanceof Clob) {
-      var clob = (Clob) o;
+    if (o instanceof String string) {
+      return string;
+    } else if (o instanceof Clob clob) {
       return clob.getSubString(1, (int) clob.length());
     } else if (o != null) {
       return o.toString();

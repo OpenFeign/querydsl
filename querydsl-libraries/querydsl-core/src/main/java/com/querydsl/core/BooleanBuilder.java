@@ -113,8 +113,8 @@ public final class BooleanBuilder implements Predicate, Cloneable {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof BooleanBuilder) {
-      return Objects.equals(((BooleanBuilder) o).getValue(), predicate);
+    } else if (o instanceof BooleanBuilder builder) {
+      return Objects.equals(builder.getValue(), predicate);
     } else {
       return false;
     }

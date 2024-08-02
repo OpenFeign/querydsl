@@ -95,8 +95,8 @@ public final class RelationalPathExtractor
   @Override
   public Set<RelationalPath<?>> visit(Path<?> expr, Set<RelationalPath<?>> known) {
     if (expr.getMetadata().isRoot()) {
-      if (expr instanceof RelationalPath) {
-        known = add(known, (RelationalPath<?>) expr);
+      if (expr instanceof RelationalPath<?> path) {
+        known = add(known, path);
       }
     } else {
       known = expr.getMetadata().getParent().accept(this, known);

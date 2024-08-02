@@ -158,7 +158,7 @@ public class DefaultQueryMetadata implements QueryMetadata, Cloneable {
   public void addJoin(JoinType joinType, Expression<?> expr) {
     addLastJoin();
     if (!exprInJoins.contains(expr)) {
-      if (expr instanceof Path && ((Path<?>) expr).getMetadata().isRoot()) {
+      if (expr instanceof Path<?> path && path.getMetadata().isRoot()) {
         exprInJoins.add(expr);
       } else {
         validate(expr);
@@ -378,8 +378,7 @@ public class DefaultQueryMetadata implements QueryMetadata, Cloneable {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof QueryMetadata) {
-      var q = (QueryMetadata) o;
+    if (o instanceof QueryMetadata q) {
       return q.getFlags().equals(flags)
           && q.getGroupBy().equals(groupBy)
           && Objects.equals(q.getHaving(), having)

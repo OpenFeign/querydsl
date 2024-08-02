@@ -35,8 +35,7 @@ class SQLListenerAdapter implements SQLDetailedListener {
   private final SQLDetailedListener detailedListener;
 
   SQLListenerAdapter(final SQLListener sqlListener) {
-    this.detailedListener =
-        sqlListener instanceof SQLDetailedListener ? (SQLDetailedListener) sqlListener : null;
+    this.detailedListener = sqlListener instanceof SQLDetailedListener sqldl ? sqldl : null;
     this.sqlListener = sqlListener;
   }
 

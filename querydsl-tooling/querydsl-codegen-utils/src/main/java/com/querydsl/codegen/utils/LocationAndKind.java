@@ -36,8 +36,7 @@ public class LocationAndKind {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof LocationAndKind) {
-      var other = (LocationAndKind) obj;
+    } else if (obj instanceof LocationAndKind other) {
       return location.equals(other.location) && kind.equals(other.kind);
     } else {
       return false;

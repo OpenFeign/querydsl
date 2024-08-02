@@ -205,10 +205,10 @@ public final class NativeSQLSerializer extends SQLSerializer {
 
   @Override
   public void visitConstant(Object constant) {
-    if (constant instanceof Collection<?>) {
+    if (constant instanceof Collection<?> collection) {
       append("(");
       var first = true;
-      for (Object element : ((Collection<?>) constant)) {
+      for (Object element : collection) {
         if (!first) {
           append(", ");
         }

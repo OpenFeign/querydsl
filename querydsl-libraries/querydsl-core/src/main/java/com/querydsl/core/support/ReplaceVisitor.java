@@ -88,8 +88,8 @@ public class ReplaceVisitor<C> implements Visitor<Expression<?>, C> {
       var metadata = expr.getMetadata();
       Path<?> parent = (Path) metadata.getParent().accept(this, context);
       var element = metadata.getElement();
-      if (element instanceof Expression<?>) {
-        element = ((Expression<?>) element).accept(this, context);
+      if (element instanceof Expression<?> expression) {
+        element = expression.accept(this, context);
       }
       if (parent.equals(metadata.getParent()) && Objects.equals(element, metadata.getElement())) {
         return expr;
@@ -155,8 +155,8 @@ public class ReplaceVisitor<C> implements Visitor<Expression<?>, C> {
   public Expression<?> visit(TemplateExpression<?> expr, C context) {
     ArrayList args = new ArrayList<>();
     for (Object arg : expr.getArgs()) {
-      if (arg instanceof Expression) {
-        args.add(((Expression<?>) arg).accept(this, context));
+      if (arg instanceof Expression<?> expression) {
+        args.add(expression.accept(this, context));
       } else {
         args.add(arg);
       }

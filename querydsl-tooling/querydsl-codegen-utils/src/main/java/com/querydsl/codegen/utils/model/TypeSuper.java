@@ -68,9 +68,8 @@ public class TypeSuper extends TypeAdapter {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof TypeSuper) {
-      return Objects.equals(((TypeSuper) o).varName, varName)
-          && ((TypeSuper) o).superType.equals(superType);
+    } else if (o instanceof TypeSuper super1) {
+      return Objects.equals(super1.varName, varName) && super1.superType.equals(superType);
     } else {
       return false;
     }

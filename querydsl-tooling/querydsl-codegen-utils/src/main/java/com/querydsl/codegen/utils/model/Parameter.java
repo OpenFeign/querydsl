@@ -33,8 +33,7 @@ public final class Parameter {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Parameter) {
-      var t = (Parameter) o;
+    } else if (o instanceof Parameter t) {
       return type.equals(t.type) && name.equals(t.name);
     } else {
       return false;

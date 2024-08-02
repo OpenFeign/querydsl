@@ -607,14 +607,12 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
     append("\nusing ");
 
     // A hacky way to allow merging table to table directly
-    if (usingExpression instanceof RelationalPath) {
+    if (usingExpression instanceof RelationalPath<?> path) {
       dmlWithSchema = true;
       // If table has an alias, handle both original table name and alias
-      if (!((RelationalPath<?>) usingExpression)
-          .getTableName()
-          .equals(ColumnMetadata.getName((RelationalPath<?>) usingExpression))) {
+      if (!path.getTableName().equals(ColumnMetadata.getName(path))) {
         RelationalPath<?> originalEntity = this.entity;
-        this.entity = (RelationalPath<?>) usingExpression;
+        this.entity = path;
         handle(usingExpression);
         append(" ");
         this.entity = originalEntity;
@@ -936,10 +934,10 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
   @Override
   public void visitConstant(Object constant) {
     if (useLiterals) {
-      if (constant instanceof Collection) {
+      if (constant instanceof Collection<?> collection) {
         append("(");
         var first = true;
-        for (Object o : ((Collection) constant)) {
+        for (Object o : collection) {
           if (!first) {
             append(COMMA);
           }
@@ -950,10 +948,10 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
       } else {
         append(configuration.asLiteral(constant));
       }
-    } else if (constant instanceof Collection) {
+    } else if (constant instanceof Collection<?> collection) {
       append("(");
       var first = true;
-      for (Object o : ((Collection) constant)) {
+      for (Object o : collection) {
         if (!first) {
           append(COMMA);
         }
@@ -966,7 +964,7 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
       }
       append(")");
 
-      var size = ((Collection) constant).size() - 1;
+      var size = collection.size() - 1;
       Path<?> lastPath = constantPaths.peekLast();
       for (var i = 0; i < size; i++) {
         constantPaths.add(lastPath);
@@ -1007,8 +1005,8 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
   @Override
   public Void visit(Path<?> path, Void context) {
     if (dml) {
-      if (path.equals(entity) && path instanceof RelationalPath<?>) {
-        var schemaAndTable = getSchemaAndTable((RelationalPath<?>) path);
+      if (path.equals(entity) && path instanceof RelationalPath<?> relationalPath) {
+        var schemaAndTable = getSchemaAndTable(relationalPath);
         boolean precededByDot;
         if (dmlWithSchema && templates.isPrintSchema()) {
           appendSchemaName(schemaAndTable.getSchema());

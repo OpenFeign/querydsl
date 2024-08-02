@@ -61,8 +61,8 @@ public abstract class FactoryExpressionBase<T> extends ExpressionBase<T>
     public boolean equals(Object o) {
       if (o == this) {
         return true;
-      } else if (o instanceof FactoryExpressionWrapper) {
-        return expr.equals(((FactoryExpressionWrapper) o).expr);
+      } else if (o instanceof FactoryExpressionWrapper<?> wrapper) {
+        return expr.equals(wrapper.expr);
       } else {
         return false;
       }
@@ -86,8 +86,8 @@ public abstract class FactoryExpressionBase<T> extends ExpressionBase<T>
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof FactoryExpression) {
-      return getClass().equals(o.getClass()) && getArgs().equals(((FactoryExpression) o).getArgs());
+    } else if (o instanceof FactoryExpression<?> expression) {
+      return getClass().equals(o.getClass()) && getArgs().equals(expression.getArgs());
     } else {
       return false;
     }

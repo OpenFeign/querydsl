@@ -52,8 +52,7 @@ public class ParamExpressionImpl<T> extends ExpressionBase<T> implements ParamEx
   public final boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof ParamExpression<?>) {
-      ParamExpression<?> other = (ParamExpression<?>) o;
+    } else if (o instanceof ParamExpression<?> other) {
       return other.getType().equals(getType())
           && other.getName().equals(name)
           && other.isAnon() == anon;

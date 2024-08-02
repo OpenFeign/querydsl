@@ -58,12 +58,12 @@ public class DateType extends AbstractDateTimeType<Date, Temporal> {
 
   @Override
   protected Date fromDbValue(Temporal value) {
-    if (value instanceof LocalDate) {
-      return Date.valueOf((LocalDate) value);
+    if (value instanceof LocalDate date) {
+      return Date.valueOf(date);
     }
 
-    if (value instanceof LocalDateTime) {
-      return Date.valueOf(((LocalDateTime) value).toLocalDate());
+    if (value instanceof LocalDateTime time) {
+      return Date.valueOf(time.toLocalDate());
     }
     // mysql
     //        if (String.class.isAssignableFrom(value.getClass())) {

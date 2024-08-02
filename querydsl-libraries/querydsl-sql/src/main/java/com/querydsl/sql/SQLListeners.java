@@ -50,12 +50,12 @@ public class SQLListeners implements SQLDetailedListener {
   }
 
   public void add(SQLListener listener) {
-    if (listener instanceof SQLListeners) {
-      for (SQLListener l : ((SQLListeners) listener).listeners) {
+    if (listener instanceof SQLListeners lListeners) {
+      for (SQLListener l : lListeners.listeners) {
         add(l);
       }
-    } else if (listener instanceof SQLDetailedListener) {
-      listeners.add((SQLDetailedListener) listener);
+    } else if (listener instanceof SQLDetailedListener detailedListener) {
+      listeners.add(detailedListener);
     } else {
       listeners.add(new SQLListenerAdapter(listener));
     }

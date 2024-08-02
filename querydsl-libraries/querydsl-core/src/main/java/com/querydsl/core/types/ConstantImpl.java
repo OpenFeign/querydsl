@@ -144,8 +144,8 @@ public final class ConstantImpl<T> extends ExpressionBase<T> implements Constant
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Constant<?>) {
-      return ((Constant<?>) o).getConstant().equals(constant);
+    } else if (o instanceof Constant<?> constant1) {
+      return constant1.getConstant().equals(constant);
     } else {
       return false;
     }

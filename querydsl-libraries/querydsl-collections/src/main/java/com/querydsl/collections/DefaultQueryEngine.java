@@ -163,8 +163,8 @@ public class DefaultQueryEngine implements QueryEngine {
     final List<Expression<?>> sources = Collections.<Expression<?>>singletonList(source);
     final Iterable<?> iterable = iterables.values().iterator().next();
     List<?> list;
-    if (iterable instanceof List) {
-      list = (List) iterable;
+    if (iterable instanceof List<?> list1) {
+      list = list1;
     } else {
       list = IteratorAdapter.asList(iterable.iterator());
     }

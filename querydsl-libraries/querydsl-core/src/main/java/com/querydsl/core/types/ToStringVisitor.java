@@ -57,16 +57,16 @@ public final class ToStringVisitor implements Visitor<String, Templates> {
       final var builder = new StringBuilder();
       for (Template.Element element : template.getElements()) {
         final var rv = element.convert(o.getArgs());
-        if (rv instanceof Expression) {
-          if (precedence > -1 && rv instanceof Operation) {
-            if (precedence < templates.getPrecedence(((Operation<?>) rv).getOperator())) {
+        if (rv instanceof Expression<?> expression) {
+          if (precedence > -1 && rv instanceof Operation<?> operation) {
+            if (precedence < templates.getPrecedence(operation.getOperator())) {
               builder.append("(");
-              builder.append(((Expression<?>) rv).accept(this, templates));
+              builder.append(operation.accept(this, templates));
               builder.append(")");
               continue;
             }
           }
-          builder.append(((Expression<?>) rv).accept(this, templates));
+          builder.append(expression.accept(this, templates));
         } else {
           builder.append(rv.toString());
         }
@@ -96,8 +96,8 @@ public final class ToStringVisitor implements Visitor<String, Templates> {
         final var builder = new StringBuilder();
         for (Template.Element element : pattern.getElements()) {
           var rv = element.convert(args);
-          if (rv instanceof Expression) {
-            builder.append(((Expression<?>) rv).accept(this, templates));
+          if (rv instanceof Expression<?> expression) {
+            builder.append(expression.accept(this, templates));
           } else {
             builder.append(rv.toString());
           }
@@ -121,8 +121,8 @@ public final class ToStringVisitor implements Visitor<String, Templates> {
     final var builder = new StringBuilder();
     for (Template.Element element : expr.getTemplate().getElements()) {
       var rv = element.convert(expr.getArgs());
-      if (rv instanceof Expression) {
-        builder.append(((Expression<?>) rv).accept(this, templates));
+      if (rv instanceof Expression<?> expression) {
+        builder.append(expression.accept(this, templates));
       } else {
         builder.append(rv.toString());
       }

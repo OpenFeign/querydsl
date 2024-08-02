@@ -106,8 +106,8 @@ public class JoinFlag implements Serializable {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof JoinFlag) {
-      return ((JoinFlag) obj).flag.equals(flag);
+    } else if (obj instanceof JoinFlag joinFlag) {
+      return joinFlag.flag.equals(flag);
     } else {
       return false;
     }

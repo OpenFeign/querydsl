@@ -38,8 +38,8 @@ public class StringAsObjectType extends AbstractType<CharSequence, Clob> {
   @Override
   public String getValue(Row row, int startIndex) {
     var o = row.get(startIndex);
-    if (o instanceof String) {
-      return (String) o;
+    if (o instanceof String string) {
+      return string;
       //        } else if (o instanceof Clob) {
       //            Clob clob = (Clob) o;
       //            return clob.stream();
