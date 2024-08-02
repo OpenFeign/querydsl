@@ -122,19 +122,33 @@ public class GroupByListTest extends AbstractGroupByTest {
       Object[] array = tuple.toArray();
 
       if (posts == null || !(postId == array[0] || postId != null && postId.equals(array[0]))) {
-        posts = new LinkedHashMap<Integer, Map<Integer, String>>();
-        expected.add(posts);
+        posts = findPostsById(expected, array[0]);
+        if (posts == null) {
+          posts = new LinkedHashMap<Integer, Map<Integer, String>>();
+          expected.add(posts);
+        }
       }
       postId = array[0];
       @SuppressWarnings("unchecked")
       Pair<Integer, Pair<Integer, String>> pair = (Pair<Integer, Pair<Integer, String>>) array[1];
       Integer first = pair.getFirst();
-      Map<Integer, String> comments =
-          posts.computeIfAbsent(first, k -> new LinkedHashMap<Integer, String>());
+      Map<Integer, String> comments = posts.get(first);
+      if (comments == null) {
+        comments = new LinkedHashMap<Integer, String>();
+        posts.put(first, comments);
+      }
       Pair<Integer, String> second = pair.getSecond();
       comments.put(second.getFirst(), second.getSecond());
     }
     assertEquals(expected.toString(), actual.toString());
+  }
+
+  private Map<Integer, Map<Integer, String>> findPostsById(
+      List<Map<Integer, Map<Integer, String>>> allPosts, Object postId) {
+    for (Map<Integer, Map<Integer, String>> posts : allPosts) {
+      if (posts.containsKey(postId)) return posts;
+    }
+    return null;
   }
 
   @Test
