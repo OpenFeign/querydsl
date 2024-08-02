@@ -74,7 +74,7 @@ public final class ValidatingVisitor
   @Override
   public Set<Expression<?>> visit(Path<?> expr, Set<Expression<?>> known) {
     if (!known.contains(expr.getRoot())) {
-      throw new IllegalArgumentException(String.format(errorTemplate, expr.getRoot()));
+      throw new IllegalArgumentException(errorTemplate.formatted(expr.getRoot()));
     }
     return known;
   }
@@ -105,8 +105,8 @@ public final class ValidatingVisitor
   @Override
   public Set<Expression<?>> visit(TemplateExpression<?> expr, Set<Expression<?>> known) {
     for (Object arg : expr.getArgs()) {
-      if (arg instanceof Expression<?>) {
-        known = ((Expression<?>) arg).accept(this, known);
+      if (arg instanceof Expression<?> expression) {
+        known = expression.accept(this, known);
       }
     }
     return known;
@@ -115,7 +115,7 @@ public final class ValidatingVisitor
   private Set<Expression<?>> visitJoins(Iterable<JoinExpression> joins, Set<Expression<?>> known) {
     for (JoinExpression j : joins) {
       final Expression<?> expr = j.getTarget();
-      if (expr instanceof Path && ((Path) expr).getMetadata().isRoot()) {
+      if (expr instanceof Path<?> path && path.getMetadata().isRoot()) {
         known = add(known, expr);
       } else {
         known = expr.accept(this, known);

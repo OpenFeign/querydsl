@@ -92,10 +92,10 @@ public final class ReflectionUtils {
   }
 
   public static int getTypeParameterCount(java.lang.reflect.Type type) {
-    if (type instanceof ParameterizedType) {
-      return ((ParameterizedType) type).getActualTypeArguments().length;
-    } else if (type instanceof TypeVariable) {
-      return getTypeParameterCount(((TypeVariable) type).getBounds()[0]);
+    if (type instanceof ParameterizedType parameterizedType) {
+      return parameterizedType.getActualTypeArguments().length;
+    } else if (type instanceof TypeVariable<?> variable) {
+      return getTypeParameterCount(variable.getBounds()[0]);
     } else {
       return 0;
     }
@@ -112,34 +112,33 @@ public final class ReflectionUtils {
 
   @Nullable
   public static Type getTypeParameter(java.lang.reflect.Type type, int index) {
-    if (type instanceof ParameterizedType) {
-      return ((ParameterizedType) type).getActualTypeArguments()[index];
-    } else if (type instanceof TypeVariable) {
-      return getTypeParameter(((TypeVariable) type).getBounds()[0], index);
+    if (type instanceof ParameterizedType parameterizedType) {
+      return parameterizedType.getActualTypeArguments()[index];
+    } else if (type instanceof TypeVariable<?> variable) {
+      return getTypeParameter(variable.getBounds()[0], index);
     } else {
       return null;
     }
   }
 
   private static Class<?> asClass(Type type) {
-    if (type instanceof WildcardType) {
-      var wildcardType = (WildcardType) type;
-      if (wildcardType.getUpperBounds()[0] instanceof Class) {
-        return (Class<?>) wildcardType.getUpperBounds()[0];
-      } else if (wildcardType.getUpperBounds()[0] instanceof ParameterizedType) {
-        return (Class<?>) ((ParameterizedType) wildcardType.getUpperBounds()[0]).getRawType();
+    if (type instanceof WildcardType wildcardType) {
+      if (wildcardType.getUpperBounds()[0] instanceof Class<?> class1) {
+        return class1;
+      } else if (wildcardType.getUpperBounds()[0] instanceof ParameterizedType parameterizedType) {
+        return (Class<?>) parameterizedType.getRawType();
       } else {
         return Object.class;
       }
-    } else if (type instanceof TypeVariable) {
-      return asClass(((TypeVariable) type).getBounds()[0]);
-    } else if (type instanceof ParameterizedType) {
-      return (Class<?>) ((ParameterizedType) type).getRawType();
-    } else if (type instanceof GenericArrayType) {
-      var component = ((GenericArrayType) type).getGenericComponentType();
+    } else if (type instanceof TypeVariable<?> variable) {
+      return asClass(variable.getBounds()[0]);
+    } else if (type instanceof ParameterizedType parameterizedType) {
+      return (Class<?>) parameterizedType.getRawType();
+    } else if (type instanceof GenericArrayType arrayType) {
+      var component = arrayType.getGenericComponentType();
       return Array.newInstance(asClass(component), 0).getClass();
-    } else if (type instanceof Class) {
-      return (Class<?>) type;
+    } else if (type instanceof Class<?> class1) {
+      return class1;
     } else {
       throw new IllegalArgumentException(type.getClass().toString());
     }

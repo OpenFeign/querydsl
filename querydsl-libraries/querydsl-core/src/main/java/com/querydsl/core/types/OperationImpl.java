@@ -69,8 +69,7 @@ public class OperationImpl<T> extends ExpressionBase<T> implements Operation<T> 
   public final boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Operation<?>) {
-      Operation<?> op = (Operation<?>) o;
+    } else if (o instanceof Operation<?> op) {
       return op.getOperator() == operator
           && op.getArgs().equals(args)
           && op.getType().equals(getType());

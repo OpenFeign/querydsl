@@ -48,8 +48,7 @@ public class Delegate {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Delegate) {
-      var m = (Delegate) o;
+    } else if (o instanceof Delegate m) {
       return m.name.equals(name) && m.parameters.equals(parameters);
     } else {
       return false;
