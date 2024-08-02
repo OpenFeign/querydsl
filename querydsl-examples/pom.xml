@@ -12,6 +12,10 @@
   <packaging>pom</packaging>
   <name>Querydsl - Examples</name>
 
+  <properties>
+    <main.java.version>17</main.java.version>
+  </properties>
+
   <modules>
     <module>querydsl-example-sql-guice</module>
     <module>querydsl-example-sql-spring</module>

@@ -11,17 +11,8 @@
   <artifactId>querydsl-example-sql-spring</artifactId>
   <name>Querydsl example - SQL Spring</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <!-- to match spring JDK version -->
-    <main.java.version>17</main.java.version>
-  </properties>
-
   <dependencies>
-
     <!-- spring -->
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
@@ -49,6 +40,11 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign.querydsl</groupId>
+      <artifactId>querydsl-sql-json</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -90,6 +86,13 @@
             <customType>com.querydsl.sql.types.LocalDateTimeType</customType>
             <customType>com.querydsl.sql.types.LocalDateType</customType>
           </customTypes>
+          <typeMappings>
+            <typeMapping>
+              <table>CUSTOMER_ADDRESS</table>
+              <column>ADDRESS</column>
+              <type>com.querydsl.example.dto.Address</type>
+            </typeMapping>
+          </typeMappings>
           <packageName>com.querydsl.example.sql</packageName>
           <targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
         </configuration>

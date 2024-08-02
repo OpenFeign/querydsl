@@ -82,23 +82,12 @@ create table customer_order_delivery (
   constraint order2_fk foreign key (order_id) references customer_order(id)
 );
 
-create table address (
-  id identity primary key, 
-  street varchar(64),
-  zip varchar(64),
-  town varchar(64),
-  state varchar(64),
-  country varchar(3),
-  other_details varchar(64) 
-);
-
 create table customer_address (
   customer_id long,
-  address_id long,
+  address clob,
   from_date date,
   to_date date,
   address_type_code varchar(12),
   
-  constraint customer3_fk foreign key (customer_id) references customer(id),
-  constraint address_fk foreign key (address_id) references address(id)
+  constraint customer3_fk foreign key (customer_id) references customer(id)
 );

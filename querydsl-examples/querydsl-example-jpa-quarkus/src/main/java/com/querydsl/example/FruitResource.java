@@ -101,8 +101,8 @@ public class FruitResource {
       LOGGER.error("Failed to handle request", exception);
 
       int code = 500;
-      if (exception instanceof WebApplicationException) {
-        code = ((WebApplicationException) exception).getResponse().getStatus();
+      if (exception instanceof WebApplicationException applicationException) {
+        code = applicationException.getResponse().getStatus();
       }
 
       ObjectNode exceptionJson = objectMapper.createObjectNode();

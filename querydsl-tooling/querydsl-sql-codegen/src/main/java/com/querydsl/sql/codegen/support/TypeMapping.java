@@ -45,7 +45,9 @@ public class TypeMapping implements Mapping {
       } else {
         configuration.register(table, column, typeClass);
       }
-    } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+    } catch (ClassNotFoundException e) {
+      configuration.register(table, column, new com.querydsl.sql.types.SimpleType(type));
+    } catch (IllegalAccessException | InstantiationException e) {
       throw new RuntimeException(e);
     }
   }
@@ -72,5 +74,10 @@ public class TypeMapping implements Mapping {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  @Override
+  public String toString() {
+    return "TypeMapping [table=" + table + ", column=" + column + ", type=" + type + "]";
   }
 }
