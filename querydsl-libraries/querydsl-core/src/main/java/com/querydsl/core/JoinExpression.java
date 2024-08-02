@@ -107,8 +107,7 @@ public final class JoinExpression implements Serializable {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof JoinExpression) {
-      var j = (JoinExpression) o;
+    } else if (o instanceof JoinExpression j) {
       return Objects.equals(condition, j.condition)
           && Objects.equals(target, j.target)
           && Objects.equals(type, j.type);

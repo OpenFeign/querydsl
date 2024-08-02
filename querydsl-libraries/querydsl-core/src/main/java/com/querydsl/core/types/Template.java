@@ -173,8 +173,8 @@ public final class Template implements Serializable {
     @Override
     public Object convert(final List<?> args) {
       final Object arg = args.get(index);
-      if (arg instanceof Expression) {
-        return ExpressionUtils.extract((Expression<?>) arg);
+      if (arg instanceof Expression<?> expression) {
+        return ExpressionUtils.extract(expression);
       } else {
         return arg;
       }
@@ -223,20 +223,19 @@ public final class Template implements Serializable {
         Expression<?> expr1 = asExpression(arg1);
         Expression<?> expr2 = asExpression(arg2);
 
-        if (arg2 instanceof Number) {
+        if (arg2 instanceof Number number) {
           if (CONVERTIBLES.contains(operator)
-              && expr1 instanceof com.querydsl.core.types.Operation) {
-            var operation = (com.querydsl.core.types.Operation) expr1;
+              && expr1 instanceof com.querydsl.core.types.Operation<?> operation) {
             if (CONVERTIBLES.contains(operation.getOperator())
                 && operation.getArg(1) instanceof Constant) {
               var num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
               Number num2;
               if (operator == operation.getOperator()) {
-                num2 = MathUtils.result(num1, (Number) arg2, Ops.ADD);
+                num2 = MathUtils.result(num1, number, Ops.ADD);
               } else if (operator == Ops.ADD) {
-                num2 = MathUtils.result((Number) arg2, num1, Ops.SUB);
+                num2 = MathUtils.result(number, num1, Ops.SUB);
               } else {
-                num2 = MathUtils.result(num1, (Number) arg2, Ops.SUB);
+                num2 = MathUtils.result(num1, number, Ops.SUB);
               }
               return ExpressionUtils.operation(
                   expr1.getType(), operator, operation.getArg(0), Expressions.constant(num2));
@@ -295,8 +294,8 @@ public final class Template implements Serializable {
       } else {
         Expression<?> expr1 = asExpression(arg1);
 
-        if (CONVERTIBLES.contains(operator) && expr1 instanceof com.querydsl.core.types.Operation) {
-          var operation = (com.querydsl.core.types.Operation) expr1;
+        if (CONVERTIBLES.contains(operator)
+            && expr1 instanceof com.querydsl.core.types.Operation<?> operation) {
           if (CONVERTIBLES.contains(operation.getOperator())
               && operation.getArg(1) instanceof Constant) {
             var num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
@@ -350,8 +349,8 @@ public final class Template implements Serializable {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Template) {
-      return ((Template) o).template.equals(template);
+    } else if (o instanceof Template template1) {
+      return template1.template.equals(template);
     } else {
       return false;
     }
@@ -363,23 +362,22 @@ public final class Template implements Serializable {
   }
 
   private static Number asNumber(Object arg) {
-    if (arg instanceof Number) {
-      return (Number) arg;
-    } else if (arg instanceof Constant) {
-      return (Number) ((Constant) arg).getConstant();
+    if (arg instanceof Number number) {
+      return number;
+    } else if (arg instanceof Constant<?> constant) {
+      return (Number) constant.getConstant();
     } else {
       throw new IllegalArgumentException(arg.toString());
     }
   }
 
   private static boolean isNumber(Object o) {
-    return o instanceof Number
-        || o instanceof Constant && ((Constant<?>) o).getConstant() instanceof Number;
+    return o instanceof Number || o instanceof Constant<?> c && c.getConstant() instanceof Number;
   }
 
   private static Expression<?> asExpression(Object arg) {
-    if (arg instanceof Expression) {
-      return ExpressionUtils.extract((Expression<?>) arg);
+    if (arg instanceof Expression<?> expression) {
+      return ExpressionUtils.extract(expression);
     } else {
       return Expressions.constant(arg);
     }

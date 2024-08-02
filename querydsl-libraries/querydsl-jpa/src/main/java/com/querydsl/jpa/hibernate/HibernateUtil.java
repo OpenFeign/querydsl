@@ -108,10 +108,10 @@ public final class HibernateUtil {
 
   private static void setValueWithNumberedLabel(
       org.hibernate.query.Query<?> query, Integer key, Object val) {
-    if (val instanceof Collection<?>) {
-      query.setParameterList(key, (Collection<?>) val);
-    } else if (val instanceof Object[] && !BUILT_IN.contains(val.getClass())) {
-      query.setParameterList(key, (Object[]) val);
+    if (val instanceof Collection<?> collection) {
+      query.setParameterList(key, collection);
+    } else if (val instanceof Object[] objects && !BUILT_IN.contains(val.getClass())) {
+      query.setParameterList(key, objects);
     } else if (val instanceof Number && TYPES.containsKey(val.getClass())) {
       query.setParameter(key, val, getType(val.getClass()));
     } else {

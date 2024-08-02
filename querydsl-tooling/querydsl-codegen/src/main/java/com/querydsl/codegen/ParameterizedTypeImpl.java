@@ -53,8 +53,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof ParameterizedTypeImpl) {
-      var other = (ParameterizedTypeImpl) o;
+    } else if (o instanceof ParameterizedTypeImpl other) {
       return other.rawType.equals(rawType) && Arrays.equals(other.arguments, arguments);
     } else {
       return false;

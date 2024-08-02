@@ -61,8 +61,8 @@ public class EnumConversion<T> extends FactoryExpressionBase<T> {
         @SuppressWarnings("unchecked") // The expression type is an enum
         var rv = (T) Enum.valueOf(getType().asSubclass(Enum.class), args[0].toString());
         return rv;
-      } else if (args[0] instanceof Number) {
-        return values[((Number) args[0]).intValue()];
+      } else if (args[0] instanceof Number number) {
+        return values[number.intValue()];
       } else {
         @SuppressWarnings("unchecked")
         var rv = (T) args[0];
