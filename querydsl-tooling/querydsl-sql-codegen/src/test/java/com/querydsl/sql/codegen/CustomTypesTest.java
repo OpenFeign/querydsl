@@ -31,7 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,7 +81,7 @@ public class CustomTypesTest extends AbstractJDBCTest {
 
     // export
     exporter.export(connection.getMetaData());
-    var qpersonFile = Paths.get("target", "customExport", "test", "QPerson.java");
+    var qpersonFile = Path.of("target", "customExport", "test", "QPerson.java");
     assertThat(qpersonFile).exists();
     var person = new String(Files.readAllBytes(qpersonFile), StandardCharsets.UTF_8);
     // System.err.println(person);
