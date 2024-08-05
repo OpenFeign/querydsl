@@ -13,6 +13,8 @@
  */
 package com.querydsl.core.group;
 
+import static com.querydsl.core.util.TupleUtils.toTuple;
+
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -53,29 +55,30 @@ public class GroupByGenericCollection<K, V, RES extends Collection<V>>
     if (hasGroups) {
       expr = withoutGroupExpressions(expr);
     }
-    final var iter = query.select(expr).iterate();
+    try (final var iter = query.select(expr).iterate(); ) {
 
-    var list = resultFactory.get();
-    GroupImpl group = null;
-    K groupId = null;
-    while (iter.hasNext()) {
-      @SuppressWarnings("unchecked") // This type is mandated by the key type
-      var row = (K[]) iter.next().toArray();
-      if (group == null) {
-        group = new GroupImpl(groupExpressions, maps);
-        groupId = row[0];
-      } else if (!Objects.equals(groupId, row[0])) {
-        list.add(transform(group));
-        group = new GroupImpl(groupExpressions, maps);
-        groupId = row[0];
+      var list = resultFactory.get();
+      GroupImpl group = null;
+      K groupId = null;
+      while (iter.hasNext()) {
+        var tuple = toTuple(iter.next(), expressions);
+        @SuppressWarnings("unchecked") // This type is mandated by the key type
+        var row = (K[]) tuple.toArray();
+        if (group == null) {
+          group = new GroupImpl(groupExpressions, maps);
+          groupId = row[0];
+        } else if (!Objects.equals(groupId, row[0])) {
+          list.add(transform(group));
+          group = new GroupImpl(groupExpressions, maps);
+          groupId = row[0];
+        }
+        group.add(row);
       }
-      group.add(row);
+      if (group != null) {
+        list.add(transform(group));
+      }
+      return list;
     }
-    if (group != null) {
-      list.add(transform(group));
-    }
-    iter.close();
-    return list;
   }
 
   @SuppressWarnings("unchecked")

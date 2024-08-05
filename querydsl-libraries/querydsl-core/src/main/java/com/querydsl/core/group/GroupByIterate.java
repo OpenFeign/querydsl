@@ -13,6 +13,8 @@
  */
 package com.querydsl.core.group;
 
+import static com.querydsl.core.util.TupleUtils.toTuple;
+
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Tuple;
@@ -73,8 +75,9 @@ public class GroupByIterate<K, V> extends AbstractGroupByTransformer<K, Closeabl
         }
 
         while (iter.hasNext()) {
+          var tuple = toTuple(iter.next(), expressions);
           @SuppressWarnings("unchecked") // This type is mandated by the key type
-          var row = (K[]) iter.next().toArray();
+          var row = (K[]) tuple.toArray();
           if (group == null) {
             group = new GroupImpl(groupExpressions, maps);
             groupId = row[0];

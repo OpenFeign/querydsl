@@ -14,10 +14,14 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.group.GroupBy;
+import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.domain.Cat;
@@ -158,5 +162,18 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
     for (String row : rows) {
       assertThat(row instanceof String).isTrue();
     }
+  }
+
+  @Test
+  @ExcludeIn(Target.DERBY)
+  public void createQuery4() {
+    assertDoesNotThrow(
+        () ->
+            query()
+                .from(cat)
+                .leftJoin(cat.kittens)
+                .fetchJoin()
+                .distinct()
+                .transform(GroupBy.groupBy(cat.id).as(cat)));
   }
 }

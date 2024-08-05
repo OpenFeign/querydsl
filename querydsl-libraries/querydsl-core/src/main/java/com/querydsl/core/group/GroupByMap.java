@@ -13,6 +13,8 @@
  */
 package com.querydsl.core.group;
 
+import static com.querydsl.core.util.TupleUtils.toTuple;
+
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
@@ -50,8 +52,9 @@ public class GroupByMap<K, V> extends AbstractGroupByTransformer<K, Map<K, V>> {
     }
     try (var iter = query.select(expr).iterate()) {
       while (iter.hasNext()) {
+        var tuple = toTuple(iter.next(), expressions);
         @SuppressWarnings("unchecked") // This type is mandated by the key type
-        var row = (K[]) iter.next().toArray();
+        var row = (K[]) tuple.toArray();
         var groupId = row[0];
         var group = (GroupImpl) groups.get(groupId);
         if (group == null) {
