@@ -1,4 +1,3 @@
-
 #
 # Copyright 2012-2020 The Feign Authors
 #
@@ -27,7 +26,18 @@ commands:
       - run:
           name: 'Resolving Dependencies'
           command: |
-            ./mvnw -ntp dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true -B
+            ./mvnw -ntp -B dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true
+
+  save-test-results:
+    steps:
+      - run:
+          name: Save package results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
 
   configure-gpg:
     steps:
@@ -35,12 +45,6 @@ commands:
           name: 'Configure GPG keys'
           command: |
             echo -e "$GPG_KEY" | gpg --batch --no-tty --import --yes
-  nexus-deploy:
-    steps:
-      - run:
-          name: 'Deploy Core Modules Sonatype'
-          command: |
-            ./mvnw -ntp -nsu -s .circleci/settings.xml -DskipTests=true deploy -B -Prelease
 
 # our job defaults
 defaults: &defaults
@@ -102,12 +106,14 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp verify -B -Pno-databases
-  buildExamples:
-    <<: *defaults
-    working_directory: ~/querydsl
-    docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+            ./mvnw -ntp -B verify -Pno-databases
+      - save-test-results
+
+  windows:
+    machine:
+      image: windows-server-2019-vs2019:current # Windows machine image
+    resource_class: windows.medium
+
     steps:
       - checkout
       - restore_cache:
@@ -117,7 +123,40 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp verify -B -Pexamples,no-databases
+            ./mvnw -ntp -B verify -Pno-databases -Dtoolchain.skip=true
+          shell: bash.exe
+
+  buildExamples:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-docker
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
+      - run:
+          name: 'Test'
+          command: |
+            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb,:querydsl-r2dbc,:querydsl-sql-json -am -T2
+            ./mvnw -ntp -B verify -Pexamples -rf :querydsl-examples
+      - save-test-results
+  buildQuarkusExample:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: cimg/base:2022.06
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: 'Test'
+          command: |
+            cp querydsl-examples/querydsl-example-jpa-quarkus/Dockerfile .
+            docker build --progress=plain .
   testMySQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -138,7 +177,8 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.MySQL
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.MySQL
+      - save-test-results
   testPostgreSQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -158,7 +198,8 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.PostgreSQL
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
+      - save-test-results
   testCUBRID:
     <<: *defaults
     working_directory: ~/querydsl
@@ -176,17 +217,19 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.CUBRID
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.CUBRID
+      - save-test-results
   testOracle:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
       - image: velo/toolchains-4-ci-builds:with-21
-      - image: gvenzl/oracle-xe:11
+      - image: gvenzl/oracle-xe:slim-faststart
         environment:
           - ORACLE_PASSWORD=querydsl
           - APP_USER=querydsl
           - APP_USER_PASSWORD=querydsl
+          - TZ=UTC
     steps:
       - checkout
       - restore_cache:
@@ -196,7 +239,8 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.Oracle
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.Oracle
+      - save-test-results
   testMongo:
     <<: *defaults
     working_directory: ~/querydsl
@@ -212,7 +256,8 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.MongoDB
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.MongoDB
+      - save-test-results
   testFirebird:
     <<: *defaults
     working_directory: ~/querydsl
@@ -224,6 +269,7 @@ jobs:
           - FIREBIRD_DATABASE=querydsl.fdb
           - FIREBIRD_USER=querydsl
           - FIREBIRD_PASSWORD=querydsl
+          - TZ=UTC
     steps:
       - checkout
       - restore_cache:
@@ -233,13 +279,14 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.Firebird
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.Firebird
+      - save-test-results
   testMSSQL:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
       - image: velo/toolchains-4-ci-builds:with-21
-      - image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+      - image: mcr.microsoft.com/mssql/server:2022-latest
         environment:
           - ACCEPT_EULA=Y
           - SA_PASSWORD=Password1!
@@ -253,7 +300,8 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.SQLServer
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.SQLServer
+      - save-test-results
   testEmbedded:
     <<: *defaults
     working_directory: ~/querydsl
@@ -268,9 +316,10 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp test -B -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
+      - save-test-results
 
-  deploy:
+  deploySnapshot:
     executor:
       name: java
     <<: *defaults
@@ -282,7 +331,27 @@ jobs:
             - querydsl-dependencies-
       - resolve-dependencies
       - configure-gpg
-      - nexus-deploy
+      - run:
+          name: 'Deploy Core Modules Sonatype'
+          command: |
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease
+
+  deployRelease:
+    executor:
+      name: java
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
+      - resolve-dependencies
+      - configure-gpg
+      - run:
+          name: 'Deploy Core Modules Sonatype'
+          command: |
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease,staging
 
 workflows:
   version: 2
@@ -293,15 +362,25 @@ workflows:
           filters:
             <<: *all-branches
       - test:
-          name: 'Compile and Test (no external databases)'
+          name: 'Compile and package (no external databases)'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - windows:
+          name: 'Compile and package on Windows (no external databases)'
           requires:
             - 'Resolve dependencies'
           filters:
             <<: *all-branches
       - buildExamples:
-          name: 'Compile and Test Examples'
+          name: 'Compile and package Examples'
           requires:
             - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - buildQuarkusExample:
+          name: 'Compile and package Quarkus Example'
           filters:
             <<: *all-branches
       - testMySQL:
@@ -359,7 +438,7 @@ workflows:
           name: 'snapshot'
           filters:
             <<: *master-only
-      - deploy:
+      - deploySnapshot:
           name: 'deploy snapshot'
           requires:
             - 'snapshot'
@@ -369,7 +448,7 @@ workflows:
 
   release:
     jobs:
-      - deploy:
+      - deployRelease:
           name: 'release to maven central'
           context: Sonatype
           filters:

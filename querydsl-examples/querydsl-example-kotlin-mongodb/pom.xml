@@ -4,22 +4,17 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>5.6-SNAPSHOT</version>
+    <version>6.7-SNAPSHOT</version>
   </parent>
   <artifactId>querydsl-example-kotlin-mongodb</artifactId>
   <name>Querydsl example - Kotlin MongoDB</name>
-
-  <properties>
-    <kotlin.version>1.9.22</kotlin.version>
-    <main.java.version>11</main.java.version>
-  </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.2</version>
+        <version>${springboot.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -54,15 +49,13 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit</artifactId>
+      <artifactId>kotlin-test-junit5</artifactId>
       <version>${kotlin.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <build>
-    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -79,8 +72,20 @@
           <annotationProcessors>
             <annotationProcessor>org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor</annotationProcessor>
           </annotationProcessors>
-          <jvmTarget>1.8</jvmTarget>
+          <jvmTarget>${main.java.version}</jvmTarget>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-allopen</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-noarg</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <id>kapt</id>
@@ -96,10 +101,10 @@
           </execution>
           <execution>
             <id>compile</id>
-            <phase>process-sources</phase>
             <goals>
               <goal>compile</goal>
             </goals>
+            <phase>process-sources</phase>
             <configuration>
               <sourceDirs>
                 <sourceDir>src/main/kotlin</sourceDir>
@@ -133,23 +138,13 @@
             </configuration>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-allopen</artifactId>
-            <version>${kotlin.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-noarg</artifactId>
-            <version>${kotlin.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
     </plugins>
+    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
   </build>
 </project>

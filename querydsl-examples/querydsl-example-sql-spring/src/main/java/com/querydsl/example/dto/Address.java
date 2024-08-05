@@ -1,9 +1,10 @@
 package com.querydsl.example.dto;
 
+import io.github.openfeign.querydsl.sql.json.*;
 import lombok.Data;
 
 @Data
-public class Address {
+public class Address implements JsonEntity {
 
   private Long id;
 

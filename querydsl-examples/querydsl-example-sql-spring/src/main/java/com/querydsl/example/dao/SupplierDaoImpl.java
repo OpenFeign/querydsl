@@ -8,19 +8,19 @@ import com.querydsl.core.types.QBean;
 import com.querydsl.example.dto.Supplier;
 import com.querydsl.sql.SQLQueryFactory;
 import java.util.List;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class SupplierDaoImpl implements SupplierDao {
 
-  @Inject SQLQueryFactory queryFactory;
+  @Autowired SQLQueryFactory queryFactory;
 
   final QBean<Supplier> supplierBean = bean(Supplier.class, supplier.all());
 
   @Override
   public Supplier findById(long id) {
-    List<Supplier> suppliers = findAll(supplier.id.eq(id));
+    var suppliers = findAll(supplier.id.eq(id));
     return suppliers.isEmpty() ? null : suppliers.get(0);
   }
 
@@ -32,7 +32,7 @@ public class SupplierDaoImpl implements SupplierDao {
   @Override
   public Supplier save(Supplier s) {
     if (s.getId() == null) {
-      Long id =
+      var id =
           queryFactory
               .insert(supplier)
               .set(supplier.code, s.getCode())

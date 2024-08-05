@@ -5,27 +5,14 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>5.6-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.7-SNAPSHOT</version>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-example-sql-spring</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl example - SQL Spring</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>5.3.32</spring.version>
-    <h2.version>2.2.224</h2.version>
-
-    <main.java.version>11</main.java.version>
-  </properties>
-
   <dependencies>
-
     <!-- spring -->
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
@@ -43,14 +30,9 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
-      <version>1</version>
-    </dependency>
-    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
+      <version>1.18.34</version>
       <scope>provided</scope>
     </dependency>
 
@@ -62,45 +44,24 @@
     </dependency>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
+      <artifactId>querydsl-sql-json</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql-spring</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.jolbox</groupId>
-      <artifactId>bonecp</artifactId>
-      <version>0.8.0-beta1</version>
-      <classifier>jdk7</classifier>
-    </dependency>
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime.version}</version>
-    </dependency>
-
-    <!-- logging -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- TEST dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
-      <scope>test</scope>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -122,12 +83,26 @@
           <jdbcUrl>jdbc:h2:mem:;INIT=runscript from 'file:${project.baseUri}/src/main/sql/001_schema.sql'</jdbcUrl>
           <jdbcUser>sa</jdbcUser>
           <customTypes>
-            <customType>com.querydsl.sql.types.DateTimeType</customType>
+            <customType>com.querydsl.sql.types.LocalDateTimeType</customType>
             <customType>com.querydsl.sql.types.LocalDateType</customType>
           </customTypes>
+          <typeMappings>
+            <typeMapping>
+              <table>CUSTOMER_ADDRESS</table>
+              <column>ADDRESS</column>
+              <type>com.querydsl.example.dto.Address</type>
+            </typeMapping>
+          </typeMappings>
           <packageName>com.querydsl.example.sql</packageName>
           <targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <goals>
@@ -135,33 +110,8 @@
             </goals>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${jodatime.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
   </build>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>sonatype-oss-public</id>
-      <url>https://oss.sonatype.org/content/groups/public</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 
 </project>

@@ -16,7 +16,7 @@
 
 package com.querydsl.examples.kotlin.entity
 
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 data class ExampleEntity(

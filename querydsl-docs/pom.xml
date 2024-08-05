@@ -5,11 +5,9 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.6-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>6.7-SNAPSHOT</version>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-docs</artifactId>
   <name>Querydsl - Documentation</name>
   <packaging>jdocbook</packaging>
@@ -17,7 +15,6 @@
   <properties>
     <translation>en-US</translation>
     <xslthl.config>http://docbook.sourceforge.net/release/xsl/current/highlighting/xslthl-config.xml</xslthl.config>
-    <checkstyle.skip>true</checkstyle.skip>
   </properties>
 
   <build>

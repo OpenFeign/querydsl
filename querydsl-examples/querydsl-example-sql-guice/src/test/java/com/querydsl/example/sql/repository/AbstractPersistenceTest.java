@@ -2,13 +2,10 @@ package com.querydsl.example.sql.repository;
 
 import com.querydsl.example.sql.guice.GuiceTestRunner;
 import com.querydsl.example.sql.guice.Transactional;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
+import jakarta.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Inject;
 import javax.sql.DataSource;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -20,10 +17,10 @@ public abstract class AbstractPersistenceTest {
   @Before
   @Transactional
   public void before() {
-    try (Connection connection = dataSource.getConnection()) {
-      List<String> tables = new ArrayList<String>();
-      DatabaseMetaData md = connection.getMetaData();
-      ResultSet rs = md.getTables(null, "PUBLIC", null, new String[] {"TABLE"});
+    try (var connection = dataSource.getConnection()) {
+      List<String> tables = new ArrayList<>();
+      var md = connection.getMetaData();
+      var rs = md.getTables(null, "PUBLIC", null, new String[] {"TABLE"});
       try {
         while (rs.next()) {
           tables.add(rs.getString("TABLE_NAME"));
@@ -32,7 +29,7 @@ public abstract class AbstractPersistenceTest {
         rs.close();
       }
 
-      java.sql.Statement stmt = connection.createStatement();
+      var stmt = connection.createStatement();
       try {
         stmt.execute("SET REFERENTIAL_INTEGRITY FALSE");
         for (String table : tables) {

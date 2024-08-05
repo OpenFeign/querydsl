@@ -1,0 +1,5 @@
+**/target/*
+**/m2e-target/*
+**/.git
+.dockerignore
+Dockerfile

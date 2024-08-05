@@ -5,21 +5,14 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>5.6-SNAPSHOT</version>
-    <relativePath>../</relativePath>
+    <version>6.7-SNAPSHOT</version>
   </parent>
 
-  <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-example-sql-guice</artifactId>
-  <packaging>jar</packaging>
   <name>Querydsl example - SQL Guice</name>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <failIfNoTests>false</failIfNoTests>
-    <guice.version>5.0.1</guice.version>
-    <h2.version>2.2.224</h2.version>
-    <main.java.version>11</main.java.version>
+    <guice.version>7.0.0</guice.version>
   </properties>
 
   <dependencies>
@@ -29,20 +22,6 @@
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
       <version>${guice.version}</version>
-    </dependency>
-
-    <!-- logging -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
     </dependency>
 
     <!-- persistence -->
@@ -61,18 +40,11 @@
       <artifactId>c3p0</artifactId>
       <version>0.9.1.2</version>
     </dependency>
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime.version}</version>
-    </dependency>
 
     <!-- TEST dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
-      <scope>test</scope>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
     </dependency>
   </dependencies>
 
@@ -91,13 +63,6 @@
           <targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
           <exportBeans>true</exportBeans>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>export</goal>
-            </goals>
-          </execution>
-        </executions>
         <dependencies>
           <dependency>
             <groupId>com.h2database</groupId>
@@ -105,6 +70,13 @@
             <version>${h2.version}</version>
           </dependency>
         </dependencies>
+        <executions>
+          <execution>
+            <goals>
+              <goal>export</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

@@ -15,30 +15,30 @@ services:
     image: mysql:5.6.38
     ports:
       - "3306:3306"
-    volumes:
-      - ./db/mysql.sh:/docker-entrypoint-initdb.d/mysql.sh
     environment:
       - MYSQL_ROOT_PASSWORD=querydsl
       - MYSQL_USER=querydsl
       - MYSQL_PASSWORD=querydsl
+      - MYSQL_DATABASE=querydsl
 
   postgresql:
     image: postgis/postgis:16-3.4-alpine
     ports:
       - "5432:5432"
-    volumes:
-      - ./db/postgresql.sql:/docker-entrypoint-initdb.d/postgresql.sql
     environment:
       - POSTGRES_USER=querydsl
       - POSTGRES_PASSWORD=querydsl
       - POSTGRES_DB=querydsl
 
   oracle:
-    image: wnameless/oracle-xe-11g-r2:latest
+    image: gvenzl/oracle-xe:slim-faststart
     ports:
       - "1521:1521"
-    volumes:
-    - "./devops/sql-snippets/oracle.sql:/docker-entrypoint-initdb.d/oracle.sql"
+    environment:
+      - ORACLE_PASSWORD=querydsl
+      - APP_USER=querydsl
+      - APP_USER_PASSWORD=querydsl
+      - TZ=UTC
 
   cubrid:
     image: cubrid/cubrid:11.3
@@ -57,7 +57,7 @@ services:
       start_period: 60s
 
   mongo:
-    image: mongo:3.6.1
+    image: mongo:4
     ports:
       - "27017:27017"
 
@@ -94,7 +94,7 @@ services:
       start_period: 60s
 
   firebird:
-    image: jacobalberty/firebird:2.5.9-ss
+    image: jacobalberty/firebird:v4
     ports:
       - "3050:3050"
     environment:

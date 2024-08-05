@@ -1,7 +1,16 @@
 package com.querydsl.example.config;
 
-import com.querydsl.example.dao.*;
-import javax.inject.Inject;
+import com.querydsl.example.dao.CustomerDao;
+import com.querydsl.example.dao.CustomerDaoImpl;
+import com.querydsl.example.dao.OrderDao;
+import com.querydsl.example.dao.OrderDaoImpl;
+import com.querydsl.example.dao.PersonDao;
+import com.querydsl.example.dao.PersonDaoImpl;
+import com.querydsl.example.dao.ProductDao;
+import com.querydsl.example.dao.ProductDaoImpl;
+import com.querydsl.example.dao.SupplierDao;
+import com.querydsl.example.dao.SupplierDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -13,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Import(JdbcConfiguration.class)
 public class AppConfiguration {
 
-  @Inject Environment env;
+  @Autowired Environment env;
 
   @Bean
   public CustomerDao customerDao() {

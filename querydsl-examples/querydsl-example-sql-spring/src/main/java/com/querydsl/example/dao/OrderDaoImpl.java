@@ -13,15 +13,14 @@ import com.querydsl.example.dto.CustomerPaymentMethod;
 import com.querydsl.example.dto.Order;
 import com.querydsl.example.dto.OrderProduct;
 import com.querydsl.sql.SQLQueryFactory;
-import com.querydsl.sql.dml.SQLInsertClause;
 import java.util.List;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class OrderDaoImpl implements OrderDao {
 
-  @Inject SQLQueryFactory queryFactory;
+  @Autowired SQLQueryFactory queryFactory;
 
   final QBean<OrderProduct> orderProductBean =
       bean(
@@ -44,7 +43,7 @@ public class OrderDaoImpl implements OrderDao {
 
   @Override
   public Order findById(long id) {
-    List<Order> orders = findAll(customerOrder.id.eq(id));
+    var orders = findAll(customerOrder.id.eq(id));
     return orders.isEmpty() ? null : orders.get(0);
   }
 
@@ -66,7 +65,7 @@ public class OrderDaoImpl implements OrderDao {
 
   @Override
   public Order save(Order o) {
-    Long id = o.getId();
+    var id = o.getId();
 
     if (id == null) {
       id = populate(queryFactory.insert(customerOrder), o).executeWithKey(customerOrder.id);
@@ -81,7 +80,7 @@ public class OrderDaoImpl implements OrderDao {
           .execute();
     }
 
-    SQLInsertClause insert = queryFactory.insert(customerOrderProduct);
+    var insert = queryFactory.insert(customerOrderProduct);
     for (OrderProduct op : o.getOrderProducts()) {
       insert
           .set(customerOrderProduct.orderId, id)

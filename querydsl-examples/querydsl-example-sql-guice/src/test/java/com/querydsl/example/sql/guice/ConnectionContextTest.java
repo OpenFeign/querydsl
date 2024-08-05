@@ -1,6 +1,6 @@
 package com.querydsl.example.sql.guice;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.inject.Inject;
 import org.junit.After;
@@ -19,9 +19,9 @@ public class ConnectionContextTest {
 
   @Test
   public void get_connection() {
-    assertNotNull(context.getConnection(true));
-    assertNotNull(context.getConnection());
+    assertThat(context.getConnection(true)).isNotNull();
+    assertThat(context.getConnection()).isNotNull();
     context.removeConnection();
-    assertNull(context.getConnection());
+    assertThat(context.getConnection()).isNull();
   }
 }

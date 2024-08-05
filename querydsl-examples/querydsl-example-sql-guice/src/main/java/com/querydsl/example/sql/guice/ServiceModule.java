@@ -10,18 +10,18 @@ import com.querydsl.example.sql.repository.TweetRepository;
 import com.querydsl.example.sql.repository.UserRepository;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.H2Templates;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map.Entry;
 import java.util.Properties;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 public class ServiceModule extends AbstractModule {
   @Override
   protected void configure() {
-    Properties properties = new Properties();
+    var properties = new Properties();
     try {
       properties.load(getClass().getResourceAsStream("/jdbc.properties"));
     } catch (IOException e) {
@@ -37,7 +37,7 @@ public class ServiceModule extends AbstractModule {
     bind(TweetRepository.class).in(Scopes.SINGLETON);
     bind(UserRepository.class).in(Scopes.SINGLETON);
 
-    TransactionInterceptor interceptor = new TransactionInterceptor();
+    var interceptor = new TransactionInterceptor();
     requestInjection(interceptor);
     bindInterceptor(Matchers.any(), Matchers.annotatedWith(Transactional.class), interceptor);
   }

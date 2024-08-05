@@ -9,7 +9,6 @@ import com.querydsl.example.sql.guice.Transactional;
 import com.querydsl.example.sql.model.QUsert;
 import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.TweetUser;
-import com.querydsl.sql.dml.SQLInsertClause;
 import java.util.List;
 
 public class TweetRepository extends AbstractRepository {
@@ -26,10 +25,10 @@ public class TweetRepository extends AbstractRepository {
 
   @Transactional
   public Long save(Tweet tweet, Long... mentions) {
-    Long tweetId = save(tweet);
-    SQLInsertClause insert = insert(tweetUser);
+    var tweetId = save(tweet);
+    var insert = insert(tweetUser);
     for (Long mentionsId : mentions) {
-      TweetUser tu = new TweetUser();
+      var tu = new TweetUser();
       tu.setTweetId(tweetId);
       tu.setMentionsId(mentionsId);
       insert.populate(tu).addBatch();
