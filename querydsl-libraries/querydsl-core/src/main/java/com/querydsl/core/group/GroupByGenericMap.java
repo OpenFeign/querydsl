@@ -55,8 +55,7 @@ public class GroupByGenericMap<K, V, RES extends Map<K, V>>
     if (hasGroups) {
       expr = withoutGroupExpressions(expr);
     }
-    var iter = query.select(expr).iterate();
-    try (iter) {
+    try (var iter = query.select(expr).iterate()) {
       while (iter.hasNext()) {
         var tuple = toTuple(iter.next(), expressions);
         @SuppressWarnings("unchecked") // This type is mandated by the key type
