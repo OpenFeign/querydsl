@@ -20,6 +20,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.util.TupleUtils;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -57,17 +58,7 @@ public class GroupByGenericMap<K, V, RES extends Map<K, V>>
     CloseableIterator<Tuple> iter = query.select(expr).iterate();
     try {
       while (iter.hasNext()) {
-        // workaround from https://github.com/querydsl/querydsl/issues/3264
-        Object next = iter.next();
-        Tuple tuple;
-        if (next instanceof Tuple) {
-          tuple = (Tuple) next;
-        } else if (next instanceof Object[]) {
-          tuple = Projections.tuple(expressions).newInstance((Object[]) next);
-        } else {
-          throw new IllegalArgumentException(
-              String.format("Could not translate %s into tuple", next));
-        }
+        Tuple tuple = TupleUtils.toTuple(iter.next(), expressions);
 
         @SuppressWarnings("unchecked") // This type is mandated by the key type
         K[] row = (K[]) tuple.toArray();
