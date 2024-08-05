@@ -20,6 +20,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.util.TupleUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -51,8 +52,11 @@ public class GroupByMap<K, V> extends AbstractGroupByTransformer<K, Map<K, V>> {
     }
     try (CloseableIterator<Tuple> iter = query.select(expr).iterate()) {
       while (iter.hasNext()) {
+        Tuple tuple = TupleUtils.toTuple(iter.next(), expressions);
+
         @SuppressWarnings("unchecked") // This type is mandated by the key type
-        K[] row = (K[]) iter.next().toArray();
+        K[] row = (K[]) tuple.toArray();
+        // end of workaround
         K groupId = row[0];
         GroupImpl group = (GroupImpl) groups.get(groupId);
         if (group == null) {

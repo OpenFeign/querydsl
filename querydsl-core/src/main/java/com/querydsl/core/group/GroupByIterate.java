@@ -20,6 +20,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.util.TupleUtils;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -73,8 +74,12 @@ public class GroupByIterate<K, V> extends AbstractGroupByTransformer<K, Closeabl
         }
 
         while (iter.hasNext()) {
+          // workaround from https://github.com/querydsl/querydsl/issues/3264
+          Tuple tuple = TupleUtils.toTuple(iter.next(), expressions);
+
           @SuppressWarnings("unchecked") // This type is mandated by the key type
-          K[] row = (K[]) iter.next().toArray();
+          K[] row = (K[]) tuple.toArray();
+          // end of workaround
           if (group == null) {
             group = new GroupImpl(groupExpressions, maps);
             groupId = row[0];

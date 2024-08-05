@@ -20,6 +20,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.util.TupleUtils;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -57,8 +58,11 @@ public class GroupByGenericMap<K, V, RES extends Map<K, V>>
     CloseableIterator<Tuple> iter = query.select(expr).iterate();
     try {
       while (iter.hasNext()) {
+        Tuple tuple = TupleUtils.toTuple(iter.next(), expressions);
+
         @SuppressWarnings("unchecked") // This type is mandated by the key type
-        K[] row = (K[]) iter.next().toArray();
+        K[] row = (K[]) tuple.toArray();
+        // end of workaround
         K groupId = row[0];
         GroupImpl group = (GroupImpl) groups.get(groupId);
         if (group == null) {
