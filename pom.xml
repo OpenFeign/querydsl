@@ -431,6 +431,12 @@
             <configuration>
               <rules>
                 <dependencyConvergence></dependencyConvergence>
+                <bannedDependencies>
+                  <excludes>
+                    <exclude>org.hamcrest:*:*:*:*</exclude>
+                  </excludes>
+                  <searchTransitive>false</searchTransitive>
+                </bannedDependencies>
               </rules>
             </configuration>
           </execution>

@@ -74,12 +74,6 @@
       <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
-
-    <!-- TEST dependencies -->
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-    </dependency>
   </dependencies>
 
   <pluginRepositories>
