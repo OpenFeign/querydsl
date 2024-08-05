@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class InnerExtensionsTest extends AbstractProcessorTest {
     var qtypeContent =
         new String(
             Files.readAllBytes(
-                Paths.get("target", "innerextensions", "com", "querydsl", "QExampleEntity2.java")),
+                Path.of("target", "innerextensions", "com", "querydsl", "QExampleEntity2.java")),
             StandardCharsets.UTF_8);
     assertThat(qtypeContent)
         .contains("return InnerExtensions.ExampleEntity2Extensions.isZero(this);");

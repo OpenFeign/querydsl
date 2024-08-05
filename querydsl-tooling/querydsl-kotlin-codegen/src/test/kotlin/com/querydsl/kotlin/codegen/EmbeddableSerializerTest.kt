@@ -31,11 +31,11 @@ import com.querydsl.codegen.utils.model.Types
 import com.querydsl.core.annotations.Generated
 import com.querydsl.core.annotations.PropertyType
 import com.querydsl.kotlin.codegen.CompileUtils.assertCompiles
-import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 
 import java.io.StringWriter
 import java.sql.Time
@@ -183,8 +183,8 @@ class EmbeddableSerializerTest {
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
         val generatedSource = writer.toString()
-        Assert.assertThat(generatedSource, Matchers.containsString("import $generatedAnnotationImport"))
-        Assert.assertThat(generatedSource, Matchers.containsString("@Generated(\"com.querydsl.kotlin.codegen.KotlinEmbeddableSerializer\")\npublic class"))
+        assertThat(generatedSource).contains("import $generatedAnnotationImport")
+        assertThat(generatedSource).contains("@Generated(\"com.querydsl.kotlin.codegen.KotlinEmbeddableSerializer\")\npublic class")
         assertCompiles("QEntity", generatedSource)
     }
 
@@ -195,7 +195,7 @@ class EmbeddableSerializerTest {
         typeMappings.register(entityType, queryTypeFactory.create(entityType))
         KotlinEmbeddableSerializer(typeMappings, emptySet(), Generated::class.java).serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
         val generatedSourceCode = writer.toString()
-        Assert.assertThat(generatedSourceCode, Matchers.containsString("@Generated(\"com.querydsl.kotlin.codegen.KotlinEmbeddableSerializer\")\npublic class"))
+        assertThat(generatedSourceCode).contains("@Generated(\"com.querydsl.kotlin.codegen.KotlinEmbeddableSerializer\")\npublic class")
         assertCompiles("QEntity", generatedSourceCode)
     }
 }

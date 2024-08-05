@@ -25,7 +25,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import org.junit.Test;
 
 public class PackageVerification {
@@ -53,7 +53,7 @@ public class PackageVerification {
     var resourceKey = "META-INF/services/javax.annotation.processing.Processor";
     assertThat(
             new String(
-                Files.readAllBytes(Paths.get(oneJarClassLoader.findResource(resourceKey).toURI())),
+                Files.readAllBytes(Path.of(oneJarClassLoader.findResource(resourceKey).toURI())),
                 StandardCharsets.UTF_8))
         .isEqualTo(MorphiaAnnotationProcessor.class.getName());
   }

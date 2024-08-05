@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class BooleanExtensionsTest extends AbstractProcessorTest {
     var qtypeContent =
         new String(
             Files.readAllBytes(
-                Paths.get("target", "booleanExtensions", "com", "querydsl", "QExampleEntity.java")),
+                Path.of("target", "booleanExtensions", "com", "querydsl", "QExampleEntity.java")),
             StandardCharsets.UTF_8);
     assertThat(qtypeContent).contains("ext.java.lang.QBoolean booleanProp");
     assertThat(qtypeContent).contains("ext.java.lang.QBoolean booleanProp2");
@@ -55,8 +55,7 @@ public class BooleanExtensionsTest extends AbstractProcessorTest {
     var qtypeContent =
         new String(
             Files.readAllBytes(
-                Paths.get(
-                    "target", "booleanExtensions2", "com", "querydsl", "QExampleEntity.java")),
+                Path.of("target", "booleanExtensions2", "com", "querydsl", "QExampleEntity.java")),
             StandardCharsets.UTF_8);
     assertThat(qtypeContent).contains("ext.java.lang.QBoolean booleanProp");
     assertThat(qtypeContent).contains("ext.java.lang.QBoolean booleanProp2");

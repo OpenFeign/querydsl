@@ -25,7 +25,7 @@ import com.querydsl.codegen.utils.model.Type
 import com.querydsl.codegen.utils.model.TypeCategory
 import com.querydsl.codegen.utils.model.Types
 import com.querydsl.core.annotations.Generated
-import org.hamcrest.Matchers
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
@@ -61,8 +61,8 @@ class ProjectionSerializerTest {
         val serializer: ProjectionSerializer = KotlinProjectionSerializer(KotlinTypeMappings())
         serializer.serialize(type, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
         val generatedSource = writer.toString()
-        Assert.assertThat(generatedSource, Matchers.containsString("import $generatedAnnotationImport"))
-        Assert.assertThat(generatedSource, Matchers.containsString("@Generated(\"com.querydsl.kotlin.codegen.KotlinProjectionSerializer\")\npublic class"))
+        assertThat(generatedSource).contains("import $generatedAnnotationImport")
+        assertThat(generatedSource).contains("@Generated(\"com.querydsl.kotlin.codegen.KotlinProjectionSerializer\")\npublic class")
     }
 
     @Test
@@ -73,7 +73,7 @@ class ProjectionSerializerTest {
         val serializer: ProjectionSerializer = KotlinProjectionSerializer(KotlinTypeMappings(), Generated::class.java)
         serializer.serialize(type, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
         val generatedSource = writer.toString()
-        Assert.assertThat(generatedSource, Matchers.containsString("import com.querydsl.core.annotations.Generated"))
-        Assert.assertThat(generatedSource, Matchers.containsString("@Generated(\"com.querydsl.kotlin.codegen.KotlinProjectionSerializer\")\npublic class"))
+        assertThat(generatedSource).contains("import com.querydsl.core.annotations.Generated")
+        assertThat(generatedSource).contains("@Generated(\"com.querydsl.kotlin.codegen.KotlinProjectionSerializer\")\npublic class")
     }
 }
