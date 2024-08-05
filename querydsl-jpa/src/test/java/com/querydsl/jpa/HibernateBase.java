@@ -14,10 +14,12 @@
 package com.querydsl.jpa;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.domain.Cat;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.util.List;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
+import org.hibernate.exception.GenericJDBCException;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -157,5 +160,21 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
     for (String row : rows) {
       assertTrue(row instanceof String);
     }
+  }
+
+  @Test
+  public void createQuery4() {
+    assertDoesNotThrow(
+        () -> {
+          try {
+            query()
+                .from(cat)
+                .leftJoin(cat.kittens)
+                .fetchJoin()
+                .distinct()
+                .transform(GroupBy.groupBy(cat.id).as(cat));
+          } catch (GenericJDBCException ignored) { // Empty result set
+          }
+        });
   }
 }
