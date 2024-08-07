@@ -30,6 +30,7 @@ import com.querydsl.r2dbc.types.Type;
 import com.querydsl.sql.Keywords;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLOps;
+import com.querydsl.sql.SQLSyntax;
 import com.querydsl.sql.SchemaAndTable;
 import java.lang.reflect.Field;
 import java.sql.Types;
@@ -110,91 +111,9 @@ public class SQLTemplates extends Templates {
 
   private boolean printSchema;
 
-  private String createTable = "create table ";
-
-  private String asc = " asc";
-
-  private String autoIncrement = " auto_increment";
-
-  private String columnAlias = " ";
-
-  private String count = "count ";
-
-  private String countStar = "count(*)";
-
-  private String crossJoin = ", ";
-
-  private String delete = "delete ";
-
-  private String desc = " desc";
-
-  private String distinctCountEnd = ")";
-
-  private String distinctCountStart = "count(distinct ";
-
-  private String dummyTable = "dual";
-
-  private String from = "\nfrom ";
-
-  private String fullJoin = "\nfull join ";
-
-  private String groupBy = "\ngroup by ";
-
-  private String having = "\nhaving ";
-
-  private String innerJoin = "\ninner join ";
-
-  private String insertInto = "insert into ";
-
-  private String join = "\njoin ";
-
-  private String key = "key";
-
-  private String leftJoin = "\nleft join ";
-
-  private String rightJoin = "\nright join ";
-
-  private final String limitTemplate = "\nlimit {0}";
-
-  private String mergeInto = "merge into ";
-
   private boolean nativeMerge;
 
-  private String notNull = " not null";
-
-  private String offsetTemplate = "\noffset {0}";
-
-  private String on = "\non ";
-
-  private String orderBy = "\norder by ";
-
-  private String select = "select ";
-
-  private String selectDistinct = "select distinct ";
-
-  private String set = "set ";
-
-  private String tableAlias = " ";
-
-  private String update = "update ";
-
-  private String values = "\nvalues ";
-
-  private String defaultValues = "\nvalues ()";
-
-  private String where = "\nwhere ";
-
-  private String with = "with ";
-
-  private String withRecursive = "with recursive ";
-
-  private String createIndex = "create index ";
-
-  private String createUniqueIndex = "create unique index ";
-
-  private String nullsFirst = " nulls first";
-
-  private String nullsLast = " nulls last";
+  private SQLSyntax syntax = new SQLSyntax();
 
   private boolean parameterMetadataAvailable = true;
 
@@ -518,144 +437,144 @@ public class SQLTemplates extends Templates {
   }
 
   public final String getAsc() {
-    return asc;
+    return syntax.asc;
   }
 
   public final String getAutoIncrement() {
-    return autoIncrement;
+    return syntax.autoIncrement;
   }
 
   public final String getColumnAlias() {
-    return columnAlias;
+    return syntax.columnAlias;
   }
 
   public final String getCount() {
-    return count;
+    return syntax.count;
   }
 
   public final String getCountStar() {
-    return countStar;
+    return syntax.countStar;
   }
 
   public final String getCrossJoin() {
-    return crossJoin;
+    return syntax.crossJoin;
   }
 
   public final String getDelete() {
-    return delete;
+    return syntax.delete;
   }
 
   public final String getDesc() {
-    return desc;
+    return syntax.desc;
   }
 
   public final String getDistinctCountEnd() {
-    return distinctCountEnd;
+    return syntax.distinctCountEnd;
   }
 
   public final String getDistinctCountStart() {
-    return distinctCountStart;
+    return syntax.distinctCountStart;
   }
 
   public final String getDummyTable() {
-    return dummyTable;
+    return syntax.dummyTable;
   }
 
   public final String getFrom() {
-    return from;
+    return syntax.from;
   }
 
   public final String getFullJoin() {
-    return fullJoin;
+    return syntax.fullJoin;
   }
 
   public final String getGroupBy() {
-    return groupBy;
+    return syntax.groupBy;
   }
 
   public final String getHaving() {
-    return having;
+    return syntax.having;
   }
 
   public final String getInnerJoin() {
-    return innerJoin;
+    return syntax.innerJoin;
   }
 
   public final String getInsertInto() {
-    return insertInto;
+    return syntax.insertInto;
   }
 
   public final String getJoin() {
-    return join;
+    return syntax.join;
   }
 
   public final String getJoinSymbol(JoinType joinType) {
     switch (joinType) {
       case JOIN:
-        return join;
+        return syntax.join;
       case INNERJOIN:
-        return innerJoin;
+        return syntax.innerJoin;
       case FULLJOIN:
-        return fullJoin;
+        return syntax.fullJoin;
       case LEFTJOIN:
-        return leftJoin;
+        return syntax.leftJoin;
       case RIGHTJOIN:
-        return rightJoin;
+        return syntax.rightJoin;
       default:
-        return crossJoin;
+        return syntax.crossJoin;
     }
   }
 
   public final String getKey() {
-    return key;
+    return syntax.key;
   }
 
   public final String getLeftJoin() {
-    return leftJoin;
+    return syntax.leftJoin;
   }
 
   public final String getRightJoin() {
-    return rightJoin;
+    return syntax.rightJoin;
   }
 
   public final String getLimitTemplate() {
-    return limitTemplate;
+    return syntax.limitTemplate;
   }
 
   public final String getMergeInto() {
-    return mergeInto;
+    return syntax.mergeInto;
   }
 
   public final String getNotNull() {
-    return notNull;
+    return syntax.notNull;
   }
 
   public final String getOffsetTemplate() {
-    return offsetTemplate;
+    return syntax.offsetTemplate;
   }
 
   public final String getOn() {
-    return on;
+    return syntax.on;
   }
 
   public final String getOrderBy() {
-    return orderBy;
+    return syntax.orderBy;
   }
 
   public final String getSelect() {
-    return select;
+    return syntax.select;
   }
 
   public final String getSelectDistinct() {
-    return selectDistinct;
+    return syntax.selectDistinct;
   }
 
   public final String getSet() {
-    return set;
+    return syntax.set;
   }
 
   public final String getTableAlias() {
-    return tableAlias;
+    return syntax.tableAlias;
   }
 
   public final Map<SchemaAndTable, SchemaAndTable> getTableOverrides() {
@@ -675,19 +594,19 @@ public class SQLTemplates extends Templates {
   }
 
   public final String getUpdate() {
-    return update;
+    return syntax.update;
   }
 
   public final String getValues() {
-    return values;
+    return syntax.values;
   }
 
   public final String getDefaultValues() {
-    return defaultValues;
+    return syntax.defaultValues;
   }
 
   public final String getWhere() {
-    return where;
+    return syntax.where;
   }
 
   public final boolean isNativeMerge() {
@@ -699,23 +618,23 @@ public class SQLTemplates extends Templates {
   }
 
   public final String getCreateIndex() {
-    return createIndex;
+    return syntax.createIndex;
   }
 
   public final String getCreateUniqueIndex() {
-    return createUniqueIndex;
+    return syntax.createUniqueIndex;
   }
 
   public final String getCreateTable() {
-    return createTable;
+    return syntax.createTable;
   }
 
   public final String getWith() {
-    return with;
+    return syntax.with;
   }
 
   public final String getWithRecursive() {
-    return withRecursive;
+    return syntax.withRecursive;
   }
 
   public final boolean isCountDistinctMultipleColumns() {
@@ -759,11 +678,11 @@ public class SQLTemplates extends Templates {
   }
 
   public final String getNullsFirst() {
-    return nullsFirst;
+    return syntax.nullsFirst;
   }
 
   public final String getNullsLast() {
-    return nullsLast;
+    return syntax.nullsLast;
   }
 
   public final boolean isCountViaAnalytics() {
@@ -995,12 +914,12 @@ public class SQLTemplates extends Templates {
   protected void serializeModifiers(QueryMetadata metadata, SQLSerializer context) {
     var mod = metadata.getModifiers();
     if (mod.getLimit() != null) {
-      context.handle(limitTemplate, mod.getLimit());
+      context.handle(syntax.limitTemplate, mod.getLimit());
     } else if (limitRequired) {
-      context.handle(limitTemplate, maxLimit);
+      context.handle(syntax.limitTemplate, maxLimit);
     }
     if (mod.getOffset() != null) {
-      context.handle(offsetTemplate, mod.getOffset());
+      context.handle(syntax.offsetTemplate, mod.getOffset());
     }
   }
 
@@ -1009,47 +928,47 @@ public class SQLTemplates extends Templates {
   }
 
   protected void setAsc(String asc) {
-    this.asc = asc;
+    this.syntax.asc = asc;
   }
 
   protected void setAutoIncrement(String autoIncrement) {
-    this.autoIncrement = autoIncrement;
+    this.syntax.autoIncrement = autoIncrement;
   }
 
   protected void setColumnAlias(String columnAlias) {
-    this.columnAlias = columnAlias;
+    this.syntax.columnAlias = columnAlias;
   }
 
   protected void setCount(String count) {
-    this.count = count;
+    this.syntax.count = count;
   }
 
   protected void setCountStar(String countStar) {
-    this.countStar = countStar;
+    this.syntax.countStar = countStar;
   }
 
   protected void setCrossJoin(String crossJoin) {
-    this.crossJoin = crossJoin;
+    this.syntax.crossJoin = crossJoin;
   }
 
   protected void setDelete(String delete) {
-    this.delete = delete;
+    this.syntax.delete = delete;
   }
 
   protected void setDesc(String desc) {
-    this.desc = desc;
+    this.syntax.desc = desc;
   }
 
   protected void setDistinctCountEnd(String distinctCountEnd) {
-    this.distinctCountEnd = distinctCountEnd;
+    this.syntax.distinctCountEnd = distinctCountEnd;
   }
 
   protected void setDistinctCountStart(String distinctCountStart) {
-    this.distinctCountStart = distinctCountStart;
+    this.syntax.distinctCountStart = distinctCountStart;
   }
 
   protected void setDummyTable(String dummyTable) {
-    this.dummyTable = dummyTable;
+    this.syntax.dummyTable = dummyTable;
   }
 
   protected void setForShareSupported(boolean forShareSupported) {
@@ -1057,47 +976,47 @@ public class SQLTemplates extends Templates {
   }
 
   protected void setFrom(String from) {
-    this.from = from;
+    this.syntax.from = from;
   }
 
   protected void setFullJoin(String fullJoin) {
-    this.fullJoin = fullJoin;
+    this.syntax.fullJoin = fullJoin;
   }
 
   protected void setGroupBy(String groupBy) {
-    this.groupBy = groupBy;
+    this.syntax.groupBy = groupBy;
   }
 
   protected void setHaving(String having) {
-    this.having = having;
+    this.syntax.having = having;
   }
 
   protected void setInnerJoin(String innerJoin) {
-    this.innerJoin = innerJoin;
+    this.syntax.innerJoin = innerJoin;
   }
 
   protected void setInsertInto(String insertInto) {
-    this.insertInto = insertInto;
+    this.syntax.insertInto = insertInto;
   }
 
   protected void setJoin(String join) {
-    this.join = join;
+    this.syntax.join = join;
   }
 
   protected void setKey(String key) {
-    this.key = key;
+    this.syntax.key = key;
   }
 
   protected void setLeftJoin(String leftJoin) {
-    this.leftJoin = leftJoin;
+    this.syntax.leftJoin = leftJoin;
   }
 
   protected void setRightJoin(String rightJoin) {
-    this.rightJoin = rightJoin;
+    this.syntax.rightJoin = rightJoin;
   }
 
   protected void setMergeInto(String mergeInto) {
-    this.mergeInto = mergeInto;
+    this.syntax.mergeInto = mergeInto;
   }
 
   protected void setNativeMerge(boolean nativeMerge) {
@@ -1105,71 +1024,71 @@ public class SQLTemplates extends Templates {
   }
 
   protected void setNotNull(String notNull) {
-    this.notNull = notNull;
+    this.syntax.notNull = notNull;
   }
 
   protected void setOffsetTemplate(String offsetTemplate) {
-    this.offsetTemplate = offsetTemplate;
+    this.syntax.offsetTemplate = offsetTemplate;
   }
 
   protected void setOn(String on) {
-    this.on = on;
+    this.syntax.on = on;
   }
 
   protected void setOrderBy(String orderBy) {
-    this.orderBy = orderBy;
+    this.syntax.orderBy = orderBy;
   }
 
   protected void setSelect(String select) {
-    this.select = select;
+    this.syntax.select = select;
   }
 
   protected void setSelectDistinct(String selectDistinct) {
-    this.selectDistinct = selectDistinct;
+    this.syntax.selectDistinct = selectDistinct;
   }
 
   protected void setSet(String set) {
-    this.set = set;
+    this.syntax.set = set;
   }
 
   protected void setTableAlias(String tableAlias) {
-    this.tableAlias = tableAlias;
+    this.syntax.tableAlias = tableAlias;
   }
 
   protected void setUpdate(String update) {
-    this.update = update;
+    this.syntax.update = update;
   }
 
   protected void setValues(String values) {
-    this.values = values;
+    this.syntax.values = values;
   }
 
   protected void setDefaultValues(String defaultValues) {
-    this.defaultValues = defaultValues;
+    this.syntax.defaultValues = defaultValues;
   }
 
   protected void setWhere(String where) {
-    this.where = where;
+    this.syntax.where = where;
   }
 
   protected void setWith(String with) {
-    this.with = with;
+    this.syntax.with = with;
   }
 
   protected void setWithRecursive(String withRecursive) {
-    this.withRecursive = withRecursive;
+    this.syntax.withRecursive = withRecursive;
   }
 
   protected void setCreateIndex(String createIndex) {
-    this.createIndex = createIndex;
+    this.syntax.createIndex = createIndex;
   }
 
   protected void setCreateUniqueIndex(String createUniqueIndex) {
-    this.createUniqueIndex = createUniqueIndex;
+    this.syntax.createUniqueIndex = createUniqueIndex;
   }
 
   protected void setCreateTable(String createTable) {
-    this.createTable = createTable;
+    this.syntax.createTable = createTable;
   }
 
   protected void setPrintSchema(boolean printSchema) {
@@ -1193,11 +1112,11 @@ public class SQLTemplates extends Templates {
   }
 
   protected void setNullsFirst(String nullsFirst) {
-    this.nullsFirst = nullsFirst;
+    this.syntax.nullsFirst = nullsFirst;
   }
 
   protected void setNullsLast(String nullsLast) {
-    this.nullsLast = nullsLast;
+    this.syntax.nullsLast = nullsLast;
   }
 
   protected void setLimitRequired(boolean limitRequired) {
