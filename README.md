@@ -54,7 +54,7 @@ Use these tutorials to get started
 
 **Examples**
 
-[Querydsl example projects](https://github.com/querydsl/querydsl/tree/master/querydsl-examples)
+[Querydsl example projects](https://github.com/OpenFeign/querydsl/tree/master/querydsl-examples)
 
 **Support**
 
