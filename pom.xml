@@ -87,6 +87,9 @@
   </distributionManagement>
 
   <properties>
+    <!-- removing old modules on 7.0 release -->
+    <japicmp.skip>true</japicmp.skip>
+
     <failIfNoTests>false</failIfNoTests>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.homepage>http://www.querydsl.com</project.homepage>
