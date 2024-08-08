@@ -384,10 +384,10 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
   @Override
   public void visitConstant(Object constant) {
     if (inCaseOperation && templates.isCaseWithLiterals()) {
-      if (constant instanceof Collection) {
+      if (constant instanceof Collection<?> collection) {
         append("(");
         var first = true;
-        for (Object o : (Collection) constant) {
+        for (Object o : collection) {
           if (!first) {
             append(", ");
           }
