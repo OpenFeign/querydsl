@@ -14,7 +14,7 @@
   <description>Querydsl Maven plugin</description>
 
   <properties>
-    <maven-plugin.version>3.13.1</maven-plugin.version>
+    <maven-plugin.version>3.14.0</maven-plugin.version>
   </properties>
 
   <dependencyManagement>
