@@ -74,7 +74,7 @@ final class TypeResolver {
           "Did not find type " + varName + " in " + declaringType + " for " + context);
     }
 
-    Supertype type = context.getSuperType();
+    var type = context.getSuperType();
     while (!type.getEntityType().equals(declaringType)) {
       type = type.getEntityType().getSuperType();
     }
