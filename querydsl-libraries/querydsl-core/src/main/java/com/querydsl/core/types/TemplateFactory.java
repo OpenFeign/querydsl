@@ -50,12 +50,13 @@ public class TemplateFactory {
 
   private static final Pattern elementPattern =
       Pattern.compile(
-          "\\{"
-              + "(%?%?)"
-              + "(\\d+)"
-              + "(?:([+-/*])(?:(\\d+)|'(-?\\d+(?:\\.\\d+)?)'))?"
-              + "([slu%]?%?)"
-              + "\\}");
+          """
+			\\{\
+			(%?%?)\
+			(\\d+)\
+			(?:([+-/*])(?:(\\d+)|'(-?\\d+(?:\\.\\d+)?)'))?\
+			([slu%]?%?)\
+			\\}""");
 
   private final Map<String, Template> cache = Collections.synchronizedMap(new WeakHashMap<>());
 
