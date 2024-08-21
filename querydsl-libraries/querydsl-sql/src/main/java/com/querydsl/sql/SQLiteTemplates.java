@@ -140,27 +140,24 @@ public class SQLiteTemplates extends SQLTemplates {
   @Override
   public String serialize(String literal, int jdbcType) {
     // XXX doesn't work with LocalDate, LocalDateTime and LocalTime
-    switch (jdbcType) {
-      case Types.TIMESTAMP:
-      case TIMESTAMP_WITH_TIMEZONE:
-        return String.valueOf(
-            dateTimeFormatter
-                .parse(literal, LocalDateTime::from)
-                .toInstant(ZoneOffset.UTC)
-                .toEpochMilli());
-      case Types.DATE:
-        return String.valueOf(
-            dateFormatter
-                .parse(literal, LocalDate::from)
-                .atStartOfDay(ZoneOffset.UTC)
-                .toInstant()
-                .toEpochMilli());
-      case Types.TIME:
-      case TIME_WITH_TIMEZONE:
-        return String.valueOf(
-            timeFormatter.parse(literal, LocalTime::from).get(ChronoField.MILLI_OF_DAY));
-      default:
-        return super.serialize(literal, jdbcType);
-    }
+    return switch (jdbcType) {
+      case Types.TIMESTAMP, TIMESTAMP_WITH_TIMEZONE ->
+          String.valueOf(
+              dateTimeFormatter
+                  .parse(literal, LocalDateTime::from)
+                  .toInstant(ZoneOffset.UTC)
+                  .toEpochMilli());
+      case Types.DATE ->
+          String.valueOf(
+              dateFormatter
+                  .parse(literal, LocalDate::from)
+                  .atStartOfDay(ZoneOffset.UTC)
+                  .toInstant()
+                  .toEpochMilli());
+      case Types.TIME, TIME_WITH_TIMEZONE ->
+          String.valueOf(
+              timeFormatter.parse(literal, LocalTime::from).get(ChronoField.MILLI_OF_DAY));
+      default -> super.serialize(literal, jdbcType);
+    };
   }
 }

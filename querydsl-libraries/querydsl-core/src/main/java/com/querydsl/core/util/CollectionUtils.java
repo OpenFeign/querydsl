@@ -105,14 +105,11 @@ public final class CollectionUtils {
     if (isUnmodifiableType(list.getClass())) {
       return list;
     }
-    switch (list.size()) {
-      case 0:
-        return Collections.emptyList();
-      case 1:
-        return Collections.singletonList(list.get(0));
-      default:
-        return Collections.unmodifiableList(new ArrayList<>(list));
-    }
+    return switch (list.size()) {
+      case 0 -> Collections.emptyList();
+      case 1 -> Collections.singletonList(list.get(0));
+      default -> Collections.unmodifiableList(new ArrayList<>(list));
+    };
   }
 
   /**
@@ -127,22 +124,20 @@ public final class CollectionUtils {
     if (isUnmodifiableType(set.getClass())) {
       return set;
     }
-    switch (set.size()) {
-      case 0:
-        return Collections.emptySet();
-      case 1:
-        return Collections.singleton(set.iterator().next());
-      default:
-        return Collections.unmodifiableSet(
-            (Set<T>)
-                (set instanceof LinkedHashSet
-                    ? ((LinkedHashSet<T>) set).clone()
-                    : set instanceof TreeSet
-                        ? ((TreeSet<T>) set).clone()
-                        : set instanceof HashSet
-                            ? ((HashSet<T>) set).clone()
-                            : new LinkedHashSet<>(set)));
-    }
+    return switch (set.size()) {
+      case 0 -> Collections.emptySet();
+      case 1 -> Collections.singleton(set.iterator().next());
+      default ->
+          Collections.unmodifiableSet(
+              (Set<T>)
+                  (set instanceof LinkedHashSet
+                      ? ((LinkedHashSet<T>) set).clone()
+                      : set instanceof TreeSet
+                          ? ((TreeSet<T>) set).clone()
+                          : set instanceof HashSet
+                              ? ((HashSet<T>) set).clone()
+                              : new LinkedHashSet<>(set)));
+    };
   }
 
   public static <T> List<List<T>> partition(List<T> list, int batchSize) {

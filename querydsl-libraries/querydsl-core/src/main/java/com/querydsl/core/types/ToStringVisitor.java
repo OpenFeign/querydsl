@@ -51,7 +51,7 @@ public final class ToStringVisitor implements Visitor<String, Templates> {
 
   @Override
   public String visit(Operation<?> o, Templates templates) {
-    final Template template = templates.getTemplate(o.getOperator());
+    final var template = templates.getTemplate(o.getOperator());
     if (template != null) {
       final var precedence = templates.getPrecedence(o.getOperator());
       final var builder = new StringBuilder();
@@ -90,7 +90,7 @@ public final class ToStringVisitor implements Visitor<String, Templates> {
     final Path<?> parent = p.getMetadata().getParent();
     final var elem = p.getMetadata().getElement();
     if (parent != null) {
-      Template pattern = templates.getTemplate(p.getMetadata().getPathType());
+      var pattern = templates.getTemplate(p.getMetadata().getPathType());
       if (pattern != null) {
         final List<?> args = Arrays.asList(parent, elem);
         final var builder = new StringBuilder();

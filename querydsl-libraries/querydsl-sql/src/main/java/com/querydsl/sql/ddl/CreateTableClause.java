@@ -103,7 +103,7 @@ public class CreateTableClause {
    * @return
    */
   public CreateTableClause primaryKey(String name, String... columns) {
-    for (int i = 0; i < columns.length; i++) {
+    for (var i = 0; i < columns.length; i++) {
       columns[i] = templates.quoteIdentifier(columns[i]);
     }
     primaryKey = new PrimaryKeyData(templates.quoteIdentifier(name), columns);

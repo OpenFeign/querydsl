@@ -92,49 +92,31 @@ public class ExtendedTypeFactory {
 
         @Override
         public Type visitPrimitive(PrimitiveType primitiveType, Boolean p) {
-          switch (primitiveType.getKind()) {
-            case BOOLEAN:
-              return Types.BOOLEAN;
-            case BYTE:
-              return Types.BYTE;
-            case SHORT:
-              return Types.SHORT;
-            case INT:
-              return Types.INTEGER;
-            case LONG:
-              return Types.LONG;
-            case CHAR:
-              return Types.CHARACTER;
-            case FLOAT:
-              return Types.FLOAT;
-            case DOUBLE:
-              return Types.DOUBLE;
-            default:
-              return null;
-          }
+          return switch (primitiveType.getKind()) {
+            case BOOLEAN -> Types.BOOLEAN;
+            case BYTE -> Types.BYTE;
+            case SHORT -> Types.SHORT;
+            case INT -> Types.INTEGER;
+            case LONG -> Types.LONG;
+            case CHAR -> Types.CHARACTER;
+            case FLOAT -> Types.FLOAT;
+            case DOUBLE -> Types.DOUBLE;
+            default -> null;
+          };
         }
 
         private Type getPrimitive(PrimitiveType primitiveType) {
-          switch (primitiveType.getKind()) {
-            case BOOLEAN:
-              return Types.BOOLEAN_P;
-            case BYTE:
-              return Types.BYTE_P;
-            case SHORT:
-              return Types.SHORT_P;
-            case INT:
-              return Types.INT;
-            case LONG:
-              return Types.LONG_P;
-            case CHAR:
-              return Types.CHAR;
-            case FLOAT:
-              return Types.FLOAT_P;
-            case DOUBLE:
-              return Types.DOUBLE_P;
-            default:
-              return null;
-          }
+          return switch (primitiveType.getKind()) {
+            case BOOLEAN -> Types.BOOLEAN_P;
+            case BYTE -> Types.BYTE_P;
+            case SHORT -> Types.SHORT_P;
+            case INT -> Types.INT;
+            case LONG -> Types.LONG_P;
+            case CHAR -> Types.CHAR;
+            case FLOAT -> Types.FLOAT_P;
+            case DOUBLE -> Types.DOUBLE_P;
+            default -> null;
+          };
         }
 
         @Override

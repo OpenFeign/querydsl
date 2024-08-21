@@ -48,18 +48,12 @@ public class SQLTemplatesRegistry {
     } else if (name.equals("postgresql")) {
       return PostgreSQLTemplates.builder();
     } else if (name.equals("microsoft sql server")) {
-      switch (md.getDatabaseMajorVersion()) {
-        case 13:
-        case 12:
-        case 11:
-          return SQLServer2012Templates.builder();
-        case 10:
-          return SQLServer2008Templates.builder();
-        case 9:
-          return SQLServer2005Templates.builder();
-        default:
-          return SQLServerTemplates.builder();
-      }
+      return switch (md.getDatabaseMajorVersion()) {
+        case 13, 12, 11 -> SQLServer2012Templates.builder();
+        case 10 -> SQLServer2008Templates.builder();
+        case 9 -> SQLServer2005Templates.builder();
+        default -> SQLServerTemplates.builder();
+      };
     } else {
       return new SQLTemplates.Builder() {
         @Override

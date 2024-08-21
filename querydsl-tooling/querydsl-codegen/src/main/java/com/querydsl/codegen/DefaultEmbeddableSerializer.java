@@ -82,34 +82,18 @@ public class DefaultEmbeddableSerializer extends DefaultEntitySerializer
     var category = model.getOriginalCategory();
     Class<? extends Path> pathType;
     if (model.getProperties().isEmpty()) {
-      switch (category) {
-        case COMPARABLE:
-          pathType = ComparablePath.class;
-          break;
-        case ENUM:
-          pathType = EnumPath.class;
-          break;
-        case DATE:
-          pathType = DatePath.class;
-          break;
-        case DATETIME:
-          pathType = DateTimePath.class;
-          break;
-        case TIME:
-          pathType = TimePath.class;
-          break;
-        case NUMERIC:
-          pathType = NumberPath.class;
-          break;
-        case STRING:
-          pathType = StringPath.class;
-          break;
-        case BOOLEAN:
-          pathType = BooleanPath.class;
-          break;
-        default:
-          pathType = BeanPath.class;
-      }
+      pathType =
+          switch (category) {
+            case COMPARABLE -> ComparablePath.class;
+            case ENUM -> EnumPath.class;
+            case DATE -> DatePath.class;
+            case DATETIME -> DateTimePath.class;
+            case TIME -> TimePath.class;
+            case NUMERIC -> NumberPath.class;
+            case STRING -> StringPath.class;
+            case BOOLEAN -> BooleanPath.class;
+            default -> BeanPath.class;
+          };
     } else {
       pathType = BeanPath.class;
     }
