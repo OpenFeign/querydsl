@@ -52,9 +52,10 @@ public abstract class AbstractR2DBCDeleteClause<C extends AbstractR2DBCDeleteCla
 
   protected static final ValidatingVisitor validatingVisitor =
       new ValidatingVisitor(
-          "Undeclared path '%s'. "
-              + "A delete operation can only reference a single table. "
-              + "Consider this alternative: DELETE ... WHERE EXISTS (subquery)");
+          """
+			Undeclared path '%s'. \
+			A delete operation can only reference a single table. \
+			Consider this alternative: DELETE ... WHERE EXISTS (subquery)""");
 
   protected final RelationalPath<?> entity;
 

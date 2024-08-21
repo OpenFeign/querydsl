@@ -118,16 +118,12 @@ public class CUBRIDTemplates extends SQLTemplates {
 
   @Override
   public String serialize(String literal, int jdbcType) {
-    switch (jdbcType) {
-      case Types.TIMESTAMP:
-        return "timestamp'" + literal + "'";
-      case Types.DATE:
-        return "date'" + literal + "'";
-      case Types.TIME:
-        return "time'" + literal + "'";
-      default:
-        return super.serialize(literal, jdbcType);
-    }
+    return switch (jdbcType) {
+      case Types.TIMESTAMP -> "timestamp'" + literal + "'";
+      case Types.DATE -> "date'" + literal + "'";
+      case Types.TIME -> "time'" + literal + "'";
+      default -> super.serialize(literal, jdbcType);
+    };
   }
 
   @Override

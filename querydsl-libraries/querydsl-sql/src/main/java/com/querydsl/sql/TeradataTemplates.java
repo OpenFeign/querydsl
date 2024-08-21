@@ -118,12 +118,10 @@ public class TeradataTemplates extends SQLTemplates {
 
   @Override
   public String getCastTypeNameForCode(int code) {
-    switch (code) {
-      case Types.VARCHAR:
-        return "varchar(4000)";
-      default:
-        return super.getCastTypeNameForCode(code);
-    }
+    return switch (code) {
+      case Types.VARCHAR -> "varchar(4000)";
+      default -> super.getCastTypeNameForCode(code);
+    };
   }
 
   @Override
