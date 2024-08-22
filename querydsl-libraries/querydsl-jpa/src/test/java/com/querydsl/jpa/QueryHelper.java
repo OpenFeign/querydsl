@@ -83,7 +83,9 @@ class QueryHelper<T> extends JPAQueryBase<T, QueryHelper<T>> {
 
     var input = toString();
     logger.fine("input: " + input.replace('\n', ' '));
-    var parser = HqlParseTreeBuilder.INSTANCE.buildHqlParser(input);
+    var parser =
+        HqlParseTreeBuilder.INSTANCE.buildHqlParser(
+            input, HqlParseTreeBuilder.INSTANCE.buildHqlLexer(input));
     parser.statement();
   }
 
