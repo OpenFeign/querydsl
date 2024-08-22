@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-root</artifactId>
-  <version>6.7</version>
+  <version>6.8-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>Querydsl</name>
