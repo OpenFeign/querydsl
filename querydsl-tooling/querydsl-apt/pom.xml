@@ -100,7 +100,7 @@
     <dependency>
       <groupId>org.joda</groupId>
       <artifactId>joda-money</artifactId>
-      <version>1.0.4</version>
+      <version>1.0.5</version>
       <scope>test</scope>
     </dependency>
 
