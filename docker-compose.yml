@@ -31,11 +31,14 @@ services:
       - POSTGRES_DB=querydsl
 
   oracle:
-    image: wnameless/oracle-xe-11g-r2:latest
+    image: gvenzl/oracle-xe:slim-faststart
     ports:
       - "1521:1521"
-    volumes:
-    - "./devops/sql-snippets/oracle.sql:/docker-entrypoint-initdb.d/oracle.sql"
+    environment:
+      - ORACLE_PASSWORD=querydsl
+      - APP_USER=querydsl
+      - APP_USER_PASSWORD=querydsl
+      - TZ=UTC
 
   cubrid:
     image: cubrid/cubrid:11.3

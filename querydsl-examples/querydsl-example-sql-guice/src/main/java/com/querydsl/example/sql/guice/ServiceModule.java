@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 public class ServiceModule extends AbstractModule {
   @Override
   protected void configure() {
-    Properties properties = new Properties();
+    var properties = new Properties();
     try {
       properties.load(getClass().getResourceAsStream("/jdbc.properties"));
     } catch (IOException e) {
@@ -37,7 +37,7 @@ public class ServiceModule extends AbstractModule {
     bind(TweetRepository.class).in(Scopes.SINGLETON);
     bind(UserRepository.class).in(Scopes.SINGLETON);
 
-    TransactionInterceptor interceptor = new TransactionInterceptor();
+    var interceptor = new TransactionInterceptor();
     requestInjection(interceptor);
     bindInterceptor(Matchers.any(), Matchers.annotatedWith(Transactional.class), interceptor);
   }

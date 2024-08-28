@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.github.openfeign.querydsl</groupId>
+    <artifactId>querydsl-root</artifactId>
+    <version>6.8-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>querydsl-tooling</artifactId>
+  <packaging>pom</packaging>
+  <name>Querydsl - Tooling</name>
+
+  <modules>
+    <module>querydsl-apt</module>
+    <module>querydsl-codegen</module>
+    <module>querydsl-codegen-utils</module>
+    <module>querydsl-jpa-codegen</module>
+    <module>querydsl-kotlin-codegen</module>
+    <module>querydsl-maven-plugin</module>
+    <module>querydsl-sql-codegen</module>
+  </modules>
+
+</project>

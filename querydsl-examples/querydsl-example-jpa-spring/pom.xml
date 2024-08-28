@@ -4,16 +4,11 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>6.1-SNAPSHOT</version>
+    <version>6.8-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-example-jpa-spring</artifactId>
   <name>Querydsl example - JPA Spring</name>
-
-  <properties>
-    <!-- to match spring JDK version -->
-    <main.java.version>17</main.java.version>
-  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -45,7 +40,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
       <version>${hibernate.version}</version>
       <scope>runtime</scope>
@@ -60,6 +55,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.hamcrest</groupId>
+          <artifactId>hamcrest</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 

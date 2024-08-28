@@ -6,13 +6,7 @@
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/" # Location of package manifests
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 100
-  - package-ecosystem: "maven"
-    directory: "/" # Location of package manifests
+    directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 100
-    target-branch: "querydsl-5.0.0"

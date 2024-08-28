@@ -5,14 +5,14 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>6.1-SNAPSHOT</version>
+    <version>6.8-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-example-jpa-quarkus</artifactId>
   <name>Querydsl example - JPA Quarkus</name>
 
   <properties>
-    <quarkus.version>3.6.8</quarkus.version>
+    <quarkus.version>3.13.3</quarkus.version>
   </properties>
 
   <dependencyManagement>

@@ -15,6 +15,7 @@ public interface CustomerRepository extends QuerydslJpaRepository<Customer, Long
     return select(C).from(C).where(C.id.eq(id)).fetchOne();
   }
 
+  @Override
   default List<Customer> findAll() {
     return select(C).from(C).fetch();
   }

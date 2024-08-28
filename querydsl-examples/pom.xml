@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>6.1-SNAPSHOT</version>
+    <version>6.8-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-examples</artifactId>
@@ -23,7 +23,13 @@
     <module>querydsl-example-kotlin-codegen</module>
     <module>querydsl-example-kotlin-jpa</module>
     <module>querydsl-example-kotlin-mongodb</module>
+
+    <module>querydsl-example-r2dbc-sql-codegen</module>
   </modules>
+
+  <properties>
+    <main.java.version>17</main.java.version>
+  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -41,7 +47,7 @@
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
-        <version>2.22.1</version>
+        <version>2.23.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -65,7 +71,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.0</version>
         <dependencies>
           <dependency>
             <groupId>org.semver</groupId>
@@ -85,12 +91,12 @@
           <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
-            <version>9.6</version>
+            <version>${asm.version}</version>
           </dependency>
           <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-commons</artifactId>
-            <version>9.6</version>
+            <version>${asm.version}</version>
           </dependency>
         </dependencies>
         <executions>

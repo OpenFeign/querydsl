@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>6.1-SNAPSHOT</version>
+    <version>6.8-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-example-jpa-guice</artifactId>
@@ -27,18 +27,6 @@
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-persist</artifactId>
       <version>${guice.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.transaction</groupId>
-      <artifactId>jta</artifactId>
-      <version>1.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.el</groupId>
-      <artifactId>javax.el-api</artifactId>
-      <version>3.0.0</version>
-      <scope>provided</scope>
     </dependency>
 
     <!-- persistence -->
@@ -86,13 +74,20 @@
       <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
-
-    <!-- TEST dependencies -->
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-    </dependency>
   </dependencies>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>sonatype-oss-public</id>
+      <url>https://oss.sonatype.org/content/groups/public</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <build>
     <finalName>querydsl-example-jpa-guice</finalName>

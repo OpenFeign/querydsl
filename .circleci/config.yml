@@ -45,12 +45,6 @@ commands:
           name: 'Configure GPG keys'
           command: |
             echo -e "$GPG_KEY" | gpg --batch --no-tty --import --yes
-  nexus-deploy:
-    steps:
-      - run:
-          name: 'Deploy Core Modules Sonatype'
-          command: |
-            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease
 
 # our job defaults
 defaults: &defaults
@@ -143,12 +137,10 @@ jobs:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
             - querydsl-dependencies-
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb -am -T2
+            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb,:querydsl-r2dbc,:querydsl-sql-json -am -T2
             ./mvnw -ntp -B verify -Pexamples -rf :querydsl-examples
       - save-test-results
   buildQuarkusExample:
@@ -232,7 +224,7 @@ jobs:
     working_directory: ~/querydsl
     docker:
       - image: velo/toolchains-4-ci-builds:with-21
-      - image: gvenzl/oracle-xe:11
+      - image: gvenzl/oracle-xe:slim-faststart
         environment:
           - ORACLE_PASSWORD=querydsl
           - APP_USER=querydsl
@@ -294,7 +286,7 @@ jobs:
     working_directory: ~/querydsl
     docker:
       - image: velo/toolchains-4-ci-builds:with-21
-      - image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+      - image: mcr.microsoft.com/mssql/server:2022-latest
         environment:
           - ACCEPT_EULA=Y
           - SA_PASSWORD=Password1!
@@ -327,7 +319,7 @@ jobs:
             ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
       - save-test-results
 
-  deploy:
+  deploySnapshot:
     executor:
       name: java
     <<: *defaults
@@ -339,7 +331,27 @@ jobs:
             - querydsl-dependencies-
       - resolve-dependencies
       - configure-gpg
-      - nexus-deploy
+      - run:
+          name: 'Deploy Core Modules Sonatype'
+          command: |
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease
+
+  deployRelease:
+    executor:
+      name: java
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - querydsl-dependencies-
+      - resolve-dependencies
+      - configure-gpg
+      - run:
+          name: 'Deploy Core Modules Sonatype'
+          command: |
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease,staging
 
 workflows:
   version: 2
@@ -426,7 +438,7 @@ workflows:
           name: 'snapshot'
           filters:
             <<: *master-only
-      - deploy:
+      - deploySnapshot:
           name: 'deploy snapshot'
           requires:
             - 'snapshot'
@@ -436,7 +448,7 @@ workflows:
 
   release:
     jobs:
-      - deploy:
+      - deployRelease:
           name: 'release to maven central'
           context: Sonatype
           filters:

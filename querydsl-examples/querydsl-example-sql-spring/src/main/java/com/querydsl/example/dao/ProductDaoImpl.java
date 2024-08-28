@@ -13,7 +13,6 @@ import com.querydsl.example.dto.Product;
 import com.querydsl.example.dto.ProductL10n;
 import com.querydsl.example.dto.Supplier;
 import com.querydsl.sql.SQLQueryFactory;
-import com.querydsl.sql.dml.SQLInsertClause;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class ProductDaoImpl implements ProductDao {
 
   @Override
   public Product findById(long id) {
-    List<Product> persons = findAll(product.id.eq(id));
+    var persons = findAll(product.id.eq(id));
     return persons.isEmpty() ? null : persons.get(0);
   }
 
@@ -61,7 +60,7 @@ public class ProductDaoImpl implements ProductDao {
 
   @Override
   public Product save(Product p) {
-    Long id = p.getId();
+    var id = p.getId();
 
     if (id == null) {
       id = populate(queryFactory.insert(product), p).executeWithKey(product.id);
@@ -73,7 +72,7 @@ public class ProductDaoImpl implements ProductDao {
       queryFactory.delete(productL10n).where(productL10n.productId.eq(id)).execute();
     }
 
-    SQLInsertClause insert = queryFactory.insert(productL10n);
+    var insert = queryFactory.insert(productL10n);
     for (ProductL10n l10n : p.getLocalizations()) {
       insert
           .set(productL10n.productId, id)

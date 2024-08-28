@@ -18,25 +18,25 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
 
   @Before
   public void setUp() {
-    Usert poster = new Usert();
+    var poster = new Usert();
     poster.setUsername("dr_frank");
     posterId = userRepository.save(poster);
   }
 
   @Test
   public void save_and_find_by_id() {
-    String content = "I am alive! #YOLO";
-    Tweet tweet = new Tweet();
+    var content = "I am alive! #YOLO";
+    var tweet = new Tweet();
     tweet.setContent(content);
     tweet.setPosterId(posterId);
-    Long id = repository.save(tweet);
+    var id = repository.save(tweet);
     assertThat(repository.findById(id).getContent()).isEqualTo(content);
   }
 
   @Test
   public void save_and_find_by_username() {
-    String content = "I am alive! #YOLO";
-    Tweet tweet = new Tweet();
+    var content = "I am alive! #YOLO";
+    var tweet = new Tweet();
     tweet.setContent(content);
     tweet.setPosterId(posterId);
     repository.save(tweet);
@@ -46,32 +46,32 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
 
   @Test
   public void save_with_mentions() {
-    Usert other = new Usert();
+    var other = new Usert();
     other.setUsername("dexter");
-    Long otherId = userRepository.save(other);
+    var otherId = userRepository.save(other);
 
-    String content = "I am alive! #YOLO";
-    Tweet tweet = new Tweet();
+    var content = "I am alive! #YOLO";
+    var tweet = new Tweet();
     tweet.setContent(content);
     tweet.setPosterId(posterId);
-    Long tweetId = repository.save(tweet, otherId);
+    var tweetId = repository.save(tweet, otherId);
 
-    assertThat(repository.findWithMentioned(otherId).get(0).getId()).isEqualTo(tweetId);
+    assertThat(repository.findWithMentioned(otherId).getFirst().getId()).isEqualTo(tweetId);
   }
 
   @Test
   public void find_list_by_predicate() {
-    Tweet tw1 = new Tweet();
+    var tw1 = new Tweet();
     tw1.setPosterId(posterId);
     tw1.setContent("It is a alive! #YOLO");
     repository.save(tw1);
 
-    Tweet tw2 = new Tweet();
+    var tw2 = new Tweet();
     tw2.setPosterId(posterId);
     tw2.setContent("Oh the humanity!");
     repository.save(tw2);
 
-    Tweet tw3 = new Tweet();
+    var tw3 = new Tweet();
     tw3.setPosterId(posterId);
     tw3.setContent("#EpicFail");
     repository.save(tw3);

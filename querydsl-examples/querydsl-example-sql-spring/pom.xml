@@ -5,24 +5,14 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-examples</artifactId>
-    <version>6.1-SNAPSHOT</version>
+    <version>6.8-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-example-sql-spring</artifactId>
   <name>Querydsl example - SQL Spring</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>6.1.3</spring.version>
-
-    <!-- to match spring JDK version -->
-    <main.java.version>17</main.java.version>
-  </properties>
-
   <dependencies>
-
     <!-- spring -->
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
@@ -42,7 +32,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
+      <version>1.18.34</version>
       <scope>provided</scope>
     </dependency>
 
@@ -50,6 +40,11 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign.querydsl</groupId>
+      <artifactId>querydsl-sql-json</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -62,18 +57,8 @@
       <artifactId>h2</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>com.jolbox</groupId>
-      <artifactId>bonecp</artifactId>
-      <version>0.8.0-beta1</version>
-      <classifier>jdk7</classifier>
-    </dependency>
 
     <!-- TEST dependencies -->
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
@@ -97,6 +82,13 @@
             <customType>com.querydsl.sql.types.LocalDateTimeType</customType>
             <customType>com.querydsl.sql.types.LocalDateType</customType>
           </customTypes>
+          <typeMappings>
+            <typeMapping>
+              <table>CUSTOMER_ADDRESS</table>
+              <column>ADDRESS</column>
+              <type>com.querydsl.example.dto.Address</type>
+            </typeMapping>
+          </typeMappings>
           <packageName>com.querydsl.example.sql</packageName>
           <targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
         </configuration>

@@ -1,7 +1,6 @@
 package com.querydsl.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -48,7 +47,7 @@ public class FruitResource {
   @GET
   @Path("{id}")
   public Fruit getSingle(Integer id) {
-    Fruit entity = queryFactory.selectFrom(f).where(f.id.eq(id)).fetchOne();
+    var entity = queryFactory.selectFrom(f).where(f.id.eq(id)).fetchOne();
     if (entity == null) {
       throw new WebApplicationException("Fruit with id of " + id + " does not exist.", 404);
     }
@@ -74,7 +73,7 @@ public class FruitResource {
       throw new WebApplicationException("Fruit Name was not set on request.", 422);
     }
 
-    Fruit entity = getSingle(id);
+    var entity = getSingle(id);
     entity.setName(fruit.getName());
 
     return entity;
@@ -84,7 +83,7 @@ public class FruitResource {
   @Path("{id}")
   @Transactional
   public Response delete(Integer id) {
-    long modified = queryFactory.delete(f).where(f.id.eq(id)).execute();
+    var modified = queryFactory.delete(f).where(f.id.eq(id)).execute();
     if (modified == 0L) {
       throw new WebApplicationException("Fruit with id of " + id + " does not exist.", 404);
     }
@@ -100,12 +99,12 @@ public class FruitResource {
     public Response toResponse(Exception exception) {
       LOGGER.error("Failed to handle request", exception);
 
-      int code = 500;
-      if (exception instanceof WebApplicationException) {
-        code = ((WebApplicationException) exception).getResponse().getStatus();
+      var code = 500;
+      if (exception instanceof WebApplicationException applicationException) {
+        code = applicationException.getResponse().getStatus();
       }
 
-      ObjectNode exceptionJson = objectMapper.createObjectNode();
+      var exceptionJson = objectMapper.createObjectNode();
       exceptionJson.put("exceptionType", exception.getClass().getName());
       exceptionJson.put("code", code);
 

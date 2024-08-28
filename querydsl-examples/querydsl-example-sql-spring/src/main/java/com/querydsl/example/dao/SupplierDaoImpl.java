@@ -20,7 +20,7 @@ public class SupplierDaoImpl implements SupplierDao {
 
   @Override
   public Supplier findById(long id) {
-    List<Supplier> suppliers = findAll(supplier.id.eq(id));
+    var suppliers = findAll(supplier.id.eq(id));
     return suppliers.isEmpty() ? null : suppliers.get(0);
   }
 
@@ -32,7 +32,7 @@ public class SupplierDaoImpl implements SupplierDao {
   @Override
   public Supplier save(Supplier s) {
     if (s.getId() == null) {
-      Long id =
+      var id =
           queryFactory
               .insert(supplier)
               .set(supplier.code, s.getCode())

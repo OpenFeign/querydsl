@@ -46,11 +46,11 @@ public class Config {
   @Bean
   public AbstractEntityManagerFactoryBean entityManagerFactory() throws SQLException {
 
-    HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+    var jpaVendorAdapter = new HibernateJpaVendorAdapter();
     jpaVendorAdapter.setDatabase(Database.H2);
     jpaVendorAdapter.setGenerateDdl(true);
 
-    LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();
+    var bean = new LocalContainerEntityManagerFactoryBean();
     bean.setJpaVendorAdapter(jpaVendorAdapter);
     bean.setPackagesToScan(Config.class.getPackage().getName());
     bean.setDataSource(dataSource());

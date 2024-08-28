@@ -22,8 +22,12 @@ derby.log
 /devops/test-connection/.lein-repl-history
 **/.flattened-pom.xml
 
+.java-version
 .gitignore
 .checkstyle
 
-querydsl-gradle-plugin/build/
-querydsl-gradle-plugin/.gradle/
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
