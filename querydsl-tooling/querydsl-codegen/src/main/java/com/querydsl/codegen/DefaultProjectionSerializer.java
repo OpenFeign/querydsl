@@ -30,6 +30,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
@@ -85,10 +88,12 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
     imports(model, writer);
 
     Set<Integer> sizes = new HashSet<>();
-    for (Constructor c : model.getConstructors()) {
+    var constructors = new ArrayList<>(model.getConstructors());
+    Collections.sort(constructors);
+    for (Constructor c : constructors) {
       sizes.add(c.getParameters().size());
     }
-    if (sizes.size() != model.getConstructors().size()) {
+    if (sizes.size() != constructors.size()) {
       writer.imports(Expression.class);
     }
 
@@ -124,24 +129,23 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
     var localName = writer.getRawName(model);
     Set<Integer> sizes = new HashSet<>();
 
-    for (Constructor c : model.getConstructors()) {
+    var constructors = new ArrayList<>(model.getConstructors());
+    Collections.sort(constructors);
+    for (Constructor c : constructors) {
       final var asExpr = sizes.add(c.getParameters().size());
       // begin
       writer.beginConstructor(
           c.getParameters(),
-          new Function<Parameter, Parameter>() {
-            @Override
-            public Parameter apply(Parameter p) {
-              Type type;
-              if (!asExpr) {
-                type = typeMappings.getExprType(p.getType(), model, false, false, true);
-              } else if (p.getType().isFinal()) {
-                type = new ClassType(Expression.class, p.getType());
-              } else {
-                type = new ClassType(Expression.class, new TypeExtends(p.getType()));
-              }
-              return new Parameter(p.getName(), type);
+          (Parameter p) -> {
+            Type type;
+            if (!asExpr) {
+              type = typeMappings.getExprType(p.getType(), model, false, false, true);
+            } else if (p.getType().isFinal()) {
+              type = new ClassType(Expression.class, p.getType());
+            } else {
+              type = new ClassType(Expression.class, new TypeExtends(p.getType()));
             }
+            return new Parameter(p.getName(), type);
           });
 
       // body
