@@ -48,13 +48,22 @@ public class ProjectionSerializerTest {
     var lastName = new Parameter("lastName", Types.STRING);
     var age = new Parameter("age", Types.INTEGER);
     type.addConstructor(new Constructor(Arrays.asList(firstName, lastName, age)));
+    type.addConstructor(new Constructor(Arrays.asList(firstName, lastName)));
 
     Writer writer = new StringWriter();
     ProjectionSerializer serializer = new DefaultProjectionSerializer(new JavaTypeMappings());
     serializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(writer));
-    assertThat(writer.toString()).contains("Expression<String> firstName");
-    assertThat(writer.toString()).contains("Expression<String> lastName");
-    assertThat(writer.toString()).contains("Expression<Integer> age");
+    assertThat(writer.toString())
+        .contains(
+            """
+        public Path(Expression<String> firstName, Expression<String> lastName) {
+            super(com.querydsl.DomainClass.class, new Class<?>[]{String.class, String.class}, firstName, lastName);
+        }
+
+        public Path(Expression<String> firstName, Expression<String> lastName, Expression<Integer> age) {
+            super(com.querydsl.DomainClass.class, new Class<?>[]{String.class, String.class, int.class}, firstName, lastName, age);
+        }
+    """);
   }
 
   @Test

@@ -18,7 +18,7 @@ import java.util.Collection;
 /**
  * @author tiwe
  */
-public final class Constructor {
+public final class Constructor implements Comparable<Constructor> {
 
   private final Collection<Parameter> parameters;
 
@@ -44,5 +44,10 @@ public final class Constructor {
   @Override
   public int hashCode() {
     return parameters.hashCode();
+  }
+
+  @Override
+  public int compareTo(Constructor o) {
+    return parameters.size() - o.parameters.size();
   }
 }

@@ -22,4 +22,15 @@ public class ConstructorTest {
     assertThat(c2).isEqualTo(c1);
     assertThat(c2.hashCode()).isEqualTo(c1.hashCode());
   }
+
+  @Test
+  public void order() {
+    var firstName = new Parameter("firstName", new ClassType(TypeCategory.STRING, String.class));
+    var lastName = new Parameter("lastName", new ClassType(TypeCategory.STRING, String.class));
+    var c1 = new Constructor(Arrays.asList(firstName, lastName));
+    var c2 = new Constructor(Arrays.asList(firstName));
+    assertThat(c1.compareTo(c2)).isEqualTo(1);
+    assertThat(c1.compareTo(c1)).isEqualTo(0);
+    assertThat(c2.compareTo(c1)).isEqualTo(-1);
+  }
 }
