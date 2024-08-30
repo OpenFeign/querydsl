@@ -13,8 +13,7 @@
  */
 package com.querydsl.core.support;
 
-import com.mysema.commons.lang.CloseableIterator;
-import com.mysema.commons.lang.IteratorAdapter;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.NonUniqueResultException;
@@ -40,7 +39,7 @@ public abstract class FetchableQueryBase<T, Q extends FetchableQueryBase<T, Q>> 
 
   @Override
   public List<T> fetch() {
-    return IteratorAdapter.asList(iterate());
+    return CloseableIterator.asList(iterate());
   }
 
   @Override

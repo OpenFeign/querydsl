@@ -1,6 +1,6 @@
 package com.querydsl.core.group;
 
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.Pair;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.support.DummyFetchableQuery;
 import com.querydsl.core.types.ConstructorExpression;

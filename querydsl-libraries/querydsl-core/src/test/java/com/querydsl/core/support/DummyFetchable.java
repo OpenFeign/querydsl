@@ -1,7 +1,6 @@
 package com.querydsl.core.support;
 
-import com.mysema.commons.lang.CloseableIterator;
-import com.mysema.commons.lang.IteratorAdapter;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryModifiers;
@@ -19,7 +18,7 @@ public class DummyFetchable<T> implements Fetchable<T> {
 
   @Override
   public CloseableIterator<T> iterate() {
-    return new IteratorAdapter<>(results.iterator());
+    return CloseableIterator.of(results.iterator());
   }
 
   @Override
