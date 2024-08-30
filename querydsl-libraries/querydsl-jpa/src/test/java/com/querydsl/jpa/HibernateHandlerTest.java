@@ -8,7 +8,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.hibernate.ScrollMode.FORWARD_ONLY;
 
-import com.mysema.commons.lang.IteratorAdapter;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.jpa.domain4.Library;
 import jakarta.persistence.PersistenceException;
@@ -119,7 +119,7 @@ public class HibernateHandlerTest {
     expect(queryResultList.iterator()).andReturn(iterator);
     replay(query);
 
-    assertThat(hibernateHandler.iterate(query, null).getClass()).isEqualTo(IteratorAdapter.class);
+    assertThat(hibernateHandler.iterate(query, null)).isInstanceOf(CloseableIterator.class);
   }
 
   @Test
