@@ -23,7 +23,7 @@ import static com.querydsl.core.group.GroupBy.sortedSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.Pair;
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;

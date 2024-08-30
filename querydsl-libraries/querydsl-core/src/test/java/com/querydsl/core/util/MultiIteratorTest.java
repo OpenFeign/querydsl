@@ -17,7 +17,7 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-import com.mysema.commons.lang.IteratorAdapter;
+import com.querydsl.core.CloseableIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -117,7 +117,7 @@ public class MultiIteratorTest {
     List<Integer> list1 = asList(1, 2, 3, 4);
     List<Integer> list2 = asList(10, 20, 30);
     var iterator = new MultiIterator<>(asList(list1, list2));
-    List<Object[]> list = IteratorAdapter.asList(iterator);
+    List<Object[]> list = CloseableIterator.asList(iterator);
 
     assertThat(asList(list.getFirst())).isEqualTo(asList(1, 10));
     assertThat(asList(list.get(1))).isEqualTo(asList(1, 20));

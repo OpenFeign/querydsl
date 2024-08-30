@@ -37,8 +37,8 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.common.collect.Maps;
-import com.mysema.commons.lang.Pair;
 import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.Pair;
 import com.querydsl.core.QueryException;
 import com.querydsl.core.QuerydslModule;
 import com.querydsl.core.ReactiveFetchable;
