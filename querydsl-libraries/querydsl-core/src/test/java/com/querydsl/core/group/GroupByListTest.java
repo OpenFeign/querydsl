@@ -19,9 +19,8 @@ import static com.querydsl.core.group.GroupBy.map;
 import static com.querydsl.core.group.GroupBy.set;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mysema.commons.lang.CloseableIterator;
-import com.mysema.commons.lang.IteratorAdapter;
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.CloseableIterator;
+import com.querydsl.core.Pair;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import java.util.Arrays;
@@ -174,7 +173,7 @@ public class GroupByListTest extends AbstractGroupByTest {
   public void map4() {
     CloseableIterator<Map<Map<Integer, String>, String>> results =
         MAP4_RESULTS.transform(groupBy(postId).iterate(map(map(postId, commentText), postName)));
-    List<Map<Map<Integer, String>, String>> actual = IteratorAdapter.asList(results);
+    List<Map<Map<Integer, String>, String>> actual = CloseableIterator.asList(results);
 
     Object commentId = null;
     Map<Map<Integer, String>, String> comments = null;

@@ -15,7 +15,7 @@ package com.querydsl.collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mysema.commons.lang.IteratorAdapter;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.Expressions;
@@ -55,7 +55,8 @@ public class PagingTest extends AbstractQueryTest {
     assertThat(createQuery(modifiers).fetchCount()).isEqualTo(total);
 
     // via iterator
-    assertThat(IteratorAdapter.asList(createQuery(modifiers).select(var).iterate())).hasSize(size);
+    assertThat(CloseableIterator.asList(createQuery(modifiers).select(var).iterate()))
+        .hasSize(size);
   }
 
   private CollQuery<?> createQuery(QueryModifiers modifiers) {

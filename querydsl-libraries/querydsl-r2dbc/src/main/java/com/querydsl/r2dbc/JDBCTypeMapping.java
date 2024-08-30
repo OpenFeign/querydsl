@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.Pair;
 import com.querydsl.sql.types.Null;
 import io.r2dbc.spi.Blob;
 import java.math.BigDecimal;

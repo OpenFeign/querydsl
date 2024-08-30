@@ -7,7 +7,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-import com.mysema.commons.lang.CloseableIterator;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.annotations.QueryEntity;
