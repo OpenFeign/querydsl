@@ -13,7 +13,7 @@
   <description>SQL codegen support for Querydsl</description>
 
   <properties>
-    <ant.version>1.10.14</ant.version>
+    <ant.version>1.10.15</ant.version>
   </properties>
 
   <dependencies>
