@@ -6,11 +6,11 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>5.6-SNAPSHOT</version>
+    <version>5.6</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>codegen-utils</artifactId>
-  <version>5.6-SNAPSHOT</version>
+  <version>5.6</version>
 
   <packaging>jar</packaging>
   <name>Querydsl - Codegen utils</name>
