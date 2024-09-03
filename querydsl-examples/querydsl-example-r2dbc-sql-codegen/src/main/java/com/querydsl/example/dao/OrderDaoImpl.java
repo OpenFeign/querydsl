@@ -5,7 +5,7 @@ import static com.querydsl.example.r2dbc.QCustomerOrder.customerOrder;
 import static com.querydsl.example.r2dbc.QCustomerOrderProduct.customerOrderProduct;
 import static com.querydsl.example.r2dbc.QCustomerPaymentMethod.customerPaymentMethod;
 
-import com.querydsl.core.dml.ReactiveStoreClause;
+import com.querydsl.core.dml.StoreClause;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.QBean;
@@ -53,7 +53,7 @@ public class OrderDaoImpl implements OrderDao {
     return getBaseQuery(where);
   }
 
-  private <T extends ReactiveStoreClause<T>> T populate(T dml, Order o) {
+  private <T extends StoreClause<T>> T populate(T dml, Order o) {
     return dml.set(customerOrder.customerPaymentMethodId, o.getCustomerPaymentMethod().getId())
         .set(customerOrder.orderPlacedDate, o.getOrderPlacedDate())
         .set(customerOrder.totalOrderPrice, o.getTotalOrderPrice());
@@ -99,28 +99,26 @@ public class OrderDaoImpl implements OrderDao {
         .where(customerOrder.id.eq(id))
         .execute()
         .flatMap(
-            __ -> {
-              // delete orderproduct rows
-              return queryFactory
-                  .delete(customerOrderProduct)
-                  .where(customerOrderProduct.orderId.eq(id))
-                  .execute()
-                  .flatMap(
-                      ___ -> {
-                        return Flux.fromIterable(o.getOrderProducts())
-                            .map(
-                                op ->
-                                    queryFactory
-                                        .insert(customerOrderProduct)
-                                        .set(customerOrderProduct.orderId, id)
-                                        .set(customerOrderProduct.comments, op.getComments())
-                                        .set(customerOrderProduct.productId, op.getProductId())
-                                        .set(customerOrderProduct.quantity, op.getQuantity())
-                                        .execute())
-                            .collectList()
-                            .map(____ -> o);
-                      });
-            });
+            __ ->
+                queryFactory
+                    .delete(customerOrderProduct)
+                    .where(customerOrderProduct.orderId.eq(id))
+                    .execute()
+                    .flatMap(
+                        ___ -> {
+                          return Flux.fromIterable(o.getOrderProducts())
+                              .map(
+                                  op ->
+                                      queryFactory
+                                          .insert(customerOrderProduct)
+                                          .set(customerOrderProduct.orderId, id)
+                                          .set(customerOrderProduct.comments, op.getComments())
+                                          .set(customerOrderProduct.productId, op.getProductId())
+                                          .set(customerOrderProduct.quantity, op.getQuantity())
+                                          .execute())
+                              .collectList()
+                              .map(____ -> o);
+                        }));
   }
 
   @Override

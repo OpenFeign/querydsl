@@ -1,5 +1,7 @@
-package com.querydsl.core.dml;
+package com.querydsl.core.dml.reactive;
 
+import com.querydsl.core.FilteredClause;
+import com.querydsl.core.dml.StoreClause;
 import com.querydsl.core.types.Path;
 import java.util.List;
 
@@ -9,7 +11,7 @@ import java.util.List;
  * @param <C> concrete subtype
  */
 public interface ReactiveUpdateClause<C extends ReactiveUpdateClause<C>>
-    extends ReactiveStoreClause<C>, ReactiveFilteredClause<C> {
+    extends StoreClause<C>, FilteredClause<C>, ReactiveDMLClause<C> {
 
   /**
    * Set the paths to be updated
