@@ -18,7 +18,7 @@ import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryModifiers;
-import com.querydsl.core.dml.ReactiveDeleteClause;
+import com.querydsl.core.dml.reactive.ReactiveDeleteClause;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.ValidatingVisitor;

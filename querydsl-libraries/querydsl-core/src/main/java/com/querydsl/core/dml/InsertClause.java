@@ -22,7 +22,7 @@ import com.querydsl.core.types.SubQueryExpression;
  * @author tiwe
  * @param <C> concrete subtype
  */
-public interface InsertClause<C extends InsertClause<C>> extends StoreClause<C> {
+public interface InsertClause<C extends InsertClause<C>> extends StoreClause<C>, DMLClause<C> {
 
   /**
    * Define the columns to be populated

@@ -14,7 +14,7 @@
 package com.querydsl.r2dbc.dml;
 
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.dml.ReactiveDMLClause;
+import com.querydsl.core.dml.reactive.ReactiveDMLClause;
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.Path;

@@ -1,8 +1,10 @@
-package com.querydsl.core.support;
+package com.querydsl.core.dml.reactive;
 
 import com.querydsl.core.ReactiveFetchable;
 import com.querydsl.core.ReactiveFetchableQuery;
 import com.querydsl.core.ReactiveResultTransformer;
+import com.querydsl.core.support.QueryBase;
+import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.types.SubQueryExpression;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
