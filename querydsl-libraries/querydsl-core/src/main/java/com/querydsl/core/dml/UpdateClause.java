@@ -23,7 +23,8 @@ import java.util.List;
  * @author tiwe
  * @param <C> concrete subtype
  */
-public interface UpdateClause<C extends UpdateClause<C>> extends StoreClause<C>, FilteredClause<C> {
+public interface UpdateClause<C extends UpdateClause<C>>
+    extends StoreClause<C>, FilteredClause<C>, DMLClause<C> {
 
   /**
    * Set the paths to be updated

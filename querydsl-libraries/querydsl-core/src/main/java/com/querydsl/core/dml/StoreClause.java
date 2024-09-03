@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * @author tiwe
  * @param <C> concrete subtype
  */
-public interface StoreClause<C extends StoreClause<C>> extends DMLClause<C> {
+public interface StoreClause<C extends StoreClause<C>> {
 
   /**
    * Add a value binding

@@ -1,6 +1,9 @@
-package com.querydsl.core.support;
+package com.querydsl.core.dml.reactive;
 
 import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.support.ExtendedSubQuery;
+import com.querydsl.core.support.FetchableQueryBase;
+import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Ops;

@@ -1,5 +1,6 @@
-package com.querydsl.core.dml;
+package com.querydsl.core.dml.reactive;
 
+import com.querydsl.core.dml.StoreClause;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.SubQueryExpression;
 
@@ -9,7 +10,7 @@ import com.querydsl.core.types.SubQueryExpression;
  * @param <C> concrete subtype
  */
 public interface ReactiveInsertClause<C extends ReactiveInsertClause<C>>
-    extends ReactiveStoreClause<C> {
+    extends StoreClause<C>, ReactiveDMLClause<C> {
 
   /**
    * Define the columns to be populated

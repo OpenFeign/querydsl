@@ -1,4 +1,4 @@
-package com.querydsl.core.dml;
+package com.querydsl.core.dml.reactive;
 
 import reactor.core.publisher.Mono;
 
