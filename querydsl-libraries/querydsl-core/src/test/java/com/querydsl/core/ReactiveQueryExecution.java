@@ -13,6 +13,8 @@
  */
 package com.querydsl.core;
 
+import com.querydsl.core.dml.reactive.ReactiveFetchable;
+import com.querydsl.core.dml.reactive.ReactiveFetchableQuery;
 import com.querydsl.core.support.QueryBase;
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.Expression;

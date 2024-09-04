@@ -1,8 +1,5 @@
 package com.querydsl.core.dml.reactive;
 
-import com.querydsl.core.ReactiveFetchable;
-import com.querydsl.core.ReactiveFetchableQuery;
-import com.querydsl.core.ReactiveResultTransformer;
 import com.querydsl.core.support.QueryBase;
 import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.types.SubQueryExpression;
@@ -11,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 /**
  * {@code FetchableQueryBase} extends the {@link QueryBase} class to provide default implementations
- * of the methods of the {@link com.querydsl.core.ReactiveFetchable} interface
+ * of the methods of the {@link com.querydsl.core.dml.reactive.ReactiveFetchable} interface
  *
  * @param <T> result type
  * @param <Q> concrete subtype

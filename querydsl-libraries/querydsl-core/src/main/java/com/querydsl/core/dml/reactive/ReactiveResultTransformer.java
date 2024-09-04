@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core;
+package com.querydsl.core.dml.reactive;
 
 import org.reactivestreams.Publisher;
 

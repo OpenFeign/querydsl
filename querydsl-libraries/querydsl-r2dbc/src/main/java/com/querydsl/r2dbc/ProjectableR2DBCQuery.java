@@ -18,7 +18,7 @@ import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.Query;
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
-import com.querydsl.core.ReactiveFetchableQuery;
+import com.querydsl.core.dml.reactive.ReactiveFetchableQuery;
 import com.querydsl.core.dml.reactive.ReactiveFetchableSubQueryBase;
 import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.types.EntityPath;
