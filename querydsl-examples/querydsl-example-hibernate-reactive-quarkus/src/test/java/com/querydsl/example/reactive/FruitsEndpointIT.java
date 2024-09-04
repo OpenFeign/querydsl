@@ -1,4 +1,4 @@
-package org.acme.hibernate.reactive;
+package com.querydsl.example.reactive;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 

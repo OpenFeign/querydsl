@@ -1,4 +1,4 @@
-package org.acme.hibernate.reactive;
+package com.querydsl.example.reactive;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
