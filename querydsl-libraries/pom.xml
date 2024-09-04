@@ -30,6 +30,9 @@
     <!-- JPA -->
     <module>querydsl-jpa</module>
     <module>querydsl-jpa-spring</module>
+    <!-- reactive hibernate -->
+    <module>querydsl-hibernate-reactive</module>
+
     <!-- NoSQL -->
     <module>querydsl-mongodb</module>
 

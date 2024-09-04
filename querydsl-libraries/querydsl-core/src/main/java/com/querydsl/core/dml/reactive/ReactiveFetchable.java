@@ -1,5 +1,6 @@
-package com.querydsl.core;
+package com.querydsl.core.dml.reactive;
 
+import com.querydsl.core.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

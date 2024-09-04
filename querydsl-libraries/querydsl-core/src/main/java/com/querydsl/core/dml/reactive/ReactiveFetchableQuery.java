@@ -1,5 +1,8 @@
-package com.querydsl.core;
+package com.querydsl.core.dml.reactive;
 
+import com.querydsl.core.ResultTransformer;
+import com.querydsl.core.SimpleQuery;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import org.reactivestreams.Publisher;
 
