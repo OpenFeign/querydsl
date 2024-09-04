@@ -11,10 +11,6 @@
   <artifactId>querydsl-example-hibernate-reactive-quarkus</artifactId>
   <name>Querydsl example - Hibernate reactive Quarkus</name>
 
-  <properties>
-    <quarkus.version>3.14.1</quarkus.version>
-  </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
