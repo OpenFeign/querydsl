@@ -1,4 +1,4 @@
-package org.acme.hibernate.reactive;
+package com.querydsl.example.reactive;
 
 import static io.quarkus.vertx.web.Route.HandlerType.FAILURE;
 import static io.quarkus.vertx.web.Route.HttpMethod.DELETE;
