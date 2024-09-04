@@ -13,8 +13,8 @@
  */
 package com.querydsl.r2dbc.group;
 
-import com.querydsl.core.ReactiveFetchableQuery;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.dml.reactive.ReactiveFetchableQuery;
 import com.querydsl.core.group.Group;
 import com.querydsl.core.group.GroupExpression;
 import com.querydsl.core.group.GroupImpl;

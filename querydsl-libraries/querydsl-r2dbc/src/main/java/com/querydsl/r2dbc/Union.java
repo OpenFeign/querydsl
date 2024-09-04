@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc;
 
-import com.querydsl.core.ReactiveFetchable;
+import com.querydsl.core.dml.reactive.ReactiveFetchable;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
