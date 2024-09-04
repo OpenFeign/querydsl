@@ -1,4 +1,4 @@
-package org.acme.hibernate.reactive;
+package com.querydsl.example.reactive;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
