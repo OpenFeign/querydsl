@@ -40,7 +40,7 @@ public class R2DBCRelationalFunctionCall<T> extends SimpleExpression<T>
       if (i > 0) {
         builder.append(", ");
       }
-      builder.append("{" + i + "}");
+      builder.append("{").append(i).append("}");
     }
     builder.append(")");
     return TemplateFactory.DEFAULT.create(builder.toString());

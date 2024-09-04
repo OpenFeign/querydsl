@@ -15,6 +15,7 @@ package com.querydsl.r2dbc.types;
 
 import io.r2dbc.spi.Row;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.sql.Types;
 
@@ -37,7 +38,7 @@ public class URLType extends AbstractType<URL, String> {
   public URL getValue(Row row, int startIndex) {
     var val = row.get(startIndex, String.class);
     try {
-      return val != null ? new URL(val) : null;
+      return val != null ? URI.create(val).toURL() : null;
     } catch (MalformedURLException e) {
       return null;
     }

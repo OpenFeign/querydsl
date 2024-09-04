@@ -61,7 +61,7 @@ public abstract class UnionBase extends AbstractBaseTest {
   public void union_list() {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
-    assertThat(query().union(sq1, sq2).list().collectList().block())
+    assertThat(query().union(sq1, sq2).fetch().collectList().block())
         .isEqualTo(query().union(sq1, sq2).fetch().collectList().block());
   }
 

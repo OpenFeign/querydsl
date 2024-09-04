@@ -61,7 +61,7 @@ public abstract class UnionBase extends AbstractBaseTest {
   public void union_list() throws SQLException {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
-    assertThat(query().union(sq1, sq2).list()).isEqualTo(query().union(sq1, sq2).fetch());
+    assertThat(query().union(sq1, sq2).fetch()).isEqualTo(query().union(sq1, sq2).fetch());
   }
 
   @Test
@@ -215,7 +215,7 @@ public abstract class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Tuple> sq2 =
         query().from(employee).select(employee.id.min(), employee.id.min().subtract(1));
 
-    var list = query().union(sq1, sq2).list();
+    var list = query().union(sq1, sq2).fetch();
     assertThat(list).hasSize(2);
     assertThat(list.getFirst() != null).isTrue();
     assertThat(list.get(1) != null).isTrue();
@@ -244,7 +244,7 @@ public abstract class UnionBase extends AbstractBaseTest {
     SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
     SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.min());
 
-    var list = query().union(sq1, sq2).list();
+    var list = query().union(sq1, sq2).fetch();
     assertThat(list).hasSize(2);
     assertThat(list.getFirst() != null).isTrue();
     assertThat(list.get(1) != null).isTrue();
@@ -271,7 +271,7 @@ public abstract class UnionBase extends AbstractBaseTest {
         query().from(employee).select(Projections.constructor(Employee.class, employee.id));
     SubQueryExpression<Employee> sq2 =
         query().from(employee).select(Projections.constructor(Employee.class, employee.id));
-    var employees = query().union(sq1, sq2).list();
+    var employees = query().union(sq1, sq2).fetch();
     for (Employee employee : employees) {
       assertThat(employee).isNotNull();
     }

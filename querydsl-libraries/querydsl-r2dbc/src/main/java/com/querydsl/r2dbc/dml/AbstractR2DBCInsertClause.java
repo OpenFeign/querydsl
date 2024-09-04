@@ -209,7 +209,7 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
 
   protected Statement createStatement(Connection connection, boolean withKeys) {
     if (subQueryBuilder != null) {
-      subQuery = subQueryBuilder.select(values.toArray(new Expression[values.size()])).clone();
+      subQuery = subQueryBuilder.select(values.toArray(new Expression[0])).clone();
       values.clear();
     }
 
@@ -219,7 +219,7 @@ public abstract class AbstractR2DBCInsertClause<C extends AbstractR2DBCInsertCla
 
   protected Statement createStatements(Connection connection, boolean withKeys) {
     if (subQueryBuilder != null) {
-      subQuery = subQueryBuilder.select(values.toArray(new Expression[values.size()])).clone();
+      subQuery = subQueryBuilder.select(values.toArray(new Expression[0])).clone();
       values.clear();
     }
 

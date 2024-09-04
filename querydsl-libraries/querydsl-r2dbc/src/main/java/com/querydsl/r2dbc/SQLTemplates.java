@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * {@code SQLTemplates} extends {@link Templates} to provides SQL specific extensions and acts as
@@ -81,6 +82,8 @@ public class SQLTemplates extends Templates {
               Ops.STARTS_WITH_IC,
               Ops.STRING_CONTAINS,
               Ops.STRING_CONTAINS_IC));
+  private static final Pattern PATTERN = Pattern.compile(".*[^A-z0-9_].*");
+  private static final Pattern REGEX = Pattern.compile("^[^A-z_].*");
 
   private final Set<String> reservedWords;
 
@@ -91,9 +94,9 @@ public class SQLTemplates extends Templates {
   private final List<Type<?, ?>> customTypes = new ArrayList<>();
 
   protected boolean requiresQuotes(final String identifier, final boolean precededByDot) {
-    if (identifier.matches(".*[^A-z0-9_].*")) {
+    if (PATTERN.matcher(identifier).matches()) {
       return true;
-    } else if (identifier.matches("^[^A-z_].*")) {
+    } else if (REGEX.matcher(identifier).matches()) {
       return true;
     } else if (precededByDot && supportsUnquotedReservedWordsAsIdentifier) {
       return false;

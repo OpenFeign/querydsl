@@ -22,9 +22,8 @@ public class VisitorTest {
 
   @Test
   public void iteration() throws SecurityException, NoSuchMethodException {
-    List<Class<?>> types = new ArrayList<>();
+    List<Class<?>> types = new ArrayList<>(Arrays.asList(Operation.class.getClasses()));
     //        types.addAll(Arrays.<Class<?>>asList(Alias.class.getClasses()));
-    types.addAll(Arrays.asList(Operation.class.getClasses()));
     types.addAll(Arrays.asList(Path.class.getClasses()));
     for (Class<?> innerType : types) {
       if (!innerType.isInterface() && Expression.class.isAssignableFrom(innerType)) {

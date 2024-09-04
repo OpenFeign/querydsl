@@ -18,10 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import javax.lang.model.SourceVersion;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
@@ -106,9 +103,7 @@ public class SimpleCompiler implements JavaCompiler {
     List<String> args = new ArrayList<>(arguments.length + 2);
     args.add("-classpath");
     args.add(getClasspath());
-    for (String arg : arguments) {
-      args.add(arg);
-    }
-    return compiler.run(in, out, err, args.toArray(new String[args.size()]));
+    args.addAll(Arrays.asList(arguments));
+    return compiler.run(in, out, err, args.toArray(new String[0]));
   }
 }

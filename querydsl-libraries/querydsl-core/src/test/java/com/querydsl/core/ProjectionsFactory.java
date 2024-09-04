@@ -124,8 +124,7 @@ public class ProjectionsFactory {
 
   public <A extends Number & Comparable<A>> Collection<NumberExpression<?>> numeric(
       NumberExpression<A> expr, NumberExpression<A> other, A knownValue, boolean forFilter) {
-    var rv = new HashSet<NumberExpression<?>>();
-    rv.addAll(numeric(expr, other, forFilter));
+    var rv = new HashSet<>(numeric(expr, other, forFilter));
     rv.addAll(numeric(expr, NumberConstant.create(knownValue), forFilter));
     return Collections.unmodifiableSet(rv);
   }
@@ -193,8 +192,7 @@ public class ProjectionsFactory {
 
   public Collection<SimpleExpression<String>> string(
       StringExpression expr, StringExpression other, String knownValue) {
-    var rv = new HashSet<SimpleExpression<String>>();
-    rv.addAll(stringProjections(expr, other));
+    var rv = new HashSet<>(stringProjections(expr, other));
     rv.addAll(stringProjections(expr, StringConstant.create(knownValue)));
     return rv;
   }

@@ -69,7 +69,7 @@ public class QuerydslJpaRepositoryFactoryBean<T extends JPQLRepository<S, ID>, S
     protected RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
 
       var fragmentImplementation =
-          getTargetRepositoryViaReflection( //
+          instantiateClass( //
               QuerydslJpaRepositoryImpl.class, //
               getEntityInformation(metadata.getDomainType()), //
               entityManager //

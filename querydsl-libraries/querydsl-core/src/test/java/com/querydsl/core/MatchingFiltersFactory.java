@@ -119,8 +119,7 @@ public class MatchingFiltersFactory {
       DateExpression<java.sql.Date> expr,
       DateExpression<java.sql.Date> other,
       java.sql.Date knownValue) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(date(expr, other));
+    var rv = new HashSet<>(date(expr, other));
     rv.addAll(date(expr, DateConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
   }
@@ -160,8 +159,7 @@ public class MatchingFiltersFactory {
       DateTimeExpression<java.util.Date> expr,
       DateTimeExpression<java.util.Date> other,
       java.util.Date knownValue) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(dateTime(expr, other));
+    var rv = new HashSet<>(dateTime(expr, other));
     rv.addAll(dateTime(expr, DateTimeConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
   }
@@ -191,8 +189,7 @@ public class MatchingFiltersFactory {
 
   public <A extends Number & Comparable<A>> Collection<Predicate> numeric(
       NumberExpression<A> expr, NumberExpression<A> other, A knownValue) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(numeric(expr, other));
+    var rv = new HashSet<Predicate>(numeric(expr, other));
     rv.addAll(numeric(expr, NumberConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
   }
@@ -321,8 +318,7 @@ public class MatchingFiltersFactory {
 
   public Collection<Predicate> string(
       StringExpression expr, StringExpression other, String knownValue) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(string(expr, other));
+    var rv = new HashSet<Predicate>(string(expr, other));
     rv.addAll(string(expr, StringConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
   }
@@ -341,8 +337,7 @@ public class MatchingFiltersFactory {
       TimeExpression<java.sql.Time> expr,
       TimeExpression<java.sql.Time> other,
       java.sql.Time knownValue) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(time(expr, other));
+    var rv = new HashSet<>(time(expr, other));
     rv.addAll(time(expr, TimeConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
   }

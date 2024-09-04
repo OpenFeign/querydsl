@@ -16,6 +16,7 @@ package com.querydsl.sql.codegen;
 import com.querydsl.codegen.EntityType;
 import com.querydsl.sql.SchemaAndTable;
 import com.querydsl.sql.codegen.support.ForeignKeyData;
+import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
 
 /**
@@ -26,6 +27,8 @@ import javax.lang.model.SourceVersion;
  */
 public abstract class AbstractNamingStrategy implements NamingStrategy {
 
+  private static final Pattern PATTERN = Pattern.compile("\r");
+  private static final Pattern REGEX = Pattern.compile("\n");
   protected String foreignKeysClassName = "ForeignKeys";
 
   protected String foreignKeysVariable = "fk";
@@ -97,7 +100,7 @@ public abstract class AbstractNamingStrategy implements NamingStrategy {
 
   protected String normalizeSQLName(String name) {
     if (name != null) {
-      return name.replaceAll("\r", "").replaceAll("\n", " ");
+      return REGEX.matcher(PATTERN.matcher(name).replaceAll("")).replaceAll(" ");
     } else {
       return null;
     }

@@ -641,14 +641,13 @@ public abstract class SelectBase extends AbstractBaseTest {
       var message = new StringBuilder();
       for (Map.Entry<Object, Object> entry : failures.entrySet()) {
         message
-            .append(
-                entry.getKey().getClass().getName()
-                    + " != "
-                    + entry.getValue().getClass().getName()
-                    + ": "
-                    + entry.getKey()
-                    + " != "
-                    + entry.getValue())
+            .append(entry.getKey().getClass().getName())
+            .append(" != ")
+            .append(entry.getValue().getClass().getName())
+            .append(": ")
+            .append(entry.getKey())
+            .append(" != ")
+            .append(entry.getValue())
             .append('\n');
       }
       fail("Failed with " + message);

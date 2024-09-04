@@ -120,7 +120,7 @@ public class ReactiveGroupByBuilder<K> {
   public <V> ReactiveResultTransformer<Map<K, V>> as(FactoryExpression<V> expression) {
     final FactoryExpression<?> transformation = FactoryExpressionUtils.wrap(expression);
     var args = transformation.getArgs();
-    return new ReactiveGroupByMap<K, V>(key, args.toArray(new Expression<?>[args.size()])) {
+    return new ReactiveGroupByMap<K, V>(key, args.toArray(new Expression<?>[0])) {
 
       @Override
       protected Map<K, V> transform(Map<K, Group> groups) {
@@ -152,7 +152,7 @@ public class ReactiveGroupByBuilder<K> {
   public <V> ReactiveResultTransformer<V> flux(FactoryExpression<V> expression) {
     final FactoryExpression<V> transformation = FactoryExpressionUtils.wrap(expression);
     var args = transformation.getArgs();
-    return new ReactiveGroupByList<>(key, args.toArray(new Expression<?>[args.size()])) {
+    return new ReactiveGroupByList<>(key, args.toArray(new Expression<?>[0])) {
       @Override
       protected V transform(Group group) {
         // XXX Isn't group.toArray() suitable here?
