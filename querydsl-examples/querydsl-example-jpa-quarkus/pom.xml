@@ -11,10 +11,6 @@
   <artifactId>querydsl-example-jpa-quarkus</artifactId>
   <name>Querydsl example - JPA Quarkus</name>
 
-  <properties>
-    <quarkus.version>3.15.1</quarkus.version>
-  </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
