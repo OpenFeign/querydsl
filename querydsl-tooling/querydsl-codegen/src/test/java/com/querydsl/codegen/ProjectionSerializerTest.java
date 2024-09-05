@@ -56,14 +56,14 @@ public class ProjectionSerializerTest {
     assertThat(writer.toString())
         .contains(
             """
-        public Path(Expression<String> firstName, Expression<String> lastName) {
-            super(com.querydsl.DomainClass.class, new Class<?>[]{String.class, String.class}, firstName, lastName);
-        }
+    public Path(Expression<String> firstName, Expression<String> lastName) {
+        super(com.querydsl.DomainClass.class, new Class<?>[]{String.class, String.class}, firstName, lastName);
+    }
 
-        public Path(Expression<String> firstName, Expression<String> lastName, Expression<Integer> age) {
-            super(com.querydsl.DomainClass.class, new Class<?>[]{String.class, String.class, int.class}, firstName, lastName, age);
-        }
-    """);
+    public Path(Expression<String> firstName, Expression<String> lastName, Expression<Integer> age) {
+        super(com.querydsl.DomainClass.class, new Class<?>[]{String.class, String.class, int.class}, firstName, lastName, age);
+    }
+""");
   }
 
   @Test
