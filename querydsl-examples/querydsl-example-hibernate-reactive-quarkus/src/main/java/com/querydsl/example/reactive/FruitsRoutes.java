@@ -6,6 +6,7 @@ import static io.quarkus.vertx.web.Route.HttpMethod.GET;
 import static io.quarkus.vertx.web.Route.HttpMethod.POST;
 import static io.quarkus.vertx.web.Route.HttpMethod.PUT;
 
+import com.querydsl.jpa.hibernate.MutinyQueryFactory;
 import io.quarkus.vertx.web.Body;
 import io.quarkus.vertx.web.Param;
 import io.quarkus.vertx.web.Route;
@@ -26,17 +27,25 @@ public class FruitsRoutes {
 
   private static final Logger LOGGER = Logger.getLogger(FruitsRoutes.class.getName());
 
-  @Inject Mutiny.SessionFactory sf;
+  private final Mutiny.SessionFactory sf;
+  private final MutinyQueryFactory qf;
+
+  @Inject
+  public FruitsRoutes(Mutiny.SessionFactory sf) {
+    this.sf = sf;
+    qf = new MutinyQueryFactory(sf);
+  }
+
+  private static final QFruit f = new QFruit("f");
 
   @Route(methods = GET, path = "/")
   public Uni<List<Fruit>> getAll() {
-    return sf.withSession(
-        session -> session.createNamedQuery(Fruit.FIND_ALL, Fruit.class).getResultList());
+    return qf.withQuery(query -> query.select(f).from(f).orderBy(f.name.asc()).fetch());
   }
 
   @Route(methods = GET, path = "/:id")
   public Uni<Fruit> getSingle(@Param Integer id) {
-    return sf.withSession(session -> session.find(Fruit.class, id));
+    return qf.withQuery(query -> query.select(f).from(f).where(f.id.eq(id)).fetchOne());
   }
 
   @Route(methods = POST, path = "/")
@@ -56,32 +65,18 @@ public class FruitsRoutes {
       return Uni.createFrom()
           .failure(new IllegalArgumentException("Fruit name was not set on request."));
     }
-    return sf.withTransaction(
-            (session, tx) ->
-                session
-                    .find(Fruit.class, id)
-                    // If entity exists then update it
-                    .onItem()
-                    .ifNotNull()
-                    .invoke(entity -> entity.setName(fruit.getName())))
-        // If entity not found, fail
+    return qf.withUpdate(
+            f, update -> update.where(f.id.eq(id)).set(f.name, fruit.getName()).execute())
         .onItem()
         .ifNull()
-        .fail();
+        .fail()
+        .flatMap(a -> qf.withSelectFrom(f, select -> select.where(f.id.eq(id)).fetchOne()));
   }
 
   @Route(methods = DELETE, path = "/:id")
-  public Uni<Fruit> delete(@Param Integer id, HttpServerResponse response) {
-    return sf.withTransaction(
-            (session, tx) ->
-                session
-                    .find(Fruit.class, id)
-                    // If entity exists then delete it
-                    .onItem()
-                    .ifNotNull()
-                    .call(
-                        entity -> session.remove(entity).invoke(() -> response.setStatusCode(204))))
-        // If entity not found, fail
+  public Uni<Integer> delete(@Param Integer id, HttpServerResponse response) {
+    return qf.withDelete(f, delete -> delete.where(f.id.eq(id)).execute())
+        .invoke(() -> response.setStatusCode(204))
         .onItem()
         .ifNull()
         .fail();
