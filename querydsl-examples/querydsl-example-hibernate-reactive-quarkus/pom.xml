@@ -25,6 +25,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>io.github.openfeign.querydsl</groupId>
+      <artifactId>querydsl-hibernate-reactive</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-reactive</artifactId>
     </dependency>
@@ -59,11 +65,27 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
+          <annotationProcessorPaths>
+            <annotationProcessorPath>
+              <groupId>io.github.openfeign.querydsl</groupId>
+              <artifactId>querydsl-apt</artifactId>
+              <version>${project.version}</version>
+              <classifier>jpa</classifier>
+            </annotationProcessorPath>
+          </annotationProcessorPaths>
 
           <!-- the parameters=true option is critical so that RESTEasy works fine -->
           <parameters>true</parameters>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>io.github.openfeign.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
+
       <plugin>
         <!-- you need this specific version to integrate with the other build helpers -->
         <artifactId>maven-surefire-plugin</artifactId>

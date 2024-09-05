@@ -48,10 +48,11 @@ public class UnionSubQueryTest {
 
     serializer.handle(expr);
     assertThat(serializer.toString())
-        .isEqualTo("""
-			intPath in ((select 1 from dual)
-			union
-			(select 2 from dual))""");
+        .isEqualTo(
+            """
+            intPath in ((select 1 from dual)
+            union
+            (select 2 from dual))""");
   }
 
   @SuppressWarnings("unchecked")

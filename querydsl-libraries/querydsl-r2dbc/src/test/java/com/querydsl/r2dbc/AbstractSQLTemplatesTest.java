@@ -83,12 +83,13 @@ public abstract class AbstractSQLTemplatesTest {
                 """);
       } else {
         assertThat(union.toString())
-            .isEqualTo("""
-				select 1 as col1)
-				union
-				select 2
-				union
-				select 3""");
+            .isEqualTo(
+                """
+                select 1 as col1)
+                union
+                select 2
+                union
+                select 3""");
       }
     } else {
       var dummyTable = templates.getDummyTable();
