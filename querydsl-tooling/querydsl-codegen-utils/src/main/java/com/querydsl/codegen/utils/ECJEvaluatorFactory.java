@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.stream.Collectors;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 import org.eclipse.jdt.core.compiler.CategorizedProblem;
@@ -141,15 +140,17 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
         new INameEnvironment() {
 
           private String join(char[][] compoundName, char separator) {
-            if (compoundName == null) {
-              return "";
-            } else {
-              List<String> parts = new ArrayList<>(compoundName.length);
-              for (char[] part : compoundName) {
-                parts.add(new String(part));
+            if (compoundName == null) return "";
+
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < compoundName.length; i++) {
+              result.append(compoundName[i]);
+              if (i < compoundName.length - 1) {
+                result.append(separator);
               }
-              return parts.stream().collect(Collectors.joining(String.valueOf(separator)));
             }
+
+            return result.toString();
           }
 
           @Override
