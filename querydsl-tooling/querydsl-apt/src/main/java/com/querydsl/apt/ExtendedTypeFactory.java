@@ -434,7 +434,7 @@ public class ExtendedTypeFactory {
     List<? extends TypeMirror> arguments = declaredType.getTypeArguments();
 
     // for intersection types etc
-    if (name.equals("")) {
+    if (name.isEmpty()) {
       var type = objectType;
       if (typeCategory == TypeCategory.COMPARABLE) {
         type = comparableType;
