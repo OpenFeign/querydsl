@@ -159,7 +159,7 @@ public class JPAQueryMixin<T> extends QueryMixin<T> {
     // at least three levels
     if (metadata.getParent() != null && !metadata.getParent().getMetadata().isRoot()) {
       var md = getMetadata();
-      Set<Expression<?>> exprs = new HashSet<>(md.getGroupBy());
+      var exprs = new HashSet<>(md.getGroupBy());
       if (md.getProjection() != null) {
         exprs.add(md.getProjection());
       }

@@ -142,7 +142,7 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
           private String join(char[][] compoundName, char separator) {
             if (compoundName == null) return "";
 
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             for (int i = 0; i < compoundName.length; i++) {
               result.append(compoundName[i]);
               if (i < compoundName.length - 1) {
