@@ -149,7 +149,6 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
                 result.append(separator);
               }
             }
-
             return result.toString();
           }
 
