@@ -148,7 +148,7 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
               for (char[] part : compoundName) {
                 parts.add(new String(part));
               }
-              return parts.stream().collect(Collectors.joining(new String(new char[] {separator})));
+              return parts.stream().collect(Collectors.joining(String.valueOf(separator)));
             }
           }
 
