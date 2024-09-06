@@ -54,7 +54,7 @@ public class SimpleCompilerTest {
             "-s",
             "target/out",
             "src/test/java/com/querydsl/codegen/utils/SimpleCompilerTest.java");
-    var compilationResult = compiler.run(null, null, null, options.toArray(new String[0]));
+    var compilationResult = compiler.run(null, null, null, options.toArray(String[]::new));
     if (compilationResult != 0) {
       fail("Compilation Failed");
     }
@@ -69,7 +69,7 @@ public class SimpleCompilerTest {
     options.add("-s");
     options.add("target/out2");
     options.add("src/test/java/com/querydsl/codegen/utils/SimpleCompilerTest.java");
-    var compilationResult = compiler.run(null, null, null, options.toArray(new String[0]));
+    var compilationResult = compiler.run(null, null, null, options.toArray(String[]::new));
     if (compilationResult != 0) {
       fail("Compilation Failed");
     }

@@ -287,7 +287,7 @@ public class GroupByBuilder<K> {
       Supplier<RES> resultFactory, FactoryExpression<V> expression) {
     final FactoryExpression<V> transformation = FactoryExpressionUtils.wrap(expression);
     var args = transformation.getArgs();
-    return new GroupByGenericCollection<>(resultFactory, key, args.toArray(new Expression<?>[0])) {
+    return new GroupByGenericCollection<>(resultFactory, key, args.toArray(Expression[]::new)) {
       @Override
       protected V transform(Group group) {
         // XXX Isn't group.toArray() suitable here?

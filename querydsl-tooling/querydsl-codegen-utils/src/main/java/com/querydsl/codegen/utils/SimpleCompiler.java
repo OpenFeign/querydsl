@@ -104,6 +104,6 @@ public class SimpleCompiler implements JavaCompiler {
     args.add("-classpath");
     args.add(getClasspath());
     args.addAll(Arrays.asList(arguments));
-    return compiler.run(in, out, err, args.toArray(new String[0]));
+    return compiler.run(in, out, err, args.toArray(String[]::new));
   }
 }
