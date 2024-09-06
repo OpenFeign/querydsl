@@ -76,8 +76,7 @@ public enum TypeCategory {
 
   TypeCategory(TypeCategory superType, String... types) {
     this.superType = superType;
-    this.types = new HashSet<>(types.length);
-    this.types.addAll(Arrays.asList(types));
+    this.types = new HashSet<>(Arrays.asList(types));
   }
 
   public TypeCategory getSuperType() {
