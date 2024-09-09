@@ -93,8 +93,7 @@ public class R2DBCMatchingFiltersFactory {
 
   public Collection<Predicate> date(
       LocalDateExpression<LocalDate> expr, LocalDateExpression<LocalDate> other) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(comparable(expr, other));
+    var rv = new HashSet<>(comparable(expr, other));
     rv.add(expr.dayOfMonth().eq(other.dayOfMonth()));
 
     if (!target.equals(Target.DERBY)
@@ -124,16 +123,14 @@ public class R2DBCMatchingFiltersFactory {
       LocalDateExpression<LocalDate> expr,
       LocalDateExpression<LocalDate> other,
       LocalDate knownValue) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(date(expr, other));
+    var rv = new HashSet<>(date(expr, other));
     rv.addAll(date(expr, R2DBCDateConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
   }
 
   public Collection<Predicate> dateTime(
       LocalDateTimeExpression<LocalDateTime> expr, LocalDateTimeExpression<LocalDateTime> other) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(comparable(expr, other));
+    var rv = new HashSet<>(comparable(expr, other));
     rv.add(expr.milliSecond().eq(other.milliSecond()));
     rv.add(expr.second().eq(other.second()));
     rv.add(expr.minute().eq(other.minute()));
@@ -166,8 +163,7 @@ public class R2DBCMatchingFiltersFactory {
       LocalDateTimeExpression<LocalDateTime> expr,
       LocalDateTimeExpression<LocalDateTime> other,
       LocalDateTime knownValue) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(dateTime(expr, other));
+    var rv = new HashSet<>(dateTime(expr, other));
     rv.addAll(dateTime(expr, R2DBCDateTimeConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
   }
@@ -197,8 +193,7 @@ public class R2DBCMatchingFiltersFactory {
 
   public <A extends Number & Comparable<A>> Collection<Predicate> numeric(
       NumberExpression<A> expr, NumberExpression<A> other, A knownValue) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(numeric(expr, other));
+    var rv = new HashSet<>(numeric(expr, other));
     rv.addAll(numeric(expr, NumberConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
   }
@@ -327,16 +322,14 @@ public class R2DBCMatchingFiltersFactory {
 
   public Collection<Predicate> string(
       StringExpression expr, StringExpression other, String knownValue) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(string(expr, other));
+    var rv = new HashSet<Predicate>(string(expr, other));
     rv.addAll(string(expr, StringConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
   }
 
   public Collection<Predicate> time(
       LocalTimeExpression<LocalTime> expr, LocalTimeExpression<LocalTime> other) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(comparable(expr, other));
+    var rv = new HashSet<>(comparable(expr, other));
     rv.add(expr.milliSecond().eq(other.milliSecond()));
     rv.add(expr.second().eq(other.second()));
     rv.add(expr.minute().eq(other.minute()));
@@ -348,8 +341,7 @@ public class R2DBCMatchingFiltersFactory {
       LocalTimeExpression<LocalTime> expr,
       LocalTimeExpression<LocalTime> other,
       LocalTime knownValue) {
-    var rv = new HashSet<Predicate>();
-    rv.addAll(time(expr, other));
+    var rv = new HashSet<>(time(expr, other));
     rv.addAll(time(expr, R2DBCTimeConstant.create(knownValue)));
     return Collections.unmodifiableSet(rv);
   }

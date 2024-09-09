@@ -144,7 +144,7 @@ public class ExtendedBeanSerializer extends BeanSerializer {
         if (toString.length() > 0) {
           toString.append("+ \";\" + ");
         } else {
-          toString.append("\"" + model.getSimpleName() + "#\" + ");
+          toString.append("\"").append(model.getSimpleName()).append("#\" + ");
         }
         toString.append(propName);
       }

@@ -98,7 +98,7 @@ public abstract class ReactiveAbstractGroupByTransformer<K, T>
       }
     }
 
-    this.expressions = projection.toArray(new Expression[projection.size()]);
+    this.expressions = projection.toArray(Expression[]::new);
   }
 
   protected static FactoryExpression<Tuple> withoutGroupExpressions(

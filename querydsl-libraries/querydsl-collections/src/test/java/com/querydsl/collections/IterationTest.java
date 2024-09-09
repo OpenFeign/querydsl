@@ -47,7 +47,7 @@ public class IterationTest {
   @Test
   public void test2() {
     assertThat(
-            CollQueryFactory.<Data>from($(lt), Arrays.<Data>asList(allData.toArray(new Data[0])))
+            CollQueryFactory.<Data>from($(lt), Arrays.<Data>asList(allData.toArray(Data[]::new)))
                 .select($(lt.getData()))
                 .fetch())
         .isEqualTo(expected);
@@ -62,7 +62,7 @@ public class IterationTest {
   @Test
   public void test4() {
     assertThat(
-            CollQueryFactory.<Data>from(lt, Arrays.<Data>asList(allData.toArray(new Data[0])))
+            CollQueryFactory.<Data>from(lt, Arrays.<Data>asList(allData.toArray(Data[]::new)))
                 .select($(lt.getData()))
                 .fetch())
         .isEqualTo(expected);

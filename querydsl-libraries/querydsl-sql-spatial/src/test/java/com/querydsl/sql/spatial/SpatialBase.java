@@ -267,8 +267,8 @@ public class SpatialBase extends AbstractBaseTest {
     var shapes1 = QShapes.shapes;
     var shapes2 = new QShapes("shapes2");
 
-    List<Expression<?>> expressions = new ArrayList<>();
-    expressions.addAll(createExpressions(shapes1.geometry.asPoint(), shapes2.geometry.asPoint()));
+    var expressions =
+        new ArrayList<>(createExpressions(shapes1.geometry.asPoint(), shapes2.geometry.asPoint()));
     expressions.addAll(
         createExpressions(
             shapes1.geometry.asPoint(), ConstantImpl.create((Point) Wkt.fromWkt("Point(2 2)"))));

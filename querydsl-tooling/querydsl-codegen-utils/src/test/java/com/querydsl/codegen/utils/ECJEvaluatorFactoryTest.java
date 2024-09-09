@@ -148,8 +148,8 @@ public class ECJEvaluatorFactoryTest {
         factory.createEvaluator(
             "return " + source + ";",
             projectionType,
-            names.toArray(new String[names.size()]),
-            types.toArray(new Class<?>[types.size()]),
+            names.toArray(String[]::new),
+            types.toArray(Class[]::new),
             constants);
     return evaluator.evaluate(args.toArray());
   }

@@ -186,7 +186,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     // track also methods from external entity types
     for (EntityType entityType : new ArrayList<>(typeFactory.getEntityTypes())) {
       var fullName = entityType.getFullName();
-      if (!context.allTypes.keySet().contains(fullName)) {
+      if (!context.allTypes.containsKey(fullName)) {
         var element = processingEnv.getElementUtils().getTypeElement(fullName);
         if (element != null) {
           elementHandler.handleEntityType(element);

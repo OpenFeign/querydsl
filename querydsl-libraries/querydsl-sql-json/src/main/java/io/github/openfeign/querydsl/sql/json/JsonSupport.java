@@ -41,8 +41,7 @@ public final class JsonSupport implements Extension {
       imports = Collections.singleton(packageName);
     } else {
       var old = imports;
-      imports = new HashSet<>();
-      imports.addAll(old);
+      imports = new HashSet<>(old);
       imports.add(packageName);
     }
     module.bind(CodegenModule.IMPORTS, imports);

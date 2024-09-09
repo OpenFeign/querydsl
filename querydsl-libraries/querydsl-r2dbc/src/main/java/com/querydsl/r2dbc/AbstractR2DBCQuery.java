@@ -259,8 +259,7 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
   }
 
   private T toWildcardObjectArray(Row row, RowMetadata meta) {
-    var metaList = new ArrayList<ColumnMetadata>();
-    meta.getColumnMetadatas().forEach(metaList::add);
+    var metaList = new ArrayList<ColumnMetadata>(meta.getColumnMetadatas());
 
     var args = new Object[metaList.size()];
     for (var i = 0; i < args.length; i++) {

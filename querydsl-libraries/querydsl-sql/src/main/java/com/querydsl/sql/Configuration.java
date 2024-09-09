@@ -195,10 +195,10 @@ public final class Configuration {
           typeName = typeName.substring(0, typeName.length() - 6);
         }
         if (typeName.contains("[")) {
-          typeName = typeName.substring(0, typeName.indexOf("["));
+          typeName = typeName.substring(0, typeName.indexOf('['));
         }
         if (typeName.contains("(")) {
-          typeName = typeName.substring(0, typeName.indexOf("("));
+          typeName = typeName.substring(0, typeName.indexOf('('));
         }
 
         var sqlComponentType = templates.getCodeForTypeName(typeName);

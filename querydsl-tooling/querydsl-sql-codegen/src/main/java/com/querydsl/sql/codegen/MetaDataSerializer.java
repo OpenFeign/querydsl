@@ -266,7 +266,7 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
     for (String javaImport : imports) {
       // true if the character next to the dot is an upper case or if no dot is found (-1+1=0) the
       // first character
-      var isClass = Character.isUpperCase(javaImport.charAt(javaImport.lastIndexOf(".") + 1));
+      var isClass = Character.isUpperCase(javaImport.charAt(javaImport.lastIndexOf('.') + 1));
       if (isClass) {
         classes.add(javaImport);
       } else {

@@ -13,6 +13,7 @@
  */
 package com.querydsl.codegen.utils.model;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -75,10 +76,7 @@ public enum TypeCategory {
 
   TypeCategory(TypeCategory superType, String... types) {
     this.superType = superType;
-    this.types = new HashSet<>(types.length);
-    for (String type : types) {
-      this.types.add(type);
-    }
+    this.types = new HashSet<>(Arrays.asList(types));
   }
 
   public TypeCategory getSuperType() {
