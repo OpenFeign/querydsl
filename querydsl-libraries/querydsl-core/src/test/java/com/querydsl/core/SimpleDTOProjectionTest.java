@@ -1,18 +1,16 @@
 package com.querydsl.core;
 
-import com.querydsl.core.domain.QAnimal;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.SimpleDTOProjection;
-import org.junit.Test;
-
-import java.sql.Date;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.querydsl.core.domain.QAnimal;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.SimpleDTOProjection;
+import java.sql.Date;
+import org.junit.Test;
+
 public class SimpleDTOProjectionTest {
 
-    // DTO class for animal data
     public static class AnimalDTO {
         private boolean alive;
         private double bodyWeight;
@@ -38,26 +36,61 @@ public class SimpleDTOProjectionTest {
         }
 
         // Getters and setters
-        public boolean isAlive() { return alive; }
-        public void setAlive(boolean alive) { this.alive = alive; }
+        public boolean isAlive() {
+            return alive;
+        }
 
-        public double getBodyWeight() { return bodyWeight; }
-        public void setBodyWeight(double bodyWeight) { this.bodyWeight = bodyWeight; }
+        public void setAlive(boolean alive) {
+            this.alive = alive;
+        }
 
-        public Date getDateField() { return dateField; }
-        public void setDateField(Date dateField) { this.dateField = dateField; }
+        public double getBodyWeight() {
+            return bodyWeight;
+        }
 
-        public int getId() { return id; }
-        public void setId(int id) { this.id = id; }
+        public void setBodyWeight(double bodyWeight) {
+            this.bodyWeight = bodyWeight;
+        }
 
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
+        public Date getDateField() {
+            return dateField;
+        }
 
-        public int getToes() { return toes; }
-        public void setToes(int toes) { this.toes = toes; }
+        public void setDateField(Date dateField) {
+            this.dateField = dateField;
+        }
 
-        public int getWeight() { return weight; }
-        public void setWeight(int weight) { this.weight = weight; }
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getToes() {
+            return toes;
+        }
+
+        public void setToes(int toes) {
+            this.toes = toes;
+        }
+
+        public int getWeight() {
+            return weight;
+        }
+
+        public void setWeight(int weight) {
+            this.weight = weight;
+        }
     }
 
     @Test
@@ -67,38 +100,41 @@ public class SimpleDTOProjectionTest {
         // Create a Date object for testing
         Date testDate = new Date(System.currentTimeMillis());
 
-        // 1. Create DTO using Projections.fields()
+        // Create DTO using Projections.fields()
         AnimalDTO dtoFromProjections = Projections.fields(
-                AnimalDTO.class,
-                animal.alive,
-                animal.bodyWeight,
-                animal.dateField,
-                animal.id,
-                animal.name,
-                animal.toes,
-                animal.weight
-        ).newInstance(
-                true,      // alive
-                65.5,      // bodyWeight
-                testDate,  // dateField
-                1,         // id
-                "Lion",    // name
-                4,         // toes
-                150        // weight
-        );
+                        AnimalDTO.class,
+                        animal.alive,
+                        animal.bodyWeight,
+                        animal.dateField,
+                        animal.id,
+                        animal.name,
+                        animal.toes,
+                        animal.weight
+                )
+                .newInstance(
+                        true,      // alive
+                        65.5,      // bodyWeight
+                        testDate,  // dateField
+                        1,         // id
+                        "Lion",    // name
+                        4,         // toes
+                        150        // weight
+                );
 
-        // 2. Create DTO using SimpleDTOProjection.fields()
-        AnimalDTO dtoFromSimpleDTOProjection = SimpleDTOProjection.fields(AnimalDTO.class, animal).newInstance(
-                true,      // alive
-                65.5,      // bodyWeight
-                testDate,  // dateField
-                1,         // id
-                "Lion",    // name
-                4,         // toes
-                150        // weight
-        );
+        // Create DTO using SimpleDTOProjection.fields()
+        AnimalDTO dtoFromSimpleDTOProjection = SimpleDTOProjection
+                .fields(AnimalDTO.class, animal)
+                .newInstance(
+                        true,      // alive
+                        65.5,      // bodyWeight
+                        testDate,  // dateField
+                        1,         // id
+                        "Lion",    // name
+                        4,         // toes
+                        150        // weight
+                );
 
-        // 3. Compare the two DTOs
+        // Compare the two DTOs
         assertNotNull(dtoFromProjections);
         assertNotNull(dtoFromSimpleDTOProjection);
 
