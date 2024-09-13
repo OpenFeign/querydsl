@@ -142,8 +142,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
     var group = results.get(1);
 
     Map<Integer, String> comments = group.getMap(commentId, commentText);
-    assertThat(comments).hasSize(3);
-    assertThat(comments).containsEntry(2, "comment 2");
+    assertThat(comments).hasSize(3).containsEntry(2, "comment 2");
   }
 
   @Test
@@ -181,8 +180,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
         MAP2_RESULTS.transform(groupBy(postId).as(map(commentId, commentText)));
 
     var comments = results.get(1);
-    assertThat(comments).hasSize(3);
-    assertThat(comments).containsEntry(2, "comment 2");
+    assertThat(comments).hasSize(3).containsEntry(2, "comment 2");
   }
 
   @Override
