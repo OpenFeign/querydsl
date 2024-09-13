@@ -120,8 +120,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
 
     var group = results.get(1);
     Map<Integer, String> comments = group.getMap(commentId, commentText);
-    assertThat(comments).hasSize(3);
-    assertThat(comments).containsEntry(2, "comment 2");
+    assertThat(comments).hasSize(3).containsEntry(2, "comment 2");
   }
 
   @Override
@@ -134,8 +133,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
     assertThat(results).hasSize(4);
 
     var comments = results.get(1);
-    assertThat(comments).hasSize(3);
-    assertThat(comments).containsEntry(2, "comment 2");
+    assertThat(comments).hasSize(3).containsEntry(2, "comment 2");
   }
 
   @Test

@@ -1,7 +1,6 @@
 package com.querydsl.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.domain.QAnimal;
 import com.querydsl.core.types.Projections;
@@ -140,18 +139,10 @@ public class SimpleDTOProjectionTest {
                 150 // weight
                 );
 
-    // Compare the two DTOs
-    assertNotNull(dtoFromProjections);
-    assertNotNull(dtoFromSimpleDTOProjection);
-
     // Compare each field value
-    assertEquals(dtoFromProjections.isAlive(), dtoFromSimpleDTOProjection.isAlive());
-    assertEquals(
-        dtoFromProjections.getBodyWeight(), dtoFromSimpleDTOProjection.getBodyWeight(), 0.001);
-    assertEquals(dtoFromProjections.getDateField(), dtoFromSimpleDTOProjection.getDateField());
-    assertEquals(dtoFromProjections.getId(), dtoFromSimpleDTOProjection.getId());
-    assertEquals(dtoFromProjections.getName(), dtoFromSimpleDTOProjection.getName());
-    assertEquals(dtoFromProjections.getToes(), dtoFromSimpleDTOProjection.getToes());
-    assertEquals(dtoFromProjections.getWeight(), dtoFromSimpleDTOProjection.getWeight());
+    assertThat(dtoFromSimpleDTOProjection)
+        .isNotNull()
+        .usingRecursiveComparison()
+        .isEqualTo(dtoFromProjections);
   }
 }

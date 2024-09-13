@@ -218,12 +218,7 @@ public class DefaultQueryMetadataTest {
   public void setParam() {
     metadata.setParam(new Param(String.class, "str"), ConstantImpl.create("X"));
     assertThat(metadata.getParams()).hasSize(1);
-    assertThat(
-            metadata
-                .getParams()
-                .get(new Param(String.class, "str"))
-                .equals(ConstantImpl.create("X")))
-        .isTrue();
+    assertThat(metadata.getParams().get(new Param(String.class, "str"))).isEqualTo(ConstantImpl);
   }
 
   @Test

@@ -13,6 +13,8 @@
  */
 package com.querydsl.core;
 
+import static org.assertj.core.api.Assertions.fail;
+
 import com.querydsl.core.support.QueryBase;
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.Expression;
@@ -33,7 +35,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.junit.Assert;
 
 /**
  * The Class StandardTest.
@@ -222,7 +223,7 @@ public abstract class ReactiveQueryExecution {
       for (String e : errors) {
         buffer.append(e).append("\n");
       }
-      Assert.fail(buffer.toString());
+      fail(buffer.toString());
     } else {
       System.out.println("Success with " + total + " tests");
     }
