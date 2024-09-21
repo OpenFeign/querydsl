@@ -13,8 +13,7 @@
  */
 package com.querydsl.collections;
 
-import com.mysema.commons.lang.CloseableIterator;
-import com.mysema.commons.lang.IteratorAdapter;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.NonUniqueResultException;
@@ -180,7 +179,7 @@ public abstract class AbstractCollQuery<T, Q extends AbstractCollQuery<T, Q>>
   public CloseableIterator<T> iterate() {
     @SuppressWarnings("unchecked") // This is the built type
     var projection = (Expression<T>) queryMixin.getMetadata().getProjection();
-    return new IteratorAdapter<>(fetch().iterator());
+    return CloseableIterator.of(fetch().iterator());
   }
 
   @Override
