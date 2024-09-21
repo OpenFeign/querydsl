@@ -283,6 +283,7 @@ public abstract class AbstractJPATest {
   }
 
   @Test
+  @NoEclipseLink
   public void alias() {
     assertThat(query().from(cat).select(cat.id.as(cat.id)).fetch()).hasSize(6);
   }
