@@ -168,14 +168,13 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
         first = false;
       }
       append(")");
-    } else if (value instanceof Class) {
+    } else if (value instanceof Class<?> class1) {
       append("classOf[");
-      appendType((Class) value);
+      appendType(class1);
       append("]");
     } else if (value instanceof Number || value instanceof Boolean) {
       append(value.toString());
-    } else if (value instanceof Enum) {
-      Enum<?> enumValue = (Enum<?>) value;
+    } else if (value instanceof Enum<?> enumValue) {
       if (classes.contains(enumValue.getClass().getName())
           || packages.contains(enumValue.getClass().getPackage().getName())) {
         append(enumValue.name());

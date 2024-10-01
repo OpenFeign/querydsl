@@ -131,20 +131,13 @@ public class DerbyTemplates extends SQLTemplates {
 
   @Override
   public String serialize(String literal, int jdbcType) {
-    switch (jdbcType) {
-      case Types.BOOLEAN:
-        return "1".equals(literal) ? "true" : "false";
-      case Types.TIMESTAMP:
-      case TIMESTAMP_WITH_TIMEZONE:
-        return "{ts '" + literal + "'}";
-      case Types.DATE:
-        return "{d '" + literal + "'}";
-      case Types.TIME:
-      case TIME_WITH_TIMEZONE:
-        return "{t '" + literal + "'}";
-      default:
-        return super.serialize(literal, jdbcType);
-    }
+    return switch (jdbcType) {
+      case Types.BOOLEAN -> "1".equals(literal) ? "true" : "false";
+      case Types.TIMESTAMP, TIMESTAMP_WITH_TIMEZONE -> "{ts '" + literal + "'}";
+      case Types.DATE -> "{d '" + literal + "'}";
+      case Types.TIME, TIME_WITH_TIMEZONE -> "{t '" + literal + "'}";
+      default -> super.serialize(literal, jdbcType);
+    };
   }
 
   @Override

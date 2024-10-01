@@ -125,7 +125,7 @@ public class DefaultEntitySerializer implements EntitySerializer {
   }
 
   private boolean superTypeHasEntityFields(EntityType model) {
-    Supertype superType = model.getSuperType();
+    var superType = model.getSuperType();
     return null != superType
         && null != superType.getEntityType()
         && superType.getEntityType().hasEntityFields();
@@ -313,9 +313,9 @@ public class DefaultEntitySerializer implements EntitySerializer {
 
   protected void initEntityFields(CodeWriter writer, SerializerConfig config, EntityType model)
       throws IOException {
-    Supertype superType = model.getSuperType();
+    var superType = model.getSuperType();
     if (superType != null) {
-      EntityType entityType = superType.getEntityType();
+      var entityType = superType.getEntityType();
       if (entityType != null && entityType.hasEntityFields()) {
         var superQueryType = typeMappings.getPathType(entityType, model, false);
         writer.line(
@@ -383,34 +383,18 @@ public class DefaultEntitySerializer implements EntitySerializer {
     Class<? extends Path> pathType;
 
     if (model.getProperties().isEmpty()) {
-      switch (category) {
-        case COMPARABLE:
-          pathType = ComparablePath.class;
-          break;
-        case ENUM:
-          pathType = EnumPath.class;
-          break;
-        case DATE:
-          pathType = DatePath.class;
-          break;
-        case DATETIME:
-          pathType = DateTimePath.class;
-          break;
-        case TIME:
-          pathType = TimePath.class;
-          break;
-        case NUMERIC:
-          pathType = NumberPath.class;
-          break;
-        case STRING:
-          pathType = StringPath.class;
-          break;
-        case BOOLEAN:
-          pathType = BooleanPath.class;
-          break;
-        default:
-          pathType = EntityPathBase.class;
-      }
+      pathType =
+          switch (category) {
+            case COMPARABLE -> ComparablePath.class;
+            case ENUM -> EnumPath.class;
+            case DATE -> DatePath.class;
+            case DATETIME -> DateTimePath.class;
+            case TIME -> TimePath.class;
+            case NUMERIC -> NumberPath.class;
+            case STRING -> StringPath.class;
+            case BOOLEAN -> BooleanPath.class;
+            default -> EntityPathBase.class;
+          };
     } else {
       pathType = EntityPathBase.class;
     }
@@ -647,7 +631,7 @@ public class DefaultEntitySerializer implements EntitySerializer {
   }
 
   protected void introSuper(CodeWriter writer, EntityType model) throws IOException {
-    EntityType superType = model.getSuperType().getEntityType();
+    var superType = model.getSuperType().getEntityType();
     var superQueryType = typeMappings.getPathType(superType, model, false);
     if (!superType.hasEntityFields()) {
       writer.publicFinal(
@@ -759,7 +743,7 @@ public class DefaultEntitySerializer implements EntitySerializer {
       String factoryMethod,
       String... args)
       throws IOException {
-    Supertype superType = model.getSuperType();
+    var superType = model.getSuperType();
     // construct value
     var value = new StringBuilder();
     if (field.isInherited() && superType != null) {
@@ -792,7 +776,7 @@ public class DefaultEntitySerializer implements EntitySerializer {
     writer.line("// custom");
     if (field.isInherited()) {
       writer.line("// inherited");
-      Supertype superType = model.getSuperType();
+      var superType = model.getSuperType();
       if (!superType.getEntityType().hasEntityFields()) {
         var value = NEW + writer.getRawName(queryType) + "(_super." + field.getEscapedName() + ")";
         writer.publicFinal(queryType, field.getEscapedName(), value);
