@@ -53,8 +53,8 @@ public class PathImpl<T> extends ExpressionBase<T> implements Path<T> {
   public final boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Path<?>) {
-      return ((Path<?>) o).getMetadata().equals(metadata);
+    } else if (o instanceof Path<?> path) {
+      return path.getMetadata().equals(metadata);
     } else {
       return false;
     }

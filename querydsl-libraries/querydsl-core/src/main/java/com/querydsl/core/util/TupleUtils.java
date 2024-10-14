@@ -10,12 +10,12 @@ public final class TupleUtils {
   public static Tuple toTuple(Object next, Expression<?>[] expressions) {
     // workaround from https://github.com/querydsl/querydsl/issues/3264
     Tuple tuple;
-    if (next instanceof Tuple) {
-      tuple = (Tuple) next;
-    } else if (next instanceof Object[]) {
-      tuple = Projections.tuple(expressions).newInstance((Object[]) next);
+    if (next instanceof Tuple tuple1) {
+      tuple = tuple1;
+    } else if (next instanceof Object[] objects) {
+      tuple = Projections.tuple(expressions).newInstance(objects);
     } else {
-      throw new IllegalArgumentException(String.format("Could not translate %s into tuple", next));
+      throw new IllegalArgumentException("Could not translate %s into tuple".formatted(next));
     }
     return tuple;
   }

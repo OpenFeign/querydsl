@@ -548,8 +548,7 @@ public final class ExpressionUtils {
       if (!like.equals(rv.toString())) {
         return ConstantImpl.create(rv.toString());
       }
-    } else if (expr instanceof Operation<?>) {
-      Operation<?> o = (Operation<?>) expr;
+    } else if (expr instanceof Operation<?> o) {
       if (o.getOperator() == Ops.CONCAT) {
         var lhs = likeToRegex((Expression<String>) o.getArg(0), false);
         var rhs = likeToRegex((Expression<String>) o.getArg(1), false);
@@ -628,8 +627,7 @@ public final class ExpressionUtils {
       if (!rv.toString().equals(str)) {
         return ConstantImpl.create(rv.toString());
       }
-    } else if (expr instanceof Operation<?>) {
-      Operation<?> o = (Operation<?>) expr;
+    } else if (expr instanceof Operation<?> o) {
       if (o.getOperator() == Ops.CONCAT) {
         var lhs = regexToLike((Expression<String>) o.getArg(0));
         var rhs = regexToLike((Expression<String>) o.getArg(1));
@@ -820,8 +818,8 @@ public final class ExpressionUtils {
    * @return converted argument
    */
   public static Expression<?> toExpression(Object o) {
-    if (o instanceof Expression) {
-      return (Expression<?>) o;
+    if (o instanceof Expression<?> expression) {
+      return expression;
     } else {
       return ConstantImpl.create(o);
     }

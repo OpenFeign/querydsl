@@ -38,8 +38,7 @@ public class SchemaAndTable implements Serializable {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof SchemaAndTable) {
-      var st = (SchemaAndTable) o;
+    } else if (o instanceof SchemaAndTable st) {
       return Objects.equals(st.schema, schema) && Objects.equals(st.table, table);
     } else {
       return false;
