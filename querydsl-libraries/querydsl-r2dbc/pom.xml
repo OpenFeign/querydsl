@@ -111,7 +111,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>r2dbc-postgresql</artifactId>
-      <version>1.0.5.RELEASE</version>
+      <version>1.0.6.RELEASE</version>
       <scope>test</scope>
     </dependency>
     <dependency>
