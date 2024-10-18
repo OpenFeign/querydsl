@@ -15,7 +15,6 @@
   <properties>
     <!-- to match spring SDK version -->
     <main.java.version>17</main.java.version>
-
   </properties>
 
   <dependencyManagement>
@@ -71,24 +70,8 @@
     <dependency>
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
-      <version>${hibernate.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.asciidoctor</groupId>
-        <artifactId>asciidoctor-maven-plugin</artifactId>
-      </plugin>
-
-    </plugins>
-  </build>
 
 </project>
