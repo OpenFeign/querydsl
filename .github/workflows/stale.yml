@@ -1,0 +1,20 @@
+name: "Close stale issues"
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Runs once a day (you can adjust the frequency)
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v8
+        with:
+          days-before-stale: 30  # Days of inactivity before marking an issue as stale
+          days-before-close: 7   # Days after being marked stale before closing
+          stale-issue-message: "This issue has been automatically marked as stale due to inactivity. If no further action is taken, it will be closed in 7 days."
+          close-issue-message: "This issue has been automatically closed due to prolonged inactivity."
+          stale-pr-message: "This pull request has been marked as stale due to inactivity."
+          close-pr-message: "This pull request has been closed due to inactivity."
+          exempt-issue-labels: "pinned,keep-open" # Issues with these labels won't be marked as stale
+          stale-issue-label: "stale"  # Label used to mark issues as stale
