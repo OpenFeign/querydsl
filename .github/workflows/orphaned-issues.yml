@@ -1,0 +1,38 @@
+name: "Close orphaned"
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  close_unchecked:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if the issue has the checkbox checked
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const body = context.payload.issue.body;
+            const issue_number = context.payload.issue.number;
+            const issue_owner = context.repo.owner;
+            const issue_repo = context.repo.repo;
+
+            // Check if the checkbox is checked in the issue description
+            const checkboxChecked = body.includes('- [x] I am willing to put in the work and submit a PR to resolve this issue.');
+
+            if (!checkboxChecked) {
+              // If checkbox is not checked, close the issue with a comment
+              github.rest.issues.createComment({
+                owner: issue_owner,
+                repo: issue_repo,
+                issue_number: issue_number,
+                body: "This issue has been automatically closed as there is nobody willing to work on the issue."
+              });
+
+              github.rest.issues.update({
+                owner: issue_owner,
+                repo: issue_repo,
+                issue_number: issue_number,
+                state: "closed"
+              });
+            }
