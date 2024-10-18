@@ -26,7 +26,7 @@ jobs:
                 owner: issue_owner,
                 repo: issue_repo,
                 issue_number: issue_number,
-                body: "This issue has been automatically closed as there is nobody willing to work on the issue."
+                body: "This issue has been automatically closed because the author did not indicate they are willing to put in the effort needed to resolve it."
               });
 
               github.rest.issues.update({
