@@ -18,12 +18,13 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.NumberPath;
+import java.io.Serial;
 
 /** QCommonPersistence is a Querydsl query type for CommonPersistence */
 public class QCommonPersistence extends BeanPath<CommonPersistence>
     implements EntityPath<CommonPersistence> {
 
-  private static final long serialVersionUID = -1494672641;
+  @Serial private static final long serialVersionUID = -1494672641;
 
   public final NumberPath<Long> version = createNumber("version", Long.class);
 

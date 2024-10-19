@@ -17,6 +17,7 @@ import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import java.io.Serial;
 
 /**
  * BooleanConstant provides constants for Boolean.TRUE and Boolean.FALSE
@@ -27,7 +28,7 @@ public final class BooleanConstant extends BooleanExpression implements Constant
 
   public static final BooleanExpression FALSE = new BooleanConstant(Boolean.FALSE);
 
-  private static final long serialVersionUID = -4106376704553234781L;
+  @Serial private static final long serialVersionUID = -4106376704553234781L;
 
   public static final BooleanExpression TRUE = new BooleanConstant(Boolean.TRUE);
 

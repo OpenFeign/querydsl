@@ -21,6 +21,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringExpression;
+import java.io.Serial;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class StringConstant extends StringExpression implements Constant<String> {
 
-  private static final long serialVersionUID = 5182804405789674556L;
+  @Serial private static final long serialVersionUID = 5182804405789674556L;
 
   public static StringExpression create(String str) {
     return new StringConstant(str);

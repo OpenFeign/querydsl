@@ -9,12 +9,13 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.PathInits;
 import jakarta.annotation.Generated;
+import java.io.Serial;
 
 /** QCompanyGroup is a Querydsl query type for CompanyGroup */
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QCompanyGroupType extends EntityPathBase<CompanyGroup> {
 
-  private static final long serialVersionUID = 144687575;
+  @Serial private static final long serialVersionUID = 144687575;
 
   private static final PathInits INITS = PathInits.DIRECT;
 

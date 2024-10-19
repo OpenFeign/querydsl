@@ -20,13 +20,14 @@ import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.SimplePath;
+import java.io.Serial;
 import java.io.Serializable;
 
 /** QCommonIdentifiable is a Querydsl query type for CommonIdentifiable */
 public class QCommonIdentifiable
     extends EntityPathBase<CommonIdentifiable<? extends Serializable>> {
 
-  private static final long serialVersionUID = 1818647030;
+  @Serial private static final long serialVersionUID = 1818647030;
 
   public static final QCommonIdentifiable commonIdentifiable =
       new QCommonIdentifiable("commonIdentifiable");

@@ -7,12 +7,13 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.StringPath;
 import jakarta.annotation.Generated;
+import java.io.Serial;
 
 /** QCompanyPK is a Querydsl query type for CompanyPK */
 @Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QCompanyPK extends BeanPath<CompanyPK> {
 
-  private static final long serialVersionUID = 124567939;
+  @Serial private static final long serialVersionUID = 124567939;
 
   public static final QCompanyPK companyPK = new QCompanyPK("companyPK");
 

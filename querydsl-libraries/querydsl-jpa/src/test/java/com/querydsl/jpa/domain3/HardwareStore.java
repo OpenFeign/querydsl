@@ -13,9 +13,11 @@
  */
 package com.querydsl.jpa.domain3;
 
+import java.io.Serial;
+
 public class HardwareStore extends Store {
 
-  private static final long serialVersionUID = 2725944536560445206L;
+  @Serial private static final long serialVersionUID = 2725944536560445206L;
 
   private String storeCode;
 

@@ -20,12 +20,13 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.NumberPath;
 import jakarta.annotation.Generated;
+import java.io.Serial;
 
 /** QMyEmbeddable is a Querydsl query type for MyEmbeddable */
 @Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QMyEmbeddable extends BeanPath<MyEmbeddable> {
 
-  private static final long serialVersionUID = -968265626;
+  @Serial private static final long serialVersionUID = -968265626;
 
   public static final QMyEmbeddable myEmbeddable = new QMyEmbeddable("myEmbeddable");
 

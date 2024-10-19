@@ -13,11 +13,12 @@
  */
 package com.querydsl.jpa.domain3;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 public class Store implements Serializable {
 
-  private static final long serialVersionUID = 7221730732392000227L;
+  @Serial private static final long serialVersionUID = 7221730732392000227L;
 
   private String code;
 

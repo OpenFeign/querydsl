@@ -22,6 +22,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
@@ -29,7 +30,7 @@ import java.io.Serializable;
 @Access(AccessType.PROPERTY)
 public class BookVersion implements Serializable {
 
-  private static final long serialVersionUID = -1697470794339057030L;
+  @Serial private static final long serialVersionUID = -1697470794339057030L;
 
   private BookID bookID;
 

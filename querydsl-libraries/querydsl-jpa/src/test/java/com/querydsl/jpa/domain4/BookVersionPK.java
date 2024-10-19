@@ -14,12 +14,13 @@
 package com.querydsl.jpa.domain4;
 
 import jakarta.persistence.Embeddable;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Embeddable
 public class BookVersionPK implements Serializable {
 
-  private static final long serialVersionUID = 8483495681236266676L;
+  @Serial private static final long serialVersionUID = 8483495681236266676L;
 
   private Long bookID;
 

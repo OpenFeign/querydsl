@@ -18,6 +18,7 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
+import java.io.Serial;
 
 /**
  * SimpleConstant represents general constant expressions
@@ -27,7 +28,7 @@ import com.querydsl.core.types.dsl.SimpleExpression;
  */
 public final class SimpleConstant<D> extends SimpleExpression<D> implements Constant<D> {
 
-  private static final long serialVersionUID = -3211963259241932307L;
+  @Serial private static final long serialVersionUID = -3211963259241932307L;
 
   /**
    * Factory method for constants

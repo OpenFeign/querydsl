@@ -18,6 +18,7 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
+import java.io.Serial;
 
 /**
  * @author tiwe
@@ -25,7 +26,7 @@ import com.querydsl.core.types.dsl.NumberExpression;
 public final class DateTimeConstant<D extends java.util.Date> extends DateTimeExpression<D>
     implements Constant<D> {
 
-  private static final long serialVersionUID = 4578416585568476532L;
+  @Serial private static final long serialVersionUID = 4578416585568476532L;
 
   public static <D extends java.util.Date> DateTimeExpression<D> create(D date) {
     return new DateTimeConstant<>(date);

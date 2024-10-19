@@ -25,12 +25,13 @@ import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.core.types.dsl.TimePath;
+import java.io.Serial;
 import java.util.Date;
 
 /** QAnimal is a Querydsl query type for Animal */
 public class QTAnimal extends EntityPathBase<Animal> {
 
-  private static final long serialVersionUID = 781156670;
+  @Serial private static final long serialVersionUID = 781156670;
 
   public static final QTAnimal animal = new QTAnimal("animal");
 

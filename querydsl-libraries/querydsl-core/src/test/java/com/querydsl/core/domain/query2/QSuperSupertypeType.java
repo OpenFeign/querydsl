@@ -20,11 +20,12 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
+import java.io.Serial;
 
 /** QSuperSupertype is a Querydsl query type for SuperSupertype */
 public class QSuperSupertypeType extends EntityPathBase<SuperSupertype> {
 
-  private static final long serialVersionUID = 518341775;
+  @Serial private static final long serialVersionUID = 518341775;
 
   public static final QSuperSupertypeType superSupertype =
       new QSuperSupertypeType("superSupertype");

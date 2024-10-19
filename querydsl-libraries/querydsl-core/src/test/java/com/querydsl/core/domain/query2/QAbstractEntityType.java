@@ -20,12 +20,13 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
+import java.io.Serial;
 
 /** QAnimal is a Querydsl query type for Animal */
 @SuppressWarnings("unchecked")
 public class QAbstractEntityType extends EntityPathBase<AbstractEntity> {
 
-  private static final long serialVersionUID = 781156670;
+  @Serial private static final long serialVersionUID = 781156670;
 
   public static final QAbstractEntityType animal = new QAbstractEntityType("abstractEntity");
 
