@@ -18,6 +18,7 @@
     <module>querydsl-codegen-utils</module>
     <module>querydsl-jpa-codegen</module>
     <module>querydsl-kotlin-codegen</module>
+    <module>querydsl-ksp-codegen</module>
     <module>querydsl-maven-plugin</module>
     <module>querydsl-sql-codegen</module>
   </modules>
