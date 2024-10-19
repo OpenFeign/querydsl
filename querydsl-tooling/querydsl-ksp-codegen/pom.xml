@@ -13,10 +13,6 @@
   <artifactId>querydsl-ksp-codegen</artifactId>
   <name>Querydsl - Kotlin KSP codegen support</name>
 
-  <properties>
-    <surefire.useManifestOnlyJar>false</surefire.useManifestOnlyJar>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
