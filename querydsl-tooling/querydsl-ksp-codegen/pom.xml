@@ -41,7 +41,7 @@
     <dependency>
       <groupId>com.google.devtools.ksp</groupId>
       <artifactId>symbol-processing-api</artifactId>
-      <version>2.0.0-1.0.22</version>
+      <version>${ksp.version}</version>
     </dependency>
 
     <!-- test -->
