@@ -31,7 +31,7 @@
     <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>kotlinpoet-jvm</artifactId>
-      <version>1.18.1</version>
+      <version>${kotlinpoet.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>

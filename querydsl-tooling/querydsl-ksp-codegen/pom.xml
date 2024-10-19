@@ -27,12 +27,12 @@
     <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>kotlinpoet</artifactId>
-      <version>1.18.1</version>
+      <version>${kotlinpoet.version}</version>
     </dependency>
     <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>kotlinpoet-ksp</artifactId>
-      <version>1.18.1</version>
+      <version>${kotlinpoet.version}</version>
     </dependency>
     <dependency>
       <groupId>jakarta.persistence</groupId>
