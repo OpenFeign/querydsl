@@ -6,7 +6,7 @@ import com.querydsl.ksp.codegen.QueryModelRenderer
 import com.querydsl.ksp.codegen.SimpleType
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asClassName
-import org.junit.Assert
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import javax.script.ScriptEngineManager
 
@@ -153,14 +153,14 @@ private fun String.assertLines(expected: String) {
         if (expectedLine != actualLine) {
             println(expected)
             println(this)
-            Assert.assertEquals(expectedLine, actualLine)
+            assertThat(actualLine).isEqualTo(expectedLine)
         }
     }
-    Assert.assertEquals(expectedLines.size, actualLines.size)
+    assertThat(actualLines.size).isEqualTo(expectedLines.size)
 }
 
 private fun String.assertContains(other: String) {
-    Assert.assertTrue("Did not contain $other", this.contains(other))
+    assertThat(this).contains(other)
 }
 
 private fun String.assertContainAll(other: String) {
@@ -171,7 +171,8 @@ private fun String.assertContainAll(other: String) {
 }
 
 private fun String.assertContainLines(other: String) {
-    Assert.assertTrue("Did not contain $other", this.split("\n").map { it.trim() }.joinToString(" ").contains(other))
+    val joinedLines = this.split("\n").map { it.trim() }.joinToString(" ")
+    assertThat(joinedLines).contains(other)
 }
 
 private fun String.assertCompiles() {
