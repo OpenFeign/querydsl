@@ -25,6 +25,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -49,7 +50,7 @@ import java.io.Serializable;
       query = "SELECT p FROM Person p WHERE p.personReference = :personReference")
 })
 public class Person implements Serializable {
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   @Id
   @Basic(optional = false)

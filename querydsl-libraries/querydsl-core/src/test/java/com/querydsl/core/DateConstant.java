@@ -18,6 +18,7 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.DateExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
+import java.io.Serial;
 import java.util.Calendar;
 
 /**
@@ -26,7 +27,7 @@ import java.util.Calendar;
 public final class DateConstant<D extends java.util.Date> extends DateExpression<D>
     implements Constant<D> {
 
-  private static final long serialVersionUID = -5745611667058255826L;
+  @Serial private static final long serialVersionUID = -5745611667058255826L;
 
   public static <D extends java.util.Date> DateExpression<D> create(D date) {
     return new DateConstant<>(date);

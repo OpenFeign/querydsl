@@ -27,12 +27,13 @@ import com.querydsl.core.types.dsl.PathInits;
 import com.querydsl.core.types.dsl.SetPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.core.types.dsl.TimePath;
+import java.io.Serial;
 import java.sql.Date;
 
 /** QCat is a Querydsl query type for Cat */
 public class QCat extends EntityPathBase<Cat> {
 
-  private static final long serialVersionUID = -528210988;
+  @Serial private static final long serialVersionUID = -528210988;
 
   private static final PathInits INITS = PathInits.DIRECT;
 

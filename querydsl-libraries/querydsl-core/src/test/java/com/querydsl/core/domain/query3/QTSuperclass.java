@@ -10,12 +10,13 @@ import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.core.types.dsl.PathInits;
 import jakarta.annotation.Generated;
+import java.io.Serial;
 
 /** QSuperclass is a Querydsl query type for Superclass */
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QTSuperclass extends EntityPathBase<Superclass> {
 
-  private static final long serialVersionUID = -1300377102;
+  @Serial private static final long serialVersionUID = -1300377102;
 
   public static final QTSuperclass superclass = new QTSuperclass("superclass");
 

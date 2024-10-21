@@ -17,13 +17,14 @@ import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Embeddable;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Embeddable
 @Access(AccessType.PROPERTY)
 public class BookMark implements Serializable {
 
-  private static final long serialVersionUID = 8027009758015834551L;
+  @Serial private static final long serialVersionUID = 8027009758015834551L;
 
   private Long page;
 

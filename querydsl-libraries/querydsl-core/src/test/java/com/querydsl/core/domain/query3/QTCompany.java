@@ -7,12 +7,13 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.PathInits;
 import jakarta.annotation.Generated;
+import java.io.Serial;
 
 /** QCompany is a Querydsl query type for Company */
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QTCompany extends EntityPathBase<Company> {
 
-  private static final long serialVersionUID = 616888712;
+  @Serial private static final long serialVersionUID = 616888712;
 
   private static final PathInits INITS = PathInits.DIRECT;
 

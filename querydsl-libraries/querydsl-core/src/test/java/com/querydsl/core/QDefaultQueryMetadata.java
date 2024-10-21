@@ -29,11 +29,12 @@ import com.querydsl.core.types.dsl.MapPath;
 import com.querydsl.core.types.dsl.PathInits;
 import com.querydsl.core.types.dsl.SetPath;
 import com.querydsl.core.types.dsl.SimplePath;
+import java.io.Serial;
 
 /** QDefaultQueryMetadata is a Querydsl query type for DefaultQueryMetadata */
 public class QDefaultQueryMetadata extends EntityPathBase<DefaultQueryMetadata> {
 
-  private static final long serialVersionUID = 2000363531;
+  @Serial private static final long serialVersionUID = 2000363531;
 
   public static final QDefaultQueryMetadata defaultQueryMetadata =
       new QDefaultQueryMetadata("defaultQueryMetadata");

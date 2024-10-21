@@ -20,6 +20,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
@@ -27,7 +28,7 @@ import java.io.Serializable;
 @Access(AccessType.PROPERTY)
 public class BookID implements Serializable {
 
-  private static final long serialVersionUID = -3205025118656391776L;
+  @Serial private static final long serialVersionUID = -3205025118656391776L;
 
   private Long identity;
 

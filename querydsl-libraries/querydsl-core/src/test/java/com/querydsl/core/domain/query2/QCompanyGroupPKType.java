@@ -9,12 +9,13 @@ import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import jakarta.annotation.Generated;
+import java.io.Serial;
 
 /** QCompanyGroupPK is a Querydsl query type for CompanyGroupPK */
 @Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QCompanyGroupPKType extends BeanPath<CompanyGroupPK> {
 
-  private static final long serialVersionUID = 1605808658;
+  @Serial private static final long serialVersionUID = 1605808658;
 
   public static final QCompanyGroupPKType companyGroupPK =
       new QCompanyGroupPKType("companyGroupPK");

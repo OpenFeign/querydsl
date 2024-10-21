@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ import java.util.Set;
 @Table(name = "author_")
 public class Author implements Serializable {
 
-  private static final long serialVersionUID = -1893968697250846661L;
+  @Serial private static final long serialVersionUID = -1893968697250846661L;
 
   @Id @GeneratedValue private Long id;
 

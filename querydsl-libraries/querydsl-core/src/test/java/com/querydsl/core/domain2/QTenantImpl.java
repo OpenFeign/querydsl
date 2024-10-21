@@ -6,12 +6,13 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import jakarta.annotation.Generated;
+import java.io.Serial;
 
 /** QTenantImpl is a Querydsl query type for TenantImpl */
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QTenantImpl extends EntityPathBase<TenantImpl> {
 
-  private static final long serialVersionUID = -1856470561;
+  @Serial private static final long serialVersionUID = -1856470561;
 
   public static final QTenantImpl tenantImpl = new QTenantImpl("tenantImpl");
 

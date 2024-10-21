@@ -9,12 +9,13 @@ import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.core.types.dsl.StringPath;
 import jakarta.annotation.Generated;
+import java.io.Serial;
 
 /** QIdNamePair is a Querydsl query type for IdNamePair */
 @Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QIdNamePairType extends BeanPath<IdNamePair<?>> {
 
-  private static final long serialVersionUID = -1491444395;
+  @Serial private static final long serialVersionUID = -1491444395;
 
   public static final QIdNamePairType idNamePair = new QIdNamePairType("idNamePair");
 

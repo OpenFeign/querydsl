@@ -8,12 +8,13 @@ import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.PathInits;
 import jakarta.annotation.Generated;
+import java.io.Serial;
 
 /** QAImpl is a Querydsl query type for AImpl */
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QAImpl extends EntityPathBase<AImpl> {
 
-  private static final long serialVersionUID = -261443316;
+  @Serial private static final long serialVersionUID = -261443316;
 
   private static final PathInits INITS = PathInits.DIRECT;
 

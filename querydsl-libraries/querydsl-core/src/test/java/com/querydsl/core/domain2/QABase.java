@@ -7,12 +7,13 @@ import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.PathInits;
 import jakarta.annotation.Generated;
+import java.io.Serial;
 
 /** QABase is a Querydsl query type for ABase */
 @Generated("com.querydsl.codegen.SupertypeSerializer")
 public class QABase extends EntityPathBase<ABase> {
 
-  private static final long serialVersionUID = -261663299;
+  @Serial private static final long serialVersionUID = -261663299;
 
   private static final PathInits INITS = PathInits.DIRECT;
 

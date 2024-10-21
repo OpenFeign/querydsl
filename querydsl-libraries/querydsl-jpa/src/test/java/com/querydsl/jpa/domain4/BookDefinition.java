@@ -20,6 +20,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OrderColumn;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -27,7 +28,7 @@ import java.util.List;
 @Access(AccessType.PROPERTY)
 public class BookDefinition implements Serializable {
 
-  private static final long serialVersionUID = 3570098308959717614L;
+  @Serial private static final long serialVersionUID = 3570098308959717614L;
 
   private String name;
 

@@ -1,8 +1,10 @@
 package com.querydsl.apt.domain.custom;
 
+import java.io.Serial;
+
 public class CustomNumber extends Number implements Comparable<CustomNumber> {
 
-  private static final long serialVersionUID = 7054589019600966858L;
+  @Serial private static final long serialVersionUID = 7054589019600966858L;
 
   @Override
   public int intValue() {

@@ -20,6 +20,7 @@ import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.util.MathUtils;
+import java.io.Serial;
 
 /**
  * NumberConstant represents numeric constants
@@ -30,7 +31,7 @@ import com.querydsl.core.util.MathUtils;
 public final class NumberConstant<D extends Number & Comparable<?>> extends NumberExpression<D>
     implements Constant<D> {
 
-  private static final long serialVersionUID = 2958824808974260439L;
+  @Serial private static final long serialVersionUID = 2958824808974260439L;
 
   /**
    * Factory method

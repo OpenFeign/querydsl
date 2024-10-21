@@ -6,13 +6,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "book_")
 public class Book implements Serializable {
 
-  private static final long serialVersionUID = -9029792723035681319L;
+  @Serial private static final long serialVersionUID = -9029792723035681319L;
 
   @Id @GeneratedValue private Long id;
 
