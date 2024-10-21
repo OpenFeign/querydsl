@@ -119,7 +119,7 @@
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.46.1.3</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
-    <firebird.version>5.0.5.java11</firebird.version>
+    <firebird.version>5.0.6.java11</firebird.version>
     <mongodb.version>3.12.14</mongodb.version>
 
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
