@@ -19,6 +19,7 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Set;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 public class SetPath<E, Q extends SimpleExpression<? super E>>
     extends CollectionPathBase<Set<E>, E, Q> {
 
-  private static final long serialVersionUID = 4145848445507037373L;
+  @Serial private static final long serialVersionUID = 4145848445507037373L;
 
   private final Class<E> elementType;
 

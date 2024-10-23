@@ -19,6 +19,7 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
+import java.io.Serial;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class BooleanExpression extends LiteralExpression<Boolean> implements Predicate {
 
-  private static final long serialVersionUID = 3797956062512074164L;
+  @Serial private static final long serialVersionUID = 3797956062512074164L;
 
   @Nullable private transient volatile BooleanExpression eqTrue, eqFalse;
 

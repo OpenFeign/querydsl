@@ -253,7 +253,7 @@ public class EntityType extends TypeAdapter implements Comparable<EntityType> {
   }
 
   public void include(Supertype supertype) {
-    EntityType entityType = supertype.getEntityType();
+    var entityType = supertype.getEntityType();
     for (Delegate delegate : entityType.getDelegates()) {
       addDelegate(delegate);
     }

@@ -17,6 +17,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.Predicate;
+import java.io.Serial;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ import java.util.Set;
  */
 public final class EmptyMetadata implements QueryMetadata {
 
-  private static final long serialVersionUID = 134750105981272499L;
+  @Serial private static final long serialVersionUID = 134750105981272499L;
 
   public static final QueryMetadata DEFAULT = new EmptyMetadata();
 

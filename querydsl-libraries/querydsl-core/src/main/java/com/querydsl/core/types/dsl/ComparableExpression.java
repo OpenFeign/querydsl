@@ -20,6 +20,7 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.SubQueryExpression;
+import java.io.Serial;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ComparableExpression<T extends Comparable>
     extends ComparableExpressionBase<T> {
 
-  private static final long serialVersionUID = 5761359576767404270L;
+  @Serial private static final long serialVersionUID = 5761359576767404270L;
 
   public ComparableExpression(Expression<T> mixin) {
     super(mixin);

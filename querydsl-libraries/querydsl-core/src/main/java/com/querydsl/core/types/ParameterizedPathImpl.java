@@ -13,6 +13,8 @@
  */
 package com.querydsl.core.types;
 
+import java.io.Serial;
+
 /**
  * {@code ParameterizedPathImpl} represents {@link Path} instances with a parameterized generic type
  *
@@ -20,7 +22,7 @@ package com.querydsl.core.types;
  */
 public class ParameterizedPathImpl<T> extends PathImpl<T> implements ParameterizedExpression<T> {
 
-  private static final long serialVersionUID = -498707460985111265L;
+  @Serial private static final long serialVersionUID = -498707460985111265L;
 
   private final Class<?>[] parameterTypes;
 

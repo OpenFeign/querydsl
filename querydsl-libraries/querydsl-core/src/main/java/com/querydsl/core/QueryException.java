@@ -13,6 +13,8 @@
  */
 package com.querydsl.core;
 
+import java.io.Serial;
+
 /**
  * {@code QueryException} is thrown for exceptional query construction issues
  *
@@ -20,7 +22,7 @@ package com.querydsl.core;
  */
 public class QueryException extends RuntimeException {
 
-  private static final long serialVersionUID = 2345665389612058703L;
+  @Serial private static final long serialVersionUID = 2345665389612058703L;
 
   public QueryException(String msg) {
     super(msg);

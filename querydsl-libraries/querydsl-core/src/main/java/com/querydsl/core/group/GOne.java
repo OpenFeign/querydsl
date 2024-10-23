@@ -14,6 +14,7 @@
 package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
+import java.io.Serial;
 
 /**
  * GOne
@@ -22,7 +23,7 @@ import com.querydsl.core.types.Expression;
  */
 public class GOne<T> extends AbstractGroupExpression<T, T> {
 
-  private static final long serialVersionUID = 3518868612387641383L;
+  @Serial private static final long serialVersionUID = 3518868612387641383L;
 
   @SuppressWarnings("unchecked")
   public GOne(Expression<T> expr) {

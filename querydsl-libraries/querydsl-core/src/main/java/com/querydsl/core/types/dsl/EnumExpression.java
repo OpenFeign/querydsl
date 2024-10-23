@@ -18,6 +18,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
+import java.io.Serial;
 
 /**
  * {@code EnumExpression} represents Enum typed expressions
@@ -27,7 +28,7 @@ import com.querydsl.core.types.Path;
  */
 public abstract class EnumExpression<T extends Enum<T>> extends LiteralExpression<T> {
 
-  private static final long serialVersionUID = 8819222316513862829L;
+  @Serial private static final long serialVersionUID = 8819222316513862829L;
 
   private transient volatile NumberExpression<Integer> ordinal;
 

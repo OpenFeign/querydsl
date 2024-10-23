@@ -18,6 +18,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
+import java.io.Serial;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class StringExpression extends LiteralExpression<String> {
 
-  private static final long serialVersionUID = 1536955079961023361L;
+  @Serial private static final long serialVersionUID = 1536955079961023361L;
 
   @Nullable private transient volatile NumberExpression<Integer> length;
 

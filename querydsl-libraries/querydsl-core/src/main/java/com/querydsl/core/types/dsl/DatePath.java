@@ -19,6 +19,7 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 
 /**
@@ -30,7 +31,7 @@ import java.lang.reflect.AnnotatedElement;
 @SuppressWarnings({"unchecked"})
 public class DatePath<T extends Comparable> extends DateExpression<T> implements Path<T> {
 
-  private static final long serialVersionUID = -6030609920388740246L;
+  @Serial private static final long serialVersionUID = -6030609920388740246L;
 
   private final PathImpl<T> pathMixin;
 

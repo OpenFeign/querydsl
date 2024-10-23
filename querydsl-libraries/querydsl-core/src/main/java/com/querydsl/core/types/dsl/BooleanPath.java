@@ -19,6 +19,7 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 
 /**
@@ -29,7 +30,7 @@ import java.lang.reflect.AnnotatedElement;
  */
 public class BooleanPath extends BooleanExpression implements Path<Boolean> {
 
-  private static final long serialVersionUID = 6590516706769430565L;
+  @Serial private static final long serialVersionUID = 6590516706769430565L;
 
   private final PathImpl<Boolean> pathMixin;
 

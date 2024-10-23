@@ -13,6 +13,7 @@
  */
 package com.querydsl.core.types;
 
+import java.io.Serial;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -23,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class ExpressionBase<T> implements Expression<T> {
 
-  private static final long serialVersionUID = -8862014178653364345L;
+  @Serial private static final long serialVersionUID = -8862014178653364345L;
 
   private final Class<? extends T> type;
 

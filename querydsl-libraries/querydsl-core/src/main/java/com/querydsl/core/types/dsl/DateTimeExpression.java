@@ -15,6 +15,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
+import java.io.Serial;
 import java.util.Date;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +34,7 @@ public abstract class DateTimeExpression<T extends Comparable> extends TemporalE
     private static final DateTimeExpression<Date> CURRENT_TIMESTAMP = currentTimestamp(Date.class);
   }
 
-  private static final long serialVersionUID = -6879277113694148047L;
+  @Serial private static final long serialVersionUID = -6879277113694148047L;
 
   /**
    * Create an expression representing the current date as a DateTimeExpression instance
