@@ -17,6 +17,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
+import java.io.Serial;
 
 /**
  * {@code DslExpression} is the base class for DSL expressions, but {@link SimpleExpression} is the
@@ -27,7 +28,7 @@ import com.querydsl.core.types.Path;
  */
 public abstract class DslExpression<T> implements Expression<T> {
 
-  private static final long serialVersionUID = -3383063447710753290L;
+  @Serial private static final long serialVersionUID = -3383063447710753290L;
 
   protected final Expression<T> mixin;
 

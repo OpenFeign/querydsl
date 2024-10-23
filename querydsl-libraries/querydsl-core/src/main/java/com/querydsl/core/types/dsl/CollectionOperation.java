@@ -18,6 +18,7 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.OperationImpl;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class CollectionOperation<E> extends CollectionExpressionBase<Collection<E>, E> {
 
-  private static final long serialVersionUID = 3154315192589335574L;
+  @Serial private static final long serialVersionUID = 3154315192589335574L;
 
   private final Class<E> elementType;
 

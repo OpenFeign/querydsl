@@ -14,6 +14,7 @@
 package com.querydsl.core.types;
 
 import com.querydsl.core.annotations.Immutable;
+import java.io.Serial;
 import java.util.UUID;
 
 /**
@@ -25,7 +26,7 @@ import java.util.UUID;
 @Immutable
 public class ParamExpressionImpl<T> extends ExpressionBase<T> implements ParamExpression<T> {
 
-  private static final long serialVersionUID = -6872502615009012503L;
+  @Serial private static final long serialVersionUID = -6872502615009012503L;
 
   private final String name;
 

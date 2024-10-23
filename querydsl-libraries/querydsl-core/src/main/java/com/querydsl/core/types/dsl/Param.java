@@ -16,6 +16,7 @@ package com.querydsl.core.types.dsl;
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamExpressionImpl;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 
 /**
  * {@code Param} defines a parameter in a query with an optional name
@@ -25,7 +26,7 @@ import com.querydsl.core.types.Visitor;
  */
 public class Param<T> extends SimpleExpression<T> implements ParamExpression<T> {
 
-  private static final long serialVersionUID = -6872502615009012503L;
+  @Serial private static final long serialVersionUID = -6872502615009012503L;
 
   private final ParamExpression<T> paramMixin;
 

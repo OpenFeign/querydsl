@@ -19,6 +19,7 @@ import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.OperationImpl;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,7 +32,7 @@ import java.util.List;
 public class DateTimeOperation<T extends Comparable<?>> extends DateTimeExpression<T>
     implements Operation<T> {
 
-  private static final long serialVersionUID = 6523293814317168556L;
+  @Serial private static final long serialVersionUID = 6523293814317168556L;
 
   private final OperationImpl<T> opMixin;
 

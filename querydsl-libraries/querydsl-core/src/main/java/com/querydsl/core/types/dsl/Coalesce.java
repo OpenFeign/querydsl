@@ -21,6 +21,7 @@ import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class Coalesce<T extends Comparable> extends MutableExpressionBase<T> {
 
-  private static final long serialVersionUID = 445439522266250417L;
+  @Serial private static final long serialVersionUID = 445439522266250417L;
 
   private final List<Expression<? extends T>> exprs = new ArrayList<>();
 

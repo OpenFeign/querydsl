@@ -16,6 +16,7 @@ package com.querydsl.core;
 import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -48,7 +49,7 @@ public class JoinFlag implements Serializable {
     END
   }
 
-  private static final long serialVersionUID = -688265393547206465L;
+  @Serial private static final long serialVersionUID = -688265393547206465L;
 
   private final Expression<?> flag;
 

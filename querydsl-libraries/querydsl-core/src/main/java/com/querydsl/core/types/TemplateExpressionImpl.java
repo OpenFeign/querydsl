@@ -15,6 +15,7 @@ package com.querydsl.core.types;
 
 import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.List;
 import org.jetbrains.annotations.Unmodifiable;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.Unmodifiable;
 @Immutable
 public class TemplateExpressionImpl<T> extends ExpressionBase<T> implements TemplateExpression<T> {
 
-  private static final long serialVersionUID = 6951623726800809083L;
+  @Serial private static final long serialVersionUID = 6951623726800809083L;
 
   @Unmodifiable private final List<?> args;
 

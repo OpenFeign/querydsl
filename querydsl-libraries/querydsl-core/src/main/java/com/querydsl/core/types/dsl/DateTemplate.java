@@ -18,6 +18,7 @@ import com.querydsl.core.types.Template;
 import com.querydsl.core.types.TemplateExpression;
 import com.querydsl.core.types.TemplateExpressionImpl;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ import java.util.List;
 public class DateTemplate<T extends Comparable<?>> extends DateExpression<T>
     implements TemplateExpression<T> {
 
-  private static final long serialVersionUID = 4975559746071238026L;
+  @Serial private static final long serialVersionUID = 4975559746071238026L;
 
   private final TemplateExpressionImpl<T> templateMixin;
 

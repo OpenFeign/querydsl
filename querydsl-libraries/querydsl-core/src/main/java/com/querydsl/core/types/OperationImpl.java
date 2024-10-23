@@ -16,6 +16,7 @@ package com.querydsl.core.types;
 import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.PrimitiveUtils;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.List;
 import org.jetbrains.annotations.Unmodifiable;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Unmodifiable;
 @Immutable
 public class OperationImpl<T> extends ExpressionBase<T> implements Operation<T> {
 
-  private static final long serialVersionUID = 4796432056083507588L;
+  @Serial private static final long serialVersionUID = 4796432056083507588L;
 
   @Unmodifiable private final List<Expression<?>> args;
 

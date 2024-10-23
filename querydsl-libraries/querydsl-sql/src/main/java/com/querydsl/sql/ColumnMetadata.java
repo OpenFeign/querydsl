@@ -15,13 +15,14 @@ package com.querydsl.sql;
 
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 /** Provides metadata like the column name, JDBC type and constraints */
 public final class ColumnMetadata implements Serializable {
 
-  private static final long serialVersionUID = -5678865742525938470L;
+  @Serial private static final long serialVersionUID = -5678865742525938470L;
 
   /**
    * Returns this path's column metadata if present. Otherwise returns default metadata where the

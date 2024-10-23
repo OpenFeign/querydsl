@@ -13,6 +13,8 @@
  */
 package com.querydsl.core.group;
 
+import java.io.Serial;
+
 /**
  * {@code MixinGroupExpression} provides nesting support for {@link GroupExpression} instances
  *
@@ -22,7 +24,7 @@ package com.querydsl.core.group;
  */
 public class MixinGroupExpression<E, F, R> extends AbstractGroupExpression<E, R> {
 
-  private static final long serialVersionUID = -5419707469727395643L;
+  @Serial private static final long serialVersionUID = -5419707469727395643L;
 
   private class GroupCollectorImpl implements GroupCollector<E, R> {
 

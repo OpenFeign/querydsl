@@ -22,6 +22,7 @@ import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.Expressions;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ConstantHidingExpression<T> extends FactoryExpressionBase<T> {
 
-  private static final long serialVersionUID = -7834053123363933721L;
+  @Serial private static final long serialVersionUID = -7834053123363933721L;
 
   private final FactoryExpression<T> expr;
 

@@ -24,6 +24,7 @@ import com.querydsl.core.types.ProjectionRole;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 @Immutable
 public final class PrimaryKey<E> implements Serializable, ProjectionRole<Tuple> {
 
-  private static final long serialVersionUID = -6913344535043394649L;
+  @Serial private static final long serialVersionUID = -6913344535043394649L;
 
   private final RelationalPath<?> entity;
 
