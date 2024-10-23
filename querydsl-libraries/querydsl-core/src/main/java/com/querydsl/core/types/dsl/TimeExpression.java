@@ -18,6 +18,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
+import java.io.Serial;
 import java.sql.Time;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class TimeExpression<T extends Comparable> extends TemporalExpression<T> {
 
-  private static final long serialVersionUID = 7360552308332457990L;
+  @Serial private static final long serialVersionUID = 7360552308332457990L;
 
   private static class Constants {
     private static final TimeExpression<Time> CURRENT_TIME = currentTime(Time.class);

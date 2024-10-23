@@ -19,6 +19,7 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 
 /**
@@ -29,7 +30,7 @@ import java.lang.reflect.AnnotatedElement;
  */
 public class SimplePath<T> extends SimpleExpression<T> implements Path<T> {
 
-  private static final long serialVersionUID = 3088836955328191852L;
+  @Serial private static final long serialVersionUID = 3088836955328191852L;
 
   private final PathImpl<T> pathMixin;
 

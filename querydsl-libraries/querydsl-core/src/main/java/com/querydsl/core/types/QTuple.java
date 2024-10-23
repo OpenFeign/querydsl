@@ -16,6 +16,7 @@ package com.querydsl.core.types;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,7 +69,7 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
 
   private final class TupleImpl implements Tuple, Serializable {
 
-    private static final long serialVersionUID = 6635924689293325950L;
+    @Serial private static final long serialVersionUID = 6635924689293325950L;
 
     private final Object[] a;
 
@@ -125,7 +126,7 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
     }
   }
 
-  private static final long serialVersionUID = -2640616030595420465L;
+  @Serial private static final long serialVersionUID = -2640616030595420465L;
 
   @Unmodifiable private final List<Expression<?>> args;
 

@@ -18,6 +18,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import java.io.Serial;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class ComparableExpressionBase<T extends Comparable> extends SimpleExpression<T> {
 
-  private static final long serialVersionUID = 1460921109546656911L;
+  @Serial private static final long serialVersionUID = 1460921109546656911L;
 
   @Nullable private transient volatile OrderSpecifier<T> asc, desc;
 

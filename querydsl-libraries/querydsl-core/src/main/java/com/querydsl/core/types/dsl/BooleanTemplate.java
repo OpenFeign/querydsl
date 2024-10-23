@@ -18,6 +18,7 @@ import com.querydsl.core.types.PredicateTemplate;
 import com.querydsl.core.types.Template;
 import com.querydsl.core.types.TemplateExpression;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ import java.util.List;
  */
 public class BooleanTemplate extends BooleanExpression implements TemplateExpression<Boolean> {
 
-  private static final long serialVersionUID = 5749369427497731719L;
+  @Serial private static final long serialVersionUID = 5749369427497731719L;
 
   private final PredicateTemplate templateMixin;
 

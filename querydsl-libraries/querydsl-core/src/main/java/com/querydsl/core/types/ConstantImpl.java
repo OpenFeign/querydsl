@@ -14,6 +14,7 @@
 package com.querydsl.core.types;
 
 import com.querydsl.core.annotations.Immutable;
+import java.io.Serial;
 
 /**
  * {@code ConstantImpl} is the default implementation of the {@link Constant} interface
@@ -24,7 +25,7 @@ import com.querydsl.core.annotations.Immutable;
 @Immutable
 public final class ConstantImpl<T> extends ExpressionBase<T> implements Constant<T> {
 
-  private static final long serialVersionUID = -3898138057967814118L;
+  @Serial private static final long serialVersionUID = -3898138057967814118L;
 
   private static final int CACHE_SIZE = 256;
 

@@ -15,6 +15,7 @@ package com.querydsl.core.types;
 
 import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serial;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.Unmodifiable;
 @Immutable
 public class ArrayConstructorExpression<T> extends FactoryExpressionBase<T[]> {
 
-  private static final long serialVersionUID = 8667880104290226505L;
+  @Serial private static final long serialVersionUID = 8667880104290226505L;
 
   private final Class<T> elementType;
 

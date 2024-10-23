@@ -17,6 +17,7 @@ import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.MathUtils;
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -34,7 +35,7 @@ import java.util.function.Function;
 @Immutable
 public final class Template implements Serializable {
 
-  private static final long serialVersionUID = -1697705745769542204L;
+  @Serial private static final long serialVersionUID = -1697705745769542204L;
 
   private static final Set<? extends Operator> CONVERTIBLES =
       Collections.unmodifiableSet(EnumSet.of(Ops.ADD, Ops.SUB));
@@ -43,7 +44,7 @@ public final class Template implements Serializable {
   @Immutable
   public abstract static class Element implements Serializable {
 
-    private static final long serialVersionUID = 3396877288101929387L;
+    @Serial private static final long serialVersionUID = 3396877288101929387L;
 
     public abstract Object convert(List<?> args);
 
@@ -53,7 +54,7 @@ public final class Template implements Serializable {
   /** Expression as string */
   public static final class AsString extends Element {
 
-    private static final long serialVersionUID = -655362047873616197L;
+    @Serial private static final long serialVersionUID = -655362047873616197L;
 
     private final int index;
 
@@ -88,7 +89,7 @@ public final class Template implements Serializable {
   /** Static text element */
   public static final class StaticText extends Element {
 
-    private static final long serialVersionUID = -2791869625053368023L;
+    @Serial private static final long serialVersionUID = -2791869625053368023L;
 
     private final String text;
 
@@ -122,7 +123,7 @@ public final class Template implements Serializable {
   /** Transformed expression */
   public static final class Transformed extends Element {
 
-    private static final long serialVersionUID = 702677732175745567L;
+    @Serial private static final long serialVersionUID = 702677732175745567L;
 
     private final int index;
 
@@ -159,7 +160,7 @@ public final class Template implements Serializable {
   /** Argument by index */
   public static final class ByIndex extends Element {
 
-    private static final long serialVersionUID = 4711323946026029998L;
+    @Serial private static final long serialVersionUID = 4711323946026029998L;
 
     private final int index;
 
@@ -198,7 +199,7 @@ public final class Template implements Serializable {
   /** Math operation */
   public static final class Operation extends Element {
 
-    private static final long serialVersionUID = 1400801176778801584L;
+    @Serial private static final long serialVersionUID = 1400801176778801584L;
 
     private final int index1, index2;
 
@@ -261,7 +262,7 @@ public final class Template implements Serializable {
   /** Math operation with constant */
   public static final class OperationConst extends Element {
 
-    private static final long serialVersionUID = 1400801176778801584L;
+    @Serial private static final long serialVersionUID = 1400801176778801584L;
 
     private final int index1;
 

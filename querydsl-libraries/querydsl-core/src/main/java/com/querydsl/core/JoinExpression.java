@@ -17,6 +17,7 @@ import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Objects;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 @Immutable
 public final class JoinExpression implements Serializable {
 
-  private static final long serialVersionUID = -1131755765747174886L;
+  @Serial private static final long serialVersionUID = -1131755765747174886L;
 
   @Nullable private final Predicate condition;
 

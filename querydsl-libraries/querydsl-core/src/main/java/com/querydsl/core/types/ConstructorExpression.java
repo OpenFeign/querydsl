@@ -20,6 +20,7 @@ import static com.querydsl.core.util.ConstructorUtils.getTransformers;
 import com.querydsl.core.annotations.Immutable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serial;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -47,7 +48,7 @@ import org.jetbrains.annotations.Unmodifiable;
 @Immutable
 public class ConstructorExpression<T> extends FactoryExpressionBase<T> {
 
-  private static final long serialVersionUID = -602747921848073175L;
+  @Serial private static final long serialVersionUID = -602747921848073175L;
 
   private static Class<?>[] getParameterTypes(Expression<?>... args) {
     Class<?>[] paramTypes = new Class[args.length];

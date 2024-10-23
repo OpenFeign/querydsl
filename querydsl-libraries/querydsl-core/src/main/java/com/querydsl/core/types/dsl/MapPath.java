@@ -21,6 +21,7 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 public class MapPath<K, V, E extends SimpleExpression<? super V>> extends MapExpressionBase<K, V, E>
     implements Path<Map<K, V>> {
 
-  private static final long serialVersionUID = -9113333728412016832L;
+  @Serial private static final long serialVersionUID = -9113333728412016832L;
 
   private final Class<K> keyType;
 

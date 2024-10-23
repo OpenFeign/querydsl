@@ -18,6 +18,7 @@ import com.querydsl.core.util.PrimitiveUtils;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.Serial;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,7 +46,7 @@ import java.util.Map;
  */
 public class QBean<T> extends FactoryExpressionBase<T> {
 
-  private static final long serialVersionUID = -8210214512730989778L;
+  @Serial private static final long serialVersionUID = -8210214512730989778L;
 
   private static Map<String, Expression<?>> createBindings(Expression<?>... args) {
     Map<String, Expression<?>> rv = new LinkedHashMap<>();

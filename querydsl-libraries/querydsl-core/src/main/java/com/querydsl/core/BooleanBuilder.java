@@ -17,6 +17,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class BooleanBuilder implements Predicate, Cloneable {
 
-  private static final long serialVersionUID = -4129485177345542519L;
+  @Serial private static final long serialVersionUID = -4129485177345542519L;
 
   @Nullable private Predicate predicate;
 
