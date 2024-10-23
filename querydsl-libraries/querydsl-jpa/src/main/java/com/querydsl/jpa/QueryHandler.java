@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import com.mysema.commons.lang.CloseableIterator;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.types.FactoryExpression;
 import jakarta.persistence.Query;
 import java.util.stream.Stream;
