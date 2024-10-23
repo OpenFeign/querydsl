@@ -109,33 +109,4 @@ public final class Keywords {
               "VALUE",
               "WHEN",
               "WHERE"));
-
-  public static final Collection<String> JDO =
-      Collections.unmodifiableList(
-          Arrays.asList(
-              "AS",
-              "ASC",
-              "ASCENDING",
-              "AVG",
-              "BY",
-              "COUNT",
-              "DESC",
-              "DESCENDING",
-              "DISTINCT",
-              "EXCLUDE",
-              "FROM",
-              "GROUP",
-              "HAVING",
-              "INTO",
-              "MAX",
-              "MIN",
-              "ORDER",
-              "PARAMETERS",
-              "RANGE",
-              "SELECT",
-              "SUBCLASSES",
-              "SUM",
-              "UNIQUE",
-              "VARIABLES",
-              "WHERE"));
 }
