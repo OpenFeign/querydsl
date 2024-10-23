@@ -19,6 +19,7 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 
 /**
@@ -28,7 +29,7 @@ import java.lang.reflect.AnnotatedElement;
  */
 public class StringPath extends StringExpression implements Path<String> {
 
-  private static final long serialVersionUID = 7983490925756833429L;
+  @Serial private static final long serialVersionUID = 7983490925756833429L;
 
   private final PathImpl<String> pathMixin;
 

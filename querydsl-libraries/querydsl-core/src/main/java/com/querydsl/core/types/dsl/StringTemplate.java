@@ -18,6 +18,7 @@ import com.querydsl.core.types.Template;
 import com.querydsl.core.types.TemplateExpression;
 import com.querydsl.core.types.TemplateExpressionImpl;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ import java.util.List;
  */
 public class StringTemplate extends StringExpression implements TemplateExpression<String> {
 
-  private static final long serialVersionUID = 3181686132439356614L;
+  @Serial private static final long serialVersionUID = 3181686132439356614L;
 
   private final TemplateExpressionImpl<String> templateMixin;
 

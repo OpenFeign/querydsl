@@ -13,6 +13,7 @@
  */
 package com.querydsl.core;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Range;
  */
 public final class QueryModifiers implements Serializable {
 
-  private static final long serialVersionUID = 2934344588433680339L;
+  @Serial private static final long serialVersionUID = 2934344588433680339L;
 
   /** No limit and not offset restriction */
   public static final QueryModifiers EMPTY = new QueryModifiers();

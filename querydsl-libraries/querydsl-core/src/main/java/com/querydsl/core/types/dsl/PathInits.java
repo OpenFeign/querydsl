@@ -14,6 +14,7 @@
 package com.querydsl.core.types.dsl;
 
 import com.querydsl.core.types.PathMetadata;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +31,7 @@ import java.util.Map;
  */
 public class PathInits implements Serializable {
 
-  private static final long serialVersionUID = -2173980858324141095L;
+  @Serial private static final long serialVersionUID = -2173980858324141095L;
 
   public static final PathInits DEFAULT = new PathInits();
 

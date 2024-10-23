@@ -20,6 +20,7 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 public class ListPath<E, Q extends SimpleExpression<? super E>>
     extends CollectionPathBase<List<E>, E, Q> implements ListExpression<E, Q> {
 
-  private static final long serialVersionUID = 3302301599074388860L;
+  @Serial private static final long serialVersionUID = 3302301599074388860L;
 
   private final Map<Integer, Q> cache = new HashMap<>();
 
