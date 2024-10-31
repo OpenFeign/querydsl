@@ -8,7 +8,7 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'OpenFeign/feign'
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'OpenFeign/querydsl'
     steps:
       - name: Dependabot metadata
         id: metadata
