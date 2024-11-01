@@ -117,7 +117,7 @@
     <mysql.version>8.0.30</mysql.version>
     <mssql.version>12.8.1.jre8</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
-    <sqlite.version>3.46.1.3</sqlite.version>
+    <sqlite.version>3.47.0.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
     <firebird.version>5.0.6.java11</firebird.version>
     <mongodb.version>3.12.14</mongodb.version>
