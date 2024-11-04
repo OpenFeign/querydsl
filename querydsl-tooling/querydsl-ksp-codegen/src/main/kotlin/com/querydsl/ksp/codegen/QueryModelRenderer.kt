@@ -3,10 +3,9 @@ package com.querydsl.ksp.codegen
 import com.querydsl.core.types.Path
 import com.querydsl.core.types.PathMetadata
 import com.querydsl.core.types.dsl.*
+import com.querydsl.ksp.codegen.Naming.toCamelCase
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.querydsl.ksp.codegen.Naming.toCamelCase
-import java.util.*
 
 object QueryModelRenderer {
     fun render(model: QueryModel): TypeSpec {
@@ -32,9 +31,8 @@ object QueryModelRenderer {
         }
         superclass(
             when (model.type) {
-                QueryModel.Type.ENTITY,
-                QueryModel.Type.SUPERCLASS -> EntityPathBase::class.asClassName().parameterizedBy(constraint)
-                QueryModel.Type.EMBEDDABLE -> BeanPath::class.asClassName().parameterizedBy(constraint)
+                QueryModelType.ENTITY, QueryModelType.SUPERCLASS -> EntityPathBase::class.asClassName().parameterizedBy(constraint)
+                QueryModelType.EMBEDDABLE -> BeanPath::class.asClassName().parameterizedBy(constraint)
             }
         )
         return this
@@ -133,11 +131,11 @@ object QueryModelRenderer {
 
     private fun renderObjectReference(name: String, type: QPropertyType.ObjectReference): PropertySpec {
         return PropertySpec
-            .builder(name, type.target.className)
+            .builder(name, type.queryClassName)
             .delegate(
                 CodeBlock.builder()
                     .beginControlFlow("lazy")
-                    .addStatement("${type.target.className}(forProperty(\"${name}\"))")
+                    .addStatement("${type.queryClassName}(forProperty(\"${name}\"))")
                     .endControlFlow()
                     .build()
             )

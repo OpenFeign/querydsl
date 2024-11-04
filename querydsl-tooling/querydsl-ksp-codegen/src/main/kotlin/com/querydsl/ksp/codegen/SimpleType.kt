@@ -95,7 +95,7 @@ sealed interface SimpleType {
         override fun render(name: String): PropertySpec {
             return PropertySpec
                 .builder(name, pathTypeName)
-                .initializer("createNumber(\"$name\", ${innerType}::class.java)")
+                .initializer("createNumber(\"$name\", ${innerType}::class.javaObjectType)")
                 .build()
         }
     }

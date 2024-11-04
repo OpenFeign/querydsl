@@ -48,6 +48,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>io.mockk</groupId>
+      <artifactId>mockk-jvm</artifactId>
+      <version>1.13.13</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-script-runtime</artifactId>
       <scope>test</scope>
