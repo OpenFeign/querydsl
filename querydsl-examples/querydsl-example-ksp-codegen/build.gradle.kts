@@ -2,6 +2,8 @@ val kotlinVersion = findProperty("kotlin.version") as String
 val jpaVersion = findProperty("jpa.version") as String
 val hibernateVersion = findProperty("hibernate.version") as String
 val h2Version = findProperty("h2.version") as String
+val querydslVersion = findProperty("querydsl.version") as String
+val assertjVersion = findProperty("assertj.version") as String
 
 plugins {
 	kotlin("jvm")
@@ -17,11 +19,11 @@ repositories {
 
 dependencies {
 	implementation("jakarta.persistence:jakarta.persistence-api:${jpaVersion}")
-	implementation("io.github.openfeign.querydsl:querydsl-core:6.9-SNAPSHOT")
-	ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:6.9-SNAPSHOT")
+	implementation("io.github.openfeign.querydsl:querydsl-core:${querydslVersion}")
+	ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:${querydslVersion}")
 
-	testImplementation("io.github.openfeign.querydsl:querydsl-jpa:6.9-SNAPSHOT")
-	testImplementation("org.assertj:assertj-core:3.26.3")
+	testImplementation("io.github.openfeign.querydsl:querydsl-jpa:${querydslVersion}")
+	testImplementation("org.assertj:assertj-core:${assertjVersion}")
 	testImplementation("org.hibernate.orm:hibernate-core:${hibernateVersion}")
 	testImplementation("com.h2database:h2:${h2Version}")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}")
