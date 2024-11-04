@@ -31,3 +31,6 @@ derby.log
 
 # Ignore Gradle build output directory
 build
+
+# Ignore auto generated gradle property file copied from maven
+querydsl-examples/querydsl-example-ksp-codegen/gradle.properties

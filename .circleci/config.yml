@@ -138,9 +138,12 @@ jobs:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
             - querydsl-dependencies-
       - run:
-          name: 'Test'
+          name: 'Prepare environment'
           command: |
             ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb,:querydsl-r2dbc,:querydsl-sql-json -am -T2
+      - run:
+          name: 'Build and test examples'
+          command: |
             ./mvnw -ntp -B verify -Pexamples -rf :querydsl-examples
       - save-test-results
   buildQuarkusExample:
@@ -157,6 +160,23 @@ jobs:
           command: |
             cp querydsl-examples/querydsl-example-jpa-quarkus/Dockerfile .
             docker build --progress=plain .
+  buildKotlinKspExample:
+    <<: *defaults
+    working_directory: ~/querydsl
+    docker:
+      - image: velo/toolchains-4-ci-builds:with-docker
+    steps:
+      - checkout
+      - run:
+          name: 'Prepare environment'
+          command: |
+            ./mvnw -N org.codehaus.mojo:properties-maven-plugin:1.2.1:write-project-properties -Dproperties.outputFile=querydsl-examples/querydsl-example-ksp-codegen/gradle.properties
+            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-ksp-codegen,:querydsl-jpa -am -T2
+      - run:
+          name: 'Build and test examples'
+          command: |
+            cd querydsl-examples/querydsl-example-ksp-codegen
+            ./gradlew  --no-daemon --console=plain  test
   testMySQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -380,7 +400,11 @@ workflows:
           filters:
             <<: *all-branches
       - buildQuarkusExample:
-          name: 'Compile and package Quarkus Example'
+          name: 'Compile and test Quarkus Native Example'
+          filters:
+            <<: *all-branches
+      - buildKotlinKspExample:
+          name: 'Compile and test Kotlin KSP Example'
           filters:
             <<: *all-branches
       - testMySQL:
