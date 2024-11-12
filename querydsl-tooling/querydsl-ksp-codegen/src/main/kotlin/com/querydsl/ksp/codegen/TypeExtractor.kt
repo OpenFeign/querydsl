@@ -7,11 +7,10 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import jakarta.persistence.Convert
-import kotlin.collections.get
 
 class TypeExtractor(
-    private val property: KSPropertyDeclaration,
-    private val models: List<QueryModel>
+    private val settings: KspSettings,
+    private val property: KSPropertyDeclaration
 ) {
     fun extract(type: KSType): QPropertyType {
         val declaration = type.declaration
@@ -84,17 +83,19 @@ class TypeExtractor(
     }
 
     private fun referenceType(type: KSType): QPropertyType? {
-        val className = type.toClassName()
         val referencedDeclaration = type.declaration
         if (referencedDeclaration is KSClassDeclaration) {
             return when (referencedDeclaration.classKind) {
                 ClassKind.ENUM_CLASS -> QPropertyType.EnumReference(type.toClassName())
                 ClassKind.CLASS, ClassKind.INTERFACE -> {
-                    val target = models.singleOrNull { it.originalClassName == className }
-                    if (target == null) {
-                        return null
+                    if (isEntity(referencedDeclaration)) {
+                        return QPropertyType.ObjectReference(
+                            entityClassName = referencedDeclaration.toClassName(),
+                            queryClassName = QueryModelExtractor.queryClassName(referencedDeclaration, settings),
+                            typeArgs = type.arguments.map { it.toTypeName() }
+                        )
                     } else {
-                        return QPropertyType.ObjectReference(target, type.arguments.map { it.toTypeName() })
+                        return null
                     }
                 }
                 else -> null
@@ -102,6 +103,10 @@ class TypeExtractor(
         } else {
             return null
         }
+    }
+
+    private fun isEntity(classDeclaration: KSClassDeclaration): Boolean {
+        return QueryModelType.autodetect(classDeclaration) != null
     }
 
     private fun userType(type: KSType): QPropertyType.Unknown? {

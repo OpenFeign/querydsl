@@ -6,48 +6,38 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.*
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ksp.writeTo
-import jakarta.persistence.Embeddable
-import jakarta.persistence.Entity
-import jakarta.persistence.MappedSuperclass
 
 class QueryDslProcessor(
     private val settings: KspSettings,
     private val codeGenerator: CodeGenerator
 ) : SymbolProcessor {
+    val typeProcessor = QueryModelExtractor(settings)
+
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (settings.enable) {
-            processImpl(resolver)
+            QueryModelType.entries.forEach { type ->
+                resolver.getSymbolsWithAnnotation(type.associatedAnnotation)
+                    .map { it as KSClassDeclaration }
+                    .filter { isIncluded(it) }
+                    .forEach { declaration -> typeProcessor.add(declaration, type) }
+            }
         }
         return emptyList()
     }
 
-    private fun processImpl(resolver: Resolver) {
-        val declarations = mutableMapOf<KSClassDeclaration, QueryModel.Type>()
-
-        resolver.getSymbolsWithAnnotation(Embeddable::class.qualifiedName!!)
-            .map { it as KSClassDeclaration }
-            .filter { isIncluded(it) }
-            .forEach { declarations.putIfAbsent(it, QueryModel.Type.EMBEDDABLE) }
-
-        resolver.getSymbolsWithAnnotation(MappedSuperclass::class.qualifiedName!!)
-            .map { it as KSClassDeclaration }
-            .filter { isIncluded(it) }
-            .forEach { declarations.putIfAbsent(it, QueryModel.Type.SUPERCLASS) }
-
-        resolver.getSymbolsWithAnnotation(Entity::class.qualifiedName!!)
-            .map { it as KSClassDeclaration }
-            .filter { isIncluded(it) }
-            .forEach { declarations.putIfAbsent(it, QueryModel.Type.ENTITY) }
-
-        val allDeclarations = declarations.map { QueryModelExtractor.ModelDeclaration(it.key, it.value) }
-        val models = QueryModelExtractor.process(settings, allDeclarations)
+    override fun finish() {
+        val models = typeProcessor.process()
         models.forEach { model ->
             val typeSpec = QueryModelRenderer.render(model)
             FileSpec.builder(model.className)
                 .indent(settings.indent)
                 .addType(typeSpec)
                 .build()
-                .writeTo(codeGenerator, false)
+                .writeTo(
+                    codeGenerator = codeGenerator,
+                    aggregating = false,
+                    originatingKSFiles = listOf(model.originatingFile)
+                )
         }
     }
 

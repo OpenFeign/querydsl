@@ -116,25 +116,26 @@ sealed interface QPropertyType {
     }
 
     class ObjectReference(
-        val target: QueryModel,
+        val entityClassName: ClassName,
+        val queryClassName: ClassName,
         val typeArgs: List<TypeName>
     ) : QPropertyType {
         override val originalClassName: ClassName
-            get() = target.originalClassName
+            get() = entityClassName
 
         override val originalTypeName: TypeName
             get() {
                 if (typeArgs.isEmpty()) {
-                    return target.originalClassName
+                    return entityClassName
                 } else {
-                    return target.originalClassName.parameterizedBy(typeArgs)
+                    return entityClassName.parameterizedBy(typeArgs)
                 }
             }
 
         override val pathClassName: ClassName
-            get() = target.className
+            get() = queryClassName
 
         override val pathTypeName: TypeName
-            get() = target.className
+            get() = queryClassName
     }
 }

@@ -3,9 +3,11 @@ import com.querydsl.ksp.codegen.QProperty
 import com.querydsl.ksp.codegen.QPropertyType
 import com.querydsl.ksp.codegen.QueryModel
 import com.querydsl.ksp.codegen.QueryModelRenderer
+import com.querydsl.ksp.codegen.QueryModelType
 import com.querydsl.ksp.codegen.SimpleType
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asClassName
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import javax.script.ScriptEngineManager
@@ -17,7 +19,8 @@ class RenderTest {
             originalClassName = ClassName("", "User"),
             typeParameterCount = 0,
             className = ClassName("", "QUser"),
-            type = QueryModel.Type.ENTITY
+            type = QueryModelType.ENTITY,
+            mockk()
         )
         val properties = listOf(
             QProperty("a", QPropertyType.Simple(SimpleType.QBoolean)),
@@ -51,13 +54,15 @@ class RenderTest {
             originalClassName = ClassName("", "Cat"),
             typeParameterCount = 0,
             className = ClassName("", "QCat"),
-            type = QueryModel.Type.ENTITY
+            type = QueryModelType.ENTITY,
+            mockk()
         )
         val superClass = QueryModel(
             originalClassName = ClassName("", "Animal"),
             typeParameterCount = 0,
             className = ClassName("", "QAnimal"),
-            type = QueryModel.Type.SUPERCLASS
+            type = QueryModelType.SUPERCLASS,
+            mockk()
         )
         model.superclass = superClass
         val typeSpec = QueryModelRenderer.render(model)
@@ -73,7 +78,8 @@ class RenderTest {
             originalClassName = ClassName("", "Article"),
             typeParameterCount = 1,
             className = ClassName("", "QArticle"),
-            type = QueryModel.Type.ENTITY
+            type = QueryModelType.ENTITY,
+            mockk()
         )
         val typeSpec = QueryModelRenderer.render(model)
         val code = typeSpec.toString()
@@ -102,7 +108,8 @@ class RenderTest {
             originalClassName = ClassName("", "Animal"),
             typeParameterCount = 0,
             className = ClassName("", "QAnimal"),
-            type = QueryModel.Type.ENTITY
+            type = QueryModelType.ENTITY,
+            mockk()
         )
         animalModel.properties.add(
             QProperty("hasTail", QPropertyType.Simple(SimpleType.QBoolean))
@@ -111,7 +118,8 @@ class RenderTest {
             originalClassName = ClassName("", "Cat"),
             typeParameterCount = 0,
             className = ClassName("", "QCat"),
-            type = QueryModel.Type.ENTITY
+            type = QueryModelType.ENTITY,
+            mockk()
         )
         catModel.superclass = animalModel
         val typeSpec = QueryModelRenderer.render(catModel)
@@ -126,7 +134,8 @@ class RenderTest {
             originalClassName = ClassName("", "Animal"),
             typeParameterCount = 0,
             className = ClassName("", "QAnimal"),
-            type = QueryModel.Type.ENTITY
+            type = QueryModelType.ENTITY,
+            mockk()
         )
         model.properties.add(
             QProperty(
