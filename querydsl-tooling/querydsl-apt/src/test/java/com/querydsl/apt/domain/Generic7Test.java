@@ -3,7 +3,6 @@ package com.querydsl.apt.domain;
 import com.querydsl.core.annotations.QueryEntity;
 import java.util.Collection;
 import java.util.List;
-import org.junit.Test;
 
 public class Generic7Test {
 

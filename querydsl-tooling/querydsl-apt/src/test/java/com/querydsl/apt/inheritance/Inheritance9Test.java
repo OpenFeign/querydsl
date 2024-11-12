@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.domain.SuperSupertype;
-import org.junit.Test;
 
 /**
  * related to https://bugs.launchpad.net/querydsl/+bug/538148

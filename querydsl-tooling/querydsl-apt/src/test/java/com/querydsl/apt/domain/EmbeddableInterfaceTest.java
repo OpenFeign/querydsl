@@ -19,7 +19,6 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import java.util.Collection;
-import org.junit.Test;
 
 public class EmbeddableInterfaceTest {
 

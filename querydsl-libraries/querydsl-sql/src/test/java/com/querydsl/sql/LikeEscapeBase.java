@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.sql.SQLException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public abstract class LikeEscapeBase extends AbstractBaseTest {
 

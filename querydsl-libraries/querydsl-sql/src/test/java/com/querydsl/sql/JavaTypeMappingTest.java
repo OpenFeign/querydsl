@@ -28,7 +28,6 @@ import com.querydsl.sql.types.ObjectType;
 import com.querydsl.sql.types.ShortType;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import org.junit.Test;
 
 public class JavaTypeMappingTest {
 

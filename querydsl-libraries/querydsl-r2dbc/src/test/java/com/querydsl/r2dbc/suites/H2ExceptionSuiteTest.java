@@ -11,7 +11,6 @@ import com.querydsl.sql.DefaultSQLExceptionTranslator;
 import com.querydsl.sql.SQLExceptionTranslator;
 import java.sql.SQLException;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import reactor.core.publisher.Mono;
 

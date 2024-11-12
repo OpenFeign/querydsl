@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Date;
 import java.sql.Time;
-import org.junit.Test;
 
 public class TypeCategoryTest {
 

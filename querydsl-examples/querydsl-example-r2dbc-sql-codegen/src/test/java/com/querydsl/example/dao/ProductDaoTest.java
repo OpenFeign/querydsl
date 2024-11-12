@@ -3,33 +3,33 @@ package com.querydsl.example.dao;
 import com.querydsl.example.dto.Product;
 import com.querydsl.example.dto.ProductL10n;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-public class ProductDaoTest extends AbstractDaoTest {
+class ProductDaoTest extends AbstractDaoTest {
 
   @Autowired SupplierDao supplierDao;
 
   @Autowired ProductDao productDao;
 
   @Test
-  public void findAll() {
+  void findAll() {
     var setup = productDao.findAll();
 
     StepVerifier.create(setup).expectNextCount(2).verifyComplete();
   }
 
   @Test
-  public void findById() {
+  void findById() {
     var setup = productDao.findById(testDataService.product1);
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
 
   @Test
-  public void update() {
+  void update() {
     Mono<Product> setup =
         productDao.findById(testDataService.product1).flatMap(p -> productDao.save(p));
 
@@ -37,7 +37,7 @@ public class ProductDaoTest extends AbstractDaoTest {
   }
 
   @Test
-  public void delete() {
+  void delete() {
     var product = new Product();
     product.setName("ProductX");
     product.setLocalizations(Set.of(new ProductL10n()));

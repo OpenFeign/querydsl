@@ -6,7 +6,6 @@ import com.querydsl.core.types.dsl.Param;
 import com.querydsl.sql.domain.QSurvey;
 import java.util.Arrays;
 import java.util.Collections;
-import org.junit.Test;
 
 public class SQLBindingsTest {
 

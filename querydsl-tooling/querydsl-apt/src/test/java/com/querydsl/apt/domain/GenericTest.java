@@ -20,7 +20,6 @@ import com.querydsl.apt.domain.rel.SimpleType2;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryTransient;
 import java.util.Date;
-import org.junit.Test;
 
 public class GenericTest extends AbstractTest {
 

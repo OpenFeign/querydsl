@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QBean;
-import org.junit.Test;
 
 public class QPersonTest {
 

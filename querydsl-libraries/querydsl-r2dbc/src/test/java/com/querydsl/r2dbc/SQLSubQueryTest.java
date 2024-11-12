@@ -26,7 +26,6 @@ import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.r2dbc.domain.QSurvey;
 import java.util.List;
-import org.junit.Test;
 
 public class SQLSubQueryTest {
 

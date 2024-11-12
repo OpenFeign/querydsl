@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import org.junit.Before;
-import org.junit.Test;
 
 public class ScalaWriterTest {
 

@@ -9,7 +9,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
-import org.junit.Test;
 
 public class JSR310TimeTemplatesTest {
 

@@ -20,7 +20,6 @@ import io.r2dbc.spi.Blob;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Types;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 public class JDBCTypeMappingTest {

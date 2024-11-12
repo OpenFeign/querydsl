@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryDelegate;
 import com.querydsl.core.types.Predicate;
-import org.junit.Test;
 
 public class QueryByExampleTest {
 

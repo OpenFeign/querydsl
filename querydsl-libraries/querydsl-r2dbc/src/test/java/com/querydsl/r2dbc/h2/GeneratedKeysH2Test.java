@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Collections;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 import reactor.core.publisher.Mono;
 
 public class GeneratedKeysH2Test {

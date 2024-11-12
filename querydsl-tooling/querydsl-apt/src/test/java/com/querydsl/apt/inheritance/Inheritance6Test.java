@@ -21,7 +21,6 @@ import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.NumberPath;
 import java.io.Serializable;
 import java.util.Date;
-import org.junit.Test;
 
 /** Test multiple level superclasses with generics. */
 public class Inheritance6Test {

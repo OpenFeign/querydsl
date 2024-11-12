@@ -20,7 +20,6 @@ import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.PathInits;
-import org.junit.Test;
 
 public class EntityTest extends AbstractTest {
 

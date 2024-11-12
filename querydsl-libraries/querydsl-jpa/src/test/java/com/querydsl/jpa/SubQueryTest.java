@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.domain.QCat;
 import com.querydsl.jpa.domain.QEmployee;
 import com.querydsl.jpa.domain.QUser;
-import org.junit.Test;
 
 public class SubQueryTest extends AbstractQueryTest {
 

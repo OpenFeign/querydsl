@@ -9,7 +9,6 @@ import com.querydsl.core.types.dsl.StringPath;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
-import org.junit.Test;
 
 public class QueryEmbedded7Test {
 

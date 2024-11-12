@@ -46,7 +46,6 @@ import org.apache.lucene.util.Version;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * Tests for LuceneQuery

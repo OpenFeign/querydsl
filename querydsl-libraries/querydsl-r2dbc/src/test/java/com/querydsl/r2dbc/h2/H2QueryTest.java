@@ -4,7 +4,6 @@ import com.querydsl.r2dbc.H2Templates;
 import com.querydsl.r2dbc.R2DBCQuery;
 import com.querydsl.r2dbc.domain.QSurvey;
 import org.junit.Before;
-import org.junit.Test;
 
 public class H2QueryTest {
 

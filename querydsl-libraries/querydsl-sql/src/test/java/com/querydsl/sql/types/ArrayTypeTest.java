@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.easymock.EasyMock;
-import org.junit.Test;
 
 public class ArrayTypeTest {
 

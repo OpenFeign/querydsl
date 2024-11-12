@@ -12,7 +12,6 @@ import com.querydsl.r2dbc.mysql.R2DBCMySQLQuery;
 import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.RelationalPathBase;
 import java.time.LocalDate;
-import org.junit.Test;
 
 public class ExtendedSQLTest {
 

@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.annotations.QueryEntity;
 import java.util.Set;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class Inheritance7Test {
 

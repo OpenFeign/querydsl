@@ -23,7 +23,6 @@ import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
 
 public class ArrayExtTest {
 

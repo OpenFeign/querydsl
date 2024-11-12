@@ -10,7 +10,6 @@ import com.querydsl.sql.oracle.OracleQuery;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public abstract class SelectOracleBase extends AbstractBaseTest {
 

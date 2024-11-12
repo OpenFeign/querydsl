@@ -22,7 +22,6 @@ import com.querydsl.core.domain.MyEmbeddable;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.PathInits;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class Embeddable2Test {
 

@@ -20,7 +20,6 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
-import org.junit.Test;
 
 public class CollectionAnyVisitorTest {
 

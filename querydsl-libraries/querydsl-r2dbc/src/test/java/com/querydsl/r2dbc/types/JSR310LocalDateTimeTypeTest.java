@@ -1,7 +1,6 @@
 package com.querydsl.r2dbc.types;
 
 import java.time.LocalDateTime;
-import org.junit.Test;
 
 public class JSR310LocalDateTimeTypeTest extends AbstractJSR310DateTimeTypeTest<LocalDateTime> {
 

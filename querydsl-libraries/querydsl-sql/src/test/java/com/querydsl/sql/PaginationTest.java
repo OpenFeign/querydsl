@@ -7,7 +7,6 @@ import com.querydsl.core.testutil.ReportingOnly;
 import com.querydsl.sql.domain.QEmployee;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(ReportingOnly.class)

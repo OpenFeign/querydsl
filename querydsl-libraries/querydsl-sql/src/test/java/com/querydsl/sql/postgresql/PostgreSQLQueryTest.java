@@ -6,7 +6,6 @@ import com.querydsl.sql.PostgreSQLTemplates;
 import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
 import org.junit.Before;
-import org.junit.Test;
 
 public class PostgreSQLQueryTest {
 

@@ -4,7 +4,6 @@ import com.querydsl.sql.HSQLDBTemplates;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.domain.QSurvey;
 import org.junit.Before;
-import org.junit.Test;
 
 public class HsqldbQueryTest {
 

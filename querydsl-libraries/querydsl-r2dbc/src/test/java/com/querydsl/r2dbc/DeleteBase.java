@@ -28,7 +28,6 @@ import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.r2dbc.domain.QSurvey;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public abstract class DeleteBase extends AbstractBaseTest {
 

@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.MapKey;
 import jakarta.persistence.OneToMany;
 import java.util.Map;
-import org.junit.Test;
 
 public class ManagedEmailTest {
 

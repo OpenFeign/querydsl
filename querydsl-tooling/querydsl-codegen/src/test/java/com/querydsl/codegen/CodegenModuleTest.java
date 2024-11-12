@@ -16,7 +16,6 @@ package com.querydsl.codegen;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.annotation.Annotation;
-import org.junit.Test;
 
 public class CodegenModuleTest {
 

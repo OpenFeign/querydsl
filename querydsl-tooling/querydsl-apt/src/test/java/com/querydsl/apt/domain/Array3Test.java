@@ -3,7 +3,6 @@ package com.querydsl.apt.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
-import org.junit.Test;
 
 public class Array3Test {
 

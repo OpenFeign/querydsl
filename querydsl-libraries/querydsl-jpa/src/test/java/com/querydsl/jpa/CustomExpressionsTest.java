@@ -20,7 +20,6 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.TemplateFactory;
 import com.querydsl.core.types.dsl.StringTemplate;
 import java.util.Arrays;
-import org.junit.Test;
 
 public class CustomExpressionsTest extends AbstractQueryTest {
 

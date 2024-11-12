@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import org.junit.Test;
 
 public class RelationTest extends AbstractTest {
 

@@ -17,7 +17,6 @@ import com.querydsl.core.QueryMutability;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
-import org.junit.Test;
 
 public class QueryMutabilityTest {
 

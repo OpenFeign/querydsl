@@ -33,7 +33,6 @@ import com.querydsl.jpa.domain.Location;
 import com.querydsl.jpa.domain.QDomesticCat;
 import com.querydsl.jpa.domain.QEmployee;
 import java.util.Arrays;
-import org.junit.Test;
 
 public class JPQLSerializerTest {
 

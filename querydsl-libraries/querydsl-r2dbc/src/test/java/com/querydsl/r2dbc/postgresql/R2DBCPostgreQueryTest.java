@@ -6,7 +6,6 @@ import com.querydsl.r2dbc.PostgreSQLTemplates;
 import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.r2dbc.domain.QSurvey;
 import org.junit.Before;
-import org.junit.Test;
 
 public class R2DBCPostgreQueryTest {
 

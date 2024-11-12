@@ -35,7 +35,6 @@ import java.math.BigInteger;
 import java.sql.Types;
 import java.util.Locale;
 import org.easymock.EasyMock;
-import org.junit.Test;
 
 public class ConfigurationTest {
 

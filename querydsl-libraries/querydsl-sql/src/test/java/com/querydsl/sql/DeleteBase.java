@@ -32,7 +32,6 @@ import com.querydsl.sql.domain.QSurvey;
 import java.sql.SQLException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public abstract class DeleteBase extends AbstractBaseTest {
 

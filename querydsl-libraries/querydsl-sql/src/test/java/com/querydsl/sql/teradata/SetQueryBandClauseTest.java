@@ -6,7 +6,6 @@ import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
 import java.sql.Connection;
 import org.junit.Before;
-import org.junit.Test;
 
 public class SetQueryBandClauseTest {
 

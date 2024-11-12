@@ -24,7 +24,6 @@ import com.querydsl.core.types.dsl.StringPath;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.Before;
-import org.junit.Test;
 
 public class QBeanTest {
 

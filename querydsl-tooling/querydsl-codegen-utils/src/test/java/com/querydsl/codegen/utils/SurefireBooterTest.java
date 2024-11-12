@@ -3,7 +3,6 @@ package com.querydsl.codegen.utils;
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.jar.Manifest;
-import org.junit.Test;
 
 public class SurefireBooterTest {
 

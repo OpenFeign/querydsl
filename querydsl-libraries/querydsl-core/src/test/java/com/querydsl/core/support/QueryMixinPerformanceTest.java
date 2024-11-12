@@ -4,7 +4,6 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import org.junit.Ignore;
-import org.junit.Test;
 
 @Ignore
 public class QueryMixinPerformanceTest {

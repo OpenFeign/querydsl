@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public abstract class UnionBase extends AbstractBaseTest {
 

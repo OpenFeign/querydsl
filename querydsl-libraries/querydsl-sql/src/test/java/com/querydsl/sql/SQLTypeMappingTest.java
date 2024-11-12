@@ -16,7 +16,6 @@ package com.querydsl.sql;
 import static org.assertj.core.api.Assertions.fail;
 
 import java.lang.reflect.Field;
-import org.junit.Test;
 
 public class SQLTypeMappingTest {
 

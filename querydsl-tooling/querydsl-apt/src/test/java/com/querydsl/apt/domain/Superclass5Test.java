@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEmbeddable;
 import com.querydsl.core.types.PathMetadataFactory;
-import org.junit.Test;
 
 public class Superclass5Test {
 

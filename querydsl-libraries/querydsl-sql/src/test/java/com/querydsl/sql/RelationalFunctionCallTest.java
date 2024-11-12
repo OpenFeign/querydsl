@@ -22,7 +22,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.domain.QSurvey;
-import org.junit.Test;
 
 public class RelationalFunctionCallTest {
 

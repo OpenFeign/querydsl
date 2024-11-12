@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.NumberPath;
 import java.io.Serializable;
-import org.junit.Test;
 
 public class KeyAccessorsTest {
 

@@ -27,7 +27,6 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.sql.domain.QSurvey;
 import java.util.Collection;
 import org.junit.Before;
-import org.junit.Test;
 
 public abstract class AbstractSQLTemplatesTest {
 

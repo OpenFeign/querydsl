@@ -20,7 +20,6 @@ import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.BooleanBuilder;
-import org.junit.Test;
 
 public class BooleanOperationsTest extends AbstractQueryTest {
 

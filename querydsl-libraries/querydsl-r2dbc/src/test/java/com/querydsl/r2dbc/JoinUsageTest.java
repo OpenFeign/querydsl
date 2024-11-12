@@ -15,7 +15,6 @@ package com.querydsl.r2dbc;
 
 import com.querydsl.r2dbc.domain.QSurvey;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class JoinUsageTest {
 

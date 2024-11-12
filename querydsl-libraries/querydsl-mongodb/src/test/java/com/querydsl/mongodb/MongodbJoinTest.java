@@ -12,7 +12,6 @@ import com.querydsl.mongodb.domain.User;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
 import java.net.UnknownHostException;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;

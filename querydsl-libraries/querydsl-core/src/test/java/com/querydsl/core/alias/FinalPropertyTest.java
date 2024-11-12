@@ -13,8 +13,6 @@
  */
 package com.querydsl.core.alias;
 
-import org.junit.Test;
-
 public class FinalPropertyTest {
 
   public static class Entity {

@@ -7,7 +7,6 @@ import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.sql.KeyAccessorsTest.QEmployee;
 import com.querydsl.sql.SQLTemplates;
 import java.util.Collections;
-import org.junit.Test;
 
 public class SQLUpdateClauseTest {
 

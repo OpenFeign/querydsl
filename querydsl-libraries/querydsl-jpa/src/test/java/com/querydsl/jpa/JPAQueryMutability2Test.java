@@ -21,7 +21,6 @@ import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.testutil.JPATestRunner;
 import jakarta.persistence.EntityManager;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(JPATestRunner.class)

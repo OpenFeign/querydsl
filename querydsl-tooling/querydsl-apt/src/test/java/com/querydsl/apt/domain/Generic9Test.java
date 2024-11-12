@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import org.junit.Test;
 
 public class Generic9Test {
 

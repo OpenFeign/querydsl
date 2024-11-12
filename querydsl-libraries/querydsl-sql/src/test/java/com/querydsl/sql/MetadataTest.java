@@ -2,7 +2,6 @@ package com.querydsl.sql;
 
 import java.sql.SQLException;
 import org.junit.Ignore;
-import org.junit.Test;
 
 @Ignore
 public class MetadataTest {

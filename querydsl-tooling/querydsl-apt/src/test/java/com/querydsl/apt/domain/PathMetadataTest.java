@@ -20,7 +20,6 @@ import com.querydsl.core.types.dsl.StringExpression;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 
 @Ignore
 public class PathMetadataTest {

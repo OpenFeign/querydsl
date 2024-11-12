@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.annotations.QuerySupertype;
 import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
-import org.junit.Test;
 
 public class QuerySuperTypeTest {
 

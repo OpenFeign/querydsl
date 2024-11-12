@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.sql.SQLServerTemplates;
 import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
-import org.junit.Test;
 
 public class SQLServerQueryTest {
 

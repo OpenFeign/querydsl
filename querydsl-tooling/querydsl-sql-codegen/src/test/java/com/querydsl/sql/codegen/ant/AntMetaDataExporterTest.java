@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class AntMetaDataExporterTest {
 

@@ -16,7 +16,6 @@ package com.querydsl.apt;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Test;
 
 public class EmbeddableTest extends AbstractProcessorTest {
 

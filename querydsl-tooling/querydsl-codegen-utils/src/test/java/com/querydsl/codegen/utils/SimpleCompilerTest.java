@@ -19,7 +19,6 @@ import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import org.junit.After;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class SimpleCompilerTest {
 

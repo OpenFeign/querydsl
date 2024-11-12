@@ -2,7 +2,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.support.ClassUtils;
-import org.junit.Test;
 
 public class NestedTest {
 

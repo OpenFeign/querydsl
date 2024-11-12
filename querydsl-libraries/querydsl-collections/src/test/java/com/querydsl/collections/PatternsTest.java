@@ -16,7 +16,6 @@ package com.querydsl.collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.regex.Pattern;
-import org.junit.Test;
 
 public class PatternsTest {
 

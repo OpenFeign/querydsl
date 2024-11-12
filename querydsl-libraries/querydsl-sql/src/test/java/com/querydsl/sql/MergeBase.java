@@ -36,7 +36,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public abstract class MergeBase extends AbstractBaseTest {
 

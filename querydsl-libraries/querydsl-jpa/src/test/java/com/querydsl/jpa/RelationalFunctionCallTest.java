@@ -26,7 +26,6 @@ import com.querydsl.sql.RelationalPathBase;
 import com.querydsl.sql.SQLExpressions;
 import com.querydsl.sql.SQLSerializer;
 import com.querydsl.sql.SQLServerTemplates;
-import org.junit.Test;
 
 public class RelationalFunctionCallTest {
 

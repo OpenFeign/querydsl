@@ -21,7 +21,6 @@ import java.util.function.Supplier;
 import org.easymock.EasyMock;
 import org.hibernate.Session;
 import org.junit.Before;
-import org.junit.Test;
 
 public class HibernateQueryFactoryTest {
 

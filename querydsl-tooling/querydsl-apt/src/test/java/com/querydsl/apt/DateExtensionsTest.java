@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Ignore;
-import org.junit.Test;
 
 @Ignore
 public class DateExtensionsTest extends AbstractProcessorTest {

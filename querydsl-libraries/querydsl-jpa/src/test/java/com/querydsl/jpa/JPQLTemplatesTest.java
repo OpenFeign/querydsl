@@ -8,7 +8,6 @@ import com.querydsl.core.types.Templates;
 import com.querydsl.core.types.TemplatesTestUtils;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
 
 public class JPQLTemplatesTest {
 

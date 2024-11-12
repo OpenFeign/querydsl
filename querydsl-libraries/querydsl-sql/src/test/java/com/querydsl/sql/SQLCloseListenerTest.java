@@ -8,7 +8,6 @@ import com.querydsl.sql.domain.Employee;
 import java.sql.SQLException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(H2.class)

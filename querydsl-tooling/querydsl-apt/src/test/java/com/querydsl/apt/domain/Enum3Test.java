@@ -3,7 +3,6 @@ package com.querydsl.apt.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import java.io.Serializable;
-import org.junit.Test;
 
 public class Enum3Test {
 

@@ -21,7 +21,6 @@ import com.querydsl.core.types.dsl.DateExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
 import java.util.Date;
-import org.junit.Test;
 
 public class TemplateTest {
 

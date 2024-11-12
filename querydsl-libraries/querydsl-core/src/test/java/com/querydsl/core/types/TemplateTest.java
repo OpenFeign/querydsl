@@ -15,8 +15,6 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
-
 public class TemplateTest {
 
   @Test

@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.hibernate.ScrollMode;
 import org.hibernate.Session;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(HibernateTestRunner.class)

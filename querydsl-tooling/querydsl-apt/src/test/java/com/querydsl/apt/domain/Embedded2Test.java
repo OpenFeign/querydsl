@@ -21,7 +21,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
-import org.junit.Test;
 
 public class Embedded2Test {
 

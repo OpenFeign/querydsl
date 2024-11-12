@@ -21,7 +21,6 @@ import com.querydsl.core.types.ToStringVisitor;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class BooleanBuilderTest {
 

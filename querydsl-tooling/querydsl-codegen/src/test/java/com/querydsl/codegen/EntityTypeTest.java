@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import java.util.Collections;
-import org.junit.Test;
 
 public class EntityTypeTest {
 

@@ -34,7 +34,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import org.junit.Before;
-import org.junit.Test;
 
 public class CustomTypesTest extends AbstractJDBCTest {
 

@@ -1,7 +1,6 @@
 package com.querydsl.sql;
 
 import com.querydsl.sql.domain.QSurvey;
-import org.junit.Test;
 
 public class SQLQueryTest {
 

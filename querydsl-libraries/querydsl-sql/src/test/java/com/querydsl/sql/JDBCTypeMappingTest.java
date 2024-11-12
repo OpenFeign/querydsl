@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Types;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 public class JDBCTypeMappingTest {

@@ -19,7 +19,6 @@ import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.ForeignKey;
 import com.querydsl.sql.PrimaryKey;
 import com.querydsl.sql.RelationalPathBase;
-import org.junit.Test;
 
 @SuppressWarnings("serial")
 public class KeyTest {

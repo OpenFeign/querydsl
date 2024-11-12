@@ -19,7 +19,6 @@ import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import org.junit.Test;
 
 public class HierarchyTest {
 

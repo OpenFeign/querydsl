@@ -3,7 +3,6 @@ package com.querydsl.sql.dml;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.domain.QEmployee;
-import org.junit.Test;
 
 public class AnnotationMapperTest extends AbstractMapperTest {
 

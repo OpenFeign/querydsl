@@ -20,7 +20,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
 
 public class StringHandlingTest extends AbstractQueryTest {
 

@@ -3,7 +3,6 @@ package com.querydsl.core.types;
 import com.querydsl.core.testutil.Serialization;
 import com.querydsl.core.types.dsl.Expressions;
 import java.io.IOException;
-import org.junit.Test;
 
 public class ExpressionSerializationTest {
 

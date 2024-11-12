@@ -19,7 +19,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.jpa.domain.QCat;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class TupleTest extends AbstractQueryTest {
 

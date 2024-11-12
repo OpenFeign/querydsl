@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.domain.QEmployee;
 import java.sql.Types;
-import org.junit.Test;
 
 public class ColumnMetadataTest {
 

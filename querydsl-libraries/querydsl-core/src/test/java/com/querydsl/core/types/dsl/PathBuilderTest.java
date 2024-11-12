@@ -20,7 +20,6 @@ import com.querydsl.core.util.BeanMap;
 import java.sql.Time;
 import java.util.Date;
 import java.util.Map;
-import org.junit.Test;
 
 public class PathBuilderTest {
 

@@ -23,7 +23,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import java.io.Serializable;
-import org.junit.Test;
 
 /** The Class Account. */
 @SuppressWarnings("serial")

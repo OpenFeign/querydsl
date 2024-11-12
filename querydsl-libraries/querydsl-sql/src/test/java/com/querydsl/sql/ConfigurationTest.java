@@ -34,7 +34,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Locale;
 import org.easymock.EasyMock;
-import org.junit.Test;
 
 public class ConfigurationTest {
 

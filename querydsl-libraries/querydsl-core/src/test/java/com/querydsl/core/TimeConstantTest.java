@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.dsl.TimeExpression;
 import java.sql.Time;
 import java.util.Calendar;
-import org.junit.Test;
 
 public class TimeConstantTest {
 

@@ -48,7 +48,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public abstract class InsertBase extends AbstractBaseTest {
 

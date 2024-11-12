@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.fail;
 
 import com.querydsl.core.types.dsl.EnumPath;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
 
 public class EnumConversionTest {
 

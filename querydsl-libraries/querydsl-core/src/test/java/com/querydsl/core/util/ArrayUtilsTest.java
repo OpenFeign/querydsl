@@ -16,7 +16,6 @@ package com.querydsl.core.util;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
-import org.junit.Test;
 
 public class ArrayUtilsTest {
 

@@ -19,7 +19,6 @@ import com.mysema.commons.lang.Pair;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
-import org.junit.Test;
 
 public class MappingProjectionTest {
 

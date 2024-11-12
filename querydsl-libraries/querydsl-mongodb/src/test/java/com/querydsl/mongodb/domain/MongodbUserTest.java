@@ -16,7 +16,6 @@ package com.querydsl.mongodb.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bson.types.ObjectId;
-import org.junit.Test;
 import org.mongodb.morphia.Morphia;
 
 public class MongodbUserTest {

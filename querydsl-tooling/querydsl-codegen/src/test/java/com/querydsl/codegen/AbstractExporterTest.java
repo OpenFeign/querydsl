@@ -1,7 +1,6 @@
 package com.querydsl.codegen;
 
 import java.io.File;
-import org.junit.Test;
 
 public abstract class AbstractExporterTest {
 

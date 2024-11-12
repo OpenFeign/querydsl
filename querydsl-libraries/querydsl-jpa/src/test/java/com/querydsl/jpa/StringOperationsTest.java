@@ -22,7 +22,6 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
 
 public class StringOperationsTest extends AbstractQueryTest {
 

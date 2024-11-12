@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import org.junit.Test;
 
 public class JSR310TimeSupportTest extends AbstractTest {
 

@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import org.easymock.EasyMock;
-import org.junit.Test;
 
 public class LocalDateTimeTest {
 

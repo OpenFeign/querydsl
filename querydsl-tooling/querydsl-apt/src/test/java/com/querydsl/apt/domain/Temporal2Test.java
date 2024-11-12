@@ -10,7 +10,6 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.math.BigDecimal;
 import java.util.Date;
-import org.junit.Test;
 
 public class Temporal2Test {
 

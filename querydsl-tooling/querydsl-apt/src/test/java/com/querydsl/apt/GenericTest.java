@@ -4,7 +4,6 @@ import com.querydsl.apt.jpa.JPAAnnotationProcessor;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Test;
 
 public class GenericTest extends AbstractProcessorTest {
 

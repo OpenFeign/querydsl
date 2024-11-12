@@ -6,7 +6,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import java.math.BigDecimal;
 import java.util.Arrays;
-import org.junit.Test;
 
 public class BigDecimalTest {
 

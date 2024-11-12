@@ -23,7 +23,6 @@ import com.querydsl.core.types.dsl.StringExpression;
 import jakarta.persistence.Entity;
 import java.util.Map;
 import javax.jdo.annotations.PersistenceCapable;
-import org.junit.Test;
 
 public class QueryProjectionTest {
 

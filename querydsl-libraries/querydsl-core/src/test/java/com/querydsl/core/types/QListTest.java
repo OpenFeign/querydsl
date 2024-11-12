@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Expressions;
 import java.util.List;
-import org.junit.Test;
 
 public class QListTest {
 

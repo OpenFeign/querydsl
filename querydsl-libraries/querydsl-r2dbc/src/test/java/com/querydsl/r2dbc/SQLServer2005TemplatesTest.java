@@ -22,7 +22,6 @@ import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.SQLOps;
-import org.junit.Test;
 
 public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
 

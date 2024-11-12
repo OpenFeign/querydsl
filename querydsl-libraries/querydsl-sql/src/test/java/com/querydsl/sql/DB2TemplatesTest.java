@@ -16,7 +16,6 @@ package com.querydsl.sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Ops;
-import org.junit.Test;
 
 public class DB2TemplatesTest extends AbstractSQLTemplatesTest {
 

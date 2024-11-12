@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.sql.OracleTemplates;
 import com.querydsl.sql.domain.QSurvey;
 import org.junit.Before;
-import org.junit.Test;
 
 public class OracleQueryTest {
 

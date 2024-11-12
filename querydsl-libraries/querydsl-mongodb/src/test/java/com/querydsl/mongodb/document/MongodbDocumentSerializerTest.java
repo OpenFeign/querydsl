@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Before;
-import org.junit.Test;
 
 public class MongodbDocumentSerializerTest {
 

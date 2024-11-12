@@ -7,7 +7,6 @@ import java.io.File;
 import java.lang.annotation.Annotation;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
-import org.junit.Test;
 
 public class GenericExporterMojoTest {
 

@@ -2,8 +2,6 @@ package com.querydsl.spatial;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
-
 public class GeometryPathTest {
 
   @Test

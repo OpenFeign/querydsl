@@ -19,7 +19,6 @@ import com.querydsl.core.types.QTuple;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class SerializationTest extends AbstractQueryTest {
 

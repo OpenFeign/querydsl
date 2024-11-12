@@ -27,7 +27,6 @@ import com.querydsl.sql.ddl.DropTableClause;
 import java.sql.SQLException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public abstract class KeywordQuotingBase extends AbstractBaseTest {
 

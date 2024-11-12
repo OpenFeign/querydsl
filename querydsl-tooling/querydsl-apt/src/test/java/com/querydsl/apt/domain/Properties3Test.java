@@ -7,7 +7,6 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import org.junit.Test;
 
 public class Properties3Test extends AbstractTest {
 

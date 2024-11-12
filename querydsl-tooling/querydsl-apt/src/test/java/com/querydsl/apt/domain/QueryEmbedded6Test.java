@@ -19,7 +19,6 @@ import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import java.util.List;
-import org.junit.Test;
 
 public class QueryEmbedded6Test {
 

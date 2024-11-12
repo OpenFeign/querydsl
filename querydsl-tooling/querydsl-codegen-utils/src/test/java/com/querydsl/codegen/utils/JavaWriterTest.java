@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.function.Function;
 import org.junit.Before;
-import org.junit.Test;
 
 public class JavaWriterTest {
 

@@ -101,7 +101,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public abstract class SelectBase extends AbstractBaseTest {
 

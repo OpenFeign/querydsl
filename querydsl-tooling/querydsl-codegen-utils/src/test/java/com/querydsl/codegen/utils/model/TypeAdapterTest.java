@@ -2,8 +2,6 @@ package com.querydsl.codegen.utils.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
-
 public class TypeAdapterTest {
 
   @Test

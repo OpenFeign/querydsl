@@ -17,7 +17,6 @@ import static com.querydsl.jpa.Constants.cat;
 import static com.querydsl.jpa.Constants.kitten;
 
 import com.querydsl.jpa.domain.QCat;
-import org.junit.Test;
 
 public class MathTest extends AbstractQueryTest {
 

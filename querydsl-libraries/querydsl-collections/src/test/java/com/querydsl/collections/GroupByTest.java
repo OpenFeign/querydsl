@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class GroupByTest {
 

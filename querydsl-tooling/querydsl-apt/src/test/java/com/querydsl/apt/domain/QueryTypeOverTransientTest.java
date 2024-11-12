@@ -19,7 +19,6 @@ import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryTransient;
 import com.querydsl.core.annotations.QueryType;
-import org.junit.Test;
 
 public class QueryTypeOverTransientTest {
 

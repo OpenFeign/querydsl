@@ -41,7 +41,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.SortedMap;
-import org.junit.Test;
 
 public class GroupByMapTest extends AbstractGroupByTest {
 

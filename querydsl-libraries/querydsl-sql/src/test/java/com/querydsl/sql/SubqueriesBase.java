@@ -30,7 +30,6 @@ import com.querydsl.sql.domain.QEmployee;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Arrays;
-import org.junit.Test;
 
 public abstract class SubqueriesBase extends AbstractBaseTest {
 

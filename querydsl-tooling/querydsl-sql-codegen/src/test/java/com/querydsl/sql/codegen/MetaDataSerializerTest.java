@@ -32,7 +32,6 @@ import java.sql.SQLException;
 import javax.tools.JavaCompiler;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 public class MetaDataSerializerTest extends AbstractJDBCTest {

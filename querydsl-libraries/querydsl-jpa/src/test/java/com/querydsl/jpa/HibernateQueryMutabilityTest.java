@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import org.hibernate.Session;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @Ignore

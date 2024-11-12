@@ -27,7 +27,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
-import org.junit.Test;
 
 public class QueryInit7Test {
 

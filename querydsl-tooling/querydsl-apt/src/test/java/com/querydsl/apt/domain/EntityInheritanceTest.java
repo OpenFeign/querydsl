@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
-import org.junit.Test;
 
 public class EntityInheritanceTest {
 

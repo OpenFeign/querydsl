@@ -2,7 +2,6 @@ package com.querydsl.apt.domain;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
 
 public class Array2Test {
 

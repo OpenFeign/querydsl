@@ -19,7 +19,6 @@ import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.hibernate.HibernateQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.junit.Before;
-import org.junit.Test;
 
 public class JPQLQueryTest {
 

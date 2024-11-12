@@ -9,7 +9,6 @@ import com.querydsl.sql.domain.QEmployee;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import org.junit.Test;
 
 public class RelationalPathExtractorTest {
 

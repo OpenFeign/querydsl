@@ -15,8 +15,6 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.cat;
 
-import org.junit.Test;
-
 public class AggregationTest extends AbstractQueryTest {
 
   @Test

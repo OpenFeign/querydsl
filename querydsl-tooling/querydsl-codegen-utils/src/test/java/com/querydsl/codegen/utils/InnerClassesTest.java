@@ -7,7 +7,6 @@ import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
 import java.io.IOException;
 import java.io.StringWriter;
-import org.junit.Test;
 
 public class InnerClassesTest {
 

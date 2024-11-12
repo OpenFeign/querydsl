@@ -4,7 +4,6 @@ import com.querydsl.core.annotations.QueryDelegate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparablePath;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
 
 public class Delegate3Test {
 

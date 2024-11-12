@@ -20,7 +20,6 @@ import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import org.junit.Before;
-import org.junit.Test;
 
 public class MetaDataTest {
 

@@ -37,7 +37,6 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.junit.Before;
-import org.junit.Test;
 
 public class LuceneSerializerNotTokenizedTest {
   private RAMDirectory idx;

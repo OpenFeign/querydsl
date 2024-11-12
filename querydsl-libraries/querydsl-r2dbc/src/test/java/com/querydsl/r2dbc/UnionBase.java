@@ -20,7 +20,6 @@ import com.querydsl.r2dbc.domain.QEmployee;
 import java.io.IOException;
 import java.util.Arrays;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public abstract class UnionBase extends AbstractBaseTest {
 

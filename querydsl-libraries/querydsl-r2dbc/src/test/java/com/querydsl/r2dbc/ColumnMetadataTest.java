@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.sql.ColumnMetadata;
 import java.sql.Types;
-import org.junit.Test;
 
 public class ColumnMetadataTest {
 

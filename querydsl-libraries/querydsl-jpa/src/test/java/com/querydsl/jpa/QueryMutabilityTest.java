@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import org.hibernate.Session;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class QueryMutabilityTest {
 

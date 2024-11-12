@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.H2Templates;
 import com.querydsl.sql.KeyAccessorsTest;
-import org.junit.Test;
 
 public class SQLMergeClauseTest {
 

@@ -6,7 +6,6 @@ import com.querydsl.r2dbc.KeyAccessorsTest.QEmployee;
 import com.querydsl.r2dbc.R2DBCExpressions;
 import com.querydsl.r2dbc.SQLTemplates;
 import java.util.Collections;
-import org.junit.Test;
 
 public class R2DBCUpdateClauseTest {
 

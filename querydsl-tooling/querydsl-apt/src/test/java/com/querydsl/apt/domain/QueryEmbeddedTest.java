@@ -19,7 +19,6 @@ import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
 
 public class QueryEmbeddedTest {
 

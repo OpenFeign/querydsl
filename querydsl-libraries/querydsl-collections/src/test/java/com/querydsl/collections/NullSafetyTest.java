@@ -3,7 +3,6 @@ package com.querydsl.collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
-import org.junit.Test;
 
 public class NullSafetyTest extends AbstractQueryTest {
 

@@ -16,7 +16,6 @@ package com.querydsl.collections;
 import com.querydsl.core.types.dsl.PathInits;
 import java.util.Collections;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class TypeCastTest {
 

@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.fail;
 import com.querydsl.core.types.ProjectionExample;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import org.junit.Test;
 
 /**
  * @author Shredder121

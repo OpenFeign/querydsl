@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.junit.Test;
 
 public class Generic16Test extends AbstractTest {
 

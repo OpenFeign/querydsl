@@ -10,7 +10,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.annotation.ElementType;
-import org.junit.Test;
 
 @Annotation(prop2 = false, clazz = AnnotationTest.class)
 @Annotation2("Hello")

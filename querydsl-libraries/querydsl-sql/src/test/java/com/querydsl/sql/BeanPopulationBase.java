@@ -28,7 +28,6 @@ import com.querydsl.sql.dml.BeanMapper;
 import com.querydsl.sql.domain.Employee;
 import com.querydsl.sql.domain.QEmployee;
 import org.junit.After;
-import org.junit.Test;
 
 @ExcludeIn({CUBRID, DB2, DERBY, ORACLE, SQLSERVER, POSTGRESQL, SQLITE, TERADATA})
 public abstract class BeanPopulationBase extends AbstractBaseTest {

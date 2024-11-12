@@ -6,7 +6,6 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
 
 public class ConstantHidingExpressionTest {
 

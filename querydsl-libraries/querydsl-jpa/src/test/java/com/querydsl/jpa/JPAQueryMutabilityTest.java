@@ -26,7 +26,6 @@ import jakarta.persistence.EntityManager;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @Ignore

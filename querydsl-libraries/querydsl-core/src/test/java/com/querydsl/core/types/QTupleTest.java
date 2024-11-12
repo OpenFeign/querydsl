@@ -19,7 +19,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.Arrays;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class QTupleTest {
 

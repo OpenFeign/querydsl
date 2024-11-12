@@ -20,7 +20,6 @@ import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.types.dsl.NumberPath;
 import java.io.Serializable;
 import java.util.Date;
-import org.junit.Test;
 
 public class Inheritance5Test {
 

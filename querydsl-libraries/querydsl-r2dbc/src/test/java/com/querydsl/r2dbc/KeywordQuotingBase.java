@@ -27,7 +27,6 @@ import com.querydsl.sql.ColumnMetadata;
 import com.querydsl.sql.RelationalPathBase;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public abstract class KeywordQuotingBase extends AbstractBaseTest {
 

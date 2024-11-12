@@ -6,7 +6,6 @@ import com.querydsl.core.domain.QAnimal;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.SimpleDTOProjection;
 import java.sql.Date;
-import org.junit.Test;
 
 public class SimpleDTOProjectionTest {
 

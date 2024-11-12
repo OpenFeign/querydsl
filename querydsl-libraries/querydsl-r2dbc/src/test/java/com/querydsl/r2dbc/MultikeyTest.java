@@ -15,8 +15,6 @@ package com.querydsl.r2dbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
-
 public class MultikeyTest {
 
   Multikey multiKey1 = new Multikey();

@@ -3,7 +3,6 @@ package com.querydsl.r2dbc.types;
 import java.util.Calendar;
 import java.util.TimeZone;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class LocalDateTimeTest {
 

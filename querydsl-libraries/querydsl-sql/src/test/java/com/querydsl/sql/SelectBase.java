@@ -103,7 +103,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.compress.utils.Sets;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public abstract class SelectBase extends AbstractBaseTest {
 

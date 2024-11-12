@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.hibernate.Session;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class SearchQueryTest extends AbstractQueryTest {
 

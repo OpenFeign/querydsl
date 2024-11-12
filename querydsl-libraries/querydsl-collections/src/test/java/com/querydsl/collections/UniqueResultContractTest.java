@@ -15,7 +15,6 @@ package com.querydsl.collections;
 
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.types.Expression;
-import org.junit.Test;
 
 public class UniqueResultContractTest extends AbstractQueryTest {
 

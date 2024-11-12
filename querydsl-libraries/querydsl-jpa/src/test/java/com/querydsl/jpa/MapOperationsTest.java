@@ -17,7 +17,6 @@ import static com.querydsl.jpa.Constants.show;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.jpa.impl.JPAQuery;
-import org.junit.Test;
 
 public class MapOperationsTest extends AbstractQueryTest {
 

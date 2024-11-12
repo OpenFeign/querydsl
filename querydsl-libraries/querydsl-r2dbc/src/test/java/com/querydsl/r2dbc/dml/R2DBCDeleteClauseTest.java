@@ -6,7 +6,6 @@ import com.querydsl.r2dbc.KeyAccessorsTest.QEmployee;
 import com.querydsl.r2dbc.SQLTemplates;
 import java.util.Collections;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class R2DBCDeleteClauseTest {
 

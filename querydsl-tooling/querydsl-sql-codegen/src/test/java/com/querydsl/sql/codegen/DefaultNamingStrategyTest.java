@@ -19,7 +19,6 @@ import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.Property;
 import com.querydsl.codegen.utils.model.Types;
 import org.junit.Before;
-import org.junit.Test;
 
 public class DefaultNamingStrategyTest {
 

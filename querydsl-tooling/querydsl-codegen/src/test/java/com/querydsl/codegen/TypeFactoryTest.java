@@ -28,7 +28,6 @@ import java.sql.Clob;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import org.junit.Test;
 
 public class TypeFactoryTest {
 

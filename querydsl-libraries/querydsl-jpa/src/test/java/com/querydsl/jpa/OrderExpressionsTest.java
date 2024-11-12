@@ -16,8 +16,6 @@ package com.querydsl.jpa;
 import static com.querydsl.jpa.Constants.cat;
 import static com.querydsl.jpa.Constants.kitten;
 
-import org.junit.Test;
-
 public class OrderExpressionsTest extends AbstractQueryTest {
 
   @Test

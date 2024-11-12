@@ -25,7 +25,6 @@ import jakarta.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Test;
 
 @SuppressWarnings({"rawtypes", "serial", "unchecked"})
 public class AbstractClasses2Test {

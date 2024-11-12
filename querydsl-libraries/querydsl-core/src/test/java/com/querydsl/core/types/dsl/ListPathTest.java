@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.PathMetadataFactory;
-import org.junit.Test;
 
 public class ListPathTest {
 

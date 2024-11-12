@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.within;
 
 import java.util.Arrays;
 import org.junit.Before;
-import org.junit.Test;
 
 public class AggregationTest extends AbstractQueryTest {
 

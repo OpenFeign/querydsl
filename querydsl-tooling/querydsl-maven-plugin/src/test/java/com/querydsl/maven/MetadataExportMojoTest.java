@@ -31,7 +31,6 @@ import org.apache.maven.project.MavenProject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TestName;
 
 public class MetadataExportMojoTest {

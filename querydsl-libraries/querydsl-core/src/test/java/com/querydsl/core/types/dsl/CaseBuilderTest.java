@@ -17,8 +17,6 @@ import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.core.alias.Alias.alias;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
-
 public class CaseBuilderTest {
 
   public enum Gender {

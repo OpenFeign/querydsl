@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.MappingProjection;
-import org.junit.Test;
 
 @SuppressWarnings("serial")
 public class MappingProjectionTest extends AbstractQueryTest {

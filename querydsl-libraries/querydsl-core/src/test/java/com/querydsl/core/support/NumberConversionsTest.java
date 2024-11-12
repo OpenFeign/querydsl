@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
 
 public class NumberConversionsTest {
 

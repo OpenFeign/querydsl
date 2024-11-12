@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.inject.Inject;
 import org.junit.After;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(GuiceTestRunner.class)

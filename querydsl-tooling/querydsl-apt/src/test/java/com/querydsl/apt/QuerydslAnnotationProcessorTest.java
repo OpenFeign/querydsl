@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Test;
 
 public class QuerydslAnnotationProcessorTest extends AbstractProcessorTest {
 

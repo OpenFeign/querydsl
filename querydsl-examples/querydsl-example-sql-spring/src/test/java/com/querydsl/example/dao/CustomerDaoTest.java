@@ -2,7 +2,6 @@ package com.querydsl.example.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class CustomerDaoTest extends AbstractDaoTest {

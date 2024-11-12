@@ -18,7 +18,6 @@ import java.io.Serializable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.junit.Ignore;
-import org.junit.Test;
 
 @Ignore
 public class AbstractProperties3Test {

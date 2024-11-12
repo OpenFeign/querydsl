@@ -26,7 +26,6 @@ import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
 
 public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
 

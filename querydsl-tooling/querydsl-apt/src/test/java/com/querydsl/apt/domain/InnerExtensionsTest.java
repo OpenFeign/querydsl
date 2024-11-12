@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
 
 public class InnerExtensionsTest extends AbstractProcessorTest {
 

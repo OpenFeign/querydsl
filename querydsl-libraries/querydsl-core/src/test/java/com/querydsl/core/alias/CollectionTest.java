@@ -17,7 +17,6 @@ import static com.querydsl.core.alias.Alias.$;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.EntityPath;
-import org.junit.Test;
 
 public class CollectionTest {
 

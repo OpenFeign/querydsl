@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.SomeClass;
 import java.io.IOException;
-import org.junit.Test;
 
 public class ClassPathUtilsTest {
 

@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import org.junit.Test;
 
 public class NoteTest extends AbstractProcessorTest {
 

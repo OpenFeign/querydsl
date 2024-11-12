@@ -16,7 +16,6 @@ package com.querydsl.core;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.StringExpression;
-import org.junit.Test;
 
 public class StringConstantTest {
 

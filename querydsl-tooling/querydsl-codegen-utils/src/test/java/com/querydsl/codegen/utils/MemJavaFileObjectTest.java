@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import javax.tools.JavaFileObject.Kind;
-import org.junit.Test;
 
 public class MemJavaFileObjectTest {
 

@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.junit.Test;
 
 public abstract class TypesBase extends AbstractBaseTest {
 

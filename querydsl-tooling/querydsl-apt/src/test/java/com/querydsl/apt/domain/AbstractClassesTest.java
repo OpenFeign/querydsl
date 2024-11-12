@@ -21,7 +21,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
-import org.junit.Test;
 
 @SuppressWarnings({"rawtypes", "serial", "unchecked"})
 public class AbstractClassesTest {

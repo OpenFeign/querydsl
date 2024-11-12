@@ -26,7 +26,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import org.junit.Test;
 
 public class CollQueryTest extends AbstractQueryTest {
 

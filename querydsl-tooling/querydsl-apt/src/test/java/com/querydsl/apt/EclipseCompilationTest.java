@@ -27,7 +27,6 @@ import java.util.List;
 import javax.tools.JavaCompiler;
 import org.eclipse.jdt.internal.compiler.tool.EclipseCompiler;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class EclipseCompilationTest {
 

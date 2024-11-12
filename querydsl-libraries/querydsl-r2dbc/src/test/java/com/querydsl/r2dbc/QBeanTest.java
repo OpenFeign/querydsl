@@ -19,7 +19,6 @@ import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.r2dbc.domain.Employee;
 import com.querydsl.r2dbc.domain.QEmployee;
-import org.junit.Test;
 
 public class QBeanTest {
 

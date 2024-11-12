@@ -74,7 +74,6 @@ import com.querydsl.jpa.domain.QFooDTO;
 import com.querydsl.jpa.domain.QItem;
 import com.querydsl.jpa.domain.QProduct;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class ParsingTest extends AbstractQueryTest {
 

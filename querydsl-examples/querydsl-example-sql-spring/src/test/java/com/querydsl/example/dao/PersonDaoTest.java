@@ -3,7 +3,6 @@ package com.querydsl.example.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.dto.Person;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonDaoTest extends AbstractDaoTest {

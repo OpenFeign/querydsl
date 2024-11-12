@@ -21,7 +21,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.RelationalFunctionCall;
-import org.junit.Test;
 
 public class R2DBCRelationalFunctionCallTest {
 

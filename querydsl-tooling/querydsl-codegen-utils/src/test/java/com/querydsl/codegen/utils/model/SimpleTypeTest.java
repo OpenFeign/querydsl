@@ -3,7 +3,6 @@ package com.querydsl.codegen.utils.model;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
-import org.junit.Test;
 
 public class SimpleTypeTest {
 

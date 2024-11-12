@@ -19,7 +19,6 @@ import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class ConstructorsTest extends AbstractQueryTest {
 

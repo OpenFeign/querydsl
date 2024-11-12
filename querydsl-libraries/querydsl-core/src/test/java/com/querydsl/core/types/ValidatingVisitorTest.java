@@ -19,7 +19,6 @@ import com.querydsl.core.types.dsl.Param;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;
-import org.junit.Test;
 
 @SuppressWarnings("unchecked")
 public class ValidatingVisitorTest {

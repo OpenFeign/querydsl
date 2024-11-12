@@ -1,31 +1,31 @@
 package com.querydsl.example.dao;
 
 import com.querydsl.example.dto.Customer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-public class CustomerDaoTest extends AbstractDaoTest {
+class CustomerDaoTest extends AbstractDaoTest {
 
   @Autowired CustomerDao customerDao;
 
   @Test
-  public void findAll() {
+  void findAll() {
     var setup = customerDao.findAll();
 
     StepVerifier.create(setup).expectNextCount(2).verifyComplete();
   }
 
   @Test
-  public void findById() {
+  void findById() {
     var setup = customerDao.findById(testDataService.customer1);
 
     StepVerifier.create(setup).expectNextCount(1).verifyComplete();
   }
 
   @Test
-  public void update() {
+  void update() {
     Mono<Customer> setup =
         customerDao
             .findById(testDataService.customer1)
@@ -35,7 +35,7 @@ public class CustomerDaoTest extends AbstractDaoTest {
   }
 
   @Test
-  public void delete() {
+  void delete() {
     Mono<Customer> setup =
         customerDao
             .findById(1)

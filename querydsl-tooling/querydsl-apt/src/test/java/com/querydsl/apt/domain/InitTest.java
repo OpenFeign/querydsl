@@ -7,7 +7,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
-import org.junit.Test;
 
 public class InitTest {
 

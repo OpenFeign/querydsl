@@ -14,7 +14,6 @@
 package com.querydsl.r2dbc;
 
 import com.querydsl.core.TemplatesTestBase;
-import org.junit.Test;
 
 public class TemplatesTest extends TemplatesTestBase {
 

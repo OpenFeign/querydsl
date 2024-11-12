@@ -3,7 +3,6 @@ package com.querydsl.sql.types;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Locale;
-import org.junit.Test;
 
 public class LocaleTypeTest {
 

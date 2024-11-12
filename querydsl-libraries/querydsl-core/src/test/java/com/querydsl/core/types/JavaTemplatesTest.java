@@ -2,8 +2,6 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
-
 public class JavaTemplatesTest {
 
   private Templates templates = JavaTemplates.DEFAULT;

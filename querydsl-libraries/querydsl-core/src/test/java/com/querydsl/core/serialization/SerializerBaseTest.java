@@ -19,7 +19,6 @@ import com.querydsl.core.types.JavaTemplates;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
 import java.util.Map;
-import org.junit.Test;
 
 public class SerializerBaseTest {
 

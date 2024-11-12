@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.After;
 import org.junit.Ignore;
-import org.junit.Test;
 
 // 5.664
 public class JPAProviderTest {

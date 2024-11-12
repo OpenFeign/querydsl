@@ -16,7 +16,6 @@ package com.querydsl.core.types;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Param;
-import org.junit.Test;
 
 public class ParamTest {
 

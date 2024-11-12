@@ -2,7 +2,6 @@ package com.querydsl.maven;
 
 import java.io.File;
 import org.apache.maven.project.MavenProject;
-import org.junit.Test;
 import org.sonatype.plexus.build.incremental.DefaultBuildContext;
 
 public class CompileMojoTest {

@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
 import java.util.Collections;
-import org.junit.Test;
 
 public class DeepPopulationTest {
 

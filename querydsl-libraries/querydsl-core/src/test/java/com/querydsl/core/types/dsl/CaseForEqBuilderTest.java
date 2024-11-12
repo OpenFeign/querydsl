@@ -18,7 +18,6 @@ import static com.querydsl.core.alias.Alias.alias;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Time;
-import org.junit.Test;
 
 public class CaseForEqBuilderTest {
 

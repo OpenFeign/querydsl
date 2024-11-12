@@ -20,7 +20,6 @@ import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.QEmployee;
 import com.querydsl.jpa.domain.QUser;
 import com.querydsl.jpa.hibernate.HibernateQuery;
-import org.junit.Test;
 
 public class HibernateQueryTest {
 

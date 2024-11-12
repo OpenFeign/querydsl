@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public abstract class AbstractJSR310DateTimeTypeTest<T extends Temporal> {
 

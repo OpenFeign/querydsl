@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.SimplePath;
 import java.util.Arrays;
 import java.util.List;
 import org.easymock.EasyMock;
-import org.junit.Test;
 
 public class MockTest {
 

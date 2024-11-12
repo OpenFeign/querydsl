@@ -19,7 +19,6 @@ import com.querydsl.r2dbc.domain.QSurvey;
 import io.r2dbc.spi.Connection;
 import org.easymock.EasyMock;
 import org.junit.Before;
-import org.junit.Test;
 import reactor.core.publisher.Mono;
 
 public class R2DBCQueryFactoryTest {

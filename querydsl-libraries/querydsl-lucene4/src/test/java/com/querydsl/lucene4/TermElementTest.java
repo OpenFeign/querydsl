@@ -19,7 +19,6 @@ import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
-import org.junit.Test;
 
 public class TermElementTest {
 

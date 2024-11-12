@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class QueryElementTest {
 

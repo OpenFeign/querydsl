@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.junit.Test;
 
 public class PathTest {
 

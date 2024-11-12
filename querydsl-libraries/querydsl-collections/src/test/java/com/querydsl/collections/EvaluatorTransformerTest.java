@@ -19,7 +19,6 @@ import com.querydsl.codegen.utils.Evaluator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
 import java.util.Collections;
-import org.junit.Test;
 
 public class EvaluatorTransformerTest {
 

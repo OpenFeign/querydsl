@@ -19,7 +19,6 @@ import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import org.junit.Test;
 
 public class JDOTest extends AbstractTest {
 

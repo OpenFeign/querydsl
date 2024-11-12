@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
 import org.junit.Ignore;
-import org.junit.Test;
 
 @Ignore
 public class IncrementalCompilationTest extends AbstractProcessorTest {

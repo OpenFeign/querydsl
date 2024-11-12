@@ -1,7 +1,6 @@
 package com.querydsl.r2dbc.types;
 
 import java.time.ZonedDateTime;
-import org.junit.Test;
 
 public class JSR310ZonedDateTimeTypeTest extends AbstractJSR310DateTimeTypeTest<ZonedDateTime> {
 

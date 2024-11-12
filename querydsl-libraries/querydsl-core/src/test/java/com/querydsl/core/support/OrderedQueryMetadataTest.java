@@ -23,7 +23,6 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadataFactory;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
 
 public class OrderedQueryMetadataTest {
 

@@ -25,7 +25,6 @@ import java.sql.Statement;
 import java.util.Collections;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public class GeneratedKeysH2Test {
 

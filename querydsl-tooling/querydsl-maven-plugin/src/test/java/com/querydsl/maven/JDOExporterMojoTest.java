@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import org.apache.maven.project.MavenProject;
-import org.junit.Test;
 
 public class JDOExporterMojoTest {
 

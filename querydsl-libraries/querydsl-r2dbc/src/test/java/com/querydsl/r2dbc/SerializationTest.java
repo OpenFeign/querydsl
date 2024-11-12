@@ -26,7 +26,6 @@ import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.r2dbc.domain.QSurvey;
 import io.r2dbc.spi.Connection;
 import org.easymock.EasyMock;
-import org.junit.Test;
 
 public class SerializationTest {
 

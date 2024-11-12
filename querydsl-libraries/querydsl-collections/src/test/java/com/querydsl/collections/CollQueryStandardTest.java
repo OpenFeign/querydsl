@@ -31,7 +31,6 @@ import com.querydsl.core.types.dsl.Param;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import org.junit.Test;
 
 public class CollQueryStandardTest {
 

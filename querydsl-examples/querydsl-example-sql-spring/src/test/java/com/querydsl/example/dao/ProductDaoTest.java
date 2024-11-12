@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.example.dto.Product;
 import com.querydsl.example.dto.ProductL10n;
 import java.util.Collections;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProductDaoTest extends AbstractDaoTest {

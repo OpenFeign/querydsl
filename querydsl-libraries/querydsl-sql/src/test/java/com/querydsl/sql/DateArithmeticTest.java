@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(ReportingOnly.class)

@@ -20,7 +20,6 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class BeanPathTest {
 

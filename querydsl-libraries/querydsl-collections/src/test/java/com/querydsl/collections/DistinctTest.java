@@ -19,7 +19,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
 
 public class DistinctTest extends AbstractQueryTest {
 

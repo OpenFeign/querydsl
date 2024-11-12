@@ -20,7 +20,6 @@ import org.eclipse.persistence.internal.localization.ExceptionLocalization;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.spi.ScrollableResultsImplementor;
 import org.hibernate.transform.ResultTransformer;
-import org.junit.Test;
 
 public class HibernateHandlerTest {
 

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.codegen.utils.model.TypeExtends;
 import com.querydsl.core.annotations.QueryEntity;
 import java.io.File;
-import org.junit.Test;
 
 public class Inheritance2Test {
 

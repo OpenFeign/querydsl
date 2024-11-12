@@ -20,7 +20,6 @@ import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.TimeExpression;
 import java.util.Date;
-import org.junit.Test;
 
 public class DateTimeTest extends AbstractQueryTest {
 

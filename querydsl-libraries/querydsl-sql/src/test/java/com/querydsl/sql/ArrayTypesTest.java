@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Types;
 import org.junit.Before;
-import org.junit.Test;
 
 public class ArrayTypesTest {
 

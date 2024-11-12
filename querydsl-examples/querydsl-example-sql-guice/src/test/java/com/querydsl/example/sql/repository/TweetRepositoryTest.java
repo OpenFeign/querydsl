@@ -7,7 +7,6 @@ import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.Usert;
 import jakarta.inject.Inject;
 import org.junit.Before;
-import org.junit.Test;
 
 public class TweetRepositoryTest extends AbstractPersistenceTest {
   @Inject private TweetRepository repository;

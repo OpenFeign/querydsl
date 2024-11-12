@@ -1,7 +1,6 @@
 package com.querydsl.r2dbc.types;
 
 import java.time.Instant;
-import org.junit.Test;
 
 public class JSR310InstantTypeTest extends AbstractJSR310DateTimeTypeTest<Instant> {
 

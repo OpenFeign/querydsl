@@ -37,7 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 import org.easymock.EasyMock;
-import org.junit.Test;
 
 public class SQLSerializerTest {
 

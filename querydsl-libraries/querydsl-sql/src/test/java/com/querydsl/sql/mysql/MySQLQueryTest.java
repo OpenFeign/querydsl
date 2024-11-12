@@ -19,7 +19,6 @@ import com.querydsl.sql.MySQLTemplates;
 import com.querydsl.sql.domain.QSurvey;
 import java.io.File;
 import org.junit.Before;
-import org.junit.Test;
 
 public class MySQLQueryTest {
   private MySQLQuery<?> query;

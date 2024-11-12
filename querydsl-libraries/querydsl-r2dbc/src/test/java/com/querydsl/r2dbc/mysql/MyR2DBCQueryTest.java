@@ -19,7 +19,6 @@ import com.querydsl.r2dbc.MySQLTemplates;
 import com.querydsl.r2dbc.domain.QSurvey;
 import java.io.File;
 import org.junit.Before;
-import org.junit.Test;
 
 public class MyR2DBCQueryTest {
   private R2DBCMySQLQuery<?> query;

@@ -8,7 +8,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.MathExpressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import java.util.Collections;
-import org.junit.Test;
 
 public class MathTest {
 

@@ -12,7 +12,6 @@ import com.querydsl.sql.H2Templates;
 import com.querydsl.sql.SQLExceptionTranslator;
 import java.sql.SQLException;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 @Category(H2.class)

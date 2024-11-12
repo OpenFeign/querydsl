@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
 import java.util.Map;
-import org.junit.Test;
 
 public class ClassTypeTest {
 

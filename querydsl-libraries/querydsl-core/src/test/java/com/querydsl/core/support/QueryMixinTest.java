@@ -21,7 +21,6 @@ import com.querydsl.core.domain.QCommonPersistence;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
 
 public class QueryMixinTest {
 

@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.sql.AbstractJDBCTest;
 import java.sql.SQLException;
-import org.junit.Test;
 
 public class KeyDataFactoryTest extends AbstractJDBCTest {
 

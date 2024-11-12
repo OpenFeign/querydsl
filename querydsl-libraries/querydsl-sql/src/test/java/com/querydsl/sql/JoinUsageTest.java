@@ -17,7 +17,6 @@ import static com.querydsl.sql.SQLExpressions.selectFrom;
 
 import com.querydsl.sql.domain.QSurvey;
 import org.junit.Ignore;
-import org.junit.Test;
 
 public class JoinUsageTest {
 

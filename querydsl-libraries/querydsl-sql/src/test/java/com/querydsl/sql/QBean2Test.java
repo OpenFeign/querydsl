@@ -22,7 +22,6 @@ import com.querydsl.core.types.QBean;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
-import org.junit.Test;
 
 public class QBean2Test {
 

@@ -16,7 +16,6 @@ package com.querydsl.r2dbc;
 import static org.assertj.core.api.Assertions.fail;
 
 import java.lang.reflect.Field;
-import org.junit.Test;
 
 public class SQLTypeMappingTest {
 

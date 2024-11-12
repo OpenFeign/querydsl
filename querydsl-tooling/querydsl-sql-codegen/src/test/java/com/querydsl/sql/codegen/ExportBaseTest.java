@@ -19,7 +19,6 @@ import com.querydsl.sql.Connections;
 import java.sql.SQLException;
 import org.junit.AfterClass;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 public abstract class ExportBaseTest {

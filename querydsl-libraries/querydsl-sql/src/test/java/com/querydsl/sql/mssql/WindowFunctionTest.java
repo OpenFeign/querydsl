@@ -21,7 +21,6 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLSerializer;
 import com.querydsl.sql.SQLTemplates;
-import org.junit.Test;
 
 public class WindowFunctionTest {
 

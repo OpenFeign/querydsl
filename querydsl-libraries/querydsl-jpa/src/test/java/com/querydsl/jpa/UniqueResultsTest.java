@@ -21,7 +21,6 @@ import com.querydsl.jpa.hibernate.HibernateQuery;
 import com.querydsl.jpa.testutil.HibernateTestRunner;
 import org.hibernate.Session;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @Ignore

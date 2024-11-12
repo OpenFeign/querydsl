@@ -1,7 +1,6 @@
 package com.querydsl.r2dbc.types;
 
 import java.time.OffsetTime;
-import org.junit.Test;
 
 public class JSR310OffsetTimeTypeTest extends AbstractJSR310DateTimeTypeTest<OffsetTime> {
 

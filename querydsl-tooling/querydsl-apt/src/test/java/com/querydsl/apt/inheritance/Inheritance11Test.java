@@ -16,7 +16,6 @@ package com.querydsl.apt.inheritance;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
-import org.junit.Test;
 
 public class Inheritance11Test {
 

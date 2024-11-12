@@ -19,7 +19,6 @@ import com.querydsl.core.types.JavaTemplates;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Templates;
-import org.junit.Test;
 
 public class JavaTemplatesTest {
 

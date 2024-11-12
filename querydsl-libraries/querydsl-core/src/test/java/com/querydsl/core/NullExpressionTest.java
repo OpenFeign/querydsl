@@ -21,7 +21,6 @@ import com.querydsl.core.types.ExpressionException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import java.time.LocalDate;
-import org.junit.Test;
 
 public class NullExpressionTest {
 

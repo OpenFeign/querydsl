@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Template;
 import com.querydsl.sql.HSQLDBTemplates;
-import org.junit.Test;
 
 public class DialectSupportTest {
 

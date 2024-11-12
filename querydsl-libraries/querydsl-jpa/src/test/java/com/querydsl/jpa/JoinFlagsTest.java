@@ -17,8 +17,6 @@ import static com.querydsl.jpa.Constants.cat;
 import static com.querydsl.jpa.Constants.cat1;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
-
 public class JoinFlagsTest extends AbstractQueryTest {
   @Test
   public void fetch() {

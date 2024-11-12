@@ -20,7 +20,6 @@ import com.querydsl.sql.domain.QSurvey;
 import java.sql.Connection;
 import org.easymock.EasyMock;
 import org.junit.Before;
-import org.junit.Test;
 
 public class JoinFlagsTest {
 

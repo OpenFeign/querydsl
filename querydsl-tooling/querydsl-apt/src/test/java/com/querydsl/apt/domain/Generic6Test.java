@@ -1,7 +1,6 @@
 package com.querydsl.apt.domain;
 
 import jakarta.persistence.Entity;
-import org.junit.Test;
 
 public class Generic6Test {
 

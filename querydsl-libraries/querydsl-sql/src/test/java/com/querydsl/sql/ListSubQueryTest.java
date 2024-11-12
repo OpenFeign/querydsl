@@ -9,7 +9,6 @@ import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Test;
 
 public class ListSubQueryTest {
 

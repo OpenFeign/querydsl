@@ -15,7 +15,6 @@ package com.querydsl.core.types;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.junit.Test;
 
 public class VisitorTest {
 

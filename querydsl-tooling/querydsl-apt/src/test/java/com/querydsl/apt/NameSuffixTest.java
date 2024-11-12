@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import org.junit.Test;
 
 public class NameSuffixTest extends AbstractProcessorTest {
 
