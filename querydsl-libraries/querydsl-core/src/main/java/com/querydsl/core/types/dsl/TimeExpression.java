@@ -163,7 +163,7 @@ public abstract class TimeExpression<T extends Comparable> extends TemporalExpre
    */
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public TimeExpression<T> coalesce(Expression<?>... exprs) {
+  public TimeExpression<T> coalesce(Expression<T>... exprs) {
     var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);

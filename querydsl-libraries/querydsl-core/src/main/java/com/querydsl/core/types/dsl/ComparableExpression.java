@@ -436,7 +436,7 @@ public abstract class ComparableExpression<T extends Comparable>
    */
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public ComparableExpression<T> coalesce(Expression<?>... exprs) {
+  public ComparableExpression<T> coalesce(Expression<T>... exprs) {
     var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);

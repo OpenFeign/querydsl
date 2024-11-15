@@ -873,7 +873,7 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
    */
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public NumberExpression<T> coalesce(Expression<?>... exprs) {
+  public NumberExpression<T> coalesce(Expression<T>... exprs) {
     var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);
