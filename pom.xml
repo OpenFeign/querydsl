@@ -108,7 +108,7 @@
     <spring.version>6.2.0</spring.version>
 
     <!-- SQL deps -->
-    <db2.version>11.5.9.0</db2.version>
+    <db2.version>12.1.0.0</db2.version>
     <derby.version>10.17.1.0</derby.version>
     <hsqldb.version>2.7.4</hsqldb.version>
     <h2.version>2.3.232</h2.version>
