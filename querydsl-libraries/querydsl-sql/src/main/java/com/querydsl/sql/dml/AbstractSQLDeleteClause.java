@@ -53,9 +53,10 @@ public abstract class AbstractSQLDeleteClause<C extends AbstractSQLDeleteClause<
   protected static final ValidatingVisitor validatingVisitor =
       new ValidatingVisitor(
           """
-			Undeclared path '%s'. \
-			A delete operation can only reference a single table. \
-			Consider this alternative: DELETE ... WHERE EXISTS (subquery)""");
+          Undeclared path '%s'. \
+          A delete operation can only reference a single table. \
+          Consider this alternative: DELETE ... WHERE EXISTS (subquery)\
+          """);
 
   protected final RelationalPath<?> entity;
 
