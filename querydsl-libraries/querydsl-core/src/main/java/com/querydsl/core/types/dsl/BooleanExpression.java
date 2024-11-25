@@ -199,7 +199,7 @@ public abstract class BooleanExpression extends LiteralExpression<Boolean> imple
    */
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public BooleanExpression coalesce(Expression<?>... exprs) {
+  public BooleanExpression coalesce(Expression<Boolean>... exprs) {
     var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);

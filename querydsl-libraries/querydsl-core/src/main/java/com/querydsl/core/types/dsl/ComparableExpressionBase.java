@@ -68,7 +68,7 @@ public abstract class ComparableExpressionBase<T extends Comparable> extends Sim
    * @return coalesce
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public ComparableExpressionBase<T> coalesce(Expression<?>... exprs) {
+  public ComparableExpressionBase<T> coalesce(Expression<T>... exprs) {
     var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);

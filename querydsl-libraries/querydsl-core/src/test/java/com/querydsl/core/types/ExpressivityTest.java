@@ -90,7 +90,7 @@ public class ExpressivityTest {
     // Field<T>               coalesce(Field<T> option, Field<?>... options)
     str.coalesce(str);
     // Field<T>               coalesce(T option, T... options)
-
+    str.coalesce(str, str);
     // Field<String>          concat(Field<?>... fields)
     str.concat(str);
     // Field<String>          concat(String... values)

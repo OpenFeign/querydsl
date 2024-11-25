@@ -894,7 +894,7 @@ public abstract class StringExpression extends LiteralExpression<String> {
    */
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public StringExpression coalesce(Expression<?>... exprs) {
+  public StringExpression coalesce(Expression<String>... exprs) {
     var coalesce = new Coalesce<>(getType(), mixin);
     for (Expression expr : exprs) {
       coalesce.add(expr);
