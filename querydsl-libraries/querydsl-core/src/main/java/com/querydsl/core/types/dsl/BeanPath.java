@@ -23,6 +23,7 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.PathType;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BeanPath<T> extends SimpleExpression<T> implements Path<T> {
 
-  private static final long serialVersionUID = -1845524024957822731L;
+  @Serial private static final long serialVersionUID = -1845524024957822731L;
 
   private final Map<Class<?>, Object> casts = new ConcurrentHashMap<>();
 

@@ -16,6 +16,7 @@ package com.querydsl.core.types.dsl;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
+import java.io.Serial;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class EntityPathBase<T> extends BeanPath<T> implements EntityPath<T> {
 
-  private static final long serialVersionUID = -8610055828414880996L;
+  @Serial private static final long serialVersionUID = -8610055828414880996L;
 
   public EntityPathBase(Class<? extends T> type, String variable) {
     super(type, variable);

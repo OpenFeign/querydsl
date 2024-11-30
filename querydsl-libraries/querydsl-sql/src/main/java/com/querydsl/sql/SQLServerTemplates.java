@@ -189,19 +189,13 @@ public class SQLServerTemplates extends SQLTemplates {
 
   @Override
   public String serialize(String literal, int jdbcType) {
-    switch (jdbcType) {
-      case Types.TIMESTAMP:
-        return "CAST('" + literal + "' AS DATETIME2)";
-      case TIMESTAMP_WITH_TIMEZONE:
-        return "CAST('" + literal + "' AS DATETIMEOFFSET)";
-      case Types.DATE:
-        return "CAST('" + literal + "' AS DATE)";
-      case Types.TIME:
-      case TIME_WITH_TIMEZONE:
-        return "CAST('" + literal + "' AS TIME)";
-      default:
-        return super.serialize(literal, jdbcType);
-    }
+    return switch (jdbcType) {
+      case Types.TIMESTAMP -> "CAST('" + literal + "' AS DATETIME2)";
+      case TIMESTAMP_WITH_TIMEZONE -> "CAST('" + literal + "' AS DATETIMEOFFSET)";
+      case Types.DATE -> "CAST('" + literal + "' AS DATE)";
+      case Types.TIME, TIME_WITH_TIMEZONE -> "CAST('" + literal + "' AS TIME)";
+      default -> super.serialize(literal, jdbcType);
+    };
   }
 
   @Override

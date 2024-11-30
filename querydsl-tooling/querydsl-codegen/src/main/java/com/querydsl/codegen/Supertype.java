@@ -59,8 +59,8 @@ public class Supertype {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Supertype) {
-      return ((Supertype) o).type.equals(type);
+    } else if (o instanceof Supertype supertype) {
+      return supertype.type.equals(type);
     } else {
       return false;
     }

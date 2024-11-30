@@ -13,6 +13,7 @@
  */
 package com.querydsl.core;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class QueryResults<T> implements Serializable {
 
-  private static final long serialVersionUID = -4591506147471300909L;
+  @Serial private static final long serialVersionUID = -4591506147471300909L;
 
   private static final QueryResults<Object> EMPTY =
       new QueryResults<>(Collections.emptyList(), Long.MAX_VALUE, 0L, 0L);

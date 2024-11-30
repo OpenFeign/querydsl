@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-root</artifactId>
-  <version>6.10-SNAPSHOT</version>
+  <version>7.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>Querydsl</name>
@@ -96,7 +96,7 @@
     <argLine>-Xms256m -Xmx512m</argLine>
 
     <!-- default bytecode version for src/main -->
-    <main.java.version>11</main.java.version>
+    <main.java.version>17</main.java.version>
     <latest.java.version>21</latest.java.version>
 
     <git-code-format-maven-plugin.version>5.3</git-code-format-maven-plugin.version>
@@ -125,10 +125,10 @@
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
     <!-- JPA deps -->
-    <hibernate.version>6.6.3.Final</hibernate.version>
+    <hibernate.version>7.0.0.Beta2</hibernate.version>
     <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
-    <eclipselink.version>4.0.4</eclipselink.version>
-    <jpa.version>3.1.0</jpa.version>
+    <eclipselink.version>5.0.0-B04</eclipselink.version>
+    <jpa.version>3.2.0</jpa.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 
     <assertj.version>3.26.3</assertj.version>
@@ -1055,7 +1055,7 @@
                 <configuration>
                   <exportDatatables>true</exportDatatables>
                   <activeRecipes>
-                    <recipe>org.openrewrite.java.migrate.Java8toJava11</recipe>
+                    <recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe>
                   </activeRecipes>
                 </configuration>
               </execution>

@@ -17,6 +17,7 @@ import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.CollectionUtils;
 import com.querydsl.core.util.MathUtils;
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -34,7 +35,7 @@ import java.util.function.Function;
 @Immutable
 public final class Template implements Serializable {
 
-  private static final long serialVersionUID = -1697705745769542204L;
+  @Serial private static final long serialVersionUID = -1697705745769542204L;
 
   private static final Set<? extends Operator> CONVERTIBLES =
       Collections.unmodifiableSet(EnumSet.of(Ops.ADD, Ops.SUB));
@@ -43,7 +44,7 @@ public final class Template implements Serializable {
   @Immutable
   public abstract static class Element implements Serializable {
 
-    private static final long serialVersionUID = 3396877288101929387L;
+    @Serial private static final long serialVersionUID = 3396877288101929387L;
 
     public abstract Object convert(List<?> args);
 
@@ -53,7 +54,7 @@ public final class Template implements Serializable {
   /** Expression as string */
   public static final class AsString extends Element {
 
-    private static final long serialVersionUID = -655362047873616197L;
+    @Serial private static final long serialVersionUID = -655362047873616197L;
 
     private final int index;
 
@@ -88,7 +89,7 @@ public final class Template implements Serializable {
   /** Static text element */
   public static final class StaticText extends Element {
 
-    private static final long serialVersionUID = -2791869625053368023L;
+    @Serial private static final long serialVersionUID = -2791869625053368023L;
 
     private final String text;
 
@@ -122,7 +123,7 @@ public final class Template implements Serializable {
   /** Transformed expression */
   public static final class Transformed extends Element {
 
-    private static final long serialVersionUID = 702677732175745567L;
+    @Serial private static final long serialVersionUID = 702677732175745567L;
 
     private final int index;
 
@@ -159,7 +160,7 @@ public final class Template implements Serializable {
   /** Argument by index */
   public static final class ByIndex extends Element {
 
-    private static final long serialVersionUID = 4711323946026029998L;
+    @Serial private static final long serialVersionUID = 4711323946026029998L;
 
     private final int index;
 
@@ -173,8 +174,8 @@ public final class Template implements Serializable {
     @Override
     public Object convert(final List<?> args) {
       final Object arg = args.get(index);
-      if (arg instanceof Expression) {
-        return ExpressionUtils.extract((Expression<?>) arg);
+      if (arg instanceof Expression<?> expression) {
+        return ExpressionUtils.extract(expression);
       } else {
         return arg;
       }
@@ -198,7 +199,7 @@ public final class Template implements Serializable {
   /** Math operation */
   public static final class Operation extends Element {
 
-    private static final long serialVersionUID = 1400801176778801584L;
+    @Serial private static final long serialVersionUID = 1400801176778801584L;
 
     private final int index1, index2;
 
@@ -223,20 +224,19 @@ public final class Template implements Serializable {
         Expression<?> expr1 = asExpression(arg1);
         Expression<?> expr2 = asExpression(arg2);
 
-        if (arg2 instanceof Number) {
+        if (arg2 instanceof Number number) {
           if (CONVERTIBLES.contains(operator)
-              && expr1 instanceof com.querydsl.core.types.Operation) {
-            var operation = (com.querydsl.core.types.Operation) expr1;
+              && expr1 instanceof com.querydsl.core.types.Operation<?> operation) {
             if (CONVERTIBLES.contains(operation.getOperator())
                 && operation.getArg(1) instanceof Constant) {
               var num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
               Number num2;
               if (operator == operation.getOperator()) {
-                num2 = MathUtils.result(num1, (Number) arg2, Ops.ADD);
+                num2 = MathUtils.result(num1, number, Ops.ADD);
               } else if (operator == Ops.ADD) {
-                num2 = MathUtils.result((Number) arg2, num1, Ops.SUB);
+                num2 = MathUtils.result(number, num1, Ops.SUB);
               } else {
-                num2 = MathUtils.result(num1, (Number) arg2, Ops.SUB);
+                num2 = MathUtils.result(num1, number, Ops.SUB);
               }
               return ExpressionUtils.operation(
                   expr1.getType(), operator, operation.getArg(0), Expressions.constant(num2));
@@ -262,7 +262,7 @@ public final class Template implements Serializable {
   /** Math operation with constant */
   public static final class OperationConst extends Element {
 
-    private static final long serialVersionUID = 1400801176778801584L;
+    @Serial private static final long serialVersionUID = 1400801176778801584L;
 
     private final int index1;
 
@@ -295,8 +295,8 @@ public final class Template implements Serializable {
       } else {
         Expression<?> expr1 = asExpression(arg1);
 
-        if (CONVERTIBLES.contains(operator) && expr1 instanceof com.querydsl.core.types.Operation) {
-          var operation = (com.querydsl.core.types.Operation) expr1;
+        if (CONVERTIBLES.contains(operator)
+            && expr1 instanceof com.querydsl.core.types.Operation<?> operation) {
           if (CONVERTIBLES.contains(operation.getOperator())
               && operation.getArg(1) instanceof Constant) {
             var num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
@@ -350,8 +350,8 @@ public final class Template implements Serializable {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Template) {
-      return ((Template) o).template.equals(template);
+    } else if (o instanceof Template template1) {
+      return template1.template.equals(template);
     } else {
       return false;
     }
@@ -363,23 +363,22 @@ public final class Template implements Serializable {
   }
 
   private static Number asNumber(Object arg) {
-    if (arg instanceof Number) {
-      return (Number) arg;
-    } else if (arg instanceof Constant) {
-      return (Number) ((Constant) arg).getConstant();
+    if (arg instanceof Number number) {
+      return number;
+    } else if (arg instanceof Constant<?> constant) {
+      return (Number) constant.getConstant();
     } else {
       throw new IllegalArgumentException(arg.toString());
     }
   }
 
   private static boolean isNumber(Object o) {
-    return o instanceof Number
-        || o instanceof Constant && ((Constant<?>) o).getConstant() instanceof Number;
+    return o instanceof Number || o instanceof Constant<?> c && c.getConstant() instanceof Number;
   }
 
   private static Expression<?> asExpression(Object arg) {
-    if (arg instanceof Expression) {
-      return ExpressionUtils.extract((Expression<?>) arg);
+    if (arg instanceof Expression<?> expression) {
+      return ExpressionUtils.extract(expression);
     } else {
       return Expressions.constant(arg);
     }

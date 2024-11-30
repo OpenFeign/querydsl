@@ -20,6 +20,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.DslExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import java.io.Serial;
 
 /**
  * A base class for GroupExpressions
@@ -30,7 +31,7 @@ import com.querydsl.core.types.dsl.Expressions;
  */
 public abstract class AbstractGroupExpression<T, R> implements GroupExpression<T, R> {
 
-  private static final long serialVersionUID = 1509709546966783160L;
+  @Serial private static final long serialVersionUID = 1509709546966783160L;
 
   private final Class<? extends R> type;
 

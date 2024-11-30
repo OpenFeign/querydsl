@@ -74,8 +74,7 @@ public class ClassType implements Type {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Type) {
-      var t = (Type) o;
+    } else if (o instanceof Type t) {
       return t.getFullName().equals(className) && t.getParameters().equals(parameters);
     } else {
       return false;

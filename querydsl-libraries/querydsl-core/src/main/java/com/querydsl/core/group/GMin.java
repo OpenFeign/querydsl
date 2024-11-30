@@ -14,6 +14,7 @@
 package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
+import java.io.Serial;
 
 /**
  * GMin
@@ -22,7 +23,7 @@ import com.querydsl.core.types.Expression;
  */
 public class GMin<T extends Comparable<? super T>> extends AbstractGroupExpression<T, T> {
 
-  private static final long serialVersionUID = 8312168556148122576L;
+  @Serial private static final long serialVersionUID = 8312168556148122576L;
 
   @SuppressWarnings("unchecked")
   public GMin(Expression<T> expr) {

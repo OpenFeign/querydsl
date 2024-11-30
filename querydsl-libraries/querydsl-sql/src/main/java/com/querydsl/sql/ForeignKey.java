@@ -26,6 +26,7 @@ import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 @Immutable
 public final class ForeignKey<E> implements Serializable, ProjectionRole<Tuple> {
 
-  private static final long serialVersionUID = 2260578033772289023L;
+  @Serial private static final long serialVersionUID = 2260578033772289023L;
 
   private final RelationalPath<?> entity;
 

@@ -18,6 +18,7 @@ import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.FactoryExpressionBase;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.util.MathUtils;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ import java.util.Map;
  */
 public class NumberConversions<T> extends FactoryExpressionBase<T> {
 
-  private static final long serialVersionUID = -7834053123363933721L;
+  @Serial private static final long serialVersionUID = -7834053123363933721L;
 
   private final FactoryExpression<T> expr;
 
@@ -68,16 +69,16 @@ public class NumberConversions<T> extends FactoryExpressionBase<T> {
     for (var i = 0; i < args.length; i++) {
       Class<?> type = expr.getArgs().get(i).getType();
       if (Enum.class.isAssignableFrom(type) && !type.isInstance(args[i])) {
-        if (args[i] instanceof String) {
-          args[i] = Enum.valueOf((Class) type, (String) args[i]);
-        } else if (args[i] instanceof Number) {
-          args[i] = getValues((Class) type)[((Number) args[i]).intValue()];
+        if (args[i] instanceof String string) {
+          args[i] = Enum.valueOf((Class) type, string);
+        } else if (args[i] instanceof Number number) {
+          args[i] = getValues((Class) type)[number.intValue()];
         }
-      } else if (args[i] instanceof Number && !type.isInstance(args[i])) {
+      } else if (args[i] instanceof Number number && !type.isInstance(args[i])) {
         if (type.equals(Boolean.class)) {
-          args[i] = ((Number) args[i]).intValue() > 0;
+          args[i] = number.intValue() > 0;
         } else if (Number.class.isAssignableFrom(type)) {
-          args[i] = MathUtils.cast((Number) args[i], (Class) type);
+          args[i] = MathUtils.cast(number, (Class) type);
         }
       }
     }

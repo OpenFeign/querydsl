@@ -16,6 +16,7 @@ package com.querydsl.core.group;
 import com.mysema.commons.lang.Pair;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
+import java.io.Serial;
 
 /**
  * A pair of (Map) key and value
@@ -26,7 +27,7 @@ import com.querydsl.core.types.Expression;
  */
 public final class QPair<K, V> extends ConstructorExpression<Pair<K, V>> {
 
-  private static final long serialVersionUID = -1943990903548916056L;
+  @Serial private static final long serialVersionUID = -1943990903548916056L;
 
   public static <K, V> QPair<K, V> create(Expression<K> key, Expression<V> value) {
     return new QPair<>(key, value);

@@ -22,6 +22,7 @@ import com.querydsl.core.types.Ops.MathOps;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.util.MathUtils;
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class NumberExpression<T extends Number & Comparable<?>>
     extends ComparableExpressionBase<T> {
 
-  private static final long serialVersionUID = -5485902768703364888L;
+  @Serial private static final long serialVersionUID = -5485902768703364888L;
 
   private static class Constants {
     private static final NumberExpression<Double> RANDOM =
