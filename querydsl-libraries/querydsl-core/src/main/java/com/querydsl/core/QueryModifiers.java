@@ -13,6 +13,7 @@
  */
 package com.querydsl.core;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Range;
  */
 public final class QueryModifiers implements Serializable {
 
-  private static final long serialVersionUID = 2934344588433680339L;
+  @Serial private static final long serialVersionUID = 2934344588433680339L;
 
   /** No limit and not offset restriction */
   public static final QueryModifiers EMPTY = new QueryModifiers();
@@ -120,8 +121,7 @@ public final class QueryModifiers implements Serializable {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof QueryModifiers) {
-      var qm = (QueryModifiers) o;
+    } else if (o instanceof QueryModifiers qm) {
       return Objects.equals(qm.getLimit(), limit) && Objects.equals(qm.getOffset(), offset);
     } else {
       return false;

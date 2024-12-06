@@ -17,6 +17,7 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
+import java.io.Serial;
 import java.lang.reflect.Array;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
@@ -41,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PathBuilder<T> extends EntityPathBase<T> {
 
-  private static final long serialVersionUID = -1666357914232685088L;
+  @Serial private static final long serialVersionUID = -1666357914232685088L;
 
   private final ConcurrentHashMap<SimpleEntry<String, Class<?>>, PathBuilder<?>> properties =
       new ConcurrentHashMap<>();

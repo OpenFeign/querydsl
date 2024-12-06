@@ -14,6 +14,7 @@
 package com.querydsl.core.types;
 
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.Unmodifiable;
  */
 public class QList extends FactoryExpressionBase<List<?>> {
 
-  private static final long serialVersionUID = -7545994090073480810L;
+  @Serial private static final long serialVersionUID = -7545994090073480810L;
 
   @Unmodifiable private final List<Expression<?>> args;
 
@@ -85,8 +86,7 @@ public class QList extends FactoryExpressionBase<List<?>> {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof FactoryExpression) {
-      FactoryExpression<?> c = (FactoryExpression<?>) obj;
+    } else if (obj instanceof FactoryExpression<?> c) {
       return args.equals(c.getArgs()) && getType().equals(c.getType());
     } else {
       return false;

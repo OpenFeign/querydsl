@@ -18,6 +18,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
+import java.io.Serial;
 import java.util.Date;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +36,7 @@ public abstract class DateExpression<T extends Comparable> extends TemporalExpre
     private static final DateExpression<Date> CURRENT_DATE = currentDate(Date.class);
   }
 
-  private static final long serialVersionUID = 6054664454254721302L;
+  @Serial private static final long serialVersionUID = 6054664454254721302L;
 
   /**
    * Create an expression representing the current date as a {@code DateExpression} instance

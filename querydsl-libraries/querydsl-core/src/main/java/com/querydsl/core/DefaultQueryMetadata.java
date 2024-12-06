@@ -28,6 +28,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.ValidatingVisitor;
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -50,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class DefaultQueryMetadata implements QueryMetadata, Cloneable {
 
-  private static final long serialVersionUID = 317736313966701232L;
+  @Serial private static final long serialVersionUID = 317736313966701232L;
 
   private boolean distinct;
 
@@ -158,7 +159,7 @@ public class DefaultQueryMetadata implements QueryMetadata, Cloneable {
   public void addJoin(JoinType joinType, Expression<?> expr) {
     addLastJoin();
     if (!exprInJoins.contains(expr)) {
-      if (expr instanceof Path && ((Path<?>) expr).getMetadata().isRoot()) {
+      if (expr instanceof Path<?> path && path.getMetadata().isRoot()) {
         exprInJoins.add(expr);
       } else {
         validate(expr);
@@ -378,8 +379,7 @@ public class DefaultQueryMetadata implements QueryMetadata, Cloneable {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof QueryMetadata) {
-      var q = (QueryMetadata) o;
+    if (o instanceof QueryMetadata q) {
       return q.getFlags().equals(flags)
           && q.getGroupBy().equals(groupBy)
           && Objects.equals(q.getHaving(), having)

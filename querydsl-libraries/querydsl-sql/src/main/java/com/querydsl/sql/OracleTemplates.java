@@ -167,30 +167,21 @@ public class OracleTemplates extends SQLTemplates {
 
   @Override
   public String getCastTypeNameForCode(int code) {
-    switch (code) {
-      case Types.DOUBLE:
-        return "double precision";
-      case Types.VARCHAR:
-        return "varchar(4000 char)";
-      default:
-        return super.getCastTypeNameForCode(code);
-    }
+    return switch (code) {
+      case Types.DOUBLE -> "double precision";
+      case Types.VARCHAR -> "varchar(4000 char)";
+      default -> super.getCastTypeNameForCode(code);
+    };
   }
 
   @Override
   public String serialize(String literal, int jdbcType) {
-    switch (jdbcType) {
-      case Types.TIMESTAMP:
-      case TIMESTAMP_WITH_TIMEZONE:
-        return "timestamp '" + literal + "'";
-      case Types.DATE:
-        return "date '" + literal + "'";
-      case Types.TIME:
-      case TIME_WITH_TIMEZONE:
-        return "timestamp '1970-01-01 " + literal + "'";
-      default:
-        return super.serialize(literal, jdbcType);
-    }
+    return switch (jdbcType) {
+      case Types.TIMESTAMP, TIMESTAMP_WITH_TIMEZONE -> "timestamp '" + literal + "'";
+      case Types.DATE -> "date '" + literal + "'";
+      case Types.TIME, TIME_WITH_TIMEZONE -> "timestamp '1970-01-01 " + literal + "'";
+      default -> super.serialize(literal, jdbcType);
+    };
   }
 
   @Override

@@ -17,6 +17,7 @@ import com.querydsl.core.types.ExpressionException;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
+import java.io.Serial;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -34,7 +35,7 @@ public abstract class CollectionPathBase<
         C extends Collection<E>, E, Q extends SimpleExpression<? super E>>
     extends CollectionExpressionBase<C, E> implements Path<C> {
 
-  private static final long serialVersionUID = -9004995667633601298L;
+  @Serial private static final long serialVersionUID = -9004995667633601298L;
 
   @Nullable private transient volatile Constructor<?> constructor;
 

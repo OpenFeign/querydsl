@@ -13,6 +13,8 @@
  */
 package com.querydsl.core;
 
+import java.io.Serial;
+
 /**
  * {@code NonUniqueResultException} is thrown for query results where one result row is expected,
  * but multiple are retrieved.
@@ -21,7 +23,7 @@ package com.querydsl.core;
  */
 public class NonUniqueResultException extends QueryException {
 
-  private static final long serialVersionUID = -1757423191400510323L;
+  @Serial private static final long serialVersionUID = -1757423191400510323L;
 
   public NonUniqueResultException() {
     super("Only one result is allowed for fetchOne calls");

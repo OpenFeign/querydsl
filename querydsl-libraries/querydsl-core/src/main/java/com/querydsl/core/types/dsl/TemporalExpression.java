@@ -14,6 +14,7 @@
 package com.querydsl.core.types.dsl;
 
 import com.querydsl.core.types.Expression;
+import java.io.Serial;
 
 /**
  * {@code TemporalExpression} is a supertype for Date/Time related types
@@ -24,7 +25,7 @@ import com.querydsl.core.types.Expression;
 @SuppressWarnings({"unchecked"})
 public abstract class TemporalExpression<T extends Comparable> extends LiteralExpression<T> {
 
-  private static final long serialVersionUID = 1137918766051524298L;
+  @Serial private static final long serialVersionUID = 1137918766051524298L;
 
   public TemporalExpression(Expression<T> mixin) {
     super(mixin);

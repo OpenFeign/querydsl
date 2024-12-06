@@ -14,6 +14,7 @@
 package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
+import java.io.Serial;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -28,7 +29,7 @@ import java.util.TreeSet;
  */
 public abstract class GSet<T, S extends Set<T>> extends AbstractGroupExpression<T, S> {
 
-  private static final long serialVersionUID = -1575808026237160843L;
+  @Serial private static final long serialVersionUID = -1575808026237160843L;
 
   public static <U> GSet<U, Set<U>> createLinked(Expression<U> expr) {
     return new GSet<>(expr) {
