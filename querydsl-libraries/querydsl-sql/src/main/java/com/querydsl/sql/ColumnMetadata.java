@@ -15,13 +15,14 @@ package com.querydsl.sql;
 
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 /** Provides metadata like the column name, JDBC type and constraints */
 public final class ColumnMetadata implements Serializable {
 
-  private static final long serialVersionUID = -5678865742525938470L;
+  @Serial private static final long serialVersionUID = -5678865742525938470L;
 
   /**
    * Returns this path's column metadata if present. Otherwise returns default metadata where the
@@ -31,8 +32,8 @@ public final class ColumnMetadata implements Serializable {
     Path<?> parent = path.getMetadata().getParent();
     if (parent instanceof EntityPath) {
       var columnMetadata = ((EntityPath<?>) parent).getMetadata(path);
-      if (columnMetadata instanceof ColumnMetadata) {
-        return (ColumnMetadata) columnMetadata;
+      if (columnMetadata instanceof ColumnMetadata metadata) {
+        return metadata;
       }
     }
     return ColumnMetadata.named(path.getMetadata().getName());
@@ -49,8 +50,8 @@ public final class ColumnMetadata implements Serializable {
     Path<?> parent = path.getMetadata().getParent();
     if (parent instanceof EntityPath) {
       var columnMetadata = ((EntityPath<?>) parent).getMetadata(path);
-      if (columnMetadata instanceof ColumnMetadata) {
-        return ((ColumnMetadata) columnMetadata).getName();
+      if (columnMetadata instanceof ColumnMetadata metadata) {
+        return metadata.getName();
       }
     }
     return path.getMetadata().getName();
@@ -161,8 +162,7 @@ public final class ColumnMetadata implements Serializable {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof ColumnMetadata) {
-      var md = (ColumnMetadata) o;
+    } else if (o instanceof ColumnMetadata md) {
       return name.equals(md.name)
           && Objects.equals(jdbcType, md.jdbcType)
           && nullable == md.nullable

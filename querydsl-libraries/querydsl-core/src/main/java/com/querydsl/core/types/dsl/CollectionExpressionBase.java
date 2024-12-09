@@ -18,6 +18,7 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Ops;
+import java.io.Serial;
 import java.util.Collection;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class CollectionExpressionBase<T extends Collection<E>, E> extends DslExpression<T>
     implements CollectionExpression<T, E> {
 
-  private static final long serialVersionUID = 691230660037162054L;
+  @Serial private static final long serialVersionUID = 691230660037162054L;
 
   @Nullable private transient volatile BooleanExpression empty;
 

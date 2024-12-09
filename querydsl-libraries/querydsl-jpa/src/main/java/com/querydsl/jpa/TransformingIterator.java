@@ -37,7 +37,7 @@ public class TransformingIterator<T> implements CloseableIterator<T> {
   public TransformingIterator(Iterator<T> iterator, FactoryExpression<?> projection) {
     this.iterator = iterator;
     this.projection = projection;
-    this.closeable = iterator instanceof Closeable ? (Closeable) iterator : null;
+    this.closeable = iterator instanceof Closeable c ? c : null;
   }
 
   public TransformingIterator(

@@ -467,41 +467,34 @@ public class SQLTemplates extends Templates {
   }
 
   public String serialize(String literal, int jdbcType) {
-    switch (jdbcType) {
-      case Types.TIMESTAMP:
-      case TIMESTAMP_WITH_TIMEZONE:
-        return "(timestamp '" + literal + "')";
-      case Types.DATE:
-        return "(date '" + literal + "')";
-      case Types.TIME:
-      case TIME_WITH_TIMEZONE:
-        return "(time '" + literal + "')";
-      case Types.CHAR:
-      case Types.CLOB:
-      case Types.LONGNVARCHAR:
-      case Types.LONGVARCHAR:
-      case Types.NCHAR:
-      case Types.NCLOB:
-      case Types.NVARCHAR:
-      case Types.VARCHAR:
-        return "'" + escapeLiteral(literal) + "'";
-      case Types.BIGINT:
-      case Types.BIT:
-      case Types.BOOLEAN:
-      case Types.DECIMAL:
-      case Types.DOUBLE:
-      case Types.FLOAT:
-      case Types.INTEGER:
-      case Types.NULL:
-      case Types.NUMERIC:
-      case Types.SMALLINT:
-      case Types.TINYINT:
-        return literal;
-      default:
-        // for other JDBC types the Type instance is expected to provide
-        // the necessary quoting
-        return literal;
-    }
+    return switch (jdbcType) {
+      case Types.TIMESTAMP, TIMESTAMP_WITH_TIMEZONE -> "(timestamp '" + literal + "')";
+      case Types.DATE -> "(date '" + literal + "')";
+      case Types.TIME, TIME_WITH_TIMEZONE -> "(time '" + literal + "')";
+      case Types.CHAR,
+              Types.CLOB,
+              Types.LONGNVARCHAR,
+              Types.LONGVARCHAR,
+              Types.NCHAR,
+              Types.NCLOB,
+              Types.NVARCHAR,
+              Types.VARCHAR ->
+          "'" + escapeLiteral(literal) + "'";
+      case Types.BIGINT,
+              Types.BIT,
+              Types.BOOLEAN,
+              Types.DECIMAL,
+              Types.DOUBLE,
+              Types.FLOAT,
+              Types.INTEGER,
+              Types.NULL,
+              Types.NUMERIC,
+              Types.SMALLINT,
+              Types.TINYINT ->
+          literal;
+      default -> /* for other JDBC types the Type instance is expected to provide */ /* the necessary quoting */
+          literal;
+    };
   }
 
   public String escapeLiteral(String str) {
@@ -610,20 +603,14 @@ public class SQLTemplates extends Templates {
   }
 
   public final String getJoinSymbol(JoinType joinType) {
-    switch (joinType) {
-      case JOIN:
-        return join;
-      case INNERJOIN:
-        return innerJoin;
-      case FULLJOIN:
-        return fullJoin;
-      case LEFTJOIN:
-        return leftJoin;
-      case RIGHTJOIN:
-        return rightJoin;
-      default:
-        return crossJoin;
-    }
+    return switch (joinType) {
+      case JOIN -> join;
+      case INNERJOIN -> innerJoin;
+      case FULLJOIN -> fullJoin;
+      case LEFTJOIN -> leftJoin;
+      case RIGHTJOIN -> rightJoin;
+      default -> crossJoin;
+    };
   }
 
   public final String getKey() {

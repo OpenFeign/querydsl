@@ -22,6 +22,7 @@ import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.util.PrimitiveUtils;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -35,7 +36,7 @@ import org.jetbrains.annotations.Range;
  */
 public class ArrayPath<A, E> extends SimpleExpression<A> implements Path<A>, ArrayExpression<A, E> {
 
-  private static final long serialVersionUID = 7795049264874048226L;
+  @Serial private static final long serialVersionUID = 7795049264874048226L;
 
   private final Class<E> componentType;
 

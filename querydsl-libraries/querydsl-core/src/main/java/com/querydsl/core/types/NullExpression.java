@@ -13,6 +13,7 @@
  */
 package com.querydsl.core.types;
 
+import java.io.Serial;
 import java.util.Collections;
 
 /**
@@ -25,7 +26,7 @@ public final class NullExpression<T> extends TemplateExpressionImpl<T> {
 
   private static final Template NULL_TEMPLATE = TemplateFactory.DEFAULT.create("null");
 
-  private static final long serialVersionUID = -5311968198973316411L;
+  @Serial private static final long serialVersionUID = -5311968198973316411L;
 
   /** Default instance for an {@link java.lang.Object} typed NullExpression */
   public static final NullExpression<Object> DEFAULT = new NullExpression<>(Object.class);

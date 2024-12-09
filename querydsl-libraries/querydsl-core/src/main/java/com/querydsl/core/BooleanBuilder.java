@@ -17,6 +17,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class BooleanBuilder implements Predicate, Cloneable {
 
-  private static final long serialVersionUID = -4129485177345542519L;
+  @Serial private static final long serialVersionUID = -4129485177345542519L;
 
   @Nullable private Predicate predicate;
 
@@ -113,8 +114,8 @@ public final class BooleanBuilder implements Predicate, Cloneable {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof BooleanBuilder) {
-      return Objects.equals(((BooleanBuilder) o).getValue(), predicate);
+    } else if (o instanceof BooleanBuilder builder) {
+      return Objects.equals(builder.getValue(), predicate);
     } else {
       return false;
     }
