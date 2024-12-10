@@ -49,8 +49,6 @@ public class InterfaceType2Test {
 
   @Entity
   @Table(name = "USERS")
-  //    @org.hibernate.annotations.AccessType("field")
-  @org.hibernate.annotations.Proxy(proxyClass = User.class)
   public static class UserImpl extends EntityImpl implements User {
 
     @NaturalId(mutable = true)
@@ -85,8 +83,6 @@ public class InterfaceType2Test {
 
   @jakarta.persistence.Entity
   @Table(name = "PARTY")
-  //    @org.hibernate.annotations.AccessType("field")
-  @org.hibernate.annotations.Proxy(proxyClass = Party.class)
   public abstract static class PartyImpl extends EntityImpl implements Party {
 
     @Column(name = "NAME", nullable = false)

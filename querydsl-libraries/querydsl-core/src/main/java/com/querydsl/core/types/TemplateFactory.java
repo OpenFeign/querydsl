@@ -50,12 +50,14 @@ public class TemplateFactory {
 
   private static final Pattern elementPattern =
       Pattern.compile(
-          "\\{"
-              + "(%?%?)"
-              + "(\\d+)"
-              + "(?:([+-/*])(?:(\\d+)|'(-?\\d+(?:\\.\\d+)?)'))?"
-              + "([slu%]?%?)"
-              + "\\}");
+          """
+          \\{\
+          (%?%?)\
+          (\\d+)\
+          (?:([+-/*])(?:(\\d+)|'(-?\\d+(?:\\.\\d+)?)'))?\
+          ([slu%]?%?)\
+          \\}\
+          """);
 
   private final Map<String, Template> cache = Collections.synchronizedMap(new WeakHashMap<>());
 
@@ -67,8 +69,8 @@ public class TemplateFactory {
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
             return ConstantImpl.create(apply(arg.toString()).toString());
-          } else if (arg instanceof Expression) {
-            return ExpressionUtils.operation(String.class, Ops.LOWER, (Expression) arg);
+          } else if (arg instanceof Expression<?> expression) {
+            return ExpressionUtils.operation(String.class, Ops.LOWER, expression);
           } else {
             return String.valueOf(arg).toLowerCase();
           }
@@ -81,8 +83,8 @@ public class TemplateFactory {
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
             return ConstantImpl.create(apply(arg.toString()).toString());
-          } else if (arg instanceof Expression) {
-            return ExpressionUtils.operation(String.class, Ops.UPPER, (Expression) arg);
+          } else if (arg instanceof Expression<?> expression) {
+            return ExpressionUtils.operation(String.class, Ops.UPPER, expression);
           } else {
             return String.valueOf(arg).toUpperCase();
           }
@@ -95,8 +97,8 @@ public class TemplateFactory {
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
             return ConstantImpl.create(apply(arg.toString()).toString());
-          } else if (arg instanceof Expression) {
-            return ExpressionUtils.operation(String.class, Ops.CONCAT, (Expression) arg, PERCENT);
+          } else if (arg instanceof Expression<?> expression) {
+            return ExpressionUtils.operation(String.class, Ops.CONCAT, expression, PERCENT);
           } else {
             return escapeForLike(String.valueOf(arg)) + "%";
           }
@@ -109,9 +111,9 @@ public class TemplateFactory {
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
             return ConstantImpl.create(apply(arg.toString()).toString());
-          } else if (arg instanceof Expression) {
+          } else if (arg instanceof Expression<?> expression) {
             Expression<String> concatenated =
-                ExpressionUtils.operation(String.class, Ops.CONCAT, (Expression) arg, PERCENT);
+                ExpressionUtils.operation(String.class, Ops.CONCAT, expression, PERCENT);
             return ExpressionUtils.operation(String.class, Ops.LOWER, concatenated);
           } else {
             return escapeForLike(String.valueOf(arg).toLowerCase()) + "%";
@@ -125,8 +127,8 @@ public class TemplateFactory {
         public Object apply(Object arg) {
           if (arg instanceof Constant) {
             return ConstantImpl.create(apply(arg.toString()).toString());
-          } else if (arg instanceof Expression) {
-            return ExpressionUtils.operation(String.class, Ops.CONCAT, PERCENT, (Expression) arg);
+          } else if (arg instanceof Expression<?> expression) {
+            return ExpressionUtils.operation(String.class, Ops.CONCAT, PERCENT, expression);
           } else {
             return "%" + escapeForLike(String.valueOf(arg));
           }
@@ -139,9 +141,9 @@ public class TemplateFactory {
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
             return ConstantImpl.create(apply(arg.toString()).toString());
-          } else if (arg instanceof Expression) {
+          } else if (arg instanceof Expression<?> expression) {
             Expression<String> concatenated =
-                ExpressionUtils.operation(String.class, Ops.CONCAT, PERCENT, (Expression) arg);
+                ExpressionUtils.operation(String.class, Ops.CONCAT, PERCENT, expression);
             return ExpressionUtils.operation(String.class, Ops.LOWER, concatenated);
           } else {
             return "%" + escapeForLike(String.valueOf(arg).toLowerCase());
@@ -155,9 +157,9 @@ public class TemplateFactory {
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
             return ConstantImpl.create(apply(arg.toString()).toString());
-          } else if (arg instanceof Expression) {
+          } else if (arg instanceof Expression<?> expression) {
             Expression<String> concatenated =
-                ExpressionUtils.operation(String.class, Ops.CONCAT, PERCENT, (Expression) arg);
+                ExpressionUtils.operation(String.class, Ops.CONCAT, PERCENT, expression);
             return ExpressionUtils.operation(String.class, Ops.CONCAT, concatenated, PERCENT);
           } else {
             return "%" + escapeForLike(String.valueOf(arg)) + "%";
@@ -171,9 +173,9 @@ public class TemplateFactory {
         public Object apply(Object arg) {
           if (arg instanceof Constant<?>) {
             return ConstantImpl.create(apply(arg.toString()).toString());
-          } else if (arg instanceof Expression) {
+          } else if (arg instanceof Expression<?> expression) {
             Expression<String> concatenated =
-                ExpressionUtils.operation(String.class, Ops.CONCAT, PERCENT, (Expression) arg);
+                ExpressionUtils.operation(String.class, Ops.CONCAT, PERCENT, expression);
             concatenated =
                 ExpressionUtils.operation(String.class, Ops.CONCAT, concatenated, PERCENT);
             return ExpressionUtils.operation(String.class, Ops.LOWER, concatenated);

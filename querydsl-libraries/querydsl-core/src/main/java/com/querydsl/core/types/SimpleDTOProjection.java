@@ -26,8 +26,8 @@ public class SimpleDTOProjection<T> extends FactoryExpressionBase<T> {
         Field entityField = entity.getClass().getField(fieldName);
         if (entityField != null) {
           Object value = entityField.get(entity);
-          if (value instanceof Expression<?>) {
-            expressions.add((Expression<?>) value);
+          if (value instanceof Expression<?> expression) {
+            expressions.add(expression);
           }
         }
       } catch (NoSuchFieldException | IllegalAccessException e) {

@@ -16,6 +16,7 @@ package com.querydsl.core.types;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,8 +59,8 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
     Map<Expression<?>, Integer> map = new LinkedHashMap<>();
     for (var i = 0; i < exprs.size(); i++) {
       Expression<?> e = exprs.get(i);
-      if (e instanceof Operation && ((Operation<?>) e).getOperator() == Ops.ALIAS) {
-        map.put(((Operation<?>) e).getArg(1), i);
+      if (e instanceof Operation<?> operation && operation.getOperator() == Ops.ALIAS) {
+        map.put(operation.getArg(1), i);
       }
       map.put(e, i);
     }
@@ -68,7 +69,7 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
 
   private final class TupleImpl implements Tuple, Serializable {
 
-    private static final long serialVersionUID = 6635924689293325950L;
+    @Serial private static final long serialVersionUID = 6635924689293325950L;
 
     private final Object[] a;
 
@@ -107,8 +108,8 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
     public boolean equals(Object obj) {
       if (obj == this) {
         return true;
-      } else if (obj instanceof Tuple) {
-        return Arrays.equals(a, ((Tuple) obj).toArray());
+      } else if (obj instanceof Tuple tuple) {
+        return Arrays.equals(a, tuple.toArray());
       } else {
         return false;
       }
@@ -125,7 +126,7 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
     }
   }
 
-  private static final long serialVersionUID = -2640616030595420465L;
+  @Serial private static final long serialVersionUID = -2640616030595420465L;
 
   @Unmodifiable private final List<Expression<?>> args;
 
@@ -180,8 +181,7 @@ public class QTuple extends FactoryExpressionBase<Tuple> {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof FactoryExpression) {
-      FactoryExpression<?> c = (FactoryExpression<?>) obj;
+    } else if (obj instanceof FactoryExpression<?> c) {
       return args.equals(c.getArgs()) && getType().equals(c.getType());
     } else {
       return false;

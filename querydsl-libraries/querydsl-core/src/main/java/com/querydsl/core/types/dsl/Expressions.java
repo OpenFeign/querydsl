@@ -1580,10 +1580,10 @@ public final class Expressions {
     Expression<Boolean> underlyingMixin = ExpressionUtils.extract(expr);
     if (underlyingMixin instanceof PathImpl) {
       return new BooleanPath((PathImpl<Boolean>) underlyingMixin);
-    } else if (underlyingMixin instanceof PredicateOperation) {
-      return new BooleanOperation((PredicateOperation) underlyingMixin);
-    } else if (underlyingMixin instanceof PredicateTemplate) {
-      return new BooleanTemplate((PredicateTemplate) underlyingMixin);
+    } else if (underlyingMixin instanceof PredicateOperation operation) {
+      return new BooleanOperation(operation);
+    } else if (underlyingMixin instanceof PredicateTemplate template) {
+      return new BooleanTemplate(template);
     } else {
       return new BooleanExpression(underlyingMixin) {
 
@@ -1598,8 +1598,7 @@ public final class Expressions {
         public boolean equals(Object o) {
           if (o == this) {
             return true;
-          } else if (o instanceof BooleanExpression) {
-            var other = (BooleanExpression) o;
+          } else if (o instanceof BooleanExpression other) {
             return (other.mixin.equals(this.mixin));
           } else {
             return false;
@@ -1647,8 +1646,7 @@ public final class Expressions {
         public boolean equals(Object o) {
           if (o == this) {
             return true;
-          } else if (o instanceof ComparableExpression) {
-            var other = (ComparableExpression) o;
+          } else if (o instanceof ComparableExpression<?> other) {
             return (other.mixin.equals(this.mixin));
           } else {
             return false;
@@ -1807,8 +1805,7 @@ public final class Expressions {
         public boolean equals(Object o) {
           if (o == this) {
             return true;
-          } else if (o instanceof EnumExpression) {
-            var other = (EnumExpression) o;
+          } else if (o instanceof EnumExpression<?> other) {
             return (other.mixin.equals(this.mixin));
           } else {
             return false;
@@ -1857,8 +1854,7 @@ public final class Expressions {
         public boolean equals(Object o) {
           if (o == this) {
             return true;
-          } else if (o instanceof NumberExpression) {
-            var other = (NumberExpression) o;
+          } else if (o instanceof NumberExpression<?> other) {
             return (other.mixin.equals(this.mixin));
           } else {
             return false;
@@ -1906,8 +1902,7 @@ public final class Expressions {
         public boolean equals(Object o) {
           if (o == this) {
             return true;
-          } else if (o instanceof StringExpression) {
-            var other = (StringExpression) o;
+          } else if (o instanceof StringExpression other) {
             return (other.mixin.equals(this.mixin));
           } else {
             return false;

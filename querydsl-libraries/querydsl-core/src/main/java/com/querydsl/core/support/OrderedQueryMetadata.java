@@ -17,6 +17,7 @@ import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.types.Expression;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
  */
 public class OrderedQueryMetadata extends DefaultQueryMetadata {
 
-  private static final long serialVersionUID = 6326236143414219377L;
+  @Serial private static final long serialVersionUID = 6326236143414219377L;
 
   private List<JoinExpression> joins;
 

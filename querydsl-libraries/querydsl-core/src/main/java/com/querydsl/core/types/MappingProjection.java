@@ -15,6 +15,7 @@ package com.querydsl.core.types;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.annotations.Immutable;
+import java.io.Serial;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 @Immutable
 public abstract class MappingProjection<T> extends FactoryExpressionBase<T> {
 
-  private static final long serialVersionUID = -948494350919774466L;
+  @Serial private static final long serialVersionUID = -948494350919774466L;
 
   private final QTuple qTuple;
 

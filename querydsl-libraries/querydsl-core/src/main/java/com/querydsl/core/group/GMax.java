@@ -14,6 +14,7 @@
 package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
+import java.io.Serial;
 
 /**
  * GMax
@@ -22,7 +23,7 @@ import com.querydsl.core.types.Expression;
  */
 public class GMax<T extends Comparable<? super T>> extends AbstractGroupExpression<T, T> {
 
-  private static final long serialVersionUID = 3815394663181131511L;
+  @Serial private static final long serialVersionUID = 3815394663181131511L;
 
   @SuppressWarnings("unchecked")
   public GMax(Expression<T> expr) {

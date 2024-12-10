@@ -15,6 +15,7 @@ package com.querydsl.core.group;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.util.MathUtils;
+import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -24,7 +25,7 @@ import java.math.BigDecimal;
  */
 public class GSum<T extends Number> extends AbstractGroupExpression<T, T> {
 
-  private static final long serialVersionUID = 3518868612387641383L;
+  @Serial private static final long serialVersionUID = 3518868612387641383L;
 
   @SuppressWarnings("unchecked")
   public GSum(Expression<T> expr) {

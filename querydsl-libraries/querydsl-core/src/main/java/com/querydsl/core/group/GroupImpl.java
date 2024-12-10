@@ -50,9 +50,8 @@ public class GroupImpl implements Group {
         collector = coldef.createGroupCollector();
         Expression<?> coldefExpr = coldef.getExpression();
         groupCollectorMap.put(coldefExpr, collector);
-        if (coldefExpr instanceof Operation
-            && ((Operation) coldefExpr).getOperator() == Ops.ALIAS) {
-          groupCollectorMap.put(((Operation) coldefExpr).getArg(1), collector);
+        if (coldefExpr instanceof Operation<?> operation && operation.getOperator() == Ops.ALIAS) {
+          groupCollectorMap.put(operation.getArg(1), collector);
         }
       }
       groupCollectors.add(collector);

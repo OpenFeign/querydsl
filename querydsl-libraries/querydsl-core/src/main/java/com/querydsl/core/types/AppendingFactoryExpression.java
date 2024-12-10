@@ -13,6 +13,7 @@
  */
 package com.querydsl.core.types;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +22,7 @@ import org.jetbrains.annotations.Unmodifiable;
 
 class AppendingFactoryExpression<T> extends FactoryExpressionBase<T> {
 
-  private static final long serialVersionUID = -1337452521648394353L;
+  @Serial private static final long serialVersionUID = -1337452521648394353L;
 
   private final Expression<T> base;
 
