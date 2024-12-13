@@ -17,6 +17,7 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.MapExpression;
 import com.querydsl.core.types.Ops;
+import java.io.Serial;
 import java.util.Map;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class MapExpressionBase<K, V, Q extends SimpleExpression<? super V>>
     extends DslExpression<Map<K, V>> implements MapExpression<K, V> {
 
-  private static final long serialVersionUID = 2856001983312366841L;
+  @Serial private static final long serialVersionUID = 2856001983312366841L;
 
   @Nullable private transient volatile NumberExpression<Integer> size;
 

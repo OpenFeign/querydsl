@@ -15,6 +15,7 @@ package com.querydsl.collections;
 
 import com.querydsl.codegen.utils.Evaluator;
 import com.querydsl.core.util.NullSafeComparableComparator;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -29,7 +30,7 @@ public class MultiComparator<T> implements Comparator<T>, Serializable {
   @SuppressWarnings("unchecked")
   private static final Comparator<Object> naturalOrder = new NullSafeComparableComparator();
 
-  private static final long serialVersionUID = 1121416260773566299L;
+  @Serial private static final long serialVersionUID = 1121416260773566299L;
 
   private final boolean[] asc;
 
@@ -45,8 +46,8 @@ public class MultiComparator<T> implements Comparator<T>, Serializable {
 
   @Override
   public int compare(T o1, T o2) {
-    if (o1 instanceof Object[]) {
-      return innerCompare(ev.evaluate((Object[]) o1), ev.evaluate((Object[]) o2));
+    if (o1 instanceof Object[] objects) {
+      return innerCompare(ev.evaluate(objects), ev.evaluate((Object[]) o2));
     } else {
       return innerCompare(ev.evaluate(o1), ev.evaluate(o2));
     }

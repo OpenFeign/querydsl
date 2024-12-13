@@ -13,6 +13,7 @@
  */
 package com.querydsl.core.util;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -25,7 +26,7 @@ import java.util.Comparator;
 public class NullSafeComparableComparator<T extends Comparable<T>>
     implements Comparator<T>, Serializable {
 
-  private static final long serialVersionUID = 5681808684776488757L;
+  @Serial private static final long serialVersionUID = 5681808684776488757L;
 
   @Override
   public int compare(T obj1, T obj2) {

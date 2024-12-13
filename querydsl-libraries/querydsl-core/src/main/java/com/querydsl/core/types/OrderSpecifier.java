@@ -14,6 +14,7 @@
 package com.querydsl.core.types;
 
 import com.querydsl.core.annotations.Immutable;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -25,7 +26,7 @@ import java.io.Serializable;
 @Immutable
 public class OrderSpecifier<T extends Comparable> implements Serializable {
 
-  private static final long serialVersionUID = 3427652988262514678L;
+  @Serial private static final long serialVersionUID = 3427652988262514678L;
 
   /** Behaviour for order of null values */
   public enum NullHandling {
@@ -113,8 +114,7 @@ public class OrderSpecifier<T extends Comparable> implements Serializable {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof OrderSpecifier) {
-      OrderSpecifier<?> os = (OrderSpecifier) o;
+    } else if (o instanceof OrderSpecifier<?> os) {
       return os.order.equals(order)
           && os.target.equals(target)
           && os.nullHandling.equals(nullHandling);

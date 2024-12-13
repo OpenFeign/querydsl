@@ -21,6 +21,7 @@ import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.util.CollectionUtils;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Collection;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class SimpleExpression<T> extends DslExpression<T> {
 
-  private static final long serialVersionUID = -4405387187738167105L;
+  @Serial private static final long serialVersionUID = -4405387187738167105L;
 
   @Nullable private transient volatile NumberExpression<Long> count;
 

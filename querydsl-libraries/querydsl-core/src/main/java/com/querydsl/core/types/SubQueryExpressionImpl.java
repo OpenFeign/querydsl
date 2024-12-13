@@ -15,6 +15,7 @@ package com.querydsl.core.types;
 
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.annotations.Immutable;
+import java.io.Serial;
 
 /**
  * {@code SubQueryExpressionImpl} is the default implementation of the {@link SubQueryExpression}
@@ -26,7 +27,7 @@ import com.querydsl.core.annotations.Immutable;
 @Immutable
 public class SubQueryExpressionImpl<T> extends ExpressionBase<T> implements SubQueryExpression<T> {
 
-  private static final long serialVersionUID = 6775967804458163L;
+  @Serial private static final long serialVersionUID = 6775967804458163L;
 
   private final QueryMetadata metadata;
 

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-root</artifactId>
-  <version>6.11-SNAPSHOT</version>
+  <version>7.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>Querydsl</name>
@@ -96,7 +96,7 @@
     <argLine>-Xms256m -Xmx512m</argLine>
 
     <!-- default bytecode version for src/main -->
-    <main.java.version>11</main.java.version>
+    <main.java.version>17</main.java.version>
     <latest.java.version>21</latest.java.version>
 
     <git-code-format-maven-plugin.version>5.3</git-code-format-maven-plugin.version>
@@ -1055,7 +1055,7 @@
                 <configuration>
                   <exportDatatables>true</exportDatatables>
                   <activeRecipes>
-                    <recipe>org.openrewrite.java.migrate.Java8toJava11</recipe>
+                    <recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe>
                   </activeRecipes>
                 </configuration>
               </execution>

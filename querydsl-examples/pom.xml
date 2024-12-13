@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>6.11-SNAPSHOT</version>
+    <version>7.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-examples</artifactId>
@@ -26,10 +26,6 @@
 
     <module>querydsl-example-r2dbc-sql-codegen</module>
   </modules>
-
-  <properties>
-    <main.java.version>17</main.java.version>
-  </properties>
 
   <dependencyManagement>
     <dependencies>
