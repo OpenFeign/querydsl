@@ -87,6 +87,7 @@
   </distributionManagement>
 
   <properties>
+    <!-- removing old modules on 7.0 release -->
     <japicmp.skip>true</japicmp.skip>
 
     <failIfNoTests>false</failIfNoTests>
