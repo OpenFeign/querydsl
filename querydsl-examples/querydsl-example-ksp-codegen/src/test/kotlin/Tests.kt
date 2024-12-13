@@ -1,4 +1,5 @@
 import com.querydsl.example.ksp.Cat
+import com.querydsl.example.ksp.CatType
 import com.querydsl.example.ksp.Person
 import com.querydsl.example.ksp.QCat
 import com.querydsl.example.ksp.QPerson
@@ -41,14 +42,47 @@ class Tests {
     }
 
     @Test
+    fun `create cat with owner` () {
+        val emf = initialize()
+
+        run {
+            val em = emf.createEntityManager()
+            em.transaction.begin()
+            val catOwner = Person(425, "Percy Bysshe Catownerly")
+            em.persist(catOwner)
+            em.persist(Cat(103, "Samuel Taylor Cattingridge", false, "Not so fluffy", catOwner, CatType.MAINE_COON))
+            em.transaction.commit()
+            em.close()
+        }
+
+        run {
+            val em = emf.createEntityManager()
+            val queryFactory = JPAQueryFactory(em)
+            val q = QCat.cat
+            val catWithOwner = queryFactory
+                .selectFrom(q)
+                .where(q.name.eq("Samuel Taylor Cattingridge"))
+                .fetchOne()
+            if (catWithOwner == null) {
+                fail<Any>("No owned cat was returned")
+            } else {
+                assertThat(catWithOwner.id).isEqualTo(103)
+                assertThat(catWithOwner.catType).isEqualTo(CatType.MAINE_COON)
+                assertThat(catWithOwner.owner?.id).isEqualTo(425)
+            }
+            em.close()
+        }
+    }
+
+    @Test
     fun `filter entities`() {
         val emf = initialize()
 
         run {
             val em = emf.createEntityManager()
             em.transaction.begin()
-            em.persist(Cat(100, "Neville Furbottom", true))
-            em.persist(Cat(101, "Edgar Allan Paw", true))
+            em.persist(Cat(100, "Neville Furbottom", true, "Quite Fluffy"))
+            em.persist(Cat(101, "Edgar Allan Paw", true, null))
             em.persist(Cat(102, "Admiral Meowington", false))
             em.transaction.commit()
             em.close()
@@ -66,6 +100,13 @@ class Tests {
             assertThat(animals.size).isEqualTo(2)
             assertThat(animals).contains("Neville Furbottom")
             assertThat(animals).contains("Edgar Allan Paw")
+            val quiteFluffyAnimals = queryFactory
+                .selectFrom(q)
+                .where(q.fluffiness.eq("Quite Fluffy"))
+                .fetch()
+                .map { it.name }
+            assertThat(quiteFluffyAnimals.size).isEqualTo(1)
+            assertThat(quiteFluffyAnimals).contains("Neville Furbottom")
             em.close()
         }
     }
