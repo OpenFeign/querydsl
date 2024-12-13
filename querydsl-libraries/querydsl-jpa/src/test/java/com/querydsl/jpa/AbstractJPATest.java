@@ -24,10 +24,10 @@ import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
-import com.mysema.commons.lang.Pair;
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.FilterFactory;
 import com.querydsl.core.MatchingFiltersFactory;
+import com.querydsl.core.Pair;
 import com.querydsl.core.ProjectionsFactory;
 import com.querydsl.core.QueryExecution;
 import com.querydsl.core.QuerydslModule;

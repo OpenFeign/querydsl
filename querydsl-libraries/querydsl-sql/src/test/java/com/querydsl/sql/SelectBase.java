@@ -38,9 +38,9 @@ import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.mysema.commons.lang.Pair;
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.Pair;
 import com.querydsl.core.QueryException;
 import com.querydsl.core.QueryExecution;
 import com.querydsl.core.QuerydslModule;

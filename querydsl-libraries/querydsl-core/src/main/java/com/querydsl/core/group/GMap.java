@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.group;
 
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.Pair;
 import java.io.Serial;
 import java.util.Comparator;
 import java.util.HashMap;
