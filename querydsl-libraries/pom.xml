@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>6.10-SNAPSHOT</version>
+    <version>6.10</version>
   </parent>
 
   <artifactId>querydsl-libraries</artifactId>
