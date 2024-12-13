@@ -45,7 +45,7 @@ class TypeExtractor(
     }
 
     private fun simpleType(type: KSType): QPropertyType.Simple? {
-        val className = type.toClassName()
+        val className = type.toClassNameSimple()
         val simpleType = SimpleType.Mapper.get(className)
         if (simpleType == null) {
             return null
@@ -61,7 +61,7 @@ class TypeExtractor(
         if (declaration is KSClassDeclaration) {
             types.addAll(declaration.getAllSuperTypes())
         }
-        val classNames = types.map { it.toClassName() }
+        val classNames = types.map { it.toClassNameSimple() }
         return if (classNames.any { it.isMap() }) {
             assertTypeArgCount(type, "map", 2)
             val keyType = extract(type.arguments[0].type!!.resolve())
@@ -86,7 +86,7 @@ class TypeExtractor(
         val referencedDeclaration = type.declaration
         if (referencedDeclaration is KSClassDeclaration) {
             return when (referencedDeclaration.classKind) {
-                ClassKind.ENUM_CLASS -> QPropertyType.EnumReference(type.toClassName())
+                ClassKind.ENUM_CLASS -> QPropertyType.EnumReference(type.toClassNameSimple())
                 ClassKind.CLASS, ClassKind.INTERFACE -> {
                     if (isEntity(referencedDeclaration)) {
                         return QPropertyType.ObjectReference(
@@ -115,7 +115,7 @@ class TypeExtractor(
             Convert::class.asClassName()
         )
         if (property.annotations.any { userTypeAnnotations.contains(it.annotationType.resolve().toClassName()) }) {
-            return QPropertyType.Unknown(type.toClassName(), type.toTypeName())
+            return QPropertyType.Unknown(type.toClassNameSimple(), type.toTypeName())
         } else {
             return null
         }
@@ -155,4 +155,16 @@ private fun ClassName.isList(): Boolean {
 
 private fun ClassName.isArray(): Boolean {
     return this == Array::class.asClassName()
+}
+
+/**
+ * Ignores arguments and nullability, returning simple ClassName.
+ */
+private fun KSType.toClassNameSimple(): ClassName {
+    return when (val decl = declaration) {
+        is KSClassDeclaration -> decl.toClassName()
+        is KSTypeAlias -> decl.toClassName()
+        is KSTypeParameter -> error("Cannot convert KSTypeParameter to ClassName: '$this'")
+        else -> error("Could not compute ClassName for '$this'")
+    }
 }
