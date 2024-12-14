@@ -20,3 +20,12 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 100
     target-branch: "querydsl-7.0"
+    allow:
+      - dependency-name: "org.hibernate.orm:hibernate-core"
+        versions: "*-alpha.*"
+      - dependency-name: "org.hibernate.orm:hibernate-core"
+        versions: "*-beta.*"
+      - dependency-name: "org.eclipse.persistence:eclipselink"
+        versions: "*-alpha.*"
+      - dependency-name: "org.eclipse.persistence:eclipselink"
+        versions: "*-beta.*"
