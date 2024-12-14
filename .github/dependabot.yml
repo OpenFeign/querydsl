@@ -5,8 +5,18 @@
 
 version: 2
 updates:
+  # Configuration for the master branch
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 100
+    target-branch: "master"
+
+  # Configuration for the querydsl-7.0 branch
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 100
+    target-branch: "querydsl-7.0"
