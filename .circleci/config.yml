@@ -176,7 +176,7 @@ jobs:
           name: 'Build and test examples'
           command: |
             cd querydsl-examples/querydsl-example-ksp-codegen
-            ./gradlew --no-daemon --console=plain --info --stacktrace test
+            ./gradlew --no-daemon --console=plain
       - run:
           name: 'Save test results'
           command: |
