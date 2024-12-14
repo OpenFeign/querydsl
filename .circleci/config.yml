@@ -176,7 +176,15 @@ jobs:
           name: 'Build and test examples'
           command: |
             cd querydsl-examples/querydsl-example-ksp-codegen
-            ./gradlew  --no-daemon --console=plain  test
+            ./gradlew --no-daemon --console=plain
+      - run:
+          name: 'Save test results'
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
   testMySQL:
     <<: *defaults
     working_directory: ~/querydsl
