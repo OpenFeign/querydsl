@@ -14,8 +14,13 @@
 package com.querydsl.core.types.dsl;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.domain.Cat;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.util.BeanMap;
 import java.sql.Time;
 import java.util.Date;
@@ -128,5 +133,27 @@ public class PathBuilderTest {
     assertEquals(String.class, entity.get(pathName).getType());
     assertEquals(String.class, entity.get(pathName, Comparable.class).getType());
     assertEquals(String.class, entity.get(pathName, Object.class).getType());
+  }
+
+  @Test
+  public void order_HQL_injection() {
+    var orderBy = "breed";
+    var pathBuilder = new PathBuilder<Cat>(Cat.class, "entity");
+    assertDoesNotThrow(() -> new OrderSpecifier(Order.ASC, pathBuilder.get(orderBy)));
+  }
+
+  @Test
+  // CVE-2024-49203
+  // https://github.com/OpenFeign/querydsl/security/advisories/GHSA-6q3q-6v5j-h6vg
+  public void unsafe_order_HQL_injection() {
+    var orderBy =
+        "test.name INTERSECT SELECT t FROM Test t WHERE (SELECT cast(pg_sleep(10) AS text))='2'"
+            + " ORDER BY t.id";
+    var pathBuilder = new PathBuilder<Cat>(Cat.class, "entity");
+    var error =
+        assertThrows(
+            IllegalStateException.class,
+            () -> new OrderSpecifier(Order.ASC, pathBuilder.get(orderBy)));
+    assertTrue(error.getMessage().contains("CVE-2024-49203"));
   }
 }
