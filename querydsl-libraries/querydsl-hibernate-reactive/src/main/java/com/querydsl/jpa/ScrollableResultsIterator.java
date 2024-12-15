@@ -10,7 +10,7 @@
  */
 package com.querydsl.jpa;
 
-import com.mysema.commons.lang.CloseableIterator;
+import com.querydsl.core.CloseableIterator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;

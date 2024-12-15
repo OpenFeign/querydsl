@@ -21,6 +21,9 @@ public interface CloseableIterator<T> extends Iterator<T>, AutoCloseable {
   }
 
   public static <E> CloseableIterator<E> of(Iterator<E> iterator) {
+    if (iterator instanceof AutoCloseable closeable) {
+      return of(iterator, closeable);
+    }
     return of(iterator, () -> {});
   }
 
