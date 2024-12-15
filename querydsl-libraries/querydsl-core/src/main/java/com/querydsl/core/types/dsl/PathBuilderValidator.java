@@ -19,6 +19,7 @@ import com.querydsl.core.util.ReflectionUtils;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /** {@code PathBuilderValidator} validates {@link PathBuilder} properties at creation time */
 public interface PathBuilderValidator extends Serializable {
@@ -35,8 +36,14 @@ public interface PathBuilderValidator extends Serializable {
 
   PathBuilderValidator DEFAULT =
       new PathBuilderValidator() {
+
+        private Pattern SPACES = Pattern.compile("\\s");
+
         @Override
         public Class<?> validate(Class<?> parent, String property, Class<?> propertyType) {
+          if (SPACES.matcher(property).find()) {
+            throw new IllegalStateException("Unsafe due to CVE-2024-49203");
+          }
           return propertyType;
         }
       };
