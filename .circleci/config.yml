@@ -144,7 +144,7 @@ jobs:
       - run:
           name: 'Build and test examples'
           command: |
-            ./mvnw -ntp -B verify -Pexamples -rf :querydsl-examples
+            ./mvnw -ntp -B verify -Pexamples -rf :querydsl-examples -pl -:querydsl-example-hibernate-reactive-quarkus
       - save-test-results
   buildQuarkusExample:
     <<: *defaults
@@ -226,7 +226,8 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
+            ./mvnw -ntp -B verify -Pexamples -pl :querydsl-example-hibernate-reactive-quarkus
       - save-test-results
   testCUBRID:
     <<: *defaults

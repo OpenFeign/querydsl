@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc.group;
 
-import com.querydsl.core.ReactiveResultTransformer;
+import com.querydsl.core.dml.reactive.ReactiveResultTransformer;
 import com.querydsl.core.group.Group;
 import com.querydsl.core.group.GroupExpression;
 import com.querydsl.core.types.Expression;

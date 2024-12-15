@@ -5,7 +5,7 @@ import static com.querydsl.example.r2dbc.QProduct.product;
 import static com.querydsl.example.r2dbc.QProductL10n.productL10n;
 import static com.querydsl.example.r2dbc.QSupplier.supplier;
 
-import com.querydsl.core.dml.ReactiveStoreClause;
+import com.querydsl.core.dml.StoreClause;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.QBean;
@@ -47,7 +47,7 @@ public class ProductDaoImpl implements ProductDao {
     return getBaseQuery(where);
   }
 
-  private <T extends ReactiveStoreClause<T>> T populate(T dml, Product p) {
+  private <T extends StoreClause<T>> T populate(T dml, Product p) {
     return dml.set(product.name, p.getName())
         .set(product.otherProductDetails, p.getOtherProductDetails())
         .set(product.price, p.getPrice())
@@ -98,34 +98,32 @@ public class ProductDaoImpl implements ProductDao {
         .where(product.id.eq(id))
         .execute()
         .flatMap(
-            __ -> {
-              // delete l10n rows
-              return queryFactory
-                  .delete(productL10n)
-                  .where(productL10n.productId.eq(id))
-                  .execute()
-                  .flatMapIterable(
-                      ___ -> {
-                        var insert = queryFactory.insert(productL10n);
-                        return p.getLocalizations().stream()
-                            .map(
-                                l10n ->
-                                    insert
-                                        .set(productL10n.productId, id)
-                                        .set(productL10n.description, l10n.getDescription())
-                                        .set(productL10n.lang, l10n.getLang())
-                                        .set(productL10n.name, l10n.getName())
-                                        .execute())
-                            .map(
-                                ____ -> {
-                                  p.setId(id);
+            __ ->
+                queryFactory
+                    .delete(productL10n)
+                    .where(productL10n.productId.eq(id))
+                    .execute()
+                    .flatMapIterable(
+                        ___ -> {
+                          var insert = queryFactory.insert(productL10n);
+                          return p.getLocalizations().stream()
+                              .map(
+                                  l10n ->
+                                      insert
+                                          .set(productL10n.productId, id)
+                                          .set(productL10n.description, l10n.getDescription())
+                                          .set(productL10n.lang, l10n.getLang())
+                                          .set(productL10n.name, l10n.getName())
+                                          .execute())
+                              .map(
+                                  ____ -> {
+                                    p.setId(id);
 
-                                  return p;
-                                })
-                            .toList();
-                      })
-                  .reduce((a, b) -> a);
-            });
+                                    return p;
+                                  })
+                              .toList();
+                        })
+                    .reduce((a, b) -> a));
   }
 
   @Override

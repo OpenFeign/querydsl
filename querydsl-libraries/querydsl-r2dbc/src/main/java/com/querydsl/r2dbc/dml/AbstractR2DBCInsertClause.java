@@ -18,7 +18,7 @@ import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.dml.ReactiveInsertClause;
+import com.querydsl.core.dml.reactive.ReactiveInsertClause;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ParamExpression;
