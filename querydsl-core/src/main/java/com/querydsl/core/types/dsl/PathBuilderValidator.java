@@ -39,6 +39,9 @@ public interface PathBuilderValidator extends Serializable {
       new PathBuilderValidator() {
         @Override
         public Class<?> validate(Class<?> parent, String property, Class<?> propertyType) {
+          if (property.contains(" ")) {
+            throw new IllegalStateException("Unsafe due to CVE-2024-49203");
+          }
           return propertyType;
         }
       };
