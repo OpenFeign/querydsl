@@ -28,6 +28,7 @@
     <module>querydsl-r2dbc</module>
 
     <!-- JPA -->
+    <module>querydsl-jpa-only</module>
     <module>querydsl-jpa</module>
     <module>querydsl-jpa-spring</module>
     <!-- NoSQL -->
