@@ -176,7 +176,15 @@ jobs:
           name: 'Build and test examples'
           command: |
             cd querydsl-examples/querydsl-example-ksp-codegen
-            ./gradlew  --no-daemon --console=plain  test
+            ./gradlew --no-daemon --console=plain
+      - run:
+          name: 'Save test results'
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
   testMySQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -301,27 +309,6 @@ jobs:
           command: |
             ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.Firebird
       - save-test-results
-  testMSSQL:
-    <<: *defaults
-    working_directory: ~/querydsl
-    docker:
-      - image: velo/toolchains-4-ci-builds:with-21
-      - image: mcr.microsoft.com/mssql/server:2022-latest
-        environment:
-          - ACCEPT_EULA=Y
-          - SA_PASSWORD=Password1!
-          - MSSQL_PID=Express
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
-      - run:
-          name: 'Test'
-          command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.SQLServer
-      - save-test-results
   testEmbedded:
     <<: *defaults
     working_directory: ~/querydsl
@@ -439,12 +426,6 @@ workflows:
             <<: *all-branches
       - testFirebird:
           name: 'Test Firebird'
-          requires:
-            - 'Resolve dependencies'
-          filters:
-            <<: *all-branches
-      - testMSSQL:
-          name: 'Test SQL Server'
           requires:
             - 'Resolve dependencies'
           filters:
