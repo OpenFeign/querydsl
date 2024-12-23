@@ -24,6 +24,6 @@ jobs:
         java-version: '21'
 
     - name: Submit Dependency Snapshot
-      uses: advanced-security/maven-dependency-submission-action@v3
+      uses: advanced-security/maven-dependency-submission-action@v4.1.1
       with:
         maven-args: -Dtoolchain.skip=true
