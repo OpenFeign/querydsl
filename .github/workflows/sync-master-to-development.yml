@@ -37,3 +37,4 @@ jobs:
         gh pr create --base master --head querydsl-7.0 -t "Sync master into querydsl-7.0" -b "This PR syncs changes from master into querydsl-7.0"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
