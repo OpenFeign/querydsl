@@ -34,7 +34,7 @@ jobs:
     - name: Create Pull Request
       if: steps.check_diff.outcome == 'failure'
       run: |
-        gh pr create --base master --head querydsl-7.0 -t "Sync master into querydsl-7.0" -b "This PR syncs changes from master into querydsl-7.0"
+        gh pr create --base querydsl-7.0 --head master -t "Sync master into querydsl-7.0" -b "This PR syncs changes from master into querydsl-7.0"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
