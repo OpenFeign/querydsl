@@ -16,7 +16,7 @@ package com.querydsl.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import com.mysema.commons.lang.CloseableIterator;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
@@ -81,7 +81,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
 
   @Override
   protected void save(Object entity) {
-    session.save(entity);
+    session.persist(entity);
   }
 
   @Test

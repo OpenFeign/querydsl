@@ -162,8 +162,8 @@ public final class Alias {
     final Object current = aliasFactory.getCurrentAndReset();
     if (arg instanceof CollectionPath) {
       return (CollectionPath<D, SimpleExpression<D>>) arg; // NOSONAR
-    } else if (arg instanceof ManagedObject) {
-      return (CollectionPath<D, SimpleExpression<D>>) ((ManagedObject) arg).__mappedPath();
+    } else if (arg instanceof ManagedObject object) {
+      return (CollectionPath<D, SimpleExpression<D>>) object.__mappedPath();
     } else {
       return (CollectionPath<D, SimpleExpression<D>>) current;
     }
@@ -242,8 +242,8 @@ public final class Alias {
     final Object current = aliasFactory.getCurrentAndReset();
     if (arg instanceof ListPath) {
       return (ListPath<D, SimpleExpression<D>>) arg; // NOSONAR
-    } else if (arg instanceof ManagedObject) {
-      return (ListPath<D, SimpleExpression<D>>) ((ManagedObject) arg).__mappedPath();
+    } else if (arg instanceof ManagedObject object) {
+      return (ListPath<D, SimpleExpression<D>>) object.__mappedPath();
     } else {
       return (ListPath<D, SimpleExpression<D>>) current;
     }
@@ -272,8 +272,8 @@ public final class Alias {
     final Object current = aliasFactory.getCurrentAndReset();
     if (arg instanceof MapPath) {
       return (MapPath<K, V, SimpleExpression<V>>) arg; // NOSONAR
-    } else if (arg instanceof ManagedObject) {
-      return (MapPath<K, V, SimpleExpression<V>>) ((ManagedObject) arg).__mappedPath();
+    } else if (arg instanceof ManagedObject object) {
+      return (MapPath<K, V, SimpleExpression<V>>) object.__mappedPath();
     } else {
       return (MapPath<K, V, SimpleExpression<V>>) current;
     }
@@ -291,8 +291,8 @@ public final class Alias {
     final Object current = aliasFactory.getCurrentAndReset();
     if (arg instanceof SetPath) {
       return (SetPath<D, SimpleExpression<D>>) arg; // NOSONAR
-    } else if (arg instanceof ManagedObject) {
-      return (SetPath<D, SimpleExpression<D>>) ((ManagedObject) arg).__mappedPath();
+    } else if (arg instanceof ManagedObject object) {
+      return (SetPath<D, SimpleExpression<D>>) object.__mappedPath();
     } else {
       return (SetPath<D, SimpleExpression<D>>) current;
     }
@@ -351,8 +351,8 @@ public final class Alias {
     final Object current = aliasFactory.getCurrentAndReset();
     if (arg instanceof EntityPath<?>) {
       return (EntityPathBase<D>) arg; // NOSONAR
-    } else if (arg instanceof ManagedObject) {
-      return (EntityPathBase<D>) ((ManagedObject) arg).__mappedPath();
+    } else if (arg instanceof ManagedObject object) {
+      return (EntityPathBase<D>) object.__mappedPath();
     } else {
       return (EntityPathBase<D>) current;
     }
@@ -364,8 +364,8 @@ public final class Alias {
     final Object current = aliasFactory.getCurrentAndReset();
     if (arg instanceof Path<?>) {
       return (P) arg;
-    } else if (arg instanceof ManagedObject) {
-      return (P) ((ManagedObject) arg).__mappedPath();
+    } else if (arg instanceof ManagedObject object) {
+      return (P) object.__mappedPath();
     } else {
       return (P) current;
     }
@@ -415,8 +415,8 @@ public final class Alias {
   @SuppressWarnings("unchecked")
   public static <D> Expression<D> getAny(D arg) {
     Object current = aliasFactory.getCurrentAndReset();
-    if (arg instanceof ManagedObject) {
-      return (Expression<D>) ((ManagedObject) arg).__mappedPath();
+    if (arg instanceof ManagedObject object) {
+      return (Expression<D>) object.__mappedPath();
     } else if (current != null) {
       return (Expression<D>) current;
     } else {

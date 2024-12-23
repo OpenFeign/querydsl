@@ -13,7 +13,7 @@
  */
 package com.querydsl.r2dbc.group;
 
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.Pair;
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.group.AbstractGroupExpression;
 import com.querydsl.core.group.GAvg;

@@ -48,8 +48,7 @@ public class CollectionAnyVisitor implements Visitor<Expression<?>, Context> {
   private static <T> Path<T> replaceParent(Path<T> path, Path<?> parent) {
     var metadata =
         new PathMetadata(parent, path.getMetadata().getElement(), path.getMetadata().getPathType());
-    if (path instanceof CollectionExpression) {
-      CollectionExpression<?, ?> col = (CollectionExpression<?, ?>) path;
+    if (path instanceof CollectionExpression<?, ?> col) {
       return Expressions.listPath(col.getParameter(0), SimplePath.class, metadata);
     } else {
       return ExpressionUtils.path(path.getType(), metadata);

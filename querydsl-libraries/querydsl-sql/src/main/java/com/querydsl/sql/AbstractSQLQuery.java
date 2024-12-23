@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import com.mysema.commons.lang.CloseableIterator;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryException;
 import com.querydsl.core.QueryFlag;
@@ -518,8 +518,8 @@ public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
         }
         long total;
         if (!results.isEmpty()) {
-          if (lastCell instanceof Number) {
-            total = ((Number) lastCell).longValue();
+          if (lastCell instanceof Number number) {
+            total = number.longValue();
           } else {
             throw new IllegalStateException("Unsupported lastCell instance " + lastCell);
           }

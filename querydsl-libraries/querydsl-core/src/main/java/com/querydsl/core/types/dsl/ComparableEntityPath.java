@@ -16,6 +16,7 @@ package com.querydsl.core.types.dsl;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
+import java.io.Serial;
 
 /**
  * {@code ComparableEntityPath} extends the {@link ComparablePath} class to implement the EntityPath
@@ -28,7 +29,7 @@ import com.querydsl.core.types.PathMetadata;
 public class ComparableEntityPath<T extends Comparable> extends ComparablePath<T>
     implements EntityPath<T> {
 
-  private static final long serialVersionUID = -7115848171352092315L;
+  @Serial private static final long serialVersionUID = -7115848171352092315L;
 
   protected ComparableEntityPath(Class<? extends T> type, Path<?> parent, String property) {
     super(type, parent, property);

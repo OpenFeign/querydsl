@@ -13,6 +13,8 @@
  */
 package com.querydsl.core.types;
 
+import java.io.Serial;
+
 /**
  * {@code MutableExpressionBase} is the base class for mutable Expression implementations
  *
@@ -21,7 +23,7 @@ package com.querydsl.core.types;
  */
 public abstract class MutableExpressionBase<T> implements Expression<T> {
 
-  private static final long serialVersionUID = -6830426684911919114L;
+  @Serial private static final long serialVersionUID = -6830426684911919114L;
 
   private final Class<? extends T> type;
 

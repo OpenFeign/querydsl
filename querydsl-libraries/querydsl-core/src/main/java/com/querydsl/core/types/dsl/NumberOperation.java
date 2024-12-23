@@ -20,6 +20,7 @@ import com.querydsl.core.types.OperationImpl;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +33,7 @@ import java.util.List;
 public class NumberOperation<T extends Number & Comparable<?>> extends NumberExpression<T>
     implements Operation<T> {
 
-  private static final long serialVersionUID = -3593040852095778453L;
+  @Serial private static final long serialVersionUID = -3593040852095778453L;
 
   private final OperationImpl<T> opMixin;
 

@@ -13,8 +13,8 @@
  */
 package com.querydsl.collections;
 
-import com.mysema.commons.lang.IteratorAdapter;
 import com.querydsl.codegen.utils.Evaluator;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
@@ -163,10 +163,10 @@ public class DefaultQueryEngine implements QueryEngine {
     final List<Expression<?>> sources = Collections.<Expression<?>>singletonList(source);
     final Iterable<?> iterable = iterables.values().iterator().next();
     List<?> list;
-    if (iterable instanceof List) {
-      list = (List) iterable;
+    if (iterable instanceof List<?> list1) {
+      list = list1;
     } else {
-      list = IteratorAdapter.asList(iterable.iterator());
+      list = CloseableIterator.asList(iterable.iterator());
     }
 
     // from & where

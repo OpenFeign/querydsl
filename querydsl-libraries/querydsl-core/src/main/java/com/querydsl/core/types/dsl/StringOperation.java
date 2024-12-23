@@ -19,6 +19,7 @@ import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.OperationImpl;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import java.util.List;
  */
 public class StringOperation extends StringExpression implements Operation<String> {
 
-  private static final long serialVersionUID = 6846556373847139549L;
+  @Serial private static final long serialVersionUID = 6846556373847139549L;
 
   private final OperationImpl<String> opMixin;
 

@@ -75,21 +75,21 @@ public final class MathUtils {
     } else if (type.equals(BigDecimal.class)) {
       rv = type.cast(new BigDecimal(num.toString()));
     } else if (type.equals(BigInteger.class)) {
-      if (num instanceof BigDecimal) {
-        rv = type.cast(((BigDecimal) num).toBigInteger());
+      if (num instanceof BigDecimal decimal) {
+        rv = type.cast(decimal.toBigInteger());
       } else {
         rv = type.cast(new BigInteger(num.toString()));
       }
     } else {
       throw new IllegalArgumentException(
-          String.format("Unsupported target type : %s", type.getSimpleName()));
+          "Unsupported target type : %s".formatted(type.getSimpleName()));
     }
     return rv;
   }
 
   private static BigDecimal toBigDecimal(Number num) {
-    if (num instanceof BigDecimal) {
-      return (BigDecimal) num;
+    if (num instanceof BigDecimal decimal) {
+      return decimal;
     } else {
       return new BigDecimal(num.toString());
     }

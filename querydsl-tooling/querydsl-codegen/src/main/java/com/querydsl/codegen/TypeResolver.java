@@ -46,9 +46,9 @@ final class TypeResolver {
     }
 
     // rewrap entity type
-    if (type instanceof EntityType) {
+    if (type instanceof EntityType entityType) {
       if (!unwrap(type).equals(resolved)) {
-        resolved = new EntityType(resolved, ((EntityType) type).getSuperTypes());
+        resolved = new EntityType(resolved, entityType.getSuperTypes());
       } else {
         // reset to original type
         resolved = type;
@@ -74,7 +74,7 @@ final class TypeResolver {
           "Did not find type " + varName + " in " + declaringType + " for " + context);
     }
 
-    Supertype type = context.getSuperType();
+    var type = context.getSuperType();
     while (!type.getEntityType().equals(declaringType)) {
       type = type.getEntityType().getSuperType();
     }
@@ -116,8 +116,8 @@ final class TypeResolver {
   }
 
   private static Type unwrap(Type type) {
-    if (type instanceof EntityType) {
-      return ((EntityType) type).getInnerType();
+    if (type instanceof EntityType entityType) {
+      return entityType.getInnerType();
     } else {
       return type;
     }

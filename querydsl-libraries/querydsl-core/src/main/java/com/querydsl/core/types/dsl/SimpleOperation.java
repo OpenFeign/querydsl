@@ -19,6 +19,7 @@ import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.OperationImpl;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import java.util.List;
  */
 public class SimpleOperation<T> extends SimpleExpression<T> implements Operation<T> {
 
-  private static final long serialVersionUID = -285668548371034230L;
+  @Serial private static final long serialVersionUID = -285668548371034230L;
 
   private final OperationImpl<T> opMixin;
 
