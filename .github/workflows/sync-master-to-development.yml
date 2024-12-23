@@ -33,17 +33,7 @@ jobs:
 
     - name: Create Pull Request
       if: steps.check_diff.outcome == 'failure'
-      uses: peter-evans/create-pull-request@v5
-      with:
-        source: master
-        target: querydsl-7.0
-        title: 'Sync master into querydsl-7.0'
-        body: 'This PR syncs changes from master into querydsl-7.0.'
-        branch: 'sync-master-to-querydsl-7.0'
-
-    - name: Enable Auto-Merge for PR
-      if: steps.check_diff.outcome == 'failure'
-      run: gh pr merge --auto --merge "$PR_URL"
+      run: |
+        gh pr create --base master --head querydsl-7.0 -t "Sync master into querydsl-7.0" -b "This PR syncs changes from master into querydsl-7.0"
       env:
-        PR_URL: ${{ steps.create-pull-request.outputs.pull-request-url }}
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
