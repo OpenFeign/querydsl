@@ -56,8 +56,7 @@ public class TemplateFactory {
           (\\d+)\
           (?:([+-/*])(?:(\\d+)|'(-?\\d+(?:\\.\\d+)?)'))?\
           ([slu%]?%?)\
-          \\}\
-          """);
+          \\}""");
 
   private final Map<String, Template> cache = Collections.synchronizedMap(new WeakHashMap<>());
 

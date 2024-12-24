@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.Target;
-import com.querydsl.core.dml.ReactiveDMLClause;
+import com.querydsl.core.dml.reactive.ReactiveDMLClause;
 import com.querydsl.r2dbc.dml.R2DBCDeleteClause;
 import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import com.querydsl.r2dbc.dml.R2DBCUpdateClause;
