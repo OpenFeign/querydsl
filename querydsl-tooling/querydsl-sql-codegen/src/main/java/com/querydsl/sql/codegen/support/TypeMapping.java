@@ -41,13 +41,14 @@ public class TypeMapping implements Mapping {
     try {
       Class<?> typeClass = Class.forName(type);
       if (Type.class.isAssignableFrom(typeClass)) {
-        configuration.register(table, column, (Type<?>) typeClass.newInstance());
+        configuration.register(
+            table, column, (Type<?>) typeClass.getDeclaredConstructor().newInstance());
       } else {
         configuration.register(table, column, typeClass);
       }
     } catch (ClassNotFoundException e) {
       configuration.register(table, column, new com.querydsl.sql.types.SimpleType(type));
-    } catch (IllegalAccessException | InstantiationException e) {
+    } catch (ReflectiveOperationException e) {
       throw new RuntimeException(e);
     }
   }

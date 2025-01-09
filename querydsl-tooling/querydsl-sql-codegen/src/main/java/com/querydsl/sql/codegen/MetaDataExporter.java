@@ -53,7 +53,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -169,7 +168,7 @@ public class MetaDataExporter {
   protected Property createProperty(
       EntityType classModel, String normalizedColumnName, String propertyName, Type typeModel) {
     return new Property(
-        classModel, propertyName, propertyName, typeModel, Collections.<String>emptyList(), false);
+        classModel, propertyName, propertyName, typeModel, Collections.emptyList(), false);
   }
 
   /**
@@ -184,8 +183,8 @@ public class MetaDataExporter {
 
     if (config.getNamingStrategyClass() != null) {
       try {
-        namingStrategy = config.getNamingStrategyClass().newInstance();
-      } catch (InstantiationException | IllegalAccessException e) {
+        namingStrategy = config.getNamingStrategyClass().getDeclaredConstructor().newInstance();
+      } catch (ReflectiveOperationException e) {
         throw new RuntimeException(e);
       }
     } else {
@@ -308,8 +307,8 @@ public class MetaDataExporter {
         serializer = new BeanSerializer();
       } else {
         try {
-          serializer = config.getBeanSerializerClass().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+          serializer = config.getBeanSerializerClass().getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
           throw new RuntimeException(e);
         }
       }
@@ -338,8 +337,11 @@ public class MetaDataExporter {
       for (CustomType cl : config.getCustomTypes()) {
         try {
           configuration.register(
-              (com.querydsl.sql.types.Type) Class.forName(cl.getClassName()).newInstance());
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+              Class.forName(cl.getClassName())
+                  .asSubclass(com.querydsl.sql.types.Type.class)
+                  .getDeclaredConstructor()
+                  .newInstance());
+        } catch (ReflectiveOperationException e) {
           throw new RuntimeException(e);
         }
       }
@@ -361,9 +363,7 @@ public class MetaDataExporter {
     }
 
     if (config.getColumnComparatorClass() != null) {
-      module.bind(
-          SQLCodegenModule.COLUMN_COMPARATOR,
-          config.getColumnComparatorClass().asSubclass(Comparator.class));
+      module.bind(SQLCodegenModule.COLUMN_COMPARATOR, config.getColumnComparatorClass());
     }
 
     if (config.getSerializerClass() != null) {
@@ -596,7 +596,7 @@ public class MetaDataExporter {
     var generate = true;
     var bytes = w.toString().getBytes(config.getSourceEncoding());
     if (targetFile.exists() && targetFile.length() == bytes.length) {
-      var str = new String(Files.readAllBytes(targetFile.toPath()), config.getSourceEncoding());
+      var str = Files.readString(targetFile.toPath(), config.getSourceEncoding());
       if (str.equals(w.toString())) {
         generate = false;
       }
