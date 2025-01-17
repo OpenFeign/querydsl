@@ -48,12 +48,7 @@ public class BeanSerializer implements Serializer {
   public static final boolean DEFAULT_PROPERTY_ANNOTATIONS = true;
 
   private static final Function<Property, Parameter> propertyToParameter =
-      new Function<>() {
-        @Override
-        public Parameter apply(Property input) {
-          return new Parameter(input.getName(), input.getType());
-        }
-      };
+      input -> new Parameter(input.getName(), input.getType());
   private final Class<? extends Annotation> generatedAnnotationClass;
 
   private final boolean propertyAnnotations;
@@ -242,7 +237,7 @@ public class BeanSerializer implements Serializer {
     writer.end();
 
     // full constructor
-    writer.beginConstructor(model.getProperties(), propertyToParameter::apply);
+    writer.beginConstructor(model.getProperties(), propertyToParameter);
     for (Property property : model.getProperties()) {
       writer.line("this.", property.getEscapedName(), " = ", property.getEscapedName(), ";");
     }

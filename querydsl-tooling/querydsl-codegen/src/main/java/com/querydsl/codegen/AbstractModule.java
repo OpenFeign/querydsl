@@ -18,9 +18,11 @@ import jakarta.inject.Named;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * {@code AbstractModule} provides a base class for annotation based dependency injection
@@ -117,45 +119,44 @@ public abstract class AbstractModule {
     }
   }
 
-  @SuppressWarnings("unchecked")
   private <T> T createInstance(Class<? extends T> implementation) {
-    Constructor<?> constructor = null;
-    for (Constructor<?> c : implementation.getConstructors()) {
-      if (c.isAnnotationPresent(Inject.class)) {
-        constructor = c;
-        break;
+    var constructor =
+        Arrays.stream(implementation.getConstructors())
+            .filter(c -> c.isAnnotationPresent(Inject.class))
+            .findFirst()
+            .orElseGet(() -> fallbackToDefaultConstructor(implementation));
+
+    var args = getConstructorParameters(constructor);
+    try {
+      //noinspection unchecked
+      return (T) constructor.newInstance(args);
+      // TODO : populate fields as well?!?
+    } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private Object @NotNull [] getConstructorParameters(Constructor<?> constructor) {
+    Class<?>[] parameterTypes = constructor.getParameterTypes();
+    Annotation[][] parameterAnnotations = constructor.getParameterAnnotations();
+    var args = new Object[parameterTypes.length];
+    for (var i = 0; i < parameterTypes.length; i++) {
+      var named = getNamedAnnotation(parameterAnnotations[i]);
+      if (named != null) {
+        args[i] = get(parameterTypes[i], named.value());
+      } else {
+        args[i] = get(parameterTypes[i]);
       }
     }
+    return args;
+  }
 
-    // fallback to default constructor
-    if (constructor == null) {
-      try {
-        constructor = implementation.getConstructor();
-      } catch (SecurityException | NoSuchMethodException e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    if (constructor != null) {
-      var args = new Object[constructor.getParameterTypes().length];
-      for (var i = 0; i < constructor.getParameterTypes().length; i++) {
-        var named = getNamedAnnotation(constructor.getParameterAnnotations()[i]);
-        if (named != null) {
-          args[i] = get(constructor.getParameterTypes()[i], named.value());
-        } else {
-          args[i] = get(constructor.getParameterTypes()[i]);
-        }
-      }
-      try {
-        return (T) constructor.newInstance(args);
-        // TODO : populate fields as well?!?
-      } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
-        throw new RuntimeException(e);
-      }
-
-    } else {
-      throw new IllegalArgumentException(
-          "Got no annotated constructor for " + implementation.getName());
+  private static <T> @NotNull Constructor<? extends T> fallbackToDefaultConstructor(
+      Class<? extends T> implementation) {
+    try {
+      return implementation.getConstructor();
+    } catch (SecurityException | NoSuchMethodException e) {
+      throw new RuntimeException(e);
     }
   }
 
