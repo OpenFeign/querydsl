@@ -17,7 +17,7 @@ import com.querydsl.codegen.utils.model.TypeCategory;
 import java.lang.annotation.Annotation;
 
 /**
- * {@code AnnotationHelper} defines a interface to provide custom annotation processing for {@link
+ * {@code AnnotationHelper} defines an interface to provide custom annotation processing for {@link
  * TypeFactory}.
  *
  * @author dyorgio
@@ -36,7 +36,7 @@ public interface AnnotationHelper {
    * Get specific object that will be used as part of type cache key.
    *
    * @param annotation Annotation instance.
-   * @return Any object, normally a annotation param. Can be {@code null}.
+   * @return Any object, normally an annotation param. Can be {@code null}.
    */
   Object getCustomKey(Annotation annotation);
 

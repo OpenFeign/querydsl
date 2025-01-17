@@ -191,36 +191,22 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
   private List<RenameMapping> renameMappings = new ArrayList<>();
 
   @Override
-  @SuppressWarnings({"unchecked", "rawtypes"})
   public void execute() {
     if (targetFolder == null) {
       throw new BuildException("targetFolder is a mandatory property");
     }
 
-    Connection dbConn = null;
     try {
-      Class.forName(jdbcDriver).newInstance();
-
-      dbConn = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
-
-      var exporter = new MetaDataExporter(this);
-
-      exporter.export(dbConn.getMetaData());
-
-    } catch (RuntimeException
-        | SQLException
-        | ClassNotFoundException
-        | IllegalAccessException
-        | InstantiationException e) {
+      Class.forName(jdbcDriver).getDeclaredConstructor().newInstance();
+    } catch (RuntimeException | ReflectiveOperationException e) {
       throw new BuildException(e);
-    } finally {
-      if (dbConn != null) {
-        try {
-          dbConn.close();
-        } catch (SQLException e2) {
-          throw new BuildException(e2);
-        }
-      }
+    }
+
+    try (Connection dbConn = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword)) {
+      var exporter = new MetaDataExporter(this);
+      exporter.export(dbConn.getMetaData());
+    } catch (RuntimeException | SQLException e) {
+      throw new BuildException(e);
     }
   }
 
@@ -343,7 +329,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
       return null;
     }
     try {
-      return (Class<? extends NamingStrategy>) Class.forName(namingStrategyClass);
+      return Class.forName(namingStrategyClass).asSubclass(NamingStrategy.class);
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
@@ -357,7 +343,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
   public Class<? extends BeanSerializer> getBeanSerializerClass() {
     if (exportBeans && beanSerializerClass != null) {
       try {
-        return (Class<? extends BeanSerializer>) Class.forName(beanSerializerClass);
+        return Class.forName(beanSerializerClass).asSubclass(BeanSerializer.class);
       } catch (ClassNotFoundException e) {
         throw new RuntimeException(e);
       }
@@ -375,7 +361,7 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
       return null;
     }
     try {
-      return (Class<? extends Serializer>) Class.forName(serializerClass);
+      return Class.forName(serializerClass).asSubclass(Serializer.class);
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
@@ -581,7 +567,8 @@ public class AntMetaDataExporter extends Task implements MetadataExporterConfig 
       return null;
     }
     try {
-      return (Class<? extends Comparator<Property>>) Class.forName(columnComparatorClass);
+      return (Class<? extends Comparator<Property>>)
+          Class.forName(columnComparatorClass).asSubclass(Comparator.class);
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
