@@ -108,19 +108,19 @@
     <ecj.version>3.40.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
     <springboot.version>3.4.1</springboot.version>
-    <spring.version>6.2.1</spring.version>
+    <spring.version>6.2.2</spring.version>
 
     <!-- SQL deps -->
     <db2.version>12.1.0.0</db2.version>
     <derby.version>10.17.1.0</derby.version>
     <hsqldb.version>2.7.4</hsqldb.version>
     <h2.version>2.3.232</h2.version>
-    <postgresql.version>42.7.4</postgresql.version>
+    <postgresql.version>42.7.5</postgresql.version>
     <oracle.version>23.6.0.24.10</oracle.version>
     <mysql.version>9.1.0</mysql.version>
     <mssql.version>12.9.0.jre8-preview</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
-    <sqlite.version>3.47.2.0</sqlite.version>
+    <sqlite.version>3.48.0.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
     <firebird.version>5.0.6.java11</firebird.version>
     <mongodb.version>3.12.14</mongodb.version>
@@ -284,7 +284,7 @@
       <dependency>
         <groupId>io.projectreactor</groupId>
         <artifactId>reactor-bom</artifactId>
-        <version>2024.0.1</version>
+        <version>2024.0.2</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -451,7 +451,7 @@
       <plugin>
         <groupId>com.github.siom79.japicmp</groupId>
         <artifactId>japicmp-maven-plugin</artifactId>
-        <version>0.23.0</version>
+        <version>0.23.1</version>
         <configuration>
           <parameter>
             <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
@@ -1011,18 +1011,18 @@
           <plugin>
             <groupId>org.openrewrite.maven</groupId>
             <artifactId>rewrite-maven-plugin</artifactId>
-            <version>5.47.3</version>
+            <version>6.0.3</version>
 
             <dependencies>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-testing-frameworks</artifactId>
-                <version>2.24.0</version>
+                <version>3.0.0</version>
               </dependency>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-migrate-java</artifactId>
-                <version>2.31.0</version>
+                <version>3.0.0</version>
               </dependency>
             </dependencies>
 
