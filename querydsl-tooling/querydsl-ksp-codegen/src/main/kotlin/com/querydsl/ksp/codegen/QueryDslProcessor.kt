@@ -36,7 +36,7 @@ class QueryDslProcessor(
                 .writeTo(
                     codeGenerator = codeGenerator,
                     aggregating = false,
-                    originatingKSFiles = listOf(model.originatingFile)
+                    originatingKSFiles = if (model.originatingFile != null) listOf(model.originatingFile) else listOf()
                 )
         }
     }
