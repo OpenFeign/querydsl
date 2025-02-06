@@ -27,7 +27,7 @@ public class JPATest extends AbstractTest {
 
     @Transient String skipped;
 
-    @Transient JDOTest.JDOEntity skippedEntity;
+    @Transient QueryTypeTest.QueryTypeEntity skippedEntity;
   }
 
   @Test

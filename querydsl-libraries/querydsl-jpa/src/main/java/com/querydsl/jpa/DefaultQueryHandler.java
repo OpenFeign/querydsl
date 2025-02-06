@@ -13,8 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import com.mysema.commons.lang.CloseableIterator;
-import com.mysema.commons.lang.IteratorAdapter;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.types.FactoryExpression;
 import jakarta.persistence.Query;
 import java.util.Iterator;
@@ -53,7 +52,7 @@ public final class DefaultQueryHandler implements QueryHandler {
     if (projection != null) {
       return new TransformingIterator<>(iterator, projection);
     } else {
-      return new IteratorAdapter<>(iterator);
+      return CloseableIterator.of(iterator);
     }
   }
 

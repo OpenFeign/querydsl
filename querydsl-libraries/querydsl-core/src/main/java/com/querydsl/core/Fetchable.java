@@ -13,7 +13,6 @@
  */
 package com.querydsl.core;
 
-import com.mysema.commons.lang.CloseableIterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;

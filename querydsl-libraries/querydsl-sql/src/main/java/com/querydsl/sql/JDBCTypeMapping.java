@@ -13,7 +13,7 @@
  */
 package com.querydsl.sql;
 
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.Pair;
 import com.querydsl.sql.types.Null;
 import java.math.BigDecimal;
 import java.math.BigInteger;

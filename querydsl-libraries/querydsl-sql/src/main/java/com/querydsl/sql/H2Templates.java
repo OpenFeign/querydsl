@@ -89,13 +89,10 @@ public class H2Templates extends SQLTemplates {
 
   @Override
   public String serialize(String literal, int jdbcType) {
-    switch (jdbcType) {
-      case TIMESTAMP_WITH_TIMEZONE:
-        return "(timestamp with time zone '" + literal + "')";
-      case TIME_WITH_TIMEZONE:
-        return "(time with time zone '" + literal + "')";
-      default:
-        return super.serialize(literal, jdbcType);
-    }
+    return switch (jdbcType) {
+      case TIMESTAMP_WITH_TIMEZONE -> "(timestamp with time zone '" + literal + "')";
+      case TIME_WITH_TIMEZONE -> "(time with time zone '" + literal + "')";
+      default -> super.serialize(literal, jdbcType);
+    };
   }
 }

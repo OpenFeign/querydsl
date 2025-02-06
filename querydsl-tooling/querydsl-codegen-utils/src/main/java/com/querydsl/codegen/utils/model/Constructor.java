@@ -30,8 +30,8 @@ public final class Constructor implements Comparable<Constructor> {
   public boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Constructor) {
-      return ((Constructor) o).parameters.equals(parameters);
+    } else if (o instanceof Constructor constructor) {
+      return constructor.parameters.equals(parameters);
     } else {
       return false;
     }

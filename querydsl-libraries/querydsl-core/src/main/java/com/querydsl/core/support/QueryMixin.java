@@ -150,14 +150,14 @@ public class QueryMixin<T> {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public <RT> Expression<RT> convert(Expression<RT> expr, Role role) {
     if (expandAnyPaths) {
-      if (expr instanceof Path) {
-        expr = (Expression) normalizePath((Path) expr);
+      if (expr instanceof Path<?> path) {
+        expr = (Expression) normalizePath(path);
       } else if (expr != null) {
         expr = (Expression) expr.accept(replaceVisitor, null);
       }
     }
-    if (expr instanceof ProjectionRole<?>) {
-      return convert(((ProjectionRole) expr).getProjection(), role);
+    if (expr instanceof ProjectionRole pr) {
+      return convert((pr).getProjection(), role);
     } else if (expr instanceof FactoryExpression<?>
         && !(expr instanceof FactoryExpressionAdapter<?>)) {
       return FactoryExpressionUtils.wrap((FactoryExpression<RT>) expr);
@@ -437,8 +437,7 @@ public class QueryMixin<T> {
   public final boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof QueryMixin<?>) {
-      QueryMixin<?> q = (QueryMixin<?>) o;
+    } else if (o instanceof QueryMixin<?> q) {
       return q.metadata.equals(metadata);
     } else {
       return false;

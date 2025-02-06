@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>6.11-SNAPSHOT</version>
+    <version>7.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-libraries</artifactId>
@@ -98,8 +98,6 @@
                     <exclude>org.hibernate:hibernate-envers:*:*:compile</exclude>
                     <exclude>org.hibernate.validator:hibernate-validator:*:*:compile</exclude>
                     <exclude>org.eclipse.persistence:eclipselink:*:*:compile</exclude>
-                    <exclude>org.datanucleus:javax.jdo:*:*:compile</exclude>
-                    <exclude>org.springframework.roo:org.springframework.roo.annotations:*:*:compile</exclude>
                     <exclude>org.mongodb.morphia:morphia:*:*:compile</exclude>
                     <exclude>org.joda:joda-money:*:*:compile</exclude>
                     <exclude>org.batoo.jpa:batoo-jpa:*:*:compile</exclude>
@@ -112,6 +110,9 @@
                     <exclude>jakarta.xml.bind:jakarta.xml.bind-api:*:*:compile</exclude>
                     <!-- Ban any API's that were moved to jakarta -->
                     <exclude>javax.*:*:*:*:*</exclude>
+                    <!-- Ban libraries that support was dropped -->
+                    <exclude>org.datanucleus:javax.jdo:*:*:*</exclude>
+                    <exclude>org.springframework.roo:org.springframework.roo.annotations:*:*:compile</exclude>
                     <!-- The following database drivers should be in test scope -->
                     <exclude>org.hsqldb:hsqldb:*:*:compile</exclude>
                     <exclude>com.h2database:h2:*:*:compile</exclude>

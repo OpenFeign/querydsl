@@ -47,7 +47,7 @@ public class HibernateConfiguration extends JPAConfiguration {
   protected List<Class<? extends Annotation>> getAnnotations() {
     try {
       List<Class<? extends Annotation>> annotations = new ArrayList<>(super.getAnnotations());
-      for (String simpleName : Arrays.asList("Type", "Cascade", "LazyCollection", "OnDelete")) {
+      for (String simpleName : Arrays.asList("Type", "Cascade", "OnDelete")) {
         annotations.add(
             (Class<? extends Annotation>) Class.forName("org.hibernate.annotations." + simpleName));
       }

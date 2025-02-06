@@ -15,6 +15,7 @@ package com.querydsl.core;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -25,7 +26,7 @@ import java.util.Objects;
  */
 public class QueryFlag implements Serializable {
 
-  private static final long serialVersionUID = -7131081607441961628L;
+  @Serial private static final long serialVersionUID = -7131081607441961628L;
 
   /** The different {@code QueryFlag} positions */
   public enum Position {
@@ -103,8 +104,7 @@ public class QueryFlag implements Serializable {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof QueryFlag) {
-      var other = (QueryFlag) obj;
+    } else if (obj instanceof QueryFlag other) {
       return other.position.equals(position) && other.flag.equals(flag);
     } else {
       return false;

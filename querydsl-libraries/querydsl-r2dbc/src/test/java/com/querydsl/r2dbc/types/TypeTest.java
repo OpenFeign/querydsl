@@ -15,7 +15,7 @@ package com.querydsl.r2dbc.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.Pair;
 import com.querydsl.r2dbc.binding.BindMarkersFactory;
 import com.querydsl.r2dbc.binding.BindTarget;
 import com.querydsl.r2dbc.binding.StatementWrapper;

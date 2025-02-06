@@ -174,21 +174,11 @@ public class MySQLTemplates extends SQLTemplates {
 
   @Override
   public String getCastTypeNameForCode(int code) {
-    switch (code) {
-      case Types.TINYINT:
-      case Types.SMALLINT:
-      case Types.INTEGER:
-      case Types.BIGINT:
-        return "signed";
-      case Types.FLOAT:
-      case Types.DOUBLE:
-      case Types.REAL:
-      case Types.DECIMAL:
-        return "decimal";
-      case Types.VARCHAR:
-        return "char";
-      default:
-        return super.getCastTypeNameForCode(code);
-    }
+    return switch (code) {
+      case Types.TINYINT, Types.SMALLINT, Types.INTEGER, Types.BIGINT -> "signed";
+      case Types.FLOAT, Types.DOUBLE, Types.REAL, Types.DECIMAL -> "decimal";
+      case Types.VARCHAR -> "char";
+      default -> super.getCastTypeNameForCode(code);
+    };
   }
 }

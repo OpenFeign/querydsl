@@ -14,6 +14,7 @@
 package com.querydsl.core.types;
 
 import com.querydsl.core.annotations.Immutable;
+import java.io.Serial;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @Immutable
 public class PredicateTemplate extends TemplateExpressionImpl<Boolean> implements Predicate {
 
-  private static final long serialVersionUID = -5371430939203772072L;
+  @Serial private static final long serialVersionUID = -5371430939203772072L;
 
   @Nullable private transient volatile Predicate not;
 

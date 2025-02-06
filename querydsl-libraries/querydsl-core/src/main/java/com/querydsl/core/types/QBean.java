@@ -18,6 +18,7 @@ import com.querydsl.core.util.PrimitiveUtils;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.Serial;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,16 +46,14 @@ import java.util.Map;
  */
 public class QBean<T> extends FactoryExpressionBase<T> {
 
-  private static final long serialVersionUID = -8210214512730989778L;
+  @Serial private static final long serialVersionUID = -8210214512730989778L;
 
   private static Map<String, Expression<?>> createBindings(Expression<?>... args) {
     Map<String, Expression<?>> rv = new LinkedHashMap<>();
     for (Expression<?> expr : args) {
-      if (expr instanceof Path<?>) {
-        Path<?> path = (Path<?>) expr;
+      if (expr instanceof Path<?> path) {
         rv.put(path.getMetadata().getName(), expr);
-      } else if (expr instanceof Operation<?>) {
-        Operation<?> operation = (Operation<?>) expr;
+      } else if (expr instanceof Operation<?> operation) {
         if (operation.getOperator() == Ops.ALIAS && operation.getArg(1) instanceof Path<?>) {
           Path<?> path = (Path<?>) operation.getArg(1);
           if (isCompoundExpression(operation.getArg(0))) {
@@ -275,8 +274,7 @@ public class QBean<T> extends FactoryExpressionBase<T> {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof QBean<?>) {
-      QBean<?> c = (QBean<?>) obj;
+    } else if (obj instanceof QBean<?> c) {
       return getArgs().equals(c.getArgs()) && getType().equals(c.getType());
     } else {
       return false;

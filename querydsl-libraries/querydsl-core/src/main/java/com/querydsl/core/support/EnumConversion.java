@@ -16,6 +16,7 @@ package com.querydsl.core.support;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpressionBase;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
  */
 public class EnumConversion<T> extends FactoryExpressionBase<T> {
 
-  private static final long serialVersionUID = 7840412008633901748L;
+  @Serial private static final long serialVersionUID = 7840412008633901748L;
 
   private final List<Expression<?>> exprs;
 
@@ -61,8 +62,8 @@ public class EnumConversion<T> extends FactoryExpressionBase<T> {
         @SuppressWarnings("unchecked") // The expression type is an enum
         var rv = (T) Enum.valueOf(getType().asSubclass(Enum.class), args[0].toString());
         return rv;
-      } else if (args[0] instanceof Number) {
-        return values[((Number) args[0]).intValue()];
+      } else if (args[0] instanceof Number number) {
+        return values[number.intValue()];
       } else {
         @SuppressWarnings("unchecked")
         var rv = (T) args[0];

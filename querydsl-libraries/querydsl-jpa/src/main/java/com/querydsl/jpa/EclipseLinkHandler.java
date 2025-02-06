@@ -13,8 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import com.mysema.commons.lang.CloseableIterator;
-import com.mysema.commons.lang.IteratorAdapter;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.types.FactoryExpression;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
@@ -96,7 +95,7 @@ class EclipseLinkHandler implements QueryHandler {
     if (projection != null) {
       return new TransformingIterator<>(iterator, closeable, projection);
     } else {
-      return new IteratorAdapter<>(iterator, closeable);
+      return CloseableIterator.of(iterator, closeable);
     }
   }
 

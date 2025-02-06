@@ -13,7 +13,7 @@
  */
 package com.querydsl.core.group;
 
-import com.mysema.commons.lang.CloseableIterator;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;

@@ -17,6 +17,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpressionBase;
 import com.querydsl.core.types.Visitor;
 import com.querydsl.core.util.MathUtils;
+import java.io.Serial;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import java.util.List;
  */
 public class NumberConversion<T> extends FactoryExpressionBase<T> {
 
-  private static final long serialVersionUID = 7840412008633901748L;
+  @Serial private static final long serialVersionUID = 7840412008633901748L;
 
   private final List<Expression<?>> exprs;
 

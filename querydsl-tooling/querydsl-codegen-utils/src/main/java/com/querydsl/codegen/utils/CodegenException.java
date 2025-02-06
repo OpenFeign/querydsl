@@ -13,12 +13,14 @@
  */
 package com.querydsl.codegen.utils;
 
+import java.io.Serial;
+
 /**
  * @author tiwe
  */
 public class CodegenException extends RuntimeException {
 
-  private static final long serialVersionUID = -8704782349669898467L;
+  @Serial private static final long serialVersionUID = -8704782349669898467L;
 
   public CodegenException(String msg) {
     super(msg);
