@@ -112,7 +112,7 @@ class QueryModelExtractor(
             typeParameterCount = classDeclaration.typeParameters.size,
             className = queryClassName(classDeclaration, settings),
             type = type,
-            originatingFile = classDeclaration.containingFile!!
+            originatingFile = classDeclaration.containingFile
         )
     }
 
