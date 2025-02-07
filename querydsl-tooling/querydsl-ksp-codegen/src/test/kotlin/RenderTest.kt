@@ -73,6 +73,30 @@ class RenderTest {
     }
 
     @Test
+    fun superclassNullContainingFile() {
+        val model = QueryModel(
+            originalClassName = ClassName("", "Cat"),
+            typeParameterCount = 0,
+            className = ClassName("", "QCat"),
+            type = QueryModelType.ENTITY,
+            mockk()
+        )
+        val superClass = QueryModel(
+            originalClassName = ClassName("", "Animal"),
+            typeParameterCount = 0,
+            className = ClassName("", "QAnimal"),
+            type = QueryModelType.SUPERCLASS,
+            null
+        )
+        model.superclass = superClass
+        val typeSpec = QueryModelRenderer.render(model)
+        val code = typeSpec.toString()
+        code.assertCompiles()
+        code.assertContains("class QCat : com.querydsl.core.types.dsl.EntityPathBase<Cat>")
+        code.assertContainLines("val _super: QAnimal by lazy { QAnimal(this) }")
+    }
+
+    @Test
     fun genericTypeArgs() {
         val model = QueryModel(
             originalClassName = ClassName("", "Article"),
