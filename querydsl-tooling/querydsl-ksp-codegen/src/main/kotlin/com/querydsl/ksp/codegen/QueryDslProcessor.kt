@@ -28,6 +28,13 @@ class QueryDslProcessor(
     override fun finish() {
         val models = typeProcessor.process()
         models.forEach { model ->
+            if (model.originatingFile == null) {
+                // skip models without originating file. This happens when the model is from a compiled dependency,
+                // so we don't have access to the source file. It is expected the Q class is packaged alongside the
+                // compiled dependency.
+                return@forEach
+            }
+
             val typeSpec = QueryModelRenderer.render(model)
             FileSpec.builder(model.className)
                 .indent(settings.indent)
@@ -36,7 +43,7 @@ class QueryDslProcessor(
                 .writeTo(
                     codeGenerator = codeGenerator,
                     aggregating = false,
-                    originatingKSFiles = listOfNotNull(model.originatingFile)
+                    originatingKSFiles = listOf(model.originatingFile)
                 )
         }
     }
