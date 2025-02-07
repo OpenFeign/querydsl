@@ -1,7 +1,6 @@
 package com.querydsl.ksp.codegen
 
 import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.*
@@ -13,10 +12,8 @@ class QueryDslProcessor(
     private val codeGenerator: CodeGenerator
 ) : SymbolProcessor {
     val typeProcessor = QueryModelExtractor(settings)
-    lateinit var typeResolver: Resolver
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        typeResolver = resolver
         if (settings.enable) {
             QueryModelType.entries.forEach { type ->
                 resolver.getSymbolsWithAnnotation(type.associatedAnnotation)
@@ -32,22 +29,14 @@ class QueryDslProcessor(
         val models = typeProcessor.process()
         models.forEach { model ->
             val typeSpec = QueryModelRenderer.render(model)
-
-            val sources = if (model.originatingFile != null) {
-                arrayOf(model.originatingFile)
-            } else if (this::typeResolver.isInitialized) {
-                typeResolver.getAllFiles().toList().toTypedArray()
-            } else {
-                emptyArray()
-            }
-
             FileSpec.builder(model.className)
                 .indent(settings.indent)
                 .addType(typeSpec)
                 .build()
                 .writeTo(
-                    codeGenerator,
-                    Dependencies(false, *sources)
+                    codeGenerator = codeGenerator,
+                    aggregating = false,
+                    originatingKSFiles = listOfNotNull(model.originatingFile)
                 )
         }
     }
