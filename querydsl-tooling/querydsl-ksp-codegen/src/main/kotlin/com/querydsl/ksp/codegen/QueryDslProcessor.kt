@@ -11,10 +11,12 @@ class QueryDslProcessor(
     private val settings: KspSettings,
     private val codeGenerator: CodeGenerator
 ) : SymbolProcessor {
-    val typeProcessor = QueryModelExtractor(settings)
+    val store = QueryModelStore(settings)
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (settings.enable) {
+            val allFiles = resolver.getAllFiles().toList()
+            val typeProcessor = QueryModelExtractor(settings, store, allFiles)
             QueryModelType.entries.forEach { type ->
                 resolver.getSymbolsWithAnnotation(type.associatedAnnotation)
                     .map { it as KSClassDeclaration }
@@ -26,7 +28,7 @@ class QueryDslProcessor(
     }
 
     override fun finish() {
-        val models = typeProcessor.process()
+        val models = store.process()
         models.forEach { model ->
             val typeSpec = QueryModelRenderer.render(model)
             FileSpec.builder(model.className)
@@ -36,7 +38,7 @@ class QueryDslProcessor(
                 .writeTo(
                     codeGenerator = codeGenerator,
                     aggregating = false,
-                    originatingKSFiles = listOfNotNull(model.originatingFile)
+                    originatingKSFiles = model.sources
                 )
         }
     }

@@ -8,7 +8,7 @@ class QueryModel(
     val typeParameterCount: Int,
     val className: ClassName,
     val type: QueryModelType,
-    val originatingFile: KSFile?
+    val sources: List<KSFile>
 ) {
     var superclass: QueryModel? = null
 
