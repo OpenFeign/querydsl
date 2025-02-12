@@ -7,14 +7,13 @@ package com.querydsl.codegen.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.querydsl.codegen.utils.support.ClassLoaderWrapper;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.querydsl.codegen.utils.support.ClassLoaderWrapper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -168,12 +167,14 @@ public class JDKEvaluatorFactoryTest {
     var factory = new JDKEvaluatorFactory(classLoader);
 
     assertThat(
-            factory.createEvaluator(
-                            "return " + source + ";",
-                            projectionType,
-                            names.toArray(String[]::new),
-                            types.toArray(Class[]::new),
-                            Collections.<String, Object>emptyMap())
-                    .evaluate(args.toArray())).isEqualTo("Hello World");
+            factory
+                .createEvaluator(
+                    "return " + source + ";",
+                    projectionType,
+                    names.toArray(String[]::new),
+                    types.toArray(Class[]::new),
+                    Collections.<String, Object>emptyMap())
+                .evaluate(args.toArray()))
+        .isEqualTo("Hello World");
   }
 }

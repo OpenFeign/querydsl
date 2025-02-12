@@ -7,12 +7,12 @@ import java.util.Collections;
 import java.util.Enumeration;
 
 public class ClassLoaderWrapper extends URLClassLoader {
-    public ClassLoaderWrapper(ClassLoader parent) {
-        super(new URL[0], parent);
-    }
+  public ClassLoaderWrapper(ClassLoader parent) {
+    super(new URL[0], parent);
+  }
 
-    @Override
-    public Enumeration<URL> findResources(String name) throws IOException {
-        return Collections.emptyEnumeration();
-    }
+  @Override
+  public Enumeration<URL> findResources(String name) throws IOException {
+    return Collections.emptyEnumeration();
+  }
 }
