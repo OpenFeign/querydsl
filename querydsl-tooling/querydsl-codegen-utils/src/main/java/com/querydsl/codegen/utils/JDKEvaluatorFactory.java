@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.tools.JavaCompiler;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardLocation;
@@ -50,7 +51,10 @@ public class JDKEvaluatorFactory extends AbstractEvaluatorFactory {
     this.fileManager =
         new MemFileManager(parent, compiler.getStandardFileManager(null, null, null));
     this.compiler = compiler;
-    this.classpath = SimpleCompiler.getClassPath(parent);
+    this.classpath =
+        Optional.of(SimpleCompiler.getClassPath(parent))
+            .filter(s -> !s.isEmpty())
+            .orElseGet(() -> SimpleCompiler.getClassPath(compiler.getClass().getClassLoader()));
     this.loader = fileManager.getClassLoader(StandardLocation.CLASS_OUTPUT);
     this.compilationOptions = Arrays.asList("-classpath", classpath, "-g:none");
   }
