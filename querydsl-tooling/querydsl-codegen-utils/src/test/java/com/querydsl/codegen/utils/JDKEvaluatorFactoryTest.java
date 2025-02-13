@@ -7,6 +7,7 @@ package com.querydsl.codegen.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.querydsl.codegen.utils.support.ClassLoaderWrapper;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -152,5 +153,28 @@ public class JDKEvaluatorFactoryTest {
             types.toArray(Class[]::new),
             constants);
     return evaluator.evaluate(args.toArray());
+  }
+
+  @Test
+  public void CustomClassLoader() {
+    var source = "a.getName()";
+    var projectionType = String.class;
+    var names = Collections.singletonList("a");
+    var types = Collections.<Class<?>>singletonList(TestEntity.class);
+    var args = Arrays.asList(new TestEntity("Hello World"));
+
+    var classLoader = new ClassLoaderWrapper(getClass().getClassLoader());
+    var factory = new JDKEvaluatorFactory(classLoader);
+
+    assertThat(
+            factory
+                .createEvaluator(
+                    "return " + source + ";",
+                    projectionType,
+                    names.toArray(String[]::new),
+                    types.toArray(Class[]::new),
+                    Collections.<String, Object>emptyMap())
+                .evaluate(args.toArray()))
+        .isEqualTo("Hello World");
   }
 }
