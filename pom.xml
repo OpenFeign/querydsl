@@ -107,7 +107,7 @@
     <junit.version>5.11.4</junit.version>
     <ecj.version>3.40.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
-    <springboot.version>3.4.2</springboot.version>
+    <springboot.version>3.4.3</springboot.version>
     <spring.version>6.2.3</spring.version>
 
     <!-- SQL deps -->
@@ -120,7 +120,7 @@
     <mysql.version>9.2.0</mysql.version>
     <mssql.version>12.9.0.jre8-preview</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
-    <sqlite.version>3.49.0.0</sqlite.version>
+    <sqlite.version>3.49.1.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
     <firebird.version>5.0.6.java11</firebird.version>
     <mongodb.version>3.12.14</mongodb.version>
@@ -171,7 +171,7 @@
       <dependency>
         <groupId>io.smallrye</groupId>
         <artifactId>jandex</artifactId>
-        <version>3.2.6</version>
+        <version>3.2.7</version>
       </dependency>
       <dependency>
         <groupId>org.jetbrains</groupId>
@@ -1011,18 +1011,18 @@
           <plugin>
             <groupId>org.openrewrite.maven</groupId>
             <artifactId>rewrite-maven-plugin</artifactId>
-            <version>6.1.4</version>
+            <version>6.2.0</version>
 
             <dependencies>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-testing-frameworks</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
               </dependency>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-migrate-java</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
               </dependency>
             </dependencies>
 
