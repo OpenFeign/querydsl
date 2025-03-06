@@ -383,6 +383,10 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
 
   @Override
   public void visitConstant(Object constant) {
+    if (constant instanceof Enum) {
+      visitLiteral(constant);
+      return;
+    }
     if (inCaseOperation && templates.isCaseWithLiterals()) {
       if (constant instanceof Collection) {
         append("(");
