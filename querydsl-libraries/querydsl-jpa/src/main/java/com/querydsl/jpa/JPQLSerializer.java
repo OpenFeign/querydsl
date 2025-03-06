@@ -383,6 +383,10 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
 
   @Override
   public void visitConstant(Object constant) {
+    if (inCaseOperation && constant instanceof Enum) {
+      visitLiteral(constant);
+      return;
+    }
     if (inCaseOperation && templates.isCaseWithLiterals()) {
       if (constant instanceof Collection) {
         append("(");
@@ -451,7 +455,7 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
   protected void visitOperation(
       Class<?> type, Operator operator, List<? extends Expression<?>> args) {
     var oldInCaseOperation = inCaseOperation;
-    inCaseOperation = CASE_OPS.contains(operator);
+    inCaseOperation = CASE_OPS.contains(operator) || operator.equals(Ops.CASE_WHEN);
     var oldWrapElements = wrapElements;
     wrapElements = templates.wrapElements(operator);
 
