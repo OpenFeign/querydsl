@@ -102,7 +102,7 @@
     <git-code-format-maven-plugin.version>5.3</git-code-format-maven-plugin.version>
 
     <junit.version>5.12.0</junit.version>
-    <ecj.version>3.33.0</ecj.version>
+    <ecj.version>3.41.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
     <springboot.version>3.4.3</springboot.version>
     <spring.version>6.2.3</spring.version>
