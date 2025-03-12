@@ -138,7 +138,7 @@
     <mvn.version>3.9.9</mvn.version>
     <guava.version>33.4.0-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
-    <byte-buddy.version>1.17.1</byte-buddy.version>
+    <byte-buddy.version>1.17.2</byte-buddy.version>
     <slf4j.version>2.0.17</slf4j.version>
     <surefire.version>3.5.2</surefire.version>
     <animal-sniffer.version>1.24</animal-sniffer.version>
@@ -284,7 +284,7 @@
       <dependency>
         <groupId>io.projectreactor</groupId>
         <artifactId>reactor-bom</artifactId>
-        <version>2024.0.3</version>
+        <version>2024.0.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -566,7 +566,7 @@
       <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
-        <version>0.200.0</version>
+        <version>0.200.3</version>
         <inherited>false</inherited>
         <configuration>
           <boms>
@@ -1011,18 +1011,18 @@
           <plugin>
             <groupId>org.openrewrite.maven</groupId>
             <artifactId>rewrite-maven-plugin</artifactId>
-            <version>6.2.2</version>
+            <version>6.3.0</version>
 
             <dependencies>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-testing-frameworks</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.0</version>
               </dependency>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-migrate-java</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.0</version>
               </dependency>
             </dependencies>
 
