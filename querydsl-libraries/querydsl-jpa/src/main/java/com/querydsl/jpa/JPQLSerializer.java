@@ -65,7 +65,7 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
               Ops.ADD, Ops.SUB, Ops.MULT, Ops.DIV, Ops.LT, Ops.LOE, Ops.GT, Ops.GOE, Ops.BETWEEN));
 
   private static final Set<? extends Operator> CASE_OPS =
-      Collections.unmodifiableSet(EnumSet.of(Ops.CASE_ELSE));
+      Collections.unmodifiableSet(EnumSet.of(Ops.CASE_WHEN, Ops.CASE_ELSE));
 
   private static final String COMMA = ", ";
 
@@ -455,7 +455,7 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
   protected void visitOperation(
       Class<?> type, Operator operator, List<? extends Expression<?>> args) {
     var oldInCaseOperation = inCaseOperation;
-    inCaseOperation = CASE_OPS.contains(operator) || operator.equals(Ops.CASE_WHEN);
+    inCaseOperation = CASE_OPS.contains(operator);
     var oldWrapElements = wrapElements;
     wrapElements = templates.wrapElements(operator);
 
