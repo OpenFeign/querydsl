@@ -19,19 +19,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.domain.QAnimal;
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.EntityPathBase;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.jpa.domain.JobFunction;
-import com.querydsl.jpa.domain.Location;
-import com.querydsl.jpa.domain.QDomesticCat;
-import com.querydsl.jpa.domain.QEmployee;
+import com.querydsl.core.types.dsl.*;
+import com.querydsl.jpa.domain.*;
 import java.util.Arrays;
 import org.junit.Test;
 
@@ -67,7 +61,7 @@ public class JPQLSerializerTest {
         Expressions.cases().when(cat.toes.eq(2)).then(2).when(cat.toes.eq(3)).then(3).otherwise(4);
     serializer.handle(expr);
     assertThat(serializer.toString())
-        .isEqualTo("case when (cat.toes = ?1) then ?2 when (cat.toes = ?3) then ?4 else 4 end");
+        .isEqualTo("case when (cat.toes = ?1) then 2 when (cat.toes = ?2) then 3 else 4 end");
   }
 
   @Test
@@ -338,17 +332,37 @@ public class JPQLSerializerTest {
   }
 
   @Test
-  public void visitLiteral_enum() {
-    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
-    serializer.visitLiteral(JobFunction.MANAGER);
-    assertThat(serializer).hasToString("com.querydsl.jpa.domain.JobFunction.MANAGER");
-  }
-
-  @Test
   public void substring_indexOf() {
     var cat = QCat.cat;
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     cat.name.substring(cat.name.indexOf("")).accept(serializer, null);
     assertThat(serializer).hasToString("substring(cat.name,locate(?1,cat.name)-1 + ?2)");
+  }
+
+  @Test
+  public void case_enumConversion() {
+    var serializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
+
+    Expression<?> expr =
+        new CaseBuilder()
+            .when(Expressions.TRUE)
+            .then(JobFunction.MANAGER)
+            .otherwise(JobFunction.CONSULTANT);
+
+    serializer.handle(expr);
+
+    assertThat(serializer.toString())
+        .isEqualTo("case when true then 'MANAGER' else 'CONSULTANT' end");
+  }
+
+  @Test
+  public void inClause_enumCollection() {
+    QAnimal animal = QAnimal.animal;
+    Expression<?> predicate = animal.color.in(Arrays.asList(Color.BLACK, Color.TABBY));
+    JPQLSerializer serializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
+    serializer.handle(predicate);
+    assertThat(serializer.toString()).isEqualTo("animal.color in ?1");
+    Object constant = serializer.getConstants().get(0);
+    assertThat(constant.toString()).isEqualTo("[BLACK, TABBY]");
   }
 }
