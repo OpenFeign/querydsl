@@ -103,7 +103,7 @@ public class SimpleType implements Type {
     this.fullName = fullName;
     this.packageName = packageName;
     this.simpleName = simpleName;
-    if (packageName.length() > 0) {
+    if (packageName.length() > 0 && fullName.length() > packageName.length()) {
       this.localName = fullName.substring(packageName.length() + 1);
     } else {
       this.localName = fullName;
