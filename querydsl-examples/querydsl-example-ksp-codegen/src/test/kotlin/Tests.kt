@@ -111,6 +111,37 @@ class Tests {
         }
     }
 
+    @Test
+    fun `select dto`() {
+        val emf = initialize()
+
+        run {
+            val em = emf.createEntityManager()
+            em.transaction.begin()
+            em.persist(Person(424, "John Smith"))
+            em.transaction.commit()
+            em.close()
+        }
+
+        run {
+            val em = emf.createEntityManager()
+            val queryFactory = JPAQueryFactory(em)
+            val q = QPerson.person
+            val personDTO = queryFactory
+                .select(QPersonDTO(q.id, q.name))
+                .from(q)
+                .where(q.name.eq("John Smith"))
+                .fetchOne()
+            if (personDTO == null) {
+                fail<Any>("No personDTO was returned")
+            } else {
+                assertThat(personDTO.id).isEqualTo(424)
+                assertThat(personDTO.name).isEqualTo("John Smith")
+            }
+            em.close()
+        }
+    }
+
     private fun initialize(): EntityManagerFactory {
         val configuration = Configuration()
             .setProperty(AvailableSettings.JAKARTA_JDBC_DRIVER, org.h2.Driver::class.qualifiedName!!)
