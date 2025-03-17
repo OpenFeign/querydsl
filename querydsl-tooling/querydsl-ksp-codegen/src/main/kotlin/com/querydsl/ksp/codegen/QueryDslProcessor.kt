@@ -33,8 +33,7 @@ class QueryDslProcessor(
                         }
                     }
                     .filter {
-                        val result = isIncluded(it)
-                        result
+                        isIncluded(it)
                     }
                     .forEach { declaration ->
                         typeProcessor.add(declaration, type)
