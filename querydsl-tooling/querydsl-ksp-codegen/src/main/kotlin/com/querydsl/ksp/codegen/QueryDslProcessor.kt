@@ -25,6 +25,7 @@ class QueryDslProcessor(
                                         " must be declared on a constructor function or class"
                                 when (declaration) {
                                     is KSFunctionDeclaration -> {
+                                        if (!declaration.isConstructor()) error(errorMessage)
                                         declaration.parent as? KSClassDeclaration
                                             ?: error(errorMessage)
                                     }
