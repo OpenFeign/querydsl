@@ -18,18 +18,23 @@ class QueryDslProcessor(
         if (settings.enable) {
             QueryModelType.entries.forEach { type ->
                 resolver.getSymbolsWithAnnotation(type.associatedAnnotation)
-                    .mapNotNull { declaration ->
-                        when (declaration) {
-                            is KSClassDeclaration -> declaration
-                            is KSFunctionDeclaration -> {
-                                if (declaration.isConstructor()) {
-                                    declaration.parent as? KSClassDeclaration
-                                } else {
-                                    null
-                                }
+                    .map { declaration ->
+                        when {
+                            type == QueryModelType.QUERY_PROJECTION -> {
+                                val errorMessage = "${type.associatedAnnotation} annotation" +
+                                        " must be declared on a constructor function or class"
+                                when (declaration) {
+                                    is KSFunctionDeclaration -> {
+                                        declaration.parent as? KSClassDeclaration
+                                            ?: error(errorMessage)
+                                    }
 
+                                    is KSClassDeclaration -> declaration
+                                    else -> error(errorMessage)
+                                }
                             }
-                            else -> null
+
+                            else -> declaration as KSClassDeclaration
                         }
                     }
                     .filter {
