@@ -128,7 +128,25 @@ class Tests {
             val queryFactory = JPAQueryFactory(em)
             val q = QPerson.person
             val personDTO = queryFactory
-                .select(QPersonDTO(q.id, q.name))
+                .select(QPersonClassConstructorDto(q.id, q.name))
+                .from(q)
+                .where(q.name.eq("John Smith"))
+                .fetchOne()
+            if (personDTO == null) {
+                fail<Any>("No personDTO was returned")
+            } else {
+                assertThat(personDTO.id).isEqualTo(424)
+                assertThat(personDTO.name).isEqualTo("John Smith")
+            }
+            em.close()
+        }
+
+        run {
+            val em = emf.createEntityManager()
+            val queryFactory = JPAQueryFactory(em)
+            val q = QPerson.person
+            val personDTO = queryFactory
+                .select(QPersonClassDto(q.id, q.name))
                 .from(q)
                 .where(q.name.eq("John Smith"))
                 .fetchOne()
