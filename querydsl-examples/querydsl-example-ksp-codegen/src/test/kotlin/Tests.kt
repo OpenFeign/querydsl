@@ -128,7 +128,7 @@ class Tests {
             val queryFactory = JPAQueryFactory(em)
             val q = QPerson.person
             val personDTO = queryFactory
-                .select(QPersonClassConstructorDto(q.id, q.name))
+                .select(QPersonClassConstructorDTO(q.id, q.name))
                 .from(q)
                 .where(q.name.eq("John Smith"))
                 .fetchOne()
@@ -146,7 +146,7 @@ class Tests {
             val queryFactory = JPAQueryFactory(em)
             val q = QPerson.person
             val personDTO = queryFactory
-                .select(QPersonClassDto(q.id, q.name))
+                .select(QPersonClassDTO(q.id, q.name))
                 .from(q)
                 .where(q.name.eq("John Smith"))
                 .fetchOne()
