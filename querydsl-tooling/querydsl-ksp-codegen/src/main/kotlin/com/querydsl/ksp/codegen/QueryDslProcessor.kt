@@ -1,5 +1,6 @@
 package com.querydsl.ksp.codegen
 
+import com.google.devtools.ksp.isConstructor
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
@@ -17,9 +18,32 @@ class QueryDslProcessor(
         if (settings.enable) {
             QueryModelType.entries.forEach { type ->
                 resolver.getSymbolsWithAnnotation(type.associatedAnnotation)
-                    .map { it as KSClassDeclaration }
-                    .filter { isIncluded(it) }
-                    .forEach { declaration -> typeProcessor.add(declaration, type) }
+                    .map { declaration ->
+                        when {
+                            type == QueryModelType.QUERY_PROJECTION -> {
+                                val errorMessage = "${type.associatedAnnotation} annotation" +
+                                        " must be declared on a constructor function or class"
+                                when (declaration) {
+                                    is KSFunctionDeclaration -> {
+                                        if (!declaration.isConstructor()) error(errorMessage)
+                                        declaration.parent as? KSClassDeclaration
+                                            ?: error(errorMessage)
+                                    }
+
+                                    is KSClassDeclaration -> declaration
+                                    else -> error(errorMessage)
+                                }
+                            }
+
+                            else -> declaration as KSClassDeclaration
+                        }
+                    }
+                    .filter {
+                        isIncluded(it)
+                    }
+                    .forEach { declaration ->
+                        typeProcessor.add(declaration, type)
+                    }
             }
         }
         return emptyList()
