@@ -65,7 +65,7 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
               Ops.ADD, Ops.SUB, Ops.MULT, Ops.DIV, Ops.LT, Ops.LOE, Ops.GT, Ops.GOE, Ops.BETWEEN));
 
   private static final Set<? extends Operator> CASE_OPS =
-      Collections.unmodifiableSet(EnumSet.of(Ops.CASE_ELSE));
+      Collections.unmodifiableSet(EnumSet.of(Ops.CASE_WHEN, Ops.CASE_ELSE));
 
   private static final String COMMA = ", ";
 
@@ -383,6 +383,10 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
 
   @Override
   public void visitConstant(Object constant) {
+    if (inCaseOperation && constant instanceof Enum) {
+      visitLiteral(constant);
+      return;
+    }
     if (inCaseOperation && templates.isCaseWithLiterals()) {
       if (constant instanceof Collection<?> collection) {
         append("(");

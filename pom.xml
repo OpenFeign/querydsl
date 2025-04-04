@@ -104,11 +104,11 @@
 
     <git-code-format-maven-plugin.version>5.3</git-code-format-maven-plugin.version>
 
-    <junit.version>5.12.0</junit.version>
+    <junit.version>5.12.1</junit.version>
     <ecj.version>3.40.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
-    <springboot.version>3.4.3</springboot.version>
-    <spring.version>6.2.3</spring.version>
+    <springboot.version>3.4.4</springboot.version>
+    <spring.version>6.2.5</spring.version>
 
     <!-- SQL deps -->
     <db2.version>12.1.0.0</db2.version>
@@ -118,7 +118,7 @@
     <postgresql.version>42.7.5</postgresql.version>
     <oracle.version>23.7.0.25.01</oracle.version>
     <mysql.version>9.2.0</mysql.version>
-    <mssql.version>12.9.0.jre8-preview</mssql.version>
+    <mssql.version>12.10.0.jre8</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.49.1.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
@@ -136,21 +136,21 @@
 
     <assertj.version>3.27.3</assertj.version>
     <mvn.version>3.9.9</mvn.version>
-    <guava.version>33.4.0-jre</guava.version>
+    <guava.version>33.4.6-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
-    <byte-buddy.version>1.17.2</byte-buddy.version>
+    <byte-buddy.version>1.17.5</byte-buddy.version>
     <slf4j.version>2.0.17</slf4j.version>
-    <surefire.version>3.5.2</surefire.version>
+    <surefire.version>3.5.3</surefire.version>
     <animal-sniffer.version>1.24</animal-sniffer.version>
     <h2gis.version>2.2.3</h2gis.version>
     <morphia.version>1.3.2</morphia.version>
     <jmh.version>1.37</jmh.version>
-    <kotlin.version>2.1.10</kotlin.version>
-    <ksp.version>2.1.10-1.0.31</ksp.version>
+    <kotlin.version>2.1.20</kotlin.version>
+    <ksp.version>2.1.20-1.0.32</ksp.version>
     <kotlinpoet.version>2.1.0</kotlinpoet.version>
     <dokka.version>2.0.0</dokka.version>
     <scala.version>2.11.12</scala.version>
-    <asm.version>9.7.1</asm.version>
+    <asm.version>9.8</asm.version>
     <querydsl.version>${project.version}</querydsl.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
@@ -224,7 +224,7 @@
       <dependency>
         <groupId>org.geolatte</groupId>
         <artifactId>geolatte-geom</artifactId>
-        <version>1.9.1</version>
+        <version>1.10</version>
       </dependency>
       <dependency>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -489,7 +489,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.12</version>
+        <version>0.8.13</version>
         <executions>
           <execution>
             <id>prepare-agent</id>
@@ -1011,18 +1011,18 @@
           <plugin>
             <groupId>org.openrewrite.maven</groupId>
             <artifactId>rewrite-maven-plugin</artifactId>
-            <version>6.3.0</version>
+            <version>6.4.0</version>
 
             <dependencies>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-testing-frameworks</artifactId>
-                <version>3.4.0</version>
+                <version>3.5.1</version>
               </dependency>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-migrate-java</artifactId>
-                <version>3.4.0</version>
+                <version>3.5.0</version>
               </dependency>
             </dependencies>
 
