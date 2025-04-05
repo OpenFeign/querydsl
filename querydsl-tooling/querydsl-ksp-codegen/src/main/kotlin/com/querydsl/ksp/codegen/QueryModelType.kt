@@ -2,6 +2,7 @@ package com.querydsl.ksp.codegen
 
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.querydsl.core.annotations.QueryProjection
 import com.squareup.kotlinpoet.ksp.toTypeName
 import jakarta.persistence.Embeddable
 import jakarta.persistence.Entity
@@ -12,7 +13,8 @@ enum class QueryModelType(
 ) {
     ENTITY(Entity::class.qualifiedName!!),
     EMBEDDABLE(Embeddable::class.qualifiedName!!),
-    SUPERCLASS(MappedSuperclass::class.qualifiedName!!);
+    SUPERCLASS(MappedSuperclass::class.qualifiedName!!),
+    QUERY_PROJECTION(QueryProjection::class.qualifiedName!!);
 
     companion object {
         fun autodetect(classDeclaration: KSClassDeclaration): QueryModelType? {

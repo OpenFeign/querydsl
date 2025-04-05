@@ -176,6 +176,31 @@ class RenderTest {
             val features: com.querydsl.core.types.dsl.SetPath<kotlin.String, com.querydsl.core.types.dsl.StringPath> = createSet("features", kotlin.String::class.java, com.querydsl.core.types.dsl.StringPath::class.java, null)
         """.trimIndent())
     }
+
+    @Test
+    fun queryProjection() {
+        val model = QueryModel(
+            originalClassName = ClassName("", "CatDTO"),
+            typeParameterCount = 0,
+            className = ClassName("", "QCatDTO"),
+            type = QueryModelType.QUERY_PROJECTION,
+            mockk()
+        )
+        val properties = listOf(
+            QProperty("id", QPropertyType.Simple(SimpleType.QNumber(Int::class.asClassName()))),
+            QProperty("name", QPropertyType.Simple(SimpleType.QString)),
+        )
+        model.properties.addAll(properties)
+        val typeSpec = QueryModelRenderer.render(model)
+        val code = typeSpec.toString()
+        code.assertCompiles()
+        code.assertContainAll("""
+            public class QPersonDTO(
+              id: com.querydsl.core.types.Expression<kotlin.Int>,
+              name: com.querydsl.core.types.Expression<kotlin.String>,
+            ) : com.querydsl.core.types.ConstructorExpression<CatDTO>(CatDTO::class.java, arrayOf(kotlin.Int::class.java, kotlin.String::class.java), id, name)
+        """.trimIndent())
+    }
 }
 
 private fun String.assertLines(expected: String) {
@@ -234,3 +259,5 @@ class QAnimal(
 }
 
 class Cat
+
+class CatDTO

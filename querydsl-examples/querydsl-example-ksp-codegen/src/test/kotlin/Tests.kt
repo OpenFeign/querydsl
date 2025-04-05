@@ -3,6 +3,8 @@ import com.querydsl.example.ksp.CatType
 import com.querydsl.example.ksp.Person
 import com.querydsl.example.ksp.QCat
 import com.querydsl.example.ksp.QPerson
+import com.querydsl.example.ksp.QPersonClassDTO
+import com.querydsl.example.ksp.QPersonClassConstructorDTO
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManagerFactory
 import org.hibernate.cfg.AvailableSettings
@@ -107,6 +109,55 @@ class Tests {
                 .map { it.name }
             assertThat(quiteFluffyAnimals.size).isEqualTo(1)
             assertThat(quiteFluffyAnimals).contains("Neville Furbottom")
+            em.close()
+        }
+    }
+
+    @Test
+    fun `select dto`() {
+        val emf = initialize()
+
+        run {
+            val em = emf.createEntityManager()
+            em.transaction.begin()
+            em.persist(Person(424, "John Smith"))
+            em.transaction.commit()
+            em.close()
+        }
+
+        run {
+            val em = emf.createEntityManager()
+            val queryFactory = JPAQueryFactory(em)
+            val q = QPerson.person
+            val personDTO = queryFactory
+                .select(QPersonClassConstructorDTO(q.id, q.name))
+                .from(q)
+                .where(q.name.eq("John Smith"))
+                .fetchOne()
+            if (personDTO == null) {
+                fail<Any>("No personDTO was returned")
+            } else {
+                assertThat(personDTO.id).isEqualTo(424)
+                assertThat(personDTO.name).isEqualTo("John Smith")
+            }
+            em.close()
+        }
+
+        run {
+            val em = emf.createEntityManager()
+            val queryFactory = JPAQueryFactory(em)
+            val q = QPerson.person
+            val personDTO = queryFactory
+                .select(QPersonClassDTO(q.id, q.name))
+                .from(q)
+                .where(q.name.eq("John Smith"))
+                .fetchOne()
+            if (personDTO == null) {
+                fail<Any>("No personDTO was returned")
+            } else {
+                assertThat(personDTO.id).isEqualTo(424)
+                assertThat(personDTO.name).isEqualTo("John Smith")
+            }
             em.close()
         }
     }

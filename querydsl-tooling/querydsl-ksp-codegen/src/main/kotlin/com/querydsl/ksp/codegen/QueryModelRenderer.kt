@@ -1,7 +1,9 @@
 package com.querydsl.ksp.codegen
 
+import com.querydsl.core.types.ConstructorExpression
 import com.querydsl.core.types.Path
 import com.querydsl.core.types.PathMetadata
+import com.querydsl.core.types.Expression
 import com.querydsl.core.types.dsl.*
 import com.querydsl.ksp.codegen.Naming.toCamelCase
 import com.squareup.kotlinpoet.*
@@ -9,17 +11,25 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 object QueryModelRenderer {
     fun render(model: QueryModel): TypeSpec {
-        return TypeSpec.classBuilder(model.className)
-            .setEntitySuperclass(model)
-            .addSuperProperty(model)
-            .addProperties(model)
-            .constructorForPath(model)
-            .constructorForMetadata(model)
-            .constructorForVariable(model)
-            .constructorForTypeMetadata(model)
-            .addInitializerCompanionObject(model)
-            .addInheritedProperties(model)
-            .build()
+        return when (model.type) {
+            QueryModelType.QUERY_PROJECTION -> TypeSpec.classBuilder(model.className)
+                .setPrimaryConstructor(model)
+                .setEntitySuperclass(model)
+                .addSuperConstructorParameter(model)
+                .build()
+
+            else -> TypeSpec.classBuilder(model.className)
+                .setEntitySuperclass(model)
+                .addSuperProperty(model)
+                .addProperties(model)
+                .constructorForPath(model)
+                .constructorForMetadata(model)
+                .constructorForVariable(model)
+                .constructorForTypeMetadata(model)
+                .addInitializerCompanionObject(model)
+                .addInheritedProperties(model)
+                .build()
+        }
     }
 
     private fun TypeSpec.Builder.setEntitySuperclass(model: QueryModel): TypeSpec.Builder {
@@ -33,6 +43,7 @@ object QueryModelRenderer {
             when (model.type) {
                 QueryModelType.ENTITY, QueryModelType.SUPERCLASS -> EntityPathBase::class.asClassName().parameterizedBy(constraint)
                 QueryModelType.EMBEDDABLE -> BeanPath::class.asClassName().parameterizedBy(constraint)
+                QueryModelType.QUERY_PROJECTION -> ConstructorExpression::class.asClassName().parameterizedBy(constraint)
             }
         )
         return this
@@ -219,6 +230,30 @@ object QueryModelRenderer {
             )
             .build()
         addType(companionObject)
+        return this
+    }
+
+    private fun TypeSpec.Builder.setPrimaryConstructor(model: QueryModel): TypeSpec.Builder {
+        val constructorSpec = FunSpec.constructorBuilder().apply {
+            model.properties.forEach {
+                addParameter(
+                    it.name,
+                    Expression::class.asClassName().parameterizedBy(it.type.originalTypeName)
+                )
+            }
+        }.build()
+        primaryConstructor(constructorSpec)
+        return this
+    }
+
+    private fun TypeSpec.Builder.addSuperConstructorParameter(model: QueryModel): TypeSpec.Builder {
+        val paramTypes = model.properties.joinToString(", ", prefix = "arrayOf(", postfix = ")") {
+            "${it.type.originalClassName}::class.java"
+        }
+        val paramNames = model.properties.joinToString(", ") { it.name }
+        addSuperclassConstructorParameter(
+            "${model.originalClassName}::class.java, $paramTypes, $paramNames"
+        )
         return this
     }
 }
