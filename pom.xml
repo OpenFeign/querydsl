@@ -133,7 +133,7 @@
 
     <assertj.version>3.27.3</assertj.version>
     <mvn.version>3.9.9</mvn.version>
-    <guava.version>33.4.6-jre</guava.version>
+    <guava.version>33.4.7-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
     <mysema.lang.version>0.2.4</mysema.lang.version>
     <byte-buddy.version>1.17.5</byte-buddy.version>
