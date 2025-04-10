@@ -23,6 +23,7 @@ import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryInit;
+import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.core.annotations.QueryType;
 import com.querydsl.core.util.Annotations;
 import com.querydsl.core.util.BeanUtils;
@@ -34,12 +35,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.tools.Diagnostic;
 
 /**
  * {@code TypeElementHandler} is an APT visitor for entity types
@@ -67,7 +70,7 @@ public class TypeElementHandler {
     this.queryTypeFactory = queryTypeFactory;
   }
 
-  public EntityType handleEntityType(TypeElement element) {
+  public EntityType handleEntityType(TypeElement element, Messager messager) {
     EntityType entityType = typeFactory.getEntityType(element.asType(), true);
     List<? extends Element> elements = element.getEnclosedElements();
     var config = configuration.getConfig(element, elements);
@@ -78,7 +81,7 @@ public class TypeElementHandler {
 
     // constructors
     if (config.visitConstructors()) {
-      handleConstructors(entityType, elements, true);
+      handleConstructors(entityType, elements, true, messager);
     }
 
     // fields
@@ -175,13 +178,14 @@ public class TypeElementHandler {
     return new Property(entityType, name, propertyType, inits);
   }
 
-  public EntityType handleProjectionType(TypeElement e, boolean onlyAnnotatedConstructors) {
+  public EntityType handleProjectionType(
+      TypeElement e, boolean onlyAnnotatedConstructors, Messager messager) {
     Type c = typeFactory.getType(e.asType(), true);
     var entityType =
         new EntityType(c.as(TypeCategory.ENTITY), configuration.getVariableNameFunction());
     typeMappings.register(entityType, queryTypeFactory.create(entityType));
     List<? extends Element> elements = e.getEnclosedElements();
-    handleConstructors(entityType, elements, onlyAnnotatedConstructors);
+    handleConstructors(entityType, elements, onlyAnnotatedConstructors, messager);
     return entityType;
   }
 
@@ -198,11 +202,28 @@ public class TypeElementHandler {
   }
 
   private void handleConstructors(
-      EntityType entityType, List<? extends Element> elements, boolean onlyAnnotatedConstructors) {
+      EntityType entityType,
+      List<? extends Element> elements,
+      boolean onlyAnnotatedConstructors,
+      Messager messager) {
     for (ExecutableElement constructor : ElementFilter.constructorsIn(elements)) {
       if (configuration.isValidConstructor(constructor, onlyAnnotatedConstructors)) {
         var parameters = transformParams(constructor.getParameters());
-        entityType.addConstructor(new Constructor(parameters));
+        QueryProjection projection = constructor.getAnnotation(QueryProjection.class);
+        if (projection != null
+            && projection.useBuilder()
+            && projection.builderName().trim().isEmpty()) {
+          messager.printMessage(
+              Diagnostic.Kind.ERROR,
+              "@QueryProjection with builder=true requires a non-empty builderName",
+              constructor);
+          return;
+        }
+        Constructor constructorModel = new Constructor(parameters);
+        constructorModel.setUseBuilder(projection != null && projection.useBuilder());
+        constructorModel.setBuilderName(projection != null ? projection.builderName() : "");
+
+        entityType.addConstructor(constructorModel);
       }
     }
   }
