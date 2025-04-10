@@ -53,4 +53,9 @@ import java.lang.annotation.Target;
 @Documented
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RUNTIME)
-public @interface QueryProjection {}
+public @interface QueryProjection {
+
+  boolean useBuilder() default false;
+
+  String builderName() default "";
+}
