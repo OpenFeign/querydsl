@@ -206,6 +206,7 @@ public class TypeElementHandler {
       List<? extends Element> elements,
       boolean onlyAnnotatedConstructors,
       Messager messager) {
+    var builderNameSet = new HashSet<String>();
     for (ExecutableElement constructor : ElementFilter.constructorsIn(elements)) {
       if (configuration.isValidConstructor(constructor, onlyAnnotatedConstructors)) {
         var parameters = transformParams(constructor.getParameters());
@@ -219,10 +220,20 @@ public class TypeElementHandler {
               constructor);
           return;
         }
+
         Constructor constructorModel = new Constructor(parameters);
         constructorModel.setUseBuilder(projection != null && projection.useBuilder());
         constructorModel.setBuilderName(projection != null ? projection.builderName() : "");
 
+        if (builderNameSet.contains(constructorModel.getBuilderName())) {
+          messager.printMessage(
+              Diagnostic.Kind.ERROR,
+              "Duplicate builderName found: " + constructorModel.getBuilderName(),
+              constructor);
+          return;
+        }
+
+        builderNameSet.add(constructorModel.getBuilderName());
         entityType.addConstructor(constructorModel);
       }
     }
