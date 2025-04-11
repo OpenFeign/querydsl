@@ -50,6 +50,7 @@ public class GenericExporterTest extends AbstractProcessorTest {
     expected.add("QQueryProjectionTest_EntityWithProjection.java");
     expected.add("QEmbeddable3Test_EmbeddableClass.java");
     expected.add("QQueryEmbedded4Test_User.java");
+    expected.add("QQueryProjectionBuilderTestEntity.java");
 
     execute(expected, "GenericExporterTest", "QuerydslAnnotationProcessor");
   }
@@ -89,6 +90,7 @@ public class GenericExporterTest extends AbstractProcessorTest {
     expected.add("QOneToOneTest_Person.java");
     expected.add("QGeneric16Test_HidaBez.java");
     expected.add("QGeneric16Test_HidaBezGruppe.java");
+    expected.add("QQueryProjectionBuilderTestEntity.java");
 
     execute(expected, "GenericExporterTest2", "HibernateAnnotationProcessor");
   }

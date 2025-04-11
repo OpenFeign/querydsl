@@ -21,6 +21,8 @@ import java.util.Collection;
 public final class Constructor implements Comparable<Constructor> {
 
   private final Collection<Parameter> parameters;
+  private boolean useBuilder = false;
+  private String builderName = "";
 
   public Constructor(Collection<Parameter> params) {
     parameters = params;
@@ -39,6 +41,22 @@ public final class Constructor implements Comparable<Constructor> {
 
   public Collection<Parameter> getParameters() {
     return parameters;
+  }
+
+  public boolean useBuilder() {
+    return useBuilder;
+  }
+
+  public void setUseBuilder(boolean useBuilder) {
+    this.useBuilder = useBuilder;
+  }
+
+  public String getBuilderName() {
+    return builderName;
+  }
+
+  public void setBuilderName(String builderName) {
+    this.builderName = builderName;
   }
 
   @Override

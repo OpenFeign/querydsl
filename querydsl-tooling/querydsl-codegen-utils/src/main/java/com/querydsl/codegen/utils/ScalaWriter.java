@@ -254,6 +254,16 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
   }
 
   @Override
+  public CodeWriter beginInnerStaticClass(Type type) {
+    throw new UnsupportedOperationException("Not implemented");
+  }
+
+  @Override
+  public CodeWriter beginInnerStaticClass(Type type, Type superClass, Type... interfaces) {
+    throw new UnsupportedOperationException("Not implemented");
+  }
+
+  @Override
   public <T> ScalaWriter beginConstructor(
       Collection<T> parameters, Function<T, Parameter> transformer) throws IOException {
     beginLine(DEF, THIS).params(parameters, transformer).append(" {").nl();

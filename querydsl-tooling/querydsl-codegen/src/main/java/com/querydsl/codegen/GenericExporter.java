@@ -403,7 +403,11 @@ public class GenericExporter {
           }
           parameters.add(new Parameter("param" + i, parameterType));
         }
-        type.addConstructor(new com.querydsl.codegen.utils.model.Constructor(parameters));
+        var queryProjection = constructor.getAnnotation(QueryProjection.class);
+        var newConstructor = new com.querydsl.codegen.utils.model.Constructor(parameters);
+        newConstructor.setUseBuilder(queryProjection.useBuilder());
+        newConstructor.setBuilderName(queryProjection.builderName());
+        type.addConstructor(newConstructor);
       }
     }
   }
