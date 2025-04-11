@@ -225,7 +225,8 @@ public class TypeElementHandler {
         constructorModel.setUseBuilder(projection != null && projection.useBuilder());
         constructorModel.setBuilderName(projection != null ? projection.builderName() : "");
 
-        if (builderNameSet.contains(constructorModel.getBuilderName())) {
+        if (constructorModel.useBuilder()
+            && builderNameSet.contains(constructorModel.getBuilderName())) {
           messager.printMessage(
               Diagnostic.Kind.ERROR,
               "Duplicate builderName found: " + constructorModel.getBuilderName(),
