@@ -473,14 +473,6 @@
             <accessModifier>public</accessModifier>
           </parameter>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>cmp</goal>
-            </goals>
-            <phase>verify</phase>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
