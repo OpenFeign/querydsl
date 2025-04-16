@@ -33,6 +33,8 @@ commands:
 
   save-test-results:
     steps:
+      - codecov/upload:
+          recurse_submodules: true
       - run:
           name: Save package results
           command: |
@@ -41,9 +43,6 @@ commands:
           when: always
       - store_test_results:
           path: ~/test-results
-      - codecov/upload:
-          report_type: coverage
-          recurse_submodules: true
 
   configure-gpg:
     steps:
