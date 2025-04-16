@@ -14,7 +14,7 @@
 
 # common executors
 orbs:
-  codecov: codecov/codecov@3
+  codecov: codecov/codecov@5
 
 executors:
   java:
@@ -129,6 +129,7 @@ jobs:
           command: |
             ./mvnw -ntp -B verify -Pno-databases -Dtoolchain.skip=true
           shell: bash.exe
+      - codecov/upload
 
   buildExamples:
     <<: *defaults
