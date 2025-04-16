@@ -319,6 +319,56 @@ jobs:
           command: |
             ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
       - save-test-results
+  testDB2:
+    # Use the machine executor so we have full VM capabilities (e.g. docker running as admin)
+    machine: true
+    working_directory: ~/querydsl
+    environment:
+      # You can also set any DB2-specific environment variables here if needed
+      DB2INST1_PASSWORD: a3sd!fDj
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+      # Start the DB2 container in detached mode
+      - run:
+          name: "Start DB2 container"
+          command: |
+            # Start the DB2 container with the same settings as your docker-compose file
+            docker run -d --privileged --name db2 \
+              -p 50000:50000 \
+              -e DB2INST1_PASSWORD=a3sd!fDj \
+              -e DB2INSTANCE=db2inst1 \
+              -e DBNAME=sample \
+              -e LICENSE=accept \
+              -e ARCHIVE_LOGS=false \
+              -e AUTOCONFIG=false \
+              ibmcom/db2:11.5.0.0
+
+            echo "Waiting for DB2 to initialize..."
+            # Basic health-check loop; replace with a more robust check if available
+            for i in {1..30}; do
+              if docker logs db2 2>&1 | grep -q "All databases are now active"; then
+                echo "DB2 appears to be up"
+                break
+              fi
+              echo "Waiting ($i/30)..."
+              sleep 10
+            done
+            docker ps
+
+      # Run your tests against DB2; adjust the Maven command according to your project
+      - run:
+          name: "Run DB2 tests"
+          command: |
+            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.DB2 -Dtoolchain.skip=true
+      # Clean up the DB2 container once the tests are done
+      - run:
+          name: "Stop and remove DB2 container"
+          command: |
+            docker stop db2 && docker rm db2
+      - save-test-results
 
   deploySnapshot:
     executor:
@@ -424,6 +474,12 @@ workflows:
             <<: *all-branches
       - testEmbedded:
           name: 'Test Embedded databases'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testDB2:
+          name: 'Test DB2'
           requires:
             - 'Resolve dependencies'
           filters:
