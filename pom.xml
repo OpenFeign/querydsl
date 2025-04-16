@@ -549,6 +549,7 @@
         <configuration>
           <includes>
             <include>com/querydsl/**</include>
+            <include>io/github/openfeign/querydsl/**</include>
           </includes>
         </configuration>
       </plugin>
@@ -574,6 +575,7 @@
           </projectExtraProperties>
           <includes>
             <include>com/querydsl/**</include>
+            <include>io/github/openfeign/querydsl/**</include>
           </includes>
           <excludeModules>
             <excludeModule>querydsl-scala</excludeModule>

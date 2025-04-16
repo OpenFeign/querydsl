@@ -166,7 +166,7 @@ jobs:
       - run:
           name: 'Build and test examples'
           command: |
-            ./mvnw -ntp -B verify -Pexamples -rf :querydsl-examples
+            ./mvnw -ntp -B install -Pexamples -rf :querydsl-examples
       - save-test-results
   buildQuarkusExample:
     <<: *defaults
