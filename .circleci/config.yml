@@ -224,7 +224,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.MySQL
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.MySQL
       - save-test-results
   testPostgreSQL:
     <<: *defaults
@@ -244,7 +244,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
       - save-test-results
   testCUBRID:
     <<: *defaults
@@ -262,7 +262,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.CUBRID
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.CUBRID
       - save-test-results
   testOracle:
     <<: *defaults
@@ -283,7 +283,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.Oracle
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.Oracle
       - save-test-results
   testMongo:
     <<: *defaults
@@ -299,7 +299,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.MongoDB
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.MongoDB
       - save-test-results
   testFirebird:
     <<: *defaults
@@ -321,7 +321,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.Firebird
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.Firebird
       - save-test-results
   testEmbedded:
     <<: *defaults
@@ -336,7 +336,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
       - save-test-results
   testDB2:
     # Use the machine executor so we have full VM capabilities (e.g. docker running as admin)
@@ -381,7 +381,7 @@ jobs:
       - run:
           name: "Run DB2 tests"
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.DB2 -Dtoolchain.skip=true
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.DB2 -Dtoolchain.skip=true
       # Clean up the DB2 container once the tests are done
       - run:
           name: "Stop and remove DB2 container"
