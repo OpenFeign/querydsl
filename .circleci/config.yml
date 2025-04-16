@@ -13,9 +13,6 @@
 #
 
 # common executors
-orbs:
-  codecov: codecov/codecov@5
-
 executors:
   java:
     docker:
@@ -33,8 +30,6 @@ commands:
 
   save-test-results:
     steps:
-      - codecov/upload:
-          recurse_submodules: true
       - run:
           name: Save package results
           command: |
@@ -43,6 +38,30 @@ commands:
           when: always
       - store_test_results:
           path: ~/test-results
+      - run:
+          name: Codecov
+          command: |
+            set -x
+
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x codecov
+
+            # Prepare extra arguments: include pull request number if set
+            EXTRA=""
+            if [ -n "$CIRCLE_PR_NUMBER" ]; then
+              EXTRA="--pull-request-number $CIRCLE_PR_NUMBER"
+            fi
+
+            # Build the set of common arguments.
+            COMMON_ARGS="--token $CODECOV_TOKEN --branch $CIRCLE_BRANCH --commit-sha $CIRCLE_SHA1 $EXTRA --recurse-submodules --git-service github"
+
+            ls -lha
+
+            # Upload the coverage report.
+            ./codecov upload-coverage $COMMON_ARGS
+
+            # Upload the test reports.
+            ./codecov do-upload --report-type test_results $COMMON_ARGS
 
   configure-gpg:
     steps:
@@ -127,7 +146,6 @@ jobs:
           command: |
             ./mvnw -ntp -B verify -Pno-databases -Dtoolchain.skip=true
           shell: bash.exe
-      - codecov/upload
 
   buildExamples:
     <<: *defaults
