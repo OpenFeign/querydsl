@@ -568,7 +568,6 @@
               </limits>
             </rule>
           </projectRules>
-          <haltOnFailure>true</haltOnFailure>
           <projectExtraProperties>
             <enforcer.skip>true</enforcer.skip>
             <license.skip>true</license.skip>

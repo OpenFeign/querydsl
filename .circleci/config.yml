@@ -13,6 +13,9 @@
 #
 
 # common executors
+orbs:
+  codecov: codecov/codecov@3
+
 executors:
   java:
     docker:
@@ -38,6 +41,7 @@ commands:
           when: always
       - store_test_results:
           path: ~/test-results
+      - codecov/upload
 
   configure-gpg:
     steps:
