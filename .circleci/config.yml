@@ -19,7 +19,7 @@ orbs:
 executors:
   java:
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
 
 # common commands
 commands:
@@ -84,13 +84,12 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - resolve-dependencies
       - save_cache:
           paths:
@@ -100,13 +99,12 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -123,7 +121,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -135,13 +132,12 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-docker
+      - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Prepare environment'
           command: |
@@ -169,7 +165,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-docker
+      - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
       - run:
@@ -194,7 +190,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: mysql:5.6.38
         environment:
           - MYSQL_ROOT_PASSWORD=querydsl
@@ -206,7 +202,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -216,7 +211,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: postgis/postgis:16-3.4-alpine
         environment:
           - POSTGRES_USER=querydsl
@@ -227,7 +222,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -237,7 +231,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: cubrid/cubrid:11.3
         environment:
           - CUBRID_DB=demodb
@@ -246,7 +240,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -256,7 +249,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: gvenzl/oracle-xe:slim-faststart
         environment:
           - ORACLE_PASSWORD=querydsl
@@ -268,7 +261,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -278,14 +270,13 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: mongo:3.6.1
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -295,7 +286,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: jacobalberty/firebird:2.5.9-ss
         environment:
           - ISC_PASSWORD=masterkey
@@ -308,7 +299,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -318,13 +308,12 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -340,7 +329,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - resolve-dependencies
       - configure-gpg
       - run:
@@ -357,7 +345,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - resolve-dependencies
       - configure-gpg
       - run:
