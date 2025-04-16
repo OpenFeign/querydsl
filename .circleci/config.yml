@@ -350,12 +350,12 @@ jobs:
 
             echo "Waiting for DB2 to initialize..."
             # Basic health-check loop; replace with a more robust check if available
-            for i in {1..30}; do
+            for i in {1..60}; do
               if docker logs db2 2>&1 | grep -q "All databases are now active"; then
                 echo "DB2 appears to be up"
                 break
               fi
-              echo "Waiting ($i/30)..."
+              echo "Waiting ($i/60)..."
               sleep 10
             done
             docker ps
