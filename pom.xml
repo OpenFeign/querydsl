@@ -453,12 +453,7 @@
         <configuration>
           <parameter>
             <excludes>
-              <exclude>com.querydsl.core.annotations.QueryProjection</exclude>
-              <exclude>com.querydsl.codegen.utils.AbstractCodeWriter</exclude>
-              <exclude>com.querydsl.codegen.utils.CodeWriter#beginInnerStaticClass(com.querydsl.codegen.utils.model.Type,com.querydsl.codegen.utils.model.Type,com.querydsl.codegen.utils.model.Type[])#</exclude>
-              <exclude>com.querydsl.codegen.utils.CodeWriter#beginInnerStaticClass(com.querydsl.codegen.utils.model.Type)</exclude>
-              <exclude>com.querydsl.apt.TypeElementHandler#handleEntityType(javax.lang.model.element.TypeElement)</exclude>
-              <exclude>com.querydsl.apt.TypeElementHandler#handleProjectionType(javax.lang.model.element.TypeElement,boolean)</exclude>
+              <exclude>com.querydsl.core.annotations.QueryProjection</exclude>          
             </excludes>
             <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
             <onlyModified>true</onlyModified>
