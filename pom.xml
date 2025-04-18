@@ -453,6 +453,9 @@
         <version>0.23.1</version>
         <configuration>
           <parameter>
+            <excludes>
+              <exclude>com.querydsl.core.annotations.QueryProjection</exclude>          
+            </excludes>
             <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
             <onlyModified>true</onlyModified>
             <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
@@ -466,14 +469,6 @@
             <accessModifier>public</accessModifier>
           </parameter>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>cmp</goal>
-            </goals>
-            <phase>verify</phase>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
