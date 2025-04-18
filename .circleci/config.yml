@@ -16,7 +16,7 @@
 executors:
   java:
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
 
 # common commands
 commands:
@@ -38,6 +38,32 @@ commands:
           when: always
       - store_test_results:
           path: ~/test-results
+      - run:
+          name: Codecov
+          command: |
+            set -x
+
+            curl -Os https://cli.codecov.io/latest/linux/codecov
+            chmod +x codecov
+
+            # Prepare extra arguments: include pull request number if set
+            EXTRA=""
+            if [ -n "$CIRCLE_PR_NUMBER" ]; then
+              EXTRA="--pull-request-number $CIRCLE_PR_NUMBER"
+            fi
+
+            # Build the set of common arguments.
+            COMMON_ARGS="--token $CODECOV_TOKEN --branch $CIRCLE_BRANCH --commit-sha $CIRCLE_SHA1 $EXTRA --recurse-submodules --git-service github"
+
+            ls -lha
+
+            ./codecov --version
+
+            # Upload the coverage report.
+            ./codecov upload-coverage $COMMON_ARGS
+
+            # Upload the test reports.
+            ./codecov do-upload --report-type test_results $COMMON_ARGS
 
   configure-gpg:
     steps:
@@ -80,13 +106,12 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - resolve-dependencies
       - save_cache:
           paths:
@@ -96,13 +121,12 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -119,7 +143,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
@@ -130,13 +153,12 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-docker
+      - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Prepare environment'
           command: |
@@ -144,7 +166,7 @@ jobs:
       - run:
           name: 'Build and test examples'
           command: |
-            ./mvnw -ntp -B verify -Pexamples -rf :querydsl-examples
+            ./mvnw -ntp -B install -Pexamples -rf :querydsl-examples
       - save-test-results
   buildQuarkusExample:
     <<: *defaults
@@ -164,7 +186,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-docker
+      - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
       - run:
@@ -189,7 +211,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: mysql:5.6.38
         environment:
           - MYSQL_ROOT_PASSWORD=querydsl
@@ -201,17 +223,16 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.MySQL
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.MySQL
       - save-test-results
   testPostgreSQL:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: postgis/postgis:16-3.4-alpine
         environment:
           - POSTGRES_USER=querydsl
@@ -222,17 +243,16 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
       - save-test-results
   testCUBRID:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: cubrid/cubrid:11.3
         environment:
           - CUBRID_DB=demodb
@@ -241,17 +261,16 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.CUBRID
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.CUBRID
       - save-test-results
   testOracle:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: gvenzl/oracle-xe:slim-faststart
         environment:
           - ORACLE_PASSWORD=querydsl
@@ -263,34 +282,32 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.Oracle
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.Oracle
       - save-test-results
   testMongo:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: mongo:3.6.1
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.MongoDB
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.MongoDB
       - save-test-results
   testFirebird:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
       - image: jacobalberty/firebird:2.5.9-ss
         environment:
           - ISC_PASSWORD=masterkey
@@ -303,27 +320,75 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.Firebird
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.Firebird
       - save-test-results
   testEmbedded:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:with-21
+      - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B package -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
+      - save-test-results
+  testDB2:
+    # Use the machine executor so we have full VM capabilities (e.g. docker running as admin)
+    machine: true
+    working_directory: ~/querydsl
+    environment:
+      # You can also set any DB2-specific environment variables here if needed
+      DB2INST1_PASSWORD: a3sd!fDj
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - querydsl-dependencies-{{ checksum "pom.xml" }}
+      # Start the DB2 container in detached mode
+      - run:
+          name: "Start DB2 container"
+          command: |
+            # Start the DB2 container with the same settings as your docker-compose file
+            docker run -d --privileged --name db2 \
+              -p 50000:50000 \
+              -e DB2INST1_PASSWORD=a3sd!fDj \
+              -e DB2INSTANCE=db2inst1 \
+              -e DBNAME=sample \
+              -e LICENSE=accept \
+              -e ARCHIVE_LOGS=false \
+              -e AUTOCONFIG=false \
+              ibmcom/db2:11.5.0.0
+
+            echo "Waiting for DB2 to initialize..."
+            # Basic health-check loop; replace with a more robust check if available
+            for i in {1..60}; do
+              if docker logs db2 2>&1 | grep -q "All databases are now active"; then
+                echo "DB2 appears to be up"
+                break
+              fi
+              echo "Waiting ($i/60)..."
+              sleep 10
+            done
+            docker ps
+
+      # Run your tests against DB2; adjust the Maven command according to your project
+      - run:
+          name: "Run DB2 tests"
+          command: |
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.DB2 -Dtoolchain.skip=true
+      # Clean up the DB2 container once the tests are done
+      - run:
+          name: "Stop and remove DB2 container"
+          command: |
+            docker stop db2 && docker rm db2
       - save-test-results
 
   deploySnapshot:
@@ -335,7 +400,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - resolve-dependencies
       - configure-gpg
       - run:
@@ -352,7 +416,6 @@ jobs:
       - restore_cache:
           keys:
             - querydsl-dependencies-{{ checksum "pom.xml" }}
-            - querydsl-dependencies-
       - resolve-dependencies
       - configure-gpg
       - run:
@@ -432,6 +495,12 @@ workflows:
             <<: *all-branches
       - testEmbedded:
           name: 'Test Embedded databases'
+          requires:
+            - 'Resolve dependencies'
+          filters:
+            <<: *all-branches
+      - testDB2:
+          name: 'Test DB2'
           requires:
             - 'Resolve dependencies'
           filters:

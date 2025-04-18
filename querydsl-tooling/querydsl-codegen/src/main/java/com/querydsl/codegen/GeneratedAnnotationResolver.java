@@ -1,5 +1,6 @@
 package com.querydsl.codegen;
 
+import com.querydsl.core.annotations.Generated;
 import java.lang.annotation.Annotation;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 public final class GeneratedAnnotationResolver {
 
   private static final Class<? extends Annotation> DEFAULT_GENERATED_ANNOTATION_CLASS =
-      resolveJavaDefault();
+      Generated.class;
 
   /**
    * Use the {@code generatedAnnotationClass} or use the JDK one.
