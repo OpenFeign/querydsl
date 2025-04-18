@@ -41,6 +41,11 @@ public interface CodeWriter extends Appendable {
 
   CodeWriter beginClass(Type type, Type superClass, Type... interfaces) throws IOException;
 
+  CodeWriter beginInnerStaticClass(Type type) throws IOException;
+
+  CodeWriter beginInnerStaticClass(Type type, Type superClass, Type... interfaces)
+      throws IOException;
+
   <T> CodeWriter beginConstructor(Collection<T> params, Function<T, Parameter> transformer)
       throws IOException;
 

@@ -13,16 +13,11 @@
  */
 package com.querydsl.codegen;
 
-import static com.querydsl.codegen.utils.Symbols.THIS_ESCAPE;
+import static com.querydsl.codegen.utils.StringUtils.capitalize;
+import static com.querydsl.codegen.utils.Symbols.*;
 
 import com.querydsl.codegen.utils.CodeWriter;
-import com.querydsl.codegen.utils.model.ClassType;
-import com.querydsl.codegen.utils.model.Constructor;
-import com.querydsl.codegen.utils.model.Parameter;
-import com.querydsl.codegen.utils.model.Type;
-import com.querydsl.codegen.utils.model.TypeCategory;
-import com.querydsl.codegen.utils.model.TypeExtends;
-import com.querydsl.codegen.utils.model.Types;
+import com.querydsl.codegen.utils.model.*;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -71,6 +66,16 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
           Class<? extends Annotation> generatedAnnotationClass) {
     this.typeMappings = typeMappings;
     this.generatedAnnotationClass = generatedAnnotationClass;
+  }
+
+  private Parameter getExpressionParameter(EntityType model, boolean asExpr, Parameter p) {
+    var type =
+        !asExpr
+            ? typeMappings.getExprType(p.getType(), model, false, false, true)
+            : new ClassType(
+                Expression.class,
+                p.getType().isFinal() ? p.getType() : new TypeExtends(p.getType()));
+    return new Parameter(p.getName(), type);
   }
 
   protected void intro(EntityType model, CodeWriter writer) throws IOException {
@@ -127,37 +132,32 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
     var localName = writer.getRawName(model);
     Set<Integer> sizes = new HashSet<>();
 
+    var queryType = typeMappings.getPathType(model, model, false);
+
     var constructors = new ArrayList<>(model.getConstructors());
     Collections.sort(constructors);
     for (Constructor c : constructors) {
-      final var asExpr = sizes.add(c.getParameters().size());
+      var parameters = new ArrayList<>(c.getParameters());
+      final var asExpr = sizes.add(parameters.size());
       // begin
       writer.beginConstructor(
-          c.getParameters(),
-          (Parameter p) -> {
-            Type type;
-            if (!asExpr) {
-              type = typeMappings.getExprType(p.getType(), model, false, false, true);
-            } else if (p.getType().isFinal()) {
-              type = new ClassType(Expression.class, p.getType());
-            } else {
-              type = new ClassType(Expression.class, new TypeExtends(p.getType()));
-            }
-            return new Parameter(p.getName(), type);
-          });
+          parameters, parameter -> getExpressionParameter(model, asExpr, parameter));
 
       // body
-      writer.beginLine("super(" + writer.getClassConstant(localName));
+      writer.beginLine(SUPER, "(" + writer.getClassConstant(localName));
       // TODO: Fix for Scala (Array[Class])
       writer.append(", new Class<?>[]{");
-      var first = true;
-
-      for (Parameter p : c.getParameters()) {
-        if (!first) {
+      for (int i = 0; i < parameters.size(); i++) {
+        if (i != 0) {
           writer.append(", ");
         }
-        parameterType(writer, p);
-        first = false;
+        Parameter p = parameters.get(i);
+        if (Types.PRIMITIVES.containsKey(p.getType())) {
+          var primitive = Types.PRIMITIVES.get(p.getType());
+          writer.append(writer.getClassConstant(primitive.getFullName()));
+        } else {
+          writer.append(writer.getClassConstant(writer.getRawName(p.getType())));
+        }
       }
       writer.append("}");
 
@@ -169,6 +169,12 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
       // end
       writer.append(");\n");
       writer.end();
+    }
+
+    sizes = new HashSet<Integer>();
+    for (Constructor c : model.getConstructors()) {
+      appendInnerStaticBuilderClass(model, writer, queryType, c, sizes);
+      appendStaticBuilderFactoryMethod(writer, c);
     }
 
     // outro
@@ -186,5 +192,84 @@ public class DefaultProjectionSerializer implements ProjectionSerializer {
 
   protected void parameter(CodeWriter writer, Parameter p) throws IOException {
     writer.append(p.getName());
+  }
+
+  private void appendInnerStaticBuilderClass(
+      EntityType model,
+      CodeWriter writer,
+      Type queryType,
+      Constructor constructor,
+      Set<Integer> sizes)
+      throws IOException {
+    if (isBuilderDisabled(constructor)) return;
+
+    var builderName = constructor.getBuilderName();
+    var parameters = new ArrayList<>(constructor.getParameters());
+    final var asExpr = sizes.add(parameters.size());
+
+    var builderClassName = capitalize(builderName) + "Builder";
+
+    var builderType = new SimpleType(builderClassName);
+
+    writer.beginInnerStaticClass(builderType);
+    for (var param : parameters) {
+      var expressionParameter = getExpressionParameter(model, asExpr, param);
+      writer.privateField(expressionParameter.getType(), expressionParameter.getName());
+    }
+
+    for (var param : parameters) {
+      var expressionParameter = getExpressionParameter(model, asExpr, param);
+      appendPublicSetterForBuilder(writer, expressionParameter, builderType);
+    }
+
+    appendPublicBuildMethodForBuilder(writer, queryType, parameters);
+
+    writer.end();
+  }
+
+  private void appendPublicSetterForBuilder(
+      CodeWriter writer, Parameter expressionParameter, Type builderType) throws IOException {
+    writer.beginPublicMethod(
+        builderType, "set" + capitalize(expressionParameter.getName()), expressionParameter);
+    writer.line(
+        THIS, DOT, expressionParameter.getName(), ASSIGN, expressionParameter.getName(), SEMICOLON);
+    writer.line(RETURN, THIS, SEMICOLON);
+    writer.end();
+  }
+
+  private void appendPublicBuildMethodForBuilder(
+      CodeWriter writer, Type queryType, ArrayList<Parameter> parameters) throws IOException {
+    writer.beginPublicMethod(queryType, "build");
+    writer.beginLine(RETURN, NEW, queryType.getSimpleName(), "(");
+    for (int i = 0; i < parameters.size(); i++) {
+      if (i != 0) {
+        writer.append(", ");
+      }
+      writer.append(parameters.get(i).getName());
+      if (i == parameters.size() - 1) {
+        writer.append(")").append(SEMICOLON).append(NEWLINE);
+      }
+    }
+    writer.end();
+  }
+
+  private void appendStaticBuilderFactoryMethod(CodeWriter writer, Constructor constructor)
+      throws IOException {
+    if (isBuilderDisabled(constructor)) return;
+
+    var builderName = constructor.getBuilderName();
+    var builderClassName = capitalize(builderName) + "Builder";
+    var factoryMethodName = "builder" + capitalize(builderName);
+
+    var builderType = new SimpleType(builderClassName);
+
+    writer.beginStaticMethod(builderType, factoryMethodName);
+    writer.line(RETURN, NEW, builderType.getSimpleName(), "()", SEMICOLON);
+    writer.end();
+  }
+
+  private boolean isBuilderDisabled(Constructor constructor) {
+    if (!constructor.useBuilder()) return true;
+    return constructor.getBuilderName() == null || constructor.getBuilderName().trim().isEmpty();
   }
 }

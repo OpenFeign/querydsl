@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  *
  *     private String firstName, lastName;
  *
- *     {@code @QueryProjection}
+ *     {@code @QueryProjection(useBuilder = true, builderName = "new")}
  *     public UserInfo(String firstName, String lastName) {
  *         this.firstName = firstName;
  *         this.lastName = lastName;
@@ -49,8 +49,27 @@ import java.lang.annotation.Target;
  *     .select(new QUserInfo(user.firstName, user.lastName))
  *     .fetch();
  * }</pre>
+ *
+ * or(with Builder)
+ *
+ * <pre>{@code
+ * QUser user = QUser.user;
+ * List <UserInfo> result = querydsl.from(user)
+ *     .where(user.valid.eq(true))
+ *     .select(QUserInfo.builderNew()
+ *            .firstName(user.firstName)
+ *            .lastName(user.lastName)
+ *            .build()
+ *     )
+ *     .fetch();
+ * }</pre>
  */
 @Documented
 @Target({ElementType.CONSTRUCTOR, ElementType.TYPE})
 @Retention(RUNTIME)
-public @interface QueryProjection {}
+public @interface QueryProjection {
+
+  boolean useBuilder() default false;
+
+  String builderName() default "";
+}

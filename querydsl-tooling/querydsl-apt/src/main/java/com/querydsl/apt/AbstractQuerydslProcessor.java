@@ -57,6 +57,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
@@ -164,7 +165,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     var altEntityAnn = conf.getAlternativeEntityAnnotation() != null;
     var superAnn = conf.getSuperTypeAnnotation() != null;
     for (TypeElement element : elements) {
-      var entityType = elementHandler.handleEntityType(element);
+      var entityType = elementHandler.handleEntityType(element, processingEnv.getMessager());
       registerTypeElement(entityType.getFullName(), element);
       if (typeFactory.isSimpleTypeEntity(element, conf.getEntityAnnotation())) {
         context.entityTypes.put(entityType.getFullName(), entityType);
@@ -189,7 +190,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
       if (!context.allTypes.containsKey(fullName)) {
         var element = processingEnv.getElementUtils().getTypeElement(fullName);
         if (element != null) {
-          elementHandler.handleEntityType(element);
+          elementHandler.handleEntityType(element, processingEnv.getMessager());
         }
       }
     }
@@ -206,7 +207,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
       addSupertypeFields(entityType, handled);
     }
 
-    processProjectionTypes(elements);
+    processProjectionTypes(elements, processingEnv.getMessager());
 
     // extend entity types
     typeFactory.extendTypes();
@@ -231,7 +232,8 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
             && !TypeUtils.hasAnnotationOfType(typeElement, conf.getEntityAnnotations())) {
           continue;
         }
-        var superEntityType = elementHandler.handleEntityType(typeElement);
+        var superEntityType =
+            elementHandler.handleEntityType(typeElement, processingEnv.getMessager());
         if (superEntityType.getSuperType() != null) {
           superTypes.push(superEntityType.getSuperType().getType());
         }
@@ -306,7 +308,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
       // register found elements
       for (TypeElement element : embeddedElements) {
         if (!elements.contains(element)) {
-          elementHandler.handleEntityType(element);
+          elementHandler.handleEntityType(element, processingEnv.getMessager());
         }
       }
     }
@@ -343,20 +345,20 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     elements.add(element);
   }
 
-  private void processProjectionTypes(Set<TypeElement> elements) {
+  private void processProjectionTypes(Set<TypeElement> elements, Messager messager) {
     Set<Element> visited = new HashSet<>();
     for (Element element : getElements(QueryProjection.class)) {
       if (element.getKind() == ElementKind.CONSTRUCTOR) {
         var parent = element.getEnclosingElement();
         if (!elements.contains(parent) && !visited.contains(parent)) {
-          var model = elementHandler.handleProjectionType((TypeElement) parent, true);
+          var model = elementHandler.handleProjectionType((TypeElement) parent, true, messager);
           registerTypeElement(model.getFullName(), (TypeElement) parent);
           context.projectionTypes.put(model.getFullName(), model);
           visited.add(parent);
         }
       }
       if (element.getKind().isClass() && !visited.contains(element)) {
-        var model = elementHandler.handleProjectionType((TypeElement) element, false);
+        var model = elementHandler.handleProjectionType((TypeElement) element, false, messager);
         registerTypeElement(model.getFullName(), (TypeElement) element);
         context.projectionTypes.put(model.getFullName(), model);
         visited.add(element);

@@ -1,3 +1,5 @@
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/OpenFeign/querydsl/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/OpenFeign/querydsl/tree/master) [![codecov](https://codecov.io/gh/OpenFeign/querydsl/graph/badge.svg?token=6yJhkzBRmx)](https://codecov.io/gh/OpenFeign/querydsl) ![Maven Central Version](https://img.shields.io/maven-central/v/io.github.openfeign.querydsl/querydsl-core)
+
 ## Querydsl
 
 Querydsl is a framework which enables the construction of type-safe SQL-like queries for multiple backends including JPA, MongoDB and SQL in Java.

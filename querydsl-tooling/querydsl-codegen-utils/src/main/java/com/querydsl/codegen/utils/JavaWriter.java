@@ -57,6 +57,8 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
 
   private static final String PUBLIC_CLASS = "public class ";
 
+  private static final String PUBLIC_STATIC_CLASS = "public static class ";
+
   private static final String PUBLIC_FINAL = "public final ";
 
   private static final String PUBLIC_INTERFACE = "public interface ";
@@ -189,6 +191,33 @@ public final class JavaWriter extends AbstractCodeWriter<JavaWriter> {
     if (interfaces.length > 0) {
       append(IMPLEMENTS);
       for (var i = 0; i < interfaces.length; i++) {
+        if (i > 0) {
+          append(Symbols.COMMA);
+        }
+        append(interfaces[i].getGenericName(false, packages, classes));
+      }
+    }
+    append(" {").nl().nl();
+    goIn();
+    types.push(type);
+    return this;
+  }
+
+  @Override
+  public CodeWriter beginInnerStaticClass(Type type) throws IOException {
+    return beginInnerStaticClass(type, null);
+  }
+
+  @Override
+  public CodeWriter beginInnerStaticClass(Type type, Type superClass, Type... interfaces)
+      throws IOException {
+    beginLine(PUBLIC_STATIC_CLASS, type.getGenericName(false, packages, classes));
+    if (superClass != null) {
+      append(EXTENDS).append(superClass.getGenericName(false, packages, classes));
+    }
+    if (interfaces.length > 0) {
+      append(IMPLEMENTS);
+      for (int i = 0; i < interfaces.length; i++) {
         if (i > 0) {
           append(Symbols.COMMA);
         }
