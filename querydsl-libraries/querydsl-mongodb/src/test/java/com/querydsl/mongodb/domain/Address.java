@@ -13,7 +13,7 @@
  */
 package com.querydsl.mongodb.domain;
 
-import org.mongodb.morphia.annotations.Embedded;
+import dev.morphia.annotations.Embedded;
 
 public final class Address {
 

@@ -15,9 +15,9 @@ package com.querydsl.mongodb.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dev.morphia.Morphia;
 import org.bson.types.ObjectId;
 import org.junit.Test;
-import org.mongodb.morphia.Morphia;
 
 public class MongodbUserTest {
 
@@ -38,7 +38,7 @@ public class MongodbUserTest {
   @Test
   public void friend() {
     var friend = new User();
-    friend.setId(ObjectId.createFromLegacyFormat(1, 2, 3));
+    friend.setId(new ObjectId(1, 2));
 
     var user = new User();
     user.setFriend(friend);
@@ -49,7 +49,7 @@ public class MongodbUserTest {
   @Test
   public void friends() {
     var friend = new User();
-    friend.setId(ObjectId.createFromLegacyFormat(1, 2, 3));
+    friend.setId(new ObjectId(1, 2));
 
     var user = new User();
     user.addFriend(friend);

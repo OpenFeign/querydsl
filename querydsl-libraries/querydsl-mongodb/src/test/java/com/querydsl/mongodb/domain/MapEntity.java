@@ -1,9 +1,9 @@
 package com.querydsl.mongodb.domain;
 
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
 import java.util.HashMap;
 import java.util.Map;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
 
 @Entity
 public class MapEntity extends AbstractEntity {

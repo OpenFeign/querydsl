@@ -1,10 +1,10 @@
 package com.querydsl.mongodb.domain;
 
+import dev.morphia.converters.SimpleValueConverter;
+import dev.morphia.converters.TypeConverter;
+import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.MappingException;
 import java.util.Locale;
-import org.mongodb.morphia.converters.SimpleValueConverter;
-import org.mongodb.morphia.converters.TypeConverter;
-import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.MappingException;
 
 public class LocaleConverter extends TypeConverter implements SimpleValueConverter {
 

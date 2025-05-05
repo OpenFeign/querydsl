@@ -30,6 +30,7 @@ import com.querydsl.mongodb.domain.QItem;
 import com.querydsl.mongodb.domain.QPerson;
 import com.querydsl.mongodb.domain.QUser;
 import com.querydsl.mongodb.morphia.MorphiaSerializer;
+import dev.morphia.Morphia;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +39,6 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
-import org.mongodb.morphia.Morphia;
 
 public class MongodbSerializerTest {
 

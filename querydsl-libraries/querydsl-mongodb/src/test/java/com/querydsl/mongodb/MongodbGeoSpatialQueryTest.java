@@ -22,12 +22,12 @@ import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.mongodb.domain.GeoEntity;
 import com.querydsl.mongodb.domain.QGeoEntity;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import java.net.UnknownHostException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
 
 @Category(MongoDB.class)
 public class MongodbGeoSpatialQueryTest {

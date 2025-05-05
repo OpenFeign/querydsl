@@ -18,11 +18,11 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.mongodb.AbstractMongodbQuery;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
+import dev.morphia.mapping.cache.DefaultEntityCache;
+import dev.morphia.mapping.cache.EntityCache;
 import java.util.function.Function;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.mapping.cache.DefaultEntityCache;
-import org.mongodb.morphia.mapping.cache.EntityCache;
 
 /**
  * {@code MorphiaQuery} extends {@link AbstractMongodbQuery} with Morphia specific transformations

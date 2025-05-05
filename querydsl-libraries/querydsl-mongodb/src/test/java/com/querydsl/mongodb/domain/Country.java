@@ -1,8 +1,8 @@
 package com.querydsl.mongodb.domain;
 
+import dev.morphia.annotations.Converters;
+import dev.morphia.annotations.Entity;
 import java.util.Locale;
-import org.mongodb.morphia.annotations.Converters;
-import org.mongodb.morphia.annotations.Entity;
 
 @Entity
 @Converters(LocaleConverter.class)
