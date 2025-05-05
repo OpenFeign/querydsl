@@ -13,6 +13,7 @@
   <description>Mongodb support for Querydsl</description>
 
   <properties>
+    <japicmp.skip>true</japicmp.skip>
     <osgi.import.package>com.mongodb;version="0.0.0",
             dev.morphia.*;version="1.6.1",
             org.bson.*;version="0.0.0",
