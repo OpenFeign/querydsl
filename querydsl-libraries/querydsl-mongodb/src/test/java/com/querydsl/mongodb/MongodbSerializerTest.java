@@ -191,28 +191,39 @@ public class MongodbSerializerTest {
   @Test
   public void regexCases() {
     assertQuery(
-        title.startsWith("A"), dbo("title", dbo("$regex", "^\\QA\\E").append("$options", "")));
+        title.startsWith("A"),
+        dbo("title", dbo("$regularExpression", dbo("pattern", "^\\QA\\E").append("options", ""))));
     assertQuery(
         title.startsWithIgnoreCase("A"),
-        dbo("title", dbo("$regex", "^\\QA\\E").append("$options", "i")));
+        dbo("title", dbo("$regularExpression", dbo("pattern", "^\\QA\\E").append("options", "i"))));
 
     assertQuery(
-        title.endsWith("A"), dbo("title", dbo("$regex", "\\QA\\E$").append("$options", "")));
+        title.endsWith("A"),
+        dbo("title", dbo("$regularExpression", dbo("pattern", "\\QA\\E$").append("options", ""))));
     assertQuery(
         title.endsWithIgnoreCase("A"),
-        dbo("title", dbo("$regex", "\\QA\\E$").append("$options", "i")));
+        dbo("title", dbo("$regularExpression", dbo("pattern", "\\QA\\E$").append("options", "i"))));
 
     assertQuery(
         title.equalsIgnoreCase("A"),
-        dbo("title", dbo("$regex", "^\\QA\\E$").append("$options", "i")));
+        dbo(
+            "title",
+            dbo("$regularExpression", dbo("pattern", "^\\QA\\E$").append("options", "i"))));
 
     assertQuery(
-        title.contains("A"), dbo("title", dbo("$regex", ".*\\QA\\E.*").append("$options", "")));
+        title.contains("A"),
+        dbo(
+            "title",
+            dbo("$regularExpression", dbo("pattern", ".*\\QA\\E.*").append("options", ""))));
     assertQuery(
         title.containsIgnoreCase("A"),
-        dbo("title", dbo("$regex", ".*\\QA\\E.*").append("$options", "i")));
+        dbo(
+            "title",
+            dbo("$regularExpression", dbo("pattern", ".*\\QA\\E.*").append("options", "i"))));
 
-    assertQuery(title.matches(".*A^"), dbo("title", dbo("$regex", ".*A^").append("$options", "")));
+    assertQuery(
+        title.matches(".*A^"),
+        dbo("title", dbo("$regularExpression", dbo("pattern", ".*A^").append("options", ""))));
   }
 
   @Test
@@ -222,8 +233,14 @@ public class MongodbSerializerTest {
         dbo(
             "$and",
             dblist(
-                dbo("title", dbo("$regex", "^\\Qa\\E").append("$options", "i")),
-                dbo("title", dbo("$regex", "\\Qb\\E$").append("$options", "i")))));
+                dbo(
+                    "title",
+                    dbo("$regularExpression", dbo("pattern", "^\\Qa\\E").append("options", "i"))),
+                dbo(
+                    "title",
+                    dbo(
+                        "$regularExpression",
+                        dbo("pattern", "\\Qb\\E$").append("options", "i"))))));
   }
 
   @Test
