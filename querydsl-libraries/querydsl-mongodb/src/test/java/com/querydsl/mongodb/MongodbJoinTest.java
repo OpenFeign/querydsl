@@ -2,8 +2,9 @@ package com.querydsl.mongodb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.mongodb.domain.Item;
@@ -13,6 +14,7 @@ import com.querydsl.mongodb.morphia.MorphiaQuery;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import java.net.UnknownHostException;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -21,7 +23,6 @@ import org.junit.experimental.categories.Category;
 public class MongodbJoinTest {
 
   private final MongoClient mongo;
-  private final Morphia morphia;
   private final Datastore ds;
 
   private final String dbname = "testdb";
@@ -31,9 +32,9 @@ public class MongodbJoinTest {
   private final QUser enemy = new QUser("enemy");
 
   public MongodbJoinTest() throws UnknownHostException, MongoException {
-    mongo = new MongoClient();
-    morphia = new Morphia().map(User.class).map(Item.class);
-    ds = morphia.createDatastore(mongo, dbname);
+    mongo = MongoClients.create();
+    ds = Morphia.createDatastore(mongo, dbname);
+    ds.getMapper().map(User.class, Item.class);
   }
 
   @Before
@@ -43,12 +44,12 @@ public class MongodbJoinTest {
     var friend1 = new User("Max", null);
     var friend2 = new User("Jack", null);
     var friend3 = new User("Bob", null);
-    ds.save(friend1, friend2, friend3);
+    ds.save(List.of(friend1, friend2, friend3));
 
     var user1 = new User("Jane", null, friend1);
     var user2 = new User("Mary", null, user1);
     var user3 = new User("Ann", null, friend3);
-    ds.save(user1, user2, user3);
+    ds.save(List.of(user1, user2, user3));
 
     var user4 = new User("Mike", null);
     user4.setFriend(user2);
@@ -258,7 +259,7 @@ public class MongodbJoinTest {
   }
 
   private MorphiaQuery<User> query() {
-    return new MorphiaQuery<>(morphia, ds, user);
+    return new MorphiaQuery<>(ds, user);
   }
 
   private MorphiaQuery<User> where(Predicate... e) {

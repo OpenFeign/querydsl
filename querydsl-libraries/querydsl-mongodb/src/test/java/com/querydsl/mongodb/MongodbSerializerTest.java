@@ -61,7 +61,7 @@ public class MongodbSerializerTest {
 
   @Before
   public void before() {
-    serializer = new MorphiaSerializer(new Morphia());
+    serializer = new MorphiaSerializer(Morphia.createDatastore("db"));
     entityPath = new PathBuilder<>(Object.class, "obj");
     title = entityPath.getString("title");
     year = entityPath.getNumber("year", Integer.class);

@@ -14,10 +14,9 @@
 package com.querydsl.mongodb;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mysema.commons.lang.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.Fetchable;
@@ -44,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -64,9 +65,9 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
 
   private final QueryMixin<Q> queryMixin;
 
-  private final DBCollection collection;
+  private final MongoCollection collection;
 
-  private final Function<DBObject, K> transformer;
+  private final Function<Document, K> transformer;
 
   private ReadPreference readPreference;
 
@@ -79,7 +80,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
    */
   @SuppressWarnings("unchecked")
   public AbstractMongodbQuery(
-      DBCollection collection, Function<DBObject, K> transformer, MongodbSerializer serializer) {
+      MongoCollection collection, Function<Document, K> transformer, MongodbSerializer serializer) {
     @SuppressWarnings("unchecked") // Q is this plus subclass
     var query = (Q) this;
     this.queryMixin = new QueryMixin<>(query, new DefaultQueryMetadata(), false);
@@ -122,7 +123,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
     return new AnyEmbeddedBuilder<>(queryMixin, collection);
   }
 
-  protected abstract DBCollection getCollection(Class<?> type);
+  protected abstract MongoCollection getCollection(Class<?> type);
 
   @Nullable
   protected Predicate createFilter(QueryMetadata metadata) {
@@ -164,16 +165,15 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
     // TODO : fetch only ids
     var cursor =
         createCursor(
-            collection,
-            condition,
-            null,
-            QueryModifiers.EMPTY,
-            Collections.<OrderSpecifier<?>>emptyList());
+                collection,
+                condition,
+                null,
+                QueryModifiers.EMPTY,
+                Collections.<OrderSpecifier<?>>emptyList())
+            .cursor();
     if (cursor.hasNext()) {
-      List<Object> ids = new ArrayList<>(cursor.count());
-      for (DBObject obj : cursor) {
-        ids.add(obj.get("_id"));
-      }
+      List<Object> ids = new ArrayList<>();
+      cursor.forEachRemaining(ids::add);
       return ids;
     } else {
       return Collections.emptyList();
@@ -236,7 +236,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
 
   @Override
   public CloseableIterator<K> iterate() {
-    final var cursor = createCursor();
+    final var cursor = createCursor().cursor();
     return new CloseableIterator<>() {
       @Override
       public boolean hasNext() {
@@ -272,7 +272,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
     try {
       var cursor = createCursor();
       List<K> results = new ArrayList<>();
-      for (DBObject dbObject : cursor) {
+      for (Document dbObject : cursor) {
         results.add(transformer.apply(dbObject));
       }
       return results;
@@ -281,7 +281,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
     }
   }
 
-  protected DBCursor createCursor() {
+  protected FindIterable<Document> createCursor() {
     var metadata = queryMixin.getMetadata();
     Predicate filter = createFilter(metadata);
     return createCursor(
@@ -292,13 +292,19 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
         metadata.getOrderBy());
   }
 
-  protected DBCursor createCursor(
-      DBCollection collection,
+  protected FindIterable<Document> createCursor(
+      MongoCollection collection,
       @Nullable Predicate where,
       Expression<?> projection,
       QueryModifiers modifiers,
       List<OrderSpecifier<?>> orderBy) {
-    var cursor = collection.find(createQuery(where), createProjection(projection));
+    var cursor =
+        readPreference != null
+            ? collection
+                .withReadPreference(readPreference)
+                .find(createQuery(where))
+                .projection(createProjection(projection))
+            : collection.find(createQuery(where)).projection(createProjection(projection));
     Integer limit = modifiers.getLimitAsInteger();
     Integer offset = modifiers.getOffsetAsInteger();
     if (limit != null) {
@@ -310,15 +316,12 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
     if (orderBy.size() > 0) {
       cursor.sort(serializer.toSort(orderBy));
     }
-    if (readPreference != null) {
-      cursor.setReadPreference(readPreference);
-    }
     return cursor;
   }
 
-  private DBObject createProjection(Expression<?> projection) {
+  private Bson createProjection(Expression<?> projection) {
     if (projection instanceof FactoryExpression) {
-      DBObject obj = new BasicDBObject();
+      var obj = new BasicDBObject();
       for (Object expr : ((FactoryExpression) projection).getArgs()) {
         if (expr instanceof Expression) {
           obj.put((String) serializer.handle((Expression) expr), 1);
@@ -343,7 +346,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
   @Override
   public K fetchFirst() {
     try {
-      var c = createCursor().limit(1);
+      var c = createCursor().limit(1).cursor();
       if (c.hasNext()) {
         return transformer.apply(c.next());
       } else {
@@ -372,7 +375,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
       if (limit == null) {
         limit = 2L;
       }
-      var c = createCursor().limit(limit.intValue());
+      var c = createCursor().limit(limit.intValue()).cursor();
       if (c.hasNext()) {
         var rv = transformer.apply(c.next());
         if (c.hasNext()) {
@@ -416,15 +419,15 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
   public long fetchCount() {
     try {
       Predicate filter = createFilter(queryMixin.getMetadata());
-      return collection.count(createQuery(filter));
+      return collection.countDocuments(createQuery(filter));
     } catch (NoResults ex) {
       return 0L;
     }
   }
 
-  private DBObject createQuery(@Nullable Predicate predicate) {
+  private Bson createQuery(@Nullable Predicate predicate) {
     if (predicate != null) {
-      return (DBObject) serializer.handle(predicate);
+      return (Bson) serializer.handle(predicate);
     } else {
       return new BasicDBObject();
     }
@@ -444,7 +447,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
    *
    * @return
    */
-  public DBObject asDBObject() {
+  public Bson asDBObject() {
     return createQuery(queryMixin.getMetadata().getWhere());
   }
 

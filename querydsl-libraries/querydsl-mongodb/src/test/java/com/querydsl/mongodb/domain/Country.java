@@ -1,11 +1,9 @@
 package com.querydsl.mongodb.domain;
 
-import dev.morphia.annotations.Converters;
 import dev.morphia.annotations.Entity;
 import java.util.Locale;
 
 @Entity
-@Converters(LocaleConverter.class)
 public class Country extends AbstractEntity {
   private String name;
   private Locale defaultLocale;

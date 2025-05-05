@@ -15,6 +15,7 @@ package com.querydsl.mongodb.domain;
 
 import dev.morphia.annotations.Embedded;
 
+@Embedded
 public final class Address {
 
   public Address() {}
@@ -29,5 +30,5 @@ public final class Address {
 
   public String postCode;
 
-  @Embedded public City city;
+  public City city;
 }

@@ -15,13 +15,19 @@ package com.querydsl.mongodb.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
 public class MongodbUserTest {
 
-  private static final Morphia morphia = new Morphia().map(User.class);
+  private static final Datastore morphia;
+
+  static {
+    morphia = Morphia.createDatastore("db");
+    morphia.getMapper().map(User.class);
+  }
 
   @Test
   public void map() {
@@ -32,7 +38,7 @@ public class MongodbUserTest {
     user.setFirstName("Jaakko");
     user.addAddress("Aakatu", "00300", tampere);
 
-    assertThat(morphia.toDBObject(user)).isNotNull();
+    assertThat(morphia.getMapper().toDocument(user)).isNotNull();
   }
 
   @Test
@@ -43,7 +49,7 @@ public class MongodbUserTest {
     var user = new User();
     user.setFriend(friend);
 
-    assertThat(morphia.toDBObject(user)).isNotNull();
+    assertThat(morphia.getMapper().toDocument(user)).isNotNull();
   }
 
   @Test
@@ -54,6 +60,6 @@ public class MongodbUserTest {
     var user = new User();
     user.addFriend(friend);
 
-    assertThat(morphia.toDBObject(user)).isNotNull();
+    assertThat(morphia.getMapper().toDocument(user)).isNotNull();
   }
 }

@@ -13,16 +13,12 @@
  */
 package com.querydsl.mongodb.morphia;
 
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.mongodb.AbstractMongodbQuery;
 import dev.morphia.Datastore;
-import dev.morphia.Morphia;
-import dev.morphia.mapping.cache.DefaultEntityCache;
-import dev.morphia.mapping.cache.EntityCache;
-import java.util.function.Function;
+import org.bson.Document;
 
 /**
  * {@code MorphiaQuery} extends {@link AbstractMongodbQuery} with Morphia specific transformations
@@ -43,49 +39,27 @@ import java.util.function.Function;
  */
 public class MorphiaQuery<K> extends AbstractMongodbQuery<K, MorphiaQuery<K>> {
 
-  private final EntityCache cache;
-
   private final Datastore datastore;
 
-  public MorphiaQuery(Morphia morphia, Datastore datastore, EntityPath<K> entityPath) {
-    this(morphia, datastore, new DefaultEntityCache(), entityPath);
+  public MorphiaQuery(Datastore datastore, EntityPath<K> entityPath) {
+    this(datastore, entityPath.getType());
   }
 
-  public MorphiaQuery(Morphia morphia, Datastore datastore, Class<? extends K> entityType) {
-    this(morphia, datastore, new DefaultEntityCache(), entityType);
-  }
-
-  public MorphiaQuery(
-      Morphia morphia, Datastore datastore, EntityCache cache, EntityPath<K> entityPath) {
-    this(morphia, datastore, cache, entityPath.getType());
-  }
-
-  public MorphiaQuery(
-      final Morphia morphia,
-      final Datastore datastore,
-      final EntityCache cache,
-      final Class<? extends K> entityType) {
+  public MorphiaQuery(final Datastore datastore, final Class<? extends K> entityType) {
     super(
-        datastore.getCollection(entityType),
-        new Function<DBObject, K>() {
-          @Override
-          public K apply(DBObject dbObject) {
-            return morphia.fromDBObject(datastore, entityType, dbObject, cache);
-          }
-        },
-        new MorphiaSerializer(morphia));
+        datastore.getMapper().getCollection(entityType),
+        dbObject -> datastore.getMapper().fromDocument(entityType, dbObject),
+        new MorphiaSerializer(datastore));
     this.datastore = datastore;
-    this.cache = cache;
   }
 
   @Override
-  protected DBCursor createCursor() {
-    cache.flush();
+  protected FindIterable<Document> createCursor() {
     return super.createCursor();
   }
 
   @Override
-  protected DBCollection getCollection(Class<?> type) {
-    return datastore.getCollection(type);
+  protected MongoCollection getCollection(Class<?> type) {
+    return datastore.getMapper().getCollection(type);
   }
 }

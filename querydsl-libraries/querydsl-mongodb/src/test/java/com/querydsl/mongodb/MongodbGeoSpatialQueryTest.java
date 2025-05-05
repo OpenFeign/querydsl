@@ -16,8 +16,9 @@ package com.querydsl.mongodb;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
-import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.mongodb.domain.GeoEntity;
 import com.querydsl.mongodb.domain.QGeoEntity;
@@ -34,14 +35,13 @@ public class MongodbGeoSpatialQueryTest {
 
   private final String dbname = "geodb";
   private final MongoClient mongo;
-  private final Morphia morphia;
   private final Datastore ds;
   private final QGeoEntity geoEntity = new QGeoEntity("geoEntity");
 
   public MongodbGeoSpatialQueryTest() throws UnknownHostException, MongoException {
-    mongo = new MongoClient();
-    morphia = new Morphia().map(GeoEntity.class);
-    ds = morphia.createDatastore(mongo, dbname);
+    mongo = MongoClients.create();
+    ds = Morphia.createDatastore(mongo, dbname);
+    ds.getMapper().map(GeoEntity.class);
   }
 
   @Before
@@ -101,6 +101,6 @@ public class MongodbGeoSpatialQueryTest {
   }
 
   private MorphiaQuery<GeoEntity> query() {
-    return new MorphiaQuery<>(morphia, ds, geoEntity);
+    return new MorphiaQuery<>(ds, geoEntity);
   }
 }

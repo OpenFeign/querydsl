@@ -19,9 +19,10 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.DBRef;
-import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.querydsl.core.NonUniqueResultException;
@@ -71,7 +72,6 @@ import org.junit.experimental.categories.Category;
 public class MongodbQueryTest {
 
   private final MongoClient mongo;
-  private final Morphia morphia;
   private final MongoDatabase database;
   private final Datastore ds;
 
@@ -90,10 +90,10 @@ public class MongodbQueryTest {
   City tampere, helsinki;
 
   public MongodbQueryTest() throws UnknownHostException, MongoException {
-    mongo = new MongoClient();
-    morphia = new Morphia().map(User.class).map(Item.class).map(MapEntity.class).map(Dates.class);
+    mongo = MongoClients.create();
+    ds = Morphia.createDatastore(mongo, dbname);
     database = mongo.getDatabase(dbname);
-    ds = morphia.createDatastore(mongo, dbname);
+    ds.getMapper().map(User.class, Item.class, MapEntity.class, Dates.class);
   }
 
   @Before
@@ -671,7 +671,7 @@ public class MongodbQueryTest {
 
   private Document asDocument(AbstractEntity entity) {
     return database
-        .getCollection(ds.getCollection(entity.getClass()).getName())
+        .getCollection(ds.getMapper().getEntityModel(entity.getClass()).getCollectionName())
         .find(new Document("_id", entity.getId()))
         .first();
   }
@@ -685,7 +685,7 @@ public class MongodbQueryTest {
   }
 
   private <T> SimpleMongodbQuery where(EntityPath<T> entity, Predicate... e) {
-    return new SimpleMongodbQuery(morphia, ds, entity.getType(), database).where(e);
+    return new SimpleMongodbQuery(ds, entity.getType(), database).where(e);
   }
 
   private SimpleMongodbQuery where(Predicate... e) {
@@ -693,15 +693,15 @@ public class MongodbQueryTest {
   }
 
   private SimpleMongodbQuery query() {
-    return new SimpleMongodbQuery(morphia, ds, user.getType(), database);
+    return new SimpleMongodbQuery(ds, user.getType(), database);
   }
 
   private <T> SimpleMongodbQuery query(EntityPath<T> path) {
-    return new SimpleMongodbQuery(morphia, ds, path.getType(), database);
+    return new SimpleMongodbQuery(ds, path.getType(), database);
   }
 
   private <T> SimpleMongodbQuery query(Class<? extends T> clazz) {
-    return new SimpleMongodbQuery(morphia, ds, clazz, database);
+    return new SimpleMongodbQuery(ds, clazz, database);
   }
 
   private void assertQuery(SimpleMongodbQuery query, Document... expected) {
@@ -754,28 +754,26 @@ public class MongodbQueryTest {
     private final MongoDatabase database;
 
     SimpleMongodbQuery(
-        final Morphia morphia,
-        final Datastore datastore,
-        final Class<?> entityType,
-        final MongoDatabase database) {
+        final Datastore datastore, final Class<?> entityType, final MongoDatabase database) {
       super(
-          database.getCollection(datastore.getCollection(entityType).getName()),
+          database.getCollection(
+              datastore.getMapper().getEntityModel(entityType).getCollectionName()),
           Function.identity(),
-          new SampleSerializer(morphia));
+          new SampleSerializer(datastore));
       this.datastore = datastore;
       this.database = database;
     }
 
     @Override
     protected MongoCollection<Document> getCollection(Class<?> type) {
-      return database.getCollection(datastore.getCollection(type).getName());
+      return database.getCollection(datastore.getMapper().getEntityModel(type).getCollectionName());
     }
   }
 
   static class SampleSerializer extends MongodbDocumentSerializer {
-    private final Morphia morphia;
+    private final Datastore morphia;
 
-    SampleSerializer(Morphia morphia) {
+    SampleSerializer(Datastore morphia) {
       this.morphia = morphia;
     }
 
@@ -787,14 +785,14 @@ public class MongodbQueryTest {
     @Override
     protected DBRef asReference(Object constant) {
       Key<?> key = morphia.getMapper().getKey(constant);
-      return morphia.getMapper().keyToDBRef(key);
+      return new DBRef(key.getCollection(), key);
     }
 
     @Override
     protected DBRef asReferenceKey(Class<?> entity, Object id) {
-      var collection = morphia.getMapper().getCollectionName(entity);
+      var collection = morphia.getMapper().getEntityModel(entity).getCollectionName();
       Key<?> key = new Key<Object>(entity, collection, id);
-      return morphia.getMapper().keyToDBRef(key);
+      return new DBRef(key.getCollection(), id);
     }
 
     @Override

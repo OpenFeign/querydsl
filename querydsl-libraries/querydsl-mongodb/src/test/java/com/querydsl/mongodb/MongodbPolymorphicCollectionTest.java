@@ -2,8 +2,8 @@ package com.querydsl.mongodb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import com.mongodb.client.MongoClients;
 import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.mongodb.domain.Chips;
@@ -15,6 +15,7 @@ import com.querydsl.mongodb.morphia.MorphiaQuery;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import java.net.UnknownHostException;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -22,22 +23,21 @@ import org.junit.experimental.categories.Category;
 @Category(MongoDB.class)
 public class MongodbPolymorphicCollectionTest {
 
-  private final Morphia morphia;
   private final Datastore ds;
   private final Fish f1 = new Fish("f1");
   private final Fish f2 = new Fish("f2");
   private final Chips c1 = new Chips("c1");
 
   public MongodbPolymorphicCollectionTest() throws UnknownHostException, MongoException {
-    final var mongo = new MongoClient();
-    morphia = new Morphia().map(Food.class);
-    ds = morphia.createDatastore(mongo, "testdb");
+    final var mongo = MongoClients.create();
+    ds = Morphia.createDatastore(mongo, "testdb");
+    ds.getMapper().map(Food.class);
   }
 
   @Before
   public void before() throws UnknownHostException, MongoException {
     ds.delete(ds.createQuery(Food.class));
-    ds.save(f1, f2, c1);
+    ds.save(List.of(f1, f2, c1));
   }
 
   @Test
@@ -75,7 +75,7 @@ public class MongodbPolymorphicCollectionTest {
   }
 
   private MorphiaQuery<Food> query() {
-    return new MorphiaQuery<>(morphia, ds, QFood.food);
+    return new MorphiaQuery<>(ds, QFood.food);
   }
 
   private MorphiaQuery<Food> where(final Predicate... e) {

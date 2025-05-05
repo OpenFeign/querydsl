@@ -18,8 +18,8 @@ import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.mongodb.MongodbSerializer;
+import dev.morphia.Datastore;
 import dev.morphia.Key;
-import dev.morphia.Morphia;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
@@ -33,16 +33,22 @@ import dev.morphia.mapping.Mapper;
  */
 public class MorphiaSerializer extends MongodbSerializer {
 
-  private final Morphia morphia;
+  private final Datastore morphia;
 
-  public MorphiaSerializer(Morphia morphia) {
+  public MorphiaSerializer(Datastore morphia) {
     this.morphia = morphia;
   }
 
   @Override
   public Object visit(Constant<?> expr, Void context) {
     var value = super.visit(expr, context);
-    return morphia.getMapper().toMongoObject(null, null, value);
+
+    // Skip Morphia mapping for primitives
+    if (!morphia.getMapper().isMappable(value.getClass())) {
+      return value;
+    }
+
+    return morphia.getMapper().toDocument(value);
   }
 
   @Override
@@ -88,13 +94,13 @@ public class MorphiaSerializer extends MongodbSerializer {
   @Override
   protected DBRef asReference(Object constant) {
     Key<?> key = morphia.getMapper().getKey(constant);
-    return morphia.getMapper().keyToDBRef(key);
+    return new DBRef(key.getCollection(), key);
   }
 
   @Override
   protected DBRef asReferenceKey(Class<?> entity, Object id) {
-    var collection = morphia.getMapper().getCollectionName(entity);
+    var collection = morphia.getMapper().getEntityModel(entity).getCollectionName();
     Key<?> key = new Key<Object>(entity, collection, id);
-    return morphia.getMapper().keyToDBRef(key);
+    return new DBRef(key.getCollection(), key);
   }
 }
