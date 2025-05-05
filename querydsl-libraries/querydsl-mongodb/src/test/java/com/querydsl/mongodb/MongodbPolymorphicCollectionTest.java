@@ -36,9 +36,9 @@ public class MongodbPolymorphicCollectionTest {
 
   @Before
   public void before() throws UnknownHostException, MongoException {
-    ds.getMapper().getCollection(Food.class).deleteMany(new org.bson.Document());
-    ds.getMapper().getCollection(Chips.class).deleteMany(new org.bson.Document());
-    ds.getMapper().getCollection(Fish.class).deleteMany(new org.bson.Document());
+    ds.getCollection(Food.class).deleteMany(new org.bson.Document());
+    ds.getCollection(Chips.class).deleteMany(new org.bson.Document());
+    ds.getCollection(Fish.class).deleteMany(new org.bson.Document());
 
     ds.save(List.of(f1, f2, c1));
   }

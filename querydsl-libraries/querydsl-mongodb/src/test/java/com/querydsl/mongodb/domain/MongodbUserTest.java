@@ -15,6 +15,7 @@ package com.querydsl.mongodb.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.querydsl.mongodb.document.DocumentUtils;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import org.bson.types.ObjectId;
@@ -38,7 +39,7 @@ public class MongodbUserTest {
     user.setFirstName("Jaakko");
     user.addAddress("Aakatu", "00300", tampere);
 
-    assertThat(morphia.getMapper().toDocument(user)).isNotNull();
+    assertThat(DocumentUtils.getAsDocument(morphia, user)).isNotNull();
   }
 
   @Test
@@ -49,7 +50,7 @@ public class MongodbUserTest {
     var user = new User();
     user.setFriend(friend);
 
-    assertThat(morphia.getMapper().toDocument(user)).isNotNull();
+    assertThat(DocumentUtils.getAsDocument(morphia, user)).isNotNull();
   }
 
   @Test
@@ -60,6 +61,6 @@ public class MongodbUserTest {
     var user = new User();
     user.addFriend(friend);
 
-    assertThat(morphia.getMapper().toDocument(user)).isNotNull();
+    assertThat(DocumentUtils.getAsDocument(morphia, user)).isNotNull();
   }
 }

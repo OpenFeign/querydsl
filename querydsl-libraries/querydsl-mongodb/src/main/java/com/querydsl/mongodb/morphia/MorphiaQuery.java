@@ -46,7 +46,7 @@ public class MorphiaQuery<K> extends AbstractMongodbQuery<K, MorphiaQuery<K>> {
 
   public MorphiaQuery(final Datastore datastore, final Class<? extends K> entityType) {
     super(
-        datastore.getMapper().getCollection(entityType),
+        datastore.getCollection(entityType),
         dbObject -> datastore.getMapper().getId(dbObject),
         new MorphiaSerializer(datastore));
     this.datastore = datastore;
@@ -59,6 +59,6 @@ public class MorphiaQuery<K> extends AbstractMongodbQuery<K, MorphiaQuery<K>> {
 
   @Override
   protected MongoCollection getCollection(Class<?> type) {
-    return datastore.getMapper().getCollection(type);
+    return datastore.getCollection(type);
   }
 }

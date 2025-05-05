@@ -120,7 +120,7 @@
     <sqlite.version>3.49.1.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
     <firebird.version>5.0.7.java11</firebird.version>
-    <mongodb.version>4.2.2</mongodb.version>
+    <mongodb.version>4.11.5</mongodb.version>
 
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
@@ -141,7 +141,7 @@
     <surefire.version>3.5.3</surefire.version>
     <animal-sniffer.version>1.24</animal-sniffer.version>
     <h2gis.version>2.2.3</h2gis.version>
-    <morphia.version>2.2.0</morphia.version>
+    <morphia.version>2.4.18</morphia.version>
     <jmh.version>1.37</jmh.version>
     <kotlin.version>2.1.20</kotlin.version>
     <ksp.version>2.1.20-2.0.1</ksp.version>

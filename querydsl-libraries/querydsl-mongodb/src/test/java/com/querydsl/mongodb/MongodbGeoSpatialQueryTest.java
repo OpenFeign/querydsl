@@ -46,8 +46,7 @@ public class MongodbGeoSpatialQueryTest {
 
   @Before
   public void before() {
-    ds.getMapper().getCollection(GeoEntity.class).deleteMany(new org.bson.Document());
-    ds.ensureIndexes(GeoEntity.class);
+    ds.getCollection(GeoEntity.class).deleteMany(new org.bson.Document());
   }
 
   @Test

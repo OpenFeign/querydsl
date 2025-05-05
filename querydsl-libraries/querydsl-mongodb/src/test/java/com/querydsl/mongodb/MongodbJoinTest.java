@@ -39,7 +39,7 @@ public class MongodbJoinTest {
 
   @Before
   public void before() throws UnknownHostException, MongoException {
-    ds.getMapper().getCollection(User.class).deleteMany(new org.bson.Document());
+    ds.getCollection(User.class).deleteMany(new org.bson.Document());
     var friend1 = new User("Max", null);
     var friend2 = new User("Jack", null);
     var friend3 = new User("Bob", null);

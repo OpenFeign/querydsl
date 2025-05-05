@@ -18,6 +18,7 @@ import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.mongodb.MongodbSerializer;
+import com.querydsl.mongodb.document.DocumentUtils;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -46,8 +47,7 @@ public class MorphiaSerializer extends MongodbSerializer {
     if (!morphia.getMapper().isMappable(value.getClass())) {
       return value;
     }
-
-    return morphia.getMapper().toDocument(value);
+    return DocumentUtils.getAsDocument(morphia, value);
   }
 
   @Override
