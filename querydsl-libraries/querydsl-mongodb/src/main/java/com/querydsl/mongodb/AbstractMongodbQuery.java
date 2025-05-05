@@ -43,7 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,7 +66,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
 
   private final MongoCollection collection;
 
-  private final Function<Document, K> transformer;
+  private final Function<K, Object> transformer;
 
   private ReadPreference readPreference;
 
@@ -75,12 +74,12 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
    * Create a new MongodbQuery instance
    *
    * @param collection collection
-   * @param transformer result transformer
+   * @param transformer id transformer
    * @param serializer serializer
    */
   @SuppressWarnings("unchecked")
   public AbstractMongodbQuery(
-      MongoCollection collection, Function<Document, K> transformer, MongodbSerializer serializer) {
+      MongoCollection collection, Function<K, Object> transformer, MongodbSerializer serializer) {
     @SuppressWarnings("unchecked") // Q is this plus subclass
     var query = (Q) this;
     this.queryMixin = new QueryMixin<>(query, new DefaultQueryMetadata(), false);
@@ -173,7 +172,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
             .cursor();
     if (cursor.hasNext()) {
       List<Object> ids = new ArrayList<>();
-      cursor.forEachRemaining(ids::add);
+      cursor.forEachRemaining(document -> ids.add(transformer.apply(document)));
       return ids;
     } else {
       return Collections.emptyList();
@@ -245,7 +244,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
 
       @Override
       public K next() {
-        return transformer.apply(cursor.next());
+        return cursor.next();
       }
 
       @Override
@@ -272,8 +271,8 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
     try {
       var cursor = createCursor();
       List<K> results = new ArrayList<>();
-      for (Document dbObject : cursor) {
-        results.add(transformer.apply(dbObject));
+      for (K dbObject : cursor) {
+        results.add(dbObject);
       }
       return results;
     } catch (NoResults ex) {
@@ -281,7 +280,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
     }
   }
 
-  protected FindIterable<Document> createCursor() {
+  protected FindIterable<K> createCursor() {
     var metadata = queryMixin.getMetadata();
     Predicate filter = createFilter(metadata);
     return createCursor(
@@ -292,7 +291,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
         metadata.getOrderBy());
   }
 
-  protected FindIterable<Document> createCursor(
+  protected FindIterable<K> createCursor(
       MongoCollection collection,
       @Nullable Predicate where,
       Expression<?> projection,
@@ -348,7 +347,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
     try {
       var c = createCursor().limit(1).cursor();
       if (c.hasNext()) {
-        return transformer.apply(c.next());
+        return c.next();
       } else {
         return null;
       }
@@ -377,7 +376,7 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
       }
       var c = createCursor().limit(limit.intValue()).cursor();
       if (c.hasNext()) {
-        var rv = transformer.apply(c.next());
+        var rv = c.next();
         if (c.hasNext()) {
           throw new NonUniqueResultException();
         }

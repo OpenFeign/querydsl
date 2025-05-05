@@ -19,7 +19,6 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.mongodb.MongodbSerializer;
 import dev.morphia.Datastore;
-import dev.morphia.Key;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
@@ -92,15 +91,15 @@ public class MorphiaSerializer extends MongodbSerializer {
   }
 
   @Override
-  protected DBRef asReference(Object constant) {
-    Key<?> key = morphia.getMapper().getKey(constant);
-    return new DBRef(key.getCollection(), key);
+  protected DBRef asReference(Object entity) {
+    Object key = morphia.getMapper().getId(entity);
+    return new DBRef(
+        morphia.getMapper().getEntityModel(entity.getClass()).getCollectionName(), key);
   }
 
   @Override
   protected DBRef asReferenceKey(Class<?> entity, Object id) {
     var collection = morphia.getMapper().getEntityModel(entity).getCollectionName();
-    Key<?> key = new Key<Object>(entity, collection, id);
-    return new DBRef(key.getCollection(), key);
+    return new DBRef(collection, id);
   }
 }

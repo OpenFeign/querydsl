@@ -85,10 +85,10 @@ public class MongodbQueryTest {
 
   @Before
   public void before() throws UnknownHostException, MongoException {
-    ds.delete(ds.createQuery(Item.class));
-    ds.delete(ds.createQuery(User.class));
-    ds.delete(ds.createQuery(Country.class));
-    ds.delete(ds.createQuery(MapEntity.class));
+    ds.getMapper().getCollection(Item.class).deleteMany(new org.bson.Document());
+    ds.getMapper().getCollection(User.class).deleteMany(new org.bson.Document());
+    ds.getMapper().getCollection(Country.class).deleteMany(new org.bson.Document());
+    ds.getMapper().getCollection(MapEntity.class).deleteMany(new org.bson.Document());
 
     tampere = new City("Tampere", 61.30, 23.50);
     helsinki = new City("Helsinki", 60.15, 20.03);
@@ -294,7 +294,7 @@ public class MongodbQueryTest {
     var current = System.currentTimeMillis();
     var dayInMillis = 24 * 60 * 60 * 1000;
     var start = new Date(current);
-    ds.delete(ds.createQuery(Dates.class));
+    ds.getMapper().getCollection(Dates.class).deleteMany(new org.bson.Document());
     var d = new Dates();
     d.setDate(new Date(current + dayInMillis));
     ds.save(d);

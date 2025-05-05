@@ -48,7 +48,6 @@ import com.querydsl.mongodb.domain.QUser;
 import com.querydsl.mongodb.domain.User;
 import com.querydsl.mongodb.domain.User.Gender;
 import dev.morphia.Datastore;
-import dev.morphia.Key;
 import dev.morphia.Morphia;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -98,10 +97,10 @@ public class MongodbQueryTest {
 
   @Before
   public void before() throws UnknownHostException, MongoException {
-    ds.delete(ds.createQuery(Item.class));
-    ds.delete(ds.createQuery(User.class));
-    ds.delete(ds.createQuery(Country.class));
-    ds.delete(ds.createQuery(MapEntity.class));
+    ds.getMapper().getCollection(Item.class).deleteMany(new org.bson.Document());
+    ds.getMapper().getCollection(User.class).deleteMany(new org.bson.Document());
+    ds.getMapper().getCollection(Country.class).deleteMany(new org.bson.Document());
+    ds.getMapper().getCollection(MapEntity.class).deleteMany(new org.bson.Document());
 
     tampere = new City("Tampere", 61.30, 23.50);
     helsinki = new City("Helsinki", 60.15, 20.03);
@@ -297,7 +296,7 @@ public class MongodbQueryTest {
     var current = System.currentTimeMillis();
     var dayInMillis = 24 * 60 * 60 * 1000;
     var start = new Date(current);
-    ds.delete(ds.createQuery(Dates.class));
+    ds.getMapper().getCollection(Dates.class).deleteMany(new org.bson.Document());
     var d = new Dates();
     d.setDate(new Date(current + dayInMillis));
     ds.save(d);
@@ -783,16 +782,16 @@ public class MongodbQueryTest {
     }
 
     @Override
-    protected DBRef asReference(Object constant) {
-      Key<?> key = morphia.getMapper().getKey(constant);
-      return new DBRef(key.getCollection(), key);
+    protected DBRef asReference(Object entity) {
+      Object key = morphia.getMapper().getId(entity);
+      return new DBRef(
+          morphia.getMapper().getEntityModel(entity.getClass()).getCollectionName(), key);
     }
 
     @Override
     protected DBRef asReferenceKey(Class<?> entity, Object id) {
       var collection = morphia.getMapper().getEntityModel(entity).getCollectionName();
-      Key<?> key = new Key<Object>(entity, collection, id);
-      return new DBRef(key.getCollection(), id);
+      return new DBRef(collection, id);
     }
 
     @Override
@@ -818,5 +817,29 @@ public class MongodbQueryTest {
       }
       return super.getKeyForPath(expr, metadata);
     }
+  }
+
+  @Test
+  public void userJoinTest() {
+    final QUser friend = new QUser("friend");
+
+    // Setup: Create and save users with friends
+    User user1 = addUser("Alice", "Johnson");
+    User user2 = addUser("Bob", "Smith");
+    User user3 = addUser("Charlie", "Brown");
+
+    user1.addFriend(user2);
+    user2.addFriend(user3);
+
+    ds.save(user1);
+    ds.save(user2);
+    ds.save(user3);
+
+    // Query: Find users who have a friend named "Bob" using join
+    var results = where().join(user.friends, friend).on(friend.firstName.eq("Bob")).fetch();
+
+    // Assert: Verify the results
+    assertThat(results).hasSize(1);
+    assertThat(results.get(0).get("firstName")).isEqualTo("Alice");
   }
 }

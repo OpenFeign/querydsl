@@ -18,7 +18,6 @@ import com.mongodb.client.MongoCollection;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.mongodb.AbstractMongodbQuery;
 import dev.morphia.Datastore;
-import org.bson.Document;
 
 /**
  * {@code MorphiaQuery} extends {@link AbstractMongodbQuery} with Morphia specific transformations
@@ -48,13 +47,13 @@ public class MorphiaQuery<K> extends AbstractMongodbQuery<K, MorphiaQuery<K>> {
   public MorphiaQuery(final Datastore datastore, final Class<? extends K> entityType) {
     super(
         datastore.getMapper().getCollection(entityType),
-        dbObject -> datastore.getMapper().fromDocument(entityType, dbObject),
+        dbObject -> datastore.getMapper().getId(dbObject),
         new MorphiaSerializer(datastore));
     this.datastore = datastore;
   }
 
   @Override
-  protected FindIterable<Document> createCursor() {
+  protected FindIterable<K> createCursor() {
     return super.createCursor();
   }
 
