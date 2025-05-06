@@ -112,6 +112,7 @@ class TypeExtractor(
     private fun userType(type: KSType): QPropertyType.Unknown? {
         val userTypeAnnotations = listOf(
             ClassName("org.hibernate.annotations", "Type"),
+            ClassName("org.hibernate.annotations", "JdbcTypeCode"),
             Convert::class.asClassName()
         )
         if (property.annotations.any { userTypeAnnotations.contains(it.annotationType.resolve().toClassName()) }) {
