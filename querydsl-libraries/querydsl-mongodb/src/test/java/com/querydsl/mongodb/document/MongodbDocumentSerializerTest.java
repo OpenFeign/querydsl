@@ -236,8 +236,16 @@ public class MongodbDocumentSerializerTest {
         document(
             "$and",
             Arrays.asList(
-                document("title", document("$regex", "^\\Qa\\E").append("$options", "i")),
-                document("title", document("$regex", "\\Qb\\E$").append("$options", "i")))));
+                document(
+                    "title",
+                    document(
+                        "$regularExpression",
+                        document("pattern", "^\\Qa\\E").append("options", "i"))),
+                document(
+                    "title",
+                    document(
+                        "$regularExpression",
+                        document("pattern", "\\Qb\\E$").append("options", "i"))))));
   }
 
   @Test

@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import org.bson.BSONObject;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 /**
@@ -52,7 +53,7 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
     return expression.accept(this, null);
   }
 
-  public DBObject toSort(List<OrderSpecifier<?>> orderBys) {
+  public Bson toSort(List<OrderSpecifier<?>> orderBys) {
     var sort = new BasicDBObject();
     for (OrderSpecifier<?> orderBy : orderBys) {
       Object key = orderBy.getTarget().accept(this, null);

@@ -13,8 +13,8 @@
  */
 package com.querydsl.mongodb.domain;
 
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Property;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Property;
 
 @Entity
 public class DummyEntity extends AbstractEntity {

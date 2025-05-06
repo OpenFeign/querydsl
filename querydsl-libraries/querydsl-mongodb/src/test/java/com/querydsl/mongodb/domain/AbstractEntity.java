@@ -1,8 +1,8 @@
 package com.querydsl.mongodb.domain;
 
 import com.querydsl.core.annotations.QuerySupertype;
+import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Id;
 
 @QuerySupertype
 public abstract class AbstractEntity {

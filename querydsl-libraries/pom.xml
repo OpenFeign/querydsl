@@ -100,7 +100,7 @@
                     <exclude>org.eclipse.persistence:eclipselink:*:*:compile</exclude>
                     <exclude>org.datanucleus:javax.jdo:*:*:compile</exclude>
                     <exclude>org.springframework.roo:org.springframework.roo.annotations:*:*:compile</exclude>
-                    <exclude>org.mongodb.morphia:morphia:*:*:compile</exclude>
+                    <exclude>dev.morphia:core:*:*:compile</exclude>
                     <exclude>org.joda:joda-money:*:*:compile</exclude>
                     <exclude>org.batoo.jpa:batoo-jpa:*:*:compile</exclude>
                     <exclude>jakarta.annotation:jakarta.annotation-api:*:*:compile</exclude>

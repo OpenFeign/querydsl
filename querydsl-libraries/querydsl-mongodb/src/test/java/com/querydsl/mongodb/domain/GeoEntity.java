@@ -13,11 +13,11 @@
  */
 package com.querydsl.mongodb.domain;
 
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Field;
-import org.mongodb.morphia.annotations.Index;
-import org.mongodb.morphia.annotations.Indexes;
-import org.mongodb.morphia.utils.IndexType;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Field;
+import dev.morphia.annotations.Index;
+import dev.morphia.annotations.Indexes;
+import dev.morphia.utils.IndexType;
 
 @Entity
 @Indexes({@Index(fields = @Field(value = "location", type = IndexType.GEO2D))})

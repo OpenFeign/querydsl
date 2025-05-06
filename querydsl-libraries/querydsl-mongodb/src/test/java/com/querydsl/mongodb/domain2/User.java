@@ -13,12 +13,20 @@
  */
 package com.querydsl.mongodb.domain2;
 
+import dev.morphia.annotations.Entity;
 import java.util.Map;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
 
-@Entity(value = "USER", noClassnameStored = true)
+@Entity("USER")
 public class User {
 
-  @Embedded Map<String, UserAttribute> properties;
+  private Map<String, UserAttribute> properties;
+
+  // Getters and setters (required for Morphia 2.x)
+  public Map<String, UserAttribute> getProperties() {
+    return properties;
+  }
+
+  public void setProperties(Map<String, UserAttribute> properties) {
+    this.properties = properties;
+  }
 }
