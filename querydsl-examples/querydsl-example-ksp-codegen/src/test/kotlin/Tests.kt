@@ -1,10 +1,13 @@
 import com.querydsl.example.ksp.Cat
 import com.querydsl.example.ksp.CatType
+import com.querydsl.example.ksp.Dog
 import com.querydsl.example.ksp.Person
 import com.querydsl.example.ksp.QCat
+import com.querydsl.example.ksp.QDog
 import com.querydsl.example.ksp.QPerson
 import com.querydsl.example.ksp.QPersonClassDTO
 import com.querydsl.example.ksp.QPersonClassConstructorDTO
+import com.querydsl.example.ksp.Tag
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManagerFactory
 import org.hibernate.cfg.AvailableSettings
@@ -162,6 +165,47 @@ class Tests {
         }
     }
 
+    @Test
+    fun `create and query dog with jsonb tag`() {
+        val emf = initialize()
+
+        run {
+            val em = emf.createEntityManager()
+            em.transaction.begin()
+
+            val dogTag = Tag(
+                id = 10,
+                name = "Playful"
+            )
+            em.persist(Dog(300, "Buddy", dogTag))
+
+            em.transaction.commit()
+            em.close()
+        }
+
+        run {
+            val em = emf.createEntityManager()
+            val queryFactory = JPAQueryFactory(em)
+            val q = QDog.dog
+
+            val dog = queryFactory
+                .selectFrom(q)
+                .where(q.name.eq("Buddy"))
+                .fetchOne()
+
+            if (dog == null) {
+                fail<Any>("No dog was returned")
+            } else {
+                assertThat(dog.id).isEqualTo(300)
+                assertThat(dog.name).isEqualTo("Buddy")
+                assertThat(dog.tag.id).isEqualTo(10)
+                assertThat(dog.tag.name).isEqualTo("Playful")
+            }
+
+            em.close()
+        }
+    }
+
     private fun initialize(): EntityManagerFactory {
         val configuration = Configuration()
             .setProperty(AvailableSettings.JAKARTA_JDBC_DRIVER, org.h2.Driver::class.qualifiedName!!)
@@ -170,6 +214,7 @@ class Tests {
             .setProperty(AvailableSettings.SHOW_SQL, "true")
             .addAnnotatedClass(Person::class.java)
             .addAnnotatedClass(Cat::class.java)
+            .addAnnotatedClass(Dog::class.java)
 
         return configuration
             .buildSessionFactory()
