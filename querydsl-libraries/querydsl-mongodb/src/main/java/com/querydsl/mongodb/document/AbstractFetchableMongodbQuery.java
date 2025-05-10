@@ -227,7 +227,7 @@ public abstract class AbstractFetchableMongodbQuery<
   public long fetchCount() {
     try {
       Predicate filter = createFilter(getQueryMixin().getMetadata());
-      return collection.count(createQuery(filter));
+      return collection.countDocuments(createQuery(filter));
     } catch (NoResults ex) {
       return 0L;
     }

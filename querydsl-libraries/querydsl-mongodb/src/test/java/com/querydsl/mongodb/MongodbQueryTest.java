@@ -17,29 +17,27 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.mongodb.domain.Address;
-import com.querydsl.mongodb.domain.City;
-import com.querydsl.mongodb.domain.Country;
-import com.querydsl.mongodb.domain.Dates;
-import com.querydsl.mongodb.domain.Item;
-import com.querydsl.mongodb.domain.MapEntity;
+import com.querydsl.mongodb.domain.*;
 import com.querydsl.mongodb.domain.QAddress;
 import com.querydsl.mongodb.domain.QCountry;
 import com.querydsl.mongodb.domain.QDates;
 import com.querydsl.mongodb.domain.QItem;
 import com.querydsl.mongodb.domain.QMapEntity;
 import com.querydsl.mongodb.domain.QUser;
-import com.querydsl.mongodb.domain.User;
 import com.querydsl.mongodb.domain.User.Gender;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,18 +46,17 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
 
 @Category(MongoDB.class)
 public class MongodbQueryTest {
 
   private final MongoClient mongo;
-  private final Morphia morphia;
   private final Datastore ds;
 
   private final String dbname = "testdb";
@@ -75,17 +72,23 @@ public class MongodbQueryTest {
   City tampere, helsinki;
 
   public MongodbQueryTest() throws UnknownHostException, MongoException {
-    mongo = new MongoClient();
-    morphia = new Morphia().map(User.class).map(Item.class).map(MapEntity.class).map(Dates.class);
-    ds = morphia.createDatastore(mongo, dbname);
+    // Register your custom codec
+    CodecRegistry customRegistry =
+        CodecRegistries.fromRegistries(
+            CodecRegistries.fromCodecs(new LocaleCodec()),
+            MongoClientSettings.getDefaultCodecRegistry());
+    mongo =
+        MongoClients.create(MongoClientSettings.builder().codecRegistry(customRegistry).build());
+    ds = Morphia.createDatastore(mongo, dbname);
+    ds.getMapper().map(User.class, Item.class, MapEntity.class, Dates.class);
   }
 
   @Before
   public void before() throws UnknownHostException, MongoException {
-    ds.delete(ds.createQuery(Item.class));
-    ds.delete(ds.createQuery(User.class));
-    ds.delete(ds.createQuery(Country.class));
-    ds.delete(ds.createQuery(MapEntity.class));
+    ds.getCollection(Item.class).deleteMany(new org.bson.Document());
+    ds.getCollection(User.class).deleteMany(new org.bson.Document());
+    ds.getCollection(Country.class).deleteMany(new org.bson.Document());
+    ds.getCollection(MapEntity.class).deleteMany(new org.bson.Document());
 
     tampere = new City("Tampere", 61.30, 23.50);
     helsinki = new City("Helsinki", 60.15, 20.03);
@@ -291,7 +294,7 @@ public class MongodbQueryTest {
     var current = System.currentTimeMillis();
     var dayInMillis = 24 * 60 * 60 * 1000;
     var start = new Date(current);
-    ds.delete(ds.createQuery(Dates.class));
+    ds.getCollection(Dates.class).deleteMany(new org.bson.Document());
     var d = new Dates();
     d.setDate(new Date(current + dayInMillis));
     ds.save(d);
@@ -700,7 +703,7 @@ public class MongodbQueryTest {
   }
 
   private <T> MorphiaQuery<T> where(EntityPath<T> entity, Predicate... e) {
-    return new MorphiaQuery<>(morphia, ds, entity).where(e);
+    return new MorphiaQuery<>(ds, entity).where(e);
   }
 
   private MorphiaQuery<User> where(Predicate... e) {
@@ -708,15 +711,15 @@ public class MongodbQueryTest {
   }
 
   private MorphiaQuery<User> query() {
-    return new MorphiaQuery<>(morphia, ds, user);
+    return new MorphiaQuery<>(ds, user);
   }
 
   private <T> MorphiaQuery<T> query(EntityPath<T> path) {
-    return new MorphiaQuery<>(morphia, ds, path);
+    return new MorphiaQuery<>(ds, path);
   }
 
   private <T> MorphiaQuery<T> query(Class<? extends T> clazz) {
-    return new MorphiaQuery<>(morphia, ds, clazz);
+    return new MorphiaQuery<>(ds, clazz);
   }
 
   private void assertQuery(MorphiaQuery<User> query, User... expected) {

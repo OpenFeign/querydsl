@@ -56,7 +56,7 @@ services:
       start_period: 60s
 
   mongo:
-    image: mongo:4
+    image: mongo:8.0.9
     ports:
       - "27017:27017"
 

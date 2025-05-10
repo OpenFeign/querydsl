@@ -1,7 +1,7 @@
 package com.querydsl.mongodb.domain;
 
+import dev.morphia.annotations.Entity;
 import java.util.Date;
-import org.mongodb.morphia.annotations.Entity;
 
 @Entity
 public class Dates extends AbstractEntity {

@@ -15,13 +15,20 @@ package com.querydsl.mongodb.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.querydsl.mongodb.document.DocumentUtils;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import org.bson.types.ObjectId;
 import org.junit.Test;
-import org.mongodb.morphia.Morphia;
 
 public class MongodbUserTest {
 
-  private static final Morphia morphia = new Morphia().map(User.class);
+  private static final Datastore morphia;
+
+  static {
+    morphia = Morphia.createDatastore("db");
+    morphia.getMapper().map(User.class);
+  }
 
   @Test
   public void map() {
@@ -32,28 +39,28 @@ public class MongodbUserTest {
     user.setFirstName("Jaakko");
     user.addAddress("Aakatu", "00300", tampere);
 
-    assertThat(morphia.toDBObject(user)).isNotNull();
+    assertThat(DocumentUtils.getAsDocument(morphia, user)).isNotNull();
   }
 
   @Test
   public void friend() {
     var friend = new User();
-    friend.setId(ObjectId.createFromLegacyFormat(1, 2, 3));
+    friend.setId(new ObjectId(1, 2));
 
     var user = new User();
     user.setFriend(friend);
 
-    assertThat(morphia.toDBObject(user)).isNotNull();
+    assertThat(DocumentUtils.getAsDocument(morphia, user)).isNotNull();
   }
 
   @Test
   public void friends() {
     var friend = new User();
-    friend.setId(ObjectId.createFromLegacyFormat(1, 2, 3));
+    friend.setId(new ObjectId(1, 2));
 
     var user = new User();
     user.addFriend(friend);
 
-    assertThat(morphia.toDBObject(user)).isNotNull();
+    assertThat(DocumentUtils.getAsDocument(morphia, user)).isNotNull();
   }
 }

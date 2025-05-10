@@ -16,38 +16,38 @@ package com.querydsl.mongodb;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
-import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.mongodb.domain.GeoEntity;
 import com.querydsl.mongodb.domain.QGeoEntity;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import java.net.UnknownHostException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
 
 @Category(MongoDB.class)
 public class MongodbGeoSpatialQueryTest {
 
   private final String dbname = "geodb";
   private final MongoClient mongo;
-  private final Morphia morphia;
   private final Datastore ds;
   private final QGeoEntity geoEntity = new QGeoEntity("geoEntity");
 
   public MongodbGeoSpatialQueryTest() throws UnknownHostException, MongoException {
-    mongo = new MongoClient();
-    morphia = new Morphia().map(GeoEntity.class);
-    ds = morphia.createDatastore(mongo, dbname);
+    mongo = MongoClients.create();
+    ds = Morphia.createDatastore(mongo, dbname);
+    ds.getMapper().map(GeoEntity.class);
   }
 
   @Before
   public void before() {
-    ds.delete(ds.createQuery(GeoEntity.class));
-    ds.ensureIndexes(GeoEntity.class);
+    ds.getCollection(GeoEntity.class).deleteMany(new org.bson.Document());
+    ds.ensureIndexes();
   }
 
   @Test
@@ -101,6 +101,6 @@ public class MongodbGeoSpatialQueryTest {
   }
 
   private MorphiaQuery<GeoEntity> query() {
-    return new MorphiaQuery<>(morphia, ds, geoEntity);
+    return new MorphiaQuery<>(ds, geoEntity);
   }
 }

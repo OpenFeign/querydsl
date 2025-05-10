@@ -13,7 +13,7 @@
  */
 package com.querydsl.mongodb.domain2;
 
-import org.mongodb.morphia.annotations.Embedded;
+import dev.morphia.annotations.Embedded;
 
 @Embedded
 public class UserAttribute {

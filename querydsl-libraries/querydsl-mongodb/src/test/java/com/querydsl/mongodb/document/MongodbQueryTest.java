@@ -19,9 +19,10 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.DBRef;
-import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.querydsl.core.NonUniqueResultException;
@@ -46,6 +47,12 @@ import com.querydsl.mongodb.domain.QMapEntity;
 import com.querydsl.mongodb.domain.QUser;
 import com.querydsl.mongodb.domain.User;
 import com.querydsl.mongodb.domain.User.Gender;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.Mapper;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,19 +66,11 @@ import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.mapping.Mapper;
 
 @Category(MongoDB.class)
 public class MongodbQueryTest {
 
   private final MongoClient mongo;
-  private final Morphia morphia;
   private final MongoDatabase database;
   private final Datastore ds;
 
@@ -90,18 +89,18 @@ public class MongodbQueryTest {
   City tampere, helsinki;
 
   public MongodbQueryTest() throws UnknownHostException, MongoException {
-    mongo = new MongoClient();
-    morphia = new Morphia().map(User.class).map(Item.class).map(MapEntity.class).map(Dates.class);
+    mongo = MongoClients.create();
+    ds = Morphia.createDatastore(mongo, dbname);
     database = mongo.getDatabase(dbname);
-    ds = morphia.createDatastore(mongo, dbname);
+    ds.getMapper().map(User.class, Item.class, MapEntity.class, Dates.class);
   }
 
   @Before
   public void before() throws UnknownHostException, MongoException {
-    ds.delete(ds.createQuery(Item.class));
-    ds.delete(ds.createQuery(User.class));
-    ds.delete(ds.createQuery(Country.class));
-    ds.delete(ds.createQuery(MapEntity.class));
+    ds.getCollection(Item.class).deleteMany(new org.bson.Document());
+    ds.getCollection(User.class).deleteMany(new org.bson.Document());
+    ds.getCollection(Country.class).deleteMany(new org.bson.Document());
+    ds.getCollection(MapEntity.class).deleteMany(new org.bson.Document());
 
     tampere = new City("Tampere", 61.30, 23.50);
     helsinki = new City("Helsinki", 60.15, 20.03);
@@ -297,7 +296,7 @@ public class MongodbQueryTest {
     var current = System.currentTimeMillis();
     var dayInMillis = 24 * 60 * 60 * 1000;
     var start = new Date(current);
-    ds.delete(ds.createQuery(Dates.class));
+    ds.getCollection(Dates.class).deleteMany(new org.bson.Document());
     var d = new Dates();
     d.setDate(new Date(current + dayInMillis));
     ds.save(d);
@@ -671,7 +670,7 @@ public class MongodbQueryTest {
 
   private Document asDocument(AbstractEntity entity) {
     return database
-        .getCollection(ds.getCollection(entity.getClass()).getName())
+        .getCollection(ds.getMapper().getEntityModel(entity.getClass()).getCollectionName())
         .find(new Document("_id", entity.getId()))
         .first();
   }
@@ -685,7 +684,7 @@ public class MongodbQueryTest {
   }
 
   private <T> SimpleMongodbQuery where(EntityPath<T> entity, Predicate... e) {
-    return new SimpleMongodbQuery(morphia, ds, entity.getType(), database).where(e);
+    return new SimpleMongodbQuery(ds, entity.getType(), database).where(e);
   }
 
   private SimpleMongodbQuery where(Predicate... e) {
@@ -693,15 +692,15 @@ public class MongodbQueryTest {
   }
 
   private SimpleMongodbQuery query() {
-    return new SimpleMongodbQuery(morphia, ds, user.getType(), database);
+    return new SimpleMongodbQuery(ds, user.getType(), database);
   }
 
   private <T> SimpleMongodbQuery query(EntityPath<T> path) {
-    return new SimpleMongodbQuery(morphia, ds, path.getType(), database);
+    return new SimpleMongodbQuery(ds, path.getType(), database);
   }
 
   private <T> SimpleMongodbQuery query(Class<? extends T> clazz) {
-    return new SimpleMongodbQuery(morphia, ds, clazz, database);
+    return new SimpleMongodbQuery(ds, clazz, database);
   }
 
   private void assertQuery(SimpleMongodbQuery query, Document... expected) {
@@ -754,28 +753,26 @@ public class MongodbQueryTest {
     private final MongoDatabase database;
 
     SimpleMongodbQuery(
-        final Morphia morphia,
-        final Datastore datastore,
-        final Class<?> entityType,
-        final MongoDatabase database) {
+        final Datastore datastore, final Class<?> entityType, final MongoDatabase database) {
       super(
-          database.getCollection(datastore.getCollection(entityType).getName()),
+          database.getCollection(
+              datastore.getMapper().getEntityModel(entityType).getCollectionName()),
           Function.identity(),
-          new SampleSerializer(morphia));
+          new SampleSerializer(datastore));
       this.datastore = datastore;
       this.database = database;
     }
 
     @Override
     protected MongoCollection<Document> getCollection(Class<?> type) {
-      return database.getCollection(datastore.getCollection(type).getName());
+      return database.getCollection(datastore.getMapper().getEntityModel(type).getCollectionName());
     }
   }
 
   static class SampleSerializer extends MongodbDocumentSerializer {
-    private final Morphia morphia;
+    private final Datastore morphia;
 
-    SampleSerializer(Morphia morphia) {
+    SampleSerializer(Datastore morphia) {
       this.morphia = morphia;
     }
 
@@ -785,16 +782,16 @@ public class MongodbQueryTest {
     }
 
     @Override
-    protected DBRef asReference(Object constant) {
-      Key<?> key = morphia.getMapper().getKey(constant);
-      return morphia.getMapper().keyToDBRef(key);
+    protected DBRef asReference(Object entity) {
+      Object key = morphia.getMapper().getId(entity);
+      return new DBRef(
+          morphia.getMapper().getEntityModel(entity.getClass()).getCollectionName(), key);
     }
 
     @Override
     protected DBRef asReferenceKey(Class<?> entity, Object id) {
-      var collection = morphia.getMapper().getCollectionName(entity);
-      Key<?> key = new Key<Object>(entity, collection, id);
-      return morphia.getMapper().keyToDBRef(key);
+      var collection = morphia.getMapper().getEntityModel(entity).getCollectionName();
+      return new DBRef(collection, id);
     }
 
     @Override
@@ -820,5 +817,29 @@ public class MongodbQueryTest {
       }
       return super.getKeyForPath(expr, metadata);
     }
+  }
+
+  @Test
+  public void userJoinTest() {
+    final QUser friend = new QUser("friend");
+
+    // Setup: Create and save users with friends
+    User user1 = addUser("Alice", "Johnson");
+    User user2 = addUser("Bob", "Smith");
+    User user3 = addUser("Charlie", "Brown");
+
+    user1.addFriend(user2);
+    user2.addFriend(user3);
+
+    ds.save(user1);
+    ds.save(user2);
+    ds.save(user3);
+
+    // Query: Find users who have a friend named "Bob" using join
+    var results = where().join(user.friends, friend).on(friend.firstName.eq("Bob")).fetch();
+
+    // Assert: Verify the results
+    assertThat(results).hasSize(1);
+    assertThat(results.get(0).get("firstName")).isEqualTo("Alice");
   }
 }
