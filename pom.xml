@@ -125,7 +125,7 @@
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
     <!-- JPA deps -->
-    <hibernate.version>6.6.13.Final</hibernate.version>
+    <hibernate.version>6.6.14.Final</hibernate.version>
     <hibernate.validator.version>8.0.2.Final</hibernate.validator.version>
     <eclipselink.version>4.0.6</eclipselink.version>
     <jpa.version>3.1.0</jpa.version>
