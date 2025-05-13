@@ -589,7 +589,7 @@
       <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
-        <version>0.200.3</version>
+        <version>0.200.4</version>
         <inherited>false</inherited>
         <configuration>
           <boms>
