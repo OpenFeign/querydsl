@@ -170,7 +170,7 @@
       <dependency>
         <groupId>io.smallrye</groupId>
         <artifactId>jandex</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
       </dependency>
       <dependency>
         <groupId>org.jetbrains</groupId>
