@@ -12,7 +12,7 @@
   <name>Querydsl example - JPA Quarkus</name>
 
   <properties>
-    <quarkus.version>3.22.2</quarkus.version>
+    <quarkus.version>3.22.3</quarkus.version>
   </properties>
 
   <dependencyManagement>
