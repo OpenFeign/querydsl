@@ -72,6 +72,19 @@ public class ExpressionUtilsTest {
   }
 
   @Test
+  public void likeToRegex_escapeCharacter() {
+    assertThat(regex(ConstantImpl.create("a\\%b"))).isEqualTo("^a%b$");
+    assertThat(regex(ConstantImpl.create("a\\_b"))).isEqualTo("^a_b$");
+  }
+
+  @Test
+  public void regexToLike_anchorsAndEscapes() {
+    assertThat(like(ConstantImpl.create("^a%b$"))).isEqualTo("a\\%b");
+    assertThat(like(ConstantImpl.create("^a_b$"))).isEqualTo("a\\_b");
+    assertThat(like(ConstantImpl.create("^ab$"))).isEqualTo("ab");
+  }
+
+  @Test
   public void regexToLike() {
     assertThat(like(ConstantImpl.create(".*"))).isEqualTo("%");
     assertThat(like(ConstantImpl.create("."))).isEqualTo("_");
