@@ -10,7 +10,7 @@ import org.junit.Test;
 public abstract class SelectMySQLBase extends AbstractBaseTest {
 
   protected R2DBCMySQLQuery<?> myR2DBCQuery() {
-    return new R2DBCMySQLQuery<Void>(connection, configuration);
+    return new R2DBCMySQLQuery<Void>(Connections.getMySQL().getConnection().block(), configuration);
   }
 
   @Test
