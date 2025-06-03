@@ -212,31 +212,33 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
   @SuppressWarnings("unchecked")
   @Override
   public Flux<T> fetch() {
-    return getConnection()
-        .flatMapMany(
-            conn -> {
-              var expr = (Expression<T>) queryMixin.getMetadata().getProjection();
-              var serializer = serialize(false);
-              var mapper = createMapper(expr);
 
-              var constants = serializer.getConstants();
-              var originalSql = serializer.toString();
-              var sql =
-                  R2dbcUtils.replaceBindingArguments(
-                      configuration.getBindMarkerFactory().create(), constants, originalSql);
+    return Flux.usingWhen(
+        getConnection(),
+        conn -> {
+          var expr = (Expression<T>) queryMixin.getMetadata().getProjection();
+          var serializer = serialize(false);
+          var mapper = createMapper(expr);
 
-              var statement = conn.createStatement(sql);
-              BindTarget bindTarget = new StatementWrapper(statement);
+          var constants = serializer.getConstants();
+          var originalSql = serializer.toString();
+          var sql =
+              R2dbcUtils.replaceBindingArguments(
+                  configuration.getBindMarkerFactory().create(), constants, originalSql);
 
-              setParameters(
-                  bindTarget,
-                  configuration.getBindMarkerFactory().create(),
-                  constants,
-                  serializer.getConstantPaths(),
-                  getMetadata().getParams());
+          var statement = conn.createStatement(sql);
+          BindTarget bindTarget = new StatementWrapper(statement);
 
-              return Flux.from(statement.execute()).flatMap(result -> result.map(mapper::map));
-            });
+          setParameters(
+              bindTarget,
+              configuration.getBindMarkerFactory().create(),
+              constants,
+              serializer.getConstantPaths(),
+              getMetadata().getParams());
+
+          return Flux.from(statement.execute()).flatMap(result -> result.map(mapper::map));
+        },
+        Connection::close);
   }
 
   private Mapper<T> createMapper(Expression<T> expr) {
@@ -322,32 +324,32 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
 
     logQuery(sql, constants);
 
-    return getConnection()
-        .flatMap(
-            connection -> {
-              var statement = getStatement(connection, sql);
-              BindTarget bindTarget = new StatementWrapper(statement);
+    return Mono.usingWhen(
+        getConnection(), // Mono<Connection>
+        connection -> {
+          var statement = getStatement(connection, sql);
+          BindTarget bindTarget = new StatementWrapper(statement);
 
-              setParameters(
-                  bindTarget,
-                  configuration.getBindMarkerFactory().create(),
-                  constants,
-                  serializer.getConstantPaths(),
-                  getMetadata().getParams());
+          setParameters(
+              bindTarget,
+              configuration.getBindMarkerFactory().create(),
+              constants,
+              serializer.getConstantPaths(),
+              getMetadata().getParams());
 
-              return Mono.from(statement.execute())
-                  .flatMap(result -> Mono.from(result.map((row, rowMetadata) -> row.get(0))))
-                  .map(
-                      o -> {
-                        if (Integer.class.isAssignableFrom(o.getClass())) {
-                          return ((Integer) o).longValue();
-                        }
-
-                        return (Long) o;
-                      })
-                  .defaultIfEmpty(0L)
-                  .doOnError(e -> Mono.error(configuration.translate(sql, constants, e)));
-            });
+          return Mono.from(statement.execute())
+              .flatMap(result -> Mono.from(result.map((row, rowMetadata) -> row.get(0))))
+              .map(
+                  o -> {
+                    if (Integer.class.isAssignableFrom(o.getClass())) {
+                      return ((Integer) o).longValue();
+                    }
+                    return (Long) o;
+                  })
+              .defaultIfEmpty(0L)
+              .doOnError(e -> Mono.error(configuration.translate(sql, constants, e)));
+        },
+        Connection::close);
   }
 
   protected void logQuery(String queryString, Collection<Object> parameters) {
