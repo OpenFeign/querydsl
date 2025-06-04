@@ -1,6 +1,8 @@
 package com.querydsl.jpa.domain;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity(name = "AlchemistEntity")
@@ -16,11 +18,18 @@ public class Alchemist {
   @Column(columnDefinition = "TEXT")
   private Set<PotionEffect> knownEffects;
 
+  @ElementCollection
+  @CollectionTable(name = "alchemist_spells", joinColumns = @JoinColumn(name = "alchemist_id"))
+  @Column(name = "spell_name")
+  private List<String> learnedSpells = new ArrayList<>();
+
   public Alchemist() {}
 
-  public Alchemist(String alchemistName, Set<PotionEffect> knownEffects) {
+  public Alchemist(
+      String alchemistName, Set<PotionEffect> knownEffects, List<String> learnedSpells) {
     this.alchemistName = alchemistName;
     this.knownEffects = knownEffects;
+    this.learnedSpells = learnedSpells;
   }
 
   public Integer getId() {
@@ -29,6 +38,10 @@ public class Alchemist {
 
   public String getAlchemistName() {
     return alchemistName;
+  }
+
+  public List<String> getLearnedSpells() {
+    return learnedSpells;
   }
 
   public Set<PotionEffect> getKnownEffects() {
