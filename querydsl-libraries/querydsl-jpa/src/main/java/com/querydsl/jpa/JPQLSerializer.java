@@ -374,10 +374,10 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
       return;
     }
     if (inCaseOperation && templates.isCaseWithLiterals()) {
-      if (constant instanceof Collection) {
+      if (constant instanceof Collection<?> collection) {
         append("(");
         var first = true;
-        for (Object o : (Collection) constant) {
+        for (Object o : collection) {
           if (!first) {
             append(", ");
           }
@@ -507,17 +507,19 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
         if (operator.getClass().getName().endsWith("SQLOps")) {
           throw new IllegalArgumentException(
               String.format(
-                  "SQL Expressions like %s are not supported in JPQL - the query language for JPA."
-                      + " SQLExpressions.* can only be used in JPQL queries when these functions"
-                      + " are registered as custom function in your ORM.%n\tTo fix this issue, you"
-                      + " have three options:%n\t1) If you do want to use advanced, dialect"
-                      + " specific, SQL functions within JPQL, make sure to make these functions"
-                      + " available to your ORM through custom functions and register these with"
-                      + " your JPATemplates instance.%n\t2) Use JPASQLQuery instead. This allows"
-                      + " you to generate a pure SQL query based on your JPA metamodel.%n\t3)"
-                      + " Consider using the Blaze-Persistence QueryDSL integration."
-                      + " Blaze-Persistence is an extension on top of JPA that makes various SQL"
-                      + " specific functions like window functions available to JPQL.",
+                  """
+                  SQL Expressions like %s are not supported in JPQL - the query language for JPA.\
+                   SQLExpressions.* can only be used in JPQL queries when these functions\
+                   are registered as custom function in your ORM.%n	To fix this issue, you\
+                   have three options:%n	1) If you do want to use advanced, dialect\
+                   specific, SQL functions within JPQL, make sure to make these functions\
+                   available to your ORM through custom functions and register these with\
+                   your JPATemplates instance.%n	2) Use JPASQLQuery instead. This allows\
+                   you to generate a pure SQL query based on your JPA metamodel.%n	3)\
+                   Consider using the Blaze-Persistence QueryDSL integration.\
+                   Blaze-Persistence is an extension on top of JPA that makes various SQL\
+                   specific functions like window functions available to JPQL.\
+                  """,
                   operator.name()),
               e);
         } else {

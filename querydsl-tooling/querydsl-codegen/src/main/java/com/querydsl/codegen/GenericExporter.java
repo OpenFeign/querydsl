@@ -500,11 +500,11 @@ public class GenericExporter {
     }
     if (propertyType == null) {
       propertyType = typeFactory.get(type, annotated, genericType);
-      if (propertyType instanceof EntityType
+      if (propertyType instanceof EntityType entityType
           && !allTypes.containsKey(ClassUtils.getFullName(type))) {
         var fullName = ClassUtils.getFullName(type);
         if (!allTypes.containsKey(fullName)) {
-          allTypes.put(fullName, (EntityType) propertyType);
+          allTypes.put(fullName, entityType);
         }
       }
     }

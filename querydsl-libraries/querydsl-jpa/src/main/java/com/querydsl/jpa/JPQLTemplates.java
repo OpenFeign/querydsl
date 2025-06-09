@@ -212,8 +212,8 @@ public class JPQLTemplates extends Templates {
       return constant.toString();
     } else if (constant instanceof String) {
       return "'" + escapeLiteral(constant.toString()) + "'";
-    } else if (constant instanceof Enum) {
-      return "'" + ((Enum<?>) constant).name() + "'";
+    } else if (constant instanceof Enum enum1) {
+      return "'" + enum1.name() + "'";
     } else {
       return "'" + constant.toString() + "'";
     }

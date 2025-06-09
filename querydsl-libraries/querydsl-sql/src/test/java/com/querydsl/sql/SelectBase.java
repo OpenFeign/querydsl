@@ -38,9 +38,9 @@ import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.mysema.commons.lang.Pair;
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.NonUniqueResultException;
+import com.querydsl.core.Pair;
 import com.querydsl.core.QueryException;
 import com.querydsl.core.QueryExecution;
 import com.querydsl.core.QuerydslModule;
@@ -579,19 +579,11 @@ public abstract class SelectBase extends AbstractBaseTest {
 
     // have to explicitly list these
     // connection.getMetaData().getTypeInfo() is not helpful in this case for most drivers
-    boolean supportsTimeZones;
-    switch (target) {
-      case FIREBIRD:
-      case H2:
-      case HSQLDB:
-      case ORACLE:
-      case SQLSERVER:
-        supportsTimeZones = true;
-        break;
-      default:
-        supportsTimeZones = false;
-        break;
-    }
+    boolean supportsTimeZones =
+        switch (target) {
+          case FIREBIRD, H2, HSQLDB, ORACLE, SQLSERVER -> true;
+          default -> false;
+        };
     if (supportsTimeZones) {
       // java.time.OffsetTime
       // SQL Server does not support TIME WITH TIME ZONE

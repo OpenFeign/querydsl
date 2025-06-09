@@ -222,11 +222,9 @@ public class DefaultConfiguration implements Configuration {
     for (Element element : roundEnv.getElementsAnnotatedWith(Config.class)) {
       var querydslConfig = element.getAnnotation(Config.class);
       var config = SimpleSerializerConfig.getConfig(querydslConfig);
-      if (element instanceof PackageElement) {
-        var packageElement = (PackageElement) element;
+      if (element instanceof PackageElement packageElement) {
         packageToConfig.put(packageElement.getQualifiedName().toString(), config);
-      } else if (element instanceof TypeElement) {
-        var typeElement = (TypeElement) element;
+      } else if (element instanceof TypeElement typeElement) {
         typeToConfig.put(typeElement.getQualifiedName().toString(), config);
       }
     }

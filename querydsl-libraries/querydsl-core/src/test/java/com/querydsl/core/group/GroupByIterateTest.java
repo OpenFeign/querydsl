@@ -19,9 +19,8 @@ import static com.querydsl.core.group.GroupBy.map;
 import static com.querydsl.core.group.GroupBy.set;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mysema.commons.lang.CloseableIterator;
-import com.mysema.commons.lang.IteratorAdapter;
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.CloseableIterator;
+import com.querydsl.core.Pair;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import java.util.Arrays;
@@ -41,7 +40,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
   public void group_order() {
     CloseableIterator<Group> resultsIt =
         BASIC_RESULTS.transform(groupBy(postId).iterate(postName, set(commentId)));
-    List<Group> results = IteratorAdapter.asList(resultsIt);
+    List<Group> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(4);
   }
@@ -52,7 +51,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
     CloseableIterator<Group> resultsIt =
         BASIC_RESULTS.transform(
             groupBy(postId).iterate(postName, set(commentId), list(commentText)));
-    List<Group> results = IteratorAdapter.asList(resultsIt);
+    List<Group> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(4);
 
@@ -70,7 +69,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
     CloseableIterator<Group> resultsIt =
         BASIC_RESULTS.transform(
             groupBy(postId).iterate(postName, set(commentId), list(commentText)));
-    List<Group> results = IteratorAdapter.asList(resultsIt);
+    List<Group> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(4);
 
@@ -87,7 +86,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
     CloseableIterator<Group> resultsIt =
         BASIC_RESULTS.transform(
             groupBy(postId).iterate(postName, set(commentId), list(commentText)));
-    List<Group> results = IteratorAdapter.asList(resultsIt);
+    List<Group> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(4);
 
@@ -101,7 +100,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
     CloseableIterator<Group> resultsIt =
         BASIC_RESULTS.transform(
             groupBy(postId).iterate(postName, set(commentId), list(commentText)));
-    List<Group> results = IteratorAdapter.asList(resultsIt);
+    List<Group> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(4);
 
@@ -114,7 +113,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
   public void map1() {
     CloseableIterator<Group> resultsIt =
         MAP_RESULTS.transform(groupBy(postId).iterate(postName, map(commentId, commentText)));
-    List<Group> results = IteratorAdapter.asList(resultsIt);
+    List<Group> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(4);
 
@@ -128,7 +127,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
   public void map2() {
     CloseableIterator<Map<Integer, String>> resultsIt =
         MAP2_RESULTS.transform(groupBy(postId).iterate(map(commentId, commentText)));
-    List<Map<Integer, String>> results = IteratorAdapter.asList(resultsIt);
+    List<Map<Integer, String>> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(4);
 
@@ -140,7 +139,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
   public void map22() {
     CloseableIterator<Map<Integer, String>> results =
         MAP2_RESULTS.transform(groupBy(postId).iterate(map(commentId, commentText)));
-    List<Map<Integer, String>> actual = IteratorAdapter.asList(results);
+    List<Map<Integer, String>> actual = CloseableIterator.asList(results);
 
     Object commentId = null;
     Map<Integer, String> comments = null;
@@ -168,7 +167,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
   public void map3() {
     CloseableIterator<Map<Integer, Map<Integer, String>>> results =
         MAP3_RESULTS.transform(groupBy(postId).iterate(map(postId, map(commentId, commentText))));
-    List<Map<Integer, Map<Integer, String>>> actual = IteratorAdapter.asList(results);
+    List<Map<Integer, Map<Integer, String>>> actual = CloseableIterator.asList(results);
 
     Object postId = null;
     Map<Integer, Map<Integer, String>> posts = null;
@@ -197,7 +196,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
   public void map4() {
     CloseableIterator<Map<Map<Integer, String>, String>> results =
         MAP4_RESULTS.transform(groupBy(postId).iterate(map(map(postId, commentText), postName)));
-    List<Map<Map<Integer, String>, String>> actual = IteratorAdapter.asList(results);
+    List<Map<Map<Integer, String>, String>> actual = CloseableIterator.asList(results);
 
     Object commentId = null;
     Map<Map<Integer, String>, String> comments = null;
@@ -227,7 +226,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
     CloseableIterator<Group> resultsIt =
         BASIC_RESULTS.transform(
             groupBy(postId).iterate(postName, set(commentId), list(commentText)));
-    List<Group> results = IteratorAdapter.asList(resultsIt);
+    List<Group> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(4);
 
@@ -246,7 +245,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
         POST_W_COMMENTS.transform(
             groupBy(postId)
                 .iterate(Projections.constructor(Post.class, postId, postName, set(qComment))));
-    List<Post> results = IteratorAdapter.asList(resultsIt);
+    List<Post> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(4);
 
@@ -265,7 +264,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
             groupBy(postId)
                 .iterate(
                     Projections.bean(Post.class, postId, postName, set(qComment).as("comments"))));
-    List<Post> results = IteratorAdapter.asList(resultsIt);
+    List<Post> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(4);
 
@@ -287,7 +286,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
                         User.class,
                         userName,
                         Projections.constructor(Post.class, postId, postName, set(qComment)))));
-    List<User> results = IteratorAdapter.asList(resultsIt);
+    List<User> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(2);
 
@@ -310,7 +309,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
                         userName,
                         Projections.bean(Post.class, postId, postName, set(qComment).as("comments"))
                             .as("latestPost"))));
-    List<User> results = IteratorAdapter.asList(resultsIt);
+    List<User> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(2);
 
@@ -333,7 +332,7 @@ public class GroupByIterateTest extends AbstractGroupByTest {
                         userName,
                         Projections.constructor(Post.class, postId, postName, set(qComment))
                             .as("latestPost"))));
-    List<User> results = IteratorAdapter.asList(resultsIt);
+    List<User> results = CloseableIterator.asList(resultsIt);
 
     assertThat(results).hasSize(2);
 

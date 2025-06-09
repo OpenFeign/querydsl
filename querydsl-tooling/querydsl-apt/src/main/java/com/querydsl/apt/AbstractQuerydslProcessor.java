@@ -250,8 +250,8 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     // from class annotations
     for (Class<? extends Annotation> annotation : conf.getEntityAnnotations()) {
       for (Element element : getElements(annotation)) {
-        if (element instanceof TypeElement) {
-          elements.add((TypeElement) element);
+        if (element instanceof TypeElement typeElement) {
+          elements.add(typeElement);
         }
       }
     }
@@ -404,8 +404,8 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   private Set<TypeElement> getTypeFromProperties(Set<TypeElement> parents) {
     Set<TypeElement> elements = new HashSet<>();
     for (Element element : parents) {
-      if (element instanceof TypeElement) {
-        processFromProperties((TypeElement) element, elements);
+      if (element instanceof TypeElement typeElement) {
+        processFromProperties(typeElement, elements);
       }
     }
 
@@ -472,10 +472,10 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
 
   private void processExclusions() {
     for (Element element : getElements(QueryExclude.class)) {
-      if (element instanceof PackageElement) {
-        conf.addExcludedPackage(((PackageElement) element).getQualifiedName().toString());
-      } else if (element instanceof TypeElement) {
-        conf.addExcludedClass(((TypeElement) element).getQualifiedName().toString());
+      if (element instanceof PackageElement packageElement) {
+        conf.addExcludedPackage(packageElement.getQualifiedName().toString());
+      } else if (element instanceof TypeElement typeElement) {
+        conf.addExcludedClass(typeElement.getQualifiedName().toString());
       } else {
         throw new IllegalArgumentException(element.toString());
       }

@@ -13,7 +13,7 @@
  */
 package com.querydsl.jpa;
 
-import com.mysema.commons.lang.CloseableIterator;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.types.FactoryExpression;
 import java.io.Closeable;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class TransformingIterator<T> implements CloseableIterator<T> {
   public TransformingIterator(Iterator<T> iterator, FactoryExpression<?> projection) {
     this.iterator = iterator;
     this.projection = projection;
-    this.closeable = iterator instanceof Closeable ? (Closeable) iterator : null;
+    this.closeable = iterator instanceof Closeable c ? c : null;
   }
 
   public TransformingIterator(

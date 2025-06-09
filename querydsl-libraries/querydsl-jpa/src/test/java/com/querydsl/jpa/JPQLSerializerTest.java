@@ -244,7 +244,10 @@ public class JPQLSerializerTest {
     md.addOrderBy(cat.name.asc().nullsFirst());
     serializer.serialize(md, false, null);
     assertThat(serializer.toString())
-        .isEqualTo("select cat\n" + "from Cat cat\n" + "order by cat.name asc nulls first");
+        .isEqualTo("""
+			select cat
+			from Cat cat
+			order by cat.name asc nulls first""");
   }
 
   @Test
@@ -256,7 +259,10 @@ public class JPQLSerializerTest {
     md.addOrderBy(cat.name.asc().nullsLast());
     serializer.serialize(md, false, null);
     assertThat(serializer.toString())
-        .isEqualTo("select cat\n" + "from Cat cat\n" + "order by cat.name asc nulls last");
+        .isEqualTo("""
+			select cat
+			from Cat cat
+			order by cat.name asc nulls last""");
   }
 
   @SuppressWarnings("unchecked")

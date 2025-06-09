@@ -116,8 +116,8 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
   }
 
   public final S handle(Object arg) {
-    if (arg instanceof Expression) {
-      ((Expression<?>) arg).accept(this, null);
+    if (arg instanceof Expression<?> expression) {
+      expression.accept(this, null);
     } else {
       visitConstant(arg);
     }
@@ -146,8 +146,8 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
   protected void handleTemplate(final Template template, final List<?> args) {
     for (final Template.Element element : template.getElements()) {
       final var rv = element.convert(args);
-      if (rv instanceof Expression) {
-        ((Expression<?>) rv).accept(this, null);
+      if (rv instanceof Expression<?> expression) {
+        expression.accept(this, null);
       } else if (element.isString()) {
         builder.append(rv.toString());
       } else {
@@ -304,10 +304,9 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
       var first = true;
       for (final Template.Element element : template.getElements()) {
         final var rv = element.convert(args);
-        if (rv instanceof Expression) {
-          final Expression<?> expr = (Expression<?>) rv;
-          if (precedence > -1 && expr instanceof Operation) {
-            var op = ((Operation<?>) expr).getOperator();
+        if (rv instanceof Expression<?> expr) {
+          if (precedence > -1 && expr instanceof Operation<?> operation) {
+            var op = operation.getOperator();
             var opPrecedence = templates.getPrecedence(op);
             if (precedence < opPrecedence) {
               append("(").handle(expr).append(")");
@@ -328,9 +327,8 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
       }
     } else if (strict) {
       throw new IllegalArgumentException(
-          String.format(
-              "No pattern found for %s. Make sure to register any custom functions with %s.",
-              operator, templates.getClass()));
+          "No pattern found for %s. Make sure to register any custom functions with %s."
+              .formatted(operator, templates.getClass()));
     } else {
       append(operator.toString());
       append("(");

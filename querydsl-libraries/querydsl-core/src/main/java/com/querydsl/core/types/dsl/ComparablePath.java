@@ -19,6 +19,7 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 
 /**
@@ -32,7 +33,7 @@ import java.lang.reflect.AnnotatedElement;
 public class ComparablePath<T extends Comparable> extends ComparableExpression<T>
     implements Path<T> {
 
-  private static final long serialVersionUID = -7434767743611671666L;
+  @Serial private static final long serialVersionUID = -7434767743611671666L;
 
   private final PathImpl<T> pathMixin;
 

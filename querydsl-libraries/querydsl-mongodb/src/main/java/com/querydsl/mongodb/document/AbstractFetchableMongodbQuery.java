@@ -17,7 +17,7 @@ package com.querydsl.mongodb.document;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mysema.commons.lang.CloseableIterator;
+import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.Fetchable;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryModifiers;

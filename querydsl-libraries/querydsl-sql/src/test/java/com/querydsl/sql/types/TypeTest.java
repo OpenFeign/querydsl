@@ -15,7 +15,7 @@ package com.querydsl.sql.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.Pair;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;

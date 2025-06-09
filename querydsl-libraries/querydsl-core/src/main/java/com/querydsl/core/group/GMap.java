@@ -13,7 +13,8 @@
  */
 package com.querydsl.core.group;
 
-import com.mysema.commons.lang.Pair;
+import com.querydsl.core.Pair;
+import java.io.Serial;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -31,7 +32,7 @@ import java.util.TreeMap;
 public abstract class GMap<K, V, M extends Map<K, V>>
     extends AbstractGroupExpression<Pair<K, V>, M> {
 
-  private static final long serialVersionUID = 7106389414200843920L;
+  @Serial private static final long serialVersionUID = 7106389414200843920L;
 
   GMap(QPair<K, V> qpair) {
     super(Map.class, qpair);
@@ -98,7 +99,7 @@ public abstract class GMap<K, V, M extends Map<K, V>>
   public static class Mixin<K, V, T, U, R extends Map<? super T, ? super U>>
       extends AbstractGroupExpression<Pair<K, V>, R> {
 
-    private static final long serialVersionUID = 1939989270493531116L;
+    @Serial private static final long serialVersionUID = 1939989270493531116L;
 
     private class GroupCollectorImpl implements GroupCollector<Pair<K, V>, R> {
 

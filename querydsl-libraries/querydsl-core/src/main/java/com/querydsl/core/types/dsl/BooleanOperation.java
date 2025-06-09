@@ -20,6 +20,7 @@ import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.PredicateOperation;
 import com.querydsl.core.types.Visitor;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import java.util.List;
  */
 public class BooleanOperation extends BooleanExpression implements Operation<Boolean> {
 
-  private static final long serialVersionUID = 7432281499861357581L;
+  @Serial private static final long serialVersionUID = 7432281499861357581L;
 
   private final PredicateOperation opMixin;
 

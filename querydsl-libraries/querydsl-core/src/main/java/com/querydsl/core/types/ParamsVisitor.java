@@ -78,8 +78,8 @@ public final class ParamsVisitor implements Visitor<Void, QueryMetadata> {
   @Override
   public Void visit(TemplateExpression<?> expr, QueryMetadata context) {
     for (Object arg : expr.getArgs()) {
-      if (arg instanceof Expression<?>) {
-        ((Expression<?>) arg).accept(this, context);
+      if (arg instanceof Expression<?> expression) {
+        expression.accept(this, context);
       }
     }
     return null;

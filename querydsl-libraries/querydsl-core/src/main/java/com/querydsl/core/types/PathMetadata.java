@@ -14,6 +14,7 @@
 package com.querydsl.core.types;
 
 import com.querydsl.core.annotations.Immutable;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 @Immutable
 public final class PathMetadata implements Serializable {
 
-  private static final long serialVersionUID = -1055994185028970065L;
+  @Serial private static final long serialVersionUID = -1055994185028970065L;
 
   private final Object element;
 
@@ -48,8 +49,7 @@ public final class PathMetadata implements Serializable {
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
-    } else if (obj instanceof PathMetadata) {
-      var p = (PathMetadata) obj;
+    } else if (obj instanceof PathMetadata p) {
       return element.equals(p.element)
           && pathType == p.pathType
           && Objects.equals(parent, p.parent);

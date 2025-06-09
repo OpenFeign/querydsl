@@ -15,6 +15,7 @@ package com.querydsl.core.types;
 
 import com.querydsl.core.annotations.Immutable;
 import com.querydsl.core.util.ReflectionUtils;
+import java.io.Serial;
 import java.lang.reflect.AnnotatedElement;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @Immutable
 public class PathImpl<T> extends ExpressionBase<T> implements Path<T> {
 
-  private static final long serialVersionUID = -2498447742798348162L;
+  @Serial private static final long serialVersionUID = -2498447742798348162L;
 
   private final PathMetadata metadata;
 
@@ -53,8 +54,8 @@ public class PathImpl<T> extends ExpressionBase<T> implements Path<T> {
   public final boolean equals(Object o) {
     if (o == this) {
       return true;
-    } else if (o instanceof Path<?>) {
-      return ((Path<?>) o).getMetadata().equals(metadata);
+    } else if (o instanceof Path<?> path) {
+      return path.getMetadata().equals(metadata);
     } else {
       return false;
     }

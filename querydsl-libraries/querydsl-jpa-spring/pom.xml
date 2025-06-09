@@ -5,17 +5,12 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-libraries</artifactId>
-    <version>6.13-SNAPSHOT</version>
+    <version>7.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-jpa-spring</artifactId>
   <name>Querydsl - JPA Spring support</name>
   <description>JPA Spring support for Querydsl</description>
-
-  <properties>
-    <!-- to match spring SDK version -->
-    <main.java.version>17</main.java.version>
-  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -70,8 +65,8 @@
     <dependency>
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
+      <version>${hibernate.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
-
 </project>

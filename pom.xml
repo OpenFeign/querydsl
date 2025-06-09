@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-root</artifactId>
-  <version>6.13-SNAPSHOT</version>
+  <version>7.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>Querydsl</name>
@@ -87,6 +87,9 @@
   </distributionManagement>
 
   <properties>
+    <!-- removing old modules on 7.0 release -->
+    <japicmp.skip>true</japicmp.skip>
+
     <failIfNoTests>false</failIfNoTests>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.homepage>http://www.querydsl.com</project.homepage>
@@ -96,13 +99,13 @@
     <argLine>-Xms256m -Xmx512m</argLine>
 
     <!-- default bytecode version for src/main -->
-    <main.java.version>11</main.java.version>
+    <main.java.version>17</main.java.version>
     <latest.java.version>21</latest.java.version>
 
     <git-code-format-maven-plugin.version>5.3</git-code-format-maven-plugin.version>
 
     <junit.version>5.13.1</junit.version>
-    <ecj.version>3.33.0</ecj.version>
+    <ecj.version>3.40.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
     <springboot.version>3.5.0</springboot.version>
     <spring.version>6.2.7</spring.version>
@@ -125,17 +128,16 @@
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
     <!-- JPA deps -->
-    <hibernate.version>6.6.15.Final</hibernate.version>
+    <hibernate.version>7.0.0.Beta1</hibernate.version>
     <hibernate.validator.version>8.0.2.Final</hibernate.validator.version>
-    <eclipselink.version>4.0.6</eclipselink.version>
-    <jpa.version>3.1.0</jpa.version>
+    <eclipselink.version>5.0.0-B07</eclipselink.version>
+    <jpa.version>3.2.0</jpa.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 
     <assertj.version>3.27.3</assertj.version>
     <mvn.version>3.9.10</mvn.version>
     <guava.version>33.4.8-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
-    <mysema.lang.version>0.2.4</mysema.lang.version>
     <byte-buddy.version>1.17.5</byte-buddy.version>
     <slf4j.version>2.0.17</slf4j.version>
     <surefire.version>3.5.3</surefire.version>
@@ -1081,7 +1083,7 @@
                 <configuration>
                   <exportDatatables>true</exportDatatables>
                   <activeRecipes>
-                    <recipe>org.openrewrite.java.migrate.Java8toJava11</recipe>
+                    <recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe>
                   </activeRecipes>
                 </configuration>
               </execution>
