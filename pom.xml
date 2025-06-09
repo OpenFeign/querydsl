@@ -128,7 +128,7 @@
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
     <!-- JPA deps -->
-    <hibernate.version>7.0.0.CR1</hibernate.version>
+    <hibernate.version>7.0.0.Final</hibernate.version>
     <hibernate.validator.version>8.0.2.Final</hibernate.validator.version>
     <eclipselink.version>5.0.0-B07</eclipselink.version>
     <jpa.version>3.2.0</jpa.version>
@@ -157,6 +157,7 @@
     <osgi.import.package.root>*</osgi.import.package.root>
     <osgi.import.package>${osgi.import.package.root}</osgi.import.package>
 
+    <jacocoArgLine></jacocoArgLine>
     <jacoco.propertyName>jacocoArgLine</jacoco.propertyName>
   </properties>
 
@@ -456,7 +457,7 @@
         <configuration>
           <parameter>
             <excludes>
-              <exclude>com.querydsl.core.annotations.QueryProjection</exclude>          
+              <exclude>com.querydsl.core.annotations.QueryProjection</exclude>
             </excludes>
             <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
             <onlyModified>true</onlyModified>
