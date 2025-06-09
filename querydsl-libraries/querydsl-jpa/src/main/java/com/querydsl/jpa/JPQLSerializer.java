@@ -634,11 +634,7 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
       }
     }
     super.visitOperation(
-        type,
-        (operator == Ops.IN
-            ? com.querydsl.jpa.JPQLOps.MEMBER_OF
-            : com.querydsl.jpa.JPQLOps.NOT_MEMBER_OF),
-        args);
+        type, operator == Ops.IN ? JPQLOps.MEMBER_OF : JPQLOps.NOT_MEMBER_OF, args);
   }
 
   @SuppressWarnings("unchecked")
