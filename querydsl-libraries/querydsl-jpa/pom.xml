@@ -42,6 +42,13 @@
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>org.hibernate.orm</groupId>
+      <artifactId>hibernate-scan-jandex</artifactId>
+      <version>${hibernate.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
       <groupId>jakarta.persistence</groupId>
@@ -92,6 +99,13 @@
           <artifactId>validation-api</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.expressly</groupId>
+      <artifactId>expressly</artifactId>
+      <version>5.0.0</version>
+      <scope>provided</scope>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
