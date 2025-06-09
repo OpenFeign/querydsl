@@ -640,8 +640,10 @@ public final class ExpressionUtils {
         } else if (!escape && ch == '\\') {
           escape = true;
           continue;
-          // } else if (!escape && (ch == '[' || ch == ']' || ch == '^' || ch == '.' || ch == '*')) {
-        } else if (!escape && (ch == '[' || ch == ']' || ch == '^' || ch == '$' || ch == '.' || ch == '*')) {
+          // } else if (!escape && (ch == '[' || ch == ']' || ch == '^' || ch == '.' || ch == '*'))
+          // {
+        } else if (!escape
+            && (ch == '[' || ch == ']' || ch == '^' || ch == '$' || ch == '.' || ch == '*')) {
           throw new QueryException("'" + str + "' can't be converted to like form");
         } else if (escape
             && (ch == 'd' || ch == 'D' || ch == 's' || ch == 'S' || ch == 'w' || ch == 'W')) {
