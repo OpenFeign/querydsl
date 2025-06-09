@@ -13,6 +13,9 @@
  */
 package com.querydsl.mongodb.domain;
 
+import dev.morphia.annotations.Embedded;
+
+@Embedded
 public final class City {
 
   public City() {}

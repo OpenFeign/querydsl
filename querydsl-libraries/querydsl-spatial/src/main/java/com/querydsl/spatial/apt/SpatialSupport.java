@@ -91,8 +91,8 @@ public final class SpatialSupport implements Extension {
   @Override
   public void addSupport(AbstractModule module) {
     registerTypes(module.get(TypeMappings.class));
-    addImports(module, "com.querydsl.spatial.path");
+    addImports(module, "com.querydsl.spatial");
     registerJTSTypes(module.get(TypeMappings.class));
-    addImports(module, "com.querydsl.spatial.jts.path");
+    addImports(module, "com.querydsl.spatial.jts");
   }
 }

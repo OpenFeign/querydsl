@@ -18,12 +18,12 @@ import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.mongodb.MongodbSerializer;
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.mapping.Mapper;
+import com.querydsl.mongodb.document.DocumentUtils;
+import dev.morphia.Datastore;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.Mapper;
 
 /**
  * {@code MorphiaSerializer} extends {@link MongodbSerializer} with Morphia specific annotation
@@ -33,16 +33,21 @@ import org.mongodb.morphia.mapping.Mapper;
  */
 public class MorphiaSerializer extends MongodbSerializer {
 
-  private final Morphia morphia;
+  private final Datastore morphia;
 
-  public MorphiaSerializer(Morphia morphia) {
+  public MorphiaSerializer(Datastore morphia) {
     this.morphia = morphia;
   }
 
   @Override
   public Object visit(Constant<?> expr, Void context) {
     var value = super.visit(expr, context);
-    return morphia.getMapper().toMongoObject(null, null, value);
+
+    // Skip Morphia mapping for primitives
+    if (!morphia.getMapper().isMappable(value.getClass())) {
+      return value;
+    }
+    return DocumentUtils.getAsDocument(morphia, value);
   }
 
   @Override
@@ -86,15 +91,15 @@ public class MorphiaSerializer extends MongodbSerializer {
   }
 
   @Override
-  protected DBRef asReference(Object constant) {
-    Key<?> key = morphia.getMapper().getKey(constant);
-    return morphia.getMapper().keyToDBRef(key);
+  protected DBRef asReference(Object entity) {
+    Object key = morphia.getMapper().getId(entity);
+    return new DBRef(
+        morphia.getMapper().getEntityModel(entity.getClass()).getCollectionName(), key);
   }
 
   @Override
   protected DBRef asReferenceKey(Class<?> entity, Object id) {
-    var collection = morphia.getMapper().getCollectionName(entity);
-    Key<?> key = new Key<Object>(entity, collection, id);
-    return morphia.getMapper().keyToDBRef(key);
+    var collection = morphia.getMapper().getEntityModel(entity).getCollectionName();
+    return new DBRef(collection, id);
   }
 }

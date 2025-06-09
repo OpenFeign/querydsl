@@ -13,9 +13,9 @@
  */
 package com.querydsl.mongodb.domain;
 
+import dev.morphia.annotations.Entity;
 import java.util.List;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Entity;
 
 @Entity
 public class Item extends AbstractEntity {

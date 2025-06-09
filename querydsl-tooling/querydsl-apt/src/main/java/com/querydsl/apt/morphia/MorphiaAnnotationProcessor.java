@@ -19,20 +19,20 @@ import com.querydsl.apt.DefaultConfiguration;
 import com.querydsl.core.annotations.QueryEntities;
 import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.types.Expression;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Transient;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Transient;
 
 /**
  * Annotation processor to create Querydsl query types for Morphia annotated classes
  *
  * @author tiwe
  */
-@SupportedAnnotationTypes({"com.querydsl.core.annotations.*", "org.mongodb.morphia.annotations.*"})
+@SupportedAnnotationTypes({"com.querydsl.core.annotations.*", "dev.morphia.annotations.*"})
 public class MorphiaAnnotationProcessor extends AbstractQuerydslProcessor {
 
   @Override

@@ -6,25 +6,26 @@ val querydslVersion = findProperty("querydsl.version") as String
 val assertjVersion = findProperty("assertj.version") as String
 
 plugins {
-	kotlin("jvm")
-	id("com.google.devtools.ksp")
-	kotlin("plugin.jpa")
-	kotlin("plugin.serialization")
+        kotlin("jvm")
+        id("com.google.devtools.ksp")
+        kotlin("plugin.jpa")
+        kotlin("plugin.serialization")
 }
 
 repositories {
-	mavenCentral()
-	mavenLocal()
+        mavenCentral()
+        mavenLocal()
 }
 
 dependencies {
-	implementation("jakarta.persistence:jakarta.persistence-api:${jpaVersion}")
-	implementation("io.github.openfeign.querydsl:querydsl-core:${querydslVersion}")
-	ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:${querydslVersion}")
-
-	testImplementation("io.github.openfeign.querydsl:querydsl-jpa:${querydslVersion}")
-	testImplementation("org.assertj:assertj-core:${assertjVersion}")
-	testImplementation("org.hibernate.orm:hibernate-core:${hibernateVersion}")
-	testImplementation("com.h2database:h2:${h2Version}")
-	testImplementation("org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}")
+        implementation("jakarta.persistence:jakarta.persistence-api:${jpaVersion}")
+        implementation("io.github.openfeign.querydsl:querydsl-core:${querydslVersion}")
+        implementation("org.hibernate.orm:hibernate-core:${hibernateVersion}")
+        ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:${querydslVersion}")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.0")
+        testImplementation("io.github.openfeign.querydsl:querydsl-jpa:${querydslVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hibernate.orm:hibernate-core:${hibernateVersion}")
+        testImplementation("com.h2database:h2:${h2Version}")
+        testImplementation("org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}")
 }
