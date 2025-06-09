@@ -529,8 +529,21 @@ public final class ExpressionUtils {
       if (matchStartAndEnd && !like.startsWith("%")) {
         rv.append('^');
       }
+      boolean escape = false;
       for (var i = 0; i < like.length(); i++) {
         var ch = like.charAt(i);
+        if (escape) {
+          if (ch == '.' || ch == '*' || ch == '?') {
+            rv.append('\\');
+          }
+          rv.append(ch);
+          escape = false;
+          continue;
+        }
+        if (ch == '\\') {
+          escape = true;
+          continue;
+        }
         if (ch == '.' || ch == '*' || ch == '?') {
           rv.append('\\');
         } else if (ch == '%') {
@@ -601,12 +614,23 @@ public final class ExpressionUtils {
   public static Expression<String> regexToLike(Expression<String> expr) {
     if (expr instanceof Constant<?>) {
       final var str = expr.toString();
-      final var rv = new StringBuilder(str.length() + 2);
+      // final var rv = new StringBuilder(str.length() + 2);
+      int start = 0;
+      int end = str.length();
+      if (start < end && str.charAt(start) == '^') {
+        start++;
+      }
+      if (end > start && str.charAt(end - 1) == '$') {
+        end--;
+      }
+      final var rv = new StringBuilder(end - start + 2);
       var escape = false;
-      for (var i = 0; i < str.length(); i++) {
+      // for (var i = 0; i < str.length(); i++) {
+      for (var i = start; i < end; i++) {
         final var ch = str.charAt(i);
         if (!escape && ch == '.') {
-          if (i < str.length() - 1 && str.charAt(i + 1) == '*') {
+          // if (i < str.length() - 1 && str.charAt(i + 1) == '*') {
+          if (i < end - 1 && str.charAt(i + 1) == '*') {
             rv.append('%');
             i++;
           } else {
@@ -616,16 +640,23 @@ public final class ExpressionUtils {
         } else if (!escape && ch == '\\') {
           escape = true;
           continue;
-        } else if (!escape && (ch == '[' || ch == ']' || ch == '^' || ch == '.' || ch == '*')) {
+          // } else if (!escape && (ch == '[' || ch == ']' || ch == '^' || ch == '.' || ch == '*'))
+          // {
+        } else if (!escape
+            && (ch == '[' || ch == ']' || ch == '^' || ch == '$' || ch == '.' || ch == '*')) {
           throw new QueryException("'" + str + "' can't be converted to like form");
         } else if (escape
             && (ch == 'd' || ch == 'D' || ch == 's' || ch == 'S' || ch == 'w' || ch == 'W')) {
           throw new QueryException("'" + str + "' can't be converted to like form");
         }
+        if (ch == '%' || ch == '_') {
+          rv.append('\\');
+        }
         rv.append(ch);
         escape = false;
       }
-      if (!rv.toString().equals(str)) {
+      // if (!rv.toString().equals(str)) {
+      if (start != 0 || end != str.length() || !rv.toString().equals(str.substring(start, end))) {
         return ConstantImpl.create(rv.toString());
       }
     } else if (expr instanceof Operation<?>) {
