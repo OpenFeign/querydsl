@@ -17,28 +17,14 @@ import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.SerializerBase;
-import com.querydsl.core.types.CollectionExpression;
-import com.querydsl.core.types.Constant;
-import com.querydsl.core.types.ConstantImpl;
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.FactoryExpression;
-import com.querydsl.core.types.MapExpression;
-import com.querydsl.core.types.Operation;
-import com.querydsl.core.types.Operator;
-import com.querydsl.core.types.Ops;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Path;
-import com.querydsl.core.types.PathType;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.MathUtils;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.Metamodel;
 import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -596,8 +582,57 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     return null;
   }
 
+  private boolean isCollectionPathWithConverterToBasicType(Path<?> path, Metamodel metamodel) {
+
+    PathMetadata metadata = path.getMetadata();
+    if (metadata.getPathType() != PathType.PROPERTY
+        || metadata.getParent() == null
+        || !metadata.getParent().getMetadata().isRoot()) {
+      return false;
+    }
+    Class<?> owningEntityJavaType = metadata.getParent().getType();
+    String attributeName = metadata.getName();
+    try {
+      EntityType<?> entityType = metamodel.entity(owningEntityJavaType);
+      Attribute<?, ?> attribute = entityType.getAttribute(attributeName);
+      boolean isJavaCollection =
+          java.util.Collection.class.isAssignableFrom(attribute.getJavaType());
+      boolean isPersistentBasic =
+          attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.BASIC;
+      return isJavaCollection && isPersistentBasic;
+    } catch (IllegalArgumentException e) {
+      System.err.println(
+          "QueryDSL-JPA (DEBUG): Metamodel lookup failed for " + path + ": " + e.getMessage());
+      return false;
+    }
+  }
+
   private void visitAnyInPath(
       Class<?> type, Operator operator, List<? extends Expression<?>> args) {
+    Expression<?> collectionExpression = args.get(1);
+
+    if (this.entityManager != null && collectionExpression instanceof Path<?>) {
+      Path<?> collectionPath = (Path<?>) collectionExpression;
+      jakarta.persistence.metamodel.Metamodel metamodel = this.entityManager.getMetamodel();
+      if (isCollectionPathWithConverterToBasicType(collectionPath, metamodel)) {
+        String effectiveOperatorForMessage =
+            (operator == Ops.IN)
+                ? "MEMBER OF (translated from IN)"
+                : "NOT MEMBER OF (translated from NOT IN)";
+        throw new com.querydsl.core.QueryException(
+            "QueryDSL Error: Path '"
+                + collectionPath
+                + "' is a Java collection mapped via a JPA @Converter to a basic database type. "
+                + "The QueryDSL operation '"
+                + operator.toString()
+                + "' on this path, which would typically translate to JPQL '"
+                + effectiveOperatorForMessage
+                + "', "
+                + "is not supported by JPA/Hibernate for such converted attributes as they are not treated as queryable 'plural paths'. "
+                + "Consider alternative query strategies (e.g., native queries with database-specific functions) "
+                + "or re-evaluate your entity mapping strategy.");
+      }
+    }
     super.visitOperation(
         type, operator == Ops.IN ? JPQLOps.MEMBER_OF : JPQLOps.NOT_MEMBER_OF, args);
   }
