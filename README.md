@@ -25,7 +25,7 @@ Initial goals accomplished.
 
 We now have a stable fork with regular releases.  Patches from community are happening and this project is moving idenpendently.
 
-I'm here to help those who help themselves.  
+#### I'm here to help those who help themselves.  
 
 What does it mean?
 
