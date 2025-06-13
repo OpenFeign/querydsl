@@ -61,6 +61,10 @@ public class ECJEvaluatorFactory extends AbstractEvaluatorFactory {
 
   public static CompilerOptions getDefaultCompilerOptions() {
     var javaSpecVersion = System.getProperty("java.specification.version");
+    // use Java 8 compliance to disable module support and avoid NPE in newer ECJ versions
+    if (!javaSpecVersion.startsWith("1.")) {
+      javaSpecVersion = "1.8";
+    }
     Map<String, String> settings = new HashMap<>();
     settings.put(CompilerOptions.OPTION_Source, javaSpecVersion);
     settings.put(CompilerOptions.OPTION_TargetPlatform, javaSpecVersion);
