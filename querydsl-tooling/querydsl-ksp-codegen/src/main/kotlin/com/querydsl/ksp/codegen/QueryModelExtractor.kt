@@ -3,6 +3,8 @@ package com.querydsl.ksp.codegen
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSFunction
+import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asClassName
@@ -15,17 +17,23 @@ class QueryModelExtractor(
     private val transientClassName = Transient::class.asClassName()
     private val processed = mutableMapOf<String, ModelDeclaration>()
 
-    fun add(classDeclaration: KSClassDeclaration, type: QueryModelType): QueryModel {
-        return lookupOrInsert(classDeclaration) { addNew(classDeclaration, type) }
+    fun addConstructor(classDeclaration: KSClassDeclaration, constructor: KSFunctionDeclaration): QueryModel {
+        return lookupOrInsert(classDeclaration) { addNew(classDeclaration, QueryModelType.QUERY_PROJECTION, constructor) }
             .model
     }
 
-    fun add(classDeclaration: KSClassDeclaration): QueryModel {
+    fun addClass(classDeclaration: KSClassDeclaration, type: QueryModelType): QueryModel {
+        return lookupOrInsert(classDeclaration) { addNew(classDeclaration, type, null) }
+            .model
+    }
+
+    fun addClass(classDeclaration: KSClassDeclaration): QueryModel {
         return lookupOrInsert(classDeclaration) {
             addNew(
                 classDeclaration,
                 QueryModelType.autodetect(classDeclaration)
-                    ?: error("Unable to resolve type of entity for ${classDeclaration.qualifiedName!!.asString()}")
+                    ?: error("Unable to resolve type of entity for ${classDeclaration.qualifiedName!!.asString()}"),
+                null
             )
         }.model
     }
@@ -50,24 +58,47 @@ class QueryModelExtractor(
 
     private fun addNew(
         classDeclaration: KSClassDeclaration,
-        type: QueryModelType
+        type: QueryModelType,
+        constructor: KSFunctionDeclaration?
     ): QueryModel {
-        val queryModel = toQueryModel(classDeclaration, type)
+        val queryModel = toQueryModel(classDeclaration, type, constructor)
         val superclass = classDeclaration.superclassOrNull()
         if (superclass != null) {
-            queryModel.superclass = add(superclass)
+            queryModel.superclass = addClass(superclass)
         }
         return queryModel
     }
 
     private fun processProperties() {
         processed.values.map { modelDeclaration ->
-            val properties = extractProperties(modelDeclaration.declaration)
-            modelDeclaration.model.properties.addAll(properties)
+            val constructor = modelDeclaration.model.constructor
+            if (constructor == null) {
+                val properties = extractPropertiesForClass(modelDeclaration.declaration)
+                modelDeclaration.model.properties.addAll(properties)
+            } else {
+                val properties = extractPropertiesForConstructor(constructor)
+                modelDeclaration.model.properties.addAll(properties)
+            }
         }
     }
 
-    private fun extractProperties(declaration: KSClassDeclaration): List<QProperty> {
+    private fun extractPropertiesForConstructor(declaration: KSFunctionDeclaration): List<QProperty> {
+        return declaration
+            .parameters
+            .map { parameter ->
+                val paramName = parameter.name!!.asString()
+                val extractor = TypeExtractor(
+                    settings,
+                    "${declaration.parent?.location} - $paramName",
+                    parameter.annotations
+                )
+                val type = extractor.extract(parameter.type.resolve())
+                QProperty(paramName, type)
+            }
+            .toList()
+    }
+
+    private fun extractPropertiesForClass(declaration: KSClassDeclaration): List<QProperty> {
         return declaration
             .getDeclaredProperties()
             .filter { !it.isTransient() }
@@ -75,7 +106,11 @@ class QueryModelExtractor(
             .filter { it.hasBackingField }
             .map { property ->
                 val propName = property.simpleName.asString()
-                val extractor = TypeExtractor(settings, property)
+                val extractor = TypeExtractor(
+                    settings,
+                    property.simpleName.asString(),
+                    property.annotations
+                )
                 val type = extractor.extract(property.type.resolve())
                 QProperty(propName, type)
             }
@@ -106,12 +141,13 @@ class QueryModelExtractor(
         return null
     }
 
-    private fun toQueryModel(classDeclaration: KSClassDeclaration, type: QueryModelType): QueryModel {
+    private fun toQueryModel(classDeclaration: KSClassDeclaration, type: QueryModelType, constructor: KSFunctionDeclaration?): QueryModel {
         return QueryModel(
             originalClassName = classDeclaration.toClassName(),
             typeParameterCount = classDeclaration.typeParameters.size,
             className = queryClassName(classDeclaration, settings),
             type = type,
+            constructor = constructor,
             originatingFile = classDeclaration.containingFile
         )
     }

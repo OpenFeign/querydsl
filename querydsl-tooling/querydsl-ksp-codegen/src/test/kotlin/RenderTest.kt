@@ -20,6 +20,7 @@ class RenderTest {
             typeParameterCount = 0,
             className = ClassName("", "QUser"),
             type = QueryModelType.ENTITY,
+            null,
             mockk()
         )
         val properties = listOf(
@@ -55,6 +56,7 @@ class RenderTest {
             typeParameterCount = 0,
             className = ClassName("", "QCat"),
             type = QueryModelType.ENTITY,
+            null,
             mockk()
         )
         val superClass = QueryModel(
@@ -62,6 +64,7 @@ class RenderTest {
             typeParameterCount = 0,
             className = ClassName("", "QAnimal"),
             type = QueryModelType.SUPERCLASS,
+            null,
             mockk()
         )
         model.superclass = superClass
@@ -79,6 +82,7 @@ class RenderTest {
             typeParameterCount = 0,
             className = ClassName("", "QCat"),
             type = QueryModelType.ENTITY,
+            null,
             mockk()
         )
         val superClass = QueryModel(
@@ -86,6 +90,7 @@ class RenderTest {
             typeParameterCount = 0,
             className = ClassName("", "QAnimal"),
             type = QueryModelType.SUPERCLASS,
+            null,
             null
         )
         model.superclass = superClass
@@ -103,6 +108,7 @@ class RenderTest {
             typeParameterCount = 1,
             className = ClassName("", "QArticle"),
             type = QueryModelType.ENTITY,
+            null,
             mockk()
         )
         val typeSpec = QueryModelRenderer.render(model)
@@ -133,6 +139,7 @@ class RenderTest {
             typeParameterCount = 0,
             className = ClassName("", "QAnimal"),
             type = QueryModelType.ENTITY,
+            null,
             mockk()
         )
         animalModel.properties.add(
@@ -143,6 +150,7 @@ class RenderTest {
             typeParameterCount = 0,
             className = ClassName("", "QCat"),
             type = QueryModelType.ENTITY,
+            null,
             mockk()
         )
         catModel.superclass = animalModel
@@ -159,6 +167,7 @@ class RenderTest {
             typeParameterCount = 0,
             className = ClassName("", "QAnimal"),
             type = QueryModelType.ENTITY,
+            null,
             mockk()
         )
         model.properties.add(
@@ -184,6 +193,7 @@ class RenderTest {
             typeParameterCount = 0,
             className = ClassName("", "QCatDTO"),
             type = QueryModelType.QUERY_PROJECTION,
+            null,
             mockk()
         )
         val properties = listOf(

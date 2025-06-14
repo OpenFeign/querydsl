@@ -10,7 +10,8 @@ import jakarta.persistence.Convert
 
 class TypeExtractor(
     private val settings: KspSettings,
-    private val property: KSPropertyDeclaration
+    private val fullPathName: String,
+    private val annotations: Sequence<KSAnnotation>
 ) {
     fun extract(type: KSType): QPropertyType {
         val declaration = type.declaration
@@ -115,7 +116,7 @@ class TypeExtractor(
             ClassName("org.hibernate.annotations", "JdbcTypeCode"),
             Convert::class.asClassName()
         )
-        if (property.annotations.any { userTypeAnnotations.contains(it.annotationType.resolve().toClassName()) }) {
+        if (annotations.any { userTypeAnnotations.contains(it.annotationType.resolve().toClassName()) }) {
             return QPropertyType.Unknown(type.toClassNameSimple(), type.toTypeName())
         } else {
             return null
@@ -129,7 +130,7 @@ class TypeExtractor(
     }
 
     private fun throwError(message: String): Nothing {
-        error("Error processing ${property.qualifiedName!!.asString()}: $message")
+        error("Error processing $fullPathName: $message")
     }
 }
 

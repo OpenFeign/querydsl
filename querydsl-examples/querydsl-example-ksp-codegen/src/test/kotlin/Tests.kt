@@ -1,7 +1,10 @@
+import com.querydsl.example.ksp.Bear
 import com.querydsl.example.ksp.Cat
 import com.querydsl.example.ksp.CatType
 import com.querydsl.example.ksp.Dog
 import com.querydsl.example.ksp.Person
+import com.querydsl.example.ksp.QBear
+import com.querydsl.example.ksp.QBearSimplifiedProjection
 import com.querydsl.example.ksp.QCat
 import com.querydsl.example.ksp.QDog
 import com.querydsl.example.ksp.QPerson
@@ -14,6 +17,8 @@ import org.hibernate.cfg.AvailableSettings
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import org.hibernate.cfg.Configuration
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.primaryConstructor
 import kotlin.test.Test
 
 class Tests {
@@ -166,6 +171,43 @@ class Tests {
     }
 
     @Test
+    fun `query projection with excluded property`() {
+        val emf = initialize()
+
+        run {
+            val em = emf.createEntityManager()
+            em.transaction.begin()
+            em.persist(Bear(424, "Winnie", "The forest"))
+            em.transaction.commit()
+            em.close()
+        }
+
+        run {
+            val em = emf.createEntityManager()
+            val queryFactory = JPAQueryFactory(em)
+            val q = QBear.bear
+            val bearProjection = queryFactory
+                .select(QBearSimplifiedProjection(q.id, q.name))
+                .from(q)
+                .where(q.name.eq("Winnie"))
+                .fetchOne()
+            if (bearProjection == null) {
+                fail<Any>("No bear was returned")
+            } else {
+                assertThat(bearProjection.id).isEqualTo(424)
+                assertThat(bearProjection.name).isEqualTo("Winnie")
+            }
+            em.close()
+        }
+    }
+
+    @Test
+    fun `query projection exclude property from constructor`() {
+        assertThat(Bear::class.declaredMemberProperties.count()).isEqualTo(3)
+        assertThat(QBearSimplifiedProjection::class.primaryConstructor!!.parameters.count()).isEqualTo(2)
+    }
+
+    @Test
     fun `create and query dog with jsonb tag`() {
         val emf = initialize()
 
@@ -215,6 +257,7 @@ class Tests {
             .addAnnotatedClass(Person::class.java)
             .addAnnotatedClass(Cat::class.java)
             .addAnnotatedClass(Dog::class.java)
+            .addAnnotatedClass(Bear::class.java)
 
         return configuration
             .buildSessionFactory()
