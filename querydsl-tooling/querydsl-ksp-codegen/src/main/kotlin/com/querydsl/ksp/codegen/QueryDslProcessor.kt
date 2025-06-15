@@ -18,7 +18,7 @@ class QueryDslProcessor(
         if (settings.enable) {
             QueryModelType.entries.forEach { type ->
                 resolver.getSymbolsWithAnnotation(type.associatedAnnotation)
-                    .map { declaration ->
+                    .forEach { declaration ->
                         when {
                             type == QueryModelType.QUERY_PROJECTION -> {
                                 val errorMessage = "${type.associatedAnnotation} annotation" +
@@ -26,23 +26,29 @@ class QueryDslProcessor(
                                 when (declaration) {
                                     is KSFunctionDeclaration -> {
                                         if (!declaration.isConstructor()) error(errorMessage)
-                                        declaration.parent as? KSClassDeclaration
+                                        val parentDeclaration = declaration.parent as? KSClassDeclaration
                                             ?: error(errorMessage)
+                                        if (isIncluded(parentDeclaration)) {
+                                            typeProcessor.addConstructor(parentDeclaration, declaration)
+                                        }
                                     }
-
-                                    is KSClassDeclaration -> declaration
+                                    is KSClassDeclaration -> {
+                                        if (isIncluded(declaration)) {
+                                            typeProcessor.addClass(declaration, type)
+                                        }
+                                    }
                                     else -> error(errorMessage)
                                 }
                             }
-
-                            else -> declaration as KSClassDeclaration
+                            declaration is KSClassDeclaration -> {
+                                if (isIncluded(declaration)) {
+                                    typeProcessor.addClass(declaration, type)
+                                }
+                            }
+                            else -> {
+                                error("Annotated element was expected to be class or constructor, instead got ${declaration}")
+                            }
                         }
-                    }
-                    .filter {
-                        isIncluded(it)
-                    }
-                    .forEach { declaration ->
-                        typeProcessor.add(declaration, type)
                     }
             }
         }
