@@ -90,7 +90,7 @@
     <dependency>
       <groupId>net.postgis</groupId>
       <artifactId>postgis-jdbc</artifactId>
-      <version>2025.1.0</version>
+      <version>2025.1.1</version>
       <optional>true</optional>
     </dependency>
     <dependency>
