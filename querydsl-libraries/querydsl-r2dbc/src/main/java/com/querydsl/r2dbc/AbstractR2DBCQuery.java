@@ -283,9 +283,6 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
     if (connProvider != null) {
       return connProvider.getConnection();
     }
-    if (conn != null) {
-      return Mono.just(conn);
-    }
     return Mono.error(new IllegalStateException("No connection provided"));
   }
 
