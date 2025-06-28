@@ -43,6 +43,8 @@ import java.util.Map;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@code DefaultEvaluatorFactory} provides Java source templates for evaluation of {@link
@@ -51,6 +53,8 @@ import org.jetbrains.annotations.Nullable;
  * @author tiwe
  */
 public class DefaultEvaluatorFactory {
+
+  private static final Logger logger = LoggerFactory.getLogger(DefaultEvaluatorFactory.class);
 
   private final EvaluatorFactory factory;
 
@@ -151,7 +155,8 @@ public class DefaultEvaluatorFactory {
     ser.append("        if (").handle(filter).append(") {\n");
     ser.append("            rv.add(" + source + ");\n");
     ser.append("        }\n");
-    ser.append("    } catch (NullPointerException npe) { }\n");
+    ser.append(
+        "    } catch (NullPointerException npe) { logger.debug(\"Caught NullPointerException, treating as false\", npe); }\n");
     ser.append("}\n");
     ser.append("return rv;");
 
@@ -257,7 +262,8 @@ public class DefaultEvaluatorFactory {
       }
       ser.append("    rv.add(new Object[]{" + vars + "});\n");
       ser.append("}\n");
-      ser.append("} catch (NullPointerException npe) { }\n");
+      ser.append(
+          "} catch (NullPointerException npe) { logger.debug(\"Caught NullPointerException, treating as false\", npe); }\n");
     } else {
       ser.append("rv.add(new Object[]{" + vars + "});\n");
     }
