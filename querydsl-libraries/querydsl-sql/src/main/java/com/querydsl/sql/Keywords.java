@@ -28,7 +28,9 @@ public final class Keywords {
   private static Set<String> readLines(String path) {
     try (var bufferedReader =
         new BufferedReader(
-            new InputStreamReader(Keywords.class.getResourceAsStream("/keywords/" + path))); ) {
+      new InputStreamReader(
+          Keywords.class.getResourceAsStream("/keywords/" + path),
+          java.nio.charset.StandardCharsets.UTF_8)); ) {
       return bufferedReader
           .lines()
           .filter(line -> !line.isEmpty() && !line.startsWith("#"))
