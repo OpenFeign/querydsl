@@ -17,7 +17,12 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.tools.JavaFileManager;
+
+import com.google.common.collect.MapMaker;
 
 /**
  * @author tiwe
@@ -26,13 +31,13 @@ public final class MemFileSystemRegistry {
 
   public static final MemFileSystemRegistry DEFAULT = new MemFileSystemRegistry();
 
-  private final Map<JavaFileManager, String> jfm2prefix = new WeakHashMap<>();
+  private final ConcurrentMap<JavaFileManager, String> jfm2prefix = new MapMaker().weakKeys().makeMap();
 
-  private Map<String, WeakReference<JavaFileManager>> prefix2jfm = new WeakHashMap<>();
+  private ConcurrentMap<String, WeakReference<JavaFileManager>> prefix2jfm = new MapMaker().weakValues().makeMap();
 
   private final String protocolName;
 
-  private int sequence = 0;
+  private final AtomicInteger sequence = new AtomicInteger();
 
   private MemFileSystemRegistry() {
     var pkgName = MemFileSystemRegistry.class.getPackage().getName();
@@ -53,13 +58,12 @@ public final class MemFileSystemRegistry {
   }
 
   public String getUrlPrefix(JavaFileManager jfm) {
-    if (jfm2prefix.containsKey(jfm)) {
-      return jfm2prefix.get(jfm);
-    } else {
-      var result = protocolName + "://jfm" + (sequence++) + "/";
-      jfm2prefix.put(jfm, result);
-      prefix2jfm.put(result, new WeakReference<>(jfm));
-      return result;
-    }
+    return jfm2prefix.computeIfAbsent(
+        jfm,
+        key -> {
+          var result = protocolName + "://jfm" + sequence.getAndIncrement() + "/";
+          prefix2jfm.put(result, new WeakReference<>(key));
+          return result;
+        });
   }
 }

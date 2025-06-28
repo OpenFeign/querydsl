@@ -13,6 +13,7 @@
  */
 package com.querydsl.core.types;
 
+import com.google.common.collect.MapMaker;
 import com.querydsl.core.types.Template.Element;
 import com.querydsl.core.util.CollectionUtils;
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -59,7 +61,7 @@ public class TemplateFactory {
           \\}\
           """);
 
-  private final Map<String, Template> cache = Collections.synchronizedMap(new WeakHashMap<>());
+  private final ConcurrentMap<String, Template> cache = new MapMaker().weakKeys().makeMap();
 
   private final char escape;
 
@@ -190,87 +192,85 @@ public class TemplateFactory {
   }
 
   public Template create(String template) {
-    if (cache.containsKey(template)) {
-      return cache.get(template);
-    } else {
-      var m = elementPattern.matcher(template);
-      final List<Element> elements = new ArrayList<>();
-      var end = 0;
-      while (m.find()) {
-        if (m.start() > end) {
-          elements.add(new Template.StaticText(template.substring(end, m.start())));
-        }
-        var premodifiers = m.group(1).toLowerCase(Locale.ENGLISH);
-        var index = Integer.parseInt(m.group(2));
-        var postmodifiers = m.group(6).toLowerCase(Locale.ENGLISH);
-        var asString = false;
-        Function<Object, Object> transformer = null;
-        switch (premodifiers.length()) {
-          case 1:
-            transformer = toEndsWithViaLike;
-            break;
-          case 2:
-            transformer = toEndsWithViaLikeLower;
-            break;
-        }
-        switch (postmodifiers.length()) {
-          case 1:
-            switch (postmodifiers.charAt(0)) {
-              case '%':
-                if (transformer == null) {
-                  transformer = toStartsWithViaLike;
-                } else {
-                  transformer = toContainsViaLike;
+    return cache.computeIfAbsent(
+        template,
+        t -> {
+          var m = elementPattern.matcher(t);
+          final List<Element> elements = new ArrayList<>();
+          var end = 0;
+          while (m.find()) {
+            if (m.start() > end) {
+              elements.add(new Template.StaticText(t.substring(end, m.start())));
+            }
+            var premodifiers = m.group(1).toLowerCase(Locale.ENGLISH);
+            var index = Integer.parseInt(m.group(2));
+            var postmodifiers = m.group(6).toLowerCase(Locale.ENGLISH);
+            var asString = false;
+            Function<Object, Object> transformer = null;
+            switch (premodifiers.length()) {
+              case 1:
+                transformer = toEndsWithViaLike;
+                break;
+              case 2:
+                transformer = toEndsWithViaLikeLower;
+                break;
+            }
+            switch (postmodifiers.length()) {
+              case 1:
+                switch (postmodifiers.charAt(0)) {
+                  case '%':
+                    if (transformer == null) {
+                      transformer = toStartsWithViaLike;
+                    } else {
+                      transformer = toContainsViaLike;
+                    }
+                    break;
+                  case 'l':
+                    transformer = toLowerCase;
+                    break;
+                  case 'u':
+                    transformer = toUpperCase;
+                    break;
+                  case 's':
+                    asString = true;
+                    break;
                 }
                 break;
-              case 'l':
-                transformer = toLowerCase;
-                break;
-              case 'u':
-                transformer = toUpperCase;
-                break;
-              case 's':
-                asString = true;
+              case 2:
+                if (transformer == null) {
+                  transformer = toStartsWithViaLikeLower;
+                } else {
+                  transformer = toContainsViaLikeLower;
+                }
                 break;
             }
-            break;
-          case 2:
-            if (transformer == null) {
-              transformer = toStartsWithViaLikeLower;
+            if (m.group(4) != null) {
+              var operator = OPERATORS.get(m.group(3));
+              var index2 = Integer.parseInt(m.group(4));
+              elements.add(new Template.Operation(index, index2, operator, asString));
+            } else if (m.group(5) != null) {
+              var operator = OPERATORS.get(m.group(3));
+              Number number;
+              if (m.group(5).contains(".")) {
+                number = new BigDecimal(m.group(5));
+              } else {
+                number = Integer.valueOf(m.group(5));
+              }
+              elements.add(new Template.OperationConst(index, number, operator, asString));
+            } else if (asString) {
+              elements.add(new Template.AsString(index));
+            } else if (transformer != null) {
+              elements.add(new Template.Transformed(index, transformer));
             } else {
-              transformer = toContainsViaLikeLower;
+              elements.add(new Template.ByIndex(index));
             }
-            break;
-        }
-        if (m.group(4) != null) {
-          var operator = OPERATORS.get(m.group(3));
-          var index2 = Integer.parseInt(m.group(4));
-          elements.add(new Template.Operation(index, index2, operator, asString));
-        } else if (m.group(5) != null) {
-          var operator = OPERATORS.get(m.group(3));
-          Number number;
-          if (m.group(5).contains(".")) {
-            number = new BigDecimal(m.group(5));
-          } else {
-            number = Integer.valueOf(m.group(5));
+            end = m.end();
           }
-          elements.add(new Template.OperationConst(index, number, operator, asString));
-        } else if (asString) {
-          elements.add(new Template.AsString(index));
-        } else if (transformer != null) {
-          elements.add(new Template.Transformed(index, transformer));
-        } else {
-          elements.add(new Template.ByIndex(index));
-        }
-        end = m.end();
-      }
-      if (end < template.length()) {
-        elements.add(new Template.StaticText(template.substring(end)));
-      }
-      var rv = new Template(template, CollectionUtils.unmodifiableList(elements));
-      cache.put(template, rv);
-      return rv;
-    }
+          if (end < t.length()) {
+            elements.add(new Template.StaticText(t.substring(end)));
+          }
+          return new Template(t, CollectionUtils.unmodifiableList(elements));
+        });
   }
 
   public String escapeForLike(String str) {

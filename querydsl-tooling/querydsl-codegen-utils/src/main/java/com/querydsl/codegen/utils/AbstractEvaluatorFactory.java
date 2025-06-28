@@ -13,6 +13,7 @@
  */
 package com.querydsl.codegen.utils;
 
+import com.google.common.collect.MapMaker;
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Parameter;
 import com.querydsl.codegen.utils.model.SimpleType;
@@ -25,13 +26,14 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author tiwe
  */
 public abstract class AbstractEvaluatorFactory implements EvaluatorFactory {
 
-  private final Map<String, Method> cache = new WeakHashMap<>();
+  private final ConcurrentMap<String, Method> cache = new MapMaker().weakValues().makeMap();
 
   protected ClassLoader loader;
 

@@ -25,6 +25,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -39,7 +41,7 @@ public class ListPath<E, Q extends SimpleExpression<? super E>>
 
   @Serial private static final long serialVersionUID = 3302301599074388860L;
 
-  private final Map<Integer, Q> cache = new HashMap<>();
+  private final Map<Integer, Q> cache = new ConcurrentHashMap<>();
 
   private final Class<E> elementType;
 
@@ -105,13 +107,7 @@ public class ListPath<E, Q extends SimpleExpression<? super E>>
 
   @Override
   public Q get(int index) {
-    if (cache.containsKey(index)) {
-      return cache.get(index);
-    } else {
-      var rv = create(index);
-      cache.put(index, rv);
-      return rv;
-    }
+    return cache.computeIfAbsent(index, this::create);
   }
 
   @Override
