@@ -18,6 +18,7 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -698,6 +699,20 @@ public final class SQLExpressions {
    */
   public static WithinGroup<String> listagg(Expression<?> expr, String delimiter) {
     return new WithinGroup<>(String.class, SQLOps.LISTAGG, expr, ConstantImpl.create(delimiter));
+  }
+
+  /**
+   * PostgreSQL specific string_agg aggregate function.
+   *
+   * <p>Use {@link WithinGroup#withinGroup()} followed by {@link WithinGroup.OrderBy#orderBy(OrderSpecifier...)}
+   * to specify the ORDER BY clause.</p>
+   *
+   * @param expr expression to be aggregated
+   * @param delimiter delimiter string
+   * @return string_agg(expr, delimiter)
+   */
+  public static WithinGroup<String> stringAgg(Expression<?> expr, String delimiter) {
+    return new WithinGroup<>(String.class, SQLOps.GROUP_CONCAT2, expr, ConstantImpl.create(delimiter));
   }
 
   /**
