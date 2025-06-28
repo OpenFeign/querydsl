@@ -85,23 +85,40 @@ class JavaTypeMapping {
     try {
       Class.forName("java.time.Instant");
       registerDefault(
-          (Type<?, ?>) Class.forName("com.querydsl.r2dbc.types.JSR310InstantType").newInstance());
+          (Type<?, ?>)
+              Class.forName("com.querydsl.r2dbc.types.JSR310InstantType")
+                  .getDeclaredConstructor()
+                  .newInstance());
       registerDefault(
           (Type<?, ?>)
-              Class.forName("com.querydsl.r2dbc.types.JSR310LocalDateTimeType").newInstance());
-      registerDefault(
-          (Type<?, ?>) Class.forName("com.querydsl.r2dbc.types.JSR310LocalDateType").newInstance());
-      registerDefault(
-          (Type<?, ?>) Class.forName("com.querydsl.r2dbc.types.JSR310LocalTimeType").newInstance());
+              Class.forName("com.querydsl.r2dbc.types.JSR310LocalDateTimeType")
+                  .getDeclaredConstructor()
+                  .newInstance());
       registerDefault(
           (Type<?, ?>)
-              Class.forName("com.querydsl.r2dbc.types.JSR310OffsetDateTimeType").newInstance());
+              Class.forName("com.querydsl.r2dbc.types.JSR310LocalDateType")
+                  .getDeclaredConstructor()
+                  .newInstance());
       registerDefault(
           (Type<?, ?>)
-              Class.forName("com.querydsl.r2dbc.types.JSR310OffsetTimeType").newInstance());
+              Class.forName("com.querydsl.r2dbc.types.JSR310LocalTimeType")
+                  .getDeclaredConstructor()
+                  .newInstance());
       registerDefault(
           (Type<?, ?>)
-              Class.forName("com.querydsl.r2dbc.types.JSR310ZonedDateTimeType").newInstance());
+              Class.forName("com.querydsl.r2dbc.types.JSR310OffsetDateTimeType")
+                  .getDeclaredConstructor()
+                  .newInstance());
+      registerDefault(
+          (Type<?, ?>)
+              Class.forName("com.querydsl.r2dbc.types.JSR310OffsetTimeType")
+                  .getDeclaredConstructor()
+                  .newInstance());
+      registerDefault(
+          (Type<?, ?>)
+              Class.forName("com.querydsl.r2dbc.types.JSR310ZonedDateTimeType")
+                  .getDeclaredConstructor()
+                  .newInstance());
     } catch (ClassNotFoundException e) {
       // converters for JSR 310 are not loaded
     } catch (InstantiationException e) {

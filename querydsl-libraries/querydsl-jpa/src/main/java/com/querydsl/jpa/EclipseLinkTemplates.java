@@ -32,7 +32,11 @@ public class EclipseLinkTemplates extends JPQLTemplates {
   static {
     QueryHandler instance;
     try {
-      instance = (QueryHandler) Class.forName("com.querydsl.jpa.EclipseLinkHandler").newInstance();
+      instance =
+          (QueryHandler)
+              Class.forName("com.querydsl.jpa.EclipseLinkHandler")
+                  .getDeclaredConstructor()
+                  .newInstance();
     } catch (NoClassDefFoundError | Exception e) {
       instance = DefaultQueryHandler.DEFAULT;
     }

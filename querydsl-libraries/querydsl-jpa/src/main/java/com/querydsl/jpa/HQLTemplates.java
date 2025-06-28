@@ -36,7 +36,11 @@ public class HQLTemplates extends JPQLTemplates {
   static {
     QueryHandler instance;
     try {
-      instance = (QueryHandler) Class.forName("com.querydsl.jpa.HibernateHandler").newInstance();
+      instance =
+          (QueryHandler)
+              Class.forName("com.querydsl.jpa.HibernateHandler")
+                  .getDeclaredConstructor()
+                  .newInstance();
     } catch (NoClassDefFoundError | Exception e) {
       instance = DefaultQueryHandler.DEFAULT;
     }
