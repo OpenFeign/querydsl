@@ -103,17 +103,28 @@ public final class Connections {
   }
 
   public static R2DBCConnectionProvider getMySQL() {
-    var url = "r2dbc:mysql://querydsl:querydsl@localhost:3306/querydsl?useLegacyDatetimeCode=false";
+    var username = System.getProperty("mysql.username", "querydsl");
+    var password = System.getProperty("mysql.password", "querydsl");
+    var url =
+        "r2dbc:mysql://"
+            + username
+            + ":"
+            + password
+            + "@localhost:3306/querydsl?useLegacyDatetimeCode=false";
     return getR2DBCConnectionProvider(url);
   }
 
   public static R2DBCConnectionProvider getPostgreSQL() {
-    var url = "r2dbc:postgresql://querydsl:querydsl@localhost:5433/querydsl";
+    var username = System.getProperty("postgresql.username", "querydsl");
+    var password = System.getProperty("postgresql.password", "querydsl");
+    var url = "r2dbc:postgresql://" + username + ":" + password + "@localhost:5433/querydsl";
     return getR2DBCConnectionProvider(url);
   }
 
   public static R2DBCConnectionProvider getSQLServer() {
-    var url = "r2dbc:mssql://sa:Password1!@localhost:1433/tempdb";
+    var username = System.getProperty("sqlserver.username", "sa");
+    var password = System.getProperty("sqlserver.password", "Password1!");
+    var url = "r2dbc:mssql://" + username + ":" + password + "@localhost:1433/tempdb";
     return getR2DBCConnectionProvider(url);
   }
 

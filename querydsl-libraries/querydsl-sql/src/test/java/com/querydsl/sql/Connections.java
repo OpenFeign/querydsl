@@ -105,7 +105,9 @@ public final class Connections {
   private static Connection getDB2() throws SQLException, ClassNotFoundException {
     Class.forName("com.ibm.db2.jcc.DB2Driver");
     var url = "jdbc:db2://localhost:50000/sample";
-    return DriverManager.getConnection(url, "db2inst1", "a3sd!fDj");
+    var username = System.getProperty("db2.username", "db2inst1");
+    var password = System.getProperty("db2.password", "a3sd!fDj");
+    return DriverManager.getConnection(url, username, password);
   }
 
   private static Connection getDerby() throws SQLException, ClassNotFoundException {
@@ -117,7 +119,9 @@ public final class Connections {
   private static Connection getFirebird() throws SQLException, ClassNotFoundException {
     Class.forName("org.firebirdsql.jdbc.FBDriver");
     var url = "jdbc:firebirdsql:localhost/3050:/firebird/data/querydsl.fdb";
-    return DriverManager.getConnection(url, "sysdba", "masterkey");
+    var username = System.getProperty("firebird.username", "sysdba");
+    var password = System.getProperty("firebird.password", "masterkey");
+    return DriverManager.getConnection(url, username, password);
   }
 
   private static Connection getHSQL() throws SQLException, ClassNotFoundException {
@@ -135,26 +139,34 @@ public final class Connections {
   private static Connection getMySQL() throws SQLException, ClassNotFoundException {
     Class.forName("com.mysql.jdbc.Driver");
     var url = "jdbc:mysql://localhost:3306/querydsl?useLegacyDatetimeCode=false";
-    return DriverManager.getConnection(url, "querydsl", "querydsl");
+    var username = System.getProperty("mysql.username", "querydsl");
+    var password = System.getProperty("mysql.password", "querydsl");
+    return DriverManager.getConnection(url, username, password);
   }
 
   private static Connection getOracle() throws SQLException, ClassNotFoundException {
     Class.forName("oracle.jdbc.driver.OracleDriver");
     var url = "jdbc:oracle:thin:@localhost:1521/XEPDB1";
-    return DriverManager.getConnection(url, "querydsl", "querydsl");
+    var username = System.getProperty("oracle.username", "querydsl");
+    var password = System.getProperty("oracle.password", "querydsl");
+    return DriverManager.getConnection(url, username, password);
   }
 
   private static Connection getPostgreSQL() throws ClassNotFoundException, SQLException {
     Class.forName("org.postgresql.Driver");
     var url = "jdbc:postgresql://localhost:5432/querydsl";
-    return DriverManager.getConnection(url, "querydsl", "querydsl");
+    var username = System.getProperty("postgresql.username", "querydsl");
+    var password = System.getProperty("postgresql.password", "querydsl");
+    return DriverManager.getConnection(url, username, password);
   }
 
   private static Connection getSQLServer() throws ClassNotFoundException, SQLException {
     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
     var url =
         "jdbc:sqlserver://localhost:1433;databaseName=tempdb;sendTimeAsDatetime=false;trustServerCertificate=true";
-    return DriverManager.getConnection(url, "sa", "Password1!");
+    var username = System.getProperty("sqlserver.username", "sa");
+    var password = System.getProperty("sqlserver.password", "Password1!");
+    return DriverManager.getConnection(url, username, password);
   }
 
   private static Connection getCubrid() throws ClassNotFoundException, SQLException {
@@ -171,7 +183,9 @@ public final class Connections {
 
   private static Connection getTeradata() throws SQLException, ClassNotFoundException {
     Class.forName("com.teradata.jdbc.TeraDriver");
-    return DriverManager.getConnection("jdbc:teradata://teradata/dbc", "querydsl", "querydsl");
+    var username = System.getProperty("teradata.username", "querydsl");
+    var password = System.getProperty("teradata.password", "querydsl");
+    return DriverManager.getConnection("jdbc:teradata://teradata/dbc", username, password);
   }
 
   private static CreateTableClause createTable(SQLTemplates templates, String table) {

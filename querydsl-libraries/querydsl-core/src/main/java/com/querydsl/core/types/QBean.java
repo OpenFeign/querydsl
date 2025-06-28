@@ -243,7 +243,11 @@ public class QBean<T> extends FactoryExpressionBase<T> {
   }
 
   protected <T> T create(Class<T> type) throws IllegalAccessException, InstantiationException {
-    return type.newInstance();
+    try {
+      return type.getDeclaredConstructor().newInstance();
+    } catch (NoSuchMethodException | InvocationTargetException e) {
+      throw new InstantiationException(e.getMessage());
+    }
   }
 
   /**
