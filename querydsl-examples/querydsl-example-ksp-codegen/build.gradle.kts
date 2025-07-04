@@ -22,6 +22,7 @@ dependencies {
         implementation("io.github.openfeign.querydsl:querydsl-core:${querydslVersion}")
         implementation("org.hibernate.orm:hibernate-core:${hibernateVersion}")
         ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:${querydslVersion}")
+        implementation("org.locationtech.jts:jts-core:1.19.0")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.0")
         testImplementation("io.github.openfeign.querydsl:querydsl-jpa:${querydslVersion}")
         testImplementation("org.assertj:assertj-core:${assertjVersion}")

@@ -7,6 +7,7 @@ import com.querydsl.example.ksp.QBear
 import com.querydsl.example.ksp.QBearSimplifiedProjection
 import com.querydsl.example.ksp.QCat
 import com.querydsl.example.ksp.QDog
+import com.querydsl.example.ksp.QGeolocation
 import com.querydsl.example.ksp.QPerson
 import com.querydsl.example.ksp.QPersonClassDTO
 import com.querydsl.example.ksp.QPersonClassConstructorDTO
@@ -246,6 +247,16 @@ class Tests {
 
             em.close()
         }
+    }
+
+    @Test
+    fun `is detecting comparable interface on unknown type`() {
+        val locationTypeName = QGeolocation::class
+            .members
+            .first { it.name == "location" }
+            .returnType
+            .toString()
+        assertThat(locationTypeName).isEqualTo("com.querydsl.core.types.dsl.ComparablePath<org.locationtech.jts.geom.Point>")
     }
 
     private fun initialize(): EntityManagerFactory {
