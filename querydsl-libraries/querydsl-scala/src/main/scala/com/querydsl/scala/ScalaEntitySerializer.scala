@@ -24,7 +24,7 @@ import com.querydsl.codegen.utils.{CodeWriter, ScalaWriter}
 import com.querydsl.codegen._
 import com.querydsl.core.types._
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.immutable.Map
 import scala.collection.mutable.Set
 
@@ -62,7 +62,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
     var importedClasses = getAnnotationTypes(model)
     if (model.hasLists) importedClasses.add(classOf[java.util.List[_]].getName)
     if (model.hasMaps)  importedClasses.add(classOf[java.util.Map[_, _]].getName)
-    writer.importClasses(importedClasses.toArray: _*)
+    writer.importClasses(importedClasses.toSeq: _*)
 
     writeHeader(model, scalaWriter)
 
@@ -117,13 +117,13 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
   }
 
   def writeAnnotations(model: EntityType, queryType: Type, writer: ScalaWriter) = {
-    model.getAnnotations.foreach(writer.annotation)
+    model.getAnnotations.asScala.foreach(writer.annotation)
   }
 
   def writeAdditionalCompanionContent(model: EntityType, writer: ScalaWriter) = {}
 
   private def getEntityProperties(model: EntityType, writer: CodeWriter,
-      properties: Collection[Property]) = {
+      properties: Iterable[Property]) = {
     for (property <- properties if property.getType.getCategory == ENTITY) yield {
       val queryType = typeMappings.getPathType(property.getType, model, false)
       val typeName = writer.getRawName(queryType)
@@ -133,7 +133,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
   }
 
   private def getOtherProperties(model: EntityType, writer: CodeWriter,
-      properties: Collection[Property]) = {
+      properties: Iterable[Property]) = {
     for (property <- properties if property.getType.getCategory != ENTITY) yield {
       val name = normalizeProperty(property.getName)
       val methodName: String = "create" + methodNames(property.getType.getCategory)
@@ -175,10 +175,10 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
 
   def serializeProperties(model: EntityType, writer: CodeWriter, properties: Collection[Property]) {
     // entity properties
-    getEntityProperties(model, writer, properties) foreach (writer.line(_, "\n"))
+    getEntityProperties(model, writer, properties.asScala) foreach (writer.line(_, "\n"))
 
     // other properties
-    getOtherProperties(model, writer, properties) foreach { case (propertyName, value) =>
+    getOtherProperties(model, writer, properties.asScala) foreach { case (propertyName, value) =>
       writer.line("val ", escape(propertyName), " = ", value, "\n")
     }
   }
@@ -190,7 +190,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
   }
 
   def getAnnotationTypes(model: EntityType): Set[String] = {
-    Set() ++ model.getAnnotations.map(_.annotationType.getName)
+    Set() ++ model.getAnnotations.asScala.map(_.annotationType.getName)
   }
 
   private def getRaw(t : Type): Type = {

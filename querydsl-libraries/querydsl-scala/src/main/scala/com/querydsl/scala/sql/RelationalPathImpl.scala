@@ -32,7 +32,7 @@ import scala.beans.BeanProperty
 class RelationalPathImpl[T](md: PathMetadata, schema: String, table: String)(implicit val mf: Manifest[T])
   extends BeanPath[T](mf.runtimeClass.asInstanceOf[Class[T]], md) with RelationalPath[T] {
 
-  import scala.collection.JavaConversions._
+  import scala.jdk.CollectionConverters._
 
   private var primaryKey: PrimaryKey[T] = _
 
@@ -77,7 +77,7 @@ class RelationalPathImpl[T](md: PathMetadata, schema: String, table: String)(imp
   }
 
   def createForeignKey[F](local: List[_ <: Path[_]], foreign: List[String]) = {
-    val foreignKey = new ForeignKey[F](this, local, foreign)
+    val foreignKey = new ForeignKey[F](this, local.asJava, foreign.asJava)
     foreignKeys.add(foreignKey)
     foreignKey
   }
@@ -89,7 +89,7 @@ class RelationalPathImpl[T](md: PathMetadata, schema: String, table: String)(imp
   }
 
   def createInvForeignKey[F](local: List[_ <: Path[_]], foreign: List[String]) = {
-    val foreignKey = new ForeignKey[F](this, local, foreign)
+    val foreignKey = new ForeignKey[F](this, local.asJava, foreign.asJava)
     inverseForeignKeys.add(foreignKey)
     foreignKey
   }

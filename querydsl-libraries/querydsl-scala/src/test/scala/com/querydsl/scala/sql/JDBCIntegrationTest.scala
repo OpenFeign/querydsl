@@ -80,13 +80,13 @@ class JDBCIntegrationTest extends SQLHelpers {
 
   @Test
   def Populate_Bean {
-    assertEquals(2, query.from(survey).select(survey).fetch() size ())
+    assertEquals(2, query.from(survey).select(survey).fetch().size())
   }
 
   @Test
   def List {
-    assertEquals(2, query.from(survey).select(survey.id).fetch() size ())
-    assertEquals(2, query.from(employee).select(employee.firstname).fetch() size ())
+    assertEquals(2, query.from(survey).select(survey.id).fetch().size())
+    assertEquals(2, query.from(employee).select(employee.firstname).fetch().size())
   }
 
   @Test
@@ -129,7 +129,7 @@ class JDBCIntegrationTest extends SQLHelpers {
     s.name = "XXX"
 
     val id = insert(survey) populate(s) executeWithKey(survey.id)
-    val sNew = query from survey where (survey.id === id) select (survey) fetchOne()
+    val sNew = (query from survey where (survey.id === id) select (survey)).fetchOne()
     assertEquals(s.name, sNew.name)
   }
 
@@ -142,10 +142,10 @@ class JDBCIntegrationTest extends SQLHelpers {
     s.id = id
     s.name = "YYY"
 
-    val count = update(survey) populate(s) execute()
+    val count = (update(survey) populate(s)).execute()
     assertTrue(count > 0)
 
-    val sNew = query from survey where (survey.id === id) select (survey) fetchOne()
+    val sNew = (query from survey where (survey.id === id) select (survey)).fetchOne()
     assertEquals(s.name, sNew.name)
   }
 
@@ -155,7 +155,7 @@ class JDBCIntegrationTest extends SQLHelpers {
     s.name = "XXX"
 
     val id = insert(survey) populate(s) executeWithKey(survey.id)
-    val count = delete(survey) where(survey.id === id) execute()
+    val count = (delete(survey) where(survey.id === id)).execute()
     assertTrue(count > 0)
   }
 

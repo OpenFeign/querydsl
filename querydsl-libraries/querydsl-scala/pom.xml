@@ -164,6 +164,8 @@
             <arg>-unchecked</arg>
             <arg>-deprecation</arg>
             <arg>-nobootcp</arg>
+            <arg>-language:postfixOps</arg>
+            <arg>-language:reflectiveCalls</arg>
             <!-- <arg>-feature</arg> -->
             <!-- <arg>-explaintypes</arg> -->
             <!-- <arg>-verbose</arg> -->
