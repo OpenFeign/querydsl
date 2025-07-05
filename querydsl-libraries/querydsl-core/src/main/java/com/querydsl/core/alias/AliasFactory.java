@@ -13,6 +13,7 @@
  */
 package com.querydsl.core.alias;
 
+import com.google.common.collect.MapMaker;
 import com.querydsl.core.QueryException;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
@@ -22,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
+
 import java.util.concurrent.ConcurrentHashMap;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.implementation.MethodDelegation;
@@ -61,7 +63,7 @@ class AliasFactory {
   public <A> A createAliasForExpr(Class<A> cl, Expression<? extends A> expr) {
     try {
       final var expressionCache =
-          proxyCache.computeIfAbsent(cl, a -> Collections.synchronizedMap(new WeakHashMap<>()));
+          proxyCache.computeIfAbsent(cl, a -> new MapMaker().weakKeys().makeMap());
       return (A) expressionCache.computeIfAbsent(expr, e -> (ManagedObject) createProxy(cl, expr));
     } catch (ClassCastException e) {
       throw new QueryException(e);
