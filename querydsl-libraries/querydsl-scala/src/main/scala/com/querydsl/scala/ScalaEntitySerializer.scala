@@ -153,6 +153,15 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
           methodName + "["+keyType+","+valueType+","+
             writer.getGenericName(true, queryType)+"](\"" + name + "\")"
         }
+        case COMPARABLE => {
+          val typeName = getName(property.getType, writer)
+          // Special handling for Scala enumeration types - use createSimple instead
+          if (typeName == "Any" && writer.getGenericName(true, property.getType).contains("scala.Enumeration")) {
+            "createSimple[" + typeName + "](\"" + name + "\")"
+          } else {
+            methodName + "[" + typeName + "](\"" + name + "\")"
+          }
+        }
         case _ => methodName + "[" + getName(property.getType, writer) + "](\"" + name + "\")"
       }
       (normalizeProperty(property.getEscapedName), value)
@@ -169,7 +178,14 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
     } else if (primitives && Types.PRIMITIVES.containsKey(t)) {
       writer.getRawName(Types.PRIMITIVES.get(t))
     } else {
-      writer.getGenericName(true, t)
+      val genericName = writer.getGenericName(true, t)
+      // Fix Scala enumeration type syntax for Scala 2.13+
+      // Use Any instead of scala.Enumeration.Value which doesn't exist
+      if (genericName.contains("scala.Enumeration$Value")) {
+        "Any"
+      } else {
+        genericName
+      }
     }
   }
 
