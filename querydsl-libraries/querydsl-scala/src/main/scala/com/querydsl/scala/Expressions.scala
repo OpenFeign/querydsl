@@ -22,6 +22,8 @@ import com.querydsl.core.types._
 import com.querydsl.scala.Constants._
 import com.querydsl.scala.Operations._
 
+import scala.language.reflectiveCalls
+
 object Constants {
 
   def constant(value: Integer) = ConstantImpl.create(value.intValue)
@@ -592,7 +594,7 @@ trait EnumExpression[T <: Enum[T]] extends ComparableExpression[T] {
 
   override def as(alias: String): EnumExpression[T] = as(ExpressionUtils.path[T](getType, alias))
 
-  def mapToId[T <: { def id: java.lang.Long }](events: List[T]) = events groupBy (_.id.longValue) toList
+  def mapToId[T <: { def id: java.lang.Long }](events: List[T]) = events.groupBy(_.id.longValue).toList
 
 }
 

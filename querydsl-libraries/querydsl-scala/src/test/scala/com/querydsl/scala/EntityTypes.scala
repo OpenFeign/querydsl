@@ -4,7 +4,7 @@ import com.querydsl.codegen.utils.model._
 import com.querydsl.codegen._
 import com.querydsl.core.util.StringUtils.uncapitalize
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 object EntityTypes {
 
@@ -35,6 +35,6 @@ object EntityTypes {
     val firstName = new Parameter("firstName", Types.STRING)
     val lastName = new Parameter("lastName", Types.STRING)
 
-    entityType.addConstructor(new Constructor(List(firstName, lastName)))
+    entityType.addConstructor(new Constructor(List(firstName, lastName).asJava))
 
 }

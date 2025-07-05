@@ -427,9 +427,20 @@ public class ScalaWriter extends AbstractCodeWriter<ScalaWriter> {
     }
     var packageName = type.getPackageName();
     if (packageName != null && packageName.length() > 0) {
-      fullName = packageName + "." + fullName.substring(packageName.length() + 1).replace('.', '$');
+      // Special handling for Scala Enumeration types - preserve dot notation
+      if (fullName.contains("scala.Enumeration$Value")) {
+        fullName = fullName.replace("scala.Enumeration$Value", "scala.Enumeration.Value");
+      } else {
+        fullName =
+            packageName + "." + fullName.substring(packageName.length() + 1).replace('.', '$');
+      }
     } else {
-      fullName = fullName.replace('.', '$');
+      // Handle Scala Enumeration types without package context
+      if (fullName.contains("Enumeration$Value")) {
+        fullName = fullName.replace("Enumeration$Value", "Enumeration.Value");
+      } else {
+        fullName = fullName.replace('.', '$');
+      }
     }
     var rv = fullName;
     if (type.isPrimitive() && packageName.isEmpty()) {
