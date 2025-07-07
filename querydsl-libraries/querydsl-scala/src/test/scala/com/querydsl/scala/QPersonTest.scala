@@ -27,7 +27,7 @@ class QPersonTest {
         person.listOfPersons(0).firstName isNotNull)
   }
 
-  def assertEquals(expected: String, actual: Any) {
+  def assertEquals(expected: String, actual: Any): Unit = {
     Assert.assertEquals(expected, actual.toString)
   }
 

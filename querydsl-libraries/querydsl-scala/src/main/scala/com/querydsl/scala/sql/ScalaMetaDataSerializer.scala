@@ -38,7 +38,7 @@ class ScalaMetaDataSerializer @Inject() (typeMappings: TypeMappings, val namingS
 
   override val classHeaderFormat = "%s(md: PathMetadata) extends RelationalPathImpl[%s](md, %s, %s)"
 
-  override def writeHeader(model: EntityType, writer: ScalaWriter) {
+  override def writeHeader(model: EntityType, writer: ScalaWriter): Unit = {
     writer.imports(classOf[RelationalPathImpl[_]])
     writer.imports(classOf[PrimaryKey[_]].getPackage)
 
@@ -63,7 +63,7 @@ class ScalaMetaDataSerializer @Inject() (typeMappings: TypeMappings, val namingS
     writer.line("def this(parent: Path[_], property: String) = this(forProperty(parent, property))\n")
   }
 
-  override def writeAdditionalProperties(model: EntityType, writer: ScalaWriter) {
+  override def writeAdditionalProperties(model: EntityType, writer: ScalaWriter): Unit = {
     // primary keys
     val primaryKeys: Collection[PrimaryKeyData] =
       model.getData.get(classOf[PrimaryKeyData]).asInstanceOf[Collection[PrimaryKeyData]]
@@ -106,7 +106,7 @@ class ScalaMetaDataSerializer @Inject() (typeMappings: TypeMappings, val namingS
     }
   }
 
-  def serializePrimaryKeys(model: EntityType, writer: CodeWriter, primaryKeys: Iterable[PrimaryKeyData]) {
+  def serializePrimaryKeys(model: EntityType, writer: CodeWriter, primaryKeys: Iterable[PrimaryKeyData]): Unit = {
     primaryKeys.foreach { pk =>
       val fieldName = namingStrategy.getPropertyNameForPrimaryKey(pk.getName, model)
       val value = pk.getColumns.asScala.map(c => escape(namingStrategy.getPropertyName(c, model)))

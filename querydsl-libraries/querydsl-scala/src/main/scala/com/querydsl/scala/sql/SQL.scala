@@ -44,7 +44,7 @@ trait SQL extends SQLHelpers {
 
   def connection = connectionHolder.get()
 
-  def query() = new SQLQuery(connection, templates)
+  def query(): SQLQuery[_] = new SQLQuery(connection, templates)
 
   def from(expr: RelationalPath[_]*) = query.from(expr:_*)
 
@@ -54,7 +54,7 @@ trait SQL extends SQLHelpers {
 
   def delete(path: RelationalPath[_]) = new SQLDeleteClause(connection, templates, path)
 
-  def tx[R](fn: ⇒ R): R = {
+  def tx[R](fn: => R): R = {
     val conn = dataSource.getConnection
     conn.setAutoCommit(false)
     connectionHolder.set(conn)
@@ -63,7 +63,7 @@ trait SQL extends SQLHelpers {
       conn.commit()
       rv
     } catch {
-      case e: Exception ⇒ {
+      case e: Exception => {
         conn.rollback()
         throw e
       }

@@ -48,7 +48,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
   /**
    *
    */
-  def serialize(model: EntityType, serializerConfig: SerializerConfig, writer: CodeWriter) {
+  def serialize(model: EntityType, serializerConfig: SerializerConfig, writer: CodeWriter): Unit = {
     val scalaWriter = writer.asInstanceOf[ScalaWriter]
     val simpleName: String = model.getSimpleName
 
@@ -93,7 +93,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
       // override to customize
   }
 
-  def writeHeader(model: EntityType, writer: ScalaWriter) {
+  def writeHeader(model: EntityType, writer: ScalaWriter): Unit = {
     val queryType = typeMappings.getPathType(model, model, true)
     val modelName = writer.getRawName(model)
     val queryTypeName = writer.getRawName(queryType)
@@ -189,7 +189,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
     }
   }
 
-  def serializeProperties(model: EntityType, writer: CodeWriter, properties: Collection[Property]) {
+  def serializeProperties(model: EntityType, writer: CodeWriter, properties: Collection[Property]): Unit = {
     // entity properties
     getEntityProperties(model, writer, properties.asScala) foreach (writer.line(_, "\n"))
 

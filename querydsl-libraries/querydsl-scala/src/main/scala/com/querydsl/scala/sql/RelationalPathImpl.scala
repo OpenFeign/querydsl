@@ -61,7 +61,7 @@ class RelationalPathImpl[T](md: PathMetadata, schema: String, table: String)(imp
     p
   }
 
-  protected def addMetadata(path: Path[_], md: ColumnMetadata) {
+  protected def addMetadata(path: Path[_], md: ColumnMetadata): Unit = {
     metadata.put(path, md)
   }
 

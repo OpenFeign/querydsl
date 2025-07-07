@@ -63,7 +63,7 @@ object Paths {
 
   def string(md: Metadata) = new StringPath(md)
 
-  def enum[T <: Enum[T]](t: Class[T], md: Metadata) = new EnumPath[T](t, md)
+  def `enum`[T <: Enum[T]](t: Class[T], md: Metadata) = new EnumPath[T](t, md)
 
   def any[T, Q <: Ex[_ >: T]](parent: Path[_], t: Class[T], q: Class[Q]): Q =  create(t, q, forCollectionAny(parent))
 

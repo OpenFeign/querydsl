@@ -8,7 +8,7 @@ class ExpressionTest {
 
   val person = Person as "person"
 
-  def assertEquals(expected: String, actual: Any) {
+  def assertEquals(expected: String, actual: Any): Unit = {
     Assert.assertEquals(expected, actual.toString)
   }
 

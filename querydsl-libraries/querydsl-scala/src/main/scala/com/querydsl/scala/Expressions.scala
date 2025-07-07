@@ -350,7 +350,7 @@ trait NumberExpression[T] extends SimpleExpression[T] {
 
   lazy val round = number[T](getType, MathOps.ROUND, this)
 
-  def unary_-() = negate
+  def unary_- = negate
 
   private def castToNum[A : Numeric](t: Class[A]): NumberExpression[A] = {
     if (t.equals(getType)) {

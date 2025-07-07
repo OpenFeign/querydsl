@@ -14,7 +14,7 @@ object JDBCIntegrationTest {
   private var statement: Statement = _
 
   @BeforeClass
-  def setUpClass() {
+  def setUpClass(): Unit = {
     Class.forName("org.h2.Driver")
     val url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy"
 
@@ -47,7 +47,7 @@ object JDBCIntegrationTest {
   }
 
   @AfterClass
-  def tearDownClass() {
+  def tearDownClass(): Unit = {
     try {
       statement.close()
     } finally {
