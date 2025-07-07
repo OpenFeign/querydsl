@@ -8,7 +8,7 @@ import org.junit.Test
 class GenericExporterTest {
 
   @Test
-  def Export {
+  def Export: Unit = {
     val exporter = new GenericExporter()
     exporter.setTargetFolder(new java.io.File("target/gen1"))
     exporter.setSerializerClass(classOf[ScalaEntitySerializer])

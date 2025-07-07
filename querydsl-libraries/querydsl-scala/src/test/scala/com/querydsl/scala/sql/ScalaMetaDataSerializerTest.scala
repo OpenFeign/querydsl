@@ -39,7 +39,7 @@ class ScalaMetaDataSerializerTest {
   }
 
   @Test
-  def Print {
+  def Print: Unit = {
     val typeMappings = ScalaTypeMappings.create
     val namingStrategy = new DefaultNamingStrategy()
     val serializer = new ScalaMetaDataSerializer(typeMappings, namingStrategy)

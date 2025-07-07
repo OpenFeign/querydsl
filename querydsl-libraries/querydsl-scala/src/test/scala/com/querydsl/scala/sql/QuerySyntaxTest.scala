@@ -15,28 +15,28 @@ class QuerySyntaxTest {
   val user2 = new QUser("user2")
 
   @Test
-  def Path_Creation {
+  def Path_Creation: Unit = {
     assertEquals(new QCategory("c"), QCategory as "c")
   }
 
   @Test
-  def Query_Syntax {
-    query from(c) innerJoin(b) from(c1) where (c1.name like "a%") orderBy(c.name asc) //list(c)
-    query from(c) innerJoin(b) select (b.id count)
+  def Query_Syntax: Unit = {
+    query() from(c) innerJoin(b) from(c1) where (c1.name like "a%") orderBy(c.name asc) //list(c)
+    query() from(c) innerJoin(b) select (b.id count)
 
-    query from (c) select (c.id, c.name)
+    query() from (c) select (c.id, c.name)
   }
 
   @Test
-  def Key_Usage {
+  def Key_Usage: Unit = {
     // superiorId -> id
-    query from(user) innerJoin(user.superiorIdKey, user2)
+    query() from(user) innerJoin(user.superiorIdKey, user2)
   }
 
   @Test
-  def Key_Usage2 {
+  def Key_Usage2: Unit = {
     // department -> id / company -> id
-    query from(user) innerJoin(user.departmentKey, department) innerJoin(department.companyKey, company)
+    query() from(user) innerJoin(user.departmentKey, department) innerJoin(department.companyKey, company)
   }
 
   def query() = new SQLQuery[Void]()

@@ -15,7 +15,7 @@ class CaseClassSerializerTest {
   var writer = new StringWriter()
 
   @Test
-  def Print {
+  def Print: Unit = {
     val serializer = new CaseClassSerializer(typeMappings)
     typeMappings.register(entityType, new QueryTypeFactoryImpl("Q", "", "").create(entityType))
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new ScalaWriter(writer))
@@ -24,7 +24,7 @@ class CaseClassSerializerTest {
   }
 
   @Test
-  def Compile {
+  def Compile: Unit = {
     val serializer = new CaseClassSerializer(typeMappings)
     serializer.createCompanionObject = false
     typeMappings.register(entityType, new QueryTypeFactoryImpl("Q", "", "").create(entityType))

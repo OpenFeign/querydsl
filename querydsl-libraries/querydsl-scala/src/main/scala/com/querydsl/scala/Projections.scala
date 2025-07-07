@@ -16,6 +16,7 @@ package com.querydsl.scala
 
 import java.util.Arrays
 
+import scala.language.implicitConversions
 import com.querydsl.core.types.{Projections => ProjectionsFactory, _}
 
 object Projections extends Projections
