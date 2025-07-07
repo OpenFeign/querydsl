@@ -24,7 +24,7 @@ class TypeExtractor(
                 ?: simpleType(type)
                 ?: referenceType(type)
                 ?: collectionType(type)
-                ?: throwError("Type was not recognised, This may be an entity that has not been annotated with @Entity, or maybe you are using javax instead of jakarta.")
+                ?: fallbackType(type)
         }
     }
 
@@ -42,6 +42,27 @@ class TypeExtractor(
             }
         } else {
             return null
+        }
+    }
+
+    private fun fallbackType(type: KSType): QPropertyType.Simple {
+        val declaration = type.declaration
+        val isComparable = if (declaration is KSClassDeclaration) {
+            val comparableNames = listOfNotNull(
+                Comparable::class.java.canonicalName,
+                java.lang.Comparable::class.qualifiedName
+            )
+            declaration.getAllSuperTypes().any {
+                comparableNames.contains(it.toClassName().canonicalName)
+            }
+        } else {
+            false
+        }
+        val className = type.toClassNameSimple()
+        if (isComparable) {
+            return QPropertyType.Simple(SimpleType.Comparable(className))
+        } else {
+            return QPropertyType.Simple(SimpleType.Simple(className))
         }
     }
 
