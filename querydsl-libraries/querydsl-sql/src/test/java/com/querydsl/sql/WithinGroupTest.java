@@ -80,4 +80,14 @@ public class WithinGroupTest {
   public void listaggIntString() {
     assertThat(toString(SQLExpressions.listagg(path, "1"))).isEqualTo("listagg(path,'1')");
   }
+
+  @Test
+  public void stringAgg_with_orderBy() {
+    var expr =
+        SQLExpressions.stringAgg(path, ", ")
+            .withinGroup()
+            .orderBy(path2.asc())
+            .getValue();
+    assertThat(toString(expr)).isEqualTo("string_agg(path,', ') within group (order by path2 asc)");
+  }
 }
