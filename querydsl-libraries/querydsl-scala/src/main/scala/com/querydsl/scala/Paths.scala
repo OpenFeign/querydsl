@@ -63,7 +63,7 @@ object Paths {
 
   def string(md: Metadata) = new StringPath(md)
 
-  def enum[T <: Enum[T]](t: Class[T], md: Metadata) = new EnumPath[T](t, md)
+  def `enum`[T <: Enum[T]](t: Class[T], md: Metadata) = new EnumPath[T](t, md)
 
   def any[T, Q <: Ex[_ >: T]](parent: Path[_], t: Class[T], q: Class[Q]): Q =  create(t, q, forCollectionAny(parent))
 
@@ -150,7 +150,7 @@ class EntityPathImpl[T](t: Class[_ <: T], md: PathMetadata)
 }
 
 class CollectionPath[T, Q <: Ex[_ >: T]](t: Class[T], q: Class[Q], md: PathMetadata)
-  extends PathImpl[java.util.Collection[T]](classOf[java.util.Collection[T]], md) with CollectionExpression[T,Q] {
+  extends PathImpl[java.util.Collection[T]](classOf[java.util.Collection[T]], md) with com.querydsl.scala.CollectionExpression[T,Q] {
 
   def this(t: Class[T],  q: Class[Q], variable: String) = this(t, q, forVariable(variable))
 
@@ -187,7 +187,7 @@ class ListPath[T, Q <: Ex[_ >: T]](t: Class[T],  q: Class[Q], md: PathMetadata)
 }
 
 class MapPath[K, V, Q <: Ex[_ >: V]](k: Class[K], v: Class[V], q: Class[Q], md: PathMetadata)
-  extends PathImpl[java.util.Map[K, V]](classOf[java.util.Map[K, V]], md) with MapExpression[K, V, Q] {
+  extends PathImpl[java.util.Map[K, V]](classOf[java.util.Map[K, V]], md) with com.querydsl.scala.MapExpression[K, V, Q] {
 
   def this(k: Class[K], v: Class[V], q: Class[Q], variable: String) = this(k, v, q, forVariable(variable))
 

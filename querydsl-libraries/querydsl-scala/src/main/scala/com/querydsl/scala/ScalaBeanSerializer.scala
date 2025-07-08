@@ -22,7 +22,7 @@ import com.querydsl.codegen.utils.{CodeWriter, ScalaWriter}
 import com.querydsl.codegen._
 import com.querydsl.scala.Serializer._
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable.Set
 
 /**
@@ -33,25 +33,25 @@ object Serializer {
   /**
    *
    */
-  def writePackage(model: EntityType, writer: ScalaWriter) {
+  def writePackage(model: EntityType, writer: ScalaWriter): Unit = {
     if (!model.getPackageName.isEmpty) writer.packageDecl(model.getPackageName)
   }
 
   /**
    *
    */
-  def writeImports(model: EntityType, javaBeanSupport: Boolean, writer: ScalaWriter) {
+  def writeImports(model: EntityType, javaBeanSupport: Boolean, writer: ScalaWriter): Unit = {
     val importedClasses = getAnnotationTypes(model)
     if (javaBeanSupport)  importedClasses.add("scala.beans.BeanProperty")
     if (model.hasLists) importedClasses.add(classOf[List[_]].getName)
     if (model.hasMaps)  importedClasses.add(classOf[Map[_, _]].getName)
-    writer.importClasses(importedClasses.toArray: _*)
+    writer.importClasses(importedClasses.toSeq: _*)
   }
 
   /**
    *
    */
-  def writeCompanionObject(model: EntityType, typeMappings: TypeMappings, writer: ScalaWriter) {
+  def writeCompanionObject(model: EntityType, typeMappings: TypeMappings, writer: ScalaWriter): Unit = {
     val queryType = typeMappings.getPathType(model, model, true)
     val modelName = writer.getRawName(model)
     val queryTypeName = writer.getRawName(queryType)
@@ -64,10 +64,10 @@ object Serializer {
   }
 
   private def getAnnotationTypes(model: EntityType): Set[String] = {
-    val imports = Set() ++ model.getAnnotations.map(_.annotationType.getName)
+    val imports = Set() ++ model.getAnnotations.asScala.map(_.annotationType.getName)
     // flatMap flattens the results of the map-function.
     // E.g. List(List(1,2,3), List(4,5,6)).flatMap(_.map(_*3)) ends up as List(3, 6, 9, 12, 15, 18).
-    imports ++ model.getProperties.flatMap(_.getAnnotations.map(_.annotationType.getName))
+    imports ++ model.getProperties.asScala.flatMap(_.getAnnotations.asScala.map(_.annotationType.getName))
   }
 
 }
@@ -87,7 +87,7 @@ class ScalaBeanSerializer @Inject() (typeMappings: TypeMappings) extends Seriali
   /**
    *
    */
-  def serialize(model: EntityType, serializerConfig: SerializerConfig, writer: CodeWriter) {
+  def serialize(model: EntityType, serializerConfig: SerializerConfig, writer: CodeWriter): Unit = {
     val scalaWriter = writer.asInstanceOf[ScalaWriter]
 
     writePackage(model, scalaWriter)
@@ -100,10 +100,10 @@ class ScalaBeanSerializer @Inject() (typeMappings: TypeMappings) extends Seriali
 
   def writeClass(model: EntityType, writer: ScalaWriter) = {
     writer.javadoc(model.getSimpleName + javadocSuffix)
-    model.getAnnotations foreach(writer.annotation)
+    model.getAnnotations.asScala foreach(writer.annotation)
     writer.beginClass(model)
-    for (property <- model.getProperties) {
-      property.getAnnotations.foreach(writer.annotation)
+    for (property <- model.getProperties.asScala) {
+      property.getAnnotations.asScala.foreach(writer.annotation)
       if (javaBeanSupport) writer.line("@BeanProperty")
       writer.publicField(property.getType, property.getEscapedName, "_")
     }
@@ -122,7 +122,7 @@ class CaseClassSerializer @Inject() (typeMappings: TypeMappings) extends Seriali
   /**
    *
    */
-  def serialize(model: EntityType, serializerConfig: SerializerConfig, writer: CodeWriter) {
+  def serialize(model: EntityType, serializerConfig: SerializerConfig, writer: CodeWriter): Unit = {
     val scalaWriter = writer.asInstanceOf[ScalaWriter]
 
     writePackage(model, scalaWriter)
@@ -134,8 +134,8 @@ class CaseClassSerializer @Inject() (typeMappings: TypeMappings) extends Seriali
   }
 
   def writeClass(model: EntityType, writer: ScalaWriter) = {
-    model.getAnnotations foreach writer.annotation
-    val parameters = model.getProperties
+    model.getAnnotations.asScala foreach writer.annotation
+    val parameters = model.getProperties.asScala
       .map(p => new Parameter(p.getEscapedName, p.getType)).toArray
     writer.caseClass(model.getSimpleName, parameters:_*)
   }

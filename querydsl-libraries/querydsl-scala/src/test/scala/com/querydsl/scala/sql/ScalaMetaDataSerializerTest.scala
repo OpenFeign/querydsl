@@ -18,7 +18,7 @@ class ScalaMetaDataSerializerTest {
   val writer = new StringWriter()
 
   @Before
-  def setUp() {
+  def setUp(): Unit = {
     // type
     val typeModel = new SimpleType(TypeCategory.ENTITY,
         "com.querydsl.DomainClass", "com.querydsl", "DomainClass", false, false)
@@ -39,7 +39,7 @@ class ScalaMetaDataSerializerTest {
   }
 
   @Test
-  def Print {
+  def Print: Unit = {
     val typeMappings = ScalaTypeMappings.create
     val namingStrategy = new DefaultNamingStrategy()
     val serializer = new ScalaMetaDataSerializer(typeMappings, namingStrategy)

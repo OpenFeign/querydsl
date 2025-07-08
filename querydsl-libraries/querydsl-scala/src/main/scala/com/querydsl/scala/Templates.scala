@@ -56,7 +56,7 @@ object Templates {
 
   def string(tpl: Template, args: Ex[_]*): StringExpression = new StringTemplate(tpl, args: _*)
 
-  def enum[T <: Enum[T]](t: Class[T], tpl: Template, args: Ex[_]*): EnumExpression[T] = {
+  def `enum`[T <: Enum[T]](t: Class[T], tpl: Template, args: Ex[_]*): EnumExpression[T] = {
     new EnumTemplate[T](t, tpl, args: _*)
   }
 

@@ -16,7 +16,7 @@ class ScalaBeanSerializerTest {
   val entityType = EntityTypes.entityType
 
   @Test
-  def Print {
+  def Print: Unit = {
     val serializer = new ScalaBeanSerializer(typeMappings)
     serializer.javaBeanSupport = true
     typeMappings.register(entityType, new QueryTypeFactoryImpl("Q", "", "").create(entityType))
@@ -53,7 +53,7 @@ class ScalaBeanSerializerTest {
   }
 
   @Test
-  def Compile {
+  def Compile: Unit = {
     val serializer = new ScalaBeanSerializer(typeMappings)
     serializer.createCompanionObject = false
     typeMappings.register(entityType, new QueryTypeFactoryImpl("Q", "", "").create(entityType))

@@ -64,7 +64,7 @@ object Operations {
     new OperationImpl[String](classOf[String], op, args: _*) with StringExpression
   }
 
-  def enum[T <: Enum[T]](t: Class[T], op: Op, args: Ex[_]*): EnumExpression[T] = {
+  def `enum`[T <: Enum[T]](t: Class[T], op: Op, args: Ex[_]*): EnumExpression[T] = {
     new OperationImpl[T](t, op, args: _*) with EnumExpression[T]
   }
 

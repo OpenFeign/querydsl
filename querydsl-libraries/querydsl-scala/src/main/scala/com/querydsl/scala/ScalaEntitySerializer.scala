@@ -24,7 +24,7 @@ import com.querydsl.codegen.utils.{CodeWriter, ScalaWriter}
 import com.querydsl.codegen._
 import com.querydsl.core.types._
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.immutable.Map
 import scala.collection.mutable.Set
 
@@ -48,7 +48,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
   /**
    *
    */
-  def serialize(model: EntityType, serializerConfig: SerializerConfig, writer: CodeWriter) {
+  def serialize(model: EntityType, serializerConfig: SerializerConfig, writer: CodeWriter): Unit = {
     val scalaWriter = writer.asInstanceOf[ScalaWriter]
     val simpleName: String = model.getSimpleName
 
@@ -62,7 +62,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
     var importedClasses = getAnnotationTypes(model)
     if (model.hasLists) importedClasses.add(classOf[java.util.List[_]].getName)
     if (model.hasMaps)  importedClasses.add(classOf[java.util.Map[_, _]].getName)
-    writer.importClasses(importedClasses.toArray: _*)
+    writer.importClasses(importedClasses.toSeq: _*)
 
     writeHeader(model, scalaWriter)
 
@@ -93,7 +93,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
       // override to customize
   }
 
-  def writeHeader(model: EntityType, writer: ScalaWriter) {
+  def writeHeader(model: EntityType, writer: ScalaWriter): Unit = {
     val queryType = typeMappings.getPathType(model, model, true)
     val modelName = writer.getRawName(model)
     val queryTypeName = writer.getRawName(queryType)
@@ -117,13 +117,13 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
   }
 
   def writeAnnotations(model: EntityType, queryType: Type, writer: ScalaWriter) = {
-    model.getAnnotations.foreach(writer.annotation)
+    model.getAnnotations.asScala.foreach(writer.annotation)
   }
 
   def writeAdditionalCompanionContent(model: EntityType, writer: ScalaWriter) = {}
 
   private def getEntityProperties(model: EntityType, writer: CodeWriter,
-      properties: Collection[Property]) = {
+      properties: Iterable[Property]) = {
     for (property <- properties if property.getType.getCategory == ENTITY) yield {
       val queryType = typeMappings.getPathType(property.getType, model, false)
       val typeName = writer.getRawName(queryType)
@@ -133,7 +133,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
   }
 
   private def getOtherProperties(model: EntityType, writer: CodeWriter,
-      properties: Collection[Property]) = {
+      properties: Iterable[Property]) = {
     for (property <- properties if property.getType.getCategory != ENTITY) yield {
       val name = normalizeProperty(property.getName)
       val methodName: String = "create" + methodNames(property.getType.getCategory)
@@ -153,6 +153,15 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
           methodName + "["+keyType+","+valueType+","+
             writer.getGenericName(true, queryType)+"](\"" + name + "\")"
         }
+        case COMPARABLE => {
+          val typeName = getName(property.getType, writer)
+          // Special handling for Scala enumeration types - use createSimple instead
+          if (typeName == "Any" && writer.getGenericName(true, property.getType).contains("scala.Enumeration")) {
+            "createSimple[" + typeName + "](\"" + name + "\")"
+          } else {
+            methodName + "[" + typeName + "](\"" + name + "\")"
+          }
+        }
         case _ => methodName + "[" + getName(property.getType, writer) + "](\"" + name + "\")"
       }
       (normalizeProperty(property.getEscapedName), value)
@@ -169,16 +178,23 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
     } else if (primitives && Types.PRIMITIVES.containsKey(t)) {
       writer.getRawName(Types.PRIMITIVES.get(t))
     } else {
-      writer.getGenericName(true, t)
+      val genericName = writer.getGenericName(true, t)
+      // Fix Scala enumeration type syntax for Scala 2.13+
+      // Use Any instead of scala.Enumeration.Value which doesn't exist
+      if (genericName.contains("scala.Enumeration$Value")) {
+        "Any"
+      } else {
+        genericName
+      }
     }
   }
 
-  def serializeProperties(model: EntityType, writer: CodeWriter, properties: Collection[Property]) {
+  def serializeProperties(model: EntityType, writer: CodeWriter, properties: Collection[Property]): Unit = {
     // entity properties
-    getEntityProperties(model, writer, properties) foreach (writer.line(_, "\n"))
+    getEntityProperties(model, writer, properties.asScala) foreach (writer.line(_, "\n"))
 
     // other properties
-    getOtherProperties(model, writer, properties) foreach { case (propertyName, value) =>
+    getOtherProperties(model, writer, properties.asScala) foreach { case (propertyName, value) =>
       writer.line("val ", escape(propertyName), " = ", value, "\n")
     }
   }
@@ -190,7 +206,7 @@ class ScalaEntitySerializer @Inject()(val typeMappings: TypeMappings) extends Se
   }
 
   def getAnnotationTypes(model: EntityType): Set[String] = {
-    Set() ++ model.getAnnotations.map(_.annotationType.getName)
+    Set() ++ model.getAnnotations.asScala.map(_.annotationType.getName)
   }
 
   private def getRaw(t : Type): Type = {

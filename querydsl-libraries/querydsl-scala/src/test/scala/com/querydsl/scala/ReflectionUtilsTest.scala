@@ -6,12 +6,12 @@ import org.junit._
 class ReflectionUtilsTest {
 
   @Test
-  def getSuperClasses_of_String {
+  def getSuperClasses_of_String: Unit = {
     assertEquals(List(classOf[String],classOf[AnyRef]), ReflectionUtils.getSuperClasses(classOf[String]))
   }
 
   @Test
-  def getImplementedInterfaces {
+  def getImplementedInterfaces: Unit = {
     var setToTest = ReflectionUtils.getImplementedInterfaces(classOf[String])
     assertTrue(setToTest.contains(classOf[java.io.Serializable]))
     assertTrue(setToTest.contains(classOf[Comparable[_]]))
@@ -19,7 +19,7 @@ class ReflectionUtilsTest {
   }
 
   @Test
-  def getFields {
+  def getFields: Unit = {
     assertTrue( ReflectionUtils.getFields(classOf[String]).size > 0)
   }
 

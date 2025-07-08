@@ -28,7 +28,7 @@ import scala.collection.mutable.Builder
 object GroupBy extends GroupBy {
 
   class BuilderCollector[T,C](builder: Builder[T,C]) extends GroupCollector[T,C]{
-    def add(o: T) { builder.+=(o) }
+    def add(o: T): Unit = { builder.+=(o) }
     def get(): C = builder.result()
   }
 

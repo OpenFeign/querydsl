@@ -16,6 +16,7 @@ package com.querydsl.scala
 
 import java.util.Arrays
 
+import scala.language.implicitConversions
 import com.querydsl.core.types.{Projections => ProjectionsFactory, _}
 
 object Projections extends Projections
@@ -45,77 +46,77 @@ trait Projections {
     }}
   }
 
-  implicit def tuple2Expr[A,B](t: (_ <: Ex[A], _ <: Ex[B])) = new Tu2Ex[A,B](t._1, t._2)
+  implicit def tuple2Expr[A,B](t: (_ <: Ex[A], _ <: Ex[B])): Tuple2Expression[A,B] = new Tu2Ex[A,B](t._1, t._2)
 
-  implicit def tuple3Expr[A,B,C](t: (_ <: Ex[A], _ <: Ex[B], _ <: Ex[C])) = {
+  implicit def tuple3Expr[A,B,C](t: (_ <: Ex[A], _ <: Ex[B], _ <: Ex[C])): Tuple3Expression[A,B,C] = {
     new Tu3Ex[A,B,C](t._1, t._2, t._3)
   }
 
-  implicit def tuple4Expr[A,B,C,D](t: (_ <: Ex[A], _ <: Ex[B], _ <: Ex[C], _ <: Ex[D])) = {
+  implicit def tuple4Expr[A,B,C,D](t: (_ <: Ex[A], _ <: Ex[B], _ <: Ex[C], _ <: Ex[D])): Tuple4Expression[A,B,C,D] = {
     new Tu4Ex[A,B,C,D](t._1, t._2, t._3, t._4)
   }
 
   implicit def tuple5Expr[A,B,C,D,E](t: (_ <: Ex[A], _ <: Ex[B], _ <: Ex[C], _ <: Ex[D],
-      _<: Ex[E])) = {
+      _<: Ex[E])): Tuple5Expression[A,B,C,D,E] = {
     new Tu5Ex[A,B,C,D,E](t._1, t._2, t._3, t._4, t._5)
   }
 
   implicit def tuple6Expr[A,B,C,D,E,F](t: (_ <: Ex[A], _ <: Ex[B], _ <: Ex[C], _ <: Ex[D],
-      _<: Ex[E], _ <: Ex[F])) = {
+      _<: Ex[E], _ <: Ex[F])): Tuple6Expression[A,B,C,D,E,F] = {
     new Tu6Ex[A,B,C,D,E,F](t._1, t._2, t._3, t._4, t._5, t._6)
   }
 
   implicit def tuple7Expr[A,B,C,D,E,F,G](t: (_ <: Ex[A], _ <: Ex[B], _ <: Ex[C], _ <: Ex[D],
-      _<: Ex[E], _ <: Ex[F], _ <: Ex[G])) = {
+      _<: Ex[E], _ <: Ex[F], _ <: Ex[G])): Tuple7Expression[A,B,C,D,E,F,G] = {
     new Tu7Ex[A,B,C,D,E,F,G](t._1, t._2, t._3, t._4, t._5, t._6, t._7)
   }
 
   implicit def tuple8Expr[A,B,C,D,E,F,G,H](t: (_ <: Ex[A], _ <: Ex[B], _ <: Ex[C], _ <: Ex[D],
-      _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H])) = {
+      _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H])): Tuple8Expression[A,B,C,D,E,F,G,H] = {
     new Tu8Ex[A,B,C,D,E,F,G,H](t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8)
   }
 
   implicit def tuple9Expr[A,B,C,D,E,F,G,H,I](t: (_ <: Ex[A], _ <: Ex[B], _ <: Ex[C],
-      _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I])) = {
+      _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I])): Tuple9Expression[A,B,C,D,E,F,G,H,I] = {
     new Tu9Ex[A,B,C,D,E,F,G,H,I](t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9)
   }
 
   implicit def tuple10Expr[A,B,C,D,E,F,G,H,I,J](t: (_ <: Ex[A], _ <: Ex[B], _ <: Ex[C],
-      _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I], _ <: Ex[J])) = {
+      _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I], _ <: Ex[J])): Tuple10Expression[A,B,C,D,E,F,G,H,I,J] = {
     new Tu10Ex[A,B,C,D,E,F,G,H,I,J](t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9, t._10)
   }
 
   implicit def tuple11Expr[A,B,C,D,E,F,G,H,I,J,K](t: (_ <: Ex[A], _ <: Ex[B],
       _ <: Ex[C], _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I],
-      _ <: Ex[J], _ <: Ex[K])) = {
+      _ <: Ex[J], _ <: Ex[K])): Tuple11Expression[A,B,C,D,E,F,G,H,I,J,K] = {
     new Tu11Ex[A,B,C,D,E,F,G,H,I,J,K](t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8,
         t._9, t._10, t._11)
   }
 
   implicit def tuple12Expr[A,B,C,D,E,F,G,H,I,J,K,L](t: (_ <: Ex[A], _ <: Ex[B],
       _ <: Ex[C], _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I],
-      _ <: Ex[J], _ <: Ex[K], _ <: Ex[L])) = {
+      _ <: Ex[J], _ <: Ex[K], _ <: Ex[L])): Tuple12Expression[A,B,C,D,E,F,G,H,I,J,K,L] = {
     new Tu12Ex[A,B,C,D,E,F,G,H,I,J,K,L](t._1, t._2, t._3, t._4, t._5, t._6, t._7,
         t._8, t._9, t._10, t._11, t._12)
   }
 
   implicit def tuple13Expr[A,B,C,D,E,F,G,H,I,J,K,L,M](t: (_ <: Ex[A], _ <: Ex[B],
       _ <: Ex[C], _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I],
-      _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M])) = {
+      _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M])): Tuple13Expression[A,B,C,D,E,F,G,H,I,J,K,L,M] = {
     new Tu13Ex[A,B,C,D,E,F,G,H,I,J,K,L,M](t._1, t._2, t._3, t._4, t._5, t._6, t._7,
         t._8, t._9, t._10, t._11, t._12, t._13)
   }
 
   implicit def tuple14Expr[A,B,C,D,E,F,G,H,I,J,K,L,M,N](t: (_ <: Ex[A], _ <: Ex[B],
       _ <: Ex[C], _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I],
-      _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M], _ <: Ex[N])) = {
+      _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M], _ <: Ex[N])): Tuple14Expression[A,B,C,D,E,F,G,H,I,J,K,L,M,N] = {
     new Tu14Ex[A,B,C,D,E,F,G,H,I,J,K,L,M,N](t._1, t._2, t._3, t._4, t._5, t._6, t._7,
         t._8, t._9, t._10, t._11, t._12, t._13, t._14)
   }
 
   implicit def tuple15Expr[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O](t: (_ <: Ex[A], _ <: Ex[B],
       _ <: Ex[C], _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I],
-      _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M], _ <: Ex[N], _ <: Ex[O])) = {
+      _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M], _ <: Ex[N], _ <: Ex[O])): Tuple15Expression[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O] = {
     new Tu15Ex[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O](t._1, t._2, t._3, t._4, t._5, t._6, t._7,
         t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15)
   }
@@ -123,7 +124,7 @@ trait Projections {
   implicit def tuple16Expr[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P](t: (_ <: Ex[A], _ <: Ex[B],
       _ <: Ex[C], _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I],
       _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M], _ <: Ex[N], _ <: Ex[O],
-      _ <: Ex[P])) = {
+      _ <: Ex[P])): Tuple16Expression[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P] = {
     new Tu16Ex[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P](t._1, t._2, t._3, t._4, t._5, t._6, t._7,
         t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15, t._16)
   }
@@ -131,7 +132,7 @@ trait Projections {
   implicit def tuple17Expr[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q](t: (_ <: Ex[A], _ <: Ex[B],
       _ <: Ex[C], _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I],
       _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M], _ <: Ex[N], _ <: Ex[O],
-      _ <: Ex[P], _ <: Ex[Q])) = {
+      _ <: Ex[P], _ <: Ex[Q])): Tuple17Expression[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q] = {
     new Tu17Ex[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q](t._1, t._2, t._3, t._4, t._5, t._6, t._7,
         t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15, t._16, t._17)
   }
@@ -139,7 +140,7 @@ trait Projections {
   implicit def tuple18Expr[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R](t: (_ <: Ex[A], _ <: Ex[B],
       _ <: Ex[C], _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I],
       _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M], _ <: Ex[N], _ <: Ex[O],
-      _ <: Ex[P], _ <: Ex[Q], _ <: Ex[R])) = {
+      _ <: Ex[P], _ <: Ex[Q], _ <: Ex[R])): Tuple18Expression[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R] = {
     new Tu18Ex[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R](t._1, t._2, t._3, t._4, t._5, t._6, t._7,
         t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15, t._16, t._17, t._18)
   }
@@ -147,7 +148,7 @@ trait Projections {
   implicit def tuple19Expr[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S](t: (_ <: Ex[A], _ <: Ex[B],
       _ <: Ex[C], _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I],
       _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M], _ <: Ex[N], _ <: Ex[O],
-      _ <: Ex[P], _ <: Ex[Q], _ <: Ex[R], _ <: Ex[S])) = {
+      _ <: Ex[P], _ <: Ex[Q], _ <: Ex[R], _ <: Ex[S])): Tuple19Expression[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S] = {
     new Tu19Ex[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S](t._1, t._2, t._3, t._4, t._5, t._6, t._7,
         t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15, t._16, t._17, t._18, t._19)
   }
@@ -155,7 +156,7 @@ trait Projections {
   implicit def tuple20Expr[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T](t: (_ <: Ex[A], _ <: Ex[B],
       _ <: Ex[C], _ <: Ex[D], _<: Ex[E], _ <: Ex[F], _ <: Ex[G], _ <: Ex[H], _ <: Ex[I],
       _ <: Ex[J], _ <: Ex[K], _ <: Ex[L], _ <: Ex[M], _ <: Ex[N], _ <: Ex[O],
-      _ <: Ex[P], _ <: Ex[Q], _ <: Ex[R], _ <: Ex[S], _ <: Ex[T])) = {
+      _ <: Ex[P], _ <: Ex[Q], _ <: Ex[R], _ <: Ex[S], _ <: Ex[T])): Tuple20Expression[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T] = {
     new Tu20Ex[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T](t._1, t._2, t._3, t._4, t._5, t._6, t._7,
         t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15, t._16, t._17, t._18, t._19, t._20)
   }

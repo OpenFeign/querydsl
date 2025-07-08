@@ -14,6 +14,8 @@
 
 package com.querydsl.scala
 
+import scala.language.implicitConversions
+
 /**
  * @author tiwe
  *

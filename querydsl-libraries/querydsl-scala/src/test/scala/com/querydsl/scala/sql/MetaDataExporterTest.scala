@@ -10,7 +10,7 @@ object MetaDataExporterTest {
   private var connection: java.sql.Connection = _
 
   @BeforeClass
-  def setUp() {
+  def setUp(): Unit = {
     Class.forName("org.h2.Driver")
     val url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy"
     connection = java.sql.DriverManager.getConnection(url, "sa", "")
@@ -54,7 +54,7 @@ object MetaDataExporterTest {
   }
 
   @AfterClass
-  def tearDown() {
+  def tearDown(): Unit = {
     connection.close()
   }
 
@@ -65,7 +65,7 @@ class MetaDataExporterTest {
   import MetaDataExporterTest._
 
   @Test
-  def Generate_Without_BeanTypes() {
+  def Generate_Without_BeanTypes(): Unit = {
     val directory = new java.io.File("target/jdbcgen1")
     val config = new MetadataExporterConfigImpl();
     config.setNamePrefix("Q")
@@ -87,7 +87,7 @@ class MetaDataExporterTest {
   }
 
   @Test
-  def Generate_With_BeanTypes() {
+  def Generate_With_BeanTypes(): Unit = {
     val directory = new java.io.File("target/jdbcgen2")
     val config = new MetadataExporterConfigImpl();
     config.setNamePrefix("Q")
@@ -109,7 +109,7 @@ class MetaDataExporterTest {
   }
 
   @Test
-  def Generate_With_Schema() {
+  def Generate_With_Schema(): Unit = {
     val directory = new java.io.File("target/jdbcgen3")
     val config = new MetadataExporterConfigImpl();
     config.setNamePrefix("Q")
@@ -129,7 +129,7 @@ class MetaDataExporterTest {
   }
 
   @Test
-  def Generate_With_BeanTypes_And_Schema() {
+  def Generate_With_BeanTypes_And_Schema(): Unit = {
     val directory = new java.io.File("target/jdbcgen4")
     val config = new MetadataExporterConfigImpl();
     config.setNamePrefix("Q")

@@ -8,145 +8,145 @@ class ExpressionTest {
 
   val person = Person as "person"
 
-  def assertEquals(expected: String, actual: Any) {
+  def assertEquals(expected: String, actual: Any): Unit = {
     Assert.assertEquals(expected, actual.toString)
   }
 
   @Test
-  def Double_Negation {
+  def Double_Negation: Unit = {
     assertEquals("person.javaInt", person.javaInt.negate.negate)
   }
 
   @Test
-  def Is_Not_Null {
+  def Is_Not_Null: Unit = {
     assertEquals("person.other is not null", person.other isNotNull)
     assertEquals("person.other is not null", person.other is not(null) )
   }
 
   @Test
-  def Is_Null {
+  def Is_Null: Unit = {
     assertEquals("person.other is null", person.other isNull)
     assertEquals("person.other is null", person.other is null )
   }
 
   @Test
-  def Long_Path {
+  def Long_Path: Unit = {
     assertEquals("person.other.firstName = Ben", person.other.firstName eq "Ben")
   }
 
   @Test
-  def Long_Path_With_Operators {
+  def Long_Path_With_Operators: Unit = {
     assertEquals("person.other.firstName = Ben", person.other.firstName === "Ben")
   }
 
   @Test
-  def Path_Equality {
+  def Path_Equality: Unit = {
     assertEquals("person.firstName = person.lastName", person.firstName eq person.lastName)
   }
 
   @Test
-  def Path_Equality_With_Operators {
+  def Path_Equality_With_Operators: Unit = {
     assertEquals("person.firstName = person.lastName", person.firstName === person.lastName)
   }
 
   @Test
-  def String_Equality {
+  def String_Equality: Unit = {
     assertEquals("person.firstName = Ben", person.firstName eq "Ben")
     assertEquals("person.firstName != Ben", person.firstName ne "Ben")
     assertEquals("person.firstName != Ben", person.firstName ne "Ben")
   }
 
   @Test
-  def String_Equality_With_Operators {
+  def String_Equality_With_Operators: Unit = {
     assertEquals("person.firstName = Ben", person.firstName === "Ben")
     assertEquals("person.firstName != Ben", person.firstName !== "Ben")
     assertEquals("person.firstName != Ben", person.firstName !== "Ben")
   }
 
   @Test
-  def String_Like {
+  def String_Like: Unit = {
     assertEquals("person.firstName like Ben", person.firstName like "Ben")
   }
 
   @Test
-  def String_Order {
+  def String_Order: Unit = {
     assertEquals("person.firstName ASC", person.firstName asc)
   }
 
   @Test
-  def String_Append {
+  def String_Append: Unit = {
     assertEquals("person.firstName + x", person.firstName append "x")
   }
 
   @Test
-  def String_Append_With_Operators {
+  def String_Append_With_Operators: Unit = {
     assertEquals("person.firstName + x", person.firstName + "x")
   }
 
   @Test
-  def String_Append2 {
+  def String_Append2: Unit = {
     assertEquals("person.firstName +   + person.lastName", person.firstName append " " append person.lastName)
   }
 
   @Test
-  def String_Append2_With_Operators {
+  def String_Append2_With_Operators: Unit = {
     assertEquals("person.firstName +   + person.lastName", person.firstName + " " + person.lastName)
   }
 
   @Test
-  def String_And {
+  def String_And: Unit = {
     val andClause = (person.firstName like "An%") and (person.firstName like "Be%")
     assertEquals("person.firstName like An% && person.firstName like Be%", andClause)
   }
 
   @Test
-  def String_And_With_Operators {
+  def String_And_With_Operators: Unit = {
     val andClause = (person.firstName like "An%") && (person.firstName like "Be%")
     assertEquals("person.firstName like An% && person.firstName like Be%", andClause)
   }
 
   @Test
-  def String_Or {
+  def String_Or: Unit = {
     val orClause = (person.firstName like "An%") or (person.firstName like "Be%")
     assertEquals("person.firstName like An% || person.firstName like Be%", orClause)
   }
 
   @Test
-  def String_Or_With_Operators {
+  def String_Or_With_Operators: Unit = {
     val orClause = (person.firstName like "An%") || (person.firstName like "Be%")
     assertEquals("person.firstName like An% || person.firstName like Be%", orClause)
   }
 
   @Test
-  def String_Not {
+  def String_Not: Unit = {
     assertEquals("!(person.firstName like An%)", (person.firstName like "An%") not)
   }
 
   @Test
-  def String_Not_With_Operators {
+  def String_Not_With_Operators: Unit = {
     assertEquals("!(person.firstName like An%)", !(person.firstName like "An%"))
   }
 
   @Test
-  def String_Trim {
-    assertEquals("trim(person.firstName)", person.firstName trim)
+  def String_Trim: Unit = {
+    assertEquals("trim(person.firstName)", person.firstName.trim())
   }
 
   @Test
-  def String_Is_Empty {
+  def String_Is_Empty: Unit = {
     assertEquals("empty(person.firstName)", person.firstName isEmpty)
     assertEquals("empty(person.firstName)", person.firstName is empty)
   }
 
   @Test
-  def String_Is_Not_Empty {
+  def String_Is_Not_Empty: Unit = {
     assertEquals("!empty(person.firstName)", person.firstName isNotEmpty)
     assertEquals("!empty(person.firstName)", person.firstName not empty)
 //    assertEquals("!empty(person.firstName)", person.firstName is not(empty) )
   }
 
   @Test
-  def Number_Comparison {
+  def Number_Comparison: Unit = {
     assertEquals("person.scalaInt < 5", person.scalaInt lt 5)
     assertEquals("person.scalaInt = 5", person.scalaInt eq 5)
 
@@ -159,12 +159,12 @@ class ExpressionTest {
   }
 
   @Test
-  def Number_Negation {
+  def Number_Negation: Unit = {
     assertEquals("-person.scalaInt", -person.scalaInt)
   }
 
   @Test
-  def Number_Comparison_With_Operators {
+  def Number_Comparison_With_Operators: Unit = {
     assertEquals("person.scalaInt < 5", person.scalaInt < 5)
     assertEquals("person.scalaInt = 5", person.scalaInt === 5)
 
@@ -177,19 +177,19 @@ class ExpressionTest {
   }
 
   @Test
-  def Number_Between {
+  def Number_Between: Unit = {
     assertEquals("person.scalaInt between 2 and 3", person.scalaInt between (2, 3))
     assertEquals("person.javaInt between 2 and 3", person.javaInt between (2, 3))
   }
 
   @Test
-  def Number_Not_Between {
+  def Number_Not_Between: Unit = {
     assertEquals("!(person.scalaInt between 2 and 3)", person.scalaInt not between (2, 3))
     assertEquals("!(person.javaInt between 2 and 3)", person.javaInt not between (2, 3))
   }
 
   @Test
-  def Number_Arithmetic {
+  def Number_Arithmetic: Unit = {
     assertEquals("person.scalaInt + 3", person.scalaInt add 3)
     assertEquals("person.scalaInt - 3", person.scalaInt subtract 3)
     assertEquals("person.scalaInt / 3", person.scalaInt divide 3)
@@ -203,7 +203,7 @@ class ExpressionTest {
   }
 
   @Test
-  def Number_Arithmetic_With_Operators {
+  def Number_Arithmetic_With_Operators: Unit = {
     assertEquals("person.scalaInt + 3", person.scalaInt + 3)
     assertEquals("person.scalaInt - 3", person.scalaInt - 3)
     assertEquals("person.scalaInt / 3", person.scalaInt / 3)
@@ -213,13 +213,13 @@ class ExpressionTest {
   }
 
   @Test
-  def Number_Casts {
+  def Number_Casts: Unit = {
     assertEquals("cast(person.javaInt,long)", person.javaInt longValue)
     assertEquals("cast(person.scalaInt,long)", person.scalaInt longValue)
   }
 
   @Test
-  def Java_Collections_Size {
+  def Java_Collections_Size: Unit = {
     assertEquals("size(person.javaCollection)", person.javaCollection size)
     assertEquals("size(person.javaSet)", person.javaSet size)
     assertEquals("size(person.javaList)", person.javaList size)
@@ -227,7 +227,7 @@ class ExpressionTest {
   }
 
   @Test
-  def Java_Collections_Is_Empty {
+  def Java_Collections_Is_Empty: Unit = {
     assertEquals("empty(person.javaCollection)", person.javaCollection isEmpty)
     assertEquals("empty(person.javaSet)", person.javaSet isEmpty)
     assertEquals("empty(person.javaList)", person.javaList isEmpty)
@@ -235,63 +235,63 @@ class ExpressionTest {
   }
 
   @Test
-  def Java_Collections_Get {
+  def Java_Collections_Get: Unit = {
     assertEquals("person.javaList.get(0) is not null", person.javaList.get(0) isNotNull)
     assertEquals("person.javaMap.get(xxx) is null", person.javaMap.get("xxx") isNull)
   }
 
   @Test
-  def Java_Collection_Get_With_Apply {
+  def Java_Collection_Get_With_Apply: Unit = {
     assertEquals("person.javaList.get(0) is not null", person.javaList(0) isNotNull)
   }
 
   @Test
-  def Java_Collections_Get_And_Starts_With {
+  def Java_Collections_Get_And_Starts_With: Unit = {
     assertEquals("startsWith(person.javaMap.get(xxx),X)", person.javaMap.get("xxx") startsWith "X")
   }
 
   @Test
-  def Java_Collections_Get_With_Apply {
+  def Java_Collections_Get_With_Apply: Unit = {
     assertEquals("startsWith(person.javaMap.get(xxx),X)", person.javaMap("xxx") startsWith "X")
   }
 
   @Test
-  def Scala_Collections_Size {
+  def Scala_Collections_Size: Unit = {
     assertEquals("size(person.scalaList)", person.scalaList size)
     assertEquals("size(person.scalaMap)", person.scalaMap size)
   }
 
   @Test
-  def Scala_Collections_Is_Empty {
+  def Scala_Collections_Is_Empty: Unit = {
     assertEquals("empty(person.scalaList)", person.scalaList isEmpty)
     assertEquals("empty(person.scalaMap)", person.scalaMap isEmpty)
   }
 
   @Test
-  def Scala_Collections_Get {
+  def Scala_Collections_Get: Unit = {
     assertEquals("person.scalaList.get(0) is not null", person.scalaList.get(0) isNotNull)
     assertEquals("person.scalaList.get(0) is not null", person.scalaList.get(0) isNotNull)
     assertEquals("person.scalaMap.get(xxx) is null", person.scalaMap.get("xxx") isNull)
   }
 
   @Test
-  def Scala_Collections_Contains {
+  def Scala_Collections_Contains: Unit = {
     assertEquals("X in person.scalaList", person.scalaList contains "X")
     assertEquals("X in person.javaList", person.javaList contains "X")
   }
 
   @Test
-  def Scala_Collections_Get_And_Starts_With {
+  def Scala_Collections_Get_And_Starts_With: Unit = {
     assertEquals("startsWith(person.scalaMap.get(xxx),X)", person.scalaMap.get("xxx") startsWith "X")
   }
 
   @Test
-  def Array_Size {
+  def Array_Size: Unit = {
     assertEquals("size(person.array)", person.array size)
   }
 
   @Test
-  def Complex_Starts_With_And_Less_Than_And_Is_Null {
+  def Complex_Starts_With_And_Less_Than_And_Is_Null: Unit = {
     val expr: Predicate = (person.firstName startsWith person.lastName) and (person.javaInt lt person.scalaInt) or (person.javaDouble isNull)
     assertEquals("startsWith(person.firstName,person.lastName) " +
          "&& person.javaInt < person.scalaInt " +
@@ -299,68 +299,68 @@ class ExpressionTest {
   }
 
   @Test
-  def Complex_Starts_With_And_Less_Than_And_Is_Null_With_Operators {
+  def Complex_Starts_With_And_Less_Than_And_Is_Null_With_Operators: Unit = {
     val expr: Predicate = (person.firstName startsWith person.lastName) and (person.javaInt lt person.scalaInt) or (person.javaDouble isNull)
     assertEquals("startsWith(person.firstName,person.lastName) && person.javaInt < person.scalaInt || person.javaDouble is null",
                   person.firstName.startsWith(person.lastName) && person.javaInt < person.scalaInt || person.javaDouble.isNull)
   }
 
   @Test
-  def Lt_and_Gt {
+  def Lt_and_Gt: Unit = {
     val expr: Predicate = (person.javaInt lt 5) and (person.scalaInt gt 7)
     assertEquals("person.javaInt < 5 && person.scalaInt > 7", expr)
   }
 
   @Test
-  def Lt_and_Gt_With_Operators {
+  def Lt_and_Gt_With_Operators: Unit = {
     assertEquals("person.javaInt < 5 && person.scalaInt > 7", person.javaInt < 5 && person.scalaInt > 7)
   }
 
   @Test
-  def Gt_and_Lt {
+  def Gt_and_Lt: Unit = {
     val expr: Predicate = (person.javaInt gt 5) and (person.scalaInt lt 7)
     assertEquals("person.javaInt > 5 && person.scalaInt < 7", expr)
   }
 
   @Test
-  def Gt_and_Lt_With_Operators {
+  def Gt_and_Lt_With_Operators: Unit = {
     assertEquals("person.javaInt > 5 && person.scalaInt < 7", person.javaInt > 5 && person.scalaInt < 7)
   }
 
   @Test
-  def Lt_or_Gt {
+  def Lt_or_Gt: Unit = {
     val expr: Predicate = (person.javaInt lt 5) or (person.scalaInt gt 7)
     assertEquals("person.javaInt < 5 || person.scalaInt > 7", expr)
   }
 
   @Test
-  def Lt_or_Gt_With_Operators {
+  def Lt_or_Gt_With_Operators: Unit = {
     assertEquals("person.javaInt < 5 || person.scalaInt > 7", person.javaInt < 5 || person.scalaInt > 7)
   }
 
   @Test
-  def Gt_or_Lt {
+  def Gt_or_Lt: Unit = {
     val expr: Predicate = (person.javaInt gt 5) or (person.scalaInt lt 7)
     assertEquals("person.javaInt > 5 || person.scalaInt < 7", expr)
   }
 
   @Test
-  def Gt_or_Lt_With_Operators {
+  def Gt_or_Lt_With_Operators: Unit = {
     assertEquals("person.javaInt > 5 || person.scalaInt < 7", person.javaInt > 5 || person.scalaInt < 7)
   }
 
   @Test
-  def Starts_with {
+  def Starts_with: Unit = {
     assertEquals("startsWith(person.firstName,amin)",  person.firstName startsWith "amin")
   }
 
   @Test
-  def Ends_with {
+  def Ends_with: Unit = {
     assertEquals("endsWith(person.firstName,amin)",  person.firstName endsWith "amin")
   }
 
   @Test
-  def String_Negations {
+  def String_Negations: Unit = {
     assertEquals("!(person.firstName like XXX)", person.firstName not like("XXX"))
     assertEquals("!matches(person.firstName,XXX)", person.firstName not matches("XXX"))
     assertEquals("!startsWith(person.firstName,XXX)", person.firstName not startsWith("XXX"))
@@ -369,7 +369,7 @@ class ExpressionTest {
   }
 
   @Test
-  def String_Negations2 {
+  def String_Negations2: Unit = {
     assertEquals("!(person.firstName like XXX)", !(person.firstName like "XXX"))
     assertEquals("!matches(person.firstName,XXX)", !(person.firstName matches "XXX"))
     assertEquals("!startsWith(person.firstName,XXX)", !(person.firstName startsWith "XXX"))
@@ -378,7 +378,7 @@ class ExpressionTest {
   }
 
   @Test
-  def BooleanExpression_All_Of {
+  def BooleanExpression_All_Of: Unit = {
     val b1 = new BooleanPath("b1")
     val b2 = new BooleanPath("b2")
     val b3 = new BooleanPath("b3")
@@ -387,7 +387,7 @@ class ExpressionTest {
   }
 
   @Test
-  def BooleanExpression_Any_Of {
+  def BooleanExpression_Any_Of: Unit = {
     val b1 = new BooleanPath("b1")
     val b2 = new BooleanPath("b2")
     val b3 = new BooleanPath("b3")
