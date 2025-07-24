@@ -516,7 +516,7 @@ workflows:
           name: 'deploy snapshot'
           requires:
             - 'snapshot'
-          context: Sonatype
+          context: central
           filters:
             <<: *master-only
 
@@ -524,6 +524,6 @@ workflows:
     jobs:
       - deployRelease:
           name: 'release to maven central'
-          context: Sonatype
+          context: central
           filters:
             <<: *tags-only
