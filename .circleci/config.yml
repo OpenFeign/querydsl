@@ -29,6 +29,10 @@ commands:
             ./mvnw -ntp -B dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true
 
   save-test-results:
+    parameters:
+      flag:
+        type: string
+        default: ""
     steps:
       - run:
           name: Save package results
@@ -52,8 +56,14 @@ commands:
               EXTRA="--pull-request-number $CIRCLE_PR_NUMBER"
             fi
 
+            # Add flag if provided
+            FLAG_ARG=""
+            if [ -n "<< parameters.flag >>" ]; then
+              FLAG_ARG="--flag << parameters.flag >>"
+            fi
+
             # Build the set of common arguments.
-            COMMON_ARGS="--token $CODECOV_TOKEN --branch $CIRCLE_BRANCH --commit-sha $CIRCLE_SHA1 $EXTRA --recurse-submodules --git-service github"
+            COMMON_ARGS="--token $CODECOV_TOKEN --branch $CIRCLE_BRANCH --commit-sha $CIRCLE_SHA1 $EXTRA $FLAG_ARG --recurse-submodules --git-service github"
 
             ls -lha
 
@@ -131,7 +141,8 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B verify -Pno-databases
-      - save-test-results
+      - save-test-results:
+          flag: "test"
 
   windows:
     machine:
@@ -167,7 +178,8 @@ jobs:
           name: 'Build and test examples'
           command: |
             ./mvnw -ntp -B install -Pexamples -rf :querydsl-examples
-      - save-test-results
+      - save-test-results:
+          flag: "examples"
   buildQuarkusExample:
     <<: *defaults
     working_directory: ~/querydsl
@@ -227,7 +239,8 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.MySQL
-      - save-test-results
+      - save-test-results:
+          flag: "mysql"
   testPostgreSQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -247,7 +260,8 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
-      - save-test-results
+      - save-test-results:
+          flag: "postgresql"
   testCUBRID:
     <<: *defaults
     working_directory: ~/querydsl
@@ -265,7 +279,8 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.CUBRID
-      - save-test-results
+      - save-test-results:
+          flag: "cubrid"
   testOracle:
     <<: *defaults
     working_directory: ~/querydsl
@@ -286,7 +301,8 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.Oracle
-      - save-test-results
+      - save-test-results:
+          flag: "oracle"
   testMongo:
     <<: *defaults
     working_directory: ~/querydsl
@@ -302,7 +318,8 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.MongoDB
-      - save-test-results
+      - save-test-results:
+          flag: "mongodb"
   testFirebird:
     <<: *defaults
     working_directory: ~/querydsl
@@ -324,7 +341,8 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.Firebird
-      - save-test-results
+      - save-test-results:
+          flag: "firebird"
   testEmbedded:
     <<: *defaults
     working_directory: ~/querydsl
@@ -339,7 +357,8 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
-      - save-test-results
+      - save-test-results:
+          flag: "embedded"
   testDB2:
     # Use the machine executor so we have full VM capabilities (e.g. docker running as admin)
     machine: true
@@ -389,7 +408,8 @@ jobs:
           name: "Stop and remove DB2 container"
           command: |
             docker stop db2 && docker rm db2
-      - save-test-results
+      - save-test-results:
+          flag: "db2"
 
   deploySnapshot:
     executor:
