@@ -107,7 +107,7 @@
     <junit.version>5.13.4</junit.version>
     <ecj.version>3.42.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
-    <springboot.version>3.5.3</springboot.version>
+    <springboot.version>3.5.4</springboot.version>
     <spring.version>6.2.9</spring.version>
 
     <!-- SQL deps -->
