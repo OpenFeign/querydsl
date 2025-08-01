@@ -116,4 +116,9 @@ public class HQLTemplates extends JPQLTemplates {
   public boolean isCaseWithLiterals() {
     return true;
   }
+
+  @Override
+  public boolean isSubQueryModifiersSupported() {
+    return true;
+  }
 }
