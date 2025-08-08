@@ -95,4 +95,16 @@ public class JPQLTemplatesTest {
       TemplatesTestUtils.testPrecedence(templates);
     }
   }
+
+  @Test
+  public void subQueryModifiers_support() {
+    assertThat(JPQLTemplates.DEFAULT.isSubQueryModifiersSupported()).isFalse();
+    assertThat(new EclipseLinkTemplates().isSubQueryModifiersSupported()).isFalse();
+    assertThat(new OpenJPATemplates().isSubQueryModifiersSupported()).isFalse();
+    assertThat(new DataNucleusTemplates().isSubQueryModifiersSupported()).isFalse();
+    assertThat(new BatooTemplates().isSubQueryModifiersSupported()).isFalse();
+
+    assertThat(HQLTemplates.DEFAULT.isSubQueryModifiersSupported()).isTrue();
+    assertThat(new HQLTemplates().isSubQueryModifiersSupported()).isTrue();
+  }
 }

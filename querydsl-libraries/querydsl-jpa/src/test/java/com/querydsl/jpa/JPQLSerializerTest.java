@@ -24,6 +24,7 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.domain.*;
 import java.util.Arrays;
@@ -370,5 +371,235 @@ public class JPQLSerializerTest {
     assertThat(serializer.toString()).isEqualTo("animal.color in ?1");
     Object constant = serializer.getConstants().get(0);
     assertThat(constant.toString()).isEqualTo("[BLACK, TABBY]");
+  }
+
+  @Test
+  public void visit_subQueryExpression_with_limit_jpql() {
+    var cat = QCat.cat;
+    var subQuery = JPAExpressions.select(cat.id).from(cat).limit(5);
+    var serializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
+    serializer.visit(subQuery, null);
+
+    assertThat(serializer.toString()).isEqualTo("(select cat.id\nfrom Cat cat)");
+    assertThat(serializer.getConstants()).isEmpty();
+  }
+
+  @Test
+  public void visit_subQueryExpression_with_limit_hql() {
+    var cat = QCat.cat;
+    var subQuery = JPAExpressions.select(cat.id).from(cat).limit(5);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.visit(subQuery, null);
+
+    assertThat(serializer.toString()).isEqualTo("(select cat.id\nfrom Cat cat\nlimit ?1)");
+    assertThat(serializer.getConstants()).hasSize(1);
+    assertThat(serializer.getConstants().getFirst()).isEqualTo(5L);
+  }
+
+  @Test
+  public void visit_subQueryExpression_with_offset_jpql() {
+    var cat = QCat.cat;
+    var subQuery = JPAExpressions.select(cat.id).from(cat).offset(10);
+    var serializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
+    serializer.visit(subQuery, null);
+
+    assertThat(serializer.toString()).isEqualTo("(select cat.id\nfrom Cat cat)");
+    assertThat(serializer.getConstants()).isEmpty();
+  }
+
+  @Test
+  public void visit_subQueryExpression_with_offset_hql() {
+    var cat = QCat.cat;
+    var subQuery = JPAExpressions.select(cat.id).from(cat).offset(10);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.visit(subQuery, null);
+
+    assertThat(serializer.toString()).isEqualTo("(select cat.id\nfrom Cat cat\noffset ?1)");
+    assertThat(serializer.getConstants()).hasSize(1);
+    assertThat(serializer.getConstants().getFirst()).isEqualTo(10L);
+  }
+
+  @Test
+  public void visit_subQueryExpression_with_limit_and_offset_jpql() {
+    var cat = QCat.cat;
+    var subQuery = JPAExpressions.select(cat.id).from(cat).limit(5).offset(10);
+    var serializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
+    serializer.visit(subQuery, null);
+
+    assertThat(serializer.toString()).isEqualTo("(select cat.id\nfrom Cat cat)");
+    assertThat(serializer.getConstants()).isEmpty();
+  }
+
+  @Test
+  public void visit_subQueryExpression_with_limit_and_offset_hql() {
+    var cat = QCat.cat;
+    var subQuery = JPAExpressions.select(cat.id).from(cat).limit(5).offset(10);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.visit(subQuery, null);
+
+    assertThat(serializer.toString())
+        .isEqualTo("(select cat.id\nfrom Cat cat\nlimit ?1\noffset ?2)");
+    assertThat(serializer.getConstants()).hasSize(2);
+    assertThat(serializer.getConstants().get(0)).isEqualTo(5L);
+    assertThat(serializer.getConstants().get(1)).isEqualTo(10L);
+  }
+
+  @Test
+  public void visit_nested_subQueryExpression_with_modifiers_hql() {
+    var cat = QCat.cat;
+    var mate = new QCat("mate");
+
+    var innerSubQuery = JPAExpressions.select(mate.id).from(mate).limit(3);
+
+    var outerSubQuery =
+        JPAExpressions.select(cat.id).from(cat).where(cat.id.in(innerSubQuery)).limit(5);
+
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.visit(outerSubQuery, null);
+
+    assertThat(serializer.toString())
+        .isEqualTo(
+            """
+        (select cat.id
+        from Cat cat
+        where cat.id in (select mate.id
+        from Cat mate
+        limit ?1)
+        limit ?2)""");
+    assertThat(serializer.getConstants()).hasSize(2);
+    assertThat(serializer.getConstants().get(0)).isEqualTo(3L);
+    assertThat(serializer.getConstants().get(1)).isEqualTo(5L);
+  }
+
+  @Test
+  public void subquery_in_where_clause_with_modifiers_jpql() {
+    var cat = QCat.cat;
+    var kitten = new QCat("kitten");
+
+    QueryMetadata mainQuery = new DefaultQueryMetadata();
+    mainQuery.addJoin(JoinType.DEFAULT, cat);
+
+    SubQueryExpression<Integer> subQuery =
+        JPAExpressions.select(kitten.id)
+            .from(kitten)
+            .where(kitten.name.isNotNull())
+            .limit(5)
+            .offset(10);
+
+    mainQuery.addWhere(cat.id.in(subQuery));
+    mainQuery.setProjection(cat);
+
+    var jpqlSerializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
+    jpqlSerializer.serialize(mainQuery, false, null);
+
+    assertThat(jpqlSerializer.toString())
+        .isEqualTo(
+            """
+        select cat
+        from Cat cat
+        where cat.id in (select kitten.id
+        from Cat kitten
+        where kitten.name is not null)""");
+    assertThat(jpqlSerializer.getConstants()).isEmpty();
+  }
+
+  @Test
+  public void subquery_in_where_clause_with_modifiers_hql() {
+    var cat = QCat.cat;
+    var kitten = new QCat("kitten");
+
+    QueryMetadata mainQuery = new DefaultQueryMetadata();
+    mainQuery.addJoin(JoinType.DEFAULT, cat);
+
+    SubQueryExpression<Integer> subQuery =
+        JPAExpressions.select(kitten.id)
+            .from(kitten)
+            .where(kitten.name.isNotNull())
+            .limit(5)
+            .offset(10);
+
+    mainQuery.addWhere(cat.id.in(subQuery));
+    mainQuery.setProjection(cat);
+
+    var hqlSerializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    hqlSerializer.serialize(mainQuery, false, null);
+
+    assertThat(hqlSerializer.toString())
+        .isEqualTo(
+            """
+        select cat
+        from Cat cat
+        where cat.id in (select kitten.id
+        from Cat kitten
+        where kitten.name is not null
+        limit ?1
+        offset ?2)""");
+    assertThat(hqlSerializer.getConstants()).hasSize(2);
+    assertThat(hqlSerializer.getConstants().get(0)).isEqualTo(5L);
+    assertThat(hqlSerializer.getConstants().get(1)).isEqualTo(10L);
+  }
+
+  @Test
+  public void subquery_in_select_clause_with_modifiers_jpql() {
+    var cat = QCat.cat;
+    var mate = new QCat("mate");
+
+    QueryMetadata mainQuery = new DefaultQueryMetadata();
+    mainQuery.addJoin(JoinType.DEFAULT, cat);
+
+    SubQueryExpression<Integer> subQuery =
+        JPAExpressions.select(mate.weight.max())
+            .from(mate)
+            .where(mate.name.eq(cat.name))
+            .limit(1)
+            .offset(2);
+
+    mainQuery.setProjection(subQuery);
+
+    var jpqlSerializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
+    jpqlSerializer.serialize(mainQuery, false, null);
+
+    assertThat(jpqlSerializer.toString())
+        .isEqualTo(
+            """
+        select (select max(mate.weight)
+        from Cat mate
+        where mate.name = cat.name)
+        from Cat cat""");
+    assertThat(jpqlSerializer.getConstants()).isEmpty();
+  }
+
+  @Test
+  public void subquery_in_select_clause_with_modifiers_hql() {
+    var cat = QCat.cat;
+    var mate = new QCat("mate");
+
+    QueryMetadata mainQuery = new DefaultQueryMetadata();
+    mainQuery.addJoin(JoinType.DEFAULT, cat);
+
+    SubQueryExpression<Integer> subQuery =
+        JPAExpressions.select(mate.weight.max())
+            .from(mate)
+            .where(mate.name.eq(cat.name))
+            .limit(1)
+            .offset(2);
+
+    mainQuery.setProjection(subQuery);
+
+    var hqlSerializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    hqlSerializer.serialize(mainQuery, false, null);
+
+    assertThat(hqlSerializer.toString())
+        .isEqualTo(
+            """
+        select (select max(mate.weight)
+        from Cat mate
+        where mate.name = cat.name
+        limit ?1
+        offset ?2)
+        from Cat cat""");
+    assertThat(hqlSerializer.getConstants()).hasSize(2);
+    assertThat(hqlSerializer.getConstants().get(0)).isEqualTo(1L);
+    assertThat(hqlSerializer.getConstants().get(1)).isEqualTo(2L);
   }
 }
