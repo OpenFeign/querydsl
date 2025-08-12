@@ -116,8 +116,8 @@
     <hsqldb.version>2.7.4</hsqldb.version>
     <h2.version>2.3.232</h2.version>
     <postgresql.version>42.7.7</postgresql.version>
-    <oracle.version>23.8.0.25.04</oracle.version>
-    <mysql.version>9.3.0</mysql.version>
+    <oracle.version>23.9.0.25.07</oracle.version>
+    <mysql.version>9.4.0</mysql.version>
     <mssql.version>13.1.1.jre8-preview</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.50.3.0</sqlite.version>
@@ -128,13 +128,13 @@
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
     <!-- JPA deps -->
-    <hibernate.version>7.0.8.Final</hibernate.version>
+    <hibernate.version>7.0.9.Final</hibernate.version>
     <hibernate.validator.version>9.0.1.Final</hibernate.validator.version>
     <eclipselink.version>5.0.0-B09</eclipselink.version>
     <jpa.version>3.2.0</jpa.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 
-    <assertj.version>3.27.3</assertj.version>
+    <assertj.version>3.27.4</assertj.version>
     <mvn.version>3.9.11</mvn.version>
     <guava.version>33.4.8-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
