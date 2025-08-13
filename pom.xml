@@ -77,12 +77,12 @@
 
   <distributionManagement>
     <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <id>central</id>
+      <url>https://central.sonatype.com/api/v1/publisher/deployments/upload/</url>
     </repository>
     <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <id>central</id>
+      <url>https://central.sonatype.com/api/v1/publisher/deployments/upload/</url>
     </snapshotRepository>
   </distributionManagement>
 
@@ -107,7 +107,7 @@
     <junit.version>5.13.4</junit.version>
     <ecj.version>3.42.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
-    <springboot.version>3.5.3</springboot.version>
+    <springboot.version>3.5.4</springboot.version>
     <spring.version>6.2.9</spring.version>
 
     <!-- SQL deps -->
@@ -116,9 +116,9 @@
     <hsqldb.version>2.7.4</hsqldb.version>
     <h2.version>2.3.232</h2.version>
     <postgresql.version>42.7.7</postgresql.version>
-    <oracle.version>23.8.0.25.04</oracle.version>
-    <mysql.version>9.3.0</mysql.version>
-    <mssql.version>13.1.0.jre8-preview</mssql.version>
+    <oracle.version>23.9.0.25.07</oracle.version>
+    <mysql.version>9.4.0</mysql.version>
+    <mssql.version>13.1.1.jre8-preview</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.50.3.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
@@ -128,13 +128,13 @@
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
     <!-- JPA deps -->
-    <hibernate.version>7.0.2.Final</hibernate.version>
+    <hibernate.version>7.0.9.Final</hibernate.version>
     <hibernate.validator.version>9.0.1.Final</hibernate.validator.version>
     <eclipselink.version>5.0.0-B09</eclipselink.version>
     <jpa.version>3.2.0</jpa.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 
-    <assertj.version>3.27.3</assertj.version>
+    <assertj.version>3.27.4</assertj.version>
     <mvn.version>3.9.11</mvn.version>
     <guava.version>33.4.8-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
@@ -286,7 +286,7 @@
       <dependency>
         <groupId>io.projectreactor</groupId>
         <artifactId>reactor-bom</artifactId>
-        <version>2024.0.8</version>
+        <version>2024.0.9</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -802,15 +802,14 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.7.0</version>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.8.0</version>
             <extensions>true</extensions>
             <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-              <stagingProgressTimeoutMinutes>15</stagingProgressTimeoutMinutes>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+              <waitUntil>published</waitUntil>
             </configuration>
           </plugin>
         </plugins>
@@ -1038,18 +1037,18 @@
           <plugin>
             <groupId>org.openrewrite.maven</groupId>
             <artifactId>rewrite-maven-plugin</artifactId>
-            <version>6.15.0</version>
+            <version>6.16.0</version>
 
             <dependencies>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-testing-frameworks</artifactId>
-                <version>3.14.1</version>
+                <version>3.15.0</version>
               </dependency>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-migrate-java</artifactId>
-                <version>3.14.1</version>
+                <version>3.15.0</version>
               </dependency>
             </dependencies>
 
