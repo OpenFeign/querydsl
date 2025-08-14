@@ -286,7 +286,7 @@
       <dependency>
         <groupId>io.projectreactor</groupId>
         <artifactId>reactor-bom</artifactId>
-        <version>2024.0.8</version>
+        <version>2024.0.9</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -1037,18 +1037,18 @@
           <plugin>
             <groupId>org.openrewrite.maven</groupId>
             <artifactId>rewrite-maven-plugin</artifactId>
-            <version>6.15.0</version>
+            <version>6.16.0</version>
 
             <dependencies>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-testing-frameworks</artifactId>
-                <version>3.14.1</version>
+                <version>3.15.0</version>
               </dependency>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-migrate-java</artifactId>
-                <version>3.14.1</version>
+                <version>3.15.0</version>
               </dependency>
             </dependencies>
 
