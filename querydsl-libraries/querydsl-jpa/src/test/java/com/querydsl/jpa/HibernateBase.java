@@ -176,4 +176,75 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
                 .distinct()
                 .transform(GroupBy.groupBy(cat.id).as(cat)));
   }
+
+  @Test
+  public void subQueryWithLimitAndOffset() {
+    var kitten = new QCat("kitten");
+
+    List<Integer> allIds = query().from(kitten).orderBy(kitten.id.asc()).select(kitten.id).fetch();
+
+    List<Integer> expectedIds = allIds.subList(1, 4);
+
+    List<Cat> results =
+        query()
+            .from(cat)
+            .where(
+                cat.id.in(
+                    JPAExpressions.select(kitten.id)
+                        .from(kitten)
+                        .orderBy(kitten.id.asc())
+                        .limit(3)
+                        .offset(1)))
+            .orderBy(cat.id.asc())
+            .select(cat)
+            .fetch();
+
+    assertThat(results).hasSize(3);
+    assertThat(results.stream().map(Cat::getId).toList()).isEqualTo(expectedIds);
+  }
+
+  @Test
+  public void subQueryWithLimitInSelectClause() {
+    var firstCat = query().from(cat).orderBy(cat.id.asc()).select(cat).fetchFirst();
+    var mate = new QCat("mate");
+
+    Integer result =
+        query()
+            .from(cat)
+            .where(cat.id.eq(firstCat.getId()))
+            .select(
+                JPAExpressions.select(mate.id)
+                    .from(mate)
+                    .where(mate.name.eq(firstCat.getName()))
+                    .orderBy(mate.id.asc())
+                    .limit(1))
+            .fetchFirst();
+
+    assertThat(result).isEqualTo(firstCat.getId());
+  }
+
+  @Test
+  public void subQueryWithOffsetOnly() {
+    var kitten = new QCat("kitten");
+
+    List<Integer> allIds = query().from(kitten).orderBy(kitten.id.asc()).select(kitten.id).fetch();
+
+    List<Integer> expectedIds = allIds.subList(2, allIds.size());
+
+    List<Cat> results =
+        query()
+            .from(cat)
+            .where(
+                cat.id.in(
+                    JPAExpressions.select(kitten.id)
+                        .from(kitten)
+                        .orderBy(kitten.id.asc())
+                        .offset(2)))
+            .orderBy(cat.id.asc())
+            .select(cat)
+            .fetch();
+
+    assertThat(results).hasSize(expectedIds.size());
+    assertThat(results.stream().map(Cat::getId).toList()).isEqualTo(expectedIds);
+  }
 }
