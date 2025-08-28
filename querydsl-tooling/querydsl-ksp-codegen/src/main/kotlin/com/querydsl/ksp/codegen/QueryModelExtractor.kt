@@ -154,9 +154,16 @@ class QueryModelExtractor(
 
     companion object {
         fun queryClassName(classDeclaration: KSClassDeclaration, settings: KspSettings): ClassName {
+            val simpleNames = generateSequence(classDeclaration) { it.parentDeclaration as? KSClassDeclaration }
+                .map { it.simpleName.asString() }
+                .toList()
+                .reversed()
+
+            val className = simpleNames.joinToString("_")
+
             return ClassName(
                 "${classDeclaration.packageName.asString()}${settings.packageSuffix}",
-                "${settings.prefix}${classDeclaration.simpleName.asString()}${settings.suffix}"
+                "${settings.prefix}${className}${settings.suffix}"
             )
         }
     }
