@@ -17,39 +17,42 @@ class QueryDslProcessor(
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (settings.enable) {
             QueryModelType.entries.forEach { type ->
-                resolver.getSymbolsWithAnnotation(type.associatedAnnotation)
-                    .forEach { declaration ->
-                        when {
-                            type == QueryModelType.QUERY_PROJECTION -> {
-                                val errorMessage = "${type.associatedAnnotation} annotation" +
-                                        " must be declared on a constructor function or class"
-                                when (declaration) {
-                                    is KSFunctionDeclaration -> {
-                                        if (!declaration.isConstructor()) error(errorMessage)
-                                        val parentDeclaration = declaration.parent as? KSClassDeclaration
-                                            ?: error(errorMessage)
-                                        if (isIncluded(parentDeclaration)) {
-                                            typeProcessor.addConstructor(parentDeclaration, declaration)
-                                        }
-                                    }
-                                    is KSClassDeclaration -> {
-                                        if (isIncluded(declaration)) {
-                                            typeProcessor.addClass(declaration, type)
-                                        }
-                                    }
-                                    else -> error(errorMessage)
-                                }
-                            }
-                            declaration is KSClassDeclaration -> {
-                                if (isIncluded(declaration)) {
-                                    typeProcessor.addClass(declaration, type)
-                                }
-                            }
-                            else -> {
-                                error("Annotated element was expected to be class or constructor, instead got ${declaration}")
-                            }
-                        }
-                    }
+				type.associatedAnnotations.forEach { associatedAnnotation ->
+					resolver.getSymbolsWithAnnotation(associatedAnnotation)
+						.forEach { declaration ->
+							when {
+								type == QueryModelType.QUERY_PROJECTION -> {
+									val errorMessage = "$associatedAnnotation annotation" +
+											" must be declared on a constructor function or class"
+									when (declaration) {
+										is KSFunctionDeclaration -> {
+											if (!declaration.isConstructor()) error(errorMessage)
+											val parentDeclaration = declaration.parent as? KSClassDeclaration
+												?: error(errorMessage)
+											if (isIncluded(parentDeclaration)) {
+												typeProcessor.addConstructor(parentDeclaration, declaration)
+											}
+										}
+										is KSClassDeclaration -> {
+											if (isIncluded(declaration)) {
+												typeProcessor.addClass(declaration, type)
+											}
+										}
+										else -> error(errorMessage)
+									}
+								}
+								declaration is KSClassDeclaration -> {
+									if (isIncluded(declaration)) {
+										typeProcessor.addClass(declaration, type)
+									}
+								}
+								else -> {
+									error("Annotated element was expected to be class or constructor, instead got ${declaration}")
+								}
+							}
+						}
+				}
+
             }
         }
         return emptyList()
