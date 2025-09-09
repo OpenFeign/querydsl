@@ -211,6 +211,48 @@ class RenderTest {
             ) : com.querydsl.core.types.ConstructorExpression<CatDTO>(CatDTO::class.java, arrayOf(kotlin.Int::class.java, kotlin.String::class.java), id, name)
         """.trimIndent())
     }
+
+    @Test
+    fun innerClassNaming() {
+        // Test case for inner class naming compatibility with KAPT
+        val model = QueryModel(
+            originalClassName = ClassName("", "OuterClass", "InnerClass"),
+            typeParameterCount = 0,
+            className = ClassName("", "QOuterClass_InnerClass"),
+            type = QueryModelType.ENTITY,
+            null,
+            mockk()
+        )
+        val properties = listOf(
+            QProperty("innerProperty", QPropertyType.Simple(SimpleType.QString))
+        )
+        model.properties.addAll(properties)
+        val typeSpec = QueryModelRenderer.render(model)
+        val code = typeSpec.toString()
+
+        // Skip compile check for inner classes as they reference non-existent types
+        code.assertContains("class QOuterClass_InnerClass")
+        code.assertContains("val innerProperty: com.querydsl.core.types.dsl.StringPath = createString(\"innerProperty\")")
+    }
+
+    @Test
+    fun deeplyNestedClassNaming() {
+        // Test case for deeply nested classes (3 levels) - just check generated code structure
+        val model = QueryModel(
+            originalClassName = ClassName("", "Level1", "Level2", "Level3"),
+            typeParameterCount = 0,
+            className = ClassName("", "QLevel1_Level2_Level3"),
+            type = QueryModelType.ENTITY,
+            null,
+            mockk()
+        )
+        val typeSpec = QueryModelRenderer.render(model)
+        val code = typeSpec.toString()
+
+        // Skip compile check for nested classes as they reference non-existent types
+        code.assertContains("class QLevel1_Level2_Level3")
+        code.assertContains("EntityPathBase<Level1.Level2.Level3>")
+    }
 }
 
 private fun String.assertLines(expected: String) {
@@ -271,3 +313,13 @@ class QAnimal(
 class Cat
 
 class CatDTO
+
+class OuterClass {
+    class InnerClass
+}
+
+class Level1 {
+    class Level2 {
+        class Level3
+    }
+}
