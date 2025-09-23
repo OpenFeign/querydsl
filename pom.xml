@@ -134,7 +134,7 @@
     <jpa.version>3.2.0</jpa.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 
-    <assertj.version>3.27.5</assertj.version>
+    <assertj.version>3.27.6</assertj.version>
     <mvn.version>3.9.11</mvn.version>
     <guava.version>33.5.0-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
