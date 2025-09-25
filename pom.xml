@@ -114,7 +114,7 @@
     <db2.version>12.1.2.0</db2.version>
     <derby.version>10.17.1.0</derby.version>
     <hsqldb.version>2.7.4</hsqldb.version>
-    <h2.version>2.3.232</h2.version>
+    <h2.version>2.4.240</h2.version>
     <postgresql.version>42.7.8</postgresql.version>
     <oracle.version>23.9.0.25.07</oracle.version>
     <mysql.version>9.4.0</mysql.version>
