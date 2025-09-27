@@ -8,6 +8,7 @@ import com.querydsl.example.ksp.QBearSimplifiedProjection
 import com.querydsl.example.ksp.QCat
 import com.querydsl.example.ksp.QDog
 import com.querydsl.example.ksp.QGeolocation
+import com.querydsl.example.ksp.QMyShape
 import com.querydsl.example.ksp.QPerson
 import com.querydsl.example.ksp.QPersonClassDTO
 import com.querydsl.example.ksp.QPersonClassConstructorDTO
@@ -19,7 +20,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import org.hibernate.cfg.Configuration
 import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.jvmErasure
 import kotlin.test.Test
 
 class Tests {
@@ -249,15 +252,12 @@ class Tests {
         }
     }
 
-    @Test
-    fun `is detecting comparable interface on unknown type`() {
-        val locationTypeName = QGeolocation::class
-            .members
-            .first { it.name == "location" }
-            .returnType
-            .toString()
-        assertThat(locationTypeName).isEqualTo("com.querydsl.core.types.dsl.ComparablePath<org.locationtech.jts.geom.Point>")
-    }
+	@Test
+	fun ensureCorrectGeoType() {
+		val departureProperty = QMyShape::class.memberProperties.single { it.name == "departureGeo" }
+		assertThat(departureProperty.returnType.jvmErasure.qualifiedName!!).isEqualTo("com.querydsl.spatial.locationtech.jts.JTSGeometryPath")
+		assertThat(departureProperty.returnType.arguments.single().type!!.jvmErasure.qualifiedName!!).isEqualTo("org.locationtech.jts.geom.Geometry")
+	}
 
     private fun initialize(): EntityManagerFactory {
         val configuration = Configuration()
