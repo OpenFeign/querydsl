@@ -253,6 +253,32 @@ class RenderTest {
         code.assertContains("class QLevel1_Level2_Level3")
         code.assertContains("EntityPathBase<Level1.Level2.Level3>")
     }
+
+	@Test
+	fun geometryTypeRendering() {
+		val model = QueryModel(
+			originalClassName = ClassName("", "MyShape"),
+			typeParameterCount = 0,
+			className = ClassName("", "QMyShape"),
+			type = QueryModelType.ENTITY,
+			null,
+			mockk()
+		)
+		val properties = listOf(
+			QProperty(
+				"geometry",
+				QPropertyType.Simple(
+					SimpleType.Mapper.get(ClassName("org.locationtech.jts.geom", "Geometry"))!!
+				)
+			)
+		)
+		model.properties.addAll(properties)
+		val typeSpec = QueryModelRenderer.render(model)
+		val code = typeSpec.toString()
+		code.assertContains("""
+			public val geometry: com.querydsl.spatial.locationtech.jts.JTSGeometryPath<org.locationtech.jts.geom.Geometry> = com.querydsl.spatial.locationtech.jts.JTSGeometryPath(forProperty("geometry"))
+		""".trimIndent())
+	}
 }
 
 private fun String.assertLines(expected: String) {

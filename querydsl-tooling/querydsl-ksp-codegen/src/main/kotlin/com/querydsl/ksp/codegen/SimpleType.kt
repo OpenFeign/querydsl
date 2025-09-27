@@ -165,8 +165,21 @@ sealed interface SimpleType {
         }
     }
 
+	class Custom(
+		override val className: ClassName,
+		override val pathClassName: ClassName,
+		override val pathTypeName: TypeName
+	) : SimpleType {
+		override fun render(name: String): PropertySpec {
+			return PropertySpec
+				.builder(name, pathTypeName)
+				.initializer("${pathClassName}(forProperty(\"$name\"))")
+				.build()
+		}
+	}
+
     object Mapper {
-        private val typeMap: Map<ClassName, SimpleType> = mutableMapOf<KClass<*>, SimpleType>()
+        private val simpleTypeMap: Map<ClassName, SimpleType> = mutableMapOf<KClass<*>, SimpleType>()
             .apply {
                 this[Any::class] = Simple(Any::class.asClassName())
                 this[Char::class] = Comparable(Char::class.asClassName())
@@ -215,8 +228,54 @@ sealed interface SimpleType {
             }
             .mapKeys { it.key.asClassName() }
 
+		private val customTypeMap: Map<ClassName, SimpleType> = mutableMapOf<ClassName, SimpleType>()
+			.apply {
+				val mapping = mutableMapOf<ClassName, ClassName>()
+				apply {
+					val map = mapOf(
+						"Geometry" to "GeometryPath",
+						"GeometryCollection" to "GeometryCollectionPath",
+						"LinearRing" to "LinearRingPath",
+						"LineString" to "LineStringPath",
+						"MultiLineString" to "MultiLineStringPath",
+						"MultiPoint" to "MultiPointPath",
+						"MultiPolygon" to "MultiPolygonPath",
+						"Point" to "PointPath",
+						"Polygon" to "PolygonPath"
+					)
+					for (entry in map) {
+						mapping[ClassName("org.geolatte.geom", entry.key)] = ClassName("com.querydsl.spatial", entry.value)
+					}
+				}
+
+				apply {
+					val map = mapOf(
+						"Geometry" to "JTSGeometryPath",
+						"GeometryCollection" to "JTSGeometryCollectionPath",
+						"LinearRing" to "JTSLinearRingPath",
+						"LineString" to "JTSLineStringPath",
+						"MultiLineString" to "JTSMultiLineStringPath",
+						"MultiPoint" to "JTSMultiPointPath",
+						"MultiPolygon" to "JTSMultiPolygonPath",
+						"Point" to "JTSPointPath",
+						"Polygon" to "JTSPolygonPath",
+					)
+					for (entry in map) {
+						mapping[ClassName("com.vividsolutions.jts.geom", entry.key)] = ClassName("com.querydsl.spatial.jts", entry.value)
+						mapping[ClassName("org.locationtech.jts.geom", entry.key)] = ClassName("com.querydsl.spatial.locationtech.jts", entry.value)
+					}
+				}
+				for (entry in mapping) {
+					this[entry.key] = Custom(
+						entry.key,
+						entry.value,
+						entry.value.parameterizedBy(entry.key)
+					)
+				}
+			}
+
         fun get(className: ClassName): SimpleType? {
-            return typeMap[className]
+            return simpleTypeMap[className] ?: customTypeMap[className]
         }
     }
 }
