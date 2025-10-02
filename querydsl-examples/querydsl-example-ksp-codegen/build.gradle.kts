@@ -20,6 +20,7 @@ repositories {
 dependencies {
         implementation("jakarta.persistence:jakarta.persistence-api:${jpaVersion}")
         implementation("io.github.openfeign.querydsl:querydsl-core:${querydslVersion}")
+        implementation("io.github.openfeign.querydsl:querydsl-spatial:${querydslVersion}")
         implementation("org.hibernate.orm:hibernate-core:${hibernateVersion}")
         ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:${querydslVersion}")
         implementation("org.locationtech.jts:jts-core:1.19.0")
