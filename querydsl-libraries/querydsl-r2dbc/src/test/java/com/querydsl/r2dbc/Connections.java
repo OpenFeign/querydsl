@@ -74,7 +74,7 @@ public final class Connections {
   private static boolean sqlServerInited, h2Inited, mysqlInited, postgresqlInited;
 
   public static R2DBCConnectionProvider getR2DBCConnectionProvider(String url) {
-    return () -> Mono.from(getConnectionProvider(url).create());
+    return R2DBCConnectionProvider.from(getConnectionProvider(url));
   }
 
   public static ConnectionFactory getConnectionProvider(String url) {

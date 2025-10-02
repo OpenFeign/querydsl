@@ -40,10 +40,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -212,31 +214,32 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
   @SuppressWarnings("unchecked")
   @Override
   public Flux<T> fetch() {
-    return getConnection()
-        .flatMapMany(
-            conn -> {
-              var expr = (Expression<T>) queryMixin.getMetadata().getProjection();
-              var serializer = serialize(false);
-              var mapper = createMapper(expr);
+    Function<Connection, Publisher<T>> work =
+        connection -> {
+          var expr = (Expression<T>) queryMixin.getMetadata().getProjection();
+          var serializer = serialize(false);
+          var mapper = createMapper(expr);
 
-              var constants = serializer.getConstants();
-              var originalSql = serializer.toString();
-              var sql =
-                  R2dbcUtils.replaceBindingArguments(
-                      configuration.getBindMarkerFactory().create(), constants, originalSql);
+          var constants = serializer.getConstants();
+          var originalSql = serializer.toString();
+          var sql =
+              R2dbcUtils.replaceBindingArguments(
+                  configuration.getBindMarkerFactory().create(), constants, originalSql);
 
-              var statement = conn.createStatement(sql);
-              BindTarget bindTarget = new StatementWrapper(statement);
+          var statement = connection.createStatement(sql);
+          BindTarget bindTarget = new StatementWrapper(statement);
 
-              setParameters(
-                  bindTarget,
-                  configuration.getBindMarkerFactory().create(),
-                  constants,
-                  serializer.getConstantPaths(),
-                  getMetadata().getParams());
+          setParameters(
+              bindTarget,
+              configuration.getBindMarkerFactory().create(),
+              constants,
+              serializer.getConstantPaths(),
+              getMetadata().getParams());
 
-              return Flux.from(statement.execute()).flatMap(result -> result.map(mapper::map));
-            });
+          return Flux.from(statement.execute()).flatMap(result -> result.map(mapper::map));
+        };
+
+    return usingConnectionMany(work);
   }
 
   private Mapper<T> createMapper(Expression<T> expr) {
@@ -322,32 +325,53 @@ public abstract class AbstractR2DBCQuery<T, Q extends AbstractR2DBCQuery<T, Q>>
 
     logQuery(sql, constants);
 
-    return getConnection()
-        .flatMap(
-            connection -> {
-              var statement = getStatement(connection, sql);
-              BindTarget bindTarget = new StatementWrapper(statement);
+    Function<Connection, Mono<Long>> work =
+        connection -> {
+          var statement = getStatement(connection, sql);
+          BindTarget bindTarget = new StatementWrapper(statement);
 
-              setParameters(
-                  bindTarget,
-                  configuration.getBindMarkerFactory().create(),
-                  constants,
-                  serializer.getConstantPaths(),
-                  getMetadata().getParams());
+          setParameters(
+              bindTarget,
+              configuration.getBindMarkerFactory().create(),
+              constants,
+              serializer.getConstantPaths(),
+              getMetadata().getParams());
 
-              return Mono.from(statement.execute())
-                  .flatMap(result -> Mono.from(result.map((row, rowMetadata) -> row.get(0))))
-                  .map(
-                      o -> {
-                        if (Integer.class.isAssignableFrom(o.getClass())) {
-                          return ((Integer) o).longValue();
-                        }
+          return Mono.from(statement.execute())
+              .flatMap(result -> Mono.from(result.map((row, rowMetadata) -> row.get(0))))
+              .map(
+                  o -> {
+                    if (Integer.class.isAssignableFrom(o.getClass())) {
+                      return ((Integer) o).longValue();
+                    }
 
-                        return (Long) o;
-                      })
-                  .defaultIfEmpty(0L)
-                  .doOnError(e -> Mono.error(configuration.translate(sql, constants, e)));
-            });
+                    return (Long) o;
+                  })
+              .defaultIfEmpty(0L)
+              .doOnError(e -> Mono.error(configuration.translate(sql, constants, e)));
+        };
+
+    return usingConnection(work);
+  }
+
+  private <R> Flux<R> usingConnectionMany(Function<Connection, Publisher<R>> callback) {
+    if (connProvider != null) {
+      return connProvider.withConnectionMany(callback);
+    }
+    if (conn != null) {
+      return Flux.defer(() -> Flux.from(callback.apply(conn)));
+    }
+    return Flux.error(new IllegalStateException("No connection provided"));
+  }
+
+  private <R> Mono<R> usingConnection(Function<Connection, Mono<R>> callback) {
+    if (connProvider != null) {
+      return connProvider.withConnection(callback);
+    }
+    if (conn != null) {
+      return Mono.defer(() -> callback.apply(conn));
+    }
+    return Mono.error(new IllegalStateException("No connection provided"));
   }
 
   protected void logQuery(String queryString, Collection<Object> parameters) {
