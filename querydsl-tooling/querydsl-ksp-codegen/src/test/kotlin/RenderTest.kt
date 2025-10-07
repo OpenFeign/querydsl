@@ -115,6 +115,7 @@ class RenderTest {
         val code = typeSpec.toString()
         code.assertCompiles()
         code.assertLines("""
+            @com.querydsl.core.annotations.Generated
             public class QArticle : com.querydsl.core.types.dsl.EntityPathBase<Article<*>> {
                 public constructor(path: com.querydsl.core.types.Path<out Article<*>>) : super(path.type, path.metadata)
                 

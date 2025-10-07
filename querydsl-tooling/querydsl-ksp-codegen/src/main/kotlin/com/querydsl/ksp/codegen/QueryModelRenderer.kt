@@ -71,7 +71,13 @@ object QueryModelRenderer {
 
     private fun TypeSpec.Builder.addProperties(model: QueryModel): TypeSpec.Builder {
         model.properties
-            .map { renderProperty(it) }
+            .map {
+                val propertySpec = renderProperty(it)
+                when {
+                    propertySpec.delegated -> propertySpec
+                    else -> propertySpec.toBuilder().addAnnotation(JvmField::class).build()
+                }
+            }
             .forEach { addProperty(it) }
         return this
     }
