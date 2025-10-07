@@ -1,5 +1,6 @@
 package com.querydsl.ksp.codegen
 
+import com.querydsl.core.annotations.Generated
 import com.querydsl.core.types.ConstructorExpression
 import com.querydsl.core.types.Path
 import com.querydsl.core.types.PathMetadata
@@ -16,6 +17,7 @@ object QueryModelRenderer {
                 .setPrimaryConstructor(model)
                 .setEntitySuperclass(model)
                 .addSuperConstructorParameter(model)
+                .addAnnotation(Generated::class)
                 .build()
 
             else -> TypeSpec.classBuilder(model.className)
@@ -28,6 +30,7 @@ object QueryModelRenderer {
                 .constructorForTypeMetadata(model)
                 .addInitializerCompanionObject(model)
                 .addInheritedProperties(model)
+                .addAnnotation(Generated::class)
                 .build()
         }
     }
