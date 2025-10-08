@@ -34,6 +34,10 @@ public abstract class QueryBase<Q extends QueryBase<Q>> {
 
   protected final QueryMixin<Q> queryMixin;
 
+  protected QueryBase() {
+    this.queryMixin = null;
+  }
+
   public QueryBase(QueryMixin<Q> queryMixin) {
     this.queryMixin = queryMixin;
   }

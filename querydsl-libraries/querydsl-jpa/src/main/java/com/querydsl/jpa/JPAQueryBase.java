@@ -15,12 +15,18 @@ package com.querydsl.jpa;
 
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.support.FetchableSubQueryBase;
+import com.querydsl.core.support.QueryBase;
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.MapExpression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serial;
+import java.lang.reflect.Field;
 
 /**
  * {@code JPAQueryBase} is a base Query class for JPA queries
@@ -32,9 +38,9 @@ import com.querydsl.core.types.dsl.Expressions;
 public abstract class JPAQueryBase<T, Q extends JPAQueryBase<T, Q>>
     extends FetchableSubQueryBase<T, Q> implements JPQLQuery<T> {
 
-  protected final JPAQueryMixin<Q> queryMixin;
+  protected final transient JPAQueryMixin<Q> queryMixin;
 
-  private final JPQLTemplates templates;
+  private final transient JPQLTemplates templates;
 
   @SuppressWarnings("unchecked")
   public JPAQueryBase(QueryMetadata md, JPQLTemplates templates) {
@@ -224,4 +230,32 @@ public abstract class JPAQueryBase<T, Q extends JPAQueryBase<T, Q>>
 
   @Override
   public abstract Q clone();
+
+  @Serial
+  private void writeObject(ObjectOutputStream oos) throws IOException {
+    oos.writeObject(getMetadata());
+  }
+
+  @Serial
+  private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+    QueryMetadata metadata = (QueryMetadata) ois.readObject();
+    JPAQueryMixin<Q> queryMixinValue = new JPAQueryMixin<>(metadata);
+    @SuppressWarnings("unchecked")
+    Q self = (Q) this;
+    queryMixinValue.setSelf(self);
+    try {
+      setFinalFieldValue(JPAQueryBase.class, "templates", JPQLTemplates.DEFAULT);
+      setFinalFieldValue(JPAQueryBase.class, "queryMixin", queryMixinValue);
+      setFinalFieldValue(QueryBase.class, "queryMixin", queryMixinValue);
+    } catch (NoSuchFieldException | IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private void setFinalFieldValue(Class<?> type, String fieldName, Object value)
+      throws NoSuchFieldException, IllegalAccessException {
+    Field field = type.getDeclaredField(fieldName);
+    field.setAccessible(true);
+    field.set(this, value);
+  }
 }

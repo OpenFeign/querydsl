@@ -32,6 +32,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class FetchableQueryBase<T, Q extends FetchableQueryBase<T, Q>> extends QueryBase<Q>
     implements Fetchable<T> {
+  protected FetchableQueryBase() {
+    super();
+  }
 
   public FetchableQueryBase(QueryMixin<Q> queryMixin) {
     super(queryMixin);
