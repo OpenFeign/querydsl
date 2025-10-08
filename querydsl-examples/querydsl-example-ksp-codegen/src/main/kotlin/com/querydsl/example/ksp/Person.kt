@@ -9,6 +9,7 @@ class Person(
     @Id
     val id: Int,
     val name: String,
+    val email: Email,
 
     @OneToMany(mappedBy = "owner")
     val cats: List<Cat>? = null,

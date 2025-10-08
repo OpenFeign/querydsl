@@ -14,17 +14,30 @@ class TypeExtractor(
     private val annotations: Sequence<KSAnnotation>
 ) {
     fun extract(type: KSType): QPropertyType {
-        val declaration = type.declaration
-        if (declaration is KSTypeAlias) {
-            val innerType = declaration.type.resolve()
-            return extract(innerType)
-        } else {
-            return userType(type)
-                ?: parameterType(type)
-                ?: simpleType(type)
-                ?: referenceType(type)
-                ?: collectionType(type)
-                ?: fallbackType(type)
+        when (val declaration = type.declaration) {
+            is KSClassDeclaration if declaration.modifiers.contains(Modifier.VALUE) -> {
+                val wrappedType = declaration
+                    .primaryConstructor
+                    ?.parameters
+                    ?.firstOrNull()
+                    ?.type
+                    ?.resolve()
+                    ?: throwError("Cannot resolve type: $declaration")
+
+                return extract(wrappedType)
+            }
+            is KSTypeAlias -> {
+                val innerType = declaration.type.resolve()
+                return extract(innerType)
+            }
+            else -> {
+                return userType(type)
+                    ?: parameterType(type)
+                    ?: simpleType(type)
+                    ?: referenceType(type)
+                    ?: collectionType(type)
+                    ?: fallbackType(type)
+            }
         }
     }
 
