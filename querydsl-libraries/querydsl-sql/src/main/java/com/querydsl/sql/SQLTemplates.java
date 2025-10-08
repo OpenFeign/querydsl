@@ -472,25 +472,25 @@ public class SQLTemplates extends Templates {
       case Types.DATE -> "(date '" + literal + "')";
       case Types.TIME, TIME_WITH_TIMEZONE -> "(time '" + literal + "')";
       case Types.CHAR,
-              Types.CLOB,
-              Types.LONGNVARCHAR,
-              Types.LONGVARCHAR,
-              Types.NCHAR,
-              Types.NCLOB,
-              Types.NVARCHAR,
-              Types.VARCHAR ->
+          Types.CLOB,
+          Types.LONGNVARCHAR,
+          Types.LONGVARCHAR,
+          Types.NCHAR,
+          Types.NCLOB,
+          Types.NVARCHAR,
+          Types.VARCHAR ->
           "'" + escapeLiteral(literal) + "'";
       case Types.BIGINT,
-              Types.BIT,
-              Types.BOOLEAN,
-              Types.DECIMAL,
-              Types.DOUBLE,
-              Types.FLOAT,
-              Types.INTEGER,
-              Types.NULL,
-              Types.NUMERIC,
-              Types.SMALLINT,
-              Types.TINYINT ->
+          Types.BIT,
+          Types.BOOLEAN,
+          Types.DECIMAL,
+          Types.DOUBLE,
+          Types.FLOAT,
+          Types.INTEGER,
+          Types.NULL,
+          Types.NUMERIC,
+          Types.SMALLINT,
+          Types.TINYINT ->
           literal;
       default -> /* for other JDBC types the Type instance is expected to provide */ /* the necessary quoting */
           literal;

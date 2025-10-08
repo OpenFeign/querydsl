@@ -80,7 +80,8 @@ public abstract class AbstractSQLTemplatesTest {
                 """);
       } else {
         assertThat(union.toString())
-            .isEqualTo("""
+            .isEqualTo(
+                """
 				select 1 as col1)
 				union
 				select 2

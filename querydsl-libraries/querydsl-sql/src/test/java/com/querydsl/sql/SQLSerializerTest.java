@@ -64,7 +64,7 @@ public class SQLSerializerTest {
     serializer.serializeForQuery(query.getMetadata(), true);
     assertThat(serializer.toString())
         .isEqualTo(
-            """
+"""
 select count(*)
 from (select distinct EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, \
 EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID
@@ -443,7 +443,7 @@ from EMPLOYEE EMPLOYEE) internal\
     serializer.serialize(md, false);
     assertThat(serializer.toString())
         .isEqualTo(
-            """
+"""
 with recursive sub (ID, FIRSTNAME, SUPERIOR_ID) as ((select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.SUPERIOR_ID
 from EMPLOYEE EMPLOYEE
 where EMPLOYEE.FIRSTNAME = ?)

@@ -51,7 +51,8 @@ public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
             R2DBCExpressions.select(two),
             R2DBCExpressions.select(three));
     assertThat(union.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
 			(select 1 as col1)
 			union
 			(select 2)

@@ -24,7 +24,7 @@ public class AnnotationTest {
   public void ClassAnnotation() throws IOException {
     writer.annotation(getClass().getAnnotation(Annotation.class));
     var option1 =
-        """
+"""
 @com.querydsl.codegen.utils.Annotation(clazz=com.querydsl.codegen.utils.AnnotationTest.class,\
  prop2=false)\
 """;

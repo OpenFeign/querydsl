@@ -80,7 +80,7 @@ public class SQLSubQueryTest {
 
     assertThat(serializer.toString())
         .isEqualTo(
-            """
+"""
 (select EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID, employee2.ID as col__ID7
 from EMPLOYEE EMPLOYEE
 inner join EMPLOYEE employee2

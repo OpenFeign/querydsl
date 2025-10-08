@@ -50,7 +50,8 @@ public class JoinFlagsTest {
     query.addJoinFlag(" a ", JoinFlag.Position.BEFORE_CONDITION);
 
     assertThat(query.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
 			from SURVEY s
 			inner join SURVEY s2 a\s
 			on s.ID = s2.ID""");
@@ -63,7 +64,8 @@ public class JoinFlagsTest {
     query.addJoinFlag(" b ", JoinFlag.Position.BEFORE_TARGET);
 
     assertThat(query.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
 			from SURVEY s
 			inner join  b SURVEY s3
 			on s.ID = s3.ID""");
@@ -76,7 +78,8 @@ public class JoinFlagsTest {
     query.addJoinFlag(" c ", JoinFlag.Position.END);
 
     assertThat(query.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
 			from SURVEY s
 			inner join SURVEY s4
 			on s.ID = s4.ID c""");
@@ -98,7 +101,8 @@ public class JoinFlagsTest {
     query.addJoinFlag(" e ", JoinFlag.Position.START);
 
     assertThat(query.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
 			from SURVEY s e\s
 			inner join SURVEY s6
 			on s.ID = s6.ID""");

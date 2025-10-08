@@ -47,7 +47,8 @@ public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union = query.union(select(one.as(col1)), select(two), select(three));
     assertThat(union.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
 			(select 1 as col1)
 			union
 			(select 2)
