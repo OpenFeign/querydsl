@@ -48,7 +48,8 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
     Path<Integer> col1 = Expressions.path(Integer.class, "col1");
     Union union = query.union(select(one.as(col1)), select(two), select(three));
     assertThat(union.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
 			(select 1 as col1)
 			union
 			(select 2)
@@ -70,7 +71,7 @@ public class SQLServer2005TemplatesTest extends AbstractSQLTemplatesTest {
     query.getMetadata().setProjection(survey1.id);
     assertThat(query.toString())
         .isEqualTo(
-            """
+"""
 select * from (\
    select survey1.ID, row_number() over (order by survey1.ID asc) as rn from SURVEY survey1) a \
 where rn > ? and rn <= ? order by rn\
@@ -83,7 +84,7 @@ where rn > ? and rn <= ? order by rn\
     query.getMetadata().setProjection(survey1.id);
     assertThat(query.toString())
         .isEqualTo(
-            """
+"""
 select * from (\
    select survey1.ID, row_number() over (order by current_timestamp asc) as rn from SURVEY survey1) a \
 where rn > ? and rn <= ? order by rn\

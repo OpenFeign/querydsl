@@ -245,7 +245,8 @@ public class JPQLSerializerTest {
     md.addOrderBy(cat.name.asc().nullsFirst());
     serializer.serialize(md, false, null);
     assertThat(serializer.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
 			select cat
 			from Cat cat
 			order by cat.name asc nulls first""");
@@ -260,7 +261,8 @@ public class JPQLSerializerTest {
     md.addOrderBy(cat.name.asc().nullsLast());
     serializer.serialize(md, false, null);
     assertThat(serializer.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
 			select cat
 			from Cat cat
 			order by cat.name asc nulls last""");

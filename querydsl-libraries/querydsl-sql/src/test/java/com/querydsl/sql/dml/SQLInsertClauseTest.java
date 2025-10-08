@@ -53,7 +53,7 @@ public class SQLInsertClauseTest {
     assertThat(sql.getSQL())
         .as("The order of columns in generated sql should be predictable")
         .isEqualTo(
-            """
+"""
 insert into EMPLOYEE (ID, FIRSTNAME, LASTNAME, SALARY, DATEFIELD, TIMEFIELD, SUPERIOR_ID)
 values (EMPLOYEE.ID, EMPLOYEE.FIRSTNAME, EMPLOYEE.LASTNAME, EMPLOYEE.SALARY, EMPLOYEE.DATEFIELD, EMPLOYEE.TIMEFIELD, EMPLOYEE.SUPERIOR_ID)\
 """);
