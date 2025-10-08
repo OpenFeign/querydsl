@@ -11,6 +11,10 @@
   <artifactId>querydsl-example-r2dbc-sql-codegen</artifactId>
   <name>Querydsl example - R2DBC SQL Codegen</name>
 
+  <properties>
+    <h2.version>2.1.214</h2.version>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>

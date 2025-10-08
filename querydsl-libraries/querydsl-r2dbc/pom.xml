@@ -14,6 +14,7 @@
 
   <properties>
     <bridge-method.version>1.13</bridge-method.version>
+    <h2.version>2.1.214</h2.version>
   </properties>
 
   <dependencies>
