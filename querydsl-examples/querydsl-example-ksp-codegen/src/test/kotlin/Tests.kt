@@ -2,12 +2,12 @@ import com.querydsl.example.ksp.Bear
 import com.querydsl.example.ksp.Cat
 import com.querydsl.example.ksp.CatType
 import com.querydsl.example.ksp.Dog
+import com.querydsl.example.ksp.Email
 import com.querydsl.example.ksp.Person
 import com.querydsl.example.ksp.QBear
 import com.querydsl.example.ksp.QBearSimplifiedProjection
 import com.querydsl.example.ksp.QCat
 import com.querydsl.example.ksp.QDog
-import com.querydsl.example.ksp.QGeolocation
 import com.querydsl.example.ksp.QMyShape
 import com.querydsl.example.ksp.QPerson
 import com.querydsl.example.ksp.QPersonClassDTO
@@ -33,7 +33,7 @@ class Tests {
         run {
             val em = emf.createEntityManager()
             em.transaction.begin()
-            em.persist(Person(424, "John Smith"))
+            em.persist(Person(424, "John Smith", Email("abc@domain.com")))
             em.transaction.commit()
             em.close()
         }
@@ -44,7 +44,7 @@ class Tests {
             val q = QPerson.person
             val person = queryFactory
                 .selectFrom(q)
-                .where(q.name.eq("John Smith"))
+                .where(q.name.eq("John Smith"), q.email.eq("abc@domain.com"))
                 .fetchOne()
             if (person == null) {
                 fail<Any>("No person was returned")
@@ -62,7 +62,7 @@ class Tests {
         run {
             val em = emf.createEntityManager()
             em.transaction.begin()
-            val catOwner = Person(425, "Percy Bysshe Catownerly")
+            val catOwner = Person(425, "Percy Bysshe Catownerly", Email("abc@domain.com"))
             em.persist(catOwner)
             em.persist(Cat(103, "Samuel Taylor Cattingridge", false, "Not so fluffy", catOwner, CatType.MAINE_COON))
             em.transaction.commit()
@@ -132,7 +132,7 @@ class Tests {
         run {
             val em = emf.createEntityManager()
             em.transaction.begin()
-            em.persist(Person(424, "John Smith"))
+            em.persist(Person(424, "John Smith", Email("abc@domain.com")))
             em.transaction.commit()
             em.close()
         }
