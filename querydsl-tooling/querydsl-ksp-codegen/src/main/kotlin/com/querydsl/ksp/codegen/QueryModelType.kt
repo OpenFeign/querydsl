@@ -9,20 +9,26 @@ import jakarta.persistence.Entity
 import jakarta.persistence.MappedSuperclass
 
 enum class QueryModelType(
-    val associatedAnnotation: String
+    val associatedAnnotations: List<String>
 ) {
-    ENTITY(Entity::class.qualifiedName!!),
-    EMBEDDABLE(Embeddable::class.qualifiedName!!),
-    SUPERCLASS(MappedSuperclass::class.qualifiedName!!),
-    QUERY_PROJECTION(QueryProjection::class.qualifiedName!!);
+    ENTITY(
+		listOf(
+			Entity::class.qualifiedName!!,
+			"com.querydsl.core.annotations.QueryEntity",
+			"org.springframework.data.mongodb.core.mapping.Document"
+		)
+	),
+    EMBEDDABLE(listOf(Embeddable::class.qualifiedName!!)),
+    SUPERCLASS(listOf(MappedSuperclass::class.qualifiedName!!)),
+    QUERY_PROJECTION(listOf(QueryProjection::class.qualifiedName!!));
 
     companion object {
         fun autodetect(classDeclaration: KSClassDeclaration): QueryModelType? {
             for (annotation in classDeclaration.annotations) {
                 for (type in QueryModelType.entries) {
-                    if (annotation.isEqualTo(type.associatedAnnotation)) {
-                        return type
-                    }
+					if (type.associatedAnnotations.any { ann -> annotation.isEqualTo(ann) }) {
+						return type
+					}
                 }
             }
             return null
