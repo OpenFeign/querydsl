@@ -19,8 +19,11 @@ import static com.querydsl.jpa.JPAExpressions.select;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import com.querydsl.core.domain.QCat;
+import com.querydsl.core.testutil.Serialization;
+import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.QEmployee;
 import com.querydsl.jpa.domain.QUser;
 import org.junit.Test;
@@ -193,4 +196,10 @@ public class SubQueryTest extends AbstractQueryTest {
   //                query.toString().replace("\n", " "));
   //    }
 
+  @Test
+  public void subQueryShouldBeSerialized() {
+    JPQLSubQuery<Cat> subQuery = select(cat).from(cat).where(cat.alive.isTrue());
+    JPQLSubQuery<Cat> deserializationResult = Serialization.serialize(subQuery);
+    assertEquals(subQuery, deserializationResult);
+  }
 }
