@@ -1,4 +1,5 @@
 import com.querydsl.example.ksp.Bear
+import com.querydsl.example.ksp.BearSpecies
 import com.querydsl.example.ksp.Cat
 import com.querydsl.example.ksp.CatType
 import com.querydsl.example.ksp.Dog
@@ -181,7 +182,7 @@ class Tests {
         run {
             val em = emf.createEntityManager()
             em.transaction.begin()
-            em.persist(Bear(424, "Winnie", "The forest"))
+            em.persist(Bear(424, "Winnie", "The forest", null))
             em.transaction.commit()
             em.close()
         }
@@ -207,8 +208,38 @@ class Tests {
 
     @Test
     fun `query projection exclude property from constructor`() {
-        assertThat(Bear::class.declaredMemberProperties.count()).isEqualTo(3)
+        assertThat(Bear::class.declaredMemberProperties.count()).isEqualTo(4)
         assertThat(QBearSimplifiedProjection::class.primaryConstructor!!.parameters.count()).isEqualTo(2)
+    }
+
+    @Test
+    fun `enum with convert annotation generates EnumPath`() {
+        val emf = initialize()
+
+        run {
+            val em = emf.createEntityManager()
+            em.transaction.begin()
+            em.persist(Bear(501, "Baloo", "Jungle", null))
+            em.transaction.commit()
+            em.close()
+        }
+
+        run {
+            val em = emf.createEntityManager()
+            val queryFactory = JPAQueryFactory(em)
+            val q = QBear.bear
+
+            val bears = queryFactory
+                .select(q.species.coalesce(BearSpecies.BLACK_BEAR))
+                .from(q)
+                .orderBy(q.id.asc())
+                .fetch()
+
+            assertThat(bears.size).isEqualTo(1)
+            assertThat(bears[0]).isEqualTo(BearSpecies.BLACK_BEAR)
+
+            em.close()
+        }
     }
 
     @Test
