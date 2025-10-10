@@ -1,6 +1,7 @@
 package com.querydsl.example.ksp
 
 import com.querydsl.core.annotations.QueryProjection
+import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 
@@ -9,7 +10,9 @@ class Bear(
 	@Id
 	val id: Int,
 	val name: String,
-	val location: String
+	val location: String,
+	@Convert(converter = BearSpeciesConverter::class)
+	val species: BearSpecies?
 )
 
 class BearSimplifiedProjection @QueryProjection constructor(
