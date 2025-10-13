@@ -357,9 +357,10 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       }
     } else if (op == Ops.EQ_IGNORE_CASE) {
       if (expr.getArg(1) instanceof Constant<?>) {
-        asDBObject(
+        return asDBObject(
             asDBKey(expr, 0),
             Pattern.compile("^" + regexValue(expr, 1) + "$", Pattern.CASE_INSENSITIVE));
+
       } else {
         return createRegexMatch(expr, true, STRING_MATCH_TYPE.EQUALS);
       }
