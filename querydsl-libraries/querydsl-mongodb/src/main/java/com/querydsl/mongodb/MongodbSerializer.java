@@ -316,8 +316,8 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
     } else if (op == Ops.NE) {
       Path<?> path = (Path<?>) expr.getArg(0);
       Object constant = expr.getArg(1);
-      if (constant instanceof Constant<?> constatntValue) {
-        return asDBObject(asDBKey(expr, 0), asDBObject("$ne", convert(path, constatntValue)));
+      if (constant instanceof Constant<?> constantValue) {
+        return asDBObject(asDBKey(expr, 0), asDBObject("$ne", convert(path, constantValue)));
       } else {
         Object rightField = MONGO_EXPR_SYMBOL + asDBKey(expr, 1);
         Object leftField = MONGO_EXPR_SYMBOL + asDBKey(expr, 0);
