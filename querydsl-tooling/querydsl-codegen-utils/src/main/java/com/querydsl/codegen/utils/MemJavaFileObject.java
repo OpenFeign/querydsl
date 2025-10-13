@@ -44,7 +44,7 @@ public class MemJavaFileObject extends SimpleJavaFileObject {
     if (baos == null) {
       throw new FileNotFoundException(name);
     }
-    return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+    return baos.toString(StandardCharsets.UTF_8);
   }
 
   @Override
