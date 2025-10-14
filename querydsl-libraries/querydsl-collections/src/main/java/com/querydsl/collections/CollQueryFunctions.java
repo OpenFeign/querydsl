@@ -85,7 +85,7 @@ public final class CollQueryFunctions {
         }
       };
 
-  private static final List<Object> nullList = Collections.singletonList((Object) null);
+  private static final List<Object> nullList = Collections.singletonList(null);
 
   @SuppressWarnings("unused")
   public static boolean equals(Object o1, Object o2) {
@@ -231,7 +231,7 @@ public final class CollQueryFunctions {
     } else if (aggregator == Ops.AggOps.COUNT_AGG) {
       return (long) source.size();
     } else if (aggregator == Ops.AggOps.COUNT_DISTINCT_AGG) {
-      if (!Set.class.isInstance(source)) {
+      if (!(source instanceof Set)) {
         source = new HashSet<>(source);
       }
       return (long) source.size();

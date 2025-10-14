@@ -164,7 +164,7 @@ public final class CollQuerySerializer extends SerializerBase<CollQuerySerialize
   }
 
   private void visitCast(Operator operator, Expression<?> source, Class<?> targetType) {
-    if (Number.class.isAssignableFrom(source.getType()) && !Constant.class.isInstance(source)) {
+    if (Number.class.isAssignableFrom(source.getType()) && !(source instanceof Constant)) {
       append("new ").append(source.getType().getSimpleName()).append("(");
       handle(source);
       append(")");

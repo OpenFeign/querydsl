@@ -134,11 +134,9 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
             query, extractEntityExpression(projection).toString(), projection.getType());
       } else if (aliases.containsKey(projection)) {
         for (String scalar : aliases.get(projection)) {
-          if (!used.contains(scalar)) {
-            queryHandler.addScalar(query, scalar, projection.getType());
-            used.add(scalar);
-            break;
-          }
+          queryHandler.addScalar(query, scalar, projection.getType());
+          used.add(scalar);
+          break;
         }
       }
     }

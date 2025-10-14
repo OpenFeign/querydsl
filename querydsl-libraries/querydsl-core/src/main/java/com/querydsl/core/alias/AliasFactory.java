@@ -165,7 +165,7 @@ class AliasFactory {
 
   /** Reset the thread bound expression to null */
   public void reset() {
-    current.set(null);
+    current.remove();
   }
 
   /**

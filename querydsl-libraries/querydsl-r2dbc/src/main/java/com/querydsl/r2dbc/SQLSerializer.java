@@ -1001,19 +1001,13 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
 
     } else if (operator == Ops.ALIAS) {
       if (stage == Stage.SELECT || stage == Stage.FROM) {
-        if (stage == SQLSerializer.Stage.SELECT || stage == SQLSerializer.Stage.FROM) {
-          if (args.get(1) instanceof Path && !((Path<?>) args.get(1)).getMetadata().isRoot()) {
-            Path<?> path = (Path<?>) args.get(1);
-            args =
-                Arrays.asList(
-                    args.get(0),
-                    ExpressionUtils.path(path.getType(), path.getMetadata().getName()));
-          }
-          super.visitOperation(type, operator, args);
-        } else {
-          // handle only target
-          handle(args.get(1));
+        if (args.get(1) instanceof Path && !((Path<?>) args.get(1)).getMetadata().isRoot()) {
+          Path<?> path = (Path<?>) args.get(1);
+          args =
+              Arrays.asList(
+                  args.get(0), ExpressionUtils.path(path.getType(), path.getMetadata().getName()));
         }
+        super.visitOperation(type, operator, args);
       } else {
         // handle only target
         handle(args.get(1));
@@ -1035,28 +1029,24 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
         if (templates.getListMaxSize() == 0 || coll.size() <= templates.getListMaxSize()) {
           super.visitOperation(type, operator, args);
         } else {
-          if (templates.getListMaxSize() == 0 || coll.size() <= templates.getListMaxSize()) {
-            super.visitOperation(type, operator, args);
-          } else {
-            // The type of the path is compatible with the constant
-            // expression, since the compile time checking mandates it to be
-            @SuppressWarnings("unchecked")
-            var path = (Expression<Object>) args.get(0);
-            if (pathAdded) {
-              constantPaths.removeLast();
-            }
-            Iterable<List<Object>> partitioned =
-                CollectionUtils.partition(new ArrayList<>(coll), templates.getListMaxSize());
-            Predicate result;
-            if (operator == Ops.IN) {
-              result = ExpressionUtils.inAny(path, partitioned);
-            } else {
-              result = ExpressionUtils.notInAny(path, partitioned);
-            }
-            append("(");
-            result.accept(this, null);
-            append(")");
+          // The type of the path is compatible with the constant
+          // expression, since the compile time checking mandates it to be
+          @SuppressWarnings("unchecked")
+          var path = (Expression<Object>) args.get(0);
+          if (pathAdded) {
+            constantPaths.removeLast();
           }
+          Iterable<List<Object>> partitioned =
+              CollectionUtils.partition(new ArrayList<>(coll), templates.getListMaxSize());
+          Predicate result;
+          if (operator == Ops.IN) {
+            result = ExpressionUtils.inAny(path, partitioned);
+          } else {
+            result = ExpressionUtils.notInAny(path, partitioned);
+          }
+          append("(");
+          result.accept(this, null);
+          append(")");
         }
       }
 
