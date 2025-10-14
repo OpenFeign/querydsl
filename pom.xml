@@ -143,7 +143,7 @@
     <surefire.version>3.5.4</surefire.version>
     <animal-sniffer.version>1.26</animal-sniffer.version>
     <h2gis.version>2.2.3</h2gis.version>
-    <morphia.version>2.5.0</morphia.version>
+    <morphia.version>2.5.1</morphia.version>
     <jmh.version>1.37</jmh.version>
     <kotlin.version>2.2.20</kotlin.version>
     <ksp.version>2.2.20-2.0.4</ksp.version>
