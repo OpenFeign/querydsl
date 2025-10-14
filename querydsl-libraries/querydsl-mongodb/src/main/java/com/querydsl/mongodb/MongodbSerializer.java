@@ -13,7 +13,10 @@
  */
 package com.querydsl.mongodb;
 
-import com.mongodb.*;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
@@ -30,6 +33,7 @@ import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.TemplateExpression;
 import com.querydsl.core.types.Visitor;
 import java.util.*;
+import java.util.function.*;
 import java.util.regex.Pattern;
 import org.bson.BSONObject;
 import org.bson.conversions.Bson;
@@ -194,7 +198,7 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
     }
   }
 
-  protected DBObject asDBObjectOrExpresson(String op, Operation<?> expr) {
+  protected DBObject asDBObjectOrExpression(String op, Operation<?> expr) {
     if (expr.getArg(1) instanceof Constant<?>) { // preferred if constant for better performance
       return asDBObject(asDBKey(expr, 0), asDBObject(op, asDBValue(expr, 1)));
     } else {
@@ -217,22 +221,14 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
     MATCHES;
 
     public Function<Object, List<?>> toRegex() {
-      return s -> {
-        switch (this) {
-          case STARTS_WITH:
-            return List.of("^", s);
-          case ENDS_WITH:
-            return List.of("", s, "\\$");
-          case EQUALS:
-            return List.of("^", s, "\\$");
-          case CONTAINS:
-            return List.of(".*", s, ".*");
-          case MATCHES:
-            return List.of(s);
-          default:
-            throw new IllegalArgumentException("Unknown match type: " + this);
-        }
-      };
+      return s ->
+          switch (this) {
+            case STARTS_WITH -> List.of("^", s);
+            case ENDS_WITH -> List.of("", s, "\\$");
+            case EQUALS -> List.of("^", s, "\\$");
+            case CONTAINS -> List.of(".*", s, ".*");
+            case MATCHES -> List.of(s);
+          };
     }
   }
 
@@ -257,18 +253,16 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
   public Object visit(Operation<?> expr, Void context) {
     var op = expr.getOperator();
     if (op == Ops.EQ) {
-      if (expr.getArg(0) instanceof Operation) {
-        Operation<?> lhs = (Operation<?>) expr.getArg(0);
+      if (expr.getArg(0) instanceof Operation<?> lhs) {
         if (lhs.getOperator() == Ops.COL_SIZE || lhs.getOperator() == Ops.ARRAY_SIZE) {
           return asDBObject(asDBKey(lhs, 0), asDBObject("$size", asDBValue(expr, 1)));
         } else {
           throw new UnsupportedOperationException("Illegal operation " + expr);
         }
-      } else if (expr.getArg(0) instanceof Path) {
-        Path<?> path = (Path<?>) expr.getArg(0);
+      } else if (expr.getArg(0) instanceof Path<?> path) {
         Object constant = expr.getArg(1);
-        if (constant instanceof Constant<?> constatntValue) {
-          return asDBObject(asDBKey(expr, 0), convert(path, constatntValue));
+        if (constant instanceof Constant<?> constantValue) {
+          return asDBObject(asDBKey(expr, 0), convert(path, constantValue));
         } else {
           Object rightField = MONGO_EXPR_SYMBOL + asDBKey(expr, 1);
           Object leftField = MONGO_EXPR_SYMBOL + asDBKey(expr, 0);
@@ -439,15 +433,15 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       return asDBObject("$or", list);
 
     } else if (op == Ops.LT) {
-      return asDBObjectOrExpresson("$lt", expr);
+      return asDBObjectOrExpression("$lt", expr);
 
     } else if (op == Ops.GT) {
-      return asDBObjectOrExpresson("$gt", expr);
+      return asDBObjectOrExpression("$gt", expr);
 
     } else if (op == Ops.LOE) {
-      return asDBObjectOrExpresson("$lte", expr);
+      return asDBObjectOrExpression("$lte", expr);
     } else if (op == Ops.GOE) {
-      return asDBObjectOrExpresson("$gte", expr);
+      return asDBObjectOrExpression("$gte", expr);
 
     } else if (op == Ops.IS_NULL) {
       return asDBObject(asDBKey(expr, 0), asDBObject("$exists", false));

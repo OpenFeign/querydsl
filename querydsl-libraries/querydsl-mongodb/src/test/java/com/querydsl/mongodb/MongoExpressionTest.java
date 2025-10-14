@@ -362,7 +362,7 @@ public class MongoExpressionTest {
   }
 
   @Test
-  public void desctription_eq_constant() {
+  public void description_eq_constant() {
     List<Product> results = query().where(product.shotDesc.eq("Lux")).fetch();
     long expected = data.stream().filter(p -> "Lux".equals(p.getShotDesc())).count();
     assertEquals((int) expected, results.size());
