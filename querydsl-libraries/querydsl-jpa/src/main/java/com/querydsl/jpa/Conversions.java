@@ -71,12 +71,12 @@ public final class Conversions {
 
   private static boolean needsNumberConversion(Expression<?> expr) {
     expr = ExpressionUtils.extract(expr);
-    return Number.class.isAssignableFrom(expr.getType()) && !Path.class.isInstance(expr);
+    return Number.class.isAssignableFrom(expr.getType()) && !(expr instanceof Path);
   }
 
   private static boolean isEntityPathAndNeedsWrapping(Expression<?> expr) {
     if ((expr instanceof Path && expr.getType().isAnnotationPresent(Entity.class))
-        || (expr instanceof EntityPath && !RelationalPath.class.isInstance(expr))) {
+        || (expr instanceof EntityPath && !(expr instanceof RelationalPath))) {
       Path<?> path = (Path<?>) expr;
       if (path.getMetadata().getParent() == null) {
         return true;

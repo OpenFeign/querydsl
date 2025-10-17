@@ -120,12 +120,8 @@ public final class NativeSQLSerializer extends SQLSerializer {
     Expression<?> projection = metadata.getProjection();
     if (projection instanceof Path) {
       Path<?> path = (Path<?>) projection;
-      if (!used.add(path.getMetadata().getName())) {
-        var alias = "col_1";
-        aliases.computeIfAbsent(projection, NativeSQLSerializer::createArrayList).add(alias);
-        projection = ExpressionUtils.as(projection, alias);
-        modified = true;
-      } else if (path.getAnnotatedElement().isAnnotationPresent(Column.class)) {
+      used.add(path.getMetadata().getName());
+      if (path.getAnnotatedElement().isAnnotationPresent(Column.class)) {
         var column = path.getAnnotatedElement().getAnnotation(Column.class);
         if (!column.name().isEmpty()) {
           aliases

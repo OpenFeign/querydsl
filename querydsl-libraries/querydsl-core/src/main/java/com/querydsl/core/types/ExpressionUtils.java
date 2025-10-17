@@ -558,7 +558,7 @@ public final class ExpressionUtils {
       if (matchStartAndEnd && !like.endsWith("%")) {
         rv.append('$');
       }
-      if (!like.equals(rv.toString())) {
+      if (!like.contentEquals(rv)) {
         return ConstantImpl.create(rv.toString());
       }
     } else if (expr instanceof Operation<?> o) {

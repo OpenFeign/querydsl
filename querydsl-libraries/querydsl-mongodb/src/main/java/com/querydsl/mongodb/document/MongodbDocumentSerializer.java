@@ -409,7 +409,7 @@ public abstract class MongodbDocumentSerializer implements Visitor<Object, Void>
     Queue<Map<Object, Object>> pendingDocuments = new LinkedList<>();
     for (Expression<?> exp : operation.getArgs()) {
       var document = (Map<Object, Object>) handle(exp);
-      if (document.keySet().size() == 1 && document.containsKey(operator)) {
+      if (document.size() == 1 && document.containsKey(operator)) {
         pendingDocuments.addAll((Collection<Map<Object, Object>>) document.get(operator));
       } else {
         pendingDocuments.add(document);

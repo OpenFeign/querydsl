@@ -18,12 +18,10 @@ import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.dsl.Param;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,33 +36,31 @@ import org.hibernate.type.StandardBasicTypes;
 public final class HibernateUtil {
 
   private static final Set<Class<?>> BUILT_IN =
-      Collections.unmodifiableSet(
-          new HashSet<>(
-              Arrays.asList(
-                  Boolean.class,
-                  Byte.class,
-                  Character.class,
-                  Double.class,
-                  Float.class,
-                  Integer.class,
-                  Long.class,
-                  Short.class,
-                  String.class,
-                  BigDecimal.class,
-                  byte[].class,
-                  Byte[].class,
-                  java.util.Date.class,
-                  java.util.Calendar.class,
-                  java.sql.Date.class,
-                  java.sql.Time.class,
-                  java.sql.Timestamp.class,
-                  java.util.Locale.class,
-                  java.util.TimeZone.class,
-                  java.util.Currency.class,
-                  Class.class,
-                  java.io.Serializable.class,
-                  java.sql.Blob.class,
-                  java.sql.Clob.class)));
+      Set.of(
+          Boolean.class,
+          Byte.class,
+          Character.class,
+          Double.class,
+          Float.class,
+          Integer.class,
+          Long.class,
+          Short.class,
+          String.class,
+          BigDecimal.class,
+          byte[].class,
+          Byte[].class,
+          java.util.Date.class,
+          java.util.Calendar.class,
+          java.sql.Date.class,
+          java.sql.Time.class,
+          java.sql.Timestamp.class,
+          java.util.Locale.class,
+          java.util.TimeZone.class,
+          java.util.Currency.class,
+          Class.class,
+          java.io.Serializable.class,
+          java.sql.Blob.class,
+          java.sql.Clob.class);
 
   private static final Map<Class<?>, BasicTypeReference<?>> TYPES;
 

@@ -113,11 +113,9 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
         query.addEntity(extractEntityExpression(projection).toString(), projection.getType());
       } else if (aliases.containsKey(projection)) {
         for (String scalar : aliases.get(projection)) {
-          if (!used.contains(scalar)) {
-            query.addScalar(scalar);
-            used.add(scalar);
-            break;
-          }
+          query.addScalar(scalar);
+          used.add(scalar);
+          break;
         }
       }
 

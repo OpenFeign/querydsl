@@ -210,9 +210,6 @@ public class DefaultEntitySerializer implements EntitySerializer {
           "(",
           classCast,
           writer.getClassConstant(localName) + COMMA + "metadata, inits" + additionalParams + ");");
-      if (!hasEntityFields) {
-        constructorContent(writer, model);
-      }
       writer.end();
     }
 

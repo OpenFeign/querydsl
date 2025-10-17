@@ -31,7 +31,6 @@ import com.querydsl.core.util.CollectionUtils;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -252,12 +251,7 @@ public class DefaultQueryMetadata implements QueryMetadata, Cloneable {
       return Collections.unmodifiableList(joins);
     } else {
       List<JoinExpression> j = new ArrayList<>(joins);
-      j.add(
-          new JoinExpression(
-              joinType,
-              joinTarget,
-              joinCondition,
-              Collections.unmodifiableSet(new HashSet<>(joinFlags))));
+      j.add(new JoinExpression(joinType, joinTarget, joinCondition, Set.copyOf(joinFlags)));
       return j;
     }
   }

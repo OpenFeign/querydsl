@@ -45,7 +45,7 @@ public final class RelationalPathUtils {
 
   private static <T> FactoryExpression<T> createConstructorProjection(RelationalPath<T> path) {
     Expression<?>[] exprs = path.getColumns().toArray(new Expression[0]);
-    return Projections.<T>constructor((Class) path.getType(), exprs);
+    return Projections.constructor(path.getType(), exprs);
   }
 
   private static <T> FactoryExpression<T> createBeanProjection(RelationalPath<T> path) {
@@ -56,7 +56,7 @@ public final class RelationalPathUtils {
     if (bindings.isEmpty()) {
       throw new IllegalArgumentException("No bindings could be derived from " + path);
     }
-    return Projections.<T>fields((Class) path.getType(), bindings);
+    return Projections.fields(path.getType(), bindings);
   }
 
   private RelationalPathUtils() {}

@@ -144,7 +144,7 @@ public final class JPAExpressions {
   public static <A extends Comparable<? super A>> ComparableExpression<A> avg(
       CollectionExpression<?, A> col) {
     return Expressions.comparableOperation(
-        (Class) col.getParameter(0), Ops.QuantOps.AVG_IN_COL, (Expression<?>) col);
+        (Class) col.getParameter(0), Ops.QuantOps.AVG_IN_COL, col);
   }
 
   /**
@@ -156,7 +156,7 @@ public final class JPAExpressions {
   public static <A extends Comparable<? super A>> ComparableExpression<A> max(
       CollectionExpression<?, A> left) {
     return Expressions.comparableOperation(
-        (Class) left.getParameter(0), Ops.QuantOps.MAX_IN_COL, (Expression<?>) left);
+        (Class) left.getParameter(0), Ops.QuantOps.MAX_IN_COL, left);
   }
 
   /**
@@ -168,7 +168,7 @@ public final class JPAExpressions {
   public static <A extends Comparable<? super A>> ComparableExpression<A> min(
       CollectionExpression<?, A> left) {
     return Expressions.comparableOperation(
-        (Class) left.getParameter(0), Ops.QuantOps.MIN_IN_COL, (Expression<?>) left);
+        (Class) left.getParameter(0), Ops.QuantOps.MIN_IN_COL, left);
   }
 
   /**

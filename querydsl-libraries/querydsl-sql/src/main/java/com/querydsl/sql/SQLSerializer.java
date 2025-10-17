@@ -971,7 +971,7 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
       }
     } else {
       if (stage == Stage.SELECT
-          && !Null.class.isInstance(constant)
+          && !(constant instanceof Null)
           && configuration.getTemplates().isWrapSelectParameters()) {
         var typeName = configuration.getTypeNameForCast(constant.getClass());
         Expression type = Expressions.constant(typeName);
@@ -1079,7 +1079,7 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
         && args.get(1) instanceof Constant<?>
         && operator != Ops.NUMCAST) {
       Object constant = ((Constant<?>) args.get(1)).getConstant();
-      if (!Collection.class.isInstance(constant) || !((Collection) constant).isEmpty()) {
+      if (!(constant instanceof Collection) || !((Collection) constant).isEmpty()) {
         for (Element element : templates.getTemplate(operator).getElements()) {
           if (element instanceof Template.ByIndex && ((Template.ByIndex) element).getIndex() == 1) {
             constantPaths.add((Path<?>) args.get(0));

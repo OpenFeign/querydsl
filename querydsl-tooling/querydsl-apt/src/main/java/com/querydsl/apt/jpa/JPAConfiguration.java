@@ -45,8 +45,6 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.Transient;
 import jakarta.persistence.Version;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -96,30 +94,29 @@ public class JPAConfiguration extends DefaultConfiguration {
 
   @SuppressWarnings("unchecked")
   protected List<Class<? extends Annotation>> getAnnotations() {
-    return Collections.unmodifiableList(
-        Arrays.asList(
-            Access.class,
-            Basic.class,
-            Column.class,
-            ElementCollection.class,
-            Embedded.class,
-            EmbeddedId.class,
-            Enumerated.class,
-            GeneratedValue.class,
-            Id.class,
-            JoinColumn.class,
-            ManyToOne.class,
-            ManyToMany.class,
-            MapKeyEnumerated.class,
-            OneToOne.class,
-            OneToMany.class,
-            PrimaryKeyJoinColumn.class,
-            QueryType.class,
-            QueryInit.class,
-            QueryTransient.class,
-            Temporal.class,
-            Transient.class,
-            Version.class));
+    return List.of(
+        Access.class,
+        Basic.class,
+        Column.class,
+        ElementCollection.class,
+        Embedded.class,
+        EmbeddedId.class,
+        Enumerated.class,
+        GeneratedValue.class,
+        Id.class,
+        JoinColumn.class,
+        ManyToOne.class,
+        ManyToMany.class,
+        MapKeyEnumerated.class,
+        OneToOne.class,
+        OneToMany.class,
+        PrimaryKeyJoinColumn.class,
+        QueryType.class,
+        QueryInit.class,
+        QueryTransient.class,
+        Temporal.class,
+        Transient.class,
+        Version.class);
   }
 
   @Override
