@@ -145,6 +145,10 @@ class TypeExtractor(
     }
 
     private fun userType(type: KSType): QPropertyType.Unknown? {
+        if (type.isEnum()) {
+            return null
+        }
+
         val userTypeAnnotations = listOf(
             ClassName("org.hibernate.annotations", "Type"),
             ClassName("org.hibernate.annotations", "JdbcTypeCode"),
@@ -203,4 +207,10 @@ private fun KSType.toClassNameSimple(): ClassName {
         is KSTypeParameter -> error("Cannot convert KSTypeParameter to ClassName: '$this'")
         else -> error("Could not compute ClassName for '$this'")
     }
+}
+
+private fun KSType.isEnum(): Boolean {
+    val referencedDeclaration = declaration
+
+    return referencedDeclaration is KSClassDeclaration && referencedDeclaration.classKind == ClassKind.ENUM_CLASS
 }
