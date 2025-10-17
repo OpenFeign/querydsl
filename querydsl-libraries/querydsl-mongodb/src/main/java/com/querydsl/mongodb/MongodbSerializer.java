@@ -32,10 +32,8 @@ import com.querydsl.core.types.PathType;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.TemplateExpression;
 import com.querydsl.core.types.Visitor;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.*;
 import java.util.regex.Pattern;
 import org.bson.BSONObject;
 import org.bson.conversions.Bson;
@@ -48,6 +46,9 @@ import org.bson.types.ObjectId;
  * @author sangyong choi
  */
 public abstract class MongodbSerializer implements Visitor<Object, Void> {
+
+  public static final String MONGO_EXPRESSION = "$expr";
+  public static final String MONGO_EXPR_SYMBOL = "$";
 
   public Object handle(Expression<?> expression) {
     return expression.accept(this, null);
@@ -99,22 +100,176 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
     return new BasicDBObject(key, value);
   }
 
+  protected DBObject asDBObjectOrExpressionNotIn(Operation<?> expr, int exprIndex, int constIndex) {
+    boolean rightConst = expr.getArg(constIndex) instanceof Constant<?>;
+    boolean rightCollectionConst =
+        rightConst && Collection.class.isAssignableFrom(expr.getArg(constIndex).getType());
+    if (rightCollectionConst) {
+      @SuppressWarnings("unchecked") // guarded by previous check
+      Collection<?> values =
+          ((Constant<? extends Collection<?>>) expr.getArg(constIndex)).getConstant();
+      return asDBObject(asDBKey(expr, exprIndex), asDBObject("$nin", values.toArray()));
+    } else if (rightConst) {
+      Path<?> path = (Path<?>) expr.getArg(exprIndex);
+      Constant<?> constant = (Constant<?>) expr.getArg(constIndex);
+      return asDBObject(asDBKey(expr, exprIndex), asDBObject("$ne", convert(path, constant)));
+    } else {
+      Object leftField = MONGO_EXPR_SYMBOL + asDBKey(expr, constIndex);
+      Object rightValue = expr.getArg(exprIndex).accept(this, null);
+      List<BasicDBObject> conditions = new ArrayList<>();
+
+      if (Collection.class.isAssignableFrom(rightValue.getClass())) {
+        for (Object rv : (Collection<?>) rightValue) {
+          conditions.add(
+              new BasicDBObject(
+                  "$ne", Arrays.asList(leftField, MONGO_EXPR_SYMBOL + rv.toString())));
+        }
+      } else {
+        conditions.add(new BasicDBObject("$ne", Arrays.asList(leftField, rightValue)));
+      }
+      return new BasicDBObject(MONGO_EXPRESSION, new BasicDBObject("$and", conditions));
+    }
+  }
+
+  protected DBObject asDBObjectOrExpressionIn(Operation<?> expr, int exprIndex, int constIndex) {
+    boolean rightConst = expr.getArg(constIndex) instanceof Constant<?>;
+    boolean rightCollectionConst =
+        rightConst && Collection.class.isAssignableFrom(expr.getArg(constIndex).getType());
+    if (rightCollectionConst) {
+      @SuppressWarnings("unchecked")
+      Collection<?> values =
+          ((Constant<? extends Collection<?>>) expr.getArg(constIndex)).getConstant();
+      return asDBObject(asDBKey(expr, exprIndex), new BasicDBObject("$in", values.toArray()));
+    } else if (rightConst) {
+      Path<?> path = (Path<?>) expr.getArg(exprIndex);
+      Constant<?> constant = (Constant<?>) expr.getArg(constIndex);
+      return asDBObject(asDBKey(expr, exprIndex), convert(path, constant));
+    } else {
+      Object rightField = MONGO_EXPR_SYMBOL + asDBKey(expr, constIndex);
+      Object valueField;
+      Object leftValue = expr.getArg(exprIndex).accept(this, null);
+      if (Collection.class.isAssignableFrom(leftValue.getClass())) {
+        valueField =
+            ((Collection<?>) leftValue)
+                .stream().map(v -> MONGO_EXPR_SYMBOL + v.toString()).toList();
+      } else {
+        valueField = List.of(MONGO_EXPR_SYMBOL + asDBKey(expr, exprIndex));
+      }
+      BasicDBObject inCondition = new BasicDBObject("$in", Arrays.asList(rightField, valueField));
+      return new BasicDBObject(MONGO_EXPRESSION, inCondition);
+    }
+  }
+
+  private Object asDbList(Operation<?> expr) {
+    List<Expression<?>> values = (expr.getArgs().stream().toList());
+    return values.stream()
+        .map(v -> v.accept(this, null))
+        .flatMap(
+            o -> {
+              if (o instanceof Collection<?> coll) {
+                return coll.stream();
+              } else {
+                return Arrays.stream(new Object[] {o});
+              }
+            })
+        .toList();
+  }
+
+  protected DBObject asDBObjectOrExpressionBetween(Operation<?> expr) {
+    boolean arg1Const = expr.getArg(1) instanceof Constant<?>;
+    boolean arg2Const = expr.getArg(2) instanceof Constant<?>;
+
+    if (arg1Const && arg2Const) {
+      BasicDBObject range =
+          new BasicDBObject("$gte", asDBValue(expr, 1)).append("$lte", asDBValue(expr, 2));
+      return asDBObject(asDBKey(expr, 0), range);
+    } else {
+      Object leftField = MONGO_EXPR_SYMBOL + asDBKey(expr, 0);
+      Object right1 = arg1Const ? asDBValue(expr, 1) : MONGO_EXPR_SYMBOL + asDBKey(expr, 1);
+      Object right2 = arg2Const ? asDBValue(expr, 2) : MONGO_EXPR_SYMBOL + asDBKey(expr, 2);
+      BasicDBObject gteCondition =
+          new BasicDBObject("$gte", java.util.Arrays.asList(leftField, right1));
+      BasicDBObject lteCondition =
+          new BasicDBObject("$lte", java.util.Arrays.asList(leftField, right2));
+
+      BasicDBObject inner =
+          new BasicDBObject("$and", java.util.Arrays.asList(gteCondition, lteCondition));
+      return new BasicDBObject(MONGO_EXPRESSION, inner);
+    }
+  }
+
+  protected DBObject asDBObjectOrExpression(String op, Operation<?> expr) {
+    if (expr.getArg(1) instanceof Constant<?>) { // preferred if constant for better performance
+      return asDBObject(asDBKey(expr, 0), asDBObject(op, asDBValue(expr, 1)));
+    } else {
+      return asExpression(op, asDBKey(expr, 0), asDBKey(expr, 1));
+    }
+  }
+
+  protected BasicDBObject asExpression(String op, String left, Object right) {
+    BasicDBObject inner =
+        new BasicDBObject(
+            op, java.util.Arrays.asList(MONGO_EXPR_SYMBOL + left, MONGO_EXPR_SYMBOL + right));
+    return new BasicDBObject(MONGO_EXPRESSION, inner);
+  }
+
+  private enum STRING_MATCH_TYPE {
+    STARTS_WITH,
+    ENDS_WITH,
+    EQUALS,
+    CONTAINS,
+    MATCHES;
+
+    public Function<Object, List<?>> toRegex() {
+      return s ->
+          switch (this) {
+            case STARTS_WITH -> List.of("^", s);
+            case ENDS_WITH -> List.of("", s, "\\$");
+            case EQUALS -> List.of("^", s, "\\$");
+            case CONTAINS -> List.of(".*", s, ".*");
+            case MATCHES -> List.of(s);
+          };
+    }
+  }
+
+  private BasicDBObject createRegexMatch(
+      Operation<?> expr, boolean ignoreCase, STRING_MATCH_TYPE startsWithOrEndsWith) {
+    Object leftField = MONGO_EXPR_SYMBOL + asDBKey(expr, 0);
+    Object rightField = MONGO_EXPR_SYMBOL + asDBKey(expr, 1);
+
+    BasicDBObject regexMatch = new BasicDBObject();
+    regexMatch.put("input", leftField);
+    regexMatch.put(
+        "regex", new BasicDBObject("$concat", startsWithOrEndsWith.toRegex().apply(rightField)));
+    if (ignoreCase) {
+      regexMatch.put("options", "i");
+    }
+    BasicDBObject exprObj = new BasicDBObject("$regexMatch", regexMatch);
+    return new BasicDBObject(MONGO_EXPRESSION, exprObj);
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public Object visit(Operation<?> expr, Void context) {
     var op = expr.getOperator();
     if (op == Ops.EQ) {
-      if (expr.getArg(0) instanceof Operation) {
-        Operation<?> lhs = (Operation<?>) expr.getArg(0);
+      if (expr.getArg(0) instanceof Operation<?> lhs) {
         if (lhs.getOperator() == Ops.COL_SIZE || lhs.getOperator() == Ops.ARRAY_SIZE) {
           return asDBObject(asDBKey(lhs, 0), asDBObject("$size", asDBValue(expr, 1)));
         } else {
           throw new UnsupportedOperationException("Illegal operation " + expr);
         }
-      } else if (expr.getArg(0) instanceof Path) {
-        Path<?> path = (Path<?>) expr.getArg(0);
-        Constant<?> constant = (Constant<?>) expr.getArg(1);
-        return asDBObject(asDBKey(expr, 0), convert(path, constant));
+      } else if (expr.getArg(0) instanceof Path<?> path) {
+        Object constant = expr.getArg(1);
+        if (constant instanceof Constant<?> constantValue) {
+          return asDBObject(asDBKey(expr, 0), convert(path, constantValue));
+        } else {
+          Object rightField = MONGO_EXPR_SYMBOL + asDBKey(expr, 1);
+          Object leftField = MONGO_EXPR_SYMBOL + asDBKey(expr, 0);
+          BasicDBObject eqCondition =
+              new BasicDBObject("$eq", Arrays.asList(leftField, rightField));
+          return new BasicDBObject(MONGO_EXPRESSION, eqCondition);
+        }
       }
     } else if (op == Ops.STRING_IS_EMPTY) {
       return asDBObject(asDBKey(expr, 0), "");
@@ -154,56 +309,105 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
 
     } else if (op == Ops.NE) {
       Path<?> path = (Path<?>) expr.getArg(0);
-      Constant<?> constant = (Constant<?>) expr.getArg(1);
-      return asDBObject(asDBKey(expr, 0), asDBObject("$ne", convert(path, constant)));
+      Object constant = expr.getArg(1);
+      if (constant instanceof Constant<?> constantValue) {
+        return asDBObject(asDBKey(expr, 0), asDBObject("$ne", convert(path, constantValue)));
+      } else {
+        Object rightField = MONGO_EXPR_SYMBOL + asDBKey(expr, 1);
+        Object leftField = MONGO_EXPR_SYMBOL + asDBKey(expr, 0);
+        BasicDBObject eqCondition = new BasicDBObject("$ne", Arrays.asList(leftField, rightField));
+        return new BasicDBObject(MONGO_EXPRESSION, eqCondition);
+      }
 
     } else if (op == Ops.STARTS_WITH) {
-      return asDBObject(asDBKey(expr, 0), Pattern.compile("^" + regexValue(expr, 1)));
+
+      if (expr.getArg(1) instanceof Constant<?>) {
+        return asDBObject(asDBKey(expr, 0), Pattern.compile("^" + regexValue(expr, 1)));
+      } else {
+        return createRegexMatch(expr, false, STRING_MATCH_TYPE.STARTS_WITH);
+      }
 
     } else if (op == Ops.STARTS_WITH_IC) {
-      return asDBObject(
-          asDBKey(expr, 0), Pattern.compile("^" + regexValue(expr, 1), Pattern.CASE_INSENSITIVE));
+      if (expr.getArg(1) instanceof Constant<?>) {
+        return asDBObject(
+            asDBKey(expr, 0), Pattern.compile("^" + regexValue(expr, 1), Pattern.CASE_INSENSITIVE));
+      } else {
+        return createRegexMatch(expr, true, STRING_MATCH_TYPE.STARTS_WITH);
+      }
 
     } else if (op == Ops.ENDS_WITH) {
-      return asDBObject(asDBKey(expr, 0), Pattern.compile(regexValue(expr, 1) + "$"));
+      if (expr.getArg(1) instanceof Constant<?>) {
+        return asDBObject(asDBKey(expr, 0), Pattern.compile(regexValue(expr, 1) + "$"));
+      } else {
+        return createRegexMatch(expr, false, STRING_MATCH_TYPE.ENDS_WITH);
+      }
 
     } else if (op == Ops.ENDS_WITH_IC) {
-      return asDBObject(
-          asDBKey(expr, 0), Pattern.compile(regexValue(expr, 1) + "$", Pattern.CASE_INSENSITIVE));
-
+      if (expr.getArg(1) instanceof Constant<?>) {
+        return asDBObject(
+            asDBKey(expr, 0), Pattern.compile(regexValue(expr, 1) + "$", Pattern.CASE_INSENSITIVE));
+      } else {
+        return createRegexMatch(expr, true, STRING_MATCH_TYPE.ENDS_WITH);
+      }
     } else if (op == Ops.EQ_IGNORE_CASE) {
-      return asDBObject(
-          asDBKey(expr, 0),
-          Pattern.compile("^" + regexValue(expr, 1) + "$", Pattern.CASE_INSENSITIVE));
+      if (expr.getArg(1) instanceof Constant<?>) {
+        return asDBObject(
+            asDBKey(expr, 0),
+            Pattern.compile("^" + regexValue(expr, 1) + "$", Pattern.CASE_INSENSITIVE));
+
+      } else {
+        return createRegexMatch(expr, true, STRING_MATCH_TYPE.EQUALS);
+      }
 
     } else if (op == Ops.STRING_CONTAINS) {
-      return asDBObject(asDBKey(expr, 0), Pattern.compile(".*" + regexValue(expr, 1) + ".*"));
+      if (expr.getArg(1) instanceof Constant<?>) {
+        return asDBObject(asDBKey(expr, 0), Pattern.compile(".*" + regexValue(expr, 1) + ".*"));
+      } else {
+        return createRegexMatch(expr, false, STRING_MATCH_TYPE.CONTAINS);
+      }
 
     } else if (op == Ops.STRING_CONTAINS_IC) {
-      return asDBObject(
-          asDBKey(expr, 0),
-          Pattern.compile(".*" + regexValue(expr, 1) + ".*", Pattern.CASE_INSENSITIVE));
-
+      if (expr.getArg(1) instanceof Constant<?>) {
+        return asDBObject(
+            asDBKey(expr, 0),
+            Pattern.compile(".*" + regexValue(expr, 1) + ".*", Pattern.CASE_INSENSITIVE));
+      } else {
+        return createRegexMatch(expr, true, STRING_MATCH_TYPE.CONTAINS);
+      }
     } else if (op == Ops.MATCHES) {
-      return asDBObject(asDBKey(expr, 0), Pattern.compile(asDBValue(expr, 1).toString()));
+      if (expr.getArg(1) instanceof Constant<?>) {
+        return asDBObject(asDBKey(expr, 0), Pattern.compile(asDBValue(expr, 1).toString()));
+      } else {
+        return createRegexMatch(expr, false, STRING_MATCH_TYPE.MATCHES);
+      }
 
     } else if (op == Ops.MATCHES_IC) {
-      return asDBObject(
-          asDBKey(expr, 0),
-          Pattern.compile(asDBValue(expr, 1).toString(), Pattern.CASE_INSENSITIVE));
+      if (expr.getArg(1) instanceof Constant<?>) {
+        return asDBObject(
+            asDBKey(expr, 0),
+            Pattern.compile(asDBValue(expr, 1).toString(), Pattern.CASE_INSENSITIVE));
+      } else {
+        return createRegexMatch(expr, true, STRING_MATCH_TYPE.MATCHES);
+      }
 
     } else if (op == Ops.LIKE) {
-      var regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
-      return asDBObject(asDBKey(expr, 0), Pattern.compile(regex));
+      if (expr.getArg(1) instanceof Constant<?>) {
+        var regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
+        return asDBObject(asDBKey(expr, 0), Pattern.compile(regex));
+      } else {
+        return createRegexMatch(expr, false, STRING_MATCH_TYPE.MATCHES);
+      }
 
     } else if (op == Ops.LIKE_IC) {
-      var regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
-      return asDBObject(asDBKey(expr, 0), Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
+      if (expr.getArg(1) instanceof Constant<?>) {
+        var regex = ExpressionUtils.likeToRegex((Expression) expr.getArg(1)).toString();
+        return asDBObject(asDBKey(expr, 0), Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
+      } else {
+        return createRegexMatch(expr, true, STRING_MATCH_TYPE.MATCHES);
+      }
 
     } else if (op == Ops.BETWEEN) {
-      var value = new BasicDBObject("$gte", asDBValue(expr, 1));
-      value.append("$lte", asDBValue(expr, 2));
-      return asDBObject(asDBKey(expr, 0), value);
+      return asDBObjectOrExpressionBetween(expr);
 
     } else if (op == Ops.IN) {
       var constIndex = 0;
@@ -212,17 +416,7 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
         constIndex = 1;
         exprIndex = 0;
       }
-      if (Collection.class.isAssignableFrom(expr.getArg(constIndex).getType())) {
-        @SuppressWarnings("unchecked") // guarded by previous check
-        Collection<?> values =
-            ((Constant<? extends Collection<?>>) expr.getArg(constIndex)).getConstant();
-        return asDBObject(asDBKey(expr, exprIndex), asDBObject("$in", values.toArray()));
-      } else {
-        Path<?> path = (Path<?>) expr.getArg(exprIndex);
-        Constant<?> constant = (Constant<?>) expr.getArg(constIndex);
-        return asDBObject(asDBKey(expr, exprIndex), convert(path, constant));
-      }
-
+      return asDBObjectOrExpressionIn(expr, exprIndex, constIndex);
     } else if (op == Ops.NOT_IN) {
       var constIndex = 0;
       var exprIndex = 1;
@@ -230,16 +424,7 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
         constIndex = 1;
         exprIndex = 0;
       }
-      if (Collection.class.isAssignableFrom(expr.getArg(constIndex).getType())) {
-        @SuppressWarnings("unchecked") // guarded by previous check
-        Collection<?> values =
-            ((Constant<? extends Collection<?>>) expr.getArg(constIndex)).getConstant();
-        return asDBObject(asDBKey(expr, exprIndex), asDBObject("$nin", values.toArray()));
-      } else {
-        Path<?> path = (Path<?>) expr.getArg(exprIndex);
-        Constant<?> constant = (Constant<?>) expr.getArg(constIndex);
-        return asDBObject(asDBKey(expr, exprIndex), asDBObject("$ne", convert(path, constant)));
-      }
+      return asDBObjectOrExpressionNotIn(expr, exprIndex, constIndex);
 
     } else if (op == Ops.COL_IS_EMPTY) {
       var list = new BasicDBList();
@@ -248,16 +433,15 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       return asDBObject("$or", list);
 
     } else if (op == Ops.LT) {
-      return asDBObject(asDBKey(expr, 0), asDBObject("$lt", asDBValue(expr, 1)));
+      return asDBObjectOrExpression("$lt", expr);
 
     } else if (op == Ops.GT) {
-      return asDBObject(asDBKey(expr, 0), asDBObject("$gt", asDBValue(expr, 1)));
+      return asDBObjectOrExpression("$gt", expr);
 
     } else if (op == Ops.LOE) {
-      return asDBObject(asDBKey(expr, 0), asDBObject("$lte", asDBValue(expr, 1)));
-
+      return asDBObjectOrExpression("$lte", expr);
     } else if (op == Ops.GOE) {
-      return asDBObject(asDBKey(expr, 0), asDBObject("$gte", asDBValue(expr, 1)));
+      return asDBObjectOrExpression("$gte", expr);
 
     } else if (op == Ops.IS_NULL) {
       return asDBObject(asDBKey(expr, 0), asDBObject("$exists", false));
@@ -291,8 +475,11 @@ public abstract class MongodbSerializer implements Visitor<Object, Void> {
       return asDBObject(asDBKey(expr, 0), asDBObject("$all", asDBValue(expr, 1)));
     } else if (op == MongodbOps.ELEM_MATCH) {
       return asDBObject(asDBKey(expr, 0), asDBObject("$elemMatch", asDBValue(expr, 1)));
+    } else if (op == Ops.SET) {
+      return asDbList(expr);
+    } else if (op == Ops.LIST) {
+      return asDbList(expr);
     }
-
     throw new UnsupportedOperationException("Illegal operation " + expr);
   }
 
