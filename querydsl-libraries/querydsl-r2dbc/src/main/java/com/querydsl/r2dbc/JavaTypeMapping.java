@@ -28,6 +28,13 @@ import com.querydsl.r2dbc.types.DateType;
 import com.querydsl.r2dbc.types.DoubleType;
 import com.querydsl.r2dbc.types.FloatType;
 import com.querydsl.r2dbc.types.IntegerType;
+import com.querydsl.r2dbc.types.JSR310InstantType;
+import com.querydsl.r2dbc.types.JSR310LocalDateTimeType;
+import com.querydsl.r2dbc.types.JSR310LocalDateType;
+import com.querydsl.r2dbc.types.JSR310LocalTimeType;
+import com.querydsl.r2dbc.types.JSR310OffsetDateTimeType;
+import com.querydsl.r2dbc.types.JSR310OffsetTimeType;
+import com.querydsl.r2dbc.types.JSR310ZonedDateTimeType;
 import com.querydsl.r2dbc.types.LocaleType;
 import com.querydsl.r2dbc.types.LongType;
 import com.querydsl.r2dbc.types.NullType;
@@ -82,33 +89,13 @@ class JavaTypeMapping {
     registerDefault(new UtilUUIDType());
 
     // initialize java time api (JSR 310) converters only if java 8 is available
-    try {
-      Class.forName("java.time.Instant");
-      registerDefault(
-          (Type<?, ?>) Class.forName("com.querydsl.r2dbc.types.JSR310InstantType").newInstance());
-      registerDefault(
-          (Type<?, ?>)
-              Class.forName("com.querydsl.r2dbc.types.JSR310LocalDateTimeType").newInstance());
-      registerDefault(
-          (Type<?, ?>) Class.forName("com.querydsl.r2dbc.types.JSR310LocalDateType").newInstance());
-      registerDefault(
-          (Type<?, ?>) Class.forName("com.querydsl.r2dbc.types.JSR310LocalTimeType").newInstance());
-      registerDefault(
-          (Type<?, ?>)
-              Class.forName("com.querydsl.r2dbc.types.JSR310OffsetDateTimeType").newInstance());
-      registerDefault(
-          (Type<?, ?>)
-              Class.forName("com.querydsl.r2dbc.types.JSR310OffsetTimeType").newInstance());
-      registerDefault(
-          (Type<?, ?>)
-              Class.forName("com.querydsl.r2dbc.types.JSR310ZonedDateTimeType").newInstance());
-    } catch (ClassNotFoundException e) {
-      // converters for JSR 310 are not loaded
-    } catch (InstantiationException e) {
-      throw new RuntimeException(e);
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
+    registerDefault(new JSR310InstantType());
+    registerDefault(new JSR310LocalDateTimeType());
+    registerDefault(new JSR310LocalDateType());
+    registerDefault(new JSR310LocalTimeType());
+    registerDefault(new JSR310OffsetDateTimeType());
+    registerDefault(new JSR310OffsetTimeType());
+    registerDefault(new JSR310ZonedDateTimeType());
   }
 
   private static void registerDefault(Type<?, ?> type) {
