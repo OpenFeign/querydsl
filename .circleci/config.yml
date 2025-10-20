@@ -429,7 +429,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - resolve-dependencies
       - configure-gpg
       - run:
           name: 'Deploy Core Modules Sonatype'
@@ -445,7 +444,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - resolve-dependencies
       - configure-gpg
       - run:
           name: 'Deploy Core Modules Sonatype'
