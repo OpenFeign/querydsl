@@ -320,7 +320,7 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
         first = false;
       }
       append(")");
-    } else if (inserts != null && inserts.entrySet().size() > 0) {
+    } else if (inserts != null && !inserts.isEmpty()) {
       first = true;
       for (Map.Entry<Path<?>, Expression<?>> entry : inserts.entrySet()) {
         if (!first) {
