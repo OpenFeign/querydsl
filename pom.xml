@@ -82,7 +82,7 @@
     </repository>
     <snapshotRepository>
       <id>central</id>
-      <url>https://central.sonatype.com/api/v1/publisher/deployments/upload/</url>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
