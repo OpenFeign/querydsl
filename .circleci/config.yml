@@ -23,6 +23,18 @@ commands:
   resolve-dependencies:
     description: 'Download and prepare all dependencies'
     steps:
+      - restore_cache:
+          keys:
+            - m2-{{ checksum "pom.xml" }}
+      - run:
+          name: 'Check if cache was restored'
+          command: |
+            if [ -d ~/.m2/repository/io/github/openfeign/querydsl ]; then
+              echo "Cache hit detected, skipping resolve job."
+              circleci step halt
+            else
+              echo "No cache hit, proceeding with resolve."
+            fi
       - run:
           name: 'Resolving Dependencies'
           command: |
@@ -119,14 +131,11 @@ jobs:
       - image: velo/toolchains-4-ci-builds:latest
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
       - resolve-dependencies
       - save_cache:
           paths:
-            - ~/.m2/repository
-          key: querydsl-dependencies-{{ checksum "pom.xml" }}
+            - ~/.m2
+          key: m2-{{ checksum "pom.xml" }}
   test:
     <<: *defaults
     working_directory: ~/querydsl
@@ -136,7 +145,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -153,7 +162,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -169,7 +178,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - run:
           name: 'Prepare environment'
           command: |
@@ -234,7 +243,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -255,7 +264,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -274,7 +283,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -296,7 +305,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -313,7 +322,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -336,7 +345,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -352,7 +361,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -370,7 +379,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       # Start the DB2 container in detached mode
       - run:
           name: "Start DB2 container"
@@ -419,7 +428,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - resolve-dependencies
       - configure-gpg
       - run:
@@ -435,7 +444,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - querydsl-dependencies-{{ checksum "pom.xml" }}
+            - m2-{{ checksum "pom.xml" }}
       - resolve-dependencies
       - configure-gpg
       - run:
