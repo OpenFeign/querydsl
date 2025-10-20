@@ -537,8 +537,14 @@ workflows:
 
   snapshot:
     jobs:
+      - resolve:
+          name: 'Resolve dependencies'
+          filters:
+            <<: *master-only
       - test:
           name: 'snapshot'
+          requires:
+            - 'Resolve dependencies'
           filters:
             <<: *master-only
       - deploySnapshot:
