@@ -222,7 +222,6 @@
     <cglib.version>3.3.0</cglib.version>
     <querydsl-apt-jsr305.version>2.0.2</querydsl-apt-jsr305.version>
     <jmolecules.version>1.0.0</jmolecules.version>
-    <hibernate6.version>6.0.0</hibernate6.version>
     <proxytoys.version>1.0</proxytoys.version>
     <r2dbc-mysql.version>1.4.1</r2dbc-mysql.version>
     <plexus-build-api-old.version>0.0.7</plexus-build-api-old.version>
