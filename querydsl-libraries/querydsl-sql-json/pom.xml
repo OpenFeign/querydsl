@@ -121,7 +121,7 @@
     <dependency>
       <groupId>com.github.jinahya</groupId>
       <artifactId>cubrid-jdbc-driver-${cubrid.version}</artifactId>
-      <version>${jmolecules.version}</version>
+      <version>${cubrid-packaging.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -156,7 +156,7 @@
     <dependency>
       <groupId>jdepend</groupId>
       <artifactId>jdepend</artifactId>
-      <version>${json-path.version}</version>
+      <version>${jdepend.version}</version>
       <scope>test</scope>
     </dependency>
 

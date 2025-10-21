@@ -194,7 +194,6 @@
     <logback.version>1.4.1</logback.version>
     <r2dbc-h2.version>1.1.0.RELEASE</r2dbc-h2.version>
     <r2dbc-pool.version>1.0.0.RELEASE</r2dbc-pool.version>
-    <jmh-generator.version>1.37</jmh-generator.version>
     <scalatest.version>3.2.10</scalatest.version>
     <scalatestplus.version>1.0.0-M2</scalatestplus.version>
     <scalacheck.version>1.17.1</scalacheck.version>
@@ -232,6 +231,9 @@
     <plexus-classworlds.version>2.9.0</plexus-classworlds.version>
     <expressly.version>6.0.0</expressly.version>
     <commons-lang3.version>3.19.0</commons-lang3.version>
+    <jdepend.version>2.9.1</jdepend.version>
+    <cubrid-packaging.version>1.0.0</cubrid-packaging.version>
+    <r2dbc-postgresql.version>1.0.7.RELEASE</r2dbc-postgresql.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
     <osgi.import.package.root>*</osgi.import.package.root>
