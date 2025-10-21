@@ -52,7 +52,7 @@
     <dependency>
       <groupId>com.thoughtworks.proxytoys</groupId>
       <artifactId>proxytoys</artifactId>
-      <version>1.0</version>
+      <version>${proxytoys.version}</version>
       <type>jar</type>
       <optional>true</optional>
     </dependency>
@@ -84,7 +84,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.4.2</version>
+        <version>${maven-jar-plugin.version}</version>
         <configuration>
           <archive>
             <manifestEntries>

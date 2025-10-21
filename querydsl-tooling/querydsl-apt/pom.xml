@@ -75,7 +75,7 @@
     <dependency>
       <groupId>org.joda</groupId>
       <artifactId>joda-money</artifactId>
-      <version>2.0.2</version>
+      <version>${querydsl-apt-jsr305.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -97,7 +97,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.4.2</version>
+        <version>${maven-jar-plugin.version}</version>
         <configuration>
           <archive>
             <manifestEntries>
@@ -148,7 +148,7 @@
       <plugin>
         <groupId>com.mysema.maven</groupId>
         <artifactId>apt-maven-plugin</artifactId>
-        <version>1.1.3</version>
+        <version>${jandex-maven-plugin.version}</version>
         <executions>
           <execution>
             <goals>

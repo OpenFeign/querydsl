@@ -17,7 +17,7 @@
       <dependency>
         <groupId>com.fasterxml.jackson</groupId>
         <artifactId>jackson-bom</artifactId>
-        <version>2.20.0</version>
+        <version>${jackson.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -121,7 +121,7 @@
     <dependency>
       <groupId>com.github.jinahya</groupId>
       <artifactId>cubrid-jdbc-driver-${cubrid.version}</artifactId>
-      <version>1.0.0</version>
+      <version>${jmolecules.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -156,7 +156,7 @@
     <dependency>
       <groupId>jdepend</groupId>
       <artifactId>jdepend</artifactId>
-      <version>2.9.1</version>
+      <version>${json-path.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -177,7 +177,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.4.2</version>
+        <version>${maven-jar-plugin.version}</version>
         <configuration>
           <archive>
             <manifestEntries>

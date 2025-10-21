@@ -188,6 +188,51 @@
     <rewrite-testing-frameworks.version>3.19.0</rewrite-testing-frameworks.version>
     <rewrite-migrate-java.version>3.19.0</rewrite-migrate-java.version>
     <postgis-jdbc.version>2025.1.1</postgis-jdbc.version>
+    <json-path.version>2.9.1</json-path.version>
+    <fge-btf.version>1.2</fge-btf.version>
+    <jcip-annotations.version>1.0</jcip-annotations.version>
+    <logback.version>1.4.1</logback.version>
+    <r2dbc-h2.version>1.1.0.RELEASE</r2dbc-h2.version>
+    <r2dbc-pool.version>1.0.0.RELEASE</r2dbc-pool.version>
+    <jmh-generator.version>1.37</jmh-generator.version>
+    <scalatest.version>3.2.10</scalatest.version>
+    <scalatestplus.version>1.0.0-M2</scalatestplus.version>
+    <scalacheck.version>1.17.1</scalacheck.version>
+    <javax-inject.version>1</javax-inject.version>
+    <google-java-format.version>1.14.6</google-java-format.version>
+    <lombok.version>1.18.42</lombok.version>
+    <jackson.version>2.20.0</jackson.version>
+    <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
+    <scala-maven-plugin.version>4.9.6</scala-maven-plugin.version>
+    <json-simple.version>1.1.1</json-simple.version>
+    <maven-plugin-api.version>3.9.0</maven-plugin-api.version>
+    <maven-plugin-annotations.version>3.15.1</maven-plugin-annotations.version>
+    <plexus-utils.version>4.0.2</plexus-utils.version>
+    <plexus-build-api.version>1.2.0</plexus-build-api.version>
+    <maven-core.version>3.9.0</maven-core.version>
+    <maven-project.version>2.2.1</maven-project.version>
+    <bridge-method-annotation.version>1.14</bridge-method-annotation.version>
+    <checker-qual.version>3.48.3</checker-qual.version>
+    <testcontainers.version>1.20.6</testcontainers.version>
+    <groovy.version>4.0.24</groovy.version>
+    <jaxb.version>4.0.6</jaxb.version>
+    <parsson.version>1.1.7</parsson.version>
+    <jakarta-json-api.version>2.1.3</jakarta-json-api.version>
+    <joor.version>0.9.15</joor.version>
+    <cglib.version>3.3.0</cglib.version>
+    <querydsl-apt-jsr305.version>2.0.2</querydsl-apt-jsr305.version>
+    <jmolecules.version>1.0.0</jmolecules.version>
+    <hibernate6.version>6.0.0</hibernate6.version>
+    <proxytoys.version>1.0</proxytoys.version>
+    <r2dbc-mysql.version>1.4.1</r2dbc-mysql.version>
+    <plexus-build-api-old.version>0.0.7</plexus-build-api-old.version>
+    <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
+    <jandex-maven-plugin.version>1.1.3</jandex-maven-plugin.version>
+    <maven-plugin-api-old.version>2.9.0</maven-plugin-api-old.version>
+    <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+    <plexus-classworlds.version>2.9.0</plexus-classworlds.version>
+    <expressly.version>6.0.0</expressly.version>
+    <commons-lang3.version>3.19.0</commons-lang3.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
     <osgi.import.package.root>*</osgi.import.package.root>

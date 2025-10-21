@@ -66,21 +66,21 @@
     <dependency>
       <groupId>jdepend</groupId>
       <artifactId>jdepend</artifactId>
-      <version>2.9.1</version>
+      <version>${json-path.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-core</artifactId>
-      <version>1.37</version>
+      <version>${jmh-generator.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-generator-annprocess</artifactId>
-      <version>1.37</version>
+      <version>${jmh-generator.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -105,13 +105,13 @@
     <dependency>
       <groupId>io.asyncer</groupId>
       <artifactId>r2dbc-mysql</artifactId>
-      <version>1.4.1</version>
+      <version>${r2dbc-mysql.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>r2dbc-postgresql</artifactId>
-      <version>1.1.0.RELEASE</version>
+      <version>${r2dbc-h2.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

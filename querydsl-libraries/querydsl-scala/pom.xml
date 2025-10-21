@@ -125,7 +125,7 @@
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
           <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
+          <version>${lifecycle-mapping.version}</version>
           <configuration>
             <lifecycleMappingMetadata>
               <pluginExecutions>
@@ -153,7 +153,7 @@
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
-        <version>4.9.6</version>
+        <version>${scala-maven-plugin.version}</version>
         <configuration>
           <scalaVersion>${scala.version}</scalaVersion>
 
@@ -203,7 +203,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.10</version>
+        <version>${maven-eclipse-plugin.version}</version>
         <configuration>
           <projectnatures>
             <projectnature>ch.epfl.lamp.sdt.core.scalanature</projectnature>
