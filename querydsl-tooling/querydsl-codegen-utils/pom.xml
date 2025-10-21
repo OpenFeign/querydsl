@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-tooling</artifactId>
-    <version>7.1-SNAPSHOT</version>
+    <version>7.1</version>
   </parent>
   <artifactId>querydsl-codegen-utils</artifactId>
 
