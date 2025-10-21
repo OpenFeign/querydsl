@@ -142,6 +142,53 @@
     <asm.version>9.9</asm.version>
     <querydsl.version>${project.version}</querydsl.version>
 
+    <!-- Maven plugin versions -->
+    <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+    <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+    <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+    <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
+    <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+    <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+    <maven-failsafe-plugin.version>${surefire.version}</maven-failsafe-plugin.version>
+    <maven-bundle-plugin.version>6.0.0</maven-bundle-plugin.version>
+    <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+    <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+    <maven-scm-plugin.version>2.2.1</maven-scm-plugin.version>
+    <maven-toolchains-plugin.version>3.2.0</maven-toolchains-plugin.version>
+    <maven-wrapper-plugin.version>3.3.4</maven-wrapper-plugin.version>
+    <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
+
+    <!-- Other plugin versions -->
+    <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
+    <dokka-maven-plugin.version>${dokka.version}</dokka-maven-plugin.version>
+    <kotlin-maven-plugin.version>${kotlin.version}</kotlin-maven-plugin.version>
+    <japicmp-maven-plugin.version>0.24.2</japicmp-maven-plugin.version>
+    <go-offline-maven-plugin.version>1.2.8</go-offline-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
+    <easy-jacoco-maven-plugin.version>0.1.4</easy-jacoco-maven-plugin.version>
+    <sundr-maven-plugin.version>0.230.1</sundr-maven-plugin.version>
+    <sortpom-maven-plugin.version>4.0.0</sortpom-maven-plugin.version>
+    <rewrite-maven-plugin.version>6.21.1</rewrite-maven-plugin.version>
+
+    <!-- Dependency versions -->
+    <jandex.version>3.5.0</jandex.version>
+    <jetbrains-annotations.version>26.0.2-1</jetbrains-annotations.version>
+    <jts.version>1.13</jts.version>
+    <classgraph.version>4.8.184</classgraph.version>
+    <javassist.version>3.30.2-GA</javassist.version>
+    <geolatte-geom.version>1.10</geolatte-geom.version>
+    <classmate.version>1.7.1</classmate.version>
+    <jboss-logging.version>3.6.1.Final</jboss-logging.version>
+    <jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
+    <jakarta.activation-api.version>2.1.4</jakarta.activation-api.version>
+    <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
+    <reactor-bom.version>2024.0.11</reactor-bom.version>
+    <easymock.version>5.6.0</easymock.version>
+    <animal-sniffer-signature.version>1.0</animal-sniffer-signature.version>
+    <rewrite-testing-frameworks.version>3.19.0</rewrite-testing-frameworks.version>
+    <rewrite-migrate-java.version>3.19.0</rewrite-migrate-java.version>
+    <postgis-jdbc.version>2025.1.1</postgis-jdbc.version>
+
     <!-- Import-Package definitions for maven-bundle-plugin -->
     <osgi.import.package.root>*</osgi.import.package.root>
     <osgi.import.package>${osgi.import.package.root}</osgi.import.package>
@@ -162,12 +209,12 @@
       <dependency>
         <groupId>io.smallrye</groupId>
         <artifactId>jandex</artifactId>
-        <version>3.5.0</version>
+        <version>${jandex.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jetbrains</groupId>
         <artifactId>annotations</artifactId>
-        <version>26.0.2-1</version>
+        <version>${jetbrains-annotations.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -178,7 +225,7 @@
       <dependency>
         <groupId>com.vividsolutions</groupId>
         <artifactId>jts</artifactId>
-        <version>1.13</version>
+        <version>${jts.version}</version>
       </dependency>
       <dependency>
         <groupId>com.h2database</groupId>
@@ -193,7 +240,7 @@
       <dependency>
         <groupId>io.github.classgraph</groupId>
         <artifactId>classgraph</artifactId>
-        <version>4.8.184</version>
+        <version>${classgraph.version}</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
@@ -205,7 +252,7 @@
       <dependency>
         <groupId>org.javassist</groupId>
         <artifactId>javassist</artifactId>
-        <version>3.30.2-GA</version>
+        <version>${javassist.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -215,7 +262,7 @@
       <dependency>
         <groupId>org.geolatte</groupId>
         <artifactId>geolatte-geom</artifactId>
-        <version>1.10</version>
+        <version>${geolatte-geom.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -232,12 +279,12 @@
       <dependency>
         <groupId>com.fasterxml</groupId>
         <artifactId>classmate</artifactId>
-        <version>1.7.1</version>
+        <version>${classmate.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.logging</groupId>
         <artifactId>jboss-logging</artifactId>
-        <version>3.6.1.Final</version>
+        <version>${jboss-logging.version}</version>
       </dependency>
       <dependency>
         <groupId>org.ow2.asm</groupId>
@@ -260,22 +307,22 @@
       <dependency>
         <groupId>jakarta.validation</groupId>
         <artifactId>jakarta.validation-api</artifactId>
-        <version>3.1.1</version>
+        <version>${jakarta.validation-api.version}</version>
       </dependency>
       <dependency>
         <groupId>jakarta.activation</groupId>
         <artifactId>jakarta.activation-api</artifactId>
-        <version>2.1.4</version>
+        <version>${jakarta.activation-api.version}</version>
       </dependency>
       <dependency>
         <groupId>jakarta.inject</groupId>
         <artifactId>jakarta.inject-api</artifactId>
-        <version>2.0.1.MR</version>
+        <version>${jakarta.inject-api.version}</version>
       </dependency>
       <dependency>
         <groupId>io.projectreactor</groupId>
         <artifactId>reactor-bom</artifactId>
-        <version>2024.0.11</version>
+        <version>${reactor-bom.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -302,7 +349,7 @@
     <dependency>
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
-      <version>5.6.0</version>
+      <version>${easymock.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -324,32 +371,32 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.3.1</version>
+          <version>${maven-source-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.12.0</version>
+          <version>${maven-javadoc-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
-          <version>3.2.8</version>
+          <version>${maven-gpg-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.7.1</version>
+          <version>${maven-assembly-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.14.1</version>
+          <version>${maven-compiler-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>3.1.4</version>
+          <version>${maven-deploy-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -371,7 +418,7 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <version>6.0.0</version>
+          <version>${maven-bundle-plugin.version}</version>
           <executions>
             <execution>
               <id>bundle-manifest</id>
@@ -417,7 +464,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.6.2</version>
+        <version>${maven-enforcer-plugin.version}</version>
         <executions>
           <execution>
             <id>enforce-maven</id>
@@ -442,7 +489,7 @@
       <plugin>
         <groupId>com.github.siom79.japicmp</groupId>
         <artifactId>japicmp-maven-plugin</artifactId>
-        <version>0.24.2</version>
+        <version>${japicmp-maven-plugin.version}</version>
         <configuration>
           <parameter>
             <excludes>
@@ -510,18 +557,18 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.4.2</version>
+        <version>${maven-jar-plugin.version}</version>
       </plugin>
       <plugin>
         <groupId>de.qaware.maven</groupId>
         <artifactId>go-offline-maven-plugin</artifactId>
-        <version>1.2.8</version>
+        <version>${go-offline-maven-plugin.version}</version>
         <configuration>
           <dynamicDependencies>
             <DynamicDependency>
               <groupId>org.codehaus.mojo.signature</groupId>
               <artifactId>java18</artifactId>
-              <version>1.0</version>
+              <version>${animal-sniffer-signature.version}</version>
               <type>signature</type>
               <repositoryType>MAIN</repositoryType>
             </DynamicDependency>
@@ -532,7 +579,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.14</version>
+        <version>${jacoco-maven-plugin.version}</version>
         <configuration>
           <includes>
             <include>com/querydsl/**</include>
@@ -543,7 +590,7 @@
       <plugin>
         <groupId>com.marvinformatics.jacoco</groupId>
         <artifactId>easy-jacoco-maven-plugin</artifactId>
-        <version>0.1.4</version>
+        <version>${easy-jacoco-maven-plugin.version}</version>
         <configuration>
           <projectRules>
             <rule>
@@ -573,7 +620,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>${maven-scm-plugin.version}</version>
         <configuration>
           <tag>${project.version}</tag>
         </configuration>
@@ -581,7 +628,7 @@
       <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
-        <version>0.230.1</version>
+        <version>${sundr-maven-plugin.version}</version>
         <inherited>false</inherited>
         <configuration>
           <boms>
@@ -731,7 +778,7 @@
       <plugin>
         <groupId>com.github.ekryd.sortpom</groupId>
         <artifactId>sortpom-maven-plugin</artifactId>
-        <version>4.0.0</version>
+        <version>${sortpom-maven-plugin.version}</version>
         <configuration>
           <keepBlankLines>true</keepBlankLines>
           <lineSeparator>\n</lineSeparator>
@@ -751,7 +798,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-wrapper-plugin</artifactId>
-        <version>3.3.4</version>
+        <version>${maven-wrapper-plugin.version}</version>
         <configuration>
           <mavenVersion>${mvn.version}</mavenVersion>
         </configuration>
@@ -793,7 +840,7 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.9.0</version>
+            <version>${central-publishing-maven-plugin.version}</version>
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>
@@ -938,7 +985,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
-            <version>3.6.1</version>
+            <version>${build-helper-maven-plugin.version}</version>
             <executions>
               <execution>
                 <goals>
@@ -1026,18 +1073,18 @@
           <plugin>
             <groupId>org.openrewrite.maven</groupId>
             <artifactId>rewrite-maven-plugin</artifactId>
-            <version>6.21.1</version>
+            <version>${rewrite-maven-plugin.version}</version>
 
             <dependencies>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-testing-frameworks</artifactId>
-                <version>3.19.0</version>
+                <version>${rewrite-testing-frameworks.version}</version>
               </dependency>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-migrate-java</artifactId>
-                <version>3.19.0</version>
+                <version>${rewrite-migrate-java.version}</version>
               </dependency>
             </dependencies>
 
@@ -1095,7 +1142,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-toolchains-plugin</artifactId>
-            <version>3.2.0</version>
+            <version>${maven-toolchains-plugin.version}</version>
             <executions>
               <execution>
                 <goals>

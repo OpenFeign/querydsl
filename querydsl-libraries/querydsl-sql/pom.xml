@@ -87,7 +87,7 @@
     <dependency>
       <groupId>net.postgis</groupId>
       <artifactId>postgis-jdbc</artifactId>
-      <version>2025.1.1</version>
+      <version>${postgis-jdbc.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
