@@ -799,6 +799,7 @@
               <publishingServerId>central</publishingServerId>
               <autoPublish>true</autoPublish>
               <waitUntil>published</waitUntil>
+              <publishingTimeoutMinutes>30</publishingTimeoutMinutes>
               <checksums>required</checksums>
             </configuration>
           </plugin>
