@@ -433,7 +433,7 @@ jobs:
       - run:
           name: 'Deploy Core Modules Sonatype'
           command: |
-            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true -Deasyjacoco.skip=true deploy -Prelease
 
   deployRelease:
     executor:
@@ -448,7 +448,7 @@ jobs:
       - run:
           name: 'Deploy Core Modules Sonatype'
           command: |
-            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease,staging
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true -Deasyjacoco.skip=true deploy -Prelease
 
 workflows:
   version: 2
