@@ -90,7 +90,6 @@ class QueryModelExtractor(
                 val extractor = TypeExtractor(
                     settings,
                     "${declaration.parent?.location} - $paramName",
-                    parameter.annotations
                 )
                 val type = extractor.extract(parameter.type.resolve())
                 QProperty(paramName, type)
@@ -109,7 +108,6 @@ class QueryModelExtractor(
                 val extractor = TypeExtractor(
                     settings,
                     property.simpleName.asString(),
-                    property.annotations
                 )
                 val type = extractor.extract(property.type.resolve())
                 QProperty(propName, type)

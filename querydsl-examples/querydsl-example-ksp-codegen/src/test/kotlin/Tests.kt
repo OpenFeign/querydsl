@@ -9,6 +9,7 @@ import com.querydsl.example.ksp.QBear
 import com.querydsl.example.ksp.QBearSimplifiedProjection
 import com.querydsl.example.ksp.QCat
 import com.querydsl.example.ksp.QDog
+import com.querydsl.example.ksp.QInvoice
 import com.querydsl.example.ksp.QMyShape
 import com.querydsl.example.ksp.QPerson
 import com.querydsl.example.ksp.QPersonClassDTO
@@ -288,6 +289,18 @@ class Tests {
 		val departureProperty = QMyShape::class.memberProperties.single { it.name == "departureGeo" }
 		assertThat(departureProperty.returnType.jvmErasure.qualifiedName!!).isEqualTo("com.querydsl.spatial.locationtech.jts.JTSGeometryPath")
 		assertThat(departureProperty.returnType.arguments.single().type!!.jvmErasure.qualifiedName!!).isEqualTo("org.locationtech.jts.geom.Geometry")
+	}
+
+	@Test
+	fun `Invoice month and amount generate correct path types`() {
+		val monthProperty = QInvoice::class.memberProperties.single { it.name == "month" }
+		val amountProperty = QInvoice::class.memberProperties.single { it.name == "amount" }
+		
+		assertThat(monthProperty.returnType.jvmErasure.qualifiedName!!).isEqualTo("com.querydsl.core.types.dsl.ComparablePath")
+		assertThat(monthProperty.returnType.arguments.single().type!!.jvmErasure.qualifiedName!!).isEqualTo("java.time.YearMonth")
+		
+		assertThat(amountProperty.returnType.jvmErasure.qualifiedName!!).isEqualTo("com.querydsl.core.types.dsl.NumberPath")
+		assertThat(amountProperty.returnType.arguments.single().type!!.jvmErasure.qualifiedName!!).isEqualTo("com.querydsl.example.ksp.Money")
 	}
 
     private fun initialize(): EntityManagerFactory {
