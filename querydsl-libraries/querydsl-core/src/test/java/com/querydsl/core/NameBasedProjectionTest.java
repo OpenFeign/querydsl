@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.domain.QAnimal;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.SimpleDTOProjection;
+import com.querydsl.core.types.NameBasedProjection;
 import java.sql.Date;
 import org.junit.Test;
 
-public class SimpleDTOProjectionTest {
+public class NameBasedProjectionTest {
 
   public static class AnimalDTO {
     private boolean alive;
@@ -128,7 +128,7 @@ public class SimpleDTOProjectionTest {
 
     // Create DTO using SimpleDTOProjection.fields()
     AnimalDTO dtoFromSimpleDTOProjection =
-        SimpleDTOProjection.fields(AnimalDTO.class, animal)
+        NameBasedProjection.binder(AnimalDTO.class, animal)
             .newInstance(
                 true, // alive
                 65.5, // bodyWeight
