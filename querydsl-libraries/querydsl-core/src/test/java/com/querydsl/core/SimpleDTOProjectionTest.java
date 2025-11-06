@@ -3,12 +3,12 @@ package com.querydsl.core;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.domain.QAnimal;
-import com.querydsl.core.types.SimpleDtoProjection;
+import com.querydsl.core.types.SimpleDTOProjection;
 import com.querydsl.core.types.Projections;
 import java.sql.Date;
 import org.junit.Test;
 
-public class SimpleDtoProjectionTest {
+public class SimpleDTOProjectionTest {
 
   public static class AnimalDTO {
     private boolean alive;
@@ -128,7 +128,7 @@ public class SimpleDtoProjectionTest {
 
     // Create DTO using NameBasedProjection.binder
     AnimalDTO dtoFromSimpleDTOProjection =
-        SimpleDtoProjection.binder(AnimalDTO.class, animal)
+        SimpleDTOProjection.binder(AnimalDTO.class, animal)
             .newInstance(
                 true, // alive
                 65.5, // bodyWeight
@@ -256,7 +256,7 @@ public class SimpleDtoProjectionTest {
 
     // Create a DTO that combines fields from both Animal and Cat entities
     AnimalCatDTO dto =
-        new SimpleDtoProjection<>(AnimalCatDTO.class, animal, cat)
+        new SimpleDTOProjection<>(AnimalCatDTO.class, animal, cat)
             .newInstance(
                 true, // alive (from Animal)
                 55.2, // bodyWeight (from Animal)
