@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NameBasedProjection<T> extends FactoryExpressionBase<T> {
+public class SimpleDtoProjection<T> extends FactoryExpressionBase<T> {
 
   private final List<Expression<?>> expressions;
   private final Constructor<? extends T> constructor;
 
   @SafeVarargs
-  public NameBasedProjection(Class<? extends T> type, EntityPathBase<?>... entities) {
+  public SimpleDtoProjection(Class<? extends T> type, EntityPathBase<?>... entities) {
     super(type);
     Map<String, Expression<?>> exprByName = collectExpressions(entities);
     this.constructor = findMatchingConstructor(type, exprByName);
@@ -126,7 +126,7 @@ public class NameBasedProjection<T> extends FactoryExpressionBase<T> {
   }
 
   /**
-   * Creates a {@link NameBasedProjection} instance for the given DTO class and entity.
+   * Creates a {@link SimpleDtoProjection} instance for the given DTO class and entity.
    *
    * <p>Author: <b>Mouon (munhyunjune)</b>
    *
@@ -160,7 +160,7 @@ public class NameBasedProjection<T> extends FactoryExpressionBase<T> {
    *
    * <h3>Return</h3>
    *
-   * A new {@link NameBasedProjection} instance capable of instantiating the given DTO type using
+   * A new {@link SimpleDtoProjection} instance capable of instantiating the given DTO type using
    * the entity's expressions.
    *
    * <h3>Matching Logic</h3>
@@ -190,10 +190,10 @@ public class NameBasedProjection<T> extends FactoryExpressionBase<T> {
    * @param type the DTO class type to bind expressions to
    * @param entity the QueryDSL entity path whose field expressions are used
    * @param <T> the generic DTO type
-   * @return a new {@link NameBasedProjection} ready to create DTO instances
+   * @return a new {@link SimpleDtoProjection} ready to create DTO instances
    */
-  public static <T> NameBasedProjection<T> binder(
+  public static <T> SimpleDtoProjection<T> binder(
       Class<? extends T> type, EntityPathBase<?> entity) {
-    return new NameBasedProjection<>(type, entity);
+    return new SimpleDtoProjection<>(type, entity);
   }
 }
