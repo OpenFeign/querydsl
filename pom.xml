@@ -127,7 +127,7 @@
     <mvn.version>3.9.11</mvn.version>
     <guava.version>33.5.0-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
-    <byte-buddy.version>1.18.0</byte-buddy.version>
+    <byte-buddy.version>1.18.1</byte-buddy.version>
     <slf4j.version>2.0.17</slf4j.version>
     <surefire.version>3.5.4</surefire.version>
     <animal-sniffer.version>1.26</animal-sniffer.version>
