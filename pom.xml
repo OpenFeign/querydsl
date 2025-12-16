@@ -139,7 +139,7 @@
     <kotlinpoet.version>2.2.0</kotlinpoet.version>
     <dokka.version>2.1.0</dokka.version>
     <scala.version>2.13.16</scala.version>
-    <asm.version>9.9</asm.version>
+    <asm.version>9.9.1</asm.version>
     <querydsl.version>${project.version}</querydsl.version>
 
     <!-- Import-Package definitions for maven-bundle-plugin -->
