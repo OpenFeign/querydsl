@@ -6,12 +6,10 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
-import jakarta.persistence.Convert
 
 class TypeExtractor(
     private val settings: KspSettings,
     private val fullPathName: String,
-    private val annotations: Sequence<KSAnnotation>
 ) {
     fun extract(type: KSType): QPropertyType {
         when (val declaration = type.declaration) {
@@ -31,8 +29,7 @@ class TypeExtractor(
                 return extract(innerType)
             }
             else -> {
-                return userType(type)
-                    ?: parameterType(type)
+                return parameterType(type)
                     ?: simpleType(type)
                     ?: referenceType(type)
                     ?: collectionType(type)
@@ -58,24 +55,21 @@ class TypeExtractor(
         }
     }
 
-    private fun fallbackType(type: KSType): QPropertyType.Simple {
+    private fun fallbackType(type: KSType): QPropertyType {
         val declaration = type.declaration
-        val isComparable = if (declaration is KSClassDeclaration) {
-            val comparableNames = listOfNotNull(
-                Comparable::class.java.canonicalName,
-                java.lang.Comparable::class.qualifiedName
-            )
-            declaration.getAllSuperTypes().any {
-                comparableNames.contains(it.toClassName().canonicalName)
-            }
-        } else {
-            false
-        }
         val className = type.toClassNameSimple()
-        if (isComparable) {
-            return QPropertyType.Simple(SimpleType.Comparable(className))
-        } else {
-            return QPropertyType.Simple(SimpleType.Simple(className))
+        
+        if (declaration !is KSClassDeclaration) {
+            return QPropertyType.Unknown(className, type.toTypeName())
+        }
+
+        val isComparable = declaration.isComparable()
+        val isNumber = declaration.isNumber()
+        
+        return when {
+            isComparable && isNumber -> QPropertyType.Simple(SimpleType.QNumber(className))
+            isComparable -> QPropertyType.Simple(SimpleType.Comparable(className))
+            else -> QPropertyType.Unknown(className, type.toTypeName())
         }
     }
 
@@ -144,23 +138,6 @@ class TypeExtractor(
         return QueryModelType.autodetect(classDeclaration) != null
     }
 
-    private fun userType(type: KSType): QPropertyType.Unknown? {
-        if (type.isEnum()) {
-            return null
-        }
-
-        val userTypeAnnotations = listOf(
-            ClassName("org.hibernate.annotations", "Type"),
-            ClassName("org.hibernate.annotations", "JdbcTypeCode"),
-            Convert::class.asClassName()
-        )
-        if (annotations.any { userTypeAnnotations.contains(it.annotationType.resolve().toClassName()) }) {
-            return QPropertyType.Unknown(type.toClassNameSimple(), type.toTypeName())
-        } else {
-            return null
-        }
-    }
-
     private fun assertTypeArgCount(parentType: KSType, collectionTypeName: String, count: Int) {
         if (parentType.arguments.size != count) {
             throwError("Type looks like a $collectionTypeName so expected $count type arguments, but got ${parentType.arguments.size}")
@@ -209,8 +186,38 @@ private fun KSType.toClassNameSimple(): ClassName {
     }
 }
 
-private fun KSType.isEnum(): Boolean {
-    val referencedDeclaration = declaration
+private fun KSClassDeclaration.hasSuperType(predicate: (ClassName) -> Boolean): Boolean {
+    return getAllSuperTypes().any { superType ->
+        val superDeclaration = superType.declaration
+        if (superDeclaration is KSClassDeclaration) {
+            predicate(superDeclaration.toClassName())
+        } else {
+            false
+        }
+    }
+}
 
-    return referencedDeclaration is KSClassDeclaration && referencedDeclaration.classKind == ClassKind.ENUM_CLASS
+private fun KSClassDeclaration.isComparable(): Boolean {
+    val comparableNames = listOfNotNull(
+        Comparable::class.java.canonicalName,
+        java.lang.Comparable::class.qualifiedName
+    )
+    return hasSuperType { className ->
+        comparableNames.contains(className.canonicalName)
+    }
+}
+
+private fun KSClassDeclaration.isNumber(): Boolean {
+    val numberQualifiedNames = listOf(
+        "kotlin.Number",
+        "java.lang.Number"
+    )
+    
+    if (qualifiedName?.asString() in numberQualifiedNames) {
+        return true
+    }
+    
+    return getAllSuperTypes().any { superType ->
+        superType.declaration.qualifiedName?.asString() in numberQualifiedNames
+    }
 }
