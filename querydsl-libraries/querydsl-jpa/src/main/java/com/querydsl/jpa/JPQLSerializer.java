@@ -135,7 +135,7 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     }
   }
 
-  private void handleJoinTarget(JoinExpression je) {
+  protected void handleJoinTarget(JoinExpression je) {
     // type specifier
     if (je.getTarget() instanceof EntityPath<?>) {
       final EntityPath<?> pe = (EntityPath<?>) je.getTarget();
