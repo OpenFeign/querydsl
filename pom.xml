@@ -135,7 +135,7 @@
     <morphia.version>2.5.2</morphia.version>
     <jmh.version>1.37</jmh.version>
     <kotlin.version>2.3.0</kotlin.version>
-    <ksp.version>2.3.4</ksp.version>
+    <ksp.version>2.3.5</ksp.version>
     <kotlinpoet.version>2.2.0</kotlinpoet.version>
     <dokka.version>2.1.0</dokka.version>
     <scala.version>2.13.16</scala.version>
