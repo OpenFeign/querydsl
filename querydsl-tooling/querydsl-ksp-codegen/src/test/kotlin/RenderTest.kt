@@ -43,7 +43,7 @@ class RenderTest {
             val c: com.querydsl.core.types.dsl.DatePath<java.util.Date> = createDate("c", java.util.Date::class.java)
             val d: com.querydsl.core.types.dsl.EnumPath<SampleEnum> = createEnum("d", SampleEnum::class.java)
             val e: com.querydsl.core.types.dsl.DateTimePath<java.util.Date> = createDateTime("e", java.util.Date::class.java)
-            val f: com.querydsl.core.types.dsl.NumberPath<kotlin.Int> = createNumber("f", kotlin.Int::class.java)
+            val f: com.querydsl.core.types.dsl.NumberPath<kotlin.Int> = createNumber("f", kotlin.Int::class.javaObjectType)
             val g: com.querydsl.core.types.dsl.TimePath<java.sql.Time> = createTime("g", java.sql.Time::class.java)
             val h: com.querydsl.core.types.dsl.SimplePath<kotlin.Any> = createSimple("h", kotlin.Any::class.java)
         """.trimIndent())
@@ -206,7 +206,7 @@ class RenderTest {
         val code = typeSpec.toString()
         code.assertCompiles()
         code.assertContainAll("""
-            public class QPersonDTO(
+            public class QCatDTO(
               id: com.querydsl.core.types.Expression<kotlin.Int>,
               name: com.querydsl.core.types.Expression<kotlin.String>,
             ) : com.querydsl.core.types.ConstructorExpression<CatDTO>(CatDTO::class.java, arrayOf(kotlin.Int::class.java, kotlin.String::class.java), id, name)
@@ -303,7 +303,7 @@ private fun String.assertContains(other: String) {
 private fun String.assertContainAll(other: String) {
     val expectedElements = other.split("\n")
     for (element in expectedElements) {
-        other.assertContains(element)
+        this.assertContains(element)
     }
 }
 
