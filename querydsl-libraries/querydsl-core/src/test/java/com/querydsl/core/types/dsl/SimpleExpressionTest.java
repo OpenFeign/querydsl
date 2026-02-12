@@ -14,6 +14,7 @@
 package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
@@ -23,9 +24,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SimpleExpressionTest {
+class SimpleExpressionTest {
 
   enum ExampleEnum {
     A,
@@ -33,21 +34,21 @@ public class SimpleExpressionTest {
   }
 
   @Test
-  public void as_usage() {
+  void as_usage() {
     SimpleExpression<String> str = new StringPath("str");
     assertThat(str.as("alias")).hasToString("str as alias");
     assertThat(str.as(new StringPath("alias"))).hasToString("str as alias");
   }
 
   @Test
-  public void case_() {
+  void case_() {
     SimpleExpression<String> str = new StringPath("str");
     // nullif(str, 'xxx')
     str.when("xxx").thenNull().otherwise(str);
   }
 
   @Test
-  public void subclasses_override_as() throws SecurityException, NoSuchMethodException {
+  void subclasses_override_as() throws Exception {
     List<Class<?>> classes =
         Arrays.<Class<?>>asList(
             BooleanExpression.class,
@@ -71,7 +72,7 @@ public class SimpleExpressionTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void various() {
+  void various() {
     List<DslExpression<?>> paths = new ArrayList<>();
     paths.add(new ArrayPath(String[].class, "p"));
     paths.add(new BeanPath(Object.class, "p"));
@@ -99,8 +100,9 @@ public class SimpleExpressionTest {
     }
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void eq_null() {
-    new SimplePath<>(Object.class, "path").eq((Object) null);
+  @Test
+  void eq_null() {
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> new SimplePath<>(Object.class, "path").eq((Object) null));
   }
 }

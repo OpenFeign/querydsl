@@ -18,12 +18,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.dsl.TimeExpression;
 import java.sql.Time;
 import java.util.Calendar;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TimeConstantTest {
+class TimeConstantTest {
 
   @Test
-  public void test() {
+  void test() {
     var cal = Calendar.getInstance();
     cal.set(Calendar.HOUR_OF_DAY, 13);
     cal.set(Calendar.MINUTE, 30);

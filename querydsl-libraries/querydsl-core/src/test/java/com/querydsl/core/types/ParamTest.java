@@ -16,9 +16,9 @@ package com.querydsl.core.types;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Param;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ParamTest {
+class ParamTest {
 
   Param<String> param11 = new Param<>(String.class, "param1");
   Param<String> param12 = new Param<>(String.class, "param1");
@@ -27,20 +27,18 @@ public class ParamTest {
   Param<String> param4 = new Param<>(String.class);
 
   @Test
-  public void identity() {
+  void identity() {
     assertThat(param12).isEqualTo(param11);
-    assertThat(param11.equals(param2)).isFalse();
-    assertThat(param11.equals(param3)).isFalse();
-    assertThat(param11.equals(param4)).isFalse();
+    assertThat(param11).isNotEqualTo(param2).isNotEqualTo(param3).isNotEqualTo(param4);
   }
 
   @Test
-  public void anon() {
+  void anon() {
     assertThat(param4.getName()).isNotNull();
   }
 
   @Test
-  public void getNotSetMessage() {
+  void getNotSetMessage() {
     assertThat(param11.getNotSetMessage()).isEqualTo("The parameter param1 needs to be set");
     assertThat(param4.getNotSetMessage())
         .isEqualTo("A parameter of type java.lang.String was not set");

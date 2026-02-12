@@ -19,8 +19,8 @@ import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import org.jetbrains.annotations.Nullable;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class BeanPathTest {
 
@@ -42,29 +42,29 @@ public class BeanPathTest {
   private BeanPath<BeanPathTest> beanPath = new BeanPath<>(BeanPathTest.class, "p");
 
   @Test
-  public void as_path() {
+  void as_path() {
     var simplePath = new SimplePath<>(BeanPathTest.class, "p");
     assertThat(beanPath.as(simplePath)).isNotNull();
   }
 
   @Test
-  @Ignore
-  public void as_class() {
+  @Disabled
+  void as_class() {
     var otherPath = beanPath.as(MyBeanPath.class);
     assertThat(otherPath).isEqualTo(beanPath);
     assertThat(otherPath.getMetadata().isRoot()).isTrue();
   }
 
   @Test
-  public void as_class_cached() {
+  void as_class_cached() {
     var otherPath = beanPath.as(MyBeanPath.class);
     //        assertEquals(beanPath, otherPath);
-    assertThat(otherPath == beanPath.as(MyBeanPath.class)).isTrue();
+    assertThat(otherPath).isSameAs(beanPath.as(MyBeanPath.class));
   }
 
   @Test
-  @Ignore
-  public void as_class_with_inits() {
+  @Disabled
+  void as_class_with_inits() {
     beanPath =
         new BeanPath<>(BeanPathTest.class, PathMetadataFactory.forVariable("p"), PathInits.DEFAULT);
     var otherPath = beanPath.as(MyBeanPath.class);
@@ -72,34 +72,34 @@ public class BeanPathTest {
   }
 
   @Test
-  public void as_class_with_inits_cached() {
+  void as_class_with_inits_cached() {
     beanPath =
         new BeanPath<>(BeanPathTest.class, PathMetadataFactory.forVariable("p"), PathInits.DEFAULT);
     var otherPath = beanPath.as(MyBeanPath.class);
     //        assertEquals(beanPath, otherPath);
-    assertThat(otherPath == beanPath.as(MyBeanPath.class)).isTrue();
+    assertThat(otherPath).isSameAs(beanPath.as(MyBeanPath.class));
   }
 
   @Test
-  public void createEnum() {
+  void createEnum() {
     assertThat(beanPath.createEnum("property", PropertyType.class)).isNotNull();
   }
 
   @Test
-  public void instanceOf() {
+  void instanceOf() {
     assertThat(beanPath.instanceOf(BeanPathTest.class)).isNotNull();
   }
 
   @Test
-  public void instanceOfAny() {
+  void instanceOfAny() {
     var pred1 = beanPath.instanceOf(BeanPathTest.class).or(beanPath.instanceOf(SubClass.class));
     var pred2 = beanPath.instanceOfAny(BeanPathTest.class, SubClass.class);
-    assertThat(pred2).isEqualTo(pred1);
-    assertThat(pred2.toString())
-        .isEqualTo(
+    assertThat(pred2)
+        .isEqualTo(pred1)
+        .hasToString(
             """
-            p instanceof class com.querydsl.core.types.dsl.BeanPathTest || \
-            p instanceof class com.querydsl.core.types.dsl.BeanPathTest$SubClass\
-            """);
+        p instanceof class com.querydsl.core.types.dsl.BeanPathTest || \
+        p instanceof class com.querydsl.core.types.dsl.BeanPathTest$SubClass\
+        """);
   }
 }

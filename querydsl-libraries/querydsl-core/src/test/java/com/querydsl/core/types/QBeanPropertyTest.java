@@ -16,9 +16,9 @@ package com.querydsl.core.types;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.PathBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class QBeanPropertyTest {
+class QBeanPropertyTest {
 
   public static class Entity {
 
@@ -44,7 +44,7 @@ public class QBeanPropertyTest {
   }
 
   @Test
-  public void field_access() {
+  void field_access() {
     var entity = new PathBuilder<>(Entity.class, "entity");
     var beanProjection =
         new QBean<>(
@@ -59,7 +59,7 @@ public class QBeanPropertyTest {
   }
 
   @Test
-  public void property_access() {
+  void property_access() {
     var entity = new PathBuilder<>(Entity.class, "entity");
     var beanProjection =
         new QBean<>(

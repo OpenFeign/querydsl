@@ -19,18 +19,17 @@ import static org.assertj.core.api.Assertions.within;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.mongodb.domain.GeoEntity;
 import com.querydsl.mongodb.domain.QGeoEntity;
 import com.querydsl.mongodb.morphia.MorphiaQuery;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import java.net.UnknownHostException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(MongoDB.class)
+@Tag("MongoDB")
 public class MongodbGeoSpatialQueryTest {
 
   private final String dbname = "geodb";
@@ -44,14 +43,14 @@ public class MongodbGeoSpatialQueryTest {
     ds.getMapper().map(GeoEntity.class);
   }
 
-  @Before
-  public void before() {
+  @BeforeEach
+  void before() {
     ds.getCollection(GeoEntity.class).deleteMany(new org.bson.Document());
     ds.ensureIndexes();
   }
 
   @Test
-  public void near() {
+  void near() {
     ds.save(new GeoEntity(10.0, 50.0));
     ds.save(new GeoEntity(20.0, 50.0));
     ds.save(new GeoEntity(30.0, 50.0));
@@ -63,7 +62,7 @@ public class MongodbGeoSpatialQueryTest {
   }
 
   @Test
-  public void near_sphere() {
+  void near_sphere() {
     ds.save(new GeoEntity(10.0, 50.0));
     ds.save(new GeoEntity(20.0, 50.0));
     ds.save(new GeoEntity(30.0, 50.0));
@@ -76,7 +75,7 @@ public class MongodbGeoSpatialQueryTest {
   }
 
   @Test
-  public void geo_within_box() {
+  void geo_within_box() {
     ds.save(new GeoEntity(10.0, 50.0));
     ds.save(new GeoEntity(20.0, 50.0));
     ds.save(new GeoEntity(30.0, 50.0));
@@ -89,7 +88,7 @@ public class MongodbGeoSpatialQueryTest {
   }
 
   @Test
-  public void geo_intersects() {
+  void geo_intersects() {
     ds.save(new GeoEntity(10.0, 50.0));
     ds.save(new GeoEntity(20.0, 50.0));
     ds.save(new GeoEntity(30.0, 50.0));

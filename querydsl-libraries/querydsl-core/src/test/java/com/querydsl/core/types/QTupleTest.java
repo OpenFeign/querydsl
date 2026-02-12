@@ -18,10 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.Arrays;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-public class QTupleTest {
+class QTupleTest {
 
   StringPath str1 = Expressions.stringPath("str1");
   StringPath str2 = Expressions.stringPath("str2");
@@ -33,7 +33,7 @@ public class QTupleTest {
   Concatenation concat = new Concatenation(str1, str2);
 
   @Test
-  public void alias() {
+  void alias() {
     Expression<?> expr = str1.as("s");
     var qTuple = new QTuple(expr);
     var tuple = qTuple.newInstance("arg");
@@ -42,78 +42,79 @@ public class QTupleTest {
   }
 
   @Test
-  public void twoExpressions_getArgs() {
-    assertThat(new QTuple(str1, str2).getArgs()).isEqualTo(Arrays.asList(str1, str2));
+  void twoExpressions_getArgs() {
+    assertThat(new QTuple(str1, str2).getArgs())
+        .containsExactlyElementsOf(Arrays.asList(str1, str2));
   }
 
   @Test
-  public void oneArray_getArgs() {
-    assertThat(new QTuple(exprs1).getArgs()).isEqualTo(Arrays.asList(str1, str2));
+  void oneArray_getArgs() {
+    assertThat(new QTuple(exprs1).getArgs()).containsExactlyElementsOf(Arrays.asList(str1, str2));
   }
 
   @Test
-  public void twoExpressionArrays_getArgs() {
+  void twoExpressionArrays_getArgs() {
     assertThat(new QTuple(exprs1, exprs2).getArgs())
-        .isEqualTo(Arrays.asList(str1, str2, str3, str4));
+        .containsExactlyElementsOf(Arrays.asList(str1, str2, str3, str4));
   }
 
   @Test
-  public void nestedProjection_getArgs() {
+  void nestedProjection_getArgs() {
     assertThat(FactoryExpressionUtils.wrap(new QTuple(concat)).getArgs())
-        .isEqualTo(Arrays.asList(str1, str2));
+        .containsExactlyElementsOf(Arrays.asList(str1, str2));
   }
 
   @Test
-  public void nestedProjection_getArgs2() {
+  void nestedProjection_getArgs2() {
     assertThat(FactoryExpressionUtils.wrap(new QTuple(concat, str3)).getArgs())
-        .isEqualTo(Arrays.asList(str1, str2, str3));
+        .containsExactlyElementsOf(Arrays.asList(str1, str2, str3));
   }
 
   @Test
-  public void nestedProjection_newInstance() {
+  void nestedProjection_newInstance() {
     var expr = new QTuple(concat);
     assertThat(FactoryExpressionUtils.wrap(expr).newInstance("12", "34").get(concat))
         .isEqualTo("1234");
   }
 
   @Test
-  public void nestedProjection_newInstance2() {
+  void nestedProjection_newInstance2() {
     var expr = new QTuple(str1, str2, concat);
     assertThat(FactoryExpressionUtils.wrap(expr).newInstance("1", "2", "12", "34").get(concat))
         .isEqualTo("1234");
   }
 
   @Test
-  public void tuple_equals() {
+  void tuple_equals() {
     var expr = new QTuple(str1, str2);
     assertThat(expr.newInstance("str1", "str2")).isEqualTo(expr.newInstance("str1", "str2"));
   }
 
   @Test
-  public void tuple_hashCode() {
+  void tuple_hashCode() {
     var expr = new QTuple(str1, str2);
-    assertThat(expr.newInstance("str1", "str2").hashCode())
-        .isEqualTo(expr.newInstance("str1", "str2").hashCode());
+    assertThat(expr.newInstance("str1", "str2"))
+        .hasSameHashCodeAs(expr.newInstance("str1", "str2"));
   }
 
   @Test
-  @Ignore
-  public void duplicates() {
+  @Disabled
+  void duplicates() {
     var expr = new QTuple(str1, str1);
     assertThat(expr.getArgs()).hasSize(1);
-    assertThat(expr.getArgs().getFirst()).isEqualTo(str1);
+    assertThat(expr.getArgs()).first().isEqualTo(str1);
   }
 
   @Test
-  @Ignore
-  public void duplicates2() {
+  @Disabled
+  void duplicates2() {
     var expr = new QTuple(Arrays.asList(str1, str1));
     assertThat(expr.getArgs()).hasSize(1);
-    assertThat(expr.getArgs().getFirst()).isEqualTo(str1);
+    assertThat(expr.getArgs()).first().isEqualTo(str1);
   }
 
   @Test
-  public void newInstance() {
+  void newInstance() {
     assertThat(new QTuple(str1, str1).newInstance(null, null)).isNotNull();
     assertThat(new QTuple(str1, str1).skipNulls().newInstance(null, null)).isNull();
   }

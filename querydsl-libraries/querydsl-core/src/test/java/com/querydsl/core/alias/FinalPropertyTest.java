@@ -13,9 +13,9 @@
  */
 package com.querydsl.core.alias;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class FinalPropertyTest {
+class FinalPropertyTest {
 
   public static class Entity {
 
@@ -33,7 +33,7 @@ public class FinalPropertyTest {
   public static final class Entity2 {}
 
   @Test
-  public void test() {
+  void test() {
     var entity = Alias.alias(Entity.class);
     Alias.$(entity.getProperty());
   }

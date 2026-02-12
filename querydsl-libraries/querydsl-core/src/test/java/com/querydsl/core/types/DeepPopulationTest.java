@@ -18,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DeepPopulationTest {
+class DeepPopulationTest {
 
   public static class Entity1 {
 
@@ -57,7 +57,7 @@ public class DeepPopulationTest {
   }
 
   @Test
-  public void deep_population_via_qBean() {
+  void deep_population_via_qBean() {
     var name = Expressions.stringPath("name");
     var id = Expressions.stringPath("id");
     var entity2Bean = new QBean<Entity2>(Entity2.class, name, id);
@@ -70,7 +70,7 @@ public class DeepPopulationTest {
   }
 
   @Test
-  public void deep_population_via_qTuple() {
+  void deep_population_via_qTuple() {
     var name = Expressions.stringPath("name");
     var id = Expressions.stringPath("id");
     var entity2Bean = new QBean<Entity2>(Entity2.class, name, id);

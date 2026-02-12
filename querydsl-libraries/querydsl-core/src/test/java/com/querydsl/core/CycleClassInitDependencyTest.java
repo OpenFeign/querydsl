@@ -5,29 +5,32 @@ import io.github.classgraph.ClassGraph;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
-public class CycleClassInitDependencyTest {
+class CycleClassInitDependencyTest {
 
   private static ClassLoader loader;
 
-  @BeforeClass
-  public static void overrideClassLoader() {
+  @BeforeAll
+  static void overrideClassLoader() {
     loader = Thread.currentThread().getContextClassLoader();
     Collection<URL> urls = new ClassGraph().getClasspathURLs();
     ClassLoader cl = URLClassLoader.newInstance(urls.toArray(new URL[0]), null /*no delegation*/);
     Thread.currentThread().setContextClassLoader(cl);
   }
 
-  @AfterClass
-  public static void resetClassLoader() {
+  @AfterAll
+  static void resetClassLoader() {
     Thread.currentThread().setContextClassLoader(loader);
   }
 
-  @Test(timeout = 2000)
-  public void test() {
+  @Test
+  @Timeout(value = 2000, unit = TimeUnit.MILLISECONDS)
+  void test() {
 
     // each thread wants to load one part of the dependency circle
     ThreadSafety.check(

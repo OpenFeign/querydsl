@@ -2,14 +2,14 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class JavaTemplatesTest {
+class JavaTemplatesTest {
 
   private Templates templates = JavaTemplates.DEFAULT;
 
   @Test
-  public void precedence() {
+  void precedence() {
     // postfix    expr++ expr--
     // unary    ++expr --expr +expr -expr ~ !
     // multiplicative    * / %
@@ -33,16 +33,16 @@ public class JavaTemplatesTest {
     var p6 = getPrecedence(Ops.AND);
     var p7 = getPrecedence(Ops.OR);
 
-    assertThat(p1 < p2).isTrue();
-    assertThat(p2 < p3).isTrue();
-    assertThat(p3 < p4).isTrue();
-    assertThat(p4 < p5).isTrue();
-    assertThat(p5 < p6).isTrue();
-    assertThat(p6 < p7).isTrue();
+    assertThat(p1).isLessThan(p2);
+    assertThat(p2).isLessThan(p3);
+    assertThat(p3).isLessThan(p4);
+    assertThat(p4).isLessThan(p5);
+    assertThat(p5).isLessThan(p6);
+    assertThat(p6).isLessThan(p7);
   }
 
   @Test
-  public void generic_precedence() {
+  void generic_precedence() {
     TemplatesTestUtils.testPrecedence(JavaTemplates.DEFAULT);
   }
 

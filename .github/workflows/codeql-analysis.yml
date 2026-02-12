@@ -93,10 +93,10 @@ jobs:
       uses: actions/setup-java@v4.0.0
       with:
         distribution: 'temurin'
-        java-version: '21'
+        java-version: '25'
 
     - name: Compile project
-      run: ./mvnw -B -ntp clean package -DskipTests=true -Dtoolchain.skip=true
+      run: ./mvnw -B -ntp clean package -DskipTests=true -Dtoolchain.skip=true -pl !querydsl-tooling/querydsl-kotlin-codegen,!querydsl-tooling/querydsl-ksp-codegen,!querydsl-libraries/querydsl-kotlin
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

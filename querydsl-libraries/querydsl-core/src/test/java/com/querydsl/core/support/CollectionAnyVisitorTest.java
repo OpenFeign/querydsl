@@ -20,49 +20,49 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CollectionAnyVisitorTest {
+class CollectionAnyVisitorTest {
 
   private QCat cat = QCat.cat;
 
   @Test
-  public void path() {
+  void path() {
     assertThat(serialize(cat.kittens.any())).isEqualTo("cat_kittens_0");
   }
 
   @Test
-  public void longer_path() {
+  void longer_path() {
     assertThat(serialize(cat.kittens.any().name)).isEqualTo("cat_kittens_0.name");
   }
 
   @Test
-  public void longer_path2() {
+  void longer_path2() {
     var visitor = new CollectionAnyVisitor();
     assertThat(serialize(cat.kittens.any().name, visitor)).isEqualTo("cat_kittens_0.name");
     assertThat(serialize(cat.kittens.any().name, visitor)).isEqualTo("cat_kittens_1.name");
   }
 
   @Test
-  public void very_long_path() {
+  void very_long_path() {
     assertThat(serialize(cat.kittens.any().kittens.any().name))
         .isEqualTo("cat_kittens_0_kittens_1.name");
   }
 
   @Test
-  public void simple_booleanOperation() {
+  void simple_booleanOperation() {
     Predicate predicate = cat.kittens.any().name.eq("Ruth123");
     assertThat(serialize(predicate)).isEqualTo("cat_kittens_0.name = Ruth123");
   }
 
   @Test
-  public void simple_stringOperation() {
+  void simple_stringOperation() {
     Predicate predicate = cat.kittens.any().name.substring(1).eq("uth123");
     assertThat(serialize(predicate)).isEqualTo("substring(cat_kittens_0.name,1) = uth123");
   }
 
   @Test
-  public void and_operation() {
+  void and_operation() {
     Predicate predicate =
         cat.kittens.any().name.eq("Ruth123").and(cat.kittens.any().bodyWeight.gt(10.0));
     assertThat(serialize(predicate))
@@ -70,7 +70,7 @@ public class CollectionAnyVisitorTest {
   }
 
   @Test
-  public void template() {
+  void template() {
     Expression<Boolean> templateExpr =
         ExpressionUtils.template(
             Boolean.class, "{0} = {1}", cat.kittens.any().name, ConstantImpl.create("Ruth123"));

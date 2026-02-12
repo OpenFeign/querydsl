@@ -6,12 +6,12 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ConstantHidingExpressionTest {
+class ConstantHidingExpressionTest {
 
   @Test
-  public void constants_hidden() {
+  void constants_hidden() {
     FactoryExpression<Tuple> tuple =
         Projections.tuple(
             Expressions.stringPath("str"),

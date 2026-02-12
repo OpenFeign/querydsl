@@ -16,7 +16,7 @@
 executors:
   java:
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
 
 # common commands
 commands:
@@ -128,7 +128,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
     steps:
       - checkout
       - resolve-dependencies
@@ -140,7 +140,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
     steps:
       - checkout
       - restore_cache:
@@ -173,7 +173,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
     steps:
       - checkout
       - restore_cache:
@@ -207,7 +207,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
     steps:
       - checkout
       - run:
@@ -232,7 +232,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
       - image: mysql:5.6.38
         environment:
           - MYSQL_ROOT_PASSWORD=querydsl
@@ -254,7 +254,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
       - image: postgis/postgis:16-3.4-alpine
         environment:
           - POSTGRES_USER=querydsl
@@ -275,7 +275,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
       - image: cubrid/cubrid:11.3
         environment:
           - CUBRID_DB=demodb
@@ -294,7 +294,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
       - image: gvenzl/oracle-xe:slim-faststart
         environment:
           - ORACLE_PASSWORD=querydsl
@@ -316,7 +316,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
       - image: mongo:8.0.9
     steps:
       - checkout
@@ -333,7 +333,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
       - image: jacobalberty/firebird:2.5.9-ss
         environment:
           - ISC_PASSWORD=masterkey
@@ -356,7 +356,7 @@ jobs:
     <<: *defaults
     working_directory: ~/querydsl
     docker:
-      - image: velo/toolchains-4-ci-builds:latest
+      - image: velo/toolchains-4-ci-builds:with-25
     steps:
       - checkout
       - restore_cache:

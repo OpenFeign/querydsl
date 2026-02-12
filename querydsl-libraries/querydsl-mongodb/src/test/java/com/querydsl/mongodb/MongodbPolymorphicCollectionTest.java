@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoClients;
-import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.mongodb.domain.Chips;
 import com.querydsl.mongodb.domain.Fish;
@@ -16,11 +15,11 @@ import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import java.net.UnknownHostException;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(MongoDB.class)
+@Tag("MongoDB")
 public class MongodbPolymorphicCollectionTest {
 
   private final Datastore ds;
@@ -34,8 +33,8 @@ public class MongodbPolymorphicCollectionTest {
     ds.getMapper().map(Food.class);
   }
 
-  @Before
-  public void before() throws UnknownHostException, MongoException {
+  @BeforeEach
+  void before() throws UnknownHostException, MongoException {
     ds.getCollection(Food.class).deleteMany(new org.bson.Document());
     ds.getCollection(Chips.class).deleteMany(new org.bson.Document());
     ds.getCollection(Fish.class).deleteMany(new org.bson.Document());
@@ -44,24 +43,24 @@ public class MongodbPolymorphicCollectionTest {
   }
 
   @Test
-  public void basicCount() {
+  void basicCount() {
     assertThat(3).isEqualTo(where().fetchCount());
   }
 
   @Test
-  public void countFishFromName() {
+  void countFishFromName() {
     assertThat(1).isEqualTo(where(QFood.food.name.eq("f1")).fetchCount());
   }
 
   @Test
-  public void countFishFromNameAndBreed() {
+  void countFishFromNameAndBreed() {
     assertThat(1)
         .isEqualTo(
             where(QFood.food.name.eq("f1").and(QFish.fish.breed.eq("unknown"))).fetchCount());
   }
 
   @Test
-  public void countFishFromNameAndBreedWithCast() {
+  void countFishFromNameAndBreedWithCast() {
     assertThat(1)
         .isEqualTo(
             where(QFood.food.name.eq("f1").and(QFood.food.as(QFish.class).breed.eq("unknown")))
@@ -69,7 +68,7 @@ public class MongodbPolymorphicCollectionTest {
   }
 
   @Test
-  public void countFishes() {
+  void countFishes() {
     assertThat(2).isEqualTo(where(isFish()).fetchCount());
   }
 
