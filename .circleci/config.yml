@@ -25,7 +25,7 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Check if cache was restored'
           command: |
@@ -135,7 +135,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2/repository
-          key: m2-{{ checksum "pom.xml" }}
+          key: m2repo-{{ checksum "pom.xml" }}
   test:
     <<: *defaults
     working_directory: ~/querydsl
@@ -145,7 +145,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -162,7 +162,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -178,7 +178,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Prepare environment'
           command: |
@@ -243,7 +243,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -264,7 +264,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -283,7 +283,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -305,7 +305,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -322,7 +322,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -345,7 +345,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -361,7 +361,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
           command: |
@@ -379,7 +379,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       # Start the DB2 container in detached mode
       - run:
           name: "Start DB2 container"
@@ -428,7 +428,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - configure-gpg
       - run:
           name: 'Deploy Core Modules Sonatype'
@@ -443,7 +443,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - m2-{{ checksum "pom.xml" }}
+            - m2repo-{{ checksum "pom.xml" }}
       - configure-gpg
       - run:
           name: 'Deploy Core Modules Sonatype'
