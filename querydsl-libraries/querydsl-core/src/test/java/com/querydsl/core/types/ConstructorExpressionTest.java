@@ -20,9 +20,9 @@ import com.querydsl.core.testutil.ThreadSafety;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ConstructorExpressionTest {
+class ConstructorExpressionTest {
 
   StringPath str1 = Expressions.stringPath("str1");
   StringPath str2 = Expressions.stringPath("str2");
@@ -30,7 +30,7 @@ public class ConstructorExpressionTest {
   Concatenation concat = new Concatenation(str1, str2);
 
   @Test
-  public void constructor() {
+  void constructor() {
     Expression<Long> longVal = ConstantImpl.create(1L);
     Expression<String> stringVal = ConstantImpl.create("");
     var instance =
@@ -46,7 +46,7 @@ public class ConstructorExpressionTest {
   }
 
   @Test
-  public void create() {
+  void create() {
     Expression<Long> longVal = ConstantImpl.create(1L);
     Expression<String> stringVal = ConstantImpl.create("");
     assertThat(
@@ -56,26 +56,26 @@ public class ConstructorExpressionTest {
   }
 
   @Test
-  public void create2() {
+  void create2() {
     Expression<Long> longVal = ConstantImpl.create(1L);
     assertThat(Projections.constructor(ProjectionExample.class, longVal).newInstance(0L))
         .isNotNull();
   }
 
   @Test
-  public void create3() {
+  void create3() {
     assertThat(Projections.constructor(ProjectionExample.class).newInstance()).isNotNull();
   }
 
   @Test
-  public void create4() {
+  void create4() {
     Expression<String> stringVal = ConstantImpl.create("");
     assertThat(Projections.constructor(ProjectionExample.class, stringVal).newInstance(""))
         .isNotNull();
   }
 
   @Test
-  public void createNullPrimitive() {
+  void createNullPrimitive() {
     Expression<Boolean> booleanVal = ConstantImpl.create(false);
     Expression<Byte> byteVal = ConstantImpl.create((byte) 0);
     Expression<Character> charVal = ConstantImpl.create('\0');
@@ -100,15 +100,15 @@ public class ConstructorExpressionTest {
   }
 
   @Test
-  public void factoryExpression_has_right_args() {
+  void factoryExpression_has_right_args() {
     FactoryExpression<ProjectionExample> constructor =
         Projections.constructor(ProjectionExample.class, concat);
     constructor = FactoryExpressionUtils.wrap(constructor);
-    assertThat(constructor.getArgs()).isEqualTo(Arrays.asList(str1, str2));
+    assertThat(constructor.getArgs()).containsExactlyElementsOf(Arrays.asList(str1, str2));
   }
 
   @Test
-  public void factoryExpression_newInstance() {
+  void factoryExpression_newInstance() {
     FactoryExpression<ProjectionExample> constructor =
         Projections.constructor(ProjectionExample.class, concat);
     constructor = FactoryExpressionUtils.wrap(constructor);
@@ -117,21 +117,21 @@ public class ConstructorExpressionTest {
   }
 
   @Test
-  public void serializability() {
+  void serializability() {
     ConstructorExpression<String> expr =
         Serialization.serialize(Projections.constructor(String.class));
     assertThat(expr.newInstance()).isEmpty();
   }
 
   @Test
-  public void threadSafety() {
+  void threadSafety() {
     final ConstructorExpression<String> expr = Projections.constructor(String.class);
     Runnable invoker = () -> expr.newInstance();
     ThreadSafety.check(invoker, invoker);
   }
 
   @Test
-  public void constructorArgsShouldBeSerialized() {
+  void constructorArgsShouldBeSerialized() {
     var longArg = ConstantImpl.create(1L);
     var stringArg = ConstantImpl.create("");
     var projection =

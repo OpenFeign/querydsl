@@ -18,6 +18,7 @@ import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.core.group.GroupBy.map;
 import static com.querydsl.core.group.GroupBy.set;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.Pair;
@@ -31,9 +32,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class GroupByListTest extends AbstractGroupByTest {
+class GroupByListTest extends AbstractGroupByTest {
 
   @Override
   @Test
@@ -54,9 +55,9 @@ public class GroupByListTest extends AbstractGroupByTest {
     var group = results.get(1);
     assertThat(group.getOne(postId)).isEqualTo(toInt(1));
     assertThat(group.getOne(postName)).isEqualTo("post 1");
-    assertThat(group.getSet(commentId)).isEqualTo(toSet(1, 2, 3));
+    assertThat(group.getSet(commentId)).hasSameElementsAs(toSet(1, 2, 3));
     assertThat(group.getList(commentText))
-        .isEqualTo(Arrays.asList("comment 1", "comment 2", "comment 3"));
+        .containsExactlyElementsOf(Arrays.asList("comment 1", "comment 2", "comment 3"));
   }
 
   @Override
@@ -70,32 +71,30 @@ public class GroupByListTest extends AbstractGroupByTest {
     var group = results.getFirst();
     assertThat(group.getOne(postId)).isNull();
     assertThat(group.getOne(postName)).isEqualTo("null post");
-    assertThat(group.getSet(commentId)).isEqualTo(toSet(7, 8));
-    assertThat(group.getList(commentText)).isEqualTo(Arrays.asList("comment 7", "comment 8"));
+    assertThat(group.getSet(commentId)).hasSameElementsAs(toSet(7, 8));
+    assertThat(group.getList(commentText))
+        .containsExactlyElementsOf(Arrays.asList("comment 7", "comment 8"));
   }
 
   @Override
-  @Test(expected = NoSuchElementException.class)
+  @Test
   public void noSuchElementException() {
     List<Group> results =
         BASIC_RESULTS.transform(groupBy(postId).list(postName, set(commentId), list(commentText)));
-
     assertThat(results).hasSize(4);
-
     var group = results.get(1);
-    group.getSet(qComment);
+    assertThatExceptionOfType(NoSuchElementException.class)
+        .isThrownBy(() -> group.getSet(qComment));
   }
 
   @Override
-  @Test(expected = ClassCastException.class)
+  @Test
   public void classCastException() {
     List<Group> results =
         BASIC_RESULTS.transform(groupBy(postId).list(postName, set(commentId), list(commentText)));
-
     assertThat(results).hasSize(4);
-
     var group = results.get(1);
-    group.getList(commentId);
+    assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> group.getList(commentId));
   }
 
   @Override
@@ -227,7 +226,7 @@ public class GroupByListTest extends AbstractGroupByTest {
     assertThat(post).isNotNull();
     assertThat(post.getId()).isEqualTo(toInt(1));
     assertThat(post.getName()).isEqualTo("post 1");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(1), comment(2), comment(3)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(1), comment(2), comment(3)));
   }
 
   @Override
@@ -245,7 +244,7 @@ public class GroupByListTest extends AbstractGroupByTest {
     assertThat(post).isNotNull();
     assertThat(post.getId()).isEqualTo(toInt(1));
     assertThat(post.getName()).isEqualTo("post 1");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(1), comment(2), comment(3)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(1), comment(2), comment(3)));
   }
 
   @Override
@@ -266,7 +265,7 @@ public class GroupByListTest extends AbstractGroupByTest {
     var post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(toInt(2));
     assertThat(post.getName()).isEqualTo("post 2");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(4), comment(5)));
   }
 
   @Override
@@ -288,7 +287,7 @@ public class GroupByListTest extends AbstractGroupByTest {
     var post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(toInt(2));
     assertThat(post.getName()).isEqualTo("post 2");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(4), comment(5)));
   }
 
   @Override
@@ -310,6 +309,6 @@ public class GroupByListTest extends AbstractGroupByTest {
     var post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(toInt(2));
     assertThat(post.getName()).isEqualTo("post 2");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(4), comment(5)));
   }
 }

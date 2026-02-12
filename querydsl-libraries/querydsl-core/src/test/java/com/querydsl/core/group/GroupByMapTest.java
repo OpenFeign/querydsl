@@ -22,6 +22,7 @@ import static com.querydsl.core.group.GroupBy.sortedMap;
 import static com.querydsl.core.group.GroupBy.sortedSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.Pair;
 import com.querydsl.core.ResultTransformer;
@@ -41,12 +42,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.SortedMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class GroupByMapTest extends AbstractGroupByTest {
+class GroupByMapTest extends AbstractGroupByTest {
 
   @Test
-  public void compile() {
+  void compile() {
     StringExpression str = Expressions.stringPath("str");
     GroupExpression<String, String> strGroup = new GOne<>(str);
     GroupBy.sortedMap(strGroup, str, null);
@@ -62,19 +63,19 @@ public class GroupByMapTest extends AbstractGroupByTest {
   }
 
   @Test
-  public void set_by_sorted() {
+  void set_by_sorted() {
     Map<Integer, Group> results =
         BASIC_RESULTS_UNORDERED.transform(groupBy(postId).as(postName, sortedSet(commentId)));
 
     var group = results.get(1);
     var it = group.getSet(commentId).iterator();
-    assertThat(it.next().intValue()).isEqualTo(1);
+    assertThat(it.next().intValue()).isOne();
     assertThat(it.next().intValue()).isEqualTo(2);
     assertThat(it.next().intValue()).isEqualTo(3);
   }
 
   @Test
-  public void set_by_sorted_reverse() {
+  void set_by_sorted_reverse() {
     Map<Integer, Group> results =
         BASIC_RESULTS_UNORDERED.transform(
             groupBy(postId).as(postName, sortedSet(commentId, Comparator.reverseOrder())));
@@ -83,7 +84,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
     var it = group.getSet(commentId).iterator();
     assertThat(it.next().intValue()).isEqualTo(3);
     assertThat(it.next().intValue()).isEqualTo(2);
-    assertThat(it.next().intValue()).isEqualTo(1);
+    assertThat(it.next().intValue()).isOne();
   }
 
   @Override
@@ -95,9 +96,9 @@ public class GroupByMapTest extends AbstractGroupByTest {
     var group = results.get(1);
     assertThat(group.getOne(postId)).isEqualTo(toInt(1));
     assertThat(group.getOne(postName)).isEqualTo("post 1");
-    assertThat(group.getSet(commentId)).isEqualTo(toSet(1, 2, 3));
+    assertThat(group.getSet(commentId)).hasSameElementsAs(toSet(1, 2, 3));
     assertThat(group.getList(commentText))
-        .isEqualTo(Arrays.asList("comment 1", "comment 2", "comment 3"));
+        .containsExactlyElementsOf(Arrays.asList("comment 1", "comment 2", "comment 3"));
   }
 
   @Override
@@ -109,28 +110,28 @@ public class GroupByMapTest extends AbstractGroupByTest {
     var group = results.get(null);
     assertThat(group.getOne(postId)).isNull();
     assertThat(group.getOne(postName)).isEqualTo("null post");
-    assertThat(group.getSet(commentId)).isEqualTo(toSet(7, 8));
-    assertThat(group.getList(commentText)).isEqualTo(Arrays.asList("comment 7", "comment 8"));
+    assertThat(group.getSet(commentId)).hasSameElementsAs(toSet(7, 8));
+    assertThat(group.getList(commentText))
+        .containsExactlyElementsOf(Arrays.asList("comment 7", "comment 8"));
   }
 
   @Override
-  @Test(expected = NoSuchElementException.class)
+  @Test
   public void noSuchElementException() {
     Map<Integer, Group> results =
         BASIC_RESULTS.transform(groupBy(postId).as(postName, set(commentId), list(commentText)));
-
     var group = results.get(1);
-    group.getSet(qComment);
+    assertThatExceptionOfType(NoSuchElementException.class)
+        .isThrownBy(() -> group.getSet(qComment));
   }
 
   @Override
-  @Test(expected = ClassCastException.class)
+  @Test
   public void classCastException() {
     Map<Integer, Group> results =
         BASIC_RESULTS.transform(groupBy(postId).as(postName, set(commentId), list(commentText)));
-
     var group = results.get(1);
-    group.getList(commentId);
+    assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> group.getList(commentId));
   }
 
   @Override
@@ -146,20 +147,20 @@ public class GroupByMapTest extends AbstractGroupByTest {
   }
 
   @Test
-  public void map_sorted() {
+  void map_sorted() {
     Map<Integer, Group> results =
         MAP_RESULTS.transform(groupBy(postId).as(postName, sortedMap(commentId, commentText)));
 
     var group = results.get(1);
 
     var it = group.getMap(commentId, commentText).entrySet().iterator();
-    assertThat(it.next().getKey().intValue()).isEqualTo(1);
+    assertThat(it.next().getKey().intValue()).isOne();
     assertThat(it.next().getKey().intValue()).isEqualTo(2);
     assertThat(it.next().getKey().intValue()).isEqualTo(3);
   }
 
   @Test
-  public void map_sorted_reverse() {
+  void map_sorted_reverse() {
     Map<Integer, Group> results =
         MAP_RESULTS.transform(
             groupBy(postId)
@@ -170,7 +171,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
     var it = group.getMap(commentId, commentText).entrySet().iterator();
     assertThat(it.next().getKey().intValue()).isEqualTo(3);
     assertThat(it.next().getKey().intValue()).isEqualTo(2);
-    assertThat(it.next().getKey().intValue()).isEqualTo(1);
+    assertThat(it.next().getKey().intValue()).isOne();
   }
 
   @Override
@@ -202,7 +203,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
       @SuppressWarnings("unchecked")
       var pair = (Pair<Integer, Pair<Integer, String>>) array[1];
       var first = pair.getFirst();
-      var comments = posts.computeIfAbsent(first, k -> new LinkedHashMap<Integer, String>());
+      var comments = posts.computeIfAbsent(first, _ -> new LinkedHashMap<Integer, String>());
       var second = pair.getSecond();
       comments.put(second.getFirst(), second.getSecond());
     }
@@ -260,11 +261,11 @@ public class GroupByMapTest extends AbstractGroupByTest {
     assertThat(post).isNotNull();
     assertThat(post.getId()).isEqualTo(toInt(1));
     assertThat(post.getName()).isEqualTo("post 1");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(1), comment(2), comment(3)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(1), comment(2), comment(3)));
   }
 
   @Test
-  public void transform_via_groupByProjection() {
+  void transform_via_groupByProjection() {
     Map<Integer, Post> results =
         POST_W_COMMENTS2.transform(
             new GroupByProjection<Integer, Post>(postId, postName, set(qComment)) {
@@ -279,7 +280,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
     assertThat(post).isNotNull();
     assertThat(post.getId()).isEqualTo(toInt(1));
     assertThat(post.getName()).isEqualTo("post 1");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(1), comment(2), comment(3)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(1), comment(2), comment(3)));
   }
 
   @Override
@@ -294,7 +295,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
     assertThat(post).isNotNull();
     assertThat(post.getId()).isEqualTo(toInt(1));
     assertThat(post.getName()).isEqualTo("post 1");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(1), comment(2), comment(3)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(1), comment(2), comment(3)));
   }
 
   @Override
@@ -315,7 +316,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
     var post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(toInt(2));
     assertThat(post.getName()).isEqualTo("post 2");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(4), comment(5)));
   }
 
   @Override
@@ -337,7 +338,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
     var post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(toInt(2));
     assertThat(post.getName()).isEqualTo("post 2");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(4), comment(5)));
   }
 
   @Override
@@ -359,11 +360,11 @@ public class GroupByMapTest extends AbstractGroupByTest {
     var post = user.getLatestPost();
     assertThat(post.getId()).isEqualTo(toInt(2));
     assertThat(post.getName()).isEqualTo("post 2");
-    assertThat(post.getComments()).isEqualTo(toSet(comment(4), comment(5)));
+    assertThat(post.getComments()).hasSameElementsAs(toSet(comment(4), comment(5)));
   }
 
   @Test
-  public void signature() {
+  void signature() {
     var str = Expressions.stringPath("str");
     NumberPath<BigDecimal> bigd = Expressions.numberPath(BigDecimal.class, "bigd");
 
@@ -383,7 +384,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
   }
 
   @Test
-  public void average_with_default_math_context() {
+  void average_with_default_math_context() {
     Map<Integer, Double> results = POSTS_W_COMMENTS_SCORE.transform(groupBy(postId).as(avg(score)));
     assertThat(results.get(null)).isCloseTo(1.5, within(0.0));
     assertThat(results.get(1)).isCloseTo(((1.5 + 2.0 + 0.5) / 3), within(0.0));
@@ -391,7 +392,7 @@ public class GroupByMapTest extends AbstractGroupByTest {
   }
 
   @Test
-  public void average_with_user_provided_math_context() {
+  void average_with_user_provided_math_context() {
     var oneDigitMathContext = new MathContext(2, RoundingMode.HALF_EVEN);
     Map<Integer, Double> results =
         POSTS_W_COMMENTS_SCORE.transform(groupBy(postId).as(avg(score, oneDigitMathContext)));

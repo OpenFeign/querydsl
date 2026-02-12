@@ -20,9 +20,9 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SerializationTest {
+class SerializationTest {
 
   public enum Gender {
     MALE,
@@ -30,7 +30,7 @@ public class SerializationTest {
   }
 
   @Test
-  public void expressions() throws Exception {
+  void expressions() throws Exception {
     Map<Class<?>, Object> args = new HashMap<>();
     args.put(Object.class, "obj");
     args.put(BeanPath.class, new EntityPathBase<>(Object.class, "obj"));
@@ -78,20 +78,20 @@ public class SerializationTest {
   }
 
   @Test
-  public void order() {
+  void order() {
     OrderSpecifier<?> order = new OrderSpecifier<>(Order.ASC, Expressions.stringPath("str"));
     assertThat(Serialization.serialize(order)).isEqualTo(order);
   }
 
   @Test
-  public void roundtrip() throws Exception {
+  void roundtrip() throws Exception {
     Path<?> path = ExpressionUtils.path(Object.class, "entity");
     SimplePath<?> path2 = Expressions.path(Object.class, "entity");
     assertThat(serialize(path)).isEqualTo(path);
     assertThat(serialize(path2)).isEqualTo(path2);
     assertThat(serialize(path2.isNull())).isEqualTo(path2.isNull());
-    assertThat(serialize(path).hashCode()).isEqualTo(path.hashCode());
-    assertThat(serialize(path2).hashCode()).isEqualTo(path2.hashCode());
-    assertThat(serialize(path2.isNull()).hashCode()).isEqualTo(path2.isNull().hashCode());
+    assertThat(serialize(path)).hasSameHashCodeAs(path);
+    assertThat(serialize(path2)).hasSameHashCodeAs(path2);
+    assertThat(serialize(path2.isNull())).hasSameHashCodeAs(path2.isNull());
   }
 }

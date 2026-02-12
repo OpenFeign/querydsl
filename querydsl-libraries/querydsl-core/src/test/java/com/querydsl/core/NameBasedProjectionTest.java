@@ -6,9 +6,9 @@ import com.querydsl.core.domain.QAnimal;
 import com.querydsl.core.types.NameBasedProjection;
 import com.querydsl.core.types.Projections;
 import java.sql.Date;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class NameBasedProjectionTest {
+class NameBasedProjectionTest {
 
   public static class AnimalDTO {
     private boolean alive;
@@ -99,7 +99,7 @@ public class NameBasedProjectionTest {
   }
 
   @Test
-  public void testSimpleDTOProjectionWithFields() {
+  void simpleDTOProjectionWithFields() {
     QAnimal animal = QAnimal.animal;
 
     // Create a Date object for testing
@@ -247,7 +247,7 @@ public class NameBasedProjectionTest {
    * (QAnimal) takes precedence.
    */
   @Test
-  public void testMultiEntityProjectionWithAnimalAndCat() {
+  void multiEntityProjectionWithAnimalAndCat() {
     QAnimal animal = QAnimal.animal;
     com.querydsl.core.domain.QCat cat = com.querydsl.core.domain.QCat.cat;
 

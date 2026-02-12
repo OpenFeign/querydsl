@@ -18,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class QMapTest {
+class QMapTest {
 
   StringPath str1 = Expressions.stringPath("str1");
   StringPath str2 = Expressions.stringPath("str2");
@@ -32,34 +32,35 @@ public class QMapTest {
   Concatenation concat = new Concatenation(str1, str2);
 
   @Test
-  public void twoExpressions_getArgs() {
-    assertThat(new QMap(str1, str2).getArgs()).isEqualTo(Arrays.asList(str1, str2));
+  void twoExpressions_getArgs() {
+    assertThat(new QMap(str1, str2).getArgs()).containsExactlyElementsOf(Arrays.asList(str1, str2));
   }
 
   @Test
-  public void oneArray_getArgs() {
-    assertThat(new QMap(exprs1).getArgs()).isEqualTo(Arrays.asList(str1, str2));
+  void oneArray_getArgs() {
+    assertThat(new QMap(exprs1).getArgs()).containsExactlyElementsOf(Arrays.asList(str1, str2));
   }
 
   @Test
-  public void twoExpressionArrays_getArgs() {
-    assertThat(new QMap(exprs1, exprs2).getArgs()).isEqualTo(Arrays.asList(str1, str2, str3, str4));
+  void twoExpressionArrays_getArgs() {
+    assertThat(new QMap(exprs1, exprs2).getArgs())
+        .containsExactlyElementsOf(Arrays.asList(str1, str2, str3, str4));
   }
 
   @Test
-  public void nestedProjection_getArgs() {
+  void nestedProjection_getArgs() {
     assertThat(FactoryExpressionUtils.wrap(new QMap(concat)).getArgs())
-        .isEqualTo(Arrays.asList(str1, str2));
+        .containsExactlyElementsOf(Arrays.asList(str1, str2));
   }
 
   @Test
-  public void nestedProjection_getArgs2() {
+  void nestedProjection_getArgs2() {
     assertThat(FactoryExpressionUtils.wrap(new QMap(concat, str3)).getArgs())
-        .isEqualTo(Arrays.asList(str1, str2, str3));
+        .containsExactlyElementsOf(Arrays.asList(str1, str2, str3));
   }
 
   @Test
-  public void nestedProjection_newInstance() {
+  void nestedProjection_newInstance() {
     var expr = new QMap(concat);
     var result = FactoryExpressionUtils.wrap(expr).newInstance("12", "34");
     assertThat(result)
@@ -71,7 +72,7 @@ public class QMapTest {
   }
 
   @Test
-  public void nestedProjection_newInstance2() {
+  void nestedProjection_newInstance2() {
     var expr = new QMap(str1, str2, concat);
     var result = FactoryExpressionUtils.wrap(expr).newInstance("1", "2", "12", "34");
     assertThat(result)
@@ -83,20 +84,20 @@ public class QMapTest {
   }
 
   @Test
-  public void tuple_equals() {
+  void tuple_equals() {
     var expr = new QMap(str1, str2);
     assertThat(expr.newInstance("str1", "str2")).isEqualTo(expr.newInstance("str1", "str2"));
   }
 
   @Test
-  public void tuple_hashCode() {
+  void tuple_hashCode() {
     var expr = new QMap(str1, str2);
-    assertThat(expr.newInstance("str1", "str2").hashCode())
-        .isEqualTo(expr.newInstance("str1", "str2").hashCode());
+    assertThat(expr.newInstance("str1", "str2"))
+        .hasSameHashCodeAs(expr.newInstance("str1", "str2"));
   }
 
   @Test
-  public void null_value() {
+  void null_value() {
     var expr = new QMap(str1, str2);
     assertThat(expr.newInstance("str1", null)).isNotNull();
   }

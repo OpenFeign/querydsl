@@ -18,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.QBeanPropertyTest.Entity;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ProjectionsTest {
+class ProjectionsTest {
 
   public static class VarArgs {
     String[] args;
@@ -61,7 +61,7 @@ public class ProjectionsTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void array() {
+  void array() {
     FactoryExpression<String[]> expr =
         Projections.array(
             String[].class,
@@ -71,7 +71,7 @@ public class ProjectionsTest {
   }
 
   @Test
-  public void beanClassOfTExpressionOfQArray() {
+  void beanClassOfTExpressionOfQArray() {
     var entity = new PathBuilder<Entity>(Entity.class, "entity");
     QBean<Entity> beanProjection =
         Projections.bean(
@@ -83,7 +83,7 @@ public class ProjectionsTest {
   }
 
   @Test
-  public void constructor() {
+  void constructor() {
     Expression<Long> longVal = ConstantImpl.create(1L);
     Expression<String> stringVal = ConstantImpl.create("");
     assertThat(
@@ -94,7 +94,7 @@ public class ProjectionsTest {
   }
 
   @Test
-  public void constructor_varArgs() {
+  void constructor_varArgs() {
     Expression<String> stringVal = ConstantImpl.create("");
     var instance =
         Projections.constructor(VarArgs.class, stringVal, stringVal).newInstance("X", "Y");
@@ -102,7 +102,7 @@ public class ProjectionsTest {
   }
 
   @Test
-  public void constructor_varArgs2() {
+  void constructor_varArgs2() {
     Expression<String> stringVal = ConstantImpl.create("");
     var instance =
         Projections.constructor(VarArgs2.class, stringVal, stringVal, stringVal)
@@ -112,7 +112,7 @@ public class ProjectionsTest {
   }
 
   @Test
-  public void constructor_varArgs3() {
+  void constructor_varArgs3() {
     var longVal = ConstantImpl.create(1L);
     var charVal = ConstantImpl.create('\0');
     var instance =
@@ -130,7 +130,7 @@ public class ProjectionsTest {
                 charVal,
                 charVal)
             .newInstance(null, 'm', 'y', 's', 'e', 'm', 'a', null, 'l', 't', 'd');
-    assertThat((long) instance.id).isEqualTo(0L);
+    assertThat((long) instance.id).isZero();
     // null character cannot be inserted, so a literal String can't be used.
     var expectedText =
         String.valueOf(new char[] {'m', 'y', 's', 'e', 'm', 'a', '\0', 'l', 't', 'd'});
@@ -138,7 +138,7 @@ public class ProjectionsTest {
   }
 
   @Test
-  public void fieldsClassOfTExpressionOfQArray() {
+  void fieldsClassOfTExpressionOfQArray() {
     var entity = new PathBuilder<Entity>(Entity.class, "entity");
     QBean<Entity> beanProjection =
         Projections.fields(
@@ -150,7 +150,7 @@ public class ProjectionsTest {
   }
 
   @Test
-  public void nested() {
+  void nested() {
     var str1 = Expressions.stringPath("str1");
     var str2 = Expressions.stringPath("str2");
     var str3 = Expressions.stringPath("str3");
@@ -172,7 +172,7 @@ public class ProjectionsTest {
   }
 
   @Test
-  public void nestedSkipNulls() {
+  void nestedSkipNulls() {
     var str1 = Expressions.stringPath("str1");
     var str2 = Expressions.stringPath("str2");
     var str3 = Expressions.stringPath("str3");
@@ -194,7 +194,7 @@ public class ProjectionsTest {
   }
 
   @Test
-  public void nestedSkipNulls2() {
+  void nestedSkipNulls2() {
     var str1 = Expressions.stringPath("str1");
     var str2 = Expressions.stringPath("str2");
     var str3 = Expressions.stringPath("str3");

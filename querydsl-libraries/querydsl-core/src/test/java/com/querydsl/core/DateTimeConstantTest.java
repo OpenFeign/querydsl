@@ -18,12 +18,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import java.util.Calendar;
 import java.util.Date;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DateTimeConstantTest {
+class DateTimeConstantTest {
 
   @Test
-  public void test() {
+  void test() {
     var cal = Calendar.getInstance();
     cal.set(Calendar.DAY_OF_MONTH, 1);
     cal.set(Calendar.MONTH, 0);

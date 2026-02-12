@@ -19,9 +19,9 @@ import com.querydsl.mongodb.document.DocumentUtils;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import org.bson.types.ObjectId;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class MongodbUserTest {
+class MongodbUserTest {
 
   private static final Datastore morphia;
 
@@ -31,7 +31,7 @@ public class MongodbUserTest {
   }
 
   @Test
-  public void map() {
+  void map() {
     var tampere = new City("Tampere", 61.30, 23.50);
 
     var user = new User();
@@ -43,7 +43,7 @@ public class MongodbUserTest {
   }
 
   @Test
-  public void friend() {
+  void friend() {
     var friend = new User();
     friend.setId(new ObjectId(1, 2));
 
@@ -54,7 +54,7 @@ public class MongodbUserTest {
   }
 
   @Test
-  public void friends() {
+  void friends() {
     var friend = new User();
     friend.setId(new ObjectId(1, 2));
 

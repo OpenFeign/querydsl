@@ -21,9 +21,9 @@ import com.querydsl.core.domain.QCommonPersistence;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class QueryMixinTest {
+class QueryMixinTest {
 
   private QueryMixin<?> mixin = new QueryMixin<Void>();
 
@@ -31,12 +31,12 @@ public class QueryMixinTest {
       new QCommonPersistence(PathMetadataFactory.forVariable("entity"));
 
   @Test
-  public void where_null() {
+  void where_null() {
     mixin.where((Predicate) null);
   }
 
   @Test
-  public void getJoins_with_condition() {
+  void getJoins_with_condition() {
     mixin.innerJoin(entity);
     mixin.on(entity.version.isNull(), entity.version.isNotNull());
 
@@ -48,7 +48,7 @@ public class QueryMixinTest {
   }
 
   @Test
-  public void getJoins_no_condition() {
+  void getJoins_no_condition() {
     mixin.innerJoin(entity);
 
     assertThat(mixin.getMetadata().getJoins()).hasSize(1);
@@ -58,7 +58,7 @@ public class QueryMixinTest {
   }
 
   @Test
-  public void innerJoin() {
+  void innerJoin() {
     var e = Alias.alias(DummyEntity.class);
     var e2 = Alias.alias(DummyEntity.class, "e2");
     var e3 = Alias.alias(DummyEntity.class, "e3");
@@ -76,7 +76,7 @@ public class QueryMixinTest {
   }
 
   @Test
-  public void join() {
+  void join() {
     var e = Alias.alias(DummyEntity.class);
     var e2 = Alias.alias(DummyEntity.class, "e2");
     var e3 = Alias.alias(DummyEntity.class, "e3");
@@ -94,7 +94,7 @@ public class QueryMixinTest {
   }
 
   @Test
-  public void joins() {
+  void joins() {
     var e = Alias.alias(DummyEntity.class);
     var e2 = Alias.alias(DummyEntity.class, "e2");
 
@@ -107,7 +107,7 @@ public class QueryMixinTest {
   }
 
   @Test
-  public void leftJoin() {
+  void leftJoin() {
     var e = Alias.alias(DummyEntity.class);
     var e2 = Alias.alias(DummyEntity.class, "e2");
     var e3 = Alias.alias(DummyEntity.class, "e3");
@@ -125,7 +125,7 @@ public class QueryMixinTest {
   }
 
   @Test
-  public void rightJoin() {
+  void rightJoin() {
     var e = Alias.alias(DummyEntity.class);
     var e2 = Alias.alias(DummyEntity.class, "e2");
     var e3 = Alias.alias(DummyEntity.class, "e3");
@@ -143,7 +143,7 @@ public class QueryMixinTest {
   }
 
   @Test
-  public void fullJoin() {
+  void fullJoin() {
     var e = Alias.alias(DummyEntity.class);
     var e2 = Alias.alias(DummyEntity.class, "e2");
     var e3 = Alias.alias(DummyEntity.class, "e3");

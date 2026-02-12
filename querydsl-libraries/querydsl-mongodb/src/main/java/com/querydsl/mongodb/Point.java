@@ -17,6 +17,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.ArrayPath;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import java.io.Serial;
 
 /**
  * {@code Point} is an adapter type for Double[] arrays to use geo spatial querying features of
@@ -26,7 +27,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
  */
 public class Point extends ArrayPath<Double[], Double> {
 
-  private static final long serialVersionUID = 1776628530121566388L;
+  @Serial private static final long serialVersionUID = 1776628530121566388L;
 
   public Point(String variable) {
     super(Double[].class, variable);

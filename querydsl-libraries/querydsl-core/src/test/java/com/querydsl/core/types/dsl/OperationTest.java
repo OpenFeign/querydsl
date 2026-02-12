@@ -25,9 +25,9 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class OperationTest {
+class OperationTest {
 
   enum ExampleEnum {
     A,
@@ -36,7 +36,7 @@ public class OperationTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void various() {
+  void various() {
     var args = new Expression[] {new StringPath("x"), new StringPath("y")};
     List<Operation<?>> operations = new ArrayList<>();
     //        paths.add(new ArrayOperation(String[].class, "p"));
@@ -56,8 +56,7 @@ public class OperationTest {
               operation.getType(), operation.getOperator(), new ArrayList<>(operation.getArgs()));
       assertThat(operation.accept(ToStringVisitor.DEFAULT, Templates.DEFAULT))
           .isEqualTo(operation.toString());
-      assertThat(other.hashCode()).isEqualTo(operation.hashCode());
-      assertThat(other).isEqualTo(operation);
+      assertThat(other).hasSameHashCodeAs(operation).isEqualTo(operation);
       assertThat(operation.getOperator()).isNotNull();
       assertThat(operation.getArgs()).isNotNull();
       assertThat(operation.getType()).isNotNull();

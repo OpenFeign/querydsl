@@ -15,19 +15,19 @@ package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ComparableExpressionTest {
+class ComparableExpressionTest {
 
   private StringPath strPath = new StringPath("str");
 
   @Test
-  public void between_start_given() {
+  void between_start_given() {
     assertThat(strPath.between("A", null)).isEqualTo(strPath.goe("A"));
   }
 
   @Test
-  public void between_end_given() {
+  void between_end_given() {
     assertThat(strPath.between(null, "Z")).isEqualTo(strPath.loe("Z"));
   }
 }

@@ -4,104 +4,104 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-public class BeanMapTest {
+class BeanMapTest {
 
   private BeanMap beanMap;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     beanMap = new BeanMap(new Entity());
   }
 
   @Test
-  public void size() {
+  void size() {
     assertThat(beanMap.size()).isEqualTo(4);
   }
 
   @Test
-  public void clear() {
+  void clear() {
     beanMap.clear();
     assertThat(beanMap.size()).isEqualTo(4);
   }
 
   @Test
-  public void primitives() {
+  void primitives() {
     beanMap.put("id", 5);
     assertThat(((Entity) beanMap.getBean()).getId()).isEqualTo(5);
   }
 
   @Test
-  public void beanMap() {
-    assertThat(new BeanMap().size()).isEqualTo(0);
+  void beanMap() {
+    assertThat(new BeanMap().size()).isZero();
   }
 
   @Test
-  public void beanMapObject() {
+  void beanMapObject() {
     assertThat(new BeanMap(new Entity()).size()).isEqualTo(4);
   }
 
   @Test
-  public void toString_() {
+  void toString_() {
     assertThat(new BeanMap()).hasToString("BeanMap<null>");
   }
 
   @Test
-  public void clone_() throws CloneNotSupportedException {
+  void clone_() throws Exception {
     assertThat(beanMap.clone()).isEqualTo(beanMap);
   }
 
   @Test
-  public void putAllWriteable() {}
+  void putAllWriteable() {}
 
   @Test
-  public void containsKeyString() {
-    assertThat(beanMap.containsKey("id")).isTrue();
+  void containsKeyString() {
+    assertThat(beanMap).containsKey("id");
   }
 
   @Test
-  public void containsValueObject() {}
+  void containsValueObject() {}
 
   @Test
-  public void getString() {
+  void getString() {
     beanMap.put("firstName", "John");
-    assertThat(beanMap.get("firstName")).isEqualTo("John");
+    assertThat(beanMap).containsEntry("firstName", "John");
   }
 
   @Test
-  public void keySet() {
+  void keySet() {
     assertThat(beanMap.keySet())
-        .isEqualTo(new HashSet<>(Arrays.asList("id", "class", "firstName", "lastName")));
+        .hasSameElementsAs(new HashSet<>(Arrays.asList("id", "class", "firstName", "lastName")));
   }
 
   @Test
-  public void entrySet() {
+  void entrySet() {
     beanMap.put("firstName", "John");
     assertThat(beanMap.entrySet()).isNotEmpty();
   }
 
   @Test
-  @Ignore
-  public void values() {
+  @Disabled
+  void values() {
     beanMap.put("firstName", "John");
     assertThat(beanMap.values()).isEqualTo(Arrays.asList(0, null, Entity.class, "John"));
   }
 
   @Test
-  public void getType() {}
+  void getType() {}
 
   @Test
-  public void getBean() {
+  void getBean() {
     assertThat(beanMap.getBean().getClass()).isEqualTo(Entity.class);
   }
 
   @Test
-  public void setBean() {
+  void setBean() {
     var entity = new Entity();
     beanMap.setBean(entity);
-    assertThat(entity == beanMap.getBean()).isTrue();
+    assertThat(entity).isSameAs(beanMap.getBean());
   }
 }

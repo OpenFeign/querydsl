@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class NumberConversionsTest {
+class NumberConversionsTest {
 
   public enum Color {
     GREEN,
@@ -19,7 +19,7 @@ public class NumberConversionsTest {
   }
 
   @Test
-  public void name() {
+  void name() {
     var color = Expressions.enumPath(Color.class, "path");
     var qTuple = Projections.tuple(color);
     var conversions = new NumberConversions<Tuple>(qTuple);
@@ -27,7 +27,7 @@ public class NumberConversionsTest {
   }
 
   @Test
-  public void ordinal() {
+  void ordinal() {
     var color = Expressions.enumPath(Color.class, "path");
     var qTuple = Projections.tuple(color);
     var conversions = new NumberConversions<Tuple>(qTuple);
@@ -35,7 +35,7 @@ public class NumberConversionsTest {
   }
 
   @Test
-  public void safe_number_conversion() {
+  void safe_number_conversion() {
     var strPath = Expressions.stringPath("strPath");
     var intPath = Expressions.numberPath(Integer.class, "intPath");
     var qTuple = Projections.tuple(strPath, intPath);
@@ -44,7 +44,7 @@ public class NumberConversionsTest {
   }
 
   @Test
-  public void number_conversion() {
+  void number_conversion() {
     var strPath = Expressions.stringPath("strPath");
     var intPath = Expressions.numberPath(Integer.class, "intPath");
     var qTuple = Projections.tuple(strPath, intPath);

@@ -15,12 +15,12 @@ package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PathBuilderFactoryTest {
+class PathBuilderFactoryTest {
 
   @Test
-  public void create() {
+  void create() {
     var factory = new PathBuilderFactory("");
     PathBuilder<Object> pathBuilder = factory.create(Object.class);
     assertThat(pathBuilder).hasToString("object");
@@ -32,7 +32,7 @@ public class PathBuilderFactoryTest {
   }
 
   @Test
-  public void create_withSuffix() {
+  void create_withSuffix() {
     var factory = new PathBuilderFactory("_");
     PathBuilder<Object> pathBuilder = factory.create(Object.class);
     assertThat(pathBuilder).hasToString("object_");

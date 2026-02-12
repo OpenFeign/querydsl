@@ -19,16 +19,16 @@ import com.querydsl.core.Pair;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class MappingProjectionTest {
+class MappingProjectionTest {
 
   StringPath str1 = Expressions.stringPath("str1");
   StringPath str2 = Expressions.stringPath("str2");
 
   @SuppressWarnings("serial")
   @Test
-  public void two_args() {
+  void two_args() {
     MappingProjection<Pair<String, String>> mapping =
         new MappingProjection<>(Pair.class, str1, str2) {
           @Override
@@ -44,7 +44,7 @@ public class MappingProjectionTest {
 
   @SuppressWarnings("serial")
   @Test
-  public void single_arg() {
+  void single_arg() {
     MappingProjection<String> mapping =
         new MappingProjection<>(String.class, str1) {
           @Override
@@ -57,7 +57,7 @@ public class MappingProjectionTest {
   }
 
   @Test
-  public void distinct_expressions() {
+  void distinct_expressions() {
     MappingProjection<Pair<String, String>> mapping =
         new MappingProjection<>(Pair.class, str1, str1) {
           @Override

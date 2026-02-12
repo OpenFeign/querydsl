@@ -27,10 +27,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** The Class CoverageTest. */
-public class CoverageTest {
+class CoverageTest {
 
   private MatchingFiltersFactory matchers =
       new MatchingFiltersFactory(QuerydslModule.COLLECTIONS, Target.MEM);
@@ -43,7 +43,7 @@ public class CoverageTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void test() throws IllegalArgumentException, IllegalAccessException {
+  void test() throws Exception {
     // make sure all Operators are covered in expression factory methods
     Set<Operator> usedOperators = new HashSet<>();
     List<Expression<?>> exprs = new ArrayList<>();

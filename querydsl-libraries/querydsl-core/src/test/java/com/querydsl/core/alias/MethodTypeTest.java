@@ -18,12 +18,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MethodTypeTest {
 
   @Test
-  public void get() throws SecurityException, NoSuchMethodException {
+  void get() throws Exception {
     var getVal = MethodTypeTest.class.getMethod("getVal");
     var hashCode = Object.class.getMethod("hashCode");
     var size = Collection.class.getMethod("size");

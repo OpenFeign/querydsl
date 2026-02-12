@@ -14,6 +14,7 @@
 package com.querydsl.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.domain.Cat;
 import com.querydsl.core.domain.QCat;
@@ -21,12 +22,12 @@ import com.querydsl.core.types.ExpressionException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import java.time.LocalDate;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class NullExpressionTest {
+class NullExpressionTest {
 
   @Test
-  public void withConstructor() {
+  void withConstructor() {
     var cat =
         Projections.constructor(
                 Cat.class,
@@ -37,15 +38,16 @@ public class NullExpressionTest {
     assertThat(cat).isNotNull();
   }
 
-  @Test(expected = ExpressionException.class)
-  public void withoutConstructor() {
-    var cat =
-        Projections.constructor(
-                Cat.class,
-                Expressions.nullExpression(String.class),
-                QCat.cat.id,
-                QCat.cat.birthdate)
-            .newInstance(null, 1, LocalDate.now());
-    assertThat(cat).isNotNull();
+  @Test
+  void withoutConstructor() {
+    assertThatExceptionOfType(ExpressionException.class)
+        .isThrownBy(
+            () ->
+                Projections.constructor(
+                        Cat.class,
+                        Expressions.nullExpression(String.class),
+                        QCat.cat.id,
+                        QCat.cat.birthdate)
+                    .newInstance(null, 1, LocalDate.now()));
   }
 }

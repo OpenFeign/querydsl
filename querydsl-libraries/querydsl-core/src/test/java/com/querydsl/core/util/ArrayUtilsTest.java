@@ -16,13 +16,14 @@ package com.querydsl.core.util;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ArrayUtilsTest {
+class ArrayUtilsTest {
 
   @Test
-  public void test() {
+  void test() {
     var array = ArrayUtils.combine(5, new Object[] {"a", "b"}, new Object[] {"c", "d", "e"});
-    assertThat(Arrays.asList(array)).isEqualTo(Arrays.asList("a", "b", "c", "d", "e"));
+    assertThat(Arrays.asList(array))
+        .containsExactlyElementsOf(Arrays.asList("a", "b", "c", "d", "e"));
   }
 }

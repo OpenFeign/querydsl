@@ -16,29 +16,28 @@ package com.querydsl.core.types.dsl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.PathMetadataFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CollectionPathTest {
+class CollectionPathTest {
 
   private CollectionPath<String, StringPath> stringPath =
       new CollectionPath<>(
           String.class, StringPath.class, PathMetadataFactory.forVariable("stringPath"));
 
   @Test
-  public void toString_() {
+  void toString_() {
     assertThat(stringPath).hasToString("stringPath");
     assertThat(stringPath.any()).hasToString("any(stringPath)");
-    assertThat(stringPath.any().equalsIgnoreCase("X").toString())
-        .isEqualTo("eqIc(any(stringPath),X)");
+    assertThat(stringPath.any().equalsIgnoreCase("X")).hasToString("eqIc(any(stringPath),X)");
   }
 
   @Test
-  public void getElementType() {
+  void getElementType() {
     assertThat(stringPath.getElementType()).isEqualTo(String.class);
   }
 
   @Test
-  public void getParameter() {
+  void getParameter() {
     assertThat(stringPath.getParameter(0)).isEqualTo(String.class);
   }
 }

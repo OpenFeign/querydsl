@@ -23,10 +23,10 @@ import com.querydsl.core.types.dsl.PathBuilderFactory;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class QBeanFieldAccessTest {
+class QBeanFieldAccessTest {
 
   public static class Entity {
 
@@ -47,8 +47,8 @@ public class QBeanFieldAccessTest {
 
   private BooleanPath married;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     entity = new PathBuilderFactory().create(Entity.class);
     name = entity.getString("name");
     name2 = entity.getString("name2");
@@ -57,7 +57,7 @@ public class QBeanFieldAccessTest {
   }
 
   @Test
-  public void with_class_and_exprs_using_fields() {
+  void with_class_and_exprs_using_fields() {
     var beanProjection = new QBean<>(Entity.class, true, name, age, married);
     var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.name).isEqualTo("Fritz");
@@ -66,7 +66,7 @@ public class QBeanFieldAccessTest {
   }
 
   @Test
-  public void with_path_and_exprs_using_fields() {
+  void with_path_and_exprs_using_fields() {
     QBean<Entity> beanProjection = Projections.fields(entity, name, age, married);
     var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.name).isEqualTo("Fritz");
@@ -75,7 +75,7 @@ public class QBeanFieldAccessTest {
   }
 
   @Test
-  public void with_class_and_map_using_fields() {
+  void with_class_and_map_using_fields() {
     Map<String, Expression<?>> bindings = new LinkedHashMap<>();
     bindings.put("name", name);
     bindings.put("age", age);
@@ -88,7 +88,7 @@ public class QBeanFieldAccessTest {
   }
 
   @Test
-  public void with_class_and_alias_using_fields() {
+  void with_class_and_alias_using_fields() {
     var name2 = Expressions.stringPath("name2");
     var beanProjection = new QBean<>(Entity.class, true, name.as(name2), age, married);
     var bean = beanProjection.newInstance("Fritz", 30, true);
@@ -99,7 +99,7 @@ public class QBeanFieldAccessTest {
   }
 
   @Test
-  public void with_nested_factoryExpression() {
+  void with_nested_factoryExpression() {
     Map<String, Expression<?>> bindings = new LinkedHashMap<>();
     bindings.put("age", age);
     bindings.put("name", new Concatenation(name, name2));

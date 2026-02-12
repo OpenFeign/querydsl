@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ErrorCollector;
 
 public class TemplatesTestBase {
@@ -39,7 +39,7 @@ public class TemplatesTestBase {
   private final String modulePrefix = getClass().getPackage().getName();
 
   @Test
-  public void default_instance() {
+  void default_instance() {
     var templates = querydsl.scan().getSubclasses(Templates.class.getName()).loadClasses();
     Set<Class<?>> moduleSpecific =
         templates.stream().filter(MODULE_SPECIFIC).collect(Collectors.toSet());

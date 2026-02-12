@@ -26,12 +26,12 @@ import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PackageVerification {
+class PackageVerification {
 
   @Test
-  public void verify_package() throws Exception {
+  void verify_package() throws Exception {
     var version = System.getProperty("version");
     verify(new File("target/querydsl-mongodb-" + version + "-apt-one-jar.jar"));
   }

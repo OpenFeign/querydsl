@@ -18,46 +18,46 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class QueryResultsTest {
+class QueryResultsTest {
 
   private List<Integer> list = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
   private QueryResults<Integer> results = new QueryResults<>(list, 10L, 0L, 20);
 
   @Test
-  public void getResults() {
-    assertThat(results.getResults()).isEqualTo(list);
+  void getResults() {
+    assertThat(results.getResults()).containsExactlyElementsOf(list);
   }
 
   @Test
-  public void getTotal() {
+  void getTotal() {
     assertThat(results.getTotal()).isEqualTo(20L);
   }
 
   @Test
-  public void isEmpty() {
+  void isEmpty() {
     assertThat(results.isEmpty()).isFalse();
   }
 
   @Test
-  public void getLimit() {
+  void getLimit() {
     assertThat(results.getLimit()).isEqualTo(10L);
   }
 
   @Test
-  public void getOffset() {
-    assertThat(results.getOffset()).isEqualTo(0L);
+  void getOffset() {
+    assertThat(results.getOffset()).isZero();
   }
 
   @Test
-  public void emptyResults() {
+  void emptyResults() {
     QueryResults<Object> empty = QueryResults.emptyResults();
     assertThat(empty.isEmpty()).isTrue();
     assertThat(empty.getLimit()).isEqualTo(Long.MAX_VALUE);
-    assertThat(empty.getOffset()).isEqualTo(0L);
-    assertThat(empty.getTotal()).isEqualTo(0L);
-    assertThat(empty.getResults()).isEqualTo(Collections.emptyList());
+    assertThat(empty.getOffset()).isZero();
+    assertThat(empty.getTotal()).isZero();
+    assertThat(empty.getResults()).containsExactlyElementsOf(Collections.emptyList());
   }
 }

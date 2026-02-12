@@ -16,12 +16,12 @@ package com.querydsl.core.types.dsl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ArrayPathTest {
+class ArrayPathTest {
 
   @Test
-  public void get() {
+  void get() {
     var arrayPath = new ArrayPath<>(String[].class, "p");
     assertThat(arrayPath.get(ConstantImpl.create(0))).isNotNull();
   }

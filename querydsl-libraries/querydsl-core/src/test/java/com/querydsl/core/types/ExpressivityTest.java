@@ -9,10 +9,10 @@ import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.core.types.dsl.StringExpressions;
 import java.util.Arrays;
 import java.util.Date;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ExpressivityTest {
+class ExpressivityTest {
 
   private NumberExpression<Integer> num;
 
@@ -21,8 +21,8 @@ public class ExpressivityTest {
   private DateExpression<Date> date;
 
   @SuppressWarnings({"rawtypes", "unchecked"})
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     num = Expressions.numberPath(Integer.class, "num");
     str = Expressions.stringPath("str");
     date = Expressions.datePath(Date.class, "date");
@@ -32,7 +32,7 @@ public class ExpressivityTest {
   }
 
   @Test
-  public void test() {
+  void test() {
     // Field<T>               abs()
     num.abs();
     // Field<BigDecimal>      acos()

@@ -32,9 +32,9 @@ import java.util.Date;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PathTest {
+class PathTest {
 
   enum ExampleEnum {
     A,
@@ -74,7 +74,7 @@ public class PathTest {
   }
 
   @Test
-  public void getAnnotatedElement() {
+  void getAnnotatedElement() {
     var entity = Alias.alias(Entity.class);
     var element = $(entity).getAnnotatedElement();
 
@@ -83,7 +83,7 @@ public class PathTest {
   }
 
   @Test
-  public void getAnnotatedElement_for_property() {
+  void getAnnotatedElement_for_property() {
     var entity = Alias.alias(Entity.class);
     var property1 = $(entity.getProperty1()).getAnnotatedElement();
     var property2 = $(entity.getProperty2()).getAnnotatedElement();
@@ -107,7 +107,7 @@ public class PathTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void equals() {
+  void equals() {
     assertThat(new StringPath("s")).isEqualTo(new StringPath("s"));
     assertThat(new BooleanPath("b")).isEqualTo(new BooleanPath("b"));
     assertThat(new NumberPath<>(Integer.class, "n"))
@@ -130,7 +130,7 @@ public class PathTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void various_properties() {
+  void various_properties() {
     Path<?> parent = ExpressionUtils.path(Object.class, "parent");
     List<Path<?>> paths = new ArrayList<>();
     paths.add(new ArrayPath(String[].class, parent, "p"));
@@ -154,8 +154,7 @@ public class PathTest {
           ExpressionUtils.path(path.getType(), PathMetadataFactory.forProperty(parent, "p"));
       assertThat(path.accept(ToStringVisitor.DEFAULT, Templates.DEFAULT))
           .isEqualTo(path.toString());
-      assertThat(other.hashCode()).isEqualTo(path.hashCode());
-      assertThat(other).isEqualTo(path);
+      assertThat(other).hasSameHashCodeAs(path).isEqualTo(path);
       assertThat(path.getMetadata()).isNotNull();
       assertThat(path.getType()).isNotNull();
       assertThat(path.getRoot()).isEqualTo(parent);
@@ -164,7 +163,7 @@ public class PathTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void various() {
+  void various() {
     List<Path<?>> paths = new ArrayList<>();
     paths.add(new ArrayPath(String[].class, "p"));
     paths.add(new BeanPath(Object.class, "p"));
@@ -185,8 +184,7 @@ public class PathTest {
     for (Path<?> path : paths) {
       Path other = ExpressionUtils.path(path.getType(), "p");
       assertThat(path.accept(ToStringVisitor.DEFAULT, null)).isEqualTo(path.toString());
-      assertThat(other.hashCode()).isEqualTo(path.hashCode());
-      assertThat(other).isEqualTo(path);
+      assertThat(other).hasSameHashCodeAs(path).isEqualTo(path);
       assertThat(path.getMetadata()).isNotNull();
       assertThat(path.getType()).isNotNull();
       assertThat(path.getRoot()).isEqualTo(path);
@@ -194,7 +192,7 @@ public class PathTest {
   }
 
   @Test
-  public void parent_path() {
+  void parent_path() {
     Path<Object> person = ExpressionUtils.path(Object.class, "person");
     Path<String> name = ExpressionUtils.path(String.class, person, "name");
     assertThat(name).hasToString("person.name");

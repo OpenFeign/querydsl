@@ -23,10 +23,10 @@ import com.querydsl.core.types.dsl.PathBuilderFactory;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class QBeanTest {
+class QBeanTest {
 
   public static class Entity {
 
@@ -81,8 +81,8 @@ public class QBeanTest {
 
   private BooleanPath married;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     entity = new PathBuilderFactory().create(Entity.class);
     name = entity.getString("name");
     name2 = entity.getString("name2");
@@ -91,7 +91,7 @@ public class QBeanTest {
   }
 
   @Test
-  public void with_class_and_exprs() {
+  void with_class_and_exprs() {
     var beanProjection = new QBean<>(Entity.class, name, age, married);
     var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
@@ -100,7 +100,7 @@ public class QBeanTest {
   }
 
   @Test
-  public void with_path_and_exprs() {
+  void with_path_and_exprs() {
     QBean<Entity> beanProjection = Projections.bean(entity, name, age, married);
     var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
@@ -109,7 +109,7 @@ public class QBeanTest {
   }
 
   @Test
-  public void with_unknown_properties() {
+  void with_unknown_properties() {
     QBean<Entity> beanProjection =
         Projections.bean(entity, name, age, Expressions.booleanPath("unknown"));
     var bean = beanProjection.newInstance("Fritz", 30, true);
@@ -118,7 +118,7 @@ public class QBeanTest {
   }
 
   @Test
-  public void with_class_and_map() {
+  void with_class_and_map() {
     Map<String, Expression<?>> bindings = new LinkedHashMap<>();
     bindings.put("name", name);
     bindings.put("age", age);
@@ -131,7 +131,7 @@ public class QBeanTest {
   }
 
   @Test
-  public void with_class_and_alias() {
+  void with_class_and_alias() {
     var name2 = Expressions.stringPath("name2");
     var beanProjection = new QBean<>(Entity.class, name.as(name2), age, married);
     var bean = beanProjection.newInstance("Fritz", 30, true);
@@ -142,7 +142,7 @@ public class QBeanTest {
   }
 
   @Test
-  public void with_nested_factoryExpression() {
+  void with_nested_factoryExpression() {
     Map<String, Expression<?>> bindings = new LinkedHashMap<>();
     bindings.put("age", age);
     bindings.put("name", new Concatenation(name, name2));
@@ -153,7 +153,7 @@ public class QBeanTest {
   }
 
   @Test
-  public void with_nested_factoryExpression2() {
+  void with_nested_factoryExpression2() {
     var beanProjection =
         new QBean<>(Entity.class, age, ExpressionUtils.as(new Concatenation(name, name2), "name"));
     FactoryExpression<Entity> wrappedProjection = FactoryExpressionUtils.wrap(beanProjection);
@@ -162,7 +162,7 @@ public class QBeanTest {
   }
 
   @Test
-  public void supertype_population() {
+  void supertype_population() {
     var beanProjection = new QBean<>(SubEntity.class, true, name, age, married);
     var bean = beanProjection.newInstance("Fritz", 30, true);
     assertThat(bean.getName()).isEqualTo("Fritz");
@@ -171,17 +171,17 @@ public class QBeanTest {
   }
 
   @Test
-  public void skipNulls() {
+  void skipNulls() {
     QBean<Object> bean = Projections.bean(Object.class);
     assertThat(bean).isEqualTo(bean);
     assertThat(bean.skipNulls()).isEqualTo(bean.skipNulls());
-    assertThat(bean.skipNulls().equals(bean)).isFalse();
-    assertThat(bean.equals(bean.skipNulls())).isFalse();
+    assertThat(bean.skipNulls()).isNotEqualTo(bean);
+    assertThat(bean).isNotEqualTo(bean.skipNulls());
   }
 
   @Test
-  public void alias() {
+  void alias() {
     var beanProjection = new QBean<>(Entity.class, name.as("name2"));
-    assertThat(beanProjection.getArgs().getFirst()).isEqualTo(name.as("name2"));
+    assertThat(beanProjection.getArgs()).first().isEqualTo(name.as("name2"));
   }
 }

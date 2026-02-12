@@ -21,15 +21,15 @@ import static org.assertj.core.api.Assertions.fail;
 import com.querydsl.core.types.ProjectionExample;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Shredder121
  */
-public class ConstructorUtilsTest {
+class ConstructorUtilsTest {
 
   @Test
-  public void getDefaultConstructor() {
+  void getDefaultConstructor() {
     Class<?>[] args = {};
     Constructor<?> emptyDefaultConstructor = getConstructor(ProjectionExample.class, args);
     Constructor<?> nullDefaultConstructor = getConstructor(ProjectionExample.class, null);
@@ -42,7 +42,7 @@ public class ConstructorUtilsTest {
   }
 
   @Test
-  public void getSimpleConstructor() {
+  void getSimpleConstructor() {
     Class<?>[] args = {Long.class};
     Constructor<?> constructor = getConstructor(ProjectionExample.class, args);
     assertThat(constructor).isNotNull();
@@ -50,7 +50,7 @@ public class ConstructorUtilsTest {
   }
 
   @Test
-  public void getDefaultConstructorParameters() {
+  void getDefaultConstructorParameters() {
     Class<?>[] args = {Long.class, String.class};
     Class<?>[] expected = {Long.TYPE, String.class};
     var constructorParameters = getConstructorParameters(ProjectionExample.class, args);
@@ -63,7 +63,7 @@ public class ConstructorUtilsTest {
     Constructor<C> rv = null;
     try {
       rv = ConstructorUtils.getConstructor(type, givenTypes);
-    } catch (NoSuchMethodException ex) {
+    } catch (NoSuchMethodException _) {
       fail(
           "",
           "No constructor found for "

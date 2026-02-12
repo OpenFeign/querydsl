@@ -16,31 +16,31 @@ package com.querydsl.core.types.dsl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.ConstantImpl;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class MapPathTest {
+class MapPathTest {
 
   private MapPath<String, String, StringPath> mapPath =
       new MapPath<>(String.class, String.class, StringPath.class, "p");
 
   @Test
-  public void get() {
+  void get() {
     assertThat(mapPath.get("X")).isNotNull();
     assertThat(mapPath.get(ConstantImpl.create("X"))).isNotNull();
   }
 
   @Test
-  public void getKeyType() {
+  void getKeyType() {
     assertThat(mapPath.getKeyType()).isEqualTo(String.class);
   }
 
   @Test
-  public void getValueType() {
+  void getValueType() {
     assertThat(mapPath.getValueType()).isEqualTo(String.class);
   }
 
   @Test
-  public void getParameter() {
+  void getParameter() {
     assertThat(mapPath.getParameter(0)).isEqualTo(String.class);
     assertThat(mapPath.getParameter(1)).isEqualTo(String.class);
   }

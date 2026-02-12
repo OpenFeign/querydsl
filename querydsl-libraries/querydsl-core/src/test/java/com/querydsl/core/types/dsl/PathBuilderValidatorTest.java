@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PathBuilderValidatorTest {
+class PathBuilderValidatorTest {
 
   public static class Customer {
     String name;
@@ -37,7 +37,7 @@ public class PathBuilderValidatorTest {
   }
 
   @Test
-  public void defaults() {
+  void defaults() {
     assertThat(PathBuilderValidator.DEFAULT.validate(Customer.class, "name", String.class))
         .isEqualTo(String.class);
     assertThat(PathBuilderValidator.DEFAULT.validate(ExtendedCustomer.class, "name", String.class))
@@ -49,7 +49,7 @@ public class PathBuilderValidatorTest {
   }
 
   @Test
-  public void fields() {
+  void fields() {
     assertThat(PathBuilderValidator.FIELDS.validate(Customer.class, "name", String.class))
         .isEqualTo(String.class);
     assertThat(PathBuilderValidator.FIELDS.validate(ExtendedCustomer.class, "name", String.class))
@@ -64,7 +64,7 @@ public class PathBuilderValidatorTest {
   }
 
   @Test
-  public void properties() {
+  void properties() {
     assertThat(PathBuilderValidator.PROPERTIES.validate(Customer.class, "name", String.class))
         .isNull();
     assertThat(

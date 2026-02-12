@@ -8,9 +8,9 @@ import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import org.jetbrains.annotations.Nullable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ReplaceVisitorTest {
+class ReplaceVisitorTest {
 
   private static final ReplaceVisitor<Void> visitor =
       new ReplaceVisitor<>() {
@@ -25,7 +25,7 @@ public class ReplaceVisitorTest {
       };
 
   @Test
-  public void operation() {
+  void operation() {
     Expression<String> str =
         Expressions.stringPath(ExpressionUtils.path(Object.class, "customer"), "name");
     Expression<String> str2 = Expressions.stringPath("str");
@@ -35,7 +35,7 @@ public class ReplaceVisitorTest {
   }
 
   @Test
-  public void templateExpression() {
+  void templateExpression() {
     Expression<String> str =
         Expressions.stringPath(ExpressionUtils.path(Object.class, "customer"), "name");
     Expression<String> str2 = Expressions.stringPath("str");

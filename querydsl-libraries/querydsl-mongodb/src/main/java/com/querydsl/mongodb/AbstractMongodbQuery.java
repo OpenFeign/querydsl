@@ -319,11 +319,11 @@ public abstract class AbstractMongodbQuery<K, Q extends AbstractMongodbQuery<K, 
   }
 
   private Bson createProjection(Expression<?> projection) {
-    if (projection instanceof FactoryExpression) {
+    if (projection instanceof FactoryExpression expression1) {
       var obj = new BasicDBObject();
-      for (Object expr : ((FactoryExpression) projection).getArgs()) {
-        if (expr instanceof Expression) {
-          obj.put((String) serializer.handle((Expression) expr), 1);
+      for (Object expr : expression1.getArgs()) {
+        if (expr instanceof Expression expression) {
+          obj.put((String) serializer.handle(expression), 1);
         }
       }
       return obj;

@@ -19,12 +19,12 @@ import com.querydsl.core.types.JavaTemplates;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SerializerBaseTest {
+class SerializerBaseTest {
 
   @Test
-  public void test() {
+  void test() {
     var serializer = new DummySerializer(new JavaTemplates());
     var strPath = Expressions.stringPath("str");
     // path

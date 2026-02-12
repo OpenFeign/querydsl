@@ -3,12 +3,12 @@ package com.querydsl.core.types;
 import com.querydsl.core.testutil.Serialization;
 import com.querydsl.core.types.dsl.Expressions;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ExpressionSerializationTest {
+class ExpressionSerializationTest {
 
   @Test
-  public void serialize() throws ClassNotFoundException, IOException {
+  void serialize() throws Exception {
     var e = new QTuple(Expressions.stringPath("x"), Expressions.numberPath(Integer.class, "y"));
     serialize(e);
     serialize(e.newInstance("a", 1));

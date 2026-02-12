@@ -44,5 +44,5 @@ public enum Target {
   /** */
   TERADATA,
   /** */
-  LUCENE;
+  LUCENE
 }

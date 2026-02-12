@@ -37,8 +37,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.bson.types.ObjectId;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MongodbSerializerTest {
 
@@ -59,8 +59,8 @@ public class MongodbSerializerTest {
 
   private MongodbSerializer serializer;
 
-  @Before
-  public void before() {
+  @BeforeEach
+  void before() {
     serializer = new MorphiaSerializer(Morphia.createDatastore("db"));
     entityPath = new PathBuilder<>(Object.class, "obj");
     title = entityPath.getString("title");
@@ -75,7 +75,7 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void paths() {
+  void paths() {
     var user = QUser.user;
     assertThat(serializer.visit(user, null)).isEqualTo("user");
     assertThat(serializer.visit(user.addresses, null)).isEqualTo("addresses");
@@ -85,40 +85,40 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void propertyAnnotation() {
+  void propertyAnnotation() {
     var entity = QDummyEntity.dummyEntity;
     assertThat(serializer.visit(entity.property, null)).isEqualTo("prop");
   }
 
   @Test
-  public void indexedAccess() {
+  void indexedAccess() {
     var user = QUser.user;
     assertThat(serializer.visit(user.addresses.get(0).street, null))
         .isEqualTo("addresses.0.street");
   }
 
   @Test
-  public void collectionAny() {
+  void collectionAny() {
     var user = QUser.user;
     assertQuery(user.addresses.any().street.eq("Aakatu"), dbo("addresses.street", "Aakatu"));
   }
 
   @Test
-  public void collectionIsEmpty() {
+  void collectionIsEmpty() {
     var expected =
         dbo("$or", dblist(dbo("addresses", dblist()), dbo("addresses", dbo("$exists", false))));
     assertQuery(QUser.user.addresses.isEmpty(), expected);
   }
 
   @Test
-  public void collectionIsNotEmpty() {
+  void collectionIsNotEmpty() {
     var expected =
         dbo("$nor", dblist(dbo("addresses", dblist()), dbo("addresses", dbo("$exists", false))));
     assertQuery(QUser.user.addresses.isNotEmpty(), expected);
   }
 
   @Test
-  public void equals() {
+  void equals() {
     assertQuery(title.eq("A"), dbo("title", "A"));
     assertQuery(year.eq(1), dbo("year", 1));
     assertQuery(gross.eq(1.0D), dbo("gross", 1.0D));
@@ -132,7 +132,7 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void eqAndEq() {
+  void eqAndEq() {
     assertQuery(title.eq("A").and(year.eq(1)), dbo("title", "A").append("year", 1));
 
     assertQuery(
@@ -141,17 +141,17 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void notEq() {
+  void notEq() {
     assertQuery(title.ne("A"), dbo("title", dbo("$ne", "A")));
   }
 
   @Test
-  public void between() {
+  void between() {
     assertQuery(year.between(1, 10), dbo("year", dbo("$gte", 1).append("$lte", 10)));
   }
 
   @Test
-  public void lessAndGreaterAndBetween() {
+  void lessAndGreaterAndBetween() {
     assertQuery(title.lt("A"), dbo("title", dbo("$lt", "A")));
     assertQuery(year.gt(1), dbo("year", dbo("$gt", 1)));
 
@@ -166,18 +166,18 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void in() {
+  void in() {
     assertQuery(year.in(1, 2, 3), dbo("year", dbo("$in", 1, 2, 3)));
   }
 
   @Test
-  public void notIn() {
+  void notIn() {
     assertQuery(year.in(1, 2, 3).not(), dbo("year", dbo("$nin", 1, 2, 3)));
     assertQuery(year.notIn(1, 2, 3), dbo("year", dbo("$nin", 1, 2, 3)));
   }
 
   @Test
-  public void orderBy() {
+  void orderBy() {
     var orderBy = serializer.toSort(sortList(year.asc()));
     assertThat(orderBy).isEqualTo(dbo("year", 1));
 
@@ -189,7 +189,7 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void regexCases() {
+  void regexCases() {
     assertQuery(
         title.startsWith("A"),
         dbo("title", dbo("$regularExpression", dbo("pattern", "^\\QA\\E").append("options", ""))));
@@ -227,7 +227,7 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void and() {
+  void and() {
     assertQuery(
         title.startsWithIgnoreCase("a").and(title.endsWithIgnoreCase("b")),
         dbo(
@@ -244,21 +244,21 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void near() {
+  void near() {
     assertQuery(
         MongodbExpressions.near(new Point("point"), 1.0, 2.0),
         dbo("point", dbo("$near", dblist(1.0, 2.0))));
   }
 
   @Test
-  public void near_sphere() {
+  void near_sphere() {
     assertQuery(
         MongodbExpressions.nearSphere(new Point("point"), 1.0, 2.0),
         dbo("point", dbo("$nearSphere", dblist(1.0, 2.0))));
   }
 
   @Test
-  public void all() {
+  void all() {
     var item = QItem.item;
     List<ObjectId> objectIds = new ArrayList<>();
     var objectId1 = new ObjectId();
@@ -273,7 +273,7 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void not() {
+  void not() {
     assertQuery(title.eq("A").not(), dbo("title", dbo("$ne", "A")));
 
     assertQuery(
@@ -282,7 +282,7 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void objectId() {
+  void objectId() {
     var id = new ObjectId();
     var person = QPerson.person;
     assertQuery(person.id.eq(id), dbo("_id", id));
@@ -290,7 +290,7 @@ public class MongodbSerializerTest {
   }
 
   @Test
-  public void path() {
+  void path() {
     var user = QUser.user;
     assertThat(serializer.visit(user.firstName, null)).isEqualTo("firstName");
     assertThat(serializer.visit(user.as(QUser.class).firstName, null)).isEqualTo("firstName");

@@ -14,27 +14,27 @@
 package com.querydsl.core.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class MathUtilsTest {
+class MathUtilsTest {
 
   @Test
-  public void sum() {
+  void sum() {
     assertThat(MathUtils.sum(2, 3.0)).isEqualTo(Integer.valueOf(5));
   }
 
   @Test
-  public void difference() {
+  void difference() {
     assertThat(MathUtils.difference(5, 3.0)).isEqualTo(Integer.valueOf(2));
   }
 
   @Test
-  public void cast_returns_correct_type() {
+  void cast_returns_correct_type() {
     checkCast(1, BigDecimal.class);
     checkCast(1, BigInteger.class);
     checkCast(1, Double.class);
@@ -46,7 +46,7 @@ public class MathUtilsTest {
   }
 
   @Test
-  public void cast_returns_argument_as_is_when_compatible() {
+  void cast_returns_argument_as_is_when_compatible() {
     checkSame(BigDecimal.ONE, BigDecimal.class);
     checkSame(BigInteger.ONE, BigInteger.class);
     checkSame((double) 1, Double.class);
@@ -58,19 +58,17 @@ public class MathUtilsTest {
   }
 
   @Test
-  public void cast_returns_null_when_input_is_null() {
+  void cast_returns_null_when_input_is_null() {
     var result = MathUtils.cast(null, Integer.class);
     assertThat(result).isNull();
   }
 
   @Test
-  public void cast_throws_on_unsupported_numbers() {
+  void cast_throws_on_unsupported_numbers() {
     Throwable exception =
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-              checkCast(1, AtomicInteger.class);
-            });
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> checkCast(1, AtomicInteger.class))
+            .actual();
     assertThat(exception.getMessage()).contains("Unsupported target type");
   }
 
