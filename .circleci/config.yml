@@ -20,20 +20,9 @@ executors:
 
 # common commands
 commands:
-  ensure-toolchain-25:
-    description: 'Ensure Java 25 toolchain entry exists'
-    steps:
-      - run:
-          name: 'Add Java 25 toolchain if missing'
-          command: |
-            if ! grep -q 'version>25<' ~/.m2/toolchains.xml 2>/dev/null; then
-              sed -i '/<\/toolchains>/i \  <toolchain>\n    <type>jdk</type>\n    <provides>\n      <version>25</version>\n    </provides>\n    <configuration>\n      <jdkHome>/usr/lib/jvm/java-25-openjdk-amd64</jdkHome>\n    </configuration>\n  </toolchain>' ~/.m2/toolchains.xml
-            fi
-
   resolve-dependencies:
     description: 'Download and prepare all dependencies'
     steps:
-      - ensure-toolchain-25
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
@@ -145,7 +134,7 @@ jobs:
       - resolve-dependencies
       - save_cache:
           paths:
-            - ~/.m2
+            - ~/.m2/repository
           key: m2-{{ checksum "pom.xml" }}
   test:
     <<: *defaults
@@ -157,7 +146,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - run:
           name: 'Test'
           command: |
@@ -191,7 +179,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - run:
           name: 'Prepare environment'
           command: |
@@ -223,7 +210,6 @@ jobs:
       - image: velo/toolchains-4-ci-builds:with-25
     steps:
       - checkout
-      - ensure-toolchain-25
       - run:
           name: 'Prepare environment'
           command: |
@@ -258,7 +244,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - run:
           name: 'Test'
           command: |
@@ -280,7 +265,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - run:
           name: 'Test'
           command: |
@@ -300,7 +284,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - run:
           name: 'Test'
           command: |
@@ -323,7 +306,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - run:
           name: 'Test'
           command: |
@@ -341,7 +323,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - run:
           name: 'Test'
           command: |
@@ -365,7 +346,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - run:
           name: 'Test'
           command: |
@@ -382,7 +362,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - run:
           name: 'Test'
           command: |
@@ -450,7 +429,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - configure-gpg
       - run:
           name: 'Deploy Core Modules Sonatype'
@@ -466,7 +444,6 @@ jobs:
       - restore_cache:
           keys:
             - m2-{{ checksum "pom.xml" }}
-      - ensure-toolchain-25
       - configure-gpg
       - run:
           name: 'Deploy Core Modules Sonatype'
