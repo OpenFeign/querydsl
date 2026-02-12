@@ -147,6 +147,17 @@ jobs:
           keys:
             - m2-{{ checksum "pom.xml" }}
       - run:
+          name: 'Troubleshoot toolchains'
+          command: |
+            echo "=== Java version ==="
+            java -version
+            echo "=== JAVA_HOME ==="
+            echo $JAVA_HOME
+            echo "=== toolchains.xml ==="
+            cat ~/.m2/toolchains.xml || echo "No toolchains.xml found"
+            echo "=== JDKs available ==="
+            ls -d /usr/lib/jvm/*/
+      - run:
           name: 'Test'
           command: |
             ./mvnw -ntp -B verify -Pno-databases
