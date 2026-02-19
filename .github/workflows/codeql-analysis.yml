@@ -96,7 +96,7 @@ jobs:
         java-version: '21'
 
     - name: Compile project
-      run: ./mvnw -B -ntp clean package -DskipTests=true -Dtoolchain.skip=true
+      run: ./mvnw -B -ntp clean package -DskipTests=true -Dtoolchain.skip=true -pl '!:querydsl-kotlin-codegen,!:querydsl-ksp-codegen,!:querydsl-kotlin'
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
