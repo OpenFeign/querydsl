@@ -97,7 +97,7 @@
     <ecj.version>3.44.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
     <springboot.version>3.5.7</springboot.version>
-    <spring.version>7.0.3</spring.version>
+    <spring.version>7.0.5</spring.version>
 
     <!-- SQL deps -->
     <db2.version>12.1.3.0</db2.version>
