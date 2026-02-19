@@ -334,7 +334,7 @@ jobs:
     working_directory: ~/querydsl
     docker:
       - image: velo/toolchains-4-ci-builds:latest
-      - image: jacobalberty/firebird:2.5.9-ss
+      - image: jacobalberty/firebird:v4
         environment:
           - ISC_PASSWORD=masterkey
           - FIREBIRD_DATABASE=querydsl.fdb
