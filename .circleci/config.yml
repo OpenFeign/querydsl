@@ -41,10 +41,6 @@ commands:
             ./mvnw -ntp -B dependency:resolve-plugins go-offline:resolve-dependencies -DskipTests=true
 
   save-test-results:
-    parameters:
-      flag:
-        type: string
-        default: ""
     steps:
       - run:
           name: Save package results
@@ -54,38 +50,6 @@ commands:
           when: always
       - store_test_results:
           path: ~/test-results
-      - run:
-          name: Codecov
-          command: |
-            set -x
-
-            curl -Os https://cli.codecov.io/latest/linux/codecov
-            chmod +x codecov
-
-            # Prepare extra arguments: include pull request number if set
-            EXTRA=""
-            if [ -n "$CIRCLE_PR_NUMBER" ]; then
-              EXTRA="--pull-request-number $CIRCLE_PR_NUMBER"
-            fi
-
-            # Add flag if provided
-            FLAG_ARG=""
-            if [ -n "<< parameters.flag >>" ]; then
-              FLAG_ARG="--flag << parameters.flag >>"
-            fi
-
-            # Build the set of common arguments.
-            COMMON_ARGS="--token $CODECOV_TOKEN --branch $CIRCLE_BRANCH --commit-sha $CIRCLE_SHA1 $EXTRA $FLAG_ARG --recurse-submodules --git-service github"
-
-            ls -lha
-
-            ./codecov --version
-
-            # Upload the coverage report.
-            ./codecov upload-coverage $COMMON_ARGS
-
-            # Upload the test reports.
-            ./codecov do-upload --report-type test_results $COMMON_ARGS
 
   configure-gpg:
     steps:
@@ -150,8 +114,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B verify -Pno-databases
-      - save-test-results:
-          flag: "test"
+      - save-test-results
 
   windows:
     machine:
@@ -187,8 +150,7 @@ jobs:
           name: 'Build and test examples'
           command: |
             ./mvnw -ntp -B install -Pexamples -rf :querydsl-examples
-      - save-test-results:
-          flag: "examples"
+      - save-test-results
   buildQuarkusExample:
     <<: *defaults
     working_directory: ~/querydsl
@@ -248,8 +210,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.MySQL
-      - save-test-results:
-          flag: "mysql"
+      - save-test-results
   testPostgreSQL:
     <<: *defaults
     working_directory: ~/querydsl
@@ -269,8 +230,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL
-      - save-test-results:
-          flag: "postgresql"
+      - save-test-results
   testCUBRID:
     <<: *defaults
     working_directory: ~/querydsl
@@ -288,8 +248,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.CUBRID
-      - save-test-results:
-          flag: "cubrid"
+      - save-test-results
   testOracle:
     <<: *defaults
     working_directory: ~/querydsl
@@ -310,8 +269,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.Oracle
-      - save-test-results:
-          flag: "oracle"
+      - save-test-results
   testMongo:
     <<: *defaults
     working_directory: ~/querydsl
@@ -327,8 +285,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.MongoDB
-      - save-test-results:
-          flag: "mongodb"
+      - save-test-results
   testFirebird:
     <<: *defaults
     working_directory: ~/querydsl
@@ -350,8 +307,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.Firebird
-      - save-test-results:
-          flag: "firebird"
+      - save-test-results
   testEmbedded:
     <<: *defaults
     working_directory: ~/querydsl
@@ -366,8 +322,7 @@ jobs:
           name: 'Test'
           command: |
             ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
-      - save-test-results:
-          flag: "embedded"
+      - save-test-results
   testDB2:
     # Use the machine executor so we have full VM capabilities (e.g. docker running as admin)
     machine: true
@@ -417,8 +372,7 @@ jobs:
           name: "Stop and remove DB2 container"
           command: |
             docker stop db2 && docker rm db2
-      - save-test-results:
-          flag: "db2"
+      - save-test-results
 
   deploySnapshot:
     executor:
