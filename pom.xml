@@ -279,6 +279,11 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>org.reactivestreams</groupId>
+        <artifactId>reactive-streams</artifactId>
+        <version>1.0.4</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
