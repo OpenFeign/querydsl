@@ -766,13 +766,6 @@
 
   <profiles>
     <profile>
-      <id>docs</id>
-      <modules>
-        <module>querydsl-docs</module>
-      </modules>
-    </profile>
-
-    <profile>
       <id>examples</id>
       <modules>
         <module>querydsl-examples</module>
