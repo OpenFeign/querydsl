@@ -63,7 +63,7 @@ class ConstructorUtilsTest {
     Constructor<C> rv = null;
     try {
       rv = ConstructorUtils.getConstructor(type, givenTypes);
-    } catch (NoSuchMethodException _) {
+    } catch (NoSuchMethodException e) {
       fail(
           "",
           "No constructor found for "

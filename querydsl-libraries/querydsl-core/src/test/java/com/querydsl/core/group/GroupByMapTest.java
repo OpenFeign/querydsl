@@ -203,7 +203,7 @@ class GroupByMapTest extends AbstractGroupByTest {
       @SuppressWarnings("unchecked")
       var pair = (Pair<Integer, Pair<Integer, String>>) array[1];
       var first = pair.getFirst();
-      var comments = posts.computeIfAbsent(first, _ -> new LinkedHashMap<Integer, String>());
+      var comments = posts.computeIfAbsent(first, key -> new LinkedHashMap<Integer, String>());
       var second = pair.getSecond();
       comments.put(second.getFirst(), second.getSecond());
     }
