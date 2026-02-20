@@ -113,15 +113,17 @@ jobs:
             - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
-          no_output_timeout: 30m
+          no_output_timeout: 60m
           command: |
-            ./mvnw -ntp -B verify -Pno-databases -T2
+            ./mvnw -ntp -B verify -Pno-databases
       - save-test-results
 
   windows:
     machine:
       image: windows-server-2019-vs2019:current # Windows machine image
     resource_class: windows.medium
+    environment:
+      MAVEN_OPTS: -Xmx3200m
 
     steps:
       - checkout
@@ -129,8 +131,22 @@ jobs:
           keys:
             - m2repo-{{ checksum "pom.xml" }}
       - run:
+          name: 'Install JDK 25'
+          command: |
+            $ProgressPreference = 'SilentlyContinue'
+            Invoke-WebRequest -Uri "https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jdk/hotspot/normal/eclipse?project=jdk" -OutFile "$env:TEMP\jdk.zip"
+            Expand-Archive -Path "$env:TEMP\jdk.zip" -DestinationPath "C:\jdk25"
+            $jdkDir = Get-ChildItem "C:\jdk25" -Directory | Select-Object -First 1
+            [Environment]::SetEnvironmentVariable("JAVA_HOME", $jdkDir.FullName, "Machine")
+            Write-Host "JAVA_HOME set to $($jdkDir.FullName)"
+            & "$($jdkDir.FullName)\bin\java" -version
+          shell: powershell.exe
+      - run:
           name: 'Test'
           command: |
+            export JAVA_HOME="$(ls -d /c/jdk25/jdk-* | head -1)"
+            export PATH="$JAVA_HOME/bin:$PATH"
+            java -version
             ./mvnw -ntp -B verify -Pno-databases -Dtoolchain.skip=true
           shell: bash.exe
 
@@ -147,7 +163,7 @@ jobs:
       - run:
           name: 'Prepare environment'
           command: |
-            ./mvnw -ntp -B install -Pquickbuild -T2 -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb,:querydsl-r2dbc,:querydsl-sql-json -am
+            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb,:querydsl-r2dbc,:querydsl-sql-json -am
       - run:
           name: 'Build and test examples'
           command: |
@@ -178,7 +194,7 @@ jobs:
           name: 'Prepare environment'
           command: |
             ./mvnw -N org.codehaus.mojo:properties-maven-plugin:1.2.1:write-project-properties -Dproperties.outputFile=querydsl-examples/querydsl-example-ksp-codegen/gradle.properties
-            ./mvnw -ntp -B install -Pquickbuild -T2 -pl :querydsl-ksp-codegen,:querydsl-jpa -am
+            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-ksp-codegen,:querydsl-jpa -am
       - run:
           name: 'Build and test examples'
           environment:
@@ -332,18 +348,15 @@ jobs:
     machine: true
     working_directory: ~/querydsl
     environment:
-      # You can also set any DB2-specific environment variables here if needed
       DB2INST1_PASSWORD: a3sd!fDj
     steps:
       - checkout
       - restore_cache:
           keys:
             - m2repo-{{ checksum "pom.xml" }}
-      # Start the DB2 container in detached mode
       - run:
           name: "Start DB2 container"
           command: |
-            # Start the DB2 container with the same settings as your docker-compose file
             docker run -d --privileged --name db2 \
               -p 50000:50000 \
               -e DB2INST1_PASSWORD=a3sd!fDj \
@@ -355,7 +368,6 @@ jobs:
               ibmcom/db2:11.5.0.0
 
             echo "Waiting for DB2 to initialize..."
-            # Basic health-check loop; replace with a more robust check if available
             for i in {1..60}; do
               if docker logs db2 2>&1 | grep -q "All databases are now active"; then
                 echo "DB2 appears to be up"
@@ -365,17 +377,23 @@ jobs:
               sleep 10
             done
             docker ps
-
-      # Run your tests against DB2; adjust the Maven command according to your project
       - run:
           name: "Run DB2 tests"
           command: |
-            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.DB2 -Dtoolchain.skip=true
-      # Clean up the DB2 container once the tests are done
+            docker run --rm \
+              --network host \
+              -v $(pwd):/code \
+              -v ~/.m2:/root/.m2 \
+              -w /code \
+              -e MAVEN_OPTS=-Xmx3200m \
+              -e JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64 \
+              velo/toolchains-4-ci-builds:with-25 \
+              ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.DB2
       - run:
           name: "Stop and remove DB2 container"
           command: |
             docker stop db2 && docker rm db2
+          when: always
       - save-test-results
 
   deploySnapshot:
