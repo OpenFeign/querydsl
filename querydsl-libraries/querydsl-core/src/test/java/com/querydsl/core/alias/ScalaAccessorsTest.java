@@ -16,12 +16,12 @@ package com.querydsl.core.alias;
 import static com.querydsl.core.alias.Alias.$;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ScalaAccessorsTest {
+class ScalaAccessorsTest {
 
   @Test
-  public void scalaAccessors() {
+  void scalaAccessors() {
     var scalaAccessors = Alias.alias(ScalaAccessors.class);
     assertThat($(scalaAccessors.firstName())).hasToString("scalaAccessors.firstName");
     assertThat($(scalaAccessors.lastName())).hasToString("scalaAccessors.lastName");

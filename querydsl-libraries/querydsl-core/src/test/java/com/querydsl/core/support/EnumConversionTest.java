@@ -1,13 +1,13 @@
 package com.querydsl.core.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.types.dsl.EnumPath;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class EnumConversionTest {
+class EnumConversionTest {
 
   public enum Color {
     GREEN,
@@ -19,31 +19,30 @@ public class EnumConversionTest {
   }
 
   @Test
-  public void nameForCharacter() {
+  void nameForCharacter() {
     EnumPath<Color> color = Expressions.enumPath(Color.class, "path");
     var conv = new EnumConversion<Color>(color);
     assertThat(conv.newInstance('W')).isEqualTo(Color.W);
   }
 
   @Test
-  public void name() {
+  void name() {
     EnumPath<Color> color = Expressions.enumPath(Color.class, "path");
     var conv = new EnumConversion<Color>(color);
     assertThat(conv.newInstance("BLUE")).isEqualTo(Color.BLUE);
   }
 
   @Test
-  public void ordinal() {
+  void ordinal() {
     EnumPath<Color> color = Expressions.enumPath(Color.class, "path");
     var conv = new EnumConversion<Color>(color);
     assertThat(conv.newInstance(2)).isEqualTo(Color.RED);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void illegal() {
+  @Test
+  void illegal() {
     var string = Expressions.stringPath("path");
-    var conv = new EnumConversion<String>(string);
-    fail("EnumConversion successfully created for a non-enum type");
-    conv.newInstance(0);
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> new EnumConversion<String>(string));
   }
 }

@@ -15,35 +15,35 @@ package com.querydsl.core.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class NullSafeComparableComparatorTest {
+class NullSafeComparableComparatorTest {
 
   private final NullSafeComparableComparator<String> comparator =
       new NullSafeComparableComparator<>();
 
   @Test
-  public void null_before_object() {
-    assertThat(comparator.compare(null, "X") < 0).isTrue();
+  void null_before_object() {
+    assertThat(comparator.compare(null, "X")).isLessThan(0);
   }
 
   @Test
-  public void object_after_null() {
-    assertThat(comparator.compare("X", null) > 0).isTrue();
+  void object_after_null() {
+    assertThat(comparator.compare("X", null)).isGreaterThan(0);
   }
 
   @Test
-  public void object_eq_object() {
-    assertThat(comparator.compare("X", "X")).isEqualTo(0);
+  void object_eq_object() {
+    assertThat(comparator.compare("X", "X")).isZero();
   }
 
   @Test
-  public void object_lt_object() {
-    assertThat(comparator.compare("X", "Y") < 0).isTrue();
+  void object_lt_object() {
+    assertThat(comparator.compare("X", "Y")).isLessThan(0);
   }
 
   @Test
-  public void object_gt_object() {
-    assertThat(comparator.compare("Z", "Y") > 0).isTrue();
+  void object_gt_object() {
+    assertThat(comparator.compare("Z", "Y")).isGreaterThan(0);
   }
 }

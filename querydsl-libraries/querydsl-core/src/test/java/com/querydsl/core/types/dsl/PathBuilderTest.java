@@ -14,8 +14,8 @@
 package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.domain.Cat;
@@ -25,12 +25,12 @@ import com.querydsl.core.util.BeanMap;
 import java.sql.Time;
 import java.util.Date;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PathBuilderTest {
+class PathBuilderTest {
 
   @Test
-  public void getEnum() {
+  void getEnum() {
     var entityPath = new PathBuilder<>(User.class, "entity");
     EnumPath<Gender> enumPath = entityPath.getEnum("gender", Gender.class);
     assertThat(enumPath.ordinal()).isNotNull();
@@ -38,17 +38,18 @@ public class PathBuilderTest {
   }
 
   @Test
-  public void getByExample() {
+  void getByExample() {
     var user = new User();
     user.setFirstName("firstName");
     user.setLastName("lastName");
     var byExample = getByExample(user).toString();
-    assertThat(byExample).contains("entity.lastName = lastName");
-    assertThat(byExample).contains("entity.firstName = firstName");
+    assertThat(byExample)
+        .contains("entity.lastName = lastName")
+        .contains("entity.firstName = firstName");
   }
 
   @Test
-  public void getArray() {
+  void getArray() {
     var entityPath = new PathBuilder<>(User.class, "entity");
     ArrayPath<String[], String> array = entityPath.getArray("array", String[].class);
     assertThat(array.getType()).isEqualTo(String[].class);
@@ -56,14 +57,14 @@ public class PathBuilderTest {
   }
 
   @Test
-  public void getList() {
+  void getList() {
     var entityPath = new PathBuilder<>(User.class, "entity");
     entityPath.getList("list", String.class, StringPath.class).get(0).lower();
     entityPath.getList("list", String.class).get(0);
   }
 
   @Test
-  public void getMap() {
+  void getMap() {
     var entityPath = new PathBuilder<>(User.class, "entity");
     entityPath.getMap("map", String.class, String.class, StringPath.class).get("").lower();
     entityPath.getMap("map", String.class, String.class).get("");
@@ -85,7 +86,7 @@ public class PathBuilderTest {
   }
 
   @Test
-  public void get() {
+  void get() {
     var entity = new PathBuilder<>(User.class, "entity");
     var intPath = new NumberPath<>(Integer.class, "int");
     var strPath = new StringPath("str");
@@ -99,7 +100,7 @@ public class PathBuilderTest {
   }
 
   @Test
-  public void various() {
+  void various() {
     var entity = new PathBuilder<>(User.class, "entity");
     entity.getBoolean("boolean");
     entity.getCollection("col", User.class);
@@ -116,7 +117,7 @@ public class PathBuilderTest {
   }
 
   @Test
-  public void calling_get_with_the_same_name_and_different_types_returns_correct_type() {
+  void calling_get_with_the_same_name_and_different_types_returns_correct_type() {
     var entity = new PathBuilder<>(User.class, "entity");
     var pathName = "some_path";
     assertThat(entity.get(pathName).getType()).isEqualTo(Object.class);
@@ -125,8 +126,7 @@ public class PathBuilderTest {
   }
 
   @Test
-  public void
-      calling_get_with_the_same_name_and_different_types_returns_specific_type_when_validating() {
+  void calling_get_with_the_same_name_and_different_types_returns_specific_type_when_validating() {
     var entity = new PathBuilder<>(User.class, "entity", PathBuilderValidator.FIELDS);
     var pathName = "username";
     assertThat(entity.get(pathName).getType()).isEqualTo(String.class);
@@ -135,23 +135,24 @@ public class PathBuilderTest {
   }
 
   @Test
-  public void order_HQL_injection() {
+  void order_HQL_injection() {
     var orderBy = "breed";
     var pathBuilder = new PathBuilder<Cat>(Cat.class, "entity");
-    assertDoesNotThrow(() -> new OrderSpecifier(Order.ASC, pathBuilder.get(orderBy)));
+    assertThatCode(() -> new OrderSpecifier(Order.ASC, pathBuilder.get(orderBy)))
+        .doesNotThrowAnyException();
   }
 
-  @Test
   // CVE-2024-49203
   // https://github.com/OpenFeign/querydsl/security/advisories/GHSA-6q3q-6v5j-h6vg
-  public void unsafe_order_HQL_injection() {
+  @Test
+  void unsafe_order_HQL_injection() {
     var orderBy =
         "test.name INTERSECT SELECT t FROM Test t WHERE (SELECT cast(pg_sleep(10) AS text))='2' ORDER BY t.id";
     var pathBuilder = new PathBuilder<Cat>(Cat.class, "entity");
     var error =
-        assertThrows(
-            IllegalStateException.class,
-            () -> new OrderSpecifier(Order.ASC, pathBuilder.get(orderBy)));
+        assertThatExceptionOfType(IllegalStateException.class)
+            .isThrownBy(() -> new OrderSpecifier(Order.ASC, pathBuilder.get(orderBy)))
+            .actual();
     assertThat(error).hasMessageContaining("CVE-2024-49203");
   }
 }

@@ -22,15 +22,15 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class StringTest {
+class StringTest {
 
   private static class DummyTemplates extends Templates {}
 
   @SuppressWarnings("unchecked")
   @Test
-  public void patternAvailability() throws IllegalArgumentException, IllegalAccessException {
+  void patternAvailability() throws Exception {
     Templates ops = new DummyTemplates();
     Set<Field> missing = new HashSet<>();
     for (Field field : Ops.class.getFields()) {
@@ -62,7 +62,7 @@ public class StringTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void toString_() {
+  void toString_() {
     var alias = alias(SomeType.class, "alias");
 
     // Path toString

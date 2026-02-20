@@ -15,36 +15,36 @@ package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PathInitsTest {
+class PathInitsTest {
 
   @Test
-  public void defaultInits() {
+  void defaultInits() {
     assertThat(PathInits.DEFAULT.isInitialized("")).isFalse();
   }
 
   @Test
-  public void isInitialized() {
+  void isInitialized() {
     var inits = new PathInits(".2").get("");
     assertThat(inits.isInitialized("1")).isFalse();
     assertThat(inits.isInitialized("2")).isTrue();
   }
 
   @Test
-  public void wildcard() {
+  void wildcard() {
     assertThat(new PathInits("*").isInitialized("")).isTrue();
   }
 
   @Test
-  public void wildcard2() {
+  void wildcard2() {
     var inits = new PathInits(".*").get("");
     assertThat(inits.isInitialized("1")).isTrue();
     assertThat(inits.isInitialized("2")).isTrue();
   }
 
   @Test
-  public void deep_wildcard() {
+  void deep_wildcard() {
     var inits = new PathInits("*.*").get("");
     assertThat(inits.isInitialized("1")).isTrue();
     assertThat(inits.isInitialized("2")).isTrue();

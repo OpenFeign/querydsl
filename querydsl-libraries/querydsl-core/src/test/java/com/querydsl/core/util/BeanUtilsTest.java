@@ -15,12 +15,12 @@ package com.querydsl.core.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class BeanUtilsTest {
+class BeanUtilsTest {
 
   @Test
-  public void capitalize() {
+  void capitalize() {
     assertThat(BeanUtils.capitalize("x")).isEqualTo("X");
     assertThat(BeanUtils.capitalize("prop")).isEqualTo("Prop");
     assertThat(BeanUtils.capitalize("URL")).isEqualTo("URL");
@@ -29,7 +29,7 @@ public class BeanUtilsTest {
   }
 
   @Test
-  public void uncapitalize() {
+  void uncapitalize() {
     assertThat(BeanUtils.uncapitalize("X")).isEqualTo("x");
     assertThat(BeanUtils.uncapitalize("Prop")).isEqualTo("prop");
     assertThat(BeanUtils.uncapitalize("URL")).isEqualTo("URL");

@@ -18,30 +18,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.Operation;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class NumberPathTest {
+class NumberPathTest {
 
   private NumberPath<Byte> bytePath = new NumberPath<>(Byte.class, "bytePath");
 
   @SuppressWarnings("unchecked")
   @Test
-  public void bytePath_in() {
+  void bytePath_in() {
     Operation<?> operation = (Operation<?>) bytePath.in(1, 2, 3);
     var rightArg = (Constant<List<Byte>>) operation.getArg(1);
     var numbers = rightArg.getConstant();
-    assertThat(numbers.getFirst()).isEqualTo(Byte.valueOf((byte) 1));
+    assertThat(numbers).first().isEqualTo(Byte.valueOf((byte) 1));
     assertThat(numbers.get(1)).isEqualTo(Byte.valueOf((byte) 2));
     assertThat(numbers.get(2)).isEqualTo(Byte.valueOf((byte) 3));
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void bytePath_notIn() {
+  void bytePath_notIn() {
     Operation<?> operation = (Operation<?>) bytePath.notIn(1, 2, 3);
     var rightArg = (Constant<List<Byte>>) operation.getArg(1);
     var numbers = rightArg.getConstant();
-    assertThat(numbers.getFirst()).isEqualTo(Byte.valueOf((byte) 1));
+    assertThat(numbers).first().isEqualTo(Byte.valueOf((byte) 1));
     assertThat(numbers.get(1)).isEqualTo(Byte.valueOf((byte) 2));
     assertThat(numbers.get(2)).isEqualTo(Byte.valueOf((byte) 3));
   }

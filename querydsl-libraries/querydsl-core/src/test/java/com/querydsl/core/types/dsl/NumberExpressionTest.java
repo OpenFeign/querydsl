@@ -15,19 +15,19 @@ package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class NumberExpressionTest {
+class NumberExpressionTest {
 
   private NumberPath<Integer> intPath = new NumberPath<>(Integer.class, "int");
 
   @Test
-  public void between_start_given() {
+  void between_start_given() {
     assertThat(intPath.between(1L, null)).isEqualTo(intPath.goe(1L));
   }
 
   @Test
-  public void between_end_given() {
+  void between_end_given() {
     assertThat(intPath.between(null, 3L)).isEqualTo(intPath.loe(3L));
   }
 }

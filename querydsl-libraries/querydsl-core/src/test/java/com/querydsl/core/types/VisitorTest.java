@@ -15,12 +15,12 @@ package com.querydsl.core.types;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class VisitorTest {
+class VisitorTest {
 
   @Test
-  public void iteration() throws SecurityException, NoSuchMethodException {
+  void iteration() throws Exception {
     var types = new ArrayList<>(Arrays.asList(Operation.class.getClasses()));
     //        types.addAll(Arrays.<Class<?>>asList(Alias.class.getClasses()));
     types.addAll(Arrays.asList(Path.class.getClasses()));
@@ -29,6 +29,6 @@ public class VisitorTest {
         Visitor.class.getDeclaredMethod("visit", innerType);
       }
     }
-    System.out.println("successful for " + types.size() + " types");
+    IO.println("successful for " + types.size() + " types");
   }
 }

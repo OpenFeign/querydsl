@@ -29,15 +29,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class SignatureTest {
+class SignatureTest {
 
   private List<Class<?>> classes = new ArrayList<>();
 
-  @Before
-  public void setUp() throws ClassNotFoundException {
+  @BeforeEach
+  void setUp() throws ClassNotFoundException {
     for (String folder : Collections.singletonList("com/querydsl/core/types/dsl")) {
       for (String file : new File("src/main/java", folder).list()) {
         if (file.endsWith(".java") && !file.equals("package-info.java")) {
@@ -49,7 +49,7 @@ public class SignatureTest {
   }
 
   @Test
-  public void returnType_extends_simpleExpression() {
+  void returnType_extends_simpleExpression() {
     assertThat(classes).isNotEmpty();
     Set<String> skippedMethods = new HashSet<>(Arrays.asList("getArg", "getRoot", "not"));
     List<String> errors = new ArrayList<>();

@@ -17,9 +17,9 @@ import static com.querydsl.core.alias.Alias.$;
 import static com.querydsl.core.alias.Alias.alias;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CaseBuilderTest {
+class CaseBuilderTest {
 
   public enum Gender {
     MALE,
@@ -35,29 +35,29 @@ public class CaseBuilderTest {
   }
 
   @Test
-  public void general() {
+  void general() {
     var expr = new CaseBuilder().when(Expressions.TRUE).then(new Object()).otherwise(null);
     assertThat(expr).isNotNull();
   }
 
   @Test
-  public void booleanTyped() {
+  void booleanTyped() {
     var c = alias(Customer.class, "customer");
     var cases =
         new CaseBuilder().when($(c.getAnnualSpending()).gt(10000)).then(true).otherwise(false);
 
-    assertThat(cases.toString())
-        .isEqualTo(
+    assertThat(cases)
+        .hasToString(
             """
-            case \
-            when customer.annualSpending > 10000 then true \
-            else false \
-            end\
-            """);
+        case \
+        when customer.annualSpending > 10000 then true \
+        else false \
+        end\
+        """);
   }
 
   @Test
-  public void booleanTyped_predicate() {
+  void booleanTyped_predicate() {
     var c = alias(Customer.class, "customer");
     var cases =
         new CaseBuilder()
@@ -67,19 +67,19 @@ public class CaseBuilderTest {
             .then(true)
             .otherwise(false);
 
-    assertThat(cases.toString())
-        .isEqualTo(
+    assertThat(cases)
+        .hasToString(
             """
-            case \
-            when customer.annualSpending > 20000 then false \
-            when customer.annualSpending > 10000 then true \
-            else false \
-            end\
-            """);
+        case \
+        when customer.annualSpending > 20000 then false \
+        when customer.annualSpending > 10000 then true \
+        else false \
+        end\
+        """);
   }
 
   @Test
-  public void enumTyped() {
+  void enumTyped() {
     var c = alias(Customer.class, "customer");
     var cases =
         new CaseBuilder()
@@ -87,18 +87,18 @@ public class CaseBuilderTest {
             .then(Gender.MALE)
             .otherwise(Gender.FEMALE);
 
-    assertThat(cases.toString())
-        .isEqualTo(
+    assertThat(cases)
+        .hasToString(
             """
-            case \
-            when customer.annualSpending > 10000 then MALE \
-            else FEMALE \
-            end\
-            """);
+        case \
+        when customer.annualSpending > 10000 then MALE \
+        else FEMALE \
+        end\
+        """);
   }
 
   @Test
-  public void numberTyped() {
+  void numberTyped() {
     var c = alias(Customer.class, "customer");
     var cases =
         new CaseBuilder()
@@ -110,20 +110,20 @@ public class CaseBuilderTest {
             .then(3)
             .otherwise(4);
 
-    assertThat(cases.toString())
-        .isEqualTo(
+    assertThat(cases)
+        .hasToString(
             """
-            case \
-            when customer.annualSpending > 10000 then 1 \
-            when customer.annualSpending > 5000 then 2 \
-            when customer.annualSpending > 2000 then 3 \
-            else 4 \
-            end\
-            """);
+        case \
+        when customer.annualSpending > 10000 then 1 \
+        when customer.annualSpending > 5000 then 2 \
+        when customer.annualSpending > 2000 then 3 \
+        else 4 \
+        end\
+        """);
   }
 
   @Test
-  public void stringTyped() {
+  void stringTyped() {
     //        CASE
     //          WHEN c.annualSpending > 10000 THEN 'Premier'
     //          WHEN c.annualSpending >  5000 THEN 'Gold'
@@ -143,15 +143,15 @@ public class CaseBuilderTest {
             .otherwise("Bronze");
 
     // NOTE : this is just a test serialization, not the real one
-    assertThat(cases.toString())
-        .isEqualTo(
+    assertThat(cases)
+        .hasToString(
             """
-            case \
-            when customer.annualSpending > 10000 then Premier \
-            when customer.annualSpending > 5000 then Gold \
-            when customer.annualSpending > 2000 then Silver \
-            else Bronze \
-            end\
-            """);
+        case \
+        when customer.annualSpending > 10000 then Premier \
+        when customer.annualSpending > 5000 then Gold \
+        when customer.annualSpending > 2000 then Silver \
+        else Bronze \
+        end\
+        """);
   }
 }

@@ -15,12 +15,12 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TemplateTest {
+class TemplateTest {
 
   @Test
-  public void test() {
+  void test() {
     var factory = new TemplateFactory('\\');
     match("[0, ' + ', 1, ' + ', 2]", factory.create("{0} + {1} + {2}"));
     match("['blah ', 0, ' + ', 1, ' + ', 2, ' XXX']", factory.create("blah {0} + {1} + {2} XXX"));
@@ -31,14 +31,14 @@ public class TemplateTest {
   }
 
   @Test
-  public void operation() {
+  void operation() {
     var factory = new TemplateFactory('\\');
     match("[0 ADD 1]", factory.create("{0+1}"));
     match("[0 DIV 1]", factory.create("{0/1}"));
   }
 
   @Test
-  public void operationConst() {
+  void operationConst() {
     var factory = new TemplateFactory('\\');
     match("[0 ADD 1]", factory.create("{0+'1'}"));
     match("[0 DIV 1.0]", factory.create("{0/'1.0'}"));
@@ -48,7 +48,7 @@ public class TemplateTest {
   }
 
   @Test
-  public void like() {
+  void like() {
     var factory = new TemplateFactory('\\');
     match("[0]", factory.create("{0%}"));
     match("[0]", factory.create("{%0}"));

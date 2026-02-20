@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MongodbDocumentSerializerTest {
 
@@ -60,8 +60,8 @@ public class MongodbDocumentSerializerTest {
 
   private MongodbDocumentSerializer serializer;
 
-  @Before
-  public void before() {
+  @BeforeEach
+  void before() {
     serializer =
         new MongodbDocumentSerializer() {
           @Override
@@ -88,7 +88,7 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void paths() {
+  void paths() {
     var user = QUser.user;
     assertThat(serializer.visit(user, null)).isEqualTo("user");
     assertThat(serializer.visit(user.addresses, null)).isEqualTo("addresses");
@@ -98,20 +98,20 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void indexedAccess() {
+  void indexedAccess() {
     var user = QUser.user;
     assertThat(serializer.visit(user.addresses.get(0).street, null))
         .isEqualTo("addresses.0.street");
   }
 
   @Test
-  public void collectionAny() {
+  void collectionAny() {
     var user = QUser.user;
     assertQuery(user.addresses.any().street.eq("Aakatu"), document("addresses.street", "Aakatu"));
   }
 
   @Test
-  public void collectionIsEmpty() {
+  void collectionIsEmpty() {
     var expected =
         document(
             "$or",
@@ -122,7 +122,7 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void collectionIsNotEmpty() {
+  void collectionIsNotEmpty() {
     var expected =
         document(
             "$nor",
@@ -133,7 +133,7 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void equals() {
+  void equals() {
     assertQuery(title.eq("A"), document("title", "A"));
     assertQuery(year.eq(1), document("year", 1));
     assertQuery(gross.eq(1.0D), document("gross", 1.0D));
@@ -146,7 +146,7 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void eqAndEq() {
+  void eqAndEq() {
     assertQuery(title.eq("A").and(year.eq(1)), document("title", "A").append("year", 1));
 
     assertQuery(
@@ -155,17 +155,17 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void notEq() {
+  void notEq() {
     assertQuery(title.ne("A"), document("title", document("$ne", "A")));
   }
 
   @Test
-  public void between() {
+  void between() {
     assertQuery(year.between(1, 10), document("year", document("$gte", 1).append("$lte", 10)));
   }
 
   @Test
-  public void lessAndGreaterAndBetween() {
+  void lessAndGreaterAndBetween() {
     assertQuery(title.lt("A"), document("title", document("$lt", "A")));
     assertQuery(year.gt(1), document("year", document("$gt", 1)));
 
@@ -183,30 +183,30 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void in() {
+  void in() {
     assertQuery(year.in(1, 2, 3), document("year", document("$in", Arrays.asList(1, 2, 3))));
   }
 
   @Test
-  public void notIn() {
+  void notIn() {
     assertQuery(year.in(1, 2, 3).not(), document("year", document("$nin", Arrays.asList(1, 2, 3))));
     assertQuery(year.notIn(1, 2, 3), document("year", document("$nin", Arrays.asList(1, 2, 3))));
   }
 
   @Test
-  public void orderBy() {
+  void orderBy() {
     var orderBy = serializer.toSort(sortList(year.asc()));
-    assertThat(orderBy).isEqualTo(document("year", 1));
+    assertThat(orderBy).containsExactlyInAnyOrderEntriesOf(document("year", 1));
 
     orderBy = serializer.toSort(sortList(year.desc()));
-    assertThat(orderBy).isEqualTo(document("year", -1));
+    assertThat(orderBy).containsExactlyInAnyOrderEntriesOf(document("year", -1));
 
     orderBy = serializer.toSort(sortList(year.desc(), title.asc()));
-    assertThat(orderBy).isEqualTo(document("year", -1).append("title", 1));
+    assertThat(orderBy).containsExactlyInAnyOrderEntriesOf(document("year", -1).append("title", 1));
   }
 
   @Test
-  public void regexCases() {
+  void regexCases() {
     assertQuery(title.startsWith("A"), document("title", Pattern.compile("^\\QA\\E")));
     assertQuery(
         title.startsWithIgnoreCase("A"),
@@ -230,7 +230,7 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void and() {
+  void and() {
     assertQuery(
         title.startsWithIgnoreCase("a").and(title.endsWithIgnoreCase("b")),
         document(
@@ -249,21 +249,21 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void near() {
+  void near() {
     assertQuery(
         MongodbExpressions.near(new Point("point"), 1.0, 2.0),
         document("point", document("$near", Arrays.asList(1.0, 2.0))));
   }
 
   @Test
-  public void near_sphere() {
+  void near_sphere() {
     assertQuery(
         MongodbExpressions.nearSphere(new Point("point"), 1.0, 2.0),
         document("point", document("$nearSphere", Arrays.asList(1.0, 2.0))));
   }
 
   @Test
-  public void not() {
+  void not() {
     assertQuery(title.eq("A").not(), document("title", document("$ne", "A")));
 
     assertQuery(
@@ -273,7 +273,7 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void objectId() {
+  void objectId() {
     var id = new ObjectId();
     var person = QPerson.person;
     assertQuery(person.id.eq(id), document("id", id));
@@ -281,7 +281,7 @@ public class MongodbDocumentSerializerTest {
   }
 
   @Test
-  public void path() {
+  void path() {
     var user = QUser.user;
     assertThat(serializer.visit(user.firstName, null)).isEqualTo("firstName");
     assertThat(serializer.visit(user.as(QUser.class).firstName, null)).isEqualTo("firstName");

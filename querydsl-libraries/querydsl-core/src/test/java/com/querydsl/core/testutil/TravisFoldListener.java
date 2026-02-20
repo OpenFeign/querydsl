@@ -28,12 +28,12 @@ public class TravisFoldListener extends RunListener {
 
   @Override
   public void testRunStarted(Description description) throws Exception {
-    System.out.println("travis_fold:start:tests" + ID);
-    System.out.println("Running tests");
+    IO.println("travis_fold:start:tests" + ID);
+    IO.println("Running tests");
   }
 
   @Override
   public void testRunFinished(Result result) throws Exception {
-    System.out.println("travis_fold:end:tests" + ID);
+    IO.println("travis_fold:end:tests" + ID);
   }
 }

@@ -23,10 +23,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("unchecked")
-public class MultiIteratorTest {
+class MultiIteratorTest {
 
   private MultiIterator it;
 
@@ -37,7 +37,7 @@ public class MultiIteratorTest {
   private List<Integer> list3, list4;
 
   @Test
-  public void emptyList() {
+  void emptyList() {
     it = new MultiIterator(Arrays.asList(list1, list2));
     while (it.hasNext()) {
       it.next();
@@ -46,13 +46,13 @@ public class MultiIteratorTest {
   }
 
   @Test
-  public void oneLevel() {
+  void oneLevel() {
     it = new MultiIterator(Collections.singletonList(list1));
     assertIteratorEquals(Arrays.asList(row(1), row(2)).iterator(), it);
   }
 
   @Test
-  public void twoLevels() {
+  void twoLevels() {
     list2 = Arrays.asList(10, 20, 30);
     it = new MultiIterator(Arrays.asList(list1, list2));
     var base =
@@ -62,7 +62,7 @@ public class MultiIteratorTest {
   }
 
   @Test
-  public void threeLevels() {
+  void threeLevels() {
     list1 = Arrays.asList(1, 2);
     list2 = Arrays.asList(10, 20, 30);
     list3 = Arrays.asList(100, 200, 300, 400);
@@ -79,7 +79,7 @@ public class MultiIteratorTest {
   }
 
   @Test
-  public void fourLevels() {
+  void fourLevels() {
     list1 = Arrays.asList(1, 2);
     list2 = Arrays.asList(10, 20, 30);
     list3 = Arrays.asList(100, 200, 300, 400);
@@ -100,7 +100,7 @@ public class MultiIteratorTest {
   }
 
   @Test
-  public void fourLevels2() {
+  void fourLevels2() {
     list1 = new ArrayList<>(100);
     for (var i = 0; i < 100; i++) {
       list1.add(i + 1);
@@ -113,29 +113,29 @@ public class MultiIteratorTest {
   }
 
   @Test
-  public void test() {
+  void test() {
     List<Integer> list1 = asList(1, 2, 3, 4);
     List<Integer> list2 = asList(10, 20, 30);
     var iterator = new MultiIterator<>(asList(list1, list2));
     List<Object[]> list = CloseableIterator.asList(iterator);
 
-    assertThat(asList(list.getFirst())).isEqualTo(asList(1, 10));
-    assertThat(asList(list.get(1))).isEqualTo(asList(1, 20));
-    assertThat(asList(list.get(2))).isEqualTo(asList(1, 30));
-    assertThat(asList(list.get(3))).isEqualTo(asList(2, 10));
-    assertThat(asList(list.get(4))).isEqualTo(asList(2, 20));
-    assertThat(asList(list.get(5))).isEqualTo(asList(2, 30));
-    assertThat(asList(list.get(6))).isEqualTo(asList(3, 10));
-    assertThat(asList(list.get(7))).isEqualTo(asList(3, 20));
-    assertThat(asList(list.get(8))).isEqualTo(asList(3, 30));
-    assertThat(asList(list.get(9))).isEqualTo(asList(4, 10));
-    assertThat(asList(list.get(10))).isEqualTo(asList(4, 20));
-    assertThat(asList(list.get(11))).isEqualTo(asList(4, 30));
+    assertThat(asList(list.getFirst())).containsExactlyElementsOf(asList(1, 10));
+    assertThat(asList(list.get(1))).containsExactlyElementsOf(asList(1, 20));
+    assertThat(asList(list.get(2))).containsExactlyElementsOf(asList(1, 30));
+    assertThat(asList(list.get(3))).containsExactlyElementsOf(asList(2, 10));
+    assertThat(asList(list.get(4))).containsExactlyElementsOf(asList(2, 20));
+    assertThat(asList(list.get(5))).containsExactlyElementsOf(asList(2, 30));
+    assertThat(asList(list.get(6))).containsExactlyElementsOf(asList(3, 10));
+    assertThat(asList(list.get(7))).containsExactlyElementsOf(asList(3, 20));
+    assertThat(asList(list.get(8))).containsExactlyElementsOf(asList(3, 30));
+    assertThat(asList(list.get(9))).containsExactlyElementsOf(asList(4, 10));
+    assertThat(asList(list.get(10))).containsExactlyElementsOf(asList(4, 20));
+    assertThat(asList(list.get(11))).containsExactlyElementsOf(asList(4, 30));
   }
 
   protected void assertIteratorEquals(Iterator<Object[]> a, Iterator<Object[]> b) {
     while (a.hasNext()) {
-      assertThat(Arrays.asList(b.next())).isEqualTo(Arrays.asList(a.next()));
+      assertThat(Arrays.asList(b.next())).containsExactlyElementsOf(Arrays.asList(a.next()));
     }
     assertThat(b).isExhausted();
   }

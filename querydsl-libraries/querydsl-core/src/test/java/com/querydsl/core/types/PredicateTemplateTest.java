@@ -15,12 +15,12 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PredicateTemplateTest {
+class PredicateTemplateTest {
 
   @Test
-  public void not() {
+  void not() {
     var template = ExpressionUtils.predicateTemplate("XXX");
     assertThat(template.not()).hasToString("!XXX");
   }

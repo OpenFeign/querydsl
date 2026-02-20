@@ -15,17 +15,17 @@ package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class BooleanTemplateTest {
+class BooleanTemplateTest {
 
   @Test
-  public void true_() {
+  void true_() {
     assertThat(Expressions.TRUE).hasToString("true");
   }
 
   @Test
-  public void false_() {
+  void false_() {
     assertThat(Expressions.FALSE).hasToString("false");
   }
 }

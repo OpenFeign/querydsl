@@ -17,9 +17,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ToStringVisitorTest {
+class ToStringVisitorTest {
 
   private Templates templates =
       new Templates() {
@@ -30,13 +30,13 @@ public class ToStringVisitorTest {
       };
 
   @Test
-  public void operation() {
+  void operation() {
     assertThat(QCat.cat.name.isNotNull().accept(ToStringVisitor.DEFAULT, templates))
         .isEqualTo("cat_name is not null");
   }
 
   @Test
-  public void template() {
+  void template() {
     Expression<Boolean> template =
         ExpressionUtils.template(Boolean.class, "{0} is not null", QCat.cat.name);
     assertThat(template.accept(ToStringVisitor.DEFAULT, templates))
@@ -44,13 +44,13 @@ public class ToStringVisitorTest {
   }
 
   @Test
-  public void path() {
+  void path() {
     assertThat(QCat.cat.kittens.any().kittens.any().name.accept(ToStringVisitor.DEFAULT, templates))
         .isEqualTo("cat_kittens_kittens_name");
   }
 
   @Test
-  public void complex() {
+  void complex() {
     var a = Expressions.booleanPath("a");
     var b = Expressions.booleanPath("d");
     var c = Expressions.booleanPath("c");

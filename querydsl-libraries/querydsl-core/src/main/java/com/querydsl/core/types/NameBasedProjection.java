@@ -31,8 +31,8 @@ public class NameBasedProjection<T> extends FactoryExpressionBase<T> {
         if (!map.containsKey(name)) {
           try {
             Object val = f.get(entity);
-            if (val instanceof Expression) {
-              map.put(name, (Expression<?>) val);
+            if (val instanceof Expression<?> expression) {
+              map.put(name, expression);
             }
           } catch (IllegalAccessException e) {
 
