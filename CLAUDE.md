@@ -134,3 +134,42 @@ cd querydsl-examples/querydsl-example-jpa-spring
 - Use `@Tag` annotations to categorize tests by database or performance characteristics
 - Integration tests should extend appropriate base classes from `querydsl-core/src/test/java/com/querydsl/`
 - Database-specific tests go in modules like `querydsl-jpa/src/test/java/com/querydsl/jpa/`
+
+## Documentation
+
+Documentation lives in `docs/` and is published to https://openfeign.github.io/querydsl via GitHub Pages using Jekyll with the just-the-docs theme.
+
+### Structure
+```
+docs/
+├── _config.yml           # Jekyll config, theme, Liquid variables
+├── Gemfile               # Ruby dependencies (local preview only)
+├── index.md              # Landing page
+├── introduction.md       # Background and principles
+├── tutorials/            # Backend-specific tutorials (JPA, SQL, R2DBC, MongoDB, etc.)
+├── guides/               # Cross-cutting guides (creating queries, result handling, codegen, aliases)
+├── troubleshooting.md
+└── migration.md          # Migration from defunct upstream com.querydsl
+```
+
+### Liquid Variables
+Use these in Markdown files instead of hardcoding values:
+- `{{ site.querydsl_version }}` — current release version (e.g. `7.1`)
+- `{{ site.group_id }}` — Maven groupId (`io.github.openfeign.querydsl`)
+- `{{ site.baseurl }}` — site base URL for internal links
+
+### Deployment
+- Automatic: `.github/workflows/docs.yml` triggers on push to `master` when `docs/**` changes
+- Manual: `workflow_dispatch` trigger available in GitHub Actions UI
+
+### Local Preview
+```bash
+docker run --rm -d -v $(pwd)/docs:/srv/jekyll -p 4000:4000 jekyll/jekyll:4.2.2 jekyll serve --host 0.0.0.0
+# Open http://localhost:4000/querydsl/
+```
+
+### Editing Guidelines
+- All doc files are Markdown with YAML front matter (`layout`, `title`, `parent`, `nav_order`)
+- Code examples should use `maven-compiler-plugin` with `annotationProcessorPaths`, not the old `apt-maven-plugin`
+- Use `{{ site.group_id }}` and `{{ site.querydsl_version }}` in dependency examples
+- Dropped modules (JDO, Lucene, Hibernate Search) should not be referenced

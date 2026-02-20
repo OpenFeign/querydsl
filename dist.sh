@@ -8,6 +8,3 @@ do
   mvn -pl querydsl-$module -Dtest=X clean assembly:assembly
 done
 
-mkdir -p target/dist/reference
-mvn -f querydsl-docs/pom.xml -Dxslthl.config=http://docbook.sourceforge.net/release/xsl/current/highlighting/xslthl-config.xml clean package
-cp -R querydsl-docs/target/docbook/publish/en-US/* target/dist/reference/

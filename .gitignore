@@ -23,6 +23,7 @@ derby.log
 **/.flattened-pom.xml
 
 .java-version
+.sdkmanrc
 .gitignore
 .checkstyle
 

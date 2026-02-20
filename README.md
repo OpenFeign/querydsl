@@ -42,17 +42,23 @@ Get a querydsl project active!  May be as a fork, may be as a wake up call to pr
 
 Well, you will need to get your hands dirty.  I might fix bugs or create features, but mostly when they affect my day job. Sorry, just a single guy here doing free work on spare time.
 
+**Documentation**
+
+Full reference documentation is available at **[openfeign.github.io/querydsl](https://openfeign.github.io/querydsl)**.
+
 **Getting started**
 
 Use these tutorials to get started
 
-* [Querying JPA](http://www.querydsl.com/static/querydsl/latest/reference/html/ch02.html#jpa_integration)
-* [Querying SQL](http://www.querydsl.com/static/querydsl/latest/reference/html/ch02s03.html)
-* [Querying Mongodb](http://www.querydsl.com/static/querydsl/latest/reference/html/ch02s07.html)
-* [Querying Lucene](http://www.querydsl.com/static/querydsl/latest/reference/html/ch02s05.html)
-* [Querying Collections](http://www.querydsl.com/static/querydsl/latest/reference/html/ch02s08.html)
-* [Querydsl Spatial](http://www.querydsl.com/static/querydsl/latest/reference/html/ch02s04.html)
-* [Querying JDO](http://www.querydsl.com/static/querydsl/latest/reference/html/ch02s02.html)
+* [Querying JPA](https://openfeign.github.io/querydsl/tutorials/jpa)
+* [Querying SQL](https://openfeign.github.io/querydsl/tutorials/sql)
+* [Querying R2DBC](https://openfeign.github.io/querydsl/tutorials/r2dbc)
+* [Querying MongoDB](https://openfeign.github.io/querydsl/tutorials/mongodb)
+* [Querying Collections](https://openfeign.github.io/querydsl/tutorials/collections)
+* [Querydsl Spatial](https://openfeign.github.io/querydsl/tutorials/spatial)
+* [Querying in Kotlin](https://openfeign.github.io/querydsl/tutorials/kotlin)
+* [Querying in Scala](https://openfeign.github.io/querydsl/tutorials/scala)
+* [Migration Guide](https://openfeign.github.io/querydsl/migration)
 
 **Examples**
 
@@ -72,7 +78,7 @@ $ mvn -Pquickbuild,{projectname} clean install
 ```
 Where projectname is one of the Maven profiles (e.g. `jpa`, `sql`, `mongodb`, etc. or `all`)
 
-For more information visit the project homepage at https://querydsl.github.io.
+For more information visit the [documentation site](https://openfeign.github.io/querydsl).
 
 **Docker Compose setup**
 
