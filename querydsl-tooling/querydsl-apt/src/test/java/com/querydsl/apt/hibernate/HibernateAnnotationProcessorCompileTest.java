@@ -9,24 +9,26 @@ import com.google.testing.compile.JavaFileObjects;
 import javax.tools.JavaFileObject;
 import org.junit.jupiter.api.Test;
 
-class HibernateAnnotationProcessorTest {
+class HibernateAnnotationProcessorCompileTest {
 
   @Test
   void jpaEntity_generatesQClass() {
     JavaFileObject source =
-        JavaFileObjects.forSourceLines(
+        JavaFileObjects.forSourceString(
             "test.Product",
-            "package test;",
-            "",
-            "import jakarta.persistence.Entity;",
-            "import jakarta.persistence.Id;",
-            "",
-            "@Entity",
-            "public class Product {",
-            "  @Id public Long id;",
-            "  public String name;",
-            "  public double price;",
-            "}");
+            """
+            package test;
+
+            import jakarta.persistence.Entity;
+            import jakarta.persistence.Id;
+
+            @Entity
+            public class Product {
+              @Id public Long id;
+              public String name;
+              public double price;
+            }
+            """);
 
     Compilation compilation =
         javac().withProcessors(new HibernateAnnotationProcessor()).compile(source);
@@ -38,21 +40,23 @@ class HibernateAnnotationProcessorTest {
   @Test
   void hibernateFormula_handledCorrectly() {
     JavaFileObject source =
-        JavaFileObjects.forSourceLines(
+        JavaFileObjects.forSourceString(
             "test.Account",
-            "package test;",
-            "",
-            "import jakarta.persistence.Entity;",
-            "import jakarta.persistence.Id;",
-            "import org.hibernate.annotations.Formula;",
-            "",
-            "@Entity",
-            "public class Account {",
-            "  @Id public Long id;",
-            "  public double balance;",
-            "  @Formula(\"balance * 1.1\")",
-            "  public double projectedBalance;",
-            "}");
+            """
+            package test;
+
+            import jakarta.persistence.Entity;
+            import jakarta.persistence.Id;
+            import org.hibernate.annotations.Formula;
+
+            @Entity
+            public class Account {
+              @Id public Long id;
+              public double balance;
+              @Formula("balance * 1.1")
+              public double projectedBalance;
+            }
+            """);
 
     Compilation compilation =
         javac().withProcessors(new HibernateAnnotationProcessor()).compile(source);
@@ -64,29 +68,33 @@ class HibernateAnnotationProcessorTest {
   @Test
   void entityWithMappedSuperclass_generatesQClasses() {
     JavaFileObject superSource =
-        JavaFileObjects.forSourceLines(
+        JavaFileObjects.forSourceString(
             "test.AbstractEntity",
-            "package test;",
-            "",
-            "import jakarta.persistence.Id;",
-            "import jakarta.persistence.MappedSuperclass;",
-            "",
-            "@MappedSuperclass",
-            "public abstract class AbstractEntity {",
-            "  @Id public Long id;",
-            "}");
+            """
+            package test;
+
+            import jakarta.persistence.Id;
+            import jakarta.persistence.MappedSuperclass;
+
+            @MappedSuperclass
+            public abstract class AbstractEntity {
+              @Id public Long id;
+            }
+            """);
 
     JavaFileObject subSource =
-        JavaFileObjects.forSourceLines(
+        JavaFileObjects.forSourceString(
             "test.Item",
-            "package test;",
-            "",
-            "import jakarta.persistence.Entity;",
-            "",
-            "@Entity",
-            "public class Item extends AbstractEntity {",
-            "  public String title;",
-            "}");
+            """
+            package test;
+
+            import jakarta.persistence.Entity;
+
+            @Entity
+            public class Item extends AbstractEntity {
+              public String title;
+            }
+            """);
 
     Compilation compilation =
         javac().withProcessors(new HibernateAnnotationProcessor()).compile(superSource, subSource);
