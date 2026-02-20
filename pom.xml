@@ -974,6 +974,7 @@
 
       <properties>
         <excludedGroups>com.querydsl.core.testutil.Database,
+                        com.querydsl.core.testutil.MongoDB,
                         com.querydsl.core.testutil.SlowTest,
                         com.querydsl.core.testutil.Performance,
                         com.querydsl.core.testutil.ReportingOnly</excludedGroups>
@@ -993,6 +994,7 @@
       <properties>
         <!-- default groups to exclude from surefire plugin -->
         <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
+                        com.querydsl.core.testutil.MongoDB,
                         com.querydsl.core.testutil.SlowTest,
                         com.querydsl.core.testutil.Performance,
                         com.querydsl.core.testutil.ReportingOnly</excludedGroups>

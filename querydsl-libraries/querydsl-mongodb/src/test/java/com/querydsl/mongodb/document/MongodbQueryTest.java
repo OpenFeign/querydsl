@@ -67,7 +67,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-@Tag("MongoDB")
+@Tag("com.querydsl.core.testutil.MongoDB")
 public class MongodbQueryTest {
 
   private final MongoClient mongo;

@@ -63,6 +63,7 @@ defaults: &defaults
   environment:
     # Customize the JVM maximum heap limit
     MAVEN_OPTS: -Xmx3200m
+    JAVA_HOME: /usr/lib/jvm/java-25-openjdk-amd64
 
 # branch filters
 master-only: &master-only
@@ -112,8 +113,9 @@ jobs:
             - m2repo-{{ checksum "pom.xml" }}
       - run:
           name: 'Test'
+          no_output_timeout: 30m
           command: |
-            ./mvnw -ntp -B verify -Pno-databases
+            ./mvnw -ntp -B verify -Pno-databases -T2
       - save-test-results
 
   windows:
@@ -145,7 +147,7 @@ jobs:
       - run:
           name: 'Prepare environment'
           command: |
-            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb,:querydsl-r2dbc,:querydsl-sql-json -am -T2
+            ./mvnw -ntp -B install -Pquickbuild -T2 -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb,:querydsl-r2dbc,:querydsl-sql-json -am
       - run:
           name: 'Build and test examples'
           command: |
@@ -176,9 +178,11 @@ jobs:
           name: 'Prepare environment'
           command: |
             ./mvnw -N org.codehaus.mojo:properties-maven-plugin:1.2.1:write-project-properties -Dproperties.outputFile=querydsl-examples/querydsl-example-ksp-codegen/gradle.properties
-            ./mvnw -ntp -B install -Pquickbuild -pl :querydsl-ksp-codegen,:querydsl-jpa -am -T2
+            ./mvnw -ntp -B install -Pquickbuild -T2 -pl :querydsl-ksp-codegen,:querydsl-jpa -am
       - run:
           name: 'Build and test examples'
+          environment:
+            JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
           command: |
             cd querydsl-examples/querydsl-example-ksp-codegen
             ./gradlew --no-daemon --console=plain --info --stacktrace test
