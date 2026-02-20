@@ -254,8 +254,8 @@ public class MongodbQueryTest {
 
   @Test
   void notExists() {
-    assertThat(where(user.firstName.eq("Jaakko")).fetchCount()).isNotSameAs(0);
-    assertThat(where(user.firstName.eq("JaakkoX")).fetchCount()).isSameAs(0);
+    assertThat(where(user.firstName.eq("Jaakko")).fetchCount()).isNotEqualTo(0L);
+    assertThat(where(user.firstName.eq("JaakkoX")).fetchCount()).isEqualTo(0L);
   }
 
   @Test
@@ -637,7 +637,7 @@ public class MongodbQueryTest {
 
     assertThat(where(item, item.ctds.contains(i.getCtds().getFirst())).fetchCount())
         .isGreaterThan(0);
-    assertThat(where(item, item.ctds.contains(ObjectId.get())).fetchCount()).isSameAs(0);
+    assertThat(where(item, item.ctds.contains(ObjectId.get())).fetchCount()).isEqualTo(0L);
   }
 
   @Test
@@ -650,7 +650,7 @@ public class MongodbQueryTest {
     assertThat(
             where(item, item.ctds.any().in(Arrays.asList(ObjectId.get(), ObjectId.get())))
                 .fetchCount())
-        .isSameAs(0);
+        .isEqualTo(0L);
   }
 
   @Test

@@ -383,7 +383,7 @@ jobs:
             docker run --rm \
               --network host \
               -v $(pwd):/code \
-              -v ~/.m2:/root/.m2 \
+              -v ~/.m2/repository:/root/.m2/repository \
               -w /code \
               -e MAVEN_OPTS=-Xmx3200m \
               -e JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64 \
