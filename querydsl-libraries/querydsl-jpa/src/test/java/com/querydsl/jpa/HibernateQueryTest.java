@@ -43,4 +43,63 @@ public class HibernateQueryTest {
     assertThat(hqlQuery.toString())
         .isEqualTo("select employee\nfrom Employee employee\n  inner join employee.user as user");
   }
+
+  @Test
+  public void cteWithNotMaterializedHint() {
+    HibernateQuery<Void> query = new HibernateQuery<>();
+    QCat felix = new QCat("felix");
+    query
+        .withNotMaterializedHint(
+            felix,
+            JPAExpressions.select(QCat.cat.bodyWeight.as(felix.bodyWeight))
+                .from(QCat.cat)
+                .where(QCat.cat.name.eq("Felix123")))
+        .select(QCat.cat)
+        .from(QCat.cat, felix)
+        .where(QCat.cat.bodyWeight.gt(felix.bodyWeight));
+    assertThat(query.toString())
+        .isEqualTo(
+            """
+            with
+            felix as not materialized (select cat.bodyWeight as bodyWeight
+            from Cat cat
+            where cat.name = ?1)
+            select cat
+            from Cat cat, felix felix
+            where cat.bodyWeight > felix.bodyWeight""");
+  }
+
+  @Test
+  public void multipleCtes() {
+    HibernateQuery<Void> query = new HibernateQuery<>();
+    QCat felix = new QCat("felix");
+    QCat felixMates = new QCat("felixMates");
+
+    query
+        .with(
+            felix,
+            JPAExpressions.select(QCat.cat.id.as(felix.id))
+                .from(QCat.cat)
+                .where(QCat.cat.name.eq("Felix123")))
+        .with(
+            felixMates,
+            JPAExpressions.select(QCat.cat.id.as(felixMates.id))
+                .from(QCat.cat)
+                .innerJoin(felix)
+                .on(QCat.cat.mate.id.eq(felix.id)))
+        .select(felixMates.id)
+        .from(felixMates);
+    assertThat(query.toString())
+        .isEqualTo(
+            """
+              with
+              felix as (select cat.id as id
+              from Cat cat
+              where cat.name = ?1),
+              felixMates as (select cat.id as id
+              from Cat cat
+                inner join felix felix with cat.mate.id = felix.id)
+              select felixMates.id
+              from felixMates felixMates""");
+  }
 }

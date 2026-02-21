@@ -17,16 +17,19 @@ import com.querydsl.core.CloseableIterator;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryException;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.jpa.FactoryExpressionTransformer;
 import com.querydsl.jpa.HQLTemplates;
 import com.querydsl.jpa.JPAQueryBase;
-import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.ScrollableResultsIterator;
 import java.util.HashMap;
@@ -93,6 +96,29 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
     } finally {
       reset();
     }
+  }
+
+  public Q with(Path<?> alias, SubQueryExpression<?> query) {
+    return with(alias, null, query);
+  }
+
+  public Q withMaterializedHint(Path<?> alias, SubQueryExpression<?> query) {
+    return with(alias, true, query);
+  }
+
+  public Q withNotMaterializedHint(Path<?> alias, SubQueryExpression<?> query) {
+    return with(alias, false, query);
+  }
+
+  public Q with(Path<?> alias, Boolean materialized, SubQueryExpression<?> query) {
+    Expression<?> expr =
+        ExpressionUtils.operation(
+            alias.getType(),
+            HQLOps.WITH,
+            alias,
+            materialized != null ? ConstantImpl.create(materialized) : null,
+            query);
+    return queryMixin.addFlag(new QueryFlag(QueryFlag.Position.WITH, expr));
   }
 
   /**
@@ -348,8 +374,8 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   }
 
   @Override
-  protected JPQLSerializer createSerializer() {
-    return new JPQLSerializer(getTemplates());
+  protected HQLSerializer createSerializer() {
+    return new HQLSerializer(getTemplates());
   }
 
   protected void clone(Q query) {
