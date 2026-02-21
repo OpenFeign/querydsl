@@ -58,7 +58,8 @@ The `JPAAnnotationProcessor` finds domain types annotated with the
 If you use Hibernate annotations in your domain types, use the processor
 `com.querydsl.apt.hibernate.HibernateAnnotationProcessor` instead. See the
 [Hibernate tutorial]({{ site.baseurl }}/tutorials/hibernate) for
-Hibernate-specific features such as query caching and read-only mode.
+Hibernate-specific features such as Common Table Expressions, query caching,
+and read-only mode.
 
 Run `mvn clean install` and your query types will be generated into
 `target/generated-sources/java`.
@@ -155,8 +156,9 @@ Both `JPAQuery` and `HibernateQuery` implement the `JPQLQuery` interface.
 
 For the examples in this chapter, queries are created via a `JPAQueryFactory`
 instance. `JPAQueryFactory` should be the preferred option for obtaining
-`JPAQuery` instances. For the Hibernate API, `HibernateQueryFactory` can be used. For
-Hibernate-specific features, see the
+`JPAQuery` instances. For the Hibernate API, `HibernateQueryFactory` can be
+used. For Hibernate-specific features such as CTEs, query caching, and
+read-only mode, see the
 [Hibernate tutorial]({{ site.baseurl }}/tutorials/hibernate).
 
 To retrieve the customer with the first name Bob:

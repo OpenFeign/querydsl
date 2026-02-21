@@ -24,6 +24,8 @@ import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.QGroup;
@@ -246,5 +248,98 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
 
     assertThat(results).hasSize(expectedIds.size());
     assertThat(results.stream().map(Cat::getId).toList()).isEqualTo(expectedIds);
+  }
+
+  @Test
+  public void cteWithInnerJoinAndHint() {
+    // does not work before Hibernate 6.5,
+    // see https://hibernate.atlassian.net/browse/HHH-17897
+
+    // find the heaviest cat that is lighter than Felix
+    var felix = new QCat("felix");
+    Cat result =
+        query()
+            .withNotMaterializedHint(
+                felix,
+                JPAExpressions.select(QCat.cat.bodyWeight.as(felix.bodyWeight))
+                    .from(QCat.cat)
+                    .where(QCat.cat.name.eq("Felix123")))
+            .select(QCat.cat)
+            .from(felix)
+            .join(QCat.cat)
+            .on(QCat.cat.bodyWeight.lt(felix.bodyWeight))
+            .orderBy(QCat.cat.bodyWeight.desc())
+            .limit(1)
+            .fetchOne();
+    assertThat(result)
+        .hasFieldOrPropertyWithValue("id", 2)
+        .hasFieldOrPropertyWithValue("name", "Ruth123");
+  }
+
+  @Test
+  public void cteWithCrossJoinAndCustomColumn() {
+    // all cats in ascending order by comparing their weight to the most average weight of all cats
+    var avgCat = new QCat("avgcat");
+    NumberPath<Double> avgWeightColumn = Expressions.numberPath(Double.class, avgCat, "avgweight");
+    List<Cat> results =
+        query()
+            .with(
+                avgCat,
+                JPAExpressions.select(QCat.cat.bodyWeight.avg().as(avgWeightColumn)).from(QCat.cat))
+            .select(QCat.cat)
+            .from(QCat.cat, avgCat)
+            .orderBy(QCat.cat.bodyWeight.subtract(avgWeightColumn).abs().asc(), QCat.cat.id.asc())
+            .fetch();
+    // the average body weights of all cats is 3.5
+    assertThat(results)
+        .hasSize(6)
+        .satisfiesExactly(
+            cat ->
+                assertThat(cat)
+                    .hasFieldOrPropertyWithValue("id", 3)
+                    .hasFieldOrPropertyWithValue("bodyWeight", 3.0D),
+            cat ->
+                assertThat(cat)
+                    .hasFieldOrPropertyWithValue("id", 4)
+                    .hasFieldOrPropertyWithValue("bodyWeight", 4.0D),
+            cat ->
+                assertThat(cat)
+                    .hasFieldOrPropertyWithValue("id", 2)
+                    .hasFieldOrPropertyWithValue("bodyWeight", 2.0D),
+            cat ->
+                assertThat(cat)
+                    .hasFieldOrPropertyWithValue("id", 5)
+                    .hasFieldOrPropertyWithValue("bodyWeight", 5.0D),
+            cat ->
+                assertThat(cat)
+                    .hasFieldOrPropertyWithValue("id", 1)
+                    .hasFieldOrPropertyWithValue("bodyWeight", 1.0D),
+            cat ->
+                assertThat(cat)
+                    .hasFieldOrPropertyWithValue("id", 6)
+                    .hasFieldOrPropertyWithValue("bodyWeight", 6.0D));
+  }
+
+  @Test
+  public void multipleCtes() {
+    QCat felix = new QCat("felix");
+    QCat felixMates = new QCat("felixMates");
+    List<Integer> results =
+        query()
+            .with(
+                felix,
+                JPAExpressions.select(QCat.cat.id.as(felix.id))
+                    .from(QCat.cat)
+                    .where(QCat.cat.name.eq("Felix123")))
+            .with(
+                felixMates,
+                JPAExpressions.select(QCat.cat.id.as(QCat.cat.id))
+                    .from(QCat.cat)
+                    .innerJoin(felix)
+                    .on(QCat.cat.mate.id.eq(felix.id)))
+            .select(felixMates.id)
+            .from(felixMates)
+            .fetch();
+    assertThat(results).hasSize(1).isEqualTo(List.of(4));
   }
 }

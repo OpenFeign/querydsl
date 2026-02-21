@@ -154,6 +154,102 @@ List results = hibernateQuery.list();
 This returns a Hibernate `org.hibernate.query.Query` rather than a JPA
 `jakarta.persistence.Query`.
 
+## Common Table Expressions
+
+`HibernateQuery` supports Common Table Expressions (CTEs) via the `with()`
+method family. CTEs define named temporary result sets that can be referenced
+in the main query. This feature requires Hibernate 6.5 or later and is not
+available on `JPAQuery`.
+
+| Method | Description |
+|---|---|
+| `with(alias, subquery)` | Define a CTE |
+| `withMaterializedHint(alias, subquery)` | Define a CTE with `MATERIALIZED` hint |
+| `withNotMaterializedHint(alias, subquery)` | Define a CTE with `NOT MATERIALIZED` hint |
+
+### Simple CTE with Join
+
+Define a CTE that selects a specific cat's weight, then join against it to
+find lighter cats:
+
+```java
+QCat cat = QCat.cat;
+QCat felix = new QCat("felix");
+
+Cat result = new HibernateQuery<Cat>(session)
+    .withNotMaterializedHint(felix,
+        JPAExpressions.select(cat.bodyWeight.as(felix.bodyWeight))
+            .from(cat)
+            .where(cat.name.eq("Felix")))
+    .select(cat)
+    .from(felix)
+    .join(cat).on(cat.bodyWeight.lt(felix.bodyWeight))
+    .orderBy(cat.bodyWeight.desc())
+    .limit(1)
+    .fetchOne();
+```
+
+Generated HQL:
+
+```
+with
+felix as not materialized (select cat.bodyWeight as bodyWeight
+from Cat cat
+where cat.name = ?1)
+select cat
+from Cat cat, felix felix
+where cat.bodyWeight > felix.bodyWeight
+```
+
+### CTE with Custom Column
+
+Use `Expressions.numberPath()` to create custom column references within a CTE:
+
+```java
+QCat cat = QCat.cat;
+QCat avgCat = new QCat("avgcat");
+NumberPath<Double> avgWeight = Expressions.numberPath(Double.class, avgCat, "avgweight");
+
+List<Cat> results = new HibernateQuery<Cat>(session)
+    .with(avgCat,
+        JPAExpressions.select(cat.bodyWeight.avg().as(avgWeight))
+            .from(cat))
+    .select(cat)
+    .from(cat, avgCat)
+    .orderBy(cat.bodyWeight.subtract(avgWeight).abs().asc(), cat.id.asc())
+    .fetch();
+```
+
+### Multiple CTEs
+
+Chain `.with()` calls to define multiple CTEs. Later CTEs can reference earlier
+ones:
+
+```java
+QCat cat = QCat.cat;
+QCat felix = new QCat("felix");
+QCat felixMates = new QCat("felixMates");
+
+List<Integer> results = new HibernateQuery<Integer>(session)
+    .with(felix,
+        JPAExpressions.select(cat.id.as(felix.id))
+            .from(cat)
+            .where(cat.name.eq("Felix")))
+    .with(felixMates,
+        JPAExpressions.select(cat.id.as(cat.id))
+            .from(cat)
+            .innerJoin(felix).on(cat.mate.id.eq(felix.id)))
+    .select(felixMates.id)
+    .from(felixMates)
+    .fetch();
+```
+
+{: .note }
+CTE aliases reuse existing Q-types (e.g., `new QCat("felix")`) to define CTE
+columns. Use `as()` in projections to map columns from the subquery to the CTE
+alias fields. The `JPAExpressions` factory is used for CTE subqueries, same as
+for standard JPQL subqueries.
+
 ## Native SQL with Hibernate
 
 Use `HibernateSQLQuery` to run native SQL through a Hibernate `Session`:
@@ -173,6 +269,7 @@ for more details on native SQL query patterns.
 |---|---|---|
 | Underlying API | JPA EntityManager | Hibernate Session |
 | Query factory | `JPAQueryFactory` | `HibernateQueryFactory` |
+| Common Table Expressions | Not available | `with()`, `withMaterializedHint()`, `withNotMaterializedHint()` |
 | Query caching | Not available | `setCacheable()`, `setCacheRegion()` |
 | Read-only mode | Not available | `setReadOnly()` |
 | SQL comments | Not available | `setComment()` |

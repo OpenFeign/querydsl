@@ -15,6 +15,7 @@ import static com.querydsl.r2dbc.Constants.employee;
 import static com.querydsl.r2dbc.Constants.employee2;
 import static com.querydsl.r2dbc.Constants.survey;
 import static com.querydsl.r2dbc.Constants.survey2;
+import static com.querydsl.r2dbc.R2DBCExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
@@ -26,8 +27,12 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.r2dbc.domain.Employee;
 import com.querydsl.r2dbc.domain.QEmployee;
+import com.querydsl.sql.Configuration;
 import com.querydsl.sql.ForeignKey;
+import com.querydsl.sql.SQLSerializer;
+import com.querydsl.sql.SQLTemplates;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Arrays;
 import org.junit.Test;
 
@@ -75,7 +80,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   @Test
   @SkipForQuoted
   @ExcludeIn(DB2) // ID is reserved IN DB2
-  public void subQueries() {
+  public void subQueries() throws SQLException {
     // subquery in where block
     expectedQuery =
         """
@@ -157,10 +162,10 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   public void subQuery_params() {
     var aParam = new Param<String>(String.class, "param");
     R2DBCQuery<?> subQuery =
-        R2DBCExpressions.select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));
+        select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));
     subQuery.set(aParam, "Mike");
 
-    assertThat((long) query().from(subQuery).fetchCount().block()).isEqualTo(1);
+    assertThat(query().from(subQuery).fetchCount().block()).isEqualTo(1);
   }
 
   @Test
@@ -219,7 +224,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   public void subQuerySerialization2() {
     NumberPath<BigDecimal> sal = Expressions.numberPath(BigDecimal.class, "sal");
     var sq = new PathBuilder<Object[]>(Object[].class, "sq");
-    var serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(new Configuration(SQLTemplates.DEFAULT));
 
     serializer.handle(
         query()
@@ -232,13 +237,13 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
   public void scalarSubQueryInClause() {
-    var serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(new Configuration(SQLTemplates.DEFAULT));
 
     serializer.handle(
         this.query()
             .from(employee)
             .where(
-                R2DBCExpressions.select(employee.firstname)
+                com.querydsl.sql.SQLExpressions.select(employee.firstname)
                     .from(employee)
                     .orderBy(employee.salary.asc())
                     .limit(1)
@@ -259,13 +264,13 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
   public void scalarSubQueryInClause2() {
-    var serializer = new SQLSerializer(Configuration.DEFAULT);
+    var serializer = new SQLSerializer(new Configuration(SQLTemplates.DEFAULT));
 
     serializer.handle(
         this.query()
             .from(employee)
             .where(
-                R2DBCExpressions.select(employee.firstname)
+                com.querydsl.sql.SQLExpressions.select(employee.firstname)
                     .from(employee)
                     .orderBy(employee.salary.asc())
                     .limit(1)
