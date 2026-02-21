@@ -18,9 +18,9 @@ import static com.querydsl.core.alias.Alias.alias;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Time;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CaseForEqBuilderTest {
+class CaseForEqBuilderTest {
 
   public enum EnumExample {
     A,
@@ -36,7 +36,7 @@ public class CaseForEqBuilderTest {
   }
 
   @Test
-  public void numberTyped() {
+  void numberTyped() {
     var c = alias(Customer.class, "customer");
 
     var cases =
@@ -49,20 +49,20 @@ public class CaseForEqBuilderTest {
             .then(3)
             .otherwise(4);
 
-    assertThat(cases.toString())
-        .isEqualTo(
+    assertThat(cases)
+        .hasToString(
             """
-            case customer.annualSpending \
-            when 1000 then 1 \
-            when 2000 then 2 \
-            when 5000 then 3 \
-            else 4 \
-            end\
-            """);
+        case customer.annualSpending \
+        when 1000 then 1 \
+        when 2000 then 2 \
+        when 5000 then 3 \
+        else 4 \
+        end\
+        """);
   }
 
   @Test
-  public void stringTyped() {
+  void stringTyped() {
     var c = alias(Customer.class, "customer");
 
     var cases =
@@ -79,7 +79,7 @@ public class CaseForEqBuilderTest {
   }
 
   @Test
-  public void booleanTyped() {
+  void booleanTyped() {
     var c = alias(Customer.class, "customer");
 
     var cases = $(c.getAnnualSpending()).when(1000L).then(true).otherwise(false);
@@ -88,7 +88,7 @@ public class CaseForEqBuilderTest {
   }
 
   @Test
-  public void dateType() {
+  void dateType() {
     var c = alias(Customer.class, "customer");
 
     var cases =
@@ -101,7 +101,7 @@ public class CaseForEqBuilderTest {
   }
 
   @Test
-  public void dateTimeType() {
+  void dateTimeType() {
     var c = alias(Customer.class, "customer");
 
     var cases =
@@ -114,7 +114,7 @@ public class CaseForEqBuilderTest {
   }
 
   @Test
-  public void timeType() {
+  void timeType() {
     var c = alias(Customer.class, "customer");
 
     var cases = $(c.getAnnualSpending()).when(1000L).then(new Time(0)).otherwise(new Time(0));
@@ -123,7 +123,7 @@ public class CaseForEqBuilderTest {
   }
 
   @Test
-  public void enumType() {
+  void enumType() {
     var c = alias(Customer.class, "customer");
 
     var cases = $(c.getAnnualSpending()).when(1000L).then(EnumExample.A).otherwise(EnumExample.B);

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.querydsl.core.testutil.MongoDB;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.mongodb.domain.Item;
 import com.querydsl.mongodb.domain.QUser;
@@ -15,11 +14,11 @@ import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import java.net.UnknownHostException;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(MongoDB.class)
+@Tag("com.querydsl.core.testutil.MongoDB")
 public class MongodbJoinTest {
 
   private final MongoClient mongo;
@@ -37,8 +36,8 @@ public class MongodbJoinTest {
     ds.getMapper().map(User.class, Item.class);
   }
 
-  @Before
-  public void before() throws UnknownHostException, MongoException {
+  @BeforeEach
+  void before() throws UnknownHostException, MongoException {
     ds.getCollection(User.class).deleteMany(new org.bson.Document());
     var friend1 = new User("Max", null);
     var friend2 = new User("Jack", null);
@@ -62,93 +61,89 @@ public class MongodbJoinTest {
   }
 
   @Test
-  public void count() {
+  void count() {
     assertThat(where().join(user.friend(), friend).on(friend.firstName.eq("Max")).fetchCount())
-        .isEqualTo(1);
+        .isOne();
     assertThat(
             where(user.firstName.eq("Jane"))
                 .join(user.friend(), friend)
                 .on(friend.firstName.eq("Max"))
                 .fetchCount())
-        .isEqualTo(1);
+        .isOne();
     assertThat(
             where(user.firstName.eq("Mary"))
                 .join(user.friend(), friend)
                 .on(friend.firstName.eq("Max"))
                 .fetchCount())
-        .isEqualTo(0);
+        .isZero();
     assertThat(
             where(user.firstName.eq("Jane"))
                 .join(user.friend(), friend)
                 .on(friend.firstName.eq("Jack"))
                 .fetchCount())
-        .isEqualTo(0);
+        .isZero();
   }
 
   @Test
-  public void count_collection() {
+  void count_collection() {
     assertThat(where().join(user.friends, friend).on(friend.firstName.eq("Mary")).fetchCount())
-        .isEqualTo(1);
+        .isOne();
     assertThat(where().join(user.friends, friend).on(friend.firstName.eq("Ann")).fetchCount())
-        .isEqualTo(1);
+        .isOne();
     assertThat(
             where()
                 .join(user.friends, friend)
                 .on(friend.firstName.eq("Ann").or(friend.firstName.eq("Mary")))
                 .fetchCount())
-        .isEqualTo(1);
+        .isOne();
     assertThat(
             where(user.firstName.eq("Bart"))
                 .join(user.friends, friend)
                 .on(friend.firstName.eq("Mary"))
                 .fetchCount())
-        .isEqualTo(1);
+        .isOne();
     assertThat(where().join(user.friends, friend).on(friend.firstName.eq("Max")).fetchCount())
-        .isEqualTo(0);
+        .isZero();
   }
 
   @Test
-  public void exists() {
-    assertThat(where().join(user.friend(), friend).on(friend.firstName.eq("Max")).fetchCount() > 0)
-        .isTrue();
+  void exists() {
+    assertThat(where().join(user.friend(), friend).on(friend.firstName.eq("Max")).fetchCount())
+        .isGreaterThan(0);
     assertThat(
             where(user.firstName.eq("Jane"))
-                    .join(user.friend(), friend)
-                    .on(friend.firstName.eq("Max"))
-                    .fetchCount()
-                > 0)
-        .isTrue();
+                .join(user.friend(), friend)
+                .on(friend.firstName.eq("Max"))
+                .fetchCount())
+        .isGreaterThan(0);
     assertThat(
             where(user.firstName.eq("Mary"))
-                    .join(user.friend(), friend)
-                    .on(friend.firstName.eq("Max"))
-                    .fetchCount()
-                > 0)
-        .isFalse();
+                .join(user.friend(), friend)
+                .on(friend.firstName.eq("Max"))
+                .fetchCount())
+        .isLessThanOrEqualTo(0);
     assertThat(
             where(user.firstName.eq("Jane"))
-                    .join(user.friend(), friend)
-                    .on(friend.firstName.eq("Jack"))
-                    .fetchCount()
-                > 0)
-        .isFalse();
+                .join(user.friend(), friend)
+                .on(friend.firstName.eq("Jack"))
+                .fetchCount())
+        .isLessThanOrEqualTo(0);
   }
 
   @Test
-  public void exists_collection() {
-    assertThat(where().join(user.friends, friend).on(friend.firstName.eq("Mary")).fetchCount() > 0)
-        .isTrue();
+  void exists_collection() {
+    assertThat(where().join(user.friends, friend).on(friend.firstName.eq("Mary")).fetchCount())
+        .isGreaterThan(0);
     assertThat(
             where(user.firstName.eq("Bart"))
-                    .join(user.friends, friend)
-                    .on(friend.firstName.eq("Mary"))
-                    .fetchCount()
-                > 0)
-        .isTrue();
+                .join(user.friends, friend)
+                .on(friend.firstName.eq("Mary"))
+                .fetchCount())
+        .isGreaterThan(0);
   }
 
   @Test
-  public void list() {
+  void list() {
     assertThat(where().join(user.friend(), friend).on(friend.firstName.eq("Max")).fetch())
         .hasSize(1);
     assertThat(
@@ -177,7 +172,7 @@ public class MongodbJoinTest {
   }
 
   @Test
-  public void single() {
+  void single() {
     assertThat(
             where()
                 .join(user.friend(), friend)
@@ -207,7 +202,7 @@ public class MongodbJoinTest {
   }
 
   @Test
-  public void single_collection() {
+  void single_collection() {
     assertThat(
             where()
                 .join(user.friends, friend)
@@ -218,7 +213,7 @@ public class MongodbJoinTest {
   }
 
   @Test
-  public void double1() {
+  void double1() {
     assertThat(
             where()
                 .join(user.friend(), friend)
@@ -231,7 +226,7 @@ public class MongodbJoinTest {
   }
 
   @Test
-  public void double2() {
+  void double2() {
     assertThat(
             where()
                 .join(user.friend(), friend)
@@ -244,7 +239,7 @@ public class MongodbJoinTest {
   }
 
   @Test
-  public void deep() {
+  void deep() {
     // Mike -> Mary -> Jane
     assertThat(
             where()

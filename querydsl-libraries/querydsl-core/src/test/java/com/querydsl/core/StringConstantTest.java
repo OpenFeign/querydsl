@@ -16,12 +16,12 @@ package com.querydsl.core;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.StringExpression;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class StringConstantTest {
+class StringConstantTest {
 
   @Test
-  public void test() {
+  void test() {
     assertThat(expr("ab").append("c")).hasToString("abc");
     assertThat(expr("bc").prepend("a")).hasToString("abc");
     assertThat(expr("ABC").lower()).hasToString("abc");
@@ -30,7 +30,7 @@ public class StringConstantTest {
   }
 
   @Test
-  public void test2() {
+  void test2() {
     assertThat(expr("ab").append(expr("c"))).hasToString("abc");
     assertThat(expr("bc").prepend(expr("a"))).hasToString("abc");
     assertThat(expr("ABC").lower()).hasToString("abc");

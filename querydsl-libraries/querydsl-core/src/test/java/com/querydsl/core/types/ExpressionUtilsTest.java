@@ -14,6 +14,7 @@
 package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryException;
@@ -22,17 +23,17 @@ import com.querydsl.core.types.dsl.StringPath;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-public class ExpressionUtilsTest {
+class ExpressionUtilsTest {
 
   private static final StringPath str = Expressions.stringPath("str");
 
   private static final StringPath str2 = Expressions.stringPath("str2");
 
   @Test
-  public void likeToRegex() {
+  void likeToRegex() {
     assertThat(regex(ConstantImpl.create("%"))).isEqualTo(".*");
     assertThat(regex(ConstantImpl.create("abc%"))).isEqualTo("^abc.*");
     assertThat(regex(ConstantImpl.create("%abc"))).isEqualTo(".*abc$");
@@ -46,8 +47,8 @@ public class ExpressionUtilsTest {
   }
 
   @Test
-  @Ignore
-  public void likeToRegexSpeed() {
+  @Disabled
+  void likeToRegexSpeed() {
     // 4570
     var path = Expressions.stringPath("path");
     final var iterations = 1000000;
@@ -67,25 +68,25 @@ public class ExpressionUtilsTest {
   }
 
   @Test
-  public void likeToRegex_escape() {
+  void likeToRegex_escape() {
     assertThat(regex(ConstantImpl.create("."))).isEqualTo("^\\.$");
   }
 
   @Test
-  public void likeToRegex_escapeCharacter() {
+  void likeToRegex_escapeCharacter() {
     assertThat(regex(ConstantImpl.create("a\\%b"))).isEqualTo("^a%b$");
     assertThat(regex(ConstantImpl.create("a\\_b"))).isEqualTo("^a_b$");
   }
 
   @Test
-  public void regexToLike_anchorsAndEscapes() {
+  void regexToLike_anchorsAndEscapes() {
     assertThat(like(ConstantImpl.create("^a%b$"))).isEqualTo("a\\%b");
     assertThat(like(ConstantImpl.create("^a_b$"))).isEqualTo("a\\_b");
     assertThat(like(ConstantImpl.create("^ab$"))).isEqualTo("ab");
   }
 
   @Test
-  public void regexToLike() {
+  void regexToLike() {
     assertThat(like(ConstantImpl.create(".*"))).isEqualTo("%");
     assertThat(like(ConstantImpl.create("."))).isEqualTo("_");
     assertThat(like(ConstantImpl.create("\\."))).isEqualTo(".");
@@ -97,24 +98,27 @@ public class ExpressionUtilsTest {
     assertThat(like(path.prepend("."))).isEqualTo("_ + path");
   }
 
-  @Test(expected = QueryException.class)
-  public void regexToLike_fail() {
-    like(ConstantImpl.create("a*"));
-  }
-
-  @Test(expected = QueryException.class)
-  public void regexToLike_fail2() {
-    like(ConstantImpl.create("\\d"));
-  }
-
-  @Test(expected = QueryException.class)
-  public void regexToLike_fail3() {
-    like(ConstantImpl.create("[ab]"));
+  @Test
+  void regexToLike_fail() {
+    assertThatExceptionOfType(QueryException.class)
+        .isThrownBy(() -> like(ConstantImpl.create("a*")));
   }
 
   @Test
-  @Ignore
-  public void regexToLikeSpeed() {
+  void regexToLike_fail2() {
+    assertThatExceptionOfType(QueryException.class)
+        .isThrownBy(() -> like(ConstantImpl.create("\\d")));
+  }
+
+  @Test
+  void regexToLike_fail3() {
+    assertThatExceptionOfType(QueryException.class)
+        .isThrownBy(() -> like(ConstantImpl.create("[ab]")));
+  }
+
+  @Test
+  @Disabled
+  void regexToLikeSpeed() {
     // 3255
     var path = Expressions.stringPath("path");
     final var iterations = 1000000;
@@ -140,28 +144,28 @@ public class ExpressionUtilsTest {
   }
 
   @Test
-  public void count() {
+  void count() {
     assertThat(ExpressionUtils.count(str)).hasToString("count(str)");
   }
 
   @Test
-  public void eqConst() {
+  void eqConst() {
     assertThat(ExpressionUtils.eqConst(str, "X")).hasToString("str = X");
   }
 
   @Test
-  public void eq() {
+  void eq() {
     assertThat(ExpressionUtils.eq(str, str2)).hasToString("str = str2");
   }
 
   @Test
-  public void in() {
-    assertThat(ExpressionUtils.in(str, Arrays.asList("a", "b", "c")).toString())
-        .isEqualTo("str in [a, b, c]");
+  void in() {
+    assertThat(ExpressionUtils.in(str, Arrays.asList("a", "b", "c")))
+        .hasToString("str in [a, b, c]");
   }
 
   @Test
-  public void in_subQuery() {
+  void in_subQuery() {
     var s =
         ExpressionUtils.in(
                 str, new SubQueryExpressionImpl<>(String.class, new DefaultQueryMetadata()))
@@ -170,43 +174,42 @@ public class ExpressionUtilsTest {
   }
 
   @Test
-  public void inAny() {
+  void inAny() {
     Collection<List<String>> of =
         Arrays.asList(Arrays.asList("a", "b", "c"), Arrays.asList("d", "e", "f"));
-    assertThat(ExpressionUtils.inAny(str, of).toString())
-        .isEqualTo("str in [a, b, c] || str in [d, e, f]");
+    assertThat(ExpressionUtils.inAny(str, of)).hasToString("str in [a, b, c] || str in [d, e, f]");
   }
 
   @Test
-  public void isNull() {
+  void isNull() {
     assertThat(ExpressionUtils.isNull(str)).hasToString("str is null");
   }
 
   @Test
-  public void isNotNull() {
+  void isNotNull() {
     assertThat(ExpressionUtils.isNotNull(str)).hasToString("str is not null");
   }
 
   @Test
-  public void neConst() {
+  void neConst() {
     assertThat(ExpressionUtils.neConst(str, "X")).hasToString("str != X");
   }
 
   @Test
-  public void ne() {
+  void ne() {
     assertThat(ExpressionUtils.ne(str, str2)).hasToString("str != str2");
   }
 
   @Test
-  public void notInAny() {
+  void notInAny() {
     Collection<List<String>> of =
         Arrays.asList(Arrays.asList("a", "b", "c"), Arrays.asList("d", "e", "f"));
-    assertThat(ExpressionUtils.notInAny(str, of).toString())
-        .isEqualTo("str not in [a, b, c] && str not in [d, e, f]");
+    assertThat(ExpressionUtils.notInAny(str, of))
+        .hasToString("str not in [a, b, c] && str not in [d, e, f]");
   }
 
   @Test
-  public void notIn_subQuery() {
+  void notIn_subQuery() {
     var s =
         ExpressionUtils.notIn(
                 str, new SubQueryExpressionImpl<>(String.class, new DefaultQueryMetadata()))

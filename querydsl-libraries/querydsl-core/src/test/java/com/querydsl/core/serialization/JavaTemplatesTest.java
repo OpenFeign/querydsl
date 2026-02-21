@@ -19,12 +19,12 @@ import com.querydsl.core.types.JavaTemplates;
 import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Templates;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class JavaTemplatesTest {
+class JavaTemplatesTest {
 
   @Test
-  public void mappings() {
+  void mappings() {
     Templates templates = new JavaTemplates();
     var matched = 0;
     for (Operator operator : Ops.values()) {
@@ -32,6 +32,6 @@ public class JavaTemplatesTest {
       assertThat(templates.getTemplate(operator)).isNotNull();
     }
 
-    assertThat(matched > 0).isTrue();
+    assertThat(matched).isGreaterThan(0);
   }
 }

@@ -15,76 +15,74 @@ package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CoalesceTest {
+class CoalesceTest {
 
   private final StringPath firstname = new StringPath("firstname");
 
   private final StringPath lastname = new StringPath("lastname");
 
   @Test
-  public void mutable() {
+  void mutable() {
     var c = new Coalesce<String>(firstname, lastname).add("xxx");
     assertThat(c).hasToString("coalesce(firstname, lastname, xxx)");
     assertThat(c.add("yyy")).hasToString("coalesce(firstname, lastname, xxx, yyy)");
   }
 
   @Test
-  public void withList() {
+  void withList() {
     var c = new Coalesce<String>(firstname, lastname).add("xxx");
     assertThat(c).hasToString("coalesce(firstname, lastname, xxx)");
   }
 
   @Test
-  public void withSingleArg() {
+  void withSingleArg() {
     var c = new Coalesce<String>().add("xxx");
     assertThat(c).hasToString("coalesce(xxx)");
   }
 
   @Test
-  public void asComparable() {
+  void asComparable() {
     var c = new Coalesce<>(firstname, lastname);
     c.getValue().asc();
   }
 
   @Test
-  public void asString() {
+  void asString() {
     var c = new Coalesce<>(firstname, lastname);
     c.asString().lower();
   }
 
   @Test
-  public void withoutWarnings() {
+  void withoutWarnings() {
     var c = new Coalesce<>(String.class).add(firstname).add(lastname);
     assertThat(c).hasToString("coalesce(firstname, lastname)");
   }
 
   @Test
-  public void dsl() {
+  void dsl() {
     assertThat(firstname.coalesce(lastname)).hasToString("coalesce(firstname, lastname)");
   }
 
   @Test
-  public void dsl2() {
-    assertThat(new Coalesce<String>().add(firstname).add(lastname).add("xxx").toString())
-        .isEqualTo("coalesce(firstname, lastname, xxx)");
+  void dsl2() {
+    assertThat(new Coalesce<String>().add(firstname).add(lastname).add("xxx"))
+        .hasToString("coalesce(firstname, lastname, xxx)");
   }
 
   @Test
-  public void dsl3() {
+  void dsl3() {
     assertThat(firstname.coalesce("xxx")).hasToString("coalesce(firstname, xxx)");
   }
 
   @Test
-  public void asc() {
-    assertThat(firstname.coalesce("xxx").asc().toString())
-        .isEqualTo("coalesce(firstname, xxx) ASC");
+  void asc() {
+    assertThat(firstname.coalesce("xxx").asc()).hasToString("coalesce(firstname, xxx) ASC");
   }
 
   @Test
-  public void desc() {
-    assertThat(firstname.coalesce("xxx").desc().toString())
-        .isEqualTo("coalesce(firstname, xxx) DESC");
+  void desc() {
+    assertThat(firstname.coalesce("xxx").desc()).hasToString("coalesce(firstname, xxx) DESC");
   }
 }

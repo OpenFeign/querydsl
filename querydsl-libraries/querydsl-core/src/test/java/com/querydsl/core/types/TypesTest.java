@@ -15,19 +15,19 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TypesTest {
+class TypesTest {
 
   @Test
-  public void testExpr() {
+  void expr() {
     for (Class<?> cl : Expression.class.getClasses()) {
       assertThat(Expression.class.isAssignableFrom(cl)).as(cl.getName()).isTrue();
     }
   }
 
   @Test
-  public void testPath() {
+  void path() {
     for (Class<?> cl : Path.class.getClasses()) {
       assertThat(Path.class.isAssignableFrom(cl)).as(cl.getName()).isTrue();
       if (!cl.isInterface()) {

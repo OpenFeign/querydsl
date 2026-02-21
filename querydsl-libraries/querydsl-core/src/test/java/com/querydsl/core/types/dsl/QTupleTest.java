@@ -17,9 +17,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QTuple;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class QTupleTest {
+class QTupleTest {
 
   private StringPath first = new StringPath("x");
 
@@ -30,7 +30,7 @@ public class QTupleTest {
   private QTuple tupleExpression = Projections.tuple(first, second, third);
 
   @Test
-  public void newInstanceObjectArray() {
+  void newInstanceObjectArray() {
     var tuple = tupleExpression.newInstance("1", 42, true);
     assertThat(tuple.size()).isEqualTo(3);
     assertThat(tuple.get(0, String.class)).isEqualTo("1");

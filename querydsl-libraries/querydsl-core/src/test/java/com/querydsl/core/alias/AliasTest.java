@@ -17,25 +17,25 @@ import static com.querydsl.core.alias.Alias.$;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Path;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AliasTest {
 
   @Test
-  public void alias() {
+  void alias() {
     var domainType = Alias.alias(DomainType.class);
     Alias.alias(DomainType.class, $(domainType.getCollection()).any());
   }
 
   @Test
-  public void comparableEntity() {
+  void comparableEntity() {
     var entity = Alias.alias(ComparableEntity.class);
     Path<ComparableEntity> path = $(entity);
     assertThat(path.getType()).isEqualTo(ComparableEntity.class);
   }
 
   @Test
-  public void comparableEntity_property() {
+  void comparableEntity_property() {
     var entity = Alias.alias(ComparableEntity.class);
     Path<String> propertyPath = $(entity.getProperty());
     assertThat(propertyPath.getType()).isEqualTo(String.class);
@@ -43,10 +43,9 @@ public class AliasTest {
   }
 
   @Test
-  public void basicUsage() {
+  void basicUsage() {
     var domainType = Alias.alias(DomainType.class);
-    assertThat($(domainType.getFirstName()).lower().toString())
-        .isEqualTo("lower(domainType.firstName)");
+    assertThat($(domainType.getFirstName()).lower()).hasToString("lower(domainType.firstName)");
     assertThat($(domainType.getAge())).hasToString("domainType.age");
     assertThat($(domainType.getMap().get("a"))).hasToString("domainType.map.get(a)");
     assertThat($(domainType.getList().get(3))).hasToString("domainType.list.get(3)");
@@ -68,20 +67,20 @@ public class AliasTest {
   }
 
   @Test
-  public void getAny() {
+  void getAny() {
     var domainType = Alias.alias(DomainType.class);
     assertThat(Alias.getAny(domainType).getType()).isEqualTo(DomainType.class);
     assertThat(Alias.getAny(domainType.getFirstName()).getType()).isEqualTo(String.class);
   }
 
   @Test
-  public void otherMethods() {
+  void otherMethods() {
     var domainType = Alias.alias(DomainType.class);
     assertThat(domainType).hasToString("domainType");
   }
 
   @Test
-  public void var() {
+  void var() {
     assertThat(Alias.var()).hasToString("it");
     assertThat(Alias.var(1)).hasToString("varInteger1");
     assertThat(Alias.var("X")).hasToString("X");

@@ -15,12 +15,12 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ConstantImplTest {
+class ConstantImplTest {
 
   @Test
-  public void create() {
+  void create() {
     assertThat(ConstantImpl.create(true)).isNotNull();
     assertThat(ConstantImpl.create((byte) 1)).isNotNull();
     assertThat(ConstantImpl.create(ConstantImplTest.class)).isNotNull();

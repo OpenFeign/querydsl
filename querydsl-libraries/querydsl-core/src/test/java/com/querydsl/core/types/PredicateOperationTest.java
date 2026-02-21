@@ -15,13 +15,13 @@ package com.querydsl.core.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PredicateOperationTest {
+class PredicateOperationTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void not() {
+  void not() {
     Path<?> o1 = ExpressionUtils.path(Object.class, "o1");
     Path<?> o2 = ExpressionUtils.path(Object.class, "o2");
     var template = ExpressionUtils.predicate(Ops.EQ, o1, o2);

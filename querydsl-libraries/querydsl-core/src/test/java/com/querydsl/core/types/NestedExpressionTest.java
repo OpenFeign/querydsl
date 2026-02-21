@@ -18,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class NestedExpressionTest {
+class NestedExpressionTest {
 
   StringPath str1 = Expressions.stringPath("str1");
   StringPath str2 = Expressions.stringPath("str2");
@@ -32,25 +32,25 @@ public class NestedExpressionTest {
       new Concatenation(new Concatenation(str1, new Concatenation(str2, str3)), str4);
 
   @Test
-  public void wrapped_projection_has_right_arguments() {
+  void wrapped_projection_has_right_arguments() {
     FactoryExpression<String> wrapped = FactoryExpressionUtils.wrap(concat1);
-    assertThat(wrapped.getArgs()).isEqualTo(Arrays.asList(str1, str2, str3));
+    assertThat(wrapped.getArgs()).containsExactlyElementsOf(Arrays.asList(str1, str2, str3));
   }
 
   @Test
-  public void wrapped_projection_compresses_projection() {
+  void wrapped_projection_compresses_projection() {
     FactoryExpression<String> wrapped = FactoryExpressionUtils.wrap(concat1);
     assertThat(wrapped.newInstance("1", "2", "3")).isEqualTo("123");
   }
 
   @Test
-  public void deeply_wrapped_projection_has_right_arguments() {
+  void deeply_wrapped_projection_has_right_arguments() {
     FactoryExpression<String> wrapped = FactoryExpressionUtils.wrap(concat2);
-    assertThat(wrapped.getArgs()).isEqualTo(Arrays.asList(str1, str2, str3, str4));
+    assertThat(wrapped.getArgs()).containsExactlyElementsOf(Arrays.asList(str1, str2, str3, str4));
   }
 
   @Test
-  public void deeply_wrapped_projection_compresses_projection() {
+  void deeply_wrapped_projection_compresses_projection() {
     FactoryExpression<String> wrapped = FactoryExpressionUtils.wrap(concat2);
     assertThat(wrapped.newInstance("1", "2", "3", "4")).isEqualTo("1234");
   }

@@ -13,9 +13,9 @@
  */
 package com.querydsl.core.alias;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ComparablePropertyTest {
+class ComparablePropertyTest {
 
   public static class Entity {
 
@@ -55,7 +55,7 @@ public class ComparablePropertyTest {
   }
 
   @Test
-  public void test() {
+  void test() {
     var entity = Alias.alias(Entity.class);
     Alias.$(entity.getProperty());
   }

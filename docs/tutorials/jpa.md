@@ -56,7 +56,9 @@ The `JPAAnnotationProcessor` finds domain types annotated with the
 `jakarta.persistence.Entity` annotation and generates query types for them.
 
 If you use Hibernate annotations in your domain types, use the processor
-`com.querydsl.apt.hibernate.HibernateAnnotationProcessor` instead.
+`com.querydsl.apt.hibernate.HibernateAnnotationProcessor` instead. See the
+[Hibernate tutorial]({{ site.baseurl }}/tutorials/hibernate) for
+Hibernate-specific features such as query caching and read-only mode.
 
 Run `mvn clean install` and your query types will be generated into
 `target/generated-sources/java`.
@@ -153,8 +155,9 @@ Both `JPAQuery` and `HibernateQuery` implement the `JPQLQuery` interface.
 
 For the examples in this chapter, queries are created via a `JPAQueryFactory`
 instance. `JPAQueryFactory` should be the preferred option for obtaining
-`JPAQuery` instances. For the Hibernate API, `HibernateQueryFactory` can be
-used.
+`JPAQuery` instances. For the Hibernate API, `HibernateQueryFactory` can be used. For
+Hibernate-specific features, see the
+[Hibernate tutorial]({{ site.baseurl }}/tutorials/hibernate).
 
 To retrieve the customer with the first name Bob:
 
@@ -469,4 +472,6 @@ List<CatDTO> catDTOs = query.select(Projections.constructor(CatDTO.class, cat.id
 ```
 
 If you use the Hibernate API instead of the JPA API, use `HibernateSQLQuery`
-instead.
+instead. See the
+[Hibernate tutorial]({{ site.baseurl }}/tutorials/hibernate) for more
+details on `HibernateSQLQuery` and other Hibernate-specific features.

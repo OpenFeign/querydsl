@@ -23,9 +23,9 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadataFactory;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class OrderedQueryMetadataTest {
+class OrderedQueryMetadataTest {
 
   private Path<Object> x = ExpressionUtils.path(Object.class, PathMetadataFactory.forVariable("x"));
   private Path<Object> y = ExpressionUtils.path(Object.class, PathMetadataFactory.forVariable("y"));
@@ -47,7 +47,7 @@ public class OrderedQueryMetadataTest {
   }
 
   @Test
-  public void addJoin() {
+  void addJoin() {
     List<JoinExpression> joins = new ArrayList<>();
     joins.add(new JoinExpression(JoinType.DEFAULT, x));
     joins.add(new JoinExpression(JoinType.DEFAULT, y));

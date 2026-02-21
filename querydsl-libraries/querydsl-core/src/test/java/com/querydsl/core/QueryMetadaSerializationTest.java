@@ -24,7 +24,6 @@ import com.querydsl.core.types.dsl.NumberOperation;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.core.util.ReflectionUtils;
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -35,14 +34,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class QueryMetadaSerializationTest {
+class QueryMetadaSerializationTest {
 
   private QueryMetadata metadata = new DefaultQueryMetadata();
 
   @Test
-  public void serialization() throws IOException, ClassNotFoundException {
+  void serialization() throws Exception {
     var expr = Expressions.stringPath("str");
     metadata.addJoin(JoinType.DEFAULT, expr);
     metadata.addFlag(new QueryFlag(Position.AFTER_FILTERS, ""));
@@ -56,21 +55,21 @@ public class QueryMetadaSerializationTest {
 
     var metadata2 = Serialization.serialize(metadata);
 
-    assertThat(metadata2.getFlags()).isEqualTo(metadata.getFlags());
-    assertThat(metadata2.getGroupBy().getFirst()).isEqualTo(metadata.getGroupBy().getFirst());
-    assertThat(metadata2.getGroupBy()).isEqualTo(metadata.getGroupBy());
+    assertThat(metadata2.getFlags()).hasSameElementsAs(metadata.getFlags());
+    assertThat(metadata2.getGroupBy()).first().isEqualTo(metadata.getGroupBy().getFirst());
+    assertThat(metadata2.getGroupBy()).containsExactlyElementsOf(metadata.getGroupBy());
     assertThat(metadata2.getHaving()).isEqualTo(metadata.getHaving());
-    assertThat(metadata2.getJoins()).isEqualTo(metadata.getJoins());
+    assertThat(metadata2.getJoins()).containsExactlyElementsOf(metadata.getJoins());
     assertThat(metadata2.getModifiers()).isEqualTo(metadata.getModifiers());
-    assertThat(metadata2.getOrderBy()).isEqualTo(metadata.getOrderBy());
-    assertThat(metadata2.getParams()).isEqualTo(metadata.getParams());
+    assertThat(metadata2.getOrderBy()).containsExactlyElementsOf(metadata.getOrderBy());
+    assertThat(metadata2.getParams()).containsExactlyInAnyOrderEntriesOf(metadata.getParams());
     assertThat(metadata2.getProjection()).isEqualTo(metadata.getProjection());
     assertThat(metadata2.getWhere()).isEqualTo(metadata.getWhere());
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void fullySerializable() {
+  void fullySerializable() {
     Set<Class<?>> checked =
         new HashSet<>(
             Arrays.asList(

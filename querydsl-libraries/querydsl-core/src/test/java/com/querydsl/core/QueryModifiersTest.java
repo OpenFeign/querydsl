@@ -14,15 +14,16 @@
 package com.querydsl.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class QueryModifiersTest {
+class QueryModifiersTest {
 
   @Test
-  public void limit() {
+  void limit() {
     var modifiers = QueryModifiers.limit(12L);
     assertThat(modifiers.getLimit()).isEqualTo(Long.valueOf(12));
     assertThat(modifiers.getOffset()).isNull();
@@ -30,7 +31,7 @@ public class QueryModifiersTest {
   }
 
   @Test
-  public void offset() {
+  void offset() {
     var modifiers = QueryModifiers.offset(12L);
     assertThat(modifiers.getOffset()).isEqualTo(Long.valueOf(12));
     assertThat(modifiers.getLimit()).isNull();
@@ -38,7 +39,7 @@ public class QueryModifiersTest {
   }
 
   @Test
-  public void both() {
+  void both() {
     var modifiers = new QueryModifiers(1L, 2L);
     assertThat(modifiers.getLimit()).isEqualTo(Long.valueOf(1));
     assertThat(modifiers.getOffset()).isEqualTo(Long.valueOf(2));
@@ -46,7 +47,7 @@ public class QueryModifiersTest {
   }
 
   @Test
-  public void empty() {
+  void empty() {
     var modifiers = new QueryModifiers(null, null);
     assertThat(modifiers.getLimit()).isNull();
     assertThat(modifiers.getOffset()).isNull();
@@ -54,31 +55,36 @@ public class QueryModifiersTest {
   }
 
   @Test
-  public void hashCode_() {
+  void hashCode_() {
     var modifiers1 = new QueryModifiers(null, null);
     var modifiers2 = new QueryModifiers(1L, null);
     var modifiers3 = new QueryModifiers(null, 1L);
 
-    assertThat(QueryModifiers.EMPTY.hashCode()).isEqualTo(modifiers1.hashCode());
-    assertThat(QueryModifiers.limit(1L).hashCode()).isEqualTo(modifiers2.hashCode());
-    assertThat(QueryModifiers.offset(1L).hashCode()).isEqualTo(modifiers3.hashCode());
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void illegalLimit() {
-    QueryModifiers.limit(-1);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void illegalOffset() {
-    QueryModifiers.offset(-1);
+    assertThat(QueryModifiers.EMPTY).hasSameHashCodeAs(modifiers1);
+    assertThat(QueryModifiers.limit(1L)).hasSameHashCodeAs(modifiers2);
+    assertThat(QueryModifiers.offset(1L)).hasSameHashCodeAs(modifiers3);
   }
 
   @Test
-  public void subList() {
+  void illegalLimit() {
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> QueryModifiers.limit(-1));
+  }
+
+  @Test
+  void illegalOffset() {
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> QueryModifiers.offset(-1));
+  }
+
+  @Test
+  void subList() {
     List<Integer> ints = Arrays.asList(1, 2, 3, 4, 5);
-    assertThat(QueryModifiers.offset(2).subList(ints)).isEqualTo(Arrays.asList(3, 4, 5));
-    assertThat(QueryModifiers.limit(3).subList(ints)).isEqualTo(Arrays.asList(1, 2, 3));
-    assertThat(new QueryModifiers(3L, 1L).subList(ints)).isEqualTo(Arrays.asList(2, 3, 4));
+    assertThat(QueryModifiers.offset(2).subList(ints))
+        .containsExactlyElementsOf(Arrays.asList(3, 4, 5));
+    assertThat(QueryModifiers.limit(3).subList(ints))
+        .containsExactlyElementsOf(Arrays.asList(1, 2, 3));
+    assertThat(new QueryModifiers(3L, 1L).subList(ints))
+        .containsExactlyElementsOf(Arrays.asList(2, 3, 4));
   }
 }

@@ -20,14 +20,14 @@ import com.querydsl.core.types.dsl.SimpleExpression;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ReflectionUtilsTest {
+class ReflectionUtilsTest {
 
   String property;
 
   @Test
-  public void getAnnotatedElement() {
+  void getAnnotatedElement() {
     var annotatedElement =
         ReflectionUtils.getAnnotatedElement(ReflectionUtilsTest.class, "property", String.class);
     assertThat(annotatedElement).isNotNull();
@@ -35,9 +35,9 @@ public class ReflectionUtilsTest {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void getImplementedInterfaces() {
+  void getImplementedInterfaces() {
     var ifaces = ReflectionUtils.getImplementedInterfaces(SimpleExpression.class);
     assertThat(ifaces)
-        .isEqualTo(new HashSet<>(Arrays.asList(Serializable.class, Expression.class)));
+        .hasSameElementsAs(new HashSet<>(Arrays.asList(Serializable.class, Expression.class)));
   }
 }

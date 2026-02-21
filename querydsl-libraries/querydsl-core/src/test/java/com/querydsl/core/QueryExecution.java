@@ -258,7 +258,7 @@ public abstract class QueryExecution {
       }
       fail(buffer.toString());
     } else {
-      System.out.println("Success with " + total + " tests");
+      IO.println("Success with " + total + " tests");
     }
   }
 

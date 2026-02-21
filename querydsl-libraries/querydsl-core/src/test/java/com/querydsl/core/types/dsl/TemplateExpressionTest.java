@@ -28,12 +28,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TemplateExpressionTest {
+class TemplateExpressionTest {
 
   @Test
-  public void constructors() {
+  void constructors() {
     Templates templates = new JavaTemplates();
     var template = TemplateFactory.DEFAULT.create("{0}");
     List<Expression<?>> args = Collections.singletonList(new StringPath("a"));
@@ -56,7 +56,7 @@ public class TemplateExpressionTest {
       assertThat(custom.getArgs()).isNotNull();
       assertThat(custom).isEqualTo(custom);
       if (prev != null) {
-        assertThat(custom.equals(prev)).isFalse();
+        assertThat(custom).isNotEqualTo(prev);
       }
       // assertEquals(custom.getType().hashCode(), custom.hashCode());
       custom.accept(ToStringVisitor.DEFAULT, templates);
@@ -65,7 +65,7 @@ public class TemplateExpressionTest {
   }
 
   @Test
-  public void factoryMethods() {
+  void factoryMethods() {
     var template = "";
     Expression<Boolean> arg = ConstantImpl.create(true);
 
@@ -81,7 +81,7 @@ public class TemplateExpressionTest {
   }
 
   @Test
-  public void factoryMethods2() {
+  void factoryMethods2() {
     var template = TemplateFactory.DEFAULT.create("");
     Expression<Boolean> arg = ConstantImpl.create(true);
 

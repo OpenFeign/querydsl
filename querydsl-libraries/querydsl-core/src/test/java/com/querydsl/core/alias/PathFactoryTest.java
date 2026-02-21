@@ -26,100 +26,100 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PathFactoryTest {
+class PathFactoryTest {
 
   private PathFactory pathFactory = new DefaultPathFactory();
 
   private PathMetadata metadata = PathMetadataFactory.forVariable("var");
 
   @Test
-  public void createArrayPath() {
+  void createArrayPath() {
     Path<String[]> path = pathFactory.createArrayPath(String[].class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createEntityPath() {
+  void createEntityPath() {
     Path<Object> path = pathFactory.createEntityPath(Object.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createSimplePath() {
+  void createSimplePath() {
     Path<Object> path = pathFactory.createSimplePath(Object.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createComparablePath() {
+  void createComparablePath() {
     Path<String> path = pathFactory.createComparablePath(String.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createEnumPath() {
+  void createEnumPath() {
     Path<PropertyType> path = pathFactory.createEnumPath(PropertyType.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createDatePath() {
+  void createDatePath() {
     Path<Date> path = pathFactory.createDatePath(Date.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createTimePath() {
+  void createTimePath() {
     Path<Time> path = pathFactory.createTimePath(Time.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createDateTimePath() {
+  void createDateTimePath() {
     Path<Timestamp> path = pathFactory.createDateTimePath(Timestamp.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createNumberPath() {
+  void createNumberPath() {
     Path<Integer> path = pathFactory.createNumberPath(Integer.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createBooleanPath() {
+  void createBooleanPath() {
     var path = pathFactory.createBooleanPath(metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createStringPath() {
+  void createStringPath() {
     var path = pathFactory.createStringPath(metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createListPath() {
+  void createListPath() {
     Path<List<Timestamp>> path = pathFactory.createListPath(Timestamp.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createSetPath() {
+  void createSetPath() {
     Path<Set<Timestamp>> path = pathFactory.createSetPath(Timestamp.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createCollectionPath() {
+  void createCollectionPath() {
     Path<Collection<Timestamp>> path = pathFactory.createCollectionPath(Timestamp.class, metadata);
     assertThat(path).isNotNull();
   }
 
   @Test
-  public void createMapPath() {
+  void createMapPath() {
     Path<Map<String, Timestamp>> path =
         pathFactory.createMapPath(String.class, Timestamp.class, metadata);
     assertThat(path).isNotNull();

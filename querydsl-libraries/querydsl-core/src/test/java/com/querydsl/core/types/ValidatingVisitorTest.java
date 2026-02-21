@@ -18,53 +18,53 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Param;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("unchecked")
-public class ValidatingVisitorTest {
+class ValidatingVisitorTest {
 
   private final Set<Expression<?>> known = new HashSet<>();
 
   private final ValidatingVisitor validator = ValidatingVisitor.DEFAULT;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     known.add(ExpressionUtils.path(Object.class, "path"));
   }
 
   @Test
-  public void visitConstantOfQVoid() {
+  void visitConstantOfQVoid() {
     validator.visit(ConstantImpl.create("XXX"), known);
   }
 
   @Test
-  public void visitFactoryExpressionOfQVoid() {
+  void visitFactoryExpressionOfQVoid() {
     validator.visit(new QBean(Object.class, ExpressionUtils.path(String.class, "path")), known);
   }
 
   @Test
-  public void visitOperationOfQVoid() {
+  void visitOperationOfQVoid() {
     validator.visit((Operation) Expressions.path(Object.class, "path").isNull(), known);
   }
 
   @Test
-  public void visitParamExpressionOfQVoid() {
+  void visitParamExpressionOfQVoid() {
     validator.visit(new Param(Object.class, "prop"), known);
   }
 
   @Test
-  public void visitPathOfQVoid() {
+  void visitPathOfQVoid() {
     validator.visit(ExpressionUtils.path(Object.class, "path"), known);
   }
 
   @Test
-  public void visitSubQueryExpressionOfQVoid() {
+  void visitSubQueryExpressionOfQVoid() {
     validator.visit(new SubQueryExpressionImpl(Object.class, new DefaultQueryMetadata()), known);
   }
 
   @Test
-  public void visitTemplateExpressionOfQVoid() {
+  void visitTemplateExpressionOfQVoid() {
     validator.visit(Expressions.template(Object.class, "XXX"), known);
   }
 }
