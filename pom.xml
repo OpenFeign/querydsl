@@ -879,6 +879,14 @@
                   <packages>com.querydsl.lucene5*</packages>
                 </group>
                 <group>
+                  <title>Lucene 9</title>
+                  <packages>com.querydsl.lucene9*</packages>
+                </group>
+                <group>
+                  <title>Lucene 10</title>
+                  <packages>com.querydsl.lucene10*</packages>
+                </group>
+                <group>
                   <title>Hibernate Search</title>
                   <packages>com.querydsl.hibernate.search*</packages>
                 </group>
