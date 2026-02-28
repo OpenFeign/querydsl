@@ -8,6 +8,7 @@ Instead of writing queries as inline strings or externalizing them into XML file
 
 [![Querydsl](https://circleci.com/gh/OpenFeign/querydsl.svg?style=shield)](https://app.circleci.com/pipelines/github/OpenFeign/querydsl?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.openfeign.querydsl/querydsl-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.openfeign.querydsl/querydsl-core/)
+[![libs.tech recommends](https://libs.tech/project/711629509/badge.svg)](https://libs.tech/project/711629509/querydsl)
 
 ## Why forking?
 
