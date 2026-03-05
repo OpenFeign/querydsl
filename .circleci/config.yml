@@ -408,6 +408,7 @@ jobs:
       - configure-gpg
       - run:
           name: 'Deploy Core Modules Sonatype'
+          no_output_timeout: 4h
           command: |
             ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease
 
@@ -423,6 +424,7 @@ jobs:
       - configure-gpg
       - run:
           name: 'Deploy Core Modules Sonatype'
+          no_output_timeout: 4h
           command: |
             ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease,staging
 
