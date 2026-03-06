@@ -36,6 +36,10 @@
     <!-- Languages -->
     <module>querydsl-scala</module>
     <module>querydsl-kotlin</module>
+
+    <!-- Lucene -->
+    <module>querydsl-lucene9</module>
+    <module>querydsl-lucene10</module>
   </modules>
 
   <dependencyManagement>

@@ -158,9 +158,9 @@ The following modules have been removed from this fork:
 | Module | Reason | Alternative |
 |:-------|:-------|:------------|
 | `querydsl-jdo` | JDO usage has declined significantly | Use JPA instead |
-| `querydsl-lucene3` | Lucene 3 is EOL | Use Lucene/Elasticsearch client directly |
-| `querydsl-lucene4` | Lucene 4 is EOL | Use Lucene/Elasticsearch client directly |
-| `querydsl-lucene5` | Lucene integration is rarely used | Use Lucene/Elasticsearch client directly |
+| `querydsl-lucene3` | Lucene 3 is EOL | Use `querydsl-lucene9` or `querydsl-lucene10` |
+| `querydsl-lucene4` | Lucene 4 is EOL | Use `querydsl-lucene9` or `querydsl-lucene10` |
+| `querydsl-lucene5` | Lucene 5 is EOL | Use `querydsl-lucene9` or `querydsl-lucene10` |
 | `querydsl-hibernate-search` | Hibernate Search has its own query DSL | Use Hibernate Search API directly |
 
 If you depend on any of these modules, you have two options:
@@ -174,6 +174,8 @@ If you depend on any of these modules, you have two options:
 | Module | Description |
 |:-------|:------------|
 | [`querydsl-r2dbc`]({{ site.baseurl }}/tutorials/r2dbc) | Reactive, non-blocking database access via R2DBC and Project Reactor |
+| [`querydsl-lucene9`]({{ site.baseurl }}/tutorials/lucene) | Lucene 9 integration (Java 17+), replacing the old lucene3/4/5 modules |
+| [`querydsl-lucene10`]({{ site.baseurl }}/tutorials/lucene) | Lucene 10 integration (Java 21+) |
 | [`querydsl-kotlin`]({{ site.baseurl }}/tutorials/kotlin) | Kotlin extension functions — use `+`, `-`, `*`, `/`, `%` operators on expressions |
 
 ## Step-by-Step Migration
