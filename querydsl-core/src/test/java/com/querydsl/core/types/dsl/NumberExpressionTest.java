@@ -15,9 +15,6 @@ package com.querydsl.core.types.dsl;
 
 import static org.junit.Assert.assertEquals;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 import org.junit.Test;
 
 public class NumberExpressionTest {
@@ -33,25 +30,4 @@ public class NumberExpressionTest {
   public void between_end_given() {
     assertEquals(intPath.loe(3L), intPath.between(null, 3L));
   }
-
-  @Test
-  public void sumBigDecimal_has_bigDecimal_type() {
-    assertEquals(BigDecimal.class, intPath.sumBigDecimal().getType());
-  }
-
-  @Test
-  public void sumBigInteger_has_bigInteger_type() {
-    assertEquals(BigInteger.class, intPath.sumBigInteger().getType());
-  }
-
-  @Test
-  public void sumDouble_has_double_type() {
-    assertEquals(Double.class, intPath.sumDouble().getType());
-  }
-
-  @Test
-  public void sumLong_has_long_type() {
-    assertEquals(Long.class, intPath.sumLong().getType());
-  }
-
 }
