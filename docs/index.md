@@ -39,6 +39,7 @@ fluent API.
 | [SQL (JDBC)]({{ site.baseurl }}/tutorials/sql) | `{{ site.group_id }}:querydsl-sql` |
 | [R2DBC (Reactive SQL)]({{ site.baseurl }}/tutorials/r2dbc) | `{{ site.group_id }}:querydsl-r2dbc` |
 | [MongoDB]({{ site.baseurl }}/tutorials/mongodb) | `{{ site.group_id }}:querydsl-mongodb` |
+| [Lucene]({{ site.baseurl }}/tutorials/lucene) | `{{ site.group_id }}:querydsl-lucene9` / `querydsl-lucene10` |
 | [Collections]({{ site.baseurl }}/tutorials/collections) | `{{ site.group_id }}:querydsl-collections` |
 | [Spatial]({{ site.baseurl }}/tutorials/spatial) | `{{ site.group_id }}:querydsl-sql-spatial` |
 | [Kotlin Extensions]({{ site.baseurl }}/tutorials/kotlin) | `{{ site.group_id }}:querydsl-kotlin` |

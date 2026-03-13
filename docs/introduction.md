@@ -19,7 +19,7 @@ construction faster and safer.
 
 HQL for Hibernate was the first target language for Querydsl. Today the
 framework supports **JPA**, **SQL (JDBC)**, **R2DBC**, **MongoDB**,
-**Collections**, **Spatial**, **Kotlin**, and **Scala** as backends.
+**Lucene**, **Collections**, **Spatial**, **Kotlin**, and **Scala** as backends.
 
 If you are new to database access in Java,
 [this guide](https://www.marcobehler.com/guides/a-guide-to-accessing-databases-in-java)
