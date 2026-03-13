@@ -764,8 +764,9 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
    *
    * @return sum(this)
    */
+  @SuppressWarnings("unchecked")
   public NumberExpression<T> sum() {
-    return sum(getType());
+    return sum((Class<T>) getType());
   }
 
   /** {@link Float} {@link Double} are mapped to sumDouble. */
