@@ -16,6 +16,8 @@ package com.querydsl.core.types.dsl;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.Ops.MathOps;
 import com.querydsl.core.util.MathUtils;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
@@ -747,6 +749,14 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
     return Expressions.numberOperation(getType(), Ops.SUB, mixin, ConstantImpl.create(right));
   }
 
+  @SuppressWarnings("unchecked")
+  private <P extends Number & Comparable<?>> NumberExpression<P> sum(Class<P> clazz) {
+    if (sum == null) {
+      sum = (NumberExpression<T>) Expressions.numberOperation(clazz, Ops.AggOps.SUM_AGG, mixin);
+    }
+    return (NumberExpression<P>) sum;
+  }
+
   /**
    * Create a {@code sum(this)} expression
    *
@@ -754,11 +764,29 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
    *
    * @return sum(this)
    */
+  @SuppressWarnings("unchecked")
   public NumberExpression<T> sum() {
-    if (sum == null) {
-      sum = Expressions.numberOperation(getType(), Ops.AggOps.SUM_AGG, mixin);
-    }
-    return sum;
+    return sum((Class<T>) getType());
+  }
+
+  /** {@link Float} {@link Double} are mapped to sumDouble. */
+  public NumberExpression<Double> sumDouble() {
+    return sum(Double.class);
+  }
+
+  /** {@link Byte} {@link Short} {@link Integer} {@link Long} are mapped to sumLong. */
+  public NumberExpression<Long> sumLong() {
+    return sum(Long.class);
+  }
+
+  /** {@link java.math.BigDecimal} are mapped to sumBigDecimal. */
+  public NumberExpression<BigDecimal> sumBigDecimal() {
+    return sum(BigDecimal.class);
+  }
+
+  /** {@link java.math.BigInteger} are mapped to sumBigInteger. */
+  public NumberExpression<BigInteger> sumBigInteger() {
+    return sum(BigInteger.class);
   }
 
   @Override
