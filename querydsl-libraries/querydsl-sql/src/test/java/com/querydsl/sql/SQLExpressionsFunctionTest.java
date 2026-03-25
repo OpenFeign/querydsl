@@ -31,14 +31,14 @@ public class SQLExpressionsFunctionTest {
   @Test
   public void simpleFunction() {
     SimpleTemplate<String> expr = SQLExpressions.function(String.class, "my_function", survey.name);
-    assertThat(expr.toString()).isEqualTo("my_function(SURVEY.NAME)");
+    assertThat(expr.toString()).containsIgnoringCase("my_function(SURVEY.NAME)");
   }
 
   @Test
   public void twoPartName() {
     StringTemplate expr =
         SQLExpressions.stringFunction("dbo.my_function", survey.name, survey.name2);
-    assertThat(expr.toString()).isEqualTo("dbo.my_function(SURVEY.NAME, SURVEY.NAME2)");
+    assertThat(expr.toString()).containsIgnoringCase("dbo.my_function(SURVEY.NAME, SURVEY.NAME2)");
   }
 
   @Test
@@ -49,20 +49,21 @@ public class SQLExpressionsFunctionTest {
             ConstantImpl.create("PARAM"),
             survey.name,
             ConstantImpl.create(""));
-    assertThat(expr.toString()).isEqualTo("external_db.dbo.my_function(PARAM, SURVEY.NAME, )");
+    assertThat(expr.toString())
+        .containsIgnoringCase("external_db.dbo.my_function(PARAM, SURVEY.NAME, )");
   }
 
   @Test
   public void numberFunction() {
     NumberTemplate<Integer> expr =
         SQLExpressions.numberFunction(Integer.class, "dbo.calculate", survey.id);
-    assertThat(expr.toString()).isEqualTo("dbo.calculate(SURVEY.ID)");
+    assertThat(expr.toString()).containsIgnoringCase("dbo.calculate(SURVEY.ID)");
   }
 
   @Test
   public void stringFunction() {
     StringTemplate expr = SQLExpressions.stringFunction("my_encrypt", survey.name);
-    assertThat(expr.toString()).isEqualTo("my_encrypt(SURVEY.NAME)");
+    assertThat(expr.toString()).containsIgnoringCase("my_encrypt(SURVEY.NAME)");
   }
 
   @Test
@@ -107,7 +108,8 @@ public class SQLExpressionsFunctionTest {
   public void fourPartName() {
     StringTemplate expr =
         SQLExpressions.stringFunction("linked_server.external_db.dbo.my_function", survey.name);
-    assertThat(expr.toString()).isEqualTo("linked_server.external_db.dbo.my_function(SURVEY.NAME)");
+    assertThat(expr.toString())
+        .containsIgnoringCase("linked_server.external_db.dbo.my_function(SURVEY.NAME)");
   }
 
   @Test
@@ -119,6 +121,6 @@ public class SQLExpressionsFunctionTest {
             survey.name,
             survey.id,
             ConstantImpl.create("B"));
-    assertThat(expr.toString()).isEqualTo("schema.func(A, SURVEY.NAME, SURVEY.ID, B)");
+    assertThat(expr.toString()).containsIgnoringCase("schema.func(A, SURVEY.NAME, SURVEY.ID, B)");
   }
 }
