@@ -103,7 +103,7 @@ public class SQLExpressionsFunctionTest {
   @Test
   public void functionInInsertValues() {
     SQLInsertClause insert =
-        new SQLInsertClause(null, new Configuration(SQLServerTemplates.DEFAULT), survey);
+        new SQLInsertClause((java.sql.Connection) null, new Configuration(SQLServerTemplates.DEFAULT), survey);
     insert.set(survey.name, SQLExpressions.stringFunction("dbo.encrypt", Expressions.constant("value")));
 
     assertThat(insert.toString())
