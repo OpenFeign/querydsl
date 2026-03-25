@@ -21,7 +21,6 @@ import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.core.types.dsl.SimpleTemplate;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.sql.dml.SQLInsertClause;
-import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
 import org.junit.Test;
 
@@ -29,12 +28,9 @@ public class SQLExpressionsFunctionTest {
 
   private static final QSurvey survey = QSurvey.survey;
 
-  private static final QEmployee employee = QEmployee.employee;
-
   @Test
   public void simpleFunction() {
-    SimpleTemplate<String> expr =
-        SQLExpressions.function(String.class, "my_function", survey.name);
+    SimpleTemplate<String> expr = SQLExpressions.function(String.class, "my_function", survey.name);
     assertThat(expr.toString()).isEqualTo("my_function(SURVEY.NAME)");
   }
 
@@ -53,8 +49,7 @@ public class SQLExpressionsFunctionTest {
             ConstantImpl.create("PARAM"),
             survey.name,
             ConstantImpl.create(""));
-    assertThat(expr.toString())
-        .isEqualTo("external_db.dbo.my_function(PARAM, SURVEY.NAME, )");
+    assertThat(expr.toString()).isEqualTo("external_db.dbo.my_function(PARAM, SURVEY.NAME, )");
   }
 
   @Test
@@ -73,14 +68,13 @@ public class SQLExpressionsFunctionTest {
   @Test
   public void functionInSelect() {
     SQLQuery<?> query = new SQLQuery<Void>(SQLServerTemplates.DEFAULT);
-    query
-        .select(SQLExpressions.stringFunction("dbo.my_function", survey.name))
-        .from(survey);
+    query.select(SQLExpressions.stringFunction("dbo.my_function", survey.name)).from(survey);
     assertThat(query.toString())
         .isEqualTo(
             """
             select dbo.my_function(SURVEY.NAME)
-            from SURVEY SURVEY""");
+            from SURVEY SURVEY\
+            """);
   }
 
   @Test
@@ -89,34 +83,31 @@ public class SQLExpressionsFunctionTest {
     query
         .select(survey.name)
         .from(survey)
-        .where(
-            SQLExpressions.stringFunction("dbo.decrypt", survey.name)
-                .eq("expected"));
+        .where(SQLExpressions.stringFunction("dbo.decrypt", survey.name).eq("expected"));
     assertThat(query.toString())
         .isEqualTo(
             """
             select SURVEY.NAME
             from SURVEY SURVEY
-            where dbo.decrypt(SURVEY.NAME) = ?""");
+            where dbo.decrypt(SURVEY.NAME) = ?\
+            """);
   }
 
   @Test
   public void functionInInsertValues() {
-    SQLInsertClause insert =
-        new SQLInsertClause((java.sql.Connection) null, new Configuration(SQLServerTemplates.DEFAULT), survey);
-    insert.set(survey.name, SQLExpressions.stringFunction("dbo.encrypt", Expressions.constant("value")));
+    var config = new Configuration(SQLServerTemplates.DEFAULT);
+    SQLInsertClause insert = new SQLInsertClause((java.sql.Connection) null, config, survey);
+    insert.set(
+        survey.name, SQLExpressions.stringFunction("dbo.encrypt", Expressions.constant("value")));
 
-    assertThat(insert.toString())
-        .contains("dbo.encrypt(?)");
+    assertThat(insert.toString()).contains("dbo.encrypt(?)");
   }
 
   @Test
   public void fourPartName() {
     StringTemplate expr =
-        SQLExpressions.stringFunction(
-            "linked_server.external_db.dbo.my_function", survey.name);
-    assertThat(expr.toString())
-        .isEqualTo("linked_server.external_db.dbo.my_function(SURVEY.NAME)");
+        SQLExpressions.stringFunction("linked_server.external_db.dbo.my_function", survey.name);
+    assertThat(expr.toString()).isEqualTo("linked_server.external_db.dbo.my_function(SURVEY.NAME)");
   }
 
   @Test
@@ -128,7 +119,6 @@ public class SQLExpressionsFunctionTest {
             survey.name,
             survey.id,
             ConstantImpl.create("B"));
-    assertThat(expr.toString())
-        .isEqualTo("schema.func(A, SURVEY.NAME, SURVEY.ID, B)");
+    assertThat(expr.toString()).isEqualTo("schema.func(A, SURVEY.NAME, SURVEY.ID, B)");
   }
 }
