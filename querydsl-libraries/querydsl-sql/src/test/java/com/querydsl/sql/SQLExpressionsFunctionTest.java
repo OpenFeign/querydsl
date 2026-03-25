@@ -20,6 +20,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.core.types.dsl.SimpleTemplate;
 import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
 import org.junit.Test;
