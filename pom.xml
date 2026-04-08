@@ -586,7 +586,7 @@
       <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
-        <version>0.230.2</version>
+        <version>0.240.1</version>
         <inherited>false</inherited>
         <configuration>
           <boms>
