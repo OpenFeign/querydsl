@@ -14,6 +14,7 @@
 package com.querydsl.jpa.hibernate;
 
 import org.hibernate.Session;
+import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
@@ -38,5 +39,10 @@ public class DefaultSessionHolder implements SessionHolder {
   @Override
   public NativeQuery<?> createSQLQuery(String queryString) {
     return session.createNativeQuery(queryString);
+  }
+
+  @Override
+  public <T> T doReturningWork(ReturningWork<T> work) {
+    return session.doReturningWork(work);
   }
 }
