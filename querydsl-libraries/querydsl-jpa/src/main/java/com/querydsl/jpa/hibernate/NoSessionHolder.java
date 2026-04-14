@@ -13,6 +13,7 @@
  */
 package com.querydsl.jpa.hibernate;
 
+import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
@@ -34,6 +35,11 @@ public final class NoSessionHolder implements SessionHolder {
 
   @Override
   public NativeQuery<?> createSQLQuery(String queryString) {
+    throw new UnsupportedOperationException("No session in detached Query available");
+  }
+
+  @Override
+  public <T> T doReturningWork(ReturningWork<T> work) {
     throw new UnsupportedOperationException("No session in detached Query available");
   }
 }
