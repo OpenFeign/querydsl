@@ -29,6 +29,20 @@ import java.util.Map;
  */
 public final class JPAUtil {
 
+  private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER =
+      Map.of(
+          int.class, Integer.class,
+          long.class, Long.class,
+          double.class, Double.class,
+          float.class, Float.class,
+          short.class, Short.class,
+          byte.class, Byte.class);
+
+  @SuppressWarnings("unchecked")
+  private static <T extends Number> Class<T> primitiveToWrapper(Class<?> type) {
+    return (Class<T>) PRIMITIVE_TO_WRAPPER.getOrDefault(type, type);
+  }
+
   private JPAUtil() {}
 
   public static void setConstants(
@@ -50,8 +64,9 @@ public final class JPAUtil {
         Parameter parameter = query.getParameter(i + 1);
         var parameterType = parameter != null ? parameter.getParameterType() : null;
         if (parameterType != null && !parameterType.isInstance(val)) {
-          if (val instanceof Number number && Number.class.isAssignableFrom(parameterType)) {
-            val = MathUtils.cast(number, parameterType);
+          var targetType = primitiveToWrapper(parameterType);
+          if (val instanceof Number number && Number.class.isAssignableFrom(targetType)) {
+            val = MathUtils.cast(number, targetType);
           }
         }
       }

@@ -427,10 +427,10 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
         && modifiers.isRestricting()
         && templates.isSubQueryModifiersSupported()) {
       if (modifiers.getLimit() != null) {
-        append(LIMIT).handle(modifiers.getLimit());
+        append(LIMIT).handle(modifiers.getLimitAsInteger());
       }
       if (modifiers.getOffset() != null) {
-        append(OFFSET).handle(modifiers.getOffset());
+        append(OFFSET).handle(modifiers.getOffsetAsInteger());
       }
     }
 
