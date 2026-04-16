@@ -20,14 +20,20 @@ import com.querydsl.core.types.Operator;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.Template;
+import com.querydsl.core.types.TemplateFactory;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateExpression;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.SimpleTemplate;
 import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.core.types.dsl.Wildcard;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -276,6 +282,92 @@ public final class SQLExpressions {
   public static <T> RelationalFunctionCall<T> relationalFunctionCall(
       Class<? extends T> type, String function, Object... args) {
     return new RelationalFunctionCall<>(type, function, args);
+  }
+
+  /**
+   * Create a function call template string for the given function name and argument count.
+   *
+   * <p>The function name is inserted as-is, which allows fully qualified names such as {@code
+   * schema.function}, {@code database.schema.function}, or {@code
+   * linked_server.database.schema.function}.
+   *
+   * @param function function name (may contain dots for qualified names)
+   * @param argCount number of arguments
+   * @return template for the function call
+   */
+  private static Template createFunctionCallTemplate(String function, int argCount) {
+    var builder = new StringBuilder();
+    builder.append(function);
+    builder.append("(");
+    for (var i = 0; i < argCount; i++) {
+      if (i > 0) {
+        builder.append(", ");
+      }
+      builder.append("{").append(i).append("}");
+    }
+    builder.append(")");
+    return TemplateFactory.DEFAULT.create(builder.toString());
+  }
+
+  /**
+   * Create a scalar function call expression.
+   *
+   * <p>Unlike {@link #relationalFunctionCall(Class, String, Object...)}, this method creates a
+   * scalar expression suitable for use in SELECT, WHERE, INSERT VALUES, and other non-FROM
+   * contexts.
+   *
+   * <p>Supports fully qualified function names including cross-database calls:
+   *
+   * <ul>
+   *   <li>{@code function("my_function", arg)} &rarr; {@code my_function(?)}
+   *   <li>{@code function("dbo.my_function", arg1, arg2)} &rarr; {@code dbo.my_function(?, ?)}
+   *   <li>{@code function("other_db.dbo.my_function", arg)} &rarr; {@code
+   *       other_db.dbo.my_function(?)}
+   * </ul>
+   *
+   * @param <T> return type
+   * @param type return type class
+   * @param function function name (may contain dots for schema-qualified names)
+   * @param args function arguments
+   * @return scalar function call expression
+   */
+  public static <T> SimpleTemplate<T> function(
+      Class<? extends T> type, String function, Object... args) {
+    return Expressions.template(
+        type, createFunctionCallTemplate(function, args.length), Arrays.asList(args));
+  }
+
+  /**
+   * Create a scalar function call expression that returns a String.
+   *
+   * <p>Supports fully qualified function names including cross-database calls.
+   *
+   * @param function function name (may contain dots for schema-qualified names)
+   * @param args function arguments
+   * @return string function call expression
+   * @see #function(Class, String, Object...)
+   */
+  public static StringTemplate stringFunction(String function, Object... args) {
+    return Expressions.stringTemplate(
+        createFunctionCallTemplate(function, args.length), Arrays.asList(args));
+  }
+
+  /**
+   * Create a scalar function call expression that returns a Number.
+   *
+   * <p>Supports fully qualified function names including cross-database calls.
+   *
+   * @param <T> number type
+   * @param type return type class
+   * @param function function name (may contain dots for schema-qualified names)
+   * @param args function arguments
+   * @return number function call expression
+   * @see #function(Class, String, Object...)
+   */
+  public static <T extends Number & Comparable<?>> NumberTemplate<T> numberFunction(
+      Class<? extends T> type, String function, Object... args) {
+    return Expressions.numberTemplate(
+        type, createFunctionCallTemplate(function, args.length), Arrays.asList(args));
   }
 
   /**
