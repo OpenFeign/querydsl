@@ -14,6 +14,7 @@
 package com.querydsl.jpa.impl;
 
 import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryException;
 import com.querydsl.core.dml.InsertClause;
 import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.types.EntityPath;
@@ -24,6 +25,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAQueryMixin;
 import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
+import com.querydsl.jpa.JpaInsertNativeHelper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import java.util.ArrayList;
@@ -82,6 +84,72 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     }
     JPAUtil.setConstants(query, serializer.getConstants(), queryMixin.getMetadata().getParams());
     return query.executeUpdate();
+  }
+
+  /**
+   * Execute the clause and return the generated key with the type of the given path. If no rows
+   * were created, null is returned, otherwise the key of the first row is returned.
+   *
+   * <p>This method bypasses JPQL and executes a native SQL INSERT via JDBC to retrieve the
+   * generated key. It requires that the JPA provider supports {@code
+   * EntityManager.unwrap(Connection.class)}.
+   *
+   * <p>Note: {@code INSERT ... SELECT} subqueries are not supported by this method.
+   *
+   * @param <T> key type
+   * @param path path for key (used to determine return type)
+   * @return generated key, or null if no rows were created
+   * @throws QueryException if a database error occurs or the operation is not supported
+   */
+  @SuppressWarnings("unchecked")
+  @Nullable
+  public <T> T executeWithKey(Path<T> path) {
+    return executeWithKey((Class<T>) path.getType());
+  }
+
+  /**
+   * Execute the clause and return the generated key cast to the given type. If no rows were
+   * created, null is returned, otherwise the key of the first row is returned.
+   *
+   * @param <T> key type
+   * @param type class of the key type
+   * @return generated key, or null if no rows were created
+   * @throws QueryException if a database error occurs or the operation is not supported
+   */
+  @Nullable
+  public <T> T executeWithKey(Class<T> type) {
+    if (subQuery != null) {
+      throw new UnsupportedOperationException(
+          "executeWithKey is not supported for INSERT ... SELECT subqueries");
+    }
+
+    var effectiveColumns = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
+    if (effectiveColumns.isEmpty()) {
+      throw new IllegalStateException("No columns specified for insert");
+    }
+
+    var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
+
+    // Serialize to collect constant values
+    var serializer = new JPQLSerializer(templates, entityManager);
+    serializer.serializeForInsert(
+        queryMixin.getMetadata(), effectiveColumns, values, subQuery, inserts);
+
+    var params =
+        JpaInsertNativeHelper.resolveConstants(
+            serializer.getConstants(), queryMixin.getMetadata().getParams());
+
+    var sql = JpaInsertNativeHelper.buildNativeInsertSQL(entityClass, effectiveColumns);
+
+    try {
+      return entityManager
+          .unwrap(org.hibernate.Session.class)
+          .doReturningWork(
+              connection ->
+                  JpaInsertNativeHelper.executeAndReturnKey(connection, sql, params, type));
+    } catch (Exception e) {
+      throw new QueryException("Failed to execute insert with generated key", e);
+    }
   }
 
   public JPAInsertClause setLockMode(LockModeType lockMode) {

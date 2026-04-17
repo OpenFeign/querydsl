@@ -13,6 +13,7 @@
  */
 package com.querydsl.jpa.hibernate;
 
+import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
@@ -38,4 +39,13 @@ public interface SessionHolder {
    * @return query
    */
   NativeQuery<?> createSQLQuery(String queryString);
+
+  /**
+   * Execute a {@link ReturningWork} within the session's transaction context.
+   *
+   * @param <T> the return type
+   * @param work the work to execute with a JDBC Connection
+   * @return the result of the work
+   */
+  <T> T doReturningWork(ReturningWork<T> work);
 }
