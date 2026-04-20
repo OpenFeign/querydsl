@@ -97,7 +97,7 @@
     <ecj.version>3.45.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
     <springboot.version>4.0.5</springboot.version>
-    <spring.version>7.0.6</spring.version>
+    <spring.version>7.0.7</spring.version>
 
     <!-- SQL deps -->
     <db2.version>12.1.4.0</db2.version>
@@ -124,8 +124,8 @@
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 
     <assertj.version>3.27.7</assertj.version>
-    <mvn.version>3.9.14</mvn.version>
-    <guava.version>33.5.0-jre</guava.version>
+    <mvn.version>3.9.15</mvn.version>
+    <guava.version>33.6.0-jre</guava.version>
     <codegen.version>0.6.8</codegen.version>
     <byte-buddy.version>1.18.8</byte-buddy.version>
     <slf4j.version>2.0.17</slf4j.version>
@@ -205,7 +205,7 @@
       <dependency>
         <groupId>org.javassist</groupId>
         <artifactId>javassist</artifactId>
-        <version>3.30.2-GA</version>
+        <version>3.31.0-GA</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -275,7 +275,7 @@
       <dependency>
         <groupId>io.projectreactor</groupId>
         <artifactId>reactor-bom</artifactId>
-        <version>2025.0.4</version>
+        <version>2025.0.5</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -447,7 +447,7 @@
       <plugin>
         <groupId>com.github.siom79.japicmp</groupId>
         <artifactId>japicmp-maven-plugin</artifactId>
-        <version>0.25.5</version>
+        <version>0.25.6</version>
         <configuration>
           <parameter>
             <excludes>
@@ -586,7 +586,7 @@
       <plugin>
         <groupId>io.sundr</groupId>
         <artifactId>sundr-maven-plugin</artifactId>
-        <version>0.240.1</version>
+        <version>0.300.0</version>
         <inherited>false</inherited>
         <configuration>
           <boms>
