@@ -158,6 +158,40 @@ public class SerializationTest {
   }
 
   @Test
+  public void scalarFunctionCall() {
+    var expr =
+        SQLExpressions.select(
+                SQLExpressions.stringFunction("external_db.dbo.my_function", survey.name))
+            .from(survey);
+
+    var serializer = new SQLSerializer(new Configuration(new SQLServerTemplates()));
+    serializer.serialize(expr.getMetadata(), false);
+    assertThat(serializer.toString())
+        .isEqualTo(
+            """
+            select external_db.dbo.my_function(SURVEY.NAME)
+            from SURVEY SURVEY\
+            """);
+  }
+
+  @Test
+  public void scalarFunctionCallInWhere() {
+    var query = new SQLQuery<Void>(new Configuration(new SQLServerTemplates()));
+    query
+        .select(survey.name)
+        .from(survey)
+        .where(SQLExpressions.stringFunction("dbo.decrypt", survey.name).eq("test"));
+
+    assertThat(query.toString())
+        .isEqualTo(
+            """
+            select SURVEY.NAME
+            from SURVEY SURVEY
+            where dbo.decrypt(SURVEY.NAME) = ?\
+            """);
+  }
+
+  @Test
   public void functionCall3() {
     RelationalFunctionCall<String> func =
         SQLExpressions.relationalFunctionCall(String.class, "TableValuedFunction", "parameter");

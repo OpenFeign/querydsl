@@ -108,8 +108,6 @@ public final class HibernateUtil {
       query.setParameterList(key, collection);
     } else if (val instanceof Object[] objects && !BUILT_IN.contains(val.getClass())) {
       query.setParameterList(key, objects);
-    } else if (val instanceof Number && TYPES.containsKey(val.getClass())) {
-      query.setParameter(key, val, getType(val.getClass()));
     } else {
       query.setParameter(key, val);
     }

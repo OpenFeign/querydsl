@@ -395,7 +395,7 @@ public class JPQLSerializerTest {
 
     assertThat(serializer.toString()).isEqualTo("(select cat.id\nfrom Cat cat\nlimit ?1)");
     assertThat(serializer.getConstants()).hasSize(1);
-    assertThat(serializer.getConstants().getFirst()).isEqualTo(5L);
+    assertThat(serializer.getConstants().getFirst()).isEqualTo(5);
   }
 
   @Test
@@ -418,7 +418,7 @@ public class JPQLSerializerTest {
 
     assertThat(serializer.toString()).isEqualTo("(select cat.id\nfrom Cat cat\noffset ?1)");
     assertThat(serializer.getConstants()).hasSize(1);
-    assertThat(serializer.getConstants().getFirst()).isEqualTo(10L);
+    assertThat(serializer.getConstants().getFirst()).isEqualTo(10);
   }
 
   @Test
@@ -442,8 +442,8 @@ public class JPQLSerializerTest {
     assertThat(serializer.toString())
         .isEqualTo("(select cat.id\nfrom Cat cat\nlimit ?1\noffset ?2)");
     assertThat(serializer.getConstants()).hasSize(2);
-    assertThat(serializer.getConstants().get(0)).isEqualTo(5L);
-    assertThat(serializer.getConstants().get(1)).isEqualTo(10L);
+    assertThat(serializer.getConstants().get(0)).isEqualTo(5);
+    assertThat(serializer.getConstants().get(1)).isEqualTo(10);
   }
 
   @Test
@@ -469,8 +469,8 @@ public class JPQLSerializerTest {
         limit ?1)
         limit ?2)""");
     assertThat(serializer.getConstants()).hasSize(2);
-    assertThat(serializer.getConstants().get(0)).isEqualTo(3L);
-    assertThat(serializer.getConstants().get(1)).isEqualTo(5L);
+    assertThat(serializer.getConstants().get(0)).isEqualTo(3);
+    assertThat(serializer.getConstants().get(1)).isEqualTo(5);
   }
 
   @Test
@@ -537,8 +537,8 @@ public class JPQLSerializerTest {
         limit ?1
         offset ?2)""");
     assertThat(hqlSerializer.getConstants()).hasSize(2);
-    assertThat(hqlSerializer.getConstants().get(0)).isEqualTo(5L);
-    assertThat(hqlSerializer.getConstants().get(1)).isEqualTo(10L);
+    assertThat(hqlSerializer.getConstants().get(0)).isEqualTo(5);
+    assertThat(hqlSerializer.getConstants().get(1)).isEqualTo(10);
   }
 
   @Test
@@ -601,7 +601,7 @@ public class JPQLSerializerTest {
         offset ?2)
         from Cat cat""");
     assertThat(hqlSerializer.getConstants()).hasSize(2);
-    assertThat(hqlSerializer.getConstants().get(0)).isEqualTo(1L);
-    assertThat(hqlSerializer.getConstants().get(1)).isEqualTo(2L);
+    assertThat(hqlSerializer.getConstants().get(0)).isEqualTo(1);
+    assertThat(hqlSerializer.getConstants().get(1)).isEqualTo(2);
   }
 }
