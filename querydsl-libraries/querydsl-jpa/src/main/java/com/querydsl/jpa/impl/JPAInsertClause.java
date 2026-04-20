@@ -26,6 +26,7 @@ import com.querydsl.jpa.JPAQueryMixin;
 import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.JpaInsertNativeHelper;
+import com.querydsl.sql.SQLTemplates;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import java.util.ArrayList;
@@ -139,7 +140,9 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
         JpaInsertNativeHelper.resolveConstants(
             serializer.getConstants(), queryMixin.getMetadata().getParams());
 
-    var sql = JpaInsertNativeHelper.buildNativeInsertSQL(entityClass, effectiveColumns);
+    var sql =
+        JpaInsertNativeHelper.buildNativeInsertSQL(
+            SQLTemplates.DEFAULT, entityClass, effectiveColumns);
 
     try {
       return entityManager

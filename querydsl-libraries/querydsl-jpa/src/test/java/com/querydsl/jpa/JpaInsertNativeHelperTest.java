@@ -21,6 +21,7 @@ import com.querydsl.jpa.domain.Numeric;
 import com.querydsl.jpa.domain.QAuthor;
 import com.querydsl.jpa.domain.QGeneratedKeyEntity;
 import com.querydsl.jpa.domain.QNumeric;
+import com.querydsl.sql.SQLTemplates;
 import java.util.List;
 import org.junit.Test;
 
@@ -64,16 +65,33 @@ public class JpaInsertNativeHelperTest {
   public void buildNativeInsertSQL() {
     var entity = QGeneratedKeyEntity.generatedKeyEntity;
     var sql =
-        JpaInsertNativeHelper.buildNativeInsertSQL(GeneratedKeyEntity.class, List.of(entity.name));
+        JpaInsertNativeHelper.buildNativeInsertSQL(
+            SQLTemplates.DEFAULT, GeneratedKeyEntity.class, List.of(entity.name));
 
+    // SQLTemplates.DEFAULT uses double quotes only when required (reserved words or special chars)
     assertThat(sql).isEqualTo("INSERT INTO generated_key_entity (name_) VALUES (?)");
   }
 
   @Test
   public void buildNativeInsertSQL_multiple_columns() {
     var numeric = QNumeric.numeric;
-    var sql = JpaInsertNativeHelper.buildNativeInsertSQL(Numeric.class, List.of(numeric.value));
+    var sql =
+        JpaInsertNativeHelper.buildNativeInsertSQL(
+            SQLTemplates.DEFAULT, Numeric.class, List.of(numeric.value));
 
     assertThat(sql).isEqualTo("INSERT INTO numeric_ (value_) VALUES (?)");
+  }
+
+  @Test
+  public void buildNativeInsertSQL_quotes_reserved_words() {
+    // Custom SQLTemplates with useQuotes=true always quotes identifiers
+    var alwaysQuote = new SQLTemplates("\"", '\\', true) {};
+
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    var sql =
+        JpaInsertNativeHelper.buildNativeInsertSQL(
+            alwaysQuote, GeneratedKeyEntity.class, List.of(entity.name));
+
+    assertThat(sql).isEqualTo("INSERT INTO \"generated_key_entity\" (\"name_\") VALUES (?)");
   }
 }
