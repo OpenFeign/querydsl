@@ -17,23 +17,21 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Param;
-import com.querydsl.sql.SQLTemplates;
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Helper for building native SQL INSERT statements from JPA entity metadata. Used by {@link
- * com.querydsl.jpa.impl.JPAInsertClause} and {@link
- * com.querydsl.jpa.hibernate.HibernateInsertClause} to support {@code executeWithKey()}.
+ * Helpers shared by {@link com.querydsl.jpa.impl.JPAInsertClause} and {@link
+ * com.querydsl.jpa.hibernate.HibernateInsertClause} to support {@code executeWithKey()} via native
+ * SQL INSERT.
  *
  * <p>This is an internal API and not intended for direct use by application code.
  */
@@ -42,120 +40,45 @@ public final class JpaInsertNativeHelper {
   private JpaInsertNativeHelper() {}
 
   /**
-   * Resolve the SQL table name for an entity class (unquoted).
-   *
-   * @param entityClass the JPA entity class
-   * @return the raw SQL table name (schema.table if schema is set)
+   * Resolve the effective column paths from either the {@code set()}-style inserts map or the
+   * {@code columns()}-style list. The {@code set()}-style takes precedence when present.
    */
-  public static String resolveTableName(Class<?> entityClass) {
-    if (entityClass.isAnnotationPresent(Table.class)) {
-      var table = entityClass.getAnnotation(Table.class);
-      if (!table.name().isEmpty()) {
-        var sb = new StringBuilder();
-        if (!table.schema().isEmpty()) {
-          sb.append(table.schema()).append('.');
-        }
-        sb.append(table.name());
-        return sb.toString();
+  public static List<Path<?>> effectiveColumns(
+      Map<Path<?>, Expression<?>> inserts, List<Path<?>> columns) {
+    if (!inserts.isEmpty()) {
+      return new ArrayList<>(inserts.keySet());
+    }
+    return new ArrayList<>(columns);
+  }
+
+  /**
+   * Resolve the effective value expressions, in the order matching {@link #effectiveColumns(Map,
+   * List)}. Raw values from the {@code values()}-style call are wrapped as constants; expressions
+   * are passed through unchanged.
+   */
+  public static List<Expression<?>> effectiveValues(
+      Map<Path<?>, Expression<?>> inserts, List<Object> values) {
+    if (!inserts.isEmpty()) {
+      return new ArrayList<>(inserts.values());
+    }
+    var result = new ArrayList<Expression<?>>(values.size());
+    for (Object v : values) {
+      if (v instanceof Expression<?> expression) {
+        result.add(expression);
+      } else {
+        result.add(Expressions.constant(v));
       }
     }
-    return entityClass.getSimpleName();
+    return result;
   }
 
   /**
-   * Resolve the SQL column name for a path (unquoted). Reads {@code @Column} annotation if present,
-   * otherwise falls back to the path metadata name.
+   * Resolve constant values from the serializer, unwrapping {@link Param} expressions against the
+   * provided parameter bindings.
    *
-   * @param path the query path
-   * @return the raw SQL column name
-   */
-  public static String resolveColumnName(Path<?> path) {
-    if (path.getAnnotatedElement() != null
-        && path.getAnnotatedElement().isAnnotationPresent(Column.class)) {
-      var column = path.getAnnotatedElement().getAnnotation(Column.class);
-      if (!column.name().isEmpty()) {
-        return column.name();
-      }
-    }
-    return path.getMetadata().getName();
-  }
-
-  /**
-   * Quote a table name using the given {@link SQLTemplates}. Handles schema-qualified names by
-   * quoting schema and table parts separately.
-   *
-   * @param templates the SQL templates providing dialect-specific quoting rules
-   * @param tableName the raw table name (may be schema-qualified as "schema.table")
-   * @return the properly quoted table name
-   */
-  private static String quoteTableName(SQLTemplates templates, String tableName) {
-    var dotIndex = tableName.indexOf('.');
-    if (dotIndex > 0) {
-      var schema = tableName.substring(0, dotIndex);
-      var table = tableName.substring(dotIndex + 1);
-      return templates.quoteIdentifier(schema) + "." + templates.quoteIdentifier(table, true);
-    }
-    return templates.quoteIdentifier(tableName);
-  }
-
-  /**
-   * Build a native SQL INSERT statement from entity metadata and column paths, with identifiers
-   * properly quoted using the given {@link SQLTemplates}.
-   *
-   * @param templates the SQL templates providing dialect-specific quoting rules
-   * @param entityClass the entity class (for table name resolution)
-   * @param columns the columns to insert
-   * @return the native SQL INSERT string with positional parameters
-   */
-  public static String buildNativeInsertSQL(
-      SQLTemplates templates, Class<?> entityClass, Collection<Path<?>> columns) {
-    var sb = new StringBuilder();
-    sb.append("INSERT INTO ")
-        .append(quoteTableName(templates, resolveTableName(entityClass)))
-        .append(" (");
-
-    var first = true;
-    for (Path<?> col : columns) {
-      if (!first) {
-        sb.append(", ");
-      }
-      sb.append(templates.quoteIdentifier(resolveColumnName(col)));
-      first = false;
-    }
-
-    sb.append(") VALUES (");
-    first = true;
-    for (int i = 0; i < columns.size(); i++) {
-      if (!first) {
-        sb.append(", ");
-      }
-      sb.append('?');
-      first = false;
-    }
-    sb.append(')');
-
-    return sb.toString();
-  }
-
-  /**
-   * Build a native SQL INSERT statement using {@link SQLTemplates#DEFAULT} for identifier quoting.
-   *
-   * @param entityClass the entity class (for table name resolution)
-   * @param columns the columns to insert
-   * @return the native SQL INSERT string with positional parameters
-   * @deprecated prefer {@link #buildNativeInsertSQL(SQLTemplates, Class, Collection)} with explicit
-   *     templates so dialect-specific quoting is applied
-   */
-  @Deprecated
-  public static String buildNativeInsertSQL(Class<?> entityClass, Collection<Path<?>> columns) {
-    return buildNativeInsertSQL(SQLTemplates.DEFAULT, entityClass, columns);
-  }
-
-  /**
-   * Resolve constant values from the serializer, unwrapping {@link Param} expressions.
-   *
-   * @param constants the constants from the serializer
-   * @param params the parameter bindings
+   * @param constants the constants accumulated by the serializer
+   * @param params the parameter bindings collected from {@link
+   *     com.querydsl.core.QueryMetadata#getParams()}
    * @return resolved values ready for JDBC binding
    */
   public static Object[] resolveConstants(
@@ -175,14 +98,14 @@ public final class JpaInsertNativeHelper {
   }
 
   /**
-   * Execute a native SQL INSERT with RETURN_GENERATED_KEYS and return the generated key.
+   * Execute a native SQL INSERT with {@code RETURN_GENERATED_KEYS} and return the generated key.
    *
    * @param <T> the key type
    * @param conn the JDBC connection (not closed by this method)
    * @param sql the native SQL INSERT string
-   * @param params the parameter values to bind
+   * @param params the parameter values to bind, in positional order
    * @param keyType the expected key type
-   * @return the generated key, or null if no rows were inserted
+   * @return the generated key, or {@code null} if no rows were inserted
    * @throws SQLException if a database error occurs
    */
   @Nullable
@@ -201,23 +124,5 @@ public final class JpaInsertNativeHelper {
         return null;
       }
     }
-  }
-
-  /**
-   * Collect effective columns and values from either the set-style inserts map or the
-   * columns/values lists.
-   *
-   * @param inserts the set-style inserts (path to expression mapping)
-   * @param columns the columns list (from columns().values() style)
-   * @param values the values list
-   * @param serializer used to extract constant values from expressions
-   * @return the effective column paths
-   */
-  public static Collection<Path<?>> effectiveColumns(
-      Map<Path<?>, Expression<?>> inserts, List<Path<?>> columns) {
-    if (!inserts.isEmpty()) {
-      return inserts.keySet();
-    }
-    return columns;
   }
 }

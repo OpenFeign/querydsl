@@ -27,6 +27,8 @@ import com.querydsl.jpa.JPAQueryMixin;
 import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.JpaInsertNativeHelper;
+import com.querydsl.jpa.JpaNativeInsertSerializer;
+import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -142,21 +144,17 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
     if (effectiveColumns.isEmpty()) {
       throw new IllegalStateException("No columns specified for insert");
     }
+    var effectiveValues = JpaInsertNativeHelper.effectiveValues(inserts, values);
 
     var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
 
-    // Serialize to collect constant values
-    var serializer = new JPQLSerializer(templates, null);
-    serializer.serializeForInsert(
-        queryMixin.getMetadata(), effectiveColumns, values, subQuery, inserts);
+    var serializer = new JpaNativeInsertSerializer(new Configuration(SQLTemplates.DEFAULT));
+    serializer.serializeInsert(entityClass, effectiveColumns, effectiveValues);
 
+    var sql = serializer.toString();
     var params =
         JpaInsertNativeHelper.resolveConstants(
             serializer.getConstants(), queryMixin.getMetadata().getParams());
-
-    var sql =
-        JpaInsertNativeHelper.buildNativeInsertSQL(
-            SQLTemplates.DEFAULT, entityClass, effectiveColumns);
 
     return session.doReturningWork(
         connection -> {

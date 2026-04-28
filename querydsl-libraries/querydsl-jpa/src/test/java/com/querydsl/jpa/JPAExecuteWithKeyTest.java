@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.domain.QGeneratedKeyEntity;
 import com.querydsl.jpa.impl.JPAInsertClause;
 import jakarta.persistence.EntityManager;
@@ -114,6 +115,48 @@ public class JPAExecuteWithKeyTest {
     assertThat(id1).isNotNull();
     assertThat(id2).isNotNull();
     assertThat(id2).isGreaterThan(id1);
+  }
+
+  @Test
+  public void executeWithKey_with_function_template_applies_function() {
+    // Regression: a function template like dbo.encrypt({0}) used to be silently dropped,
+    // and only the inner constant was bound, leading to plaintext being inserted.
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    Long id =
+        insert(entity)
+            .set(
+                entity.name,
+                Expressions.stringTemplate("upper({0})", Expressions.constant("value")))
+            .executeWithKey(entity.id);
+
+    assertThat(id).isNotNull();
+
+    var stored =
+        (String)
+            entityManager
+                .createNativeQuery("select name_ from generated_key_entity where id = ?1")
+                .setParameter(1, id)
+                .getSingleResult();
+    assertThat(stored).isEqualTo("VALUE");
+  }
+
+  @Test
+  public void executeWithKey_with_zero_arg_function_template() {
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    Long id =
+        insert(entity)
+            .set(entity.name, Expressions.stringTemplate("'fixed_' || current_user"))
+            .executeWithKey(entity.id);
+
+    assertThat(id).isNotNull();
+
+    var stored =
+        (String)
+            entityManager
+                .createNativeQuery("select name_ from generated_key_entity where id = ?1")
+                .setParameter(1, id)
+                .getSingleResult();
+    assertThat(stored).startsWith("fixed_");
   }
 
   @Test

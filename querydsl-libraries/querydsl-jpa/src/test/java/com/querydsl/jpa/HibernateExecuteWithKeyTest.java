@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.domain.GeneratedKeyEntity;
 import com.querydsl.jpa.domain.QGeneratedKeyEntity;
 import com.querydsl.jpa.hibernate.HibernateInsertClause;
@@ -121,6 +122,30 @@ public class HibernateExecuteWithKeyTest {
 
     assertThat(id).isNotNull();
     assertThat(id).isPositive();
+  }
+
+  @Test
+  public void executeWithKey_with_function_template_applies_function() {
+    // Regression: a function template like dbo.encrypt({0}) used to be silently dropped,
+    // and only the inner constant was bound, leading to plaintext being inserted.
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    Long id =
+        insert(entity)
+            .set(
+                entity.name,
+                Expressions.stringTemplate("upper({0})", Expressions.constant("value")))
+            .executeWithKey(entity.id);
+
+    assertThat(id).isNotNull();
+
+    var stored =
+        (String)
+            session
+                .createNativeQuery(
+                    "select name_ from generated_key_entity where id = ?1", String.class)
+                .setParameter(1, id)
+                .getSingleResult();
+    assertThat(stored).isEqualTo("VALUE");
   }
 
   @Test
