@@ -321,16 +321,17 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
       }
       append(")");
     } else if (inserts != null && !inserts.isEmpty()) {
+      append(VALUES);
+      append(" (");
       first = true;
       for (Map.Entry<Path<?>, Expression<?>> entry : inserts.entrySet()) {
         if (!first) {
           append(", ");
         }
-        handle(entry.getKey());
-        append(" = ");
         handle(entry.getValue());
         first = false;
       }
+      append(")");
     } else {
       serialize(query.getMetadata(), false, null);
     }
