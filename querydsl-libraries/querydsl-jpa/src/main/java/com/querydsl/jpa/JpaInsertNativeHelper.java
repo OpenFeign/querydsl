@@ -125,4 +125,34 @@ public final class JpaInsertNativeHelper {
       }
     }
   }
+
+  /**
+   * Execute a native SQL multi-row INSERT with {@code RETURN_GENERATED_KEYS} and return all
+   * generated keys.
+   *
+   * @param <T> the key type
+   * @param conn the JDBC connection (not closed by this method)
+   * @param sql the native SQL INSERT string (typically multi-row {@code VALUES (..),(..)})
+   * @param params the parameter values to bind, in positional order
+   * @param keyType the expected key type
+   * @return the generated keys in row order; empty list if no rows were inserted
+   * @throws SQLException if a database error occurs
+   */
+  public static <T> List<T> executeAndReturnKeys(
+      java.sql.Connection conn, String sql, Object[] params, Class<T> keyType) throws SQLException {
+    try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+      for (int i = 0; i < params.length; i++) {
+        stmt.setObject(i + 1, params[i]);
+      }
+      stmt.executeUpdate();
+
+      var keys = new ArrayList<T>();
+      try (ResultSet rs = stmt.getGeneratedKeys()) {
+        while (rs.next()) {
+          keys.add(rs.getObject(1, keyType));
+        }
+      }
+      return keys;
+    }
+  }
 }

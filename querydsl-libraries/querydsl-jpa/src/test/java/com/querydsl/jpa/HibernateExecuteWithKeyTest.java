@@ -149,6 +149,48 @@ public class HibernateExecuteWithKeyTest {
   }
 
   @Test
+  public void executeWithKeys_multi_row_returns_all_keys_in_order() {
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    var keys =
+        insert(entity)
+            .columns(entity.name)
+            .values("RowA")
+            .addRow()
+            .values("RowB")
+            .addRow()
+            .values("RowC")
+            .executeWithKeys(entity.id);
+
+    assertThat(keys).hasSize(3);
+    assertThat(keys.get(0)).isLessThan(keys.get(1));
+    assertThat(keys.get(1)).isLessThan(keys.get(2));
+  }
+
+  @Test
+  public void executeWithKeys_single_row_returns_size_one_list() {
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    var keys = insert(entity).columns(entity.name).values("Solo").executeWithKeys(entity.id);
+
+    assertThat(keys).hasSize(1);
+    assertThat(keys.get(0)).isPositive();
+  }
+
+  @Test
+  public void executeWithKey_rejects_after_addRow() {
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    assertThatThrownBy(
+            () ->
+                insert(entity)
+                    .columns(entity.name)
+                    .values("First")
+                    .addRow()
+                    .values("Second")
+                    .executeWithKey(entity.id))
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessageContaining("executeWithKeys");
+  }
+
+  @Test
   public void executeWithKey_rejects_subquery() {
     var entity = QGeneratedKeyEntity.generatedKeyEntity;
     var other = new QGeneratedKeyEntity("other");

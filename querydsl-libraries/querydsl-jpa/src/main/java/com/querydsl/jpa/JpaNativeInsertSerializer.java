@@ -55,10 +55,11 @@ public final class JpaNativeInsertSerializer extends SQLSerializer {
   }
 
   /**
-   * Serialize an {@code INSERT} statement for the given entity, columns, and value expressions.
-   * Each value expression is dispatched through the visitor pattern, so function templates, paths,
-   * parameters, and other expressions are serialized into SQL with positional {@code ?}
-   * placeholders. Bound values are accumulated and accessible via {@link #getConstants()}.
+   * Serialize a single-row {@code INSERT} statement for the given entity, columns, and value
+   * expressions. Each value expression is dispatched through the visitor pattern, so function
+   * templates, paths, parameters, and other expressions are serialized into SQL with positional
+   * {@code ?} placeholders. Bound values are accumulated and accessible via {@link
+   * #getConstants()}.
    *
    * @param entityClass the JPA entity class (used to resolve the table name via {@link Table})
    * @param columns the column paths to insert into
@@ -66,13 +67,31 @@ public final class JpaNativeInsertSerializer extends SQLSerializer {
    */
   public void serializeInsert(
       Class<?> entityClass, List<Path<?>> columns, List<Expression<?>> values) {
-    if (columns.size() != values.size()) {
-      throw new IllegalArgumentException(
-          "Column count ("
-              + columns.size()
-              + ") does not match value count ("
-              + values.size()
-              + ")");
+    serializeInsertRows(entityClass, columns, List.of(values));
+  }
+
+  /**
+   * Serialize a multi-row {@code INSERT} statement for the given entity, columns, and rows of value
+   * expressions. Emits {@code INSERT INTO t (c1, c2) VALUES (?, ?), (?, ?), ...}.
+   *
+   * @param entityClass the JPA entity class (used to resolve the table name via {@link Table})
+   * @param columns the column paths to insert into
+   * @param rows the rows of value expressions; each row's size must match the column count
+   */
+  public void serializeInsertRows(
+      Class<?> entityClass, List<Path<?>> columns, List<List<Expression<?>>> rows) {
+    if (rows.isEmpty()) {
+      throw new IllegalArgumentException("No rows specified for insert");
+    }
+    for (var row : rows) {
+      if (columns.size() != row.size()) {
+        throw new IllegalArgumentException(
+            "Column count ("
+                + columns.size()
+                + ") does not match value count ("
+                + row.size()
+                + ")");
+      }
     }
 
     var templates = getTemplates();
@@ -96,16 +115,23 @@ public final class JpaNativeInsertSerializer extends SQLSerializer {
     skipParent = true;
     try {
       append(templates.getValues());
-      append("(");
-      var first = true;
-      for (Expression<?> value : values) {
-        if (!first) {
+      var firstRow = true;
+      for (var row : rows) {
+        if (!firstRow) {
           append(", ");
         }
-        handle(value);
-        first = false;
+        append("(");
+        var firstValue = true;
+        for (Expression<?> value : row) {
+          if (!firstValue) {
+            append(", ");
+          }
+          handle(value);
+          firstValue = false;
+        }
+        append(")");
+        firstRow = false;
       }
-      append(")");
     } finally {
       skipParent = oldSkipParent;
     }

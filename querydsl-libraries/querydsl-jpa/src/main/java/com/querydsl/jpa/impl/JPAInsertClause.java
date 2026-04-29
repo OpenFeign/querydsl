@@ -53,6 +53,8 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
 
   private final List<Object> values = new ArrayList<>();
 
+  private final List<List<Expression<?>>> rows = new ArrayList<>();
+
   private final EntityManager entityManager;
 
   private final JPQLTemplates templates;
@@ -125,6 +127,10 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
       throw new UnsupportedOperationException(
           "executeWithKey is not supported for INSERT ... SELECT subqueries");
     }
+    if (!rows.isEmpty()) {
+      throw new IllegalStateException(
+          "executeWithKey expects a single row; use executeWithKeys for multiple rows");
+    }
 
     var effectiveColumns = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
     if (effectiveColumns.isEmpty()) {
@@ -150,6 +156,94 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
                   JpaInsertNativeHelper.executeAndReturnKey(connection, sql, params, type));
     } catch (Exception e) {
       throw new QueryException("Failed to execute insert with generated key", e);
+    }
+  }
+
+  /**
+   * Append the current {@code values()} (or {@code set()}) state as a row and clear it for the next
+   * row. Use together with {@link #executeWithKeys(Class)} to issue a multi-row {@code INSERT INTO
+   * t (...) VALUES (..),(..),...} as a single SQL statement.
+   *
+   * @return this clause for chaining
+   * @throws IllegalStateException if no values have been specified for the current row, or if
+   *     mixing with {@code INSERT ... SELECT}
+   */
+  public JPAInsertClause addRow() {
+    if (subQuery != null) {
+      throw new IllegalStateException("addRow is not supported with INSERT ... SELECT subqueries");
+    }
+    if (values.isEmpty() && inserts.isEmpty()) {
+      throw new IllegalStateException("No values to add as row");
+    }
+    rows.add(JpaInsertNativeHelper.effectiveValues(inserts, values));
+    values.clear();
+    inserts.clear();
+    return this;
+  }
+
+  /**
+   * Execute the clause and return all generated keys with the type of the given path. Supports both
+   * single-row inserts and multi-row inserts accumulated via {@link #addRow()}.
+   *
+   * @param <T> key type
+   * @param path path for key (used to determine return type)
+   * @return generated keys in row order; empty list if no rows were inserted
+   * @throws QueryException if a database error occurs or the operation is not supported
+   */
+  @SuppressWarnings("unchecked")
+  public <T> List<T> executeWithKeys(Path<T> path) {
+    return executeWithKeys((Class<T>) path.getType());
+  }
+
+  /**
+   * Execute the clause and return all generated keys cast to the given type. Supports both
+   * single-row inserts and multi-row inserts accumulated via {@link #addRow()}.
+   *
+   * <p>If the current row has unflushed values (i.e. {@code addRow()} was not called after the last
+   * {@code values()}/{@code set()}), they are treated as the trailing row.
+   *
+   * @param <T> key type
+   * @param type class of the key type
+   * @return generated keys in row order; empty list if no rows were inserted
+   * @throws QueryException if a database error occurs or the operation is not supported
+   */
+  public <T> List<T> executeWithKeys(Class<T> type) {
+    if (subQuery != null) {
+      throw new UnsupportedOperationException(
+          "executeWithKeys is not supported for INSERT ... SELECT subqueries");
+    }
+
+    var effectiveColumns = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
+    if (effectiveColumns.isEmpty()) {
+      throw new IllegalStateException("No columns specified for insert");
+    }
+
+    var allRows = new ArrayList<>(rows);
+    if (!values.isEmpty() || !inserts.isEmpty()) {
+      allRows.add(JpaInsertNativeHelper.effectiveValues(inserts, values));
+    }
+    if (allRows.isEmpty()) {
+      throw new IllegalStateException("No values specified for insert");
+    }
+
+    var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
+
+    var serializer = new JpaNativeInsertSerializer(new Configuration(SQLTemplates.DEFAULT));
+    serializer.serializeInsertRows(entityClass, effectiveColumns, allRows);
+
+    var sql = serializer.toString();
+    var params =
+        JpaInsertNativeHelper.resolveConstants(
+            serializer.getConstants(), queryMixin.getMetadata().getParams());
+
+    try {
+      return entityManager
+          .unwrap(org.hibernate.Session.class)
+          .doReturningWork(
+              connection ->
+                  JpaInsertNativeHelper.executeAndReturnKeys(connection, sql, params, type));
+    } catch (Exception e) {
+      throw new QueryException("Failed to execute insert with generated keys", e);
     }
   }
 
