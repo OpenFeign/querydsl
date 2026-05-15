@@ -65,8 +65,9 @@ class TypeExtractor(
                 Comparable::class.java.canonicalName,
                 java.lang.Comparable::class.qualifiedName
             )
-            declaration.getAllSuperTypes().any {
-                comparableNames.contains(it.toClassName().canonicalName)
+            declaration.getAllSuperTypes().any { supertype ->
+                // Skip parameterized types (e.g. Comparable<ObjectId>) — toClassName() throws for them
+                supertype.arguments.isEmpty() && comparableNames.contains(supertype.toClassName().canonicalName)
             }
         } else {
             false
