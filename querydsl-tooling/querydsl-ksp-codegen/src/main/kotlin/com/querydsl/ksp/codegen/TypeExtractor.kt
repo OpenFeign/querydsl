@@ -65,8 +65,17 @@ class TypeExtractor(
                 Comparable::class.java.canonicalName,
                 java.lang.Comparable::class.qualifiedName
             )
-            declaration.getAllSuperTypes().any {
-                comparableNames.contains(it.toClassName().canonicalName)
+            // Match supertypes by their declaration's qualified name. KSType.toClassName()
+            // (the kotlinpoet-ksp extension) throws IllegalStateException for parameterized
+            // types — getAllSuperTypes() routinely yields Comparable<E>, Collection<E>,
+            // Iterable<E>, etc., so iterating with toClassName() blows up on any entity that
+            // implements a parameterized interface (Set<X>, List<X>, custom Comparable<X>
+            // wrappers). The declaration's qualifiedName carries the same identity without
+            // the type-args check.
+            declaration.getAllSuperTypes().any { superType ->
+                val superDecl = superType.declaration
+                superDecl is KSClassDeclaration &&
+                    comparableNames.contains(superDecl.qualifiedName?.asString())
             }
         } else {
             false
@@ -110,6 +119,17 @@ class TypeExtractor(
             assertTypeArgCount(type, "set", 1)
             val innerType = extract(type.arguments.single().type!!.resolve())
             return QPropertyType.SetCollection(innerType)
+        } else if (classNames.any { it.isCollection() }) {
+            // Plain Collection<E> / Iterable<E> (e.g. JPA `Collection<Degree>` from Java).
+            // Checked AFTER List/Set so concrete sub-interfaces still produce ListPath/SetPath.
+            // Walk type.arguments first (the original use-site), then any supertype that
+            // carries the element type — handles cases where the entity field is declared
+            // as Iterable<X> but resolves through a parameterized supertype chain.
+            val carrier = types.firstOrNull { it.arguments.size == 1 } ?: type
+            val arg = carrier.arguments.singleOrNull()?.type
+                ?: throwError("Unable to resolve element type for collection")
+            val innerType = extract(arg.resolve())
+            QPropertyType.CollectionCollection(innerType)
         } else if (classNames.any { it.isArray() }) {
             throwError("Unable to process type Array, Consider using List or Set instead")
         } else {
@@ -149,16 +169,25 @@ class TypeExtractor(
             return null
         }
 
-        val userTypeAnnotations = listOf(
-            ClassName("org.hibernate.annotations", "Type"),
-            ClassName("org.hibernate.annotations", "JdbcTypeCode"),
-            Convert::class.asClassName()
+        // Compare annotations by their fully-qualified name via the symbol API
+        // rather than kotlinpoet-ksp's toClassName(): the latter goes through
+        // KSType.declaration / isError() which traverses analysis-API lifetime
+        // tokens and can throw KaInvalidLifetimeOwnerAccessException under KSP2
+        // for any property whose annotations include @Convert / @Type / etc.
+        // The shortName check is a cheap prefilter so the common (no annotation)
+        // case never resolves at all.
+        val userTypeFqns = listOf(
+            "org.hibernate.annotations.Type",
+            "org.hibernate.annotations.JdbcTypeCode",
+            Convert::class.qualifiedName!!
         )
-        if (annotations.any { userTypeAnnotations.contains(it.annotationType.resolve().toClassName()) }) {
-            return QPropertyType.Unknown(type.toClassNameSimple(), type.toTypeName())
-        } else {
-            return null
+        val userSimpleNames = userTypeFqns.mapTo(mutableSetOf()) { it.substringAfterLast('.') }
+        val match = annotations.any { ann ->
+            if (ann.shortName.asString() !in userSimpleNames) return@any false
+            val fqn = ann.annotationType.resolve().declaration.qualifiedName?.asString()
+            fqn in userTypeFqns
         }
+        return if (match) QPropertyType.Unknown(type.toClassNameSimple(), type.toTypeName()) else null
     }
 
     private fun assertTypeArgCount(parentType: KSType, collectionTypeName: String, count: Int) {
@@ -190,6 +219,15 @@ private fun ClassName.isList(): Boolean {
     return listOf(
         List::class.asClassName(),
         ClassName("kotlin.collections", "MutableList")
+    ).contains(this)
+}
+
+private fun ClassName.isCollection(): Boolean {
+    return listOf(
+        Collection::class.asClassName(),
+        ClassName("kotlin.collections", "MutableCollection"),
+        Iterable::class.asClassName(),
+        ClassName("kotlin.collections", "MutableIterable")
     ).contains(this)
 }
 

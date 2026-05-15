@@ -58,6 +58,45 @@
       <artifactId>kotlin-script-runtime</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>dev.zacsweers.kctfork</groupId>
+      <artifactId>core</artifactId>
+      <version>0.12.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>dev.zacsweers.kctfork</groupId>
+      <artifactId>ksp</artifactId>
+      <version>0.12.1</version>
+      <scope>test</scope>
+      <exclusions>
+        <!-- com.google.devtools.ksp:symbol-processing is a pom-packaged aggregator;
+             kctfork's gradle-published metadata declares it without type=pom, so
+             Maven mistakenly tries to download a non-existent jar. The runtime
+             artifacts kctfork actually needs (symbol-processing-aa-embeddable,
+             symbol-processing-common-deps, symbol-processing-api) are declared
+             separately in kctfork's pom and resolve fine. -->
+        <exclusion>
+          <groupId>com.google.devtools.ksp</groupId>
+          <artifactId>symbol-processing</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- Align KSP runtime artifacts with the API version pinned in the root pom.
+         kctfork 0.12.1 pulls in 2.3.4; the API is at ${ksp.version}=2.3.7. The
+         mismatch can surface as KaInvalidLifetimeOwnerAccessException at runtime. -->
+    <dependency>
+      <groupId>com.google.devtools.ksp</groupId>
+      <artifactId>symbol-processing-aa-embeddable</artifactId>
+      <version>${ksp.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.devtools.ksp</groupId>
+      <artifactId>symbol-processing-common-deps</artifactId>
+      <version>${ksp.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

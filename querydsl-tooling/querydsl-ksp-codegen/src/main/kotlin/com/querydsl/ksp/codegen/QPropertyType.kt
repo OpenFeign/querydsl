@@ -1,5 +1,6 @@
 package com.querydsl.ksp.codegen
 
+import com.querydsl.core.types.dsl.CollectionPath
 import com.querydsl.core.types.dsl.EnumPath
 import com.querydsl.core.types.dsl.ListPath
 import com.querydsl.core.types.dsl.MapPath
@@ -47,6 +48,22 @@ sealed interface QPropertyType {
 
         override val pathTypeName: TypeName
             get() = SetPath::class.asClassName().parameterizedBy(innerType.originalTypeName, innerType.pathTypeName)
+    }
+
+    class CollectionCollection(
+        val innerType: QPropertyType
+    ) : QPropertyType {
+        override val originalClassName: ClassName
+            get() = Collection::class.asClassName()
+
+        override val originalTypeName: TypeName
+            get() = Collection::class.asTypeName().parameterizedBy(innerType.originalTypeName)
+
+        override val pathClassName: ClassName
+            get() = CollectionPath::class.asClassName()
+
+        override val pathTypeName: TypeName
+            get() = CollectionPath::class.asClassName().parameterizedBy(innerType.originalTypeName, innerType.pathTypeName)
     }
 
     class MapCollection(
