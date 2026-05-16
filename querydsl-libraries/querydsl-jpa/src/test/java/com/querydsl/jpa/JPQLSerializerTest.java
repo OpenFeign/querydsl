@@ -20,6 +20,7 @@ import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.domain.QCat;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
@@ -28,6 +29,9 @@ import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.domain.*;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.junit.Test;
 
 public class JPQLSerializerTest {
@@ -603,5 +607,47 @@ public class JPQLSerializerTest {
     assertThat(hqlSerializer.getConstants()).hasSize(2);
     assertThat(hqlSerializer.getConstants().get(0)).isEqualTo(1);
     assertThat(hqlSerializer.getConstants().get(1)).isEqualTo(2);
+  }
+
+  @Test
+  public void serializeForInsert_setStyle_emitsValuesForm() {
+    var cat = QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+
+    Map<Path<?>, Expression<?>> inserts = new LinkedHashMap<>();
+    inserts.put(cat.name, ConstantImpl.create("Bobby"));
+    inserts.put(cat.alive, ConstantImpl.create(false));
+
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serializeForInsert(md, inserts.keySet(), Collections.emptyList(), null, inserts);
+
+    var sql = serializer.toString();
+    assertThat(sql).startsWith("insert into Cat (name, alive)");
+    assertThat(sql).contains("\nvalues ");
+    assertThat(sql).endsWith("(?1, ?2)");
+    assertThat(sql).doesNotContain(" = ");
+    assertThat(serializer.getConstants()).containsExactly("Bobby", false);
+  }
+
+  @Test
+  public void serializeForInsert_columnsValuesStyle_unchanged() {
+    var cat = QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serializeForInsert(
+        md,
+        Arrays.asList(cat.name, cat.alive),
+        Arrays.asList("Bobby", false),
+        null,
+        Collections.emptyMap());
+
+    var sql = serializer.toString();
+    assertThat(sql).startsWith("insert into Cat (name, alive)");
+    assertThat(sql).contains("\nvalues ");
+    assertThat(sql).endsWith("(?1, ?2)");
+    assertThat(serializer.getConstants()).containsExactly("Bobby", false);
   }
 }
