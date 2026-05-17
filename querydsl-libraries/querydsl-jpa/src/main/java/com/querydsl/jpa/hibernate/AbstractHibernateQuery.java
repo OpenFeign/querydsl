@@ -30,9 +30,12 @@ import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.jpa.FactoryExpressionTransformer;
 import com.querydsl.jpa.HQLTemplates;
 import com.querydsl.jpa.JPAQueryBase;
+import com.querydsl.jpa.JPAQueryMixin;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.ScrollableResultsIterator;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -213,7 +216,11 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
   @SuppressWarnings("unchecked")
   public List<T> fetch() {
     try {
-      return createQuery().list();
+      List<T> results = createQuery().list();
+      if (hasFetchJoin()) {
+        results = new ArrayList<>(new LinkedHashSet<>(results));
+      }
+      return results;
     } finally {
       reset();
     }
@@ -230,6 +237,9 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
         var query = createQuery(modifiers, false);
         @SuppressWarnings("unchecked")
         List<T> list = query.list();
+        if (hasFetchJoin()) {
+          list = new ArrayList<>(new LinkedHashSet<>(list));
+        }
         return new QueryResults<>(list, modifiers, total);
       } else {
         return QueryResults.emptyResults();
@@ -237,6 +247,16 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
     } finally {
       reset();
     }
+  }
+
+  /**
+   * Check if any join in this query has a fetch join flag.
+   *
+   * @return true if at least one join uses fetchJoin
+   */
+  private boolean hasFetchJoin() {
+    return getMetadata().getJoins().stream()
+        .anyMatch(join -> join.getFlags().contains(JPAQueryMixin.FETCH));
   }
 
   protected void logQuery(String queryString) {
@@ -363,6 +383,17 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
     try {
       var modifiers = getMetadata().getModifiers();
       var query = createQuery(modifiers, false);
+      if (hasFetchJoin()) {
+        List<T> results = query.list();
+        results = new ArrayList<>(new LinkedHashSet<>(results));
+        if (results.isEmpty()) {
+          return null;
+        } else if (results.size() == 1) {
+          return results.get(0);
+        } else {
+          throw new NonUniqueResultException();
+        }
+      }
       try {
         return (T) query.uniqueResult();
       } catch (org.hibernate.NonUniqueResultException e) {
