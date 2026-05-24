@@ -22,6 +22,7 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.jpa.JPAQueryBase;
+import com.querydsl.jpa.JPAQueryMixin;
 import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.QueryHandler;
@@ -179,10 +180,11 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
    */
   private List<?> getResultList(Query query) {
     // TODO : use lazy fetch here?
+    List<?> results;
     if (projection != null) {
-      List<?> results = query.getResultList();
-      List<Object> rv = new ArrayList<>(results.size());
-      for (Object o : results) {
+      List<?> raw = query.getResultList();
+      List<Object> rv = new ArrayList<>(raw.size());
+      for (Object o : raw) {
         if (o != null) {
           if (!o.getClass().isArray()) {
             o = new Object[] {o};
@@ -192,10 +194,29 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
           rv.add(projection.newInstance(new Object[] {null}));
         }
       }
-      return rv;
+      results = rv;
     } else {
-      return query.getResultList();
+      results = query.getResultList();
     }
+
+    // Deduplicate results when fetchJoin is used.
+    // Since Hibernate 6, automatic deduplication on fetch joins was removed,
+    // so we handle it at the QueryDSL level for all JPA providers.
+    if (hasFetchJoin()) {
+      results = new ArrayList<>(new LinkedHashSet<>(results));
+    }
+
+    return results;
+  }
+
+  /**
+   * Check if any join in this query has a fetch join flag.
+   *
+   * @return true if at least one join uses fetchJoin
+   */
+  private boolean hasFetchJoin() {
+    return getMetadata().getJoins().stream()
+        .anyMatch(join -> join.getFlags().contains(JPAQueryMixin.FETCH));
   }
 
   /**
@@ -336,6 +357,19 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   @Override
   public T fetchOne() throws NonUniqueResultException {
     try {
+      if (hasFetchJoin()) {
+        // When fetchJoin is used, use getResultList with deduplication
+        // to avoid NonUniqueResultException caused by JOIN duplicates
+        var query = createQuery(getMetadata().getModifiers(), false);
+        var results = (List<T>) getResultList(query);
+        if (results.isEmpty()) {
+          return null;
+        } else if (results.size() == 1) {
+          return results.get(0);
+        } else {
+          throw new NonUniqueResultException();
+        }
+      }
       var query = createQuery(getMetadata().getModifiers(), false);
       return (T) getSingleResult(query);
     } catch (jakarta.persistence.NoResultException e) {
