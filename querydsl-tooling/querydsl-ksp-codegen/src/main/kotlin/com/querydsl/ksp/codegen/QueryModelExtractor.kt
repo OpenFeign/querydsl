@@ -2,10 +2,12 @@ package com.querydsl.ksp.codegen
 
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.symbol.ClassKind
+import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunction
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
+import com.google.devtools.ksp.symbol.Modifier
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.ksp.toClassName
@@ -14,7 +16,7 @@ import jakarta.persistence.Transient
 class QueryModelExtractor(
     private val settings: KspSettings
 ) {
-    private val transientClassName = Transient::class.asClassName()
+    private val transientSimpleName = Transient::class.simpleName!!
     private val processed = mutableMapOf<String, ModelDeclaration>()
 
     fun addConstructor(classDeclaration: KSClassDeclaration, constructor: KSFunctionDeclaration): QueryModel {
@@ -99,32 +101,50 @@ class QueryModelExtractor(
     }
 
     private fun extractPropertiesForClass(declaration: KSClassDeclaration): List<QProperty> {
-        return declaration
-            .getDeclaredProperties()
-            .filter { !it.isTransient() }
-            .filter { !it.isGetterTransient() }
-            .filter { it.hasBackingField }
-            .map { property ->
-                val propName = property.simpleName.asString()
-                val extractor = TypeExtractor(
-                    settings,
-                    property.simpleName.asString(),
-                    property.annotations
-                )
-                val type = extractor.extract(property.type.resolve())
-                QProperty(propName, type)
-            }
-            .toList()
+        // Materialise the property sequence eagerly: KSP2's analysis-API
+        // lifetime tokens can advance between lazy steps, so the chained
+        // sequence form throws KaInvalidLifetimeOwnerAccessException at
+        // type.resolve() time. A list-based iteration keeps each property's
+        // resolution within a single live context.
+        val properties = declaration.getDeclaredProperties().toList()
+        val result = mutableListOf<QProperty>()
+        for (property in properties) {
+            if (property.isTransient() || property.isGetterTransient()) continue
+            // Exclude Java `static` and `transient` (the keyword, not the
+            // annotation) fields. KSP surfaces them as KSPropertyDeclaration
+            // alongside instance fields, but they're not persisted.
+            if (Modifier.JAVA_STATIC in property.modifiers) continue
+            if (Modifier.JAVA_TRANSIENT in property.modifiers) continue
+            if (!property.hasBackingField) continue
+            val propName = property.simpleName.asString()
+            val extractor = TypeExtractor(
+                settings,
+                propName,
+                property.annotations
+            )
+            val type = extractor.extract(property.type.resolve())
+            result += QProperty(propName, type)
+        }
+        return result
     }
 
     private fun KSPropertyDeclaration.isTransient(): Boolean {
-        return annotations.any { it.annotationType.resolve().toClassName() == transientClassName }
+        return annotations.any { it.hasSimpleName(transientSimpleName) }
     }
 
     private fun KSPropertyDeclaration.isGetterTransient(): Boolean {
         return this.getter?.let { getter ->
-            getter.annotations.any { it.annotationType.resolve().toClassName() == transientClassName }
+            getter.annotations.any { it.hasSimpleName(transientSimpleName) }
         } ?: false
+    }
+
+    // Match by KSAnnotation.shortName (a KSName) instead of resolving the
+    // annotation type to a ClassName. Calling toClassName() / KSType.declaration
+    // under KSP2 traverses analysis-API lifetime tokens that can throw
+    // KaInvalidLifetimeOwnerAccessException ("PSI has changed since creation").
+    // Simple-name match is accurate for the JPA annotations we recognise.
+    private fun KSAnnotation.hasSimpleName(name: String): Boolean {
+        return shortName.asString() == name
     }
 
     private fun KSClassDeclaration.superclassOrNull(): KSClassDeclaration? {
@@ -132,8 +152,14 @@ class QueryModelExtractor(
             val resolvedType = superType.resolve()
             val declaration = resolvedType.declaration
             if (declaration is KSClassDeclaration) {
-                val superClassName = declaration.toClassName()
-                if (declaration.classKind == ClassKind.CLASS && superClassName != Any::class.asClassName()) {
+                // Compare against kotlin.Any via qualifiedName rather than
+                // KotlinPoet's toClassName(): the latter calls isError() on the
+                // resolved type, which invalidates KSP2 analysis-API lifetime
+                // tokens for any KSType resolved later in the same process()
+                // invocation (manifests as KaInvalidLifetimeOwnerAccessException
+                // when we later resolve property types).
+                val fqn = declaration.qualifiedName?.asString()
+                if (declaration.classKind == ClassKind.CLASS && fqn != "kotlin.Any") {
                     return declaration
                 }
             }
@@ -143,7 +169,13 @@ class QueryModelExtractor(
 
     private fun toQueryModel(classDeclaration: KSClassDeclaration, type: QueryModelType, constructor: KSFunctionDeclaration?): QueryModel {
         return QueryModel(
-            originalClassName = classDeclaration.toClassName(),
+            // Build the ClassName from raw KSP names to avoid kotlinpoet-ksp's
+            // toClassName(), which invalidates KSP2 lifetime tokens (see
+            // superclassOrNull above for the same workaround).
+            originalClassName = ClassName(
+                classDeclaration.packageName.asString(),
+                classDeclaration.simpleName.asString()
+            ),
             typeParameterCount = classDeclaration.typeParameters.size,
             className = queryClassName(classDeclaration, settings),
             type = type,

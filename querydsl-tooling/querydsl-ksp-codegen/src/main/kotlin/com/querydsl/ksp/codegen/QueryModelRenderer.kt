@@ -54,15 +54,14 @@ object QueryModelRenderer {
 
     private fun TypeSpec.Builder.addSuperProperty(model: QueryModel): TypeSpec.Builder {
         model.superclass?.let { superclass ->
+            // Eager @JvmField: exposed as a Java field, and inherited
+            // @JvmField properties below can read `_super.x` directly.
+            // Construction recursion follows the inheritance chain (acyclic
+            // by language rule), so eager init is safe.
             val superProperty = PropertySpec
                 .builder("_super", superclass.className)
-                .delegate(
-                    CodeBlock.builder()
-                        .beginControlFlow("lazy")
-                        .addStatement("${superclass.className}(this)")
-                        .endControlFlow()
-                        .build()
-                )
+                .initializer("${superclass.className}(this)")
+                .addAnnotation(JvmField::class)
                 .build()
             addProperty(superProperty)
         }
@@ -93,12 +92,40 @@ object QueryModelRenderer {
     }
 
     private fun renderInheritedProperty(property: QProperty): PropertySpec {
+        val type = property.type
+        if (type is QPropertyType.ObjectReference) {
+            // Defer inherited object references with `by lazy`. An eager
+            // `@JvmField val foo = _super.foo` reads the parent's per-instance
+            // `by lazy` during the child's construction, which for a
+            // mapped-superclass that `@ManyToOne`s back to a concrete
+            // subclass (e.g. `Auditable.createdBy : User` with `User extends
+            // Auditable`) triggers infinite construction recursion — every
+            // new child level allocates a fresh parent whose own lazy then
+            // allocates another child. Lazy here, paired with @get:JvmName
+            // to drop the `get` prefix, mirrors how we render direct object
+            // references and keeps the construction tree bounded to the
+            // depth the caller actually navigates.
+            val getterJvmName = AnnotationSpec.builder(JvmName::class)
+                .useSiteTarget(AnnotationSpec.UseSiteTarget.GET)
+                .addMember("%S", property.name)
+                .build()
+            return PropertySpec.builder(property.name, type.queryClassName)
+                .delegate(
+                    CodeBlock.builder()
+                        .beginControlFlow("lazy")
+                        .addStatement("_super.${property.name}")
+                        .endControlFlow()
+                        .build()
+                )
+                .addAnnotation(getterJvmName)
+                .build()
+        }
+        // Eager @JvmField for scalars / enums / collections — these don't
+        // recurse, so eager init is safe and Java consumers get field-style
+        // access (`qChild.actived` rather than `qChild.getActived()`).
         return PropertySpec.builder(property.name, property.type.pathTypeName)
-            .getter(
-                FunSpec.getterBuilder()
-                    .addCode("return _super.${property.name}")
-                    .build()
-            )
+            .initializer("_super.${property.name}")
+            .addAnnotation(JvmField::class)
             .build()
     }
 
@@ -132,6 +159,13 @@ object QueryModelRenderer {
                     .initializer("createSet(\"$name\", ${inner.originalClassName}::class.java, ${inner.pathClassName}::class.java, null)")
                     .build()
             }
+            is QPropertyType.CollectionCollection -> {
+                val inner = type.innerType
+                PropertySpec
+                    .builder(name, CollectionPath::class.asClassName().parameterizedBy(inner.originalTypeName, inner.pathTypeName))
+                    .initializer("createCollection(\"$name\", ${inner.originalClassName}::class.java, ${inner.pathClassName}::class.java, null)")
+                    .build()
+            }
         }
     }
 
@@ -150,6 +184,17 @@ object QueryModelRenderer {
     }
 
     private fun renderObjectReference(name: String, type: QPropertyType.ObjectReference): PropertySpec {
+        // Object references are `by lazy` — defers construction so self-referential
+        // entities don't stack-overflow at init time, and the type stays non-null
+        // for ergonomic Kotlin queries (`q.headOffice.id` with no `?.`).
+        //
+        // Drop the synthesised `get` prefix on the JVM getter so Java consumers see
+        // `q.headOffice()` instead of `q.getHeadOffice()` — closer to the field-style
+        // access they get from querydsl-apt-generated Q-classes.
+        val getterJvmName = AnnotationSpec.builder(JvmName::class)
+            .useSiteTarget(AnnotationSpec.UseSiteTarget.GET)
+            .addMember("%S", name)
+            .build()
         return PropertySpec
             .builder(name, type.queryClassName)
             .delegate(
@@ -159,6 +204,7 @@ object QueryModelRenderer {
                     .endControlFlow()
                     .build()
             )
+            .addAnnotation(getterJvmName)
             .build()
     }
 

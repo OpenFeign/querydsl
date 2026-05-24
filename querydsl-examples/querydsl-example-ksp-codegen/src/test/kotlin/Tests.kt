@@ -1,5 +1,6 @@
 import com.querydsl.example.ksp.Bear
 import com.querydsl.example.ksp.BearSpecies
+import com.querydsl.example.ksp.Branch
 import com.querydsl.example.ksp.Cat
 import com.querydsl.example.ksp.CatType
 import com.querydsl.example.ksp.Dog
@@ -7,6 +8,7 @@ import com.querydsl.example.ksp.Email
 import com.querydsl.example.ksp.Person
 import com.querydsl.example.ksp.QBear
 import com.querydsl.example.ksp.QBearSimplifiedProjection
+import com.querydsl.example.ksp.QBranch
 import com.querydsl.example.ksp.QCat
 import com.querydsl.example.ksp.QDog
 import com.querydsl.example.ksp.QMyShape
@@ -283,6 +285,36 @@ class Tests {
         }
     }
 
+    @Test
+    fun `select java entity from kotlin code`() {
+        // Branch is a Java @Entity sitting alongside the Kotlin entities. Demonstrates
+        // that querydsl-ksp-codegen picks up Java sources during kspKotlin and emits
+        // a .kt Q-class (QBranch) that Kotlin can use the same as QPerson, QCat, etc.
+        // Also exercises the self-reference shape: Branch.parent : Branch is rendered
+        // as `by lazy` non-null QBranch, so navigating arbitrary chains never overflows.
+        val emf = initialize()
+        val em = emf.createEntityManager()
+        em.transaction.begin()
+        val root = Branch(1L, "root", null)
+        em.persist(root)
+        em.persist(Branch(2L, "child", root))
+        em.transaction.commit()
+
+        val q = QBranch.branch
+        val child = JPAQueryFactory(em)
+            .selectFrom(q)
+            .where(q.name.eq("child"))
+            .fetchOne()
+
+        if (child == null) {
+            fail<Any>("No child Branch was returned")
+        } else {
+            assertThat(child.id).isEqualTo(2L)
+            assertThat(child.parent.id).isEqualTo(1L)
+        }
+        em.close()
+    }
+
 	@Test
 	fun ensureCorrectGeoType() {
 		val departureProperty = QMyShape::class.memberProperties.single { it.name == "departureGeo" }
@@ -300,6 +332,7 @@ class Tests {
             .addAnnotatedClass(Cat::class.java)
             .addAnnotatedClass(Dog::class.java)
             .addAnnotatedClass(Bear::class.java)
+            .addAnnotatedClass(Branch::class.java)
 
         return configuration
             .buildSessionFactory()

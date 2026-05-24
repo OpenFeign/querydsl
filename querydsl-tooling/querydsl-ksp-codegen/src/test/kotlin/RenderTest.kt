@@ -72,7 +72,7 @@ class RenderTest {
         val code = typeSpec.toString()
         code.assertCompiles()
         code.assertContains("class QCat : com.querydsl.core.types.dsl.EntityPathBase<Cat>")
-        code.assertContainLines("val _super: QAnimal by lazy { QAnimal(this) }")
+        code.assertContainLines("@kotlin.jvm.JvmField public val _super: QAnimal = QAnimal(this)")
     }
 
     @Test
@@ -98,7 +98,7 @@ class RenderTest {
         val code = typeSpec.toString()
         code.assertCompiles()
         code.assertContains("class QCat : com.querydsl.core.types.dsl.EntityPathBase<Cat>")
-        code.assertContainLines("val _super: QAnimal by lazy { QAnimal(this) }")
+        code.assertContainLines("@kotlin.jvm.JvmField public val _super: QAnimal = QAnimal(this)")
     }
 
     @Test
@@ -158,7 +158,7 @@ class RenderTest {
         val typeSpec = QueryModelRenderer.render(catModel)
         val code = typeSpec.toString()
         code.assertCompiles()
-        code.assertContainLines("val hasTail: com.querydsl.core.types.dsl.BooleanPath get() = _super.hasTail")
+        code.assertContainLines("@kotlin.jvm.JvmField public val hasTail: com.querydsl.core.types.dsl.BooleanPath = _super.hasTail")
     }
 
     @Test
