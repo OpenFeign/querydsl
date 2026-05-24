@@ -212,6 +212,14 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     // extend entity types
     typeFactory.extendTypes();
 
+    if (!context.entityTypes.isEmpty()) {
+      var serializerConfig =
+          conf.getSerializerConfig(context.entityTypes.values().iterator().next());
+      if (serializerConfig.createDefaultVariable()) {
+        detectCircularQClassReferences();
+      }
+    }
+
     context.clean();
   }
 
@@ -680,6 +688,71 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
         processingEnv.getMessager().printMessage(Kind.ERROR, e.getMessage());
       }
     }
+  }
+
+  private void detectCircularQClassReferences() {
+    Map<String, EntityType> typeMap = context.entityTypes;
+
+    List<String> detectedCycles = new ArrayList<>();
+    Set<String> globalVisited = new HashSet<>();
+
+    for (EntityType start : typeMap.values()) {
+      if (globalVisited.contains(start.getFullName())) continue;
+
+      Deque<String> path = new ArrayDeque<>();
+      Set<String> inStack = new HashSet<>();
+      dfs(start, typeMap, path, inStack, globalVisited, detectedCycles);
+    }
+
+    if (!detectedCycles.isEmpty()) {
+      var message = new StringBuilder();
+      message.append("[QueryDSL] Circular Q-class references detected.\n");
+      message.append(
+          "This may cause class initialization deadlock in multi-threaded environments.\n\n");
+      message.append("Detected cycles:\n");
+      for (int i = 0; i < detectedCycles.size(); i++) {
+        message.append("  (").append(i + 1).append(") ").append(detectedCycles.get(i)).append("\n");
+      }
+      message.append("\nTo avoid deadlock, consider:\n");
+      message.append("  (1) Removing the bidirectional association on one side.\n");
+      message.append(
+          "  (2) Pre-initializing Q-classes in a single thread before handling requests (e.g. via @PostConstruct).\n");
+      message.append(
+          "  (3) Using 'new QClass(\"alias\")' instead of static field access in your repositories.");
+
+      processingEnv.getMessager().printMessage(Kind.WARNING, message.toString());
+    }
+  }
+
+  private void dfs(
+      EntityType current,
+      Map<String, EntityType> typeMap,
+      Deque<String> path,
+      Set<String> inStack,
+      Set<String> globalVisited,
+      List<String> detectedCycles) {
+
+    String currentName = current.getFullName();
+    globalVisited.add(currentName);
+    inStack.add(currentName);
+    path.addLast(current.getSimpleName());
+
+    for (Property property : current.getProperties()) {
+      String neighborName = property.getType().getFullName();
+      EntityType neighbor = typeMap.get(neighborName);
+      if (neighbor == null) continue;
+
+      if (inStack.contains(neighborName)) {
+        List<String> cycle = new ArrayList<>(path);
+        cycle.add(neighbor.getSimpleName());
+        detectedCycles.add(String.join(" → ", cycle));
+      } else if (!globalVisited.contains(neighborName)) {
+        dfs(neighbor, typeMap, path, inStack, globalVisited, detectedCycles);
+      }
+    }
+
+    path.removeLast();
+    inStack.remove(currentName);
   }
 
   protected String getClassName(EntityType model) {

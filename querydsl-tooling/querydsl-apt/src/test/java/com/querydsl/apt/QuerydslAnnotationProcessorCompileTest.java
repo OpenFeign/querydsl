@@ -130,6 +130,179 @@ class QuerydslAnnotationProcessorCompileTest {
   }
 
   @Test
+  void circularQClassReference_producesWarning() {
+    JavaFileObject orderSource =
+        JavaFileObjects.forSourceString(
+            "test.Order",
+            """
+            package test;
+
+            import com.querydsl.core.annotations.QueryEntity;
+
+            @QueryEntity
+            public class Order {
+              public Customer customer;
+            }
+            """);
+
+    JavaFileObject customerSource =
+        JavaFileObjects.forSourceString(
+            "test.Customer",
+            """
+            package test;
+
+            import com.querydsl.core.annotations.QueryEntity;
+
+            @QueryEntity
+            public class Customer {
+              public Order lastOrder;
+            }
+            """);
+
+    Compilation compilation =
+        javac()
+            .withProcessors(new QuerydslAnnotationProcessor())
+            .compile(orderSource, customerSource);
+
+    CompilationSubject.assertThat(compilation).succeeded();
+    CompilationSubject.assertThat(compilation)
+        .hadWarningContaining("Circular Q-class references detected");
+  }
+
+  @Test
+  void unidirectionalReference_noWarning() {
+    JavaFileObject orderSource =
+        JavaFileObjects.forSourceString(
+            "test.Order",
+            """
+            package test;
+
+            import com.querydsl.core.annotations.QueryEntity;
+
+            @QueryEntity
+            public class Order {
+              public Customer customer;
+            }
+            """);
+
+    JavaFileObject customerSource =
+        JavaFileObjects.forSourceString(
+            "test.Customer",
+            """
+            package test;
+
+            import com.querydsl.core.annotations.QueryEntity;
+
+            @QueryEntity
+            public class Customer {
+              public String name;
+            }
+            """);
+
+    Compilation compilation =
+        javac()
+            .withProcessors(new QuerydslAnnotationProcessor())
+            .compile(orderSource, customerSource);
+
+    CompilationSubject.assertThat(compilation).succeeded();
+    CompilationSubject.assertThat(compilation).hadWarningCount(0);
+  }
+
+  @Test
+  void collectionReference_noWarning() {
+    JavaFileObject orderSource =
+        JavaFileObjects.forSourceString(
+            "test.Order",
+            """
+            package test;
+
+            import com.querydsl.core.annotations.QueryEntity;
+            import java.util.List;
+
+            @QueryEntity
+            public class Order {
+              public List<OrderItem> items;
+            }
+            """);
+
+    JavaFileObject orderItemSource =
+        JavaFileObjects.forSourceString(
+            "test.OrderItem",
+            """
+            package test;
+
+            import com.querydsl.core.annotations.QueryEntity;
+
+            @QueryEntity
+            public class OrderItem {
+              public Order order;
+            }
+            """);
+
+    Compilation compilation =
+        javac()
+            .withProcessors(new QuerydslAnnotationProcessor())
+            .compile(orderSource, orderItemSource);
+
+    CompilationSubject.assertThat(compilation).succeeded();
+    CompilationSubject.assertThat(compilation).hadWarningCount(0);
+  }
+
+  @Test
+  void indirectCircularReference_producesWarning() {
+    JavaFileObject aSource =
+        JavaFileObjects.forSourceString(
+            "test.EntityA",
+            """
+            package test;
+
+            import com.querydsl.core.annotations.QueryEntity;
+
+            @QueryEntity
+            public class EntityA {
+              public EntityB b;
+            }
+            """);
+
+    JavaFileObject bSource =
+        JavaFileObjects.forSourceString(
+            "test.EntityB",
+            """
+            package test;
+
+            import com.querydsl.core.annotations.QueryEntity;
+
+            @QueryEntity
+            public class EntityB {
+              public EntityC c;
+            }
+            """);
+
+    JavaFileObject cSource =
+        JavaFileObjects.forSourceString(
+            "test.EntityC",
+            """
+            package test;
+
+            import com.querydsl.core.annotations.QueryEntity;
+
+            @QueryEntity
+            public class EntityC {
+              public EntityA a;
+            }
+            """);
+
+    Compilation compilation =
+        javac()
+            .withProcessors(new QuerydslAnnotationProcessor())
+            .compile(aSource, bSource, cSource);
+
+    CompilationSubject.assertThat(compilation).succeeded();
+    CompilationSubject.assertThat(compilation)
+        .hadWarningContaining("Circular Q-class references detected");
+  }
+
+  @Test
   void entityWithInheritance_generatesQClasses() {
     JavaFileObject superSource =
         JavaFileObjects.forSourceString(
