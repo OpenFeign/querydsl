@@ -14,6 +14,7 @@
 package com.querydsl.jpa;
 
 import com.querydsl.jpa.hibernate.SessionHolder;
+import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
@@ -26,6 +27,11 @@ public class DummySessionHolder implements SessionHolder {
 
   @Override
   public NativeQuery<?> createSQLQuery(String queryString) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T> T doReturningWork(ReturningWork<T> work) {
     throw new UnsupportedOperationException();
   }
 }
