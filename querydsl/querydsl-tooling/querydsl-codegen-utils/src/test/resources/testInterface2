@@ -1,3 +1,0 @@
-public interface Test extends TestInterface1 {
-
-}

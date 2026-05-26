@@ -257,15 +257,17 @@ def process_all_files():
             
             sub_roots = [
                 "src/main/java", "src/main/kotlin", "src/main/scala",
-                "src/test/java", "src/test/kotlin", "src/test/scala",
                 "src/apt"
             ]
             
             # Clean up target source directories first to avoid stale/renamed files
-            for sr in sub_roots:
+            for sr in sub_roots + ["src/test/java", "src/test/kotlin", "src/test/scala", "src/test"]:
                 target_dir = os.path.join(legacy_subpath, sr)
                 if os.path.exists(target_dir):
-                    shutil.rmtree(target_dir)
+                    if os.path.isdir(target_dir):
+                        shutil.rmtree(target_dir)
+                    else:
+                        os.remove(target_dir)
             
             # Source directory in fluentq
             for sub_root in sub_roots:
