@@ -30,8 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Helpers shared by {@link com.querydsl.jpa.impl.JPAInsertClause} and {@link
- * com.querydsl.jpa.hibernate.HibernateInsertClause} to support {@code executeWithKey()} via native
- * SQL INSERT.
+ * com.querydsl.jpa.hibernate.HibernateInsertClause} to execute INSERT statements via native SQL.
  *
  * <p>This is an internal API and not intended for direct use by application code.
  */
@@ -95,6 +94,25 @@ public final class JpaInsertNativeHelper {
       result[i] = val;
     }
     return result;
+  }
+
+  /**
+   * Execute a native SQL INSERT and return the number of affected rows.
+   *
+   * @param conn the JDBC connection (not closed by this method)
+   * @param sql the native SQL INSERT string
+   * @param params the parameter values to bind, in positional order
+   * @return the number of affected rows
+   * @throws SQLException if a database error occurs
+   */
+  public static long executeUpdate(java.sql.Connection conn, String sql, Object[] params)
+      throws SQLException {
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      for (int i = 0; i < params.length; i++) {
+        stmt.setObject(i + 1, params[i]);
+      }
+      return stmt.executeUpdate();
+    }
   }
 
   /**
