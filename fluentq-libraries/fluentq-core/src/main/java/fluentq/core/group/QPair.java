@@ -1,0 +1,49 @@
+/*
+ * Copyright 2015, The FluentQ Team (http://www.fluentq.com/team)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package fluentq.core.group;
+
+import fluentq.core.Pair;
+import fluentq.core.types.ConstructorExpression;
+import fluentq.core.types.Expression;
+import java.io.Serial;
+
+/**
+ * A pair of (Map) key and value
+ *
+ * @author sasa
+ * @param <K> Map key type
+ * @param <V> Map value type
+ */
+public class QPair<K, V> extends ConstructorExpression<Pair<K, V>> {
+
+  @Serial private static final long serialVersionUID = -1943990903548916056L;
+
+  public static <K, V> QPair<K, V> create(Expression<K> key, Expression<V> value) {
+    return new QPair<>(key, value);
+  }
+
+  @SuppressWarnings({"unchecked"})
+  public QPair(Expression<K> key, Expression<V> value) {
+    super((Class) Pair.class, new Class<?>[] {Object.class, Object.class}, key, value);
+  }
+
+  public boolean equals(Expression<?> keyExpr, Expression<?> valueExpr) {
+    return getArgs().get(0).equals(keyExpr) && getArgs().get(1).equals(valueExpr);
+  }
+
+  public boolean equals(Expression<?> keyExpr, Class<?> valueType) {
+    return getArgs().get(0).equals(keyExpr)
+        && valueType.isAssignableFrom(getArgs().get(1).getType());
+  }
+}

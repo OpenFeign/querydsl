@@ -16,12 +16,12 @@ Add the following dependencies to your Maven project:
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-mongodb</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-mongodb</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
-Configure the `maven-compiler-plugin` to run the Querydsl annotation processor:
+Configure the `maven-compiler-plugin` to run the fluentQ annotation processor:
 
 ```xml
 <plugin>
@@ -32,8 +32,8 @@ Configure the `maven-compiler-plugin` to run the Querydsl annotation processor:
   <dependencies>
     <dependency>
       <groupId>{{ site.group_id }}</groupId>
-      <artifactId>querydsl-apt</artifactId>
-      <version>{{ site.querydsl_version }}</version>
+      <artifactId>fluentq-apt</artifactId>
+      <version>{{ site.fluentq_version }}</version>
       <classifier>morphia</classifier>
     </dependency>
   </dependencies>
@@ -41,7 +41,7 @@ Configure the `maven-compiler-plugin` to run the Querydsl annotation processor:
 ```
 
 The `MorphiaAnnotationProcessor` finds domain types annotated with
-`com.google.code.morphia.annotations.Entity` and generates Querydsl query
+`com.google.code.morphia.annotations.Entity` and generates fluentQ query
 types for them.
 
 Run `mvn clean install` and your query types will be generated into
@@ -49,7 +49,7 @@ Run `mvn clean install` and your query types will be generated into
 
 ## Querying
 
-Querying with Querydsl MongoDB with Morphia:
+Querying with fluentQ MongoDB with Morphia:
 
 ```java
 Morphia morphia;

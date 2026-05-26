@@ -7,15 +7,15 @@ nav_order: 3
 
 # Code Generation
 
-Querydsl uses Java annotation processing (APT) for code generation in the JPA
+fluentQ uses Java annotation processing (APT) for code generation in the JPA
 and MongoDB modules. This section describes various configuration options for
 the code generation and alternatives to APT usage.
 
 ## Path Initialization
 
-By default, Querydsl initializes only reference properties of the first two
+By default, fluentQ initializes only reference properties of the first two
 levels. When longer initialization paths are required, annotate the domain
-types with `com.querydsl.core.annotations.QueryInit`:
+types with `fluentq.core.annotations.QueryInit`:
 
 ```java
 @Entity
@@ -51,7 +51,7 @@ manual initialization can be activated via the `@Config` annotation.
 
 ## Customization
 
-The serialization of Querydsl can be customized via `@Config` annotations on
+The serialization of fluentQ can be customized via `@Config` annotations on
 packages and types.
 
 ### Config Options
@@ -80,9 +80,9 @@ Customization of package content:
 
 ```java
 @Config(listAccessors=true)
-package com.querydsl.core.domain.rel;
+package fluentq.core.domain.rel;
 
-import com.querydsl.core.annotations.Config;
+import fluentq.core.annotations.Config;
 ```
 
 ### APT Options
@@ -92,21 +92,21 @@ options:
 
 | Name | Description |
 |:-----|:------------|
-| `querydsl.entityAccessors` | Enable reference field accessors |
-| `querydsl.listAccessors` | Enable accessors for direct indexed list access |
-| `querydsl.mapAccessors` | Enable accessors for direct key-based map access |
-| `querydsl.prefix` | Override the prefix for query types (default: `Q`) |
-| `querydsl.suffix` | Set a suffix for query types |
-| `querydsl.packageSuffix` | Set a suffix for query type packages |
-| `querydsl.createDefaultVariable` | Set whether default variables are created |
-| `querydsl.unknownAsEmbeddable` | Set whether unknown non-annotated classes should be treated as embeddable (default: `false`) |
-| `querydsl.includedPackages` | Comma-separated list of packages to include into code generation (default: all) |
-| `querydsl.includedClasses` | Comma-separated list of class names to include into code generation (default: all) |
-| `querydsl.excludedPackages` | Comma-separated list of packages to exclude from code generation (default: none) |
-| `querydsl.excludedClasses` | Comma-separated list of class names to exclude from code generation (default: none) |
-| `querydsl.useFields` | Set whether fields are used as metadata source (default: `true`) |
-| `querydsl.useGetters` | Set whether accessors are used as metadata source (default: `true`) |
-| `querydsl.generatedAnnotationClass` | Fully qualified class name of the annotation to add on generated sources |
+| `fluentq.entityAccessors` | Enable reference field accessors |
+| `fluentq.listAccessors` | Enable accessors for direct indexed list access |
+| `fluentq.mapAccessors` | Enable accessors for direct key-based map access |
+| `fluentq.prefix` | Override the prefix for query types (default: `Q`) |
+| `fluentq.suffix` | Set a suffix for query types |
+| `fluentq.packageSuffix` | Set a suffix for query type packages |
+| `fluentq.createDefaultVariable` | Set whether default variables are created |
+| `fluentq.unknownAsEmbeddable` | Set whether unknown non-annotated classes should be treated as embeddable (default: `false`) |
+| `fluentq.includedPackages` | Comma-separated list of packages to include into code generation (default: all) |
+| `fluentq.includedClasses` | Comma-separated list of class names to include into code generation (default: all) |
+| `fluentq.excludedPackages` | Comma-separated list of packages to exclude from code generation (default: none) |
+| `fluentq.excludedClasses` | Comma-separated list of class names to exclude from code generation (default: none) |
+| `fluentq.useFields` | Set whether fields are used as metadata source (default: `true`) |
+| `fluentq.useGetters` | Set whether accessors are used as metadata source (default: `true`) |
+| `fluentq.generatedAnnotationClass` | Fully qualified class name of the annotation to add on generated sources |
 
 ### Using maven-compiler-plugin
 
@@ -119,15 +119,15 @@ directly into compilation:
   <configuration>
     <generatedSourcesDirectory>target/generated-sources/java</generatedSourcesDirectory>
     <compilerArgs>
-      <arg>-Aquerydsl.entityAccessors=true</arg>
-      <arg>-Aquerydsl.useFields=false</arg>
+      <arg>-Afluentq.entityAccessors=true</arg>
+      <arg>-Afluentq.useFields=false</arg>
     </compilerArgs>
   </configuration>
   <dependencies>
     <dependency>
       <groupId>{{ site.group_id }}</groupId>
-      <artifactId>querydsl-apt</artifactId>
-      <version>{{ site.querydsl_version }}</version>
+      <artifactId>fluentq-apt</artifactId>
+      <version>{{ site.fluentq_version }}</version>
       <classifier>jpa</classifier>
     </dependency>
     <dependency>
@@ -140,7 +140,7 @@ directly into compilation:
 ```
 
 You need to use a proper classifier when defining the dependency on
-`{{ site.group_id }}:querydsl-apt`. The additional artifacts define the
+`{{ site.group_id }}:fluentq-apt`. The additional artifacts define the
 annotation processor to be used in
 `META-INF/services/javax.annotation.processing.Processor`.
 
@@ -175,20 +175,20 @@ public class MyEntity {
     public String stringAsComparable;
 
     @QueryType(PropertyType.NONE)
-    public String stringNotInQuerydsl;
+    public String stringNotInfluentQ;
 }
 ```
 
 The value `PropertyType.NONE` can be used to skip a property in query type
 generation. This is different from `@Transient` or `@QueryTransient`
 annotated properties, where properties are not persisted. `PropertyType.NONE`
-just omits the property from the Querydsl query type.
+just omits the property from the fluentQ query type.
 
 ## Delegate Methods
 
 To declare a static method as a delegate method, add the `@QueryDelegate`
 annotation with the corresponding domain type as a value and provide a method
-signature that takes the corresponding Querydsl query type as the first
+signature that takes the corresponding fluentQ query type as the first
 argument.
 
 ```java
@@ -240,11 +240,11 @@ proper delegate method usages are created.
 
 ## Non-annotated Types
 
-It is possible to create Querydsl query types for non-annotated types by
+It is possible to create fluentQ query types for non-annotated types by
 creating `@QueryEntities` annotations. Place a `@QueryEntities` annotation
 into a package of your choice and the classes to mirror in the value attribute.
 
-To create the types, use the `com.querydsl.apt.QuerydslAnnotationProcessor`.
+To create the types, use the `fluentq.apt.fluentQAnnotationProcessor`.
 In Maven, configure the `maven-compiler-plugin`:
 
 ```xml
@@ -256,8 +256,8 @@ In Maven, configure the `maven-compiler-plugin`:
   <dependencies>
     <dependency>
       <groupId>{{ site.group_id }}</groupId>
-      <artifactId>querydsl-apt</artifactId>
-      <version>{{ site.querydsl_version }}</version>
+      <artifactId>fluentq-apt</artifactId>
+      <version>{{ site.fluentq_version }}</version>
       <classifier>general</classifier>
     </dependency>
   </dependencies>
@@ -271,13 +271,13 @@ a different JVM language (Scala, Groovy) or annotation addition via bytecode
 manipulation, the `GenericExporter` class can be used to scan the classpath
 for annotated classes and generate query types.
 
-Add a dependency to the `querydsl-codegen` module:
+Add a dependency to the `fluentq-codegen` module:
 
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-codegen</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-codegen</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
@@ -301,7 +301,7 @@ subpackages to the `target/generated-sources/java` directory.
 ### Usage via Maven
 
 The goals `generic-export`, `jpa-export`, and `jdo-export` of the
-`querydsl-maven-plugin` can be used for `GenericExporter` usage via Maven.
+`fluentq-maven-plugin` can be used for `GenericExporter` usage via Maven.
 
 | Type | Element | Description |
 |:-----|:--------|:------------|
@@ -318,8 +318,8 @@ Example for JPA annotated classes:
 ```xml
 <plugin>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-maven-plugin</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-maven-plugin</artifactId>
+  <version>{{ site.fluentq_version }}</version>
   <executions>
     <execution>
       <phase>process-classes</phase>
@@ -361,13 +361,13 @@ For Scala output, use a variant of the following configuration:
 ```xml
 <plugin>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-maven-plugin</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-maven-plugin</artifactId>
+  <version>{{ site.fluentq_version }}</version>
   <dependencies>
     <dependency>
       <groupId>{{ site.group_id }}</groupId>
-      <artifactId>querydsl-scala</artifactId>
-      <version>{{ site.querydsl_version }}</version>
+      <artifactId>fluentq-scala</artifactId>
+      <version>{{ site.fluentq_version }}</version>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>

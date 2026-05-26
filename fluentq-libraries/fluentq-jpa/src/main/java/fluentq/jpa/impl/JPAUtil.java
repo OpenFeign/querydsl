@@ -1,0 +1,77 @@
+/*
+ * Copyright 2015, The FluentQ Team (http://www.fluentq.com/team)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package fluentq.jpa.impl;
+
+import fluentq.core.types.ParamExpression;
+import fluentq.core.types.ParamNotSetException;
+import fluentq.core.types.dsl.Param;
+import fluentq.core.util.MathUtils;
+import jakarta.persistence.Parameter;
+import jakarta.persistence.Query;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * JPAUtil provides static utility methods for JPA
+ *
+ * @author tiwe
+ */
+public final class JPAUtil {
+
+  private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER =
+      Map.of(
+          int.class, Integer.class,
+          long.class, Long.class,
+          double.class, Double.class,
+          float.class, Float.class,
+          short.class, Short.class,
+          byte.class, Byte.class);
+
+  @SuppressWarnings("unchecked")
+  private static <T extends Number> Class<T> primitiveToWrapper(Class<?> type) {
+    return (Class<T>) PRIMITIVE_TO_WRAPPER.getOrDefault(type, type);
+  }
+
+  private JPAUtil() {}
+
+  public static void setConstants(
+      Query query, List<Object> constants, Map<ParamExpression<?>, Object> params) {
+    var hasParameters = !query.getParameters().isEmpty();
+
+    for (var i = 0; i < constants.size(); i++) {
+      var val = constants.get(i);
+
+      if (val instanceof Param) {
+        Param<?> param = (Param<?>) val;
+        val = params.get(val);
+        if (val == null) {
+          throw new ParamNotSetException(param);
+        }
+      }
+
+      if (hasParameters) {
+        Parameter parameter = query.getParameter(i + 1);
+        var parameterType = parameter != null ? parameter.getParameterType() : null;
+        if (parameterType != null && !parameterType.isInstance(val)) {
+          var targetType = primitiveToWrapper(parameterType);
+          if (val instanceof Number number && Number.class.isAssignableFrom(targetType)) {
+            val = MathUtils.cast(number, targetType);
+          }
+        }
+      }
+
+      query.setParameter(i + 1, val);
+    }
+  }
+}

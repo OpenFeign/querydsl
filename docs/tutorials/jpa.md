@@ -7,11 +7,11 @@ nav_order: 1
 
 # Querying JPA
 
-Querydsl defines a general statically typed syntax for querying on top of
-persisted domain model data. This guide describes how to use Querydsl in
+fluentQ defines a general statically typed syntax for querying on top of
+persisted domain model data. This guide describes how to use fluentQ in
 combination with JPA.
 
-Querydsl for JPA is an alternative to both JPQL and Criteria queries. It
+fluentQ for JPA is an alternative to both JPQL and Criteria queries. It
 combines the dynamic nature of Criteria queries with the expressiveness of
 JPQL — all in a fully type-safe manner.
 
@@ -22,12 +22,12 @@ Add the following dependencies to your Maven project:
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-jpa</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-jpa</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
-Configure the `maven-compiler-plugin` to run the Querydsl annotation processor
+Configure the `maven-compiler-plugin` to run the fluentQ annotation processor
 during compilation:
 
 ```xml
@@ -39,8 +39,8 @@ during compilation:
   <dependencies>
     <dependency>
       <groupId>{{ site.group_id }}</groupId>
-      <artifactId>querydsl-apt</artifactId>
-      <version>{{ site.querydsl_version }}</version>
+      <artifactId>fluentq-apt</artifactId>
+      <version>{{ site.fluentq_version }}</version>
       <classifier>jpa</classifier>
     </dependency>
     <dependency>
@@ -56,7 +56,7 @@ The `JPAAnnotationProcessor` finds domain types annotated with the
 `jakarta.persistence.Entity` annotation and generates query types for them.
 
 If you use Hibernate annotations in your domain types, use the processor
-`com.querydsl.apt.hibernate.HibernateAnnotationProcessor` instead. See the
+`fluentq.apt.hibernate.HibernateAnnotationProcessor` instead. See the
 [Hibernate tutorial]({{ site.baseurl }}/tutorials/hibernate) for
 Hibernate-specific features such as Common Table Expressions, query caching,
 and read-only mode.
@@ -67,9 +67,9 @@ Run `mvn clean install` and your query types will be generated into
 ## Generating the Model from hbm.xml Files
 
 If you use Hibernate with an XML-based configuration, you can use the XML
-metadata to create your Querydsl model.
+metadata to create your fluentQ model.
 
-`com.querydsl.jpa.codegen.HibernateDomainExporter` provides this
+`fluentq.jpa.codegen.HibernateDomainExporter` provides this
 functionality:
 
 ```java
@@ -84,12 +84,12 @@ exporter.export();
 The `HibernateDomainExporter` must be executed within a classpath where the
 domain types are visible, since property types are resolved via reflection.
 
-All JPA annotations are ignored, but Querydsl annotations such as `@QueryInit`
+All JPA annotations are ignored, but fluentQ annotations such as `@QueryInit`
 and `@QueryType` are taken into account.
 
 ## Using Query Types
 
-To create queries with Querydsl you need to instantiate variables and query
+To create queries with fluentQ you need to instantiate variables and query
 implementations.
 
 Assume that your project has the following domain type:
@@ -118,9 +118,9 @@ public class Customer {
 }
 ```
 
-Querydsl generates a query type with the simple name `QCustomer` into the same
+fluentQ generates a query type with the simple name `QCustomer` into the same
 package as `Customer`. `QCustomer` can be used as a statically typed variable
-in Querydsl queries as a representative for the `Customer` type.
+in fluentQ queries as a representative for the `Customer` type.
 
 `QCustomer` has a default instance variable accessible as a static field:
 
@@ -136,7 +136,7 @@ QCustomer customer = new QCustomer("myCustomer");
 
 ## Querying
 
-The Querydsl JPA module supports both the JPA and the Hibernate API.
+The fluentQ JPA module supports both the JPA and the Hibernate API.
 
 To use the JPA API, create `JPAQuery` instances like this:
 
@@ -171,7 +171,7 @@ Customer bob = queryFactory.selectFrom(customer)
 ```
 
 The `selectFrom` call defines the query source and projection, the `where`
-part defines the filter, and `fetchOne` tells Querydsl to return a single
+part defines the filter, and `fetchOne` tells fluentQ to return a single
 element.
 
 To create a query with multiple sources:
@@ -212,7 +212,7 @@ queryFactory.selectFrom(customer)
 
 ## Using Joins
 
-Querydsl supports the following join variants in JPQL: inner join, join, left
+fluentQ supports the following join variants in JPQL: inner join, join, left
 join, and right join. Join usage is type-safe and follows this pattern:
 
 ```java
@@ -372,16 +372,16 @@ List results = jpaQuery.getResultList();
 
 ## Using Native SQL in JPA Queries
 
-Querydsl supports Native SQL in JPA via the `JPASQLQuery` class.
+fluentQ supports Native SQL in JPA via the `JPASQLQuery` class.
 
-To use it, you must generate Querydsl query types for your SQL schema. This
+To use it, you must generate fluentQ query types for your SQL schema. This
 can be done with the following Maven configuration:
 
 ```xml
 <plugin>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-maven-plugin</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-maven-plugin</artifactId>
+  <version>{{ site.fluentq_version }}</version>
   <executions>
     <execution>
       <goals>

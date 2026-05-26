@@ -1,0 +1,64 @@
+/*
+ * Copyright 2015, The FluentQ Team (http://www.fluentq.com/team)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package fluentq.core.group;
+
+import fluentq.core.types.Expression;
+import fluentq.core.util.MathUtils;
+import java.io.Serial;
+import java.math.BigDecimal;
+import java.math.MathContext;
+
+/**
+ * GAvg
+ *
+ * @param <T> t
+ */
+@SuppressWarnings("unchecked")
+public class GAvg<T extends Number> extends AbstractGroupExpression<T, T> {
+
+  @Serial private static final long serialVersionUID = 3518868612387641383L;
+
+  private final MathContext mathContext;
+
+  public GAvg(Expression<T> expr) {
+    this(expr, MathContext.DECIMAL128);
+  }
+
+  GAvg(Expression<T> expr, MathContext mathContext) {
+    super((Class) expr.getType(), expr);
+    this.mathContext = mathContext;
+  }
+
+  @Override
+  public GroupCollector<T, T> createGroupCollector() {
+    return new GroupCollector<>() {
+      private int count = 0;
+      private BigDecimal sum = BigDecimal.ZERO;
+
+      @Override
+      public void add(T t) {
+        count++;
+        if (t != null) {
+          sum = sum.add(new BigDecimal(t.toString()));
+        }
+      }
+
+      @Override
+      public T get() {
+        var avg = sum.divide(BigDecimal.valueOf(count), mathContext);
+        return MathUtils.cast(avg, getType());
+      }
+    };
+  }
+}

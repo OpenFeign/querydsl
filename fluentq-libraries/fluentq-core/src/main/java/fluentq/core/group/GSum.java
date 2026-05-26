@@ -1,0 +1,53 @@
+/*
+ * Copyright 2015, The FluentQ Team (http://www.fluentq.com/team)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package fluentq.core.group;
+
+import fluentq.core.types.Expression;
+import fluentq.core.util.MathUtils;
+import java.io.Serial;
+import java.math.BigDecimal;
+
+/**
+ * GSum
+ *
+ * @param <T> t
+ */
+public class GSum<T extends Number> extends AbstractGroupExpression<T, T> {
+
+  @Serial private static final long serialVersionUID = 3518868612387641383L;
+
+  @SuppressWarnings("unchecked")
+  public GSum(Expression<T> expr) {
+    super((Class) expr.getType(), expr);
+  }
+
+  @Override
+  public GroupCollector<T, T> createGroupCollector() {
+    return new GroupCollector<>() {
+      private BigDecimal sum = BigDecimal.ZERO;
+
+      @Override
+      public void add(T t) {
+        if (t != null) {
+          sum = sum.add(new BigDecimal(t.toString()));
+        }
+      }
+
+      @Override
+      public T get() {
+        return MathUtils.cast(sum, getType());
+      }
+    };
+  }
+}

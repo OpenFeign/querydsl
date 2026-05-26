@@ -5,9 +5,9 @@ parent: Tutorials
 nav_order: 7
 ---
 
-# Querydsl Spatial
+# fluentQ Spatial
 
-Support for spatial queries is available via the Querydsl Spatial module, which
+Support for spatial queries is available via the fluentQ Spatial module, which
 is an extension module to the SQL module. The Spatial module supports the object
 model of Simple Feature Access in queries and object binding.
 
@@ -22,8 +22,8 @@ Add the following dependency to your Maven project:
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-sql-spatial</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-sql-spatial</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
@@ -49,14 +49,14 @@ Additionally, add the following database-specific extra dependencies:
 
 ## Code Generation via Maven
 
-The code generation for Querydsl SQL can be set to detect spatial types in
+The code generation for fluentQ SQL can be set to detect spatial types in
 database schemas and use geolatte types via the `spatial` property:
 
 ```xml
 <plugin>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-maven-plugin</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-maven-plugin</artifactId>
+  <version>{{ site.fluentq_version }}</version>
   ...
   <configuration>
     ...

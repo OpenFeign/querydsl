@@ -1,0 +1,16 @@
+package fluentq.sql.suites;
+
+import fluentq.sql.Connections;
+import java.sql.SQLException;
+import org.junit.AfterClass;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+
+@RunWith(Enclosed.class)
+public abstract class AbstractSuite {
+
+  @AfterClass
+  public static void tearDown() throws SQLException {
+    Connections.close();
+  }
+}

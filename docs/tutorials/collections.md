@@ -7,21 +7,21 @@ nav_order: 4
 
 # Querying Collections
 
-The `querydsl-collections` module can be used with generated query types or
+The `fluentq-collections` module can be used with generated query types or
 without. The first section describes usage without generated query types.
 
 ## Usage Without Generated Query Types
 
-To use `querydsl-collections` without generated query types, use the Querydsl
+To use `fluentq-collections` without generated query types, use the fluentQ
 alias feature.
 
 Add the following static imports:
 
 ```java
-// needed for access of the Querydsl Collections API
-import static com.querydsl.collections.CollQueryFactory.*;
+// needed for access of the fluentQ Collections API
+import static fluentq.collections.CollQueryFactory.*;
 // needed if you use the $-invocations
-import static com.querydsl.core.alias.Alias.*;
+import static fluentq.core.alias.Alias.*;
 ```
 
 Create an alias instance for the `Cat` class. Alias instances can only be
@@ -97,13 +97,13 @@ Add the following dependencies to your Maven project:
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-collections</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-collections</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
 If you are not using JPA you can generate expression types for your domain
-types by annotating them with `com.querydsl.core.annotations.QueryEntity` and
+types by annotating them with `fluentq.core.annotations.QueryEntity` and
 configuring the `maven-compiler-plugin`:
 
 ```xml
@@ -115,8 +115,8 @@ configuring the `maven-compiler-plugin`:
   <dependencies>
     <dependency>
       <groupId>{{ site.group_id }}</groupId>
-      <artifactId>querydsl-apt</artifactId>
-      <version>{{ site.querydsl_version }}</version>
+      <artifactId>fluentq-apt</artifactId>
+      <version>{{ site.fluentq_version }}</version>
       <classifier>general</classifier>
     </dependency>
   </dependencies>
@@ -125,11 +125,11 @@ configuring the `maven-compiler-plugin`:
 
 ## Hamcrest Matchers
 
-Querydsl Collections provides Hamcrest matchers:
+fluentQ Collections provides Hamcrest matchers:
 
 ```java
 import static org.hamcrest.core.IsEqual.equalTo;
-import static com.querydsl.collections.PathMatcher.hasValue;
+import static fluentq.collections.PathMatcher.hasValue;
 import static org.junit.Assert.assertThat;
 
 Car car = new Car();
@@ -141,7 +141,7 @@ assertThat(car, hasValue($.horsePower, equalTo(123)));
 
 ## Usage With the Eclipse Compiler for Java
 
-If `querydsl-collections` is used with a JRE where the system compiler is not
+If `fluentq-collections` is used with a JRE where the system compiler is not
 available, `CollQuery` instances can be configured to use the Eclipse Compiler
 for Java (ECJ) instead:
 

@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>io.github.openfeign.querydsl</groupId>
-  <artifactId>querydsl-root</artifactId>
-  <version>7.3-SNAPSHOT</version>
+  <groupId>io.github.openfeign.fluentq</groupId>
+  <artifactId>fluentq-root</artifactId>
+  <version>8.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
-  <name>Querydsl</name>
+  <name>fluentQ</name>
   <description>parent project for Querydsl modules</description>
   <url>https://querydsl.github.io/</url>
 
@@ -65,8 +65,9 @@
   </contributors>
 
   <modules>
-    <module>querydsl-tooling</module>
-    <module>querydsl-libraries</module>
+    <module>fluentq-tooling</module>
+    <module>fluentq-libraries</module>
+    <module>querydsl</module>
   </modules>
 
   <scm>
@@ -540,6 +541,7 @@
         <version>0.8.14</version>
         <configuration>
           <includes>
+            <include>fluentq/**</include>
             <include>com/querydsl/**</include>
             <include>io/github/openfeign/querydsl/**</include>
           </includes>
@@ -566,6 +568,7 @@
             <license.skip>true</license.skip>
           </projectExtraProperties>
           <includes>
+            <include>fluentq/**</include>
             <include>com/querydsl/**</include>
             <include>io/github/openfeign/querydsl/**</include>
           </includes>
@@ -611,82 +614,183 @@
 
               <extraDependencies>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-apt</artifactId>
                   <version>${project.version}</version>
                   <classifier>general</classifier>
                 </dependency>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-apt</artifactId>
                   <version>${project.version}</version>
                   <classifier>hibernate</classifier>
                 </dependency>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-apt</artifactId>
                   <version>${project.version}</version>
                   <classifier>jakarta</classifier>
                 </dependency>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-apt</artifactId>
                   <version>${project.version}</version>
                   <classifier>jdo</classifier>
                 </dependency>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-apt</artifactId>
                   <version>${project.version}</version>
                   <classifier>jpa</classifier>
                 </dependency>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-apt</artifactId>
                   <version>${project.version}</version>
                   <classifier>morphia</classifier>
                 </dependency>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-apt</artifactId>
                   <version>${project.version}</version>
                   <classifier>roo</classifier>
                 </dependency>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-apt</artifactId>
                   <version>${project.version}</version>
                   <classifier>general-one</classifier>
                 </dependency>
 
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-jpa</artifactId>
                   <version>${project.version}</version>
                   <classifier>apt-one-jar</classifier>
                 </dependency>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-jpa</artifactId>
                   <version>${project.version}</version>
                   <classifier>apt-hibernate-one-jar</classifier>
                 </dependency>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-jpa</artifactId>
                   <version>${project.version}</version>
                   <classifier>apt</classifier>
                 </dependency>
 
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-mongodb</artifactId>
                   <version>${project.version}</version>
                   <classifier>apt-one-jar</classifier>
                 </dependency>
                 <dependency>
-                  <groupId>${project.groupId}</groupId>
+                  <groupId>io.github.openfeign.querydsl</groupId>
                   <artifactId>querydsl-mongodb</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt</classifier>
+                </dependency>
+              </extraDependencies>
+            </bom>
+            <bom>
+              <artifactId>fluentq-bom</artifactId>
+              <name>fluentQ (Bill Of Materials)</name>
+
+              <properties>
+                <license.skip>true</license.skip>
+              </properties>
+
+              <modules>
+                <includes>
+                  <include>io.github.openfeign.fluentq:*</include>
+                </includes>
+                <excludes>
+                  <exclude>*:fluentq-examples</exclude>
+                  <exclude>*:fluentq-example-*</exclude>
+                </excludes>
+              </modules>
+
+              <extraDependencies>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>general</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>hibernate</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jakarta</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jdo</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jpa</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>morphia</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>roo</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-apt</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>general-one</classifier>
+                </dependency>
+
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-jpa</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt-one-jar</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-jpa</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt-hibernate-one-jar</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-jpa</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt</classifier>
+                </dependency>
+
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-mongodb</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>apt-one-jar</classifier>
+                </dependency>
+                <dependency>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>fluentq-mongodb</artifactId>
                   <version>${project.version}</version>
                   <classifier>apt</classifier>
                 </dependency>
@@ -977,7 +1081,12 @@
                         com.querydsl.core.testutil.MongoDB,
                         com.querydsl.core.testutil.SlowTest,
                         com.querydsl.core.testutil.Performance,
-                        com.querydsl.core.testutil.ReportingOnly</excludedGroups>
+                        com.querydsl.core.testutil.ReportingOnly,
+                        fluentq.core.testutil.Database,
+                        fluentq.core.testutil.MongoDB,
+                        fluentq.core.testutil.SlowTest,
+                        fluentq.core.testutil.Performance,
+                        fluentq.core.testutil.ReportingOnly</excludedGroups>
       </properties>
     </profile>
     <profile>
@@ -986,7 +1095,10 @@
         <!-- default groups to exclude from surefire plugin -->
         <excludedGroups>com.querydsl.core.testutil.SlowTest,
                         com.querydsl.core.testutil.Performance,
-                        com.querydsl.core.testutil.ReportingOnly</excludedGroups>
+                        com.querydsl.core.testutil.ReportingOnly,
+                        fluentq.core.testutil.SlowTest,
+                        fluentq.core.testutil.Performance,
+                        fluentq.core.testutil.ReportingOnly</excludedGroups>
       </properties>
     </profile>
     <profile>
@@ -997,7 +1109,12 @@
                         com.querydsl.core.testutil.MongoDB,
                         com.querydsl.core.testutil.SlowTest,
                         com.querydsl.core.testutil.Performance,
-                        com.querydsl.core.testutil.ReportingOnly</excludedGroups>
+                        com.querydsl.core.testutil.ReportingOnly,
+                        fluentq.core.testutil.ExternalDatabase,
+                        fluentq.core.testutil.MongoDB,
+                        fluentq.core.testutil.SlowTest,
+                        fluentq.core.testutil.Performance,
+                        fluentq.core.testutil.ReportingOnly</excludedGroups>
       </properties>
 
       <build>

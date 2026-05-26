@@ -7,5 +7,5 @@ has_children: true
 
 # Guides
 
-In-depth guides covering cross-cutting Querydsl features that apply to all
+In-depth guides covering cross-cutting fluentQ features that apply to all
 backend modules.

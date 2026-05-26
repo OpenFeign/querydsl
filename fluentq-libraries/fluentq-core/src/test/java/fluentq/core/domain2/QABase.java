@@ -1,0 +1,42 @@
+package fluentq.core.domain2;
+
+import static fluentq.core.types.PathMetadataFactory.forVariable;
+
+import fluentq.core.types.PathMetadata;
+import fluentq.core.types.dsl.EntityPathBase;
+import fluentq.core.types.dsl.NumberPath;
+import fluentq.core.types.dsl.PathInits;
+import jakarta.annotation.Generated;
+import java.io.Serial;
+
+/** QABase is a FluentQ query type for ABase */
+@Generated("fluentq.codegen.SupertypeSerializer")
+public class QABase extends EntityPathBase<ABase> {
+
+  @Serial private static final long serialVersionUID = -261663299;
+
+  private static final PathInits INITS = PathInits.DIRECT;
+
+  public static final QABase aBase = new QABase("aBase");
+
+  public final NumberPath<Long> id = createNumber("id", Long.class);
+
+  public final QTenantImpl tenant;
+
+  public QABase(String variable) {
+    this(ABase.class, forVariable(variable), INITS);
+  }
+
+  public QABase(PathMetadata metadata) {
+    this(metadata, metadata.isRoot() ? INITS : PathInits.DEFAULT);
+  }
+
+  public QABase(PathMetadata metadata, PathInits inits) {
+    this(ABase.class, metadata, inits);
+  }
+
+  public QABase(Class<? extends ABase> type, PathMetadata metadata, PathInits inits) {
+    super(type, metadata, inits);
+    this.tenant = inits.isInitialized("tenant") ? new QTenantImpl(forProperty("tenant")) : null;
+  }
+}

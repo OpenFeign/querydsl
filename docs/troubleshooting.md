@@ -8,19 +8,19 @@ nav_order: 5
 
 ## Insufficient Type Arguments
 
-Querydsl needs properly encoded `List`, `Set`, `Collection`, and `Map`
+fluentQ needs properly encoded `List`, `Set`, `Collection`, and `Map`
 properties in all code generation scenarios.
 
 When using improperly encoded fields or getters you might see the following
 stack trace:
 
 ```
-java.lang.RuntimeException: Caught exception for field com.querydsl.jdo.testdomain.Store#products
-  at com.querydsl.apt.Processor$2.visitType(Processor.java:117)
-  at com.querydsl.apt.Processor$2.visitType(Processor.java:80)
+java.lang.RuntimeException: Caught exception for field fluentq.jdo.testdomain.Store#products
+  at fluentq.apt.Processor$2.visitType(Processor.java:117)
+  at fluentq.apt.Processor$2.visitType(Processor.java:80)
   ...
 Caused by: java.lang.IllegalArgumentException: Insufficient type arguments for List
-  at com.querydsl.apt.APTTypeModel.visitDeclared(APTTypeModel.java:112)
+  at fluentq.apt.APTTypeModel.visitDeclared(APTTypeModel.java:112)
   ...
 ```
 
@@ -34,15 +34,15 @@ private Map employeesByName;                   // WRONG
 private Map<String, Employee> employeesByName; // RIGHT
 ```
 
-## Multithreaded Initialization of Querydsl Q-types
+## Multithreaded Initialization of fluentQ Q-types
 
-When Querydsl Q-types are initialized from multiple threads, deadlocks can
+When fluentQ Q-types are initialized from multiple threads, deadlocks can
 occur if the Q-types have circular dependencies.
 
 The solution is to initialize the classes in a single thread before they are
 used in different threads.
 
-The `com.querydsl.codegen.ClassPathUtils` class can be used for that:
+The `fluentq.codegen.ClassPathUtils` class can be used for that:
 
 ```java
 ClassPathUtils.scanPackage(Thread.currentThread().getContextClassLoader(), packageToLoad);

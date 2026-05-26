@@ -17,19 +17,19 @@ Add the following dependencies to your Maven project:
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-sql</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-sql</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-sql-codegen</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-sql-codegen</artifactId>
+  <version>{{ site.fluentq_version }}</version>
   <scope>provided</scope>
 </dependency>
 ```
 
-The `querydsl-sql-codegen` dependency can be skipped if code generation happens
+The `fluentq-sql-codegen` dependency can be skipped if code generation happens
 via Maven.
 
 ## Code Generation via Maven
@@ -39,8 +39,8 @@ This functionality should be primarily used via the Maven plugin:
 ```xml
 <plugin>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-maven-plugin</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-maven-plugin</artifactId>
+  <version>{{ site.fluentq_version }}</version>
   <executions>
     <execution>
       <goals>
@@ -115,7 +115,7 @@ Custom types can be used to register additional Type implementations:
 
 ```xml
 <customTypes>
-  <customType>com.querydsl.sql.types.InputStreamType</customType>
+  <customType>fluentq.sql.types.InputStreamType</customType>
 </customTypes>
 ```
 
@@ -196,7 +196,7 @@ Renaming a column:
 
 ## Creating the Query Types
 
-To get started, export your schema into Querydsl query types:
+To get started, export your schema into fluentQ query types:
 
 ```java
 java.sql.Connection conn = ...;
@@ -218,15 +218,15 @@ which can be used for compact join declarations.
 
 ## Configuration
 
-The configuration is done via `com.querydsl.sql.Configuration` which takes a
-Querydsl SQL dialect as an argument. For H2:
+The configuration is done via `fluentq.sql.Configuration` which takes a
+fluentQ SQL dialect as an argument. For H2:
 
 ```java
 SQLTemplates templates = new H2Templates();
 Configuration configuration = new Configuration(templates);
 ```
 
-Querydsl uses SQL dialects to customize the SQL serialization needed for
+fluentQ uses SQL dialects to customize the SQL serialization needed for
 different relational databases. The available dialects are:
 
 - `CUBRIDTemplates`
@@ -269,7 +269,7 @@ creation:
 SQLQueryFactory queryFactory = new SQLQueryFactory(configuration, dataSource);
 ```
 
-Querying with Querydsl SQL:
+Querying with fluentQ SQL:
 
 ```java
 QCustomer customer = new QCustomer("c");
@@ -410,7 +410,7 @@ queryFactory.select(Expressions.constant(1),
                     Expressions.constant("abc"));
 ```
 
-The class `com.querydsl.core.types.dsl.Expressions` also offers other useful
+The class `fluentq.core.types.dsl.Expressions` also offers other useful
 static methods for projections, operations, and template creation.
 
 ## Query Extension Support
@@ -448,7 +448,7 @@ public class MySQLQuery<T> extends AbstractSQLQuery<T, MySQLQuery<T>> {
 
 The flags are custom SQL snippets that can be inserted at specific points in
 the serialization. The supported positions are the enums of the
-`com.querydsl.core.QueryFlag.Position` enum class.
+`fluentq.core.QueryFlag.Position` enum class.
 
 ## Window Functions
 
@@ -609,7 +609,7 @@ queryFactory.delete(survey)
 
 ## Batch Support in DML Clauses
 
-Querydsl SQL supports JDBC batch updates through the DML APIs. Bundle
+fluentQ SQL supports JDBC batch updates through the DML APIs. Bundle
 consecutive DML calls with a similar structure via `addBatch()`:
 
 Update:
@@ -693,7 +693,7 @@ query or configuration level via `setUseLiterals(true)`.
 
 ## Custom Types
 
-Querydsl SQL provides the possibility to declare custom type mappings for
+fluentQ SQL provides the possibility to declare custom type mappings for
 `ResultSet`/`Statement` interaction. Custom type mappings can be declared in
 `Configuration` instances:
 
@@ -730,18 +730,18 @@ validation.
 
 ## Spring Integration
 
-Querydsl SQL integrates with Spring through the `querydsl-sql-spring` module:
+fluentQ SQL integrates with Spring through the `fluentq-sql-spring` module:
 
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-sql-spring</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-sql-spring</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
 It provides Spring exception translation and a Spring connection provider for
-usage of Querydsl SQL with Spring transaction managers:
+usage of fluentQ SQL with Spring transaction managers:
 
 ```java
 @Configuration
@@ -758,9 +758,9 @@ public class JdbcConfiguration {
     }
 
     @Bean
-    public com.querydsl.sql.Configuration querydslConfiguration() {
+    public fluentq.sql.Configuration fluentqConfiguration() {
         SQLTemplates templates = H2Templates.builder().build();
-        com.querydsl.sql.Configuration configuration = new com.querydsl.sql.Configuration(templates);
+        fluentq.sql.Configuration configuration = new fluentq.sql.Configuration(templates);
         configuration.setExceptionTranslator(new SpringExceptionTranslator());
         return configuration;
     }
@@ -768,7 +768,7 @@ public class JdbcConfiguration {
     @Bean
     public SQLQueryFactory queryFactory() {
         SpringConnectionProvider provider = new SpringConnectionProvider(dataSource());
-        return new SQLQueryFactory(querydslConfiguration(), provider);
+        return new SQLQueryFactory(fluentqConfiguration(), provider);
     }
 }
 ```

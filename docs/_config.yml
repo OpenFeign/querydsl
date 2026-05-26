@@ -1,4 +1,4 @@
-title: Querydsl
+title: fluentQ
 description: >-
   Type-safe SQL-like queries for Java — JPA, SQL, MongoDB, R2DBC, Collections, and more.
 url: "https://openfeign.github.io"
@@ -6,8 +6,8 @@ baseurl: "/querydsl"
 
 remote_theme: just-the-docs/just-the-docs@v0.10.0
 
-querydsl_version: "7.1"
-group_id: "io.github.openfeign.querydsl"
+querydsl_version: "8.0"
+group_id: "io.github.openfeign.fluentq"
 
 permalink: pretty
 

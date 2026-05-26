@@ -1,0 +1,453 @@
+/*
+ * Copyright 2015, The FluentQ Team (http://www.fluentq.com/team)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package fluentq.jpa.hibernate;
+
+import fluentq.core.CloseableIterator;
+import fluentq.core.DefaultQueryMetadata;
+import fluentq.core.NonUniqueResultException;
+import fluentq.core.QueryException;
+import fluentq.core.QueryFlag;
+import fluentq.core.QueryMetadata;
+import fluentq.core.QueryModifiers;
+import fluentq.core.QueryResults;
+import fluentq.core.types.ConstantImpl;
+import fluentq.core.types.Expression;
+import fluentq.core.types.ExpressionUtils;
+import fluentq.core.types.FactoryExpression;
+import fluentq.core.types.Path;
+import fluentq.core.types.SubQueryExpression;
+import fluentq.jpa.FactoryExpressionTransformer;
+import fluentq.jpa.HQLTemplates;
+import fluentq.jpa.JPAQueryBase;
+import fluentq.jpa.JPAQueryMixin;
+import fluentq.jpa.JPQLTemplates;
+import fluentq.jpa.ScrollableResultsIterator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
+import org.hibernate.FlushMode;
+import org.hibernate.LockMode;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
+import org.hibernate.Session;
+import org.hibernate.StatelessSession;
+import org.hibernate.query.Query;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * Abstract base class for Hibernate API based implementations of the JPQL interface
+ *
+ * @param <T> result type
+ * @param <Q> concrete subtype
+ * @author tiwe
+ */
+public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery<T, Q>>
+    extends JPAQueryBase<T, Q> {
+
+  private static final Logger logger = Logger.getLogger(HibernateQuery.class.getName());
+
+  @Nullable protected Boolean cacheable, readOnly;
+  @Nullable protected String cacheRegion, comment;
+
+  protected int fetchSize = 0;
+
+  protected final Map<Path<?>, LockMode> lockModes = new HashMap<>();
+
+  @Nullable protected FlushMode flushMode;
+
+  private final SessionHolder session;
+
+  protected int timeout = 0;
+
+  public AbstractHibernateQuery(Session session) {
+    this(new DefaultSessionHolder(session), HQLTemplates.DEFAULT, new DefaultQueryMetadata());
+  }
+
+  public AbstractHibernateQuery(
+      SessionHolder session, JPQLTemplates patterns, QueryMetadata metadata) {
+    super(metadata, patterns);
+    this.session = session;
+  }
+
+  @Override
+  public long fetchCount() {
+    var modifiers = getMetadata().getModifiers();
+    try {
+      var query = createQuery(modifiers, true);
+      var rv = (Long) query.uniqueResult();
+      if (rv != null) {
+        return rv;
+      } else {
+        throw new QueryException("Query returned null");
+      }
+    } finally {
+      reset();
+    }
+  }
+
+  public Q with(Path<?> alias, SubQueryExpression<?> query) {
+    return with(alias, null, query);
+  }
+
+  public Q withMaterializedHint(Path<?> alias, SubQueryExpression<?> query) {
+    return with(alias, true, query);
+  }
+
+  public Q withNotMaterializedHint(Path<?> alias, SubQueryExpression<?> query) {
+    return with(alias, false, query);
+  }
+
+  public Q with(Path<?> alias, Boolean materialized, SubQueryExpression<?> query) {
+    Expression<?> expr =
+        ExpressionUtils.operation(
+            alias.getType(),
+            HQLOps.WITH,
+            alias,
+            materialized != null ? ConstantImpl.create(materialized) : null,
+            query);
+    return queryMixin.addFlag(new QueryFlag(QueryFlag.Position.WITH, expr));
+  }
+
+  /**
+   * Expose the original Hibernate query for the given projection
+   *
+   * @return query
+   */
+  public Query createQuery() {
+    return createQuery(getMetadata().getModifiers(), false);
+  }
+
+  private Query createQuery(@Nullable QueryModifiers modifiers, boolean forCount) {
+    var serializer = serialize(forCount);
+    var queryString = serializer.toString();
+    logQuery(queryString);
+    Query query = session.createQuery(queryString);
+    HibernateUtil.setConstants(query, serializer.getConstants(), getMetadata().getParams());
+    if (fetchSize > 0) {
+      query.setFetchSize(fetchSize);
+    }
+    if (timeout > 0) {
+      query.setTimeout(timeout);
+    }
+    if (cacheable != null) {
+      query.setCacheable(cacheable);
+    }
+    if (cacheRegion != null) {
+      query.setCacheRegion(cacheRegion);
+    }
+    if (comment != null) {
+      query.setComment(comment);
+    }
+    if (readOnly != null) {
+      query.setReadOnly(readOnly);
+    }
+    for (Map.Entry<Path<?>, LockMode> entry : lockModes.entrySet()) {
+      query.setLockMode(entry.getKey().toString(), entry.getValue());
+    }
+    if (flushMode != null) {
+      query.setHibernateFlushMode(flushMode);
+    }
+
+    if (modifiers != null && modifiers.isRestricting()) {
+      Integer limit = modifiers.getLimitAsInteger();
+      Integer offset = modifiers.getOffsetAsInteger();
+      if (limit != null) {
+        query.setMaxResults(limit);
+      }
+      if (offset != null) {
+        query.setFirstResult(offset);
+      }
+    }
+
+    // set transformer, if necessary
+    Expression<?> projection = getMetadata().getProjection();
+    if (!forCount && projection instanceof FactoryExpression) {
+      query.setResultTransformer(
+          new FactoryExpressionTransformer((FactoryExpression<?>) projection));
+    }
+    return query;
+  }
+
+  /**
+   * Return the query results as an {@code Iterator}. If the query contains multiple results pre
+   * row, the results are returned in an instance of {@code Object[]}.<br>
+   * <br>
+   * Entities returned as results are initialized on demand. The first SQL query returns identifiers
+   * only.<br>
+   */
+  @Override
+  public CloseableIterator<T> iterate() {
+    try {
+      var query = createQuery();
+      var results = query.getResultList();
+      return new ScrollableResultsIterator<T>(results);
+    } finally {
+      reset();
+    }
+  }
+
+  @Override
+  public Stream<T> stream() {
+    try {
+      var query = createQuery();
+      return query.getResultStream();
+    } finally {
+      reset();
+    }
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<T> fetch() {
+    try {
+      List<T> results = createQuery().list();
+      if (hasFetchJoin()) {
+        results = new ArrayList<>(new LinkedHashSet<>(results));
+      }
+      return results;
+    } finally {
+      reset();
+    }
+  }
+
+  @Override
+  public QueryResults<T> fetchResults() {
+    try {
+      var countQuery = createQuery(null, true);
+      long total = (Long) countQuery.uniqueResult();
+
+      if (total > 0) {
+        var modifiers = getMetadata().getModifiers();
+        var query = createQuery(modifiers, false);
+        @SuppressWarnings("unchecked")
+        List<T> list = query.list();
+        if (hasFetchJoin()) {
+          list = new ArrayList<>(new LinkedHashSet<>(list));
+        }
+        return new QueryResults<>(list, modifiers, total);
+      } else {
+        return QueryResults.emptyResults();
+      }
+    } finally {
+      reset();
+    }
+  }
+
+  /**
+   * Check if any join in this query has a fetch join flag.
+   *
+   * @return true if at least one join uses fetchJoin
+   */
+  private boolean hasFetchJoin() {
+    return getMetadata().getJoins().stream()
+        .anyMatch(join -> join.getFlags().contains(JPAQueryMixin.FETCH));
+  }
+
+  protected void logQuery(String queryString) {
+    if (logger.isLoggable(Level.FINE)) {
+      var normalizedQuery = queryString.replace('\n', ' ');
+      logger.fine(normalizedQuery);
+    }
+  }
+
+  @Override
+  protected void reset() {}
+
+  /**
+   * Return the query results as {@code ScrollableResults}. The scrollability of the returned
+   * results depends upon JDBC driver support for scrollable {@code ResultSet}s.<br>
+   *
+   * @param mode scroll mode
+   * @return scrollable results
+   */
+  public ScrollableResults scroll(ScrollMode mode) {
+    try {
+      return createQuery().scroll(mode);
+    } finally {
+      reset();
+    }
+  }
+
+  /**
+   * Enable caching of this query result set.
+   *
+   * @param cacheable Should the query results be cacheable?
+   */
+  @SuppressWarnings("unchecked")
+  public Q setCacheable(boolean cacheable) {
+    this.cacheable = cacheable;
+    return (Q) this;
+  }
+
+  /**
+   * Set the name of the cache region.
+   *
+   * @param cacheRegion the name of a query cache region, or {@code null} for the default query
+   *     cache
+   */
+  @SuppressWarnings("unchecked")
+  public Q setCacheRegion(String cacheRegion) {
+    this.cacheRegion = cacheRegion;
+    return (Q) this;
+  }
+
+  /**
+   * Add a comment to the generated SQL.
+   *
+   * @param comment comment
+   * @return the current object
+   */
+  @SuppressWarnings("unchecked")
+  public Q setComment(String comment) {
+    this.comment = comment;
+    return (Q) this;
+  }
+
+  /**
+   * Set a fetchJoin size for the underlying JDBC query.
+   *
+   * @param fetchSize the fetchJoin size
+   * @return the current object
+   */
+  @SuppressWarnings("unchecked")
+  public Q setFetchSize(int fetchSize) {
+    this.fetchSize = fetchSize;
+    return (Q) this;
+  }
+
+  /**
+   * Set the lock mode for the given path.
+   *
+   * @return the current object
+   */
+  @SuppressWarnings("unchecked")
+  public Q setLockMode(Path<?> path, LockMode lockMode) {
+    lockModes.put(path, lockMode);
+    return (Q) this;
+  }
+
+  /**
+   * Override the current session flush mode, just for this query.
+   *
+   * @return the current object
+   */
+  @SuppressWarnings("unchecked")
+  public Q setFlushMode(FlushMode flushMode) {
+    this.flushMode = flushMode;
+    return (Q) this;
+  }
+
+  /**
+   * Entities retrieved by this query will be loaded in a read-only mode where Hibernate will never
+   * dirty-check them or make changes persistent.
+   *
+   * @return the current object
+   */
+  @SuppressWarnings("unchecked")
+  public Q setReadOnly(boolean readOnly) {
+    this.readOnly = readOnly;
+    return (Q) this;
+  }
+
+  /**
+   * Set a timeout for the underlying JDBC query.
+   *
+   * @param timeout the timeout in seconds
+   * @return the current object
+   */
+  @SuppressWarnings("unchecked")
+  public Q setTimeout(int timeout) {
+    this.timeout = timeout;
+    return (Q) this;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public T fetchOne() throws NonUniqueResultException {
+    try {
+      var modifiers = getMetadata().getModifiers();
+      var query = createQuery(modifiers, false);
+      if (hasFetchJoin()) {
+        List<T> results = query.list();
+        results = new ArrayList<>(new LinkedHashSet<>(results));
+        if (results.isEmpty()) {
+          return null;
+        } else if (results.size() == 1) {
+          return results.get(0);
+        } else {
+          throw new NonUniqueResultException();
+        }
+      }
+      try {
+        return (T) query.uniqueResult();
+      } catch (org.hibernate.NonUniqueResultException e) {
+        throw new NonUniqueResultException(e);
+      }
+    } finally {
+      reset();
+    }
+  }
+
+  @Override
+  protected HQLSerializer createSerializer() {
+    return new HQLSerializer(getTemplates());
+  }
+
+  protected void clone(Q query) {
+    cacheable = query.cacheable;
+    cacheRegion = query.cacheRegion;
+    fetchSize = query.fetchSize;
+    flushMode = query.flushMode;
+    lockModes.putAll(query.lockModes);
+    readOnly = query.readOnly;
+    timeout = query.timeout;
+  }
+
+  protected abstract Q clone(SessionHolder sessionHolder);
+
+  /**
+   * Clone the state of this query to a new instance with the given Session
+   *
+   * @param session session
+   * @return cloned query
+   */
+  public Q clone(Session session) {
+    return this.clone(new DefaultSessionHolder(session));
+  }
+
+  /**
+   * Clone the state of this query to a new instance with the given StatelessSession
+   *
+   * @param session session
+   * @return cloned query
+   */
+  public Q clone(StatelessSession session) {
+    return this.clone(new StatelessSessionHolder(session));
+  }
+
+  /**
+   * Clone the state of this query to a new instance
+   *
+   * @return closed query
+   */
+  @Override
+  public Q clone() {
+    return this.clone(this.session);
+  }
+}

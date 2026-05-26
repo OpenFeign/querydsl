@@ -7,7 +7,7 @@ nav_order: 6
 
 # Querying Hibernate
 
-Querydsl provides Hibernate-specific extensions on top of the standard JPA
+fluentQ provides Hibernate-specific extensions on top of the standard JPA
 support. For common features such as basic querying, joins, subqueries, and DML
 operations, see the [JPA tutorial]({{ site.baseurl }}/tutorials/jpa).
 
@@ -15,13 +15,13 @@ This page covers features exclusive to the Hibernate API.
 
 ## Maven Integration
 
-The Hibernate integration uses the same `querydsl-jpa` artifact:
+The Hibernate integration uses the same `fluentq-jpa` artifact:
 
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-jpa</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-jpa</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
@@ -37,8 +37,8 @@ annotation processor with `HibernateAnnotationProcessor`:
   <dependencies>
     <dependency>
       <groupId>{{ site.group_id }}</groupId>
-      <artifactId>querydsl-apt</artifactId>
-      <version>{{ site.querydsl_version }}</version>
+      <artifactId>fluentq-apt</artifactId>
+      <version>{{ site.fluentq_version }}</version>
       <classifier>jpa</classifier>
     </dependency>
     <dependency>
