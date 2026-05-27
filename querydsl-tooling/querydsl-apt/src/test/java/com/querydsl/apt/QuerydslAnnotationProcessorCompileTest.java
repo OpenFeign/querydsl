@@ -249,6 +249,29 @@ class QuerydslAnnotationProcessorCompileTest {
   }
 
   @Test
+  void selfReference_noWarning() {
+    JavaFileObject orderSource =
+        JavaFileObjects.forSourceString(
+            "test.Order",
+            """
+                    package test;
+
+                    import com.querydsl.core.annotations.QueryEntity;
+
+                    @QueryEntity
+                    public class Order {
+                      public Order parent;
+                    }
+                    """);
+
+    Compilation compilation =
+        javac().withProcessors(new QuerydslAnnotationProcessor()).compile(orderSource);
+
+    CompilationSubject.assertThat(compilation).succeeded();
+    CompilationSubject.assertThat(compilation).hadWarningCount(0);
+  }
+
+  @Test
   void indirectCircularReference_producesWarning() {
     JavaFileObject aSource =
         JavaFileObjects.forSourceString(

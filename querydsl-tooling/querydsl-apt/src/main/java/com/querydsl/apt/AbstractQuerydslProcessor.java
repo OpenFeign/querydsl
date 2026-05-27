@@ -739,6 +739,8 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
 
     for (Property property : current.getProperties()) {
       String neighborName = property.getType().getFullName();
+      if (neighborName.equals(currentName)) continue;
+
       EntityType neighbor = typeMap.get(neighborName);
       if (neighbor == null) continue;
 
