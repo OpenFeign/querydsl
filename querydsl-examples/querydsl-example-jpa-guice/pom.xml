@@ -69,6 +69,12 @@
       <version>${hibernate.version}</version>
     </dependency>
     <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>4.0.5</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-jpa</artifactId>
       <version>${project.version}</version>
