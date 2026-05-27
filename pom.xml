@@ -590,7 +590,7 @@
         <version>0.300.0</version>
         <inherited>false</inherited>
         <configuration>
-          <bomTemplateUrl>file://${project.basedir}/src/main/resources/bom-template.xml.vm</bomTemplateUrl>
+          <bomTemplateUrl>${project.baseUri}src/main/resources/bom-template.xml.vm</bomTemplateUrl>
           <boms>
             <bom>
               <artifactId>querydsl-bom</artifactId>
