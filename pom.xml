@@ -67,6 +67,7 @@
   <modules>
     <module>querydsl-tooling</module>
     <module>querydsl-libraries</module>
+    <module>querydsl-bom</module>
   </modules>
 
   <scm>
@@ -589,6 +590,7 @@
         <version>0.300.0</version>
         <inherited>false</inherited>
         <configuration>
+          <bomTemplateUrl>${project.baseUri}src/main/resources/bom-template.xml.vm</bomTemplateUrl>
           <boms>
             <bom>
               <artifactId>querydsl-bom</artifactId>
@@ -598,11 +600,23 @@
                 <license.skip>true</license.skip>
               </properties>
 
+              <!-- sundr only generates the BOM pom; the committed querydsl-bom module
+                   (wired into <modules>) is what actually gets published, via the same
+                   central-publishing path as every other module. -->
+              <goals>
+                <excludes>
+                  <exclude>install</exclude>
+                  <exclude>deploy</exclude>
+                </excludes>
+              </goals>
+
               <modules>
                 <includes>
                   <include>io.github.openfeign.querydsl:*</include>
                 </includes>
                 <excludes>
+                  <exclude>*:querydsl-bom</exclude>
+                  <exclude>*:querydsl-apt-test</exclude>
                   <exclude>*:querydsl-examples</exclude>
                   <exclude>*:querydsl-example-*</exclude>
                   <exclude>*:querydsl-jpa-spring</exclude>
