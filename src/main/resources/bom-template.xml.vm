@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- GENERATED FILE - do not edit by hand.
+         Regenerate with: mvn -Pquickbuild validate && cp target/classes/querydsl-bom/pom.xml querydsl-bom/pom.xml
+         Source of the dependency list: sundr-maven-plugin generate-bom (see root pom.xml).
+         Inherits the release profile (gpg + central-publishing) from querydsl-root so it
+         publishes through the same path as every other module. -->
+
+    <parent>
+        <groupId>io.github.openfeign.querydsl</groupId>
+        <artifactId>querydsl-root</artifactId>
+        <version>${model.version}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>${model.artifactId}</artifactId>
+    <name>${model.name}</name>
+    <packaging>pom</packaging>
+    <description>${model.description}</description>
+
+    <dependencyManagement>
+        <dependencies>#foreach($d in $model.dependencyManagement.dependencies)
+
+            <dependency>
+                <groupId>${d.groupId}</groupId>
+                <artifactId>${d.artifactId}</artifactId>
+                <version>${d.version}</version>#if( $d.scope && $!d.scope != '' )
+
+                <scope>${d.scope}</scope>#end#if( $d.type && $!d.type != '' && $!d.type != 'jar' && $!d.type != 'bundle')
+
+                <type>${d.type}</type>#end#if( $d.classifier && $!d.classifier != '' )
+
+                <classifier>${d.classifier}</classifier>#end#if( $d.exclusions && $d.exclusions.size() > 0 )
+
+                <exclusions>#foreach( $e in $d.exclusions )
+
+                    <exclusion>
+                        <groupId>${e.groupId}</groupId>
+                        <artifactId>${e.artifactId}</artifactId>
+                    </exclusion>#end
+
+                </exclusions>#end
+
+            </dependency>#end
+
+        </dependencies>
+    </dependencyManagement>
+</project>
