@@ -249,6 +249,66 @@ class QuerydslAnnotationProcessorCompileTest {
   }
 
   @Test
+  void queryProjection_withKotlinValueClassParameter_generatesConstructor() throws Exception {
+    JavaFileObject jvmInlineAnnotation =
+        JavaFileObjects.forSourceString(
+            "kotlin.jvm.JvmInline",
+            """
+            package kotlin.jvm;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Target(ElementType.TYPE)
+            @Retention(RetentionPolicy.CLASS)
+            public @interface JvmInline {}
+            """);
+
+    JavaFileObject valueClassSource =
+        JavaFileObjects.forSourceString(
+            "test.UserId",
+            """
+            package test;
+
+            import kotlin.jvm.JvmInline;
+
+            @JvmInline
+            public final class UserId {
+              private final String value;
+              public UserId(String value) { this.value = value; }
+              public String getValue() { return value; }
+            }
+            """);
+
+    JavaFileObject dtoSource =
+        JavaFileObjects.forSourceString(
+            "test.UserDto",
+            """
+            package test;
+
+            import com.querydsl.core.annotations.QueryProjection;
+
+            public class UserDto {
+              @QueryProjection
+              public UserDto(UserId id, String name) {}
+            }
+            """);
+
+    Compilation compilation =
+        javac()
+            .withProcessors(new QuerydslAnnotationProcessor())
+            .compile(jvmInlineAnnotation, valueClassSource, dtoSource);
+
+    CompilationSubject.assertThat(compilation).succeeded();
+    var generated = compilation.generatedSourceFile("test.QUserDto").orElseThrow();
+    var content = generated.getCharContent(false).toString();
+    assertThat(content).contains("public QUserDto(");
+    assertThat(content).contains("Expression<String>");
+  }
+
+  @Test
   void selfReference_noWarning() {
     JavaFileObject orderSource =
         JavaFileObjects.forSourceString(
