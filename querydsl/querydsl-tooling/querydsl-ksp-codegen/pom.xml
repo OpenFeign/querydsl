@@ -12,11 +12,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.github.openfeign.fluentq</groupId>
-      <artifactId>fluentq-ksp-codegen</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib</artifactId>
       <version>${kotlin.version}</version>
