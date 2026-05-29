@@ -113,7 +113,7 @@
     <sqlite.version>3.53.1.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
     <firebird.version>6.0.5</firebird.version>
-    <mongodb.version>5.7.1</mongodb.version>
+    <mongodb.version>5.8.0</mongodb.version>
 
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
