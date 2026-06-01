@@ -67,6 +67,7 @@
   <modules>
     <module>querydsl-tooling</module>
     <module>querydsl-libraries</module>
+    <module>querydsl-bom</module>
   </modules>
 
   <scm>
@@ -112,12 +113,12 @@
     <sqlite.version>3.53.1.0</sqlite.version>
     <teradata.version>13.10.00.35</teradata.version>
     <firebird.version>6.0.5</firebird.version>
-    <mongodb.version>5.7.0</mongodb.version>
+    <mongodb.version>5.8.0</mongodb.version>
 
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 
     <!-- JPA deps -->
-    <hibernate.version>7.3.6.Final</hibernate.version>
+    <hibernate.version>7.4.0.Final</hibernate.version>
     <hibernate.validator.version>9.1.0.Final</hibernate.validator.version>
     <eclipselink.version>5.0.0-B13</eclipselink.version>
     <jpa.version>3.2.0</jpa.version>
@@ -129,13 +130,13 @@
     <codegen.version>0.6.8</codegen.version>
     <byte-buddy.version>1.18.8</byte-buddy.version>
     <slf4j.version>2.0.18</slf4j.version>
-    <surefire.version>3.5.5</surefire.version>
+    <surefire.version>3.5.6</surefire.version>
     <animal-sniffer.version>1.27</animal-sniffer.version>
     <h2gis.version>2.2.5</h2gis.version>
     <morphia.version>2.5.3</morphia.version>
     <jmh.version>1.37</jmh.version>
     <kotlin.version>2.3.21</kotlin.version>
-    <ksp.version>2.3.8</ksp.version>
+    <ksp.version>2.3.9</ksp.version>
     <kotlinpoet.version>2.3.0</kotlinpoet.version>
     <dokka.version>2.2.0</dokka.version>
     <scala.version>2.13.16</scala.version>
@@ -447,7 +448,7 @@
       <plugin>
         <groupId>com.github.siom79.japicmp</groupId>
         <artifactId>japicmp-maven-plugin</artifactId>
-        <version>0.26.0</version>
+        <version>0.26.1</version>
         <configuration>
           <parameter>
             <excludes>
@@ -589,6 +590,7 @@
         <version>0.300.0</version>
         <inherited>false</inherited>
         <configuration>
+          <bomTemplateUrl>${project.baseUri}src/main/resources/bom-template.xml.vm</bomTemplateUrl>
           <boms>
             <bom>
               <artifactId>querydsl-bom</artifactId>
@@ -598,11 +600,23 @@
                 <license.skip>true</license.skip>
               </properties>
 
+              <!-- sundr only generates the BOM pom; the committed querydsl-bom module
+                   (wired into <modules>) is what actually gets published, via the same
+                   central-publishing path as every other module. -->
+              <goals>
+                <excludes>
+                  <exclude>install</exclude>
+                  <exclude>deploy</exclude>
+                </excludes>
+              </goals>
+
               <modules>
                 <includes>
                   <include>io.github.openfeign.querydsl:*</include>
                 </includes>
                 <excludes>
+                  <exclude>*:querydsl-bom</exclude>
+                  <exclude>*:querydsl-apt-test</exclude>
                   <exclude>*:querydsl-examples</exclude>
                   <exclude>*:querydsl-example-*</exclude>
                   <exclude>*:querydsl-jpa-spring</exclude>

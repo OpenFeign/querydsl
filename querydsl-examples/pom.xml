@@ -45,6 +45,14 @@
         <artifactId>log4j-core</artifactId>
         <version>2.26.0</version>
       </dependency>
+      <dependency>
+        <!-- Hibernate 7.4 pulls jakarta.xml.bind-api 4.0.4 directly and 4.0.5
+             transitively (via jaxb-runtime -> jaxb-core); pin one version so the
+             enforcer dependency-convergence rule passes. -->
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>4.0.5</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

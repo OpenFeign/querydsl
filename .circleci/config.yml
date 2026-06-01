@@ -410,7 +410,7 @@ jobs:
           name: 'Deploy Core Modules Sonatype'
           no_output_timeout: 4h
           command: |
-            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease -pl '!:querydsl-apt-test'
 
   deployRelease:
     executor:
@@ -426,7 +426,7 @@ jobs:
           name: 'Deploy Core Modules Sonatype'
           no_output_timeout: 4h
           command: |
-            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease,staging
+            ./mvnw -ntp -B -nsu -s .circleci/settings.xml -DskipTests=true deploy -Prelease,staging -pl '!:querydsl-apt-test'
 
 workflows:
   version: 2
