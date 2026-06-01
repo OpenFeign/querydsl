@@ -109,14 +109,13 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
         JpaInsertNativeHelper.resolveConstants(
             serializer.getConstants(), queryMixin.getMetadata().getParams());
 
-    try {
-      return entityManager
-          .unwrap(org.hibernate.Session.class)
-          .doReturningWork(
-              connection -> JpaInsertNativeHelper.executeUpdate(connection, sql, params));
-    } catch (Exception e) {
-      throw new QueryException("Failed to execute insert", e);
+    // Provider-neutral native execute: use the JPA standard EntityManager.createNativeQuery
+    // instead of unwrapping a Hibernate Session, so this path also works under EclipseLink/OpenJPA.
+    var nativeQuery = entityManager.createNativeQuery(sql);
+    for (int i = 0; i < params.length; i++) {
+      nativeQuery.setParameter(i + 1, params[i]);
     }
+    return nativeQuery.executeUpdate();
   }
 
   /**
