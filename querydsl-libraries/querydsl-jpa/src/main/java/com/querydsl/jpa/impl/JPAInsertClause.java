@@ -21,6 +21,7 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.TemplateExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAQueryMixin;
 import com.querydsl.jpa.JPQLSerializer;
@@ -75,20 +76,66 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
 
   @Override
   public long execute() {
-    var serializer = new JPQLSerializer(templates, entityManager);
-    serializer.serializeForInsert(
-        queryMixin.getMetadata(),
-        inserts.isEmpty() ? columns : inserts.keySet(),
-        values,
-        subQuery,
-        inserts);
+    if (subQuery != null || !hasTemplateValue()) {
+      var serializer = new JPQLSerializer(templates, entityManager);
+      serializer.serializeForInsert(
+          queryMixin.getMetadata(),
+          inserts.isEmpty() ? columns : inserts.keySet(),
+          values,
+          subQuery,
+          inserts);
 
-    var query = entityManager.createQuery(serializer.toString());
-    if (lockMode != null) {
-      query.setLockMode(lockMode);
+      var query = entityManager.createQuery(serializer.toString());
+      if (lockMode != null) {
+        query.setLockMode(lockMode);
+      }
+      JPAUtil.setConstants(query, serializer.getConstants(), queryMixin.getMetadata().getParams());
+      return query.executeUpdate();
     }
-    JPAUtil.setConstants(query, serializer.getConstants(), queryMixin.getMetadata().getParams());
-    return query.executeUpdate();
+
+    var effectiveColumns = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
+    if (effectiveColumns.isEmpty()) {
+      throw new IllegalStateException("No columns specified for insert");
+    }
+    var effectiveValues = JpaInsertNativeHelper.effectiveValues(inserts, values);
+
+    var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
+
+    var serializer = new JpaNativeInsertSerializer(new Configuration(SQLTemplates.DEFAULT));
+    serializer.serializeInsert(entityClass, effectiveColumns, effectiveValues);
+
+    var sql = serializer.toString();
+    var params =
+        JpaInsertNativeHelper.resolveConstants(
+            serializer.getConstants(), queryMixin.getMetadata().getParams());
+
+    // Provider-neutral native execute: use the JPA standard EntityManager.createNativeQuery
+    // instead of unwrapping a Hibernate Session, so this path also works under EclipseLink/OpenJPA.
+    var nativeQuery = entityManager.createNativeQuery(sql);
+    for (int i = 0; i < params.length; i++) {
+      nativeQuery.setParameter(i + 1, params[i]);
+    }
+    return nativeQuery.executeUpdate();
+  }
+
+  /**
+   * Whether any value expression is a {@link TemplateExpression} — typically a schema-qualified
+   * function call from {@code SQLExpressions.function/stringFunction/numberFunction} that
+   * Hibernate's HQL parser cannot type-check. When true, we route through the native SQL path to
+   * bypass HQL semantic validation.
+   */
+  private boolean hasTemplateValue() {
+    for (Object v : values) {
+      if (v instanceof TemplateExpression) {
+        return true;
+      }
+    }
+    for (Expression<?> v : inserts.values()) {
+      if (v instanceof TemplateExpression) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
