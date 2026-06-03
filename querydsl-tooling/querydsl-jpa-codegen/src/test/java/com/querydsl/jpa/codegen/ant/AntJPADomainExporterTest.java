@@ -5,20 +5,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class AntJPADomainExporterTest {
 
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir File folder;
 
   @Test
   public void test() throws IOException {
     var exporter = new AntJPADomainExporter();
     exporter.setNamePrefix("Q");
     exporter.setNameSuffix("");
-    var outputFolder = folder.getRoot().toPath();
+    var outputFolder = folder.toPath();
     exporter.setTargetFolder(outputFolder.toFile().getAbsolutePath());
     exporter.setPersistenceUnitName("h2");
     exporter.execute();

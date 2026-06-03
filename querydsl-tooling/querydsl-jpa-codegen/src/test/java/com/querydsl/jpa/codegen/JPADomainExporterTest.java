@@ -20,23 +20,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Properties;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 
-@RunWith(Parameterized.class)
 public class JPADomainExporterTest {
 
-  @Rule public ErrorCollector errors = new ErrorCollector();
+  private final File origRoot =
+      new File(
+          "../../querydsl-libraries/querydsl-jpa/target/generated-test-sources/test-annotations");
 
-  @Parameters
-  public static Collection<Object[]> generateFiles() throws Exception {
+  @TestFactory
+  public Stream<DynamicTest> generatedFilesMatchReference() throws Exception {
     var emf = Persistence.createEntityManagerFactory("h2", new Properties());
     var outputFolder = Files.createTempDirectory("jpa-exporter-test");
     var exporter = new JPADomainExporter(outputFolder.toFile(), emf.getMetamodel());
@@ -47,23 +44,12 @@ public class JPADomainExporterTest {
 
     return files.stream()
         .sorted(Comparator.comparing(File::getName))
-        .map(file -> new Object[] {outputFolder, file})
-        .toList();
+        .map(
+            file ->
+                DynamicTest.dynamicTest(file.getName(), () -> assertMatches(outputFolder, file)));
   }
 
-  private File file;
-  private Path outputFolder;
-  private File origRoot =
-      new File(
-          "../../querydsl-libraries/querydsl-jpa/target/generated-test-sources/test-annotations");
-
-  public JPADomainExporterTest(Path outputFolder, File file) {
-    this.file = file;
-    this.outputFolder = outputFolder;
-  }
-
-  @Test
-  public void test() throws IOException {
+  private void assertMatches(Path outputFolder, File file) throws IOException {
     var relativeFile = outputFolder.relativize(file.toPath());
     var origFile = origRoot.toPath().resolve(relativeFile);
     var reference = Files.readString(origFile);
