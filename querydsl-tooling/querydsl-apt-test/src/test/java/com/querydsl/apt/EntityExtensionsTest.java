@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,8 +42,7 @@ public class EntityExtensionsTest extends AbstractProcessorTest {
     assertThat(qType).exists();
     var modified = qType.lastModified();
     Thread.sleep(1000);
-    assertThat(new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8))
-        .contains("extension()");
+    assertThat(Files.readString(qType.toPath())).contains("extension()");
 
     // EntityWithExtensions has not changed, QEntityWithExtensions is not overwritten
     compile(QuerydslAnnotationProcessor.class, sources, "overwrite2");
@@ -56,15 +54,13 @@ public class EntityExtensionsTest extends AbstractProcessorTest {
     assertThat(modified < qType.lastModified())
         .as("" + modified + " >= " + qType.lastModified())
         .isTrue();
-    assertThat(new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8))
-        .contains("extension()");
+    assertThat(Files.readString(qType.toPath())).contains("extension()");
 
     // QEntityWithExtensions is deleted and regenerated
     assertThat(qType.delete()).isTrue();
     compile(QuerydslAnnotationProcessor.class, sources, "overwrite2");
     assertThat(qType).exists();
-    assertThat(new String(Files.readAllBytes(qType.toPath()), StandardCharsets.UTF_8))
-        .contains("extension()");
+    assertThat(Files.readString(qType.toPath())).contains("extension()");
   }
 
   @Override

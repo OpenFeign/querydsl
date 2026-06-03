@@ -1,7 +1,7 @@
 package com.querydsl.codegen;
 
 import com.querydsl.codegen.utils.model.Type;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GenericTest {
 

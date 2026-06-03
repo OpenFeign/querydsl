@@ -13,7 +13,6 @@
  */
 package com.querydsl.sql.codegen;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -190,7 +189,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
   }
 
   private void assertFileContainsInOrder(String path, String... methods) throws IOException {
-    var content = new String(Files.readAllBytes(folder.getRoot().toPath().resolve(path)), UTF_8);
+    var content = Files.readString(folder.getRoot().toPath().resolve(path));
     assertThat(content).containsIgnoringWhitespaces(methods);
   }
 }

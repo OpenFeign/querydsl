@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,9 +31,8 @@ public class AntJPADomainExporterTest {
     for (File file : files) {
       var relativeFile = outputFolder.relativize(file.toPath());
       var origFile = origRoot.toPath().resolve(relativeFile);
-      var reference =
-          new String(java.nio.file.Files.readAllBytes(origFile), StandardCharsets.UTF_8);
-      var content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+      var reference = Files.readString(origFile);
+      var content = Files.readString(file.toPath());
 
       if (file.getName().equals("QCalendar.java")) {
         // The APT processor does not apply @Temporal(TemporalType.DATE) to @ElementCollection

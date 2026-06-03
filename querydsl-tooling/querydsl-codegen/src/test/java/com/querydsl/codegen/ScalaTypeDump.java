@@ -33,13 +33,13 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ScalaTypeDump {
 
   @Test
-  @Ignore
+  @Disabled
   public void test() throws IOException {
     List<Class<?>> classes = new ArrayList<>();
     classes.add(SimpleExpression.class);

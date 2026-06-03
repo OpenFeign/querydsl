@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -23,10 +22,8 @@ public class IntegerExtensionsTest extends AbstractProcessorTest {
             new File(packagePath, "ExampleEntity2.java").getPath());
     process(QuerydslAnnotationProcessor.class, sources, "integerExtensions");
     var qtypeContent =
-        new String(
-            Files.readAllBytes(
-                Path.of("target", "integerExtensions", "com", "querydsl", "QExampleEntity2.java")),
-            StandardCharsets.UTF_8);
+        Files.readString(
+            Path.of("target", "integerExtensions", "com", "querydsl", "QExampleEntity2.java"));
     // The superclass' id property is inherited, but can't be assigned to the custom QInteger
     assertThat(qtypeContent)
         .contains(

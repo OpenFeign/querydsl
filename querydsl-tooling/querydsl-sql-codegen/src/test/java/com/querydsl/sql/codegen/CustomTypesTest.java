@@ -29,7 +29,6 @@ import com.querydsl.sql.types.StringType;
 import com.querydsl.sql.types.UtilDateType;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -83,7 +82,7 @@ public class CustomTypesTest extends AbstractJDBCTest {
     exporter.export(connection.getMetaData());
     var qpersonFile = Path.of("target", "customExport", "test", "QPerson.java");
     assertThat(qpersonFile).exists();
-    var person = new String(Files.readAllBytes(qpersonFile), StandardCharsets.UTF_8);
+    var person = Files.readString(qpersonFile);
     // System.err.println(person);
     assertThat(person).contains("createEnum(\"gender\"");
   }

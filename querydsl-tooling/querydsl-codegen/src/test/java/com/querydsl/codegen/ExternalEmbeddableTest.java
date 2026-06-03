@@ -3,9 +3,9 @@ package com.querydsl.codegen;
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.domain.EmbeddableWithoutQType;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class ExternalEmbeddableTest {
 
   @QueryEntity

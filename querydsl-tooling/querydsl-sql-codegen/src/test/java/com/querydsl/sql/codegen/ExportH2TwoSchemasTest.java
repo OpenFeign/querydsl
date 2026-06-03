@@ -7,7 +7,6 @@ import com.querydsl.sql.Connections;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import org.junit.AfterClass;
@@ -50,10 +49,7 @@ public class ExportH2TwoSchemasTest {
     var exporter = new MetaDataExporter(config);
     exporter.export(Connections.getConnection().getMetaData());
 
-    var contents =
-        new String(
-            Files.readAllBytes(new File(folder.getRoot(), "test/QSurvey.java").toPath()),
-            StandardCharsets.UTF_8);
+    var contents = Files.readString(new File(folder.getRoot(), "test/QSurvey.java").toPath());
     assertThat(contents).contains("id");
     assertThat(contents).contains("name");
     assertThat(contents).contains("name2");
