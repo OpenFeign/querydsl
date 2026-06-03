@@ -67,7 +67,7 @@
     <dependency>
       <groupId>dev.zacsweers.kctfork</groupId>
       <artifactId>ksp</artifactId>
-      <version>0.12.1</version>
+      <version>0.13.0</version>
       <scope>test</scope>
       <exclusions>
         <!-- com.google.devtools.ksp:symbol-processing is a pom-packaged aggregator;
