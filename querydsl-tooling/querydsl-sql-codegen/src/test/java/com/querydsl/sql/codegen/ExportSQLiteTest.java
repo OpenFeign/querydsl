@@ -1,14 +1,13 @@
 package com.querydsl.sql.codegen;
 
-import com.querydsl.core.testutil.SQLite;
 import com.querydsl.sql.Connections;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(SQLite.class)
+@Tag("com.querydsl.core.testutil.SQLite")
 public class ExportSQLiteTest extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     Connections.initSQLite();
   }

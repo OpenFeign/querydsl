@@ -13,16 +13,15 @@
  */
 package com.querydsl.sql.codegen;
 
-import com.querydsl.core.testutil.Oracle;
 import com.querydsl.sql.Connections;
 import java.util.TimeZone;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(Oracle.class)
+@Tag("com.querydsl.core.testutil.Oracle")
 public class ExportOracleTest extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     var tz = TimeZone.getDefault();
     try {

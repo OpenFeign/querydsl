@@ -32,15 +32,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class CustomTypesTest extends AbstractJDBCTest {
 
   private Configuration configuration;
 
   @Override
-  @Before
+  @BeforeEach
   public void setUp() throws ClassNotFoundException, SQLException {
     super.setUp();
     // create schema

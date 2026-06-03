@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.SchemaAndTable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RenameMappingTest {
 

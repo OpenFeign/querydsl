@@ -13,15 +13,14 @@
  */
 package com.querydsl.sql.codegen;
 
-import com.querydsl.core.testutil.H2;
 import com.querydsl.sql.Connections;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(H2.class)
+@Tag("com.querydsl.core.testutil.H2")
 public class ExportH2Test extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     Connections.initH2();
   }

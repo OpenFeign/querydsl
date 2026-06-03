@@ -23,24 +23,24 @@ import com.querydsl.sql.AbstractJDBCTest;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.types.AbstractType;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.tools.JavaCompiler;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class MetaDataSerializerTest extends AbstractJDBCTest {
   public static class CustomNumber {}
 
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir File folder;
 
   @Override
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException, ClassNotFoundException {
     super.setUp();
     statement.execute("drop table employee if exists");
@@ -92,7 +92,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
     config.setBeanSerializerClass(BeanSerializer.class);
     config.setNamePrefix(namePrefix);
     config.setPackageName("test");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     config.setNamingStrategyClass(DefaultNamingStrategy.class);
     config.setExportBeans(true);
     var exporter = new MetaDataExporter(config);
@@ -148,7 +148,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
     config.setBeanSerializerClass(BeanSerializer.class);
     config.setNamePrefix(namePrefix);
     config.setPackageName("test");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     config.setNamingStrategyClass(DefaultNamingStrategy.class);
     config.setGeneratedAnnotationClass("com.querydsl.core.annotations.Generated");
     config.setExportBeans(true);
@@ -189,7 +189,7 @@ public class MetaDataSerializerTest extends AbstractJDBCTest {
   }
 
   private void assertFileContainsInOrder(String path, String... methods) throws IOException {
-    var content = Files.readString(folder.getRoot().toPath().resolve(path));
+    var content = Files.readString(folder.toPath().resolve(path));
     assertThat(content).containsIgnoringWhitespaces(methods);
   }
 }
