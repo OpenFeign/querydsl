@@ -18,8 +18,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QTuple;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class SerializationTest extends AbstractQueryTest {
 
@@ -105,7 +105,7 @@ public class SerializationTest extends AbstractQueryTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void join_list() {
     query()
         .from(cat, cats)

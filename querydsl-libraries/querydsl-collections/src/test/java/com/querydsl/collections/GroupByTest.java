@@ -22,6 +22,7 @@ import static com.querydsl.core.group.GroupBy.min;
 import static com.querydsl.core.group.GroupBy.set;
 import static com.querydsl.core.group.GroupBy.sum;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.core.group.Group;
 import com.querydsl.core.types.ConstructorExpression;
@@ -32,8 +33,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class GroupByTest {
 
@@ -155,7 +156,7 @@ public class GroupByTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void group_by_null() {
     Map<Integer, Group> results =
         CollQueryFactory.from(post, posts)
@@ -179,20 +180,25 @@ public class GroupByTest {
   //        group.getSet(qComment);
   //    }
 
-  @Test(expected = ClassCastException.class)
+  @Test
   public void classCastException() {
-    Map<Integer, Group> results =
-        CollQueryFactory.from(post, posts)
-            .from(comment, comments)
-            .where(comment.post.id.eq(post.id))
-            .transform(groupBy(post.id).as(post.name, set(comment.id), list(comment.text)));
+    assertThatThrownBy(
+            () -> {
+              Map<Integer, Group> results =
+                  CollQueryFactory.from(post, posts)
+                      .from(comment, comments)
+                      .where(comment.post.id.eq(post.id))
+                      .transform(
+                          groupBy(post.id).as(post.name, set(comment.id), list(comment.text)));
 
-    var group = results.get(1);
-    group.getList(comment.id);
+              var group = results.get(1);
+              group.getList(comment.id);
+            })
+        .isInstanceOf(ClassCastException.class);
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void map_() {
     Map<Integer, Group> results =
         CollQueryFactory.from(post, posts)

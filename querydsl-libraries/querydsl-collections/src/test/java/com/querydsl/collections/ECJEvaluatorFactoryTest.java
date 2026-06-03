@@ -1,7 +1,7 @@
 package com.querydsl.collections;
 
 import com.querydsl.codegen.utils.ECJEvaluatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ECJEvaluatorFactoryTest extends AbstractQueryTest {
 

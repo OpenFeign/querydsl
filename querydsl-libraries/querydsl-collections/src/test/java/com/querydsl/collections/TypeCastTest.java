@@ -13,19 +13,25 @@
  */
 package com.querydsl.collections;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.querydsl.core.types.dsl.PathInits;
 import java.util.Collections;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class TypeCastTest {
 
-  @Test(expected = IllegalStateException.class)
-  @Ignore
+  @Test
+  @Disabled
   public void cast() {
-    var animal = QAnimal.animal;
-    var cat = new QCat(animal.getMetadata(), new PathInits("*"));
-    CollQueryFactory.from(animal, Collections.<Animal>emptyList())
-        .from(cat, Collections.<Cat>emptyList());
+    assertThatThrownBy(
+            () -> {
+              var animal = QAnimal.animal;
+              var cat = new QCat(animal.getMetadata(), new PathInits("*"));
+              CollQueryFactory.from(animal, Collections.<Animal>emptyList())
+                  .from(cat, Collections.<Cat>emptyList());
+            })
+        .isInstanceOf(IllegalStateException.class);
   }
 }

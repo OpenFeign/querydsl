@@ -1,11 +1,12 @@
 package com.querydsl.collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
 
 import java.util.Arrays;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class AggregationTest extends AbstractQueryTest {
 
@@ -14,7 +15,7 @@ public class AggregationTest extends AbstractQueryTest {
   private CollQuery<?> query;
 
   @Override
-  @Before
+  @BeforeEach
   public void setUp() {
     var cat1 = new Cat();
     cat1.setWeight(2);
@@ -53,9 +54,10 @@ public class AggregationTest extends AbstractQueryTest {
   }
 
   @SuppressWarnings("unchecked")
-  @Test(expected = UnsupportedOperationException.class)
+  @Test
   public void min_and_max() {
-    query.select(cat.weight.min(), cat.weight.max()).fetchOne();
+    assertThatThrownBy(() -> query.select(cat.weight.min(), cat.weight.max()).fetchOne())
+        .isInstanceOf(UnsupportedOperationException.class);
   }
 
   @Test
