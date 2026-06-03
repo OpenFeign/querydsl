@@ -22,6 +22,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.hsqldb.types.Types;
@@ -749,6 +750,26 @@ public final class Connections {
     if (mysqlInited) {
       return;
     }
+
+    // The shared MySQL database accumulates tables from other suites under two naming conventions:
+    // Hibernate keeps the entity case (Child2) while EclipseLink upper-cases it (CHILD2). On a
+    // case-sensitive server (lower_case_table_names=0) both survive, and the metadata export then
+    // maps CHILD2 and Child2 to the same QChild2 and fails. Drop every table up front so the test
+    // schema is deterministic regardless of what previous runs left behind.
+    var leftovers = new ArrayList<String>();
+    try (var rs =
+        stmt.executeQuery(
+            "select table_name from information_schema.tables"
+                + " where table_schema = database() and table_type = 'BASE TABLE'")) {
+      while (rs.next()) {
+        leftovers.add(rs.getString(1));
+      }
+    }
+    stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
+    for (String table : leftovers) {
+      stmt.execute("drop table if exists `" + table + "`");
+    }
+    stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
 
     // shapes
     stmt.execute("drop table if exists SHAPES");

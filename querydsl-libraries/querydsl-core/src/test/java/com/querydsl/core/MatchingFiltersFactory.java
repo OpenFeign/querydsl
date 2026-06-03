@@ -103,6 +103,7 @@ public class MatchingFiltersFactory {
           && !target.equals(Target.MYSQL)
           && !target.equals(Target.CUBRID)
           && !target.equals(Target.POSTGRESQL)
+          && !target.equals(Target.H2)
           && !target.equals(Target.HSQLDB)) {
         rv.add(expr.week().eq(other.week()));
       }
@@ -142,6 +143,7 @@ public class MatchingFiltersFactory {
           && !target.equals(Target.MYSQL)
           && !target.equals(Target.CUBRID)
           && !target.equals(Target.POSTGRESQL)
+          && !target.equals(Target.H2)
           && !target.equals(Target.HSQLDB)) {
         rv.add(expr.week().eq(other.week()));
       }

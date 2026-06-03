@@ -283,7 +283,11 @@ public abstract class AbstractSQLTest {
   @Test
   @ExcludeIn(Target.HSQLDB)
   public void no_from() {
-    assertThat(query().select(DateExpression.currentDate()).fetchFirst()).isNotNull();
+    // the result type of current_date depends on the JPA provider (Hibernate -> LocalDate,
+    // EclipseLink -> java.sql.Date), so project through a wildcard to avoid a provider-specific
+    // cast
+    DateExpression<?> currentDate = DateExpression.currentDate();
+    assertThat(query().select(currentDate).fetchFirst()).isNotNull();
   }
 
   @Test

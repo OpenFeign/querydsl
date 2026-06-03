@@ -128,6 +128,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   @NoBatooJPA
+  // Hibernate wraps the correlated EXISTS subquery in a derived table, and MySQL cannot reference
+  // the deleted table's alias from inside a derived table ("Unknown column 'c1_0.parent_id'")
+  @ExcludeIn(Target.MYSQL)
   public void delete_where_subQuery2() {
     var child = QChild.child;
     var parent = QParent.parent;
@@ -206,6 +209,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
+  // Hibernate 7.4 generates a malformed pessimistic-lock clause ("... with rs with rs") for Derby
+  // and a "for share of <alias>" clause that MySQL does not support
+  @ExcludeIn({Target.DERBY, Target.MYSQL})
   public void lockMode() {
     var query =
         query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).createQuery();
@@ -214,6 +220,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
+  // Hibernate 7.4 generates a malformed pessimistic-lock clause ("... with rs with rs") for Derby
+  // and a "for share of <alias>" clause that MySQL does not support
+  @ExcludeIn({Target.DERBY, Target.MYSQL})
   public void lockMode2() {
     assertThat(query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).fetch())
         .isNotEmpty();

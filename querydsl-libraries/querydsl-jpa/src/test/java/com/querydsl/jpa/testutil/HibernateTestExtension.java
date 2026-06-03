@@ -44,8 +44,19 @@ public class HibernateTestExtension
 
   private boolean isDerby = false;
 
+  private String previousMode;
+
+  private Target previousTarget;
+
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
+    // Mode.mode/target are ThreadLocals shared across the @Nested suites that run on the same
+    // thread. Remember the values set by the enclosing suite so they can be restored in afterAll,
+    // otherwise this extension would leak HSQLDB into sibling (e.g. H2/Derby) JPA suites and make
+    // @IncludeIn/@ExcludeIn evaluate against the wrong target.
+    previousMode = Mode.mode.get();
+    previousTarget = Mode.target.get();
+
     Mode.mode.set("hsqldb");
     Mode.target.set(Target.HSQLDB);
 
@@ -87,7 +98,24 @@ public class HibernateTestExtension
 
   @Override
   public void afterAll(ExtensionContext context) {
-    shutdown();
+    try {
+      shutdown();
+    } finally {
+      restoreMode();
+    }
+  }
+
+  private void restoreMode() {
+    if (previousMode == null) {
+      Mode.mode.remove();
+    } else {
+      Mode.mode.set(previousMode);
+    }
+    if (previousTarget == null) {
+      Mode.target.remove();
+    } else {
+      Mode.target.set(previousTarget);
+    }
   }
 
   private void shutdown() {
