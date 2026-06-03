@@ -17,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import java.util.Set;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class Inheritance7Test {
 
@@ -64,7 +64,7 @@ public class Inheritance7Test {
   public static class SubCategory2 extends Category<SubCategory2> {}
 
   @Test
-  @Ignore
+  @Disabled
   public void parent() {
     // FIXME
     assertThat(QInheritance7Test_Category.category.parent.getType()).isEqualTo(Category.class);
@@ -75,7 +75,7 @@ public class Inheritance7Test {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void children() {
     // FIXME
     assertThat(QInheritance7Test_Category.category.children.getElementType())

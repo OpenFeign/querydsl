@@ -14,13 +14,14 @@
 package com.querydsl.apt.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
 import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.PathInits;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class EntityTest extends AbstractTest {
 
@@ -99,9 +100,13 @@ public class EntityTest extends AbstractTest {
     QEntityTest_Supertype2.class.getConstructor(types);
   }
 
-  @Test(expected = NoSuchMethodException.class)
-  public void constructors2() throws SecurityException, NoSuchMethodException {
-    var types = new Class<?>[] {Class.class, PathMetadata.class, PathInits.class};
-    QEntityTest_EntityNoReferences.class.getConstructor(types);
+  @Test
+  public void constructors2() throws SecurityException {
+    assertThrows(
+        NoSuchMethodException.class,
+        () -> {
+          var types = new Class<?>[] {Class.class, PathMetadata.class, PathInits.class};
+          QEntityTest_EntityNoReferences.class.getConstructor(types);
+        });
   }
 }

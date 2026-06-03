@@ -18,7 +18,7 @@ import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.core.types.dsl.StringPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Inheritance4Test extends AbstractTest {
 

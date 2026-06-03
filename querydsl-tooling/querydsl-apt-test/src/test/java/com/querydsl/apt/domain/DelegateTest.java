@@ -21,7 +21,7 @@ import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.StringPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DelegateTest {
 

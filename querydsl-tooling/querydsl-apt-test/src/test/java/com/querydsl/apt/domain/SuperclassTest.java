@@ -15,9 +15,9 @@ package com.querydsl.apt.domain;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QuerySupertype;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class SuperclassTest {
 
   @QuerySupertype

@@ -14,9 +14,9 @@
 package com.querydsl.apt.domain;
 
 import com.querydsl.core.annotations.QueryEntity;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class Enum2Test {
 
   @QueryEntity

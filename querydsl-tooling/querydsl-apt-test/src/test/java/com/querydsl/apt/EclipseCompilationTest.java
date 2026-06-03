@@ -26,15 +26,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.tools.JavaCompiler;
 import org.eclipse.jdt.internal.compiler.tool.EclipseCompiler;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class EclipseCompilationTest {
 
   private static final String packagePath = "src/test/apt/com/querydsl/eclipse/";
 
   @Test
-  @Ignore
+  @Disabled
   public void test() throws IOException {
     System.setProperty("jdt.compiler.useSingleThread", "true");
     // select classes

@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.annotations.QueryEntity;
 import java.io.Serializable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AbstractProperties2Test {
 

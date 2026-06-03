@@ -15,9 +15,9 @@ package com.querydsl.apt.domain;
 
 import jakarta.persistence.Entity;
 import java.io.Serializable;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class AbstractPropertiesTest {
 
   public abstract static class GenericEntity<K extends Serializable & Comparable<K>> {

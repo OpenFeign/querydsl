@@ -21,7 +21,7 @@ import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.core.types.dsl.TimePath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryTypeTest extends AbstractTest {
 
