@@ -1,30 +1,39 @@
 package com.querydsl.r2dbc.dml;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.r2dbc.KeyAccessorsTest.QEmployee;
 import com.querydsl.r2dbc.SQLTemplates;
 import java.util.Collections;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class R2DBCDeleteClauseTest {
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void noConnection() {
-    var emp1 = new QEmployee("emp1");
-    var delete = new R2DBCDeleteClause(null, SQLTemplates.DEFAULT, emp1);
-    delete.where(emp1.id.eq(1));
-    delete.execute().block();
+    assertThatThrownBy(
+            () -> {
+              var emp1 = new QEmployee("emp1");
+              var delete = new R2DBCDeleteClause(null, SQLTemplates.DEFAULT, emp1);
+              delete.where(emp1.id.eq(1));
+              delete.execute().block();
+            })
+        .isInstanceOf(IllegalStateException.class);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  @Ignore
+  @Test
+  @Disabled
   public void error() {
-    var emp1 = new QEmployee("emp1");
-    var emp2 = new QEmployee("emp2");
-    var delete = new R2DBCDeleteClause(null, SQLTemplates.DEFAULT, emp1);
-    delete.where(emp2.id.eq(1));
+    assertThatThrownBy(
+            () -> {
+              var emp1 = new QEmployee("emp1");
+              var emp2 = new QEmployee("emp2");
+              var delete = new R2DBCDeleteClause(null, SQLTemplates.DEFAULT, emp1);
+              delete.where(emp2.id.eq(1));
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test

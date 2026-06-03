@@ -18,15 +18,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.r2dbc.domain.QSurvey;
 import io.r2dbc.spi.Connection;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
 public class R2DBCQueryFactoryTest {
 
   private R2DBCQueryFactory queryFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     R2DBCConnectionProvider provider = () -> Mono.just(EasyMock.createNiceMock(Connection.class));
     queryFactory = new R2DBCQueryFactory(SQLTemplates.DEFAULT, provider);

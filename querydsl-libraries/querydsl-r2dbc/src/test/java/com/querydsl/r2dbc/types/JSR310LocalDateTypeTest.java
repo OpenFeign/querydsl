@@ -1,7 +1,7 @@
 package com.querydsl.r2dbc.types;
 
 import java.time.LocalDate;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JSR310LocalDateTypeTest extends AbstractJSR310DateTimeTypeTest<LocalDate> {
 

@@ -27,6 +27,7 @@ import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.r2dbc.Constants.survey;
 import static com.querydsl.r2dbc.Constants.survey2;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.core.QueryException;
 import com.querydsl.core.QueryFlag.Position;
@@ -46,9 +47,9 @@ import com.querydsl.sql.ColumnMetadata;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class InsertBase extends AbstractBaseTest {
 
@@ -59,12 +60,12 @@ public abstract class InsertBase extends AbstractBaseTest {
     delete(QDateTest.qDateTest).execute().block();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     reset();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     reset();
   }
@@ -182,21 +183,31 @@ public abstract class InsertBase extends AbstractBaseTest {
     assertThat(id).isNotNull();
   }
 
-  @Test(expected = QueryException.class)
+  @Test
   @IncludeIn({DERBY, HSQLDB})
   public void insert_with_keys_OverriddenColumn() {
-    var originalColumnName = ColumnMetadata.getName(survey.id);
-    try {
-      configuration.registerColumnOverride(
-          survey.getSchemaName(), survey.getTableName(), originalColumnName, "wrongColumnName");
+    assertThatThrownBy(
+            () -> {
+              var originalColumnName = ColumnMetadata.getName(survey.id);
+              try {
+                configuration.registerColumnOverride(
+                    survey.getSchemaName(),
+                    survey.getTableName(),
+                    originalColumnName,
+                    "wrongColumnName");
 
-      var insert = new R2DBCInsertClause(connection, configuration, survey);
-      Object id = insert.set(survey.name, "Hello you").executeWithKey(survey.id);
-      assertThat(id).isNotNull();
-    } finally {
-      configuration.registerColumnOverride(
-          survey.getSchemaName(), survey.getTableName(), originalColumnName, originalColumnName);
-    }
+                var insert = new R2DBCInsertClause(connection, configuration, survey);
+                Object id = insert.set(survey.name, "Hello you").executeWithKey(survey.id);
+                assertThat(id).isNotNull();
+              } finally {
+                configuration.registerColumnOverride(
+                    survey.getSchemaName(),
+                    survey.getTableName(),
+                    originalColumnName,
+                    originalColumnName);
+              }
+            })
+        .isInstanceOf(QueryException.class);
   }
 
   // http://sourceforge.net/tracker/index.php?func=detail&aid=3513432&group_id=280608&atid=2377440

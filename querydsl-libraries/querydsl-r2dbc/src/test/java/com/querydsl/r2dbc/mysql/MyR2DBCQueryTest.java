@@ -18,15 +18,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.r2dbc.MySQLTemplates;
 import com.querydsl.r2dbc.domain.QSurvey;
 import java.io.File;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MyR2DBCQueryTest {
   private R2DBCMySQLQuery<?> query;
 
   private QSurvey survey = new QSurvey("survey");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     query =
         new R2DBCMySQLQuery<Void>(null, MySQLTemplates.builder().newLineToSingleSpace().build());

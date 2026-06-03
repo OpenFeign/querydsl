@@ -1,16 +1,15 @@
 package com.querydsl.r2dbc;
 
-import com.querydsl.core.testutil.ReportingOnly;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(ReportingOnly.class)
+@Tag("com.querydsl.core.testutil.ReportingOnly")
 public class DateArithmeticTest {
 
   private String serialize(Expression<?> expr, SQLTemplates templates) {

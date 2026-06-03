@@ -28,7 +28,7 @@ import com.querydsl.r2dbc.types.ObjectType;
 import com.querydsl.r2dbc.types.ShortType;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JavaTypeMappingTest {
 

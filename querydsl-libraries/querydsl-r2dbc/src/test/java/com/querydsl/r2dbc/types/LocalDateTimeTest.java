@@ -2,8 +2,8 @@ package com.querydsl.r2dbc.types;
 
 import java.util.Calendar;
 import java.util.TimeZone;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class LocalDateTimeTest {
 
@@ -11,7 +11,7 @@ public class LocalDateTimeTest {
 
   //    private LocalDateTimeType type = new LocalDateTimeType();
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     UTC.setTimeInMillis(0);
   }

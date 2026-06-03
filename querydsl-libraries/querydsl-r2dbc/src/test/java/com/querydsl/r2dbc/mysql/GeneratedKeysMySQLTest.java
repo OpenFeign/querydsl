@@ -15,7 +15,6 @@ package com.querydsl.r2dbc.mysql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.testutil.MySQL;
 import com.querydsl.r2dbc.Connections;
 import com.querydsl.r2dbc.H2Templates;
 import com.querydsl.r2dbc.QGeneratedKeysEntity;
@@ -23,24 +22,24 @@ import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import io.r2dbc.spi.Connection;
 import java.util.Collection;
 import java.util.Collections;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
-@Category(MySQL.class)
+@Tag("com.querydsl.core.testutil.MySQL")
 public class GeneratedKeysMySQLTest {
 
   private Connection conn;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     conn = Connections.getMySQL().getConnection().block();
   }
 
   @Test
-  @Ignore("currently not supported")
+  @Disabled("currently not supported")
   public void test() {
     Mono.from(conn.createStatement("drop table if exists GENERATED_KEYS").execute()).block();
     Mono.from(

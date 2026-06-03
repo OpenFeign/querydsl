@@ -19,7 +19,7 @@ import com.querydsl.r2dbc.domain.Employee;
 import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.sql.ForeignKey;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ForeignKeyTest {
 

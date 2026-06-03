@@ -19,8 +19,8 @@ import com.querydsl.core.JoinFlag;
 import com.querydsl.r2dbc.domain.QSurvey;
 import io.r2dbc.spi.Connection;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JoinFlagsTest {
 
@@ -31,7 +31,7 @@ public class JoinFlagsTest {
   private R2DBCQuery query;
 
   @SuppressWarnings("unchecked")
-  @Before
+  @BeforeEach
   public void setUp() {
     s1 = new QSurvey("s");
     s2 = new QSurvey("s2");

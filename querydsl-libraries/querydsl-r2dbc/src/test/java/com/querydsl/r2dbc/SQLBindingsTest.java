@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.dsl.Param;
 import com.querydsl.r2dbc.domain.QSurvey;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLBindingsTest {
 

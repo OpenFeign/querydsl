@@ -7,7 +7,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.r2dbc.domain.QSurvey;
 import java.io.IOException;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RelationalPathTest {
 

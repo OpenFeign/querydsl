@@ -3,14 +3,13 @@ package com.querydsl.r2dbc;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.support.QueryMixin;
-import com.querydsl.core.testutil.ReportingOnly;
 import com.querydsl.r2dbc.domain.QEmployee;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(ReportingOnly.class)
+@Tag("com.querydsl.core.testutil.ReportingOnly")
 public class PaginationTest {
 
   private String serialize(QueryMetadata metadata, SQLTemplates templates) {

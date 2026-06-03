@@ -22,22 +22,22 @@ import com.querydsl.r2dbc.dml.R2DBCInsertClause;
 import io.r2dbc.spi.Connection;
 import java.util.Collection;
 import java.util.Collections;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
 public class GeneratedKeysH2Test {
 
   private Connection conn;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     conn = Connections.getH2().getConnection().block();
   }
 
   @Test
-  @Ignore("currently not supported")
+  @Disabled("currently not supported")
   public void test() {
     Mono.from(conn.createStatement("drop table GENERATED_KEYS if exists").execute()).block();
     Mono.from(

@@ -27,15 +27,15 @@ import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.r2dbc.dml.BeanMapper;
 import com.querydsl.r2dbc.domain.Employee;
 import com.querydsl.r2dbc.domain.QEmployee;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 @ExcludeIn({CUBRID, DB2, DERBY, ORACLE, SQLSERVER, POSTGRESQL, SQLITE, TERADATA})
 public abstract class BeanPopulationBase extends AbstractBaseTest {
 
   private final QEmployee e = new QEmployee("e");
 
-  @After
+  @AfterEach
   public void tearDown() {
     delete(e).where(e.firstname.eq("John")).execute().block();
   }

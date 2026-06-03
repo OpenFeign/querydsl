@@ -21,7 +21,7 @@ import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.SQLOps;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
 

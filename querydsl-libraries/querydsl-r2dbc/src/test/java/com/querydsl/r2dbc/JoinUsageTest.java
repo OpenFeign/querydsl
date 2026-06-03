@@ -13,16 +13,22 @@
  */
 package com.querydsl.r2dbc;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.querydsl.r2dbc.domain.QSurvey;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class JoinUsageTest {
 
-  @Test(expected = IllegalStateException.class)
-  @Ignore
+  @Test
+  @Disabled
   public void join_already_declared() {
-    var survey = QSurvey.survey;
-    R2DBCExpressions.selectFrom(survey).fullJoin(survey);
+    assertThatThrownBy(
+            () -> {
+              var survey = QSurvey.survey;
+              R2DBCExpressions.selectFrom(survey).fullJoin(survey);
+            })
+        .isInstanceOf(IllegalStateException.class);
   }
 }

@@ -3,8 +3,8 @@ package com.querydsl.r2dbc.h2;
 import com.querydsl.r2dbc.H2Templates;
 import com.querydsl.r2dbc.R2DBCQuery;
 import com.querydsl.r2dbc.domain.QSurvey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class H2QueryTest {
 
@@ -12,7 +12,7 @@ public class H2QueryTest {
 
   private QSurvey survey = new QSurvey("survey");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     query = new R2DBCQuery(H2Templates.builder().newLineToSingleSpace().build());
   }

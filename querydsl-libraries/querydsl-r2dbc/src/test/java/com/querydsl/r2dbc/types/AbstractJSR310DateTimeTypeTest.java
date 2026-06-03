@@ -3,9 +3,9 @@ package com.querydsl.r2dbc.types;
 import java.time.temporal.Temporal;
 import java.util.Calendar;
 import java.util.TimeZone;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class AbstractJSR310DateTimeTypeTest<T extends Temporal> {
 
@@ -23,12 +23,12 @@ public abstract class AbstractJSR310DateTimeTypeTest<T extends Temporal> {
 
   private TimeZone tz;
 
-  @Before
+  @BeforeEach
   public void before() {
     tz = TimeZone.getDefault();
   }
 
-  @After
+  @AfterEach
   public void after() {
     TimeZone.setDefault(tz);
   }
