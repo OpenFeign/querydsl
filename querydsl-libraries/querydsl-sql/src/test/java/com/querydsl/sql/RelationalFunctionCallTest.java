@@ -22,7 +22,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.domain.QSurvey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RelationalFunctionCallTest {
 

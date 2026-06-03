@@ -9,8 +9,8 @@ import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.sql.oracle.OracleQuery;
 import java.sql.SQLException;
 import java.util.logging.Logger;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class SelectOracleBase extends AbstractBaseTest {
 
@@ -33,7 +33,7 @@ public abstract class SelectOracleBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void connectBy() throws SQLException {
     // TODO : come up with a legal case
     oracleQuery()

@@ -5,7 +5,7 @@ import static com.querydsl.sql.Constants.survey;
 
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.sql.teradata.SetQueryBandClause;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class SelectTeradataBase extends AbstractBaseTest {
 

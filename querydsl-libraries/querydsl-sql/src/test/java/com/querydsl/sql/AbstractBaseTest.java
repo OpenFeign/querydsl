@@ -30,11 +30,9 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.rules.MethodRule;
-import org.junit.rules.TestRule;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith({TargetExtension.class, SkipForQuotedExtension.class})
 public abstract class AbstractBaseTest {
 
   protected static final Logger logger = Logger.getLogger(AbstractBaseTest.class.getName());
@@ -85,10 +83,6 @@ public abstract class AbstractBaseTest {
       configuration.register("XML_TEST", "COL", new XMLAsStringType());
     }
   }
-
-  @Rule public MethodRule skipForQuotedRule = new SkipForQuotedRule(configuration);
-
-  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
 
   protected <T> void add(List<T> list, T arg, Target... exclusions) {
     if (exclusions.length > 0) {

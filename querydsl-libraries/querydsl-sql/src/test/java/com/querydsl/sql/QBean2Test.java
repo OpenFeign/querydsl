@@ -22,7 +22,7 @@ import com.querydsl.core.types.QBean;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QBean2Test {
 

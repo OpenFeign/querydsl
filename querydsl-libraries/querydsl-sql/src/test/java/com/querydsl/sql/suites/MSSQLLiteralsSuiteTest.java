@@ -1,6 +1,5 @@
 package com.querydsl.sql.suites;
 
-import com.querydsl.core.testutil.SQLServer;
 import com.querydsl.sql.BeanPopulationBase;
 import com.querydsl.sql.Connections;
 import com.querydsl.sql.DeleteBase;
@@ -16,39 +15,53 @@ import com.querydsl.sql.SubqueriesBase;
 import com.querydsl.sql.TypesBase;
 import com.querydsl.sql.UnionBase;
 import com.querydsl.sql.UpdateBase;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 
-@Category(SQLServer.class)
+@Tag("com.querydsl.core.testutil.SQLServer")
 public class MSSQLLiteralsSuiteTest extends AbstractSuite {
 
-  public static class BeanPopulation extends BeanPopulationBase {}
+  @Nested
+  class BeanPopulation extends BeanPopulationBase {}
 
-  public static class Delete extends DeleteBase {}
+  @Nested
+  class Delete extends DeleteBase {}
 
-  public static class Insert extends InsertBase {}
+  @Nested
+  class Insert extends InsertBase {}
 
-  public static class KeywordQuoting extends KeywordQuotingBase {}
+  @Nested
+  class KeywordQuoting extends KeywordQuotingBase {}
 
-  public static class LikeEscape extends LikeEscapeBase {}
+  @Nested
+  class LikeEscape extends LikeEscapeBase {}
 
-  public static class Merge extends MergeBase {}
+  @Nested
+  class Merge extends MergeBase {}
 
-  public static class MergeUsing extends MergeUsingBase {}
+  @Nested
+  class MergeUsing extends MergeUsingBase {}
 
-  public static class Select extends SelectBase {}
+  @Nested
+  class Select extends SelectBase {}
 
-  public static class SelectWindowFunctions extends SelectWindowFunctionsBase {}
+  @Nested
+  class SelectWindowFunctions extends SelectWindowFunctionsBase {}
 
-  public static class Subqueries extends SubqueriesBase {}
+  @Nested
+  class Subqueries extends SubqueriesBase {}
 
-  public static class Types extends TypesBase {}
+  @Nested
+  class Types extends TypesBase {}
 
-  public static class Union extends UnionBase {}
+  @Nested
+  class Union extends UnionBase {}
 
-  public static class Update extends UpdateBase {}
+  @Nested
+  class Update extends UpdateBase {}
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Connections.initSQLServer();
     Connections.initConfiguration(SQLServer2008Templates.builder().newLineToSingleSpace().build());

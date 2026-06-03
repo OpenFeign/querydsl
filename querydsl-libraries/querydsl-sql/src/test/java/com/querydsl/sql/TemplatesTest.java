@@ -14,7 +14,7 @@
 package com.querydsl.sql;
 
 import com.querydsl.core.TemplatesTestBase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TemplatesTest extends TemplatesTestBase {
 

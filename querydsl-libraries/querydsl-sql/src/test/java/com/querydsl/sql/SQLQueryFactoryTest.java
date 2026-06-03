@@ -19,14 +19,14 @@ import com.querydsl.sql.domain.QSurvey;
 import java.sql.Connection;
 import java.util.function.Supplier;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SQLQueryFactoryTest {
 
   private SQLQueryFactory queryFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Supplier<Connection> provider = () -> EasyMock.<Connection>createNiceMock(Connection.class);
     queryFactory = new SQLQueryFactory(SQLTemplates.DEFAULT, provider);

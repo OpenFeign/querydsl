@@ -23,7 +23,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.SimplePath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UnionSubQueryTest {
 

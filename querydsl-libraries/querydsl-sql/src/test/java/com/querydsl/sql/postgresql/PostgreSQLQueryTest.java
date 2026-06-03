@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.sql.PostgreSQLTemplates;
 import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class PostgreSQLQueryTest {
 
@@ -16,7 +16,7 @@ public class PostgreSQLQueryTest {
 
   private QEmployee employee = new QEmployee("employee");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     query =
         new PostgreSQLQuery<Void>(

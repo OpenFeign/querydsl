@@ -22,7 +22,7 @@ import com.querydsl.core.types.dsl.SimpleTemplate;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.domain.QSurvey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLExpressionsFunctionTest {
 

@@ -17,7 +17,7 @@ import static com.querydsl.sql.SQLExpressions.selectOne;
 
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.dsl.NumberPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("serial")
 public class KeyTest {

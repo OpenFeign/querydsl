@@ -19,7 +19,7 @@ import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.sql.domain.Employee;
 import com.querydsl.sql.domain.QEmployee;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QBeanTest {
 

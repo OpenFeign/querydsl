@@ -29,9 +29,9 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MergeUsingBase extends AbstractBaseTest {
 
@@ -40,12 +40,12 @@ public class MergeUsingBase extends AbstractBaseTest {
     insert(survey).values(1, "Hello World", "Hello").execute();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException {
     reset();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     reset();
   }
