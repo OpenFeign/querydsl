@@ -24,8 +24,8 @@ import java.lang.annotation.Target;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.function.Function;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JavaWriterTest {
 
@@ -59,7 +59,7 @@ public class JavaWriterTest {
     assertThat(actual).isEqualTo(expected);
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     w = new StringWriter();
     writer = new JavaWriter(w);
@@ -198,18 +198,6 @@ public class JavaWriterTest {
     writer.beginClass(testType);
     writer.annotation(
         new Test() {
-          @Override
-          public Class<? extends Throwable> expected() {
-            // TODO Auto-generated method stub
-            return null;
-          }
-
-          @Override
-          public long timeout() {
-
-            return 0;
-          }
-
           @Override
           public Class<? extends Annotation> annotationType() {
             return Test.class;
