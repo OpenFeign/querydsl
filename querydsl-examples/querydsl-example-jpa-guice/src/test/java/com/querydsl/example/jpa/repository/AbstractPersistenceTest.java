@@ -1,7 +1,7 @@
 package com.querydsl.example.jpa.repository;
 
 import com.google.inject.persist.Transactional;
-import com.querydsl.example.jpa.guice.GuiceTestRunner;
+import com.querydsl.example.jpa.guice.GuiceTestExtension;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.persistence.EntityManager;
@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(GuiceTestRunner.class)
+@ExtendWith(GuiceTestExtension.class)
 public abstract class AbstractPersistenceTest {
   @Inject private Provider<EntityManager> em;
 
-  @Before
+  @BeforeEach
   @Transactional
   public void before() {
     var entityManager = em.get();

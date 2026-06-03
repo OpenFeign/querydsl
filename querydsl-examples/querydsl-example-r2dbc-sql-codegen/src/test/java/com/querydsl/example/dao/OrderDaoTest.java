@@ -4,7 +4,7 @@ import com.querydsl.example.dto.CustomerPaymentMethod;
 import com.querydsl.example.dto.Order;
 import com.querydsl.example.dto.OrderProduct;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;

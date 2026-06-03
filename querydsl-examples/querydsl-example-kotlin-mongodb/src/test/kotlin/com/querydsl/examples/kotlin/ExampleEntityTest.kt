@@ -17,7 +17,7 @@
 package com.querydsl.examples.kotlin
 
 import com.querydsl.examples.kotlin.entity.QExampleEntity
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ExampleEntityTest {
 
