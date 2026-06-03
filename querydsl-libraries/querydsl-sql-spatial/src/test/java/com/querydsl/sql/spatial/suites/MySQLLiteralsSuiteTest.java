@@ -1,19 +1,20 @@
 package com.querydsl.sql.spatial.suites;
 
-import com.querydsl.core.testutil.MySQL;
 import com.querydsl.sql.Connections;
 import com.querydsl.sql.spatial.MySQLSpatialTemplates;
 import com.querydsl.sql.spatial.SpatialBase;
 import com.querydsl.sql.suites.AbstractSuite;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 
-@Category(MySQL.class)
+@Tag("com.querydsl.core.testutil.MySQL")
 public class MySQLLiteralsSuiteTest extends AbstractSuite {
 
-  public static class Spatial extends SpatialBase {}
+  @Nested
+  class Spatial extends SpatialBase {}
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Connections.initMySQL();
     Connections.initConfiguration(MySQLSpatialTemplates.builder().newLineToSingleSpace().build());

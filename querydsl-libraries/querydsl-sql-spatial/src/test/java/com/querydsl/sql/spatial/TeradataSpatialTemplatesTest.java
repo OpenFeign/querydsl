@@ -1,7 +1,7 @@
 package com.querydsl.sql.spatial;
 
 import com.querydsl.sql.SQLTemplates;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TeradataSpatialTemplatesTest {
 
