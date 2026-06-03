@@ -18,13 +18,13 @@ import static com.querydsl.jpa.JPAExpressions.select;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.jpa.domain.QCat;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class TupleTest extends AbstractQueryTest {
 
   @Test
-  @Ignore // FIXME
+  @Disabled // FIXME
   public void test() {
     var cat = QCat.cat;
 

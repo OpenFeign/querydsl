@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CastTest extends AbstractQueryTest {
 

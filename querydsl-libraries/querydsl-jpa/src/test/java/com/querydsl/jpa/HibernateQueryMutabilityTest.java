@@ -18,16 +18,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.QueryMutability;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.hibernate.HibernateQuery;
-import com.querydsl.jpa.testutil.HibernateTestRunner;
+import com.querydsl.jpa.testutil.HibernateTestExtension;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import org.hibernate.Session;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@Ignore
-@RunWith(HibernateTestRunner.class)
+@Disabled
+@ExtendWith(HibernateTestExtension.class)
 public class HibernateQueryMutabilityTest implements HibernateTest {
 
   private Session session;

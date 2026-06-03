@@ -16,7 +16,7 @@ package com.querydsl.jpa;
 import com.querydsl.core.FilteredClause;
 import com.querydsl.jpa.hibernate.HibernateQuery;
 import com.querydsl.jpa.impl.JPAQuery;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SignatureTest {
 

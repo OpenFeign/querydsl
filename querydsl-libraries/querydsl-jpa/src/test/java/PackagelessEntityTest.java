@@ -16,7 +16,7 @@ import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.dsl.PathBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PackagelessEntityTest {
 

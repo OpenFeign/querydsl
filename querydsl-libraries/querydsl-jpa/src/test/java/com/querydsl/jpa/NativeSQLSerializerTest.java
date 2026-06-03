@@ -22,7 +22,7 @@ import com.querydsl.jpa.domain.sql.SAnimal_;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.MySQLTemplates;
 import jakarta.persistence.Column;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class NativeSQLSerializerTest {
 

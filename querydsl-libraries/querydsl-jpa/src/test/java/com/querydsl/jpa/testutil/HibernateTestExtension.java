@@ -13,34 +13,30 @@
  */
 package com.querydsl.jpa.testutil;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.querydsl.core.Target;
 import com.querydsl.jpa.HibernateTest;
 import com.querydsl.jpa.Mode;
 import com.querydsl.jpa.domain.Domain;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Properties;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import org.junit.rules.MethodRule;
-import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
-import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 /**
- * @author tiwe
+ * JUnit 5 replacement for the former {@code HibernateTestRunner}. Builds a single {@link
+ * SessionFactory}/{@link Session} (with an open transaction) per test class, injects the session
+ * into every {@link HibernateTest} instance and rolls everything back afterwards.
  */
-public class HibernateTestRunner extends BlockJUnit4ClassRunner {
+public class HibernateTestExtension
+    implements BeforeAllCallback, AfterAllCallback, TestInstancePostProcessor {
 
   private SessionFactory sessionFactory;
 
@@ -48,55 +44,8 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
 
   private boolean isDerby = false;
 
-  public HibernateTestRunner(Class<?> klass) throws InitializationError {
-    super(klass);
-  }
-
   @Override
-  protected List<MethodRule> rules(Object test) {
-    assertThat(test instanceof HibernateTest)
-        .as(
-            "In order to use the %s for %s, it should (directly or indirectly) implement %s"
-                .formatted(
-                    HibernateTestRunner.class.getSimpleName(),
-                    test.getClass(),
-                    HibernateTest.class))
-        .isTrue();
-
-    var rules = super.rules(test);
-    rules.add(
-        new MethodRule() {
-          @Override
-          public Statement apply(
-              final Statement base, FrameworkMethod method, final Object target) {
-            return new Statement() {
-              @Override
-              public void evaluate() throws Throwable {
-                ((HibernateTest) target).setSession(session);
-                base.evaluate();
-              }
-            };
-          }
-        });
-    return rules;
-  }
-
-  @Override
-  public void run(final RunNotifier notifier) {
-    try {
-      start();
-      super.run(notifier);
-    } catch (Exception e) {
-      e.printStackTrace();
-      var failure =
-          new Failure(Description.createSuiteDescription(getTestClass().getJavaClass()), e);
-      notifier.fireTestFailure(failure);
-    } finally {
-      shutdown();
-    }
-  }
-
-  private void start() throws Exception {
+  public void beforeAll(ExtensionContext context) throws Exception {
     Mode.mode.set("hsqldb");
     Mode.target.set(Target.HSQLDB);
 
@@ -110,7 +59,7 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
       Class.forName("org.apache.derby.jdbc.EmbeddedDriver").getDeclaredConstructor().newInstance();
     }
     var props = new Properties();
-    var is = HibernateTestRunner.class.getResourceAsStream(mode);
+    var is = HibernateTestExtension.class.getResourceAsStream(mode);
     if (is == null) {
       throw new IllegalArgumentException("No configuration available at classpath:" + mode);
     }
@@ -121,6 +70,24 @@ public class HibernateTestRunner extends BlockJUnit4ClassRunner {
     sessionFactory = cfg.buildSessionFactory(serviceRegistry);
     session = sessionFactory.openSession();
     session.beginTransaction();
+  }
+
+  @Override
+  public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+    if (!(testInstance instanceof HibernateTest hibernateTest)) {
+      throw new IllegalStateException(
+          "In order to use the %s for %s, it should (directly or indirectly) implement %s"
+              .formatted(
+                  HibernateTestExtension.class.getSimpleName(),
+                  testInstance.getClass(),
+                  HibernateTest.class));
+    }
+    hibernateTest.setSession(session);
+  }
+
+  @Override
+  public void afterAll(ExtensionContext context) {
+    shutdown();
   }
 
   private void shutdown() {

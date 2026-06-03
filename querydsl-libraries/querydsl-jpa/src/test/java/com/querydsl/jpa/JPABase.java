@@ -34,7 +34,7 @@ import com.querydsl.jpa.domain.QGroup;
 import com.querydsl.jpa.domain.QParent;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.testutil.JPATestRunner;
+import com.querydsl.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
@@ -42,24 +42,17 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * @author tiwe
  */
-@RunWith(JPATestRunner.class)
+@ExtendWith({JPATestExtension.class, TargetExtension.class, JPAProviderExtension.class})
 public class JPABase extends AbstractJPATest implements JPATest {
 
   private static final QCat cat = QCat.cat;
-
-  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
-
-  @Rule @ClassRule public static TestRule jpaProviderRule = new JPAProviderRule();
 
   private EntityManager entityManager;
 
@@ -97,7 +90,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void delete() {
     delete(cat).execute();
   }
@@ -235,7 +228,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
-  @Ignore // isn't a valid JPQL query
+  @Disabled // isn't a valid JPQL query
   public void subquery_uniqueResult() {
     var cat2 = new QCat("cat2");
 

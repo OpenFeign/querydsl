@@ -15,16 +15,17 @@ package com.querydsl.jpa;
 
 import static com.querydsl.core.types.dsl.Expressions.numberOperation;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.core.types.Operator;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.testutil.JPATestRunner;
+import com.querydsl.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JPATestRunner.class)
+@ExtendWith(JPATestExtension.class)
 public class JPAQueryMutability2Test implements JPATest {
 
   private EntityManager entityManager;
@@ -121,14 +122,18 @@ public class JPAQueryMutability2Test implements JPATest {
         .fetchOne();
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void clone_lose_templates() {
-    var cat = QCat.cat;
-    JPAQuery<?> query = query(customTemplates).from(cat);
-    // clone using the entitymanager's default templates
-    query
-        .clone(entityManager)
-        .select(numberOperation(Integer.class, customOperator, cat.floatProperty))
-        .fetchOne();
+    assertThatThrownBy(
+            () -> {
+              var cat = QCat.cat;
+              JPAQuery<?> query = query(customTemplates).from(cat);
+              // clone using the entitymanager's default templates
+              query
+                  .clone(entityManager)
+                  .select(numberOperation(Integer.class, customOperator, cat.floatProperty))
+                  .fetchOne();
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 }

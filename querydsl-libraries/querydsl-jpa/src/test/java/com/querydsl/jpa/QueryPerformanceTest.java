@@ -4,36 +4,35 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.Target;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.testutil.Performance;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.testutil.JPATestRunner;
+import com.querydsl.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JPATestRunner.class)
-@Ignore
-@Category(Performance.class)
+@ExtendWith(JPATestExtension.class)
+@Disabled
+@Tag("com.querydsl.core.testutil.Performance")
 public class QueryPerformanceTest implements JPATest {
 
   private static final int iterations = 1000;
 
   private EntityManager entityManager;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     Mode.mode.set("h2perf");
     Mode.target.set(Target.H2);
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() {
     Mode.mode.remove();
     Mode.target.remove();
@@ -43,7 +42,7 @@ public class QueryPerformanceTest implements JPATest {
     return new JPAQuery<Void>(entityManager);
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     if (query().from(QCat.cat).fetchCount() == 0) {
       for (var i = 0; i < iterations; i++) {

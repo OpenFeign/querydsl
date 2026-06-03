@@ -18,8 +18,8 @@ import static com.querydsl.jpa.Constants.cat;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ConstructorsTest extends AbstractQueryTest {
 
@@ -35,7 +35,7 @@ public class ConstructorsTest extends AbstractQueryTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void constructors() {
     ConstructorExpression<com.querydsl.jpa.domain.Cat> c =
         Projections.constructor(

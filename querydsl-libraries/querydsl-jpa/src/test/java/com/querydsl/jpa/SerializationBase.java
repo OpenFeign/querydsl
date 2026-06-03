@@ -19,7 +19,7 @@ import com.querydsl.core.testutil.Serialization;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.testutil.JPATestRunner;
+import com.querydsl.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,10 +27,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JPATestRunner.class)
+@ExtendWith(JPATestExtension.class)
 public class SerializationBase implements JPATest {
 
   private QCat cat = QCat.cat;

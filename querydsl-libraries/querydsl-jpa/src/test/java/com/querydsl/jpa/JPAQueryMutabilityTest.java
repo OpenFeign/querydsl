@@ -19,18 +19,18 @@ import com.querydsl.core.QueryMutability;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.sql.SAnimal_;
 import com.querydsl.jpa.sql.JPASQLQuery;
-import com.querydsl.jpa.testutil.JPATestRunner;
+import com.querydsl.jpa.testutil.JPATestExtension;
 import com.querydsl.sql.DerbyTemplates;
 import com.querydsl.sql.SQLTemplates;
 import jakarta.persistence.EntityManager;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@Ignore
-@RunWith(JPATestRunner.class)
+@Disabled
+@ExtendWith(JPATestExtension.class)
 public class JPAQueryMutabilityTest implements JPATest {
 
   private static final SQLTemplates derbyTemplates = new DerbyTemplates();

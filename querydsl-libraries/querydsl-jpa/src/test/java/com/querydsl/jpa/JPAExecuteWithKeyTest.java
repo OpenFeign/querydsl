@@ -25,11 +25,11 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import java.util.Map;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JPAExecuteWithKeyTest {
 
@@ -37,7 +37,7 @@ public class JPAExecuteWithKeyTest {
   private EntityManager entityManager;
   private EntityTransaction tx;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     emf =
         Persistence.createEntityManagerFactory(
@@ -51,21 +51,21 @@ public class JPAExecuteWithKeyTest {
                 "hibernate.show_sql", "false"));
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() {
     if (emf != null) {
       emf.close();
     }
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     entityManager = emf.createEntityManager();
     tx = entityManager.getTransaction();
     tx.begin();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     if (tx != null && tx.isActive()) {
       tx.rollback();

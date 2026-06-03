@@ -19,14 +19,14 @@ import static com.querydsl.jpa.JPAExpressions.select;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.testutil.Serialization;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.QEmployee;
 import com.querydsl.jpa.domain.QUser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SubQueryTest extends AbstractQueryTest {
 

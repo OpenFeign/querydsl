@@ -14,12 +14,13 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.hibernate.HibernateQuery;
 import com.querydsl.jpa.impl.JPAQuery;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JPQLQueryTest {
 
@@ -27,39 +28,63 @@ public class JPQLQueryTest {
 
   private HibernateQuery<?> query = new HibernateQuery<Void>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     query.from(cat);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void innerJoinPEntityOfPPEntityOfP() {
-    query.innerJoin(cat.mate, cat.mate);
+    assertThatThrownBy(
+            () -> {
+              query.innerJoin(cat.mate, cat.mate);
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void innerJoinPathOfQextendsCollectionOfPPathOfP() {
-    query.innerJoin(cat.kittens, cat.mate);
+    assertThatThrownBy(
+            () -> {
+              query.innerJoin(cat.kittens, cat.mate);
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void joinPEntityOfPPEntityOfP() {
-    query.join(cat.mate, cat.mate);
+    assertThatThrownBy(
+            () -> {
+              query.join(cat.mate, cat.mate);
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void joinPathOfQextendsCollectionOfPPathOfP() {
-    query.join(cat.kittens, cat.mate);
+    assertThatThrownBy(
+            () -> {
+              query.join(cat.kittens, cat.mate);
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void leftJoinPEntityOfPPEntityOfP() {
-    query.leftJoin(cat.mate, cat.mate);
+    assertThatThrownBy(
+            () -> {
+              query.leftJoin(cat.mate, cat.mate);
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void leftJoinPathOfQextendsCollectionOfPPathOfP() {
-    query.leftJoin(cat.kittens, cat.mate);
+    assertThatThrownBy(
+            () -> {
+              query.leftJoin(cat.kittens, cat.mate);
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test

@@ -21,7 +21,7 @@ import com.querydsl.jpa.domain.InheritedProperties;
 import com.querydsl.jpa.domain.QAnimal;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.QInheritedProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TypeCastTest {
 

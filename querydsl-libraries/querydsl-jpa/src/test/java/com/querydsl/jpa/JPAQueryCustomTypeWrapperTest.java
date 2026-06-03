@@ -7,15 +7,15 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.TypeWrapper;
 import com.querydsl.jpa.domain.*;
 import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.testutil.JPATestRunner;
+import com.querydsl.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JPATestRunner.class)
+@ExtendWith(JPATestExtension.class)
 public class JPAQueryCustomTypeWrapperTest implements JPATest {
 
   private EntityManager em;
@@ -25,7 +25,7 @@ public class JPAQueryCustomTypeWrapperTest implements JPATest {
     this.em = em;
   }
 
-  @Before
+  @BeforeEach
   public void setupData() {
     em.createQuery("delete from Invoice").executeUpdate();
     em.persist(new Invoice("00000000-0000-0000-0000-000000000001", "A", new Money("111")));

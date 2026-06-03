@@ -15,7 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.Constants.cat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class EJBQLTest extends AbstractQueryTest {
 
