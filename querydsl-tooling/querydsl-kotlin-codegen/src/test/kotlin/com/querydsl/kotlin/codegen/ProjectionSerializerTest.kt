@@ -26,8 +26,7 @@ import com.querydsl.codegen.utils.model.TypeCategory
 import com.querydsl.codegen.utils.model.Types
 import com.querydsl.core.annotations.Generated
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions
 
 import java.io.StringWriter

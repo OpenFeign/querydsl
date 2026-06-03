@@ -6,7 +6,8 @@ import com.tschuchort.compiletesting.configureKsp
 import com.tschuchort.compiletesting.kspSourcesDir
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
 import java.io.File
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CountDownLatch
@@ -296,7 +297,8 @@ class KspProcessorIntegrationTest {
             .doesNotContain("SimplePath<MutableCollection>")
     }
 
-    @Test(timeout = 30_000)
+    @Test
+    @Timeout(30)
     fun bidirectionalEntities_loadConcurrentlyWithoutDeadlock() {
         // Regression: two JPA entities with mutual @ManyToOne refs (Foo has
         // a Bar, Bar has a Foo) are the canonical case where APT-generated

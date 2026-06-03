@@ -31,9 +31,8 @@ import com.querydsl.codegen.utils.model.Types
 import com.querydsl.core.annotations.Generated
 import com.querydsl.core.annotations.PropertyType
 import com.querydsl.kotlin.codegen.CompileUtils.assertCompiles
-import org.junit.Assert
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 
@@ -164,7 +163,7 @@ class EmbeddableSerializerTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     fun delegates() {
         val type = SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false)
         val entityType = EntityType(type)
