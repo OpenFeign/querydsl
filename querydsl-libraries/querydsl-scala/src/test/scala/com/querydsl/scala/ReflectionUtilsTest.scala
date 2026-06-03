@@ -1,7 +1,7 @@
 package com.querydsl.scala
 
-import org.junit.Assert._
-import org.junit._
+import org.junit.jupiter.api.Assertions._
+import org.junit.jupiter.api._
 
 class ReflectionUtilsTest {
 

@@ -4,7 +4,7 @@ import java.io.StringWriter
 
 import com.querydsl.codegen.utils._
 import com.querydsl.codegen._
-import org.junit._
+import org.junit.jupiter.api._
 
 class CaseClassSerializerTest {
 

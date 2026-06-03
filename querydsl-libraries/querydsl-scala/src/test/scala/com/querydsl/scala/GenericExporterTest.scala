@@ -3,7 +3,7 @@ package com.querydsl.scala
 import java.io.File
 
 import com.querydsl.codegen.GenericExporter
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class GenericExporterTest {
 

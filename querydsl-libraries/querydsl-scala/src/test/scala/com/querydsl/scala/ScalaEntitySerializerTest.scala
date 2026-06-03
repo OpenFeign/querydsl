@@ -5,8 +5,8 @@ import java.io.StringWriter
 import com.querydsl.codegen.utils._
 import com.querydsl.codegen.utils.model._
 import com.querydsl.codegen._
-import org.junit.Assert._
-import org.junit.{Before, Test}
+import org.junit.jupiter.api.Assertions._
+import org.junit.jupiter.api.{BeforeEach, Test}
 
 class ScalaEntitySerializerTest {
 
@@ -14,7 +14,7 @@ class ScalaEntitySerializerTest {
 
   val writer = new StringWriter()
 
-  @Before
+  @BeforeEach
   def setUp(): Unit = {
     val typeModel = new ClassType(TypeCategory.ENTITY, classOf[Person])
     entityType = new EntityType(typeModel)
