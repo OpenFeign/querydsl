@@ -67,7 +67,7 @@
     <dependency>
       <groupId>dev.zacsweers.kctfork</groupId>
       <artifactId>ksp</artifactId>
-      <version>0.12.1</version>
+      <version>0.13.0</version>
       <scope>test</scope>
       <exclusions>
         <!-- com.google.devtools.ksp:symbol-processing is a pom-packaged aggregator;
@@ -83,7 +83,7 @@
       </exclusions>
     </dependency>
     <!-- Align KSP runtime artifacts with the API version pinned in the root pom.
-         kctfork 0.12.1 pulls in 2.3.4; the API is at ${ksp.version}=2.3.7. The
+         kctfork pulls in 2.3.4; the API is at ${ksp.version}=2.3.7. The
          mismatch can surface as KaInvalidLifetimeOwnerAccessException at runtime. -->
     <dependency>
       <groupId>com.google.devtools.ksp</groupId>
