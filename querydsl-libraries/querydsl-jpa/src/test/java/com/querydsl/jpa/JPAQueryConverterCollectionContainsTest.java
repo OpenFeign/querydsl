@@ -7,17 +7,17 @@ import com.querydsl.jpa.domain.Alchemist;
 import com.querydsl.jpa.domain.PotionEffect;
 import com.querydsl.jpa.domain.QAlchemist;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.jpa.testutil.JPATestRunner;
+import com.querydsl.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JPATestRunner.class)
+@ExtendWith(JPATestExtension.class)
 public class JPAQueryConverterCollectionContainsTest implements JPATest {
 
   private EntityManager em;
@@ -33,7 +33,7 @@ public class JPAQueryConverterCollectionContainsTest implements JPATest {
 
   private static final QAlchemist qAlchemist = QAlchemist.alchemist;
 
-  @Before
+  @BeforeEach
   public void setUpData() {
     if (em == null) {
       throw new IllegalStateException("EntityManager has not been set by JPATestRunner.");
@@ -66,7 +66,7 @@ public class JPAQueryConverterCollectionContainsTest implements JPATest {
     em.clear();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     if (em != null && em.getTransaction().isActive()) {
       em.getTransaction().rollback();

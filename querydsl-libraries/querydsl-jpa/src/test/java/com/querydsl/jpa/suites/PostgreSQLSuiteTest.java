@@ -1,7 +1,6 @@
 package com.querydsl.jpa.suites;
 
 import com.querydsl.core.Target;
-import com.querydsl.core.testutil.PostgreSQL;
 import com.querydsl.jpa.HibernateBase;
 import com.querydsl.jpa.HibernateSQLBase;
 import com.querydsl.jpa.JPABase;
@@ -9,25 +8,32 @@ import com.querydsl.jpa.JPAIntegrationBase;
 import com.querydsl.jpa.JPASQLBase;
 import com.querydsl.jpa.Mode;
 import com.querydsl.jpa.SerializationBase;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 
-@Category(PostgreSQL.class)
+@Tag("com.querydsl.core.testutil.PostgreSQL")
 public class PostgreSQLSuiteTest extends AbstractSuite {
 
-  public static class JPA extends JPABase {}
+  @Nested
+  class JPA extends JPABase {}
 
-  public static class JPASQL extends JPASQLBase {}
+  @Nested
+  class JPASQL extends JPASQLBase {}
 
-  public static class JPAIntegration extends JPAIntegrationBase {}
+  @Nested
+  class JPAIntegration extends JPAIntegrationBase {}
 
-  public static class Serialization extends SerializationBase {}
+  @Nested
+  class Serialization extends SerializationBase {}
 
-  public static class Hibernate extends HibernateBase {}
+  @Nested
+  class Hibernate extends HibernateBase {}
 
-  public static class HibernateSQL extends HibernateSQLBase {}
+  @Nested
+  class HibernateSQL extends HibernateSQLBase {}
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Mode.mode.set("postgresql");
     Mode.target.set(Target.POSTGRESQL);

@@ -6,7 +6,7 @@ import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
 import java.sql.Date;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryInit4Test {
 

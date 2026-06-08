@@ -14,7 +14,7 @@ import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class TypesBase extends AbstractBaseTest {
 

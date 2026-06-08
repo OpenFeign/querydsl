@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PostgreSQLTemplatesTest extends AbstractSQLTemplatesTest {
 

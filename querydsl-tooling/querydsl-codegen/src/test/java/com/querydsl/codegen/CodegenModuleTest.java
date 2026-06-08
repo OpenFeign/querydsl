@@ -14,9 +14,10 @@
 package com.querydsl.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.lang.annotation.Annotation;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CodegenModuleTest {
 
@@ -32,9 +33,10 @@ public class CodegenModuleTest {
     assertThat(module.get(TypeMappings.class)).isNotNull();
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void get_with_unknown_key() {
-    module.get(String.class, "XXX");
+    assertThatThrownBy(() -> module.get(String.class, "XXX"))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test

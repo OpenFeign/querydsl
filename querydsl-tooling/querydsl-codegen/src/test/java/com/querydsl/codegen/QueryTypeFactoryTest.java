@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.model.ClassType;
 import com.querydsl.codegen.utils.model.Type;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryTypeFactoryTest {
 

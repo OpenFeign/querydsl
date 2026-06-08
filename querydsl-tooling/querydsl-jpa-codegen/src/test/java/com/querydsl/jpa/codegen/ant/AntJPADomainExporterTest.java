@@ -4,22 +4,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class AntJPADomainExporterTest {
 
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir File folder;
 
   @Test
   public void test() throws IOException {
     var exporter = new AntJPADomainExporter();
     exporter.setNamePrefix("Q");
     exporter.setNameSuffix("");
-    var outputFolder = folder.getRoot().toPath();
+    var outputFolder = folder.toPath();
     exporter.setTargetFolder(outputFolder.toFile().getAbsolutePath());
     exporter.setPersistenceUnitName("h2");
     exporter.execute();
@@ -32,9 +30,8 @@ public class AntJPADomainExporterTest {
     for (File file : files) {
       var relativeFile = outputFolder.relativize(file.toPath());
       var origFile = origRoot.toPath().resolve(relativeFile);
-      var reference =
-          new String(java.nio.file.Files.readAllBytes(origFile), StandardCharsets.UTF_8);
-      var content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+      var reference = Files.readString(origFile);
+      var content = Files.readString(file.toPath());
 
       if (file.getName().equals("QCalendar.java")) {
         // The APT processor does not apply @Temporal(TemporalType.DATE) to @ElementCollection

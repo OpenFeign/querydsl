@@ -17,15 +17,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.QueryMetadata;
-import com.querydsl.core.testutil.Performance;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(Performance.class)
+@Tag("com.querydsl.core.testutil.Performance")
 public class LoadTest {
 
   private QCat cat = QCat.cat;

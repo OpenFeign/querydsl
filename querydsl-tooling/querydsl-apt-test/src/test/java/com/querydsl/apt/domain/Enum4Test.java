@@ -2,9 +2,9 @@ package com.querydsl.apt.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class Enum4Test {
 
   @Entity

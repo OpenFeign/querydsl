@@ -3,8 +3,8 @@ package com.querydsl.collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Predicate;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DocumentTest {
 
@@ -12,7 +12,7 @@ public class DocumentTest {
 
   private QDocument qDoc = QDocument.document;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     doc1 = new Document();
     doc1.setId(1L);

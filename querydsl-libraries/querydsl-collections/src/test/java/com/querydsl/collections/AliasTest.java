@@ -26,13 +26,13 @@ import com.querydsl.core.types.dsl.NumberPath;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class AliasTest extends AbstractQueryTest {
 
   @Override
-  @Before
+  @BeforeEach
   public void setUp() {
     myInts.add(1);
     myInts.add(2);

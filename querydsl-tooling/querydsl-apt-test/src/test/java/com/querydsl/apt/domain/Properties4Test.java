@@ -3,7 +3,7 @@ package com.querydsl.apt.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.persistence.MappedSuperclass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Properties4Test extends AbstractTest {
 

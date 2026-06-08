@@ -5,7 +5,7 @@ import static com.querydsl.r2dbc.Constants.survey;
 
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.r2dbc.mysql.R2DBCMySQLQuery;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class SelectMySQLBase extends AbstractBaseTest {
 

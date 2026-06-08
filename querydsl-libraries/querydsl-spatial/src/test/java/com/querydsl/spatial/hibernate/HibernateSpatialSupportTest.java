@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.types.Operator;
 import com.querydsl.spatial.SpatialOps;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class HibernateSpatialSupportTest {
 

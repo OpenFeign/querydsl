@@ -21,7 +21,7 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Delegate2Test {
 

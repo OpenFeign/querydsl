@@ -17,11 +17,10 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GenericExporterTest extends AbstractProcessorTest {
 
@@ -136,8 +135,8 @@ public class GenericExporterTest extends AbstractProcessorTest {
       if (!other.exists() || !other.isFile()) {
         continue;
       }
-      var result1 = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-      var result2 = new String(Files.readAllBytes(other.toPath()), StandardCharsets.UTF_8);
+      var result1 = Files.readString(file.toPath());
+      var result2 = Files.readString(other.toPath());
       if (!result1.equals(result2)) {
         if (!expected.contains(file.getName())) {
           System.err.println(file.getName());

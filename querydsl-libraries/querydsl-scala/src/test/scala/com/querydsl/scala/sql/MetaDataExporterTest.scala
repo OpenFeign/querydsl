@@ -3,13 +3,13 @@ package com.querydsl.scala.sql
 import com.querydsl.scala._
 import com.querydsl.sql._
 import com.querydsl.sql.codegen._
-import org.junit._
+import org.junit.jupiter.api._
 
 object MetaDataExporterTest {
 
   private var connection: java.sql.Connection = _
 
-  @BeforeClass
+  @BeforeAll
   def setUp(): Unit = {
     Class.forName("org.h2.Driver")
     val url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy"
@@ -53,7 +53,7 @@ object MetaDataExporterTest {
     }
   }
 
-  @AfterClass
+  @AfterAll
   def tearDown(): Unit = {
     connection.close()
   }

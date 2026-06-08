@@ -18,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class CollectionTest {
 
@@ -29,7 +29,7 @@ public class CollectionTest {
 
   private List<Cat> cats;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     var cat1 = new Cat("1");
     cat1.setKittens(Collections.singletonList(cat1));

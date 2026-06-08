@@ -14,6 +14,7 @@
 package com.querydsl.r2dbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.core.alias.Gender;
 import com.querydsl.r2dbc.binding.BindTarget;
@@ -35,7 +36,7 @@ import java.math.BigInteger;
 import java.sql.Types;
 import java.util.Locale;
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ConfigurationTest {
 
@@ -145,14 +146,22 @@ public class ConfigurationTest {
         .isEqualTo("lower");
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void npeWithNullParameterOfChainedNameMappingConstructor() {
-    new ChainedNameMapping((NameMapping[]) null);
+    assertThatThrownBy(
+            () -> {
+              new ChainedNameMapping((NameMapping[]) null);
+            })
+        .isInstanceOf(NullPointerException.class);
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void npeWithNullElementInParameterOfChainedNameMappingConstructor() {
-    new ChainedNameMapping(new NameMapping[] {null});
+    assertThatThrownBy(
+            () -> {
+              new ChainedNameMapping(new NameMapping[] {null});
+            })
+        .isInstanceOf(NullPointerException.class);
   }
 
   @Test

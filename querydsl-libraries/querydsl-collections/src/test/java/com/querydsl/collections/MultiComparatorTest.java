@@ -16,7 +16,7 @@ package com.querydsl.collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.codegen.utils.Evaluator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MultiComparatorTest {
 

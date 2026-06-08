@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JPAQueryFactoryTest {
 
@@ -41,7 +41,7 @@ public class JPAQueryFactoryTest {
 
   private Map<String, Object> properties = new HashMap<>();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     factoryMock = EasyMock.createMock(EntityManagerFactory.class);
     mock = EasyMock.createMock(EntityManager.class);

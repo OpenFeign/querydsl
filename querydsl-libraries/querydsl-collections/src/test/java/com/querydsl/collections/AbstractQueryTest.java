@@ -20,7 +20,7 @@ import com.querydsl.core.types.Expression;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractQueryTest {
 
@@ -50,7 +50,7 @@ public abstract class AbstractQueryTest {
 
   protected TestQuery<?> last;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     myInts.addAll(Arrays.asList(1, 2, 3, 4));
     Alias.resetAlias();

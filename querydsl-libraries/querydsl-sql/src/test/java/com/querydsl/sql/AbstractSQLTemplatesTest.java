@@ -26,8 +26,8 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.sql.domain.QSurvey;
 import java.util.Collection;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class AbstractSQLTemplatesTest {
 
@@ -41,7 +41,7 @@ public abstract class AbstractSQLTemplatesTest {
 
   protected abstract SQLTemplates createTemplates();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     templates = createTemplates();
     templates.newLineToSingleSpace();

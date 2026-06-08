@@ -25,15 +25,15 @@ import com.querydsl.jpa.hibernate.HibernateInsertClause;
 import com.querydsl.jpa.hibernate.HibernateQuery;
 import com.querydsl.jpa.hibernate.HibernateUpdateClause;
 import com.querydsl.jpa.hibernate.HibernateUtil;
-import com.querydsl.jpa.testutil.HibernateTestRunner;
+import com.querydsl.jpa.testutil.HibernateTestExtension;
 import java.util.Arrays;
 import java.util.List;
 import org.hibernate.ScrollMode;
 import org.hibernate.Session;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(HibernateTestRunner.class)
+@ExtendWith(HibernateTestExtension.class)
 public class IntegrationBase extends ParsingTest implements HibernateTest {
 
   private Session session;

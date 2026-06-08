@@ -1,10 +1,10 @@
 package com.querydsl.apt.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryProjectionBuilderTest {
 

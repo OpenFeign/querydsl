@@ -220,7 +220,7 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
             <property name="hibernate.archive.autodetection" value="class"/>
-            <property name="hibernate.dialect" value="com.querydsl.jpa.support.QMySQL5InnoDBDialect"/>
+            <property name="hibernate.dialect" value="com.querydsl.jpa.support.QMySQLDialect"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/querydsl"/>
             <property name="hibernate.connection.username" value="querydsl"/>
@@ -251,7 +251,7 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
             <property name="hibernate.archive.autodetection" value="class"/>
-            <property name="hibernate.dialect" value="com.querydsl.jpa.support.QSQLServer2008Dialect"/>
+            <property name="hibernate.dialect" value="com.querydsl.jpa.support.QSQLServerDialect"/>
             <property name="hibernate.connection.driver_class" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
             <property name="hibernate.connection.url"
                       value="jdbc:sqlserver://localhost:1433;databaseName=tempdb;sendTimeAsDatetime=false;trustServerCertificate=true"/>
@@ -269,7 +269,7 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
             <property name="hibernate.archive.autodetection" value="class"/>
-            <property name="hibernate.dialect" value="com.querydsl.jpa.support.QPostgreSQL9Dialect"/>
+            <property name="hibernate.dialect" value="com.querydsl.jpa.support.QPostgreSQLDialect"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/querydsl"/>
             <property name="hibernate.connection.username" value="querydsl"/>
@@ -302,7 +302,7 @@
             <property name="hibernate.archive.autodetection" value="class"/>
             <property name="hibernate.dialect" value="com.querydsl.jpa.support.QOracleDialect"/>
             <property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
-            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521/XEPDB1"/>
             <property name="hibernate.connection.username" value="querydsl"/>
             <property name="hibernate.connection.password" value="querydsl"/>
             <property name="hibernate.show_sql" value="true"/>

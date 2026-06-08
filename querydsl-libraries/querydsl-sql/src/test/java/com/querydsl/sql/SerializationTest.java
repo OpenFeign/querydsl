@@ -29,7 +29,7 @@ import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
 import java.sql.Connection;
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SerializationTest {
 

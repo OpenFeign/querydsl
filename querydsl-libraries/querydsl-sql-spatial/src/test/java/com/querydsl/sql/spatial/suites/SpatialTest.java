@@ -1,17 +1,16 @@
 package com.querydsl.sql.spatial.suites;
 
-import com.querydsl.core.testutil.H2;
 import com.querydsl.sql.Connections;
 import java.sql.SQLException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(H2.class)
+@Tag("com.querydsl.core.testutil.H2")
 public class SpatialTest {
 
-  @Before
+  @BeforeEach
   public void setUp() throws ClassNotFoundException, SQLException {
     Connections.initH2();
     //      Connections.initMySQL();
@@ -19,7 +18,7 @@ public class SpatialTest {
     //      Connections.initTeradata();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     Connections.close();
   }

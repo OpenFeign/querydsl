@@ -1,6 +1,5 @@
 package com.querydsl.r2dbc.suites;
 
-import com.querydsl.core.testutil.SQLServer;
 import com.querydsl.r2dbc.BeanPopulationBase;
 import com.querydsl.r2dbc.Connections;
 import com.querydsl.r2dbc.DeleteBase;
@@ -14,35 +13,47 @@ import com.querydsl.r2dbc.SubqueriesBase;
 import com.querydsl.r2dbc.TypesBase;
 import com.querydsl.r2dbc.UnionBase;
 import com.querydsl.r2dbc.UpdateBase;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 
-@Category(SQLServer.class)
+@Tag("com.querydsl.core.testutil.SQLServer")
 public class MSSQLSuiteTest extends AbstractSuite {
 
-  public static class BeanPopulation extends BeanPopulationBase {}
+  @Nested
+  class BeanPopulation extends BeanPopulationBase {}
 
-  public static class Delete extends DeleteBase {}
+  @Nested
+  class Delete extends DeleteBase {}
 
-  public static class Insert extends InsertBase {}
+  @Nested
+  class Insert extends InsertBase {}
 
-  public static class KeywordQuoting extends KeywordQuotingBase {}
+  @Nested
+  class KeywordQuoting extends KeywordQuotingBase {}
 
-  public static class LikeEscape extends LikeEscapeBase {}
+  @Nested
+  class LikeEscape extends LikeEscapeBase {}
 
-  public static class Select extends SelectBase {}
+  @Nested
+  class Select extends SelectBase {}
 
-  public static class SelectWindowFunctions extends SelectWindowFunctionsBase {}
+  @Nested
+  class SelectWindowFunctions extends SelectWindowFunctionsBase {}
 
-  public static class Subqueries extends SubqueriesBase {}
+  @Nested
+  class Subqueries extends SubqueriesBase {}
 
-  public static class Types extends TypesBase {}
+  @Nested
+  class Types extends TypesBase {}
 
-  public static class Union extends UnionBase {}
+  @Nested
+  class Union extends UnionBase {}
 
-  public static class Update extends UpdateBase {}
+  @Nested
+  class Update extends UpdateBase {}
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Connections.initConfiguration(SQLServer2008Templates.builder().newLineToSingleSpace().build());
     Connections.initSQLServer();

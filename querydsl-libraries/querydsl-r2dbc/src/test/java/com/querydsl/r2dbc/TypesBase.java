@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class TypesBase extends AbstractBaseTest {
 

@@ -23,7 +23,7 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
 

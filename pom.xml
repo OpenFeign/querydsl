@@ -301,11 +301,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
       <version>5.6.0</version>
@@ -989,6 +984,17 @@
       <properties>
         <excludedGroups>com.querydsl.core.testutil.Database,
                         com.querydsl.core.testutil.MongoDB,
+                        com.querydsl.core.testutil.CUBRID,
+                        com.querydsl.core.testutil.DB2,
+                        com.querydsl.core.testutil.Derby,
+                        com.querydsl.core.testutil.Firebird,
+                        com.querydsl.core.testutil.H2,
+                        com.querydsl.core.testutil.HSQLDB,
+                        com.querydsl.core.testutil.MySQL,
+                        com.querydsl.core.testutil.Oracle,
+                        com.querydsl.core.testutil.PostgreSQL,
+                        com.querydsl.core.testutil.SQLite,
+                        com.querydsl.core.testutil.SQLServer,
                         com.querydsl.core.testutil.SlowTest,
                         com.querydsl.core.testutil.Performance,
                         com.querydsl.core.testutil.ReportingOnly</excludedGroups>
@@ -1009,6 +1015,13 @@
         <!-- default groups to exclude from surefire plugin -->
         <excludedGroups>com.querydsl.core.testutil.ExternalDatabase,
                         com.querydsl.core.testutil.MongoDB,
+                        com.querydsl.core.testutil.CUBRID,
+                        com.querydsl.core.testutil.DB2,
+                        com.querydsl.core.testutil.Firebird,
+                        com.querydsl.core.testutil.MySQL,
+                        com.querydsl.core.testutil.Oracle,
+                        com.querydsl.core.testutil.PostgreSQL,
+                        com.querydsl.core.testutil.SQLServer,
                         com.querydsl.core.testutil.SlowTest,
                         com.querydsl.core.testutil.Performance,
                         com.querydsl.core.testutil.ReportingOnly</excludedGroups>

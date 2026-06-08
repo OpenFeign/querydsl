@@ -18,14 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.StringExpression;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-@Ignore
+@Disabled
 public class PathMetadataTest {
 
-  @Before
+  @BeforeEach
   public void setUp() {
     assertThat(QAnimalTest_Animal.animal).isNotNull();
     assertThat(QAnimalTest_Cat.cat).isNotNull();

@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import java.io.Serializable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SignatureTest {
 

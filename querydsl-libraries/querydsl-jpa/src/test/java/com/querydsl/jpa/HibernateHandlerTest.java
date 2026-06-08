@@ -1,6 +1,7 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
@@ -20,7 +21,7 @@ import org.eclipse.persistence.internal.localization.ExceptionLocalization;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.spi.ScrollableResultsImplementor;
 import org.hibernate.transform.ResultTransformer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class HibernateHandlerTest {
 
@@ -40,19 +41,23 @@ public class HibernateHandlerTest {
     verify(nativeQuery);
   }
 
-  @Test(expected = PersistenceException.class)
+  @Test
   public void addEntity_should_throw_persistence_exception_when_invalid_query_type() {
-    var notSupportedQuery = (Query) createMock(EJBQueryImpl.class);
-    var expectedThrow =
-        new PersistenceException(
-            ExceptionLocalization.buildMessage(
-                "unable_to_unwrap_jpa",
-                new String[] {Query.class.getName(), NativeQuery.class.getName()}));
+    assertThatThrownBy(
+            () -> {
+              var notSupportedQuery = (Query) createMock(EJBQueryImpl.class);
+              var expectedThrow =
+                  new PersistenceException(
+                      ExceptionLocalization.buildMessage(
+                          "unable_to_unwrap_jpa",
+                          new String[] {Query.class.getName(), NativeQuery.class.getName()}));
 
-    expect(notSupportedQuery.unwrap(NativeQuery.class)).andThrow(expectedThrow);
-    replay(notSupportedQuery);
+              expect(notSupportedQuery.unwrap(NativeQuery.class)).andThrow(expectedThrow);
+              replay(notSupportedQuery);
 
-    hibernateHandler.addEntity(notSupportedQuery, alias, classType);
+              hibernateHandler.addEntity(notSupportedQuery, alias, classType);
+            })
+        .isInstanceOf(PersistenceException.class);
   }
 
   @Test
@@ -66,19 +71,23 @@ public class HibernateHandlerTest {
     verify(nativeQuery);
   }
 
-  @Test(expected = PersistenceException.class)
+  @Test
   public void addScalar_should_throw_persistence_exception_when_invalid_query_type() {
-    var notSupportedQuery = (EJBQueryImpl) createMock(EJBQueryImpl.class);
-    var expectedThrow =
-        new PersistenceException(
-            ExceptionLocalization.buildMessage(
-                "unable_to_unwrap_jpa",
-                new String[] {Query.class.getName(), NativeQuery.class.getName()}));
+    assertThatThrownBy(
+            () -> {
+              var notSupportedQuery = (EJBQueryImpl) createMock(EJBQueryImpl.class);
+              var expectedThrow =
+                  new PersistenceException(
+                      ExceptionLocalization.buildMessage(
+                          "unable_to_unwrap_jpa",
+                          new String[] {Query.class.getName(), NativeQuery.class.getName()}));
 
-    expect(notSupportedQuery.unwrap(NativeQuery.class)).andThrow(expectedThrow);
-    replay(notSupportedQuery);
+              expect(notSupportedQuery.unwrap(NativeQuery.class)).andThrow(expectedThrow);
+              replay(notSupportedQuery);
 
-    hibernateHandler.addScalar(notSupportedQuery, alias, classType);
+              hibernateHandler.addScalar(notSupportedQuery, alias, classType);
+            })
+        .isInstanceOf(PersistenceException.class);
   }
 
   @Test

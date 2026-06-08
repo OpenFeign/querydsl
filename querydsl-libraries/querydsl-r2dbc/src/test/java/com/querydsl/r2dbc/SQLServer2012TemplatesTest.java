@@ -23,7 +23,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.r2dbc.dml.R2DBCDeleteClause;
 import com.querydsl.r2dbc.dml.R2DBCUpdateClause;
 import com.querydsl.sql.SQLOps;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
 

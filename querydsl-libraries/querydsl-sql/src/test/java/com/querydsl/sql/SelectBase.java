@@ -102,8 +102,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.compress.utils.Sets;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class SelectBase extends AbstractBaseTest {
 
@@ -1050,11 +1050,15 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @SuppressWarnings("unchecked")
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void illegalUnion() throws SQLException {
-    SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
-    SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.max());
-    assertThat(query().from(employee).union(sq1, sq2).list()).isEmpty();
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
+          SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.max());
+          assertThat(query().from(employee).union(sq1, sq2).list()).isEmpty();
+        });
   }
 
   @Test
@@ -1670,16 +1674,20 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo("Mike");
   }
 
-  @Test(expected = ParamNotSetException.class)
+  @Test
   public void params_not_set() {
-    var name = new Param<String>(String.class, "name");
-    assertThat(
-            query()
-                .from(employee)
-                .where(employee.firstname.eq(name))
-                .select(employee.firstname)
-                .fetchFirst())
-        .isEqualTo("Mike");
+    assertThrows(
+        ParamNotSetException.class,
+        () -> {
+          var name = new Param<String>(String.class, "name");
+          assertThat(
+                  query()
+                      .from(employee)
+                      .where(employee.firstname.eq(name))
+                      .select(employee.firstname)
+                      .fetchFirst())
+              .isEqualTo("Mike");
+        });
   }
 
   @Test
@@ -1918,7 +1926,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   @ExcludeIn({ORACLE, DERBY, SQLSERVER})
   public void select_booleanExpr() throws SQLException {
     // TODO : FIXME
@@ -1926,7 +1934,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   @ExcludeIn({ORACLE, DERBY, SQLSERVER})
   public void select_booleanExpr2() throws SQLException {
     // TODO : FIXME
@@ -2326,9 +2334,11 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(row.get(1, Object.class)).as(row.get(0, Object.class) + " is not null").isNotNull();
   }
 
-  @Test(expected = NonUniqueResultException.class)
+  @Test
   public void uniqueResultContract() {
-    query().from(employee).select(employee.all()).fetchOne();
+    assertThrows(
+        NonUniqueResultException.class,
+        () -> query().from(employee).select(employee.all()).fetchOne());
   }
 
   @Test

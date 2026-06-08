@@ -4,8 +4,8 @@ import java.sql.{Connection, DriverManager, Statement}
 
 import com.querydsl.sql.dml._
 import com.querydsl.sql.{Configuration, HSQLDBTemplates, RelationalPath, SQLQuery}
-import org.junit.Assert._
-import org.junit._
+import org.junit.jupiter.api.Assertions._
+import org.junit.jupiter.api._
 import test._
 
 object JDBCIntegrationTest {
@@ -13,7 +13,7 @@ object JDBCIntegrationTest {
   private var connection: Connection = _
   private var statement: Statement = _
 
-  @BeforeClass
+  @BeforeAll
   def setUpClass(): Unit = {
     Class.forName("org.h2.Driver")
     val url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy"
@@ -46,7 +46,7 @@ object JDBCIntegrationTest {
     // TODO : create table with multi column primary key
   }
 
-  @AfterClass
+  @AfterAll
   def tearDownClass(): Unit = {
     try {
       statement.close()
@@ -67,12 +67,12 @@ class JDBCIntegrationTest extends SQLHelpers {
 
   def connection = JDBCIntegrationTest.connection
 
-  @Before
+  @BeforeEach
   def setUp(): Unit = {
     connection.setAutoCommit(false)
   }
 
-  @After
+  @AfterEach
   def tearDown(): Unit = {
     connection.rollback()
     connection.setAutoCommit(true)

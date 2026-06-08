@@ -22,20 +22,15 @@ import com.querydsl.jpa.domain.Color;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.sql.SAnimal_;
 import com.querydsl.jpa.hibernate.sql.HibernateSQLQuery;
-import com.querydsl.jpa.testutil.HibernateTestRunner;
+import com.querydsl.jpa.testutil.HibernateTestExtension;
 import com.querydsl.sql.SQLTemplates;
 import org.hibernate.Session;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(HibernateTestRunner.class)
+@ExtendWith({HibernateTestExtension.class, TargetExtension.class})
 public class HibernateSQLBase extends AbstractSQLTest implements HibernateTest {
-
-  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
 
   private final SQLTemplates templates = Mode.getSQLTemplates();
 
@@ -53,7 +48,7 @@ public class HibernateSQLBase extends AbstractSQLTest implements HibernateTest {
     this.session = session;
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     if (query().from(cat).fetchCount() == 0) {
       session.persist(new Cat("Beck", 1, Color.BLACK));

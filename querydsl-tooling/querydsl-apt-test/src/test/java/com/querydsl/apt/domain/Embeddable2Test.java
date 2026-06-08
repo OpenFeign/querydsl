@@ -21,8 +21,8 @@ import com.querydsl.core.annotations.QuerySupertype;
 import com.querydsl.core.domain.MyEmbeddable;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.PathInits;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class Embeddable2Test {
 
@@ -42,7 +42,7 @@ public class Embeddable2Test {
   public static class SomeEntity extends SomeMappedSuperClassHavingMyEmbeddable {}
 
   @Test
-  @Ignore
+  @Disabled
   public void mapped_superClass_constructors() throws SecurityException, NoSuchMethodException {
     assertThat(
             QEmbeddable2Test_SomeMappedSuperClassHavingMyEmbeddable.class.getConstructor(
@@ -51,7 +51,7 @@ public class Embeddable2Test {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void entity_constructors() throws SecurityException, NoSuchMethodException {
     assertThat(
             QEmbeddable2Test_SomeEntityClassHavingMyEmbeddable.class.getConstructor(

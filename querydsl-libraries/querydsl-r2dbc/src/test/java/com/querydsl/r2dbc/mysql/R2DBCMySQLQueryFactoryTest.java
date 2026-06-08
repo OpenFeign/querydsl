@@ -21,15 +21,15 @@ import com.querydsl.r2dbc.SQLTemplates;
 import com.querydsl.r2dbc.domain.QSurvey;
 import io.r2dbc.spi.Connection;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
 public class R2DBCMySQLQueryFactoryTest {
 
   private R2DBCMySQLQueryFactory queryFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     R2DBCConnectionProvider provider = () -> Mono.just(EasyMock.createNiceMock(Connection.class));
     queryFactory = new R2DBCMySQLQueryFactory(SQLTemplates.DEFAULT, provider);

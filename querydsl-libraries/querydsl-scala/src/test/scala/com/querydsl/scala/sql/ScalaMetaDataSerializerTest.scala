@@ -8,8 +8,8 @@ import com.querydsl.codegen._
 import com.querydsl.scala._
 import com.querydsl.sql._
 import com.querydsl.sql.codegen._
-import org.junit.Assert._
-import org.junit._
+import org.junit.jupiter.api.Assertions._
+import org.junit.jupiter.api._
 
 class ScalaMetaDataSerializerTest {
 
@@ -17,7 +17,7 @@ class ScalaMetaDataSerializerTest {
 
   val writer = new StringWriter()
 
-  @Before
+  @BeforeEach
   def setUp(): Unit = {
     // type
     val typeModel = new SimpleType(TypeCategory.ENTITY,
@@ -46,7 +46,7 @@ class ScalaMetaDataSerializerTest {
     serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, new ScalaWriter(writer))
     val str = writer.toString
     //System.err.println(str)
-    assertTrue("companion object isn't before class", str.indexOf("object") < str.indexOf("class"))
+    assertTrue(str.indexOf("object") < str.indexOf("class"), "companion object isn't before class")
     //assertTrue("companion object isn't before annotations", str.indexOf("object") < str.indexOf("@Table"))
   }
 

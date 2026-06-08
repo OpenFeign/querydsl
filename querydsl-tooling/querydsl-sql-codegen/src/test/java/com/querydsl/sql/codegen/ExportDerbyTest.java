@@ -13,15 +13,14 @@
  */
 package com.querydsl.sql.codegen;
 
-import com.querydsl.core.testutil.Derby;
 import com.querydsl.sql.Connections;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(Derby.class)
+@Tag("com.querydsl.core.testutil.Derby")
 public class ExportDerbyTest extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     Connections.initDerby();
   }

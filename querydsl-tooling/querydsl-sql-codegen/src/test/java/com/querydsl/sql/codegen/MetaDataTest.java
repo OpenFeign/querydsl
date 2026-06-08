@@ -19,14 +19,14 @@ import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.utils.model.SimpleType;
 import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MetaDataTest {
 
   private EntityType classModel;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     NamingStrategy namingStrategy = new DefaultNamingStrategy();
     var packageName = "com.myproject.domain";

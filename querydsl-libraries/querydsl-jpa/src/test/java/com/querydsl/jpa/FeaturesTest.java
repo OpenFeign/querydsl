@@ -22,7 +22,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.domain.QAccount;
 import com.querydsl.jpa.domain.QInheritedProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FeaturesTest extends AbstractQueryTest {
 

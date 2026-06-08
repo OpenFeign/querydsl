@@ -6,7 +6,7 @@ import java.io.StringWriter;
 @Entity
 public class JavaWriterTest {
 
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     public void test() {
     }
 

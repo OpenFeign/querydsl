@@ -19,7 +19,7 @@ import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.domain.CommonIdentifiable;
 import com.querydsl.core.domain.CommonPersistence;
 import com.querydsl.core.types.dsl.NumberPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Inheritance8Test {
 

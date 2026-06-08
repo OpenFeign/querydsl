@@ -20,7 +20,7 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Operation;
 import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DerbyTemplatesTest extends AbstractSQLTemplatesTest {
 

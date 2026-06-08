@@ -19,7 +19,7 @@ import com.querydsl.core.annotations.QueryEntity;
 import com.querydsl.core.annotations.QueryInit;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryInit3Test {
 

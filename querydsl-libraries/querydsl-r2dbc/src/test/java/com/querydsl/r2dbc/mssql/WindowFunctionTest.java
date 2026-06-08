@@ -21,7 +21,7 @@ import com.querydsl.r2dbc.Configuration;
 import com.querydsl.r2dbc.R2DBCExpressions;
 import com.querydsl.r2dbc.SQLSerializer;
 import com.querydsl.r2dbc.SQLTemplates;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class WindowFunctionTest {
 

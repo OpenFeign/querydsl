@@ -20,14 +20,14 @@ import com.querydsl.jpa.hibernate.HibernateQueryFactory;
 import java.util.function.Supplier;
 import org.easymock.EasyMock;
 import org.hibernate.Session;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class HibernateQueryFactoryTest {
 
   private HibernateQueryFactory queryFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Supplier<Session> provider = () -> EasyMock.<Session>createNiceMock(Session.class);
     queryFactory = new HibernateQueryFactory(JPQLTemplates.DEFAULT, provider);

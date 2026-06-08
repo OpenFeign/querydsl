@@ -32,28 +32,21 @@ import com.querydsl.jpa.domain.QGroup;
 import com.querydsl.jpa.hibernate.DefaultSessionHolder;
 import com.querydsl.jpa.hibernate.HibernateDeleteClause;
 import com.querydsl.jpa.hibernate.HibernateQuery;
-import com.querydsl.jpa.testutil.HibernateTestRunner;
+import com.querydsl.jpa.testutil.HibernateTestExtension;
 import java.io.IOException;
 import java.util.List;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * @author tiwe
  */
-@RunWith(HibernateTestRunner.class)
+@ExtendWith({HibernateTestExtension.class, TargetExtension.class, JPAProviderExtension.class})
 public class HibernateBase extends AbstractJPATest implements HibernateTest {
 
   private static final QCat cat = QCat.cat;
-
-  @Rule @ClassRule public static TestRule jpaProviderRule = new JPAProviderRule();
-
-  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
 
   private Session session;
 

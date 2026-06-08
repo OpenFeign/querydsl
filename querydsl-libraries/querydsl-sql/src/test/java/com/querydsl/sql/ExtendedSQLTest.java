@@ -10,7 +10,7 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.sql.mysql.MySQLQuery;
 import java.util.Date;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ExtendedSQLTest {
 

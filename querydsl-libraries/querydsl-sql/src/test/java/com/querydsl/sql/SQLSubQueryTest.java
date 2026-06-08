@@ -16,6 +16,7 @@ package com.querydsl.sql;
 import static com.querydsl.sql.SQLExpressions.select;
 import static com.querydsl.sql.SQLExpressions.union;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
@@ -28,33 +29,37 @@ import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QSurvey;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLSubQueryTest {
 
   private static final QEmployee employee = QEmployee.employee;
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void unknownOperator() {
-    Operator op =
-        new Operator() {
-          @Override
-          public String name() {
-            return "unknownfn";
-          }
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          Operator op =
+              new Operator() {
+                @Override
+                public String name() {
+                  return "unknownfn";
+                }
 
-          @Override
-          public String toString() {
-            return name();
-          }
+                @Override
+                public String toString() {
+                  return name();
+                }
 
-          @Override
-          public Class<?> getType() {
-            return Object.class;
-          }
-        };
-    SQLQuery<?> query = new SQLQuery<Void>();
-    query.from(employee).where(Expressions.booleanOperation(op, employee.id)).toString();
+                @Override
+                public Class<?> getType() {
+                  return Object.class;
+                }
+              };
+          SQLQuery<?> query = new SQLQuery<Void>();
+          query.from(employee).where(Expressions.booleanOperation(op, employee.id)).toString();
+        });
   }
 
   @SuppressWarnings("unchecked")

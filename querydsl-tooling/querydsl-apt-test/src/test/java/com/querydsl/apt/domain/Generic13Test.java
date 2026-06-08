@@ -1,7 +1,7 @@
 package com.querydsl.apt.domain;
 
 import com.querydsl.core.annotations.QueryEntity;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Generic13Test extends AbstractTest {
 

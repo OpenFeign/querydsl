@@ -25,11 +25,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class HibernateExecuteWithKeyTest {
 
@@ -37,7 +37,7 @@ public class HibernateExecuteWithKeyTest {
   private Session session;
   private Transaction tx;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     var cfg = new Configuration();
     cfg.addAnnotatedClass(GeneratedKeyEntity.class);
@@ -50,20 +50,20 @@ public class HibernateExecuteWithKeyTest {
     sessionFactory = cfg.buildSessionFactory();
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() {
     if (sessionFactory != null) {
       sessionFactory.close();
     }
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     session = sessionFactory.openSession();
     tx = session.beginTransaction();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     if (tx != null && tx.isActive()) {
       tx.rollback();

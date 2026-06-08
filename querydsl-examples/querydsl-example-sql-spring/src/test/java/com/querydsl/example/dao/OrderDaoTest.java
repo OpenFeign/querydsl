@@ -6,7 +6,7 @@ import com.querydsl.example.dto.CustomerPaymentMethod;
 import com.querydsl.example.dto.Order;
 import com.querydsl.example.dto.OrderProduct;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class OrderDaoTest extends AbstractDaoTest {

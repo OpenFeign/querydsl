@@ -17,7 +17,7 @@ import static com.querydsl.jpa.Constants.cat;
 import static com.querydsl.jpa.Constants.cat1;
 
 import com.querydsl.jpa.domain.Cat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CollectionTest extends AbstractQueryTest {
 

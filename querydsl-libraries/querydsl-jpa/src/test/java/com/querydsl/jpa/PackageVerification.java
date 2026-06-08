@@ -25,7 +25,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Scanner;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PackageVerification {
 

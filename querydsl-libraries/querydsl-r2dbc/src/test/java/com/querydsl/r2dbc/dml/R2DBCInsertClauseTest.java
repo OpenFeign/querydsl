@@ -1,20 +1,25 @@
 package com.querydsl.r2dbc.dml;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.r2dbc.KeyAccessorsTest.QEmployee;
 import com.querydsl.r2dbc.SQLTemplates;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class R2DBCInsertClauseTest {
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void noConnection() {
-    var emp1 = new QEmployee("emp1");
-    var insert = new R2DBCInsertClause(null, SQLTemplates.DEFAULT, emp1);
-    insert.set(emp1.id, 1);
-    insert.execute().block();
+    assertThatThrownBy(
+            () -> {
+              var emp1 = new QEmployee("emp1");
+              var insert = new R2DBCInsertClause(null, SQLTemplates.DEFAULT, emp1);
+              insert.set(emp1.id, 1);
+              insert.execute().block();
+            })
+        .isInstanceOf(IllegalStateException.class);
   }
 
   @Test

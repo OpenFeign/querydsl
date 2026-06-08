@@ -2,7 +2,7 @@ package com.querydsl.codegen.utils;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * JavaWriterTest is a test class

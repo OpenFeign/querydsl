@@ -22,7 +22,7 @@ import com.querydsl.sql.ForeignKey;
 import com.querydsl.sql.PrimaryKey;
 import com.querydsl.sql.RelationalPathBase;
 import java.io.Serializable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class KeyAccessorsTest {
 

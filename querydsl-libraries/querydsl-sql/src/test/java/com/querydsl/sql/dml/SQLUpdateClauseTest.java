@@ -2,21 +2,26 @@ package com.querydsl.sql.dml;
 
 import static com.querydsl.sql.SQLExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.querydsl.core.QueryFlag.Position;
 import com.querydsl.sql.KeyAccessorsTest.QEmployee;
 import com.querydsl.sql.SQLTemplates;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLUpdateClauseTest {
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void noConnection() {
-    var emp1 = new QEmployee("emp1");
-    var update = new SQLUpdateClause(null, SQLTemplates.DEFAULT, emp1);
-    update.set(emp1.id, 1);
-    update.execute();
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          var emp1 = new QEmployee("emp1");
+          var update = new SQLUpdateClause(null, SQLTemplates.DEFAULT, emp1);
+          update.set(emp1.id, 1);
+          update.execute();
+        });
   }
 
   @Test

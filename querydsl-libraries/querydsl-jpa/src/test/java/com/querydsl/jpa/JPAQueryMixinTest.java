@@ -15,7 +15,7 @@ import com.querydsl.jpa.domain4.QBookMark;
 import com.querydsl.jpa.domain4.QBookVersion;
 import java.util.Arrays;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JPAQueryMixinTest {
 

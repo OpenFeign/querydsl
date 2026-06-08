@@ -20,14 +20,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class AntMetaDataExporterTest {
 
   private static final String url = "jdbc:h2:./target/dbs/h2_AntMetaDataExporterTest;MODE=legacy";
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws SQLException {
     try (var conn = DriverManager.getConnection(url, "sa", "")) {
       try (var stmt = conn.createStatement()) {

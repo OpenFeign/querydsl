@@ -14,10 +14,11 @@
 package com.querydsl.apt.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.querydsl.core.annotations.Config;
 import com.querydsl.core.annotations.QueryEntity;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QuerydslConfig2Test {
 
@@ -53,8 +54,9 @@ public class QuerydslConfig2Test {
     assertThat(QQuerydslConfig2Test_Entity.entity).isNotNull();
   }
 
-  @Test(expected = NoSuchFieldException.class)
-  public void create_default_variable() throws SecurityException, NoSuchFieldException {
-    QQuerydslConfig2Test_Entity2.class.getField("entity2");
+  @Test
+  public void create_default_variable() throws SecurityException {
+    assertThrows(
+        NoSuchFieldException.class, () -> QQuerydslConfig2Test_Entity2.class.getField("entity2"));
   }
 }

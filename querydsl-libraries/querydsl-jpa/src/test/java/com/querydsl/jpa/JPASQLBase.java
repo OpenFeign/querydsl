@@ -24,25 +24,18 @@ import com.querydsl.jpa.domain.Color;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.sql.SAnimal_;
 import com.querydsl.jpa.sql.JPASQLQuery;
-import com.querydsl.jpa.testutil.JPATestRunner;
+import com.querydsl.jpa.testutil.JPATestExtension;
 import com.querydsl.sql.SQLTemplates;
 import jakarta.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JPATestRunner.class)
+@ExtendWith({JPATestExtension.class, TargetExtension.class, JPAProviderExtension.class})
 public class JPASQLBase extends AbstractSQLTest implements JPATest {
-
-  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
-
-  @Rule @ClassRule public static TestRule hibernateOnly = new JPAProviderRule();
 
   private final SQLTemplates templates = Mode.getSQLTemplates();
 
@@ -61,7 +54,7 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
     this.entityManager = entityManager;
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     if (query().from(cat).fetchCount() == 0) {
       entityManager.persist(new Cat("Beck", 1, Color.BLACK));

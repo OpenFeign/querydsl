@@ -19,7 +19,7 @@ import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryMetadataTest extends AbstractQueryTest {
 

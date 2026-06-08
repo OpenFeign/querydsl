@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class WindowFunctionTest {
 

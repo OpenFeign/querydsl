@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.annotations.QueryEmbedded;
 import com.querydsl.core.annotations.QueryEntity;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryEmbedded3Test {
 

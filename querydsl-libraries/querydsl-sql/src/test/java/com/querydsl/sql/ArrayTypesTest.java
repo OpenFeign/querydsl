@@ -3,14 +3,14 @@ package com.querydsl.sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Types;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ArrayTypesTest {
 
   private Configuration configuration;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     configuration = Configuration.DEFAULT;
   }

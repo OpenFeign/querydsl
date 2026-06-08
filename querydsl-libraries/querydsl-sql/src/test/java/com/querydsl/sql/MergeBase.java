@@ -34,9 +34,9 @@ import com.querydsl.sql.domain.QSurvey;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class MergeBase extends AbstractBaseTest {
 
@@ -45,12 +45,12 @@ public abstract class MergeBase extends AbstractBaseTest {
     insert(survey).values(1, "Hello World", "Hello").execute();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException {
     reset();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     reset();
   }

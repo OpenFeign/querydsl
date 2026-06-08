@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JDKEvaluatorFactoryTest {
 
@@ -42,7 +42,7 @@ public class JDKEvaluatorFactoryTest {
 
   private List<Class<?>> string_int = Arrays.<Class<?>>asList(String.class, int.class);
 
-  @Before
+  @BeforeEach
   public void setUp() throws IOException {
     factory = new JDKEvaluatorFactory(getClass().getClassLoader());
   }

@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.dsl.PathBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class OrderHelperTest {
 

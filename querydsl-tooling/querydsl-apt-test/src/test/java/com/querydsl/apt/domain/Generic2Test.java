@@ -4,7 +4,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Generic2Test extends AbstractTest {
 

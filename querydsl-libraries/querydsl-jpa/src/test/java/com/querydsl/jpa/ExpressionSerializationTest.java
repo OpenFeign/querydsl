@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.domain.QCat;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ExpressionSerializationTest {
 

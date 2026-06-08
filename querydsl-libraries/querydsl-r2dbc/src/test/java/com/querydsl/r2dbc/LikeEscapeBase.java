@@ -16,13 +16,13 @@ package com.querydsl.r2dbc;
 import static com.querydsl.r2dbc.Constants.survey;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class LikeEscapeBase extends AbstractBaseTest {
 
-  @Before
+  @BeforeEach
   public void setUp() {
     delete(survey).execute().block();
     insert(survey)
@@ -34,7 +34,7 @@ public abstract class LikeEscapeBase extends AbstractBaseTest {
         .block();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     delete(survey).execute().block();
     insert(survey).values(1, "Hello World", "Hello").execute().block();

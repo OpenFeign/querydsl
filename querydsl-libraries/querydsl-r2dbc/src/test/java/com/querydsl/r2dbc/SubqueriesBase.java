@@ -29,7 +29,7 @@ import com.querydsl.r2dbc.domain.QEmployee;
 import com.querydsl.sql.ForeignKey;
 import java.math.BigDecimal;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class SubqueriesBase extends AbstractBaseTest {
 

@@ -413,9 +413,13 @@ public class MetaDataExporter {
     var typeName = columns.getString("TYPE_NAME");
     var columnSize = (Number) columns.getObject("COLUMN_SIZE");
     var columnDigits = (Number) columns.getObject("DECIMAL_DIGITS");
-    var columnIndex = columns.getInt("ORDINAL_POSITION");
+    // Read the columns in ascending column-index order. In Oracle the COLUMN_DEF (index 13) value
+    // is exposed as a streamed LONG, and the driver closes that stream once a higher-indexed column
+    // (e.g. ORDINAL_POSITION, index 17) is read first, causing "ORA-17027: Stream has already been
+    // closed." on tables whose columns have default values.
     var nullable = columns.getInt("NULLABLE");
     var columnDefaultValue = columns.getString("COLUMN_DEF");
+    var columnIndex = columns.getInt("ORDINAL_POSITION");
 
     var propertyName = namingStrategy.getPropertyName(normalizedColumnName, classModel);
     Class<?> clazz =

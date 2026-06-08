@@ -1,14 +1,14 @@
 package com.querydsl.sql;
 
 import java.sql.SQLException;
-import org.junit.After;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-@Ignore
+@Disabled
 public class OracleTimeTest {
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     Connections.close();
   }

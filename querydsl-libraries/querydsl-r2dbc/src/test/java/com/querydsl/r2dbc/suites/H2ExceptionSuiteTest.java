@@ -3,25 +3,24 @@ package com.querydsl.r2dbc.suites;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.base.Throwables;
-import com.querydsl.core.testutil.H2;
 import com.querydsl.r2dbc.AbstractBaseTest;
 import com.querydsl.r2dbc.Connections;
 import com.querydsl.r2dbc.H2Templates;
 import com.querydsl.sql.DefaultSQLExceptionTranslator;
 import com.querydsl.sql.SQLExceptionTranslator;
 import java.sql.SQLException;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
-@Category(H2.class)
+@Tag("com.querydsl.core.testutil.H2")
 public class H2ExceptionSuiteTest extends AbstractBaseTest {
 
   private static final SQLExceptionTranslator exceptionTranslator =
       DefaultSQLExceptionTranslator.DEFAULT;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Connections.initConfiguration(H2Templates.builder().build());
     Connections.initH2();
