@@ -118,6 +118,18 @@ class EntitySerializerTest {
     }
 
     @Test
+    fun object_array() {
+        val type = SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false)
+        val entityType = EntityType(type)
+        entityType.addProperty(Property(entityType, "tags", ClassType(TypeCategory.ARRAY, Array<String>::class.java)))
+        typeMappings.register(entityType, queryTypeFactory.create(entityType))
+        serializer.serialize(entityType, SimpleSerializerConfig.DEFAULT, JavaWriter(writer))
+        Assertions.assertTrue(writer.toString().contains("val tags: ArrayPath<Array<String>, String>"))
+        Assertions.assertTrue(writer.toString().contains("createArray(\"tags\", Array<String>::class.java)"))
+        assertCompiles("QEntity", writer.toString())
+    }
+
+    @Test
     fun include() {
         val type = SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false)
         val entityType = EntityType(type)
