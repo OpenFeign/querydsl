@@ -94,6 +94,8 @@
 
     <git-code-format-maven-plugin.version>6.0</git-code-format-maven-plugin.version>
 
+    <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
+
     <junit.version>6.1.0</junit.version>
     <ecj.version>3.46.0</ecj.version>
     <jdo.version>3.2.1</jdo.version>
