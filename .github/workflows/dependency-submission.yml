@@ -35,7 +35,9 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          # .mvn/jvm.config uses JDK 23+ flags (--sun-misc-unsafe-memory-access);
+          # keep in sync with the JDK the build actually targets
+          java-version: '25'
           cache: maven
 
       - name: Submit Dependency Snapshot
