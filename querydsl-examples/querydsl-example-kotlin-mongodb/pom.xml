@@ -96,6 +96,7 @@
             <goals>
               <goal>kapt</goal>
             </goals>
+            <phase>process-sources</phase>
             <configuration>
               <sourceDirs>
                 <sourceDir>src/main/kotlin</sourceDir>
