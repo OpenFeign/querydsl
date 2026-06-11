@@ -61,13 +61,13 @@
     <dependency>
       <groupId>dev.zacsweers.kctfork</groupId>
       <artifactId>core</artifactId>
-      <version>0.13.0</version>
+      <version>${kctfork.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>dev.zacsweers.kctfork</groupId>
       <artifactId>ksp</artifactId>
-      <version>0.13.0</version>
+      <version>${kctfork.version}</version>
       <scope>test</scope>
       <exclusions>
         <!-- com.google.devtools.ksp:symbol-processing is a pom-packaged aggregator;
