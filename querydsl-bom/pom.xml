@@ -19,6 +19,7 @@
   <packaging>pom</packaging>
   <name>QueryDSL (Bill Of Materials)</name>
   <description>Generated Bom</description>
+  <url>https://querydsl.github.io/</url>
 
   <dependencyManagement>
     <dependencies>
@@ -235,7 +236,7 @@
                 <issueManagement>remove</issueManagement>
                 <properties>remove</properties>
                 <repositories>remove</repositories>
-                <url>remove</url>
+                <url>keep</url>
               </pomElements>
             </configuration>
           </execution>
