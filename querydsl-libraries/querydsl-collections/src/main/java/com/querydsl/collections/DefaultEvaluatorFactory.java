@@ -112,7 +112,8 @@ public class DefaultEvaluatorFactory {
     }
     serializer.append(";");
 
-    var constants = getConstants(metadata, serializer.getConstants(), serializer.getConstantToLabel());
+    var constants =
+        getConstants(metadata, serializer.getConstants(), serializer.getConstantToLabel());
     var types = new Class<?>[sources.size()];
     var names = new String[sources.size()];
     for (var i = 0; i < sources.size(); i++) {
@@ -279,8 +280,8 @@ public class DefaultEvaluatorFactory {
         constants);
   }
 
-  private Map<String, Object> getConstants(QueryMetadata metadata, List<Object> constants,
-      Map<Object, String> constantToLabel) {
+  private Map<String, Object> getConstants(
+      QueryMetadata metadata, List<Object> constants, Map<Object, String> constantToLabel) {
     var result = new LinkedHashMap<String, Object>();
 
     for (var constant : constants) {
