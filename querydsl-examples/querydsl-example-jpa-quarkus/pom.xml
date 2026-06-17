@@ -18,11 +18,13 @@
   <dependencyManagement>
     <dependencies>
       <!-- imported before quarkus-bom to win on netty versions; quarkus 3.36.x
-           still manages netty 4.1.133, which has open CVEs fixed in 4.1.135 -->
+           still manages netty 4.1.133, which has open CVEs fixed in 4.1.135.
+           Keep this example on Netty 4.1.x until Quarkus supports 4.2.x in
+           native-image substitutions. -->
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-bom</artifactId>
-        <version>4.2.15.Final</version>
+        <version>4.1.135.Final</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
