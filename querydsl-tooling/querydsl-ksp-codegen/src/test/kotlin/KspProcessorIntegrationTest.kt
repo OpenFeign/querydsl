@@ -668,6 +668,43 @@ class KspProcessorIntegrationTest {
         return compilation.compile() to compilation.kspSourcesDir
     }
 
+    @Test
+    fun embeddableInnerClass_generatesQualifiedTypeReference() {
+        val source = SourceFile.kotlin(
+            "Invoice.kt",
+            """
+        package test
+
+        import jakarta.persistence.Embeddable
+        import jakarta.persistence.EmbeddedId
+        import jakarta.persistence.Entity
+        import java.io.Serializable
+
+        @Entity
+        class Invoice(
+            @EmbeddedId val id: InvoiceId
+        ) {
+            @Embeddable
+            data class InvoiceId(
+                val invoiceNo: String = "",
+                val seq: Int = 0
+            ) : Serializable
+        }
+        """.trimIndent()
+        )
+
+        val (result, generatedDir) = compile(source)
+
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+
+        val qInvoiceId = generatedDir.findGenerated("QInvoice_InvoiceId.kt")
+        assertThat(qInvoiceId.readText())
+            .contains("Invoice.InvoiceId")
+            .doesNotContain("EmbeddablePath<InvoiceId>")
+    }
+
     private fun File.findGenerated(name: String): File {
         val match = walkTopDown().firstOrNull { it.isFile && it.name == name }
         assertThat(match)
