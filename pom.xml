@@ -1057,7 +1057,7 @@
           <plugin>
             <groupId>org.openrewrite.maven</groupId>
             <artifactId>rewrite-maven-plugin</artifactId>
-            <version>6.41.0</version>
+            <version>6.42.0</version>
 
             <dependencies>
               <dependency>
