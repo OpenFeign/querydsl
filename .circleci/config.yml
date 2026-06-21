@@ -341,7 +341,7 @@ jobs:
       - run:
           name: 'Test'
           command: |
-            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase
+            ./mvnw -ntp -B install -Pci -Dgroups=com.querydsl.core.testutil.EmbeddedDatabase,com.querydsl.core.testutil.Turso
       - save-test-results
   testDB2:
     # Use the machine executor so we have full VM capabilities (e.g. docker running as admin)
