@@ -15,9 +15,11 @@
  */
 package com.querydsl.sql;
 
+import static com.querydsl.core.Target.CUBRID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.base.Splitter;
+import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.PathMetadataFactory;
 import com.querydsl.core.types.dsl.BooleanPath;
@@ -86,6 +88,9 @@ public abstract class KeywordQuotingBase extends AbstractBaseTest {
   }
 
   @Test
+  // The bundled CUBRID 9.3.9 JDBC driver reports a malformed keyword list (e.g. "TATISTICS",
+  // "DATA_TYPE___"), so completeness against the curated keyword file cannot be asserted.
+  @ExcludeIn(CUBRID)
   public void validateKeywordsCompleteness() throws SQLException {
     var keywords =
         switch (target) {

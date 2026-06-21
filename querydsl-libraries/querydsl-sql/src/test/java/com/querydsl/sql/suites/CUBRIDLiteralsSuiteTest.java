@@ -14,11 +14,9 @@ import com.querydsl.sql.TypesBase;
 import com.querydsl.sql.UnionBase;
 import com.querydsl.sql.UpdateBase;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 
-@Disabled
 @Tag("com.querydsl.core.testutil.CUBRID")
 public class CUBRIDLiteralsSuiteTest extends AbstractSuite {
 
