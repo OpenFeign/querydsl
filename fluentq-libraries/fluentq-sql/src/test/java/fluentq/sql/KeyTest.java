@@ -17,7 +17,7 @@ import static fluentq.sql.SQLExpressions.selectOne;
 
 import fluentq.core.types.PathMetadataFactory;
 import fluentq.core.types.dsl.NumberPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("serial")
 public class KeyTest {

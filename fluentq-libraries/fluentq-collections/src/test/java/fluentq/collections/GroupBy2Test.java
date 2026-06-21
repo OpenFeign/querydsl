@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GroupBy2Test {
 
@@ -74,7 +74,7 @@ public class GroupBy2Test {
 
   private List<User> users;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     var r1 = new Role();
     r1.id = 1L;

@@ -19,7 +19,7 @@ import fluentq.core.annotations.PropertyType;
 import fluentq.core.annotations.QueryType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TransientTest {
 

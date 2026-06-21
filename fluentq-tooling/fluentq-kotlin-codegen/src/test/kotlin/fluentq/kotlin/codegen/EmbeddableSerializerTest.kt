@@ -31,9 +31,8 @@ import fluentq.codegen.utils.model.Types
 import fluentq.core.annotations.Generated
 import fluentq.core.annotations.PropertyType
 import fluentq.kotlin.codegen.CompileUtils.assertCompiles
-import org.junit.Assert
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 
@@ -164,7 +163,7 @@ class EmbeddableSerializerTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     fun delegates() {
         val type = SimpleType(TypeCategory.ENTITY, "Entity", "", "Entity", false, false)
         val entityType = EntityType(type)

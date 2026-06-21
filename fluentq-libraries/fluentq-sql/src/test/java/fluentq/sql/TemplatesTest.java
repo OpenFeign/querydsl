@@ -14,7 +14,7 @@
 package fluentq.sql;
 
 import fluentq.core.TemplatesTestBase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TemplatesTest extends TemplatesTestBase {
 

@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class NoteTest extends AbstractProcessorTest {
 
@@ -31,28 +31,33 @@ public class NoteTest extends AbstractProcessorTest {
     return err;
   }
 
-  protected boolean isStdErrEmpty() {
-    return getStdErr().toByteArray().length == 0;
+  /**
+   * Whether the processor emitted info-level notes (controlled by {@code fluentq.logInfo}). Cannot
+   * simply check that stderr is empty: the processor also reports unrelated warnings (e.g. circular
+   * Q-class references) regardless of the logInfo option.
+   */
+  protected boolean hasInfoNotes() {
+    return getStdErr().toString().contains("Note:");
   }
 
   @Test
   public void processDefault() throws IOException {
     aptOptions = Collections.emptyList();
     process();
-    assertThat(isStdErrEmpty()).isTrue();
+    assertThat(hasInfoNotes()).isFalse();
   }
 
   @Test
   public void processEnabled() throws IOException {
     aptOptions = Collections.singletonList("-Afluentq.logInfo=true");
     process();
-    assertThat(isStdErrEmpty()).isFalse();
+    assertThat(hasInfoNotes()).isTrue();
   }
 
   @Test
   public void processDisabled() throws IOException {
     aptOptions = Collections.singletonList("-Afluentq.logInfo=false");
     process();
-    assertThat(isStdErrEmpty()).isTrue();
+    assertThat(hasInfoNotes()).isFalse();
   }
 }

@@ -23,9 +23,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GeneratedKeysH2Test {
 
@@ -33,7 +33,7 @@ public class GeneratedKeysH2Test {
 
   private Statement stmt;
 
-  @Before
+  @BeforeEach
   public void setUp() throws ClassNotFoundException, SQLException {
     Class.forName("org.h2.Driver");
     var url = "jdbc:h2:./target/h2-gen;MODE=legacy";
@@ -41,7 +41,7 @@ public class GeneratedKeysH2Test {
     stmt = conn.createStatement();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     try {
       stmt.close();

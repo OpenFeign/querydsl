@@ -3,7 +3,7 @@ package fluentq.r2dbc;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.sql.SchemaAndTable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SchemaAndTableTest {
 

@@ -22,7 +22,7 @@ import fluentq.core.types.dsl.NumberExpression;
 import fluentq.core.types.dsl.StringExpression;
 import jakarta.persistence.Entity;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryProjectionTest {
 

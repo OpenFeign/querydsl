@@ -26,7 +26,7 @@ import fluentq.r2dbc.domain.QEmployee;
 import fluentq.r2dbc.domain.QSurvey;
 import io.r2dbc.spi.Connection;
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SerializationTest {
 

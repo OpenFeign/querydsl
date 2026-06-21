@@ -168,13 +168,22 @@ class QueryModelExtractor(
     }
 
     private fun toQueryModel(classDeclaration: KSClassDeclaration, type: QueryModelType, constructor: KSFunctionDeclaration?): QueryModel {
+        val simpleNames = generateSequence(classDeclaration) { it.parentDeclaration as? KSClassDeclaration }
+            .map { it.simpleName.asString() }
+            .toList()
+            .reversed()
+
         return QueryModel(
             // Build the ClassName from raw KSP names to avoid kotlinpoet-ksp's
             // toClassName(), which invalidates KSP2 lifetime tokens (see
             // superclassOrNull above for the same workaround).
+            // Inner classes need the full parent hierarchy passed as vararg simple names
+            // so KotlinPoet emits a qualified reference (e.g. Outer.Inner) instead of
+            // the bare Inner, which fails to resolve at compile time.
             originalClassName = ClassName(
                 classDeclaration.packageName.asString(),
-                classDeclaration.simpleName.asString()
+                simpleNames.first(),
+                *simpleNames.drop(1).toTypedArray()
             ),
             typeParameterCount = classDeclaration.typeParameters.size,
             className = queryClassName(classDeclaration, settings),

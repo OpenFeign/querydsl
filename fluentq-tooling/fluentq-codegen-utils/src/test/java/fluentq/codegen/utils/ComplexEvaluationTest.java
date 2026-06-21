@@ -6,6 +6,7 @@
 package fluentq.codegen.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import fluentq.codegen.utils.model.ClassType;
 import fluentq.codegen.utils.model.Type;
@@ -15,7 +16,7 @@ import fluentq.codegen.utils.support.Cat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ComplexEvaluationTest {
 
@@ -106,7 +107,7 @@ public class ComplexEvaluationTest {
     }
   }
 
-  @Test(expected = CodegenException.class)
+  @Test
   @SuppressWarnings("unchecked")
   public void ComplexClassLoadingFailure() {
     var resultType = new ClassType(TypeCategory.LIST, List.class, Types.STRING);
@@ -125,20 +126,24 @@ public class ComplexEvaluationTest {
     source.append("}\n");
     source.append("return rv;");
 
-    @SuppressWarnings("rawtypes") // cannot specify further than List.class
-    Evaluator<List> evaluator =
-        factory.createEvaluator(
-            source.toString(),
-            resultType,
-            new String[] {"a_", "b_"},
-            new Type[] {resultType, resultType},
-            new Class<?>[] {List.class, List.class},
-            Collections.<String, Object>emptyMap());
+    assertThatThrownBy(
+            () -> {
+              @SuppressWarnings("rawtypes") // cannot specify further than List.class
+              Evaluator<List> evaluator =
+                  factory.createEvaluator(
+                      source.toString(),
+                      resultType,
+                      new String[] {"a_", "b_"},
+                      new Type[] {resultType, resultType},
+                      new Class<?>[] {List.class, List.class},
+                      Collections.<String, Object>emptyMap());
 
-    List<String> a = Arrays.asList("1", "2", "3", "4");
-    List<String> b = Arrays.asList("2", "4", "6", "8");
+              List<String> a = Arrays.asList("1", "2", "3", "4");
+              List<String> b = Arrays.asList("2", "4", "6", "8");
 
-    assertThat(evaluator.evaluate(a, b)).isEqualTo(Arrays.asList("2", "4"));
+              assertThat(evaluator.evaluate(a, b)).isEqualTo(Arrays.asList("2", "4"));
+            })
+        .isInstanceOf(CodegenException.class);
   }
 
   @Test

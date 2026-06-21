@@ -14,15 +14,17 @@
 package fluentq.collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import fluentq.core.types.dsl.SimplePath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CatTest {
 
-  @Test(expected = NoSuchFieldException.class)
-  public void skippedField() throws SecurityException, NoSuchFieldException {
-    QCat.class.getField("skippedField");
+  @Test
+  public void skippedField() {
+    assertThatThrownBy(() -> QCat.class.getField("skippedField"))
+        .isInstanceOf(NoSuchFieldException.class);
   }
 
   @Test

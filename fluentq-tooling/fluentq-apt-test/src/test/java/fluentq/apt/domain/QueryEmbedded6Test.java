@@ -19,7 +19,7 @@ import fluentq.core.annotations.QueryEmbedded;
 import fluentq.core.annotations.QueryEntity;
 import fluentq.core.types.dsl.EntityPathBase;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryEmbedded6Test {
 

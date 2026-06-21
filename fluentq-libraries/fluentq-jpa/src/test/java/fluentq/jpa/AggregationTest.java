@@ -15,7 +15,7 @@ package fluentq.jpa;
 
 import static fluentq.jpa.Constants.cat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AggregationTest extends AbstractQueryTest {
 

@@ -21,7 +21,7 @@ import fluentq.core.types.Expression;
 import fluentq.sql.Configuration;
 import fluentq.sql.SQLSerializer;
 import fluentq.sql.SQLTemplates;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class WindowFunctionTest {
 

@@ -5,7 +5,7 @@ import static fluentq.sql.Constants.survey;
 
 import fluentq.core.testutil.IncludeIn;
 import fluentq.sql.mysql.MySQLQuery;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class SelectMySQLBase extends AbstractBaseTest {
 

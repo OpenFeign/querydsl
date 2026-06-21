@@ -15,19 +15,12 @@ package fluentq.jpa;
 
 import fluentq.jpa.impl.JPAProvider;
 import fluentq.jpa.impl.JPAUtil;
-import fluentq.jpa.testutil.JPATestRunner;
+import fluentq.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JPATestRunner.class)
+@ExtendWith({JPATestExtension.class, TargetExtension.class, JPAProviderExtension.class})
 public class JPAIntegrationBase extends ParsingTest implements JPATest {
-
-  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
-
-  @Rule @ClassRule public static TestRule hibernateOnly = new JPAProviderRule();
 
   private EntityManager em;
 

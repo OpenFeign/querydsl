@@ -1,11 +1,13 @@
 package fluentq.apt.domain;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Properties2Test {
 
@@ -29,8 +31,9 @@ public class Properties2Test {
     }
   }
 
-  @Test(expected = NoSuchFieldException.class)
-  public void test() throws NoSuchFieldException {
-    QProperties2Test_ConcreteX.class.getDeclaredField("id");
+  @Test
+  public void test() {
+    assertThrows(
+        NoSuchFieldException.class, () -> QProperties2Test_ConcreteX.class.getDeclaredField("id"));
   }
 }

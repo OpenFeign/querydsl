@@ -3,7 +3,7 @@ package fluentq.sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.types.Ops;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TeradataTemplatesTest extends AbstractSQLTemplatesTest {
 

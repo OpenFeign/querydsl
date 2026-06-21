@@ -18,8 +18,8 @@ import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ScalaWriterTest {
 
@@ -37,7 +37,7 @@ public class ScalaWriterTest {
 
   private Type testType, testType2, testSuperType, testInterface1, testInterface2;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     testType = new ClassType(JavaWriterTest.class);
     testType2 = new SimpleType("fluentq.codegen.utils.Test", "fluentq.codegen.utils", "Test");
@@ -276,18 +276,6 @@ public class ScalaWriterTest {
     writer.beginClass(testType);
     writer.annotation(
         new Test() {
-          @Override
-          public Class<? extends Throwable> expected() {
-            // TODO Auto-generated method stub
-            return null;
-          }
-
-          @Override
-          public long timeout() {
-
-            return 0;
-          }
-
           @Override
           public Class<? extends Annotation> annotationType() {
             return Test.class;

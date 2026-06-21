@@ -31,7 +31,7 @@ import org.geolatte.geom.Point;
 import org.geolatte.geom.Polygon;
 import org.geolatte.geom.ProjectedGeometryOperations;
 import org.geolatte.geom.codec.Wkt;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SpatialBase extends AbstractBaseTest {
 

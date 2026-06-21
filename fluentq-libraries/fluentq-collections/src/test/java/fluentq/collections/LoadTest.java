@@ -17,15 +17,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.DefaultQueryMetadata;
 import fluentq.core.QueryMetadata;
-import fluentq.core.testutil.Performance;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(Performance.class)
+@Tag("fluentq.core.testutil.Performance")
 public class LoadTest {
 
   private QCat cat = QCat.cat;

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.core.types.Ops;
 import fluentq.core.types.Path;
 import fluentq.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FirebirdTemplatesTest extends AbstractSQLTemplatesTest {
 
@@ -29,6 +29,7 @@ public class FirebirdTemplatesTest extends AbstractSQLTemplatesTest {
   }
 
   @Override
+  @Test
   public void arithmetic() {
     // uses additional casts
   }

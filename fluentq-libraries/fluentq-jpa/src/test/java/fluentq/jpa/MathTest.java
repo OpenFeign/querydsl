@@ -17,7 +17,7 @@ import static fluentq.jpa.Constants.cat;
 import static fluentq.jpa.Constants.kitten;
 
 import fluentq.jpa.domain.QCat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MathTest extends AbstractQueryTest {
 

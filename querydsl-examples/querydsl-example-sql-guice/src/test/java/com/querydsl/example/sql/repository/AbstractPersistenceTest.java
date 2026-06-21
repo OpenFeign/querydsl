@@ -1,20 +1,20 @@
 package com.querydsl.example.sql.repository;
 
-import com.querydsl.example.sql.guice.GuiceTestRunner;
+import com.querydsl.example.sql.guice.GuiceTestExtension;
 import com.querydsl.example.sql.guice.Transactional;
 import jakarta.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(GuiceTestRunner.class)
+@ExtendWith(GuiceTestExtension.class)
 public abstract class AbstractPersistenceTest {
   @Inject private DataSource dataSource;
 
-  @Before
+  @BeforeEach
   @Transactional
   public void before() {
     try (var connection = dataSource.getConnection()) {

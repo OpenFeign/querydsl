@@ -11,9 +11,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.After;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 // 5.664
 public class JPAProviderTest {
@@ -22,7 +22,7 @@ public class JPAProviderTest {
 
   private EntityManager em;
 
-  @After
+  @AfterEach
   public void tearDown() {
     if (em != null) {
       em.close();
@@ -91,7 +91,7 @@ public class JPAProviderTest {
   }
 
   @Test
-  @Ignore // doesn't work on JDK 7
+  @Disabled // doesn't work on JDK 7
   public void openJPA() {
     factory = Persistence.createEntityManagerFactory("derby-openjpa");
     em = factory.createEntityManager();
@@ -101,7 +101,7 @@ public class JPAProviderTest {
   }
 
   @Test
-  @Ignore // temporarily ignored, since Batoo hangs on EntityManager creation
+  @Disabled // temporarily ignored, since Batoo hangs on EntityManager creation
   public void batoo() {
     factory = Persistence.createEntityManagerFactory("h2-batoo");
     em = factory.createEntityManager();

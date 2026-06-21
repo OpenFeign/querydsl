@@ -15,9 +15,9 @@ package fluentq.apt.domain;
 
 import fluentq.core.annotations.QueryEntity;
 import fluentq.core.annotations.QuerySupertype;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class SuperclassTest {
 
   @QuerySupertype

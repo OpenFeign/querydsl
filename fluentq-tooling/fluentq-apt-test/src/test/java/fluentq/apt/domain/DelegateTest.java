@@ -21,7 +21,7 @@ import fluentq.core.annotations.QuerySupertype;
 import fluentq.core.types.ConstantImpl;
 import fluentq.core.types.Expression;
 import fluentq.core.types.dsl.StringPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DelegateTest {
 

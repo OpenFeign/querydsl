@@ -71,9 +71,7 @@ final class DialectSupport {
 
     var basicTypeRegistry = functionContributions.getTypeConfiguration().getBasicTypeRegistry();
     functions.forEach(
-        (name, template) ->
-            functionRegistry.registerPattern(
-                name, template.pattern(), basicTypeRegistry.resolve(template.type())));
+        (name, template) -> registerPattern(functionRegistry, basicTypeRegistry, name, template));
   }
 
   public static void extendRegistry(
@@ -83,8 +81,23 @@ final class DialectSupport {
     var functionRegistry = functionContributions.getFunctionRegistry();
 
     var basicTypeRegistry = functionContributions.getTypeConfiguration().getBasicTypeRegistry();
-    functionRegistry.registerPattern(
-        name, template.pattern(), basicTypeRegistry.resolve(template.type()));
+    registerPattern(functionRegistry, basicTypeRegistry, name, template);
+  }
+
+  private static void registerPattern(
+      org.hibernate.query.sqm.function.SqmFunctionRegistry functionRegistry,
+      org.hibernate.type.BasicTypeRegistry basicTypeRegistry,
+      String name,
+      DialectFunctionTemplate template) {
+    // Operators such as CURRENT_DATE are declared with a generic Comparable type that does not map
+    // to a Hibernate BasicType. In that case register the pattern without an explicit return type
+    // and let Hibernate infer it, instead of failing on a null type.
+    if (template.type() == null) {
+      functionRegistry.registerPattern(name, template.pattern());
+    } else {
+      functionRegistry.registerPattern(
+          name, template.pattern(), basicTypeRegistry.resolve(template.type()));
+    }
   }
 
   static class DialectFunctionTemplate {

@@ -15,6 +15,7 @@ package fluentq.collections;
 
 import static fluentq.collections.CollQueryFactory.from;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import fluentq.core.Tuple;
 import fluentq.core.types.Expression;
@@ -26,7 +27,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CollQueryTest extends AbstractQueryTest {
 
@@ -178,13 +179,15 @@ public class CollQueryTest extends AbstractQueryTest {
     assertThat(nums).isEqualTo(Arrays.asList(new BigDecimal("2.1"), new BigDecimal("20.21")));
   }
 
-  @Test(expected = UnsupportedOperationException.class)
+  @Test
   public void groupBy() {
-    query().from(cat, cats).groupBy(cat.name);
+    assertThatThrownBy(() -> query().from(cat, cats).groupBy(cat.name))
+        .isInstanceOf(UnsupportedOperationException.class);
   }
 
-  @Test(expected = UnsupportedOperationException.class)
+  @Test
   public void having() {
-    query().from(cat, cats).having(cat.name.isNull());
+    assertThatThrownBy(() -> query().from(cat, cats).having(cat.name.isNull()))
+        .isInstanceOf(UnsupportedOperationException.class);
   }
 }

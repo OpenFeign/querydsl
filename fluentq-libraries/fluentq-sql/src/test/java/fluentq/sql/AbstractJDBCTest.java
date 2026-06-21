@@ -17,8 +17,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractJDBCTest {
 
@@ -26,7 +26,7 @@ public abstract class AbstractJDBCTest {
 
   protected Statement statement;
 
-  @Before
+  @BeforeEach
   public void setUp() throws ClassNotFoundException, SQLException {
     Class.forName("org.hsqldb.jdbcDriver");
     var url = "jdbc:hsqldb:mem:testdb";
@@ -34,7 +34,7 @@ public abstract class AbstractJDBCTest {
     statement = connection.createStatement();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     try {
       statement.close();

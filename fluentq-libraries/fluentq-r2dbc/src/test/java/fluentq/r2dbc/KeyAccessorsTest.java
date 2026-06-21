@@ -22,7 +22,7 @@ import fluentq.sql.ForeignKey;
 import fluentq.sql.PrimaryKey;
 import fluentq.sql.RelationalPathBase;
 import java.io.Serializable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class KeyAccessorsTest {
 

@@ -19,8 +19,8 @@ import fluentq.core.JoinFlag;
 import fluentq.sql.domain.QSurvey;
 import java.sql.Connection;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JoinFlagsTest {
 
@@ -31,7 +31,7 @@ public class JoinFlagsTest {
   private SQLQuery query;
 
   @SuppressWarnings("unchecked")
-  @Before
+  @BeforeEach
   public void setUp() {
     s1 = new QSurvey("s");
     s2 = new QSurvey("s2");

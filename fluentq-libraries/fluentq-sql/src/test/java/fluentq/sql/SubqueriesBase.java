@@ -11,6 +11,7 @@ import static fluentq.core.Target.POSTGRESQL;
 import static fluentq.core.Target.SQLITE;
 import static fluentq.core.Target.SQLSERVER;
 import static fluentq.core.Target.TERADATA;
+import static fluentq.core.Target.TURSO;
 import static fluentq.sql.Constants.employee;
 import static fluentq.sql.Constants.employee2;
 import static fluentq.sql.Constants.survey;
@@ -30,7 +31,7 @@ import fluentq.sql.domain.QEmployee;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class SubqueriesBase extends AbstractBaseTest {
 
@@ -89,6 +90,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
     assertThat(list).isNotEmpty();
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void subQuery_alias() {
     query()
@@ -98,7 +100,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLITE)
+  @ExcludeIn({SQLITE, TURSO})
   public void subQuery_all() {
     query()
         .from(employee)
@@ -107,7 +109,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLITE)
+  @ExcludeIn({SQLITE, TURSO})
   public void subQuery_any() {
     query()
         .from(employee)

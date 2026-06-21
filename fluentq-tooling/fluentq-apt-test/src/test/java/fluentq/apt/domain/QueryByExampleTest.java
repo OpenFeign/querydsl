@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.annotations.QueryDelegate;
 import fluentq.core.types.Predicate;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryByExampleTest {
 

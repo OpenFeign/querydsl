@@ -25,11 +25,11 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import java.util.Map;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JPAExecuteWithKeyTest {
 
@@ -37,7 +37,7 @@ public class JPAExecuteWithKeyTest {
   private EntityManager entityManager;
   private EntityTransaction tx;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     emf =
         Persistence.createEntityManagerFactory(
@@ -51,21 +51,21 @@ public class JPAExecuteWithKeyTest {
                 "hibernate.show_sql", "false"));
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() {
     if (emf != null) {
       emf.close();
     }
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     entityManager = emf.createEntityManager();
     tx = entityManager.getTransaction();
     tx.begin();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     if (tx != null && tx.isActive()) {
       tx.rollback();
@@ -220,5 +220,44 @@ public class JPAExecuteWithKeyTest {
                     .select(JPAExpressions.select(other.name).from(other))
                     .executeWithKey(entity.id))
         .isInstanceOf(UnsupportedOperationException.class);
+  }
+
+  @Test
+  public void execute_with_function_template_routes_through_native_sql() {
+    // Regression for #1757: execute() must route to native SQL when value expressions
+    // contain function templates, otherwise Hibernate's HQL parser rejects them.
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    long rows =
+        insert(entity)
+            .set(
+                entity.name,
+                Expressions.stringTemplate("upper({0})", Expressions.constant("hello")))
+            .execute();
+
+    assertThat(rows).isEqualTo(1L);
+
+    var stored =
+        (String)
+            entityManager
+                .createNativeQuery("select name_ from generated_key_entity")
+                .getSingleResult();
+    assertThat(stored).isEqualTo("HELLO");
+  }
+
+  @Test
+  public void execute_without_template_uses_jpql_path() {
+    // Regression for #1757: plain value INSERTs must keep using the JPQL path so
+    // JPA semantics (cascade, callbacks where applicable) are preserved.
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    long rows = insert(entity).set(entity.name, "plain").execute();
+
+    assertThat(rows).isEqualTo(1L);
+
+    var stored =
+        (String)
+            entityManager
+                .createNativeQuery("select name_ from generated_key_entity")
+                .getSingleResult();
+    assertThat(stored).isEqualTo("plain");
   }
 }

@@ -22,7 +22,7 @@ import fluentq.core.types.QBean;
 import fluentq.core.types.dsl.BeanPath;
 import fluentq.core.types.dsl.NumberPath;
 import fluentq.core.types.dsl.StringPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QBean2Test {
 

@@ -18,7 +18,7 @@ import fluentq.sql.domain.Employee;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractMapperTest {
 
@@ -49,7 +49,7 @@ public abstract class AbstractMapperTest {
 
   protected Employee employee;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     employee = new Employee();
     employee.setDatefield(new Date(0));

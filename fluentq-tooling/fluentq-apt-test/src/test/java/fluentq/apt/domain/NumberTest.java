@@ -2,9 +2,9 @@ package fluentq.apt.domain;
 
 import fluentq.apt.domain.custom.CustomNumber;
 import fluentq.core.annotations.QueryEntity;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class NumberTest {
 
   @QueryEntity

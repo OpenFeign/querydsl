@@ -4,8 +4,8 @@ import java.io.StringWriter
 
 import fluentq.codegen.utils._
 import fluentq.codegen._
-import org.junit.Assert._
-import org.junit._
+import org.junit.jupiter.api.Assertions._
+import org.junit.jupiter.api._
 
 class ScalaBeanSerializerTest {
 
@@ -47,7 +47,7 @@ class ScalaBeanSerializerTest {
     //println(str)
 
     toMatch.split("\\n").map(_.trim).foreach { line =>
-      assertTrue(line, str.contains(line))
+      assertTrue(str.contains(line), line)
     }
 
   }

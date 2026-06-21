@@ -18,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.codegen.EntityType;
 import fluentq.codegen.Property;
 import fluentq.codegen.utils.model.Types;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DefaultNamingStrategyTest {
 
@@ -27,7 +27,7 @@ public class DefaultNamingStrategyTest {
 
   private EntityType entityModel;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     entityModel = new EntityType(Types.OBJECT);
     // entityModel.addAnnotation(new TableImpl("OBJECT"));

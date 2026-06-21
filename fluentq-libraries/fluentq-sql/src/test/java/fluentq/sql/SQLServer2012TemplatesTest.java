@@ -23,7 +23,7 @@ import fluentq.core.types.Path;
 import fluentq.core.types.dsl.Expressions;
 import fluentq.sql.dml.SQLDeleteClause;
 import fluentq.sql.dml.SQLUpdateClause;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
 

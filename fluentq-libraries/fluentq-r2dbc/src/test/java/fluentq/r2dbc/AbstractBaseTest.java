@@ -26,13 +26,11 @@ import fluentq.sql.RelationalPath;
 import io.r2dbc.spi.Connection;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.rules.MethodRule;
-import org.junit.rules.TestRule;
+import org.junit.jupiter.api.extension.ExtendWith;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@ExtendWith({TargetExtension.class, SkipForQuotedExtension.class})
 public abstract class AbstractBaseTest {
 
   // protected static final Logger logger = LoggerFactory.getLogger(AbstractBaseTest.class);
@@ -76,10 +74,6 @@ public abstract class AbstractBaseTest {
   protected Configuration configuration = Connections.getConfiguration();
 
   @Nullable protected String expectedQuery;
-
-  @Rule public MethodRule skipForQuotedRule = new SkipForQuotedRule(configuration);
-
-  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
 
   protected <T> void add(List<T> list, T arg, Target... exclusions) {
     if (exclusions.length > 0) {

@@ -26,6 +26,7 @@ import static fluentq.core.Target.POSTGRESQL;
 import static fluentq.core.Target.SQLITE;
 import static fluentq.core.Target.SQLSERVER;
 import static fluentq.core.Target.TERADATA;
+import static fluentq.core.Target.TURSO;
 import static fluentq.sql.Constants.date;
 import static fluentq.sql.Constants.employee;
 import static fluentq.sql.Constants.employee2;
@@ -102,8 +103,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.compress.utils.Sets;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class SelectBase extends AbstractBaseTest {
 
@@ -130,6 +131,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     return query().select(exprs).fetchFirst();
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void aggregate_list() {
     int min = 30000, avg = 65000, max = 160000;
@@ -142,6 +144,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(max);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void aggregate_uniqueResult() {
     int min = 30000, avg = 65000, max = 160000;
@@ -214,6 +217,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(firstResult(four.divide(two.multiply(two))).intValue()).isEqualTo(1);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void arithmetic() {
     NumberExpression<Integer> one = Expressions.numberTemplate(Integer.class, "(1.0)");
@@ -289,6 +293,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     }
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void beans() {
     var rows = query().from(employee, employee2).select(new QBeans(employee, employee2)).fetch();
@@ -313,7 +318,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({ORACLE, CUBRID, FIREBIRD, DB2, DERBY, SQLSERVER, SQLITE, TERADATA})
+  @ExcludeIn({ORACLE, CUBRID, FIREBIRD, DB2, DERBY, SQLSERVER, SQLITE, TERADATA, TURSO})
   public void boolean_all() {
     assertThat(
             query()
@@ -324,7 +329,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({ORACLE, CUBRID, FIREBIRD, DB2, DERBY, SQLSERVER, SQLITE, TERADATA})
+  @ExcludeIn({ORACLE, CUBRID, FIREBIRD, DB2, DERBY, SQLSERVER, SQLITE, TERADATA, TURSO})
   public void boolean_any() {
     assertThat(
             query()
@@ -415,6 +420,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(0);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void complex_subQuery() {
     // alias for the salary
@@ -533,7 +539,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, H2, FIREBIRD})
+  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, H2, FIREBIRD, TURSO})
   public void dates() throws SQLException {
     if (!configuration.getUseLiterals()) {
       dates(false);
@@ -541,7 +547,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, SQLITE, TERADATA, FIREBIRD})
+  @ExcludeIn({CUBRID, DB2, DERBY, SQLITE, TERADATA, FIREBIRD, TURSO})
   public void dates_literals() throws SQLException {
     if (configuration.getUseLiterals()) {
       dates(true);
@@ -647,7 +653,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE})
+  @ExcludeIn({SQLITE, TURSO})
   public void date_add() {
     SQLQuery<?> query = query().from(employee);
     var date1 = query.select(employee.datefield).fetchFirst();
@@ -661,7 +667,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE})
+  @ExcludeIn({SQLITE, TURSO})
   public void date_add_Timestamp() {
     List<Expression<?>> exprs = new ArrayList<>();
     var dt = Expressions.currentTimestamp();
@@ -679,7 +685,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, SQLITE, TERADATA})
+  @ExcludeIn({DB2, SQLITE, TERADATA, TURSO})
   public void date_diff() {
     var employee2 = new QEmployee("employee2");
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
@@ -720,7 +726,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   // TDO Date_diff with timestamps
 
   @Test
-  @ExcludeIn({DB2, HSQLDB, SQLITE, TERADATA, ORACLE})
+  @ExcludeIn({DB2, HSQLDB, SQLITE, TERADATA, ORACLE, TURSO})
   public void date_diff2() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
 
@@ -757,7 +763,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, H2}) // FIXME
+  @ExcludeIn({SQLITE, H2, TURSO}) // FIXME
   public void date_trunc() {
     var expr = DateTimeExpression.currentTimestamp();
 
@@ -776,7 +782,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, TERADATA, DERBY, H2}) // FIXME
+  @ExcludeIn({SQLITE, TERADATA, DERBY, H2, TURSO, CUBRID}) // FIXME
   public void date_trunc2() {
     DateTimeExpression<LocalDateTime> expr =
         DateTimeExpression.currentTimestamp(LocalDateTime.class);
@@ -854,6 +860,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(toSecond.getSecond()).isEqualTo(date.getSecond());
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void dateTime() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
@@ -867,7 +874,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE})
+  @ExcludeIn({SQLITE, TURSO})
   public void dateTime_to_date() {
     firstResult(SQLExpressions.date(DateTimeExpression.currentTimestamp()));
   }
@@ -920,7 +927,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, SQLITE, DERBY, CUBRID, MYSQL})
+  @ExcludeIn({H2, SQLITE, DERBY, CUBRID, MYSQL, TURSO})
   public void full_join() throws SQLException {
     assertThat(
             query()
@@ -990,7 +997,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, DB2, DERBY, ORACLE, SQLSERVER})
+  @ExcludeIn({H2, DB2, DERBY, ORACLE, SQLSERVER, TURSO})
   public void groupBy_validate() {
     NumberPath<BigDecimal> alias = Expressions.numberPath(BigDecimal.class, "alias");
     assertThat(
@@ -1050,13 +1057,18 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @SuppressWarnings("unchecked")
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void illegalUnion() throws SQLException {
-    SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
-    SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.max());
-    assertThat(query().from(employee).union(sq1, sq2).list()).isEmpty();
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
+          SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.max());
+          assertThat(query().from(employee).union(sq1, sq2).list()).isEmpty();
+        });
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void in() {
     assertThat(
@@ -1251,6 +1263,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(Arrays.asList(20, 13, 10, 2));
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void limit_and_offset_Group() {
     assertThat(
@@ -1373,6 +1386,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(results.getTotal()).isEqualTo(10);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void listResults_factoryExpression() {
     var results =
@@ -1415,7 +1429,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, DERBY})
+  @ExcludeIn({SQLITE, DERBY, TURSO})
   public void lPad() {
     assertThat(firstResult(StringExpressions.lpad(ConstantImpl.create("ab"), 4))).isEqualTo("  ab");
     assertThat(firstResult(StringExpressions.lpad(ConstantImpl.create("ab"), 4, '!')))
@@ -1455,13 +1469,13 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({HSQLDB, SQLITE}) // FIXME
+  @ExcludeIn({HSQLDB, SQLITE, TURSO}) // FIXME
   public void math() {
     math(Expressions.numberTemplate(Double.class, "0.50"));
   }
 
   @Test
-  @ExcludeIn({FIREBIRD, SQLSERVER, HSQLDB, SQLITE}) // FIXME
+  @ExcludeIn({FIREBIRD, SQLSERVER, HSQLDB, SQLITE, TURSO}) // FIXME
   public void math2() {
     math(Expressions.constant(0.5));
   }
@@ -1532,7 +1546,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE})
+  @ExcludeIn({SQLITE, TURSO})
   public void no_from() {
     assertThat(firstResult(DateExpression.currentDate())).isNotNull();
   }
@@ -1670,20 +1684,24 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo("Mike");
   }
 
-  @Test(expected = ParamNotSetException.class)
+  @Test
   public void params_not_set() {
-    var name = new Param<String>(String.class, "name");
-    assertThat(
-            query()
-                .from(employee)
-                .where(employee.firstname.eq(name))
-                .select(employee.firstname)
-                .fetchFirst())
-        .isEqualTo("Mike");
+    assertThrows(
+        ParamNotSetException.class,
+        () -> {
+          var name = new Param<String>(String.class, "name");
+          assertThat(
+                  query()
+                      .from(employee)
+                      .where(employee.firstname.eq(name))
+                      .select(employee.firstname)
+                      .fetchFirst())
+              .isEqualTo("Mike");
+        });
   }
 
   @Test
-  @ExcludeIn({DB2, DERBY, FIREBIRD, HSQLDB, ORACLE, SQLSERVER})
+  @ExcludeIn({DB2, DERBY, FIREBIRD, HSQLDB, ORACLE, SQLSERVER, TURSO})
   @SkipForQuoted
   public void path_alias() {
     expectedQuery =
@@ -1816,17 +1834,19 @@ public abstract class SelectBase extends AbstractBaseTest {
     return x * Math.PI / 180.0;
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void random() {
     firstResult(MathExpressions.random());
   }
 
   @Test
-  @ExcludeIn({FIREBIRD, ORACLE, POSTGRESQL, SQLITE, TERADATA})
+  @ExcludeIn({FIREBIRD, ORACLE, POSTGRESQL, SQLITE, TERADATA, TURSO})
   public void random2() {
     firstResult(MathExpressions.random(10));
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void relationalPath_projection() {
     var results =
@@ -1910,7 +1930,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, DERBY})
+  @ExcludeIn({SQLITE, DERBY, TURSO})
   public void rpad() {
     assertThat(firstResult(StringExpressions.rpad(ConstantImpl.create("ab"), 4))).isEqualTo("ab  ");
     assertThat(firstResult(StringExpressions.rpad(ConstantImpl.create("ab"), 4, '!')))
@@ -1918,7 +1938,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   @ExcludeIn({ORACLE, DERBY, SQLSERVER})
   public void select_booleanExpr() throws SQLException {
     // TODO : FIXME
@@ -1926,7 +1946,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   @ExcludeIn({ORACLE, DERBY, SQLSERVER})
   public void select_booleanExpr2() throws SQLException {
     // TODO : FIXME
@@ -1949,13 +1969,13 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, CUBRID, TERADATA})
+  @ExcludeIn({SQLITE, CUBRID, TERADATA, TURSO})
   public void select_for_update() {
     assertThat(query().from(survey).forUpdate().select(survey.id).fetch()).hasSize(1);
   }
 
   @Test
-  @ExcludeIn({SQLITE, CUBRID, TERADATA})
+  @ExcludeIn({SQLITE, CUBRID, TERADATA, TURSO})
   public void select_for_update_Where() {
     assertThat(
             query().from(survey).forUpdate().where(survey.id.isNotNull()).select(survey.id).fetch())
@@ -1963,7 +1983,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, CUBRID, TERADATA})
+  @ExcludeIn({SQLITE, CUBRID, TERADATA, TURSO})
   public void select_for_update_UniqueResult() {
     query().from(survey).forUpdate().select(survey.id).fetchOne();
   }
@@ -2055,6 +2075,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(0);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void standardTest() {
     standardTest.runBooleanTests(employee.firstname.isNull(), employee2.lastname.isNotNull());
@@ -2069,7 +2090,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
     standardTest.runStringTests(employee.firstname, employee2.firstname, "Jennifer");
     var target = Connections.getTarget();
-    if (target != SQLITE) {
+    if (target != SQLITE && target != TURSO) {
       standardTest.runTimeTests(employee.timefield, employee2.timefield, time);
     }
 
@@ -2089,7 +2110,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLITE)
+  @ExcludeIn({SQLITE, TURSO})
   public void string() {
     StringExpression str = Expressions.stringTemplate("'  abcd  '");
 
@@ -2102,7 +2123,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLITE)
+  @ExcludeIn({SQLITE, TURSO})
   public void string_withTemplate() {
     StringExpression str = Expressions.stringTemplate("'  abcd  '");
 
@@ -2119,7 +2140,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({POSTGRESQL, SQLITE})
+  @ExcludeIn({POSTGRESQL, SQLITE, TURSO})
   public void string_indexOf() {
     StringExpression str = Expressions.stringTemplate("'  abcd  '");
 
@@ -2141,7 +2162,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLITE)
+  @ExcludeIn({SQLITE, TURSO})
   public void string_left() {
     assertThat(
             query()
@@ -2153,7 +2174,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DERBY, SQLITE})
+  @ExcludeIn({DERBY, SQLITE, TURSO})
   public void string_right() {
     assertThat(
             query()
@@ -2165,7 +2186,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DERBY, SQLITE})
+  @ExcludeIn({DERBY, SQLITE, TURSO})
   public void string_left_Right() {
     assertThat(
             query()
@@ -2177,7 +2198,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DERBY, SQLITE})
+  @ExcludeIn({DERBY, SQLITE, TURSO})
   public void string_right_Left() {
     assertThat(
             query()
@@ -2238,6 +2259,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(Collections.singletonList(1));
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void transform_groupBy() {
     var employee = new QEmployee("employee");
@@ -2326,9 +2348,12 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(row.get(1, Object.class)).as(row.get(0, Object.class) + " is not null").isNotNull();
   }
 
-  @Test(expected = NonUniqueResultException.class)
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @Test
   public void uniqueResultContract() {
-    query().from(employee).select(employee.all()).fetchOne();
+    assertThrows(
+        NonUniqueResultException.class,
+        () -> query().from(employee).select(employee.all()).fetchOne());
   }
 
   @Test
@@ -2531,7 +2556,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, DERBY, H2})
+  @ExcludeIn({DB2, DERBY, H2, TURSO})
   public void yearWeek() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
     assertThat(query.select(employee.datefield.yearWeek()).fetchFirst())
@@ -2546,6 +2571,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(Integer.valueOf(200007));
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void statementOptions() {
 

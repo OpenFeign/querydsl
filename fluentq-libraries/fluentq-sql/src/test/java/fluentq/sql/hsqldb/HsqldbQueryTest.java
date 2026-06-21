@@ -3,8 +3,8 @@ package fluentq.sql.hsqldb;
 import fluentq.sql.HSQLDBTemplates;
 import fluentq.sql.SQLQuery;
 import fluentq.sql.domain.QSurvey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class HsqldbQueryTest {
 
@@ -12,7 +12,7 @@ public class HsqldbQueryTest {
 
   private QSurvey survey = new QSurvey("survey");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     query = new SQLQuery(HSQLDBTemplates.builder().newLineToSingleSpace().build());
   }

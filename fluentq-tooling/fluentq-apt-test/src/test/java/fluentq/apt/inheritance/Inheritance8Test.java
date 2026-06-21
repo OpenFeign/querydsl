@@ -19,7 +19,7 @@ import fluentq.core.annotations.QueryEntity;
 import fluentq.core.domain.CommonIdentifiable;
 import fluentq.core.domain.CommonPersistence;
 import fluentq.core.types.dsl.NumberPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Inheritance8Test {
 

@@ -16,7 +16,7 @@ package fluentq.jpa;
 import fluentq.core.FilteredClause;
 import fluentq.jpa.hibernate.HibernateQuery;
 import fluentq.jpa.impl.JPAQuery;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SignatureTest {
 

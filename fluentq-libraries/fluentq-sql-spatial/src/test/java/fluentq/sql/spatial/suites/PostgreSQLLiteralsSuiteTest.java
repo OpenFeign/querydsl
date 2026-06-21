@@ -1,19 +1,20 @@
 package fluentq.sql.spatial.suites;
 
-import fluentq.core.testutil.PostgreSQL;
 import fluentq.sql.Connections;
 import fluentq.sql.spatial.PostGISTemplates;
 import fluentq.sql.spatial.SpatialBase;
 import fluentq.sql.suites.AbstractSuite;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 
-@Category(PostgreSQL.class)
+@Tag("fluentq.core.testutil.PostgreSQL")
 public class PostgreSQLLiteralsSuiteTest extends AbstractSuite {
 
-  public static class Spatial extends SpatialBase {}
+  @Nested
+  class Spatial extends SpatialBase {}
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Connections.initPostgreSQL();
     Connections.initConfiguration(

@@ -19,18 +19,18 @@ import fluentq.core.QueryMutability;
 import fluentq.jpa.domain.Cat;
 import fluentq.jpa.domain.sql.SAnimal_;
 import fluentq.jpa.sql.JPASQLQuery;
-import fluentq.jpa.testutil.JPATestRunner;
+import fluentq.jpa.testutil.JPATestExtension;
 import fluentq.sql.DerbyTemplates;
 import fluentq.sql.SQLTemplates;
 import jakarta.persistence.EntityManager;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@Ignore
-@RunWith(JPATestRunner.class)
+@Disabled
+@ExtendWith(JPATestExtension.class)
 public class JPAQueryMutabilityTest implements JPATest {
 
   private static final SQLTemplates derbyTemplates = new DerbyTemplates();

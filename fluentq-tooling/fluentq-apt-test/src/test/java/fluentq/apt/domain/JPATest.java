@@ -16,7 +16,7 @@ package fluentq.apt.domain;
 import fluentq.core.types.dsl.StringPath;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JPATest extends AbstractTest {
 

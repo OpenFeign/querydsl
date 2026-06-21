@@ -3,25 +3,24 @@ package fluentq.r2dbc.suites;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.base.Throwables;
-import fluentq.core.testutil.H2;
 import fluentq.r2dbc.AbstractBaseTest;
 import fluentq.r2dbc.Connections;
 import fluentq.r2dbc.H2Templates;
 import fluentq.sql.DefaultSQLExceptionTranslator;
 import fluentq.sql.SQLExceptionTranslator;
 import java.sql.SQLException;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
-@Category(H2.class)
+@Tag("fluentq.core.testutil.H2")
 public class H2ExceptionSuiteTest extends AbstractBaseTest {
 
   private static final SQLExceptionTranslator exceptionTranslator =
       DefaultSQLExceptionTranslator.DEFAULT;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Connections.initConfiguration(H2Templates.builder().build());
     Connections.initH2();

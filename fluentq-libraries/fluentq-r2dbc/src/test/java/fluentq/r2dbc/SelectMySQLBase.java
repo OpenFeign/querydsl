@@ -5,7 +5,7 @@ import static fluentq.r2dbc.Constants.survey;
 
 import fluentq.core.testutil.IncludeIn;
 import fluentq.r2dbc.mysql.R2DBCMySQLQuery;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class SelectMySQLBase extends AbstractBaseTest {
 

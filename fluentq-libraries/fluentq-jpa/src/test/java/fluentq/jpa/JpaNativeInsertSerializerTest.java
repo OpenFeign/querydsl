@@ -14,6 +14,7 @@
 package fluentq.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import fluentq.core.types.Expression;
 import fluentq.core.types.dsl.Expressions;
@@ -26,7 +27,7 @@ import fluentq.jpa.domain.QNumeric;
 import fluentq.sql.Configuration;
 import fluentq.sql.SQLTemplates;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JpaNativeInsertSerializerTest {
 
@@ -134,14 +135,18 @@ public class JpaNativeInsertSerializerTest {
     assertThat(serializer.getConstants()).containsExactly("a", "b");
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void serializeInsert_rejects_mismatched_column_value_counts() {
-    var entity = QGeneratedKeyEntity.generatedKeyEntity;
-    var serializer = newSerializer(SQLTemplates.DEFAULT);
+    assertThatThrownBy(
+            () -> {
+              var entity = QGeneratedKeyEntity.generatedKeyEntity;
+              var serializer = newSerializer(SQLTemplates.DEFAULT);
 
-    serializer.serializeInsert(
-        GeneratedKeyEntity.class,
-        List.of(entity.name),
-        List.of(Expressions.constant("a"), Expressions.constant("b")));
+              serializer.serializeInsert(
+                  GeneratedKeyEntity.class,
+                  List.of(entity.name),
+                  List.of(Expressions.constant("a"), Expressions.constant("b")));
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 }

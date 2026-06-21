@@ -16,10 +16,10 @@ package fluentq.apt.domain;
 import fluentq.core.annotations.PropertyType;
 import fluentq.core.annotations.QueryEntity;
 import fluentq.core.annotations.QueryType;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-@Ignore
+@Disabled
 public class PropertyTypeTest {
 
   @QueryEntity

@@ -14,7 +14,7 @@ import fluentq.core.annotations.QueryEntity;
 import fluentq.core.types.Projections;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GroupBy3Test {
 

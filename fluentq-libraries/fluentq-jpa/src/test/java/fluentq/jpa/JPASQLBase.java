@@ -24,25 +24,18 @@ import fluentq.jpa.domain.Color;
 import fluentq.jpa.domain.QCat;
 import fluentq.jpa.domain.sql.SAnimal_;
 import fluentq.jpa.sql.JPASQLQuery;
-import fluentq.jpa.testutil.JPATestRunner;
+import fluentq.jpa.testutil.JPATestExtension;
 import fluentq.sql.SQLTemplates;
 import jakarta.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JPATestRunner.class)
+@ExtendWith({JPATestExtension.class, TargetExtension.class, JPAProviderExtension.class})
 public class JPASQLBase extends AbstractSQLTest implements JPATest {
-
-  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
-
-  @Rule @ClassRule public static TestRule hibernateOnly = new JPAProviderRule();
 
   private final SQLTemplates templates = Mode.getSQLTemplates();
 
@@ -61,7 +54,7 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
     this.entityManager = entityManager;
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     if (query().from(cat).fetchCount() == 0) {
       entityManager.persist(new Cat("Beck", 1, Color.BLACK));

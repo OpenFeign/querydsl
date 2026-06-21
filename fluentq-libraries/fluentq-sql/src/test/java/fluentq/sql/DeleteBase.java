@@ -20,6 +20,7 @@ import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.ORACLE;
 import static fluentq.core.Target.SQLITE;
 import static fluentq.core.Target.SQLSERVER;
+import static fluentq.core.Target.TURSO;
 import static fluentq.sql.Constants.survey;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,9 +31,9 @@ import fluentq.core.types.dsl.Param;
 import fluentq.sql.domain.QEmployee;
 import fluentq.sql.domain.QSurvey;
 import java.sql.SQLException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class DeleteBase extends AbstractBaseTest {
 
@@ -41,16 +42,17 @@ public abstract class DeleteBase extends AbstractBaseTest {
     insert(survey).values(1, "Hello World", "Hello").execute();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException {
     reset();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     reset();
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void batch() throws SQLException {
     insert(survey).values(2, "A", "B").execute();
@@ -65,7 +67,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLITE, FIREBIRD})
+  @ExcludeIn({CUBRID, SQLITE, FIREBIRD, TURSO})
   public void batch_templates() throws SQLException {
     insert(survey).values(2, "A", "B").execute();
     insert(survey).values(3, "B", "C").execute();
@@ -77,7 +79,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(MYSQL)
+  @ExcludeIn({MYSQL, TURSO})
   public void delete() throws SQLException {
     var count = query().from(survey).fetchCount();
     assertThat(delete(survey).where(survey.name.eq("XXX")).execute()).isEqualTo(0);
@@ -94,6 +96,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
     assertThat(delete(survey).limit(2).execute()).isEqualTo(2);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void delete_with_subQuery_exists() {
     var survey1 = new QSurvey("s1");
@@ -104,6 +107,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
     assertThat(delete.execute()).isEqualTo(0);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void delete_with_subQuery_exists_Params() {
     var survey1 = new QSurvey("s1");
@@ -118,6 +122,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
     assertThat(delete.execute()).isEqualTo(0);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void delete_with_subQuery_exists2() {
     var survey1 = new QSurvey("s1");
@@ -130,7 +135,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLITE, FIREBIRD})
+  @ExcludeIn({CUBRID, SQLITE, FIREBIRD, TURSO})
   public void delete_with_tempateExpression_in_batch() {
     assertThat(
             delete(survey)

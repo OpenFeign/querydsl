@@ -33,6 +33,7 @@ import static fluentq.r2dbc.Constants.survey;
 import static fluentq.r2dbc.Constants.survey2;
 import static fluentq.r2dbc.Constants.time;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -100,8 +101,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class SelectBase extends AbstractBaseTest {
 
@@ -303,7 +304,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   @ExcludeIn({DERBY, HSQLDB})
-  @Ignore("currently not supported by drivers")
+  @Disabled("currently not supported by drivers")
   public void array_null() {
     Expression<Integer[]> expr = Expressions.template(Integer[].class, "null");
     assertThat(firstResult(expr)).isNull();
@@ -676,7 +677,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore // FIXME
+  @Disabled // FIXME
   @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA})
   public void dates_cST() {
     var tz = TimeZone.getDefault();
@@ -689,7 +690,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore // FIXME
+  @Disabled // FIXME
   @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA})
   public void dates_iOT() {
     var tz = TimeZone.getDefault();
@@ -1100,11 +1101,16 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @SuppressWarnings("unchecked")
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void illegalUnion() {
-    SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
-    SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.max());
-    assertEquals(0, query().from(employee).union(sq1, sq2).fetch().collectList().block().size());
+    assertThatThrownBy(
+            () -> {
+              SubQueryExpression<Integer> sq1 = query().from(employee).select(employee.id.max());
+              SubQueryExpression<Integer> sq2 = query().from(employee).select(employee.id.max());
+              assertEquals(
+                  0, query().from(employee).union(sq1, sq2).fetch().collectList().block().size());
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
@@ -1668,7 +1674,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore("not valid as streams cannot have nulls")
+  @Disabled("not valid as streams cannot have nulls")
   public void number_as_boolean_Null() {
     var numberTest = QNumberTest.numberTest;
     delete(numberTest).execute().block();
@@ -1790,17 +1796,21 @@ public abstract class SelectBase extends AbstractBaseTest {
             .block());
   }
 
-  @Test(expected = ParamNotSetException.class)
+  @Test
   public void params_not_set() {
-    var name = new Param<String>(String.class, "name");
-    assertEquals(
-        "Mike",
-        query()
-            .from(employee)
-            .where(employee.firstname.eq(name))
-            .select(employee.firstname)
-            .fetchFirst()
-            .block());
+    assertThatThrownBy(
+            () -> {
+              var name = new Param<String>(String.class, "name");
+              assertEquals(
+                  "Mike",
+                  query()
+                      .from(employee)
+                      .where(employee.firstname.eq(name))
+                      .select(employee.firstname)
+                      .fetchFirst()
+                      .block());
+            })
+        .isInstanceOf(ParamNotSetException.class);
   }
 
   @Test
@@ -2049,7 +2059,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   @ExcludeIn({ORACLE, DERBY, SQLSERVER})
   public void select_booleanExpr() {
     // TODO : FIXME
@@ -2057,7 +2067,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   @ExcludeIn({ORACLE, DERBY, SQLSERVER})
   public void select_booleanExpr2() {
     // TODO : FIXME
@@ -2518,10 +2528,14 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(row.get(1, Object.class)).as(row.get(0, Object.class) + " is not null").isNotNull();
   }
 
-  @Ignore("we select the first result if one selected")
-  @Test(expected = NonUniqueResultException.class)
+  @Disabled("we select the first result if one selected")
+  @Test
   public void uniqueResultContract() {
-    query().from(employee).select(employee.all()).fetchOne().block();
+    assertThatThrownBy(
+            () -> {
+              query().from(employee).select(employee.all()).fetchOne().block();
+            })
+        .isInstanceOf(NonUniqueResultException.class);
   }
 
   @Test

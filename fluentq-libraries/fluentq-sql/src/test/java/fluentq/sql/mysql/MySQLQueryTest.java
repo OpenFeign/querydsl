@@ -18,15 +18,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.sql.MySQLTemplates;
 import fluentq.sql.domain.QSurvey;
 import java.io.File;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MySQLQueryTest {
   private MySQLQuery<?> query;
 
   private QSurvey survey = new QSurvey("survey");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     query = new MySQLQuery<Void>(null, MySQLTemplates.builder().newLineToSingleSpace().build());
     query.from(survey);

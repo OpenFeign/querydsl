@@ -29,8 +29,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Date;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BeanSerializerTest {
 
@@ -40,7 +40,7 @@ public class BeanSerializerTest {
 
   private final Writer writer = new StringWriter();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     typeModel =
         new SimpleType(

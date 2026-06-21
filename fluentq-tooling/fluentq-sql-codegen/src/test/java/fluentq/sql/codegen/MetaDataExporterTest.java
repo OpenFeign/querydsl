@@ -14,6 +14,7 @@
 package fluentq.sql.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
 
 import fluentq.codegen.BeanSerializer;
@@ -32,12 +33,11 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.tools.JavaCompiler;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class MetaDataExporterTest {
 
@@ -53,9 +53,9 @@ public class MetaDataExporterTest {
 
   private JavaCompiler compiler = new SimpleCompiler();
 
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir File folder;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws ClassNotFoundException, SQLException {
     Class.forName("org.h2.Driver");
     var url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy";
@@ -133,12 +133,12 @@ public class MetaDataExporterTest {
     }
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() throws SQLException {
     connection.close();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws ClassNotFoundException, SQLException {
     metadata = connection.getMetaData();
   }
@@ -147,14 +147,14 @@ public class MetaDataExporterTest {
 
   @Test
   public void normalSettings_repetition() throws SQLException {
-    test("Q", "", "", "", DefaultNamingStrategy.class, folder.getRoot(), false, false, false);
+    test("Q", "", "", "", DefaultNamingStrategy.class, folder, false, false, false);
 
-    var file = new File(folder.getRoot(), "test/QEmployee.java");
+    var file = new File(folder, "test/QEmployee.java");
     var lastModified = file.lastModified();
     assertThat(file).exists();
 
     clean = false;
-    test("Q", "", "", "", DefaultNamingStrategy.class, folder.getRoot(), false, false, false);
+    test("Q", "", "", "", DefaultNamingStrategy.class, folder, false, false, false);
     assertThat(file.lastModified()).isEqualTo(lastModified);
   }
 
@@ -165,7 +165,7 @@ public class MetaDataExporterTest {
     config.setSchemaPattern("PUBLIC");
     config.setNamePrefix("Q");
     config.setPackageName("test");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     config.setNamingStrategyClass(DefaultNamingStrategy.class);
     config.setBeanSerializerClass(BeanSerializer.class);
     config.setBeanPackageName("test2");
@@ -173,8 +173,8 @@ public class MetaDataExporterTest {
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QDateTest.java")).exists();
-    assertThat(new File(folder.getRoot(), "test2/DateTest.java")).exists();
+    assertThat(new File(folder, "test/QDateTest.java")).exists();
+    assertThat(new File(folder, "test2/DateTest.java")).exists();
   }
 
   @Test
@@ -193,15 +193,15 @@ public class MetaDataExporterTest {
     config.setNamePrefix("Q");
     config.setPackageName("test");
     config.setTableNamePattern("FOO");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     config.setBeanSerializerClass(BeanSerializer.class);
     config.setValidationAnnotations(true);
     config.setExportBeans(true);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    var classLoader = URLClassLoader.newInstance(new URL[] {folder.getRoot().toURI().toURL()});
-    compiler.run(null, null, null, folder.getRoot().getAbsoluteFile() + "/test/Foo.java");
+    var classLoader = URLClassLoader.newInstance(new URL[] {folder.toURI().toURL()});
+    compiler.run(null, null, null, folder.getAbsoluteFile() + "/test/Foo.java");
     Class<?> cls = Class.forName("test.Foo", true, classLoader);
     assertThat(
             ReflectionUtils.getAnnotatedElement(cls, "id", Integer.class)
@@ -231,16 +231,16 @@ public class MetaDataExporterTest {
     config.setNamePrefix("Q");
     config.setPackageName("test");
     config.setTableNamePattern("BAR");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     config.setBeanSerializerClass(BeanSerializer.class);
     config.setValidationAnnotations(true);
     config.setExportBeans(true);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    var file = new File(folder.getRoot().getAbsoluteFile(), "/test/Bar.java");
+    var file = new File(folder.getAbsoluteFile(), "/test/Bar.java");
     assertThat(file.exists());
-    var classLoader = URLClassLoader.newInstance(new URL[] {folder.getRoot().toURI().toURL()});
+    var classLoader = URLClassLoader.newInstance(new URL[] {folder.toURI().toURL()});
     compiler.run(null, null, null, file.toString());
     Class<?> cls = Class.forName("test.Bar", true, classLoader);
     assertThat(
@@ -260,11 +260,11 @@ public class MetaDataExporterTest {
     var config = new MetadataExporterConfigImpl();
     config.setSchemaPattern("PUBLIC");
     config.setPackageName("test");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QDateTest.java")).exists();
+    assertThat(new File(folder, "test/QDateTest.java")).exists();
   }
 
   @Test
@@ -272,11 +272,11 @@ public class MetaDataExporterTest {
     var config = new MetadataExporterConfigImpl();
     config.setSchemaPattern("PUBLIC2,PUBLIC");
     config.setPackageName("test");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QDateTest.java")).exists();
+    assertThat(new File(folder, "test/QDateTest.java")).exists();
   }
 
   @Test
@@ -285,14 +285,14 @@ public class MetaDataExporterTest {
     config.setSchemaPattern("PUBLIC2,PUBLIC");
     config.setTableNamePattern("RESERVED,UNDERSCORE,BEANGEN1");
     config.setPackageName("test");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QBeangen1.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QReserved.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QUnderscore.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QDefinstance.java").exists()).isFalse();
+    assertThat(new File(folder, "test/QBeangen1.java")).exists();
+    assertThat(new File(folder, "test/QReserved.java")).exists();
+    assertThat(new File(folder, "test/QUnderscore.java")).exists();
+    assertThat(new File(folder, "test/QDefinstance.java").exists()).isFalse();
   }
 
   @Test
@@ -301,30 +301,34 @@ public class MetaDataExporterTest {
     config.setSchemaPattern("PUBLIC");
     config.setTableNamePattern("RESERVED,UNDERSCORE,BEANGEN1");
     config.setPackageName("test");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QBeangen1.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QReserved.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QUnderscore.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QDefinstance.java").exists()).isFalse();
+    assertThat(new File(folder, "test/QBeangen1.java")).exists();
+    assertThat(new File(folder, "test/QReserved.java")).exists();
+    assertThat(new File(folder, "test/QUnderscore.java")).exists();
+    assertThat(new File(folder, "test/QDefinstance.java").exists()).isFalse();
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void minimal_configuration_with_duplicate_tables() throws SQLException {
-    var config = new MetadataExporterConfigImpl();
-    config.setSchemaPattern("PUBLIC");
-    config.setTableNamePattern("%,%");
-    config.setPackageName("test");
-    config.setTargetFolder(folder.getRoot());
-    var exporter = new MetaDataExporter(config);
-    exporter.export(metadata);
+    assertThatThrownBy(
+            () -> {
+              var config = new MetadataExporterConfigImpl();
+              config.setSchemaPattern("PUBLIC");
+              config.setTableNamePattern("%,%");
+              config.setPackageName("test");
+              config.setTargetFolder(folder);
+              var exporter = new MetaDataExporter(config);
+              exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/QBeangen1.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QReserved.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QUnderscore.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/QDefinstance.java").exists()).isFalse();
+              assertThat(new File(folder, "test/QBeangen1.java")).exists();
+              assertThat(new File(folder, "test/QReserved.java")).exists();
+              assertThat(new File(folder, "test/QUnderscore.java")).exists();
+              assertThat(new File(folder, "test/QDefinstance.java").exists()).isFalse();
+            })
+        .isInstanceOf(IllegalStateException.class);
   }
 
   @Test
@@ -334,11 +338,11 @@ public class MetaDataExporterTest {
     config.setPackageName("test");
     config.setNamePrefix("");
     config.setNameSuffix("Type");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTestType.java")).exists();
+    assertThat(new File(folder, "test/DateTestType.java")).exists();
   }
 
   @Test
@@ -348,12 +352,12 @@ public class MetaDataExporterTest {
     config.setPackageName("test");
     config.setNamePrefix("");
     config.setNameSuffix("Type");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     config.setExportForeignKeys(false);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTestType.java")).exists();
+    assertThat(new File(folder, "test/DateTestType.java")).exists();
   }
 
   @Test
@@ -363,12 +367,12 @@ public class MetaDataExporterTest {
     config.setPackageName("test");
     config.setNamePrefix("");
     config.setNameSuffix("Type");
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     config.setExportInverseForeignKeys(false);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTestType.java")).exists();
+    assertThat(new File(folder, "test/DateTestType.java")).exists();
   }
 
   @Test
@@ -379,13 +383,13 @@ public class MetaDataExporterTest {
     config.setNamePrefix("");
     config.setBeanPrefix("Bean");
     config.setBeanSerializerClass(BeanSerializer.class);
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     config.setExportBeans(true);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTest.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/BeanDateTest.java")).exists();
+    assertThat(new File(folder, "test/DateTest.java")).exists();
+    assertThat(new File(folder, "test/BeanDateTest.java")).exists();
   }
 
   @Test
@@ -396,13 +400,13 @@ public class MetaDataExporterTest {
     config.setNamePrefix("");
     config.setBeanSuffix("Bean");
     config.setBeanSerializerClass(BeanSerializer.class);
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(folder);
     config.setExportBeans(true);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTest.java")).exists();
-    assertThat(new File(folder.getRoot(), "test/DateTestBean.java")).exists();
+    assertThat(new File(folder, "test/DateTest.java")).exists();
+    assertThat(new File(folder, "test/DateTestBean.java")).exists();
   }
 
   @Test
@@ -413,14 +417,15 @@ public class MetaDataExporterTest {
     config.setNamePrefix("");
     config.setBeanSuffix("Bean");
     config.setBeanSerializerClass(BeanSerializer.class);
-    config.setTargetFolder(folder.getRoot());
-    config.setBeansTargetFolder(folder.newFolder("beans"));
+    config.setTargetFolder(folder);
+    config.setBeansTargetFolder(
+        java.nio.file.Files.createDirectories(new File(folder, "beans").toPath()).toFile());
     config.setExportBeans(true);
     var exporter = new MetaDataExporter(config);
     exporter.export(metadata);
 
-    assertThat(new File(folder.getRoot(), "test/DateTest.java")).exists();
-    assertThat(new File(folder.getRoot(), "beans/test/DateTestBean.java")).exists();
+    assertThat(new File(folder, "test/DateTest.java")).exists();
+    assertThat(new File(folder, "beans/test/DateTestBean.java")).exists();
   }
 
   //    @Test FIXME can't get mysql admin access working with circle CI, might need to move to
@@ -450,23 +455,23 @@ public class MetaDataExporterTest {
       config.setNamePrefix("");
       config.setBeanSuffix("Bean");
       config.setBeanSerializerClass(BeanSerializer.class);
-      config.setTargetFolder(folder.getRoot());
-      config.setBeansTargetFolder(folder.newFolder("beans"));
+      config.setTargetFolder(folder);
+      config.setBeansTargetFolder(
+          java.nio.file.Files.createDirectories(new File(folder, "beans").toPath()).toFile());
 
       var exporter = new MetaDataExporter(config);
       exporter.export(connection.getMetaData());
-      assertThat(new File(folder.getRoot(), "test/TestCatalogTableOne.java")).exists();
-      assertThat(new File(folder.getRoot(), "beans/test/TestCatalogTableOneBean.java")).exists();
+      assertThat(new File(folder, "test/TestCatalogTableOne.java")).exists();
+      assertThat(new File(folder, "beans/test/TestCatalogTableOneBean.java")).exists();
 
-      assertThat(new File(folder.getRoot(), "test/TestCatalogTableTwo.java").exists()).isFalse();
-      assertThat(new File(folder.getRoot(), "beans/test/TestCatalogTableTwoBean.java").exists())
-          .isFalse();
+      assertThat(new File(folder, "test/TestCatalogTableTwo.java").exists()).isFalse();
+      assertThat(new File(folder, "beans/test/TestCatalogTableTwoBean.java").exists()).isFalse();
 
       config.setCatalogPattern("catalog_test_two");
       exporter.export(connection.getMetaData());
 
-      assertThat(new File(folder.getRoot(), "test/TestCatalogTableTwo.java")).exists();
-      assertThat(new File(folder.getRoot(), "beans/test/TestCatalogTableTwoBean.java")).exists();
+      assertThat(new File(folder, "test/TestCatalogTableTwo.java")).exists();
+      assertThat(new File(folder, "beans/test/TestCatalogTableTwoBean.java")).exists();
     } finally {
       stmt.execute("DROP DATABASE IF EXISTS catalog_test_one");
       stmt.execute("DROP DATABASE IF EXISTS catalog_test_two");

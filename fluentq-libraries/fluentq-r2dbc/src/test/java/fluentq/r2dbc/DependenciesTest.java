@@ -17,13 +17,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import jdepend.framework.JDepend;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class DependenciesTest {
 
   @Test
-  @Ignore
+  @Disabled
   public void test() throws IOException {
     var jdepend = new JDepend();
     jdepend.addDirectory("target/classes/fluentq/r2dbc");

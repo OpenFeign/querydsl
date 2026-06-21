@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.Tuple;
 import fluentq.core.types.MappingProjection;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("serial")
 public class MappingProjectionTest extends AbstractQueryTest {

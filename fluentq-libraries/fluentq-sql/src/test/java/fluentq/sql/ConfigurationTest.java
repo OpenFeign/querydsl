@@ -14,6 +14,7 @@
 package fluentq.sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import fluentq.core.alias.Gender;
 import fluentq.sql.domain.QSurvey;
@@ -34,7 +35,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Locale;
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ConfigurationTest {
 
@@ -140,14 +141,22 @@ public class ConfigurationTest {
         .isEqualTo("lower");
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void npeWithNullParameterOfChainedNameMappingConstructor() {
-    new ChainedNameMapping((NameMapping[]) null);
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          new ChainedNameMapping((NameMapping[]) null);
+        });
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void npeWithNullElementInParameterOfChainedNameMappingConstructor() {
-    new ChainedNameMapping(new NameMapping[] {null});
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          new ChainedNameMapping(new NameMapping[] {null});
+        });
   }
 
   @Test

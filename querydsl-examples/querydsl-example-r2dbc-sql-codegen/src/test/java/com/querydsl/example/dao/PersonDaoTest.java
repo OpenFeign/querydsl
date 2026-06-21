@@ -1,7 +1,7 @@
 package com.querydsl.example.dao;
 
 import com.querydsl.example.dto.Person;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;

@@ -6,7 +6,7 @@ import fluentq.core.annotations.QueryEntity;
 import fluentq.core.annotations.QueryInit;
 import java.sql.Date;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryInit4Test {
 

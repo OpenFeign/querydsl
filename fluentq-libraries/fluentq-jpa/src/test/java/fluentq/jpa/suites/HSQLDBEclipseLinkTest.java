@@ -1,27 +1,31 @@
 package fluentq.jpa.suites;
 
 import fluentq.core.Target;
-import fluentq.core.testutil.HSQLDB;
 import fluentq.jpa.JPABase;
 import fluentq.jpa.JPAIntegrationBase;
 import fluentq.jpa.JPASQLBase;
 import fluentq.jpa.Mode;
 import fluentq.jpa.SerializationBase;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 
-@Category(HSQLDB.class)
+@Tag("fluentq.core.testutil.HSQLDB")
 public class HSQLDBEclipseLinkTest extends AbstractJPASuite {
 
-  public static class JPA extends JPABase {}
+  @Nested
+  class JPA extends JPABase {}
 
-  public static class JPASQL extends JPASQLBase {}
+  @Nested
+  class JPASQL extends JPASQLBase {}
 
-  public static class JPAIntegration extends JPAIntegrationBase {}
+  @Nested
+  class JPAIntegration extends JPAIntegrationBase {}
 
-  public static class Serialization extends SerializationBase {}
+  @Nested
+  class Serialization extends SerializationBase {}
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Mode.mode.set("hsqldb-eclipselink");
     Mode.target.set(Target.HSQLDB);

@@ -41,6 +41,8 @@ public enum Target {
   SQLSERVER,
   /** SQLite */
   SQLITE,
+  /** Turso (SQLite-compatible) */
+  TURSO,
   /** */
   TERADATA,
   /** */

@@ -13,9 +13,11 @@
  */
 package fluentq.apt.domain;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import fluentq.core.annotations.QueryEntity;
 import fluentq.core.annotations.QueryExclude;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @QueryExclude
 @QueryEntity
@@ -25,13 +27,17 @@ public class ExcludedClassTest {
   @QueryEntity
   public static class InnerClass {}
 
-  @Test(expected = ClassNotFoundException.class)
-  public void outerClass() throws ClassNotFoundException {
-    Class.forName(getClass().getPackage().getName() + ".Q" + getClass().getSimpleName());
+  @Test
+  public void outerClass() {
+    assertThrows(
+        ClassNotFoundException.class,
+        () -> Class.forName(getClass().getPackage().getName() + ".Q" + getClass().getSimpleName()));
   }
 
-  @Test(expected = ClassNotFoundException.class)
-  public void innerClass() throws ClassNotFoundException {
-    Class.forName(getClass().getPackage().getName() + ".QExcludedClassTest_InnerClass");
+  @Test
+  public void innerClass() {
+    assertThrows(
+        ClassNotFoundException.class,
+        () -> Class.forName(getClass().getPackage().getName() + ".QExcludedClassTest_InnerClass"));
   }
 }

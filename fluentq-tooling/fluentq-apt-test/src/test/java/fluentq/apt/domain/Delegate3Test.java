@@ -4,7 +4,7 @@ import fluentq.core.annotations.QueryDelegate;
 import fluentq.core.types.dsl.BooleanExpression;
 import fluentq.core.types.dsl.ComparablePath;
 import fluentq.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Delegate3Test {
 

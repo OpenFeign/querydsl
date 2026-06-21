@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.sql.H2Templates;
 import fluentq.sql.KeyAccessorsTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLMergeClauseTest {
 

@@ -14,6 +14,7 @@
 package fluentq.r2dbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import fluentq.core.types.ConstantImpl;
 import fluentq.core.types.Expression;
@@ -26,33 +27,37 @@ import fluentq.core.types.dsl.Wildcard;
 import fluentq.r2dbc.domain.QEmployee;
 import fluentq.r2dbc.domain.QSurvey;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLSubQueryTest {
 
   private static final QEmployee employee = QEmployee.employee;
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void unknownOperator() {
-    Operator op =
-        new Operator() {
-          @Override
-          public String name() {
-            return "unknownfn";
-          }
+    assertThatThrownBy(
+            () -> {
+              Operator op =
+                  new Operator() {
+                    @Override
+                    public String name() {
+                      return "unknownfn";
+                    }
 
-          @Override
-          public String toString() {
-            return name();
-          }
+                    @Override
+                    public String toString() {
+                      return name();
+                    }
 
-          @Override
-          public Class<?> getType() {
-            return Object.class;
-          }
-        };
-    R2DBCQuery<?> query = new R2DBCQuery<Void>();
-    query.from(employee).where(Expressions.booleanOperation(op, employee.id)).toString();
+                    @Override
+                    public Class<?> getType() {
+                      return Object.class;
+                    }
+                  };
+              R2DBCQuery<?> query = new R2DBCQuery<Void>();
+              query.from(employee).where(Expressions.booleanOperation(op, employee.id)).toString();
+            })
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @SuppressWarnings("unchecked")

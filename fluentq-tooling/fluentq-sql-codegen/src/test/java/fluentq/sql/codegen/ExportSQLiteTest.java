@@ -1,14 +1,13 @@
 package fluentq.sql.codegen;
 
-import fluentq.core.testutil.SQLite;
 import fluentq.sql.Connections;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(SQLite.class)
+@Tag("fluentq.core.testutil.SQLite")
 public class ExportSQLiteTest extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     Connections.initSQLite();
   }

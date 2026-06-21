@@ -27,10 +27,26 @@ import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.joinToCode
 import kotlin.reflect.KClass
 
+private val PRIMITIVE_ARRAY_FULL_NAMES =
+    setOf("boolean[]", "byte[]", "char[]", "short[]", "int[]", "long[]", "float[]", "double[]")
+
+// Component type of an object array (e.g. String[]), or null for non-arrays and primitive
+// arrays. Primitive arrays (int[], byte[], ...) keep their dedicated Kotlin array class
+// (IntArray, ByteArray, ...) via asClassName() and must not be wrapped in Array<T>.
+private fun Type.objectArrayComponentType(): Type? =
+    componentType?.takeUnless { fullName in PRIMITIVE_ARRAY_FULL_NAMES }
+
 @JvmOverloads
-fun Type.asTypeName(out: Boolean = false): TypeName = asClassName().let { className ->
-    if (parameters.isNotEmpty())
-        className.parameterizedBy(*parameters.map { if (out) it.asOutTypeName() else it.asTypeName() }.toTypedArray()) else className
+fun Type.asTypeName(out: Boolean = false): TypeName {
+    // Object arrays (e.g. String[]) must be rendered as the Kotlin Array<T> type.
+    objectArrayComponentType()?.let { component ->
+        return Array::class.asClassName()
+            .parameterizedBy(if (out) component.asOutTypeName() else component.asTypeName())
+    }
+    return asClassName().let { className ->
+        if (parameters.isNotEmpty())
+            className.parameterizedBy(*parameters.map { if (out) it.asOutTypeName() else it.asTypeName() }.toTypedArray()) else className
+    }
 }
 
 fun Type.asClassName(): ClassName = when (this.fullName) {
@@ -67,7 +83,10 @@ private fun Type.enclosingTypeHierarchy(): List<String> {
 
 fun ClassName.asClassStatement() = CodeBlock.of("%T::class.java", this)
 
-fun Type.asClassNameStatement() = asClassName().asClassStatement()
+fun Type.asClassNameStatement(): CodeBlock =
+    // Object arrays need the Kotlin Array<T>::class.java form to resolve to the right runtime class.
+    objectArrayComponentType()?.let { CodeBlock.of("%T::class.java", asTypeName()) }
+        ?: asClassName().asClassStatement()
 
 fun TypeMappings.getPathClassName(type: Type, model: EntityType) = getPathType(type, model, true).asClassName()
 

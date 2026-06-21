@@ -23,7 +23,7 @@ import fluentq.core.types.dsl.SimplePath;
 import fluentq.core.types.dsl.StringPath;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ArrayExtTest {
 

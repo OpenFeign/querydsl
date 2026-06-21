@@ -15,9 +15,11 @@
  */
 package fluentq.sql;
 
+import static fluentq.core.Target.CUBRID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.base.Splitter;
+import fluentq.core.testutil.ExcludeIn;
 import fluentq.core.types.PathMetadata;
 import fluentq.core.types.PathMetadataFactory;
 import fluentq.core.types.dsl.BooleanPath;
@@ -25,9 +27,9 @@ import fluentq.core.types.dsl.StringPath;
 import fluentq.sql.ddl.CreateTableClause;
 import fluentq.sql.ddl.DropTableClause;
 import java.sql.SQLException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class KeywordQuotingBase extends AbstractBaseTest {
 
@@ -58,7 +60,7 @@ public abstract class KeywordQuotingBase extends AbstractBaseTest {
 
   private final Quoting quoting = Quoting.quoting;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     new CreateTableClause(connection, configuration, "quoting")
         .column("from", String.class)
@@ -68,7 +70,7 @@ public abstract class KeywordQuotingBase extends AbstractBaseTest {
     execute(insert(quoting).columns(quoting.from, quoting.all).values("from", true));
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     new DropTableClause(connection, configuration, "quoting").execute();
   }
@@ -86,6 +88,9 @@ public abstract class KeywordQuotingBase extends AbstractBaseTest {
   }
 
   @Test
+  // The bundled CUBRID 9.3.9 JDBC driver reports a malformed keyword list (e.g. "TATISTICS",
+  // "DATA_TYPE___"), so completeness against the curated keyword file cannot be asserted.
+  @ExcludeIn(CUBRID)
   public void validateKeywordsCompleteness() throws SQLException {
     var keywords =
         switch (target) {
@@ -101,6 +106,7 @@ public abstract class KeywordQuotingBase extends AbstractBaseTest {
           case ORACLE -> Keywords.ORACLE;
           case POSTGRESQL -> Keywords.POSTGRESQL;
           case SQLITE -> Keywords.SQLITE;
+          case TURSO -> Keywords.TURSO;
           case SQLSERVER -> Keywords.SQLSERVER2012;
           case TERADATA -> Keywords.DEFAULT;
         };

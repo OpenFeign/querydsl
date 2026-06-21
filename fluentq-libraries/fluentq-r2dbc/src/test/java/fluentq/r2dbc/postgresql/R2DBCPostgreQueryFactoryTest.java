@@ -20,15 +20,15 @@ import fluentq.r2dbc.SQLTemplates;
 import fluentq.r2dbc.domain.QSurvey;
 import io.r2dbc.spi.Connection;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
 public class R2DBCPostgreQueryFactoryTest {
 
   private R2DBCPostgreQueryFactory queryFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     R2DBCConnectionProvider provider =
         new R2DBCConnectionProvider() {

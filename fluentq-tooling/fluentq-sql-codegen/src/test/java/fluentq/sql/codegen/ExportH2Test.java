@@ -13,15 +13,14 @@
  */
 package fluentq.sql.codegen;
 
-import fluentq.core.testutil.H2;
 import fluentq.sql.Connections;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(H2.class)
+@Tag("fluentq.core.testutil.H2")
 public class ExportH2Test extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     Connections.initH2();
   }

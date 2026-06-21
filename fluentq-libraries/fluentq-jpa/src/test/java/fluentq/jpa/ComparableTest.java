@@ -16,7 +16,7 @@ package fluentq.jpa;
 import static fluentq.jpa.Constants.cat;
 import static fluentq.jpa.Constants.kitten;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ComparableTest extends AbstractQueryTest {
 

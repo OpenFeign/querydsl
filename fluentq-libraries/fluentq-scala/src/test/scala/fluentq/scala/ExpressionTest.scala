@@ -2,14 +2,14 @@ package fluentq.scala
 
 import fluentq.core.types._
 import fluentq.scala.Matchers._
-import org.junit.{Assert, Test}
+import org.junit.jupiter.api.{Assertions, Test}
 
 class ExpressionTest {
 
   val person = Person as "person"
 
   def assertEquals(expected: String, actual: Any): Unit = {
-    Assert.assertEquals(expected, actual.toString)
+    Assertions.assertEquals(expected, actual.toString)
   }
 
   @Test

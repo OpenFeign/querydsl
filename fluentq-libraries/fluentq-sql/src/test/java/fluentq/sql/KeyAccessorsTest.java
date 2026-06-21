@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.types.dsl.NumberPath;
 import java.io.Serializable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class KeyAccessorsTest {
 

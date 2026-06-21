@@ -4,36 +4,35 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.Target;
 import fluentq.core.Tuple;
-import fluentq.core.testutil.Performance;
 import fluentq.jpa.domain.Cat;
 import fluentq.jpa.domain.QCat;
 import fluentq.jpa.impl.JPAQuery;
-import fluentq.jpa.testutil.JPATestRunner;
+import fluentq.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JPATestRunner.class)
-@Ignore
-@Category(Performance.class)
+@ExtendWith(JPATestExtension.class)
+@Disabled
+@Tag("fluentq.core.testutil.Performance")
 public class QueryPerformanceTest implements JPATest {
 
   private static final int iterations = 1000;
 
   private EntityManager entityManager;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     Mode.mode.set("h2perf");
     Mode.target.set(Target.H2);
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() {
     Mode.mode.remove();
     Mode.target.remove();
@@ -43,7 +42,7 @@ public class QueryPerformanceTest implements JPATest {
     return new JPAQuery<Void>(entityManager);
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     if (query().from(QCat.cat).fetchCount() == 0) {
       for (var i = 0; i < iterations; i++) {

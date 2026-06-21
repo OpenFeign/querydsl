@@ -37,9 +37,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ErrorType;
@@ -52,6 +54,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.TypeVisitor;
 import javax.lang.model.type.WildcardType;
+import javax.lang.model.util.ElementFilter;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -373,8 +376,38 @@ public class ExtendedTypeFactory {
     }
   }
 
+  private boolean isKotlinValueClass(TypeElement typeElement) {
+    for (AnnotationMirror annotation : typeElement.getAnnotationMirrors()) {
+      if (annotation.getAnnotationType().toString().equals("kotlin.jvm.JvmInline")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private TypeMirror getKotlinValueClassUnderlyingType(TypeElement typeElement) {
+    var instanceFields = new ArrayList<VariableElement>();
+    for (var field : ElementFilter.fieldsIn(typeElement.getEnclosedElements())) {
+      if (!field.getModifiers().contains(Modifier.STATIC)) {
+        instanceFields.add(field);
+      }
+    }
+    if (instanceFields.size() == 1) {
+      return instanceFields.get(0).asType();
+    }
+    return null;
+  }
+
   // TODO : simplify
   private Type createClassType(DeclaredType declaredType, TypeElement typeElement, boolean deep) {
+    // Kotlin value classes (@JvmInline) should be unwrapped to their underlying type
+    if (isKotlinValueClass(typeElement)) {
+      var underlyingType = getKotlinValueClassUnderlyingType(typeElement);
+      if (underlyingType != null) {
+        return getType(underlyingType, deep);
+      }
+    }
+
     // other
     var name = typeElement.getQualifiedName().toString();
 

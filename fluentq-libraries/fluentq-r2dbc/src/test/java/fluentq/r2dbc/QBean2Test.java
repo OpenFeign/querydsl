@@ -24,7 +24,7 @@ import fluentq.core.types.dsl.NumberPath;
 import fluentq.core.types.dsl.StringPath;
 import fluentq.sql.ColumnMetadata;
 import fluentq.sql.RelationalPathBase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QBean2Test {
 

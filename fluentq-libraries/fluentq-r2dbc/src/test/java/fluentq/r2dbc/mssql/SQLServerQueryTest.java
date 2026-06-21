@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.r2dbc.SQLServerTemplates;
 import fluentq.r2dbc.domain.QEmployee;
 import fluentq.r2dbc.domain.QSurvey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLServerQueryTest {
 

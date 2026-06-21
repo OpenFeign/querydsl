@@ -21,7 +21,7 @@ import fluentq.jpa.domain.InheritedProperties;
 import fluentq.jpa.domain.QAnimal;
 import fluentq.jpa.domain.QCat;
 import fluentq.jpa.domain.QInheritedProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TypeCastTest {
 

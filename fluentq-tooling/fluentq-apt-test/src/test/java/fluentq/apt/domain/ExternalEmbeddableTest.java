@@ -16,9 +16,9 @@ package fluentq.apt.domain;
 import fluentq.core.domain.EmbeddableWithoutQType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class ExternalEmbeddableTest {
 
   @Entity

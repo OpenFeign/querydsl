@@ -22,7 +22,7 @@ import fluentq.core.types.Expression;
 import fluentq.core.types.Ops;
 import fluentq.core.types.Path;
 import fluentq.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class StringOperationsTest extends AbstractQueryTest {
 

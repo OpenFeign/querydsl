@@ -26,7 +26,7 @@ import fluentq.sql.RelationalPathBase;
 import fluentq.sql.SQLExpressions;
 import fluentq.sql.SQLSerializer;
 import fluentq.sql.SQLServerTemplates;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RelationalFunctionCallTest {
 

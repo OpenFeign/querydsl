@@ -1,6 +1,6 @@
 package fluentq.scala
 
-import org.junit.{Assert, Test}
+import org.junit.jupiter.api.{Assertions, Test}
 
 class QPersonTest {
 
@@ -28,7 +28,7 @@ class QPersonTest {
   }
 
   def assertEquals(expected: String, actual: Any): Unit = {
-    Assert.assertEquals(expected, actual.toString)
+    Assertions.assertEquals(expected, actual.toString)
   }
 
 }

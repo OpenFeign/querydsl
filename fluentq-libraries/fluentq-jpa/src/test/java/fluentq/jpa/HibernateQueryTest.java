@@ -20,7 +20,7 @@ import fluentq.jpa.domain.QCat;
 import fluentq.jpa.domain.QEmployee;
 import fluentq.jpa.domain.QUser;
 import fluentq.jpa.hibernate.HibernateQuery;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class HibernateQueryTest {
 

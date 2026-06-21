@@ -12,7 +12,7 @@ import fluentq.r2dbc.mysql.R2DBCMySQLQuery;
 import fluentq.sql.ColumnMetadata;
 import fluentq.sql.RelationalPathBase;
 import java.time.LocalDate;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ExtendedSQLTest {
 

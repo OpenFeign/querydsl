@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.core.types.Expression;
 import fluentq.core.types.dsl.Expressions;
 import fluentq.core.types.dsl.NumberPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class WithinGroupTest {
 

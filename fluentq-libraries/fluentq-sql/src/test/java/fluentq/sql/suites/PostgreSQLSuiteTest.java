@@ -1,6 +1,5 @@
 package fluentq.sql.suites;
 
-import fluentq.core.testutil.PostgreSQL;
 import fluentq.sql.BeanPopulationBase;
 import fluentq.sql.Configuration;
 import fluentq.sql.Connections;
@@ -17,22 +16,30 @@ import fluentq.sql.SubqueriesBase;
 import fluentq.sql.TypesBase;
 import fluentq.sql.UnionBase;
 import fluentq.sql.UpdateBase;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 
-@Category(PostgreSQL.class)
+@Tag("fluentq.core.testutil.PostgreSQL")
 public class PostgreSQLSuiteTest extends AbstractSuite {
 
-  public static class BeanPopulation extends BeanPopulationBase {}
+  @Nested
+  class BeanPopulation extends BeanPopulationBase {}
 
-  public static class Delete extends DeleteBase {}
+  @Nested
+  class Delete extends DeleteBase {}
 
-  public static class Insert extends InsertBase {}
+  @Nested
+  class Insert extends InsertBase {}
 
-  public static class KeywordQuoting extends KeywordQuotingBase {
+  @Nested
+  class KeywordQuoting extends KeywordQuotingBase {
 
     private Configuration previous;
 
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
       // NOTE: replacing the templates with a non-quoting one
@@ -42,6 +49,7 @@ public class PostgreSQLSuiteTest extends AbstractSuite {
       super.setUp();
     }
 
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
       super.tearDown();
@@ -50,25 +58,34 @@ public class PostgreSQLSuiteTest extends AbstractSuite {
     }
   }
 
-  public static class LikeEscape extends LikeEscapeBase {}
+  @Nested
+  class LikeEscape extends LikeEscapeBase {}
 
-  public static class Merge extends MergeBase {}
+  @Nested
+  class Merge extends MergeBase {}
 
-  public static class MergeUsing extends MergeUsingBase {}
+  @Nested
+  class MergeUsing extends MergeUsingBase {}
 
-  public static class Select extends SelectBase {}
+  @Nested
+  class Select extends SelectBase {}
 
-  public static class SelectWindowFunctions extends SelectWindowFunctionsBase {}
+  @Nested
+  class SelectWindowFunctions extends SelectWindowFunctionsBase {}
 
-  public static class Subqueries extends SubqueriesBase {}
+  @Nested
+  class Subqueries extends SubqueriesBase {}
 
-  public static class Types extends TypesBase {}
+  @Nested
+  class Types extends TypesBase {}
 
-  public static class Union extends UnionBase {}
+  @Nested
+  class Union extends UnionBase {}
 
-  public static class Update extends UpdateBase {}
+  @Nested
+  class Update extends UpdateBase {}
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Connections.initPostgreSQL();
     Connections.initConfiguration(

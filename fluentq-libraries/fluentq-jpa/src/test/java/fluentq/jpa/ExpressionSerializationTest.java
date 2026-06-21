@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.core.types.Expression;
 import fluentq.jpa.domain.QCat;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ExpressionSerializationTest {
 

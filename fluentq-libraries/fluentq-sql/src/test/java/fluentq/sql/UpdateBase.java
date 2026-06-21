@@ -21,6 +21,7 @@ import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.ORACLE;
 import static fluentq.core.Target.SQLSERVER;
 import static fluentq.core.Target.TERADATA;
+import static fluentq.core.Target.TURSO;
 import static fluentq.sql.Constants.survey;
 import static fluentq.sql.SQLExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,9 +36,9 @@ import fluentq.sql.domain.QSurvey;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class UpdateBase extends AbstractBaseTest {
 
@@ -46,16 +47,17 @@ public abstract class UpdateBase extends AbstractBaseTest {
     insert(survey).values(1, "Hello World", "Hello").execute();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException {
     reset();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     reset();
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void update() throws SQLException {
     // original state
@@ -81,6 +83,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update(survey).set(survey.name, "S").limit(2).execute()).isEqualTo(2);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void update2() throws SQLException {
     List<Path<?>> paths = Collections.<Path<?>>singletonList(survey.name);
@@ -105,6 +108,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update(survey).set(survey.name, survey.name.append("X")).execute()).isEqualTo(1);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void update4() {
     assertThat(insert(survey).values(2, "A", "B").execute()).isEqualTo(1);
@@ -112,6 +116,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
         .isEqualTo(1);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void update5() {
     assertThat(insert(survey).values(3, "B", "C").execute()).isEqualTo(1);
@@ -142,6 +147,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(execute(update(survey).setNull(name))).isEqualTo(count);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void batch() throws SQLException {
     assertThat(insert(survey).values(2, "A", "B").execute()).isEqualTo(1);
@@ -155,6 +161,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update.execute()).isEqualTo(2);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void batch_templates() throws SQLException {
     assertThat(insert(survey).values(2, "A", "B").execute()).isEqualTo(1);
@@ -172,6 +179,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update.execute()).isEqualTo(2);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void update_with_subQuery_exists() {
     var survey1 = new QSurvey("s1");
@@ -197,6 +205,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update.execute()).isEqualTo(0);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void update_with_subQuery_exists2() {
     var survey1 = new QSurvey("s1");
@@ -207,6 +216,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update.execute()).isEqualTo(0);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void update_with_subQuery_notExists() {
     var survey1 = new QSurvey("s1");

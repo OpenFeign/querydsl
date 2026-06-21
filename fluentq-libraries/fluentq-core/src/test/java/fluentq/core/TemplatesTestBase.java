@@ -15,21 +15,16 @@
  */
 package fluentq.core;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import fluentq.core.types.Templates;
 import io.github.classgraph.ClassGraph;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.junit.Rule;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ErrorCollector;
 
 public class TemplatesTestBase {
-
-  @Rule public final ErrorCollector errorCollector = new ErrorCollector();
 
   private final ClassGraph classGraph =
       new ClassGraph()
@@ -44,14 +39,16 @@ public class TemplatesTestBase {
     Set<Class<?>> moduleSpecific =
         templates.stream().filter(MODULE_SPECIFIC).collect(Collectors.toSet());
 
+    var softly = new SoftAssertions();
     for (Class<?> template : moduleSpecific) {
       try {
         var defaultInstance = (Templates) template.getField("DEFAULT").get(null);
-        errorCollector.checkSucceeds(() -> assertThat(defaultInstance).isInstanceOf(template));
+        softly.assertThat(defaultInstance).isInstanceOf(template);
       } catch (Exception ex) {
-        errorCollector.addError(ex);
+        softly.fail("Failed to read DEFAULT of " + template.getName(), ex);
       }
     }
+    softly.assertAll();
   }
 
   private final Predicate<Class<?>> objectPredicate =

@@ -30,11 +30,10 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.rules.MethodRule;
-import org.junit.rules.TestRule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith({TargetExtension.class, SkipForQuotedExtension.class})
 public abstract class AbstractBaseTest {
 
   protected static final Logger logger = Logger.getLogger(AbstractBaseTest.class.getName());
@@ -86,9 +85,21 @@ public abstract class AbstractBaseTest {
     }
   }
 
-  @Rule public MethodRule skipForQuotedRule = new SkipForQuotedRule(configuration);
-
-  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
+  // Turso (early-stage SQLite reimplementation) closes the shared connection when a statement
+  // errors, which would otherwise cascade "database connection closed" across every later test.
+  // Reconnecting per test isolates each test so we see its true pass/fail result.
+  @BeforeEach
+  public void reconnectClosedTursoConnection() throws java.sql.SQLException {
+    if (target == Target.TURSO && (connection == null || connection.isClosed())) {
+      try {
+        Connections.initTurso();
+      } catch (ClassNotFoundException e) {
+        throw new IllegalStateException(e);
+      }
+      connection = Connections.getConnection();
+      configuration = Connections.getConfiguration();
+    }
+  }
 
   protected <T> void add(List<T> list, T arg, Target... exclusions) {
     if (exclusions.length > 0) {

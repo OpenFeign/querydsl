@@ -21,7 +21,7 @@ import fluentq.core.types.dsl.Expressions;
 import fluentq.core.types.dsl.PathBuilder;
 import fluentq.core.types.dsl.StringPath;
 import fluentq.sql.RelationalFunctionCall;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class R2DBCRelationalFunctionCallTest {
 

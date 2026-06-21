@@ -13,9 +13,9 @@
  */
 package fluentq.sql;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class CUBRIDTemplatesTest extends AbstractSQLTemplatesTest {
 
   @Override

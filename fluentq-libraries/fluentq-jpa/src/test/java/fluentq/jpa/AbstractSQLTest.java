@@ -20,8 +20,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class AbstractSQLTest {
 
@@ -65,7 +65,7 @@ public abstract class AbstractSQLTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void entityProjections() {
     var cats =
         query()
@@ -283,7 +283,11 @@ public abstract class AbstractSQLTest {
   @Test
   @ExcludeIn(Target.HSQLDB)
   public void no_from() {
-    assertThat(query().select(DateExpression.currentDate()).fetchFirst()).isNotNull();
+    // the result type of current_date depends on the JPA provider (Hibernate -> LocalDate,
+    // EclipseLink -> java.sql.Date), so project through a wildcard to avoid a provider-specific
+    // cast
+    DateExpression<?> currentDate = DateExpression.currentDate();
+    assertThat(query().select(currentDate).fetchFirst()).isNotNull();
   }
 
   @Test
@@ -349,7 +353,7 @@ public abstract class AbstractSQLTest {
   @SuppressWarnings("unchecked")
   @Test
   @ExcludeIn({Target.DERBY, Target.POSTGRESQL})
-  @Ignore // FIXME
+  @Disabled // FIXME
   public void union2() {
     var rows =
         query()
@@ -367,7 +371,7 @@ public abstract class AbstractSQLTest {
   @SuppressWarnings("unchecked")
   @Test
   @ExcludeIn(Target.DERBY)
-  @Ignore // FIXME
+  @Disabled // FIXME
   public void union3() {
     var cat2 = new SAnimal_("cat2");
     var rows =
@@ -391,7 +395,7 @@ public abstract class AbstractSQLTest {
   @SuppressWarnings("unchecked")
   @Test
   @ExcludeIn({Target.DERBY, Target.POSTGRESQL})
-  @Ignore // FIXME
+  @Disabled // FIXME
   public void union4() {
     query()
         .union(

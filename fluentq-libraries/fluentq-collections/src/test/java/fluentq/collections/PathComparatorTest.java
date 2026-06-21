@@ -4,14 +4,14 @@ import static fluentq.collections.PathComparator.pathComparator;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Comparator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class PathComparatorTest {
 
   private Comparator<Car> comparator;
 
-  @Before
+  @BeforeEach
   public void setUpComparator() {
     comparator = pathComparator(QCar.car.horsePower);
   }

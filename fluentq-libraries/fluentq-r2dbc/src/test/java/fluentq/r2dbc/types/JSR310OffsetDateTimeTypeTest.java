@@ -1,7 +1,7 @@
 package fluentq.r2dbc.types;
 
 import java.time.OffsetDateTime;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JSR310OffsetDateTimeTypeTest extends AbstractJSR310DateTimeTypeTest<OffsetDateTime> {
 

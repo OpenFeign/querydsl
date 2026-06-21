@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.proxy.HibernateProxy;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryInit6Test {
 

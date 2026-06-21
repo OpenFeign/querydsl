@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.core.annotations.QueryEntity;
 import fluentq.core.annotations.QuerySupertype;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Generic8Test {
 

@@ -23,7 +23,7 @@ import fluentq.core.types.dsl.Expressions;
 import fluentq.r2dbc.dml.R2DBCDeleteClause;
 import fluentq.r2dbc.dml.R2DBCUpdateClause;
 import fluentq.sql.SQLOps;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLServer2012TemplatesTest extends AbstractSQLTemplatesTest {
 

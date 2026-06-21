@@ -3,7 +3,7 @@ package fluentq.apt.domain;
 import fluentq.core.types.dsl.StringPath;
 import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Generic3Test extends AbstractTest {
 

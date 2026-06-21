@@ -143,6 +143,13 @@
     </dependency>
 
     <dependency>
+      <groupId>tech.turso</groupId>
+      <artifactId>turso</artifactId>
+      <version>${turso.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>io.github.openfeign.fluentq</groupId>
       <artifactId>fluentq-core</artifactId>
       <version>${project.version}</version>

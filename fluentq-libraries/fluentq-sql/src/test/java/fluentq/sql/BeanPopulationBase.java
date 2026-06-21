@@ -21,25 +21,27 @@ import static fluentq.core.Target.POSTGRESQL;
 import static fluentq.core.Target.SQLITE;
 import static fluentq.core.Target.SQLSERVER;
 import static fluentq.core.Target.TERADATA;
+import static fluentq.core.Target.TURSO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.testutil.ExcludeIn;
 import fluentq.sql.dml.BeanMapper;
 import fluentq.sql.domain.Employee;
 import fluentq.sql.domain.QEmployee;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 @ExcludeIn({CUBRID, DB2, DERBY, ORACLE, SQLSERVER, POSTGRESQL, SQLITE, TERADATA})
 public abstract class BeanPopulationBase extends AbstractBaseTest {
 
   private final QEmployee e = new QEmployee("e");
 
-  @After
+  @AfterEach
   public void tearDown() {
     delete(e).where(e.firstname.eq("John")).execute();
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void custom_projection() {
     // Insert
@@ -87,6 +89,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
     assertThat(delete(e).where(e.id.eq(employee.getId())).execute()).isEqualTo(1L);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void insert_update_query_and_delete() {
     // Insert
@@ -109,6 +112,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
     assertThat(delete(e).where(e.id.eq(employee.getId())).execute()).isEqualTo(1L);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void populate_with_beanMapper() {
     var employee = new Employee();

@@ -20,7 +20,7 @@ import fluentq.core.types.dsl.Expressions;
 import fluentq.core.types.dsl.NumberPath;
 import fluentq.core.types.dsl.SimpleExpression;
 import fluentq.core.types.dsl.SimplePath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UnionSubQueryTest {
 

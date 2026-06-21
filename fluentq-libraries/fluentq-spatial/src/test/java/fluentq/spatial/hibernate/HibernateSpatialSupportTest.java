@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.types.Operator;
 import fluentq.spatial.SpatialOps;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class HibernateSpatialSupportTest {
 

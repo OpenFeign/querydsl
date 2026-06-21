@@ -19,7 +19,7 @@ import fluentq.codegen.utils.model.SimpleType;
 import fluentq.codegen.utils.model.Type;
 import fluentq.codegen.utils.model.TypeCategory;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PropertyTest {
 

@@ -16,7 +16,7 @@ package fluentq.r2dbc;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.types.Ops;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MySQLTemplatesTest extends AbstractSQLTemplatesTest {
 

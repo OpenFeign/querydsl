@@ -1,7 +1,7 @@
 package fluentq.r2dbc.types;
 
 import java.time.LocalTime;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JSR310LocalTimeTypeTest extends AbstractJSR310DateTimeTypeTest<LocalTime> {
 

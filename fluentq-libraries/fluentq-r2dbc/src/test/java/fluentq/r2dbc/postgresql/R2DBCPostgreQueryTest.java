@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.r2dbc.PostgreSQLTemplates;
 import fluentq.r2dbc.domain.QEmployee;
 import fluentq.r2dbc.domain.QSurvey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class R2DBCPostgreQueryTest {
 
@@ -16,7 +16,7 @@ public class R2DBCPostgreQueryTest {
 
   private QEmployee employee = new QEmployee("employee");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     query =
         new R2DBCPostgreQuery<Void>(

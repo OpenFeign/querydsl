@@ -14,9 +14,9 @@
 package fluentq.apt.inheritance;
 
 import fluentq.core.annotations.QueryEntity;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class Inheritance2Test {
 
   @QueryEntity

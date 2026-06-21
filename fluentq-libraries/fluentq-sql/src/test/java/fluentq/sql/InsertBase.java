@@ -24,10 +24,12 @@ import static fluentq.core.Target.ORACLE;
 import static fluentq.core.Target.POSTGRESQL;
 import static fluentq.core.Target.SQLITE;
 import static fluentq.core.Target.SQLSERVER;
+import static fluentq.core.Target.TURSO;
 import static fluentq.sql.Constants.survey;
 import static fluentq.sql.Constants.survey2;
 import static fluentq.sql.SQLExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import fluentq.core.QueryException;
 import fluentq.core.QueryFlag.Position;
@@ -51,10 +53,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class InsertBase extends AbstractBaseTest {
 
@@ -65,19 +67,19 @@ public abstract class InsertBase extends AbstractBaseTest {
     delete(QDateTest.qDateTest).execute();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException {
     reset();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     reset();
   }
 
   @Test
   @ExcludeIn({
-    CUBRID, SQLITE, DERBY, ORACLE
+    CUBRID, SQLITE, DERBY, ORACLE, TURSO
   }) // https://bitbucket.org/xerial/sqlite-jdbc/issue/133/prepstmtsetdate-int-date-calendar-seems
   public void insert_dates() {
     var dateTest = QDateTest.qDateTest;
@@ -226,7 +228,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   @ExcludeIn({DERBY})
   public void insert_nulls_in_batch2() {
     Mapper<Object> mapper = DefaultMapper.WITH_NULL_BINDINGS;
@@ -255,7 +257,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void insert_with_keys() throws SQLException {
     var rs = insert(survey).set(survey.name, "Hello World").executeWithKeys();
     assertThat(rs.next()).isTrue();
@@ -264,7 +266,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void insert_with_keys_listener() throws SQLException {
     final var result = new AtomicBoolean();
     SQLListener listener =
@@ -285,35 +287,45 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void insert_with_keys_Projected() throws SQLException {
     assertThat(insert(survey).set(survey.name, "Hello you").executeWithKey(survey.id)).isNotNull();
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void insert_with_keys_Projected2() throws SQLException {
     Path<Object> idPath = ExpressionUtils.path(Object.class, "id");
     Object id = insert(survey).set(survey.name, "Hello you").executeWithKey(idPath);
     assertThat(id).isNotNull();
   }
 
-  @Test(expected = QueryException.class)
+  @Test
   @IncludeIn({DERBY, HSQLDB})
   public void insert_with_keys_OverriddenColumn() throws SQLException {
-    var originalColumnName = ColumnMetadata.getName(survey.id);
-    try {
-      configuration.registerColumnOverride(
-          survey.getSchemaName(), survey.getTableName(), originalColumnName, "wrongColumnName");
+    assertThrows(
+        QueryException.class,
+        () -> {
+          var originalColumnName = ColumnMetadata.getName(survey.id);
+          try {
+            configuration.registerColumnOverride(
+                survey.getSchemaName(),
+                survey.getTableName(),
+                originalColumnName,
+                "wrongColumnName");
 
-      var sqlInsertClause = new SQLInsertClause(connection, configuration, survey);
-      sqlInsertClause.addListener(new TestLoggingListener());
-      Object id = sqlInsertClause.set(survey.name, "Hello you").executeWithKey(survey.id);
-      assertThat(id).isNotNull();
-    } finally {
-      configuration.registerColumnOverride(
-          survey.getSchemaName(), survey.getTableName(), originalColumnName, originalColumnName);
-    }
+            var sqlInsertClause = new SQLInsertClause(connection, configuration, survey);
+            sqlInsertClause.addListener(new TestLoggingListener());
+            Object id = sqlInsertClause.set(survey.name, "Hello you").executeWithKey(survey.id);
+            assertThat(id).isNotNull();
+          } finally {
+            configuration.registerColumnOverride(
+                survey.getSchemaName(),
+                survey.getTableName(),
+                originalColumnName,
+                originalColumnName);
+          }
+        });
   }
 
   // http://sourceforge.net/tracker/index.php?func=detail&aid=3513432&group_id=280608&atid=2377440

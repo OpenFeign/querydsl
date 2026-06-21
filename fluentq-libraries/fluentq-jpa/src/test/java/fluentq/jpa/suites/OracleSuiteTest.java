@@ -1,7 +1,6 @@
 package fluentq.jpa.suites;
 
 import fluentq.core.Target;
-import fluentq.core.testutil.Oracle;
 import fluentq.jpa.HibernateBase;
 import fluentq.jpa.HibernateSQLBase;
 import fluentq.jpa.JPABase;
@@ -10,28 +9,35 @@ import fluentq.jpa.JPASQLBase;
 import fluentq.jpa.Mode;
 import fluentq.jpa.SerializationBase;
 import java.util.TimeZone;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 
-@Category(Oracle.class)
+@Tag("fluentq.core.testutil.Oracle")
 public class OracleSuiteTest extends AbstractSuite {
 
-  public static class JPA extends JPABase {}
+  @Nested
+  class JPA extends JPABase {}
 
-  public static class JPASQL extends JPASQLBase {}
+  @Nested
+  class JPASQL extends JPASQLBase {}
 
-  public static class JPAIntegration extends JPAIntegrationBase {}
+  @Nested
+  class JPAIntegration extends JPAIntegrationBase {}
 
-  public static class Serialization extends SerializationBase {}
+  @Nested
+  class Serialization extends SerializationBase {}
 
-  public static class Hibernate extends HibernateBase {}
+  @Nested
+  class Hibernate extends HibernateBase {}
 
-  public static class HibernateSQL extends HibernateSQLBase {}
+  @Nested
+  class HibernateSQL extends HibernateSQLBase {}
 
   private static TimeZone defaultZone;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Mode.mode.set("oracle");
     Mode.target.set(Target.ORACLE);
@@ -44,7 +50,7 @@ public class OracleSuiteTest extends AbstractSuite {
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDown() {
     TimeZone.setDefault(defaultZone);
   }

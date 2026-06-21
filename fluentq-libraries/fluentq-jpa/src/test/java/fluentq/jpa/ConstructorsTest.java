@@ -18,8 +18,8 @@ import static fluentq.jpa.Constants.cat;
 import fluentq.core.types.ConstructorExpression;
 import fluentq.core.types.Expression;
 import fluentq.core.types.Projections;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ConstructorsTest extends AbstractQueryTest {
 
@@ -35,7 +35,7 @@ public class ConstructorsTest extends AbstractQueryTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void constructors() {
     ConstructorExpression<fluentq.jpa.domain.Cat> c =
         Projections.constructor(

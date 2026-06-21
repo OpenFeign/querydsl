@@ -1,7 +1,7 @@
 package fluentq.sql.spatial;
 
 import fluentq.sql.SQLTemplates;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PostGISTemplatesTest {
 

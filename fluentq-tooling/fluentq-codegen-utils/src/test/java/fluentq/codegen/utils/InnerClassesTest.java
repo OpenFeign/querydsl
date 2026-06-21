@@ -7,7 +7,7 @@ import fluentq.codegen.utils.model.SimpleType;
 import fluentq.codegen.utils.model.Type;
 import java.io.IOException;
 import java.io.StringWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class InnerClassesTest {
 

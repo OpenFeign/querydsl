@@ -19,7 +19,7 @@ import fluentq.core.DefaultQueryMetadata;
 import fluentq.core.JoinType;
 import fluentq.core.QueryMetadata;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryMetadataTest extends AbstractQueryTest {
 

@@ -17,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.sql.OracleTemplates;
 import fluentq.sql.domain.QSurvey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class OracleQueryTest {
 
@@ -26,7 +26,7 @@ public class OracleQueryTest {
 
   private QSurvey survey = new QSurvey("survey");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     query = new OracleQuery<Void>(null, OracleTemplates.builder().newLineToSingleSpace().build());
     query.from(survey);

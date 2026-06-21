@@ -17,13 +17,13 @@ import static fluentq.sql.Constants.survey;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.SQLException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class LikeEscapeBase extends AbstractBaseTest {
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException {
     delete(survey).execute();
     var insert = insert(survey);
@@ -33,7 +33,7 @@ public abstract class LikeEscapeBase extends AbstractBaseTest {
     insert.execute();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     delete(survey).execute();
     insert(survey).values(1, "Hello World", "Hello").execute();

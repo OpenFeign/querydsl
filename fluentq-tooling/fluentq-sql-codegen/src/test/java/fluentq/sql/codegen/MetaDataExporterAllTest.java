@@ -1,12 +1,13 @@
 package fluentq.sql.codegen;
 
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import fluentq.codegen.BeanSerializer;
 import fluentq.codegen.utils.SimpleCompiler;
-import fluentq.core.testutil.Parallelized;
-import fluentq.core.testutil.SlowTest;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -15,34 +16,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 import javax.tools.JavaCompiler;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.io.TempDir;
 
-@RunWith(value = Parallelized.class)
-@Category(SlowTest.class)
+@Tag("fluentq.core.testutil.SlowTest")
 public class MetaDataExporterAllTest {
 
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
+  @TempDir File folder;
 
   private static Connection connection;
   private static DatabaseMetaData metadata;
   private static JavaCompiler compiler = new SimpleCompiler();
 
-  private String namePrefix, nameSuffix, beanPrefix, beanSuffix;
-  private String beanPackageName;
-  private Class<? extends BeanSerializer> beanSerializer = BeanSerializer.class;
-  private Class<? extends NamingStrategy> namingStrategyClass;
-  private boolean withBeans, withInnerClasses, withOrdinalPositioning;
-  private boolean exportColumns, schemaToPackage;
-
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws ClassNotFoundException, SQLException {
     Class.forName("org.h2.Driver");
     var url = "jdbc:h2:mem:testdb" + System.currentTimeMillis() + ";MODE=legacy";
@@ -51,12 +43,11 @@ public class MetaDataExporterAllTest {
     MetaDataExporterTest.createTables(connection);
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() throws SQLException {
     connection.close();
   }
 
-  @Parameterized.Parameters
   public static List<Object[]> parameters() {
     List<Object[]> params = new ArrayList<>();
 
@@ -118,33 +109,27 @@ public class MetaDataExporterAllTest {
     return params;
   }
 
-  public MetaDataExporterAllTest(
-      String namePrefix,
-      String nameSuffix,
-      String beanPrefix,
-      String beanSuffix,
-      String beanPackageName,
-      Class<? extends NamingStrategy> namingStrategy,
-      boolean withBeans,
-      boolean withInnerClasses,
-      boolean withOrdinalPositioning,
-      boolean exportColumns,
-      boolean schemaToPackage) {
-    this.namePrefix = namePrefix;
-    this.nameSuffix = nameSuffix;
-    this.beanPrefix = beanPrefix;
-    this.beanSuffix = beanSuffix;
-    this.beanPackageName = beanPackageName;
-    this.schemaToPackage = schemaToPackage;
-    this.namingStrategyClass = namingStrategy;
-    this.withBeans = withBeans;
-    this.withInnerClasses = withInnerClasses;
-    this.withOrdinalPositioning = withOrdinalPositioning;
-    this.exportColumns = exportColumns;
+  @TestFactory
+  public Stream<DynamicTest> export() {
+    return parameters().stream().map(p -> dynamicTest(Arrays.toString(p), () -> runExport(p)));
   }
 
-  @Test
-  public void export() throws SQLException, IOException {
+  @SuppressWarnings("unchecked")
+  private void runExport(Object[] p) throws SQLException, IOException {
+    var namePrefix = (String) p[0];
+    var nameSuffix = (String) p[1];
+    var beanPrefix = (String) p[2];
+    var beanSuffix = (String) p[3];
+    var beanPackageName = (String) p[4];
+    var namingStrategyClass = (Class<? extends NamingStrategy>) p[5];
+    var withBeans = (boolean) p[6];
+    var withInnerClasses = (boolean) p[7];
+    var withOrdinalPositioning = (boolean) p[8];
+    var exportColumns = (boolean) p[9];
+    var schemaToPackage = (boolean) p[10];
+
+    var targetFolder = Files.createTempDirectory(folder.toPath(), "case").toFile();
+
     var config = new MetadataExporterConfigImpl();
     config.setColumnAnnotations(exportColumns);
     config.setSchemaPattern("PUBLIC");
@@ -155,11 +140,11 @@ public class MetaDataExporterAllTest {
     config.setInnerClassesForKeys(withInnerClasses);
     config.setPackageName("test");
     config.setBeanPackageName(beanPackageName);
-    config.setTargetFolder(folder.getRoot());
+    config.setTargetFolder(targetFolder);
     config.setNamingStrategyClass(namingStrategyClass);
     config.setSchemaToPackage(schemaToPackage);
     if (withBeans) {
-      config.setBeanSerializerClass(beanSerializer);
+      config.setBeanSerializerClass(BeanSerializer.class);
     }
     if (withOrdinalPositioning) {
       config.setColumnComparatorClass(OrdinalPositionComparator.class);
@@ -172,7 +157,7 @@ public class MetaDataExporterAllTest {
     var compilationResult =
         compiler.run(null, System.out, System.err, classes.toArray(new String[0]));
     if (compilationResult != 0) {
-      fail("Compilation Failed for " + folder.getRoot().getPath());
+      fail("Compilation Failed for " + targetFolder.getPath());
     }
   }
 }

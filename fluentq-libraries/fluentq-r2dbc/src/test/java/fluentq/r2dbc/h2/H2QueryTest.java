@@ -3,8 +3,8 @@ package fluentq.r2dbc.h2;
 import fluentq.r2dbc.H2Templates;
 import fluentq.r2dbc.R2DBCQuery;
 import fluentq.r2dbc.domain.QSurvey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class H2QueryTest {
 
@@ -12,7 +12,7 @@ public class H2QueryTest {
 
   private QSurvey survey = new QSurvey("survey");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     query = new R2DBCQuery(H2Templates.builder().newLineToSingleSpace().build());
   }

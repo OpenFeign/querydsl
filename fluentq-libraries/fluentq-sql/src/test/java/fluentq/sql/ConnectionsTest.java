@@ -3,7 +3,7 @@ package fluentq.sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.geolatte.geom.codec.Wkt;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ConnectionsTest {
 

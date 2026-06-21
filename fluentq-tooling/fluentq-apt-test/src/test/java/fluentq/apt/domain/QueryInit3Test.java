@@ -19,7 +19,7 @@ import fluentq.core.annotations.QueryEntity;
 import fluentq.core.annotations.QueryInit;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryInit3Test {
 

@@ -32,8 +32,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SerializerTest {
 
@@ -44,7 +44,7 @@ public class SerializerTest {
   private TypeMappings typeMappings = new JavaTypeMappings();
 
   @SuppressWarnings("unchecked")
-  @Before
+  @BeforeEach
   public void setUp() {
     // type
     Type typeModel =

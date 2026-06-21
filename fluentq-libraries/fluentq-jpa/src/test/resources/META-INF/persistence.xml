@@ -220,7 +220,7 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
             <property name="hibernate.archive.autodetection" value="class"/>
-            <property name="hibernate.dialect" value="fluentq.jpa.support.QMySQL5InnoDBDialect"/>
+            <property name="hibernate.dialect" value="fluentq.jpa.support.QMySQLDialect"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/fluentq"/>
             <property name="hibernate.connection.username" value="fluentq"/>
@@ -239,6 +239,7 @@
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/fluentq"/>
             <property name="jakarta.persistence.jdbc.user" value="fluentq"/>
             <property name="jakarta.persistence.jdbc.password" value="fluentq"/>
+            <property name="eclipselink.login.encryptor" value="fluentq.jpa.PlaintextEncryptor"/>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="database"/>
             <property name="eclipselink.logging.level" value="SEVERE"/>
@@ -251,7 +252,7 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
             <property name="hibernate.archive.autodetection" value="class"/>
-            <property name="hibernate.dialect" value="fluentq.jpa.support.QSQLServer2008Dialect"/>
+            <property name="hibernate.dialect" value="fluentq.jpa.support.QSQLServerDialect"/>
             <property name="hibernate.connection.driver_class" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
             <property name="hibernate.connection.url"
                       value="jdbc:sqlserver://localhost:1433;databaseName=tempdb;sendTimeAsDatetime=false;trustServerCertificate=true"/>
@@ -269,7 +270,7 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
             <property name="hibernate.archive.autodetection" value="class"/>
-            <property name="hibernate.dialect" value="fluentq.jpa.support.QPostgreSQL9Dialect"/>
+            <property name="hibernate.dialect" value="fluentq.jpa.support.QPostgreSQLDialect"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/fluentq"/>
             <property name="hibernate.connection.username" value="fluentq"/>
@@ -288,6 +289,7 @@
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/fluentq"/>
             <property name="jakarta.persistence.jdbc.user" value="fluentq"/>
             <property name="jakarta.persistence.jdbc.password" value="fluentq"/>
+            <property name="eclipselink.login.encryptor" value="fluentq.jpa.PlaintextEncryptor"/>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="database"/>
             <property name="eclipselink.logging.level" value="SEVERE"/>
@@ -302,7 +304,7 @@
             <property name="hibernate.archive.autodetection" value="class"/>
             <property name="hibernate.dialect" value="fluentq.jpa.support.QOracleDialect"/>
             <property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
-            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521/XEPDB1"/>
             <property name="hibernate.connection.username" value="fluentq"/>
             <property name="hibernate.connection.password" value="fluentq"/>
             <property name="hibernate.show_sql" value="true"/>

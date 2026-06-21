@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import fluentq.core.types.dsl.Expressions;
 import fluentq.r2dbc.domain.QEmployee;
 import fluentq.sql.RelationalPathExtractor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RelationalPathExtractorTest {
 

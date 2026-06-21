@@ -13,16 +13,15 @@
  */
 package fluentq.sql.codegen;
 
-import fluentq.core.testutil.Oracle;
 import fluentq.sql.Connections;
 import java.util.TimeZone;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(Oracle.class)
+@Tag("fluentq.core.testutil.Oracle")
 public class ExportOracleTest extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     var tz = TimeZone.getDefault();
     try {

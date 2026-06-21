@@ -2,7 +2,7 @@ package fluentq.apt.domain;
 
 import fluentq.core.annotations.QueryProjection;
 import fluentq.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Array2Test {
 

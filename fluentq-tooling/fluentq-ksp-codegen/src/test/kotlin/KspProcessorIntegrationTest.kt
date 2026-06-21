@@ -6,7 +6,8 @@ import com.tschuchort.compiletesting.configureKsp
 import com.tschuchort.compiletesting.kspSourcesDir
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
 import java.io.File
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CountDownLatch
@@ -296,7 +297,8 @@ class KspProcessorIntegrationTest {
             .doesNotContain("SimplePath<MutableCollection>")
     }
 
-    @Test(timeout = 30_000)
+    @Test
+    @Timeout(30)
     fun bidirectionalEntities_loadConcurrentlyWithoutDeadlock() {
         // Regression: two JPA entities with mutual @ManyToOne refs (Foo has
         // a Bar, Bar has a Foo) are the canonical case where APT-generated
@@ -664,6 +666,43 @@ class KspProcessorIntegrationTest {
             }
         }
         return compilation.compile() to compilation.kspSourcesDir
+    }
+
+    @Test
+    fun embeddableInnerClass_generatesQualifiedTypeReference() {
+        val source = SourceFile.kotlin(
+            "Invoice.kt",
+            """
+        package test
+
+        import jakarta.persistence.Embeddable
+        import jakarta.persistence.EmbeddedId
+        import jakarta.persistence.Entity
+        import java.io.Serializable
+
+        @Entity
+        class Invoice(
+            @EmbeddedId val id: InvoiceId
+        ) {
+            @Embeddable
+            data class InvoiceId(
+                val invoiceNo: String = "",
+                val seq: Int = 0
+            ) : Serializable
+        }
+        """.trimIndent()
+        )
+
+        val (result, generatedDir) = compile(source)
+
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+
+        val qInvoiceId = generatedDir.findGenerated("QInvoice_InvoiceId.kt")
+        assertThat(qInvoiceId.readText())
+            .contains("Invoice.InvoiceId")
+            .doesNotContain("EmbeddablePath<InvoiceId>")
     }
 
     private fun File.findGenerated(name: String): File {

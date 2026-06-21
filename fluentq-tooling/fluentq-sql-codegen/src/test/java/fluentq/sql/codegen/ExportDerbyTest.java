@@ -13,15 +13,14 @@
  */
 package fluentq.sql.codegen;
 
-import fluentq.core.testutil.Derby;
 import fluentq.sql.Connections;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(Derby.class)
+@Tag("fluentq.core.testutil.Derby")
 public class ExportDerbyTest extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     Connections.initDerby();
   }

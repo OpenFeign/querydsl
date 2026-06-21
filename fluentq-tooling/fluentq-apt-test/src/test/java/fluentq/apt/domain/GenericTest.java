@@ -20,7 +20,7 @@ import fluentq.apt.domain.rel.SimpleType2;
 import fluentq.core.annotations.QueryEntity;
 import fluentq.core.annotations.QueryTransient;
 import java.util.Date;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GenericTest extends AbstractTest {
 

@@ -20,7 +20,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class EmbeddedTest {
 

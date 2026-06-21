@@ -19,7 +19,7 @@ import fluentq.sql.ColumnMetadata;
 import fluentq.sql.ForeignKey;
 import fluentq.sql.PrimaryKey;
 import fluentq.sql.RelationalPathBase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("serial")
 public class KeyTest {

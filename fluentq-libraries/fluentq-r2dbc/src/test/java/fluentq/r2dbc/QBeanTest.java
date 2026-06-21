@@ -19,7 +19,7 @@ import fluentq.core.types.FactoryExpression;
 import fluentq.core.types.Projections;
 import fluentq.r2dbc.domain.Employee;
 import fluentq.r2dbc.domain.QEmployee;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QBeanTest {
 

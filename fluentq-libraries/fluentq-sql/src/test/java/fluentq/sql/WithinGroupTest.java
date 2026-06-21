@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.core.types.Expression;
 import fluentq.core.types.dsl.Expressions;
 import fluentq.core.types.dsl.NumberPath;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class WithinGroupTest {
   NumberPath<Long> path = null;
@@ -16,7 +16,7 @@ public class WithinGroupTest {
     return new SQLSerializer(Configuration.DEFAULT).handle(e).toString();
   }
 
-  @Before
+  @BeforeEach
   public void setPaths() {
     this.path = Expressions.numberPath(Long.class, "path");
     this.path2 = Expressions.numberPath(Long.class, "path2");

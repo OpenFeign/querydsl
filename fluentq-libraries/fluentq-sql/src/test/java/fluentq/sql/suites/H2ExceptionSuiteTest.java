@@ -4,24 +4,23 @@ import static fluentq.sql.domain.QSurvey.survey;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.QueryException;
-import fluentq.core.testutil.H2;
 import fluentq.sql.AbstractBaseTest;
 import fluentq.sql.Connections;
 import fluentq.sql.DefaultSQLExceptionTranslator;
 import fluentq.sql.H2Templates;
 import fluentq.sql.SQLExceptionTranslator;
 import java.sql.SQLException;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(H2.class)
+@Tag("fluentq.core.testutil.H2")
 public class H2ExceptionSuiteTest extends AbstractBaseTest {
 
   private static final SQLExceptionTranslator exceptionTranslator =
       DefaultSQLExceptionTranslator.DEFAULT;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Connections.initH2();
     Connections.initConfiguration(H2Templates.builder().build());

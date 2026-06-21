@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.sql.Configuration;
 import fluentq.sql.SQLTemplates;
 import java.sql.Connection;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SetQueryBandClauseTest {
 
@@ -14,7 +14,7 @@ public class SetQueryBandClauseTest {
 
   private SetQueryBandClause clause;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     conf = new Configuration(SQLTemplates.DEFAULT);
     conf.setUseLiterals(true);

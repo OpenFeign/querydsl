@@ -7,7 +7,7 @@ import fluentq.core.types.Projections;
 import fluentq.sql.domain.QSurvey;
 import java.io.IOException;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RelationalPathTest {
 

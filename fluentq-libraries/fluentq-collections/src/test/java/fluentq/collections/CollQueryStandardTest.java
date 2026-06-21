@@ -14,6 +14,7 @@
 package fluentq.collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import fluentq.core.Fetchable;
 import fluentq.core.FluentQModule;
@@ -31,7 +32,7 @@ import fluentq.core.types.dsl.Param;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CollQueryStandardTest {
 
@@ -183,12 +184,16 @@ public class CollQueryStandardTest {
         .isEqualTo("Bob");
   }
 
-  @Test(expected = ParamNotSetException.class)
+  @Test
   public void params_not_set() {
     var name = new Param<>(String.class, "name");
-    assertThat(
-            CollQueryFactory.from(cat, data).where(cat.name.eq(name)).select(cat.name).fetchOne())
-        .isEqualTo("Bob");
+    assertThatThrownBy(
+            () ->
+                CollQueryFactory.from(cat, data)
+                    .where(cat.name.eq(name))
+                    .select(cat.name)
+                    .fetchOne())
+        .isInstanceOf(ParamNotSetException.class);
   }
 
   @Test

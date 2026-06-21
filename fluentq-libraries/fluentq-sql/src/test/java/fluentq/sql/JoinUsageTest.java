@@ -14,17 +14,22 @@
 package fluentq.sql;
 
 import static fluentq.sql.SQLExpressions.selectFrom;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import fluentq.sql.domain.QSurvey;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class JoinUsageTest {
 
-  @Test(expected = IllegalStateException.class)
-  @Ignore
+  @Test
+  @Disabled
   public void join_already_declared() {
-    var survey = QSurvey.survey;
-    selectFrom(survey).fullJoin(survey);
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          var survey = QSurvey.survey;
+          selectFrom(survey).fullJoin(survey);
+        });
   }
 }

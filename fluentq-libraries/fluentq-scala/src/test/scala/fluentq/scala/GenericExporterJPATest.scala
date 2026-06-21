@@ -3,7 +3,7 @@ package fluentq.scala
 import jakarta.persistence._
 
 import fluentq.codegen.GenericExporter
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class GenericExporterJPATest {
 

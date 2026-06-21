@@ -1,15 +1,14 @@
 package fluentq.collections;
 
-import fluentq.core.testutil.Performance;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -18,15 +17,15 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
-@Ignore
-@Category(Performance.class)
+@Disabled
+@Tag("fluentq.core.testutil.Performance")
 public class QueryPerformanceTest {
 
   private static final int size = 1000;
 
   private static List<Cat> cats = new ArrayList<>(size);
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws SQLException, ClassNotFoundException {
     for (var i = 0; i < size; i++) {
       cats.add(new Cat(String.valueOf(i), i));

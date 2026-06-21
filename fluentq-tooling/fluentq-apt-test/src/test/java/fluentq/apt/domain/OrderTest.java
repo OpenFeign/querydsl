@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class OrderTest {
 

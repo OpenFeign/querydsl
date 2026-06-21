@@ -1,7 +1,7 @@
 package fluentq.r2dbc.types;
 
 import java.time.Instant;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JSR310InstantTypeTest extends AbstractJSR310DateTimeTypeTest<Instant> {
 

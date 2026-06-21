@@ -21,7 +21,7 @@ import fluentq.core.types.Operation;
 import fluentq.core.types.Path;
 import fluentq.core.types.dsl.Expressions;
 import fluentq.sql.SQLOps;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLServerTemplatesTest extends AbstractSQLTemplatesTest {
 

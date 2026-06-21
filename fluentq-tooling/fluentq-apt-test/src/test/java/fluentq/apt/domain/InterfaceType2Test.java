@@ -12,7 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.NaturalId;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class InterfaceType2Test {
 

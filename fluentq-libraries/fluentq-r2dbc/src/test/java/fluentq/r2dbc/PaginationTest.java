@@ -3,14 +3,13 @@ package fluentq.r2dbc;
 import fluentq.core.QueryMetadata;
 import fluentq.core.QueryModifiers;
 import fluentq.core.support.QueryMixin;
-import fluentq.core.testutil.ReportingOnly;
 import fluentq.r2dbc.domain.QEmployee;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(ReportingOnly.class)
+@Tag("fluentq.core.testutil.ReportingOnly")
 public class PaginationTest {
 
   private String serialize(QueryMetadata metadata, SQLTemplates templates) {

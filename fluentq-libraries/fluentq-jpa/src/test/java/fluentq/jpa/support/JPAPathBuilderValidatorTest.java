@@ -6,20 +6,20 @@ import fluentq.jpa.domain.Cat;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import java.util.Collection;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JPAPathBuilderValidatorTest {
 
   private EntityManagerFactory entityManagerFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     entityManagerFactory = Persistence.createEntityManagerFactory("h2");
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     entityManagerFactory.close();
   }

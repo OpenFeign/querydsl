@@ -21,7 +21,7 @@ import fluentq.core.types.dsl.DatePath;
 import fluentq.core.types.dsl.DateTimePath;
 import fluentq.core.types.dsl.SimplePath;
 import fluentq.core.types.dsl.TimePath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryTypeTest extends AbstractTest {
 

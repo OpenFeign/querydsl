@@ -18,9 +18,9 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 @SuppressWarnings("serial")
 public class EmbeddableDeepTest {
 

@@ -3,6 +3,7 @@ package fluentq.sql;
 import static fluentq.core.Target.CUBRID;
 import static fluentq.core.Target.POSTGRESQL;
 import static fluentq.core.Target.TERADATA;
+import static fluentq.core.Target.TURSO;
 
 import fluentq.core.testutil.ExcludeIn;
 import fluentq.core.types.Path;
@@ -14,7 +15,7 @@ import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class TypesBase extends AbstractBaseTest {
 
@@ -51,7 +52,7 @@ public abstract class TypesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, POSTGRESQL, TERADATA})
+  @ExcludeIn({CUBRID, POSTGRESQL, TERADATA, TURSO})
   public void dump_types() throws SQLException {
     var conn = Connections.getConnection();
     var md = conn.getMetaData();

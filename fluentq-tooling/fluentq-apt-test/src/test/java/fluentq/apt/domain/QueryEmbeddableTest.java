@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.annotations.QueryEmbeddable;
 import fluentq.core.annotations.QueryEntity;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryEmbeddableTest {
 

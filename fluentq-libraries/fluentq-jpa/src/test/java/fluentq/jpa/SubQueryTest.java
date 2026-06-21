@@ -19,14 +19,14 @@ import static fluentq.jpa.JPAExpressions.select;
 import static fluentq.jpa.JPAExpressions.selectFrom;
 import static fluentq.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import fluentq.core.domain.QCat;
 import fluentq.core.testutil.Serialization;
 import fluentq.jpa.domain.Cat;
 import fluentq.jpa.domain.QEmployee;
 import fluentq.jpa.domain.QUser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SubQueryTest extends AbstractQueryTest {
 

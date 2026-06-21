@@ -18,7 +18,7 @@ import fluentq.core.annotations.QueryEntity;
 import fluentq.core.types.dsl.NumberPath;
 import fluentq.core.types.dsl.SimplePath;
 import fluentq.core.types.dsl.StringPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Inheritance4Test extends AbstractTest {
 

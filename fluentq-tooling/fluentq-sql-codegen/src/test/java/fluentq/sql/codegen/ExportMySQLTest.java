@@ -13,15 +13,14 @@
  */
 package fluentq.sql.codegen;
 
-import fluentq.core.testutil.MySQL;
 import fluentq.sql.Connections;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(MySQL.class)
+@Tag("fluentq.core.testutil.MySQL")
 public class ExportMySQLTest extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     Connections.initMySQL();
   }

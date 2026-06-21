@@ -20,7 +20,7 @@ import fluentq.core.types.Expression;
 import fluentq.core.types.TemplateFactory;
 import fluentq.core.types.dsl.StringTemplate;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CustomExpressionsTest extends AbstractQueryTest {
 

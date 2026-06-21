@@ -37,7 +37,7 @@ import fluentq.core.types.Predicate;
 import fluentq.core.util.PrimitiveUtils;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.tools.JavaCompiler;
@@ -112,8 +112,8 @@ public class DefaultEvaluatorFactory {
     }
     serializer.append(";");
 
-    var constantToLabel = serializer.getConstantToLabel();
-    var constants = getConstants(metadata, constantToLabel);
+    var constants =
+        getConstants(metadata, serializer.getConstants(), serializer.getConstantToLabel());
     var types = new Class<?>[sources.size()];
     var names = new String[sources.size()];
     for (var i = 0; i < sources.size(); i++) {
@@ -155,8 +155,7 @@ public class DefaultEvaluatorFactory {
     ser.append("}\n");
     ser.append("return rv;");
 
-    var constantToLabel = ser.getConstantToLabel();
-    var constants = getConstants(metadata, constantToLabel);
+    var constants = getConstants(metadata, ser.getConstants(), ser.getConstantToLabel());
 
     Type sourceType = new ClassType(TypeCategory.SIMPLE, source.getType());
     var sourceListType = new ClassType(TypeCategory.SIMPLE, Iterable.class, sourceType);
@@ -269,8 +268,7 @@ public class DefaultEvaluatorFactory {
     }
     ser.append("return rv;");
 
-    var constantToLabel = ser.getConstantToLabel();
-    var constants = getConstants(metadata, constantToLabel);
+    var constants = getConstants(metadata, ser.getConstants(), ser.getConstantToLabel());
 
     var projectionType = new ClassType(TypeCategory.LIST, List.class, Types.OBJECTS);
     return factory.createEvaluator(
@@ -283,19 +281,25 @@ public class DefaultEvaluatorFactory {
   }
 
   private Map<String, Object> getConstants(
-      QueryMetadata metadata, Map<Object, String> constantToLabel) {
-    Map<String, Object> constants = new HashMap<>();
-    for (Map.Entry<Object, String> entry : constantToLabel.entrySet()) {
-      if (entry.getKey() instanceof ParamExpression<?>) {
-        var value = metadata.getParams().get(entry.getKey());
+      QueryMetadata metadata, List<Object> constants, Map<Object, String> constantToLabel) {
+    var result = new LinkedHashMap<String, Object>();
+
+    for (var constant : constants) {
+      var paramName = constantToLabel.get(constant);
+
+      if (constant instanceof ParamExpression<?>) {
+        var value = metadata.getParams().get(constant);
         if (value == null) {
-          throw new ParamNotSetException((ParamExpression<?>) entry.getKey());
+          throw new ParamNotSetException((ParamExpression<?>) constant);
         }
-        constants.put(entry.getValue(), value);
-      } else {
-        constants.put(entry.getValue(), entry.getKey());
+
+        result.put(paramName, value);
+        continue;
       }
+
+      result.put(paramName, constant);
     }
-    return constants;
+
+    return result;
   }
 }

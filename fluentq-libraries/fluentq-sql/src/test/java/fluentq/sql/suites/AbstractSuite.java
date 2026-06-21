@@ -2,14 +2,11 @@ package fluentq.sql.suites;
 
 import fluentq.sql.Connections;
 import java.sql.SQLException;
-import org.junit.AfterClass;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
 
-@RunWith(Enclosed.class)
 public abstract class AbstractSuite {
 
-  @AfterClass
+  @AfterAll
   public static void tearDown() throws SQLException {
     Connections.close();
   }

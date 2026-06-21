@@ -3,7 +3,7 @@ package fluentq.r2dbc.dml;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.r2dbc.domain.QEmployee;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AnnotationMapperTest extends AbstractMapperTest {
 

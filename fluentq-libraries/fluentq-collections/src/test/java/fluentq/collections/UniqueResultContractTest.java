@@ -13,15 +13,19 @@
  */
 package fluentq.collections;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import fluentq.core.NonUniqueResultException;
 import fluentq.core.types.Expression;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UniqueResultContractTest extends AbstractQueryTest {
 
-  @Test(expected = NonUniqueResultException.class)
+  @Test
   public void unique_result_throws_exception_on_multiple_results() {
-    CollQueryFactory.from(cat, cats).where(cat.name.isNotNull()).fetchOne();
+    assertThatThrownBy(
+            () -> CollQueryFactory.from(cat, cats).where(cat.name.isNotNull()).fetchOne())
+        .isInstanceOf(NonUniqueResultException.class);
   }
 
   @Test

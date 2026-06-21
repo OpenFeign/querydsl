@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.codegen.utils.model.TypeExtends;
 import fluentq.core.annotations.QueryEntity;
 import java.io.File;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Inheritance2Test {
 

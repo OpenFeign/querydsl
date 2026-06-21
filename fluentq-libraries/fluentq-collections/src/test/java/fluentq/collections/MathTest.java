@@ -8,7 +8,7 @@ import fluentq.core.types.dsl.Expressions;
 import fluentq.core.types.dsl.MathExpressions;
 import fluentq.core.types.dsl.NumberPath;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MathTest {
 

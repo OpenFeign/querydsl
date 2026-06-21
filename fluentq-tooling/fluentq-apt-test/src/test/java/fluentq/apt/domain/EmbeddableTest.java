@@ -17,9 +17,9 @@ import fluentq.core.annotations.QueryEmbeddable;
 import fluentq.core.annotations.QueryEntity;
 import fluentq.core.annotations.QuerySupertype;
 import java.util.List;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public class EmbeddableTest {
 
   @QueryEntity

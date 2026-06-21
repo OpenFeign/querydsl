@@ -26,9 +26,9 @@ import fluentq.core.testutil.IncludeIn;
 import fluentq.core.types.dsl.Param;
 import fluentq.r2dbc.domain.QEmployee;
 import fluentq.r2dbc.domain.QSurvey;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class DeleteBase extends AbstractBaseTest {
 
@@ -37,12 +37,12 @@ public abstract class DeleteBase extends AbstractBaseTest {
     insert(survey).values(1, "Hello World", "Hello").execute().block();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     reset();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     reset();
   }

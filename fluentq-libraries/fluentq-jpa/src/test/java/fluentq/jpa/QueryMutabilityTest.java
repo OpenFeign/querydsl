@@ -23,8 +23,8 @@ import fluentq.sql.SQLTemplates;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import org.hibernate.Session;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class QueryMutabilityTest {
 
@@ -41,7 +41,7 @@ public class QueryMutabilityTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void queryMutability()
       throws SecurityException,
           IllegalArgumentException,

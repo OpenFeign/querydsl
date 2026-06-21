@@ -73,8 +73,8 @@ import fluentq.jpa.domain.QFamily;
 import fluentq.jpa.domain.QFooDTO;
 import fluentq.jpa.domain.QItem;
 import fluentq.jpa.domain.QProduct;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ParsingTest extends AbstractQueryTest {
 
@@ -135,7 +135,7 @@ public class ParsingTest extends AbstractQueryTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void docoExamples910_3() throws Exception {
     query()
         .from(cat)
@@ -397,7 +397,7 @@ public class ParsingTest extends AbstractQueryTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   // @NoEclipseLink
   public void docoExamples97_10() throws Exception {
     query()
@@ -481,7 +481,7 @@ public class ParsingTest extends AbstractQueryTest {
   @Test
   @NoEclipseLink
   @ExcludeIn({DERBY, HSQLDB, H2, MYSQL, ORACLE, POSTGRESQL})
-  @Ignore
+  @Disabled
   public void docoExamples98_11() throws Exception {
     query()
         .from(item, ord)
@@ -656,13 +656,13 @@ public class ParsingTest extends AbstractQueryTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void groupBy() throws Exception {
     query().from(qat).groupBy(qat.breed).parse();
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void groupBy_2() throws Exception {
     query().from(qat).groupBy(qat.breed, qat.eyecolor).parse();
   }
@@ -708,7 +708,7 @@ public class ParsingTest extends AbstractQueryTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void orderBy() throws Exception {
     // NOT SUPPORTED
     query().from(qat).orderBy(qat.toes.avg().asc()).parse();
@@ -728,14 +728,14 @@ public class ParsingTest extends AbstractQueryTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void sum() {
     // NOT SUPPORTED
     query().from(cat).select(cat.kittens.size().sumLong()).parse();
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void sum_2() {
     // NOT SUPPORTED
     query().from(cat).where(cat.kittens.size().sumLong().gt(0)).select(cat).parse();

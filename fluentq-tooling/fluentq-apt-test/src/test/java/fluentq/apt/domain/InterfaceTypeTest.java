@@ -17,7 +17,7 @@ import fluentq.core.annotations.QueryEntity;
 import fluentq.core.types.dsl.ListPath;
 import fluentq.core.types.dsl.NumberPath;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class InterfaceTypeTest extends AbstractTest {
 

@@ -2,7 +2,7 @@ package fluentq.apt.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Generic5Test {
 

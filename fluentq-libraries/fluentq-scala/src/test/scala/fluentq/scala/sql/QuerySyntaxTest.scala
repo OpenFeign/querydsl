@@ -1,8 +1,8 @@
 package fluentq.scala.sql
 
 import fluentq.sql._
-import org.junit.Assert._
-import org.junit.Test
+import org.junit.jupiter.api.Assertions._
+import org.junit.jupiter.api.Test
 
 class QuerySyntaxTest {
 

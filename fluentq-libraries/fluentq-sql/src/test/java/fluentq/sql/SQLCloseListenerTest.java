@@ -3,20 +3,19 @@ package fluentq.sql;
 import static fluentq.sql.Constants.employee;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import fluentq.core.testutil.H2;
 import fluentq.sql.domain.Employee;
 import java.sql.SQLException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(H2.class)
+@Tag("fluentq.core.testutil.H2")
 public class SQLCloseListenerTest {
 
   private SQLQuery<Employee> query;
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException, ClassNotFoundException {
     Connections.initH2();
     var conf = new Configuration(H2Templates.DEFAULT);
@@ -24,7 +23,7 @@ public class SQLCloseListenerTest {
     query = new SQLQuery<Void>(Connections.getConnection(), conf).select(employee).from(employee);
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     Connections.close();
   }

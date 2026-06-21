@@ -15,7 +15,6 @@ package fluentq.sql.mysql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import fluentq.core.testutil.MySQL;
 import fluentq.sql.H2Templates;
 import fluentq.sql.QGeneratedKeysEntity;
 import fluentq.sql.dml.SQLInsertClause;
@@ -23,19 +22,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(MySQL.class)
+@Tag("fluentq.core.testutil.MySQL")
 public class GeneratedKeysMySQLTest {
 
   private Connection conn;
 
   private Statement stmt;
 
-  @Before
+  @BeforeEach
   public void setUp() throws ClassNotFoundException, SQLException {
     Class.forName("com.mysql.jdbc.Driver");
     var url = "jdbc:mysql://localhost:3306/fluentq";
@@ -43,7 +42,7 @@ public class GeneratedKeysMySQLTest {
     stmt = conn.createStatement();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     try {
       stmt.close();

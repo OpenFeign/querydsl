@@ -17,7 +17,7 @@ import fluentq.core.QueryMutability;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryMutabilityTest {
 

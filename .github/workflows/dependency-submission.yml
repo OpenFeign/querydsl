@@ -1,0 +1,46 @@
+# The workflow name and job id form the snapshot job correlator ("build" via
+# the dependency-submission-toolkit). They must stay identical to the workflow
+# removed in 69d8be19c so submissions supersede the stale December 2024
+# snapshot that keeps old transitive versions alive in the dependency graph
+# (and keeps spawning Dependabot alerts for them).
+name: Dependabot Dependency Submission
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: '23 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  dependency-submission:
+    # Dependabot and fork PRs run with a read-only GITHUB_TOKEN, so the
+    # snapshot submission would 403 and fail the check — the likely reason the
+    # original workflow was flaky. Skip those; pushes to master are what keep
+    # the dependency graph fresh.
+    if: github.event_name != 'pull_request' || (github.actor != 'dependabot[bot]' && !github.event.pull_request.head.repo.fork)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          # .mvn/jvm.config uses JDK 23+ flags (--sun-misc-unsafe-memory-access);
+          # keep in sync with the JDK the build actually targets
+          java-version: '25'
+          cache: maven
+
+      - name: Submit Dependency Snapshot
+        uses: advanced-security/maven-dependency-submission-action@v5.0.0
+        with:
+          maven-args: -Pexamples -Dtoolchain.skip=true

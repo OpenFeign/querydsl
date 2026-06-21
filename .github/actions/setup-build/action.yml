@@ -1,0 +1,47 @@
+name: "Setup build environment"
+description: "Install JDKs (17/21/25), generate Maven toolchains.xml, and restore the Maven dependency cache"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up JDKs 17, 21 and 25
+      uses: actions/setup-java@v4
+      with:
+        distribution: "temurin"
+        java-version: |
+          17
+          21
+          25
+
+    - name: Generate Maven toolchains.xml
+      shell: bash
+      run: |
+        mkdir -p ~/.m2
+        cat > ~/.m2/toolchains.xml <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <toolchains>
+          <toolchain>
+            <type>jdk</type>
+            <provides><version>17</version></provides>
+            <configuration><jdkHome>${JAVA_HOME_17_X64}</jdkHome></configuration>
+          </toolchain>
+          <toolchain>
+            <type>jdk</type>
+            <provides><version>21</version></provides>
+            <configuration><jdkHome>${JAVA_HOME_21_X64}</jdkHome></configuration>
+          </toolchain>
+          <toolchain>
+            <type>jdk</type>
+            <provides><version>25</version></provides>
+            <configuration><jdkHome>${JAVA_HOME_25_X64}</jdkHome></configuration>
+          </toolchain>
+        </toolchains>
+        EOF
+
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: maven-deps-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          maven-deps-

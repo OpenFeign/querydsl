@@ -18,13 +18,13 @@ import static fluentq.jpa.JPAExpressions.select;
 import fluentq.core.types.Projections;
 import fluentq.core.types.SubQueryExpression;
 import fluentq.jpa.domain.QCat;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class TupleTest extends AbstractQueryTest {
 
   @Test
-  @Ignore // FIXME
+  @Disabled // FIXME
   public void test() {
     var cat = QCat.cat;
 

@@ -21,7 +21,7 @@ import fluentq.r2dbc.Configuration;
 import fluentq.r2dbc.R2DBCExpressions;
 import fluentq.r2dbc.SQLSerializer;
 import fluentq.r2dbc.SQLTemplates;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class WindowFunctionTest {
 

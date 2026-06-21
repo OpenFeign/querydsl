@@ -1,7 +1,7 @@
 package fluentq.codegen;
 
 import fluentq.codegen.utils.model.Type;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GenericTest {
 

@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.annotations.QueryEntity;
 import fluentq.core.domain.SuperSupertype;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * related to https://bugs.launchpad.net/fluentq/+bug/538148

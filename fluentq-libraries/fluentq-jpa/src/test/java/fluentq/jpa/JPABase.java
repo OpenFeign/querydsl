@@ -34,7 +34,7 @@ import fluentq.jpa.domain.QGroup;
 import fluentq.jpa.domain.QParent;
 import fluentq.jpa.impl.JPADeleteClause;
 import fluentq.jpa.impl.JPAQuery;
-import fluentq.jpa.testutil.JPATestRunner;
+import fluentq.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
@@ -42,24 +42,17 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * @author tiwe
  */
-@RunWith(JPATestRunner.class)
+@ExtendWith({JPATestExtension.class, TargetExtension.class, JPAProviderExtension.class})
 public class JPABase extends AbstractJPATest implements JPATest {
 
   private static final QCat cat = QCat.cat;
-
-  @Rule @ClassRule public static TestRule targetRule = new TargetRule();
-
-  @Rule @ClassRule public static TestRule jpaProviderRule = new JPAProviderRule();
 
   private EntityManager entityManager;
 
@@ -97,7 +90,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void delete() {
     delete(cat).execute();
   }
@@ -135,6 +128,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
 
   @Test
   @NoBatooJPA
+  // Hibernate wraps the correlated EXISTS subquery in a derived table, and MySQL cannot reference
+  // the deleted table's alias from inside a derived table ("Unknown column 'c1_0.parent_id'")
+  @ExcludeIn(Target.MYSQL)
   public void delete_where_subQuery2() {
     var child = QChild.child;
     var parent = QParent.parent;
@@ -213,6 +209,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
+  // Hibernate 7.4 generates a malformed pessimistic-lock clause ("... with rs with rs") for Derby
+  // and a "for share of <alias>" clause that MySQL does not support
+  @ExcludeIn({Target.DERBY, Target.MYSQL})
   public void lockMode() {
     var query =
         query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).createQuery();
@@ -221,6 +220,9 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
+  // Hibernate 7.4 generates a malformed pessimistic-lock clause ("... with rs with rs") for Derby
+  // and a "for share of <alias>" clause that MySQL does not support
+  @ExcludeIn({Target.DERBY, Target.MYSQL})
   public void lockMode2() {
     assertThat(query().from(cat).setLockMode(LockModeType.PESSIMISTIC_READ).select(cat).fetch())
         .isNotEmpty();
@@ -235,7 +237,7 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
-  @Ignore // isn't a valid JPQL query
+  @Disabled // isn't a valid JPQL query
   public void subquery_uniqueResult() {
     var cat2 = new QCat("cat2");
 

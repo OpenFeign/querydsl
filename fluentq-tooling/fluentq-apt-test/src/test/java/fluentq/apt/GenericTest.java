@@ -4,7 +4,7 @@ import fluentq.apt.jpa.JPAAnnotationProcessor;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GenericTest extends AbstractProcessorTest {
 

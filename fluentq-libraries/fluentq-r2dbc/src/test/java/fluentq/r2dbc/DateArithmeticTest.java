@@ -1,16 +1,15 @@
 package fluentq.r2dbc;
 
-import fluentq.core.testutil.ReportingOnly;
 import fluentq.core.types.Expression;
 import fluentq.core.types.dsl.DateTimePath;
 import fluentq.core.types.dsl.Expressions;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(ReportingOnly.class)
+@Tag("fluentq.core.testutil.ReportingOnly")
 public class DateArithmeticTest {
 
   private String serialize(Expression<?> expr, SQLTemplates templates) {

@@ -17,7 +17,7 @@ import fluentq.core.annotations.PropertyType;
 import fluentq.core.annotations.QueryEntity;
 import fluentq.core.annotations.QueryTransient;
 import fluentq.core.annotations.QueryType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BlockingTest extends AbstractTest {
 

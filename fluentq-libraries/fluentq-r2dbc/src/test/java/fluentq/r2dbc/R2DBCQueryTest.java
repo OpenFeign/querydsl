@@ -1,13 +1,19 @@
 package fluentq.r2dbc;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import fluentq.r2dbc.domain.QSurvey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class R2DBCQueryTest {
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void noConnection() {
-    var survey = QSurvey.survey;
-    R2DBCExpressions.select(survey.id).from(survey).fetch().collectList().block();
+    assertThatThrownBy(
+            () -> {
+              var survey = QSurvey.survey;
+              R2DBCExpressions.select(survey.id).from(survey).fetch().collectList().block();
+            })
+        .isInstanceOf(IllegalStateException.class);
   }
 }

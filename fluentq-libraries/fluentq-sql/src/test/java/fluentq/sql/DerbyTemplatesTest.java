@@ -20,7 +20,7 @@ import fluentq.core.types.ExpressionUtils;
 import fluentq.core.types.Operation;
 import fluentq.core.types.Ops;
 import fluentq.core.types.dsl.Expressions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DerbyTemplatesTest extends AbstractSQLTemplatesTest {
 

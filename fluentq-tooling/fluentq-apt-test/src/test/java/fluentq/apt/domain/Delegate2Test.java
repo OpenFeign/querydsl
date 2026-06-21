@@ -21,7 +21,7 @@ import fluentq.core.types.ConstantImpl;
 import fluentq.core.types.Path;
 import fluentq.core.types.dsl.Expressions;
 import fluentq.core.types.dsl.NumberExpression;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Delegate2Test {
 

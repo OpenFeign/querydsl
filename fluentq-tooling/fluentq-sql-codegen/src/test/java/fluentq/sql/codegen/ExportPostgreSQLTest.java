@@ -13,15 +13,14 @@
  */
 package fluentq.sql.codegen;
 
-import fluentq.core.testutil.PostgreSQL;
 import fluentq.sql.Connections;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(PostgreSQL.class)
+@Tag("fluentq.core.testutil.PostgreSQL")
 public class ExportPostgreSQLTest extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     Connections.initPostgreSQL();
   }

@@ -11,16 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package fluentq.core.testutil;
 
-import org.junit.runners.model.Statement;
-
-public final class EmptyStatement extends Statement {
-
-  public static final Statement DEFAULT = new EmptyStatement();
-
-  private EmptyStatement() {}
-
-  @Override
-  public void evaluate() throws Throwable {}
-}
+public interface Turso extends EmbeddedDatabase {}

@@ -16,31 +16,30 @@ package fluentq.sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.core.QueryMutability;
-import fluentq.core.testutil.Derby;
 import fluentq.sql.domain.QSurvey;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(Derby.class)
+@Tag("fluentq.core.testutil.Derby")
 public class QueryMutabilityTest {
 
   private static final QSurvey survey = new QSurvey("survey");
 
   private Connection connection;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     Connections.initDerby();
     connection = Connections.getConnection();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     Connections.close();
   }

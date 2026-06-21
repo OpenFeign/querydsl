@@ -13,8 +13,6 @@
  */
 package fluentq.jpa.testutil;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import fluentq.jpa.JPATest;
 import fluentq.jpa.Mode;
 import jakarta.persistence.EntityManager;
@@ -22,20 +20,18 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
-import org.junit.rules.MethodRule;
-import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
-import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 /**
- * @author tiwe
+ * JUnit 5 replacement for the former {@code JPATestRunner}. Creates a single {@link
+ * EntityManagerFactory}/{@link EntityManager} (with an open transaction) per test class, injects
+ * the entity manager into every {@link JPATest} instance and rolls everything back afterwards.
  */
-public class JPATestRunner extends BlockJUnit4ClassRunner {
+public class JPATestExtension
+    implements BeforeAllCallback, AfterAllCallback, TestInstancePostProcessor {
 
   private EntityManagerFactory entityManagerFactory;
 
@@ -43,52 +39,8 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
 
   private boolean isDerby;
 
-  public JPATestRunner(Class<?> klass) throws InitializationError {
-    super(klass);
-  }
-
   @Override
-  protected List<MethodRule> rules(Object test) {
-    assertThat(test instanceof JPATest)
-        .as(
-            "In order to use the %s for %s, it should (directly or indirectly) implement %s"
-                .formatted(JPATestRunner.class.getSimpleName(), test.getClass(), JPATest.class))
-        .isTrue();
-
-    var rules = super.rules(test);
-    rules.add(
-        new MethodRule() {
-          @Override
-          public Statement apply(
-              final Statement base, FrameworkMethod method, final Object target) {
-            return new Statement() {
-              @Override
-              public void evaluate() throws Throwable {
-                ((JPATest) target).setEntityManager(entityManager);
-                base.evaluate();
-              }
-            };
-          }
-        });
-    return rules;
-  }
-
-  @Override
-  public void run(final RunNotifier notifier) {
-    try {
-      start();
-      super.run(notifier);
-    } catch (Exception e) {
-      e.printStackTrace();
-      var failure =
-          new Failure(Description.createSuiteDescription(getTestClass().getJavaClass()), e);
-      notifier.fireTestFailure(failure);
-    } finally {
-      shutdown();
-    }
-  }
-
-  private void start() throws Exception {
+  public void beforeAll(ExtensionContext context) throws Exception {
     var mode = Mode.mode.get();
     if (mode == null) {
       mode = "h2perf";
@@ -101,6 +53,22 @@ public class JPATestRunner extends BlockJUnit4ClassRunner {
     entityManagerFactory = Persistence.createEntityManagerFactory(mode);
     entityManager = entityManagerFactory.createEntityManager();
     entityManager.getTransaction().begin();
+  }
+
+  @Override
+  public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+    if (!(testInstance instanceof JPATest jpaTest)) {
+      throw new IllegalStateException(
+          "In order to use the %s for %s, it should (directly or indirectly) implement %s"
+              .formatted(
+                  JPATestExtension.class.getSimpleName(), testInstance.getClass(), JPATest.class));
+    }
+    jpaTest.setEntityManager(entityManager);
+  }
+
+  @Override
+  public void afterAll(ExtensionContext context) {
+    shutdown();
   }
 
   private void shutdown() {

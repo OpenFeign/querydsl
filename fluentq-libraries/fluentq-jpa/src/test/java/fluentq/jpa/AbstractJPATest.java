@@ -22,6 +22,7 @@ import static fluentq.core.Target.SQLSERVER;
 import static fluentq.core.Target.TERADATA;
 import static fluentq.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
 
 import fluentq.core.Fetchable;
@@ -111,9 +112,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author tiwe
@@ -166,7 +167,7 @@ public abstract class AbstractJPATest {
 
   protected abstract void save(Object entity);
 
-  @Before
+  @BeforeEach
   public void setUp() {
     if (query().from(cat).fetchCount() > 0) {
       savedCats.addAll(query().from(cat).orderBy(cat.id.asc()).select(cat).fetch());
@@ -1128,7 +1129,7 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @Ignore // FIXME
+  @Disabled // FIXME
   public void groupBy_count() {
     var ids = query().from(cat).groupBy(cat.id).select(cat.id).fetch();
     var count = query().from(cat).groupBy(cat.id).fetchCount();
@@ -1142,7 +1143,7 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @Ignore // FIXME
+  @Disabled // FIXME
   public void groupBy_distinct_count() {
     var ids = query().from(cat).groupBy(cat.id).distinct().select(Expressions.ONE).fetch();
     var results =
@@ -1227,7 +1228,7 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void in6() {
     // query().from(cat).where(cat.kittens.in(savedCats)).fetchCount();
   }
@@ -1489,7 +1490,7 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void map_join() {
     // select m.text from Show s join s.acts a where key(a) = 'B'
     var show = QShow.show;
@@ -1736,11 +1737,15 @@ public abstract class AbstractJPATest {
         .isEqualTo("Bob123");
   }
 
-  @Test(expected = ParamNotSetException.class)
+  @Test
   public void params_not_set() {
-    var name = new Param<>(String.class, "name");
-    assertThat(query().from(cat).where(cat.name.eq(name)).select(cat.name).fetchFirst())
-        .isEqualTo("Bob123");
+    assertThatThrownBy(
+            () -> {
+              var name = new Param<>(String.class, "name");
+              assertThat(query().from(cat).where(cat.name.eq(name)).select(cat.name).fetchFirst())
+                  .isEqualTo("Bob123");
+            })
+        .isInstanceOf(ParamNotSetException.class);
   }
 
   @Test
@@ -1773,7 +1778,7 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void size() {
     // NOT SUPPORTED
     query().from(cat).select(cat, cat.kittens.size()).fetch();
@@ -1911,7 +1916,7 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @Ignore // FIXME
+  @Disabled // FIXME
   @ExcludeIn(DERBY)
   public void substring_from_right() {
     assertThat(
@@ -1958,14 +1963,14 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void sum() {
     // NOT SUPPORTED
     query().from(cat).select(cat.kittens.size().sumLong()).fetch();
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void sum_2() {
     // NOT SUPPORTED
     query().from(cat).where(cat.kittens.size().sumLong().gt(0)).select(cat).fetch();
@@ -2231,7 +2236,7 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void type() {
     assertThat(
             query()

@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.codegen.utils.model.Parameter;
 import fluentq.codegen.utils.model.Types;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DelegateTest {
 

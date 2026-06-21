@@ -2,7 +2,7 @@ package fluentq.maven;
 
 import java.io.File;
 import org.apache.maven.project.MavenProject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.sonatype.plexus.build.incremental.DefaultBuildContext;
 
 public class CompileMojoTest {

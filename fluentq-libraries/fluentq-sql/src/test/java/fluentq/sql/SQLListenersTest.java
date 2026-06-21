@@ -18,7 +18,7 @@ import fluentq.sql.dml.SQLMergeUsingCase;
 import fluentq.sql.dml.SQLUpdateBatch;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLListenersTest {
 

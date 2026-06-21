@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.example.jpa.model.User;
 import jakarta.inject.Inject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UserRepositoryTest extends AbstractPersistenceTest {
   @Inject private UserRepository repository;

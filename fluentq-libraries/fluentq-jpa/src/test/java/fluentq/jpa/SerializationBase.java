@@ -19,7 +19,7 @@ import fluentq.core.testutil.Serialization;
 import fluentq.core.types.Predicate;
 import fluentq.jpa.domain.QCat;
 import fluentq.jpa.impl.JPAQuery;
-import fluentq.jpa.testutil.JPATestRunner;
+import fluentq.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,10 +27,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JPATestRunner.class)
+@ExtendWith(JPATestExtension.class)
 public class SerializationBase implements JPATest {
 
   private QCat cat = QCat.cat;

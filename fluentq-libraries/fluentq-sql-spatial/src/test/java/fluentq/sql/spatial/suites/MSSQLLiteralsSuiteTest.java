@@ -1,19 +1,20 @@
 package fluentq.sql.spatial.suites;
 
-import fluentq.core.testutil.SQLServer;
 import fluentq.sql.Connections;
 import fluentq.sql.spatial.SQLServer2008SpatialTemplates;
 import fluentq.sql.spatial.SpatialBase;
 import fluentq.sql.suites.AbstractSuite;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 
-@Category(SQLServer.class)
+@Tag("fluentq.core.testutil.SQLServer")
 public class MSSQLLiteralsSuiteTest extends AbstractSuite {
 
-  public static class Spatial extends SpatialBase {}
+  @Nested
+  class Spatial extends SpatialBase {}
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Connections.initSQLServer();
     Connections.initConfiguration(

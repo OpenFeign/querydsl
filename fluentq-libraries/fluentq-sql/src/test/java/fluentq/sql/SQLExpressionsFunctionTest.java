@@ -22,7 +22,7 @@ import fluentq.core.types.dsl.SimpleTemplate;
 import fluentq.core.types.dsl.StringTemplate;
 import fluentq.sql.dml.SQLInsertClause;
 import fluentq.sql.domain.QSurvey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLExpressionsFunctionTest {
 

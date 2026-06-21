@@ -40,7 +40,7 @@ import java.util.Currency;
 import java.util.List;
 import java.util.UUID;
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TypeTest implements InvocationHandler {
 

@@ -26,7 +26,7 @@ import fluentq.core.types.dsl.NumberPath;
 import fluentq.core.types.dsl.SimpleExpression;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class OracleTemplatesTest extends AbstractSQLTemplatesTest {
 

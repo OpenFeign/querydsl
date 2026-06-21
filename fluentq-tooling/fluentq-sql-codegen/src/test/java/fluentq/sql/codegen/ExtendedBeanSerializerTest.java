@@ -22,10 +22,9 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class ExtendedBeanSerializerTest {
 
@@ -34,18 +33,21 @@ public class ExtendedBeanSerializerTest {
   private static final String PACKAGE = String.join(".", PATH);
   private static final String FULL_NAME = PACKAGE + "." + CLASS_NAME;
 
-  @Rule public TemporaryFolder compileFolder = new TemporaryFolder();
+  @TempDir File compileFolder;
 
   private EntityType type;
 
   private File srcFile;
 
-  @Before
+  @BeforeEach
   public void setUp() throws IOException {
     Type typeModel =
         new SimpleType(TypeCategory.ENTITY, FULL_NAME, PACKAGE, CLASS_NAME, false, false);
     type = new EntityType(typeModel);
-    var srcFolder = compileFolder.newFolder(PATH);
+    var srcFolder =
+        java.nio.file.Files.createDirectories(
+                new File(compileFolder, String.join(File.separator, PATH)).toPath())
+            .toFile();
     srcFile = new File(srcFolder, CLASS_NAME + ".java");
   }
 
@@ -74,8 +76,7 @@ public class ExtendedBeanSerializerTest {
     extendedBeanSerializer.serialize(type, SimpleSerializerConfig.DEFAULT, new JavaWriter(fw));
     fw.close();
 
-    var classLoader =
-        URLClassLoader.newInstance(new URL[] {compileFolder.getRoot().toURI().toURL()});
+    var classLoader = URLClassLoader.newInstance(new URL[] {compileFolder.toURI().toURL()});
     var retCode = new SimpleCompiler().run(null, System.out, System.err, srcFile.getAbsolutePath());
     assertThat(retCode).as("The generated source should compile").isEqualTo(0);
 

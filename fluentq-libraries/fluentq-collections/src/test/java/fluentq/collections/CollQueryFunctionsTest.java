@@ -15,8 +15,8 @@ package fluentq.collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class CollQueryFunctionsTest {
 
@@ -28,7 +28,7 @@ public class CollQueryFunctionsTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void likeSpeed() {
     // 3015
     final var iterations = 1000000;

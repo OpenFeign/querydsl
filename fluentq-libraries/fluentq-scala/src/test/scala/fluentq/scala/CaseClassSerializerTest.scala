@@ -4,7 +4,7 @@ import java.io.StringWriter
 
 import fluentq.codegen.utils._
 import fluentq.codegen._
-import org.junit._
+import org.junit.jupiter.api._
 
 class CaseClassSerializerTest {
 

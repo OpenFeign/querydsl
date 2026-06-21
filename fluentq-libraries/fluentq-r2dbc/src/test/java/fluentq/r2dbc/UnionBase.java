@@ -19,8 +19,8 @@ import fluentq.r2dbc.domain.Employee;
 import fluentq.r2dbc.domain.QEmployee;
 import java.io.IOException;
 import java.util.Arrays;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class UnionBase extends AbstractBaseTest {
 
@@ -180,7 +180,7 @@ public abstract class UnionBase extends AbstractBaseTest {
   @SuppressWarnings("unchecked")
   @Test
   @ExcludeIn({DERBY, CUBRID, FIREBIRD, TERADATA})
-  @Ignore // FIXME
+  @Disabled // FIXME
   public void union5() {
     /* (select e.ID, e.FIRSTNAME, superior.ID as sup_id, superior.FIRSTNAME as sup_name
      * from EMPLOYEE e join EMPLOYEE superior on e.SUPERIOR_ID = superior.ID)

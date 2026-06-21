@@ -3,8 +3,8 @@ package fluentq.sql.h2;
 import fluentq.sql.H2Templates;
 import fluentq.sql.SQLQuery;
 import fluentq.sql.domain.QSurvey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class H2QueryTest {
 
@@ -12,7 +12,7 @@ public class H2QueryTest {
 
   private QSurvey survey = new QSurvey("survey");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     query = new SQLQuery(H2Templates.builder().newLineToSingleSpace().build());
   }

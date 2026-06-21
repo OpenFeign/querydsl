@@ -1,7 +1,7 @@
 package fluentq.apt.domain;
 
 import jakarta.persistence.Entity;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Generic6Test {
 

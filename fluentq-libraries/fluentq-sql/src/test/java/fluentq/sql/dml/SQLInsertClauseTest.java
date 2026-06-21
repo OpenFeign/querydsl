@@ -1,21 +1,26 @@
 package fluentq.sql.dml;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import fluentq.core.QueryFlag;
 import fluentq.sql.KeyAccessorsTest.QEmployee;
 import fluentq.sql.SQLTemplates;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLInsertClauseTest {
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void noConnection() {
-    var emp1 = new QEmployee("emp1");
-    var insert = new SQLInsertClause(null, SQLTemplates.DEFAULT, emp1);
-    insert.set(emp1.id, 1);
-    insert.execute();
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          var emp1 = new QEmployee("emp1");
+          var insert = new SQLInsertClause(null, SQLTemplates.DEFAULT, emp1);
+          insert.set(emp1.id, 1);
+          insert.execute();
+        });
   }
 
   @Test

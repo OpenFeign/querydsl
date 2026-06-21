@@ -17,19 +17,19 @@ import java.util.Arrays;
 import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-import org.junit.After;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class SimpleCompilerTest {
 
-  @After
+  @AfterEach
   public void tearDown() {
     new File("src/test/java/fluentq/codegen/utils/SimpleCompilerTest.class").delete();
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void Run() throws UnsupportedEncodingException {
     new File("target/out").mkdir();
     var compiler = ToolProvider.getSystemJavaCompiler();

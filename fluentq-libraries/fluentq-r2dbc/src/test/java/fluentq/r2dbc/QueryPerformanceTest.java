@@ -5,15 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.core.DefaultQueryMetadata;
 import fluentq.core.JoinType;
 import fluentq.core.QueryMetadata;
-import fluentq.core.testutil.H2;
-import fluentq.core.testutil.Performance;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -23,8 +21,9 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import reactor.core.publisher.Mono;
 
-@Category({H2.class, Performance.class})
-@Ignore(
+@Tag("fluentq.core.testutil.H2")
+@Tag("fluentq.core.testutil.Performance")
+@Disabled(
     """
     currently R2DBC has known READ performance issues - also there is a bug in the tests\
      somewhere\
@@ -42,7 +41,7 @@ public class QueryPerformanceTest {
 
   private static final Configuration conf = new Configuration(templates);
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     Connections.initH2();
     var conn = Connections.getConnection();
@@ -61,7 +60,7 @@ public class QueryPerformanceTest {
     conn.setAutoCommit(false);
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() {
     var conn = Connections.getConnection();
     var stmt = conn.createStatement("drop table companies");

@@ -22,7 +22,7 @@ import fluentq.core.types.dsl.Expressions;
 import fluentq.core.types.dsl.NumberPath;
 import fluentq.jpa.domain.QAccount;
 import fluentq.jpa.domain.QInheritedProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FeaturesTest extends AbstractQueryTest {
 

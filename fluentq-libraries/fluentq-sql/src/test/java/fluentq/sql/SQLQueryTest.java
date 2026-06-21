@@ -1,13 +1,19 @@
 package fluentq.sql;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import fluentq.sql.domain.QSurvey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SQLQueryTest {
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void noConnection() {
-    var survey = QSurvey.survey;
-    SQLExpressions.select(survey.id).from(survey).fetch();
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          var survey = QSurvey.survey;
+          SQLExpressions.select(survey.id).from(survey).fetch();
+        });
   }
 }

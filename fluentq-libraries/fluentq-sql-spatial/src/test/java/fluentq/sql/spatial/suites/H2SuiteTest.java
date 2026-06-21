@@ -1,19 +1,20 @@
 package fluentq.sql.spatial.suites;
 
-import fluentq.core.testutil.H2;
 import fluentq.sql.Connections;
 import fluentq.sql.spatial.H2GISTemplates;
 import fluentq.sql.spatial.SpatialBase;
 import fluentq.sql.suites.AbstractSuite;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 
-@Category(H2.class)
+@Tag("fluentq.core.testutil.H2")
 public class H2SuiteTest extends AbstractSuite {
 
-  public static class Spatial extends SpatialBase {}
+  @Nested
+  class Spatial extends SpatialBase {}
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     Connections.initH2();
     Connections.initConfiguration(H2GISTemplates.builder().newLineToSingleSpace().build());

@@ -19,10 +19,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-@Ignore
+@Disabled
 public class IncrementalCompilationTest extends AbstractProcessorTest {
 
   private static final String packagePath = "src/test/java/fluentq/apt/domain/";

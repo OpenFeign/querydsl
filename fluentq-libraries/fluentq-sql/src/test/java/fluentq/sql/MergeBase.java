@@ -21,6 +21,7 @@ import static fluentq.core.Target.POSTGRESQL;
 import static fluentq.core.Target.SQLITE;
 import static fluentq.core.Target.SQLSERVER;
 import static fluentq.core.Target.TERADATA;
+import static fluentq.core.Target.TURSO;
 import static fluentq.sql.Constants.survey;
 import static fluentq.sql.Constants.survey2;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,9 +35,9 @@ import fluentq.sql.domain.QSurvey;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class MergeBase extends AbstractBaseTest {
 
@@ -45,18 +46,18 @@ public abstract class MergeBase extends AbstractBaseTest {
     insert(survey).values(1, "Hello World", "Hello").execute();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException {
     reset();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     reset();
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE, TURSO})
   public void merge_with_keys() throws SQLException {
     var rs =
         merge(survey)
@@ -70,7 +71,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE, TURSO})
   public void merge_with_keys_listener() throws SQLException {
     final var result = new AtomicBoolean();
     SQLListener listener =
@@ -139,7 +140,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, POSTGRESQL, SQLSERVER, TERADATA, SQLITE})
+  @ExcludeIn({CUBRID, DB2, DERBY, POSTGRESQL, SQLSERVER, TERADATA, SQLITE, TURSO})
   public void merge_with_keys_Null_Id() throws SQLException {
     var rs =
         merge(survey)
@@ -153,7 +154,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE, TURSO})
   public void merge_with_keys_Projected() throws SQLException {
     assertThat(
             merge(survey)
@@ -165,7 +166,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE, TURSO})
   public void merge_with_keys_Projected2() throws SQLException {
     Path<Object> idPath = ExpressionUtils.path(Object.class, "id");
     Object id =

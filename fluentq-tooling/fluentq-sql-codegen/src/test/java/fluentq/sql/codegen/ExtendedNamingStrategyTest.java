@@ -17,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.codegen.EntityType;
 import fluentq.codegen.utils.model.Types;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ExtendedNamingStrategyTest {
 
@@ -26,7 +26,7 @@ public class ExtendedNamingStrategyTest {
 
   private EntityType entityModel;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     entityModel = new EntityType(Types.OBJECT);
     // entityModel.addAnnotation(new TableImpl("OBJECT"));

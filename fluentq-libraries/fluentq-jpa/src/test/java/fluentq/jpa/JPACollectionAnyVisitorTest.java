@@ -24,7 +24,7 @@ import fluentq.jpa.domain.QCat;
 import fluentq.jpa.domain.QCompany;
 import fluentq.jpa.domain.QDomesticCat;
 import fluentq.jpa.domain.QEmployee;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JPACollectionAnyVisitorTest {
 

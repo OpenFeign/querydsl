@@ -18,14 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.jpa.domain.Cat;
 import fluentq.jpa.domain.QCat;
 import fluentq.jpa.hibernate.HibernateQuery;
-import fluentq.jpa.testutil.HibernateTestRunner;
+import fluentq.jpa.testutil.HibernateTestExtension;
 import org.hibernate.Session;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@Ignore
-@RunWith(HibernateTestRunner.class)
+@Disabled
+@ExtendWith(HibernateTestExtension.class)
 public class UniqueResultsTest implements HibernateTest {
 
   private Session session;

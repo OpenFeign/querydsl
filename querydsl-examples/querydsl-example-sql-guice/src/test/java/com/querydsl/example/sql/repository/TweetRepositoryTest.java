@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querydsl.example.sql.model.Tweet;
 import com.querydsl.example.sql.model.Usert;
 import jakarta.inject.Inject;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TweetRepositoryTest extends AbstractPersistenceTest {
   @Inject private TweetRepository repository;
@@ -16,7 +16,7 @@ public class TweetRepositoryTest extends AbstractPersistenceTest {
 
   private Long posterId;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     var poster = new Usert();
     poster.setUsername("dr_frank");

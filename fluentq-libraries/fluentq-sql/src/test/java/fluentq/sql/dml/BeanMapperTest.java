@@ -3,7 +3,7 @@ package fluentq.sql.dml;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.sql.domain.QEmployee;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BeanMapperTest extends AbstractMapperTest {
 

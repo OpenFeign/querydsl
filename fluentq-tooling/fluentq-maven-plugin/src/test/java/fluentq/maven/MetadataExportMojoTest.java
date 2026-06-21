@@ -28,11 +28,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Collections;
 import org.apache.maven.project.MavenProject;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 public class MetadataExportMojoTest {
 
@@ -50,10 +49,11 @@ public class MetadataExportMojoTest {
 
   private final MetadataExportMojo mojo = new MetadataExportMojo();
 
-  @Rule public TestName testName = new TestName();
+  private String testName;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  public void setUp(TestInfo testInfo) {
+    testName = testInfo.getTestMethod().orElseThrow().getName();
     mojo.setProject(project);
     mojo.setJdbcDriver("org.h2.Driver");
     mojo.setJdbcUrl(url);
@@ -149,7 +149,7 @@ public class MetadataExportMojoTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void executeWithScalaSources() throws Exception {
     mojo.setTargetFolder("target/export7");
     mojo.setCreateScalaSources(true);
@@ -226,7 +226,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithUnsetSchemaPattern() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern(null);
@@ -239,7 +239,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithExactSchemaPattern() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("SCHEMA1");
@@ -253,7 +253,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithSimilarSchemaPattern() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("%EMA1");
@@ -267,7 +267,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithMismatchedSchemaPattern() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("NON_EXISTENT_SCHEMA");
@@ -280,7 +280,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithMultipleSchemaPatterns() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("SCHEMA1,SCHEMA2");
@@ -298,7 +298,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithEmptySchemaPattern() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("");
@@ -312,7 +312,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithMultipleSchemaPatternsAndInterleavedEmpty() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("SCHEMA1,,SCHEMA2");
@@ -325,7 +325,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithMultipleSchemaPatternsAndLeadingEmpty() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern(",SCHEMA2");
@@ -338,9 +338,9 @@ public class MetadataExportMojoTest {
   }
 
   @Test
-  @Ignore("Trailing empty strings are not handled correctly by the MetaDataExporter")
+  @Disabled("Trailing empty strings are not handled correctly by the MetaDataExporter")
   public void executeWithMultipleSchemaPatternsAndTrailingEmpty() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("SCHEMA1,");
@@ -358,7 +358,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithBlankUppercaseSchemaPattern() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("BLANK");
@@ -372,7 +372,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithBlankLowercaseSchemaPattern() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("blank");
@@ -386,7 +386,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithSchemaPatternContainingBlank() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("SCHEMA1BLANK");
@@ -399,7 +399,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithMultipleSchemaPatternsAndInterleavedBlank() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("SCHEMA1,BLANK,SCHEMA2");
@@ -412,7 +412,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithMultipleSchemaPatternsAndLeadingBlank() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("BLANK,SCHEMA2");
@@ -425,9 +425,9 @@ public class MetadataExportMojoTest {
   }
 
   @Test
-  @Ignore("Trailing empty strings are not handled correctly by the MetaDataExporter")
+  @Disabled("Trailing empty strings are not handled correctly by the MetaDataExporter")
   public void executeWithMultipleSchemaPatternsAndTrailingBlank() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("SCHEMA1,BLANK");
@@ -441,7 +441,7 @@ public class MetadataExportMojoTest {
 
   @Test
   public void executeWithMultipleSchemaPatternsAndContainingBlank() throws Exception {
-    var targetFolder = "target/" + testName.getMethodName();
+    var targetFolder = "target/" + testName;
 
     mojo.setTargetFolder(targetFolder);
     mojo.setSchemaPattern("SCHEMA1,SCHEMA2BLANK");

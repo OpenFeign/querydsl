@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fluentq.sql.domain.Employee;
 import fluentq.sql.domain.QEmployee;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ForeignKeyTest {
 

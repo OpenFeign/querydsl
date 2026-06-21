@@ -14,13 +14,14 @@
 package fluentq.apt.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import fluentq.core.annotations.QueryEntity;
 import fluentq.core.annotations.QueryInit;
 import fluentq.core.annotations.QuerySupertype;
 import fluentq.core.types.PathMetadata;
 import fluentq.core.types.dsl.PathInits;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class EntityTest extends AbstractTest {
 
@@ -99,9 +100,13 @@ public class EntityTest extends AbstractTest {
     QEntityTest_Supertype2.class.getConstructor(types);
   }
 
-  @Test(expected = NoSuchMethodException.class)
-  public void constructors2() throws SecurityException, NoSuchMethodException {
-    var types = new Class<?>[] {Class.class, PathMetadata.class, PathInits.class};
-    QEntityTest_EntityNoReferences.class.getConstructor(types);
+  @Test
+  public void constructors2() throws SecurityException {
+    assertThrows(
+        NoSuchMethodException.class,
+        () -> {
+          var types = new Class<?>[] {Class.class, PathMetadata.class, PathInits.class};
+          QEntityTest_EntityNoReferences.class.getConstructor(types);
+        });
   }
 }

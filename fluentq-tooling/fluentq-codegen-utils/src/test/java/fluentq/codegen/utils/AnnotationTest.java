@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.annotation.ElementType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @Annotation(prop2 = false, clazz = AnnotationTest.class)
 @Annotation2("Hello")
@@ -54,7 +54,7 @@ public class AnnotationTest {
   @Test
   public void MethodAnnotation() throws IOException, SecurityException, NoSuchMethodException {
     writer.annotation(getClass().getMethod("MethodAnnotation").getAnnotation(Test.class));
-    assertThat(w.toString().trim()).isEqualTo("@org.junit.Test");
+    assertThat(w.toString().trim()).isEqualTo("@org.junit.jupiter.api.Test");
   }
 
   @Test

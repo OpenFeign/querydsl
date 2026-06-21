@@ -15,13 +15,12 @@ package fluentq.sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import fluentq.core.testutil.ReportingOnly;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Types;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 public class JDBCTypeMappingTest {
 
@@ -83,7 +82,7 @@ public class JDBCTypeMappingTest {
   }
 
   @Test
-  @Category(ReportingOnly.class)
+  @Tag("fluentq.core.testutil.ReportingOnly")
   public void max() {
     System.err.println("Byte: " + String.valueOf(Byte.MAX_VALUE).length());
     System.err.println("Short: " + String.valueOf(Short.MAX_VALUE).length());

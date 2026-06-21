@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class InnerJoinTest extends AbstractQueryTest {
 
@@ -30,7 +30,7 @@ public class InnerJoinTest extends AbstractQueryTest {
   private List<Cat> cats;
 
   @Override
-  @Before
+  @BeforeEach
   public void setUp() {
     super.setUp();
     cat = new QCat("c");

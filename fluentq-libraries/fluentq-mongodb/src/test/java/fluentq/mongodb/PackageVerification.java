@@ -23,7 +23,6 @@ import fluentq.core.types.Expression;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
@@ -51,10 +50,7 @@ class PackageVerification {
         oneJarClassLoader.loadClass(MorphiaAnnotationProcessor.class.getName()); // fluentq-apt
     cl.getDeclaredConstructor().newInstance();
     var resourceKey = "META-INF/services/javax.annotation.processing.Processor";
-    assertThat(
-            new String(
-                Files.readAllBytes(Path.of(oneJarClassLoader.findResource(resourceKey).toURI())),
-                StandardCharsets.UTF_8))
+    assertThat(Files.readString(Path.of(oneJarClassLoader.findResource(resourceKey).toURI())))
         .isEqualTo(MorphiaAnnotationProcessor.class.getName());
   }
 }

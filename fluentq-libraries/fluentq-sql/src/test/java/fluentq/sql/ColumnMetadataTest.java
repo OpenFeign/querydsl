@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.sql.domain.QEmployee;
 import java.sql.Types;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ColumnMetadataTest {
 

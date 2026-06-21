@@ -13,15 +13,14 @@
  */
 package fluentq.sql.codegen;
 
-import fluentq.core.testutil.HSQLDB;
 import fluentq.sql.Connections;
-import org.junit.BeforeClass;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 
-@Category(HSQLDB.class)
+@Tag("fluentq.core.testutil.HSQLDB")
 public class ExportHsqldbTest extends ExportBaseTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     Connections.initHSQL();
   }

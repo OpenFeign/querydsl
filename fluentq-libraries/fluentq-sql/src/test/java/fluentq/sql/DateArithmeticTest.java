@@ -1,16 +1,15 @@
 package fluentq.sql;
 
-import fluentq.core.testutil.ReportingOnly;
 import fluentq.core.types.Expression;
 import fluentq.core.types.dsl.DateTimePath;
 import fluentq.core.types.dsl.Expressions;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(ReportingOnly.class)
+@Tag("fluentq.core.testutil.ReportingOnly")
 public class DateArithmeticTest {
 
   private String serialize(Expression<?> expr, SQLTemplates templates) {
@@ -30,6 +29,7 @@ public class DateArithmeticTest {
     list.add(new OracleTemplates());
     list.add(new PostgreSQLTemplates());
     list.add(new SQLiteTemplates());
+    list.add(new TursoTemplates());
     list.add(new SQLServerTemplates());
     list.add(new SQLServer2005Templates());
     list.add(new SQLServer2012Templates());

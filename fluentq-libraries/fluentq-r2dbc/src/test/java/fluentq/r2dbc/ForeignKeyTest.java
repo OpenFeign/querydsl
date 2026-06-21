@@ -19,7 +19,7 @@ import fluentq.r2dbc.domain.Employee;
 import fluentq.r2dbc.domain.QEmployee;
 import fluentq.sql.ForeignKey;
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ForeignKeyTest {
 
