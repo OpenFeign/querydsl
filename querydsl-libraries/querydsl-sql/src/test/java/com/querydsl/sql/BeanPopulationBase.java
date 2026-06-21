@@ -21,6 +21,7 @@ import static com.querydsl.core.Target.POSTGRESQL;
 import static com.querydsl.core.Target.SQLITE;
 import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.core.Target.TERADATA;
+import static com.querydsl.core.Target.TURSO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.testutil.ExcludeIn;
@@ -40,6 +41,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
     delete(e).where(e.firstname.eq("John")).execute();
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void custom_projection() {
     // Insert
@@ -87,6 +89,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
     assertThat(delete(e).where(e.id.eq(employee.getId())).execute()).isEqualTo(1L);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void insert_update_query_and_delete() {
     // Insert
@@ -109,6 +112,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
     assertThat(delete(e).where(e.id.eq(employee.getId())).execute()).isEqualTo(1L);
   }
 
+  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
   @Test
   public void populate_with_beanMapper() {
     var employee = new Employee();

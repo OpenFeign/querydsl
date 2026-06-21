@@ -24,6 +24,7 @@ import static com.querydsl.core.Target.ORACLE;
 import static com.querydsl.core.Target.POSTGRESQL;
 import static com.querydsl.core.Target.SQLITE;
 import static com.querydsl.core.Target.SQLSERVER;
+import static com.querydsl.core.Target.TURSO;
 import static com.querydsl.sql.Constants.survey;
 import static com.querydsl.sql.Constants.survey2;
 import static com.querydsl.sql.SQLExpressions.select;
@@ -78,7 +79,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
   @Test
   @ExcludeIn({
-    CUBRID, SQLITE, DERBY, ORACLE
+    CUBRID, SQLITE, DERBY, ORACLE, TURSO
   }) // https://bitbucket.org/xerial/sqlite-jdbc/issue/133/prepstmtsetdate-int-date-calendar-seems
   public void insert_dates() {
     var dateTest = QDateTest.qDateTest;
@@ -256,7 +257,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void insert_with_keys() throws SQLException {
     var rs = insert(survey).set(survey.name, "Hello World").executeWithKeys();
     assertThat(rs.next()).isTrue();
@@ -265,7 +266,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void insert_with_keys_listener() throws SQLException {
     final var result = new AtomicBoolean();
     SQLListener listener =
@@ -286,13 +287,13 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void insert_with_keys_Projected() throws SQLException {
     assertThat(insert(survey).set(survey.name, "Hello you").executeWithKey(survey.id)).isNotNull();
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLSERVER, SQLITE})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void insert_with_keys_Projected2() throws SQLException {
     Path<Object> idPath = ExpressionUtils.path(Object.class, "id");
     Object id = insert(survey).set(survey.name, "Hello you").executeWithKey(idPath);

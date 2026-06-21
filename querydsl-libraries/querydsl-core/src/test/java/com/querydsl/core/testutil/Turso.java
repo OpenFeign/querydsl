@@ -11,40 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core;
 
-/**
- * @author tiwe
- */
-public enum Target {
-  /** CUBRID */
-  CUBRID,
-  /** DB2 */
-  DB2,
-  /** Derby */
-  DERBY,
-  /** */
-  FIREBIRD,
-  /** */
-  H2,
-  /** HSQLDB */
-  HSQLDB,
-  /** Memory (querydsl-collection) */
-  MEM,
-  /** MySQL */
-  MYSQL,
-  /** Oracle */
-  ORACLE,
-  /** PostgreSQL */
-  POSTGRESQL,
-  /** Microsoft SQL Server */
-  SQLSERVER,
-  /** SQLite */
-  SQLITE,
-  /** Turso (SQLite-compatible) */
-  TURSO,
-  /** */
-  TERADATA,
-  /** */
-  LUCENE
-}
+package com.querydsl.core.testutil;
+
+public interface Turso extends EmbeddedDatabase {}

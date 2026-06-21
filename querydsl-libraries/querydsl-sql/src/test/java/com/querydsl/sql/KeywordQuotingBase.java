@@ -101,6 +101,7 @@ public abstract class KeywordQuotingBase extends AbstractBaseTest {
           case ORACLE -> Keywords.ORACLE;
           case POSTGRESQL -> Keywords.POSTGRESQL;
           case SQLITE -> Keywords.SQLITE;
+          case TURSO -> Keywords.TURSO;
           case SQLSERVER -> Keywords.SQLSERVER2012;
           case TERADATA -> Keywords.DEFAULT;
         };

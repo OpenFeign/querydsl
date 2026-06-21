@@ -58,6 +58,8 @@ public class SQLTemplatesRegistry {
       return PostgreSQLTemplates.builder();
     } else if (name.equals("sqlite")) {
       return SQLiteTemplates.builder();
+    } else if (name.equals("turso")) {
+      return TursoTemplates.builder();
     } else if (name.startsWith("teradata")) {
       return TeradataTemplates.builder();
     } else if (name.equals("microsoft sql server")) {

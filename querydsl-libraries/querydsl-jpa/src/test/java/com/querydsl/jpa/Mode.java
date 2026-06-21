@@ -12,6 +12,7 @@ import com.querydsl.sql.SQLServer2008Templates;
 import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.SQLiteTemplates;
 import com.querydsl.sql.TeradataTemplates;
+import com.querydsl.sql.TursoTemplates;
 
 /**
  * @author tiwe
@@ -33,6 +34,7 @@ public final class Mode {
       case ORACLE -> new OracleTemplates();
       case POSTGRESQL -> new PostgreSQLTemplates();
       case SQLITE -> new SQLiteTemplates();
+      case TURSO -> new TursoTemplates();
       case TERADATA -> new TeradataTemplates();
       default -> throw new IllegalStateException("Unknown mode " + mode);
     };
