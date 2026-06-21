@@ -218,13 +218,13 @@ jobs:
         with:
           path: ~/.m2/repository/io/github/openfeign/querydsl
           key: build-artifacts-${{ github.sha }}
-      - name: Wait for CUBRID
+      - name: Wait for CUBRID demodb to be ready
         run: |
           for i in $(seq 1 30); do
-            if (echo > /dev/tcp/localhost/30000) >/dev/null 2>&1; then
-              echo "CUBRID broker is accepting connections"; break
+            if docker logs "${{ job.services.cubrid.id }}" 2>&1 | grep -q "cubrid server start: demodb"; then
+              echo "CUBRID demodb server has started"; sleep 5; break
             fi
-            echo "Waiting for CUBRID ($i/30)..."; sleep 10
+            echo "Waiting for CUBRID demodb ($i/30)..."; sleep 5
           done
       - name: Test CUBRID
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.CUBRID
