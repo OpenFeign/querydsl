@@ -67,5 +67,5 @@ project:
 </dependency>
 ```
 
-See the [Migration Guide]({{ site.baseurl }}/migration) if you are upgrading
-from the original `fluentq` artifacts.
+See the [Migration Guide]({{ site.baseurl }}/migration-8) if you are upgrading
+from the original Querydsl packages.

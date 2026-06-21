@@ -6,6 +6,9 @@ nav_order: 6
 
 # Migration Guide
 
+> [!IMPORTANT]
+> If you are looking to migrate your project to **fluentQ (8.x)** (the renamed Querydsl version), please refer to the [Migration to fluentQ (8.x) Guide](migration-8.md).
+
 The original Querydsl project (`com.querydsl`, hosted at querydsl.com) has
 been inactive since 2020. The last release, 5.0.0, was published in July 2021.
 The website querydsl.com and its documentation may go offline at any time.
