@@ -1,0 +1,454 @@
+name: Build and Test
+
+on:
+  push:
+    branches: ["master", "querydsl-*"]
+    paths-ignore:
+      - "**/*.md"
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore:
+      - "**/*.md"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  MAVEN_OPTS: -Xmx3200m
+  # Modules that contain database-tagged tests, grouped by the databases they cover.
+  SQL_MODULES: ":querydsl-jpa,:querydsl-r2dbc,:querydsl-sql,:querydsl-sql-spatial,:querydsl-sql-codegen"
+  ORACLE_MODULES: ":querydsl-jpa,:querydsl-sql,:querydsl-sql-codegen"
+
+jobs:
+  # Build all core jars once (and run the database-independent unit tests), then publish
+  # the built artifacts as a per-commit cache that every downstream test job restores.
+  build:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+
+      - name: Validate code format
+        run: ./mvnw -ntp -B git-code-format:validate-code-format
+
+      - name: Build and run database-independent tests
+        run: ./mvnw -ntp -B clean install -Pno-databases
+
+      - name: Save build artifacts
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+
+  # Compile + package only (no databases) on Windows, mirroring the previous CircleCI job.
+  windows:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: windows-latest
+    timeout-minutes: 40
+    env:
+      MAVEN_OPTS: -Xmx3200m
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "25"
+          cache: "maven"
+      - name: Build (no external databases)
+        shell: bash
+        run: ./mvnw -ntp -B verify -Pno-databases -Dtoolchain.skip=true
+
+  embedded:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+      - name: Test embedded databases (H2, HSQLDB, Derby, SQLite, Turso)
+        run: >
+          ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }}
+          -Dgroups=com.querydsl.core.testutil.H2,com.querydsl.core.testutil.HSQLDB,com.querydsl.core.testutil.Derby,com.querydsl.core.testutil.SQLite,com.querydsl.core.testutil.Turso
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (embedded)"
+
+  mysql:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      mysql:
+        image: mysql:5.6.38
+        env:
+          MYSQL_ROOT_PASSWORD: querydsl
+          MYSQL_USER: querydsl
+          MYSQL_PASSWORD: querydsl
+          MYSQL_DATABASE: querydsl
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -pquerydsl"
+          --health-interval=10s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+      - name: Test MySQL
+        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.MySQL
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (MySQL)"
+
+  postgresql:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4-alpine
+        env:
+          POSTGRES_USER: querydsl
+          POSTGRES_PASSWORD: querydsl
+          POSTGRES_DB: querydsl
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U querydsl" --health-interval=10s
+          --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+      - name: Test PostgreSQL
+        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.PostgreSQL
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (PostgreSQL)"
+
+  oracle:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      oracle:
+        image: gvenzl/oracle-xe:slim-faststart
+        env:
+          ORACLE_PASSWORD: querydsl
+          APP_USER: querydsl
+          APP_USER_PASSWORD: querydsl
+          TZ: UTC
+        ports:
+          - 1521:1521
+        options: >-
+          --health-cmd="healthcheck.sh" --health-interval=10s
+          --health-timeout=5s --health-retries=30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+      - name: Test Oracle
+        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.ORACLE_MODULES }} -Dgroups=com.querydsl.core.testutil.Oracle
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (Oracle)"
+
+  cubrid:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      cubrid:
+        image: cubrid/cubrid:11.3
+        env:
+          CUBRID_DB: demodb
+        ports:
+          - 30000:30000
+          - 33000:33000
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+      - name: Wait for CUBRID
+        run: |
+          for i in $(seq 1 30); do
+            if (echo > /dev/tcp/localhost/30000) >/dev/null 2>&1; then
+              echo "CUBRID broker is accepting connections"; break
+            fi
+            echo "Waiting for CUBRID ($i/30)..."; sleep 10
+          done
+      - name: Test CUBRID
+        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.CUBRID
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (CUBRID)"
+
+  firebird:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      firebird:
+        image: jacobalberty/firebird:v4
+        env:
+          ISC_PASSWORD: masterkey
+          FIREBIRD_DATABASE: querydsl.fdb
+          FIREBIRD_USER: querydsl
+          FIREBIRD_PASSWORD: querydsl
+          TZ: UTC
+        ports:
+          - 3050:3050
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+      - name: Wait for Firebird
+        run: |
+          for i in $(seq 1 30); do
+            if (echo > /dev/tcp/localhost/3050) >/dev/null 2>&1; then
+              echo "Firebird is accepting connections"; break
+            fi
+            echo "Waiting for Firebird ($i/30)..."; sleep 5
+          done
+      - name: Test Firebird
+        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.Firebird
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (Firebird)"
+
+  mongodb:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      mongo:
+        image: mongo:8.0.9
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval=10s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+      - name: Test MongoDB
+        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-mongodb -Dgroups=com.querydsl.core.testutil.MongoDB
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (MongoDB)"
+
+  db2:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+      - name: Start DB2 container
+        run: |
+          docker run -d --privileged --name db2 \
+            -p 50000:50000 \
+            -e DB2INST1_PASSWORD=a3sd!fDj \
+            -e DB2INSTANCE=db2inst1 \
+            -e DBNAME=sample \
+            -e LICENSE=accept \
+            -e ARCHIVE_LOGS=false \
+            -e AUTOCONFIG=false \
+            ibmcom/db2:11.5.0.0
+          echo "Waiting for DB2 to initialize..."
+          for i in $(seq 1 60); do
+            if docker logs db2 2>&1 | grep -q "All databases are now active"; then
+              echo "DB2 appears to be up"; break
+            fi
+            echo "Waiting ($i/60)..."; sleep 10
+          done
+      - name: Test DB2
+        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.DB2
+      - name: Stop DB2 container
+        if: always()
+        run: docker stop db2 && docker rm db2
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (DB2)"
+
+  examples:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+      - name: Prepare example prerequisites
+        run: >
+          ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pquickbuild
+          -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb,:querydsl-r2dbc,:querydsl-sql-json -am
+      - name: Build and test examples
+        run: ./mvnw -ntp -B install -Pexamples -rf :querydsl-examples
+
+  examples-quarkus:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Quarkus native example image
+        run: |
+          cp querydsl-examples/querydsl-example-jpa-quarkus/Dockerfile .
+          docker build --progress=plain .
+
+  examples-ksp:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.m2/repository/io/github/openfeign/querydsl
+          key: build-artifacts-${{ github.sha }}
+      - name: Prepare KSP example prerequisites
+        run: |
+          ./mvnw -N org.codehaus.mojo:properties-maven-plugin:1.2.1:write-project-properties -Dproperties.outputFile=querydsl-examples/querydsl-example-ksp-codegen/gradle.properties
+          ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pquickbuild -pl :querydsl-ksp-codegen,:querydsl-jpa -am
+      - name: Build and test KSP example
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          cd querydsl-examples/querydsl-example-ksp-codegen
+          ./gradlew --no-daemon --console=plain --info --stacktrace test
+
+  # Single required status check that aggregates every test job.
+  ci:
+    if: always() && !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - windows
+      - embedded
+      - mysql
+      - postgresql
+      - oracle
+      - cubrid
+      - firebird
+      - mongodb
+      - db2
+      - examples
+      - examples-quarkus
+      - examples-ksp
+    steps:
+      - name: Check upstream job results
+        run: |
+          echo "Aggregating upstream job results..."
+          FAILED=""
+          ALL_SKIPPED=true
+          NEEDS_JSON='${{ toJSON(needs) }}'
+          for job in $(echo "$NEEDS_JSON" | jq -r 'keys[]'); do
+            result=$(echo "$NEEDS_JSON" | jq -r ".[\"$job\"].result")
+            echo "  $job: $result"
+            if [[ "$result" == "failure" || "$result" == "cancelled" ]]; then
+              FAILED="$FAILED $job"
+            fi
+            if [[ "$result" != "skipped" ]]; then
+              ALL_SKIPPED=false
+            fi
+          done
+          if [[ "$ALL_SKIPPED" == "true" ]]; then
+            echo "All upstream jobs were skipped - refusing to report success."
+            exit 1
+          fi
+          if [[ -n "$FAILED" ]]; then
+            echo "Failed jobs:$FAILED"
+            exit 1
+          fi
+          echo "All upstream jobs passed."
