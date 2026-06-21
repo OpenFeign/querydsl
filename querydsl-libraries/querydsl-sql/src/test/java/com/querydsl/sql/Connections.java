@@ -75,6 +75,7 @@ public final class Connections {
       oracleInited,
       postgresqlInited,
       sqliteInited,
+      tursoInited,
       teradataInited,
       firebirdInited;
 
@@ -168,6 +169,11 @@ public final class Connections {
     // System.setProperty("sqlite.purejava", "true");
     Class.forName("org.sqlite.JDBC");
     return DriverManager.getConnection("jdbc:sqlite:target/sample.db");
+  }
+
+  private static Connection getTurso() throws SQLException, ClassNotFoundException {
+    Class.forName("tech.turso.JDBC");
+    return DriverManager.getConnection("jdbc:turso:target/turso-sample.db");
   }
 
   private static Connection getTeradata() throws SQLException, ClassNotFoundException {
@@ -1105,6 +1111,78 @@ public final class Connections {
     stmt.execute("create table XML_TEST(COL varchar(128))");
 
     sqliteInited = true;
+  }
+
+  public static void initTurso() throws SQLException, ClassNotFoundException {
+    targetHolder.set(Target.TURSO);
+    var c = getTurso();
+    connHolder.set(c);
+    var stmt = c.createStatement();
+    stmtHolder.set(stmt);
+
+    if (tursoInited) {
+      return;
+    }
+
+    // qtest
+    stmt.execute("drop table if exists QTEST");
+    stmt.execute("create table QTEST (ID int IDENTITY(1,1) NOT NULL,  C1 int NULL)");
+
+    // survey
+    stmt.execute("drop table if exists SURVEY");
+    stmt.execute(
+        """
+        create table SURVEY(ID int auto_increment, \
+        NAME varchar(30),\
+        NAME2 varchar(30),\
+        constraint survey_pk primary key(ID))\
+        """);
+    stmt.execute("insert into SURVEY values (1,'Hello World','Hello');");
+
+    // test
+    stmt.execute("drop table if exists TEST");
+    stmt.execute(CREATE_TABLE_TEST);
+    try (var pstmt = c.prepareStatement(INSERT_INTO_TEST_VALUES)) {
+      for (var i = 0; i < TEST_ROW_COUNT; i++) {
+        pstmt.setString(1, "name" + i);
+        pstmt.addBatch();
+      }
+      pstmt.executeBatch();
+    }
+
+    // employee
+    stmt.execute("drop table if exists EMPLOYEE");
+    stmt.execute(
+        """
+        create table EMPLOYEE ( \
+        ID INT AUTO_INCREMENT, \
+        FIRSTNAME VARCHAR(50), \
+        LASTNAME VARCHAR(50), \
+        SALARY DECIMAL, \
+        DATEFIELD DATE, \
+        TIMEFIELD TIME, \
+        SUPERIOR_ID INT, \
+        CONSTRAINT PK_EMPLOYEE PRIMARY KEY(ID),\
+        CONSTRAINT FK_SUPERIOR FOREIGN KEY(SUPERIOR_ID) REFERENCES EMPLOYEE(ID) \
+        )\
+        """);
+    addEmployees(INSERT_INTO_EMPLOYEE);
+
+    // date_test and time_test
+    stmt.execute("drop table if exists TIME_TEST");
+    stmt.execute("drop table if exists DATE_TEST");
+    stmt.execute(CREATE_TABLE_TIMETEST);
+    stmt.execute(CREATE_TABLE_DATETEST);
+
+    // numbers
+    stmt.execute("drop table if exists NUMBER_TEST");
+    stmt.execute("create table NUMBER_TEST(col1 integer)");
+
+    // xml
+    stmt.execute("drop table if exists XML_TEST");
+    stmt.execute("create table XML_TEST(COL varchar(128))");
+
+    tursoInited = true;
   }
 
   public static void initSQLServer() throws SQLException, ClassNotFoundException {

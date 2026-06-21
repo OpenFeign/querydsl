@@ -30,6 +30,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith({TargetExtension.class, SkipForQuotedExtension.class})
@@ -81,6 +82,22 @@ public abstract class AbstractBaseTest {
     // TODO enable registration of (jdbc type, java type) -> usertype mappings
     if (target == Target.POSTGRESQL || target == Target.ORACLE) {
       configuration.register("XML_TEST", "COL", new XMLAsStringType());
+    }
+  }
+
+  // Turso (early-stage SQLite reimplementation) closes the shared connection when a statement
+  // errors, which would otherwise cascade "database connection closed" across every later test.
+  // Reconnecting per test isolates each test so we see its true pass/fail result.
+  @BeforeEach
+  public void reconnectClosedTursoConnection() throws java.sql.SQLException {
+    if (target == Target.TURSO && (connection == null || connection.isClosed())) {
+      try {
+        Connections.initTurso();
+      } catch (ClassNotFoundException e) {
+        throw new IllegalStateException(e);
+      }
+      connection = Connections.getConnection();
+      configuration = Connections.getConfiguration();
     }
   }
 

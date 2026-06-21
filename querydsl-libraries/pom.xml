@@ -124,6 +124,7 @@
                     <exclude>cubrid:cubrid-jdbc:*:*:compile</exclude>
                     <exclude>org.firebirdsql.jdbc:jaybird:*:*:compile</exclude>
                     <exclude>org.xerial:sqlite-jdbc:*:*:compile</exclude>
+                    <exclude>tech.turso:turso:*:*:compile</exclude>
                     <!-- hibernate-entitymanager is a legacy artefact and should not be used anymore -->
                     <exclude>org.hibernate:hibernate-entitymanager</exclude>
                     <!-- We favor JUL over Slf4j -->
