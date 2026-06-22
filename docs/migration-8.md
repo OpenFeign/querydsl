@@ -77,6 +77,18 @@ Replace imports of legacy packages with the new `fluentq` package structure:
 
 ---
 
+## Automated Migration with OpenRewrite
+
+For a deterministic, repeatable migration, use the published OpenRewrite recipe
+`io.github.openfeign.fluentq.rewrite.MigrateQuerydslToFluentQ` (artifact
+`{{ site.group_id }}:fluentq-rewrite`). It rewrites the Maven coordinates, the Java/Kotlin/Scala
+package imports, and the build plugin in one pass, for both Maven and Gradle projects.
+
+See the [OpenRewrite Migration guide]({{ site.baseurl }}/guides/openrewrite-recipe) for the full
+Maven and Gradle setup, the Querydsl 5 variant, and limitations.
+
+---
+
 ## Automated Migration with AI / LLM
 
 Since this migration is a mechanical rename of dependencies and package prefixes, you can easily use an AI coding assistant (like Gemini or Claude) to automate the process for you.

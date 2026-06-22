@@ -21,6 +21,7 @@
     <module>fluentq-kotlin-codegen</module>
     <module>fluentq-ksp-codegen</module>
     <module>fluentq-maven-plugin</module>
+    <module>fluentq-rewrite</module>
     <module>fluentq-sql-codegen</module>
   </modules>
 
