@@ -2,7 +2,7 @@ name: Build and Test
 
 on:
   push:
-    branches: ["master", "querydsl-*"]
+    branches: ["master", "querydsl-*", "8.x", "fluentq-*"]
     paths-ignore:
       - "**/*.md"
   pull_request:

@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: ["master", "querydsl-*"]
+    branches: ["master", "querydsl-*", "8.x"]
     tags: ["*"]
 
 concurrency:
@@ -13,7 +13,7 @@ env:
   MAVEN_OPTS: -Xmx3200m
 
 jobs:
-  # Deploy SNAPSHOT artifacts to Maven Central on every push to master / querydsl-* branches.
+  # Deploy SNAPSHOT artifacts to Maven Central on every push to master / querydsl-* / 8.x branches.
   snapshot:
     if: startsWith(github.ref, 'refs/heads/')
     runs-on: ubuntu-latest
