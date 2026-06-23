@@ -122,7 +122,7 @@
 
     <!-- JPA deps -->
     <hibernate.version>7.4.1.Final</hibernate.version>
-    <hibernate.validator.version>9.1.0.Final</hibernate.validator.version>
+    <hibernate.validator.version>9.1.1.Final</hibernate.validator.version>
     <eclipselink.version>5.0.0-B13</eclipselink.version>
     <jpa.version>3.2.0</jpa.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
