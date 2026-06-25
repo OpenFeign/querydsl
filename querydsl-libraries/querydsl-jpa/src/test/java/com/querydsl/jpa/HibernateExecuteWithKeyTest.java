@@ -266,6 +266,36 @@ public class HibernateExecuteWithKeyTest {
   }
 
   @Test
+  public void execute_multi_row_set_style_with_trailing_addRow() {
+    // The loop-friendly shape for set()-style: every iteration calls set()...addRow().
+    // After the loop, inserts/columns are both empty (set() goes into inserts which addRow()
+    // clears), but addRow() captures the column paths on its first call so executors can
+    // recover the column list. No "first row" flag, no buffer-retention trick.
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    var insert = insert(entity);
+    for (var name : new String[] {"Set1", "Set2", "Set3"}) {
+      insert.set(entity.name, name).addRow();
+    }
+    long rows = insert.execute();
+
+    assertThat(rows).isEqualTo(3L);
+  }
+
+  @Test
+  public void executeWithKeys_multi_row_set_style_with_trailing_addRow() {
+    // Same loop-friendly shape but routed through executeWithKeys to return generated keys.
+    var entity = QGeneratedKeyEntity.generatedKeyEntity;
+    var insert = insert(entity);
+    for (var name : new String[] {"KSet1", "KSet2"}) {
+      insert.set(entity.name, name).addRow();
+    }
+    var keys = insert.executeWithKeys(entity.id);
+
+    assertThat(keys).hasSize(2);
+    assertThat(keys.get(0)).isLessThan(keys.get(1));
+  }
+
+  @Test
   public void execute_without_template_uses_jpql_path() {
     // Regression for #1757: plain value INSERTs must keep using the JPQL path so
     // JPA semantics (cascade, callbacks where applicable) are preserved.

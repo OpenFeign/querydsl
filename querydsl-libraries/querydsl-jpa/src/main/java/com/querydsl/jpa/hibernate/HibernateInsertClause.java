@@ -61,6 +61,14 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
 
   private final List<List<Expression<?>>> rows = new ArrayList<>();
 
+  /**
+   * Column paths captured at the first {@link #addRow()} call. After {@code addRow()} clears the
+   * per-row {@code inserts}/{@code values} buffer, this lets executors recover the column list when
+   * the trailing iteration was also flushed (e.g. {@code for (...) { insert.set(...).addRow(); }}).
+   * Null until the first {@code addRow()}.
+   */
+  @Nullable private List<Path<?>> rowColumnPaths;
+
   private SubQueryExpression<?> subQuery;
 
   private final SessionHolder session;
@@ -152,6 +160,9 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
     }
 
     var effectiveColumns = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
+    if (effectiveColumns.isEmpty() && rowColumnPaths != null) {
+      effectiveColumns = new ArrayList<>(rowColumnPaths);
+    }
     if (effectiveColumns.isEmpty()) {
       throw new IllegalStateException("No columns specified for insert");
     }
@@ -290,6 +301,9 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
     if (values.isEmpty() && inserts.isEmpty()) {
       throw new IllegalStateException("No values to add as row");
     }
+    if (rowColumnPaths == null) {
+      rowColumnPaths = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
+    }
     rows.add(JpaInsertNativeHelper.effectiveValues(inserts, values));
     values.clear();
     inserts.clear();
@@ -329,6 +343,9 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
     }
 
     var effectiveColumns = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
+    if (effectiveColumns.isEmpty() && rowColumnPaths != null) {
+      effectiveColumns = new ArrayList<>(rowColumnPaths);
+    }
     if (effectiveColumns.isEmpty()) {
       throw new IllegalStateException("No columns specified for insert");
     }
