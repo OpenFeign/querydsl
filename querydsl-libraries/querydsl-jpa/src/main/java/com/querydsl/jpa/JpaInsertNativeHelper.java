@@ -39,6 +39,29 @@ public final class JpaInsertNativeHelper {
   private JpaInsertNativeHelper() {}
 
   /**
+   * Ensure the optional {@code querydsl-sql} module is on the classpath before taking a native SQL
+   * insert path. {@code querydsl-jpa} declares {@code querydsl-sql} as an <em>optional</em>
+   * dependency (it is only needed for the {@link JpaNativeInsertSerializer}-based paths such as
+   * {@code executeWithKey()}, {@code executeWithKeys()} and multi-row {@code execute()}), so a
+   * JPA-only consumer will not have it transitively. Without this guard the caller would hit an
+   * opaque {@link NoClassDefFoundError}; instead we fail fast with an actionable message.
+   *
+   * @throws IllegalStateException if {@code querydsl-sql} is not available
+   */
+  public static void requireSqlModule() {
+    try {
+      Class.forName("com.querydsl.sql.SQLSerializer");
+    } catch (ClassNotFoundException e) {
+      throw new IllegalStateException(
+          "This operation requires the optional querydsl-sql module, which is not on the"
+              + " classpath. Add the 'io.github.openfeign.querydsl:querydsl-sql' dependency"
+              + " (matching your querydsl-jpa version) to use executeWithKey(), executeWithKeys()"
+              + " or multi-row execute() via addRow().",
+          e);
+    }
+  }
+
+  /**
    * Resolve the effective column paths from either the {@code set()}-style inserts map or the
    * {@code columns()}-style list. The {@code set()}-style takes precedence when present.
    */
