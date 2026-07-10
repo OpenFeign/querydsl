@@ -20,52 +20,66 @@ import com.querydsl.core.types.dsl.*
 import com.querydsl.core.types.dsl.Expressions.constant
 
 /**
- * Get a negation of this boolean expression
+ * Null-safe negation that skips when this is null.
  *
- * @return !this
+ * @return NOT this, or null
  */
-operator fun Expression<Boolean>.not() : BooleanExpression {
-    return Expressions.booleanOperation(Ops.NOT, this)
+operator fun Expression<Boolean>?.not() : BooleanExpression? {
+    return if (this == null) null else Expressions.booleanOperation(Ops.NOT, this)
 }
 
 /**
- * Get an intersection of this and the given expression
+ * Null-safe intersection. A null side is skipped: both present -> AND, one present -> that side,
+ * both null -> null (dropped by where()).
  *
- * @param predicate right hand side of the union
- * @return this and right
+ * @param predicate right-hand side, or null to skip
+ * @return this AND predicate (or the present side), or null
  */
-infix fun Expression<Boolean>.and(predicate: Expression<Boolean>) : BooleanExpression {
-    return Expressions.booleanOperation(Ops.AND, this, predicate);
+infix fun Expression<Boolean>?.and(predicate: Expression<Boolean>?) : BooleanExpression? {
+    return when {
+        this != null && predicate != null -> Expressions.booleanOperation(Ops.AND, this, predicate)
+        this != null -> Expressions.asBoolean(this)
+        predicate != null -> Expressions.asBoolean(predicate)
+        else -> null
+    }
 }
 
 /**
- * Get a union of this and the given expression
+ * Null-safe union. A null side is skipped: both present -> OR, one present -> that side,
+ * both null -> null.
  *
- * @param predicate right hand side of the union
- * @return this || right
+ * @param predicate right-hand side, or null to skip
+ * @return this OR predicate (or the present side), or null
  */
-infix fun Expression<Boolean>.or(predicate: Expression<Boolean>) : BooleanExpression {
-    return Expressions.booleanOperation(Ops.OR, this, predicate);
+infix fun Expression<Boolean>?.or(predicate: Expression<Boolean>?) : BooleanExpression? {
+    return when {
+        this != null && predicate != null -> Expressions.booleanOperation(Ops.OR, this, predicate)
+        this != null -> Expressions.asBoolean(this)
+        predicate != null -> Expressions.asBoolean(predicate)
+        else -> null
+    }
 }
 
 /**
- * Get a union of this and the given expression
+ * Null-safe XOR that skips when either side is null (XOR has no meaningful one-sided form).
  *
- * @param predicate right hand side of the union
- * @return this || right
+ * @param predicate right-hand side, or null to skip
+ * @return this XOR predicate, or null
  */
-infix fun Expression<Boolean>.xor(predicate: Expression<Boolean>) : BooleanExpression {
-    return Expressions.booleanOperation(Ops.XOR, this, predicate);
+infix fun Expression<Boolean>?.xor(predicate: Expression<Boolean>?) : BooleanExpression? {
+    return if (this == null || predicate == null) null
+    else Expressions.booleanOperation(Ops.XOR, this, predicate)
 }
 
 /**
- * Get a union of this and the given expression
+ * Null-safe XNOR that skips when either side is null.
  *
- * @param predicate right hand side of the union
- * @return this || right
+ * @param predicate right-hand side, or null to skip
+ * @return this XNOR predicate, or null
  */
-infix fun Expression<Boolean>.xnor(predicate: Expression<Boolean>) : BooleanExpression {
-    return Expressions.booleanOperation(Ops.XNOR, this, predicate);
+infix fun Expression<Boolean>?.xnor(predicate: Expression<Boolean>?) : BooleanExpression? {
+    return if (this == null || predicate == null) null
+    else Expressions.booleanOperation(Ops.XNOR, this, predicate)
 }
 
 /**
