@@ -32,7 +32,7 @@ services:
       - POSTGRES_DB=querydsl
 
   oracle:
-    image: gvenzl/oracle-xe:slim-faststart
+    image: gvenzl/oracle-free:slim-faststart
     platform: linux/amd64
     ports:
       - "1521:1521"
