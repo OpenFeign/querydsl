@@ -169,6 +169,18 @@ class TypeExtractor(
             return null
         }
 
+        // Skip types that already have a well-known QueryDSL Path mapping (Instant, Boolean,
+        // LocalDate, ...): @Convert / @Type / @JdbcTypeCode only change how JPA persists the
+        // attribute to the database column - the JPQL/Path-level type is still whatever the
+        // Kotlin property declares. Treating these as "Unknown" (-> generic SimplePath) needlessly
+        // throws away query capabilities (DateTimePath.after()/before(), BooleanPath, NumberPath,
+        // ...) that querydsl-apt (the Java APT generator) keeps for the very same case.
+        // Same root cause as the enum check above (see #1410), just generalized to all of
+        // SimpleType.Mapper instead of only enums.
+        if (SimpleType.Mapper.get(type.toClassNameSimple()) != null) {
+            return null
+        }
+
         // Compare annotations by their fully-qualified name via the symbol API
         // rather than kotlinpoet-ksp's toClassName(): the latter goes through
         // KSType.declaration / isError() which traverses analysis-API lifetime
