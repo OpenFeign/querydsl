@@ -20,7 +20,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  dependency-submission:
     # Dependabot and fork PRs run with a read-only GITHUB_TOKEN, so the
     # snapshot submission would 403 and fail the check — the likely reason the
     # original workflow was flaky. Skip those; pushes to master are what keep

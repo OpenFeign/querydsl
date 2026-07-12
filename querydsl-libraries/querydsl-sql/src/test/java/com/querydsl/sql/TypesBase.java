@@ -3,6 +3,7 @@ package com.querydsl.sql;
 import static com.querydsl.core.Target.CUBRID;
 import static com.querydsl.core.Target.POSTGRESQL;
 import static com.querydsl.core.Target.TERADATA;
+import static com.querydsl.core.Target.TURSO;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.Path;
@@ -51,7 +52,7 @@ public abstract class TypesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, POSTGRESQL, TERADATA})
+  @ExcludeIn({CUBRID, POSTGRESQL, TERADATA, TURSO})
   public void dump_types() throws SQLException {
     var conn = Connections.getConnection();
     var md = conn.getMetaData();

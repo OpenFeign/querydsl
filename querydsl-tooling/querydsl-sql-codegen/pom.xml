@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-tooling</artifactId>
-    <version>7.4.0</version>
+    <version>7.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-sql-codegen</artifactId>
@@ -139,6 +139,13 @@
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
       <version>${sqlite.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>tech.turso</groupId>
+      <artifactId>turso</artifactId>
+      <version>${turso.version}</version>
       <scope>test</scope>
     </dependency>
 
