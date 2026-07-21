@@ -142,7 +142,7 @@ public final class Connections {
 
   private static Connection getOracle() throws SQLException, ClassNotFoundException {
     Class.forName("oracle.jdbc.driver.OracleDriver");
-    var url = "jdbc:oracle:thin:@localhost:1521/XEPDB1";
+    var url = "jdbc:oracle:thin:@localhost:1521/FREEPDB1";
     return DriverManager.getConnection(url, "querydsl", "querydsl");
   }
 

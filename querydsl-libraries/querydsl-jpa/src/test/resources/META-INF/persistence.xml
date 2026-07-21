@@ -302,7 +302,7 @@
             <property name="hibernate.archive.autodetection" value="class"/>
             <property name="hibernate.dialect" value="com.querydsl.jpa.support.QOracleDialect"/>
             <property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
-            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521/XEPDB1"/>
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521/FREEPDB1"/>
             <property name="hibernate.connection.username" value="querydsl"/>
             <property name="hibernate.connection.password" value="querydsl"/>
             <property name="hibernate.show_sql" value="true"/>

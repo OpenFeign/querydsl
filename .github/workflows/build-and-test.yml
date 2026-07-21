@@ -167,7 +167,7 @@ jobs:
     timeout-minutes: 40
     services:
       oracle:
-        image: gvenzl/oracle-xe:slim-faststart
+        image: gvenzl/oracle-free:slim-faststart
         env:
           ORACLE_PASSWORD: querydsl
           APP_USER: querydsl
