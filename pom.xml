@@ -335,9 +335,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <!-- ponytail: 3.12.0 auto-injects the "no fonts" javadoc flag, which the toolchain JDK 17
-               javadoc rejects (Maven runs on JDK 25). Unpin when the plugin gates it on the toolchain JDK. -->
-          <version>3.11.3</version>
+          <version>3.12.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -840,7 +838,12 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
-              <source>8</source>
+              <!-- Run javadoc on the latest JDK so newer options injected by the plugin (the
+                   "no fonts" flag) are recognised; the default toolchain is JDK 17. -->
+              <jdkToolchain>
+                <version>${latest.java.version}</version>
+              </jdkToolchain>
+              <source>${main.java.version}</source>
               <excludePackageNames>com.querydsl.examples.kotlin.*</excludePackageNames>
               <outputDirectory>${project.build.directory}/dist/apidocs</outputDirectory>
               <reportOutputDirectory>${project.build.directory}/dist/apidocs</reportOutputDirectory>
