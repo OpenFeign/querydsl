@@ -515,6 +515,74 @@ class KspProcessorIntegrationTest {
     }
 
     @Test
+    fun convertAnnotatedWellKnownType_stillRendersSpecializedPath() {
+        // Regression: TypeExtractor.userType() used to treat *every* @Convert /
+        // @Type / @JdbcTypeCode annotated property as an opaque "Unknown" type,
+        // rendering it as a generic SimplePath - even when the declared Kotlin
+        // type (Instant, Boolean, ...) already has a well-known, specialized
+        // QueryDSL Path mapping in SimpleType.Mapper. @Convert only changes how
+        // JPA persists the attribute to the database column; the JPQL/Path-level
+        // type is still whatever the Kotlin property declares. querydsl-apt (the
+        // Java APT generator) already keeps the specialized Path for this case -
+        // querydsl-ksp-codegen should too.
+        val converter = SourceFile.kotlin(
+            "Converters.kt",
+            """
+            package test
+            import jakarta.persistence.AttributeConverter
+            import java.time.Instant
+
+            class InstantToStringConverter : AttributeConverter<Instant, String> {
+                override fun convertToDatabaseColumn(attribute: Instant?): String? = attribute?.toString()
+                override fun convertToEntityAttribute(dbData: String?): Instant? = dbData?.let(Instant::parse)
+            }
+
+            class BooleanToStringConverter : AttributeConverter<Boolean, String> {
+                override fun convertToDatabaseColumn(attribute: Boolean?): String? = if (attribute == true) "Y" else "N"
+                override fun convertToEntityAttribute(dbData: String?): Boolean? = dbData == "Y"
+            }
+            """.trimIndent()
+        )
+        val entity = SourceFile.kotlin(
+            "Alarm.kt",
+            """
+            package test
+            import jakarta.persistence.Convert
+            import jakarta.persistence.Entity
+            import jakarta.persistence.Id
+            import java.time.Instant
+
+            @Entity
+            class Alarm {
+                @Id var id: Long = 0
+
+                @Convert(converter = InstantToStringConverter::class)
+                var timeCreated: Instant? = null
+
+                @Convert(converter = BooleanToStringConverter::class)
+                var isActive: Boolean? = null
+            }
+            """.trimIndent()
+        )
+
+        val (result, generatedDir) = compile(converter, entity)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+
+        val qAlarm = generatedDir.findGenerated("QAlarm.kt").readText()
+        assertThat(qAlarm)
+            .contains("class QAlarm")
+            .contains("DateTimePath<Instant>")
+            .contains("createDateTime(\"timeCreated\"")
+            .contains("BooleanPath")
+            .contains("createBoolean(\"isActive\")")
+            .doesNotContain("SimplePath<Instant")
+            .doesNotContain("SimplePath<Boolean")
+    }
+
+
+    @Test
     fun referencedClassWithSameSimpleNameAnnotation_isNotMistakenForJpaEntity() {
         // Regression: QueryModelType.autodetect used to compare KSAnnotation by
         // simpleName only. That's safe for *discovered* symbols (KSP already
