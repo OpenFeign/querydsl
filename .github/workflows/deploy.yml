@@ -26,7 +26,13 @@ jobs:
         uses: ./.github/actions/setup-build
 
       - name: Import GPG key
-        run: echo -e "$GPG_KEY" | base64 -d | gpg --batch --yes --import
+        # Accept the secret either base64-encoded or as a raw ASCII-armored key.
+        run: |
+          if [[ "$GPG_KEY" == *"BEGIN PGP"* ]]; then
+            printf '%s\n' "$GPG_KEY" | gpg --batch --yes --import
+          else
+            printf '%s\n' "$GPG_KEY" | base64 -d | gpg --batch --yes --import
+          fi
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
 
@@ -52,7 +58,13 @@ jobs:
         uses: ./.github/actions/setup-build
 
       - name: Import GPG key
-        run: echo -e "$GPG_KEY" | base64 -d | gpg --batch --yes --import
+        # Accept the secret either base64-encoded or as a raw ASCII-armored key.
+        run: |
+          if [[ "$GPG_KEY" == *"BEGIN PGP"* ]]; then
+            printf '%s\n' "$GPG_KEY" | gpg --batch --yes --import
+          else
+            printf '%s\n' "$GPG_KEY" | base64 -d | gpg --batch --yes --import
+          fi
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
 
