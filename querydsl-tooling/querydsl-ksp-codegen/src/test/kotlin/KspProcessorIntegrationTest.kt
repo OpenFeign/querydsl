@@ -153,6 +153,103 @@ class KspProcessorIntegrationTest {
     }
 
     @Test
+    fun queryEntityWithQuerySupertypeBase_generatesQClasses() {
+        // Regression: QueryModelType.autodetect() only matched jakarta
+        // @MappedSuperclass for SUPERCLASS models. A @QueryEntity whose base
+        // is @QuerySupertype failed with "Unable to resolve type of entity".
+        val base = SourceFile.kotlin(
+            "AuditableEntity.kt",
+            """
+            package test
+
+            import com.querydsl.core.annotations.QuerySupertype
+            import java.util.UUID
+
+            @QuerySupertype
+            abstract class AuditableEntity(
+                open var id: UUID? = null,
+            )
+            """.trimIndent()
+        )
+        val entity = SourceFile.kotlin(
+            "GroupEntity.kt",
+            """
+            package test
+
+            import com.querydsl.core.annotations.QueryEntity
+            import java.util.UUID
+
+            @QueryEntity
+            class GroupEntity(
+                id: UUID? = null,
+                val name: String = "",
+            ) : AuditableEntity(id)
+            """.trimIndent()
+        )
+
+        val (result, generatedDir) = compile(base, entity)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+
+        val qGroup = generatedDir.findGenerated("QGroupEntity.kt").readText()
+        assertThat(qGroup)
+            .contains("class QGroupEntity")
+            .contains("createString(\"name\")")
+            .contains("_super: QAuditableEntity")
+        assertThat(generatedDir.findGenerated("QAuditableEntity.kt").readText())
+            .contains("createComparable(\"id\"")
+    }
+
+    @Test
+    fun queryEntityWithQueryEmbeddable_generatesQClasses() {
+        val embeddable = SourceFile.kotlin(
+            "Address.kt",
+            """
+            package test
+
+            import com.querydsl.core.annotations.QueryEmbeddable
+
+            @QueryEmbeddable
+            data class Address(
+                val street: String = "",
+                val city: String = "",
+            )
+            """.trimIndent()
+        )
+        val entity = SourceFile.kotlin(
+            "Person.kt",
+            """
+            package test
+
+            import com.querydsl.core.annotations.QueryEmbedded
+            import com.querydsl.core.annotations.QueryEntity
+            import java.util.UUID
+
+            @QueryEntity
+            class Person(
+                val id: UUID? = null,
+                val name: String = "",
+                @QueryEmbedded
+                val address: Address = Address(),
+            )
+            """.trimIndent()
+        )
+
+        val (result, generatedDir) = compile(embeddable, entity)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+
+        assertThat(generatedDir.findGenerated("QPerson.kt").readText())
+            .contains("class QPerson")
+            .contains("createString(\"name\")")
+        assertThat(generatedDir.findGenerated("QAddress.kt").readText())
+            .contains("createString(\"street\")")
+            .contains("createString(\"city\")")
+    }
+
+    @Test
     fun javaEntity_extendsJavaMappedSuperclass() {
         val parent = SourceFile.java(
             "Animal.java",
