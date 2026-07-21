@@ -335,7 +335,9 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.12.0</version>
+          <!-- ponytail: 3.12.0 auto-injects the "no fonts" javadoc flag, which the toolchain JDK 17
+               javadoc rejects (Maven runs on JDK 25). Unpin when the plugin gates it on the toolchain JDK. -->
+          <version>3.11.3</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
