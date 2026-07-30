@@ -109,7 +109,7 @@
     <h2.version>2.4.240</h2.version>
     <postgresql.version>42.7.13</postgresql.version>
     <oracle.version>23.26.3.0.0</oracle.version>
-    <mysql.version>9.7.0</mysql.version>
+    <mysql.version>26.7.0</mysql.version>
     <mssql.version>13.4.0.jre11</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.53.2.1</sqlite.version>
@@ -1064,18 +1064,18 @@
           <plugin>
             <groupId>org.openrewrite.maven</groupId>
             <artifactId>rewrite-maven-plugin</artifactId>
-            <version>6.44.0</version>
+            <version>6.45.0</version>
 
             <dependencies>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-testing-frameworks</artifactId>
-                <version>3.42.1</version>
+                <version>3.43.0</version>
               </dependency>
               <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-migrate-java</artifactId>
-                <version>3.40.0</version>
+                <version>3.41.0</version>
               </dependency>
             </dependencies>
 
