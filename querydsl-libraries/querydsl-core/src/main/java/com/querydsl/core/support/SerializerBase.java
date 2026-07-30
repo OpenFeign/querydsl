@@ -27,11 +27,11 @@ import com.querydsl.core.types.Template;
 import com.querydsl.core.types.TemplateExpression;
 import com.querydsl.core.types.Templates;
 import com.querydsl.core.types.Visitor;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.IdentityHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,7 +64,7 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
 
   private String anonParamPrefix = "_";
 
-  protected final List<Object> constants = new LinkedList<>();
+  protected final List<Object> constants = new ArrayList<>();
 
   protected final Map<Object, String> constantToLabel = new IdentityHashMap<>();
 
