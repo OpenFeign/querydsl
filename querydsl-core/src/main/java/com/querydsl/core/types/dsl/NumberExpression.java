@@ -762,9 +762,14 @@ public abstract class NumberExpression<T extends Number & Comparable<?>>
    *
    * <p>Get the sum of this expression (aggregation)
    *
+   * <p>Deprecated: use one of the explicit typed variants ({@link #sumLong()},
+   * {@link #sumDouble()}, {@link #sumBigDecimal()}, {@link #sumBigInteger()}).
+   * This method will be removed in Querydsl 6.
+   *
    * @return sum(this)
    */
   @SuppressWarnings("unchecked")
+  @Deprecated
   public NumberExpression<T> sum() {
     return sum((Class<T>) getType());
   }
