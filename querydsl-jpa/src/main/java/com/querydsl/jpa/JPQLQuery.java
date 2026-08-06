@@ -14,10 +14,9 @@
 package com.querydsl.jpa;
 
 /**
- * @deprecated Use {@link JPQLSubQuery} instead. This interface has been
- * renamed and will be removed in Querydsl 6. Although Querydsl 5 APIs may
- * still return {@code JPQLQuery} for compatibility, new code should declare
- * variables, parameters, and return types as {@link JPQLSubQuery}.
+ * @deprecated Use {@link JPQLSubQuery} instead. This interface has been renamed and will be removed
+ *     in Querydsl 6. Although Querydsl 5 APIs may still return {@code JPQLQuery} for compatibility,
+ *     new code should declare variables, parameters, and return types as {@link JPQLSubQuery}.
  */
 @Deprecated
 public interface JPQLQuery<T> extends JPQLSubQuery<T> {}
