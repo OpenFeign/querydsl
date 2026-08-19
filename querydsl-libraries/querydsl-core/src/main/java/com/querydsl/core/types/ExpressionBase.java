@@ -30,7 +30,7 @@ public abstract class ExpressionBase<T> implements Expression<T> {
 
   @Nullable private transient volatile String toString;
 
-  @Nullable private transient volatile Integer hashCode;
+  private transient volatile int hashCode;
 
   public ExpressionBase(Class<? extends T> type) {
     this.type = type;
@@ -43,10 +43,12 @@ public abstract class ExpressionBase<T> implements Expression<T> {
 
   @Override
   public final int hashCode() {
-    if (hashCode == null) {
-      hashCode = accept(HashCodeVisitor.DEFAULT, null);
+    var hash = hashCode;
+    if (hash == 0) {
+      hash = accept(HashCodeVisitor.DEFAULT, null);
+      hashCode = hash;
     }
-    return hashCode;
+    return hash;
   }
 
   @Override
