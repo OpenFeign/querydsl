@@ -88,6 +88,40 @@ jobs:
         shell: bash
         run: ./mvnw -ntp -B verify -Pno-databases -Dtoolchain.skip=true
 
+  # Experimental canary, never blocking. Runs the database-independent suite on a
+  # JDK 28 early-access build with preview features enabled at runtime.
+  #
+  # JEP 401 (Value Objects) migrates the primitive wrappers and LocalDate to value
+  # classes under --enable-preview, which makes == and identityHashCode state
+  # based for them. Querydsl keys SerializerBase.constantToLabel and the alias
+  # proxy cache by identity on values supplied by the caller, so this job is where
+  # that change should surface first rather than in a user's application.
+  #
+  # Deliberately excluded from the aggregate `build` check and marked
+  # continue-on-error: a broken EA build, a withdrawn EA release or a genuine
+  # preview regression must never block a PR.
+  jdk28-preview:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 28 early access
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "28-ea"
+          cache: "maven"
+      - name: Report JDK version
+        run: java -version
+      - name: Test with preview features enabled
+        run: >
+          ./mvnw -ntp -B verify -Pno-databases
+          -Dtoolchain.skip=true
+          -Deasyjacoco.skip=true
+          -DargLine=--enable-preview
+
   embedded:
     if: ${{ !github.event.pull_request.draft }}
     needs: compile
