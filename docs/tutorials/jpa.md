@@ -32,25 +32,30 @@ during compilation:
 
 ```xml
 <plugin>
+  <groupId>org.apache.maven.plugins</groupId>
   <artifactId>maven-compiler-plugin</artifactId>
+  <version>3.15.0</version>
   <configuration>
-    <generatedSourcesDirectory>target/generated-sources/java</generatedSourcesDirectory>
+    <proc>full</proc>
+    <generatedSourcesDirectory>${project.build.directory}/generated-sources/java</generatedSourcesDirectory>
+    <annotationProcessorPaths>
+      <path>
+        <groupId>{{ site.group_id }}</groupId>
+        <artifactId>querydsl-apt</artifactId>
+        <version>{{ site.querydsl_version }}</version>
+        <classifier>jpa</classifier>
+      </path>
+    </annotationProcessorPaths>
   </configuration>
-  <dependencies>
-    <dependency>
-      <groupId>{{ site.group_id }}</groupId>
-      <artifactId>querydsl-apt</artifactId>
-      <version>{{ site.querydsl_version }}</version>
-      <classifier>jpa</classifier>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.persistence</groupId>
-      <artifactId>jakarta.persistence-api</artifactId>
-      <version>3.1.0</version>
-    </dependency>
-  </dependencies>
 </plugin>
 ```
+
+> **Note on JDK 23+**
+> `<proc>full</proc>` is required. Implicit annotation processing — where
+> `javac` auto-discovers processors on the compile classpath — was deprecated
+> in JDK 21 and disabled by default in JDK 23. Without it the build succeeds
+> but silently generates no query types. `annotationProcessorPaths` also keeps
+> the processor off your project's compile and runtime classpath.
 
 The `JPAAnnotationProcessor` finds domain types annotated with the
 `jakarta.persistence.Entity` annotation and generates query types for them.

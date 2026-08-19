@@ -30,23 +30,26 @@ annotation processor with `HibernateAnnotationProcessor`:
 
 ```xml
 <plugin>
+  <groupId>org.apache.maven.plugins</groupId>
   <artifactId>maven-compiler-plugin</artifactId>
+  <version>3.15.0</version>
   <configuration>
-    <generatedSourcesDirectory>target/generated-sources/java</generatedSourcesDirectory>
+    <proc>full</proc>
+    <generatedSourcesDirectory>${project.build.directory}/generated-sources/java</generatedSourcesDirectory>
+    <annotationProcessorPaths>
+      <path>
+        <groupId>{{ site.group_id }}</groupId>
+        <artifactId>querydsl-apt</artifactId>
+        <version>{{ site.querydsl_version }}</version>
+        <classifier>hibernate</classifier>
+      </path>
+      <path>
+        <groupId>org.hibernate.orm</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>7.4.5.Final</version>
+      </path>
+    </annotationProcessorPaths>
   </configuration>
-  <dependencies>
-    <dependency>
-      <groupId>{{ site.group_id }}</groupId>
-      <artifactId>querydsl-apt</artifactId>
-      <version>{{ site.querydsl_version }}</version>
-      <classifier>jpa</classifier>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.persistence</groupId>
-      <artifactId>jakarta.persistence-api</artifactId>
-      <version>3.1.0</version>
-    </dependency>
-  </dependencies>
 </plugin>
 ```
 
