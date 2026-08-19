@@ -13,12 +13,17 @@
  */
 package com.querydsl.jpa;
 
+import com.querydsl.core.types.Constant;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ParamExpression;
 import com.querydsl.core.types.ParamNotSetException;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.Param;
+import jakarta.persistence.Convert;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import java.lang.reflect.AnnotatedElement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -90,6 +95,97 @@ public final class JpaInsertNativeHelper {
       } else {
         result.add(Expressions.constant(v));
       }
+    }
+    return result;
+  }
+
+  /**
+   * Apply JPA {@code @Enumerated} conversion to any {@link Constant} whose value is an {@link Enum}
+   * and whose target column carries {@code @Enumerated} on its annotated element.
+   *
+   * <p>Because the native SQL path binds values directly via {@link
+   * PreparedStatement#setObject(int, Object)} instead of going through JPA, enum values would
+   * otherwise be handed to the JDBC driver as-is, producing driver-dependent behavior. This helper
+   * normalizes them according to the entity's mapping annotations so the same rules Hibernate would
+   * apply on the JPQL path are honored on the native path too.
+   *
+   * <ul>
+   *   <li>{@code @Enumerated(EnumType.STRING)} — bind {@code enum.name()}
+   *   <li>{@code @Enumerated(EnumType.ORDINAL)} — bind {@code enum.ordinal()}
+   *   <li>Enum field with no {@code @Enumerated} annotation — bind {@code enum.ordinal()} (JPA
+   *       specification default)
+   *   <li>{@code @Convert(converter = ...)} on an enum field — throw {@link IllegalStateException}
+   *       with an actionable message; custom {@code AttributeConverter} instances cannot be honored
+   *       on a native path that bypasses JPA
+   * </ul>
+   *
+   * <p>Non-enum values, expression templates that do not resolve to a bare {@link Enum}, and
+   * columns whose target does not expose an annotated element are returned unchanged.
+   *
+   * @param columns column paths, positionally paired with {@code values}
+   * @param values value expressions to normalize
+   * @return a new list of expressions with enum conversion applied where appropriate
+   * @throws IllegalStateException if an enum field is mapped with {@code @Convert}
+   */
+  public static List<Expression<?>> convertEnumValues(
+      List<Path<?>> columns, List<Expression<?>> values) {
+    if (columns.size() != values.size()) {
+      return values;
+    }
+    var result = new ArrayList<Expression<?>>(values.size());
+    for (var i = 0; i < values.size(); i++) {
+      result.add(convertEnumValue(columns.get(i), values.get(i)));
+    }
+    return result;
+  }
+
+  private static Expression<?> convertEnumValue(Path<?> column, Expression<?> value) {
+    if (!(value instanceof Constant<?> constant)) {
+      return value;
+    }
+    var raw = constant.getConstant();
+    if (!(raw instanceof Enum<?> enumValue)) {
+      return value;
+    }
+    var annotated = column.getAnnotatedElement();
+    if (annotated == null) {
+      return value;
+    }
+    if (annotated.isAnnotationPresent(Convert.class)) {
+      throw new IllegalStateException(
+          "Column '"
+              + column
+              + "' is mapped with @Convert on an enum field. Custom AttributeConverters cannot be"
+              + " honored on the native SQL INSERT path (executeWithKey/executeWithKeys/multi-row"
+              + " execute) because it bypasses the JPA layer. Convert the value at the call site,"
+              + " e.g. .set(path, myConverter.convertToDatabaseColumn(value)).");
+    }
+    var enumType = resolveEnumType(annotated);
+    return switch (enumType) {
+      case STRING -> Expressions.constant(enumValue.name());
+      case ORDINAL -> Expressions.constant(enumValue.ordinal());
+    };
+  }
+
+  private static EnumType resolveEnumType(AnnotatedElement annotated) {
+    if (annotated.isAnnotationPresent(Enumerated.class)) {
+      return annotated.getAnnotation(Enumerated.class).value();
+    }
+    return EnumType.ORDINAL;
+  }
+
+  /**
+   * Apply {@link #convertEnumValues(List, List)} to every row of a multi-row INSERT.
+   *
+   * @param columns column paths shared by every row
+   * @param rows rows of value expressions to normalize
+   * @return a new list of rows with enum conversion applied
+   */
+  public static List<List<Expression<?>>> convertEnumValuesForRows(
+      List<Path<?>> columns, List<List<Expression<?>>> rows) {
+    var result = new ArrayList<List<Expression<?>>>(rows.size());
+    for (var row : rows) {
+      result.add(convertEnumValues(columns, row));
     }
     return result;
   }
