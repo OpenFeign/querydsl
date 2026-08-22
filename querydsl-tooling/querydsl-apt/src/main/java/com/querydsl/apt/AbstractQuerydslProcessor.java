@@ -716,9 +716,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
       message.append("\nTo avoid deadlock, consider:\n");
       message.append("  (1) Removing the bidirectional association on one side.\n");
       message.append(
-          "  (2) Pre-initializing Q-classes in a single thread before handling requests (e.g. via @PostConstruct).\n");
-      message.append(
-          "  (3) Using 'new QClass(\"alias\")' instead of static field access in your repositories.");
+          "  (2) Pre-initializing Q-classes in a single thread before handling requests (e.g. via @PostConstruct).");
 
       processingEnv.getMessager().printMessage(Kind.WARNING, message.toString());
     }
