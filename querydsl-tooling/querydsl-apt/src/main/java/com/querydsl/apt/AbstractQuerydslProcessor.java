@@ -691,68 +691,28 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private void detectCircularQClassReferences() {
-    Map<String, EntityType> typeMap = context.entityTypes;
+    List<List<String>> detectedCycles = QClassCycleDetector.detect(context.entityTypes);
+    if (detectedCycles.isEmpty()) return;
 
-    List<String> detectedCycles = new ArrayList<>();
-    Set<String> globalVisited = new HashSet<>();
-
-    for (EntityType start : typeMap.values()) {
-      if (globalVisited.contains(start.getFullName())) continue;
-
-      Deque<String> path = new ArrayDeque<>();
-      Set<String> inStack = new HashSet<>();
-      dfs(start, typeMap, path, inStack, globalVisited, detectedCycles);
+    var message = new StringBuilder();
+    message.append("[QueryDSL] Circular Q-class references detected.\n");
+    message.append(
+        "This may cause class initialization deadlock in multi-threaded environments.\n\n");
+    message.append("Detected cycles:\n");
+    for (int i = 0; i < detectedCycles.size(); i++) {
+      message
+          .append("  (")
+          .append(i + 1)
+          .append(") ")
+          .append(String.join(" → ", detectedCycles.get(i)))
+          .append("\n");
     }
+    message.append("\nTo avoid deadlock, consider:\n");
+    message.append("  (1) Removing the bidirectional association on one side.\n");
+    message.append(
+        "  (2) Pre-initializing Q-classes in a single thread before handling requests (e.g. via @PostConstruct).");
 
-    if (!detectedCycles.isEmpty()) {
-      var message = new StringBuilder();
-      message.append("[QueryDSL] Circular Q-class references detected.\n");
-      message.append(
-          "This may cause class initialization deadlock in multi-threaded environments.\n\n");
-      message.append("Detected cycles:\n");
-      for (int i = 0; i < detectedCycles.size(); i++) {
-        message.append("  (").append(i + 1).append(") ").append(detectedCycles.get(i)).append("\n");
-      }
-      message.append("\nTo avoid deadlock, consider:\n");
-      message.append("  (1) Removing the bidirectional association on one side.\n");
-      message.append(
-          "  (2) Pre-initializing Q-classes in a single thread before handling requests (e.g. via @PostConstruct).");
-
-      processingEnv.getMessager().printMessage(Kind.WARNING, message.toString());
-    }
-  }
-
-  private void dfs(
-      EntityType current,
-      Map<String, EntityType> typeMap,
-      Deque<String> path,
-      Set<String> inStack,
-      Set<String> globalVisited,
-      List<String> detectedCycles) {
-
-    String currentName = current.getFullName();
-    globalVisited.add(currentName);
-    inStack.add(currentName);
-    path.addLast(current.getSimpleName());
-
-    for (Property property : current.getProperties()) {
-      String neighborName = property.getType().getFullName();
-      if (neighborName.equals(currentName)) continue;
-
-      EntityType neighbor = typeMap.get(neighborName);
-      if (neighbor == null) continue;
-
-      if (inStack.contains(neighborName)) {
-        List<String> cycle = new ArrayList<>(path);
-        cycle.add(neighbor.getSimpleName());
-        detectedCycles.add(String.join(" → ", cycle));
-      } else if (!globalVisited.contains(neighborName)) {
-        dfs(neighbor, typeMap, path, inStack, globalVisited, detectedCycles);
-      }
-    }
-
-    path.removeLast();
-    inStack.remove(currentName);
+    processingEnv.getMessager().printMessage(Kind.WARNING, message.toString());
   }
 
   protected String getClassName(EntityType model) {
