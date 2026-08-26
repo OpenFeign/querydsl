@@ -16,6 +16,7 @@ package com.querydsl.apt;
 import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.Property;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,9 @@ final class QClassCycleDetector {
 
   static List<List<String>> detect(Map<String, EntityType> typeMap) {
     var detector = new QClassCycleDetector(typeMap);
-    for (EntityType start : typeMap.values()) {
+    var starts = new ArrayList<>(typeMap.values());
+    starts.sort(Comparator.comparing(EntityType::getFullName));
+    for (EntityType start : starts) {
       if (!detector.globalVisited.contains(start.getFullName())) {
         detector.visit(start);
       }

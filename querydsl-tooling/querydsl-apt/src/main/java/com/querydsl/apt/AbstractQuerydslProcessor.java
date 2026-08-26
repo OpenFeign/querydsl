@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -212,13 +213,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     // extend entity types
     typeFactory.extendTypes();
 
-    if (!context.entityTypes.isEmpty()) {
-      var serializerConfig =
-          conf.getSerializerConfig(context.entityTypes.values().iterator().next());
-      if (serializerConfig.createDefaultVariable()) {
-        detectCircularQClassReferences();
-      }
-    }
+    detectCircularQClassReferences();
 
     context.clean();
   }
@@ -691,7 +686,13 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private void detectCircularQClassReferences() {
-    List<List<String>> detectedCycles = QClassCycleDetector.detect(context.entityTypes);
+    Map<String, EntityType> entitiesWithDefaultVariable = new HashMap<>();
+    for (var entry : context.entityTypes.entrySet()) {
+      if (conf.getSerializerConfig(entry.getValue()).createDefaultVariable()) {
+        entitiesWithDefaultVariable.put(entry.getKey(), entry.getValue());
+      }
+    }
+    List<List<String>> detectedCycles = QClassCycleDetector.detect(entitiesWithDefaultVariable);
     if (detectedCycles.isEmpty()) return;
 
     var message = new StringBuilder();

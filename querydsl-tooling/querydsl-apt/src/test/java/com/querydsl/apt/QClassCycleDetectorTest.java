@@ -95,6 +95,28 @@ class QClassCycleDetectorTest {
   }
 
   @Test
+  void multipleDisjointCycles_reportedInDeterministicOrder() {
+    var a = entity("A");
+    var b = entity("B");
+    var c = entity("C");
+    var d = entity("D");
+    reference(a, "b", b);
+    reference(b, "a", a);
+    reference(c, "d", d);
+    reference(d, "c", c);
+
+    Map<String, EntityType> shuffled = new LinkedHashMap<>();
+    shuffled.put(d.getFullName(), d);
+    shuffled.put(b.getFullName(), b);
+    shuffled.put(c.getFullName(), c);
+    shuffled.put(a.getFullName(), a);
+
+    var cycles = QClassCycleDetector.detect(shuffled);
+
+    assertThat(cycles).containsExactly(List.of("A", "B", "A"), List.of("C", "D", "C"));
+  }
+
+  @Test
   void cycleReachedFromOutside_reportsOnlyCycleNotEntryPath() {
     var a = entity("A");
     var b = entity("B");
