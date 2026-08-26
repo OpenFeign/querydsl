@@ -695,27 +695,25 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     List<List<String>> detectedCycles = QClassCycleDetector.detect(entitiesWithDefaultVariable);
     if (detectedCycles.isEmpty()) return;
 
-    var message = new StringBuilder();
-    message.append("[QueryDSL] Circular Q-class references detected.\n");
-    message.append(
-        "This may cause class initialization deadlock in multi-threaded environments.\n\n");
-    message.append("Detected cycles:\n");
+    var cyclesList = new StringBuilder();
     for (int i = 0; i < detectedCycles.size(); i++) {
-      message
-          .append("  (")
-          .append(i + 1)
-          .append(") ")
-          .append(String.join(" → ", detectedCycles.get(i)))
-          .append("\n");
+      cyclesList.append("  (%d) %s\n".formatted(i + 1, String.join(" → ", detectedCycles.get(i))));
     }
-    message.append("\nTo avoid deadlock, consider:\n");
-    message.append("  (1) Removing the bidirectional association on one side.\n");
-    message.append(
-        "  (2) Pre-initializing Q-classes in a single thread before handling requests (e.g. via @PostConstruct).\n");
-    message.append(
-        "  (3) Generating Q-classes without the static default variable (-Aquerydsl.createDefaultVariable=false) and using 'new QClass(\"alias\")' instead.");
+    var message =
+        """
+        [QueryDSL] Circular Q-class references detected.
+        This may cause class initialization deadlock in multi-threaded environments.
 
-    processingEnv.getMessager().printMessage(Kind.WARNING, message.toString());
+        Detected cycles:
+        %s
+        To avoid deadlock, consider:
+          (1) Removing the bidirectional association on one side.
+          (2) Pre-initializing Q-classes in a single thread before handling requests (e.g. via @PostConstruct).
+          (3) Generating Q-classes without the static default variable (-Aquerydsl.createDefaultVariable=false) and using 'new QClass("alias")' instead.\
+        """
+            .formatted(cyclesList);
+
+    processingEnv.getMessager().printMessage(Kind.WARNING, message);
   }
 
   protected String getClassName(EntityType model) {
