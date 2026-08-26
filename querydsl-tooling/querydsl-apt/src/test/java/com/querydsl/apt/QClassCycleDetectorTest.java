@@ -94,6 +94,20 @@ class QClassCycleDetectorTest {
     assertThat(cycles).containsExactly(List.of("A", "B", "C", "A"));
   }
 
+  @Test
+  void cycleReachedFromOutside_reportsOnlyCycleNotEntryPath() {
+    var a = entity("A");
+    var b = entity("B");
+    var c = entity("C");
+    reference(a, "b", b);
+    reference(b, "c", c);
+    reference(c, "b", b);
+
+    var cycles = QClassCycleDetector.detect(map(a, b, c));
+
+    assertThat(cycles).containsExactly(List.of("B", "C", "B"));
+  }
+
   private static EntityType entity(String simpleName) {
     return new EntityType(simpleType(simpleName));
   }

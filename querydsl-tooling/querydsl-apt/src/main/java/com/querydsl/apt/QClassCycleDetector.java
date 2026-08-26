@@ -15,9 +15,7 @@ package com.querydsl.apt;
 
 import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.Property;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +24,7 @@ import java.util.Set;
 final class QClassCycleDetector {
 
   private final Map<String, EntityType> typeMap;
-  private final Deque<String> path = new ArrayDeque<>();
+  private final List<EntityType> path = new ArrayList<>();
   private final Set<String> inStack = new HashSet<>();
   private final Set<String> globalVisited = new HashSet<>();
   private final List<List<String>> cycles = new ArrayList<>();
@@ -49,7 +47,7 @@ final class QClassCycleDetector {
     String currentName = current.getFullName();
     globalVisited.add(currentName);
     inStack.add(currentName);
-    path.addLast(current.getSimpleName());
+    path.add(current);
 
     for (Property property : current.getProperties()) {
       String neighborName = property.getType().getFullName();
@@ -59,15 +57,24 @@ final class QClassCycleDetector {
       if (neighbor == null) continue;
 
       if (inStack.contains(neighborName)) {
-        List<String> cycle = new ArrayList<>(path);
-        cycle.add(neighbor.getSimpleName());
-        cycles.add(cycle);
+        cycles.add(sliceCycleFrom(neighbor));
       } else if (!globalVisited.contains(neighborName)) {
         visit(neighbor);
       }
     }
 
-    path.removeLast();
+    path.remove(path.size() - 1);
     inStack.remove(currentName);
+  }
+
+  private List<String> sliceCycleFrom(EntityType entry) {
+    int start = path.indexOf(entry);
+
+    List<String> cycle = new ArrayList<>(path.size() - start + 1);
+    for (int i = start; i < path.size(); i++) {
+      cycle.add(path.get(i).getSimpleName());
+    }
+    cycle.add(path.get(start).getSimpleName());
+    return cycle;
   }
 }
