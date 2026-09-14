@@ -13,11 +13,34 @@
  */
 package com.querydsl.kotlin.codegen
 
-import javax.script.ScriptEngineManager
+import org.jetbrains.kotlin.cli.common.ExitCode
+import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
+import kotlin.io.path.createTempDirectory
+import kotlin.io.path.writeText
 
 object CompileUtils {
     fun assertCompiles(name: String, code: String) {
-        val engine = ScriptEngineManager().getEngineByExtension("kts")!!
-        engine.eval(code)
+        val workDir = createTempDirectory("querydsl-kotlin-codegen")
+        try {
+            val source = workDir.resolve("$name.kt")
+            source.writeText(code)
+            val messages = ByteArrayOutputStream()
+            val exitCode = K2JVMCompiler().exec(
+                PrintStream(messages),
+                source.toString(),
+                "-d", workDir.resolve("classes").toString(),
+                "-classpath", System.getProperty("java.class.path"),
+                "-no-stdlib",
+                "-no-reflect",
+                "-nowarn",
+            )
+            if (exitCode != ExitCode.OK) {
+                throw AssertionError("$name did not compile:\n$messages\n$code")
+            }
+        } finally {
+            workDir.toFile().deleteRecursively()
+        }
     }
 }
