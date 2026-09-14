@@ -13,6 +13,7 @@
  */
 package com.querydsl.core;
 
+import com.querydsl.core.annotations.Immutable;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.Range;
  *
  * @author tiwe
  */
+@Immutable
 public final class QueryModifiers implements Serializable {
 
   @Serial private static final long serialVersionUID = 2934344588433680339L;

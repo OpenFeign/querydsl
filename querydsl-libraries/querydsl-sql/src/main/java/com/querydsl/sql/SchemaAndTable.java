@@ -13,10 +13,12 @@
  */
 package com.querydsl.sql;
 
+import com.querydsl.core.annotations.Immutable;
 import java.io.Serializable;
 import java.util.Objects;
 
 /** {@code SchemaAndTable} combines schema and table into a single value type */
+@Immutable
 public class SchemaAndTable implements Serializable {
 
   private final String schema, table;
