@@ -1,0 +1,17 @@
+name: "Restore build artifacts"
+description: "Download and unpack the Querydsl SNAPSHOT jars produced by the compile job"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+
+    - name: Unpack build artifacts into the local Maven repository
+      shell: bash
+      run: |
+        mkdir -p ~/.m2/repository
+        tar -xzf "$GITHUB_WORKSPACE/build-artifacts.tgz" -C ~/.m2/repository
+        rm -f "$GITHUB_WORKSPACE/build-artifacts.tgz"
