@@ -134,7 +134,7 @@
     <codegen.version>0.6.8</codegen.version>
     <byte-buddy.version>1.18.13</byte-buddy.version>
     <slf4j.version>2.0.19</slf4j.version>
-    <surefire.version>3.5.6</surefire.version>
+    <surefire.version>3.6.0</surefire.version>
     <animal-sniffer.version>1.27</animal-sniffer.version>
     <h2gis.version>2.2.5</h2gis.version>
     <morphia.version>2.5.3</morphia.version>
@@ -367,7 +367,8 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${surefire.version}</version>
           <configuration>
-            <argLine>${jacocoArgLine} --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.naming/javax.naming=ALL-UNNAMED</argLine>
+            <!-- silences the JEP 451 dynamic-agent warning, whose printing crashes agent attach under surefire 3.6.0 -->
+            <argLine>${jacocoArgLine} -XX:+EnableDynamicAgentLoading --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.naming/javax.naming=ALL-UNNAMED</argLine>
             <environmentVariables>
               <TZ>UTC</TZ>
             </environmentVariables>
