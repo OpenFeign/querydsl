@@ -41,6 +41,22 @@ class AliasFactory {
 
   private final TypeSystem typeSystem;
 
+  /**
+   * Proxies cached per alias type, keyed by the expression they wrap.
+   *
+   * <p>Two properties of the inner maps are load bearing and easy to break by accident.
+   *
+   * <p>The keys are held weakly, but the entries are not in practice reclaimable: the cached proxy
+   * delegates to a {@link PropertyAccessInvocationHandler} that holds the very expression used as
+   * the key, so each value keeps its own key strongly reachable. That is deliberate rather than an
+   * oversight worth "fixing" in isolation — {@link #createProxy} generates and loads a fresh class
+   * per call, so evicting entries would trade retained heap for unbounded class generation. Any
+   * change here has to address both sides at once.
+   *
+   * <p>The keys are also required to be identity objects. {@link java.lang.ref.Reference} cannot
+   * refer to a value object, so this cache is what would stop {@link Expression} implementations
+   * from ever being declared as value classes under JEP 401 (preview in JDK 28).
+   */
   private final ConcurrentHashMap<Class<?>, Map<Expression<?>, ManagedObject>> proxyCache =
       new ConcurrentHashMap<>();
 
