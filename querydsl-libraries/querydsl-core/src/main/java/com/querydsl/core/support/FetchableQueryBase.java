@@ -46,7 +46,7 @@ public abstract class FetchableQueryBase<T, Q extends FetchableQueryBase<T, Q>> 
   }
 
   @Override
-  public final T fetchFirst() {
+  public @Nullable final T fetchFirst() {
     return limit(1).fetchOne();
   }
 
