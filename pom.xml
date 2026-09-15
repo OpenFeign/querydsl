@@ -135,7 +135,7 @@
     <byte-buddy.version>1.18.13</byte-buddy.version>
     <slf4j.version>2.0.19</slf4j.version>
     <surefire.version>3.6.0</surefire.version>
-    <animal-sniffer.version>1.27</animal-sniffer.version>
+    <animal-sniffer.version>1.28</animal-sniffer.version>
     <h2gis.version>2.2.5</h2gis.version>
     <morphia.version>2.5.3</morphia.version>
     <jmh.version>1.37</jmh.version>
