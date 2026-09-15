@@ -21,8 +21,7 @@ env:
   ORACLE_MODULES: ":querydsl-jpa,:querydsl-sql,:querydsl-sql-codegen"
 
 jobs:
-  # Compile all core jars once (no tests), then publish the built artifacts as a per-commit
-  # cache that every downstream test job restores. Tests run in the parallel jobs below.
+  # Compile all core jars once and hand them to the test jobs below as a run-scoped artifact.
   compile:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
@@ -39,11 +38,17 @@ jobs:
       - name: Build (no tests)
         run: ./mvnw -ntp -B clean install -Pno-databases -DskipTests
 
-      - name: Save build artifacts
-        uses: actions/cache/save@v4
+      - name: Package build artifacts
+        run: tar -czf "$GITHUB_WORKSPACE/build-artifacts.tgz" -C ~/.m2/repository io/github/openfeign/querydsl
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
         with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+          name: build-artifacts
+          path: build-artifacts.tgz
+          retention-days: 7
+          if-no-files-found: error
+          overwrite: true
 
   # Database-independent tests, run in parallel with the database test jobs.
   no-databases:
@@ -56,10 +61,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Run database-independent tests
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pno-databases
       - name: Publish test report
@@ -98,10 +100,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Test embedded databases (H2, HSQLDB, Derby, SQLite, Turso)
         run: >
           ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }}
@@ -136,10 +135,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Test MySQL
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.MySQL
       - name: Publish test report
@@ -171,10 +167,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Test PostgreSQL
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.PostgreSQL
       - name: Publish test report
@@ -207,10 +200,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Test Oracle
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.ORACLE_MODULES }} -Dgroups=com.querydsl.core.testutil.Oracle
       - name: Publish test report
@@ -238,10 +228,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Wait for CUBRID demodb to be ready
         run: |
           for i in $(seq 1 30); do
@@ -280,10 +267,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Wait for Firebird
         run: |
           for i in $(seq 1 30); do
@@ -319,10 +303,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Test MongoDB
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-mongodb -Dgroups=com.querydsl.core.testutil.MongoDB
       - name: Publish test report
@@ -342,10 +323,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Start DB2 container
         run: |
           docker run -d --privileged --name db2 \
@@ -386,10 +364,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Prepare example prerequisites
         run: >
           ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pquickbuild
@@ -405,10 +380,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Stage Querydsl artifacts for the image build
         run: |
           mkdir -p /tmp/m2inject/io/github/openfeign
@@ -430,10 +402,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.m2/repository/io/github/openfeign/querydsl
-          key: build-artifacts-${{ github.sha }}
+        uses: ./.github/actions/restore-build
       - name: Prepare KSP example prerequisites
         run: |
           ./mvnw -N org.codehaus.mojo:properties-maven-plugin:1.2.1:write-project-properties -Dproperties.outputFile=querydsl-examples/querydsl-example-ksp-codegen/gradle.properties
