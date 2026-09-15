@@ -13,6 +13,8 @@
  */
 package com.querydsl.core.serialization;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.JavaTemplates;
@@ -37,5 +39,39 @@ class SerializerBaseTest {
     serializer.handle(ConstantImpl.create(""));
     //  custom
     serializer.handle(ExpressionUtils.template(Object.class, "xxx", ConstantImpl.create("")));
+  }
+
+  /**
+   * Constants are labelled by identity, so two equal but distinct instances are bound as two
+   * separate parameters. Boxed values outside the {@link Long} cache are distinct instances today;
+   * once the JDK migrates the wrappers to value classes (JEP 401) {@code ==} becomes state based
+   * and this collapses to a single label.
+   */
+  @Test
+  void equalButDistinctConstantsGetDistinctLabels() {
+    var serializer = new DummySerializer(new JavaTemplates());
+    Long first = 1000L;
+    Long second = 1000L;
+    assertThat(first).isNotSameAs(second).isEqualTo(second);
+
+    serializer.handle((Object) first);
+    serializer.handle((Object) second);
+
+    assertThat(serializer.getConstants()).containsExactly(first, second);
+    assertThat(serializer.getConstantToLabel()).hasSize(2);
+    assertThat(serializer).hasToString("a1a2");
+  }
+
+  @Test
+  void repeatedConstantInstanceReusesLabel() {
+    var serializer = new DummySerializer(new JavaTemplates());
+    Long value = 1000L;
+
+    serializer.handle((Object) value);
+    serializer.handle((Object) value);
+
+    assertThat(serializer.getConstants()).containsExactly(value, value);
+    assertThat(serializer.getConstantToLabel()).hasSize(1);
+    assertThat(serializer).hasToString("a1a1");
   }
 }
