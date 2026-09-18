@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -686,13 +685,11 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private void detectCircularQClassReferences() {
-    Map<String, EntityType> entitiesWithDefaultVariable = new HashMap<>();
-    for (var entry : context.entityTypes.entrySet()) {
-      if (conf.getSerializerConfig(entry.getValue()).createDefaultVariable()) {
-        entitiesWithDefaultVariable.put(entry.getKey(), entry.getValue());
-      }
-    }
-    List<List<String>> detectedCycles = QClassCycleDetector.detect(entitiesWithDefaultVariable);
+    List<List<String>> detectedCycles =
+        QClassCycleDetector.detect(context.entityTypes).stream()
+            .filter(this::canDeadlock)
+            .map(cycle -> cycle.stream().map(EntityType::getSimpleName).toList())
+            .toList();
     if (detectedCycles.isEmpty()) return;
 
     var cyclesList = new StringBuilder();
@@ -714,6 +711,16 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
             .formatted(cyclesList);
 
     processingEnv.getMessager().printMessage(Kind.WARNING, message);
+  }
+
+  // ≥2 because a single static instance re-enters on the same thread, and JVM class init is
+  // re-entrant.
+  private boolean canDeadlock(List<EntityType> cycle) {
+    return cycle.stream()
+            .distinct()
+            .filter(e -> conf.getSerializerConfig(e).createDefaultVariable())
+            .count()
+        >= 2;
   }
 
   protected String getClassName(EntityType model) {

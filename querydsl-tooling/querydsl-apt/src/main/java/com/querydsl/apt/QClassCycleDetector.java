@@ -28,13 +28,13 @@ final class QClassCycleDetector {
   private final List<EntityType> path = new ArrayList<>();
   private final Set<String> inStack = new HashSet<>();
   private final Set<String> globalVisited = new HashSet<>();
-  private final List<List<String>> cycles = new ArrayList<>();
+  private final List<List<EntityType>> cycles = new ArrayList<>();
 
   private QClassCycleDetector(Map<String, EntityType> typeMap) {
     this.typeMap = typeMap;
   }
 
-  static List<List<String>> detect(Map<String, EntityType> typeMap) {
+  static List<List<EntityType>> detect(Map<String, EntityType> typeMap) {
     var detector = new QClassCycleDetector(typeMap);
     var starts = new ArrayList<>(typeMap.values());
     starts.sort(Comparator.comparing(EntityType::getFullName));
@@ -70,14 +70,14 @@ final class QClassCycleDetector {
     inStack.remove(currentName);
   }
 
-  private List<String> sliceCycleFrom(EntityType entry) {
+  private List<EntityType> sliceCycleFrom(EntityType entry) {
     int start = path.indexOf(entry);
 
-    List<String> cycle = new ArrayList<>(path.size() - start + 1);
+    List<EntityType> cycle = new ArrayList<>(path.size() - start + 1);
     for (int i = start; i < path.size(); i++) {
-      cycle.add(path.get(i).getSimpleName());
+      cycle.add(path.get(i));
     }
-    cycle.add(path.get(start).getSimpleName());
+    cycle.add(path.get(start));
     return cycle;
   }
 }
