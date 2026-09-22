@@ -92,7 +92,7 @@
     <main.java.version>17</main.java.version>
     <latest.java.version>25</latest.java.version>
 
-    <git-code-format-maven-plugin.version>6.0</git-code-format-maven-plugin.version>
+    <git-code-format-maven-plugin.version>6.1</git-code-format-maven-plugin.version>
 
     <flatten-maven-plugin.version>1.8.0</flatten-maven-plugin.version>
 
