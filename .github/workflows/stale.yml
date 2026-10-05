@@ -8,7 +8,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@v8
+      - uses: actions/stale@v11
         with:
           days-before-stale: 30  # Days of inactivity before marking an issue as stale
           days-before-close: 7   # Days after being marked stale before closing

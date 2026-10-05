@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 60
     environment: central
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup build environment
         uses: ./.github/actions/setup-build
@@ -52,7 +52,7 @@ jobs:
     timeout-minutes: 60
     environment: central
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup build environment
         uses: ./.github/actions/setup-build
