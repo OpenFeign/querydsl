@@ -539,7 +539,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, SQLITE, TERADATA, TURSO})
+  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, TERADATA, TURSO})
   public void dates() throws SQLException {
     if (!configuration.getUseLiterals()) {
       dates(false);
@@ -547,7 +547,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DERBY, SQLITE, TERADATA, TURSO})
+  @ExcludeIn({CUBRID, DERBY, TERADATA, TURSO})
   public void dates_literals() throws SQLException {
     if (configuration.getUseLiterals()) {
       dates(true);
@@ -927,7 +927,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, SQLITE, DERBY, CUBRID, MYSQL, TURSO})
+  @ExcludeIn({H2, DERBY, CUBRID, MYSQL, TURSO})
   public void full_join() throws SQLException {
     assertThat(
             query()
@@ -1079,7 +1079,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, SQLSERVER, TERADATA})
+  @ExcludeIn({SQLSERVER, TERADATA})
   public void in_long_list() {
     List<Integer> ids = new ArrayList<>();
     for (var i = 0; i < 20000; i++) {
@@ -1090,7 +1090,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DERBY, SQLITE, SQLSERVER, TERADATA})
+  @ExcludeIn({DERBY, SQLSERVER, TERADATA})
   public void notIn_long_list() {
     List<Integer> ids = new ArrayList<>();
     for (var i = 0; i < 20000; i++) {
@@ -1905,7 +1905,6 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLITE)
   public void right_join() throws SQLException {
     assertThat(
             query()
@@ -2107,7 +2106,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, TURSO})
+  @ExcludeIn(TURSO)
   public void string() {
     StringExpression str = Expressions.stringTemplate("'  abcd  '");
 
@@ -2120,7 +2119,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, TURSO})
+  @ExcludeIn(TURSO)
   public void string_withTemplate() {
     StringExpression str = Expressions.stringTemplate("'  abcd  '");
 
@@ -2137,7 +2136,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({POSTGRESQL, SQLITE, TURSO})
+  @ExcludeIn({POSTGRESQL, TURSO})
   public void string_indexOf() {
     StringExpression str = Expressions.stringTemplate("'  abcd  '");
 

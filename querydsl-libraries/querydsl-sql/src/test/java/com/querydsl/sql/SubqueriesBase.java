@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
-  @ExcludeIn({DERBY, FIREBIRD, SQLITE, SQLSERVER})
+  @ExcludeIn({DERBY, FIREBIRD, SQLSERVER})
   public void keys() {
     var employee2 = new QEmployee("employee2");
     var nameKey1 =
@@ -53,7 +53,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DERBY, FIREBIRD, SQLITE, SQLSERVER})
+  @ExcludeIn({DERBY, FIREBIRD, SQLSERVER})
   public void list_in_query() {
     var employee2 = new QEmployee("employee2");
     query()
@@ -146,7 +146,6 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLITE)
   public void subQuery_rightJoin() {
     SubQueryExpression<Integer> sq = query().from(employee2).select(employee2.id);
     var sqEmp = new QEmployee("sq");
