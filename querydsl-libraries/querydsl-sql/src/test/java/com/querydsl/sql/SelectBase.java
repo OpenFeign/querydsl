@@ -1466,7 +1466,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({HSQLDB, SQLITE, TURSO}) // FIXME
+  @ExcludeIn({SQLITE, TURSO}) // FIXME
   public void math() {
     math(Expressions.numberTemplate(Double.class, "0.50"));
   }
