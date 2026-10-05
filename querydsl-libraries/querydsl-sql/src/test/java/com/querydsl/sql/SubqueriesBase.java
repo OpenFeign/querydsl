@@ -4,7 +4,6 @@ import static com.querydsl.core.Target.DERBY;
 import static com.querydsl.core.Target.FIREBIRD;
 import static com.querydsl.core.Target.HSQLDB;
 import static com.querydsl.core.Target.MYSQL;
-import static com.querydsl.core.Target.POSTGRESQL;
 import static com.querydsl.core.Target.SQLITE;
 import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.core.Target.TERADATA;
@@ -138,7 +137,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, POSTGRESQL, DERBY, SQLSERVER, TERADATA})
+  @ExcludeIn({MYSQL, DERBY, SQLSERVER, TERADATA})
   public void subQuery_params() {
     var aParam = new Param<String>(String.class, "param");
     SQLQuery<?> subQuery = select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));

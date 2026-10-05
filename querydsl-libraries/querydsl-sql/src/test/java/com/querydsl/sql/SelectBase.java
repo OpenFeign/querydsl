@@ -539,7 +539,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, TURSO})
+  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, SQLITE, TERADATA, TURSO})
   public void dates() throws SQLException {
     if (!configuration.getUseLiterals()) {
       dates(false);
