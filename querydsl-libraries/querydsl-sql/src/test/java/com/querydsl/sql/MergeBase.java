@@ -57,7 +57,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE, TURSO})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void merge_with_keys() throws SQLException {
     var rs =
         merge(survey)
@@ -71,7 +71,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE, TURSO})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void merge_with_keys_listener() throws SQLException {
     final var result = new AtomicBoolean();
     SQLListener listener =
@@ -154,7 +154,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE, TURSO})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void merge_with_keys_Projected() throws SQLException {
     assertThat(
             merge(survey)
@@ -166,7 +166,7 @@ public abstract class MergeBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, CUBRID, SQLSERVER, SQLITE, TURSO})
+  @ExcludeIn({CUBRID, SQLSERVER, SQLITE, TURSO})
   public void merge_with_keys_Projected2() throws SQLException {
     Path<Object> idPath = ExpressionUtils.path(Object.class, "id");
     Object id =
