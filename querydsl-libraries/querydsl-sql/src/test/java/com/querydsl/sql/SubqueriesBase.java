@@ -139,7 +139,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, POSTGRESQL, DERBY, SQLSERVER, TERADATA})
+  @ExcludeIn({MYSQL, DERBY, SQLSERVER, TERADATA})
   public void subQuery_params() {
     var aParam = new Param<String>(String.class, "param");
     SQLQuery<?> subQuery = select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));
