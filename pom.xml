@@ -166,6 +166,38 @@
         <scope>import</scope>
       </dependency>
       <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.ongres.scram</groupId>
+        <artifactId>scram-client</artifactId>
+        <version>3.4</version>
+      </dependency>
+      <dependency>
+        <groupId>com.ongres.scram</groupId>
+        <artifactId>scram-common</artifactId>
+        <version>3.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jsoup</groupId>
+        <artifactId>jsoup</artifactId>
+        <version>1.23.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mchange</groupId>
+        <artifactId>c3p0</artifactId>
+        <version>0.14.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mchange</groupId>
+        <artifactId>mchange-commons-java</artifactId>
+        <version>0.6.1</version>
+      </dependency>
+      <dependency>
         <groupId>io.smallrye</groupId>
         <artifactId>jandex</artifactId>
         <version>3.6.0</version>
