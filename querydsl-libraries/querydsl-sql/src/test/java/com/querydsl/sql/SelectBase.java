@@ -539,7 +539,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, FIREBIRD, TURSO})
+  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, TURSO})
   public void dates() throws SQLException {
     if (!configuration.getUseLiterals()) {
       dates(false);
@@ -547,7 +547,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DERBY, SQLITE, TERADATA, FIREBIRD, TURSO})
+  @ExcludeIn({CUBRID, DERBY, SQLITE, TERADATA, TURSO})
   public void dates_literals() throws SQLException {
     if (configuration.getUseLiterals()) {
       dates(true);
@@ -1010,7 +1010,6 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({FIREBIRD})
   public void groupBy_count() {
     var ids = query().from(employee).groupBy(employee.id).select(employee.id).fetch();
     var count = query().from(employee).groupBy(employee.id).fetchCount();
@@ -1043,7 +1042,6 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({FIREBIRD})
   public void having_count() {
     // Produces empty resultset https://github.com/querydsl/querydsl/issues/1055
     query()
@@ -1081,7 +1079,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({FIREBIRD, SQLITE, SQLSERVER, TERADATA})
+  @ExcludeIn({SQLITE, SQLSERVER, TERADATA})
   public void in_long_list() {
     List<Integer> ids = new ArrayList<>();
     for (var i = 0; i < 20000; i++) {
@@ -1092,7 +1090,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DERBY, FIREBIRD, SQLITE, SQLSERVER, TERADATA})
+  @ExcludeIn({DERBY, SQLITE, SQLSERVER, TERADATA})
   public void notIn_long_list() {
     List<Integer> ids = new ArrayList<>();
     for (var i = 0; i < 20000; i++) {
@@ -1212,7 +1210,6 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD)
   public void like_escape() {
     List<String> strs = Arrays.asList("%a", "a%", "%a%", "_a", "a_", "_a_", "[C-P]arsen", "a\nb");
 
@@ -1586,7 +1583,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DERBY, FIREBIRD, POSTGRESQL})
+  @ExcludeIn({DERBY, POSTGRESQL})
   public void number_as_boolean() {
     var numberTest = QNumberTest.numberTest;
     delete(numberTest).execute();
@@ -2210,7 +2207,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, DERBY, FIREBIRD})
+  @ExcludeIn({DB2, DERBY})
   public void substring() {
     // SELECT * FROM account where SUBSTRING(name, -x, 1) = SUBSTRING(name, -y, 1)
     query()

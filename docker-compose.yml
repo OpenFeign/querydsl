@@ -120,12 +120,11 @@ services:
       start_period: 60s
 
   firebird:
-    image: jacobalberty/firebird:v4
-    platform: linux/amd64
+    image: firebirdsql/firebird:5
     ports:
       - "3050:3050"
     environment:
-      - ISC_PASSWORD=masterkey
+      - FIREBIRD_ROOT_PASSWORD=masterkey
       - FIREBIRD_DATABASE=querydsl.fdb
       - FIREBIRD_USER=querydsl
       - FIREBIRD_PASSWORD=querydsl
