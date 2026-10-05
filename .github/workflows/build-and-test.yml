@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup build environment
         uses: ./.github/actions/setup-build
@@ -42,7 +42,7 @@ jobs:
         run: tar -czf "$GITHUB_WORKSPACE/build-artifacts.tgz" -C ~/.m2/repository io/github/openfeign/querydsl
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-artifacts
           path: build-artifacts.tgz
@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
@@ -65,7 +65,7 @@ jobs:
       - name: Run database-independent tests
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pno-databases
       - name: Publish test report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
@@ -79,9 +79,9 @@ jobs:
     env:
       MAVEN_OPTS: -Xmx3200m
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set up JDK 25
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: "temurin"
           java-version: "25"
@@ -96,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
@@ -106,7 +106,7 @@ jobs:
           ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }}
           -Dgroups=com.querydsl.core.testutil.H2,com.querydsl.core.testutil.HSQLDB,com.querydsl.core.testutil.Derby,com.querydsl.core.testutil.SQLite,com.querydsl.core.testutil.Turso
       - name: Publish test report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
@@ -117,29 +117,18 @@ jobs:
     needs: compile
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    services:
-      mysql:
-        image: mysql:5.6.38
-        env:
-          MYSQL_ROOT_PASSWORD: querydsl
-          MYSQL_USER: querydsl
-          MYSQL_PASSWORD: querydsl
-          MYSQL_DATABASE: querydsl
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h localhost -uroot -pquerydsl"
-          --health-interval=10s --health-timeout=5s --health-retries=20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
+      - name: Start MySQL
+        run: docker compose up -d --wait --wait-timeout 900 mysql
       - name: Test MySQL
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.MySQL
       - name: Publish test report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
@@ -150,28 +139,18 @@ jobs:
     needs: compile
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    services:
-      postgres:
-        image: postgis/postgis:16-3.4-alpine
-        env:
-          POSTGRES_USER: querydsl
-          POSTGRES_PASSWORD: querydsl
-          POSTGRES_DB: querydsl
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U querydsl" --health-interval=10s
-          --health-timeout=5s --health-retries=20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
+      - name: Start PostgreSQL
+        run: docker compose up -d --wait --wait-timeout 900 postgresql
       - name: Test PostgreSQL
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.PostgreSQL
       - name: Publish test report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
@@ -182,29 +161,18 @@ jobs:
     needs: compile
     runs-on: ubuntu-latest
     timeout-minutes: 40
-    services:
-      oracle:
-        image: gvenzl/oracle-free:slim-faststart
-        env:
-          ORACLE_PASSWORD: querydsl
-          APP_USER: querydsl
-          APP_USER_PASSWORD: querydsl
-          TZ: UTC
-        ports:
-          - 1521:1521
-        options: >-
-          --health-cmd="healthcheck.sh" --health-interval=10s
-          --health-timeout=5s --health-retries=30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
+      - name: Start Oracle
+        run: docker compose up -d --wait --wait-timeout 900 oracle
       - name: Test Oracle
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.ORACLE_MODULES }} -Dgroups=com.querydsl.core.testutil.Oracle
       - name: Publish test report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
@@ -215,32 +183,18 @@ jobs:
     needs: compile
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    services:
-      cubrid:
-        image: cubrid/cubrid:11.3
-        env:
-          CUBRID_DB: demodb
-        ports:
-          - 30000:30000
-          - 33000:33000
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
-      - name: Wait for CUBRID demodb to be ready
-        run: |
-          for i in $(seq 1 30); do
-            if docker logs "${{ job.services.cubrid.id }}" 2>&1 | grep -q "cubrid server start: demodb"; then
-              echo "CUBRID demodb server has started"; sleep 5; break
-            fi
-            echo "Waiting for CUBRID demodb ($i/30)..."; sleep 5
-          done
+      - name: Start CUBRID
+        run: docker compose up -d --wait --wait-timeout 900 cubrid
       - name: Test CUBRID
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.CUBRID
       - name: Publish test report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
@@ -251,35 +205,18 @@ jobs:
     needs: compile
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    services:
-      firebird:
-        image: jacobalberty/firebird:v4
-        env:
-          ISC_PASSWORD: masterkey
-          FIREBIRD_DATABASE: querydsl.fdb
-          FIREBIRD_USER: querydsl
-          FIREBIRD_PASSWORD: querydsl
-          TZ: UTC
-        ports:
-          - 3050:3050
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
-      - name: Wait for Firebird
-        run: |
-          for i in $(seq 1 30); do
-            if (echo > /dev/tcp/localhost/3050) >/dev/null 2>&1; then
-              echo "Firebird is accepting connections"; break
-            fi
-            echo "Waiting for Firebird ($i/30)..."; sleep 5
-          done
+      - name: Start Firebird
+        run: docker compose up -d --wait --wait-timeout 900 firebird
       - name: Test Firebird
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.Firebird
       - name: Publish test report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
@@ -290,24 +227,18 @@ jobs:
     needs: compile
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    services:
-      mongo:
-        image: mongo:8.0.9
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
-          --health-interval=10s --health-timeout=5s --health-retries=20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
+      - name: Start MongoDB
+        run: docker compose up -d --wait --wait-timeout 900 mongo
       - name: Test MongoDB
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-mongodb -Dgroups=com.querydsl.core.testutil.MongoDB
       - name: Publish test report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
@@ -319,36 +250,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
-      - name: Start DB2 container
-        run: |
-          docker run -d --privileged --name db2 \
-            -p 50000:50000 \
-            -e DB2INST1_PASSWORD=a3sd!fDj \
-            -e DB2INSTANCE=db2inst1 \
-            -e DBNAME=sample \
-            -e LICENSE=accept \
-            -e ARCHIVE_LOGS=false \
-            -e AUTOCONFIG=false \
-            ibmcom/db2:11.5.0.0
-          echo "Waiting for DB2 to initialize..."
-          for i in $(seq 1 60); do
-            if docker logs db2 2>&1 | grep -q "All databases are now active"; then
-              echo "DB2 appears to be up"; break
-            fi
-            echo "Waiting ($i/60)..."; sleep 10
-          done
+      - name: Start DB2
+        run: docker compose up -d --wait --wait-timeout 900 db2
       - name: Test DB2
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.DB2
-      - name: Stop DB2 container
-        if: always()
-        run: docker stop db2 && docker rm db2
       - name: Publish test report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
@@ -360,7 +272,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts
@@ -378,7 +290,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Stage Querydsl artifacts for the image build
@@ -398,7 +310,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup build environment
         uses: ./.github/actions/setup-build
       - name: Restore build artifacts

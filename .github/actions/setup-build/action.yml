@@ -5,7 +5,7 @@ runs:
   using: "composite"
   steps:
     - name: Set up JDKs 17, 21 and 25
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v6
       with:
         distribution: "temurin"
         java-version: |
@@ -39,7 +39,7 @@ runs:
         EOF
 
     - name: Cache Maven dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ~/.m2/repository
         key: maven-deps-${{ hashFiles('**/pom.xml') }}
