@@ -333,7 +333,7 @@ public final class Connections {
                       connection,
                       "insert into SHAPES values("
                           + entry.getKey()
-                          + ", GeomFromText('"
+                          + ", ST_GeomFromText('"
                           + entry.getValue()
                           + "'))")
                   .then());

@@ -21,7 +21,6 @@ import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.r2dbc.Constants.survey;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
 import com.querydsl.core.types.dsl.Param;
 import com.querydsl.r2dbc.domain.QEmployee;
@@ -48,7 +47,6 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(MYSQL)
   public void delete() {
     var count = query().from(survey).fetchCount().block();
     assertThat((long) delete(survey).where(survey.name.eq("XXX")).execute().block()).isEqualTo(0);

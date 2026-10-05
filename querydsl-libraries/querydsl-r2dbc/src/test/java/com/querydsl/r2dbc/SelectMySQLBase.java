@@ -18,7 +18,6 @@ public abstract class SelectMySQLBase extends AbstractBaseTest {
   public void mysql_extensions() {
     myR2DBCQuery().from(survey).bigResult().select(survey.id).fetch().collectList().block();
     myR2DBCQuery().from(survey).bufferResult().select(survey.id).fetch().collectList().block();
-    myR2DBCQuery().from(survey).cache().select(survey.id).fetch().collectList().block();
     myR2DBCQuery().from(survey).calcFoundRows().select(survey.id).fetch().collectList().block();
     myR2DBCQuery().from(survey).noCache().select(survey.id).fetch().collectList().block();
 

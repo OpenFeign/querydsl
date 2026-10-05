@@ -3,7 +3,6 @@ package com.querydsl.sql;
 import static com.querydsl.core.Target.CUBRID;
 import static com.querydsl.core.Target.DERBY;
 import static com.querydsl.core.Target.FIREBIRD;
-import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.TERADATA;
 import static com.querydsl.sql.Constants.employee;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +27,7 @@ public abstract class UnionBase extends AbstractBaseTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  @ExcludeIn({MYSQL, TERADATA})
+  @ExcludeIn(TERADATA)
   public void in_union() {
     assertThat(
             query()
