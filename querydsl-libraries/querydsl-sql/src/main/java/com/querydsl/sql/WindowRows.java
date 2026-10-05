@@ -44,19 +44,17 @@ public class WindowRows<A> {
     public BetweenAnd unboundedPreceding() {
       str.append(UNBOUNDED);
       str.append(PRECEDING);
-      return new BetweenAnd();
+      return and();
     }
 
     public BetweenAnd currentRow() {
       str.append(CURRENT_ROW);
-      return new BetweenAnd();
+      return and();
     }
 
     public BetweenAnd preceding(Expression<Integer> expr) {
-      args.add(expr);
-      str.append(" {").append(offset++).append("}");
-      str.append(PRECEDING);
-      return new BetweenAnd();
+      appendOffset(expr, PRECEDING);
+      return and();
     }
 
     public BetweenAnd preceding(int i) {
@@ -64,10 +62,8 @@ public class WindowRows<A> {
     }
 
     public BetweenAnd following(Expression<Integer> expr) {
-      args.add(expr);
-      str.append(" {").append(offset++).append("}");
-      str.append(FOLLOWING);
-      return new BetweenAnd();
+      appendOffset(expr, FOLLOWING);
+      return and();
     }
 
     public BetweenAnd following(int i) {
@@ -78,26 +74,20 @@ public class WindowRows<A> {
   /** Intermediate step */
   public class BetweenAnd {
 
-    public BetweenAnd() {
-      str.append(AND);
-    }
-
     public WindowFunction<A> unboundedFollowing() {
       str.append(UNBOUNDED);
       str.append(FOLLOWING);
-      return rv.withRowsOrRange(str.toString(), args);
+      return build();
     }
 
     public WindowFunction<A> currentRow() {
       str.append(CURRENT_ROW);
-      return rv.withRowsOrRange(str.toString(), args);
+      return build();
     }
 
     public WindowFunction<A> preceding(Expression<Integer> expr) {
-      args.add(expr);
-      str.append(" {").append(offset++).append("}");
-      str.append(PRECEDING);
-      return rv.withRowsOrRange(str.toString(), args);
+      appendOffset(expr, PRECEDING);
+      return build();
     }
 
     public WindowFunction<A> preceding(int i) {
@@ -105,10 +95,8 @@ public class WindowRows<A> {
     }
 
     public WindowFunction<A> following(Expression<Integer> expr) {
-      args.add(expr);
-      str.append(" {").append(offset++).append("}");
-      str.append(FOLLOWING);
-      return rv.withRowsOrRange(str.toString(), args);
+      appendOffset(expr, FOLLOWING);
+      return build();
     }
 
     public WindowFunction<A> following(int i) {
@@ -138,33 +126,34 @@ public class WindowRows<A> {
   public WindowFunction<A> unboundedPreceding() {
     str.append(UNBOUNDED);
     str.append(PRECEDING);
-    return rv.withRowsOrRange(str.toString(), args);
+    return build();
   }
 
   public WindowFunction<A> currentRow() {
     str.append(CURRENT_ROW);
-    return rv.withRowsOrRange(str.toString(), args);
+    return build();
   }
 
   public WindowFunction<A> preceding(Expression<Integer> expr) {
-    args.add(expr);
-    str.append(" {").append(offset++).append("}");
-    str.append(PRECEDING);
-    return rv.withRowsOrRange(str.toString(), args);
+    appendOffset(expr, PRECEDING);
+    return build();
   }
 
   public WindowFunction<A> preceding(int i) {
     return preceding(ConstantImpl.create(i));
   }
 
-  public WindowFunction<A> following(Expression<Integer> expr) {
+  private void appendOffset(Expression<Integer> expr, String keyword) {
     args.add(expr);
-    str.append(" {").append(offset++).append("}");
-    str.append(FOLLOWING);
-    return rv.withRowsOrRange(str.toString(), args);
+    str.append(" {").append(offset++).append("}").append(keyword);
   }
 
-  public WindowFunction<A> following(int i) {
-    return following(ConstantImpl.create(i));
+  private BetweenAnd and() {
+    str.append(AND);
+    return new BetweenAnd();
+  }
+
+  private WindowFunction<A> build() {
+    return rv.withRowsOrRange(str.toString(), args);
   }
 }
