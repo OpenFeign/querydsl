@@ -17,7 +17,6 @@ import static com.querydsl.core.Target.CUBRID;
 import static com.querydsl.core.Target.H2;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.ORACLE;
-import static com.querydsl.core.Target.SQLITE;
 import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.core.Target.TURSO;
 import static com.querydsl.sql.Constants.survey;
@@ -66,7 +65,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLITE, TURSO})
+  @ExcludeIn({CUBRID, TURSO})
   public void batch_templates() throws SQLException {
     insert(survey).values(2, "A", "B").execute();
     insert(survey).values(3, "B", "C").execute();
@@ -134,7 +133,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, SQLITE, TURSO})
+  @ExcludeIn({CUBRID, TURSO})
   public void delete_with_tempateExpression_in_batch() {
     assertThat(
             delete(survey)
