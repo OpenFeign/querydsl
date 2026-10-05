@@ -119,6 +119,7 @@
     <mongodb.version>5.13.0</mongodb.version>
 
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
+    <r2dbc-mssql.version>1.0.7.RELEASE</r2dbc-mssql.version>
 
     <!-- JPA deps -->
     <hibernate.version>7.4.11.Final</hibernate.version>

@@ -208,7 +208,6 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLSERVER)
   public void windowFunctions_orderBy() {
     // SELECT Shipment_id,Ship_date,Ship_Type,
     // SUM(Qty) OVER (PARTITION BY Ship_Type ORDER BY Ship_Dt ) AS Total_Qty
@@ -228,7 +227,6 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLSERVER)
   public void windowFunctions_unboundedRows() {
     // SELECT Shipment_id,Ship_date,Ship_Type,
     // SUM(Qty) OVER (PARTITION BY Ship_Type ORDER BY Ship_Dt
