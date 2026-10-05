@@ -97,12 +97,32 @@ public class WindowFunctionTest {
             "sum(path) over (order by path asc rows between current row and unbounded following)");
     assertThat(toString(wf.rows().between().preceding(intPath).following(intPath)))
         .isEqualTo(
-            """
-            sum(path) over (order by path asc rows between preceding intPath and following\
-             intPath)\
-            """);
+            "sum(path) over (order by path asc rows between intPath preceding"
+                + " and intPath following)");
     assertThat(toString(wf.rows().between().preceding(1).following(3)))
-        .isEqualTo("sum(path) over (order by path asc rows between preceding ? and following ?)");
+        .isEqualTo("sum(path) over (order by path asc rows between ? preceding and ? following)");
+    assertThat(toString(wf.rows().between().following(intPath).following(intPath)))
+        .isEqualTo(
+            "sum(path) over (order by path asc rows between intPath following"
+                + " and intPath following)");
+    assertThat(toString(wf.rows().between().preceding(intPath).preceding(intPath)))
+        .isEqualTo(
+            "sum(path) over (order by path asc rows between intPath preceding"
+                + " and intPath preceding)");
+    assertThat(toString(wf.rows().between().preceding(intPath).currentRow()))
+        .isEqualTo(
+            "sum(path) over (order by path asc rows between intPath preceding and current row)");
+  }
+
+  @Test
+  public void range_between() {
+    NumberPath<Long> path = Expressions.numberPath(Long.class, "path");
+    var wf = SQLExpressions.sum(path).over().orderBy(path);
+
+    assertThat(toString(wf.range().between().preceding(1).following(3)))
+        .isEqualTo("sum(path) over (order by path asc range between ? preceding and ? following)");
+    assertThat(toString(wf.range().preceding(3)))
+        .isEqualTo("sum(path) over (order by path asc range ? preceding)");
   }
 
   @Test
@@ -130,9 +150,9 @@ public class WindowFunctionTest {
     var wf = SQLExpressions.sum(path).over().orderBy(path);
 
     assertThat(toString(wf.rows().preceding(intPath)))
-        .isEqualTo("sum(path) over (order by path asc rows preceding intPath)");
+        .isEqualTo("sum(path) over (order by path asc rows intPath preceding)");
     assertThat(toString(wf.rows().preceding(3)))
-        .isEqualTo("sum(path) over (order by path asc rows preceding ?)");
+        .isEqualTo("sum(path) over (order by path asc rows ? preceding)");
   }
 
   @Test
