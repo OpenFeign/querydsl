@@ -14,7 +14,7 @@
 package com.querydsl.sql.vector;
 
 import static com.querydsl.sql.vector.QDocument.document;
-import static com.querydsl.vector.VectorExpressions.vector;
+import static com.querydsl.vector.VectorExpressions.createConstantVector;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractSQLVectorTest {
 
-  private static final float[] QUERY = {1, 0, 0};
+  private static final float[] QUERY_EMBEDDING = {1, 0, 0};
 
   private Connection connection;
 
@@ -41,15 +41,15 @@ public abstract class AbstractSQLVectorTest {
 
   protected abstract Connection connect() throws SQLException;
 
-  protected abstract SQLTemplates templates();
+  protected abstract SQLTemplates createTemplates();
 
-  protected abstract void createTable(Connection connection) throws SQLException;
+  protected abstract void recreateVectorDocumentTable(Connection connection) throws SQLException;
 
   @BeforeAll
-  void setUp() throws SQLException {
+  void connectCreateTableAndInsertSampleDocuments() throws SQLException {
     connection = connect();
-    createTable(connection);
-    queryFactory = new SQLQueryFactory(new Configuration(templates()), () -> connection);
+    recreateVectorDocumentTable(connection);
+    queryFactory = new SQLQueryFactory(new Configuration(createTemplates()), () -> connection);
     queryFactory
         .insert(document)
         .columns(document.id, document.title, document.embedding)
@@ -65,7 +65,7 @@ public abstract class AbstractSQLVectorTest {
   }
 
   @AfterAll
-  void tearDown() throws SQLException {
+  void dropVectorDocumentTableAndCloseConnection() throws SQLException {
     try (var stmt = connection.createStatement()) {
       stmt.execute("drop table vector_document");
     }
@@ -73,7 +73,7 @@ public abstract class AbstractSQLVectorTest {
   }
 
   @Test
-  void roundTrip() {
+  void selectEmbeddingReturnsInsertedFloats() {
     var embedding =
         queryFactory.select(document.embedding).from(document).where(document.id.eq(3L)).fetchOne();
 
@@ -82,29 +82,30 @@ public abstract class AbstractSQLVectorTest {
 
   @Test
   void orderByL2Distance() {
-    assertThat(titlesOrderedBy(document.embedding.l2Distance(QUERY)))
+    assertThat(fetchTitlesOrderedAscendingBy(document.embedding.l2Distance(QUERY_EMBEDDING)))
         .containsExactly("x-axis", "near x-axis", "y-axis", "diagonal");
   }
 
   @Test
   void orderByCosineDistance() {
-    assertThat(titlesOrderedBy(document.embedding.cosineDistance(QUERY)))
+    assertThat(fetchTitlesOrderedAscendingBy(document.embedding.cosineDistance(QUERY_EMBEDDING)))
         .containsExactly("x-axis", "near x-axis", "diagonal", "y-axis");
   }
 
   @Test
   void orderByNegativeInnerProduct() {
-    assertThat(titlesOrderedBy(document.embedding.negativeInnerProduct(QUERY)))
+    assertThat(
+            fetchTitlesOrderedAscendingBy(document.embedding.negativeInnerProduct(QUERY_EMBEDDING)))
         .containsExactly("diagonal", "x-axis", "near x-axis", "y-axis");
   }
 
   @Test
-  void nearestNeighbours() {
+  void limitToTwoNearestByL2Distance() {
     var titles =
         queryFactory
             .select(document.title)
             .from(document)
-            .orderBy(document.embedding.l2Distance(QUERY).asc())
+            .orderBy(document.embedding.l2Distance(QUERY_EMBEDDING).asc())
             .limit(2)
             .fetch();
 
@@ -117,7 +118,7 @@ public abstract class AbstractSQLVectorTest {
         queryFactory
             .select(document.title)
             .from(document)
-            .where(document.embedding.cosineDistance(QUERY).lt(0.1))
+            .where(document.embedding.cosineDistance(QUERY_EMBEDDING).lt(0.1))
             .orderBy(document.id.asc())
             .fetch();
 
@@ -125,69 +126,80 @@ public abstract class AbstractSQLVectorTest {
   }
 
   @Test
-  void distances() {
-    var e = document.embedding;
-    var row =
+  void selectVectorMetricsOfSingleDocument() {
+    var embeddingPath = document.embedding;
+    var metricsTuple =
         queryFactory
             .select(
-                e.l2Distance(QUERY),
-                e.l2SquaredDistance(QUERY),
-                e.innerProduct(QUERY),
-                e.l1Distance(QUERY),
-                e.l2Distance(e))
+                embeddingPath.l2Distance(QUERY_EMBEDDING),
+                embeddingPath.l2SquaredDistance(QUERY_EMBEDDING),
+                embeddingPath.innerProduct(QUERY_EMBEDDING),
+                embeddingPath.l1Distance(QUERY_EMBEDDING),
+                embeddingPath.l2Distance(embeddingPath))
             .from(document)
             .where(document.id.eq(4L))
             .fetchOne();
 
-    assertThat(row.get(e.l2Distance(QUERY))).isCloseTo(3.0, within(1e-6));
-    assertThat(row.get(e.l2SquaredDistance(QUERY))).isCloseTo(9.0, within(1e-6));
-    assertThat(row.get(e.innerProduct(QUERY))).isCloseTo(2.0, within(1e-6));
-    assertThat(row.get(e.l1Distance(QUERY))).isCloseTo(5.0, within(1e-6));
-    assertThat(row.get(e.l2Distance(e))).isCloseTo(0.0, within(1e-6));
+    assertThat(metricsTuple.get(embeddingPath.l2Distance(QUERY_EMBEDDING)))
+        .isCloseTo(3.0, within(1e-6));
+    assertThat(metricsTuple.get(embeddingPath.l2SquaredDistance(QUERY_EMBEDDING)))
+        .isCloseTo(9.0, within(1e-6));
+    assertThat(metricsTuple.get(embeddingPath.innerProduct(QUERY_EMBEDDING)))
+        .isCloseTo(2.0, within(1e-6));
+    assertThat(metricsTuple.get(embeddingPath.l1Distance(QUERY_EMBEDDING)))
+        .isCloseTo(5.0, within(1e-6));
+    assertThat(metricsTuple.get(embeddingPath.l2Distance(embeddingPath)))
+        .isCloseTo(0.0, within(1e-6));
   }
 
   @Test
-  void constantVectors() {
-    var row =
+  void dimensionCountAndL2DistanceOfConstantVector() {
+    var dimensionCountAndL2DistanceRow =
         queryFactory
-            .select(vector(QUERY).dims(), vector(QUERY).l2Distance(new float[] {1, 0, 2}))
+            .select(
+                createConstantVector(QUERY_EMBEDDING).dimensionCount(),
+                createConstantVector(QUERY_EMBEDDING).l2Distance(new float[] {1, 0, 2}))
             .from(document)
             .where(document.id.eq(1L))
             .fetchOne();
 
-    assertThat(row.get(0, Integer.class)).isEqualTo(3);
-    assertThat(row.get(1, Double.class)).isCloseTo(2.0, within(1e-6));
+    assertThat(dimensionCountAndL2DistanceRow.get(0, Integer.class)).isEqualTo(3);
+    assertThat(dimensionCountAndL2DistanceRow.get(1, Double.class)).isCloseTo(2.0, within(1e-6));
   }
 
   @Test
-  void dimsAndNorm() {
+  void dimensionCountAndL2Norm() {
     var row =
         queryFactory
-            .select(document.embedding.dims(), document.embedding.norm())
+            .select(document.embedding.dimensionCount(), document.embedding.l2Norm())
             .from(document)
             .where(document.id.eq(2L))
             .fetchOne();
 
-    assertThat(row.get(document.embedding.dims())).isEqualTo(3);
-    assertThat(row.get(document.embedding.norm())).isCloseTo(1.0, within(1e-6));
+    assertThat(row.get(document.embedding.dimensionCount())).isEqualTo(3);
+    assertThat(row.get(document.embedding.l2Norm())).isCloseTo(1.0, within(1e-6));
   }
 
   @Test
-  void literals() {
-    var configuration = new Configuration(templates());
-    configuration.setUseLiterals(true);
-    var title =
-        new SQLQueryFactory(configuration, () -> connection)
+  void orderByCosineDistanceWithInlinedLiterals() {
+    var literalsConfiguration = new Configuration(createTemplates());
+    literalsConfiguration.setUseLiterals(true);
+    var nearestTitle =
+        new SQLQueryFactory(literalsConfiguration, () -> connection)
             .select(document.title)
             .from(document)
             .orderBy(document.embedding.cosineDistance(new float[] {0, 1, 0}).asc())
             .limit(1)
             .fetchOne();
 
-    assertThat(title).isEqualTo("y-axis");
+    assertThat(nearestTitle).isEqualTo("y-axis");
   }
 
-  private List<String> titlesOrderedBy(NumberExpression<Double> distance) {
-    return queryFactory.select(document.title).from(document).orderBy(distance.asc()).fetch();
+  private List<String> fetchTitlesOrderedAscendingBy(NumberExpression<Double> dissimilarityScore) {
+    return queryFactory
+        .select(document.title)
+        .from(document)
+        .orderBy(dissimilarityScore.asc())
+        .fetch();
   }
 }

@@ -15,7 +15,7 @@
             <property name="jakarta.persistence.jdbc.password" value="querydsl"/>
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="jakarta.persistence.schema-generation.create-source" value="script-then-metadata"/>
-            <property name="jakarta.persistence.schema-generation.create-script-source" value="META-INF/pgvector.sql"/>
+            <property name="jakarta.persistence.schema-generation.create-script-source" value="META-INF/create-pgvector-extension.sql"/>
         </properties>
     </persistence-unit>
 

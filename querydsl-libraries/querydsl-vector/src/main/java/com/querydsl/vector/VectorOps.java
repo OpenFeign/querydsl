@@ -23,8 +23,8 @@ public enum VectorOps implements Operator {
   INNER_PRODUCT(Double.class),
   NEGATIVE_INNER_PRODUCT(Double.class),
   L1_DISTANCE(Double.class),
-  DIMS(Integer.class),
-  NORM(Double.class);
+  DIMENSION_COUNT(Integer.class),
+  L2_NORM(Double.class);
 
   private final Class<?> type;
 

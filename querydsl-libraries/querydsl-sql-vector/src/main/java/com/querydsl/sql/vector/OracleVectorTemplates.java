@@ -42,6 +42,6 @@ public class OracleVectorTemplates extends OracleTemplates {
   public OracleVectorTemplates(char escape, boolean quote) {
     super(escape, quote);
     addCustomType(OracleVectorType.DEFAULT);
-    add(VectorTemplatesSupport.getOracleOps());
+    add(VectorOperatorSqlPatterns.createOracleOperatorTemplates());
   }
 }

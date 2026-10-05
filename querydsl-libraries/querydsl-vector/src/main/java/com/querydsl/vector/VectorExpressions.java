@@ -24,18 +24,18 @@ public final class VectorExpressions {
   private VectorExpressions() {}
 
   /**
-   * A vector constant, such as a query embedding. In JPA the other operand must be a vector
-   * property, as Hibernate cannot infer the type of a standalone array parameter.
+   * A vector constant, like a query embedding. In JPA, the other side must be a vector property,
+   * because Hibernate cannot guess the type of a standalone array parameter.
    */
-  public static <T> VectorExpression<T> vector(T value) {
-    return new ConstantVector<>(ConstantImpl.create(value));
+  public static VectorExpression createConstantVector(float[] vectorValue) {
+    return new ConstantVector(ConstantImpl.create(vectorValue));
   }
 
-  private static final class ConstantVector<T> extends VectorExpression<T> {
+  private static final class ConstantVector extends VectorExpression {
 
     private static final long serialVersionUID = 2614723907150983620L;
 
-    ConstantVector(Expression<T> constant) {
+    ConstantVector(Expression<float[]> constant) {
       super(constant);
     }
 

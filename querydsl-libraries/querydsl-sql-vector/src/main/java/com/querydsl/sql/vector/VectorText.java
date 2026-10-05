@@ -21,21 +21,21 @@ final class VectorText {
 
   static String format(float[] vector) {
     var joiner = new StringJoiner(",", "[", "]");
-    for (float value : vector) {
-      joiner.add(Float.toString(value));
+    for (float component : vector) {
+      joiner.add(Float.toString(component));
     }
     return joiner.toString();
   }
 
   static float[] parse(String text) {
-    var body = text.substring(1, text.length() - 1).trim();
-    if (body.isEmpty()) {
+    var elementsText = text.substring(1, text.length() - 1).trim();
+    if (elementsText.isEmpty()) {
       return new float[0];
     }
-    var parts = body.split(",");
-    var vector = new float[parts.length];
-    for (var i = 0; i < parts.length; i++) {
-      vector[i] = Float.parseFloat(parts[i].trim());
+    var elementTexts = elementsText.split(",");
+    var vector = new float[elementTexts.length];
+    for (var i = 0; i < elementTexts.length; i++) {
+      vector[i] = Float.parseFloat(elementTexts[i].trim());
     }
     return vector;
   }

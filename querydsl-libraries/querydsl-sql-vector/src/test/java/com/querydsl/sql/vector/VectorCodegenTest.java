@@ -28,9 +28,9 @@ import org.junit.jupiter.api.Test;
 class VectorCodegenTest {
 
   @Test
-  void exportsVectorColumns() throws Exception {
-    try (var connection = PostgreSQLVectorTest.pgvector()) {
-      PostgreSQLVectorTest.createDocumentTable(connection);
+  void exportsVectorColumnsAlongsideSpatialSupport() throws Exception {
+    try (var connection = PostgreSQLVectorTest.openPgvectorConnection()) {
+      PostgreSQLVectorTest.installVectorExtensionAndRecreateVectorDocumentTable(connection);
       var config = new MetadataExporterConfigImpl();
       config.setPackageName("test");
       config.setTargetFolder(new File("target/vectorExport"));
@@ -41,10 +41,11 @@ class VectorCodegenTest {
       exporter.export(connection.getMetaData());
     }
 
-    var source = Files.readString(Path.of("target/vectorExport/test/QVectorDocument.java"));
-    assertThat(source)
-        .contains("extends RelationalPathVector<")
+    var generatedQVectorDocumentSource =
+        Files.readString(Path.of("target/vectorExport/test/QVectorDocument.java"));
+    assertThat(generatedQVectorDocumentSource)
+        .contains("extends RelationalPathSpatial<")
         .contains(
-            "public final VectorPath<float[]> embedding = createVector(\"embedding\", float[].class);");
+            "public final VectorPath embedding = new VectorPath(forProperty(\"embedding\"));");
   }
 }

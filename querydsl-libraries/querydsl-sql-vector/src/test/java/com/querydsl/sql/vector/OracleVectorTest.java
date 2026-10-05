@@ -28,14 +28,14 @@ class OracleVectorTest extends AbstractSQLVectorTest {
   }
 
   @Override
-  protected OracleVectorTemplates templates() {
+  protected OracleVectorTemplates createTemplates() {
     return new OracleVectorTemplates();
   }
 
   @Override
-  protected void createTable(Connection connection) throws SQLException {
-    try (var stmt = connection.createStatement()) {
-      stmt.execute(
+  protected void recreateVectorDocumentTable(Connection connection) throws SQLException {
+    try (var statement = connection.createStatement()) {
+      statement.execute(
           """
           begin
             execute immediate 'drop table vector_document';
@@ -43,7 +43,7 @@ class OracleVectorTest extends AbstractSQLVectorTest {
             when others then null;
           end;\
           """);
-      stmt.execute(
+      statement.execute(
           "create table vector_document (id number(19) primary key, title varchar2(100),"
               + " embedding vector(3, float32))");
     }

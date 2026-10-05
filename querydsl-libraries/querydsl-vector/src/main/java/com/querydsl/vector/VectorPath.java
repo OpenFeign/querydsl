@@ -22,42 +22,26 @@ import com.querydsl.core.types.Visitor;
 import java.lang.reflect.AnnotatedElement;
 
 /**
- * {@code VectorPath} extends {@link VectorExpression} to implement the {@link Path} interface
- *
- * @param <T> Java representation of the vector, {@code float[]} unless given
+ * {@code VectorPath} extends {@link VectorExpression}. It also implements the {@link Path}
+ * interface.
  */
-public class VectorPath<T> extends VectorExpression<T> implements Path<T> {
+public class VectorPath extends VectorExpression implements Path<float[]> {
 
   private static final long serialVersionUID = -2390214373491853640L;
 
-  private final PathImpl<T> pathMixin;
+  private final PathImpl<float[]> pathMixin;
 
-  @SuppressWarnings("unchecked")
   public VectorPath(Path<?> parent, String property) {
-    this((Class<? extends T>) float[].class, parent, property);
+    this(PathMetadataFactory.forProperty(parent, property));
   }
 
-  public VectorPath(Class<? extends T> type, Path<?> parent, String property) {
-    this(type, PathMetadataFactory.forProperty(parent, property));
-  }
-
-  @SuppressWarnings("unchecked")
   public VectorPath(PathMetadata metadata) {
-    this((Class<? extends T>) float[].class, metadata);
+    super(ExpressionUtils.path(float[].class, metadata));
+    this.pathMixin = (PathImpl<float[]>) mixin;
   }
 
-  public VectorPath(Class<? extends T> type, PathMetadata metadata) {
-    super(ExpressionUtils.path(type, metadata));
-    this.pathMixin = (PathImpl<T>) mixin;
-  }
-
-  @SuppressWarnings("unchecked")
   public VectorPath(String var) {
-    this((Class<? extends T>) float[].class, PathMetadataFactory.forVariable(var));
-  }
-
-  public VectorPath(Class<? extends T> type, String var) {
-    this(type, PathMetadataFactory.forVariable(var));
+    this(PathMetadataFactory.forVariable(var));
   }
 
   @Override

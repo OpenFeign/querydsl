@@ -24,16 +24,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * {@code VectorSupport} maps {@code float[]} properties to {@link VectorPath} in code generation
+ * {@code FloatArrayVectorPathExtension} maps {@code float[]} properties to {@link VectorPath} in
+ * code generation
  */
-public final class VectorSupport implements Extension {
+public final class FloatArrayVectorPathExtension implements Extension {
 
   @Override
   public void addSupport(AbstractModule module) {
-    var floatArray = Types.FLOAT_P.asArrayType();
     module
         .get(TypeMappings.class)
-        .register(floatArray, new ClassType(VectorPath.class, floatArray));
+        .register(Types.FLOAT_P.asArrayType(), new ClassType(VectorPath.class));
 
     @SuppressWarnings("unchecked")
     Set<String> imports = new HashSet<>(module.get(Set.class, CodegenModule.IMPORTS));

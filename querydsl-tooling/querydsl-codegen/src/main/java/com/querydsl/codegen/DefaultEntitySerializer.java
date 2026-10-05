@@ -781,14 +781,7 @@ public class DefaultEntitySerializer implements EntitySerializer {
         writer.publicFinal(queryType, field.getEscapedName());
       }
     } else {
-      var diamond = queryType.getParameters().isEmpty() ? "" : "<>";
-      var value =
-          NEW
-              + writer.getRawName(queryType)
-              + diamond
-              + "(forProperty(\""
-              + field.getName()
-              + "\"))";
+      var value = NEW + writer.getRawName(queryType) + "(forProperty(\"" + field.getName() + "\"))";
       writer.publicFinal(queryType, field.getEscapedName(), value);
     }
   }

@@ -21,16 +21,17 @@ import org.junit.jupiter.api.Tag;
 @Tag("com.querydsl.core.testutil.PostgreSQL")
 class PostgreSQLVectorTest extends AbstractSQLVectorTest {
 
-  static Connection pgvector() throws SQLException {
+  static Connection openPgvectorConnection() throws SQLException {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5433/querydsl", "querydsl", "querydsl");
   }
 
-  static void createDocumentTable(Connection connection) throws SQLException {
-    try (var stmt = connection.createStatement()) {
-      stmt.execute("create extension if not exists vector");
-      stmt.execute("drop table if exists vector_document");
-      stmt.execute(
+  static void installVectorExtensionAndRecreateVectorDocumentTable(Connection connection)
+      throws SQLException {
+    try (var statement = connection.createStatement()) {
+      statement.execute("create extension if not exists vector");
+      statement.execute("drop table if exists vector_document");
+      statement.execute(
           "create table vector_document (id bigint primary key, title varchar(100), embedding"
               + " vector(3))");
     }
@@ -38,16 +39,16 @@ class PostgreSQLVectorTest extends AbstractSQLVectorTest {
 
   @Override
   protected Connection connect() throws SQLException {
-    return pgvector();
+    return openPgvectorConnection();
   }
 
   @Override
-  protected PGvectorTemplates templates() {
+  protected PGvectorTemplates createTemplates() {
     return new PGvectorTemplates();
   }
 
   @Override
-  protected void createTable(Connection connection) throws SQLException {
-    createDocumentTable(connection);
+  protected void recreateVectorDocumentTable(Connection connection) throws SQLException {
+    installVectorExtensionAndRecreateVectorDocumentTable(connection);
   }
 }

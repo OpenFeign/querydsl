@@ -1,1 +1,1 @@
-com.querydsl.vector.apt.VectorSupport
+com.querydsl.vector.apt.FloatArrayVectorPathExtension

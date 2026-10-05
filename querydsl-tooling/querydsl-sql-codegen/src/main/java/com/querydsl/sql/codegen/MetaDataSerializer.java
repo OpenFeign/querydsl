@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -390,18 +391,20 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
       EntityType model, Property field, SerializerConfig config, CodeWriter writer)
       throws IOException {
     var queryType = typeMappings.getPathType(field.getType(), model, false);
-    if (queryType.getPackageName().startsWith("com.querydsl")) {
+    var factoryMethod = "create" + field.getType().getSimpleName();
+    if (queryType.getPackageName().startsWith("com.querydsl")
+        && hasEntityPathFactory(factoryMethod)) {
       var localRawName = writer.getRawName(field.getType());
       serialize(
-          model,
-          field,
-          queryType,
-          writer,
-          "create" + queryType.getSimpleName().replaceFirst("Path$", ""),
-          writer.getClassConstant(localRawName));
+          model, field, queryType, writer, factoryMethod, writer.getClassConstant(localRawName));
     } else {
       super.customField(model, field, config, writer);
     }
+  }
+
+  private boolean hasEntityPathFactory(String methodName) {
+    return Arrays.stream(entityPathType.getMethods())
+        .anyMatch(method -> method.getName().equals(methodName));
   }
 
   protected void serializePrimaryKeys(

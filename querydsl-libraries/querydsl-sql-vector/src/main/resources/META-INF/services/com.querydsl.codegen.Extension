@@ -1,1 +1,1 @@
-com.querydsl.sql.vector.VectorSupport
+com.querydsl.sql.vector.SqlVectorCodegenExtension

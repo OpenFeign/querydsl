@@ -11,10 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.vector;
+package com.querydsl.sql.vector;
 
-/** Factory methods for vector path creation, implemented by vector aware entity paths */
-public interface VectorPaths {
+import com.querydsl.codegen.AbstractModule;
+import com.querydsl.codegen.Extension;
+import com.querydsl.sql.Configuration;
 
-  <A> VectorPath<A> createVector(String property, Class<? extends A> type);
+/**
+ * {@code SqlVectorCodegenExtension} maps vector columns to {@code float[]} in SQL code generation
+ */
+public final class SqlVectorCodegenExtension implements Extension {
+
+  @Override
+  public void addSupport(AbstractModule module) {
+    module.get(Configuration.class).registerType("vector", float[].class);
+  }
 }

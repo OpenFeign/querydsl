@@ -18,95 +18,83 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
-import org.jetbrains.annotations.Nullable;
 
-/**
- * {@code VectorExpression} represents an embedding vector column or value
- *
- * @param <T> Java representation of the vector, typically {@code float[]}
- */
-public abstract class VectorExpression<T> extends SimpleExpression<T> {
+/** {@code VectorExpression} is a column or a value that holds an embedding vector. */
+public abstract class VectorExpression extends SimpleExpression<float[]> {
 
   private static final long serialVersionUID = 4187062417529561203L;
 
-  @Nullable private transient volatile NumberExpression<Integer> dims;
-
-  @Nullable private transient volatile NumberExpression<Double> norm;
-
-  public VectorExpression(Expression<T> mixin) {
+  public VectorExpression(Expression<float[]> mixin) {
     super(mixin);
   }
 
-  /** Euclidean distance */
-  public NumberExpression<Double> l2Distance(Expression<T> other) {
-    return distance(VectorOps.L2_DISTANCE, other);
+  public NumberExpression<Double> l2Distance(Expression<float[]> other) {
+    return createVectorOperation(VectorOps.L2_DISTANCE, other);
   }
 
-  public NumberExpression<Double> l2Distance(T other) {
+  public NumberExpression<Double> l2Distance(float[] other) {
     return l2Distance(ConstantImpl.create(other));
   }
 
-  /** Squared Euclidean distance, cheaper than {@link #l2Distance} and ranks the same */
-  public NumberExpression<Double> l2SquaredDistance(Expression<T> other) {
-    return distance(VectorOps.L2_SQUARED_DISTANCE, other);
+  /**
+   * Squared Euclidean distance. It is cheaper than {@link #l2Distance} but gives the same order of
+   * results.
+   */
+  public NumberExpression<Double> l2SquaredDistance(Expression<float[]> other) {
+    return createVectorOperation(VectorOps.L2_SQUARED_DISTANCE, other);
   }
 
-  public NumberExpression<Double> l2SquaredDistance(T other) {
+  public NumberExpression<Double> l2SquaredDistance(float[] other) {
     return l2SquaredDistance(ConstantImpl.create(other));
   }
 
   /** Cosine distance, {@code 1 - cosine similarity} */
-  public NumberExpression<Double> cosineDistance(Expression<T> other) {
-    return distance(VectorOps.COSINE_DISTANCE, other);
+  public NumberExpression<Double> cosineDistance(Expression<float[]> other) {
+    return createVectorOperation(VectorOps.COSINE_DISTANCE, other);
   }
 
-  public NumberExpression<Double> cosineDistance(T other) {
+  public NumberExpression<Double> cosineDistance(float[] other) {
     return cosineDistance(ConstantImpl.create(other));
   }
 
-  /** Dot product */
-  public NumberExpression<Double> innerProduct(Expression<T> other) {
-    return distance(VectorOps.INNER_PRODUCT, other);
+  public NumberExpression<Double> innerProduct(Expression<float[]> other) {
+    return createVectorOperation(VectorOps.INNER_PRODUCT, other);
   }
 
-  public NumberExpression<Double> innerProduct(T other) {
+  public NumberExpression<Double> innerProduct(float[] other) {
     return innerProduct(ConstantImpl.create(other));
   }
 
-  /** Negated dot product, ascending order ranks the most similar vectors first */
-  public NumberExpression<Double> negativeInnerProduct(Expression<T> other) {
-    return distance(VectorOps.NEGATIVE_INNER_PRODUCT, other);
+  /**
+   * Negative dot product. Sorting from lowest to highest puts the most similar vectors at the top.
+   */
+  public NumberExpression<Double> negativeInnerProduct(Expression<float[]> other) {
+    return createVectorOperation(VectorOps.NEGATIVE_INNER_PRODUCT, other);
   }
 
-  public NumberExpression<Double> negativeInnerProduct(T other) {
+  public NumberExpression<Double> negativeInnerProduct(float[] other) {
     return negativeInnerProduct(ConstantImpl.create(other));
   }
 
   /** Manhattan (taxicab) distance */
-  public NumberExpression<Double> l1Distance(Expression<T> other) {
-    return distance(VectorOps.L1_DISTANCE, other);
+  public NumberExpression<Double> l1Distance(Expression<float[]> other) {
+    return createVectorOperation(VectorOps.L1_DISTANCE, other);
   }
 
-  public NumberExpression<Double> l1Distance(T other) {
+  public NumberExpression<Double> l1Distance(float[] other) {
     return l1Distance(ConstantImpl.create(other));
   }
 
-  public NumberExpression<Integer> dims() {
-    if (dims == null) {
-      dims = Expressions.numberOperation(Integer.class, VectorOps.DIMS, mixin);
-    }
-    return dims;
+  public NumberExpression<Integer> dimensionCount() {
+    return Expressions.numberOperation(Integer.class, VectorOps.DIMENSION_COUNT, mixin);
   }
 
-  /** Euclidean norm */
-  public NumberExpression<Double> norm() {
-    if (norm == null) {
-      norm = Expressions.numberOperation(Double.class, VectorOps.NORM, mixin);
-    }
-    return norm;
+  public NumberExpression<Double> l2Norm() {
+    return Expressions.numberOperation(Double.class, VectorOps.L2_NORM, mixin);
   }
 
-  private NumberExpression<Double> distance(VectorOps op, Expression<T> other) {
-    return Expressions.numberOperation(Double.class, op, mixin, other);
+  private NumberExpression<Double> createVectorOperation(
+      VectorOps vectorOperator, Expression<float[]> other) {
+    return Expressions.numberOperation(Double.class, vectorOperator, mixin, other);
   }
 }

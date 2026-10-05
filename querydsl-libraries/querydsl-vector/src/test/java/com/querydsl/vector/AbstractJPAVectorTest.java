@@ -32,7 +32,7 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractJPAVectorTest {
 
-  private static final float[] QUERY = {1, 0, 0};
+  private static final float[] QUERY_EMBEDDING = {1, 0, 0};
 
   private final EntityManagerFactory emf;
 
@@ -45,7 +45,7 @@ public abstract class AbstractJPAVectorTest {
   }
 
   @BeforeEach
-  void setUp() {
+  void beginTransactionAndPersistSampleDocuments() {
     em = emf.createEntityManager();
     em.getTransaction().begin();
     em.persist(new Document(1, "x-axis", 1, 0, 0));
@@ -58,18 +58,18 @@ public abstract class AbstractJPAVectorTest {
   }
 
   @AfterEach
-  void tearDown() {
+  void rollbackTransactionAndCloseEntityManager() {
     em.getTransaction().rollback();
     em.close();
   }
 
   @AfterAll
-  void close() {
+  void closeEntityManagerFactory() {
     emf.close();
   }
 
   @Test
-  void roundTrip() {
+  void selectEmbeddingReturnsPersistedFloats() {
     var embedding =
         queryFactory.select(document.embedding).from(document).where(document.id.eq(3L)).fetchOne();
 
@@ -78,19 +78,20 @@ public abstract class AbstractJPAVectorTest {
 
   @Test
   void orderByL2Distance() {
-    assertThat(titlesOrderedBy(document.embedding.l2Distance(QUERY)))
+    assertThat(fetchTitlesOrderedAscendingBy(document.embedding.l2Distance(QUERY_EMBEDDING)))
         .containsExactly("x-axis", "near x-axis", "y-axis", "diagonal");
   }
 
   @Test
   void orderByCosineDistance() {
-    assertThat(titlesOrderedBy(document.embedding.cosineDistance(QUERY)))
+    assertThat(fetchTitlesOrderedAscendingBy(document.embedding.cosineDistance(QUERY_EMBEDDING)))
         .containsExactly("x-axis", "near x-axis", "diagonal", "y-axis");
   }
 
   @Test
   void orderByNegativeInnerProduct() {
-    assertThat(titlesOrderedBy(document.embedding.negativeInnerProduct(QUERY)))
+    assertThat(
+            fetchTitlesOrderedAscendingBy(document.embedding.negativeInnerProduct(QUERY_EMBEDDING)))
         .containsExactly("diagonal", "x-axis", "near x-axis", "y-axis");
   }
 
@@ -100,7 +101,7 @@ public abstract class AbstractJPAVectorTest {
         queryFactory
             .select(document.title)
             .from(document)
-            .where(document.embedding.cosineDistance(QUERY).lt(0.1))
+            .where(document.embedding.cosineDistance(QUERY_EMBEDDING).lt(0.1))
             .orderBy(document.id.asc())
             .fetch();
 
@@ -108,41 +109,50 @@ public abstract class AbstractJPAVectorTest {
   }
 
   @Test
-  void distances() {
-    var e = document.embedding;
-    var row =
+  void selectVectorMetricsOfSingleDocument() {
+    var embeddingPath = document.embedding;
+    var metricsTuple =
         queryFactory
             .select(
-                e.l2Distance(QUERY),
-                e.l2SquaredDistance(QUERY),
-                e.innerProduct(QUERY),
-                e.l1Distance(QUERY),
-                e.l2Distance(e))
+                embeddingPath.l2Distance(QUERY_EMBEDDING),
+                embeddingPath.l2SquaredDistance(QUERY_EMBEDDING),
+                embeddingPath.innerProduct(QUERY_EMBEDDING),
+                embeddingPath.l1Distance(QUERY_EMBEDDING),
+                embeddingPath.l2Distance(embeddingPath))
             .from(document)
             .where(document.id.eq(4L))
             .fetchOne();
 
-    assertThat(row.get(e.l2Distance(QUERY))).isCloseTo(3.0, within(1e-6));
-    assertThat(row.get(e.l2SquaredDistance(QUERY))).isCloseTo(9.0, within(1e-6));
-    assertThat(row.get(e.innerProduct(QUERY))).isCloseTo(2.0, within(1e-6));
-    assertThat(row.get(e.l1Distance(QUERY))).isCloseTo(5.0, within(1e-6));
-    assertThat(row.get(e.l2Distance(e))).isCloseTo(0.0, within(1e-6));
+    assertThat(metricsTuple.get(embeddingPath.l2Distance(QUERY_EMBEDDING)))
+        .isCloseTo(3.0, within(1e-6));
+    assertThat(metricsTuple.get(embeddingPath.l2SquaredDistance(QUERY_EMBEDDING)))
+        .isCloseTo(9.0, within(1e-6));
+    assertThat(metricsTuple.get(embeddingPath.innerProduct(QUERY_EMBEDDING)))
+        .isCloseTo(2.0, within(1e-6));
+    assertThat(metricsTuple.get(embeddingPath.l1Distance(QUERY_EMBEDDING)))
+        .isCloseTo(5.0, within(1e-6));
+    assertThat(metricsTuple.get(embeddingPath.l2Distance(embeddingPath)))
+        .isCloseTo(0.0, within(1e-6));
   }
 
   @Test
-  void dimsAndNorm() {
+  void dimensionCountAndL2Norm() {
     var row =
         queryFactory
-            .select(document.embedding.dims(), document.embedding.norm())
+            .select(document.embedding.dimensionCount(), document.embedding.l2Norm())
             .from(document)
             .where(document.id.eq(2L))
             .fetchOne();
 
-    assertThat(row.get(document.embedding.dims())).isEqualTo(3);
-    assertThat(row.get(document.embedding.norm())).isCloseTo(1.0, within(1e-6));
+    assertThat(row.get(document.embedding.dimensionCount())).isEqualTo(3);
+    assertThat(row.get(document.embedding.l2Norm())).isCloseTo(1.0, within(1e-6));
   }
 
-  private List<String> titlesOrderedBy(NumberExpression<Double> distance) {
-    return queryFactory.select(document.title).from(document).orderBy(distance.asc()).fetch();
+  private List<String> fetchTitlesOrderedAscendingBy(NumberExpression<Double> dissimilarityScore) {
+    return queryFactory
+        .select(document.title)
+        .from(document)
+        .orderBy(dissimilarityScore.asc())
+        .fetch();
   }
 }

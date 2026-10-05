@@ -47,7 +47,7 @@ public class OracleVectorType extends AbstractType<float[]> {
   }
 
   @Override
-  public String getLiteral(float[] value) {
-    return "TO_VECTOR('" + VectorText.format(value) + "')";
+  public String getLiteral(float[] vector) {
+    return "TO_VECTOR('" + VectorText.format(vector) + "')";
   }
 }

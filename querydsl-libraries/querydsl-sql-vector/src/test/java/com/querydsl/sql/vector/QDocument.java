@@ -18,10 +18,11 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
+import com.querydsl.sql.RelationalPathBase;
 import com.querydsl.vector.VectorPath;
 import java.sql.Types;
 
-public class QDocument extends RelationalPathVector<Document> {
+public class QDocument extends RelationalPathBase<Document> {
 
   private static final long serialVersionUID = -1652339447328106042L;
 
@@ -31,7 +32,7 @@ public class QDocument extends RelationalPathVector<Document> {
 
   public final StringPath title = createString("title");
 
-  public final VectorPath<float[]> embedding = createVector("embedding", float[].class);
+  public final VectorPath embedding = new VectorPath(forProperty("embedding"));
 
   public QDocument(String variable) {
     super(Document.class, forVariable(variable), null, "vector_document");

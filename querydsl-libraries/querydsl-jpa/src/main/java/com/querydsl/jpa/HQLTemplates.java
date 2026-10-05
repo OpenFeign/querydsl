@@ -70,16 +70,20 @@ public class HQLTemplates extends JPQLTemplates {
     builder.put(BigDecimal.class, "big_decimal");
     typeNames = Collections.unmodifiableMap(builder);
 
-    addIfOnClasspath("com.querydsl.spatial.hibernate.HibernateSpatialSupport", "getSpatialOps");
-    addIfOnClasspath("com.querydsl.vector.hibernate.HibernateVectorSupport", "getVectorOps");
+    addOperatorTemplatesFromOptionalSupport(
+        "com.querydsl.spatial.hibernate.HibernateSpatialSupport", "getSpatialOps");
+    addOperatorTemplatesFromOptionalSupport(
+        "com.querydsl.vector.hibernate.HibernateVectorOperatorPatterns",
+        "getHqlTemplatesByVectorOperator");
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private void addIfOnClasspath(String className, String opsMethod) {
+  private void addOperatorTemplatesFromOptionalSupport(
+      String supportClassName, String operatorTemplatesGetterName) {
     try {
-      Class cl = Class.forName(className);
-      add((Map) cl.getMethod(opsMethod).invoke(null));
-    } catch (Exception e) {
+      Class supportClass = Class.forName(supportClassName);
+      add((Map) supportClass.getMethod(operatorTemplatesGetterName).invoke(null));
+    } catch (Exception supportUnavailable) {
       // do nothing
     }
   }

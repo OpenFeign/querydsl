@@ -25,15 +25,16 @@ Vectors are mapped to `float[]` and exposed as `VectorPath` in query types.
 | `innerProduct` | `(<#>) * -1` | `VECTOR_DISTANCE(.., DOT) * -1` |
 | `negativeInnerProduct` | `<#>` | `VECTOR_DISTANCE(.., DOT)` |
 | `l1Distance` | `<+>` | `VECTOR_DISTANCE(.., MANHATTAN)` |
-| `dims` | `vector_dims` | `VECTOR_DIMENSION_COUNT` |
-| `norm` | `vector_norm` | `VECTOR_NORM` |
+| `dimensionCount` | `vector_dims` | `VECTOR_DIMENSION_COUNT` |
+| `l2Norm` | `vector_norm` | `VECTOR_NORM` |
 
-Each distance accepts either a `float[]` value or another vector expression.
-`VectorExpressions.vector(float[])` turns a value into an expression, for example
-`vector(question).dims()`. In JPA, a constant has to be compared with a vector
-property, because Hibernate cannot infer the type of a standalone array parameter.
-Order by the distance ascending to get the nearest neighbours first. On
-pgvector, the operator form lets PostgreSQL use HNSW and IVFFlat indexes.
+You can use a `float[]` or another vector expression for each distance. Use
+`VectorExpressions.createConstantVector(float[])` to turn a value into an
+expression. For example, use `createConstantVector(question).dimensionCount()`.
+In JPA, you must compare a constant with a vector property. This is because
+Hibernate cannot figure out the type of a standalone array parameter. Sort by
+distance in ascending order to find the nearest neighbours first. On pgvector,
+using the operator form allows PostgreSQL to use HNSW and IVFFlat indexes.
 
 ## SQL
 
@@ -61,15 +62,17 @@ List<String> titles = queryFactory
     .fetch();
 ```
 
-To combine vectors with another extension, such as PostGIS, add the operators
-from `VectorTemplatesSupport` and the `PGvectorType` custom type to your own
-`SQLTemplates` subclass.
+To use vectors with other extensions like PostGIS, add these things to your own
+`SQLTemplates` subclass:
+
+- The operators from `VectorOperatorSqlPatterns`
+- The `PGvectorType` custom type
 
 ### Code Generation
 
-With `querydsl-sql-vector` on the `querydsl-maven-plugin` classpath, `vector`
-columns are generated as `VectorPath<float[]>` and query types extend
-`RelationalPathVector`:
+If you add `querydsl-sql-vector` to the `querydsl-maven-plugin` classpath,
+`vector` columns are generated as `VectorPath`. This also works alongside
+`querydsl-sql-spatial`:
 
 ```xml
 <plugin>
@@ -126,10 +129,10 @@ public class Document {
 </plugin>
 ```
 
-With `querydsl-vector` on the processor path, every `float[]` property is
-generated as a `VectorPath`. Add `org.hibernate.orm:hibernate-vector` and
-`querydsl-vector` at runtime and `HQLTemplates` renders the
-`hibernate-vector` functions:
+If you put `querydsl-vector` in the processor path, every `float[]` property is
+generated as a `VectorPath`. If you add `org.hibernate.orm:hibernate-vector` and
+`querydsl-vector` at runtime, `HQLTemplates` renders the `hibernate-vector`
+functions:
 
 ```java
 List<Document> nearest = queryFactory
@@ -137,4 +140,15 @@ List<Document> nearest = queryFactory
     .orderBy(document.embedding.l2Distance(question).asc())
     .limit(10)
     .fetch();
+```
+
+## `float[]` Is Reserved for Vectors
+
+With `querydsl-vector` on the processor path, other `float[]` properties lose
+`ArrayPath`. Under `PGvectorTemplates` and `OracleVectorTemplates`, every
+`float[]` binds as a vector. To map a `real[]` column, register its type
+explicitly:
+
+```java
+configuration.register("table", "column", new ArrayType<>(float[].class, "real"));
 ```

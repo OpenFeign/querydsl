@@ -44,14 +44,14 @@ public class PGvectorType extends AbstractType<float[]> {
 
   @Override
   public void setValue(PreparedStatement st, int startIndex, float[] value) throws SQLException {
-    var vector = new PGobject();
-    vector.setType("vector");
-    vector.setValue(VectorText.format(value));
-    st.setObject(startIndex, vector);
+    var vectorParameter = new PGobject();
+    vectorParameter.setType("vector");
+    vectorParameter.setValue(VectorText.format(value));
+    st.setObject(startIndex, vectorParameter);
   }
 
   @Override
-  public String getLiteral(float[] value) {
-    return "'" + VectorText.format(value) + "'::vector";
+  public String getLiteral(float[] vector) {
+    return "'" + VectorText.format(vector) + "'::vector";
   }
 }

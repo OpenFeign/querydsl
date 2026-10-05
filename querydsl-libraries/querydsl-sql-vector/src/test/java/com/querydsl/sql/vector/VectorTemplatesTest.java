@@ -23,47 +23,67 @@ import org.junit.jupiter.api.Test;
 
 class VectorTemplatesTest {
 
-  private static final float[] QUERY = {1, 0, 0.5f};
+  private static final float[] QUERY_EMBEDDING = {1, 0, 0.5f};
 
   private static final QDocument document = new QDocument("d");
 
   @Test
-  void pgvector() {
-    SQLTemplates templates = new PGvectorTemplates();
-    var e = document.embedding;
+  void rendersPgvectorOperatorsAndFunctionsAsSql() {
+    SQLTemplates pgvectorTemplates = new PGvectorTemplates();
+    var embedding = document.embedding;
 
-    assertThat(select(templates, e.l2Distance(QUERY))).isEqualTo("(d.embedding <-> ?)");
-    assertThat(select(templates, e.l2SquaredDistance(QUERY)))
+    assertThat(renderSelectClauseSql(pgvectorTemplates, embedding.l2Distance(QUERY_EMBEDDING)))
+        .isEqualTo("(d.embedding <-> ?)");
+    assertThat(
+            renderSelectClauseSql(pgvectorTemplates, embedding.l2SquaredDistance(QUERY_EMBEDDING)))
         .isEqualTo("((d.embedding <-> ?) ^ 2)");
-    assertThat(select(templates, e.cosineDistance(QUERY))).isEqualTo("(d.embedding <=> ?)");
-    assertThat(select(templates, e.innerProduct(QUERY))).isEqualTo("((d.embedding <#> ?) * -1)");
-    assertThat(select(templates, e.negativeInnerProduct(QUERY))).isEqualTo("(d.embedding <#> ?)");
-    assertThat(select(templates, e.l1Distance(QUERY))).isEqualTo("(d.embedding <+> ?)");
-    assertThat(select(templates, e.dims())).isEqualTo("vector_dims(d.embedding)");
-    assertThat(select(templates, e.norm())).isEqualTo("vector_norm(d.embedding)");
-    assertThat(PGvectorType.DEFAULT.getLiteral(QUERY)).isEqualTo("'[1.0,0.0,0.5]'::vector");
+    assertThat(renderSelectClauseSql(pgvectorTemplates, embedding.cosineDistance(QUERY_EMBEDDING)))
+        .isEqualTo("(d.embedding <=> ?)");
+    assertThat(renderSelectClauseSql(pgvectorTemplates, embedding.innerProduct(QUERY_EMBEDDING)))
+        .isEqualTo("((d.embedding <#> ?) * -1)");
+    assertThat(
+            renderSelectClauseSql(
+                pgvectorTemplates, embedding.negativeInnerProduct(QUERY_EMBEDDING)))
+        .isEqualTo("(d.embedding <#> ?)");
+    assertThat(renderSelectClauseSql(pgvectorTemplates, embedding.l1Distance(QUERY_EMBEDDING)))
+        .isEqualTo("(d.embedding <+> ?)");
+    assertThat(renderSelectClauseSql(pgvectorTemplates, embedding.dimensionCount()))
+        .isEqualTo("vector_dims(d.embedding)");
+    assertThat(renderSelectClauseSql(pgvectorTemplates, embedding.l2Norm()))
+        .isEqualTo("vector_norm(d.embedding)");
+    assertThat(PGvectorType.DEFAULT.getLiteral(QUERY_EMBEDDING))
+        .isEqualTo("'[1.0,0.0,0.5]'::vector");
   }
 
   @Test
-  void oracle() {
-    SQLTemplates templates = new OracleVectorTemplates();
-    var e = document.embedding;
+  void rendersVectorExpressionsAsOracleSql() {
+    SQLTemplates oracleVectorTemplates = new OracleVectorTemplates();
+    var embedding = document.embedding;
 
-    assertThat(select(templates, e.l2Distance(QUERY)))
+    assertThat(renderSelectClauseSql(oracleVectorTemplates, embedding.l2Distance(QUERY_EMBEDDING)))
         .isEqualTo("vector_distance(d.embedding, ?, EUCLIDEAN)");
-    assertThat(select(templates, e.l2SquaredDistance(QUERY)))
+    assertThat(
+            renderSelectClauseSql(
+                oracleVectorTemplates, embedding.l2SquaredDistance(QUERY_EMBEDDING)))
         .isEqualTo("vector_distance(d.embedding, ?, EUCLIDEAN_SQUARED)");
-    assertThat(select(templates, e.cosineDistance(QUERY)))
+    assertThat(
+            renderSelectClauseSql(oracleVectorTemplates, embedding.cosineDistance(QUERY_EMBEDDING)))
         .isEqualTo("vector_distance(d.embedding, ?, COSINE)");
-    assertThat(select(templates, e.innerProduct(QUERY)))
+    assertThat(
+            renderSelectClauseSql(oracleVectorTemplates, embedding.innerProduct(QUERY_EMBEDDING)))
         .isEqualTo("(vector_distance(d.embedding, ?, DOT) * -1)");
-    assertThat(select(templates, e.negativeInnerProduct(QUERY)))
+    assertThat(
+            renderSelectClauseSql(
+                oracleVectorTemplates, embedding.negativeInnerProduct(QUERY_EMBEDDING)))
         .isEqualTo("vector_distance(d.embedding, ?, DOT)");
-    assertThat(select(templates, e.l1Distance(QUERY)))
+    assertThat(renderSelectClauseSql(oracleVectorTemplates, embedding.l1Distance(QUERY_EMBEDDING)))
         .isEqualTo("vector_distance(d.embedding, ?, MANHATTAN)");
-    assertThat(select(templates, e.dims())).isEqualTo("vector_dimension_count(d.embedding)");
-    assertThat(select(templates, e.norm())).isEqualTo("vector_norm(d.embedding)");
-    assertThat(OracleVectorType.DEFAULT.getLiteral(QUERY)).isEqualTo("TO_VECTOR('[1.0,0.0,0.5]')");
+    assertThat(renderSelectClauseSql(oracleVectorTemplates, embedding.dimensionCount()))
+        .isEqualTo("vector_dimension_count(d.embedding)");
+    assertThat(renderSelectClauseSql(oracleVectorTemplates, embedding.l2Norm()))
+        .isEqualTo("vector_norm(d.embedding)");
+    assertThat(OracleVectorType.DEFAULT.getLiteral(QUERY_EMBEDDING))
+        .isEqualTo("TO_VECTOR('[1.0,0.0,0.5]')");
   }
 
   @Test
@@ -72,10 +92,11 @@ class VectorTemplatesTest {
     assertThat(VectorText.parse("[]")).isEmpty();
   }
 
-  private static String select(SQLTemplates templates, NumberExpression<?> expr) {
+  private static String renderSelectClauseSql(
+      SQLTemplates templates, NumberExpression<?> expression) {
     var sql =
         new SQLQuery<Void>(new Configuration(templates))
-            .select(expr)
+            .select(expression)
             .from(document)
             .getSQL()
             .getSQL();

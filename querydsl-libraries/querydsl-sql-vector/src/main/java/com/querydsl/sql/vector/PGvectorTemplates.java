@@ -42,6 +42,6 @@ public class PGvectorTemplates extends PostgreSQLTemplates {
   public PGvectorTemplates(char escape, boolean quote) {
     super(escape, quote);
     addCustomType(PGvectorType.DEFAULT);
-    add(VectorTemplatesSupport.getPGvectorOps());
+    add(VectorOperatorSqlPatterns.createPGvectorOperatorTemplates());
   }
 }
