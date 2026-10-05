@@ -79,7 +79,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
   @Test
   @ExcludeIn({
-    CUBRID, SQLITE, DERBY, ORACLE, TURSO
+    CUBRID, SQLITE, DERBY, TURSO
   }) // https://bitbucket.org/xerial/sqlite-jdbc/issue/133/prepstmtsetdate-int-date-calendar-seems
   public void insert_dates() {
     var dateTest = QDateTest.qDateTest;
@@ -214,7 +214,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(ORACLE)
   public void insert_nulls_in_batch() {
     //        QFoo f= QFoo.foo;
     //        SQLInsertClause sic = new SQLInsertClause(c, new H2Templates(), f);
