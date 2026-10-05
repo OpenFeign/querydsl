@@ -48,7 +48,6 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(MYSQL)
   public void delete() {
     var count = query().from(survey).fetchCount().block();
     assertThat((long) delete(survey).where(survey.name.eq("XXX")).execute().block()).isEqualTo(0);

@@ -1114,7 +1114,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, TERADATA})
+  @ExcludeIn(TERADATA)
   public void in_subqueries() {
     var e1 = new QEmployee("e1");
     var e2 = new QEmployee("e2");

@@ -79,7 +79,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, TURSO})
+  @ExcludeIn(TURSO)
   public void delete() throws SQLException {
     var count = query().from(survey).fetchCount();
     assertThat(delete(survey).where(survey.name.eq("XXX")).execute()).isEqualTo(0);
