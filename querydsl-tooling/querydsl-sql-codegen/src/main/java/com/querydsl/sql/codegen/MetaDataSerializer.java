@@ -397,7 +397,7 @@ public class MetaDataSerializer extends DefaultEntitySerializer {
           field,
           queryType,
           writer,
-          "create" + field.getType().getSimpleName(),
+          "create" + queryType.getSimpleName().replaceFirst("Path$", ""),
           writer.getClassConstant(localRawName));
     } else {
       super.customField(model, field, config, writer);

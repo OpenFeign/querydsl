@@ -15,6 +15,7 @@
   <modules>
     <module>querydsl-core</module>
     <module>querydsl-spatial</module>
+    <module>querydsl-vector</module>
 
     <module>querydsl-collections</module>
     <module>querydsl-guava</module>
@@ -22,6 +23,7 @@
     <!-- SQL -->
     <module>querydsl-sql</module>
     <module>querydsl-sql-spatial</module>
+    <module>querydsl-sql-vector</module>
     <module>querydsl-sql-spring</module>
     <module>querydsl-sql-json</module>
     <!-- Reactive SQL -->

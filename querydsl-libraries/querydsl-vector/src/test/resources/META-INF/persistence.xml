@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="postgresql">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.querydsl.vector.Document</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5433/querydsl"/>
+            <property name="jakarta.persistence.jdbc.user" value="querydsl"/>
+            <property name="jakarta.persistence.jdbc.password" value="querydsl"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="jakarta.persistence.schema-generation.create-source" value="script-then-metadata"/>
+            <property name="jakarta.persistence.schema-generation.create-script-source" value="META-INF/pgvector.sql"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="oracle">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.querydsl.vector.Document</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521/FREEPDB1"/>
+            <property name="jakarta.persistence.jdbc.user" value="querydsl"/>
+            <property name="jakarta.persistence.jdbc.password" value="querydsl"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>

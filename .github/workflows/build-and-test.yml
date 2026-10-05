@@ -17,8 +17,8 @@ concurrency:
 env:
   MAVEN_OPTS: -Xmx3200m
   # Modules that contain database-tagged tests, grouped by the databases they cover.
-  SQL_MODULES: ":querydsl-jpa,:querydsl-r2dbc,:querydsl-sql,:querydsl-sql-spatial,:querydsl-sql-codegen"
-  ORACLE_MODULES: ":querydsl-jpa,:querydsl-sql,:querydsl-sql-codegen"
+  SQL_MODULES: ":querydsl-jpa,:querydsl-r2dbc,:querydsl-sql,:querydsl-sql-spatial,:querydsl-sql-codegen,:querydsl-vector,:querydsl-sql-vector"
+  ORACLE_MODULES: ":querydsl-jpa,:querydsl-sql,:querydsl-sql-codegen,:querydsl-vector,:querydsl-sql-vector"
 
 jobs:
   # Compile all core jars once and hand them to the test jobs below as a run-scoped artifact.
@@ -146,7 +146,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Start PostgreSQL
-        run: docker compose up -d --wait --wait-timeout 900 postgresql
+        run: docker compose up -d --wait --wait-timeout 900 postgresql pgvector
       - name: Test PostgreSQL
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.PostgreSQL
       - name: Publish test report

@@ -70,10 +70,15 @@ public class HQLTemplates extends JPQLTemplates {
     builder.put(BigDecimal.class, "big_decimal");
     typeNames = Collections.unmodifiableMap(builder);
 
-    // add Hibernate Spatial mappings, if on classpath
+    addIfOnClasspath("com.querydsl.spatial.hibernate.HibernateSpatialSupport", "getSpatialOps");
+    addIfOnClasspath("com.querydsl.vector.hibernate.HibernateVectorSupport", "getVectorOps");
+  }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  private void addIfOnClasspath(String className, String opsMethod) {
     try {
-      Class cl = Class.forName("com.querydsl.spatial.hibernate.HibernateSpatialSupport");
-      add((Map) cl.getMethod("getSpatialOps").invoke(null));
+      Class cl = Class.forName(className);
+      add((Map) cl.getMethod(opsMethod).invoke(null));
     } catch (Exception e) {
       // do nothing
     }
