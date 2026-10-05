@@ -90,7 +90,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
     assertThat(list).isNotEmpty();
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void subQuery_alias() {
     query()

@@ -52,7 +52,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
     reset();
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void batch() throws SQLException {
     insert(survey).values(2, "A", "B").execute();
@@ -96,7 +96,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
     assertThat(delete(survey).limit(2).execute()).isEqualTo(2);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void delete_with_subQuery_exists() {
     var survey1 = new QSurvey("s1");
@@ -107,7 +107,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
     assertThat(delete.execute()).isEqualTo(0);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void delete_with_subQuery_exists_Params() {
     var survey1 = new QSurvey("s1");
@@ -122,7 +122,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
     assertThat(delete.execute()).isEqualTo(0);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void delete_with_subQuery_exists2() {
     var survey1 = new QSurvey("s1");
