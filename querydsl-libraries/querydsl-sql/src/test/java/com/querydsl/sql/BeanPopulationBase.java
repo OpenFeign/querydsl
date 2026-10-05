@@ -41,7 +41,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
     delete(e).where(e.firstname.eq("John")).execute();
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void custom_projection() {
     // Insert
@@ -89,7 +89,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
     assertThat(delete(e).where(e.id.eq(employee.getId())).execute()).isEqualTo(1L);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void insert_update_query_and_delete() {
     // Insert
@@ -112,7 +112,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
     assertThat(delete(e).where(e.id.eq(employee.getId())).execute()).isEqualTo(1L);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void populate_with_beanMapper() {
     var employee = new Employee();

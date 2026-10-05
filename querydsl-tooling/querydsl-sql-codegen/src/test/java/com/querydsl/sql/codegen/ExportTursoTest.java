@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 
-// Turso 0.6.0 JDBC DatabaseMetaData.getPrimaryKeys() returns null, so schema export codegen
+// Turso JDBC DatabaseMetaData.getPrimaryKeys() returns null, so schema export codegen
 // cannot read the database metadata. Re-enable once the driver implements it. See #1812.
-@Disabled("Turso 0.6.0 JDBC metadata (getPrimaryKeys) incomplete, see #1812")
+@Disabled("Turso JDBC metadata (getPrimaryKeys) incomplete, see #1812")
 @Tag("com.querydsl.core.testutil.Turso")
 public class ExportTursoTest extends ExportBaseTest {
 
