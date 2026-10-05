@@ -61,7 +61,7 @@ class MySQLWkbType extends AbstractType<Geometry> {
   public void setValue(PreparedStatement st, int startIndex, Geometry value) throws SQLException {
     var encoder = Wkb.newEncoder(Wkb.Dialect.POSTGIS_EWKB_1);
     var buffer = encoder.encode(value, byteOrder);
-    var srid = value.getSRID();
+    var srid = Math.max(value.getSRID(), 0);
 
     // prepend srid into first 4 bytes
     var wkb = buffer.toByteArray();
@@ -79,9 +79,9 @@ class MySQLWkbType extends AbstractType<Geometry> {
   public String getLiteral(Geometry geometry) {
     var str = Wkt.newEncoder(Wkt.Dialect.POSTGIS_EWKT_1).encode(geometry);
     if (geometry.getSRID() > -1) {
-      return "GeomFromText('" + str + "', " + geometry.getSRID() + ")";
+      return "ST_GeomFromText('" + str + "', " + geometry.getSRID() + ")";
     } else {
-      return "GeomFromText('" + str + "')";
+      return "ST_GeomFromText('" + str + "')";
     }
   }
 }
