@@ -318,7 +318,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({ORACLE, CUBRID, FIREBIRD, DB2, DERBY, SQLSERVER, SQLITE, TERADATA, TURSO})
+  @ExcludeIn({CUBRID, FIREBIRD, DB2, DERBY, SQLSERVER, SQLITE, TERADATA, TURSO})
   public void boolean_all() {
     assertThat(
             query()
@@ -726,7 +726,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   // TDO Date_diff with timestamps
 
   @Test
-  @ExcludeIn({DB2, HSQLDB, SQLITE, TERADATA, ORACLE, TURSO})
+  @ExcludeIn({DB2, HSQLDB, SQLITE, TERADATA, TURSO})
   public void date_diff2() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
 
@@ -997,7 +997,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER, TURSO})
+  @ExcludeIn({DB2, DERBY, SQLSERVER, TURSO})
   public void groupBy_validate() {
     NumberPath<BigDecimal> alias = Expressions.numberPath(BigDecimal.class, "alias");
     assertThat(
@@ -2637,7 +2637,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER})
+  @ExcludeIn({DB2, DERBY, SQLSERVER})
   public void groupConcat() {
     HashSet<String> expected =
         Sets.newHashSet("Mike,Mary", "Joe,Peter,Steve,Jim", "Jennifer,Helen,Daisy,Barbara");
@@ -2652,7 +2652,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER})
+  @ExcludeIn({DB2, DERBY, SQLSERVER})
   public void groupConcat2() {
     HashSet<String> expected =
         Sets.newHashSet("Mike-Mary", "Joe-Peter-Steve-Jim", "Jennifer-Helen-Daisy-Barbara");
