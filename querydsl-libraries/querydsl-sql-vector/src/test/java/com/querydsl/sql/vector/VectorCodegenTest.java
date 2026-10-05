@@ -21,6 +21,7 @@ import com.querydsl.sql.codegen.MetadataExporterConfigImpl;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import javax.tools.ToolProvider;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -47,5 +48,19 @@ class VectorCodegenTest {
         .contains("extends RelationalPathSpatial<")
         .contains(
             "public final VectorPath embedding = new VectorPath(forProperty(\"embedding\"));");
+
+    var compilerExitCode =
+        ToolProvider.getSystemJavaCompiler()
+            .run(
+                null,
+                null,
+                null,
+                "-proc:none",
+                "-classpath",
+                System.getProperty("java.class.path"),
+                "-d",
+                "target/vectorExport-classes",
+                "target/vectorExport/test/QVectorDocument.java");
+    assertThat(compilerExitCode).isZero();
   }
 }
