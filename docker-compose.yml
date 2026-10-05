@@ -27,7 +27,7 @@ services:
       retries: 30
 
   postgresql:
-    image: postgis/postgis:16-3.4-alpine
+    image: postgis/postgis:16-3.5-alpine
     platform: linux/amd64
     ports:
       - "5432:5432"
