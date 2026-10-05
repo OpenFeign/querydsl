@@ -279,7 +279,7 @@ public abstract class UnionBase extends AbstractBaseTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  @ExcludeIn({DERBY, CUBRID})
+  @ExcludeIn(DERBY)
   public void union_clone() {
     NumberPath<Integer> idAlias = Expressions.numberPath(Integer.class, "id");
     SubQueryExpression<Employee> sq1 =

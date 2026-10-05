@@ -1969,13 +1969,13 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, CUBRID, TERADATA, TURSO})
+  @ExcludeIn({SQLITE, TERADATA, TURSO})
   public void select_for_update() {
     assertThat(query().from(survey).forUpdate().select(survey.id).fetch()).hasSize(1);
   }
 
   @Test
-  @ExcludeIn({SQLITE, CUBRID, TERADATA, TURSO})
+  @ExcludeIn({SQLITE, TERADATA, TURSO})
   public void select_for_update_Where() {
     assertThat(
             query().from(survey).forUpdate().where(survey.id.isNotNull()).select(survey.id).fetch())
@@ -1983,7 +1983,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, CUBRID, TERADATA, TURSO})
+  @ExcludeIn({SQLITE, TERADATA, TURSO})
   public void select_for_update_UniqueResult() {
     query().from(survey).forUpdate().select(survey.id).fetchOne();
   }
