@@ -5,7 +5,6 @@ import static com.querydsl.core.Target.DERBY;
 import static com.querydsl.core.Target.FIREBIRD;
 import static com.querydsl.core.Target.HSQLDB;
 import static com.querydsl.core.Target.MYSQL;
-import static com.querydsl.core.Target.POSTGRESQL;
 import static com.querydsl.core.Target.SQLITE;
 import static com.querydsl.core.Target.SQLSERVER;
 import static com.querydsl.core.Target.TERADATA;
