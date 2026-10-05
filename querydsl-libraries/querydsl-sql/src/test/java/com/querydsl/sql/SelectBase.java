@@ -547,7 +547,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, SQLITE, TERADATA, FIREBIRD, TURSO})
+  @ExcludeIn({CUBRID, DERBY, SQLITE, TERADATA, FIREBIRD, TURSO})
   public void dates_literals() throws SQLException {
     if (configuration.getUseLiterals()) {
       dates(true);
@@ -1233,7 +1233,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, DERBY})
+  @ExcludeIn(DERBY)
   public void like_number() {
     assertThat(query().from(employee).where(employee.id.like("1%")).fetchCount()).isEqualTo(5);
   }
