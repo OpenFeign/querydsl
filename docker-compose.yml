@@ -58,7 +58,7 @@ services:
       retries: 30
 
   cubrid:
-    image: cubrid/cubrid:11.3
+    image: cubrid/cubrid:11.4
     platform: linux/amd64
     ports:
       - "33000:33000"
