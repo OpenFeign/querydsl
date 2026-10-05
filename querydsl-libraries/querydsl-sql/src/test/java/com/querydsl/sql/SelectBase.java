@@ -782,7 +782,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, TERADATA, DERBY, H2, TURSO, CUBRID}) // FIXME
+  @ExcludeIn({SQLITE, TERADATA, H2, TURSO, CUBRID}) // FIXME
   public void date_trunc2() {
     DateTimeExpression<LocalDateTime> expr =
         DateTimeExpression.currentTimestamp(LocalDateTime.class);
@@ -1081,7 +1081,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DERBY, FIREBIRD, SQLITE, SQLSERVER, TERADATA})
+  @ExcludeIn({FIREBIRD, SQLITE, SQLSERVER, TERADATA})
   public void in_long_list() {
     List<Integer> ids = new ArrayList<>();
     for (var i = 0; i < 20000; i++) {
