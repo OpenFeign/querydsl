@@ -20,3 +20,33 @@ updates:
       interval: "daily"                                                                                                                     
     open-pull-requests-limit: 100
     target-branch: "master"
+
+  - package-ecosystem: "github-actions"
+    directories:
+      - "/"
+      - "/.github/actions/*"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    target-branch: "master"
+
+  # Database majors change SQL behaviour, so they are bumped by hand together with the test exclusions
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    target-branch: "master"
+
+  - package-ecosystem: "docker"
+    directories:
+      - "/"
+      - "/querydsl-examples/querydsl-example-jpa-quarkus"
+    schedule:
+      interval: "weekly"
+    target-branch: "master"
