@@ -43,7 +43,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: >
           ./mvnw -ntp -B -nsu -s .github/settings.xml -DskipTests=true
-          deploy -Prelease -pl '!:querydsl-apt-test'
+          deploy -Prelease -Deasyjacoco.skip=true -pl '!:querydsl-apt-test'
 
   # Deploy a release to Maven Central (staging) when a tag is pushed.
   release:
@@ -75,4 +75,4 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: >
           ./mvnw -ntp -B -nsu -s .github/settings.xml -DskipTests=true
-          deploy -Prelease,staging -pl '!:querydsl-apt-test'
+          deploy -Prelease,staging -Deasyjacoco.skip=true -pl '!:querydsl-apt-test'
