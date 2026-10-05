@@ -105,7 +105,7 @@ services:
       start_period: 240s
 
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    image: mcr.microsoft.com/mssql/server:2022-latest
     platform: linux/amd64
     environment:
       - ACCEPT_EULA=Y
@@ -114,7 +114,7 @@ services:
     ports:
       - "1433:1433"
     healthcheck:
-      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" || exit 1
+      test: /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" || exit 1
       interval: 5s
       timeout: 60s
       start_period: 60s

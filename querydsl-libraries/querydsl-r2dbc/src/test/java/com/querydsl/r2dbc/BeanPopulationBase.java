@@ -30,7 +30,7 @@ import com.querydsl.r2dbc.domain.QEmployee;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-@ExcludeIn({CUBRID, DB2, DERBY, ORACLE, SQLSERVER, POSTGRESQL, SQLITE, TERADATA})
+@ExcludeIn({CUBRID, DB2, DERBY, ORACLE, POSTGRESQL, SQLITE, TERADATA})
 public abstract class BeanPopulationBase extends AbstractBaseTest {
 
   private final QEmployee e = new QEmployee("e");
@@ -41,6 +41,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
   }
 
   @Test
+  @ExcludeIn(SQLSERVER)
   public void custom_projection() {
     // Insert
     var employee = new Employee();
@@ -92,6 +93,7 @@ public abstract class BeanPopulationBase extends AbstractBaseTest {
   }
 
   @Test
+  @ExcludeIn(SQLSERVER)
   public void insert_update_query_and_delete() {
     // Insert
     var employee = new Employee();
