@@ -11,7 +11,7 @@ services:
         condition: service_healthy
 
   mysql:
-    image: mysql:5.6.38
+    image: mysql:5.7.44
     platform: linux/amd64
     ports:
       - "3306:3306"
