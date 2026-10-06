@@ -970,7 +970,11 @@ public class SQLSerializer extends SerializerBase<SQLSerializer> {
         constantPaths.add(lastPath);
       }
     } else {
-      if (stage == Stage.SELECT
+      var parameterTemplate =
+          constant instanceof Null ? null : configuration.getParameterTemplate(constant);
+      if (parameterTemplate != null) {
+        handle(Expressions.template(constant.getClass(), parameterTemplate, Q));
+      } else if (stage == Stage.SELECT
           && !(constant instanceof Null)
           && configuration.getTemplates().isWrapSelectParameters()) {
         var typeName = configuration.getTypeNameForCast(constant.getClass());

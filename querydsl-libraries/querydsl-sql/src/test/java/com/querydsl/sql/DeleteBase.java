@@ -15,6 +15,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.core.Target.CUBRID;
 import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.MARIADB;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.ORACLE;
 import static com.querydsl.core.Target.SQLSERVER;
@@ -85,7 +86,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn({CUBRID, H2, MYSQL, ORACLE, SQLSERVER})
+  @IncludeIn({CUBRID, H2, MYSQL, MARIADB, ORACLE, SQLSERVER})
   public void delete_limit() {
     insert(survey).values(2, "A", "B").execute();
     insert(survey).values(3, "B", "C").execute();

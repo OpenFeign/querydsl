@@ -40,6 +40,35 @@ services:
       timeout: 5s
       retries: 30
 
+  pgvector:
+    image: pgvector/pgvector:0.8.1-pg16
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=querydsl
+      - POSTGRES_PASSWORD=querydsl
+      - POSTGRES_DB=querydsl
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U querydsl"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  mariadb:
+    image: mariadb:11.8
+    ports:
+      - "3307:3306"
+    environment:
+      - MARIADB_ROOT_PASSWORD=querydsl
+      - MARIADB_DATABASE=querydsl
+      - MARIADB_USER=querydsl
+      - MARIADB_PASSWORD=querydsl
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
   oracle:
     image: gvenzl/oracle-free:23.26.3-slim-faststart
     platform: linux/amd64
@@ -104,7 +133,7 @@ services:
       start_period: 240s
 
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2025-latest
     platform: linux/amd64
     environment:
       - ACCEPT_EULA=Y

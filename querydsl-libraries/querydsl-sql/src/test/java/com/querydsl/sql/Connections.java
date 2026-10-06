@@ -71,6 +71,7 @@ public final class Connections {
       h2Inited,
       hsqlInited,
       mysqlInited,
+      mariadbInited,
       cubridInited,
       oracleInited,
       postgresqlInited,
@@ -138,6 +139,11 @@ public final class Connections {
     Class.forName("com.mysql.jdbc.Driver");
     var url = "jdbc:mysql://localhost:3306/querydsl?useLegacyDatetimeCode=false";
     return DriverManager.getConnection(url, "querydsl", "querydsl");
+  }
+
+  private static Connection getMariaDB() throws SQLException {
+    return DriverManager.getConnection(
+        "jdbc:mariadb://localhost:3307/querydsl", "querydsl", "querydsl");
   }
 
   private static Connection getOracle() throws SQLException, ClassNotFoundException {
@@ -757,6 +763,27 @@ public final class Connections {
       return;
     }
 
+    createMySQLCompatibleTables(c, stmt);
+    mysqlInited = true;
+  }
+
+  public static void initMariaDB() throws SQLException, ClassNotFoundException {
+    targetHolder.set(Target.MARIADB);
+    var c = getMariaDB();
+    connHolder.set(c);
+    var stmt = c.createStatement();
+    stmtHolder.set(stmt);
+
+    if (mariadbInited) {
+      return;
+    }
+
+    createMySQLCompatibleTables(c, stmt);
+    mariadbInited = true;
+  }
+
+  private static void createMySQLCompatibleTables(Connection c, Statement stmt)
+      throws SQLException {
     // The shared MySQL database accumulates tables from other suites under two naming conventions:
     // Hibernate keeps the entity case (Child2) while EclipseLink upper-cases it (CHILD2). On a
     // case-sensitive server (lower_case_table_names=0) both survive, and the metadata export then
@@ -842,8 +869,6 @@ public final class Connections {
     // xml
     stmt.execute("drop table if exists XML_TEST");
     stmt.execute("create table XML_TEST(COL varchar(128))");
-
-    mysqlInited = true;
   }
 
   public static void initOracle() throws SQLException, ClassNotFoundException {

@@ -20,6 +20,7 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Ops;
 import java.sql.Types;
 import java.util.Collections;
+import java.util.Set;
 
 /**
  * {@code MySQLTemplates} is an SQL dialect for MySQL
@@ -54,7 +55,11 @@ public class MySQLTemplates extends SQLTemplates {
   }
 
   public MySQLTemplates(char escape, boolean quote) {
-    super(Keywords.MYSQL, "`", escape, quote, false);
+    this(Keywords.MYSQL, escape, quote);
+  }
+
+  protected MySQLTemplates(Set<String> keywords, char escape, boolean quote) {
+    super(keywords, "`", escape, quote, false);
     setArraysSupported(false);
     setParameterMetadataAvailable(false);
     setLimitRequired(true);

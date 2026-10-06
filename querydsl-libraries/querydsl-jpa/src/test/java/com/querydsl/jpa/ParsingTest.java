@@ -16,6 +16,7 @@ package com.querydsl.jpa;
 import static com.querydsl.core.Target.DERBY;
 import static com.querydsl.core.Target.H2;
 import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MARIADB;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.ORACLE;
 import static com.querydsl.core.Target.POSTGRESQL;
@@ -624,6 +625,7 @@ public class ParsingTest extends AbstractQueryTest {
   @Test
   @NoOpenJPA
   @ExcludeIn({DERBY, HSQLDB, MYSQL})
+  @NoEclipseLink(MARIADB)
   public void casts_long() throws Exception {
     NumberExpression<Double> bw = cat.bodyWeight;
     query().from(cat).select(bw.longValue()).parse();

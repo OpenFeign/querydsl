@@ -17,6 +17,7 @@ import static com.querydsl.core.Target.CUBRID;
 import static com.querydsl.core.Target.DB2;
 import static com.querydsl.core.Target.DERBY;
 import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.MARIADB;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.ORACLE;
 import static com.querydsl.core.Target.SQLSERVER;
@@ -75,7 +76,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn({CUBRID, H2, MYSQL, ORACLE, SQLSERVER})
+  @IncludeIn({CUBRID, H2, MYSQL, MARIADB, ORACLE, SQLSERVER})
   public void update_limit() {
     assertThat((long) insert(survey).values(2, "A", "B").execute().block()).isEqualTo(1);
     assertThat((long) insert(survey).values(3, "B", "C").execute().block()).isEqualTo(1);

@@ -31,6 +31,8 @@ public enum Target {
   HSQLDB,
   /** Memory (querydsl-collection) */
   MEM,
+  /** MariaDB */
+  MARIADB,
   /** MySQL */
   MYSQL,
   /** Oracle */

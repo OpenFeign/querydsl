@@ -50,6 +50,9 @@ public class SQLTemplatesRegistry {
       return H2Templates.builder();
     } else if (name.equals("hsql")) {
       return HSQLDBTemplates.builder();
+    } else if (name.equals("mariadb")
+        || (name.equals("mysql") && md.getDatabaseProductVersion().contains("MariaDB"))) {
+      return MariaDBTemplates.builder();
     } else if (name.equals("mysql")) {
       return MySQLTemplates.builder();
     } else if (name.equals("oracle")) {

@@ -41,6 +41,7 @@ fluent API.
 | [MongoDB]({{ site.baseurl }}/tutorials/mongodb) | `{{ site.group_id }}:querydsl-mongodb` |
 | [Collections]({{ site.baseurl }}/tutorials/collections) | `{{ site.group_id }}:querydsl-collections` |
 | [Spatial]({{ site.baseurl }}/tutorials/spatial) | `{{ site.group_id }}:querydsl-sql-spatial` |
+| [Vector]({{ site.baseurl }}/tutorials/vector) | `{{ site.group_id }}:querydsl-sql-vector`, `{{ site.group_id }}:querydsl-vector` |
 | [Kotlin Extensions]({{ site.baseurl }}/tutorials/kotlin) | `{{ site.group_id }}:querydsl-kotlin` |
 | [Scala Extensions]({{ site.baseurl }}/tutorials/scala) | `{{ site.group_id }}:querydsl-scala` |
 

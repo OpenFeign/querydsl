@@ -70,6 +70,7 @@ database schemas and use geolatte types via the `spatial` property:
 Instead of the normal `SQLTemplates` instances, use spatial-enabled instances:
 
 - `GeoDBTemplates` (for H2)
+- `MariaDBSpatialTemplates`
 - `MySQLSpatialTemplates`
 - `OracleSpatialTemplates` (alpha stage)
 - `PostGISTemplates`

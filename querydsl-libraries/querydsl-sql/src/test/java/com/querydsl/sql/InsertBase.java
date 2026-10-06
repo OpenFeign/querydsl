@@ -19,6 +19,7 @@ import static com.querydsl.core.Target.DERBY;
 import static com.querydsl.core.Target.FIREBIRD;
 import static com.querydsl.core.Target.H2;
 import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MARIADB;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.ORACLE;
 import static com.querydsl.core.Target.POSTGRESQL;
@@ -336,7 +337,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   @SkipForQuoted
   public void insert_with_special_options() {
     var clause = insert(survey).columns(survey.id, survey.name).values(3, "Hello");
@@ -483,7 +484,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   @SkipForQuoted
   public void replace() {
     var clause = mysqlReplace(survey);
