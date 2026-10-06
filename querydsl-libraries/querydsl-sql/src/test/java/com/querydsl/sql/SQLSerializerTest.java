@@ -33,6 +33,7 @@ import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.domain.QEmployee;
 import com.querydsl.sql.domain.QEmployeeNoPK;
 import com.querydsl.sql.domain.QSurvey;
+import com.querydsl.sql.types.StringType;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -504,6 +505,23 @@ from sub\
 
     assertThat(delete.toString())
         .isEqualTo("delete from \"PUBLIC\".EMPLOYEE\n" + "where \"PUBLIC\".EMPLOYEE.ID > ?");
+  }
+
+  @Test
+  public void parameterTemplateOfRegisteredType() {
+    var configuration = new Configuration(SQLTemplates.DEFAULT);
+    configuration.register(
+        new StringType() {
+          @Override
+          public String getParameterTemplate(String value) {
+            return "upper({0})";
+          }
+        });
+    var serializer = new SQLSerializer(configuration);
+    serializer.handle(employee.firstname.eq("Bob"));
+
+    assertThat(serializer).hasToString("EMPLOYEE.FIRSTNAME = upper(?)");
+    assertThat(serializer.getConstants()).containsExactly("Bob");
   }
 
   private SQLQuery<?> query() {

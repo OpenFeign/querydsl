@@ -15,6 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.core.Target.DERBY;
 import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MARIADB;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.ORACLE;
 import static com.querydsl.core.Target.POSTGRESQL;
@@ -464,7 +465,7 @@ public abstract class AbstractJPATest {
 
   @Test
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-8653
-  @NoEclipseLink({MYSQL, POSTGRESQL})
+  @NoEclipseLink({MYSQL, MARIADB, POSTGRESQL})
   public void case1_date2() {
     var rv =
         query()
@@ -489,7 +490,7 @@ public abstract class AbstractJPATest {
 
   @Test
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-8653
-  @NoEclipseLink({MYSQL, POSTGRESQL})
+  @NoEclipseLink({MYSQL, MARIADB, POSTGRESQL})
   public void case1_time2() {
     var rv =
         query()
@@ -517,7 +518,7 @@ public abstract class AbstractJPATest {
 
   @Test
   @NoHibernate // https://hibernate.atlassian.net/browse/HHH-8653
-  @NoEclipseLink({MYSQL, POSTGRESQL})
+  @NoEclipseLink({MYSQL, MARIADB, POSTGRESQL})
   public void case1_timestamp2() {
     var rv =
         query()
@@ -799,6 +800,7 @@ public abstract class AbstractJPATest {
   @Test
   @NoHibernate
   @ExcludeIn(MYSQL)
+  @NoEclipseLink(MARIADB)
   public void distinct_orderBy2() {
     var cat = QCat.cat;
     var result =
@@ -1806,7 +1808,7 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, SQLSERVER, TERADATA})
+  @ExcludeIn({MYSQL, MARIADB, SQLSERVER, TERADATA})
   @NoOpenJPA
   public void stringOperations() {
     // NOTE : locate in MYSQL is case-insensitive

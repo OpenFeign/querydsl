@@ -17,14 +17,18 @@ import static com.querydsl.sql.vector.QDocument.document;
 import static com.querydsl.vector.VectorExpressions.createConstantVector;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.SQLTemplates;
+import com.querydsl.vector.VectorOps;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -44,6 +48,10 @@ public abstract class AbstractSQLVectorTest {
   protected abstract SQLTemplates createTemplates();
 
   protected abstract void recreateVectorDocumentTable(Connection connection) throws SQLException;
+
+  protected Set<VectorOps> unsupportedOperators() {
+    return EnumSet.noneOf(VectorOps.class);
+  }
 
   @BeforeAll
   void connectCreateTableAndInsertSampleDocuments() throws SQLException {
@@ -94,6 +102,7 @@ public abstract class AbstractSQLVectorTest {
 
   @Test
   void orderByNegativeInnerProduct() {
+    assumeSupported(VectorOps.NEGATIVE_INNER_PRODUCT);
     assertThat(
             fetchTitlesOrderedAscendingBy(document.embedding.negativeInnerProduct(QUERY_EMBEDDING)))
         .containsExactly("diagonal", "x-axis", "near x-axis", "y-axis");
@@ -131,25 +140,36 @@ public abstract class AbstractSQLVectorTest {
     var metricsTuple =
         queryFactory
             .select(
-                embeddingPath.l2Distance(QUERY_EMBEDDING),
-                embeddingPath.l2SquaredDistance(QUERY_EMBEDDING),
-                embeddingPath.innerProduct(QUERY_EMBEDDING),
-                embeddingPath.l1Distance(QUERY_EMBEDDING),
-                embeddingPath.l2Distance(embeddingPath))
+                embeddingPath.l2Distance(QUERY_EMBEDDING), embeddingPath.l2Distance(embeddingPath))
             .from(document)
             .where(document.id.eq(4L))
             .fetchOne();
 
     assertThat(metricsTuple.get(embeddingPath.l2Distance(QUERY_EMBEDDING)))
         .isCloseTo(3.0, within(1e-6));
-    assertThat(metricsTuple.get(embeddingPath.l2SquaredDistance(QUERY_EMBEDDING)))
-        .isCloseTo(9.0, within(1e-6));
-    assertThat(metricsTuple.get(embeddingPath.innerProduct(QUERY_EMBEDDING)))
-        .isCloseTo(2.0, within(1e-6));
-    assertThat(metricsTuple.get(embeddingPath.l1Distance(QUERY_EMBEDDING)))
-        .isCloseTo(5.0, within(1e-6));
     assertThat(metricsTuple.get(embeddingPath.l2Distance(embeddingPath)))
         .isCloseTo(0.0, within(1e-6));
+  }
+
+  @Test
+  void l2SquaredDistanceOfSingleDocument() {
+    assumeSupported(VectorOps.L2_SQUARED_DISTANCE);
+    assertThat(fetchDiagonalDocumentMetric(document.embedding.l2SquaredDistance(QUERY_EMBEDDING)))
+        .isCloseTo(9.0, within(1e-6));
+  }
+
+  @Test
+  void innerProductOfSingleDocument() {
+    assumeSupported(VectorOps.INNER_PRODUCT);
+    assertThat(fetchDiagonalDocumentMetric(document.embedding.innerProduct(QUERY_EMBEDDING)))
+        .isCloseTo(2.0, within(1e-6));
+  }
+
+  @Test
+  void l1DistanceOfSingleDocument() {
+    assumeSupported(VectorOps.L1_DISTANCE);
+    assertThat(fetchDiagonalDocumentMetric(document.embedding.l1Distance(QUERY_EMBEDDING)))
+        .isCloseTo(5.0, within(1e-6));
   }
 
   @Test
@@ -168,16 +188,22 @@ public abstract class AbstractSQLVectorTest {
   }
 
   @Test
-  void dimensionCountAndL2Norm() {
-    var row =
+  void dimensionCount() {
+    var dimensionCount =
         queryFactory
-            .select(document.embedding.dimensionCount(), document.embedding.l2Norm())
+            .select(document.embedding.dimensionCount())
             .from(document)
             .where(document.id.eq(2L))
             .fetchOne();
 
-    assertThat(row.get(document.embedding.dimensionCount())).isEqualTo(3);
-    assertThat(row.get(document.embedding.l2Norm())).isCloseTo(1.0, within(1e-6));
+    assertThat(dimensionCount).isEqualTo(3);
+  }
+
+  @Test
+  void l2NormOfSingleDocument() {
+    assumeSupported(VectorOps.L2_NORM);
+    assertThat(fetchDiagonalDocumentMetric(document.embedding.l2Norm()))
+        .isCloseTo(Math.sqrt(12), within(1e-6));
   }
 
   @Test
@@ -193,6 +219,15 @@ public abstract class AbstractSQLVectorTest {
             .fetchOne();
 
     assertThat(nearestTitle).isEqualTo("y-axis");
+  }
+
+  private Double fetchDiagonalDocumentMetric(NumberExpression<Double> metric) {
+    return queryFactory.select(metric).from(document).where(document.id.eq(4L)).fetchOne();
+  }
+
+  private void assumeSupported(VectorOps operator) {
+    assumeFalse(
+        unsupportedOperators().contains(operator), () -> operator + " is not supported here");
   }
 
   private List<String> fetchTitlesOrderedAscendingBy(NumberExpression<Double> dissimilarityScore) {

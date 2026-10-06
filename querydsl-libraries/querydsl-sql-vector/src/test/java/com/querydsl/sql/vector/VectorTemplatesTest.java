@@ -87,6 +87,62 @@ class VectorTemplatesTest {
   }
 
   @Test
+  void rendersVectorExpressionsAsDB2SqlWithConvertedParameters() {
+    SQLTemplates db2VectorTemplates = new DB2VectorTemplates();
+    var embedding = document.embedding;
+
+    assertThat(renderSelectClauseSql(db2VectorTemplates, embedding.l2Distance(QUERY_EMBEDDING)))
+        .isEqualTo("vector_distance(d.embedding, vector(?, 3, float32), EUCLIDEAN)");
+    assertThat(renderSelectClauseSql(db2VectorTemplates, embedding.l1Distance(embedding)))
+        .isEqualTo("vector_distance(d.embedding, d.embedding, MANHATTAN)");
+    assertThat(renderSelectClauseSql(db2VectorTemplates, embedding.l2Norm()))
+        .isEqualTo("vector_norm(d.embedding, EUCLIDEAN)");
+    assertThat(DB2VectorType.DEFAULT.getLiteral(QUERY_EMBEDDING))
+        .isEqualTo("vector('[1.0,0.0,0.5]', 3, float32)");
+  }
+
+  @Test
+  void rendersVectorExpressionsAsSQLServerSql() {
+    SQLTemplates sqlServerVectorTemplates = new SQLServerVectorTemplates();
+    var embedding = document.embedding;
+
+    assertThat(
+            renderSelectClauseSql(sqlServerVectorTemplates, embedding.l2Distance(QUERY_EMBEDDING)))
+        .isEqualTo("vector_distance('euclidean', d.embedding, ?)");
+    assertThat(
+            renderSelectClauseSql(
+                sqlServerVectorTemplates, embedding.l2SquaredDistance(QUERY_EMBEDDING)))
+        .isEqualTo("square(vector_distance('euclidean', d.embedding, ?))");
+    assertThat(
+            renderSelectClauseSql(
+                sqlServerVectorTemplates, embedding.innerProduct(QUERY_EMBEDDING)))
+        .isEqualTo("(vector_distance('dot', d.embedding, ?) * -1)");
+    assertThat(renderSelectClauseSql(sqlServerVectorTemplates, embedding.dimensionCount()))
+        .isEqualTo("vectorproperty(d.embedding, 'Dimensions')");
+    assertThat(SQLServerVectorType.DEFAULT.getLiteral(QUERY_EMBEDDING))
+        .isEqualTo("cast('[1.0,0.0,0.5]' as vector(3))");
+  }
+
+  @Test
+  void rendersVectorExpressionsAsMariaDBSql() {
+    SQLTemplates mariaDBVectorTemplates = new MariaDBVectorTemplates();
+    var embedding = document.embedding;
+
+    assertThat(
+            renderSelectClauseSql(
+                mariaDBVectorTemplates, embedding.cosineDistance(QUERY_EMBEDDING)))
+        .isEqualTo("vec_distance_cosine(d.embedding, ?)");
+    assertThat(
+            renderSelectClauseSql(
+                mariaDBVectorTemplates, embedding.l2SquaredDistance(QUERY_EMBEDDING)))
+        .isEqualTo("power(vec_distance_euclidean(d.embedding, ?), 2)");
+    assertThat(renderSelectClauseSql(mariaDBVectorTemplates, embedding.dimensionCount()))
+        .isEqualTo("(length(d.embedding) div 4)");
+    assertThat(MariaDBVectorType.DEFAULT.getLiteral(QUERY_EMBEDDING))
+        .isEqualTo("vec_fromtext('[1.0,0.0,0.5]')");
+  }
+
+  @Test
   void parseVectorText() {
     assertThat(VectorText.parse("[1,-2.5, 3e-2]")).containsExactly(1f, -2.5f, 0.03f);
     assertThat(VectorText.parse("[]")).isEmpty();

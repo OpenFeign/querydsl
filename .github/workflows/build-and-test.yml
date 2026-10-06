@@ -134,6 +134,28 @@ jobs:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
           check_name: "Test report (MySQL)"
 
+  mariadb:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: compile
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: ./.github/actions/restore-build
+      - name: Start MariaDB
+        run: docker compose up -d --wait --wait-timeout 900 mariadb
+      - name: Test MariaDB
+        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.MariaDB
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v6
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (MariaDB)"
+
   postgresql:
     if: ${{ !github.event.pull_request.draft }}
     needs: compile
@@ -258,7 +280,7 @@ jobs:
       - name: Start DB2
         run: docker compose up -d --wait --wait-timeout 900 db2
       - name: Test DB2
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.DB2
+        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql,:querydsl-vector,:querydsl-sql-vector -Dgroups=com.querydsl.core.testutil.DB2
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -280,7 +302,7 @@ jobs:
       - name: Start SQL Server
         run: docker compose up -d --wait --wait-timeout 900 sqlserver
       - name: Test SQL Server
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql,:querydsl-r2dbc -Dgroups=com.querydsl.core.testutil.SQLServer
+        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql,:querydsl-r2dbc,:querydsl-vector,:querydsl-sql-vector -Dgroups=com.querydsl.core.testutil.SQLServer
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -357,6 +379,7 @@ jobs:
       - windows
       - embedded
       - mysql
+      - mariadb
       - postgresql
       - oracle
       - cubrid

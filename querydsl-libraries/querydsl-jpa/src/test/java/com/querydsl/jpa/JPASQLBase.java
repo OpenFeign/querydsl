@@ -88,7 +88,7 @@ public class JPASQLBase extends AbstractSQLTest implements JPATest {
   }
 
   @Test
-  @ExcludeIn(Target.MYSQL)
+  @ExcludeIn({Target.MYSQL, Target.MARIADB})
   public void entityQueries_createQuery2() {
     var cat = new SAnimal_("CAT");
 

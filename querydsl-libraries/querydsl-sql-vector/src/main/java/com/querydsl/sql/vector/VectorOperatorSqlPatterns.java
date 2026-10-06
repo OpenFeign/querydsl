@@ -51,4 +51,38 @@ public final class VectorOperatorSqlPatterns {
     operatorTemplates.put(VectorOps.L2_NORM, "vector_norm({0})");
     return operatorTemplates;
   }
+
+  public static Map<Operator, String> createDB2OperatorTemplates() {
+    var operatorTemplates = createOracleOperatorTemplates();
+    operatorTemplates.put(VectorOps.L2_NORM, "vector_norm({0}, EUCLIDEAN)");
+    return operatorTemplates;
+  }
+
+  /** SQL Server 2025 has no Manhattan distance, so {@link VectorOps#L1_DISTANCE} is missing */
+  public static Map<Operator, String> createSQLServerOperatorTemplates() {
+    Map<Operator, String> operatorTemplates = new HashMap<>();
+    operatorTemplates.put(VectorOps.L2_DISTANCE, "vector_distance('euclidean', {0}, {1})");
+    operatorTemplates.put(
+        VectorOps.L2_SQUARED_DISTANCE, "square(vector_distance('euclidean', {0}, {1}))");
+    operatorTemplates.put(VectorOps.COSINE_DISTANCE, "vector_distance('cosine', {0}, {1})");
+    operatorTemplates.put(VectorOps.INNER_PRODUCT, "(vector_distance('dot', {0}, {1}) * -1)");
+    operatorTemplates.put(VectorOps.NEGATIVE_INNER_PRODUCT, "vector_distance('dot', {0}, {1})");
+    operatorTemplates.put(VectorOps.DIMENSION_COUNT, "vectorproperty({0}, 'Dimensions')");
+    operatorTemplates.put(VectorOps.L2_NORM, "vector_norm({0}, 'norm2')");
+    return operatorTemplates;
+  }
+
+  /**
+   * MariaDB only has Euclidean and cosine distance, so the inner product, Manhattan distance and
+   * norm operators are missing
+   */
+  public static Map<Operator, String> createMariaDBOperatorTemplates() {
+    Map<Operator, String> operatorTemplates = new HashMap<>();
+    operatorTemplates.put(VectorOps.L2_DISTANCE, "vec_distance_euclidean({0}, {1})");
+    operatorTemplates.put(
+        VectorOps.L2_SQUARED_DISTANCE, "power(vec_distance_euclidean({0}, {1}), 2)");
+    operatorTemplates.put(VectorOps.COSINE_DISTANCE, "vec_distance_cosine({0}, {1})");
+    operatorTemplates.put(VectorOps.DIMENSION_COUNT, "(length({0}) div 4)");
+    return operatorTemplates;
+  }
 }

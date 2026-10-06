@@ -32,4 +32,43 @@
         </properties>
     </persistence-unit>
 
+    <persistence-unit name="db2">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.querydsl.vector.Document</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="com.ibm.db2.jcc.DB2Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:db2://localhost:50000/sample"/>
+            <property name="jakarta.persistence.jdbc.user" value="db2inst1"/>
+            <property name="jakarta.persistence.jdbc.password" value="a3sd!fDj"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="sqlserver">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.querydsl.vector.Document</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=tempdb;trustServerCertificate=true"/>
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.password" value="Password1!"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="mariadb">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.querydsl.vector.Document</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3307/querydsl"/>
+            <property name="jakarta.persistence.jdbc.user" value="querydsl"/>
+            <property name="jakarta.persistence.jdbc.password" value="querydsl"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+        </properties>
+    </persistence-unit>
+
 </persistence>

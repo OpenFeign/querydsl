@@ -5,6 +5,7 @@ import static com.querydsl.core.Target.DB2;
 import static com.querydsl.core.Target.DERBY;
 import static com.querydsl.core.Target.FIREBIRD;
 import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MARIADB;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.POSTGRESQL;
 import static com.querydsl.core.Target.SQLITE;
@@ -152,7 +153,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, POSTGRESQL, DERBY, SQLSERVER, TERADATA})
+  @ExcludeIn({MYSQL, MARIADB, POSTGRESQL, DERBY, SQLSERVER, TERADATA})
   public void subQuery_params() {
     var aParam = new Param<String>(String.class, "param");
     R2DBCQuery<?> subQuery =

@@ -161,6 +161,13 @@ public final class Configuration {
     }
   }
 
+  @Nullable
+  @SuppressWarnings("unchecked")
+  public String getParameterTemplate(Object value) {
+    Type type = javaTypeMapping.getType(value.getClass());
+    return type.getParameterTemplate(value);
+  }
+
   public SQLTemplates getTemplates() {
     return templates;
   }

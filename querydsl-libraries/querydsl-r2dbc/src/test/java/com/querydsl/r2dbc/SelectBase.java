@@ -20,6 +20,7 @@ import static com.querydsl.core.Target.DERBY;
 import static com.querydsl.core.Target.FIREBIRD;
 import static com.querydsl.core.Target.H2;
 import static com.querydsl.core.Target.HSQLDB;
+import static com.querydsl.core.Target.MARIADB;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.ORACLE;
 import static com.querydsl.core.Target.POSTGRESQL;
@@ -186,7 +187,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, ORACLE})
+  @ExcludeIn({MYSQL, MARIADB, ORACLE})
   @SkipForQuoted
   public void alias_quotes() {
     expectedQuery = "select e.FIRSTNAME as \"First Name\" from EMPLOYEE e";
@@ -199,7 +200,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   @SkipForQuoted
   public void alias_quotes_MySQL() {
     expectedQuery = "select e.FIRSTNAME as `First Name` from EMPLOYEE e";
@@ -610,7 +611,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   // todo readd mysql after the escape sequence support
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, MYSQL})
+  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, MYSQL, MARIADB})
   public void dates() {
     var javaInstant = java.time.Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
     var javaDateTime = java.time.LocalDateTime.ofInstant(javaInstant, java.time.ZoneId.of("Z"));
@@ -1020,7 +1021,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, SQLITE, DERBY, CUBRID, MYSQL})
+  @ExcludeIn({H2, SQLITE, DERBY, CUBRID, MYSQL, MARIADB})
   public void full_join() {
     assertEquals(
         18,

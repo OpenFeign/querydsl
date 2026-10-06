@@ -16,6 +16,7 @@
 package com.querydsl.sql;
 
 import static com.querydsl.core.Target.CUBRID;
+import static com.querydsl.core.Target.MARIADB;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.base.Splitter;
@@ -89,8 +90,9 @@ public abstract class KeywordQuotingBase extends AbstractBaseTest {
 
   @Test
   // The bundled CUBRID 9.3.9 JDBC driver reports a malformed keyword list (e.g. "TATISTICS",
-  // "DATA_TYPE___"), so completeness against the curated keyword file cannot be asserted.
-  @ExcludeIn(CUBRID)
+  // "DATA_TYPE___") and MariaDB Connector/J 3.5 drops commas ("OFFSETON"), so completeness against
+  // the curated keyword file cannot be asserted.
+  @ExcludeIn({CUBRID, MARIADB})
   public void validateKeywordsCompleteness() throws SQLException {
     var keywords =
         switch (target) {
@@ -102,6 +104,7 @@ public abstract class KeywordQuotingBase extends AbstractBaseTest {
           case HSQLDB -> Keywords.HSQLDB;
           case LUCENE -> Keywords.DEFAULT;
           case MEM -> Keywords.DEFAULT;
+          case MARIADB -> Keywords.MARIADB;
           case MYSQL -> Keywords.MYSQL;
           case ORACLE -> Keywords.ORACLE;
           case POSTGRESQL -> Keywords.POSTGRESQL;

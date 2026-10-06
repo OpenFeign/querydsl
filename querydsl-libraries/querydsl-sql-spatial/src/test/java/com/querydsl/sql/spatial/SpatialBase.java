@@ -1,6 +1,7 @@
 package com.querydsl.sql.spatial;
 
 import static com.querydsl.core.Target.H2;
+import static com.querydsl.core.Target.MARIADB;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.POSTGRESQL;
 import static com.querydsl.core.Target.SQLSERVER;
@@ -216,14 +217,14 @@ public class SpatialBase extends AbstractBaseTest {
     add(expressions, point.geometryType(), H2);
     add(expressions, point.isEmpty());
     add(expressions, point.isSimple());
-    add(expressions, point.m(), MYSQL, TERADATA, H2);
+    add(expressions, point.m(), MYSQL, MARIADB, TERADATA, H2);
     add(expressions, point.srid());
     // TODO add emulations
-    add(expressions, point.transform(26986), MYSQL, POSTGRESQL, SQLSERVER, TERADATA, H2);
+    add(expressions, point.transform(26986), MYSQL, MARIADB, POSTGRESQL, SQLSERVER, TERADATA, H2);
     // point specific
     add(expressions, point.x(), H2);
     add(expressions, point.y(), H2);
-    add(expressions, point.z(), MYSQL, TERADATA, H2);
+    add(expressions, point.z(), MYSQL, MARIADB, TERADATA, H2);
 
     for (Expression<?> expr : expressions) {
       var logged = false;
@@ -249,7 +250,7 @@ public class SpatialBase extends AbstractBaseTest {
     add(expressions, point1.disjoint(point2));
     add(expressions, point1.distance(point2), MYSQL);
     add(expressions, point1.distanceSphere(point2), H2, MYSQL, POSTGRESQL, SQLSERVER);
-    add(expressions, point1.distanceSpheroid(point2), H2, MYSQL, POSTGRESQL, SQLSERVER);
+    add(expressions, point1.distanceSpheroid(point2), H2, MYSQL, MARIADB, POSTGRESQL, SQLSERVER);
     add(expressions, point1.eq(point2));
     add(expressions, point1.intersection(point2), H2, MYSQL, POSTGRESQL);
     add(expressions, point1.intersects(point2));

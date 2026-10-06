@@ -1,5 +1,6 @@
 package com.querydsl.r2dbc;
 
+import static com.querydsl.core.Target.MARIADB;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.r2dbc.Constants.survey;
 
@@ -14,7 +15,7 @@ public abstract class SelectMySQLBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   public void mysql_extensions() {
     myR2DBCQuery().from(survey).bigResult().select(survey.id).fetch().collectList().block();
     myR2DBCQuery().from(survey).bufferResult().select(survey.id).fetch().collectList().block();

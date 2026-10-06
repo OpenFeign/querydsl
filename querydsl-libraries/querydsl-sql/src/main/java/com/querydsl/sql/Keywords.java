@@ -46,6 +46,7 @@ public final class Keywords {
   public static final Set<String> FIREBIRD = readLines("firebird");
   public static final Set<String> H2 = readLines("h2");
   public static final Set<String> HSQLDB = readLines("hsqldb");
+  public static final Set<String> MARIADB = readLines("mariadb");
   public static final Set<String> MYSQL = readLines("mysql");
   public static final Set<String> ORACLE = readLines("oracle");
   public static final Set<String> POSTGRESQL = readLines("postgresql");

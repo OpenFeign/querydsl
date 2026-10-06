@@ -5,6 +5,7 @@ import com.querydsl.sql.CUBRIDTemplates;
 import com.querydsl.sql.DerbyTemplates;
 import com.querydsl.sql.H2Templates;
 import com.querydsl.sql.HSQLDBTemplates;
+import com.querydsl.sql.MariaDBTemplates;
 import com.querydsl.sql.MySQLTemplates;
 import com.querydsl.sql.OracleTemplates;
 import com.querydsl.sql.PostgreSQLTemplates;
@@ -30,6 +31,7 @@ public final class Mode {
       case H2 -> new H2Templates();
       case HSQLDB -> new HSQLDBTemplates();
       case SQLSERVER -> new SQLServer2008Templates();
+      case MARIADB -> new MariaDBTemplates();
       case MYSQL -> new MySQLTemplates();
       case ORACLE -> new OracleTemplates();
       case POSTGRESQL -> new PostgreSQLTemplates();

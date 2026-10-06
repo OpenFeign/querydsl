@@ -14,19 +14,24 @@ Vectors are mapped to `float[]` and exposed as `VectorPath` in query types.
 |:---------|:--------------|:----------------|
 | PostgreSQL + [pgvector](https://github.com/pgvector/pgvector) | `PGvectorTemplates` | yes |
 | Oracle 23ai | `OracleVectorTemplates` | yes |
+| Db2 12.1.2+ | `DB2VectorTemplates` | yes |
+| SQL Server 2025 | `SQLServerVectorTemplates` | yes, except `l1Distance` |
+| MariaDB 11.7+ | `MariaDBVectorTemplates` | `l2Distance` and `cosineDistance` only |
 
 ## Operations
 
-| Method | pgvector | Oracle |
-|:-------|:---------|:-------|
-| `l2Distance` | `<->` | `VECTOR_DISTANCE(.., EUCLIDEAN)` |
-| `l2SquaredDistance` | `(<->)^2` | `VECTOR_DISTANCE(.., EUCLIDEAN_SQUARED)` |
-| `cosineDistance` | `<=>` | `VECTOR_DISTANCE(.., COSINE)` |
-| `innerProduct` | `(<#>) * -1` | `VECTOR_DISTANCE(.., DOT) * -1` |
-| `negativeInnerProduct` | `<#>` | `VECTOR_DISTANCE(.., DOT)` |
-| `l1Distance` | `<+>` | `VECTOR_DISTANCE(.., MANHATTAN)` |
-| `dimensionCount` | `vector_dims` | `VECTOR_DIMENSION_COUNT` |
-| `l2Norm` | `vector_norm` | `VECTOR_NORM` |
+| Method | pgvector | Oracle and Db2 | SQL Server | MariaDB |
+|:-------|:---------|:---------------|:-----------|:--------|
+| `l2Distance` | `<->` | `VECTOR_DISTANCE(.., EUCLIDEAN)` | `VECTOR_DISTANCE('euclidean', ..)` | `VEC_DISTANCE_EUCLIDEAN` |
+| `l2SquaredDistance` | `(<->)^2` | `VECTOR_DISTANCE(.., EUCLIDEAN_SQUARED)` | `SQUARE(VECTOR_DISTANCE('euclidean', ..))` | `POWER(VEC_DISTANCE_EUCLIDEAN, 2)` |
+| `cosineDistance` | `<=>` | `VECTOR_DISTANCE(.., COSINE)` | `VECTOR_DISTANCE('cosine', ..)` | `VEC_DISTANCE_COSINE` |
+| `innerProduct` | `(<#>) * -1` | `VECTOR_DISTANCE(.., DOT) * -1` | `VECTOR_DISTANCE('dot', ..) * -1` | - |
+| `negativeInnerProduct` | `<#>` | `VECTOR_DISTANCE(.., DOT)` | `VECTOR_DISTANCE('dot', ..)` | - |
+| `l1Distance` | `<+>` | `VECTOR_DISTANCE(.., MANHATTAN)` | - | - |
+| `dimensionCount` | `vector_dims` | `VECTOR_DIMENSION_COUNT` | `VECTORPROPERTY(.., 'Dimensions')` | `LENGTH(..) DIV 4` |
+| `l2Norm` | `vector_norm` | `VECTOR_NORM` | `VECTOR_NORM(.., 'norm2')` | - |
+
+A `-` means the database has no such function, so the query fails.
 
 You can use a `float[]` or another vector expression for each distance. Use
 `VectorExpressions.createConstantVector(float[])` to turn a value into an
@@ -46,8 +51,8 @@ using the operator form allows PostgreSQL to use HNSW and IVFFlat indexes.
 </dependency>
 ```
 
-Use `PGvectorTemplates` or `OracleVectorTemplates` instead of the plain
-dialect templates:
+Use the vector templates for your database instead of the plain dialect
+templates:
 
 ```java
 SQLQueryFactory queryFactory =
@@ -67,6 +72,10 @@ To use vectors with other extensions like PostGIS, add these things to your own
 
 - The operators from `VectorOperatorSqlPatterns`
 - The `PGvectorType` custom type
+
+The Db2 driver cannot send vector parameters, so `DB2VectorType` sends each
+vector as text wrapped in `VECTOR(?, n, FLOAT32)`. SQL Server needs the
+`mssql-jdbc` driver, which provides `microsoft.sql.Vector`.
 
 ### Code Generation
 
@@ -145,8 +154,8 @@ List<Document> nearest = queryFactory
 ## `float[]` Is Reserved for Vectors
 
 With `querydsl-vector` on the processor path, other `float[]` properties lose
-`ArrayPath`. Under `PGvectorTemplates` and `OracleVectorTemplates`, every
-`float[]` binds as a vector. To map a `real[]` column, register its type
+`ArrayPath`. Under any of the vector templates, every `float[]` binds as a
+vector. To map a `real[]` column, register its type
 explicitly:
 
 ```java

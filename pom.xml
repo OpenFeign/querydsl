@@ -110,6 +110,7 @@
     <postgresql.version>42.7.13</postgresql.version>
     <oracle.version>23.26.3.0.0</oracle.version>
     <mysql.version>26.7.0</mysql.version>
+    <mariadb.version>3.5.10</mariadb.version>
     <mssql.version>13.6.0.jre11</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.53.4.0</sqlite.version>
@@ -1039,6 +1040,7 @@
                         com.querydsl.core.testutil.Firebird,
                         com.querydsl.core.testutil.H2,
                         com.querydsl.core.testutil.HSQLDB,
+                        com.querydsl.core.testutil.MariaDB,
                         com.querydsl.core.testutil.MySQL,
                         com.querydsl.core.testutil.Oracle,
                         com.querydsl.core.testutil.PostgreSQL,
@@ -1068,6 +1070,7 @@
                         com.querydsl.core.testutil.CUBRID,
                         com.querydsl.core.testutil.DB2,
                         com.querydsl.core.testutil.Firebird,
+                        com.querydsl.core.testutil.MariaDB,
                         com.querydsl.core.testutil.MySQL,
                         com.querydsl.core.testutil.Oracle,
                         com.querydsl.core.testutil.PostgreSQL,

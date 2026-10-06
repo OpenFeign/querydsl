@@ -2,6 +2,7 @@ package com.querydsl.sql;
 
 import static com.querydsl.core.Target.DERBY;
 import static com.querydsl.core.Target.FIREBIRD;
+import static com.querydsl.core.Target.MARIADB;
 import static com.querydsl.core.Target.MYSQL;
 import static com.querydsl.core.Target.SQLITE;
 import static com.querydsl.core.Target.SQLSERVER;
@@ -136,7 +137,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, DERBY, SQLSERVER, TERADATA})
+  @ExcludeIn({MYSQL, MARIADB, DERBY, SQLSERVER, TERADATA})
   public void subQuery_params() {
     var aParam = new Param<String>(String.class, "param");
     SQLQuery<?> subQuery = select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));
