@@ -123,7 +123,7 @@
     <r2dbc-mssql.version>1.0.7.RELEASE</r2dbc-mssql.version>
 
     <!-- JPA deps -->
-    <hibernate.version>7.4.11.Final</hibernate.version>
+    <hibernate.version>7.4.12.Final</hibernate.version>
     <hibernate.validator.version>9.1.4.Final</hibernate.validator.version>
     <eclipselink.version>5.0.0-B13</eclipselink.version>
     <jpa.version>3.2.0</jpa.version>
