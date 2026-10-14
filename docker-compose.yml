@@ -41,7 +41,7 @@ services:
       retries: 30
 
   pgvector:
-    image: pgvector/pgvector:0.8.1-pg16
+    image: pgvector/pgvector:0.8.7-pg16
     ports:
       - "5433:5432"
     environment:
