@@ -10,6 +10,16 @@
   <artifactId>querydsl-ksp-codegen</artifactId>
   <name>Querydsl - Kotlin KSP codegen support</name>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.github.classgraph</groupId>
+        <artifactId>classgraph</artifactId>
+        <version>4.8.198</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>

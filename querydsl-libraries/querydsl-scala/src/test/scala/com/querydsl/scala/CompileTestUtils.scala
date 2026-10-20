@@ -14,7 +14,7 @@ object CompileTestUtils {
     Class.forName(className).getProtectionDomain.getCodeSource.getLocation
   }
 
-  private val currentLibraries = new ClassGraph().getClasspathURLs.asScala.toList
+  private val currentLibraries = new ClassGraph().enableClasspath().getClasspathURLs.asScala.toList
   private val cp = jarPathOfClass("scala.tools.nsc.Interpreter") :: jarPathOfClass("scala.AnyVal") :: currentLibraries
 
   private val env = new Settings()
