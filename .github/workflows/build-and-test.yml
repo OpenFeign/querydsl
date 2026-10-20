@@ -85,7 +85,13 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "25"
-          cache: "maven"
+      - name: Cache Maven dependencies
+        uses: actions/cache@v6
+        with:
+          path: ~/.m2/repository
+          key: maven-deps-windows-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            maven-deps-windows-
       - name: Build (no external databases)
         shell: bash
         run: ./mvnw -ntp -B verify -Pno-databases -Dtoolchain.skip=true
