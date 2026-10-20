@@ -28,6 +28,7 @@ public class TemplatesTestBase {
 
   private final ClassGraph querydsl =
       new ClassGraph()
+          .enableClasspath()
           .enableClassInfo()
           .acceptPackages(TemplatesTestBase.class.getPackage().getName());
 
@@ -35,9 +36,12 @@ public class TemplatesTestBase {
 
   @Test
   void default_instance() {
-    var templates = querydsl.scan().getSubclasses(Templates.class.getName()).loadClasses();
+    var templates = querydsl.scan().getAllSubclasses(Templates.class).getNames();
     Set<Class<?>> moduleSpecific =
-        templates.stream().filter(MODULE_SPECIFIC).collect(Collectors.toSet());
+        templates.stream()
+            .map(TemplatesTestBase::loadClass)
+            .filter(MODULE_SPECIFIC)
+            .collect(Collectors.toSet());
 
     var softly = new SoftAssertions();
     for (Class<?> template : moduleSpecific) {
@@ -49,6 +53,14 @@ public class TemplatesTestBase {
       }
     }
     softly.assertAll();
+  }
+
+  private static Class<?> loadClass(String name) {
+    try {
+      return Class.forName(name);
+    } catch (ClassNotFoundException e) {
+      throw new IllegalStateException(e);
+    }
   }
 
   private final Predicate<Class<?>> objectPredicate =
