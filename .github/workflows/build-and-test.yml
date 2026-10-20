@@ -130,7 +130,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Start MySQL
-        run: docker compose up -d --wait --wait-timeout 900 mysql
+        run: docker compose up -d --wait --wait-timeout 900 mysql || { docker compose logs mysql; exit 1; }
       - name: Test MySQL
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.MySQL
       - name: Publish test report
@@ -152,7 +152,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Start MariaDB
-        run: docker compose up -d --wait --wait-timeout 900 mariadb
+        run: docker compose up -d --wait --wait-timeout 900 mariadb || { docker compose logs mariadb; exit 1; }
       - name: Test MariaDB
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.MariaDB
       - name: Publish test report
@@ -174,7 +174,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Start PostgreSQL
-        run: docker compose up -d --wait --wait-timeout 900 postgresql pgvector
+        run: docker compose up -d --wait --wait-timeout 900 postgresql pgvector || { docker compose logs postgresql pgvector; exit 1; }
       - name: Test PostgreSQL
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.PostgreSQL
       - name: Publish test report
@@ -196,7 +196,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Start Oracle
-        run: docker compose up -d --wait --wait-timeout 900 oracle
+        run: docker compose up -d --wait --wait-timeout 900 oracle || { docker compose logs oracle; exit 1; }
       - name: Test Oracle
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.ORACLE_MODULES }} -Dgroups=com.querydsl.core.testutil.Oracle
       - name: Publish test report
@@ -218,7 +218,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Start CUBRID
-        run: docker compose up -d --wait --wait-timeout 900 cubrid
+        run: docker compose up -d --wait --wait-timeout 900 cubrid || { docker compose logs cubrid; exit 1; }
       - name: Test CUBRID
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.CUBRID
       - name: Publish test report
@@ -240,7 +240,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Start Firebird
-        run: docker compose up -d --wait --wait-timeout 900 firebird
+        run: docker compose up -d --wait --wait-timeout 900 firebird || { docker compose logs firebird; exit 1; }
       - name: Test Firebird
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.Firebird
       - name: Publish test report
@@ -262,7 +262,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Start MongoDB
-        run: docker compose up -d --wait --wait-timeout 900 mongo
+        run: docker compose up -d --wait --wait-timeout 900 mongo || { docker compose logs mongo; exit 1; }
       - name: Test MongoDB
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-mongodb -Dgroups=com.querydsl.core.testutil.MongoDB
       - name: Publish test report
@@ -284,7 +284,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Start DB2
-        run: docker compose up -d --wait --wait-timeout 900 db2
+        run: docker compose up -d --wait --wait-timeout 900 db2 || { docker compose logs db2; exit 1; }
       - name: Test DB2
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql,:querydsl-vector,:querydsl-sql-vector -Dgroups=com.querydsl.core.testutil.DB2
       - name: Publish test report
@@ -306,7 +306,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Start SQL Server
-        run: docker compose up -d --wait --wait-timeout 900 sqlserver
+        run: docker compose up -d --wait --wait-timeout 900 sqlserver || { docker compose logs sqlserver; exit 1; }
       - name: Test SQL Server
         run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql,:querydsl-r2dbc,:querydsl-vector,:querydsl-sql-vector -Dgroups=com.querydsl.core.testutil.SQLServer
       - name: Publish test report

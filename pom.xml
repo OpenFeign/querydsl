@@ -111,20 +111,20 @@
     <oracle.version>23.26.3.0.0</oracle.version>
     <mysql.version>26.7.0</mysql.version>
     <mariadb.version>3.5.10</mariadb.version>
-    <mssql.version>13.6.0.jre11</mssql.version>
+    <mssql.version>13.6.1.jre11</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
     <sqlite.version>3.53.4.0</sqlite.version>
-    <turso.version>0.8.0</turso.version>
+    <turso.version>0.8.3</turso.version>
     <teradata.version>13.10.00.35</teradata.version>
-    <firebird.version>6.0.6</firebird.version>
+    <firebird.version>6.0.7</firebird.version>
     <mongodb.version>5.13.0</mongodb.version>
 
     <r2dbc.version>1.0.0.RELEASE</r2dbc.version>
     <r2dbc-mssql.version>1.0.7.RELEASE</r2dbc-mssql.version>
 
     <!-- JPA deps -->
-    <hibernate.version>7.4.12.Final</hibernate.version>
-    <hibernate.validator.version>9.1.4.Final</hibernate.validator.version>
+    <hibernate.version>7.4.13.Final</hibernate.version>
+    <hibernate.validator.version>9.1.5.Final</hibernate.validator.version>
     <eclipselink.version>5.0.0-B13</eclipselink.version>
     <jpa.version>3.2.0</jpa.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
@@ -134,7 +134,7 @@
     <guava.version>33.7.2-jre</guava.version>
     <jackson.version>2.22.3</jackson.version>
     <codegen.version>0.6.8</codegen.version>
-    <byte-buddy.version>1.18.14</byte-buddy.version>
+    <byte-buddy.version>1.18.15</byte-buddy.version>
     <slf4j.version>2.0.20</slf4j.version>
     <surefire.version>3.6.0</surefire.version>
     <animal-sniffer.version>1.28</animal-sniffer.version>
@@ -233,7 +233,7 @@
       <dependency>
         <groupId>io.github.classgraph</groupId>
         <artifactId>classgraph</artifactId>
-        <version>4.8.197</version>
+        <version>4.8.198</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
@@ -488,7 +488,7 @@
       <plugin>
         <groupId>com.github.siom79.japicmp</groupId>
         <artifactId>japicmp-maven-plugin</artifactId>
-        <version>0.26.3</version>
+        <version>0.26.5</version>
         <configuration>
           <parameter>
             <excludes>
@@ -845,7 +845,7 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.11.0</version>
+            <version>0.12.0</version>
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>
