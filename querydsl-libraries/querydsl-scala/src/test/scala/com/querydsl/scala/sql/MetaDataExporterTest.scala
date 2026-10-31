@@ -4,6 +4,8 @@ import com.querydsl.scala._
 import com.querydsl.sql._
 import com.querydsl.sql.codegen._
 import org.junit.jupiter.api._
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.io.TempDir
 
 object MetaDataExporterTest {
 
@@ -87,14 +89,15 @@ class MetaDataExporterTest {
   }
 
   @Test
-  def Generate_With_BeanTypes(): Unit = {
-    val directory = new java.io.File("target/jdbcgen2")
+  def Generate_With_BeanTypes(@TempDir directory: java.io.File): Unit = {
     val config = new MetadataExporterConfigImpl();
     config.setNamePrefix("Q")
     config.setPackageName("com.querydsl")
     config.setSchemaPattern("PUBLIC")
     config.setTargetFolder(directory)
     config.setSerializerClass(classOf[ScalaMetaDataSerializer])
+    config.setBeanSerializerClass(classOf[ScalaBeanSerializer])
+    config.setExportBeans(true)
     config.setCreateScalaSources(true)
 
     val exporter = new MetaDataExporter(config);
@@ -105,6 +108,8 @@ class MetaDataExporterTest {
     
     exporter.export(connection.getMetaData)
 
+    assertTrue(new java.io.File(directory, "com/querydsl/Employee.scala").isFile)
+    assertTrue(new java.io.File(directory, "com/querydsl/QEmployee.scala").isFile)
     CompileTestUtils.assertCompileSuccess(directory)
   }
 
@@ -129,8 +134,7 @@ class MetaDataExporterTest {
   }
 
   @Test
-  def Generate_With_BeanTypes_And_Schema(): Unit = {
-    val directory = new java.io.File("target/jdbcgen4")
+  def Generate_With_BeanTypes_And_Schema(@TempDir directory: java.io.File): Unit = {
     val config = new MetadataExporterConfigImpl();
     config.setNamePrefix("Q")
     config.setPackageName("com.querydsl")
@@ -139,6 +143,7 @@ class MetaDataExporterTest {
     config.setTargetFolder(directory)
     config.setSerializerClass(classOf[ScalaMetaDataSerializer])
     config.setBeanSerializerClass(classOf[ScalaBeanSerializer])
+    config.setExportBeans(true)
     config.setCreateScalaSources(true)
 
     val exporter = new MetaDataExporter(config);
@@ -149,6 +154,8 @@ class MetaDataExporterTest {
     
     exporter.export(connection.getMetaData)
 
+    assertTrue(new java.io.File(directory, "com/querydsl/public_/Employee.scala").isFile)
+    assertTrue(new java.io.File(directory, "com/querydsl/public_/QEmployee.scala").isFile)
     CompileTestUtils.assertCompileSuccess(directory)
   }
 
