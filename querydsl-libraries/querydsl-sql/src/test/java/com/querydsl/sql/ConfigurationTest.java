@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.querydsl.core.alias.Gender;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.domain.QSurvey;
 import com.querydsl.sql.namemapping.ChainedNameMapping;
 import com.querydsl.sql.namemapping.ChangeLetterCaseNameMapping;
@@ -157,6 +158,19 @@ public class ConfigurationTest {
         () -> {
           new ChainedNameMapping(new NameMapping[] {null});
         });
+  }
+
+  @Test
+  public void setNull_uses_sql_type_of_path_type() throws SQLException {
+    var configuration = new Configuration(new H2Templates());
+    PreparedStatement stmt = EasyMock.createStrictMock(PreparedStatement.class);
+    stmt.setNull(1, Types.BIGINT);
+    stmt.setNull(2, Types.NULL);
+    EasyMock.replay(stmt);
+
+    configuration.set(stmt, Expressions.numberPath(Long.class, "id"), 1, Null.DEFAULT);
+    configuration.set(stmt, Expressions.path(Object.class, "any"), 2, Null.DEFAULT);
+    EasyMock.verify(stmt);
   }
 
   @Test
