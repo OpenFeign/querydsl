@@ -78,6 +78,7 @@ public class GroupByTest {
     assertThat(results).containsEntry(3, "Comment 4");
   }
 
+  @Test
   public void comments_by_post() {
     Map<Integer, List<Comment>> results =
         CollQueryFactory.from(post, posts)
