@@ -113,7 +113,7 @@
     <mariadb.version>4.0.0</mariadb.version>
     <mssql.version>13.6.1.jre11</mssql.version>
     <cubrid.version>9.3.9.0002</cubrid.version>
-    <sqlite.version>3.53.4.0</sqlite.version>
+    <sqlite.version>3.54.1.0</sqlite.version>
     <turso.version>0.8.3</turso.version>
     <teradata.version>13.10.00.35</teradata.version>
     <firebird.version>6.0.7</firebird.version>
