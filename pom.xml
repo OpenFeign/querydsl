@@ -145,7 +145,7 @@
     <ksp.version>2.3.13</ksp.version>
     <kctfork.version>0.14.0</kctfork.version>
     <kotlinpoet.version>2.4.0</kotlinpoet.version>
-    <dokka.version>2.2.0</dokka.version>
+    <dokka.version>2.3.0</dokka.version>
     <scala.version>2.13.16</scala.version>
     <asm.version>9.11.1</asm.version>
     <querydsl.version>${project.version}</querydsl.version>
