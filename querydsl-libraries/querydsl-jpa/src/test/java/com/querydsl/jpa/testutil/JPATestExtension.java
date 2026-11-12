@@ -15,11 +15,13 @@ package com.querydsl.jpa.testutil;
 
 import com.querydsl.jpa.JPATest;
 import com.querydsl.jpa.Mode;
+import com.querydsl.jpa.domain.Domain;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -50,9 +52,27 @@ public class JPATestExtension
     if (isDerby) {
       Class.forName("org.apache.derby.jdbc.EmbeddedDriver").getDeclaredConstructor().newInstance();
     }
-    entityManagerFactory = Persistence.createEntityManagerFactory(mode);
-    entityManager = entityManagerFactory.createEntityManager();
+    entityManagerFactory = Persistence.createEntityManagerFactory(mode, providerProperties(mode));
+    // the Map variant exists with the same signature on Jakarta Persistence 3.2 and 4
+    entityManager = entityManagerFactory.createEntityManager(Map.of());
     entityManager.getTransaction().begin();
+  }
+
+  /**
+   * Hibernate ORM 8 (as of 8.0.0.Beta4) does not discover annotated classes from a {@code
+   * persistence.xml} root, so the domain classes are passed explicitly there. Older versions keep
+   * using classpath scanning.
+   */
+  private static Map<String, Object> providerProperties(String mode) {
+    if (mode.contains("eclipselink") || hibernateMajorVersion() < 8) {
+      return Map.of();
+    }
+    return Map.of("hibernate.loaded_classes", Domain.classes);
+  }
+
+  private static int hibernateMajorVersion() {
+    var version = org.hibernate.Version.getVersionString();
+    return Integer.parseInt(version.substring(0, version.indexOf('.')));
   }
 
   @Override

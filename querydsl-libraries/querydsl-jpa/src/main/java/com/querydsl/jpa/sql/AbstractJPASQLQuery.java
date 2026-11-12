@@ -25,6 +25,7 @@ import com.querydsl.jpa.NativeSQLSerializer;
 import com.querydsl.jpa.QueryHandler;
 import com.querydsl.jpa.impl.JPAProvider;
 import com.querydsl.jpa.impl.JPAUtil;
+import com.querydsl.jpa.support.JpaCompat;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLSerializer;
 import jakarta.persistence.EntityManager;
@@ -104,13 +105,13 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
     if (!FactoryExpression.class.isAssignableFrom(projection.getClass())
         && isEntityExpression(projection)) {
       if (queryHandler.createNativeQueryTyped()) {
-        query = entityManager.createNativeQuery(queryString, projection.getType());
+        query = JpaCompat.createNativeQuery(entityManager, queryString, projection.getType());
       } else {
-        query = entityManager.createNativeQuery(queryString);
+        query = JpaCompat.createNativeQuery(entityManager, queryString);
       }
 
     } else {
-      query = entityManager.createNativeQuery(queryString);
+      query = JpaCompat.createNativeQuery(entityManager, queryString);
     }
     if (!forCount) {
       var aliases = serializer.getAliases();

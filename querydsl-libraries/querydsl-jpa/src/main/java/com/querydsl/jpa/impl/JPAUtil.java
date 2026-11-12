@@ -21,6 +21,7 @@ import jakarta.persistence.Parameter;
 import jakarta.persistence.Query;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * JPAUtil provides static utility methods for JPA
@@ -62,7 +63,7 @@ public final class JPAUtil {
 
       if (hasParameters) {
         Parameter parameter = query.getParameter(i + 1);
-        var parameterType = parameter != null ? parameter.getParameterType() : null;
+        var parameterType = parameter != null ? parameterType(parameter) : null;
         if (parameterType != null && !parameterType.isInstance(val)) {
           var targetType = primitiveToWrapper(parameterType);
           if (val instanceof Number number && Number.class.isAssignableFrom(targetType)) {
@@ -72,6 +73,19 @@ public final class JPAUtil {
       }
 
       query.setParameter(i + 1, val);
+    }
+  }
+
+  /**
+   * The Jakarta Persistence contract lets {@link Parameter#getParameterType()} throw when the type
+   * is unknown; Hibernate ORM 8 does so, earlier versions returned {@code null}.
+   */
+  @Nullable
+  private static Class<?> parameterType(Parameter<?> parameter) {
+    try {
+      return parameter.getParameterType();
+    } catch (IllegalStateException e) {
+      return null;
     }
   }
 }
