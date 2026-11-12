@@ -197,7 +197,7 @@
       <dependency>
         <groupId>com.mchange</groupId>
         <artifactId>mchange-commons-java</artifactId>
-        <version>0.6.1</version>
+        <version>0.7.0</version>
       </dependency>
       <dependency>
         <groupId>io.smallrye</groupId>
