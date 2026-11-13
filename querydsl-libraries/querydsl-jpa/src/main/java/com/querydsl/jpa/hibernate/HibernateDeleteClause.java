@@ -70,9 +70,7 @@ public class HibernateDeleteClause implements DeleteClause<HibernateDeleteClause
     serializer.serializeForDelete(queryMixin.getMetadata());
 
     Query query = session.createQuery(serializer.toString());
-    for (Map.Entry<Path<?>, LockMode> entry : lockModes.entrySet()) {
-      query.setLockMode(entry.getKey().toString(), entry.getValue());
-    }
+    HibernateCompat.setMutationLockModes(query, lockModes);
     HibernateUtil.setConstants(
         query, serializer.getConstants(), queryMixin.getMetadata().getParams());
     return query.executeUpdate();
@@ -86,7 +84,14 @@ public class HibernateDeleteClause implements DeleteClause<HibernateDeleteClause
     return this;
   }
 
-  /** Set the lock mode for the given path. */
+  /**
+   * Set the lock mode for the given path.
+   *
+   * @return the current object
+   * @deprecated lock modes have no effect on insert, update and delete statements: Hibernate ORM 7
+   *     ignores them and Hibernate ORM 8 rejects them, so they are left out there
+   */
+  @Deprecated
   @SuppressWarnings("unchecked")
   public HibernateDeleteClause setLockMode(Path<?> path, LockMode lockMode) {
     lockModes.put(path, lockMode);

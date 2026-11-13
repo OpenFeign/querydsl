@@ -34,7 +34,7 @@ public class StatelessSessionHolder implements SessionHolder {
   @Override
   @Deprecated
   public Query<?> createQuery(String queryString) {
-    return session.createQuery(queryString);
+    return HibernateCompat.createQuery(session, queryString);
   }
 
   @Override

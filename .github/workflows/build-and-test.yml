@@ -184,6 +184,62 @@ jobs:
           report_paths: "**/target/surefire-reports/TEST-*.xml"
           check_name: "Test report (PostgreSQL)"
 
+  # Binary compatibility with Hibernate ORM 8 / Jakarta Persistence 4: the classes are compiled
+  # against the default versions and then run, without recompiling, on the hibernate8 profile.
+  hibernate8-embedded:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: compile
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: ./.github/actions/restore-build
+      - name: Compile against default Hibernate and Jakarta Persistence versions
+        run: ./mvnw -ntp -B test-compile -Deasyjacoco.skip=true -pl :querydsl-jpa
+      - name: Test H2 on Hibernate ORM 8 without recompiling
+        run: >
+          ./mvnw -ntp -B surefire:test -Pci,hibernate8 -pl :querydsl-jpa
+          -Dgroups=com.querydsl.core.testutil.H2 -Dtest='H2SuiteTest*'
+          -Dsurefire.failIfNoSpecifiedTests=false
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v6
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (H2, Hibernate 8)"
+
+  # Binary compatibility with Hibernate ORM 8 / Jakarta Persistence 4: the classes are compiled
+  # against the default versions and then run, without recompiling, on the hibernate8 profile.
+  hibernate8-postgresql:
+    if: ${{ !github.event.pull_request.draft }}
+    needs: compile
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+      - name: Restore build artifacts
+        uses: ./.github/actions/restore-build
+      - name: Start PostgreSQL
+        run: docker compose up -d --wait --wait-timeout 900 postgresql pgvector || { docker compose logs postgresql pgvector; exit 1; }
+      - name: Compile against default Hibernate and Jakarta Persistence versions
+        run: ./mvnw -ntp -B test-compile -Deasyjacoco.skip=true -pl :querydsl-jpa
+      - name: Test PostgreSQL on Hibernate ORM 8 without recompiling
+        run: >
+          ./mvnw -ntp -B surefire:test -Pci,hibernate8 -pl :querydsl-jpa
+          -Dgroups=com.querydsl.core.testutil.PostgreSQL -Dtest='PostgreSQLSuiteTest*'
+          -Dsurefire.failIfNoSpecifiedTests=false
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v6
+        if: always()
+        with:
+          report_paths: "**/target/surefire-reports/TEST-*.xml"
+          check_name: "Test report (PostgreSQL, Hibernate 8)"
+
   oracle:
     if: ${{ !github.event.pull_request.draft }}
     needs: compile
@@ -387,6 +443,8 @@ jobs:
       - mysql
       - mariadb
       - postgresql
+      - hibernate8-embedded
+      - hibernate8-postgresql
       - oracle
       - cubrid
       - firebird

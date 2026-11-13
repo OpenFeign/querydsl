@@ -27,7 +27,7 @@ public class JPAQueryCustomTypeWrapperTest implements JPATest {
 
   @BeforeEach
   public void setupData() {
-    em.createQuery("delete from Invoice").executeUpdate();
+    com.querydsl.jpa.support.JpaCompat.createQuery(em, "delete from Invoice").executeUpdate();
     em.persist(new Invoice("00000000-0000-0000-0000-000000000001", "A", new Money("111")));
     em.persist(new Invoice("00000000-0000-0000-0000-000000000002", "A", new Money("222")));
     em.persist(new Invoice("00000000-0000-0000-0000-000000000003", "B", new Money("333")));
