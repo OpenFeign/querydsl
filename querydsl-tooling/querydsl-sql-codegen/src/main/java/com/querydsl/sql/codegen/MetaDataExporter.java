@@ -306,11 +306,8 @@ public class MetaDataExporter {
       if (config.getBeanSerializerClass() == null) {
         serializer = new BeanSerializer();
       } else {
-        try {
-          serializer = config.getBeanSerializerClass().getDeclaredConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-          throw new RuntimeException(e);
-        }
+        module.bind(SQLCodegenModule.BEAN_SERIALIZER, config.getBeanSerializerClass());
+        serializer = module.get(Serializer.class, SQLCodegenModule.BEAN_SERIALIZER);
       }
       if (serializer instanceof BeanSerializer) {
         var bserializer = (BeanSerializer) serializer;
