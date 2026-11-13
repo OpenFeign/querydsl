@@ -137,7 +137,7 @@
     <byte-buddy.version>1.18.17</byte-buddy.version>
     <slf4j.version>2.0.20</slf4j.version>
     <surefire.version>3.6.1</surefire.version>
-    <animal-sniffer.version>1.29</animal-sniffer.version>
+    <animal-sniffer.version>1.29.1</animal-sniffer.version>
     <h2gis.version>2.2.5</h2gis.version>
     <morphia.version>2.5.3</morphia.version>
     <jmh.version>1.37</jmh.version>
@@ -192,17 +192,17 @@
       <dependency>
         <groupId>com.mchange</groupId>
         <artifactId>c3p0</artifactId>
-        <version>0.14.2</version>
+        <version>0.15.1</version>
       </dependency>
       <dependency>
         <groupId>com.mchange</groupId>
         <artifactId>mchange-commons-java</artifactId>
-        <version>0.7.0</version>
+        <version>0.7.1</version>
       </dependency>
       <dependency>
         <groupId>io.smallrye</groupId>
         <artifactId>jandex</artifactId>
-        <version>3.6.0</version>
+        <version>3.6.1</version>
       </dependency>
       <dependency>
         <groupId>org.jetbrains</groupId>
@@ -995,7 +995,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
-            <version>3.6.2</version>
+            <version>3.8.0</version>
             <executions>
               <execution>
                 <goals>
