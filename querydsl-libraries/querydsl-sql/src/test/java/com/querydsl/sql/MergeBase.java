@@ -25,6 +25,7 @@ import static com.querydsl.core.Target.TURSO;
 import static com.querydsl.sql.Constants.survey;
 import static com.querydsl.sql.Constants.survey2;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.testutil.IncludeIn;
@@ -246,6 +247,28 @@ public abstract class MergeBase extends AbstractBaseTest {
             .addBatch();
 
     assertThat(merge.execute()).isEqualTo(1);
+  }
+
+  @Test
+  @ExcludeIn(H2)
+  public void merge_without_key_value_fails_without_updating() {
+    assertThatThrownBy(() -> merge(survey).keys(survey.id).set(survey.name, "Changed").execute())
+        .isInstanceOf(IllegalStateException.class);
+    assertThat(query().from(survey).where(survey.name.eq("Changed")).fetchCount()).isZero();
+  }
+
+  @Test
+  @ExcludeIn(H2)
+  public void merge_with_partial_composite_key_fails_without_updating() {
+    assertThatThrownBy(
+            () ->
+                merge(survey)
+                    .keys(survey.id, survey.name2)
+                    .set(survey.id, 1)
+                    .set(survey.name, "Changed")
+                    .execute())
+        .isInstanceOf(IllegalStateException.class);
+    assertThat(query().from(survey).where(survey.name.eq("Changed")).fetchCount()).isZero();
   }
 
   @Test
