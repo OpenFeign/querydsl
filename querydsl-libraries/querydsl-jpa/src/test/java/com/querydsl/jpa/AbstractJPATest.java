@@ -613,6 +613,49 @@ public abstract class AbstractJPATest {
   }
 
   @Test
+  @NoEclipseLink
+  public void caseBuilder_enumResult() {
+    var color =
+        new CaseBuilder().when(cat.name.eq("Bob123")).then(Color.TABBY).otherwise(Color.BLACK);
+
+    var colors =
+        query()
+            .from(cat)
+            .where(cat.name.in("Bob123", "Ruth123"))
+            .orderBy(cat.name.asc())
+            .select(color)
+            .fetch();
+
+    assertThat(colors).containsExactly(Color.TABBY, Color.BLACK);
+  }
+
+  @Test
+  public void caseBuilder_enumComparedWithPath() {
+    var color =
+        new CaseBuilder().when(cat.name.eq("Bob123")).then(Color.TABBY).otherwise(Color.BLACK);
+
+    var names =
+        query()
+            .from(cat)
+            .where(cat.name.in("Bob123", "Ruth123"), cat.color.eq(color))
+            .select(cat.name)
+            .fetch();
+
+    assertThat(names).containsExactly("Ruth123");
+  }
+
+  @Test
+  @NoEclipseLink
+  public void caseBuilder_nestedEnumResult() {
+    var rating = new CaseBuilder().when(company.id.eq(1)).then(Rating.AA).otherwise(Rating.A);
+
+    var ratings =
+        query().from(company).where(company.ratingString.eq(rating)).select(rating).fetch();
+
+    assertThat(ratings).containsExactly(Rating.AA);
+  }
+
+  @Test
   public void cast() {
     var cats = query().from(cat).select(cat).fetch();
     var weights = query().from(cat).select(cat.bodyWeight.castToNum(Integer.class)).fetch();
