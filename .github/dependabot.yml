@@ -33,6 +33,16 @@ updates:
           - "*"
     target-branch: "master"
 
+  # querydsl-ksp-codegen pins classgraph at 4.8.198 for KSP compatibility
+  - package-ecosystem: "maven"
+    directory: "/querydsl-tooling/querydsl-ksp-codegen"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "io.github.classgraph:classgraph"
+        update-types: ["version-update:semver-major"]
+    target-branch: "master"
+
   # Database majors change SQL behaviour, so they are bumped by hand together with the test exclusions
   - package-ecosystem: "docker-compose"
     directory: "/"
