@@ -345,6 +345,13 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void visitLiteral_enum() {
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.visitLiteral(JobFunction.MANAGER);
+    assertThat(serializer).hasToString("com.querydsl.jpa.domain.JobFunction.MANAGER");
+  }
+
+  @Test
   public void substring_indexOf() {
     var cat = QCat.cat;
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
@@ -365,7 +372,11 @@ public class JPQLSerializerTest {
     serializer.handle(expr);
 
     assertThat(serializer.toString())
-        .isEqualTo("case when true then 'MANAGER' else 'CONSULTANT' end");
+        .isEqualTo(
+            """
+            case when true then com.querydsl.jpa.domain.JobFunction.MANAGER \
+            else com.querydsl.jpa.domain.JobFunction.CONSULTANT end\
+            """);
   }
 
   @Test
