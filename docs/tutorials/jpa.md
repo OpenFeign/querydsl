@@ -15,6 +15,27 @@ Querydsl for JPA is an alternative to both JPQL and Criteria queries. It
 combines the dynamic nature of Criteria queries with the expressiveness of
 JPQL — all in a fully type-safe manner.
 
+## Supported Versions
+
+One `querydsl-jpa` artifact runs on both of these stacks, without a separate
+build or classifier:
+
+| Jakarta Persistence | Hibernate ORM | Status |
+|:--------------------|:--------------|:-------|
+| 3.2                 | 7.x           | Supported |
+| 4.0                 | 8.x           | Supported; tested against pre-release versions (Hibernate ORM 8.0.0.Beta4, Jakarta Persistence 4.0.0-M7) |
+
+EclipseLink is supported on Jakarta Persistence 3.2.
+
+Two things change with Hibernate ORM 8 itself, independent of Querydsl:
+
+- Selecting a collection path, such as `select(cat.kittens)`, returns one
+  collection per row. Hibernate ORM 7 returned the collection elements as
+  separate rows. Join the collection and select the join alias to get the
+  elements on both versions.
+- Lock modes per alias are no longer available. See
+  [Lock Modes]({{ site.baseurl }}/tutorials/hibernate#lock-modes).
+
 ## Maven Integration
 
 Add the following dependencies to your Maven project:

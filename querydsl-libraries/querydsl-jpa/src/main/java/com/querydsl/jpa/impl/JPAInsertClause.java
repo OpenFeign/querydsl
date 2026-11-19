@@ -28,6 +28,7 @@ import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.JpaInsertNativeHelper;
 import com.querydsl.jpa.JpaNativeInsertSerializer;
+import com.querydsl.jpa.support.JpaCompat;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
 import jakarta.persistence.EntityManager;
@@ -99,7 +100,7 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
           subQuery,
           inserts);
 
-      var query = entityManager.createQuery(serializer.toString());
+      var query = JpaCompat.createQuery(entityManager, serializer.toString());
       if (lockMode != null) {
         query.setLockMode(lockMode);
       }
@@ -128,7 +129,7 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
 
     // Provider-neutral native execute: use the JPA standard EntityManager.createNativeQuery
     // instead of unwrapping a Hibernate Session, so this path also works under EclipseLink/OpenJPA.
-    var nativeQuery = entityManager.createNativeQuery(sql);
+    var nativeQuery = JpaCompat.createNativeQuery(entityManager, sql);
     for (int i = 0; i < params.length; i++) {
       nativeQuery.setParameter(i + 1, params[i]);
     }
@@ -171,7 +172,7 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
         JpaInsertNativeHelper.resolveConstants(
             serializer.getConstants(), queryMixin.getMetadata().getParams());
 
-    var nativeQuery = entityManager.createNativeQuery(sql);
+    var nativeQuery = JpaCompat.createNativeQuery(entityManager, sql);
     for (int i = 0; i < params.length; i++) {
       nativeQuery.setParameter(i + 1, params[i]);
     }

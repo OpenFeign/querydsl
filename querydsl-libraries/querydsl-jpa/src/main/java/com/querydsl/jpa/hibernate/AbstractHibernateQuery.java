@@ -157,11 +157,9 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
     if (readOnly != null) {
       query.setReadOnly(readOnly);
     }
-    for (Map.Entry<Path<?>, LockMode> entry : lockModes.entrySet()) {
-      query.setLockMode(entry.getKey().toString(), entry.getValue());
-    }
+    HibernateCompat.setLockModes(query, lockModes);
     if (flushMode != null) {
-      query.setHibernateFlushMode(flushMode);
+      HibernateCompat.setFlushMode(query, flushMode);
     }
 
     if (modifiers != null && modifiers.isRestricting()) {
@@ -178,7 +176,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
     // set transformer, if necessary
     Expression<?> projection = getMetadata().getProjection();
     if (!forCount && projection instanceof FactoryExpression) {
-      query.setResultTransformer(
+      query.setTupleTransformer(
           new FactoryExpressionTransformer((FactoryExpression<?>) projection));
     }
     return query;

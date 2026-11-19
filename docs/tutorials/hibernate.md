@@ -120,6 +120,18 @@ List<Cat> cats = queryFactory.selectFrom(cat)
     .fetch();
 ```
 
+On Hibernate ORM 7 the lock mode applies to the given alias. Hibernate ORM 8
+has no lock modes per alias, so there Querydsl applies the lock mode to the
+whole query:
+
+- If all aliases with a lock mode use the same mode, that mode is set on the
+  query. It can lock rows of other aliases in the query as well.
+- If aliases use different lock modes, the query throws
+  `UnsupportedOperationException`.
+
+Lock modes set on insert, update and delete clauses have no effect on either
+version, and `setLockMode` on those clauses is deprecated.
+
 ### Flush Mode
 
 ```java
@@ -127,6 +139,10 @@ List<Cat> cats = queryFactory.selectFrom(cat)
     .setFlushMode(FlushMode.AUTO)
     .fetch();
 ```
+
+On Hibernate ORM 8, `FlushMode.ALWAYS` flushes before the query,
+`FlushMode.COMMIT` and `FlushMode.MANUAL` do not, and `FlushMode.AUTO` uses the
+session default.
 
 ### Fetch Size and Timeout
 

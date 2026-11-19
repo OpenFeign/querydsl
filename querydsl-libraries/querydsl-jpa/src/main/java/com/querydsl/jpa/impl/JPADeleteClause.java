@@ -21,6 +21,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.JPAQueryMixin;
 import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
+import com.querydsl.jpa.support.JpaCompat;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +57,7 @@ public class JPADeleteClause implements DeleteClause<JPADeleteClause> {
     var serializer = new JPQLSerializer(templates, entityManager);
     serializer.serializeForDelete(queryMixin.getMetadata());
 
-    var query = entityManager.createQuery(serializer.toString());
+    var query = JpaCompat.createQuery(entityManager, serializer.toString());
     if (lockMode != null) {
       query.setLockMode(lockMode);
     }

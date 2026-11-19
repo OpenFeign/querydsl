@@ -33,7 +33,7 @@ public class DefaultSessionHolder implements SessionHolder {
 
   @Override
   public Query<?> createQuery(String queryString) {
-    return session.createQuery(queryString);
+    return HibernateCompat.createQuery(session, queryString);
   }
 
   @Override

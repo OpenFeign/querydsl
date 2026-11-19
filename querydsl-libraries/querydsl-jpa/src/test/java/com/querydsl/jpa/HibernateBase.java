@@ -14,6 +14,7 @@
 package com.querydsl.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.querydsl.core.CloseableIterator;
@@ -103,8 +104,58 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   }
 
   @Test
+  public void lockMode_same_mode_on_two_aliases() {
+    var mate = new QCat("mate");
+    query()
+        .from(cat)
+        .innerJoin(cat.mate, mate)
+        .setLockMode(cat, LockMode.PESSIMISTIC_READ)
+        .setLockMode(mate, LockMode.PESSIMISTIC_READ)
+        .select(cat)
+        .fetch();
+  }
+
+  @Test
+  public void lockMode_different_modes_on_two_aliases() {
+    var mate = new QCat("mate");
+    var query =
+        query()
+            .from(cat)
+            .innerJoin(cat.mate, mate)
+            .setLockMode(cat, LockMode.PESSIMISTIC_WRITE)
+            .setLockMode(mate, LockMode.PESSIMISTIC_READ)
+            .select(cat);
+    if (hibernateMajorVersion() >= 8) {
+      // Hibernate ORM 8 has no per-alias lock modes
+      assertThatThrownBy(query::fetch)
+          .isInstanceOf(UnsupportedOperationException.class)
+          .hasMessageContaining("Per-alias lock modes are not supported");
+    } else {
+      query.fetch();
+    }
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  public void lockMode_on_delete_clause() {
+    assertThat(
+            delete(QGroup.group)
+                .setLockMode(QGroup.group, LockMode.PESSIMISTIC_WRITE)
+                .where(QGroup.group.id.eq(-1))
+                .execute())
+        .isEqualTo(0);
+  }
+
+  @Test
   public void flushMode() {
-    query().from(cat).setFlushMode(org.hibernate.FlushMode.AUTO).select(cat).fetch();
+    for (org.hibernate.FlushMode flushMode : org.hibernate.FlushMode.values()) {
+      query().from(cat).setFlushMode(flushMode).select(cat).fetch();
+    }
+  }
+
+  private static int hibernateMajorVersion() {
+    var version = org.hibernate.Version.getVersionString();
+    return Integer.parseInt(version.substring(0, version.indexOf('.')));
   }
 
   @Test

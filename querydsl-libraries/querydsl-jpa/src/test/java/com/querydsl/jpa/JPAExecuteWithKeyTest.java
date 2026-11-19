@@ -62,7 +62,7 @@ public class JPAExecuteWithKeyTest {
 
   @BeforeEach
   public void setUp() {
-    entityManager = emf.createEntityManager();
+    entityManager = emf.createEntityManager(java.util.Map.of());
     tx = entityManager.getTransaction();
     tx.begin();
   }

@@ -14,28 +14,20 @@
 package com.querydsl.jpa;
 
 import com.querydsl.core.types.FactoryExpression;
-import java.util.List;
-import org.hibernate.transform.ResultTransformer;
+import org.hibernate.query.TupleTransformer;
 
 /**
- * {@code FactoryExpressionTransformer} is a ResultTransformer implementation using
- * FactoryExpression instances for transformation
+ * {@code FactoryExpressionTransformer} is a TupleTransformer implementation using FactoryExpression
+ * instances for transformation
  *
  * @author tiwe
  */
-public final class FactoryExpressionTransformer implements ResultTransformer {
+public final class FactoryExpressionTransformer implements TupleTransformer<Object> {
 
-  private static final long serialVersionUID = -3625957233853100239L;
-
-  private final transient FactoryExpression<?> projection;
+  private final FactoryExpression<?> projection;
 
   public FactoryExpressionTransformer(FactoryExpression<?> projection) {
     this.projection = projection;
-  }
-
-  @Override
-  public List transformList(List collection) {
-    return collection;
   }
 
   @Override

@@ -17,6 +17,7 @@ import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.Target;
@@ -26,6 +27,7 @@ import com.querydsl.core.testutil.ExcludeIn;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.domain.Animal;
 import com.querydsl.jpa.domain.Cat;
 import com.querydsl.jpa.domain.QCat;
 import com.querydsl.jpa.domain.QCatSummary;
@@ -34,6 +36,7 @@ import com.querydsl.jpa.domain.QGroup;
 import com.querydsl.jpa.domain.QParent;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.support.JpaCompat;
 import com.querydsl.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
@@ -87,6 +90,26 @@ public class JPABase extends AbstractJPATest implements JPATest {
   @NoHibernate
   public void connection_access() {
     assertThat(query().from(cat).select(cat).createQuery().unwrap(Connection.class)).isNotNull();
+  }
+
+  @Test
+  public void jpaCompat_creates_plain_queries() {
+    assertThat(JpaCompat.createQuery(entityManager, "select cat from Cat cat").getResultList())
+        .isNotEmpty();
+    assertThat(
+            JpaCompat.createNativeQuery(entityManager, "select count(*) from animal_")
+                .getSingleResult())
+        .isNotNull();
+    assertThat(
+            JpaCompat.createNativeQuery(entityManager, "select * from animal_", Animal.class)
+                .getResultList())
+        .isNotEmpty();
+  }
+
+  @Test
+  public void jpaCompat_rethrows_provider_exception_unwrapped() {
+    assertThatThrownBy(() -> JpaCompat.createQuery(entityManager, "select from nowhere !"))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test

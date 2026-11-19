@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.transform.ResultTransformer;
+import org.hibernate.query.TupleTransformer;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -83,8 +83,8 @@ public class HibernateHandler implements QueryHandler {
   @Override
   public boolean transform(Query query, FactoryExpression<?> projection) {
     try {
-      ResultTransformer transformer = new FactoryExpressionTransformer(projection);
-      query.unwrap(org.hibernate.query.Query.class).setResultTransformer(transformer);
+      TupleTransformer<?> transformer = new FactoryExpressionTransformer(projection);
+      query.unwrap(org.hibernate.query.Query.class).setTupleTransformer(transformer);
       return true;
     } catch (PersistenceException e) {
       return false;

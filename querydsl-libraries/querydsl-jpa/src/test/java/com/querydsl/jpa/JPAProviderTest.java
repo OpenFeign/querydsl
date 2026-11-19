@@ -36,7 +36,7 @@ public class JPAProviderTest {
   public void hibernate() {
     Map<String, String> properties = new HashMap<>();
     factory = Persistence.createEntityManagerFactory("h2", properties);
-    em = factory.createEntityManager();
+    em = factory.createEntityManager(java.util.Map.of());
     System.out.println(em.getDelegate().getClass());
     assertThat(JPAProvider.getTemplates(em)).isEqualTo(Hibernate5Templates.DEFAULT);
   }
@@ -44,7 +44,7 @@ public class JPAProviderTest {
   @Test
   public void hibernate_for_proxy() {
     factory = Persistence.createEntityManagerFactory("h2");
-    em = factory.createEntityManager();
+    em = factory.createEntityManager(java.util.Map.of());
     InvocationHandler handler =
         new InvocationHandler() {
           @Override
@@ -64,7 +64,7 @@ public class JPAProviderTest {
   @Test
   public void eclipseLink() {
     factory = Persistence.createEntityManagerFactory("h2-eclipselink");
-    em = factory.createEntityManager();
+    em = factory.createEntityManager(java.util.Map.of());
     System.out.println(em.getDelegate().getClass());
     System.out.println(em.getProperties());
     assertThat(JPAProvider.getTemplates(em)).isEqualTo(EclipseLinkTemplates.DEFAULT);
@@ -73,7 +73,7 @@ public class JPAProviderTest {
   @Test
   public void eclipseLink_for_proxy() {
     factory = Persistence.createEntityManagerFactory("h2-eclipselink");
-    em = factory.createEntityManager();
+    em = factory.createEntityManager(java.util.Map.of());
     InvocationHandler handler =
         new InvocationHandler() {
           @Override
@@ -94,7 +94,7 @@ public class JPAProviderTest {
   @Disabled // doesn't work on JDK 7
   public void openJPA() {
     factory = Persistence.createEntityManagerFactory("derby-openjpa");
-    em = factory.createEntityManager();
+    em = factory.createEntityManager(java.util.Map.of());
     System.out.println(em.getDelegate().getClass());
     System.out.println(em.getProperties());
     assertThat(JPAProvider.getTemplates(em)).isEqualTo(OpenJPATemplates.DEFAULT);
@@ -104,7 +104,7 @@ public class JPAProviderTest {
   @Disabled // temporarily ignored, since Batoo hangs on EntityManager creation
   public void batoo() {
     factory = Persistence.createEntityManagerFactory("h2-batoo");
-    em = factory.createEntityManager();
+    em = factory.createEntityManager(java.util.Map.of());
     System.out.println(em.getDelegate().getClass());
     System.out.println(em.getProperties());
     assertThat(JPAProvider.getTemplates(em)).isEqualTo(BatooTemplates.DEFAULT);

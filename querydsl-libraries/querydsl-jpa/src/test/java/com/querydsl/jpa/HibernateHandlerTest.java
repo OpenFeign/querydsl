@@ -19,8 +19,8 @@ import java.util.List;
 import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
 import org.eclipse.persistence.internal.localization.ExceptionLocalization;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.TupleTransformer;
 import org.hibernate.query.spi.ScrollableResultsImplementor;
-import org.hibernate.transform.ResultTransformer;
 import org.junit.jupiter.api.Test;
 
 public class HibernateHandlerTest {
@@ -153,7 +153,7 @@ public class HibernateHandlerTest {
     FactoryExpression<?> projection = createMock(FactoryExpression.class);
 
     expect(nativeQuery.unwrap(org.hibernate.query.Query.class)).andReturn(nativeQuery);
-    expect(nativeQuery.setResultTransformer(anyObject(ResultTransformer.class)))
+    expect(nativeQuery.setTupleTransformer(anyObject(TupleTransformer.class)))
         .andReturn(nativeQuery);
     replay(nativeQuery);
 

@@ -1062,6 +1062,15 @@
       </properties>
     </profile>
     <profile>
+      <!-- Runs against Hibernate ORM 8 / Jakarta Persistence 4 (pre-release). EclipseLink has no
+           Jakarta Persistence 4 release, so its tests are excluded under this profile. -->
+      <id>hibernate8</id>
+      <properties>
+        <hibernate.version>8.0.0.Beta4</hibernate.version>
+        <jpa.version>4.0.0-M7</jpa.version>
+      </properties>
+    </profile>
+    <profile>
       <id>dev</id>
       <properties>
         <!-- default groups to exclude from surefire plugin -->
