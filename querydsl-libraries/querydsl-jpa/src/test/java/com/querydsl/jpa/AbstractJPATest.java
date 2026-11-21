@@ -754,13 +754,83 @@ public abstract class AbstractJPATest {
   @Test
   public void count() {
     var show = QShow.show;
-    assertThat(query().from(show).fetchCount() > 0).isTrue();
+    assertThat(query().from(show).fetchCount()).isEqualTo(1L);
+  }
+
+  @Test
+  public void count_empty_result() {
+    var result =
+        query()
+            .from(cat)
+            .where(cat.id.lt(0))
+            .select(Expressions.ONE.count(), cat.id.count(), cat.id.countDistinct())
+            .fetchOne();
+
+    assertThat(result).isEqualTo(new MockTuple(new Object[] {0L, 0L, 0L}));
+  }
+
+  @Test
+  public void count_nullable_property() {
+    // Five cats are BLACK; the sixth has no color.
+    var result =
+        query()
+            .from(cat)
+            .select(Expressions.ONE.count(), cat.color.count(), cat.color.countDistinct())
+            .fetchOne();
+
+    assertThat(result).isEqualTo(new MockTuple(new Object[] {6L, 5L, 1L}));
+  }
+
+  @Test
+  public void count_left_join_without_children() {
+    var kitten = new QCat("kitten");
+    var results =
+        query()
+            .from(cat)
+            .leftJoin(cat.kittens, kitten)
+            .where(cat.id.in(1, 2))
+            .groupBy(cat.id)
+            .orderBy(cat.id.asc())
+            .select(cat.id, Expressions.ONE.count(), kitten.id.count())
+            .fetch();
+
+    // Bob has no kittens; Ruth has Bob as her kitten.
+    assertThat(results)
+        .containsExactly(
+            new MockTuple(new Object[] {1, 1L, 0L}), new MockTuple(new Object[] {2, 1L, 1L}));
+  }
+
+  @Test
+  public void count_distinct_join_duplicates() {
+    // Each cat is paired with two other cats, duplicating its ID in the result.
+    var result =
+        query()
+            .from(cat, otherCat)
+            .where(otherCat.id.in(1, 2))
+            .select(cat.id.count(), cat.id.countDistinct())
+            .fetchOne();
+
+    assertThat(result).isEqualTo(new MockTuple(new Object[] {12L, 6L}));
   }
 
   @Test
   public void count_distinct() {
     var cat = QCat.cat;
-    query().from(cat).groupBy(cat.id).select(cat.id, cat.breed.countDistinct()).fetch();
+    var results =
+        query()
+            .from(cat)
+            .groupBy(cat.id)
+            .orderBy(cat.id.asc())
+            .select(cat.id, cat.breed.countDistinct())
+            .fetch();
+    assertThat(results)
+        .containsExactly(
+            new MockTuple(new Object[] {1, 1L}),
+            new MockTuple(new Object[] {2, 1L}),
+            new MockTuple(new Object[] {3, 1L}),
+            new MockTuple(new Object[] {4, 1L}),
+            new MockTuple(new Object[] {5, 1L}),
+            new MockTuple(new Object[] {6, 1L}));
   }
 
   @Test
