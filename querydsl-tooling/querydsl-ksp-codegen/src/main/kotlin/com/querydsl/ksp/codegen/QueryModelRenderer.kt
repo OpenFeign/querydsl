@@ -14,9 +14,8 @@ object QueryModelRenderer {
     fun render(model: QueryModel): TypeSpec {
         return when (model.type) {
             QueryModelType.QUERY_PROJECTION -> TypeSpec.classBuilder(model.className)
-                .setPrimaryConstructor(model)
                 .setEntitySuperclass(model)
-                .addSuperConstructorParameter(model)
+                .addProjectionConstructors(model)
                 .addAnnotation(Generated::class)
                 .build()
 
@@ -285,6 +284,33 @@ object QueryModelRenderer {
             )
             .build()
         addType(companionObject)
+        return this
+    }
+
+    private fun TypeSpec.Builder.addProjectionConstructors(model: QueryModel): TypeSpec.Builder {
+        if (model.projectionConstructors.size <= 1) {
+            return setPrimaryConstructor(model).addSuperConstructorParameter(model)
+        }
+        model.projectionConstructors.forEach { properties ->
+            val constructor = FunSpec.constructorBuilder()
+            properties.forEach {
+                constructor.addParameter(
+                    it.name,
+                    Expression::class.asClassName().parameterizedBy(it.type.originalTypeName)
+                )
+            }
+            val paramTypes = CodeBlock.builder().add("arrayOf(")
+            properties.forEachIndexed { index, property ->
+                if (index > 0) paramTypes.add(", ")
+                paramTypes.add("%T::class.java", property.type.originalClassName)
+            }
+            paramTypes.add(")")
+            constructor.callSuperConstructor(
+                listOf(CodeBlock.of("%T::class.java", model.originalClassName), paramTypes.build()) +
+                    properties.map { CodeBlock.of("%N", it.name) }
+            )
+            addFunction(constructor.build())
+        }
         return this
     }
 
