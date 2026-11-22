@@ -17,6 +17,113 @@ import java.util.concurrent.atomic.AtomicReference
 class KspProcessorIntegrationTest {
 
     @Test
+    fun valueClassProjection_createsDtoAtRuntime() {
+        val source = SourceFile.kotlin(
+            "ValueDto.kt",
+            """
+            package test
+            import com.querydsl.core.annotations.QueryProjection
+            import com.querydsl.core.types.dsl.Expressions
+
+            @JvmInline
+            value class UserId(val value: String)
+            data class UserDto @QueryProjection constructor(val id: UserId, val name: String)
+
+            fun createDto(): List<String> {
+                val dto = QUserDto(Expressions.constant("user-1"), Expressions.constant("Alice"))
+                    .newInstance("user-1", "Alice")
+                return listOf(dto.id.value, dto.name)
+            }
+            """.trimIndent()
+        )
+        val (result, _) = compile(source)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.classLoader.loadClass("test.ValueDtoKt").getMethod("createDto").invoke(null))
+            .isEqualTo(listOf("user-1", "Alice"))
+    }
+
+    @Test
+    fun valueClassProjection_preservesFactoryOperationsAndOverloads() {
+        val source = SourceFile.kotlin(
+            "ValueDto.kt",
+            """
+            package test
+            import com.querydsl.core.annotations.QueryProjection
+            import com.querydsl.core.types.Operation
+            import com.querydsl.core.types.ExpressionException
+            import com.querydsl.core.types.dsl.Expressions
+
+            @JvmInline
+            value class UserId(val value: String)
+            typealias Id = UserId
+
+            class UserDto @QueryProjection constructor(val id: UserId, val name: String, val other: Id) {
+                var age = -1
+                var note: String? = "initial"
+                @QueryProjection constructor(name: String, age: Int) : this(UserId("default"), name, UserId("other")) {
+                    require(name != "invalid")
+                    this.age = age
+                }
+                @QueryProjection constructor(id: UserId, name: String, age: Int, note: String?) : this(id, name, id) {
+                    this.age = age
+                    this.note = note
+                }
+            }
+
+            fun checkProjection(): List<Any?> {
+                val text = Expressions.constant("same")
+                val projection = QUserDto(text, text, text)
+                check(projection.args == listOf(text, text, text))
+                check(projection.toString().contains("UserDto"))
+                check((projection.`as`("dto") as Operation<*>).getArg(0) == projection)
+                val path = Expressions.path(UserDto::class.java, "dto")
+                check((projection.`as`(path) as Operation<*>).getArg(1) == path)
+                check(projection.skipNulls().newInstance(null, null, null) == null)
+                val full = projection.newInstance("id", "name", "other")
+                val ordinaryProjection = QUserDto(text, Expressions.constant(1))
+                check(runCatching { ordinaryProjection.newInstance("invalid", 1) }.exceptionOrNull() is ExpressionException)
+                val ordinary = ordinaryProjection.newInstance("ordinary", null)
+                val nullable = QUserDto(text, text, Expressions.constant(1), text)
+                    .newInstance("nullable", "name", null, null)
+                return listOf(full.id.value, full.name, full.other.value, ordinary.id.value,
+                    ordinary.name, ordinary.age, nullable.id.value, nullable.age, nullable.note)
+            }
+            """.trimIndent()
+        )
+        val (result, _) = compile(source)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.classLoader.loadClass("test.ValueDtoKt").getMethod("checkProjection").invoke(null))
+            .isEqualTo(listOf("id", "name", "other", "default", "ordinary", 0, "nullable", 0, null))
+    }
+
+    @Test
+    fun genericProjection_withConcreteParameter_createsDtoAtRuntime() {
+        val source = SourceFile.kotlin(
+            "GenericDto.kt",
+            """
+            package test
+            import com.querydsl.core.annotations.QueryProjection
+            import com.querydsl.core.types.dsl.Expressions
+
+            data class GenericDto<T> @QueryProjection constructor(val value: String)
+            fun createDto(): Any? = QGenericDto(Expressions.constant("generic"))
+                .newInstance("generic")!!.value
+            """.trimIndent()
+        )
+        val (result, _) = compile(source)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.classLoader.loadClass("test.GenericDtoKt").getMethod("createDto").invoke(null))
+            .isEqualTo("generic")
+    }
+
+
+    @Test
     fun multipleQueryProjectionConstructors_createDtosAtRuntime() {
         val source = SourceFile.kotlin(
             "UserDto.kt",

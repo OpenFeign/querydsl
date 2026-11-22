@@ -1,6 +1,10 @@
 package com.querydsl.ksp.codegen
 
 import com.querydsl.core.annotations.Generated
+import com.querydsl.core.types.ExpressionException
+import com.querydsl.core.types.FactoryExpressionBase
+import com.querydsl.core.types.ExpressionUtils
+import com.querydsl.core.types.Visitor
 import com.querydsl.core.types.ConstructorExpression
 import com.querydsl.core.types.Path
 import com.querydsl.core.types.PathMetadata
@@ -11,11 +15,19 @@ import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 object QueryModelRenderer {
+    private val primitiveDefaults = mapOf(
+        BOOLEAN to "false", BYTE to "0", SHORT to "0", INT to "0", LONG to "0L",
+        FLOAT to "0.0f", DOUBLE to "0.0", CHAR to "'\\u0000'"
+    )
+
     fun render(model: QueryModel): TypeSpec {
         return when (model.type) {
             QueryModelType.QUERY_PROJECTION -> TypeSpec.classBuilder(model.className)
                 .setEntitySuperclass(model)
-                .addProjectionConstructors(model)
+                .let { builder ->
+                    if (model.usesDirectProjection()) builder.addDirectProjection(model)
+                    else builder.addProjectionConstructors(model)
+                }
                 .addAnnotation(Generated::class)
                 .build()
 
@@ -45,7 +57,10 @@ object QueryModelRenderer {
             when (model.type) {
                 QueryModelType.ENTITY, QueryModelType.SUPERCLASS -> EntityPathBase::class.asClassName().parameterizedBy(constraint)
                 QueryModelType.EMBEDDABLE -> BeanPath::class.asClassName().parameterizedBy(constraint)
-                QueryModelType.QUERY_PROJECTION -> ConstructorExpression::class.asClassName().parameterizedBy(constraint)
+                QueryModelType.QUERY_PROJECTION -> {
+                    val base = if (model.usesDirectProjection()) FactoryExpressionBase::class else ConstructorExpression::class
+                    base.asClassName().parameterizedBy(constraint)
+                }
             }
         )
         return this
@@ -284,6 +299,66 @@ object QueryModelRenderer {
             )
             .build()
         addType(companionObject)
+        return this
+    }
+
+    private fun QueryModel.usesDirectProjection(): Boolean {
+        val arguments = projectionConstructors.flatten().map { it.projectionArgument }
+        return typeParameterCount == 0 && arguments.any { it is ProjectionArgument.StringValue } &&
+            arguments.none { it is ProjectionArgument.UnsupportedValue }
+    }
+
+    private fun TypeSpec.Builder.addDirectProjection(model: QueryModel): TypeSpec.Builder {
+        val expressionList = List::class.asClassName().parameterizedBy(Expression::class.asClassName().parameterizedBy(STAR))
+        addProperty(PropertySpec.builder("projectionArgs", expressionList, KModifier.PRIVATE).build())
+        addProperty(PropertySpec.builder("constructorIndex", INT, KModifier.PRIVATE).build())
+        model.projectionConstructors.forEachIndexed { index, properties ->
+            val constructor = FunSpec.constructorBuilder()
+                .callSuperConstructor(CodeBlock.of("%T::class.java", model.originalClassName))
+            properties.forEach {
+                constructor.addParameter(it.name, Expression::class.asClassName().parameterizedBy(it.type.originalTypeName))
+            }
+            constructor.addStatement("this.constructorIndex = %L", index)
+            val args = properties.map { CodeBlock.of("%N", it.name) }.joinToCode(", ")
+            constructor.addStatement("this.projectionArgs = %T.unmodifiableList(listOf(%L))", java.util.Collections::class, args)
+            addFunction(constructor.build())
+        }
+        addFunction(FunSpec.builder("getArgs").addModifiers(KModifier.OVERRIDE)
+            .returns(expressionList).addStatement("return projectionArgs").build())
+        val result = TypeVariableName("R")
+        val context = TypeVariableName("C")
+        addFunction(FunSpec.builder("accept").addModifiers(KModifier.OVERRIDE)
+            .addTypeVariables(listOf(result, context))
+            .addParameter("visitor", Visitor::class.asClassName().parameterizedBy(result, context))
+            .addParameter("context", context.copy(nullable = true))
+            .returns(result).addStatement("return visitor.visit(this, context)").build())
+        listOf(Path::class.asClassName().parameterizedBy(model.originalClassName), STRING).forEach { aliasType ->
+            addFunction(FunSpec.builder("as").addParameter("alias", aliasType)
+                .returns(Expression::class.asClassName().parameterizedBy(model.originalClassName))
+                .addStatement("return %T.`as`(this, alias)", ExpressionUtils::class).build())
+        }
+        val body = CodeBlock.builder().beginControlFlow("try").beginControlFlow("return when (constructorIndex)")
+        model.projectionConstructors.forEachIndexed { index, properties ->
+            val args = properties.mapIndexed { argIndex, property ->
+                when (val argument = property.projectionArgument) {
+                    is ProjectionArgument.StringValue -> CodeBlock.of("%T(args[%L] as %T)", argument.className, argIndex, STRING)
+                    is ProjectionArgument.Direct -> {
+                        val defaultValue = primitiveDefaults[argument.typeName]
+                        if (defaultValue == null) CodeBlock.of("args[%L] as %T", argIndex, argument.typeName)
+                        else CodeBlock.of("(args[%L] as %T ?: %L)", argIndex, argument.typeName.copy(nullable = true), defaultValue)
+                    }
+                    ProjectionArgument.UnsupportedValue -> error("Unsupported value class projection")
+                }
+            }.joinToCode(", ")
+            body.addStatement("%L -> %T(%L)", index, model.originalClassName, args)
+        }
+        body.addStatement("else -> error(%S)", "Unknown projection constructor").endControlFlow()
+            .nextControlFlow("catch (exception: %T)", Exception::class)
+            .addStatement("throw %T(exception.message, exception)", ExpressionException::class)
+            .endControlFlow()
+        addFunction(FunSpec.builder("newInstance").addModifiers(KModifier.OVERRIDE)
+            .addParameter("args", ANY.copy(nullable = true), KModifier.VARARG)
+            .returns(model.originalClassName).addCode(body.build()).build())
         return this
     }
 

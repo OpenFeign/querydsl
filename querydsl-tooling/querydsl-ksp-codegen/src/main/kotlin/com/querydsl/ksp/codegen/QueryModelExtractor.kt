@@ -8,9 +8,12 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunction
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
+import com.google.devtools.ksp.symbol.Nullability
+import com.google.devtools.ksp.symbol.KSTypeAlias
 import com.google.devtools.ksp.symbol.Modifier
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.toClassName
 import jakarta.persistence.Transient
 
@@ -131,8 +134,32 @@ class QueryModelExtractor @JvmOverloads constructor(
                     "${declaration.parent?.location} - $paramName",
                     parameter.annotations
                 )
-                val type = extractor.extract(parameter.type.resolve())
-                QProperty(paramName, type)
+                val resolvedType = parameter.type.resolve()
+                val type = extractor.extract(resolvedType)
+                var underlyingType = resolvedType
+                while (underlyingType.declaration is KSTypeAlias) {
+                    underlyingType = (underlyingType.declaration as KSTypeAlias).type.resolve()
+                }
+                val parameterClass = underlyingType.declaration as? KSClassDeclaration
+                val argument = if (parameterClass != null && Modifier.VALUE in parameterClass.modifiers) {
+                    val wrappedType = parameterClass.primaryConstructor?.parameters?.singleOrNull()?.type?.resolve()
+                    if (parameterClass.typeParameters.isEmpty() &&
+                        resolvedType.nullability == Nullability.NOT_NULL &&
+                        underlyingType.nullability == Nullability.NOT_NULL &&
+                        wrappedType?.nullability == Nullability.NOT_NULL &&
+                        wrappedType.declaration.qualifiedName?.asString() == "kotlin.String"
+                    ) {
+                        ProjectionArgument.StringValue(parameterClass.toClassName())
+                    } else {
+                        ProjectionArgument.UnsupportedValue
+                    }
+                } else {
+                    val owner = declaration.parentDeclaration as? KSClassDeclaration
+                    val declaredType = if (owner?.typeParameters.isNullOrEmpty()) resolvedType.toTypeName()
+                    else type.originalTypeName
+                    ProjectionArgument.Direct(declaredType)
+                }
+                QProperty(paramName, type, argument)
             }
             .toList()
     }
