@@ -216,6 +216,14 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void neAny_collection() {
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var kitten = new QCat("kitten");
+    serializer.handle(kitten.neAny(QCat.cat.kittens));
+    assertThat(serializer).hasToString("kitten <> any elements(cat.kittens)");
+  }
+
+  @Test
   public void like() {
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.stringPath("str").contains("abc!"));
