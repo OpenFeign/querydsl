@@ -15,6 +15,7 @@
   <modules>
     <module>fluentq-core</module>
     <module>fluentq-spatial</module>
+    <module>fluentq-vector</module>
 
     <module>fluentq-collections</module>
     <module>fluentq-guava</module>
@@ -22,6 +23,7 @@
     <!-- SQL -->
     <module>fluentq-sql</module>
     <module>fluentq-sql-spatial</module>
+    <module>fluentq-sql-vector</module>
     <module>fluentq-sql-spring</module>
     <module>fluentq-sql-json</module>
     <!-- Reactive SQL -->

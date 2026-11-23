@@ -17,6 +17,114 @@ import java.util.concurrent.atomic.AtomicReference
 class KspProcessorIntegrationTest {
 
     @Test
+    fun multipleQueryProjectionConstructors_createDtosAtRuntime() {
+        val source = SourceFile.kotlin(
+            "UserDto.kt",
+            """
+            package test
+
+            import fluentq.core.annotations.QueryProjection
+            import fluentq.core.types.dsl.Expressions
+
+            class UserDto @QueryProjection constructor(val name: String, val age: Int) {
+                @QueryProjection constructor(name: String) : this(name, 20)
+                @QueryProjection constructor() : this("anonymous", 0)
+                constructor(name: String, age: Int, ignored: Boolean) : this(name, age)
+            }
+
+            fun createDtos(): List<String> {
+                val full = QUserDto(Expressions.constant("Alice"), Expressions.constant(30))
+                    .newInstance("Alice", 30)!!
+                val named = QUserDto(Expressions.constant("Bob")).newInstance("Bob")!!
+                val empty = QUserDto().newInstance()!!
+                return listOf(full.name, full.age.toString(), named.name, named.age.toString(),
+                    empty.name, empty.age.toString())
+            }
+            """.trimIndent()
+        )
+
+        val (result, _) = compile(source)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.classLoader.loadClass("test.UserDtoKt").getMethod("createDtos").invoke(null))
+            .isEqualTo(listOf("Alice", "30", "Bob", "20", "anonymous", "0"))
+        assertThat(result.classLoader.loadClass("test.QUserDto").constructors.map { it.parameterCount })
+            .containsExactlyInAnyOrder(0, 1, 2)
+    }
+
+    @Test
+    fun sameArityQueryProjectionConstructors_keepFirstDeclared() {
+        val source = SourceFile.kotlin(
+            "PriceDto.kt",
+            """
+            package test
+
+            import fluentq.core.annotations.QueryProjection
+            import fluentq.core.types.dsl.Expressions
+
+            class PriceDto(val label: String, val cents: Int) {
+                @QueryProjection constructor(label: String) : this(label, 0)
+                @QueryProjection constructor(cents: Int) : this("unnamed", cents)
+                @QueryProjection constructor(label: String, cents: Int, ignored: Boolean) : this(label, cents)
+                @QueryProjection constructor(cents: Int, label: String, ignored: Boolean) : this(label, cents)
+            }
+
+            fun createDtos(): List<String> {
+                val single = QPriceDto(Expressions.constant("Coffee")).newInstance("Coffee")!!
+                val triple = QPriceDto(Expressions.constant("Tea"), Expressions.constant(250),
+                    Expressions.constant(true)).newInstance("Tea", 250, true)!!
+                return listOf(single.label, single.cents.toString(), triple.label, triple.cents.toString())
+            }
+            """.trimIndent()
+        )
+
+        val (result, _) = compile(source)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.classLoader.loadClass("test.PriceDtoKt").getMethod("createDtos").invoke(null))
+            .isEqualTo(listOf("Coffee", "0", "Tea", "250"))
+        assertThat(result.classLoader.loadClass("test.QPriceDto").constructors.map { it.parameterCount })
+            .containsExactlyInAnyOrder(1, 3)
+        assertThat(result.messages)
+            .contains("Skipping @QueryProjection constructor (cents: Int) of test.PriceDto")
+            .contains("Skipping @QueryProjection constructor (cents: Int, label: String, ignored: Boolean) of test.PriceDto")
+    }
+
+    @Test
+    fun sameArityNullableQueryProjectionConstructors_keepPrimary() {
+        val source = SourceFile.kotlin(
+            "NoteDto.kt",
+            """
+            package test
+
+            import fluentq.core.annotations.QueryProjection
+            import fluentq.core.types.dsl.Expressions
+
+            class NoteDto @QueryProjection constructor(val text: String?) {
+                @QueryProjection constructor(priority: Int?) : this(priority?.toString())
+            }
+
+            fun createDto(): String? =
+                QNoteDto(Expressions.nullExpression(String::class.java)).newInstance(null)!!.text
+            """.trimIndent()
+        )
+
+        val (result, _) = compile(source)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.classLoader.loadClass("test.NoteDtoKt").getMethod("createDto").invoke(null))
+            .isNull()
+        val generated = result.classLoader.loadClass("test.QNoteDto").constructors.single()
+        assertThat(generated.genericParameterTypes.single().typeName)
+            .isEqualTo("fluentq.core.types.Expression<java.lang.String>")
+        assertThat(result.messages)
+            .contains("Skipping @QueryProjection constructor (priority: Int?) of test.NoteDto")
+    }
+
+    @Test
     fun kotlinEntity_generatesQClassUnderKsp2() {
         val source = SourceFile.kotlin(
             "User.kt",
@@ -150,6 +258,103 @@ class KspProcessorIntegrationTest {
             // so Java callers can write `qBranch.parent()` instead of
             // `qBranch.getParent()`.
             .contains("@get:JvmName(\"parent\")")
+    }
+
+    @Test
+    fun queryEntityWithQuerySupertypeBase_generatesQClasses() {
+        // Regression: QueryModelType.autodetect() only matched jakarta
+        // @MappedSuperclass for SUPERCLASS models. A @QueryEntity whose base
+        // is @QuerySupertype failed with "Unable to resolve type of entity".
+        val base = SourceFile.kotlin(
+            "AuditableEntity.kt",
+            """
+            package test
+
+            import fluentq.core.annotations.QuerySupertype
+            import java.util.UUID
+
+            @QuerySupertype
+            abstract class AuditableEntity(
+                open var id: UUID? = null,
+            )
+            """.trimIndent()
+        )
+        val entity = SourceFile.kotlin(
+            "GroupEntity.kt",
+            """
+            package test
+
+            import fluentq.core.annotations.QueryEntity
+            import java.util.UUID
+
+            @QueryEntity
+            class GroupEntity(
+                id: UUID? = null,
+                val name: String = "",
+            ) : AuditableEntity(id)
+            """.trimIndent()
+        )
+
+        val (result, generatedDir) = compile(base, entity)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+
+        val qGroup = generatedDir.findGenerated("QGroupEntity.kt").readText()
+        assertThat(qGroup)
+            .contains("class QGroupEntity")
+            .contains("createString(\"name\")")
+            .contains("_super: QAuditableEntity")
+        assertThat(generatedDir.findGenerated("QAuditableEntity.kt").readText())
+            .contains("createComparable(\"id\"")
+    }
+
+    @Test
+    fun queryEntityWithQueryEmbeddable_generatesQClasses() {
+        val embeddable = SourceFile.kotlin(
+            "Address.kt",
+            """
+            package test
+
+            import fluentq.core.annotations.QueryEmbeddable
+
+            @QueryEmbeddable
+            data class Address(
+                val street: String = "",
+                val city: String = "",
+            )
+            """.trimIndent()
+        )
+        val entity = SourceFile.kotlin(
+            "Person.kt",
+            """
+            package test
+
+            import fluentq.core.annotations.QueryEmbedded
+            import fluentq.core.annotations.QueryEntity
+            import java.util.UUID
+
+            @QueryEntity
+            class Person(
+                val id: UUID? = null,
+                val name: String = "",
+                @QueryEmbedded
+                val address: Address = Address(),
+            )
+            """.trimIndent()
+        )
+
+        val (result, generatedDir) = compile(embeddable, entity)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+
+        assertThat(generatedDir.findGenerated("QPerson.kt").readText())
+            .contains("class QPerson")
+            .contains("createString(\"name\")")
+        assertThat(generatedDir.findGenerated("QAddress.kt").readText())
+            .contains("createString(\"street\")")
+            .contains("createString(\"city\")")
     }
 
     @Test
@@ -513,6 +718,74 @@ class KspProcessorIntegrationTest {
             .contains("createSimple(\"pair\"")
             .contains("StringPair")
     }
+
+    @Test
+    fun convertAnnotatedWellKnownType_stillRendersSpecializedPath() {
+        // Regression: TypeExtractor.userType() used to treat *every* @Convert /
+        // @Type / @JdbcTypeCode annotated property as an opaque "Unknown" type,
+        // rendering it as a generic SimplePath - even when the declared Kotlin
+        // type (Instant, Boolean, ...) already has a well-known, specialized
+        // QueryDSL Path mapping in SimpleType.Mapper. @Convert only changes how
+        // JPA persists the attribute to the database column; the JPQL/Path-level
+        // type is still whatever the Kotlin property declares. fluentq-apt (the
+        // Java APT generator) already keeps the specialized Path for this case -
+        // fluentq-ksp-codegen should too.
+        val converter = SourceFile.kotlin(
+            "Converters.kt",
+            """
+            package test
+            import jakarta.persistence.AttributeConverter
+            import java.time.Instant
+
+            class InstantToStringConverter : AttributeConverter<Instant, String> {
+                override fun convertToDatabaseColumn(attribute: Instant?): String? = attribute?.toString()
+                override fun convertToEntityAttribute(dbData: String?): Instant? = dbData?.let(Instant::parse)
+            }
+
+            class BooleanToStringConverter : AttributeConverter<Boolean, String> {
+                override fun convertToDatabaseColumn(attribute: Boolean?): String? = if (attribute == true) "Y" else "N"
+                override fun convertToEntityAttribute(dbData: String?): Boolean? = dbData == "Y"
+            }
+            """.trimIndent()
+        )
+        val entity = SourceFile.kotlin(
+            "Alarm.kt",
+            """
+            package test
+            import jakarta.persistence.Convert
+            import jakarta.persistence.Entity
+            import jakarta.persistence.Id
+            import java.time.Instant
+
+            @Entity
+            class Alarm {
+                @Id var id: Long = 0
+
+                @Convert(converter = InstantToStringConverter::class)
+                var timeCreated: Instant? = null
+
+                @Convert(converter = BooleanToStringConverter::class)
+                var isActive: Boolean? = null
+            }
+            """.trimIndent()
+        )
+
+        val (result, generatedDir) = compile(converter, entity)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+
+        val qAlarm = generatedDir.findGenerated("QAlarm.kt").readText()
+        assertThat(qAlarm)
+            .contains("class QAlarm")
+            .contains("DateTimePath<Instant>")
+            .contains("createDateTime(\"timeCreated\"")
+            .contains("BooleanPath")
+            .contains("createBoolean(\"isActive\")")
+            .doesNotContain("SimplePath<Instant")
+            .doesNotContain("SimplePath<Boolean")
+    }
+
 
     @Test
     fun referencedClassWithSameSimpleNameAnnotation_isNotMistakenForJpaEntity() {

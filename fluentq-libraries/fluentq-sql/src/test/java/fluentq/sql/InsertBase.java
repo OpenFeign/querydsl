@@ -19,6 +19,7 @@ import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
 import static fluentq.core.Target.H2;
 import static fluentq.core.Target.HSQLDB;
+import static fluentq.core.Target.MARIADB;
 import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.ORACLE;
 import static fluentq.core.Target.POSTGRESQL;
@@ -79,7 +80,7 @@ public abstract class InsertBase extends AbstractBaseTest {
 
   @Test
   @ExcludeIn({
-    CUBRID, SQLITE, DERBY, ORACLE, TURSO
+    CUBRID, SQLITE, DERBY, TURSO
   }) // https://bitbucket.org/xerial/sqlite-jdbc/issue/133/prepstmtsetdate-int-date-calendar-seems
   public void insert_dates() {
     var dateTest = QDateTest.qDateTest;
@@ -208,13 +209,12 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({FIREBIRD, HSQLDB, DB2, DERBY, ORACLE})
+  @ExcludeIn({FIREBIRD, DB2, DERBY, ORACLE})
   public void insert_without_values() {
     assertThat(insert(survey).execute()).isEqualTo(1);
   }
 
   @Test
-  @ExcludeIn(ORACLE)
   public void insert_nulls_in_batch() {
     //        QFoo f= QFoo.foo;
     //        SQLInsertClause sic = new SQLInsertClause(c, new H2Templates(), f);
@@ -337,7 +337,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   @SkipForQuoted
   public void insert_with_special_options() {
     var clause = insert(survey).columns(survey.id, survey.name).values(3, "Hello");
@@ -349,7 +349,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery() {
     var count = (int) query().from(survey).fetchCount();
     assertThat(
@@ -361,7 +360,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, HSQLDB, CUBRID, DERBY, FIREBIRD})
+  @ExcludeIn({DB2, CUBRID, DERBY})
   public void insert_with_subQuery2() {
     //        insert into modules(name)
     //        select 'MyModule'
@@ -383,7 +382,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({HSQLDB, CUBRID, DERBY})
+  @ExcludeIn(CUBRID)
   public void insert_with_subQuery3() {
     //        insert into modules(name)
     //        select 'MyModule'
@@ -405,7 +404,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Params() {
     var param = new Param<Integer>(Integer.class, "param");
     SQLQuery<?> sq = query().from(survey2);
@@ -421,7 +419,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Via_Constructor() {
     var count = (int) query().from(survey).fetchCount();
     var insert = insert(survey, query().from(survey2));
@@ -431,7 +428,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Without_Columns() {
     var count = (int) query().from(survey).fetchCount();
     assertThat(
@@ -443,13 +439,11 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insert_without_columns() {
     assertThat(insert(survey).values(4, "Hello", "World").execute()).isEqualTo(1);
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insertBatch_with_subquery() {
     var insert =
         insert(survey)
@@ -490,7 +484,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   @SkipForQuoted
   public void replace() {
     var clause = mysqlReplace(survey);

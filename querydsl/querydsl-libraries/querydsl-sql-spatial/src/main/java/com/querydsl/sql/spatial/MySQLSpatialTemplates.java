@@ -48,7 +48,7 @@ public class MySQLSpatialTemplates extends MySQLTemplates {
   public MySQLSpatialTemplates(char escape, boolean quote) {
     super(escape, quote);
     addCustomType(MySQLWkbType.DEFAULT);
-    add(SpatialTemplatesSupport.getSpatialOps("", true));
-    add(SpatialOps.NUM_INTERIOR_RING, "NumInteriorRings({0})");
+    add(SpatialTemplatesSupport.getSpatialOps(true));
+    add(SpatialOps.NUM_INTERIOR_RING, "ST_NumInteriorRings({0})");
   }
 }

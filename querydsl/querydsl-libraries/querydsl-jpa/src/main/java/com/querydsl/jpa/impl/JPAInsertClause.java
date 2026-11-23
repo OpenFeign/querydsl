@@ -58,6 +58,14 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
 
   private final List<List<Expression<?>>> rows = new ArrayList<>();
 
+  /**
+   * Column paths captured at the first {@link #addRow()} call. After {@code addRow()} clears the
+   * per-row {@code inserts}/{@code values} buffer, this lets executors recover the column list when
+   * the trailing iteration was also flushed (e.g. {@code for (...) { insert.set(...).addRow(); }}).
+   * Null until the first {@code addRow()}.
+   */
+  @Nullable private List<Path<?>> rowColumnPaths;
+
   private final EntityManager entityManager;
 
   private final JPQLTemplates templates;
@@ -78,6 +86,12 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
 
   @Override
   public long execute() {
+    // Multi-row insert accumulated via addRow(): emit a single native
+    // INSERT INTO t (...) VALUES (..),(..),... statement in one round-trip.
+    if (!rows.isEmpty()) {
+      return executeMultiRow();
+    }
+
     if (subQuery != null || !hasTemplateValue()) {
       var serializer = new JPQLSerializer(templates, entityManager);
       serializer.serializeForInsert(
@@ -99,10 +113,13 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     if (effectiveColumns.isEmpty()) {
       throw new IllegalStateException("No columns specified for insert");
     }
-    var effectiveValues = JpaInsertNativeHelper.effectiveValues(inserts, values);
+    var effectiveValues =
+        JpaInsertNativeHelper.convertEnumValues(
+            effectiveColumns, JpaInsertNativeHelper.effectiveValues(inserts, values));
 
     var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
 
+    JpaInsertNativeHelper.requireSqlModule();
     var serializer = new JpaNativeInsertSerializer(new Configuration(SQLTemplates.DEFAULT));
     serializer.serializeInsert(entityClass, effectiveColumns, effectiveValues);
 
@@ -114,6 +131,49 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     // Provider-neutral native execute: use the JPA standard EntityManager.createNativeQuery
     // instead of unwrapping a Hibernate Session, so this path also works under EclipseLink/OpenJPA.
     var nativeQuery = JpaCompat.createNativeQuery(entityManager, sql);
+    for (int i = 0; i < params.length; i++) {
+      nativeQuery.setParameter(i + 1, params[i]);
+    }
+    return nativeQuery.executeUpdate();
+  }
+
+  /**
+   * Execute a multi-row INSERT (accumulated via {@link #addRow()}) as a single native {@code INSERT
+   * INTO t (...) VALUES (..),(..),...} statement, returning the number of affected rows. This path
+   * does not return generated keys; use {@link #executeWithKeys(Class)} when keys are needed.
+   */
+  private long executeMultiRow() {
+    if (subQuery != null) {
+      throw new IllegalStateException("addRow is not supported with INSERT ... SELECT subqueries");
+    }
+
+    var effectiveColumns = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
+    if (effectiveColumns.isEmpty() && rowColumnPaths != null) {
+      effectiveColumns = new ArrayList<>(rowColumnPaths);
+    }
+    if (effectiveColumns.isEmpty()) {
+      throw new IllegalStateException("No columns specified for insert");
+    }
+
+    var allRows = new ArrayList<>(rows);
+    if (!values.isEmpty() || !inserts.isEmpty()) {
+      allRows.add(JpaInsertNativeHelper.effectiveValues(inserts, values));
+    }
+    allRows =
+        new ArrayList<>(JpaInsertNativeHelper.convertEnumValuesForRows(effectiveColumns, allRows));
+
+    var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
+
+    JpaInsertNativeHelper.requireSqlModule();
+    var serializer = new JpaNativeInsertSerializer(new Configuration(SQLTemplates.DEFAULT));
+    serializer.serializeInsertRows(entityClass, effectiveColumns, allRows);
+
+    var sql = serializer.toString();
+    var params =
+        JpaInsertNativeHelper.resolveConstants(
+            serializer.getConstants(), queryMixin.getMetadata().getParams());
+
+    var nativeQuery = entityManager.createNativeQuery(sql);
     for (int i = 0; i < params.length; i++) {
       nativeQuery.setParameter(i + 1, params[i]);
     }
@@ -185,10 +245,13 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     if (effectiveColumns.isEmpty()) {
       throw new IllegalStateException("No columns specified for insert");
     }
-    var effectiveValues = JpaInsertNativeHelper.effectiveValues(inserts, values);
+    var effectiveValues =
+        JpaInsertNativeHelper.convertEnumValues(
+            effectiveColumns, JpaInsertNativeHelper.effectiveValues(inserts, values));
 
     var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
 
+    JpaInsertNativeHelper.requireSqlModule();
     var serializer = new JpaNativeInsertSerializer(new Configuration(SQLTemplates.DEFAULT));
     serializer.serializeInsert(entityClass, effectiveColumns, effectiveValues);
 
@@ -210,8 +273,13 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
 
   /**
    * Append the current {@code values()} (or {@code set()}) state as a row and clear it for the next
-   * row. Use together with {@link #executeWithKeys(Class)} to issue a multi-row {@code INSERT INTO
-   * t (...) VALUES (..),(..),...} as a single SQL statement.
+   * row. Accumulated rows are emitted as a single multi-row {@code INSERT INTO t (...) VALUES
+   * (..),(..),...} statement by either {@link #execute()} (no keys) or {@link
+   * #executeWithKeys(Class)} (returning generated keys).
+   *
+   * <p><strong>Note:</strong> this is <em>not</em> JDBC batching ({@code
+   * PreparedStatement.addBatch()}/{@code executeBatch()}, i.e. many statements grouped into one
+   * round-trip). It builds a single SQL statement with multiple {@code VALUES} tuples.
    *
    * @return this clause for chaining
    * @throws IllegalStateException if no values have been specified for the current row, or if
@@ -223,6 +291,9 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     }
     if (values.isEmpty() && inserts.isEmpty()) {
       throw new IllegalStateException("No values to add as row");
+    }
+    if (rowColumnPaths == null) {
+      rowColumnPaths = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
     }
     rows.add(JpaInsertNativeHelper.effectiveValues(inserts, values));
     values.clear();
@@ -263,6 +334,9 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     }
 
     var effectiveColumns = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
+    if (effectiveColumns.isEmpty() && rowColumnPaths != null) {
+      effectiveColumns = new ArrayList<>(rowColumnPaths);
+    }
     if (effectiveColumns.isEmpty()) {
       throw new IllegalStateException("No columns specified for insert");
     }
@@ -274,9 +348,12 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     if (allRows.isEmpty()) {
       throw new IllegalStateException("No values specified for insert");
     }
+    allRows =
+        new ArrayList<>(JpaInsertNativeHelper.convertEnumValuesForRows(effectiveColumns, allRows));
 
     var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
 
+    JpaInsertNativeHelper.requireSqlModule();
     var serializer = new JpaNativeInsertSerializer(new Configuration(SQLTemplates.DEFAULT));
     serializer.serializeInsertRows(entityClass, effectiveColumns, allRows);
 

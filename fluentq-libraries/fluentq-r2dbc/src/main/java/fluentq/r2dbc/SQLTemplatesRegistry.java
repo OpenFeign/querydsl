@@ -43,6 +43,9 @@ public class SQLTemplatesRegistry {
     var name = md.getDatabaseProductName().toLowerCase();
     if (name.equals("h2")) {
       return H2Templates.builder();
+    } else if (name.equals("mariadb")
+        || (name.equals("mysql") && md.getDatabaseProductVersion().contains("MariaDB"))) {
+      return MariaDBTemplates.builder();
     } else if (name.equals("mysql")) {
       return MySQLTemplates.builder();
     } else if (name.equals("postgresql")) {

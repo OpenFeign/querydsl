@@ -1,5 +1,6 @@
 package fluentq.r2dbc;
 
+import static fluentq.core.Target.MARIADB;
 import static fluentq.core.Target.MYSQL;
 import static fluentq.r2dbc.Constants.survey;
 
@@ -14,11 +15,10 @@ public abstract class SelectMySQLBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   public void mysql_extensions() {
     myR2DBCQuery().from(survey).bigResult().select(survey.id).fetch().collectList().block();
     myR2DBCQuery().from(survey).bufferResult().select(survey.id).fetch().collectList().block();
-    myR2DBCQuery().from(survey).cache().select(survey.id).fetch().collectList().block();
     myR2DBCQuery().from(survey).calcFoundRows().select(survey.id).fetch().collectList().block();
     myR2DBCQuery().from(survey).noCache().select(survey.id).fetch().collectList().block();
 

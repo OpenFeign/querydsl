@@ -16,4 +16,6 @@ class QueryModel(
     var superclass: QueryModel? = null
 
     val properties = mutableListOf<QProperty>()
+
+    val projectionConstructors = mutableListOf<List<QProperty>>()
 }

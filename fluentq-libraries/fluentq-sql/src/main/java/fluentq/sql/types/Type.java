@@ -52,6 +52,18 @@ public interface Type<T> {
   String getLiteral(T value);
 
   /**
+   * Get the SQL template that wraps the parameter marker {@code {0}}, like {@code vector({0}, 3,
+   * float32)}
+   *
+   * @param value value
+   * @return parameter template, or null to use a plain parameter marker
+   */
+  @Nullable
+  default String getParameterTemplate(T value) {
+    return null;
+  }
+
+  /**
    * Get the object from the result set
    *
    * @param rs result set

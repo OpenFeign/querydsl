@@ -15,13 +15,13 @@ package fluentq.r2dbc;
 
 import static fluentq.core.Target.CUBRID;
 import static fluentq.core.Target.H2;
+import static fluentq.core.Target.MARIADB;
 import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.ORACLE;
 import static fluentq.core.Target.SQLSERVER;
 import static fluentq.r2dbc.Constants.survey;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import fluentq.core.testutil.ExcludeIn;
 import fluentq.core.testutil.IncludeIn;
 import fluentq.core.types.dsl.Param;
 import fluentq.r2dbc.domain.QEmployee;
@@ -48,7 +48,6 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(MYSQL)
   public void delete() {
     var count = query().from(survey).fetchCount().block();
     assertThat((long) delete(survey).where(survey.name.eq("XXX")).execute().block()).isEqualTo(0);
@@ -56,7 +55,7 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn({CUBRID, H2, MYSQL, ORACLE, SQLSERVER})
+  @IncludeIn({CUBRID, H2, MYSQL, MARIADB, ORACLE, SQLSERVER})
   public void delete_limit() {
     insert(survey).values(2, "A", "B").execute().block();
     insert(survey).values(3, "B", "C").execute().block();

@@ -93,6 +93,20 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
+  public void neAny_collection_jpqlTemplates() {
+    // the standard JPQL form, which every provider has to accept
+    var kitten = new QCat("kitten");
+    var names =
+        new JPAQuery<Void>(entityManager, JPQLTemplates.DEFAULT)
+            .from(cat, kitten)
+            .where(kitten.name.eq("Bob123"), kitten.neAny(cat.kittens))
+            .orderBy(cat.id.asc())
+            .select(cat.name)
+            .fetch();
+    assertThat(names).containsExactly("Felix123", "Allen123", "Mary_123");
+  }
+
+  @Test
   public void jpaCompat_creates_plain_queries() {
     assertThat(JpaCompat.createQuery(entityManager, "select cat from Cat cat").getResultList())
         .isNotEmpty();

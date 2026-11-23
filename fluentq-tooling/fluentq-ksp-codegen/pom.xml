@@ -10,6 +10,16 @@
   <artifactId>fluentq-ksp-codegen</artifactId>
   <name>FluentQ - Kotlin KSP codegen support</name>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.github.classgraph</groupId>
+        <artifactId>classgraph</artifactId>
+        <version>4.8.200</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
@@ -50,7 +60,7 @@
     <dependency>
       <groupId>io.mockk</groupId>
       <artifactId>mockk-jvm</artifactId>
-      <version>1.14.11</version>
+      <version>1.14.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>

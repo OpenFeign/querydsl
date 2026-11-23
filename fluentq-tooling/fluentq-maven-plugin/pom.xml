@@ -14,7 +14,7 @@
   <description>FluentQ Maven plugin</description>
 
   <properties>
-    <maven-plugin.version>3.15.2</maven-plugin.version>
+    <maven-plugin.version>3.16.0</maven-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -22,7 +22,7 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
-        <version>4.0.3</version>
+        <version>4.2.0</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
@@ -32,7 +32,7 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-classworlds</artifactId>
-        <version>2.12.0</version>
+        <version>2.12.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

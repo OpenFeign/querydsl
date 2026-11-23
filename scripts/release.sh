@@ -15,6 +15,11 @@
 
 set -e
 
+if [ -n "$(git status --porcelain)" ]; then
+  echo "working tree is not clean, aborting release" >&2
+  exit 1
+fi
+
 function increment() {
   local version=$1
   result=`echo ${version} | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}'`
@@ -30,13 +35,13 @@ snapshot=$(increment ${tag})
 
 echo "release version is: ${tag} and next snapshot is: ${snapshot}"
 
-# Update the versions, removing the snapshots, then create a new tag for the release, this will
-# start the travis-ci release process.
-./mvnw -B versions:set scm:checkin -DremoveSnapshot -DgenerateBackupPoms=false -Dmessage="prepare release ${tag}" -DpushChanges=false
+./mvnw -B versions:set -DremoveSnapshot -DgenerateBackupPoms=false
+git commit -a -s -S -m "prepare release ${tag}"
+git tag -s -m "release ${tag}" "${tag}"
 
-# tag the release
+./mvnw -B versions:set -DnewVersion="${snapshot}" -DgenerateBackupPoms=false
+git commit -a -s -S -m "[ci skip] updating versions to next development iteration ${snapshot}"
+
 echo "pushing tag ${tag}"
-./mvnw scm:tag
-
-# Update the versions to the next snapshot
-./mvnw -B versions:set scm:checkin -DnewVersion="${snapshot}" -DgenerateBackupPoms=false -Dmessage="[ci skip] updating versions to next development iteration ${snapshot}"
+git push origin "${tag}"
+git push origin HEAD

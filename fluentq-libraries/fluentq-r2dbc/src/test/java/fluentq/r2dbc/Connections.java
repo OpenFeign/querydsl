@@ -71,7 +71,7 @@ public final class Connections {
 
   private static final String INSERT_INTO_TEST_VALUES = "insert into TEST values(?)";
 
-  private static boolean sqlServerInited, h2Inited, mysqlInited, postgresqlInited;
+  private static boolean sqlServerInited, h2Inited, mysqlInited, mariadbInited, postgresqlInited;
 
   public static R2DBCConnectionProvider getR2DBCConnectionProvider(String url) {
     return R2DBCConnectionProvider.from(getConnectionProvider(url));
@@ -105,6 +105,10 @@ public final class Connections {
   public static R2DBCConnectionProvider getMySQL() {
     var url = "r2dbc:mysql://fluentq:fluentq@localhost:3306/fluentq?useLegacyDatetimeCode=false";
     return getR2DBCConnectionProvider(url);
+  }
+
+  public static R2DBCConnectionProvider getMariaDB() {
+    return getR2DBCConnectionProvider("r2dbc:mariadb://fluentq:fluentq@localhost:3307/fluentq");
   }
 
   public static R2DBCConnectionProvider getPostgreSQL() {
@@ -288,6 +292,24 @@ public final class Connections {
       return;
     }
 
+    createMySQLCompatibleTables(connection);
+    mysqlInited = true;
+  }
+
+  public static void initMariaDB() {
+    targetHolder.set(Target.MARIADB);
+    var connection = getMariaDB().getConnection().block();
+    connHolder.set(connection);
+
+    if (mariadbInited) {
+      return;
+    }
+
+    createMySQLCompatibleTables(connection);
+    mariadbInited = true;
+  }
+
+  private static void createMySQLCompatibleTables(Connection connection) {
     Flux<Void> setup =
         Flux.concat(
             execute(connection, "drop table if exists SHAPES").then(),
@@ -333,7 +355,7 @@ public final class Connections {
                       connection,
                       "insert into SHAPES values("
                           + entry.getKey()
-                          + ", GeomFromText('"
+                          + ", ST_GeomFromText('"
                           + entry.getValue()
                           + "'))")
                   .then());
@@ -359,8 +381,6 @@ public final class Connections {
     setup = setup.concatWith(Mono.from(pstmt.execute()).then());
 
     StepVerifier.create(setup).verifyComplete();
-
-    mysqlInited = true;
   }
 
   public static void initPostgreSQL() {

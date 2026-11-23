@@ -37,7 +37,7 @@ import javax.tools.ToolProvider;
 public class SimpleCompiler implements JavaCompiler {
 
   public static String getClassPath(ClassLoader cl) {
-    return new ClassGraph().addClassLoader(cl).getClasspath();
+    return new ClassGraph().enableClassLoaders(cl).enableClasspath().getClasspath();
   }
 
   private final ClassLoader classLoader;

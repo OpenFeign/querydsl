@@ -213,13 +213,7 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
     // extend entity types
     typeFactory.extendTypes();
 
-    if (!context.entityTypes.isEmpty()) {
-      var serializerConfig =
-          conf.getSerializerConfig(context.entityTypes.values().iterator().next());
-      if (serializerConfig.createDefaultVariable()) {
-        detectCircularQClassReferences();
-      }
-    }
+    detectCircularQClassReferences();
 
     context.clean();
   }
@@ -692,68 +686,42 @@ public abstract class AbstractQuerydslProcessor extends AbstractProcessor {
   }
 
   private void detectCircularQClassReferences() {
-    Map<String, EntityType> typeMap = context.entityTypes;
+    List<List<String>> detectedCycles =
+        QClassCycleDetector.detect(context.entityTypes).stream()
+            .filter(this::canDeadlock)
+            .map(cycle -> cycle.stream().map(EntityType::getSimpleName).toList())
+            .toList();
+    if (detectedCycles.isEmpty()) return;
 
-    List<String> detectedCycles = new ArrayList<>();
-    Set<String> globalVisited = new HashSet<>();
-
-    for (EntityType start : typeMap.values()) {
-      if (globalVisited.contains(start.getFullName())) continue;
-
-      Deque<String> path = new ArrayDeque<>();
-      Set<String> inStack = new HashSet<>();
-      dfs(start, typeMap, path, inStack, globalVisited, detectedCycles);
+    var cyclesList = new StringBuilder();
+    for (int i = 0; i < detectedCycles.size(); i++) {
+      cyclesList.append("  (%d) %s\n".formatted(i + 1, String.join(" → ", detectedCycles.get(i))));
     }
+    var message =
+        """
+        [Querydsl] Circular Q-class references detected.
+        This may cause class initialization deadlock in multi-threaded environments.
 
-    if (!detectedCycles.isEmpty()) {
-      var message = new StringBuilder();
-      message.append("[Querydsl] Circular Q-class references detected.\n");
-      message.append(
-          "This may cause class initialization deadlock in multi-threaded environments.\n\n");
-      message.append("Detected cycles:\n");
-      for (int i = 0; i < detectedCycles.size(); i++) {
-        message.append("  (").append(i + 1).append(") ").append(detectedCycles.get(i)).append("\n");
-      }
-      message.append("\nTo avoid deadlock, consider:\n");
-      message.append("  (1) Removing the bidirectional association on one side.\n");
-      message.append(
-          "  (2) Pre-initializing Q-classes in a single thread before handling requests (e.g. via @PostConstruct).\n");
-      message.append(
-          "  (3) Using 'new QClass(\"alias\")' instead of static field access in your repositories.");
+        Detected cycles:
+        %s
+        To avoid deadlock, consider:
+          (1) Removing the bidirectional association on one side.
+          (2) Pre-initializing Q-classes in a single thread before handling requests (e.g. via @PostConstruct).
+          (3) Generating Q-classes without the static default variable (-Acom.querydsl.createDefaultVariable=false) and using 'new QClass("alias")' instead.\
+        """
+            .formatted(cyclesList);
 
-      processingEnv.getMessager().printMessage(Kind.WARNING, message.toString());
-    }
+    processingEnv.getMessager().printMessage(Kind.WARNING, message);
   }
 
-  private void dfs(
-      EntityType current,
-      Map<String, EntityType> typeMap,
-      Deque<String> path,
-      Set<String> inStack,
-      Set<String> globalVisited,
-      List<String> detectedCycles) {
-
-    String currentName = current.getFullName();
-    globalVisited.add(currentName);
-    inStack.add(currentName);
-    path.addLast(current.getSimpleName());
-
-    for (Property property : current.getProperties()) {
-      String neighborName = property.getType().getFullName();
-      EntityType neighbor = typeMap.get(neighborName);
-      if (neighbor == null) continue;
-
-      if (inStack.contains(neighborName)) {
-        List<String> cycle = new ArrayList<>(path);
-        cycle.add(neighbor.getSimpleName());
-        detectedCycles.add(String.join(" → ", cycle));
-      } else if (!globalVisited.contains(neighborName)) {
-        dfs(neighbor, typeMap, path, inStack, globalVisited, detectedCycles);
-      }
-    }
-
-    path.removeLast();
-    inStack.remove(currentName);
+  // ≥2 because a single static instance re-enters on the same thread, and JVM class init is
+  // re-entrant.
+  private boolean canDeadlock(List<EntityType> cycle) {
+    return cycle.stream()
+            .distinct()
+            .filter(e -> conf.getSerializerConfig(e).createDefaultVariable())
+            .count()
+        >= 2;
   }
 
   protected String getClassName(EntityType model) {

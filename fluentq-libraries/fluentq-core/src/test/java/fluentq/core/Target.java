@@ -31,6 +31,8 @@ public enum Target {
   HSQLDB,
   /** Memory (fluentq-collection) */
   MEM,
+  /** MariaDB */
+  MARIADB,
   /** MySQL */
   MYSQL,
   /** Oracle */

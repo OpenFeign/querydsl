@@ -20,6 +20,7 @@ import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
 import static fluentq.core.Target.H2;
 import static fluentq.core.Target.HSQLDB;
+import static fluentq.core.Target.MARIADB;
 import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.ORACLE;
 import static fluentq.core.Target.POSTGRESQL;
@@ -186,7 +187,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, ORACLE})
+  @ExcludeIn({MYSQL, MARIADB, ORACLE})
   @SkipForQuoted
   public void alias_quotes() {
     expectedQuery = "select e.FIRSTNAME as \"First Name\" from EMPLOYEE e";
@@ -199,7 +200,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   @SkipForQuoted
   public void alias_quotes_MySQL() {
     expectedQuery = "select e.FIRSTNAME as `First Name` from EMPLOYEE e";
@@ -610,7 +611,7 @@ public abstract class SelectBase extends AbstractBaseTest {
 
   @Test
   // todo readd mysql after the escape sequence support
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, MYSQL})
+  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, MYSQL, MARIADB})
   public void dates() {
     var javaInstant = java.time.Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
     var javaDateTime = java.time.LocalDateTime.ofInstant(javaInstant, java.time.ZoneId.of("Z"));
@@ -1020,7 +1021,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, SQLITE, DERBY, CUBRID, MYSQL})
+  @ExcludeIn({H2, SQLITE, DERBY, CUBRID, MYSQL, MARIADB})
   public void full_join() {
     assertEquals(
         18,
@@ -1085,7 +1086,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, DB2, DERBY, ORACLE, SQLSERVER})
+  @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER})
   public void groupBy_validate() {
     NumberPath<BigDecimal> alias = Expressions.numberPath(BigDecimal.class, "alias");
     assertEquals(
@@ -1170,7 +1171,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, TERADATA})
+  @ExcludeIn(TERADATA)
   public void in_subqueries() {
     var e1 = new QEmployee("e1");
     var e2 = new QEmployee("e2");

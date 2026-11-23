@@ -5,6 +5,7 @@ import fluentq.sql.CUBRIDTemplates;
 import fluentq.sql.DerbyTemplates;
 import fluentq.sql.H2Templates;
 import fluentq.sql.HSQLDBTemplates;
+import fluentq.sql.MariaDBTemplates;
 import fluentq.sql.MySQLTemplates;
 import fluentq.sql.OracleTemplates;
 import fluentq.sql.PostgreSQLTemplates;
@@ -30,6 +31,7 @@ public final class Mode {
       case H2 -> new H2Templates();
       case HSQLDB -> new HSQLDBTemplates();
       case SQLSERVER -> new SQLServer2008Templates();
+      case MARIADB -> new MariaDBTemplates();
       case MYSQL -> new MySQLTemplates();
       case ORACLE -> new OracleTemplates();
       case POSTGRESQL -> new PostgreSQLTemplates();

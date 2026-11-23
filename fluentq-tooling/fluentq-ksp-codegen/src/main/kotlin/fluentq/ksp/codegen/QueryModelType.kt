@@ -17,8 +17,18 @@ enum class QueryModelType(
 			"org.springframework.data.mongodb.core.mapping.Document"
 		)
 	),
-    EMBEDDABLE(listOf(Embeddable::class.qualifiedName!!)),
-    SUPERCLASS(listOf(MappedSuperclass::class.qualifiedName!!)),
+    EMBEDDABLE(
+		listOf(
+			Embeddable::class.qualifiedName!!,
+			"fluentq.core.annotations.QueryEmbeddable"
+		)
+	),
+    SUPERCLASS(
+		listOf(
+			MappedSuperclass::class.qualifiedName!!,
+			"fluentq.core.annotations.QuerySupertype"
+		)
+	),
     QUERY_PROJECTION(listOf(QueryProjection::class.qualifiedName!!));
 
     companion object {
