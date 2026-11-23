@@ -397,21 +397,37 @@ public abstract class AbstractJPATest {
   @Test
   public void neAny_collection() {
     var kitten = new QCat("kitten");
-    var query =
+    var names =
         query()
             .from(cat, kitten)
             .where(kitten.name.eq("Bob123"), kitten.neAny(cat.kittens))
             .orderBy(cat.id.asc())
-            .select(cat.name);
-    if (isEclipseLink()) {
-      // "kitten <> any cat.kittens": EclipseLink accepts ANY only before a subquery (#2085)
-      assertThatThrownBy(query::fetch)
-          .isInstanceOf(IllegalArgumentException.class)
-          .hasMessageContaining("kitten <> any cat.kittens")
-          .hasMessageContaining("is not a valid conditional expression");
-    } else {
-      assertThat(query.fetch()).containsExactly("Felix123", "Allen123", "Mary_123");
-    }
+            .select(cat.name)
+            .fetch();
+    assertThat(names).containsExactly("Felix123", "Allen123", "Mary_123");
+  }
+
+  @Test
+  public void neAll_collection() {
+    var kitten = new QCat("kitten");
+    var names =
+        query()
+            .from(cat, kitten)
+            .where(kitten.name.eq("Bob123"), kitten.neAll(cat.kittens))
+            .orderBy(cat.id.asc())
+            .select(cat.name)
+            .fetch();
+    // a cat without kittens matches "<> all"
+    assertThat(names).containsExactly("Bob123", "Felix123", "Allen123", "Mary_123", "Some");
+  }
+
+  @Test
+  public void neAny_elementCollection() {
+    var foo = QFoo.foo;
+    assertThat(query().from(foo).where(Expressions.asString("a").neAny(foo.names)).fetchCount())
+        .isEqualTo(1);
+    assertThat(query().from(foo).where(Expressions.asString("a").neAll(foo.names)).fetchCount())
+        .isZero();
   }
 
   @Test
@@ -429,11 +445,6 @@ public abstract class AbstractJPATest {
     // "<> any" over no rows is false, whereas "not in" over no rows is true
     assertThat(query().from(cat).where(cat.id.ne(ExpressionUtils.any(ids))).fetchCount()).isZero();
     assertThat(query().from(cat).where(cat.id.notIn(ids)).fetchCount()).isEqualTo(6);
-  }
-
-  private static boolean isEclipseLink() {
-    var mode = Mode.mode.get();
-    return mode != null && mode.contains("-eclipselink");
   }
 
   @Test

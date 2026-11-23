@@ -227,11 +227,21 @@ public class JPQLSerializerTest {
   @Test
   public void neAny_collection_jpql() {
     var kitten = new QCat("kitten");
-    // not valid JPQL: ANY is only allowed before a subquery (EclipseLink rejects it)
+    // JPQL accepts ANY only before a subquery
+    var expected = "kitten <> any (select cat_kittens\nfrom cat.kittens as cat_kittens)";
     assertThat(serialize(EclipseLinkTemplates.DEFAULT, kitten.neAny(QCat.cat.kittens)))
-        .isEqualTo("kitten <> any cat.kittens");
+        .isEqualTo(expected);
     assertThat(serialize(JPQLTemplates.DEFAULT, kitten.neAny(QCat.cat.kittens)))
-        .isEqualTo("kitten <> any cat.kittens");
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void neAll_collection() {
+    var kitten = new QCat("kitten");
+    assertThat(serialize(HQLTemplates.DEFAULT, kitten.neAll(QCat.cat.kittens)))
+        .isEqualTo("kitten <> all elements(cat.kittens)");
+    assertThat(serialize(JPQLTemplates.DEFAULT, kitten.neAll(QCat.cat.kittens)))
+        .isEqualTo("kitten <> all (select cat_kittens\nfrom cat.kittens as cat_kittens)");
   }
 
   @Test
