@@ -252,4 +252,23 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
         .collectList()
         .block();
   }
+
+  @Test
+  @ExcludeIn({DB2, SQLSERVER})
+  public void windowFunctions_boundedRows() {
+    query()
+        .from(employee)
+        .select(
+            employee.id,
+            R2DBCExpressions.sum(employee.salary)
+                .over()
+                .orderBy(employee.id)
+                .rows()
+                .between()
+                .preceding(1)
+                .following(1))
+        .fetch()
+        .collectList()
+        .block();
+  }
 }

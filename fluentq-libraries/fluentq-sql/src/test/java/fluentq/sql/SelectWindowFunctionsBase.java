@@ -222,6 +222,23 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   }
 
   @Test
+  @ExcludeIn({DB2, SQLSERVER})
+  public void windowFunctions_boundedRows() {
+    query()
+        .from(employee)
+        .select(
+            employee.id,
+            SQLExpressions.sum(employee.salary)
+                .over()
+                .orderBy(employee.id)
+                .rows()
+                .between()
+                .preceding(1)
+                .following(1))
+        .fetch();
+  }
+
+  @Test
   @IncludeIn({TERADATA})
   public void windowFunctions_qualify() {
     // SELECT Shipment_id,Ship_date,Ship_Type,
