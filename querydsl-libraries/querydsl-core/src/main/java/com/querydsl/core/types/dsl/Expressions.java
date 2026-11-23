@@ -1385,20 +1385,14 @@ public final class Expressions {
   }
 
   /**
-   * Create a null expression for the specified path. The type of the path is retained, so that the
-   * resulting expression is typed like the path. If the path is null, an untyped null expression is
-   * returned.
+   * Create a null expression for the specified path
    *
    * @param path path for type cast
    * @param <T> type of expression
    * @return null expression
    */
-  @SuppressWarnings("unchecked")
   public static <T> NullExpression<T> nullExpression(Path<T> path) {
-    if (path == null) {
-      return nullExpression();
-    }
-    return nullExpression((Class<T>) path.getType());
+    return nullExpression();
   }
 
   /**
