@@ -304,7 +304,7 @@
             <property name="hibernate.archive.autodetection" value="class"/>
             <property name="hibernate.dialect" value="fluentq.jpa.support.QOracleDialect"/>
             <property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
-            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521/XEPDB1"/>
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521/FREEPDB1"/>
             <property name="hibernate.connection.username" value="fluentq"/>
             <property name="hibernate.connection.password" value="fluentq"/>
             <property name="hibernate.show_sql" value="true"/>
