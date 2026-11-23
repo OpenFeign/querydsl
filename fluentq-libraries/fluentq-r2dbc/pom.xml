@@ -99,7 +99,7 @@
     <dependency>
       <groupId>io.r2dbc</groupId>
       <artifactId>r2dbc-mssql</artifactId>
-      <version>${r2dbc.version}</version>
+      <version>${r2dbc-mssql.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
