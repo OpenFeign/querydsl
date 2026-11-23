@@ -108,8 +108,8 @@ class MetaDataExporterTest {
     
     exporter.export(connection.getMetaData)
 
-    assertTrue(new java.io.File(directory, "com/fluentq/Employee.scala").isFile)
-    assertTrue(new java.io.File(directory, "com/fluentq/QEmployee.scala").isFile)
+    assertTrue(new java.io.File(directory, "fluentq/Employee.scala").isFile)
+    assertTrue(new java.io.File(directory, "fluentq/QEmployee.scala").isFile)
     CompileTestUtils.assertCompileSuccess(directory)
   }
 
@@ -154,8 +154,8 @@ class MetaDataExporterTest {
     
     exporter.export(connection.getMetaData)
 
-    assertTrue(new java.io.File(directory, "com/fluentq/public_/Employee.scala").isFile)
-    assertTrue(new java.io.File(directory, "com/fluentq/public_/QEmployee.scala").isFile)
+    assertTrue(new java.io.File(directory, "fluentq/public_/Employee.scala").isFile)
+    assertTrue(new java.io.File(directory, "fluentq/public_/QEmployee.scala").isFile)
     CompileTestUtils.assertCompileSuccess(directory)
   }
 
