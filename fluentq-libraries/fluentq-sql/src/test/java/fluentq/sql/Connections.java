@@ -118,7 +118,7 @@ public final class Connections {
 
   private static Connection getFirebird() throws SQLException, ClassNotFoundException {
     Class.forName("org.firebirdsql.jdbc.FBDriver");
-    var url = "jdbc:firebirdsql:localhost/3050:/firebird/data/fluentq.fdb";
+    var url = "jdbc:firebirdsql:localhost/3050:/var/lib/firebird/data/fluentq.fdb";
     return DriverManager.getConnection(url, "sysdba", "masterkey");
   }
 

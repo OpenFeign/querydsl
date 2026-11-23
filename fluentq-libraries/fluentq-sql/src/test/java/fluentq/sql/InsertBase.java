@@ -349,7 +349,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery() {
     var count = (int) query().from(survey).fetchCount();
     assertThat(
@@ -361,7 +360,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, HSQLDB, CUBRID, DERBY, FIREBIRD})
+  @ExcludeIn({DB2, HSQLDB, CUBRID, DERBY})
   public void insert_with_subQuery2() {
     //        insert into modules(name)
     //        select 'MyModule'
@@ -405,7 +404,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Params() {
     var param = new Param<Integer>(Integer.class, "param");
     SQLQuery<?> sq = query().from(survey2);
@@ -421,7 +419,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Via_Constructor() {
     var count = (int) query().from(survey).fetchCount();
     var insert = insert(survey, query().from(survey2));
@@ -431,7 +428,6 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insert_with_subQuery_Without_Columns() {
     var count = (int) query().from(survey).fetchCount();
     assertThat(
@@ -443,13 +439,11 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insert_without_columns() {
     assertThat(insert(survey).values(4, "Hello", "World").execute()).isEqualTo(1);
   }
 
   @Test
-  @ExcludeIn(FIREBIRD) // too slow
   public void insertBatch_with_subquery() {
     var insert =
         insert(survey)

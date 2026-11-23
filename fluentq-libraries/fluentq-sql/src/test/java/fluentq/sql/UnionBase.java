@@ -208,7 +208,6 @@ public abstract class UnionBase extends AbstractBaseTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  @ExcludeIn(FIREBIRD)
   public void union_multi_column_projection_list() throws IOException {
     SubQueryExpression<Tuple> sq1 =
         query().from(employee).select(employee.id.max(), employee.id.max().subtract(1));
@@ -223,7 +222,6 @@ public abstract class UnionBase extends AbstractBaseTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  @ExcludeIn(FIREBIRD)
   public void union_multi_column_projection_iterate() throws IOException {
     SubQueryExpression<Tuple> sq1 =
         query().from(employee).select(employee.id.max(), employee.id.max().subtract(1));
