@@ -122,7 +122,7 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, SQLSERVER})
+  @ExcludeIn(SQLSERVER)
   public void windowFunctions_regr() {
     List<WindowOver<?>> exprs = new ArrayList<>();
     var path = survey.id;

@@ -1,7 +1,6 @@
 package fluentq.sql;
 
 import static fluentq.core.Target.CUBRID;
-import static fluentq.core.Target.DB2;
 import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
 import static fluentq.core.Target.HSQLDB;
@@ -71,7 +70,6 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
   @SkipForQuoted
-  @ExcludeIn(DB2) // ID is reserved IN DB2
   public void subQueries() throws SQLException {
     // subquery in where block
     expectedQuery =
