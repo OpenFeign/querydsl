@@ -17,6 +17,43 @@ import java.util.concurrent.atomic.AtomicReference
 class KspProcessorIntegrationTest {
 
     @Test
+    fun multipleQueryProjectionConstructors_createDtosAtRuntime() {
+        val source = SourceFile.kotlin(
+            "UserDto.kt",
+            """
+            package test
+
+            import fluentq.core.annotations.QueryProjection
+            import fluentq.core.types.dsl.Expressions
+
+            class UserDto @QueryProjection constructor(val name: String, val age: Int) {
+                @QueryProjection constructor(name: String) : this(name, 20)
+                @QueryProjection constructor() : this("anonymous", 0)
+                constructor(name: String, age: Int, ignored: Boolean) : this(name, age)
+            }
+
+            fun createDtos(): List<String> {
+                val full = QUserDto(Expressions.constant("Alice"), Expressions.constant(30))
+                    .newInstance("Alice", 30)!!
+                val named = QUserDto(Expressions.constant("Bob")).newInstance("Bob")!!
+                val empty = QUserDto().newInstance()!!
+                return listOf(full.name, full.age.toString(), named.name, named.age.toString(),
+                    empty.name, empty.age.toString())
+            }
+            """.trimIndent()
+        )
+
+        val (result, _) = compile(source)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.classLoader.loadClass("test.UserDtoKt").getMethod("createDtos").invoke(null))
+            .isEqualTo(listOf("Alice", "30", "Bob", "20", "anonymous", "0"))
+        assertThat(result.classLoader.loadClass("test.QUserDto").constructors.map { it.parameterCount })
+            .containsExactlyInAnyOrder(0, 1, 2)
+    }
+
+    @Test
     fun kotlinEntity_generatesQClassUnderKsp2() {
         val source = SourceFile.kotlin(
             "User.kt",

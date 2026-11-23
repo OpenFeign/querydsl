@@ -20,8 +20,13 @@ class QueryModelExtractor(
     private val processed = mutableMapOf<String, ModelDeclaration>()
 
     fun addConstructor(classDeclaration: KSClassDeclaration, constructor: KSFunctionDeclaration): QueryModel {
-        return lookupOrInsert(classDeclaration) { addNew(classDeclaration, QueryModelType.QUERY_PROJECTION, constructor) }
-            .model
+        val declaration = lookupOrInsert(classDeclaration) {
+            addNew(classDeclaration, QueryModelType.QUERY_PROJECTION, constructor)
+        }
+        if (constructor !in declaration.constructors) {
+            declaration.constructors.add(constructor)
+        }
+        return declaration.model
     }
 
     fun addClass(classDeclaration: KSClassDeclaration, type: QueryModelType): QueryModel {
@@ -80,6 +85,10 @@ class QueryModelExtractor(
             } else {
                 val properties = extractPropertiesForConstructor(constructor)
                 modelDeclaration.model.properties.addAll(properties)
+                modelDeclaration.model.projectionConstructors.add(properties)
+                modelDeclaration.constructors.filter { it != constructor }.forEach {
+                    modelDeclaration.model.projectionConstructors.add(extractPropertiesForConstructor(it))
+                }
             }
         }
     }
@@ -212,5 +221,7 @@ class QueryModelExtractor(
     private class ModelDeclaration(
         val declaration: KSClassDeclaration,
         val model: QueryModel
-    )
+    ) {
+        val constructors = mutableListOf<KSFunctionDeclaration>()
+    }
 }
