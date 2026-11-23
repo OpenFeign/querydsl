@@ -216,6 +216,14 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void neAny_collection() {
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var kitten = new QCat("kitten");
+    serializer.handle(kitten.neAny(QCat.cat.kittens));
+    assertThat(serializer).hasToString("kitten <> any elements(cat.kittens)");
+  }
+
+  @Test
   public void like() {
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.stringPath("str").contains("abc!"));
@@ -345,6 +353,13 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void visitLiteral_enum() {
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.visitLiteral(JobFunction.MANAGER);
+    assertThat(serializer).hasToString("com.querydsl.jpa.domain.JobFunction.MANAGER");
+  }
+
+  @Test
   public void substring_indexOf() {
     var cat = QCat.cat;
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
@@ -365,7 +380,11 @@ public class JPQLSerializerTest {
     serializer.handle(expr);
 
     assertThat(serializer.toString())
-        .isEqualTo("case when true then 'MANAGER' else 'CONSULTANT' end");
+        .isEqualTo(
+            """
+            case when true then com.querydsl.jpa.domain.JobFunction.MANAGER \
+            else com.querydsl.jpa.domain.JobFunction.CONSULTANT end\
+            """);
   }
 
   @Test

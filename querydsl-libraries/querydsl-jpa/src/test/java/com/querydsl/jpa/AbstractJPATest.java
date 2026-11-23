@@ -395,6 +395,20 @@ public abstract class AbstractJPATest {
   }
 
   @Test
+  @NoEclipseLink
+  public void neAny_collection() {
+    var kitten = new QCat("kitten");
+    var names =
+        query()
+            .from(cat, kitten)
+            .where(kitten.name.eq("Bob123"), kitten.neAny(cat.kittens))
+            .orderBy(cat.id.asc())
+            .select(cat.name)
+            .fetch();
+    assertThat(names).containsExactly("Felix123", "Allen123", "Mary_123");
+  }
+
+  @Test
   public void arrayProjection() {
     var results =
         query()
@@ -613,6 +627,49 @@ public abstract class AbstractJPATest {
   }
 
   @Test
+  @NoEclipseLink
+  public void caseBuilder_enumResult() {
+    var color =
+        new CaseBuilder().when(cat.name.eq("Bob123")).then(Color.TABBY).otherwise(Color.BLACK);
+
+    var colors =
+        query()
+            .from(cat)
+            .where(cat.name.in("Bob123", "Ruth123"))
+            .orderBy(cat.name.asc())
+            .select(color)
+            .fetch();
+
+    assertThat(colors).containsExactly(Color.TABBY, Color.BLACK);
+  }
+
+  @Test
+  public void caseBuilder_enumComparedWithPath() {
+    var color =
+        new CaseBuilder().when(cat.name.eq("Bob123")).then(Color.TABBY).otherwise(Color.BLACK);
+
+    var names =
+        query()
+            .from(cat)
+            .where(cat.name.in("Bob123", "Ruth123"), cat.color.eq(color))
+            .select(cat.name)
+            .fetch();
+
+    assertThat(names).containsExactly("Ruth123");
+  }
+
+  @Test
+  @NoEclipseLink
+  public void caseBuilder_nestedEnumResult() {
+    var rating = new CaseBuilder().when(company.id.eq(1)).then(Rating.AA).otherwise(Rating.A);
+
+    var ratings =
+        query().from(company).where(company.ratingString.eq(rating)).select(rating).fetch();
+
+    assertThat(ratings).containsExactly(Rating.AA);
+  }
+
+  @Test
   public void cast() {
     var cats = query().from(cat).select(cat).fetch();
     var weights = query().from(cat).select(cat.bodyWeight.castToNum(Integer.class)).fetch();
@@ -754,13 +811,86 @@ public abstract class AbstractJPATest {
   @Test
   public void count() {
     var show = QShow.show;
-    assertThat(query().from(show).fetchCount() > 0).isTrue();
+    assertThat(query().from(show).fetchCount()).isEqualTo(1L);
+  }
+
+  @Test
+  public void count_empty_result() {
+    var result =
+        query()
+            .from(cat)
+            .where(cat.id.lt(0))
+            .select(Expressions.ONE.count(), cat.id.count(), cat.id.countDistinct())
+            .fetchOne();
+
+    assertThat(result).isEqualTo(new MockTuple(new Object[] {0L, 0L, 0L}));
+  }
+
+  @Test
+  public void count_nullable_property() {
+    // Five cats are BLACK; the sixth has no color.
+    var result =
+        query()
+            .from(cat)
+            .select(Expressions.ONE.count(), cat.color.count(), cat.color.countDistinct())
+            .fetchOne();
+
+    assertThat(result).isEqualTo(new MockTuple(new Object[] {6L, 5L, 1L}));
+  }
+
+  // EclipseLink on HSQLDB inner-joins the target of a join-table collection after the outer join,
+  // dropping parents without children (same limitation as count_distinct3)
+  @Test
+  @NoEclipseLink(HSQLDB)
+  public void count_left_join_without_children() {
+    var kitten = new QCat("kitten");
+    var results =
+        query()
+            .from(cat)
+            .leftJoin(cat.kittens, kitten)
+            .where(cat.id.in(1, 2))
+            .groupBy(cat.id)
+            .orderBy(cat.id.asc())
+            .select(cat.id, Expressions.ONE.count(), kitten.id.count())
+            .fetch();
+
+    // Bob has no kittens; Ruth has Bob as her kitten.
+    assertThat(results)
+        .containsExactly(
+            new MockTuple(new Object[] {1, 1L, 0L}), new MockTuple(new Object[] {2, 1L, 1L}));
+  }
+
+  @Test
+  public void count_distinct_join_duplicates() {
+    // Each cat is paired with two other cats, duplicating its ID in the result.
+    var result =
+        query()
+            .from(cat, otherCat)
+            .where(otherCat.id.in(1, 2))
+            .select(cat.id.count(), cat.id.countDistinct())
+            .fetchOne();
+
+    assertThat(result).isEqualTo(new MockTuple(new Object[] {12L, 6L}));
   }
 
   @Test
   public void count_distinct() {
     var cat = QCat.cat;
-    query().from(cat).groupBy(cat.id).select(cat.id, cat.breed.countDistinct()).fetch();
+    var results =
+        query()
+            .from(cat)
+            .groupBy(cat.id)
+            .orderBy(cat.id.asc())
+            .select(cat.id, cat.breed.countDistinct())
+            .fetch();
+    assertThat(results)
+        .containsExactly(
+            new MockTuple(new Object[] {1, 1L}),
+            new MockTuple(new Object[] {2, 1L}),
+            new MockTuple(new Object[] {3, 1L}),
+            new MockTuple(new Object[] {4, 1L}),
+            new MockTuple(new Object[] {5, 1L}),
+            new MockTuple(new Object[] {6, 1L}));
   }
 
   @Test

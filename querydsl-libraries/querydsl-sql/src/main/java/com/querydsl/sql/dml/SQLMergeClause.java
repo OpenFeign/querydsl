@@ -368,6 +368,11 @@ public class SQLMergeClause extends AbstractSQLClause<SQLMergeClause>
   @SuppressWarnings("unchecked")
   protected void addKeyConditions(FilteredClause<?> query) {
     List<? extends Path<?>> keys = getKeys();
+    for (Path<?> key : keys) {
+      if (!columns.contains(key)) {
+        throw new IllegalStateException("No value was set for merge key " + key);
+      }
+    }
     for (var i = 0; i < columns.size(); i++) {
       if (keys.contains(columns.get(i))) {
         if (values.get(i) instanceof NullExpression) {

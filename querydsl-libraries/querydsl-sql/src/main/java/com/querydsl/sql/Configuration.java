@@ -298,6 +298,8 @@ public final class Configuration {
         var columnMetadata = ColumnMetadata.getColumnMetadata(path);
         if (columnMetadata.hasJdbcType()) {
           sqlType = columnMetadata.getJdbcType();
+        } else {
+          sqlType = getNullSqlType(path);
         }
       }
       if (sqlType != null) {
@@ -308,6 +310,23 @@ public final class Configuration {
     } else {
       getType(path, (Class) value.getClass()).setValue(stmt, i, value);
     }
+  }
+
+  /**
+   * Derive the JDBC type used to bind a null value from the java type of the path, so that
+   * databases like PostgreSQL don't have to guess the type of the parameter.
+   */
+  @Nullable
+  private Integer getNullSqlType(Path<?> path) {
+    Class<?> pathType = path.getType();
+    if (pathType == null || pathType.equals(Object.class) || pathType.equals(Null.class)) {
+      return null;
+    }
+    var sqlTypes = getType(path, pathType).getSQLTypes();
+    if (sqlTypes.length == 0 || sqlTypes[0] == Types.OTHER) {
+      return null;
+    }
+    return sqlTypes[0];
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
