@@ -39,6 +39,29 @@ public final class JpaInsertNativeHelper {
   private JpaInsertNativeHelper() {}
 
   /**
+   * Ensure the optional {@code fluentq-sql} module is on the classpath before taking a native SQL
+   * insert path. {@code fluentq-jpa} declares {@code fluentq-sql} as an <em>optional</em>
+   * dependency (it is only needed for the {@link JpaNativeInsertSerializer}-based paths such as
+   * {@code executeWithKey()}, {@code executeWithKeys()} and multi-row {@code execute()}), so a
+   * JPA-only consumer will not have it transitively. Without this guard the caller would hit an
+   * opaque {@link NoClassDefFoundError}; instead we fail fast with an actionable message.
+   *
+   * @throws IllegalStateException if {@code fluentq-sql} is not available
+   */
+  public static void requireSqlModule() {
+    try {
+      Class.forName("fluentq.sql.SQLSerializer");
+    } catch (ClassNotFoundException e) {
+      throw new IllegalStateException(
+          "This operation requires the optional fluentq-sql module, which is not on the"
+              + " classpath. Add the 'fluentq:fluentq-sql' dependency"
+              + " (matching your fluentq-jpa version) to use executeWithKey(), executeWithKeys()"
+              + " or multi-row execute() via addRow().",
+          e);
+    }
+  }
+
+  /**
    * Resolve the effective column paths from either the {@code set()}-style inserts map or the
    * {@code columns()}-style list. The {@code set()}-style takes precedence when present.
    */
