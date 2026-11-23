@@ -13,6 +13,7 @@
  */
 package com.querydsl.jpa;
 
+import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
 import com.querydsl.core.QueryMetadata;
@@ -473,6 +474,12 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
       args = Arrays.<Expression<?>>asList(args.get(0), ((Operation) args.get(1)).getArg(0));
       visitOperation(type, Ops.IN, args);
 
+    } else if (args.size() == 2 && isQuantifiedCollectionPath(args.get(1))) {
+      // JPQL accepts ALL / ANY only before a subquery, so select the elements in one
+      var quantified = (Operation<?>) args.get(1);
+      args = Arrays.asList(args.get(0), quantifiedSubQuery(quantified));
+      super.visitOperation(type, operator, args);
+
     } else if (operator == Ops.IN || operator == Ops.NOT_IN) {
       if (args.get(1) instanceof Path) {
         visitAnyInPath(type, operator, args);
@@ -623,6 +630,35 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
           "Querydsl-JPA (DEBUG): Metamodel lookup failed for " + path + ": " + e.getMessage());
       return false;
     }
+  }
+
+  private boolean isQuantifiedCollectionPath(Expression<?> expr) {
+    if (expr instanceof Operation<?> operation
+        && (operation.getOperator() == Ops.QuantOps.ANY
+            || operation.getOperator() == Ops.QuantOps.ALL)
+        && !templates.wrapElements(operation.getOperator())
+        && operation.getArg(0) instanceof Path<?> path) {
+      return Collection.class.isAssignableFrom(path.getType())
+          && path.getMetadata().getPathType() == PathType.PROPERTY;
+    }
+    return false;
+  }
+
+  @SuppressWarnings("unchecked")
+  private Expression<?> quantifiedSubQuery(Operation<?> quantified) {
+    var collection = (Path<?>) quantified.getArg(0);
+    Class<?> elementType =
+        collection instanceof ParameterizedExpression<?> parameterized
+            ? parameterized.getParameter(0)
+            : Object.class;
+    var element = ExpressionUtils.path(elementType, ExpressionUtils.createRootVariable(collection));
+    var metadata = new DefaultQueryMetadata();
+    metadata.addJoin(JoinType.DEFAULT, ExpressionUtils.as((Path) collection, (Path) element));
+    metadata.setProjection(element);
+    return ExpressionUtils.operation(
+        quantified.getType(),
+        quantified.getOperator(),
+        new SubQueryExpressionImpl<>(elementType, metadata));
   }
 
   private void visitAnyInPath(

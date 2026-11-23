@@ -395,7 +395,6 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @NoEclipseLink
   public void neAny_collection() {
     var kitten = new QCat("kitten");
     var names =
@@ -406,6 +405,46 @@ public abstract class AbstractJPATest {
             .select(cat.name)
             .fetch();
     assertThat(names).containsExactly("Felix123", "Allen123", "Mary_123");
+  }
+
+  @Test
+  public void neAll_collection() {
+    var kitten = new QCat("kitten");
+    var names =
+        query()
+            .from(cat, kitten)
+            .where(kitten.name.eq("Bob123"), kitten.neAll(cat.kittens))
+            .orderBy(cat.id.asc())
+            .select(cat.name)
+            .fetch();
+    // a cat without kittens matches "<> all"
+    assertThat(names).containsExactly("Bob123", "Felix123", "Allen123", "Mary_123", "Some");
+  }
+
+  @Test
+  public void neAny_elementCollection() {
+    var foo = QFoo.foo;
+    assertThat(query().from(foo).where(Expressions.asString("a").neAny(foo.names)).fetchCount())
+        .isEqualTo(1);
+    assertThat(query().from(foo).where(Expressions.asString("a").neAll(foo.names)).fetchCount())
+        .isZero();
+  }
+
+  @Test
+  public void ne_any_subQuery() {
+    var ids = select(otherCat.id).from(otherCat).where(otherCat.id.in(1, 2));
+    // every id differs from 1 or from 2, so "<> any" matches all cats, unlike "not in"
+    assertThat(query().from(cat).where(cat.id.ne(ExpressionUtils.any(ids))).fetchCount())
+        .isEqualTo(6);
+    assertThat(query().from(cat).where(cat.id.notIn(ids)).fetchCount()).isEqualTo(4);
+  }
+
+  @Test
+  public void ne_any_empty_subQuery() {
+    var ids = select(otherCat.id).from(otherCat).where(otherCat.id.lt(0));
+    // "<> any" over no rows is false, whereas "not in" over no rows is true
+    assertThat(query().from(cat).where(cat.id.ne(ExpressionUtils.any(ids))).fetchCount()).isZero();
+    assertThat(query().from(cat).where(cat.id.notIn(ids)).fetchCount()).isEqualTo(6);
   }
 
   @Test
