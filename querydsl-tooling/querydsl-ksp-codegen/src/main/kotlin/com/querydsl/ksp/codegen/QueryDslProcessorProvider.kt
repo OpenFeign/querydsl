@@ -8,6 +8,6 @@ class QueryDslProcessorProvider : SymbolProcessorProvider {
         val parser = KspArgParser("querydsl", environment.options)
         val settings = KspSettings(parser)
         parser.throwUnusedArgs()
-        return QueryDslProcessor(settings, environment.codeGenerator)
+        return QueryDslProcessor(settings, environment.codeGenerator, environment.logger)
     }
 }
