@@ -66,6 +66,19 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
 
   protected final List<Object> constants = new ArrayList<>();
 
+  /**
+   * Labels assigned to the constants collected in {@link #constants}, keyed by <i>identity</i>.
+   *
+   * <p>Two equal but distinct constant instances therefore receive two distinct labels, and the
+   * same instance encountered twice reuses its label. Dialects that bind positionally are
+   * unaffected by this, but a dialect that binds by label depends on it.
+   *
+   * <p>This is a deliberate identity dependency on values supplied by the caller. JEP 401 (Value
+   * Objects, preview in JDK 28) migrates the primitive wrappers and {@code LocalDate} to value
+   * classes, for which {@code ==} and {@code identityHashCode} become state based; under that JDK
+   * this map starts collapsing equal constants onto a single label. {@code SerializerBaseTest} pins
+   * the current behaviour.
+   */
   protected final Map<Object, String> constantToLabel = new IdentityHashMap<>();
 
   @SuppressWarnings("unchecked")
@@ -98,6 +111,13 @@ public abstract class SerializerBase<S extends SerializerBase<S>> implements Vis
     return constantPrefix;
   }
 
+  /**
+   * Get the label assigned to each collected constant.
+   *
+   * <p>The returned map is keyed by identity, not by equality; see {@link #constantToLabel}.
+   *
+   * @return the live label map
+   */
   public Map<Object, String> getConstantToLabel() {
     return constantToLabel;
   }
