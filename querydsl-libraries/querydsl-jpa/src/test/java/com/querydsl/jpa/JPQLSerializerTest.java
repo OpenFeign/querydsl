@@ -23,6 +23,7 @@ import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.SubQueryExpression;
@@ -221,6 +222,32 @@ public class JPQLSerializerTest {
     var kitten = new QCat("kitten");
     serializer.handle(kitten.neAny(QCat.cat.kittens));
     assertThat(serializer).hasToString("kitten <> any elements(cat.kittens)");
+  }
+
+  @Test
+  public void neAny_collection_jpql() {
+    var kitten = new QCat("kitten");
+    // not valid JPQL: ANY is only allowed before a subquery (EclipseLink rejects it)
+    assertThat(serialize(EclipseLinkTemplates.DEFAULT, kitten.neAny(QCat.cat.kittens)))
+        .isEqualTo("kitten <> any cat.kittens");
+    assertThat(serialize(JPQLTemplates.DEFAULT, kitten.neAny(QCat.cat.kittens)))
+        .isEqualTo("kitten <> any cat.kittens");
+  }
+
+  @Test
+  public void ne_any_subQuery() {
+    var cat = QCat.cat;
+    var other = new QCat("other");
+    var predicate =
+        cat.id.ne(
+            ExpressionUtils.any(JPAExpressions.select(other.id).from(other).where(other.id.gt(1))));
+    // "<> any", not "not in": they differ once the subquery returns several values, or none
+    assertThat(serialize(HQLTemplates.DEFAULT, predicate))
+        .isEqualTo("cat.id <> any (select other.id\nfrom Cat other\nwhere other.id > ?1)");
+    assertThat(serialize(EclipseLinkTemplates.DEFAULT, predicate))
+        .isEqualTo("cat.id <> any (select other.id\nfrom Cat other\nwhere other.id > ?1)");
+    assertThat(serialize(JPQLTemplates.DEFAULT, predicate))
+        .isEqualTo("cat.id <> any (select other.id\nfrom Cat other\nwhere other.id > ?1)");
   }
 
   @Test
@@ -668,5 +695,11 @@ public class JPQLSerializerTest {
     assertThat(sql).contains("\nvalues ");
     assertThat(sql).endsWith("(?1, ?2)");
     assertThat(serializer.getConstants()).containsExactly("Bobby", false);
+  }
+
+  private static String serialize(JPQLTemplates templates, Expression<?> expression) {
+    var serializer = new JPQLSerializer(templates);
+    serializer.handle(expression);
+    return serializer.toString();
   }
 }

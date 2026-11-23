@@ -395,17 +395,45 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  @NoEclipseLink
   public void neAny_collection() {
     var kitten = new QCat("kitten");
-    var names =
+    var query =
         query()
             .from(cat, kitten)
             .where(kitten.name.eq("Bob123"), kitten.neAny(cat.kittens))
             .orderBy(cat.id.asc())
-            .select(cat.name)
-            .fetch();
-    assertThat(names).containsExactly("Felix123", "Allen123", "Mary_123");
+            .select(cat.name);
+    if (isEclipseLink()) {
+      // "kitten <> any cat.kittens": EclipseLink accepts ANY only before a subquery (#2085)
+      assertThatThrownBy(query::fetch)
+          .isInstanceOf(IllegalArgumentException.class)
+          .hasMessageContaining("kitten <> any cat.kittens")
+          .hasMessageContaining("is not a valid conditional expression");
+    } else {
+      assertThat(query.fetch()).containsExactly("Felix123", "Allen123", "Mary_123");
+    }
+  }
+
+  @Test
+  public void ne_any_subQuery() {
+    var ids = select(otherCat.id).from(otherCat).where(otherCat.id.in(1, 2));
+    // every id differs from 1 or from 2, so "<> any" matches all cats, unlike "not in"
+    assertThat(query().from(cat).where(cat.id.ne(ExpressionUtils.any(ids))).fetchCount())
+        .isEqualTo(6);
+    assertThat(query().from(cat).where(cat.id.notIn(ids)).fetchCount()).isEqualTo(4);
+  }
+
+  @Test
+  public void ne_any_empty_subQuery() {
+    var ids = select(otherCat.id).from(otherCat).where(otherCat.id.lt(0));
+    // "<> any" over no rows is false, whereas "not in" over no rows is true
+    assertThat(query().from(cat).where(cat.id.ne(ExpressionUtils.any(ids))).fetchCount()).isZero();
+    assertThat(query().from(cat).where(cat.id.notIn(ids)).fetchCount()).isEqualTo(6);
+  }
+
+  private static boolean isEclipseLink() {
+    var mode = Mode.mode.get();
+    return mode != null && mode.contains("-eclipselink");
   }
 
   @Test
