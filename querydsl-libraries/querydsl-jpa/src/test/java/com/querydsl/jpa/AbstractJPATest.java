@@ -781,7 +781,10 @@ public abstract class AbstractJPATest {
     assertThat(result).isEqualTo(new MockTuple(new Object[] {6L, 5L, 1L}));
   }
 
+  // EclipseLink on HSQLDB inner-joins the target of a join-table collection after the outer join,
+  // dropping parents without children (same limitation as count_distinct3)
   @Test
+  @NoEclipseLink(HSQLDB)
   public void count_left_join_without_children() {
     var kitten = new QCat("kitten");
     var results =
