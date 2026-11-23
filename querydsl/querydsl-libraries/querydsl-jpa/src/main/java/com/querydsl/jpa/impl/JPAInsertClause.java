@@ -112,7 +112,9 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     if (effectiveColumns.isEmpty()) {
       throw new IllegalStateException("No columns specified for insert");
     }
-    var effectiveValues = JpaInsertNativeHelper.effectiveValues(inserts, values);
+    var effectiveValues =
+        JpaInsertNativeHelper.convertEnumValues(
+            effectiveColumns, JpaInsertNativeHelper.effectiveValues(inserts, values));
 
     var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
 
@@ -156,6 +158,8 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     if (!values.isEmpty() || !inserts.isEmpty()) {
       allRows.add(JpaInsertNativeHelper.effectiveValues(inserts, values));
     }
+    allRows =
+        new ArrayList<>(JpaInsertNativeHelper.convertEnumValuesForRows(effectiveColumns, allRows));
 
     var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
 
@@ -240,7 +244,9 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     if (effectiveColumns.isEmpty()) {
       throw new IllegalStateException("No columns specified for insert");
     }
-    var effectiveValues = JpaInsertNativeHelper.effectiveValues(inserts, values);
+    var effectiveValues =
+        JpaInsertNativeHelper.convertEnumValues(
+            effectiveColumns, JpaInsertNativeHelper.effectiveValues(inserts, values));
 
     var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
 
@@ -341,6 +347,8 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
     if (allRows.isEmpty()) {
       throw new IllegalStateException("No values specified for insert");
     }
+    allRows =
+        new ArrayList<>(JpaInsertNativeHelper.convertEnumValuesForRows(effectiveColumns, allRows));
 
     var entityClass = queryMixin.getMetadata().getJoins().get(0).getTarget().getType();
 
