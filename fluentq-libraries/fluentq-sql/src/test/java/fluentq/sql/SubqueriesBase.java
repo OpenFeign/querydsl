@@ -4,7 +4,6 @@ import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
 import static fluentq.core.Target.HSQLDB;
 import static fluentq.core.Target.MYSQL;
-import static fluentq.core.Target.POSTGRESQL;
 import static fluentq.core.Target.SQLITE;
 import static fluentq.core.Target.SQLSERVER;
 import static fluentq.core.Target.TERADATA;
@@ -138,7 +137,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, POSTGRESQL, DERBY, SQLSERVER, TERADATA})
+  @ExcludeIn({MYSQL, DERBY, SQLSERVER, TERADATA})
   public void subQuery_params() {
     var aParam = new Param<String>(String.class, "param");
     SQLQuery<?> subQuery = select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));
