@@ -2,6 +2,7 @@ package fluentq.ksp.codegen
 
 import com.google.devtools.ksp.isConstructor
 import com.google.devtools.ksp.processing.CodeGenerator
+import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.*
@@ -9,9 +10,10 @@ import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ksp.writeTo
 
-class QueryDslProcessor(
+class QueryDslProcessor @JvmOverloads constructor(
     private val settings: KspSettings,
-    private val codeGenerator: CodeGenerator
+    private val codeGenerator: CodeGenerator,
+    private val logger: KSPLogger? = null
 ) : SymbolProcessor {
     private val rendered = mutableSetOf<String>()
 
@@ -20,7 +22,7 @@ class QueryDslProcessor(
         // Fresh extractor per round: under KSP2 the analysis-API lifetime is
         // scoped to one process() invocation, so KSClassDeclaration references
         // captured in a previous round are invalid here.
-        val typeProcessor = QueryModelExtractor(settings)
+        val typeProcessor = QueryModelExtractor(settings, logger)
 
         // KSP2 invalidates analysis-API lifetime tokens for symbols whose PSI is
         // not yet stable; reading those throws KaInvalidLifetimeOwnerAccessException
