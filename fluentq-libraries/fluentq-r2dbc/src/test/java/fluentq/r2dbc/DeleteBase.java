@@ -21,7 +21,6 @@ import static fluentq.core.Target.SQLSERVER;
 import static fluentq.r2dbc.Constants.survey;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import fluentq.core.testutil.ExcludeIn;
 import fluentq.core.testutil.IncludeIn;
 import fluentq.core.types.dsl.Param;
 import fluentq.r2dbc.domain.QEmployee;
@@ -48,7 +47,6 @@ public abstract class DeleteBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(MYSQL)
   public void delete() {
     var count = query().from(survey).fetchCount().block();
     assertThat((long) delete(survey).where(survey.name.eq("XXX")).execute().block()).isEqualTo(0);

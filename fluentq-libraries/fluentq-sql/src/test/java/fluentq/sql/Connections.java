@@ -784,7 +784,7 @@ public final class Connections {
       stmt.execute(
           "insert into SHAPES values("
               + entry.getKey()
-              + ", GeomFromText('"
+              + ", ST_GeomFromText('"
               + entry.getValue()
               + "'))");
     }

@@ -3,7 +3,6 @@ package fluentq.sql;
 import static fluentq.core.Target.CUBRID;
 import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
-import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.TERADATA;
 import static fluentq.sql.Constants.employee;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +27,7 @@ public abstract class UnionBase extends AbstractBaseTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  @ExcludeIn({MYSQL, TERADATA})
+  @ExcludeIn(TERADATA)
   public void in_union() {
     assertThat(
             query()
