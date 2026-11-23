@@ -539,7 +539,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, H2, FIREBIRD, TURSO})
+  @ExcludeIn({CUBRID, DB2, DERBY, HSQLDB, POSTGRESQL, SQLITE, TERADATA, FIREBIRD, TURSO})
   public void dates() throws SQLException {
     if (!configuration.getUseLiterals()) {
       dates(false);
@@ -997,7 +997,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, DB2, DERBY, ORACLE, SQLSERVER, TURSO})
+  @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER, TURSO})
   public void groupBy_validate() {
     NumberPath<BigDecimal> alias = Expressions.numberPath(BigDecimal.class, "alias");
     assertThat(

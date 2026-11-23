@@ -1085,7 +1085,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, DB2, DERBY, ORACLE, SQLSERVER})
+  @ExcludeIn({DB2, DERBY, ORACLE, SQLSERVER})
   public void groupBy_validate() {
     NumberPath<BigDecimal> alias = Expressions.numberPath(BigDecimal.class, "alias");
     assertEquals(
