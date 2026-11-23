@@ -3,7 +3,6 @@ package fluentq.sql;
 import static fluentq.core.Target.CUBRID;
 import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
-import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.TERADATA;
 import static fluentq.sql.Constants.employee;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +27,7 @@ public abstract class UnionBase extends AbstractBaseTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  @ExcludeIn({MYSQL, TERADATA})
+  @ExcludeIn(TERADATA)
   public void in_union() {
     assertThat(
             query()
@@ -208,7 +207,6 @@ public abstract class UnionBase extends AbstractBaseTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  @ExcludeIn(FIREBIRD)
   public void union_multi_column_projection_list() throws IOException {
     SubQueryExpression<Tuple> sq1 =
         query().from(employee).select(employee.id.max(), employee.id.max().subtract(1));
@@ -223,7 +221,6 @@ public abstract class UnionBase extends AbstractBaseTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  @ExcludeIn(FIREBIRD)
   public void union_multi_column_projection_iterate() throws IOException {
     SubQueryExpression<Tuple> sq1 =
         query().from(employee).select(employee.id.max(), employee.id.max().subtract(1));
@@ -279,7 +276,7 @@ public abstract class UnionBase extends AbstractBaseTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  @ExcludeIn({DERBY, CUBRID})
+  @ExcludeIn(DERBY)
   public void union_clone() {
     NumberPath<Integer> idAlias = Expressions.numberPath(Integer.class, "id");
     SubQueryExpression<Employee> sq1 =

@@ -13,7 +13,7 @@
   <description>SQL codegen support for Querydsl</description>
 
   <properties>
-    <ant.version>1.10.17</ant.version>
+    <ant.version>1.10.18</ant.version>
   </properties>
 
   <dependencies>
@@ -189,7 +189,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.1</version>
         <configuration>
           <archive>
             <manifestEntries>

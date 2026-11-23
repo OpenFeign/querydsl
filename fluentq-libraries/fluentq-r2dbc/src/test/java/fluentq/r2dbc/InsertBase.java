@@ -19,6 +19,7 @@ import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
 import static fluentq.core.Target.H2;
 import static fluentq.core.Target.HSQLDB;
+import static fluentq.core.Target.MARIADB;
 import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.ORACLE;
 import static fluentq.core.Target.POSTGRESQL;
@@ -221,7 +222,7 @@ public abstract class InsertBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   @SkipForQuoted
   public void insert_with_special_options() {
     var clause = insert(survey).columns(survey.id, survey.name).values(3, "Hello");

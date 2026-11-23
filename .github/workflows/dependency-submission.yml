@@ -29,10 +29,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Java JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           # .mvn/jvm.config uses JDK 23+ flags (--sun-misc-unsafe-memory-access);
@@ -41,6 +41,6 @@ jobs:
           cache: maven
 
       - name: Submit Dependency Snapshot
-        uses: advanced-security/maven-dependency-submission-action@v5.0.0
+        uses: advanced-security/maven-dependency-submission-action@v6.0.1
         with:
           maven-args: -Pexamples -Dtoolchain.skip=true

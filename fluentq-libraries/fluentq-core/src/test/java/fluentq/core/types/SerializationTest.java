@@ -56,9 +56,10 @@ class SerializationTest {
     args.put(QueryMetadata.class, new DefaultQueryMetadata());
     args.put(String.class, "obj");
 
-    var reflections = new ClassGraph().enableClassInfo();
-    var types = reflections.scan().getSubclasses(Expression.class.getName()).loadClasses();
-    for (Class<?> type : types) {
+    var reflections = new ClassGraph().enableClasspath().enableClassInfo();
+    var types = reflections.scan().getAllSubclasses(Expression.class).getNames();
+    for (String typeName : types) {
+      var type = Class.forName(typeName);
       if (!type.isInterface()
           && !type.isMemberClass()
           && !Modifier.isAbstract(type.getModifiers())) {

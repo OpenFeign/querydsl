@@ -235,6 +235,7 @@ different relational databases. The available dialects are:
 - `FirebirdTemplates`
 - `HSQLDBTemplates`
 - `H2Templates`
+- `MariaDBTemplates`
 - `MySQLTemplates`
 - `OracleTemplates`
 - `PostgreSQLTemplates`

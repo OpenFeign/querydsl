@@ -71,6 +71,7 @@ public final class Connections {
       h2Inited,
       hsqlInited,
       mysqlInited,
+      mariadbInited,
       cubridInited,
       oracleInited,
       postgresqlInited,
@@ -118,7 +119,7 @@ public final class Connections {
 
   private static Connection getFirebird() throws SQLException, ClassNotFoundException {
     Class.forName("org.firebirdsql.jdbc.FBDriver");
-    var url = "jdbc:firebirdsql:localhost/3050:/firebird/data/fluentq.fdb";
+    var url = "jdbc:firebirdsql:localhost/3050:/var/lib/firebird/data/fluentq.fdb";
     return DriverManager.getConnection(url, "sysdba", "masterkey");
   }
 
@@ -140,9 +141,14 @@ public final class Connections {
     return DriverManager.getConnection(url, "fluentq", "fluentq");
   }
 
+  private static Connection getMariaDB() throws SQLException {
+    return DriverManager.getConnection(
+        "jdbc:mariadb://localhost:3307/fluentq", "fluentq", "fluentq");
+  }
+
   private static Connection getOracle() throws SQLException, ClassNotFoundException {
     Class.forName("oracle.jdbc.driver.OracleDriver");
-    var url = "jdbc:oracle:thin:@localhost:1521/XEPDB1";
+    var url = "jdbc:oracle:thin:@localhost:1521/FREEPDB1";
     return DriverManager.getConnection(url, "fluentq", "fluentq");
   }
 
@@ -757,6 +763,27 @@ public final class Connections {
       return;
     }
 
+    createMySQLCompatibleTables(c, stmt);
+    mysqlInited = true;
+  }
+
+  public static void initMariaDB() throws SQLException, ClassNotFoundException {
+    targetHolder.set(Target.MARIADB);
+    var c = getMariaDB();
+    connHolder.set(c);
+    var stmt = c.createStatement();
+    stmtHolder.set(stmt);
+
+    if (mariadbInited) {
+      return;
+    }
+
+    createMySQLCompatibleTables(c, stmt);
+    mariadbInited = true;
+  }
+
+  private static void createMySQLCompatibleTables(Connection c, Statement stmt)
+      throws SQLException {
     // The shared MySQL database accumulates tables from other suites under two naming conventions:
     // Hibernate keeps the entity case (Child2) while EclipseLink upper-cases it (CHILD2). On a
     // case-sensitive server (lower_case_table_names=0) both survive, and the metadata export then
@@ -784,7 +811,7 @@ public final class Connections {
       stmt.execute(
           "insert into SHAPES values("
               + entry.getKey()
-              + ", GeomFromText('"
+              + ", ST_GeomFromText('"
               + entry.getValue()
               + "'))");
     }
@@ -842,8 +869,6 @@ public final class Connections {
     // xml
     stmt.execute("drop table if exists XML_TEST");
     stmt.execute("create table XML_TEST(COL varchar(128))");
-
-    mysqlInited = true;
   }
 
   public static void initOracle() throws SQLException, ClassNotFoundException {

@@ -1,13 +1,9 @@
 package fluentq.sql;
 
-import static fluentq.core.Target.CUBRID;
-import static fluentq.core.Target.DB2;
 import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
-import static fluentq.core.Target.H2;
-import static fluentq.core.Target.HSQLDB;
+import static fluentq.core.Target.MARIADB;
 import static fluentq.core.Target.MYSQL;
-import static fluentq.core.Target.POSTGRESQL;
 import static fluentq.core.Target.SQLITE;
 import static fluentq.core.Target.SQLSERVER;
 import static fluentq.core.Target.TERADATA;
@@ -36,7 +32,7 @@ import org.junit.jupiter.api.Test;
 public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
-  @ExcludeIn({CUBRID, DERBY, FIREBIRD, H2, HSQLDB, SQLITE, SQLSERVER})
+  @ExcludeIn({DERBY, FIREBIRD, SQLSERVER})
   public void keys() {
     var employee2 = new QEmployee("employee2");
     var nameKey1 =
@@ -58,7 +54,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DERBY, FIREBIRD, H2, HSQLDB, SQLITE, SQLSERVER})
+  @ExcludeIn({DERBY, FIREBIRD, SQLSERVER})
   public void list_in_query() {
     var employee2 = new QEmployee("employee2");
     query()
@@ -72,7 +68,6 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
   @SkipForQuoted
-  @ExcludeIn(DB2) // ID is reserved IN DB2
   public void subQueries() throws SQLException {
     // subquery in where block
     expectedQuery =
@@ -90,7 +85,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
     assertThat(list).isNotEmpty();
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void subQuery_alias() {
     query()
@@ -142,7 +137,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, POSTGRESQL, DERBY, SQLSERVER, TERADATA})
+  @ExcludeIn({MYSQL, MARIADB, DERBY, SQLSERVER, TERADATA})
   public void subQuery_params() {
     var aParam = new Param<String>(String.class, "param");
     SQLQuery<?> subQuery = select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));
@@ -152,7 +147,6 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLITE)
   public void subQuery_rightJoin() {
     SubQueryExpression<Integer> sq = query().from(employee2).select(employee2.id);
     var sqEmp = new QEmployee("sq");

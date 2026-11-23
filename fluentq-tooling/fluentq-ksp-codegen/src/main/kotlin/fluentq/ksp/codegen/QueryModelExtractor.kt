@@ -1,6 +1,7 @@
 package fluentq.ksp.codegen
 
 import com.google.devtools.ksp.getDeclaredProperties
+import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
@@ -13,15 +14,21 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.ksp.toClassName
 import jakarta.persistence.Transient
 
-class QueryModelExtractor(
-    private val settings: KspSettings
+class QueryModelExtractor @JvmOverloads constructor(
+    private val settings: KspSettings,
+    private val logger: KSPLogger? = null
 ) {
     private val transientSimpleName = Transient::class.simpleName!!
     private val processed = mutableMapOf<String, ModelDeclaration>()
 
     fun addConstructor(classDeclaration: KSClassDeclaration, constructor: KSFunctionDeclaration): QueryModel {
-        return lookupOrInsert(classDeclaration) { addNew(classDeclaration, QueryModelType.QUERY_PROJECTION, constructor) }
-            .model
+        val declaration = lookupOrInsert(classDeclaration) {
+            addNew(classDeclaration, QueryModelType.QUERY_PROJECTION, constructor)
+        }
+        if (constructor !in declaration.constructors) {
+            declaration.constructors.add(constructor)
+        }
+        return declaration.model
     }
 
     fun addClass(classDeclaration: KSClassDeclaration, type: QueryModelType): QueryModel {
@@ -78,11 +85,41 @@ class QueryModelExtractor(
                 val properties = extractPropertiesForClass(modelDeclaration.declaration)
                 modelDeclaration.model.properties.addAll(properties)
             } else {
-                val properties = extractPropertiesForConstructor(constructor)
-                modelDeclaration.model.properties.addAll(properties)
+                val projections = projectionConstructors(modelDeclaration)
+                    .map { extractPropertiesForConstructor(it) }
+                modelDeclaration.model.properties.addAll(projections.first())
+                modelDeclaration.model.projectionConstructors.addAll(projections)
             }
         }
     }
+
+    /**
+     * The annotated constructors to generate, in declaration order. Every parameter of a
+     * generated projection constructor is an `Expression<...>`, so two annotated constructors
+     * with the same arity erase to the same JVM signature and can't both be generated: the
+     * first one declared wins and the others are reported as warnings.
+     */
+    private fun projectionConstructors(modelDeclaration: ModelDeclaration): Collection<KSFunctionDeclaration> {
+        val classDeclaration = modelDeclaration.declaration
+        val declarationOrder = classDeclaration.declarations.toList()
+        val ordered = modelDeclaration.constructors.sortedBy {
+            if (it == classDeclaration.primaryConstructor) -1 else declarationOrder.indexOf(it)
+        }
+        val byArity = linkedMapOf<Int, KSFunctionDeclaration>()
+        for (constructor in ordered) {
+            val kept = byArity.putIfAbsent(constructor.parameters.size, constructor) ?: continue
+            logger?.warn(
+                "Skipping @QueryProjection constructor ${constructor.describe()} of " +
+                    "${classDeclaration.qualifiedName!!.asString()}: it has the same JVM signature " +
+                    "in the generated Q-class as ${kept.describe()}, which is declared first",
+                constructor
+            )
+        }
+        return byArity.values
+    }
+
+    private fun KSFunctionDeclaration.describe(): String =
+        parameters.joinToString(prefix = "(", postfix = ")") { "${it.name?.asString()}: ${it.type}" }
 
     private fun extractPropertiesForConstructor(declaration: KSFunctionDeclaration): List<QProperty> {
         return declaration
@@ -212,5 +249,7 @@ class QueryModelExtractor(
     private class ModelDeclaration(
         val declaration: KSClassDeclaration,
         val model: QueryModel
-    )
+    ) {
+        val constructors = mutableListOf<KSFunctionDeclaration>()
+    }
 }

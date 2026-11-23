@@ -16,6 +16,7 @@ package fluentq.jpa;
 import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.H2;
 import static fluentq.core.Target.HSQLDB;
+import static fluentq.core.Target.MARIADB;
 import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.ORACLE;
 import static fluentq.core.Target.POSTGRESQL;
@@ -624,6 +625,7 @@ public class ParsingTest extends AbstractQueryTest {
   @Test
   @NoOpenJPA
   @ExcludeIn({DERBY, HSQLDB, MYSQL})
+  @NoEclipseLink(MARIADB)
   public void casts_long() throws Exception {
     NumberExpression<Double> bw = cat.bodyWeight;
     query().from(cat).select(bw.longValue()).parse();

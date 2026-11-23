@@ -1,4 +1,4 @@
-FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-21 AS build
+FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-25 AS build
 COPY --chown=quarkus:quarkus . /code/
 USER quarkus
 WORKDIR /code

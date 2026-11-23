@@ -122,7 +122,7 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({DB2, SQLSERVER})
+  @ExcludeIn(SQLSERVER)
   public void windowFunctions_regr() {
     List<WindowOver<?>> exprs = new ArrayList<>();
     var path = survey.id;
@@ -180,7 +180,6 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLSERVER)
   public void windowFunctions_orderBy() {
     // SELECT Shipment_id,Ship_date,Ship_Type,
     // SUM(Qty) OVER (PARTITION BY Ship_Type ORDER BY Ship_Dt ) AS Total_Qty
@@ -198,7 +197,6 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn(SQLSERVER)
   public void windowFunctions_unboundedRows() {
     // SELECT Shipment_id,Ship_date,Ship_Type,
     // SUM(Qty) OVER (PARTITION BY Ship_Type ORDER BY Ship_Dt
@@ -218,6 +216,23 @@ public abstract class SelectWindowFunctionsBase extends AbstractBaseTest {
                 .between()
                 .unboundedPreceding()
                 .currentRow())
+        .fetch();
+  }
+
+  @Test
+  @ExcludeIn({DB2, SQLSERVER})
+  public void windowFunctions_boundedRows() {
+    query()
+        .from(employee)
+        .select(
+            employee.id,
+            SQLExpressions.sum(employee.salary)
+                .over()
+                .orderBy(employee.id)
+                .rows()
+                .between()
+                .preceding(1)
+                .following(1))
         .fetch();
   }
 

@@ -254,6 +254,11 @@ def process_all_files():
             # Corresponding legacy module
             legacy_module = sub.replace("fluentq-", "querydsl-")
             legacy_subpath = os.path.join("querydsl/querydsl-libraries" if root == fluentq_libs else "querydsl/querydsl-tooling", legacy_module)
+
+            # Modules introduced after the rename (e.g. fluentq-vector) never shipped as
+            # com.querydsl artifacts, so they have no legacy module and get no wrappers.
+            if not os.path.isfile(os.path.join(legacy_subpath, "pom.xml")):
+                continue
             
             sub_roots = [
                 "src/main/java", "src/main/kotlin", "src/main/scala",

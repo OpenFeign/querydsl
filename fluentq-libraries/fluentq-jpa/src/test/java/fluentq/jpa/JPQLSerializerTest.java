@@ -23,6 +23,7 @@ import fluentq.core.domain.QCat;
 import fluentq.core.types.ConstantImpl;
 import fluentq.core.types.EntityPath;
 import fluentq.core.types.Expression;
+import fluentq.core.types.ExpressionUtils;
 import fluentq.core.types.Path;
 import fluentq.core.types.Predicate;
 import fluentq.core.types.SubQueryExpression;
@@ -216,6 +217,50 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void neAny_collection() {
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var kitten = new QCat("kitten");
+    serializer.handle(kitten.neAny(QCat.cat.kittens));
+    assertThat(serializer).hasToString("kitten <> any elements(cat.kittens)");
+  }
+
+  @Test
+  public void neAny_collection_jpql() {
+    var kitten = new QCat("kitten");
+    // JPQL accepts ANY only before a subquery
+    var expected = "kitten <> any (select cat_kittens\nfrom cat.kittens as cat_kittens)";
+    assertThat(serialize(EclipseLinkTemplates.DEFAULT, kitten.neAny(QCat.cat.kittens)))
+        .isEqualTo(expected);
+    assertThat(serialize(JPQLTemplates.DEFAULT, kitten.neAny(QCat.cat.kittens)))
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void neAll_collection() {
+    var kitten = new QCat("kitten");
+    assertThat(serialize(HQLTemplates.DEFAULT, kitten.neAll(QCat.cat.kittens)))
+        .isEqualTo("kitten <> all elements(cat.kittens)");
+    assertThat(serialize(JPQLTemplates.DEFAULT, kitten.neAll(QCat.cat.kittens)))
+        .isEqualTo("kitten <> all (select cat_kittens\nfrom cat.kittens as cat_kittens)");
+  }
+
+  @Test
+  public void ne_any_subQuery() {
+    var cat = QCat.cat;
+    var other = new QCat("other");
+    var predicate =
+        cat.id.ne(
+            ExpressionUtils.any(JPAExpressions.select(other.id).from(other).where(other.id.gt(1))));
+    // "<> any", not "not in": they differ once the subquery returns several values, or none
+    assertThat(serialize(HQLTemplates.DEFAULT, predicate))
+        .isEqualTo("cat.id <> any (select other.id\nfrom Cat other\nwhere other.id > ?1)");
+    assertThat(serialize(EclipseLinkTemplates.DEFAULT, predicate))
+        .isEqualTo("cat.id <> any (select other.id\nfrom Cat other\nwhere other.id > ?1)");
+    assertThat(serialize(JPQLTemplates.DEFAULT, predicate))
+        .isEqualTo("cat.id <> any (select other.id\nfrom Cat other\nwhere other.id > ?1)");
+  }
+
+  @Test
   public void like() {
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.stringPath("str").contains("abc!"));
@@ -345,6 +390,13 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void visitLiteral_enum() {
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.visitLiteral(JobFunction.MANAGER);
+    assertThat(serializer).hasToString("fluentq.jpa.domain.JobFunction.MANAGER");
+  }
+
+  @Test
   public void substring_indexOf() {
     var cat = QCat.cat;
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
@@ -365,7 +417,11 @@ public class JPQLSerializerTest {
     serializer.handle(expr);
 
     assertThat(serializer.toString())
-        .isEqualTo("case when true then 'MANAGER' else 'CONSULTANT' end");
+        .isEqualTo(
+            """
+            case when true then fluentq.jpa.domain.JobFunction.MANAGER \
+            else fluentq.jpa.domain.JobFunction.CONSULTANT end\
+            """);
   }
 
   @Test
@@ -649,5 +705,11 @@ public class JPQLSerializerTest {
     assertThat(sql).contains("\nvalues ");
     assertThat(sql).endsWith("(?1, ?2)");
     assertThat(serializer.getConstants()).containsExactly("Bobby", false);
+  }
+
+  private static String serialize(JPQLTemplates templates, Expression<?> expression) {
+    var serializer = new JPQLSerializer(templates);
+    serializer.handle(expression);
+    return serializer.toString();
   }
 }
