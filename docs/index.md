@@ -41,6 +41,7 @@ fluent API.
 | [MongoDB]({{ site.baseurl }}/tutorials/mongodb) | `{{ site.group_id }}:fluentq-mongodb` |
 | [Collections]({{ site.baseurl }}/tutorials/collections) | `{{ site.group_id }}:fluentq-collections` |
 | [Spatial]({{ site.baseurl }}/tutorials/spatial) | `{{ site.group_id }}:fluentq-sql-spatial` |
+| [Vector]({{ site.baseurl }}/tutorials/vector) | `{{ site.group_id }}:fluentq-sql-vector`, `{{ site.group_id }}:fluentq-vector` |
 | [Kotlin Extensions]({{ site.baseurl }}/tutorials/kotlin) | `{{ site.group_id }}:fluentq-kotlin` |
 | [Scala Extensions]({{ site.baseurl }}/tutorials/scala) | `{{ site.group_id }}:fluentq-scala` |
 
