@@ -77,8 +77,8 @@
   </scm>
 
   <properties>
-    <!-- removing old modules on 7.0 release -->
-    <japicmp.skip>true</japicmp.skip>
+    <!-- Binary/source compatibility baseline: the latest 7.x release on Maven Central. -->
+    <japicmp.baseline>7.7</japicmp.baseline>
 
     <failIfNoTests>false</failIfNoTests>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -489,11 +489,23 @@
         <groupId>com.github.siom79.japicmp</groupId>
         <artifactId>japicmp-maven-plugin</artifactId>
         <version>0.27.0</version>
+        <!--
+          Binary/source compatibility gate. Every jar module is compared against the
+          ${japicmp.baseline} release; any incompatible change fails the build. Breaking changes
+          belong in a major release after a @Deprecated cycle, not in a 7.x minor.
+          Bound here (not only in querydsl-libraries) so the tooling modules are covered too.
+        -->
         <configuration>
+          <oldVersion>
+            <dependency>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>${project.artifactId}</artifactId>
+              <version>${japicmp.baseline}</version>
+              <type>${project.packaging}</type>
+            </dependency>
+          </oldVersion>
           <parameter>
-            <excludes>
-              <exclude>com.querydsl.core.annotations.QueryProjection</exclude>
-            </excludes>
+            <!-- modules added after the baseline have nothing to compare against -->
             <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
             <onlyModified>true</onlyModified>
             <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
@@ -501,12 +513,21 @@
             <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
             <ignoreMissingClasses>true</ignoreMissingClasses>
             <excludeModules>
+              <!-- Mojo classes are configured through plugin XML, not linked against -->
               <excludeModule>querydsl-maven-plugin</excludeModule>
               <excludeModule>querydsl-example.*</excludeModule>
             </excludeModules>
             <accessModifier>public</accessModifier>
           </parameter>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>cmp</goal>
+            </goals>
+            <phase>verify</phase>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
