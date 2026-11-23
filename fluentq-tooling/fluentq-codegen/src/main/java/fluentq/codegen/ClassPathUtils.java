@@ -50,7 +50,7 @@ public final class ClassPathUtils {
             .enableClassInfo()
             .acceptPackages(pkg)
             .rejectPackages("com.sun", "com.apple")
-            .overrideClassLoaders(classLoader)
+            .enableClassLoaders(classLoader)
             .scan()
             .getAllClasses()
             .stream()
