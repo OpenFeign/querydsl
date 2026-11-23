@@ -1,5 +1,7 @@
 # 8.x Branch Overview (fluentQ Transition)
 
+Which changes belong on 8.x rather than master (JPA 4 work and any breaking change) is set out in the "Branches" section of the root [`AGENTS.md`](../AGENTS.md).
+
 ## Divergence point
 
 `52a3965fb` — CI: trigger build, deploy and codeql workflows on 8.x branch
