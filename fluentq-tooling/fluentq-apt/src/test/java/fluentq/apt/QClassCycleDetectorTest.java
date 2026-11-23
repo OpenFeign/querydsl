@@ -77,7 +77,7 @@ class QClassCycleDetectorTest {
 
     var cycles = QClassCycleDetector.detect(map(a, b));
 
-    assertThat(cycles).containsExactly(List.of("A", "B", "A"));
+    assertThat(names(cycles)).containsExactly(List.of("A", "B", "A"));
   }
 
   @Test
@@ -91,7 +91,7 @@ class QClassCycleDetectorTest {
 
     var cycles = QClassCycleDetector.detect(map(a, b, c));
 
-    assertThat(cycles).containsExactly(List.of("A", "B", "C", "A"));
+    assertThat(names(cycles)).containsExactly(List.of("A", "B", "C", "A"));
   }
 
   @Test
@@ -113,7 +113,7 @@ class QClassCycleDetectorTest {
 
     var cycles = QClassCycleDetector.detect(shuffled);
 
-    assertThat(cycles).containsExactly(List.of("A", "B", "A"), List.of("C", "D", "C"));
+    assertThat(names(cycles)).containsExactly(List.of("A", "B", "A"), List.of("C", "D", "C"));
   }
 
   @Test
@@ -127,7 +127,7 @@ class QClassCycleDetectorTest {
 
     var cycles = QClassCycleDetector.detect(map(a, b, c));
 
-    assertThat(cycles).containsExactly(List.of("B", "C", "B"));
+    assertThat(names(cycles)).containsExactly(List.of("B", "C", "B"));
   }
 
   private static EntityType entity(String simpleName) {
@@ -149,5 +149,11 @@ class QClassCycleDetectorTest {
       result.put(entity.getFullName(), entity);
     }
     return result;
+  }
+
+  private static List<List<String>> names(List<List<EntityType>> cycles) {
+    return cycles.stream()
+        .map(cycle -> cycle.stream().map(EntityType::getSimpleName).toList())
+        .toList();
   }
 }
