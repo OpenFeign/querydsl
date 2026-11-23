@@ -131,7 +131,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     return query().select(exprs).fetchFirst();
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void aggregate_list() {
     int min = 30000, avg = 65000, max = 160000;
@@ -144,7 +144,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(max);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void aggregate_uniqueResult() {
     int min = 30000, avg = 65000, max = 160000;
@@ -217,7 +217,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(firstResult(four.divide(two.multiply(two))).intValue()).isEqualTo(1);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void arithmetic() {
     NumberExpression<Integer> one = Expressions.numberTemplate(Integer.class, "(1.0)");
@@ -293,7 +293,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     }
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void beans() {
     var rows = query().from(employee, employee2).select(new QBeans(employee, employee2)).fetch();
@@ -420,7 +420,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(0);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void complex_subQuery() {
     // alias for the salary
@@ -860,7 +860,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(toSecond.getSecond()).isEqualTo(date.getSecond());
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void dateTime() {
     SQLQuery<?> query = query().from(employee).orderBy(employee.id.asc());
@@ -1068,7 +1068,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         });
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void in() {
     assertThat(
@@ -1263,7 +1263,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(Arrays.asList(20, 13, 10, 2));
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void limit_and_offset_Group() {
     assertThat(
@@ -1386,7 +1386,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(results.getTotal()).isEqualTo(10);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void listResults_factoryExpression() {
     var results =
@@ -1429,7 +1429,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, DERBY, TURSO})
+  @ExcludeIn({SQLITE, DERBY})
   public void lPad() {
     assertThat(firstResult(StringExpressions.lpad(ConstantImpl.create("ab"), 4))).isEqualTo("  ab");
     assertThat(firstResult(StringExpressions.lpad(ConstantImpl.create("ab"), 4, '!')))
@@ -1834,7 +1834,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     return x * Math.PI / 180.0;
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void random() {
     firstResult(MathExpressions.random());
@@ -1846,7 +1846,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     firstResult(MathExpressions.random(10));
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void relationalPath_projection() {
     var results =
@@ -1930,7 +1930,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({SQLITE, DERBY, TURSO})
+  @ExcludeIn({SQLITE, DERBY})
   public void rpad() {
     assertThat(firstResult(StringExpressions.rpad(ConstantImpl.create("ab"), 4))).isEqualTo("ab  ");
     assertThat(firstResult(StringExpressions.rpad(ConstantImpl.create("ab"), 4, '!')))
@@ -2075,7 +2075,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(0);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void standardTest() {
     standardTest.runBooleanTests(employee.firstname.isNull(), employee2.lastname.isNotNull());
@@ -2259,7 +2259,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(Collections.singletonList(1));
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void transform_groupBy() {
     var employee = new QEmployee("employee");
@@ -2348,7 +2348,7 @@ public abstract class SelectBase extends AbstractBaseTest {
     assertThat(row.get(1, Object.class)).as(row.get(0, Object.class) + " is not null").isNotNull();
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void uniqueResultContract() {
     assertThrows(
@@ -2571,7 +2571,7 @@ public abstract class SelectBase extends AbstractBaseTest {
         .isEqualTo(Integer.valueOf(200007));
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void statementOptions() {
 

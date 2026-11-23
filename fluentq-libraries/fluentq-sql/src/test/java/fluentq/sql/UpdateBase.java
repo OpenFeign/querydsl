@@ -57,7 +57,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     reset();
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void update() throws SQLException {
     // original state
@@ -83,7 +83,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update(survey).set(survey.name, "S").limit(2).execute()).isEqualTo(2);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void update2() throws SQLException {
     List<Path<?>> paths = Collections.<Path<?>>singletonList(survey.name);
@@ -108,7 +108,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update(survey).set(survey.name, survey.name.append("X")).execute()).isEqualTo(1);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void update4() {
     assertThat(insert(survey).values(2, "A", "B").execute()).isEqualTo(1);
@@ -116,7 +116,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
         .isEqualTo(1);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void update5() {
     assertThat(insert(survey).values(3, "B", "C").execute()).isEqualTo(1);
@@ -147,7 +147,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(execute(update(survey).setNull(name))).isEqualTo(count);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void batch() throws SQLException {
     assertThat(insert(survey).values(2, "A", "B").execute()).isEqualTo(1);
@@ -161,7 +161,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update.execute()).isEqualTo(2);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void batch_templates() throws SQLException {
     assertThat(insert(survey).values(2, "A", "B").execute()).isEqualTo(1);
@@ -179,7 +179,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update.execute()).isEqualTo(2);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void update_with_subQuery_exists() {
     var survey1 = new QSurvey("s1");
@@ -205,7 +205,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update.execute()).isEqualTo(0);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void update_with_subQuery_exists2() {
     var survey1 = new QSurvey("s1");
@@ -216,7 +216,7 @@ public abstract class UpdateBase extends AbstractBaseTest {
     assertThat(update.execute()).isEqualTo(0);
   }
 
-  @ExcludeIn(TURSO) // Turso 0.6.0 gap, see #1812
+  @ExcludeIn(TURSO) // Turso gap, see #1812
   @Test
   public void update_with_subQuery_notExists() {
     var survey1 = new QSurvey("s1");
