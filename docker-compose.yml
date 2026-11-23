@@ -15,31 +15,41 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=querydsl
-      - MYSQL_USER=querydsl
-      - MYSQL_PASSWORD=querydsl
-      - MYSQL_DATABASE=querydsl
+      - MYSQL_ROOT_PASSWORD=fluentq
+      - MYSQL_USER=fluentq
+      - MYSQL_PASSWORD=fluentq
+      - MYSQL_DATABASE=fluentq
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pfluentq"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
 
   postgresql:
-    image: postgis/postgis:16-3.4-alpine
+    image: postgis/postgis:16-3.6-alpine
     platform: linux/amd64
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=querydsl
-      - POSTGRES_PASSWORD=querydsl
-      - POSTGRES_DB=querydsl
+      - POSTGRES_USER=fluentq
+      - POSTGRES_PASSWORD=fluentq
+      - POSTGRES_DB=fluentq
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fluentq"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
 
   pgvector:
-    image: pgvector/pgvector:0.8.1-pg16
+    image: pgvector/pgvector:0.8.7-pg16
     ports:
       - "5433:5432"
     environment:
-      - POSTGRES_USER=querydsl
-      - POSTGRES_PASSWORD=querydsl
-      - POSTGRES_DB=querydsl
+      - POSTGRES_USER=fluentq
+      - POSTGRES_PASSWORD=fluentq
+      - POSTGRES_DB=fluentq
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U querydsl"]
+      test: ["CMD-SHELL", "pg_isready -U fluentq"]
       interval: 10s
       timeout: 5s
       retries: 30
@@ -49,10 +59,10 @@ services:
     ports:
       - "3307:3306"
     environment:
-      - MARIADB_ROOT_PASSWORD=querydsl
-      - MARIADB_DATABASE=querydsl
-      - MARIADB_USER=querydsl
-      - MARIADB_PASSWORD=querydsl
+      - MARIADB_ROOT_PASSWORD=fluentq
+      - MARIADB_DATABASE=fluentq
+      - MARIADB_USER=fluentq
+      - MARIADB_PASSWORD=fluentq
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
@@ -60,18 +70,23 @@ services:
       retries: 30
 
   oracle:
-    image: gvenzl/oracle-free:slim-faststart
+    image: gvenzl/oracle-free:23.26.4-slim-faststart
     platform: linux/amd64
     ports:
       - "1521:1521"
     environment:
-      - ORACLE_PASSWORD=querydsl
-      - APP_USER=querydsl
-      - APP_USER_PASSWORD=querydsl
+      - ORACLE_PASSWORD=fluentq
+      - APP_USER=fluentq
+      - APP_USER_PASSWORD=fluentq
       - TZ=UTC
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
 
   cubrid:
-    image: cubrid/cubrid:11.3
+    image: cubrid/cubrid:11.4
     platform: linux/amd64
     ports:
       - "33000:33000"
@@ -88,13 +103,18 @@ services:
       start_period: 60s
 
   mongo:
-    image: mongo:8.0.9
+    image: mongo:9.0.8
     platform: linux/amd64
     ports:
       - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
 
   db2:
-    image: ibmcom/db2:11.5.8.0
+    image: icr.io/db2_community/db2:12.1.5.0
     platform: linux/amd64
     privileged: true
     ports:
@@ -107,7 +127,7 @@ services:
       - ARCHIVE_LOGS=false
       - AUTOCONFIG=false
     healthcheck:
-      test: /opt/ibm/db2/V11.5/bin/db2 CONNECT TO $$DBNAME
+      test: su - db2inst1 -c "db2 connect to $$DBNAME"
       interval: 5s
       timeout: 240s
       start_period: 240s
@@ -133,6 +153,12 @@ services:
       - "3050:3050"
     environment:
       - FIREBIRD_ROOT_PASSWORD=masterkey
-      - FIREBIRD_DATABASE=querydsl.fdb
-      - FIREBIRD_USER=querydsl
-      - FIREBIRD_PASSWORD=querydsl
+      - FIREBIRD_DATABASE=fluentq.fdb
+      - FIREBIRD_USER=fluentq
+      - FIREBIRD_PASSWORD=fluentq
+      - TZ=UTC
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/3050'"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
