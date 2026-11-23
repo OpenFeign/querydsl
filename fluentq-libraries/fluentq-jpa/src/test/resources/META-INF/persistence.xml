@@ -270,6 +270,7 @@
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3307/fluentq"/>
             <property name="jakarta.persistence.jdbc.user" value="fluentq"/>
             <property name="jakarta.persistence.jdbc.password" value="fluentq"/>
+            <property name="eclipselink.login.encryptor" value="fluentq.jpa.PlaintextEncryptor"/>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="database"/>
             <property name="eclipselink.logging.level" value="SEVERE"/>
