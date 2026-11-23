@@ -87,7 +87,6 @@ For running tests, a Docker Compose setup is provided. It comes with the followi
 * Oracle Express Edition 11g
 * PostgreSQL 16
 * MySQL 5.5.34
-* MariaDB 11.8
 * Cubrid 9.2
 
 You will need to install [Docker] and [docker-compose].

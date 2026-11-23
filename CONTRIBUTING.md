@@ -74,63 +74,30 @@ docs/
 1. Fork the repository and create a feature branch.
 2. Make your changes and add tests where appropriate.
 3. Run `./mvnw -Pdev verify` to make sure tests pass.
-4. Open a pull request against `master`.
+4. Open a pull request against `master` (or `8.x` if contributing to the fluentQ 8.0 line).
 
-## Releasing
+## 8.x (fluentQ) Development Model
 
-Releases are cut with the `scripts/release.sh` helper. **Never create a release
-tag by hand** — manual tagging is how a release ends up pointing at a
-`-SNAPSHOT` pom, which CircleCI happily builds while `central-publishing`
-silently skips the upload (a green build that publishes nothing to Maven
-Central).
+The `8.x` branch has been migrated to the new **fluentQ** naming and package namespaces (`fluentq.*`). 
 
-### Prerequisites
+* **Source of Truth**: All active codebase files are under `fluentq-libraries/` and `fluentq-tooling/`.
+* **Backward Compatibility**: The legacy packages under `querydsl/` are automatically **generated** from the new `fluentq` code. Do **NOT** edit files in `querydsl/` directly as they will be overwritten.
+* **Compatibility Pack Generation**: If you make changes in the `fluentq-` directories, regenerate the legacy wrappers using:
+  ```bash
+  python3 scripts/generate-compat-wrappers.py
+  ```
 
-- A clean working tree on the branch you are releasing (usually `master`).
-- The pom version is the `-SNAPSHOT` you intend to release. The release version
-  is derived by stripping `-SNAPSHOT`, so set it deliberately beforehand:
-  - `7.3-SNAPSHOT` → releases `7.3`
-  - `7.3.0-SNAPSHOT` → releases `7.3.0`
+### Merging / Cherry-Picking from Master (Upstream)
 
-### Cut the release
+Because package namespaces and file directories have changed on `8.x`, standard git merges or cherry-picks from `master` will conflict or fail to target the correct directories.
 
+To apply a commit or patch file from `master` to `8.x` with automatic translation:
 ```bash
-./scripts/release.sh
+python3 scripts/apply-upstream-patch.py <commit-hash-or-patch-file>
 ```
+This script will:
+1. Fetch the diff from the specified commit hash or patch file.
+2. Translate all file paths (`querydsl-libraries` -> `fluentq-libraries`, etc.) and package namespaces (`com.querydsl` -> `fluentq`, etc.).
+3. Apply the translated diff to your current working directory.
+4. Automatically run `generate-compat-wrappers.py` to keep the compatibility pack up to date.
 
-The script:
-
-1. Reads `project.version` and strips `-SNAPSHOT` to get the release version.
-2. Runs `versions:set -DremoveSnapshot` across all modules and commits
-   `prepare release <version>`, then tags that commit.
-3. Bumps the poms to the next development iteration (`<next>-SNAPSHOT`) and
-   commits `[ci skip] updating versions to next development iteration`.
-
-Because the version bump happens *before* the tag, the tag always points at a
-non-SNAPSHOT pom.
-
-### Push
-
-The script keeps the changes local (`-DpushChanges=false`). Review, then push —
-**pushing the tag is what triggers the release**:
-
-```bash
-git log --oneline -3      # confirm the two commits and the new tag
-git push origin master    # the prepare-release + next-snapshot commits
-git push origin <tag>      # e.g. git push origin 7.3 — triggers deployRelease on CircleCI
-```
-
-### Verify it actually published
-
-A green CircleCI job is not proof — confirm all three:
-
-```bash
-# 1. The tagged commit must NOT be a snapshot
-git show <tag>:pom.xml | grep -m1 '<version>'   # must not contain -SNAPSHOT
-
-# 2. Watch the release workflow to green
-#    https://app.circleci.com/pipelines/gh/OpenFeign/querydsl
-
-# 3. Confirm artifacts landed (allow a few minutes for indexing)
-#    https://central.sonatype.com/artifact/io.github.openfeign.querydsl/querydsl-core
-```

@@ -7,7 +7,7 @@ nav_order: 5
 
 # Querying R2DBC
 
-The `querydsl-r2dbc` module provides reactive, non-blocking database access
+The `fluentq-r2dbc` module provides reactive, non-blocking database access
 built on [R2DBC](https://r2dbc.io/) and [Project Reactor](https://projectreactor.io/).
 The API mirrors the SQL module but returns `Mono` and `Flux` types instead of
 blocking results.
@@ -19,8 +19,8 @@ Add the following dependencies to your Maven project:
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-r2dbc</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-r2dbc</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
@@ -36,12 +36,12 @@ You also need an R2DBC driver for your database, for example:
 
 Code generation for the query types works exactly like the
 [SQL module]({{ site.baseurl }}/tutorials/sql#code-generation-via-maven) — use the
-`querydsl-maven-plugin` or `querydsl-sql-codegen` to export your schema.
+`fluentq-maven-plugin` or `fluentq-sql-codegen` to export your schema.
 
 ## Configuration
 
-Configuration is done via `com.querydsl.r2dbc.Configuration`, which takes a
-Querydsl SQL dialect as an argument:
+Configuration is done via `fluentq.r2dbc.Configuration`, which takes a
+fluentQ SQL dialect as an argument:
 
 ```java
 SQLTemplates templates = new PostgreSQLTemplates();
@@ -228,5 +228,5 @@ mysqlFactory.insertOnDuplicateKeyUpdate(survey, "name = VALUES(name)")
 | Factory class | `SQLQueryFactory` | `R2DBCQueryFactory` |
 | Query class | `SQLQuery` | `R2DBCQuery` |
 | Blocking | Yes | No |
-| Configuration | `com.querydsl.sql.Configuration` | `com.querydsl.r2dbc.Configuration` |
+| Configuration | `fluentq.sql.Configuration` | `fluentq.r2dbc.Configuration` |
 | Templates | Shared `SQLTemplates` | Shared `SQLTemplates` |

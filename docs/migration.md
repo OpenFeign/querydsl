@@ -6,6 +6,9 @@ nav_order: 6
 
 # Migration Guide
 
+> [!IMPORTANT]
+> If you are looking to migrate your project to **fluentQ (8.x)** (the renamed Querydsl version), please refer to the [Migration to fluentQ (8.x) Guide](migration-8.md).
+
 The original Querydsl project (`com.querydsl`, hosted at querydsl.com) has
 been inactive since 2020. The last release, 5.0.0, was published in July 2021.
 The website querydsl.com and its documentation may go offline at any time.
@@ -123,21 +126,23 @@ The old `com.mysema.maven:apt-maven-plugin` is no longer recommended. Use
 
 ```xml
 <plugin>
-  <groupId>org.apache.maven.plugins</groupId>
   <artifactId>maven-compiler-plugin</artifactId>
-  <version>3.15.0</version>
   <configuration>
-    <proc>full</proc>
-    <generatedSourcesDirectory>${project.build.directory}/generated-sources/java</generatedSourcesDirectory>
-    <annotationProcessorPaths>
-      <path>
-        <groupId>{{ site.group_id }}</groupId>
-        <artifactId>querydsl-apt</artifactId>
-        <version>{{ site.querydsl_version }}</version>
-        <classifier>jpa</classifier>
-      </path>
-    </annotationProcessorPaths>
+    <generatedSourcesDirectory>target/generated-sources/java</generatedSourcesDirectory>
   </configuration>
+  <dependencies>
+    <dependency>
+      <groupId>{{ site.group_id }}</groupId>
+      <artifactId>querydsl-apt</artifactId>
+      <version>{{ site.querydsl_version }}</version>
+      <classifier>jpa</classifier>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+  </dependencies>
 </plugin>
 ```
 

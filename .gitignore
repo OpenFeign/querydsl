@@ -35,3 +35,4 @@ build
 
 # Ignore auto generated gradle property file copied from maven
 querydsl-examples/querydsl-example-ksp-codegen/gradle.properties
+.antigravitycli/

@@ -16,45 +16,32 @@ Add the following dependencies to your Maven project:
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-mongodb</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-mongodb</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
-Configure the `maven-compiler-plugin` to run the Querydsl annotation processor:
+Configure the `maven-compiler-plugin` to run the fluentQ annotation processor:
 
 ```xml
 <plugin>
-  <groupId>org.apache.maven.plugins</groupId>
   <artifactId>maven-compiler-plugin</artifactId>
-  <version>3.15.0</version>
   <configuration>
-    <proc>full</proc>
-    <generatedSourcesDirectory>${project.build.directory}/generated-sources/java</generatedSourcesDirectory>
-    <annotationProcessorPaths>
-      <path>
-        <groupId>{{ site.group_id }}</groupId>
-        <artifactId>querydsl-apt</artifactId>
-        <version>{{ site.querydsl_version }}</version>
-        <classifier>morphia</classifier>
-      </path>
-      <path>
-        <groupId>{{ site.group_id }}</groupId>
-        <artifactId>querydsl-mongodb</artifactId>
-        <version>{{ site.querydsl_version }}</version>
-      </path>
-      <path>
-        <groupId>dev.morphia.morphia</groupId>
-        <artifactId>morphia-core</artifactId>
-        <version>2.5.3</version>
-      </path>
-    </annotationProcessorPaths>
+    <generatedSourcesDirectory>target/generated-sources/java</generatedSourcesDirectory>
   </configuration>
+  <dependencies>
+    <dependency>
+      <groupId>{{ site.group_id }}</groupId>
+      <artifactId>fluentq-apt</artifactId>
+      <version>{{ site.fluentq_version }}</version>
+      <classifier>morphia</classifier>
+    </dependency>
+  </dependencies>
 </plugin>
 ```
 
 The `MorphiaAnnotationProcessor` finds domain types annotated with
-`com.google.code.morphia.annotations.Entity` and generates Querydsl query
+`com.google.code.morphia.annotations.Entity` and generates fluentQ query
 types for them.
 
 Run `mvn clean install` and your query types will be generated into
@@ -62,7 +49,7 @@ Run `mvn clean install` and your query types will be generated into
 
 ## Querying
 
-Querying with Querydsl MongoDB with Morphia:
+Querying with fluentQ MongoDB with Morphia:
 
 ```java
 Morphia morphia;

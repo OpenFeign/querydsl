@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is Querydsl, a framework for constructing type-safe SQL-like queries for multiple backends including JPA, MongoDB, and SQL in Java. This is a fork under OpenFeign maintaining the project with regular releases since the original project became stale.
+This is **fluentQ** (formerly Querydsl) on the `8.x` release branch. Starting with version 8.0, the project has been renamed to **fluentQ**, utilizing the `fluentq.*` package prefix. Backward compatibility is maintained via generated deprecated wrappers under the `querydsl/` folder in the `com.querydsl.*` package structure.
 
 ## Build Commands
 
@@ -38,8 +38,8 @@ This is Querydsl, a framework for constructing type-safe SQL-like queries for mu
 ./mvnw -Pdev verify
 
 # Run specific database tests
-./mvnw -Pci -Dgroups=com.querydsl.core.testutil.MySQL verify
-./mvnw -Pci -Dgroups=com.querydsl.core.testutil.PostgreSQL verify
+./mvnw -Pci -Dgroups=fluentq.core.testutil.MySQL verify
+./mvnw -Pci -Dgroups=fluentq.core.testutil.PostgreSQL verify
 ```
 
 ### Code Quality
@@ -67,24 +67,28 @@ cd querydsl-examples/querydsl-example-jpa-spring
 ## Project Architecture
 
 ### Module Structure
-- **querydsl-tooling/**: Code generation and tooling modules
-  - `querydsl-apt/`: Annotation processing tools
-  - `querydsl-codegen/`: Code generation utilities
-  - `querydsl-sql-codegen/`: SQL schema-based code generation
-  - `querydsl-kotlin-codegen/`: Kotlin code generation
-  - `querydsl-ksp-codegen/`: Kotlin Symbol Processing support
-  - `querydsl-maven-plugin/`: Maven plugin for code generation
+- **fluentq-tooling/**: Code generation and tooling modules
+  - `fluentq-apt/`: Annotation processing tools
+  - `fluentq-codegen/`: Code generation utilities
+  - `fluentq-sql-codegen/`: SQL schema-based code generation
+  - `fluentq-kotlin-codegen/`: Kotlin code generation
+  - `fluentq-ksp-codegen/`: Kotlin Symbol Processing support
+  - `fluentq-maven-plugin/`: Maven plugin for code generation
 
-- **querydsl-libraries/**: Core library modules
-  - `querydsl-core/`: Core query DSL framework
-  - `querydsl-jpa/`: JPA integration with Hibernate and EclipseLink support
-  - `querydsl-sql/`: SQL query support for various databases
-  - `querydsl-mongodb/`: MongoDB integration
-  - `querydsl-collections/`: In-memory collections querying
-  - `querydsl-r2dbc/`: R2DBC reactive database support
-  - `querydsl-spatial/`: Spatial/GIS query extensions
-  - `querydsl-kotlin/`: Kotlin language support
-  - `querydsl-scala/`: Scala language support
+- **fluentq-libraries/**: Core library modules
+  - `fluentq-core/`: Core query DSL framework
+  - `fluentq-jpa/`: JPA integration with Hibernate and EclipseLink support
+  - `fluentq-sql/`: SQL query support for various databases
+  - `fluentq-mongodb/`: MongoDB integration
+  - `fluentq-collections/`: In-memory collections querying
+  - `fluentq-r2dbc/`: R2DBC reactive database support
+  - `fluentq-spatial/`: Spatial/GIS query extensions
+  - `fluentq-kotlin/`: Kotlin language support
+  - `fluentq-scala/`: Scala language support
+
+- **querydsl/**: Generated legacy backwards compatibility wrappers (do NOT edit directly)
+  - Automatically generated using `python3 scripts/generate-compat-wrappers.py` to map new `fluentq` modules back to the legacy `com.querydsl` namespaces and structure.
+
 
 ### Key Technologies
 - **Java 17+**: Main source code (tests use Java 21)

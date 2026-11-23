@@ -7,7 +7,7 @@ nav_order: 1
 
 # Creating Queries
 
-Query construction in Querydsl involves calling query methods with expression
+Query construction in fluentQ involves calling query methods with expression
 arguments. Since query methods are mostly module-specific and have already been
 presented in the tutorial section, this part focuses on expressions.
 
@@ -19,7 +19,7 @@ instead.
 ## Complex Predicates
 
 To construct complex boolean expressions, use the
-`com.querydsl.core.BooleanBuilder` class. It implements `Predicate` and can be
+`fluentq.core.BooleanBuilder` class. It implements `Predicate` and can be
 used in cascaded form:
 
 ```java
@@ -40,7 +40,7 @@ or `or` call it holds the result of the operation.
 
 ## Dynamic Expressions
 
-The `com.querydsl.core.types.dsl.Expressions` class is a static factory class
+The `fluentq.core.types.dsl.Expressions` class is a static factory class
 for dynamic expression construction. The factory methods are named by the
 returned type and are mostly self-documenting.
 
@@ -70,10 +70,10 @@ instances can be used to express expressions as string templates.
 
 ## Dynamic Paths
 
-In addition to the `Expressions`-based expression creation, Querydsl provides
+In addition to the `Expressions`-based expression creation, fluentQ provides
 a more fluent API for dynamic path creation.
 
-For dynamic path generation, the `com.querydsl.core.types.dsl.PathBuilder`
+For dynamic path generation, the `fluentq.core.types.dsl.PathBuilder`
 class can be used. It extends `EntityPathBase` and can be used as an
 alternative to class generation and alias usage for path generation.
 
@@ -158,8 +158,8 @@ Expression<String> cases = customer.annualSpending
 
 To avoid a generic signature in expression types, the type hierarchies are
 flattened. The result is that all generated query types are direct subclasses
-of `com.querydsl.core.types.dsl.EntityPathBase` or
-`com.querydsl.core.types.dsl.BeanPath` and cannot be directly cast to their
+of `fluentq.core.types.dsl.EntityPathBase` or
+`fluentq.core.types.dsl.BeanPath` and cannot be directly cast to their
 logical supertypes.
 
 Instead of a direct Java cast, the supertype reference is accessible via the

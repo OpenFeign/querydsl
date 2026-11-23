@@ -7,20 +7,20 @@ nav_order: 9
 
 # Querying in Scala
 
-Generic support for Querydsl usage in Scala is available via the
-`querydsl-scala` module.
+Generic support for fluentQ usage in Scala is available via the
+`fluentq-scala` module.
 
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-scala</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-scala</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
 ## DSL Expressions for Scala
 
-Querydsl for Scala provides an alternative DSL for expression construction.
+fluentQ for Scala provides an alternative DSL for expression construction.
 The Scala DSL utilizes language features such as operator overloading, function
 pointers, and implicit imports for enhanced readability and conciseness.
 
@@ -64,7 +64,7 @@ map.get("X")          map("X")
 
 ## Querying with SQL
 
-Like with Querydsl SQL for Java, you need to generate query types to construct
+Like with fluentQ SQL for Java, you need to generate query types to construct
 queries.
 
 Generation without bean types:
@@ -74,7 +74,7 @@ val directory = new java.io.File("target/jdbcgen1")
 val namingStrategy = new DefaultNamingStrategy()
 val exporter = new MetaDataExporter()
 exporter.setNamePrefix("Q")
-exporter.setPackageName("com.querydsl")
+exporter.setPackageName("fluentq")
 exporter.setSchemaPattern("PUBLIC")
 exporter.setTargetFolder(directory)
 exporter.setSerializerClass(classOf[ScalaMetaDataSerializer])
@@ -90,7 +90,7 @@ val directory = new java.io.File("target/jdbcgen2")
 val namingStrategy = new DefaultNamingStrategy()
 val exporter = new MetaDataExporter()
 exporter.setNamePrefix("Q")
-exporter.setPackageName("com.querydsl")
+exporter.setPackageName("fluentq")
 exporter.setSchemaPattern("PUBLIC")
 exporter.setTargetFolder(directory)
 exporter.setSerializerClass(classOf[ScalaMetaDataSerializer])
@@ -103,13 +103,13 @@ exporter.export(connection.getMetaData)
 ### Code Generation via Maven
 
 Scala sources for SQL metatypes and projections can be generated with the
-`querydsl-maven-plugin`:
+`fluentq-maven-plugin`:
 
 ```xml
 <plugin>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-maven-plugin</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-maven-plugin</artifactId>
+  <version>{{ site.fluentq_version }}</version>
   <configuration>
     <jdbcDriver>com.mysql.jdbc.Driver</jdbcDriver>
     <jdbcUrl>jdbc:mysql://localhost:3306/test</jdbcUrl>
@@ -128,8 +128,8 @@ Scala sources for SQL metatypes and projections can be generated with the
     </dependency>
     <dependency>
       <groupId>{{ site.group_id }}</groupId>
-      <artifactId>querydsl-scala</artifactId>
-      <version>{{ site.querydsl_version }}</version>
+      <artifactId>fluentq-scala</artifactId>
+      <version>{{ site.fluentq_version }}</version>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
@@ -140,7 +140,7 @@ Scala sources for SQL metatypes and projections can be generated with the
 </plugin>
 ```
 
-The Maven goal to execute is `querydsl:export`.
+The Maven goal to execute is `fluentq:export`.
 
 ## Querying with Other Backends
 

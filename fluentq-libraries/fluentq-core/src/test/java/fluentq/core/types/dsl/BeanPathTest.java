@@ -1,0 +1,105 @@
+/*
+ * Copyright 2015, The FluentQ Team (http://www.fluentq.com/team)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package fluentq.core.types.dsl;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import fluentq.core.annotations.PropertyType;
+import fluentq.core.types.PathMetadata;
+import fluentq.core.types.PathMetadataFactory;
+import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+public class BeanPathTest {
+
+  public static class SubClass extends BeanPathTest {}
+
+  public static class MyBeanPath extends BeanPath<BeanPathTest> {
+
+    private static final long serialVersionUID = 6225684967115368814L;
+
+    public MyBeanPath(PathMetadata metadata) {
+      super(BeanPathTest.class, metadata);
+    }
+
+    public MyBeanPath(PathMetadata metadata, @Nullable PathInits inits) {
+      super(BeanPathTest.class, metadata);
+    }
+  }
+
+  private BeanPath<BeanPathTest> beanPath = new BeanPath<>(BeanPathTest.class, "p");
+
+  @Test
+  void as_path() {
+    var simplePath = new SimplePath<>(BeanPathTest.class, "p");
+    assertThat(beanPath.as(simplePath)).isNotNull();
+  }
+
+  @Test
+  @Disabled
+  void as_class() {
+    var otherPath = beanPath.as(MyBeanPath.class);
+    assertThat(otherPath).isEqualTo(beanPath);
+    assertThat(otherPath.getMetadata().isRoot()).isTrue();
+  }
+
+  @Test
+  void as_class_cached() {
+    var otherPath = beanPath.as(MyBeanPath.class);
+    //        assertEquals(beanPath, otherPath);
+    assertThat(otherPath).isSameAs(beanPath.as(MyBeanPath.class));
+  }
+
+  @Test
+  @Disabled
+  void as_class_with_inits() {
+    beanPath =
+        new BeanPath<>(BeanPathTest.class, PathMetadataFactory.forVariable("p"), PathInits.DEFAULT);
+    var otherPath = beanPath.as(MyBeanPath.class);
+    assertThat(otherPath).isEqualTo(beanPath);
+  }
+
+  @Test
+  void as_class_with_inits_cached() {
+    beanPath =
+        new BeanPath<>(BeanPathTest.class, PathMetadataFactory.forVariable("p"), PathInits.DEFAULT);
+    var otherPath = beanPath.as(MyBeanPath.class);
+    //        assertEquals(beanPath, otherPath);
+    assertThat(otherPath).isSameAs(beanPath.as(MyBeanPath.class));
+  }
+
+  @Test
+  void createEnum() {
+    assertThat(beanPath.createEnum("property", PropertyType.class)).isNotNull();
+  }
+
+  @Test
+  void instanceOf() {
+    assertThat(beanPath.instanceOf(BeanPathTest.class)).isNotNull();
+  }
+
+  @Test
+  void instanceOfAny() {
+    var pred1 = beanPath.instanceOf(BeanPathTest.class).or(beanPath.instanceOf(SubClass.class));
+    var pred2 = beanPath.instanceOfAny(BeanPathTest.class, SubClass.class);
+    assertThat(pred2)
+        .isEqualTo(pred1)
+        .hasToString(
+            """
+        p instanceof class fluentq.core.types.dsl.BeanPathTest || \
+        p instanceof class fluentq.core.types.dsl.BeanPathTest$SubClass\
+        """);
+  }
+}

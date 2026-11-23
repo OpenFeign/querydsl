@@ -41,8 +41,8 @@ for (String name : select($(c.getName())).from($(c),cats)
 To use the alias functionality, add the following two imports:
 
 ```java
-import static com.querydsl.core.alias.Alias.$;
-import static com.querydsl.core.alias.Alias.alias;
+import static fluentq.core.alias.Alias.$;
+import static fluentq.core.alias.Alias.alias;
 ```
 
 The following example is a variation where the access to the list size happens

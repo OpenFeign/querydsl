@@ -7,20 +7,20 @@ nav_order: 2
 
 # Result Handling
 
-Querydsl provides two ways to customize results: `FactoryExpression` for
+fluentQ provides two ways to customize results: `FactoryExpression` for
 row-based transformation and `ResultTransformer` for aggregation.
 
-The `com.querydsl.core.types.FactoryExpression` interface is used for bean
+The `fluentq.core.types.FactoryExpression` interface is used for bean
 creation, constructor invocation, and for the creation of more complex objects.
-The `FactoryExpression` implementations of Querydsl can be accessed via the
-`com.querydsl.core.types.Projections` class.
+The `FactoryExpression` implementations of fluentQ can be accessed via the
+`fluentq.core.types.Projections` class.
 
-For the `com.querydsl.core.ResultTransformer` interface, `GroupBy` is the main
+For the `fluentq.core.ResultTransformer` interface, `GroupBy` is the main
 implementation.
 
 ## Returning Multiple Columns
 
-The default type for multi-column results is `com.querydsl.core.Tuple`. Tuple
+The default type for multi-column results is `fluentq.core.Tuple`. Tuple
 provides a type-safe Map-like interface to access column data from a Tuple row
 object.
 
@@ -130,13 +130,13 @@ List<Customer> dtos = query
 
 ## Result Aggregation
 
-The `com.querydsl.core.group.GroupBy` class provides aggregation functionality
+The `fluentq.core.group.GroupBy` class provides aggregation functionality
 which can be used to aggregate query results in memory.
 
 Aggregating parent-child relations:
 
 ```java
-import static com.querydsl.core.group.GroupBy.*;
+import static fluentq.core.group.GroupBy.*;
 
 Map<Integer, List<Comment>> results = query.from(post, comment)
     .where(comment.post.id.eq(post.id))
@@ -159,5 +159,5 @@ and comment ids.
 `Group` is the `GroupBy` equivalent to the `Tuple` interface.
 
 More examples can be found in the
-[GroupByTest](https://github.com/OpenFeign/querydsl/blob/master/querydsl-libraries/querydsl-collections/src/test/java/com/querydsl/collections/GroupByTest.java)
+[GroupByTest](https://github.com/OpenFeign/fluentq/blob/master/fluentq-libraries/fluentq-collections/src/test/java/com/fluentq/collections/GroupByTest.java)
 class.

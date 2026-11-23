@@ -7,7 +7,7 @@ nav_order: 6
 
 # Querying Hibernate
 
-Querydsl provides Hibernate-specific extensions on top of the standard JPA
+fluentQ provides Hibernate-specific extensions on top of the standard JPA
 support. For common features such as basic querying, joins, subqueries, and DML
 operations, see the [JPA tutorial]({{ site.baseurl }}/tutorials/jpa).
 
@@ -15,13 +15,13 @@ This page covers features exclusive to the Hibernate API.
 
 ## Maven Integration
 
-The Hibernate integration uses the same `querydsl-jpa` artifact:
+The Hibernate integration uses the same `fluentq-jpa` artifact:
 
 ```xml
 <dependency>
   <groupId>{{ site.group_id }}</groupId>
-  <artifactId>querydsl-jpa</artifactId>
-  <version>{{ site.querydsl_version }}</version>
+  <artifactId>fluentq-jpa</artifactId>
+  <version>{{ site.fluentq_version }}</version>
 </dependency>
 ```
 
@@ -30,26 +30,23 @@ annotation processor with `HibernateAnnotationProcessor`:
 
 ```xml
 <plugin>
-  <groupId>org.apache.maven.plugins</groupId>
   <artifactId>maven-compiler-plugin</artifactId>
-  <version>3.15.0</version>
   <configuration>
-    <proc>full</proc>
-    <generatedSourcesDirectory>${project.build.directory}/generated-sources/java</generatedSourcesDirectory>
-    <annotationProcessorPaths>
-      <path>
-        <groupId>{{ site.group_id }}</groupId>
-        <artifactId>querydsl-apt</artifactId>
-        <version>{{ site.querydsl_version }}</version>
-        <classifier>hibernate</classifier>
-      </path>
-      <path>
-        <groupId>org.hibernate.orm</groupId>
-        <artifactId>hibernate-core</artifactId>
-        <version>7.4.5.Final</version>
-      </path>
-    </annotationProcessorPaths>
+    <generatedSourcesDirectory>target/generated-sources/java</generatedSourcesDirectory>
   </configuration>
+  <dependencies>
+    <dependency>
+      <groupId>{{ site.group_id }}</groupId>
+      <artifactId>fluentq-apt</artifactId>
+      <version>{{ site.fluentq_version }}</version>
+      <classifier>jpa</classifier>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+  </dependencies>
 </plugin>
 ```
 
@@ -121,7 +118,7 @@ List<Cat> cats = queryFactory.selectFrom(cat)
 ```
 
 On Hibernate ORM 7 the lock mode applies to the given alias. Hibernate ORM 8
-has no lock modes per alias, so there Querydsl applies the lock mode to the
+has no lock modes per alias, so there fluentQ applies the lock mode to the
 whole query:
 
 - If all aliases with a lock mode use the same mode, that mode is set on the

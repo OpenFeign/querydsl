@@ -1,0 +1,179 @@
+/*
+ * Copyright 2015, The FluentQ Team (http://www.fluentq.com/team)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package fluentq.sql;
+
+import fluentq.core.QueryMetadata;
+import fluentq.core.types.Expression;
+import fluentq.core.types.Path;
+import fluentq.core.types.Predicate;
+import fluentq.core.types.SubQueryExpression;
+import fluentq.core.types.dsl.SimpleExpression;
+import fluentq.sql.dml.SQLInsertBatch;
+import fluentq.sql.dml.SQLMergeBatch;
+import fluentq.sql.dml.SQLMergeUsingCase;
+import fluentq.sql.dml.SQLUpdateBatch;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * A simple adapter class that knows if the underlying listener is a simple or detailed SQL listener
+ */
+class SQLListenerAdapter implements SQLDetailedListener {
+
+  private final SQLListener sqlListener;
+  private final SQLDetailedListener detailedListener;
+
+  SQLListenerAdapter(final SQLListener sqlListener) {
+    this.detailedListener = sqlListener instanceof SQLDetailedListener sqldl ? sqldl : null;
+    this.sqlListener = sqlListener;
+  }
+
+  public SQLListener getSqlListener() {
+    return sqlListener;
+  }
+
+  @Override
+  public void start(final SQLListenerContext context) {
+    if (detailedListener != null) {
+      detailedListener.start(context);
+    }
+  }
+
+  @Override
+  public void preRender(final SQLListenerContext context) {
+    if (detailedListener != null) {
+      detailedListener.preRender(context);
+    }
+  }
+
+  @Override
+  public void rendered(final SQLListenerContext context) {
+    if (detailedListener != null) {
+      detailedListener.rendered(context);
+    }
+  }
+
+  @Override
+  public void prePrepare(final SQLListenerContext context) {
+    if (detailedListener != null) {
+      detailedListener.prePrepare(context);
+    }
+  }
+
+  @Override
+  public void prepared(final SQLListenerContext context) {
+    if (detailedListener != null) {
+      detailedListener.prepared(context);
+    }
+  }
+
+  @Override
+  public void preExecute(final SQLListenerContext context) {
+    if (detailedListener != null) {
+      detailedListener.preExecute(context);
+    }
+  }
+
+  @Override
+  public void executed(final SQLListenerContext context) {
+    if (detailedListener != null) {
+      detailedListener.executed(context);
+    }
+  }
+
+  @Override
+  public void end(final SQLListenerContext context) {
+    if (detailedListener != null) {
+      detailedListener.end(context);
+    }
+  }
+
+  @Override
+  public void exception(final SQLListenerContext context) {
+    if (detailedListener != null) {
+      detailedListener.exception(context);
+    }
+  }
+
+  @Override
+  public void notifyQuery(final QueryMetadata md) {
+    sqlListener.notifyQuery(md);
+  }
+
+  @Override
+  public void notifyDelete(final RelationalPath<?> entity, final QueryMetadata md) {
+    sqlListener.notifyDelete(entity, md);
+  }
+
+  @Override
+  public void notifyDeletes(final RelationalPath<?> entity, final List<QueryMetadata> batches) {
+    sqlListener.notifyDeletes(entity, batches);
+  }
+
+  @Override
+  public void notifyMerge(
+      final RelationalPath<?> entity,
+      final QueryMetadata md,
+      final List<Path<?>> keys,
+      final List<Path<?>> columns,
+      final List<Expression<?>> values,
+      final SubQueryExpression<?> subQuery) {
+    sqlListener.notifyMerge(entity, md, keys, columns, values, subQuery);
+  }
+
+  @Override
+  public void notifyMerges(
+      final RelationalPath<?> entity, final QueryMetadata md, final List<SQLMergeBatch> batches) {
+    sqlListener.notifyMerges(entity, md, batches);
+  }
+
+  @Override
+  public void notifyMergeUsing(
+      RelationalPath<?> entity,
+      QueryMetadata md,
+      SimpleExpression<?> usingExpression,
+      Predicate usingOn,
+      List<SQLMergeUsingCase> whens) {
+    sqlListener.notifyMergeUsing(entity, md, usingExpression, usingOn, whens);
+  }
+
+  @Override
+  public void notifyInsert(
+      final RelationalPath<?> entity,
+      final QueryMetadata md,
+      final List<Path<?>> columns,
+      final List<Expression<?>> values,
+      final SubQueryExpression<?> subQuery) {
+    sqlListener.notifyInsert(entity, md, columns, values, subQuery);
+  }
+
+  @Override
+  public void notifyInserts(
+      final RelationalPath<?> entity, final QueryMetadata md, final List<SQLInsertBatch> batches) {
+    sqlListener.notifyInserts(entity, md, batches);
+  }
+
+  @Override
+  public void notifyUpdate(
+      final RelationalPath<?> entity,
+      final QueryMetadata md,
+      final Map<Path<?>, Expression<?>> updates) {
+    sqlListener.notifyUpdate(entity, md, updates);
+  }
+
+  @Override
+  public void notifyUpdates(final RelationalPath<?> entity, final List<SQLUpdateBatch> batches) {
+    sqlListener.notifyUpdates(entity, batches);
+  }
+}

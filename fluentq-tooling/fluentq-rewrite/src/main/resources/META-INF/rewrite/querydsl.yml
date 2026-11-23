@@ -1,0 +1,208 @@
+# OpenRewrite recipes migrating Querydsl (and the OpenFeign Querydsl fork) to fluentQ.
+#
+# Run with the rewrite-maven-plugin or rewrite-gradle-plugin; the engine and the core
+# recipes composed below are supplied by the plugin, so no extra dependencies are needed
+# beyond this artifact (io.github.openfeign.fluentq:fluentq-rewrite).
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: io.github.openfeign.fluentq.rewrite.MigrateQuerydslToFluentQ
+displayName: Migrate Querydsl to fluentQ 8.0
+description: >-
+  Migrate a project from Querydsl to fluentQ 8.0. Renames the Java/Kotlin/Scala packages
+  (`com.querydsl` and `io.github.openfeign.querydsl` -> `fluentq`), the Maven coordinates
+  (group id -> `io.github.openfeign.fluentq`, artifacts `querydsl-*` -> `fluentq-*`, version
+  `8.0`), and the `fluentq-maven-plugin` coordinates. Works for both the original
+  `com.querydsl` artifacts and the OpenFeign `io.github.openfeign.querydsl` fork. Annotation
+  processor classes referenced in source code are renamed by the package change; a processor
+  class hardcoded in `pom.xml` (legacy apt-maven-plugin style) must be updated by hand.
+  Modules dropped in the fork
+  (`querydsl-jdo`, `querydsl-lucene3/4/5`, `querydsl-hibernate-search`) have no fluentQ
+  equivalent and are intentionally left untouched.
+tags:
+  - querydsl
+  - fluentq
+recipeList:
+  # --- Java / Kotlin / Scala packages (build-tool agnostic) ---
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: com.querydsl
+      newPackageName: fluentq
+      recursive: true
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: io.github.openfeign.querydsl
+      newPackageName: fluentq
+      recursive: true
+
+  # --- Maven plugin coordinates ---
+  - org.openrewrite.maven.ChangePluginGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-maven-plugin
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-maven-plugin
+      newVersion: 8.0
+
+  # --- Maven dependency coordinates (querydsl-<x> -> io.github.openfeign.fluentq:fluentq-<x>:8.0) ---
+  # oldGroupId '*' covers both com.querydsl (original) and io.github.openfeign.querydsl (fork).
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-core
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-core
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-collections
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-collections
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-guava
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-guava
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-jpa
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-jpa
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-jpa-spring
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-jpa-spring
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-sql
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-sql
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-sql-spring
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-sql-spring
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-sql-spatial
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-sql-spatial
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-sql-json
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-sql-json
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-spatial
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-spatial
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-mongodb
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-mongodb
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-r2dbc
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-r2dbc
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-kotlin
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-kotlin
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-scala
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-scala
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-apt
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-apt
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-codegen
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-codegen
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-codegen-utils
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-codegen-utils
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-sql-codegen
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-sql-codegen
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-jpa-codegen
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-jpa-codegen
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-kotlin-codegen
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-kotlin-codegen
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-ksp-codegen
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-ksp-codegen
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-bom
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-bom
+      newVersion: 8.0
+
+  # --- Managed dependencies (<dependencyManagement>, incl. imported BOMs) ---
+  - org.openrewrite.maven.ChangeManagedDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-bom
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-bom
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeManagedDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-core
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-core
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeManagedDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-jpa
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-jpa
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeManagedDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-sql
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-sql
+      newVersion: 8.0
+  - org.openrewrite.maven.ChangeManagedDependencyGroupIdAndArtifactId:
+      oldGroupId: '*'
+      oldArtifactId: querydsl-apt
+      newGroupId: io.github.openfeign.fluentq
+      newArtifactId: fluentq-apt
+      newVersion: 8.0
