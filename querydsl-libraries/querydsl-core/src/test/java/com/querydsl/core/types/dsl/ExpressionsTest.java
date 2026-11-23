@@ -58,6 +58,18 @@ class ExpressionsTest {
   }
 
   @Test
+  void nullExpression_from_path_keeps_path_type() {
+    assertThat(Expressions.nullExpression(new NumberPath<>(Long.class, "id")).getType())
+        .isEqualTo(Long.class);
+  }
+
+  @Test
+  void nullExpression_from_null_path_is_untyped() {
+    assertThat(Expressions.nullExpression((Path<Object>) null))
+        .isSameAs(Expressions.nullExpression());
+  }
+
+  @Test
   void Signature() throws Exception {
     List<String> types =
         Arrays.asList(
