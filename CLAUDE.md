@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Branches
+
+`8.x` is the next-major (fluentQ) line: JPA 4 work and breaking changes land here. `master` is the backwards-compatible 7.x line.
+
 ## Overview
 
 This is **fluentQ** (formerly Querydsl) on the `8.x` release branch. Starting with version 8.0, the project has been renamed to **fluentQ**, utilizing the `fluentq.*` package prefix. Backward compatibility is maintained via generated deprecated wrappers under the `querydsl/` folder in the `com.querydsl.*` package structure.
