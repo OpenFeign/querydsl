@@ -1,6 +1,5 @@
 package fluentq.sql;
 
-import static fluentq.core.Target.CUBRID;
 import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
 import static fluentq.core.Target.HSQLDB;
@@ -34,7 +33,7 @@ import org.junit.jupiter.api.Test;
 public abstract class SubqueriesBase extends AbstractBaseTest {
 
   @Test
-  @ExcludeIn({CUBRID, DERBY, FIREBIRD, HSQLDB, SQLITE, SQLSERVER})
+  @ExcludeIn({DERBY, FIREBIRD, HSQLDB, SQLITE, SQLSERVER})
   public void keys() {
     var employee2 = new QEmployee("employee2");
     var nameKey1 =
@@ -56,7 +55,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({CUBRID, DERBY, FIREBIRD, HSQLDB, SQLITE, SQLSERVER})
+  @ExcludeIn({DERBY, FIREBIRD, HSQLDB, SQLITE, SQLSERVER})
   public void list_in_query() {
     var employee2 = new QEmployee("employee2");
     query()
