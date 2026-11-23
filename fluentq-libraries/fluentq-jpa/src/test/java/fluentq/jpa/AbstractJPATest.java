@@ -395,6 +395,20 @@ public abstract class AbstractJPATest {
   }
 
   @Test
+  @NoEclipseLink
+  public void neAny_collection() {
+    var kitten = new QCat("kitten");
+    var names =
+        query()
+            .from(cat, kitten)
+            .where(kitten.name.eq("Bob123"), kitten.neAny(cat.kittens))
+            .orderBy(cat.id.asc())
+            .select(cat.name)
+            .fetch();
+    assertThat(names).containsExactly("Felix123", "Allen123", "Mary_123");
+  }
+
+  @Test
   public void arrayProjection() {
     var results =
         query()
