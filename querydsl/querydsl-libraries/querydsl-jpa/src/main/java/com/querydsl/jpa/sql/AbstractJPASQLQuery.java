@@ -25,7 +25,7 @@ import com.querydsl.jpa.NativeSQLSerializer;
 import com.querydsl.jpa.QueryHandler;
 import com.querydsl.jpa.impl.JPAProvider;
 import com.querydsl.jpa.impl.JPAUtil;
-import com.querydsl.jpa.support.JpaCompat;
+import com.querydsl.jpa.internal.JpaCompat;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLSerializer;
 import jakarta.persistence.EntityManager;

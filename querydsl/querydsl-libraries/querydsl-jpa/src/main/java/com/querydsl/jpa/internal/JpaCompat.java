@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.jpa.support;
+package com.querydsl.jpa.internal;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -29,7 +29,8 @@ import java.lang.invoke.MethodType;
  * methods here are resolved once by name and parameter types, and their result is always handed
  * back as a plain {@link Query}.
  *
- * <p>Not part of the public API.
+ * <p>Not part of the public API. The class is public only because it is used from more than one
+ * package of querydsl-jpa. It can change or be removed in any release.
  */
 @Deprecated
 public final class JpaCompat {

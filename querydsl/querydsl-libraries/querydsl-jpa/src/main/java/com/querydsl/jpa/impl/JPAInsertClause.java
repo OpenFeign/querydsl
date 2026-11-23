@@ -28,7 +28,7 @@ import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.JpaInsertNativeHelper;
 import com.querydsl.jpa.JpaNativeInsertSerializer;
-import com.querydsl.jpa.support.JpaCompat;
+import com.querydsl.jpa.internal.JpaCompat;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.SQLTemplates;
 import jakarta.persistence.EntityManager;

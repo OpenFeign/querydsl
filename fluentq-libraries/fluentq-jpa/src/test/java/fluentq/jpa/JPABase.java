@@ -36,7 +36,7 @@ import fluentq.jpa.domain.QGroup;
 import fluentq.jpa.domain.QParent;
 import fluentq.jpa.impl.JPADeleteClause;
 import fluentq.jpa.impl.JPAQuery;
-import fluentq.jpa.support.JpaCompat;
+import fluentq.jpa.internal.JpaCompat;
 import fluentq.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;

@@ -25,7 +25,7 @@ import fluentq.jpa.NativeSQLSerializer;
 import fluentq.jpa.QueryHandler;
 import fluentq.jpa.impl.JPAProvider;
 import fluentq.jpa.impl.JPAUtil;
-import fluentq.jpa.support.JpaCompat;
+import fluentq.jpa.internal.JpaCompat;
 import fluentq.sql.Configuration;
 import fluentq.sql.SQLSerializer;
 import jakarta.persistence.EntityManager;

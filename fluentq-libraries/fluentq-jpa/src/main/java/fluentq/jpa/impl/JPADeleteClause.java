@@ -21,7 +21,7 @@ import fluentq.core.types.Predicate;
 import fluentq.jpa.JPAQueryMixin;
 import fluentq.jpa.JPQLSerializer;
 import fluentq.jpa.JPQLTemplates;
-import fluentq.jpa.support.JpaCompat;
+import fluentq.jpa.internal.JpaCompat;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import org.jetbrains.annotations.Nullable;

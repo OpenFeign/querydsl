@@ -77,6 +77,26 @@ Replace imports of legacy packages with the new `fluentq` package structure:
 
 ---
 
+## Breaking Changes
+
+These apply to the `fluentq` artifacts and to the backwards-compatibility artifacts alike.
+
+### `FactoryExpressionTransformer` (JPA)
+
+Hibernate ORM 8 removed `org.hibernate.transform.ResultTransformer`, so
+`FactoryExpressionTransformer` now implements `org.hibernate.query.TupleTransformer` instead:
+
+* It no longer implements `ResultTransformer`, `ResultListTransformer` or `Serializable`.
+* `transformList` is removed. It returned its argument unchanged.
+
+Code that passes a `FactoryExpressionTransformer` to `Query.setResultTransformer(...)` must
+call `Query.setTupleTransformer(...)` instead. Queries built with fluentQ need no change.
+
+`fluentq-jpa` runs on Hibernate ORM 7 / Jakarta Persistence 3.2 and on Hibernate ORM 8 /
+Jakarta Persistence 4. See [Supported Versions]({{ site.baseurl }}/tutorials/jpa#supported-versions).
+
+---
+
 ## Automated Migration with OpenRewrite
 
 For a deterministic, repeatable migration, use the published OpenRewrite recipe

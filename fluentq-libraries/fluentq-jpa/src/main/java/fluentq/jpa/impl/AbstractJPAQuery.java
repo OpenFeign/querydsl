@@ -26,7 +26,7 @@ import fluentq.jpa.JPAQueryMixin;
 import fluentq.jpa.JPQLSerializer;
 import fluentq.jpa.JPQLTemplates;
 import fluentq.jpa.QueryHandler;
-import fluentq.jpa.support.JpaCompat;
+import fluentq.jpa.internal.JpaCompat;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
