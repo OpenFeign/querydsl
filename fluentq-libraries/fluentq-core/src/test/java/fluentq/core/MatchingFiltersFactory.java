@@ -101,6 +101,7 @@ public class MatchingFiltersFactory {
 
       if (!target.equals(Target.SQLSERVER)
           && !target.equals(Target.MYSQL)
+          && !target.equals(Target.MARIADB)
           && !target.equals(Target.CUBRID)
           && !target.equals(Target.POSTGRESQL)
           && !target.equals(Target.H2)
@@ -141,6 +142,7 @@ public class MatchingFiltersFactory {
 
       if (!target.equals(Target.SQLSERVER)
           && !target.equals(Target.MYSQL)
+          && !target.equals(Target.MARIADB)
           && !target.equals(Target.CUBRID)
           && !target.equals(Target.POSTGRESQL)
           && !target.equals(Target.H2)

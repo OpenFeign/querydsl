@@ -1,5 +1,6 @@
 package fluentq.sql;
 
+import static fluentq.core.Target.MARIADB;
 import static fluentq.core.Target.MYSQL;
 import static fluentq.sql.Constants.survey;
 
@@ -14,7 +15,7 @@ public abstract class SelectMySQLBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   public void mysql_extensions() {
     mysqlQuery().from(survey).bigResult().select(survey.id).fetch();
     mysqlQuery().from(survey).bufferResult().select(survey.id).fetch();

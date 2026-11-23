@@ -33,6 +33,7 @@ import fluentq.sql.dml.SQLDeleteClause;
 import fluentq.sql.domain.QEmployee;
 import fluentq.sql.domain.QEmployeeNoPK;
 import fluentq.sql.domain.QSurvey;
+import fluentq.sql.types.StringType;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -504,6 +505,23 @@ from sub\
 
     assertThat(delete.toString())
         .isEqualTo("delete from \"PUBLIC\".EMPLOYEE\n" + "where \"PUBLIC\".EMPLOYEE.ID > ?");
+  }
+
+  @Test
+  public void parameterTemplateOfRegisteredType() {
+    var configuration = new Configuration(SQLTemplates.DEFAULT);
+    configuration.register(
+        new StringType() {
+          @Override
+          public String getParameterTemplate(String value) {
+            return "upper({0})";
+          }
+        });
+    var serializer = new SQLSerializer(configuration);
+    serializer.handle(employee.firstname.eq("Bob"));
+
+    assertThat(serializer).hasToString("EMPLOYEE.FIRSTNAME = upper(?)");
+    assertThat(serializer.getConstants()).containsExactly("Bob");
   }
 
   private SQLQuery<?> query() {

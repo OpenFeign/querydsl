@@ -81,9 +81,6 @@ public class Configuration {
   @SuppressWarnings("unchecked")
   public Configuration(SQLTemplates templates, StatementOptions statementOptions) {
     this.templates = templates;
-    for (Type<?> customType : templates.getCustomTypes()) {
-      javaTypeMapping.register(customType);
-    }
     for (Map.Entry<SchemaAndTable, SchemaAndTable> entry :
         templates.getTableOverrides().entrySet()) {
       registerTableOverride(entry.getKey(), entry.getValue());
@@ -115,6 +112,10 @@ public class Configuration {
           javaTypeMapping.register(new ArrayType(arrType, name));
         }
       }
+    }
+
+    for (Type<?> customType : templates.getCustomTypes()) {
+      javaTypeMapping.register(customType);
     }
 
     if (statementOptions == null) {
@@ -159,6 +160,13 @@ public class Configuration {
         throw new IllegalArgumentException("Unsupported literal type " + o.getClass().getName());
       }
     }
+  }
+
+  @Nullable
+  @SuppressWarnings("unchecked")
+  public String getParameterTemplate(Object value) {
+    Type type = javaTypeMapping.getType(value.getClass());
+    return type.getParameterTemplate(value);
   }
 
   public SQLTemplates getTemplates() {

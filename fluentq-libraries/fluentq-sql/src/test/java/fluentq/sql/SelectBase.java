@@ -20,6 +20,7 @@ import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
 import static fluentq.core.Target.H2;
 import static fluentq.core.Target.HSQLDB;
+import static fluentq.core.Target.MARIADB;
 import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.ORACLE;
 import static fluentq.core.Target.POSTGRESQL;
@@ -166,7 +167,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, ORACLE})
+  @ExcludeIn({MYSQL, MARIADB, ORACLE})
   @SkipForQuoted
   public void alias_quotes() {
     expectedQuery = "select e.FIRSTNAME as \"First Name\" from EMPLOYEE e";
@@ -174,7 +175,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @IncludeIn(MYSQL)
+  @IncludeIn({MYSQL, MARIADB})
   @SkipForQuoted
   public void alias_quotes_MySQL() {
     expectedQuery = "select e.FIRSTNAME as `First Name` from EMPLOYEE e";
@@ -927,7 +928,7 @@ public abstract class SelectBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({H2, DERBY, CUBRID, MYSQL, TURSO})
+  @ExcludeIn({H2, DERBY, CUBRID, MYSQL, MARIADB, TURSO})
   public void full_join() throws SQLException {
     assertThat(
             query()

@@ -2,6 +2,7 @@ package fluentq.sql;
 
 import static fluentq.core.Target.DERBY;
 import static fluentq.core.Target.FIREBIRD;
+import static fluentq.core.Target.MARIADB;
 import static fluentq.core.Target.MYSQL;
 import static fluentq.core.Target.SQLITE;
 import static fluentq.core.Target.SQLSERVER;
@@ -136,7 +137,7 @@ public abstract class SubqueriesBase extends AbstractBaseTest {
   }
 
   @Test
-  @ExcludeIn({MYSQL, DERBY, SQLSERVER, TERADATA})
+  @ExcludeIn({MYSQL, MARIADB, DERBY, SQLSERVER, TERADATA})
   public void subQuery_params() {
     var aParam = new Param<String>(String.class, "param");
     SQLQuery<?> subQuery = select(Wildcard.all).from(employee).where(employee.firstname.eq(aParam));
