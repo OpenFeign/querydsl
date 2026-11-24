@@ -26,7 +26,6 @@ import fluentq.jpa.JPAQueryMixin;
 import fluentq.jpa.JPQLSerializer;
 import fluentq.jpa.JPQLTemplates;
 import fluentq.jpa.QueryHandler;
-import fluentq.jpa.internal.JpaCompat;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
@@ -137,7 +136,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
     var serializer = serialize(forCount);
     var queryString = serializer.toString();
     logQuery(queryString);
-    var query = JpaCompat.createQuery(entityManager, queryString);
+    var query = entityManager.createQuery(queryString);
     JPAUtil.setConstants(query, serializer.getConstants(), getMetadata().getParams());
     if (modifiers != null && modifiers.isRestricting()) {
       Integer limit = modifiers.getLimitAsInteger();

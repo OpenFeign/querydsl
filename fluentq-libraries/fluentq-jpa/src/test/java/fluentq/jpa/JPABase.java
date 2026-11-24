@@ -17,7 +17,6 @@ import static fluentq.core.group.GroupBy.list;
 import static fluentq.jpa.JPAExpressions.selectFrom;
 import static fluentq.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import fluentq.core.DefaultQueryMetadata;
 import fluentq.core.Target;
@@ -27,7 +26,6 @@ import fluentq.core.testutil.ExcludeIn;
 import fluentq.core.types.EntityPath;
 import fluentq.core.types.Expression;
 import fluentq.core.types.dsl.Expressions;
-import fluentq.jpa.domain.Animal;
 import fluentq.jpa.domain.Cat;
 import fluentq.jpa.domain.QCat;
 import fluentq.jpa.domain.QCatSummary;
@@ -36,7 +34,6 @@ import fluentq.jpa.domain.QGroup;
 import fluentq.jpa.domain.QParent;
 import fluentq.jpa.impl.JPADeleteClause;
 import fluentq.jpa.impl.JPAQuery;
-import fluentq.jpa.internal.JpaCompat;
 import fluentq.jpa.testutil.JPATestExtension;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
@@ -104,26 +101,6 @@ public class JPABase extends AbstractJPATest implements JPATest {
             .select(cat.name)
             .fetch();
     assertThat(names).containsExactly("Felix123", "Allen123", "Mary_123");
-  }
-
-  @Test
-  public void jpaCompat_creates_plain_queries() {
-    assertThat(JpaCompat.createQuery(entityManager, "select cat from Cat cat").getResultList())
-        .isNotEmpty();
-    assertThat(
-            JpaCompat.createNativeQuery(entityManager, "select count(*) from animal_")
-                .getSingleResult())
-        .isNotNull();
-    assertThat(
-            JpaCompat.createNativeQuery(entityManager, "select * from animal_", Animal.class)
-                .getResultList())
-        .isNotEmpty();
-  }
-
-  @Test
-  public void jpaCompat_rethrows_provider_exception_unwrapped() {
-    assertThatThrownBy(() -> JpaCompat.createQuery(entityManager, "select from nowhere !"))
-        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test

@@ -17,18 +17,13 @@ import fluentq.core.JoinType;
 import fluentq.core.dml.DeleteClause;
 import fluentq.core.support.QueryMixin;
 import fluentq.core.types.EntityPath;
-import fluentq.core.types.Path;
 import fluentq.core.types.Predicate;
 import fluentq.jpa.HQLTemplates;
 import fluentq.jpa.JPAQueryMixin;
 import fluentq.jpa.JPQLSerializer;
 import fluentq.jpa.JPQLTemplates;
-import java.util.HashMap;
-import java.util.Map;
-import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
-import org.hibernate.query.Query;
 
 /**
  * DeleteClause implementation for Hibernate
@@ -42,8 +37,6 @@ public class HibernateDeleteClause implements DeleteClause<HibernateDeleteClause
   private final SessionHolder session;
 
   private final JPQLTemplates templates;
-
-  private final Map<Path<?>, LockMode> lockModes = new HashMap<>();
 
   public HibernateDeleteClause(Session session, EntityPath<?> entity) {
     this(new DefaultSessionHolder(session), entity, HQLTemplates.DEFAULT);
@@ -69,11 +62,10 @@ public class HibernateDeleteClause implements DeleteClause<HibernateDeleteClause
     var serializer = new JPQLSerializer(templates, null);
     serializer.serializeForDelete(queryMixin.getMetadata());
 
-    Query query = session.createQuery(serializer.toString());
-    HibernateCompat.setMutationLockModes(query, lockModes);
+    var query = session.createQuery(serializer.toString()).asMutationQuery();
     HibernateUtil.setConstants(
         query, serializer.getConstants(), queryMixin.getMetadata().getParams());
-    return query.executeUpdate();
+    return query.execute();
   }
 
   @Override
@@ -81,20 +73,6 @@ public class HibernateDeleteClause implements DeleteClause<HibernateDeleteClause
     for (Predicate p : o) {
       queryMixin.where(p);
     }
-    return this;
-  }
-
-  /**
-   * Set the lock mode for the given path.
-   *
-   * @return the current object
-   * @deprecated lock modes have no effect on insert, update and delete statements: Hibernate ORM 7
-   *     ignores them and Hibernate ORM 8 rejects them, so they are left out there
-   */
-  @Deprecated
-  @SuppressWarnings("unchecked")
-  public HibernateDeleteClause setLockMode(Path<?> path, LockMode lockMode) {
-    lockModes.put(path, lockMode);
     return this;
   }
 

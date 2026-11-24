@@ -28,7 +28,6 @@ import fluentq.jpa.JPQLSerializer;
 import fluentq.jpa.JPQLTemplates;
 import fluentq.jpa.JpaInsertNativeHelper;
 import fluentq.jpa.JpaNativeInsertSerializer;
-import fluentq.jpa.internal.JpaCompat;
 import fluentq.sql.Configuration;
 import fluentq.sql.SQLTemplates;
 import jakarta.persistence.EntityManager;
@@ -100,7 +99,7 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
           subQuery,
           inserts);
 
-      var query = JpaCompat.createQuery(entityManager, serializer.toString());
+      var query = entityManager.createQuery(serializer.toString());
       if (lockMode != null) {
         query.setLockMode(lockMode);
       }
@@ -129,7 +128,7 @@ public class JPAInsertClause implements InsertClause<JPAInsertClause> {
 
     // Provider-neutral native execute: use the JPA standard EntityManager.createNativeQuery
     // instead of unwrapping a Hibernate Session, so this path also works under EclipseLink/OpenJPA.
-    var nativeQuery = JpaCompat.createNativeQuery(entityManager, sql);
+    var nativeQuery = entityManager.createNativeQuery(sql);
     for (int i = 0; i < params.length; i++) {
       nativeQuery.setParameter(i + 1, params[i]);
     }

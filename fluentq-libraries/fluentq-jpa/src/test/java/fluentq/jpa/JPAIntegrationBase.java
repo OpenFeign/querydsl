@@ -33,8 +33,7 @@ public class JPAIntegrationBase extends ParsingTest implements JPATest {
       public void parse() {
         var serializer = new JPQLSerializer(templates);
         serializer.serialize(getMetadata(), false, null);
-        // through JpaCompat so that this test class links on Jakarta Persistence 3.2 and 4
-        var query = fluentq.jpa.internal.JpaCompat.createQuery(em, serializer.toString());
+        var query = em.createQuery(serializer.toString());
         JPAUtil.setConstants(query, serializer.getConstants(), getMetadata().getParams());
         try {
           query.getResultList();

@@ -15,8 +15,8 @@ package com.querydsl.jpa.hibernate;
 
 import org.hibernate.StatelessSession;
 import org.hibernate.jdbc.ReturningWork;
+import org.hibernate.query.MutationOrSelectionQuery;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 
 /**
  * SessionHolder implementation using StatelessSession
@@ -34,8 +34,8 @@ public class StatelessSessionHolder implements SessionHolder {
 
   @Override
   @Deprecated
-  public Query<?> createQuery(String queryString) {
-    return HibernateCompat.createQuery(session, queryString);
+  public MutationOrSelectionQuery createQuery(String queryString) {
+    return session.createQuery(queryString);
   }
 
   @Override

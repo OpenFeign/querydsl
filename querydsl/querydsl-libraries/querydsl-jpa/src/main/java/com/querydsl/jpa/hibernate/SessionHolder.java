@@ -14,8 +14,8 @@
 package com.querydsl.jpa.hibernate;
 
 import org.hibernate.jdbc.ReturningWork;
+import org.hibernate.query.MutationOrSelectionQuery;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 
 /**
  * Abstraction for different Hibernate Session signatures
@@ -31,7 +31,7 @@ public interface SessionHolder {
    * @param queryString JPQL query string
    * @return query
    */
-  Query<?> createQuery(String queryString);
+  MutationOrSelectionQuery createQuery(String queryString);
 
   /**
    * Create an SQL query for the given query string

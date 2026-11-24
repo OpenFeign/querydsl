@@ -25,14 +25,11 @@ import com.querydsl.jpa.HQLTemplates;
 import com.querydsl.jpa.JPAQueryMixin;
 import com.querydsl.jpa.JPQLSerializer;
 import com.querydsl.jpa.JPQLTemplates;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
-import org.hibernate.query.Query;
 
 /**
  * UpdateClause implementation for Hibernate
@@ -49,8 +46,6 @@ public class HibernateUpdateClause implements UpdateClause<HibernateUpdateClause
   private final SessionHolder session;
 
   private final JPQLTemplates templates;
-
-  private final Map<Path<?>, LockMode> lockModes = new HashMap<>();
 
   public HibernateUpdateClause(Session session, EntityPath<?> entity) {
     this(new DefaultSessionHolder(session), entity, HQLTemplates.DEFAULT);
@@ -76,11 +71,10 @@ public class HibernateUpdateClause implements UpdateClause<HibernateUpdateClause
     var serializer = new JPQLSerializer(templates, null);
     serializer.serializeForUpdate(queryMixin.getMetadata(), updates);
 
-    Query query = session.createQuery(serializer.toString());
-    HibernateCompat.setMutationLockModes(query, lockModes);
+    var query = session.createQuery(serializer.toString()).asMutationQuery();
     HibernateUtil.setConstants(
         query, serializer.getConstants(), queryMixin.getMetadata().getParams());
-    return query.executeUpdate();
+    return query.execute();
   }
 
   @Override
@@ -127,20 +121,6 @@ public class HibernateUpdateClause implements UpdateClause<HibernateUpdateClause
     for (Predicate p : o) {
       queryMixin.where(p);
     }
-    return this;
-  }
-
-  /**
-   * Set the lock mode for the given path.
-   *
-   * @return the current object
-   * @deprecated lock modes have no effect on insert, update and delete statements: Hibernate ORM 7
-   *     ignores them and Hibernate ORM 8 rejects them, so they are left out there
-   */
-  @Deprecated
-  @SuppressWarnings("unchecked")
-  public HibernateUpdateClause setLockMode(Path<?> path, LockMode lockMode) {
-    lockModes.put(path, lockMode);
     return this;
   }
 

@@ -14,8 +14,8 @@
 package fluentq.jpa.hibernate;
 
 import org.hibernate.jdbc.ReturningWork;
+import org.hibernate.query.MutationOrSelectionQuery;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 
 /**
  * {@code NoSessionHolder} is a session holder for detached {@link HibernateQuery} usage
@@ -29,7 +29,7 @@ public final class NoSessionHolder implements SessionHolder {
   private NoSessionHolder() {}
 
   @Override
-  public Query<?> createQuery(String queryString) {
+  public MutationOrSelectionQuery createQuery(String queryString) {
     throw new UnsupportedOperationException("No session in detached Query available");
   }
 

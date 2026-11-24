@@ -36,6 +36,7 @@ import fluentq.jpa.hibernate.HibernateQuery;
 import fluentq.jpa.testutil.HibernateTestExtension;
 import java.io.IOException;
 import java.util.List;
+import org.hibernate.FlushMode;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
@@ -104,7 +105,7 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   }
 
   @Test
-  public void lockMode_same_mode_on_two_aliases() {
+  public void lockMode_same_mode_on_two_aliases_succeeds() {
     var mate = new QCat("mate");
     query()
         .from(cat)
@@ -116,46 +117,20 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   }
 
   @Test
-  public void lockMode_different_modes_on_two_aliases() {
+  public void lockMode_different_modes_on_two_aliases_throws() {
     var mate = new QCat("mate");
-    var query =
-        query()
-            .from(cat)
-            .innerJoin(cat.mate, mate)
-            .setLockMode(cat, LockMode.PESSIMISTIC_WRITE)
-            .setLockMode(mate, LockMode.PESSIMISTIC_READ)
-            .select(cat);
-    if (hibernateMajorVersion() >= 8) {
-      // Hibernate ORM 8 has no per-alias lock modes
-      assertThatThrownBy(query::fetch)
-          .isInstanceOf(UnsupportedOperationException.class)
-          .hasMessageContaining("Per-alias lock modes are not supported");
-    } else {
-      query.fetch();
-    }
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void lockMode_on_delete_clause() {
-    assertThat(
-            delete(QGroup.group)
-                .setLockMode(QGroup.group, LockMode.PESSIMISTIC_WRITE)
-                .where(QGroup.group.id.eq(-1))
-                .execute())
-        .isEqualTo(0);
+    var catLocked =
+        query().from(cat).innerJoin(cat.mate, mate).setLockMode(cat, LockMode.PESSIMISTIC_WRITE);
+    assertThatThrownBy(() -> catLocked.setLockMode(mate, LockMode.PESSIMISTIC_READ))
+        .isInstanceOf(UnsupportedOperationException.class)
+        .hasMessageContaining("one lock mode per query");
   }
 
   @Test
   public void flushMode() {
-    for (org.hibernate.FlushMode flushMode : org.hibernate.FlushMode.values()) {
+    for (FlushMode flushMode : FlushMode.values()) {
       query().from(cat).setFlushMode(flushMode).select(cat).fetch();
     }
-  }
-
-  private static int hibernateMajorVersion() {
-    var version = org.hibernate.Version.getVersionString();
-    return Integer.parseInt(version.substring(0, version.indexOf('.')));
   }
 
   @Test

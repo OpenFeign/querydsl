@@ -63,8 +63,7 @@ public final class JPAUtil {
       }
 
       if (hasParameters) {
-        Parameter parameter = query.getParameter(i + 1);
-        var parameterType = parameter != null ? parameterType(parameter) : null;
+        var parameterType = getParameterTypeOrNull(query.getParameter(i + 1));
         if (parameterType != null && !parameterType.isInstance(val)) {
           var targetType = primitiveToWrapper(parameterType);
           if (val instanceof Number number && Number.class.isAssignableFrom(targetType)) {
@@ -77,12 +76,11 @@ public final class JPAUtil {
     }
   }
 
-  /**
-   * The Jakarta Persistence contract lets {@link Parameter#getParameterType()} throw when the type
-   * is unknown; Hibernate ORM 8 does so, earlier versions returned {@code null}.
-   */
   @Nullable
-  private static Class<?> parameterType(Parameter<?> parameter) {
+  private static Class<?> getParameterTypeOrNull(@Nullable Parameter<?> parameter) {
+    if (parameter == null) {
+      return null;
+    }
     try {
       return parameter.getParameterType();
     } catch (IllegalStateException e) {

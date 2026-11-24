@@ -3,9 +3,11 @@ package fluentq.jpa.support;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import fluentq.jpa.domain.Cat;
+import fluentq.jpa.domain.Domain;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import java.util.Collection;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +18,9 @@ public class JPAPathBuilderValidatorTest {
 
   @BeforeEach
   public void setUp() {
-    entityManagerFactory = Persistence.createEntityManagerFactory("h2");
+    entityManagerFactory =
+        Persistence.createEntityManagerFactory(
+            "h2", Map.of("hibernate.loaded_classes", Domain.classes));
   }
 
   @AfterEach

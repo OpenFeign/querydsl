@@ -92,8 +92,24 @@ Hibernate ORM 8 removed `org.hibernate.transform.ResultTransformer`, so
 Code that passes a `FactoryExpressionTransformer` to `Query.setResultTransformer(...)` must
 call `Query.setTupleTransformer(...)` instead. Queries built with fluentQ need no change.
 
-`fluentq-jpa` runs on Hibernate ORM 7 / Jakarta Persistence 3.2 and on Hibernate ORM 8 /
-Jakarta Persistence 4. See [Supported Versions]({{ site.baseurl }}/tutorials/jpa#supported-versions).
+### Jakarta Persistence 4 and Hibernate ORM 8
+
+8.x requires Java 21. `fluentq-jpa` requires Jakarta Persistence 4, with Hibernate ORM 8 or
+EclipseLink 6. Stay on 7.x for Jakarta Persistence 3.2 and Hibernate ORM 7. See
+[Supported Versions]({{ site.baseurl }}/tutorials/jpa#supported-versions).
+
+### Hibernate queries and clauses
+
+* `HibernateQuery.createQuery()` returns `org.hibernate.query.SelectionQuery` instead of
+  `org.hibernate.query.Query`.
+* `SessionHolder.createQuery(String)` returns `org.hibernate.query.MutationOrSelectionQuery`.
+  Update custom `SessionHolder` implementations.
+* `setLockMode` is removed from `HibernateDeleteClause`, `HibernateInsertClause` and
+  `HibernateUpdateClause`. It never had an effect on those statements.
+* Hibernate ORM 8 has one lock mode per query. `setLockMode` on a query throws
+  `UnsupportedOperationException` when it is called with a different mode than an earlier call.
+* The protected `lockModes` map on `AbstractHibernateQuery` is replaced by a single `lockMode`
+  field.
 
 ---
 

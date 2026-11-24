@@ -33,11 +33,10 @@ import com.querydsl.jpa.JPAQueryBase;
 import com.querydsl.jpa.JPAQueryMixin;
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.ScrollableResultsIterator;
+import jakarta.persistence.QueryFlushMode;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -47,7 +46,7 @@ import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
-import org.hibernate.query.Query;
+import org.hibernate.query.SelectionQuery;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -68,7 +67,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
 
   protected int fetchSize = 0;
 
-  protected final Map<Path<?>, LockMode> lockModes = new HashMap<>();
+  @Nullable protected LockMode lockMode;
 
   @Nullable protected FlushMode flushMode;
 
@@ -130,15 +129,15 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
    *
    * @return query
    */
-  public Query createQuery() {
+  public SelectionQuery createQuery() {
     return createQuery(getMetadata().getModifiers(), false);
   }
 
-  private Query createQuery(@Nullable QueryModifiers modifiers, boolean forCount) {
+  private SelectionQuery createQuery(@Nullable QueryModifiers modifiers, boolean forCount) {
     var serializer = serialize(forCount);
     var queryString = serializer.toString();
     logQuery(queryString);
-    Query query = session.createQuery(queryString);
+    SelectionQuery query = session.createQuery(queryString).asSelectionQuery();
     HibernateUtil.setConstants(query, serializer.getConstants(), getMetadata().getParams());
     if (fetchSize > 0) {
       query.setFetchSize(fetchSize);
@@ -158,9 +157,11 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
     if (readOnly != null) {
       query.setReadOnly(readOnly);
     }
-    HibernateCompat.setLockModes(query, lockModes);
+    if (lockMode != null) {
+      query.setHibernateLockMode(lockMode);
+    }
     if (flushMode != null) {
-      HibernateCompat.setFlushMode(query, flushMode);
+      query.setQueryFlushMode(toQueryFlushMode(flushMode));
     }
 
     if (modifiers != null && modifiers.isRestricting()) {
@@ -181,6 +182,14 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
           new FactoryExpressionTransformer((FactoryExpression<?>) projection));
     }
     return query;
+  }
+
+  private static QueryFlushMode toQueryFlushMode(FlushMode flushMode) {
+    return switch (flushMode) {
+      case ALWAYS -> QueryFlushMode.FLUSH;
+      case MANUAL, COMMIT -> QueryFlushMode.NO_FLUSH;
+      case AUTO -> QueryFlushMode.DEFAULT;
+    };
   }
 
   /**
@@ -337,7 +346,14 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
    */
   @SuppressWarnings("unchecked")
   public Q setLockMode(Path<?> path, LockMode lockMode) {
-    lockModes.put(path, lockMode);
+    if (this.lockMode != null && this.lockMode != lockMode) {
+      throw new UnsupportedOperationException(
+          "Hibernate ORM 8 applies one lock mode per query, got "
+              + this.lockMode
+              + " and "
+              + lockMode);
+    }
+    this.lockMode = lockMode;
     return (Q) this;
   }
 
@@ -413,7 +429,7 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
     cacheRegion = query.cacheRegion;
     fetchSize = query.fetchSize;
     flushMode = query.flushMode;
-    lockModes.putAll(query.lockModes);
+    lockMode = query.lockMode;
     readOnly = query.readOnly;
     timeout = query.timeout;
   }

@@ -91,5 +91,7 @@ public final class Domain {
           MyEmbeddedAttribute.class,
           MyEntity.class,
           MyMappedSuperclass.class,
-          MyOtherEntity.class);
+          MyOtherEntity.class,
+          Invoice.class,
+          Alchemist.class);
 }

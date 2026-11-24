@@ -24,7 +24,6 @@ import fluentq.core.types.dsl.Expressions;
 import fluentq.jpa.JPAQueryMixin;
 import fluentq.jpa.JPQLSerializer;
 import fluentq.jpa.JPQLTemplates;
-import fluentq.jpa.internal.JpaCompat;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import java.util.LinkedHashMap;
@@ -64,7 +63,7 @@ public class JPAUpdateClause implements UpdateClause<JPAUpdateClause> {
     var serializer = new JPQLSerializer(templates, entityManager);
     serializer.serializeForUpdate(queryMixin.getMetadata(), updates);
 
-    var query = JpaCompat.createQuery(entityManager, serializer.toString());
+    var query = entityManager.createQuery(serializer.toString());
     if (lockMode != null) {
       query.setLockMode(lockMode);
     }

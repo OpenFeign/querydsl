@@ -122,11 +122,8 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
 
       // set result transformer, if projection is a FactoryExpression instance
       if (projection instanceof FactoryExpression) {
-        // called through SelectionQuery: the NativeQuery override has a different return type on
-        // Hibernate ORM 7 and 8, so a direct call would not link on both
-        ((org.hibernate.query.SelectionQuery<?>) query)
-            .setTupleTransformer(
-                new FactoryExpressionTransformer((FactoryExpression<?>) projection));
+        query.setTupleTransformer(
+            new FactoryExpressionTransformer((FactoryExpression<?>) projection));
       }
     }
 

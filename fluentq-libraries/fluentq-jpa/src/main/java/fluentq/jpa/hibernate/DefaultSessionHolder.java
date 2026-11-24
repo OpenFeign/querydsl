@@ -15,8 +15,8 @@ package fluentq.jpa.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.jdbc.ReturningWork;
+import org.hibernate.query.MutationOrSelectionQuery;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 
 /**
  * {@code DefaultSessionHolder} is the default implementation of the {@link SessionHolder} interface
@@ -32,8 +32,8 @@ public class DefaultSessionHolder implements SessionHolder {
   }
 
   @Override
-  public Query<?> createQuery(String queryString) {
-    return HibernateCompat.createQuery(session, queryString);
+  public MutationOrSelectionQuery createQuery(String queryString) {
+    return session.createQuery(queryString);
   }
 
   @Override

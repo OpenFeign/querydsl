@@ -13,12 +13,20 @@
  */
 package fluentq.jpa.codegen.ant;
 
+import fluentq.codegen.ClassPathUtils;
 import fluentq.jpa.codegen.JPADomainExporter;
+import jakarta.persistence.Converter;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Persistence;
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +36,9 @@ import java.util.Set;
  * @author 200003548
  */
 public class AntJPADomainExporter {
+
+  private static final List<Class<? extends Annotation>> MANAGED_TYPE_ANNOTATIONS =
+      List.of(Entity.class, Embeddable.class, MappedSuperclass.class, Converter.class);
 
   /** Additional property to use when creating the JPA entity manager factory */
   public static class Property {
@@ -82,6 +93,9 @@ public class AntJPADomainExporter {
   /** Name of persistence unit from which to generate query types (no default - required) */
   private String persistenceUnitName;
 
+  /** Comma-separated packages scanned for managed classes (no default - not required) */
+  private String packagesToScan;
+
   private Set<File> generatedFiles = Collections.emptySet();
 
   public Configuration getConfiguration() {
@@ -124,6 +138,14 @@ public class AntJPADomainExporter {
     this.persistenceUnitName = persistenceUnitName;
   }
 
+  public String getPackagesToScan() {
+    return packagesToScan;
+  }
+
+  public void setPackagesToScan(String packagesToScan) {
+    this.packagesToScan = packagesToScan;
+  }
+
   public Set<File> getGeneratedFiles() {
     return generatedFiles;
   }
@@ -136,7 +158,13 @@ public class AntJPADomainExporter {
     // We can assume we have the named persistence unit and its mapping file in our classpath,
     // but we may have to allow some properties in that persistence unit to be overridden before
     // we can successfully get that persistence unit's metamodel.
-    var properties = (configuration != null) ? configuration.getProperties() : null;
+    Map<String, Object> properties = new HashMap<>();
+    if (configuration != null) {
+      properties.putAll(configuration.getProperties());
+    }
+    if (packagesToScan != null) {
+      properties.put("hibernate.loaded_classes", scanManagedClasses());
+    }
     var emf = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
 
     // Now we can get the persistence unit's metamodel and export it to FluentQ query types.
@@ -149,5 +177,22 @@ public class AntJPADomainExporter {
     } catch (IOException e) {
       throw new RuntimeException("Error in JPADomainExporter", e);
     }
+  }
+
+  private List<Class<?>> scanManagedClasses() {
+    var classLoader = Thread.currentThread().getContextClassLoader();
+    var managedClasses = new ArrayList<Class<?>>();
+    try {
+      for (var pkg : packagesToScan.split(",")) {
+        for (var cl : ClassPathUtils.scanPackage(classLoader, pkg.trim())) {
+          if (cl != null && MANAGED_TYPE_ANNOTATIONS.stream().anyMatch(cl::isAnnotationPresent)) {
+            managedClasses.add(cl);
+          }
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeException("Error scanning " + packagesToScan, e);
+    }
+    return managedClasses;
   }
 }

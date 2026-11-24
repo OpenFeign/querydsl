@@ -25,7 +25,6 @@ import fluentq.jpa.NativeSQLSerializer;
 import fluentq.jpa.QueryHandler;
 import fluentq.jpa.impl.JPAProvider;
 import fluentq.jpa.impl.JPAUtil;
-import fluentq.jpa.internal.JpaCompat;
 import fluentq.sql.Configuration;
 import fluentq.sql.SQLSerializer;
 import jakarta.persistence.EntityManager;
@@ -105,13 +104,13 @@ public abstract class AbstractJPASQLQuery<T, Q extends AbstractJPASQLQuery<T, Q>
     if (!FactoryExpression.class.isAssignableFrom(projection.getClass())
         && isEntityExpression(projection)) {
       if (queryHandler.createNativeQueryTyped()) {
-        query = JpaCompat.createNativeQuery(entityManager, queryString, projection.getType());
+        query = entityManager.createNativeQuery(queryString, projection.getType());
       } else {
-        query = JpaCompat.createNativeQuery(entityManager, queryString);
+        query = entityManager.createNativeQuery(queryString);
       }
 
     } else {
-      query = JpaCompat.createNativeQuery(entityManager, queryString);
+      query = entityManager.createNativeQuery(queryString);
     }
     if (!forCount) {
       var aliases = serializer.getAliases();

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.hibernate.query.CommonQueryContract;
 import org.hibernate.type.BasicTypeReference;
 import org.hibernate.type.StandardBasicTypes;
 
@@ -85,9 +86,7 @@ public final class HibernateUtil {
   private HibernateUtil() {}
 
   public static void setConstants(
-      org.hibernate.query.Query<?> query,
-      List<Object> constants,
-      Map<ParamExpression<?>, Object> params) {
+      CommonQueryContract query, List<Object> constants, Map<ParamExpression<?>, Object> params) {
     for (var i = 0; i < constants.size(); i++) {
       var val = constants.get(i);
 
@@ -104,7 +103,7 @@ public final class HibernateUtil {
   }
 
   private static void setValueWithNumberedLabel(
-      org.hibernate.query.Query<?> query, Integer key, Object val) {
+      CommonQueryContract query, Integer key, Object val) {
     if (val instanceof Collection<?> collection) {
       query.setParameterList(key, collection);
     } else if (val instanceof Object[] objects && !BUILT_IN.contains(val.getClass())) {
