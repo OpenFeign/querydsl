@@ -138,7 +138,7 @@
     <slf4j.version>2.0.20</slf4j.version>
     <surefire.version>3.6.1</surefire.version>
     <animal-sniffer.version>1.29.1</animal-sniffer.version>
-    <h2gis.version>2.2.5</h2gis.version>
+    <h2gis.version>2.2.6</h2gis.version>
     <morphia.version>2.5.3</morphia.version>
     <jmh.version>1.37</jmh.version>
     <kotlin.version>2.4.21</kotlin.version>
