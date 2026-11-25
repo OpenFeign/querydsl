@@ -54,6 +54,11 @@
         <artifactId>jakarta.xml.bind-api</artifactId>
         <version>4.0.5</version>
       </dependency>
+      <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>${byte-buddy.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

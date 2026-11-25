@@ -2,8 +2,8 @@ package com.querydsl.example.jpa.repository;
 
 import static com.querydsl.example.jpa.model.QUser.user;
 
-import com.google.inject.persist.Transactional;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.example.jpa.guice.Transactional;
 import com.querydsl.example.jpa.model.User;
 import java.util.List;
 

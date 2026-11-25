@@ -1,7 +1,7 @@
 package com.querydsl.example.jpa.repository;
 
-import com.google.inject.persist.Transactional;
 import com.querydsl.example.jpa.guice.GuiceTestExtension;
+import com.querydsl.example.jpa.guice.Transactional;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.persistence.EntityManager;
