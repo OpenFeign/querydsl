@@ -130,14 +130,14 @@ public class NameBasedProjection<T> extends FactoryExpressionBase<T> {
    *
    * <p>Author: <b>Mouon (munhyunjune)</b>
    *
-   * <h3>Purpose</h3>
+   * <h4>Purpose</h4>
    *
    * Simplifies FluentQ projection by automatically binding entity fields to DTO constructor or
    * field names. This eliminates the need to manually specify every field in {@code
    * Projections.fields()} or {@code Projections.constructor()}, significantly reducing boilerplate
    * code.
    *
-   * <h3>Usage Example</h3>
+   * <h4>Usage Example</h4>
    *
    * <pre>{@code
    * QAnimal animal = QAnimal.animal;
@@ -150,7 +150,7 @@ public class NameBasedProjection<T> extends FactoryExpressionBase<T> {
    *     .newInstance(1, "Lion", 120);
    * }</pre>
    *
-   * <h3>Parameters</h3>
+   * <h4>Parameters</h4>
    *
    * <ul>
    *   <li><b>type</b> — The DTO class type to project into.
@@ -158,12 +158,12 @@ public class NameBasedProjection<T> extends FactoryExpressionBase<T> {
    *       mapped.
    * </ul>
    *
-   * <h3>Return</h3>
+   * <h4>Return</h4>
    *
    * A new {@link NameBasedProjection} instance capable of instantiating the given DTO type using
    * the entity's expressions.
    *
-   * <h3>Matching Logic</h3>
+   * <h4>Matching Logic</h4>
    *
    * <ul>
    *   <li>DTO constructor parameters are matched by <b>name</b> (not by order).
@@ -173,7 +173,7 @@ public class NameBasedProjection<T> extends FactoryExpressionBase<T> {
    *       ...}, so the class fields’ order will be used as a fallback.
    * </ul>
    *
-   * <h3>Caution</h3>
+   * <h4>Caution</h4>
    *
    * <ul>
    *   <li>The DTO must have either:

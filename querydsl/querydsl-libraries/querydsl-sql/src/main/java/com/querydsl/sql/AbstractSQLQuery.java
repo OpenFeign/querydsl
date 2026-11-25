@@ -685,7 +685,6 @@ public abstract class AbstractSQLQuery<T, Q extends AbstractSQLQuery<T, Q>>
    * Set the options to be applied to the JDBC statements of this query
    *
    * @param statementOptions options to be applied to statements
-   * @return the query itslef for method chaining
    * @deprecated prefer fluent setter {@link AbstractSQLQuery#statementOptions(StatementOptions)}
    */
   @Deprecated

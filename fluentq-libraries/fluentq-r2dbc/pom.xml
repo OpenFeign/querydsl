@@ -139,7 +139,7 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Automatic-Module-Name>fluentq.sql</Automatic-Module-Name>
+              <Automatic-Module-Name>fluentq.r2dbc</Automatic-Module-Name>
             </manifestEntries>
           </archive>
         </configuration>

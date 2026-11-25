@@ -46,7 +46,7 @@ public interface JPQLRepository<T, ID> extends Repository<T, ID> {
    * Create a new JPQLQuery instance with the given projection
    *
    * @param expr projection
-   * @param <T>
+   * @param <U> projection type
    * @return select(expr)
    */
   <U> JPQLQuery<U> select(Expression<U> expr);
@@ -63,7 +63,7 @@ public interface JPQLRepository<T, ID> extends Repository<T, ID> {
    * Create a new JPQLQuery instance with the given projection
    *
    * @param expr projection
-   * @param <T>
+   * @param <U> projection type
    * @return select(distinct expr)
    */
   <U> JPQLQuery<U> selectDistinct(Expression<U> expr);
@@ -94,7 +94,7 @@ public interface JPQLRepository<T, ID> extends Repository<T, ID> {
    * Create a new JPQLQuery instance with the given source and projection
    *
    * @param from projection and source
-   * @param <T>
+   * @param <U> projection type
    * @return select(from).from(from)
    */
   <U> JPQLQuery<U> selectFrom(EntityPath<U> from);
@@ -119,7 +119,7 @@ public interface JPQLRepository<T, ID> extends Repository<T, ID> {
    * Create a new detached JPQLQuery instance with the given projection
    *
    * @param expr projection
-   * @param <T>
+   * @param <U> projection type
    * @return select(expr)
    */
   default <U> JPQLSubQuery<U> subSelect(Expression<U> expr) {
