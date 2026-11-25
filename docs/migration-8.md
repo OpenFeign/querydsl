@@ -139,7 +139,7 @@ I want to migrate this project from Querydsl to fluentQ (version 8.0). Please sc
 1. **Maven Dependencies (pom.xml)**:
    - Change parent/dependency Group ID from `io.github.openfeign.querydsl` to `io.github.openfeign.fluentq`.
    - Rename dependency/plugin Artifact IDs starting with `querydsl-` to `fluentq-` (e.g. `querydsl-jpa` to `fluentq-jpa`, `querydsl-apt` to `fluentq-apt`).
-   - Set the version of all these dependencies/plugins to `8.0` (or `8.0-SNAPSHOT`).
+   - Set the version of all these dependencies/plugins to `8.0`.
 
 2. **Java / Kotlin / Scala Source Files**:
    - In package declarations and imports, replace all occurrences of `com.querydsl` with `fluentq`.
