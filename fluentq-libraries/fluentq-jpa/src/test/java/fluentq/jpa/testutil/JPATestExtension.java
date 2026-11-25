@@ -15,11 +15,13 @@ package fluentq.jpa.testutil;
 
 import fluentq.jpa.JPATest;
 import fluentq.jpa.Mode;
+import fluentq.jpa.domain.Domain;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -50,7 +52,11 @@ public class JPATestExtension
     if (isDerby) {
       Class.forName("org.apache.derby.jdbc.EmbeddedDriver").getDeclaredConstructor().newInstance();
     }
-    entityManagerFactory = Persistence.createEntityManagerFactory(mode);
+    Map<String, Object> persistenceUnitOverrides =
+        mode.contains("eclipselink")
+            ? Map.of()
+            : Map.of("hibernate.loaded_classes", Domain.classes);
+    entityManagerFactory = Persistence.createEntityManagerFactory(mode, persistenceUnitOverrides);
     entityManager = entityManagerFactory.createEntityManager();
     entityManager.getTransaction().begin();
   }

@@ -15,6 +15,29 @@ fluentQ for JPA is an alternative to both JPQL and Criteria queries. It
 combines the dynamic nature of Criteria queries with the expressiveness of
 JPQL — all in a fully type-safe manner.
 
+## Supported Versions
+
+| fluentQ | Jakarta Persistence | Hibernate ORM | EclipseLink | Java |
+|:--------|:--------------------|:--------------|:------------|:-----|
+| 7.x     | 3.2                 | 7.x           | 5.x         | 17   |
+| 8.x     | 4.0                 | 8.x           | 6.x         | 21   |
+
+8.x is tested against pre-release versions: Hibernate ORM 8.0.0.CR2, Jakarta
+Persistence 4.0.0-M8 and EclipseLink 6.0.0-M1.
+
+Hibernate ORM 8 no longer scans Java SE `persistence.xml` units for entities.
+List them with `<class>` entries, pass them in the `hibernate.loaded_classes`
+property, or set `packagesToScan` on `AntJPADomainExporter`.
+
+Two things change with Hibernate ORM 8 itself, independent of fluentQ:
+
+- Selecting a collection path, such as `select(cat.kittens)`, returns one
+  collection per row. Hibernate ORM 7 returned the collection elements as
+  separate rows. Join the collection and select the join alias to get the
+  elements.
+- Lock modes per alias are no longer available. See
+  [Lock Modes]({{ site.baseurl }}/tutorials/hibernate#lock-modes).
+
 ## Maven Integration
 
 Add the following dependencies to your Maven project:

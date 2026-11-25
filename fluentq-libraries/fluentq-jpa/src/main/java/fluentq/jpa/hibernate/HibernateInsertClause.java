@@ -34,14 +34,11 @@ import fluentq.sql.SQLTemplates;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
-import org.hibernate.query.Query;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -74,8 +71,6 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
   private final SessionHolder session;
 
   private final JPQLTemplates templates;
-
-  private final Map<Path<?>, LockMode> lockModes = new HashMap<>();
 
   public HibernateInsertClause(Session session, EntityPath<?> entity) {
     this(new DefaultSessionHolder(session), entity, HQLTemplates.DEFAULT);
@@ -113,13 +108,10 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
           subQuery,
           inserts);
 
-      Query query = session.createQuery(serializer.toString());
-      for (Map.Entry<Path<?>, LockMode> entry : lockModes.entrySet()) {
-        query.setLockMode(entry.getKey().toString(), entry.getValue());
-      }
+      var query = session.createQuery(serializer.toString()).asMutationQuery();
       HibernateUtil.setConstants(
           query, serializer.getConstants(), queryMixin.getMetadata().getParams());
-      return query.executeUpdate();
+      return query.execute();
     }
 
     var effectiveColumns = JpaInsertNativeHelper.effectiveColumns(inserts, columns);
@@ -396,17 +388,6 @@ public class HibernateInsertClause implements InsertClause<HibernateInsertClause
   @Override
   public HibernateInsertClause select(SubQueryExpression<?> sq) {
     subQuery = sq;
-    return this;
-  }
-
-  /**
-   * Set the lock mode for the given path.
-   *
-   * @return the current object
-   */
-  @SuppressWarnings("unchecked")
-  public HibernateInsertClause setLockMode(Path<?> path, LockMode lockMode) {
-    lockModes.put(path, lockMode);
     return this;
   }
 

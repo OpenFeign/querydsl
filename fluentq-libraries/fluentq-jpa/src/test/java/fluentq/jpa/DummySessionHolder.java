@@ -15,13 +15,13 @@ package fluentq.jpa;
 
 import fluentq.jpa.hibernate.SessionHolder;
 import org.hibernate.jdbc.ReturningWork;
+import org.hibernate.query.MutationOrSelectionQuery;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 
 public class DummySessionHolder implements SessionHolder {
 
   @Override
-  public Query<?> createQuery(String queryString) {
+  public MutationOrSelectionQuery createQuery(String queryString) {
     throw new UnsupportedOperationException();
   }
 

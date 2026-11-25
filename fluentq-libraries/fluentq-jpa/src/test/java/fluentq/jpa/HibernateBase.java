@@ -14,6 +14,7 @@
 package fluentq.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import fluentq.core.CloseableIterator;
@@ -35,6 +36,7 @@ import fluentq.jpa.hibernate.HibernateQuery;
 import fluentq.jpa.testutil.HibernateTestExtension;
 import java.io.IOException;
 import java.util.List;
+import org.hibernate.FlushMode;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
@@ -103,8 +105,32 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   }
 
   @Test
+  public void lockMode_same_mode_on_two_aliases_succeeds() {
+    var mate = new QCat("mate");
+    query()
+        .from(cat)
+        .innerJoin(cat.mate, mate)
+        .setLockMode(cat, LockMode.PESSIMISTIC_READ)
+        .setLockMode(mate, LockMode.PESSIMISTIC_READ)
+        .select(cat)
+        .fetch();
+  }
+
+  @Test
+  public void lockMode_different_modes_on_two_aliases_throws() {
+    var mate = new QCat("mate");
+    var catLocked =
+        query().from(cat).innerJoin(cat.mate, mate).setLockMode(cat, LockMode.PESSIMISTIC_WRITE);
+    assertThatThrownBy(() -> catLocked.setLockMode(mate, LockMode.PESSIMISTIC_READ))
+        .isInstanceOf(UnsupportedOperationException.class)
+        .hasMessageContaining("one lock mode per query");
+  }
+
+  @Test
   public void flushMode() {
-    query().from(cat).setFlushMode(org.hibernate.FlushMode.AUTO).select(cat).fetch();
+    for (FlushMode flushMode : FlushMode.values()) {
+      query().from(cat).setFlushMode(flushMode).select(cat).fetch();
+    }
   }
 
   @Test

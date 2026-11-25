@@ -20,6 +20,7 @@ public class AntJPADomainExporterTest {
     var outputFolder = folder.toPath();
     exporter.setTargetFolder(outputFolder.toFile().getAbsolutePath());
     exporter.setPersistenceUnitName("h2");
+    exporter.setPackagesToScan("fluentq.jpa");
     exporter.execute();
 
     var origRoot =

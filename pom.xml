@@ -89,7 +89,7 @@
     <argLine>-Xms256m -Xmx512m</argLine>
 
     <!-- default bytecode version for src/main -->
-    <main.java.version>17</main.java.version>
+    <main.java.version>21</main.java.version>
     <latest.java.version>25</latest.java.version>
 
     <git-code-format-maven-plugin.version>6.2</git-code-format-maven-plugin.version>
@@ -123,10 +123,10 @@
     <r2dbc-mssql.version>1.0.7.RELEASE</r2dbc-mssql.version>
 
     <!-- JPA deps -->
-    <hibernate.version>7.4.17.Final</hibernate.version>
+    <hibernate.version>8.0.0.CR2</hibernate.version>
     <hibernate.validator.version>9.1.6.Final</hibernate.validator.version>
-    <eclipselink.version>5.0.2</eclipselink.version>
-    <jpa.version>3.2.0</jpa.version>
+    <eclipselink.version>6.0.0-M1</eclipselink.version>
+    <jpa.version>4.0.0-M8</jpa.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 
     <assertj.version>3.27.7</assertj.version>
@@ -982,7 +982,7 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
               <!-- Run javadoc on the latest JDK so newer options injected by the plugin (the
-                   "no fonts" flag) are recognised; the default toolchain is JDK 17. -->
+                   "no fonts" flag) are recognised; the default toolchain is JDK 21. -->
               <jdkToolchain>
                 <version>${latest.java.version}</version>
               </jdkToolchain>

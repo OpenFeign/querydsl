@@ -15,13 +15,14 @@ package fluentq.jpa.codegen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import fluentq.jpa.domain.Domain;
 import jakarta.persistence.Persistence;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
-import java.util.Properties;
+import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -34,7 +35,9 @@ public class JPADomainExporterTest {
 
   @TestFactory
   public Stream<DynamicTest> generatedFilesMatchReference() throws Exception {
-    var emf = Persistence.createEntityManagerFactory("h2", new Properties());
+    var emf =
+        Persistence.createEntityManagerFactory(
+            "h2", Map.of("hibernate.loaded_classes", Domain.classes));
     var outputFolder = Files.createTempDirectory("jpa-exporter-test");
     var exporter = new JPADomainExporter(outputFolder.toFile(), emf.getMetamodel());
     exporter.execute();

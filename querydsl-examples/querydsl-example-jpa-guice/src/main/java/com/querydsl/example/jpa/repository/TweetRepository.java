@@ -2,8 +2,8 @@ package com.querydsl.example.jpa.repository;
 
 import static com.querydsl.example.jpa.model.QTweet.tweet;
 
-import com.google.inject.persist.Transactional;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.example.jpa.guice.Transactional;
 import com.querydsl.example.jpa.model.Tweet;
 import java.util.List;
 

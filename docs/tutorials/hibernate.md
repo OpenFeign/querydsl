@@ -120,6 +120,15 @@ List<Cat> cats = queryFactory.selectFrom(cat)
     .fetch();
 ```
 
+Hibernate ORM 8 has no lock modes per alias, so fluentQ applies the lock mode
+to the whole query:
+
+- If all aliases with a lock mode use the same mode, that mode is set on the
+  query. It can lock rows of other aliases in the query as well.
+- If aliases use different lock modes, `setLockMode` throws
+  `UnsupportedOperationException`. This includes setting a different mode on
+  the same alias twice.
+
 ### Flush Mode
 
 ```java
@@ -127,6 +136,10 @@ List<Cat> cats = queryFactory.selectFrom(cat)
     .setFlushMode(FlushMode.AUTO)
     .fetch();
 ```
+
+`FlushMode.ALWAYS` flushes before the query,
+`FlushMode.COMMIT` and `FlushMode.MANUAL` do not, and `FlushMode.AUTO` uses the
+session default.
 
 ### Fetch Size and Timeout
 

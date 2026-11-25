@@ -21,7 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.transform.ResultTransformer;
+import org.hibernate.query.SelectionQuery;
+import org.hibernate.query.TupleTransformer;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -51,7 +52,7 @@ public class HibernateHandler implements QueryHandler {
   @Override
   public <T> CloseableIterator<T> iterate(Query query, FactoryExpression<?> projection) {
     try {
-      org.hibernate.query.Query<?> unwrappedQuery = query.unwrap(org.hibernate.query.Query.class);
+      SelectionQuery<?> unwrappedQuery = query.unwrap(SelectionQuery.class);
       CloseableIterator<T> iterator =
           new ScrollableResultsIterator<>((List<T>) unwrappedQuery.getResultList());
       if (projection != null) {
@@ -84,8 +85,8 @@ public class HibernateHandler implements QueryHandler {
   @Override
   public boolean transform(Query query, FactoryExpression<?> projection) {
     try {
-      ResultTransformer transformer = new FactoryExpressionTransformer(projection);
-      query.unwrap(org.hibernate.query.Query.class).setResultTransformer(transformer);
+      TupleTransformer<?> transformer = new FactoryExpressionTransformer(projection);
+      query.unwrap(SelectionQuery.class).setTupleTransformer(transformer);
       return true;
     } catch (PersistenceException e) {
       return false;

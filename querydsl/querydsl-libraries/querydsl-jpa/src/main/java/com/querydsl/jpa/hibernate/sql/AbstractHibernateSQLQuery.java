@@ -122,7 +122,7 @@ public abstract class AbstractHibernateSQLQuery<T, Q extends AbstractHibernateSQ
 
       // set result transformer, if projection is a FactoryExpression instance
       if (projection instanceof FactoryExpression) {
-        query.setResultTransformer(
+        query.setTupleTransformer(
             new FactoryExpressionTransformer((FactoryExpression<?>) projection));
       }
     }

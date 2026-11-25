@@ -21,6 +21,7 @@ import jakarta.persistence.Parameter;
 import jakarta.persistence.Query;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * JPAUtil provides static utility methods for JPA
@@ -62,8 +63,7 @@ public final class JPAUtil {
       }
 
       if (hasParameters) {
-        Parameter parameter = query.getParameter(i + 1);
-        var parameterType = parameter != null ? parameter.getParameterType() : null;
+        var parameterType = getParameterTypeOrNull(query.getParameter(i + 1));
         if (parameterType != null && !parameterType.isInstance(val)) {
           var targetType = primitiveToWrapper(parameterType);
           if (val instanceof Number number && Number.class.isAssignableFrom(targetType)) {
@@ -73,6 +73,18 @@ public final class JPAUtil {
       }
 
       query.setParameter(i + 1, val);
+    }
+  }
+
+  @Nullable
+  private static Class<?> getParameterTypeOrNull(@Nullable Parameter<?> parameter) {
+    if (parameter == null) {
+      return null;
+    }
+    try {
+      return parameter.getParameterType();
+    } catch (IllegalStateException e) {
+      return null;
     }
   }
 }
