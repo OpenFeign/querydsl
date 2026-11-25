@@ -15,6 +15,101 @@ import java.util.concurrent.atomic.AtomicReference
 
 @OptIn(ExperimentalCompilerApi::class)
 class KspProcessorIntegrationTest {
+    @Test
+    fun qProperty_preservesJvmConstructor() {
+        com.querydsl.ksp.codegen.QProperty::class.java.getConstructor(
+            String::class.java, com.querydsl.ksp.codegen.QPropertyType::class.java)
+    }
+
+    @Test
+    fun valueClassProjection_primitiveAliasRetainsDefault() {
+        val source = SourceFile.kotlin("AliasDto.kt", """
+            package test
+            import com.querydsl.core.annotations.QueryProjection
+            import com.querydsl.core.types.dsl.Expressions
+            @JvmInline value class UserId(val value: String)
+            typealias Age = Int
+            class AliasDto @QueryProjection constructor(val id: UserId, val age: Age) {
+                @QueryProjection constructor(age: Age) : this(UserId("default"), age)
+            }
+            fun create(): Int = QAliasDto(Expressions.constant(1)).newInstance(null)!!.age
+        """.trimIndent())
+        val (result, _) = compile(source)
+        assertThat(result.exitCode).withFailMessage(result.messages).isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.classLoader.loadClass("test.AliasDtoKt").getMethod("create").invoke(null)).isEqualTo(0)
+    }
+
+    @Test
+    fun valueClassProjection_preservesConstructorExpressionType() {
+        val source = SourceFile.kotlin("MixedDto.kt", """
+            package test
+            import com.querydsl.core.annotations.QueryProjection
+            import com.querydsl.core.types.ConstructorExpression
+            import com.querydsl.core.types.dsl.Expressions
+            @JvmInline value class UserId(val value: String)
+            class MixedDto @QueryProjection constructor(val id: UserId, val name: String) {
+                @QueryProjection constructor(name: String) : this(UserId("default"), name)
+            }
+            fun projection(): ConstructorExpression<MixedDto> = QMixedDto(Expressions.constant("Alice"))
+        """.trimIndent())
+        val (result, _) = compile(source)
+        assertThat(result.exitCode).withFailMessage(result.messages).isEqualTo(KotlinCompilation.ExitCode.OK)
+    }
+
+
+
+
+
+    @Test
+    fun valueClassProjection_survivesSerializationAndRejectsDefaultMasks() {
+        val source = SourceFile.kotlin(
+            "SerializedDto.kt",
+            """
+            package test
+            import com.querydsl.core.annotations.QueryProjection
+            import com.querydsl.core.types.ExpressionException
+            import com.querydsl.core.types.Projections
+            import com.querydsl.core.types.dsl.Expressions
+            import java.io.ByteArrayInputStream
+            import java.io.ByteArrayOutputStream
+            import java.io.ObjectInputStream
+            import java.io.ObjectOutputStream
+
+            @JvmInline value class UserId(val value: String)
+            data class SerializedDto @QueryProjection constructor(val id: UserId, val count: Int)
+            class DefaultDto(val name: String = "default")
+
+            fun roundTrip(): List<Any> {
+                val id = Expressions.constant("user-1")
+                val count = Expressions.constant(1)
+                val projection = QSerializedDto(id, count)
+                val bytes = ByteArrayOutputStream()
+                ObjectOutputStream(bytes).use { it.writeObject(projection) }
+                val restored = ObjectInputStream(ByteArrayInputStream(bytes.toByteArray())).use {
+                    it.readObject() as QSerializedDto
+                }
+                check(restored == projection)
+                check(restored.args == projection.args)
+                val values = arrayOf<Any?>("user-1", null)
+                val dto = restored.newInstance(*values)!!
+                check(values.contentEquals(arrayOf<Any?>("user-1", null)))
+                val direct = Projections.constructor(SerializedDto::class.java, id, count)
+                    .newInstance("direct", 2)!!
+                val failure = runCatching {
+                    Projections.constructor(DefaultDto::class.java, id, count)
+                }.exceptionOrNull()
+                check(failure is ExpressionException)
+                return listOf(dto.id.value, dto.count, direct.id.value, direct.count)
+            }
+            """.trimIndent()
+        )
+        val (result, _) = compile(source)
+        assertThat(result.exitCode)
+            .withFailMessage(result.messages)
+            .isEqualTo(KotlinCompilation.ExitCode.OK)
+        assertThat(result.classLoader.loadClass("test.SerializedDtoKt").getMethod("roundTrip").invoke(null))
+            .isEqualTo(listOf("user-1", 0, "direct", 2))
+    }
 
     @Test
     fun valueClassProjection_createsDtoAtRuntime() {
@@ -31,7 +126,7 @@ class KspProcessorIntegrationTest {
 
             fun createDto(): List<String> {
                 val dto = QUserDto(Expressions.constant("user-1"), Expressions.constant("Alice"))
-                    .newInstance("user-1", "Alice")
+                    .newInstance("user-1", "Alice")!!
                 return listOf(dto.id.value, dto.name)
             }
             """.trimIndent()
@@ -81,12 +176,12 @@ class KspProcessorIntegrationTest {
                 val path = Expressions.path(UserDto::class.java, "dto")
                 check((projection.`as`(path) as Operation<*>).getArg(1) == path)
                 check(projection.skipNulls().newInstance(null, null, null) == null)
-                val full = projection.newInstance("id", "name", "other")
+                val full = projection.newInstance("id", "name", "other")!!
                 val ordinaryProjection = QUserDto(text, Expressions.constant(1))
                 check(runCatching { ordinaryProjection.newInstance("invalid", 1) }.exceptionOrNull() is ExpressionException)
-                val ordinary = ordinaryProjection.newInstance("ordinary", null)
+                val ordinary = ordinaryProjection.newInstance("ordinary", null)!!
                 val nullable = QUserDto(text, text, Expressions.constant(1), text)
-                    .newInstance("nullable", "name", null, null)
+                    .newInstance("nullable", "name", null, null)!!
                 return listOf(full.id.value, full.name, full.other.value, ordinary.id.value,
                     ordinary.name, ordinary.age, nullable.id.value, nullable.age, nullable.note)
             }

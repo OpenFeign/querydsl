@@ -18,6 +18,7 @@ import static com.querydsl.core.util.ArrayUtils.isEmpty;
 import com.querydsl.core.types.ExpressionException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -108,6 +109,20 @@ public final class ConstructorUtils {
         return NO_ARGS;
       }
     }
+    var argumentCount = givenTypes == null ? 0 : givenTypes.length;
+    next_synthetic_constructor:
+    for (Constructor<?> constructor : type.getConstructors()) {
+      var parameters = constructor.getParameterTypes();
+      if (!isKotlinSyntheticConstructor(constructor) || argumentCount != parameters.length - 1) {
+        continue;
+      }
+      for (var i = 0; i < argumentCount; i++) {
+        if (!compatible(parameters[i], givenTypes[i])) {
+          continue next_synthetic_constructor;
+        }
+      }
+      return parameters;
+    }
     throw new ExpressionException(
         "No constructor found for "
             + type.toString()
@@ -123,6 +138,7 @@ public final class ConstructorUtils {
    */
   public static Iterable<Function<Object[], Object[]>> getTransformers(Constructor<?> constructor) {
     return Stream.of(
+            new KotlinDefaultConstructorMarkerTransformer(constructor),
             new PrimitiveAwareVarArgsTransformer(constructor),
             new PrimitiveTransformer(constructor),
             new VarArgsTransformer(constructor))
@@ -135,6 +151,28 @@ public final class ConstructorUtils {
       clazz = clazz.getComponentType();
     }
     return PrimitiveUtils.wrap(clazz);
+  }
+
+  private static boolean isKotlinSyntheticConstructor(Constructor<?> constructor) {
+    var parameters = constructor.getParameterTypes();
+    if (!constructor.isSynthetic()
+        || constructor.isVarArgs()
+        || parameters.length == 0
+        || !parameters[parameters.length - 1]
+            .getName()
+            .equals("kotlin.jvm.internal.DefaultConstructorMarker")) {
+      return false;
+    }
+    try {
+      // Kotlin exposes lowered value-class constructors through a synthetic marker overload.
+      var underlying =
+          constructor
+              .getDeclaringClass()
+              .getDeclaredConstructor(Arrays.copyOf(parameters, parameters.length - 1));
+      return Modifier.isPrivate(underlying.getModifiers()) && !underlying.isSynthetic();
+    } catch (NoSuchMethodException e) {
+      return false;
+    }
   }
 
   private static boolean compatible(Class<?> parameter, Class<?> argument) {
@@ -156,6 +194,26 @@ public final class ConstructorUtils {
     }
 
     public abstract boolean isApplicable();
+  }
+
+  private static class KotlinDefaultConstructorMarkerTransformer extends ArgumentTransformer {
+
+    KotlinDefaultConstructorMarkerTransformer(Constructor<?> constructor) {
+      super(constructor);
+    }
+
+    @Override
+    public boolean isApplicable() {
+      return constructor != null && isKotlinSyntheticConstructor(constructor);
+    }
+
+    @Override
+    public Object[] apply(Object[] args) {
+      if (args != null && args.length == paramTypes.length - 1) {
+        return Arrays.copyOf(args, paramTypes.length);
+      }
+      return args;
+    }
   }
 
   private static class VarArgsTransformer extends ArgumentTransformer {
