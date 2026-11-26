@@ -894,6 +894,17 @@ public abstract class AbstractJPATest {
     assertThat(query().from(cat).select(cat.mate.name).fetchCount()).isEqualTo(4);
   }
 
+  // EclipseLink selects a null for the cats without a mate instead of leaving them out
+  @Test
+  @NoEclipseLink
+  public void fetchCount_entity_valued_simple_path() {
+    var mate = Expressions.path(Cat.class, cat, "mate");
+    assertThat(query().from(cat).select(mate).fetch()).hasSize(4);
+    assertThat(query().from(cat).select(mate).fetchCount()).isEqualTo(4);
+    assertThat(query().from(cat).select(mate).distinct().fetchCount()).isEqualTo(4);
+    assertThat(query().from(cat).groupBy(mate).select(mate).fetchCount()).isEqualTo(4);
+  }
+
   @Test
   public void fetchCount_distinct_tuple() {
     // All cats share the same breed, so the distinct rows differ only by color.

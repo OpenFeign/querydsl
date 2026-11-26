@@ -352,13 +352,9 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
   }
 
   private void serializeCount(boolean distinct, Expression<?> counted, Expression<?> root) {
-    // count skips nulls, so the rows of a property of the root or of a join alias are counted
-    // through the root, and its distinct values get one more for the null value
-    var property =
-        counted instanceof Path<?> path
-            && !(path instanceof BeanPath<?>)
-            && path.getMetadata().getParent() != null
-            && path.getMetadata().getParent().getMetadata().isRoot();
+    // count skips nulls, so the rows of a scalar property of the root or of a join alias are
+    // counted through the root, and its distinct values get one more for the null value
+    var property = isScalarPropertyOfAlias(counted);
     if (property && !distinct) {
       append(SELECT_COUNT).handle(root).append(")\n");
       return;
@@ -369,6 +365,24 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
       append(") then 1 else 0 end");
     }
     append("\n");
+  }
+
+  /**
+   * Check if the expression is a scalar property of the query root or of a join alias
+   *
+   * <p>Entity, collection and map valued paths are not scalar, they join their target implicitly.
+   */
+  private static boolean isScalarPropertyOfAlias(Expression<?> expression) {
+    if (!(expression instanceof Path<?> path) || path instanceof BeanPath<?>) {
+      return false;
+    }
+    var parent = path.getMetadata().getParent();
+    var type = path.getType();
+    return parent != null
+        && parent.getMetadata().isRoot()
+        && !type.isAnnotationPresent(Entity.class)
+        && !Collection.class.isAssignableFrom(type)
+        && !Map.class.isAssignableFrom(type);
   }
 
   private void serializeSources(boolean forCountRow, List<JoinExpression> joins) {

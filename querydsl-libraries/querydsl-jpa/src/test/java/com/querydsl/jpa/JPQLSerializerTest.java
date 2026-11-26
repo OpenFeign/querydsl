@@ -165,6 +165,42 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void count_entity_valued_simple_path() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    var mate = Expressions.path(Cat.class, cat, "mate");
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.setProjection(mate);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer).hasToString("select count(cat.mate)\nfrom Cat cat");
+  }
+
+  @Test
+  public void count_distinct_entity_valued_simple_path() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    var mate = Expressions.path(Cat.class, cat, "mate");
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.setProjection(mate);
+    md.setDistinct(true);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer).hasToString("select count(distinct cat.mate)\nfrom Cat cat");
+  }
+
+  @Test
+  public void count_collection_valued_path() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.setProjection(cat.kittens);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer).hasToString("select count(cat.kittens)\nfrom Cat cat");
+  }
+
+  @Test
   public void fromWithCustomEntityName() {
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     EntityPath<Location> entityPath = new EntityPathBase<>(Location.class, "entity");
