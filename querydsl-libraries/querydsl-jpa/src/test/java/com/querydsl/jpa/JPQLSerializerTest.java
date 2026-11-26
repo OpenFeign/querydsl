@@ -15,6 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
@@ -22,11 +23,13 @@ import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.domain.*;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 
 public class JPQLSerializerTest {
@@ -364,5 +367,47 @@ public class JPQLSerializerTest {
     assertThat(serializer.toString()).isEqualTo("animal.color in ?1");
     Object constant = serializer.getConstants().get(0);
     assertThat(constant.toString()).isEqualTo("[BLACK, TABBY]");
+  }
+
+  @Test
+  public void unsafe_path_names_rejected() {
+    var parent = Expressions.path(Object.class, "test");
+    for (var name :
+        List.of(
+            "name/**/INTERSECT/**/SELECT/**/t/**/FROM/**/Test/**/t",
+            "name)>(1",
+            "name,secret",
+            "length(secret)",
+            "name--comment",
+            "name\u00a0x",
+            "name\u200b",
+            "",
+            "1name")) {
+      for (Expression<?> path :
+          List.of(
+              Expressions.stringPath(parent, name),
+              ExpressionUtils.path(Object.class, parent, name),
+              Expressions.stringPath(name))) {
+        assertThatIllegalStateException()
+            .as(name)
+            .isThrownBy(() -> serialize(JPQLTemplates.DEFAULT, path))
+            .withMessageContaining("CVE-2024-49203");
+      }
+    }
+  }
+
+  @Test
+  public void safe_path_names_serialized() {
+    var parent = Expressions.path(Object.class, "test");
+    for (var name : List.of("name", "address.street", "$y", "nombre\u00f1")) {
+      assertThat(serialize(JPQLTemplates.DEFAULT, Expressions.stringPath(parent, name)))
+          .isEqualTo("test." + name);
+    }
+  }
+
+  private static String serialize(JPQLTemplates templates, Expression<?> expression) {
+    var serializer = new JPQLSerializer(templates);
+    serializer.handle(expression);
+    return serializer.toString();
   }
 }
