@@ -88,6 +88,21 @@ public class SQLTemplatesTest {
   }
 
   @Test
+  public void quoteEscapesEmbeddedQuotes() {
+    assertThat(SQLTemplates.DEFAULT.quoteIdentifier("TITLE\"='x'OR(1=1)OR\"TITLE"))
+        .isEqualTo("\"TITLE\"\"='x'OR(1=1)OR\"\"TITLE\"");
+    assertThat(new H2Templates(true).quoteIdentifier("a\"b")).isEqualTo("\"a\"\"b\"");
+  }
+
+  @Test
+  public void quoteEscapesEmbeddedBackticks() {
+    var templates = new MySQLTemplates();
+    assertThat(templates.quoteIdentifier("a`b")).isEqualTo("`a``b`");
+    assertThat(templates.quoteIdentifier("a[b")).isEqualTo("`a[b`");
+    assertThat(templates.quoteIdentifier("^ab")).isEqualTo("`^ab`");
+  }
+
+  @Test
   public void quoting_performance() {
     // 385 -> 63
     SQLTemplates templates = new H2Templates();
