@@ -77,8 +77,8 @@ public class SQLTemplates extends Templates {
               Ops.STARTS_WITH_IC,
               Ops.STRING_CONTAINS,
               Ops.STRING_CONTAINS_IC));
-  private static final Pattern PATTERN = Pattern.compile(".*[^A-z0-9_].*");
-  private static final Pattern REGEX = Pattern.compile("^[^A-z_].*");
+  private static final Pattern PATTERN = Pattern.compile(".*[^A-Za-z0-9_].*");
+  private static final Pattern REGEX = Pattern.compile("^[^A-Za-z_].*");
 
   private final Set<String> reservedWords;
 
@@ -846,7 +846,7 @@ public class SQLTemplates extends Templates {
 
   public final String quoteIdentifier(String identifier, boolean precededByDot) {
     if (useQuotes || requiresQuotes(identifier, precededByDot)) {
-      return quoteStr + identifier + quoteStr;
+      return quoteStr + identifier.replace(quoteStr, quoteStr + quoteStr) + quoteStr;
     } else {
       return identifier;
     }
