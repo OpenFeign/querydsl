@@ -14,6 +14,8 @@
 package com.querydsl.core.types.dsl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -24,6 +26,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.util.BeanMap;
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 
@@ -153,5 +156,41 @@ public class PathBuilderTest {
             IllegalStateException.class,
             () -> new OrderSpecifier(Order.ASC, pathBuilder.get(orderBy)));
     assertThat(error).hasMessageContaining("CVE-2024-49203");
+  }
+
+  @Test
+  public void unsafe_property_names_are_rejected() {
+    var pathBuilder = new PathBuilder<Cat>(Cat.class, "entity");
+    var payloads =
+        List.of(
+            "name,(select/**/count(*)/**/from/**/Secret/**/s)",
+            "name)>(1",
+            "name,secret",
+            "length(secret)",
+            "name--comment",
+            "name\u00A0desc",
+            "name\u3000desc",
+            "name\u2028desc",
+            "name\u200Bdesc",
+            "",
+            ".name",
+            "name.",
+            "address..street",
+            "1name");
+    for (var payload : payloads) {
+      assertThatIllegalStateException()
+          .as(payload)
+          .isThrownBy(() -> pathBuilder.get(payload))
+          .withMessageContaining("CVE-2024-49203");
+    }
+  }
+
+  @Test
+  public void safe_property_names_are_accepted() {
+    var pathBuilder = new PathBuilder<Cat>(Cat.class, "entity");
+    for (var property :
+        List.of("name", "firstName", "_x", "$y", "a1", "address.street", "nombreñ")) {
+      assertThatNoException().as(property).isThrownBy(() -> pathBuilder.get(property));
+    }
   }
 }
