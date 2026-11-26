@@ -9,6 +9,7 @@
   </parent>
 
   <artifactId>querydsl-jpa</artifactId>
+  <version>6.12.3</version>
   <name>Querydsl - JPA support</name>
   <description>JPA support for Querydsl</description>
 
@@ -44,19 +45,19 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
-      <version>${project.version}</version>
+      <version>6.12.2</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-apt</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-sql</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -154,7 +155,7 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
-      <version>${project.version}</version>
+      <version>6.12.2</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -304,7 +305,7 @@
       <plugin>
         <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
-        <version>${project.version}</version>
+        <version>${project.parent.version}</version>
         <configuration>
           <jdbcDriver>org.apache.derby.jdbc.EmbeddedDriver</jdbcDriver>
           <jdbcUrl>jdbc:derby:${project.build.directory}/derbydb;create=true</jdbcUrl>
