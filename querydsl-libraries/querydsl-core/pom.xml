@@ -9,6 +9,7 @@
   </parent>
 
   <artifactId>querydsl-core</artifactId>
+  <version>6.12.2</version>
   <name>Querydsl - Core module</name>
   <description>core module for querydsl</description>
 
