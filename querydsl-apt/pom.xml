@@ -11,6 +11,7 @@
 
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-apt</artifactId>
+  <version>5.1.2</version>
   <packaging>jar</packaging>
   <name>Querydsl - APT support</name>
   <description>APT based Source code generation for Querydsl</description>
@@ -26,13 +27,22 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-codegen</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <exclusions>
         <exclusion>
           <groupId>cglib</groupId>
           <artifactId>cglib</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>io.github.openfeign.querydsl</groupId>
+          <artifactId>querydsl-core</artifactId>
+        </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign.querydsl</groupId>
+      <artifactId>querydsl-core</artifactId>
+      <version>5.1.2</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains</groupId>
@@ -107,7 +117,7 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
-      <version>${project.version}</version>
+      <version>5.1.2</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -133,7 +143,7 @@
       <plugin>
         <groupId>io.github.openfeign.querydsl</groupId>
         <artifactId>querydsl-maven-plugin</artifactId>
-        <version>${project.version}</version>
+        <version>${project.parent.version}</version>
         <configuration>
           <testClasspath>true</testClasspath>
           <targetFolder>target/genericExporter</targetFolder>

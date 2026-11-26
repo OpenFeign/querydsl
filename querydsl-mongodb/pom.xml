@@ -11,6 +11,7 @@
 
   <groupId>io.github.openfeign.querydsl</groupId>
   <artifactId>querydsl-mongodb</artifactId>
+  <version>5.1.2</version>
   <packaging>jar</packaging>
   <name>Querydsl - Mongodb support</name>
   <description>Mongodb support for Querydsl</description>
@@ -58,12 +59,12 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
-      <version>${project.version}</version>
+      <version>5.1.2</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-apt</artifactId>
-      <version>${project.version}</version>
+      <version>5.1.2</version>
       <scope>provided</scope>
     </dependency>
 
@@ -71,7 +72,7 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
-      <version>${project.version}</version>
+      <version>5.1.2</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
