@@ -19,7 +19,6 @@ import com.querydsl.core.util.ReflectionUtils;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /** {@code PathBuilderValidator} validates {@link PathBuilder} properties at creation time */
 @Deprecated
@@ -38,14 +37,36 @@ public interface PathBuilderValidator extends Serializable {
   PathBuilderValidator DEFAULT =
       new PathBuilderValidator() {
 
-        private Pattern SPACES = Pattern.compile("\\s");
-
         @Override
         public Class<?> validate(Class<?> parent, String property, Class<?> propertyType) {
-          if (SPACES.matcher(property).find()) {
+          if (!isSafePropertyPath(property)) {
             throw new IllegalStateException("Unsafe due to CVE-2024-49203");
           }
           return propertyType;
+        }
+
+        private boolean isSafePropertyPath(String property) {
+          if (property == null || property.isEmpty()) {
+            return false;
+          }
+          var segmentStart = true;
+          for (var i = 0; i < property.length(); i++) {
+            var c = property.charAt(i);
+            if (c == '.') {
+              if (segmentStart) {
+                return false;
+              }
+              segmentStart = true;
+            } else if (segmentStart) {
+              if (!Character.isJavaIdentifierStart(c)) {
+                return false;
+              }
+              segmentStart = false;
+            } else if (!Character.isJavaIdentifierPart(c) || Character.isIdentifierIgnorable(c)) {
+              return false;
+            }
+          }
+          return !segmentStart;
         }
       };
 

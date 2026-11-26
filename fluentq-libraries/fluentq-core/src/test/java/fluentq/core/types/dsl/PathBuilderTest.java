@@ -26,6 +26,8 @@ import java.sql.Time;
 import java.util.Date;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class PathBuilderTest {
 
@@ -154,5 +156,38 @@ class PathBuilderTest {
             .isThrownBy(() -> new OrderSpecifier(Order.ASC, pathBuilder.get(orderBy)))
             .actual();
     assertThat(error).hasMessageContaining("CVE-2024-49203");
+  }
+
+  @ParameterizedTest
+  @ValueSource(
+      strings = {
+        "name,(select/**/count(*)/**/from/**/Secret/**/s)",
+        "name)>(1",
+        "name,secret",
+        "length(secret)",
+        "name--comment",
+        "name\u00A0or\u00A01=1",
+        "name\u3000or\u30001=1",
+        "name\u2028or\u20281=1",
+        "na\u200Bme",
+        "\u200Bname",
+        "",
+        ".name",
+        "name.",
+        "address..street",
+        "1name"
+      })
+  void unsafe_property_names_rejected(String property) {
+    var pathBuilder = new PathBuilder<Cat>(Cat.class, "entity");
+    assertThatExceptionOfType(IllegalStateException.class)
+        .isThrownBy(() -> pathBuilder.get(property))
+        .withMessageContaining("CVE-2024-49203");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"name", "firstName", "_x", "$y", "a1", "address.street", "nombre\u00F1"})
+  void safe_property_names_accepted(String property) {
+    var pathBuilder = new PathBuilder<Cat>(Cat.class, "entity");
+    assertThat(pathBuilder.get(property).getMetadata().getName()).isEqualTo(property);
   }
 }
