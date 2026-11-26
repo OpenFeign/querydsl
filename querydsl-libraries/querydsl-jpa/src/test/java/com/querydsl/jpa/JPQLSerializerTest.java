@@ -154,6 +154,17 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void count_nested_property() {
+    var cat = QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.setProjection(cat.mate.name);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer).hasToString("select count(cat.mate.name)\nfrom Cat cat");
+  }
+
+  @Test
   public void fromWithCustomEntityName() {
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     EntityPath<Location> entityPath = new EntityPathBase<>(Location.class, "entity");

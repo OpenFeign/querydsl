@@ -85,11 +85,12 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
    *     count queries in JPQL. Historically QueryDSL attempts at producing a modified query to
    *     compute the number of results instead.
    *     <p>However, this approach only works for simple queries. Specifically queries with multiple
-   *     group by clauses, distinct queries with multiple select expressions and queries with a
-   *     having clause turn out to be problematic. This is because {@code COUNT(DISTINCT a, b, c)},
-   *     while valid SQL in most dialects, is not valid JPQL. Furthermore, a having clause may refer
-   *     select elements or aggregate functions and therefore cannot be emulated by moving the
-   *     predicate to the where clause instead.
+   *     group by clauses, distinct queries with a {@link FactoryExpression} projection such as a
+   *     tuple or a constructor projection, and queries with a having clause turn out to be
+   *     problematic. This is because {@code COUNT(DISTINCT a, b, c)}, while valid SQL in most
+   *     dialects, is not valid JPQL. Furthermore, a having clause may refer select elements or
+   *     aggregate functions and therefore cannot be emulated by moving the predicate to the where
+   *     clause instead.
    *     <p>In order to support {@code fetchCount} for these queries, we generate the count in
    *     memory instead. This means that the method simply falls back to returning the size of
    *     {@link #fetch()}. For large result sets this may come at a severe performance penalty.
@@ -117,7 +118,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
       }
 
       var query = createQuery(null, true);
-      return (Long) query.getSingleResult();
+      return ((Number) query.getSingleResult()).longValue();
     } finally {
       reset();
     }
@@ -170,13 +171,6 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
     }
 
     return query;
-  }
-
-  private boolean isCountedInMemory() {
-    var metadata = getMetadata();
-    return metadata.getGroupBy().size() > 1
-        || metadata.getHaving() != null
-        || (metadata.isDistinct() && metadata.getProjection() instanceof FactoryExpression);
   }
 
   /**
@@ -290,11 +284,12 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
    *     to express count queries in JPQL. Historically QueryDSL attempts at producing a modified
    *     query to compute the number of results instead.
    *     <p>However, this approach only works for simple queries. Specifically queries with multiple
-   *     group by clauses, distinct queries with multiple select expressions and queries with a
-   *     having clause turn out to be problematic. This is because {@code COUNT(DISTINCT a, b, c)},
-   *     while valid SQL in most dialects, is not valid JPQL. Furthermore, a having clause may refer
-   *     select elements or aggregate functions and therefore cannot be emulated by moving the
-   *     predicate to the where clause instead.
+   *     group by clauses, distinct queries with a {@link FactoryExpression} projection such as a
+   *     tuple or a constructor projection, and queries with a having clause turn out to be
+   *     problematic. This is because {@code COUNT(DISTINCT a, b, c)}, while valid SQL in most
+   *     dialects, is not valid JPQL. Furthermore, a having clause may refer select elements or
+   *     aggregate functions and therefore cannot be emulated by moving the predicate to the where
+   *     clause instead.
    *     <p>In order to support {@code fetchResults} for these queries, we generate the count in
    *     memory instead. This means that the method simply falls back to returning the size of
    *     {@link #fetch()}. For large result sets this may come at a severe performance penalty.
@@ -335,7 +330,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
       }
 
       var countQuery = createQuery(null, true);
-      long total = (Long) countQuery.getSingleResult();
+      long total = ((Number) countQuery.getSingleResult()).longValue();
       if (total > 0) {
         var query = createQuery(modifiers, false);
         @SuppressWarnings("unchecked")

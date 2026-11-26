@@ -85,14 +85,29 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
     this.session = session;
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * <p>Queries with multiple group by elements, a having clause or a distinct {@link
+   * FactoryExpression} projection are counted in memory through the size of {@link #fetch()}.
+   */
   @Override
   public long fetchCount() {
     var modifiers = getMetadata().getModifiers();
     try {
+      if (isCountedInMemory()) {
+        logger.warning(
+            """
+            Fetchable#fetchCount() was computed in memory! See the Javadoc for\
+             AbstractHibernateQuery#fetchCount for more details.\
+            """);
+        return createQuery(null, false).list().size();
+      }
+
       var query = createQuery(modifiers, true);
-      var rv = (Long) query.uniqueResult();
+      var rv = (Number) query.uniqueResult();
       if (rv != null) {
-        return rv;
+        return rv.longValue();
       } else {
         throw new QueryException("Query returned null");
       }
@@ -226,14 +241,39 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
     }
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * <p>Queries with multiple group by elements, a having clause or a distinct {@link
+   * FactoryExpression} projection are counted in memory through the size of {@link #fetch()}.
+   */
   @Override
   public QueryResults<T> fetchResults() {
     try {
+      var modifiers = getMetadata().getModifiers();
+      if (isCountedInMemory()) {
+        logger.warning(
+            """
+            Fetchable#fetchResults() was computed in memory! See the Javadoc for\
+             AbstractHibernateQuery#fetchResults for more details.\
+            """);
+        @SuppressWarnings("unchecked")
+        List<T> resultList = createQuery(null, false).list();
+        var offset = modifiers.getOffsetAsInteger() == null ? 0 : modifiers.getOffsetAsInteger();
+        var limit =
+            modifiers.getLimitAsInteger() == null
+                ? resultList.size()
+                : modifiers.getLimitAsInteger();
+        return new QueryResults<>(
+            resultList.subList(offset, Math.min(resultList.size(), offset + limit)),
+            modifiers,
+            resultList.size());
+      }
+
       var countQuery = createQuery(null, true);
-      long total = (Long) countQuery.uniqueResult();
+      long total = ((Number) countQuery.uniqueResult()).longValue();
 
       if (total > 0) {
-        var modifiers = getMetadata().getModifiers();
         var query = createQuery(modifiers, false);
         @SuppressWarnings("unchecked")
         List<T> list = query.list();

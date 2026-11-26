@@ -104,14 +104,6 @@ public class JPABase extends AbstractJPATest implements JPATest {
   }
 
   @Test
-  public void fetchCount_distinct_tuple() {
-    // All cats share the same breed, so the distinct rows differ only by color.
-    assertThat(query().from(cat).select(cat.color, cat.breed).distinct().fetchCount()).isEqualTo(2);
-    assertThat(query().from(cat).select(cat.color, cat.breed).distinct().fetchResults().getTotal())
-        .isEqualTo(2);
-  }
-
-  @Test
   @Disabled
   public void delete() {
     delete(cat).execute();

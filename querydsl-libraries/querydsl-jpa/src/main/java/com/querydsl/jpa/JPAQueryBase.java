@@ -18,6 +18,7 @@ import com.querydsl.core.support.FetchableSubQueryBase;
 import com.querydsl.core.support.QueryBase;
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.MapExpression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
@@ -72,6 +73,19 @@ public abstract class JPAQueryBase<T, Q extends JPAQueryBase<T, Q>>
   }
 
   protected abstract void reset();
+
+  /**
+   * Check if the count of this query has to be computed in memory
+   *
+   * @return true for multiple group by elements, a having clause or a distinct {@link
+   *     FactoryExpression} projection
+   */
+  protected boolean isCountedInMemory() {
+    var metadata = getMetadata();
+    return metadata.getGroupBy().size() > 1
+        || metadata.getHaving() != null
+        || (metadata.isDistinct() && metadata.getProjection() instanceof FactoryExpression);
+  }
 
   @Override
   public Q fetchJoin() {

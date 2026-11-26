@@ -888,6 +888,21 @@ public abstract class AbstractJPATest {
   }
 
   @Test
+  public void fetchCount_nested_property_projection() {
+    // cat.mate.name joins the mate implicitly, so the cats without a mate are not counted
+    assertThat(query().from(cat).select(cat.mate.name).fetch()).hasSize(4);
+    assertThat(query().from(cat).select(cat.mate.name).fetchCount()).isEqualTo(4);
+  }
+
+  @Test
+  public void fetchCount_distinct_tuple() {
+    // All cats share the same breed, so the distinct rows differ only by color.
+    assertThat(query().from(cat).select(cat.color, cat.breed).distinct().fetchCount()).isEqualTo(2);
+    assertThat(query().from(cat).select(cat.color, cat.breed).distinct().fetchResults().getTotal())
+        .isEqualTo(2);
+  }
+
+  @Test
   public void fetchCount_groupBy_nullable_property() {
     assertThat(query().from(cat).groupBy(cat.color).select(cat.color).fetchCount()).isEqualTo(2);
   }
