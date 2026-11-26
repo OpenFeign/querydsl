@@ -9,6 +9,7 @@
   </parent>
 
   <artifactId>querydsl-r2dbc</artifactId>
+  <version>6.12.1</version>
   <name>Querydsl - R2DBC support</name>
   <description>R2DBC support for Querydsl</description>
 
@@ -30,7 +31,7 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
@@ -51,7 +52,7 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -59,7 +60,7 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-guava</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <scope>test</scope>
     </dependency>
 

@@ -9,6 +9,7 @@
   </parent>
 
   <artifactId>querydsl-sql</artifactId>
+  <version>6.12.1</version>
   <name>Querydsl - SQL support</name>
   <description>SQL support for Querydsl</description>
 
@@ -26,7 +27,7 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
@@ -151,7 +152,7 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-core</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -163,7 +164,7 @@
     <dependency>
       <groupId>io.github.openfeign.querydsl</groupId>
       <artifactId>querydsl-spatial</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <scope>test</scope>
     </dependency>
 
