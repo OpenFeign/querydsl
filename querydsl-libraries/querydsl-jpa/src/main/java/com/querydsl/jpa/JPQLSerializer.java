@@ -367,19 +367,24 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     append("\n");
   }
 
-  /**
-   * Check if the expression is a scalar property of the query root or of a join alias
-   *
-   * <p>Entity, collection and map valued paths are not scalar, they join their target implicitly.
-   */
+  /** Check if the expression is a scalar property of the query root or of a join alias */
   private static boolean isScalarPropertyOfAlias(Expression<?> expression) {
     if (!(expression instanceof Path<?> path) || path instanceof BeanPath<?>) {
       return false;
     }
     var parent = path.getMetadata().getParent();
-    var type = path.getType();
-    return parent != null
-        && parent.getMetadata().isRoot()
+    return parent != null && parent.getMetadata().isRoot() && isScalarType(path.getType());
+  }
+
+  /**
+   * Check if a path of the type is known to be scalar
+   *
+   * <p>Entity, collection and map valued paths join their target implicitly. {@code Object} and
+   * interface types do not tell whether the path is an association.
+   */
+  private static boolean isScalarType(Class<?> type) {
+    return type != Object.class
+        && !type.isInterface()
         && !type.isAnnotationPresent(Entity.class)
         && !Collection.class.isAssignableFrom(type)
         && !Map.class.isAssignableFrom(type);

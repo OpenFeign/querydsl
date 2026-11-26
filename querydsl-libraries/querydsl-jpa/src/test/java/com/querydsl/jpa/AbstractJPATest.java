@@ -903,6 +903,9 @@ public abstract class AbstractJPATest {
     assertThat(query().from(cat).select(mate).fetchCount()).isEqualTo(4);
     assertThat(query().from(cat).select(mate).distinct().fetchCount()).isEqualTo(4);
     assertThat(query().from(cat).groupBy(mate).select(mate).fetchCount()).isEqualTo(4);
+
+    var untypedMate = Expressions.path(Object.class, cat, "mate");
+    assertThat(query().from(cat).select(untypedMate).fetchCount()).isEqualTo(4);
   }
 
   @Test

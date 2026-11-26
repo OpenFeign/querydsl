@@ -190,6 +190,28 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void count_untyped_simple_path() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.setProjection(Expressions.path(Object.class, cat, "mate"));
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer).hasToString("select count(cat.mate)\nfrom Cat cat");
+  }
+
+  @Test
+  public void count_interface_typed_simple_path() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.setProjection(Expressions.path(java.io.Serializable.class, cat, "mate"));
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer).hasToString("select count(cat.mate)\nfrom Cat cat");
+  }
+
+  @Test
   public void count_collection_valued_path() {
     var cat = com.querydsl.jpa.domain.QCat.cat;
     QueryMetadata md = new DefaultQueryMetadata();
