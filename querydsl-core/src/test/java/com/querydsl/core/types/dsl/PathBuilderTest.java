@@ -156,4 +156,39 @@ public class PathBuilderTest {
             () -> new OrderSpecifier(Order.ASC, pathBuilder.get(orderBy)));
     assertTrue(error.getMessage().contains("CVE-2024-49203"));
   }
+
+  @Test
+  public void unsafe_property_names_without_whitespace_are_rejected() {
+    var pathBuilder = new PathBuilder<Cat>(Cat.class, "entity");
+    var payloads =
+        new String[] {
+          "name,(select/**/count(*)/**/from/**/Secret/**/s)",
+          "name)>(1",
+          "name,secret",
+          "length(secret)",
+          "name--comment",
+          "name\u00A0or\u00A01=1",
+          "name\u3000or\u30001=1",
+          "name\u2028or\u20281=1",
+          "name\u200B",
+          "",
+          ".name",
+          "name.",
+          "address..street",
+          "1name"
+        };
+    for (String payload : payloads) {
+      var error = assertThrows(IllegalStateException.class, () -> pathBuilder.get(payload));
+      assertTrue(payload, error.getMessage().contains("CVE-2024-49203"));
+    }
+  }
+
+  @Test
+  public void java_identifier_property_names_are_accepted() {
+    var pathBuilder = new PathBuilder<Cat>(Cat.class, "entity");
+    for (String property :
+        new String[] {"name", "firstName", "_x", "$y", "a1", "address.street", "nombreñ"}) {
+      assertDoesNotThrow(() -> pathBuilder.get(property));
+    }
+  }
 }

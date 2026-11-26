@@ -39,10 +39,35 @@ public interface PathBuilderValidator extends Serializable {
       new PathBuilderValidator() {
         @Override
         public Class<?> validate(Class<?> parent, String property, Class<?> propertyType) {
-          if (property.contains(" ")) {
+          if (!isSafePropertyName(property)) {
             throw new IllegalStateException("Unsafe due to CVE-2024-49203");
           }
           return propertyType;
+        }
+
+        private boolean isSafePropertyName(String property) {
+          if (property == null || property.isEmpty()) {
+            return false;
+          }
+          for (String segment : property.split("\\.", -1)) {
+            if (!isJavaIdentifier(segment)) {
+              return false;
+            }
+          }
+          return true;
+        }
+
+        private boolean isJavaIdentifier(String segment) {
+          if (segment.isEmpty() || !Character.isJavaIdentifierStart(segment.charAt(0))) {
+            return false;
+          }
+          for (int i = 1; i < segment.length(); i++) {
+            char c = segment.charAt(i);
+            if (!Character.isJavaIdentifierPart(c) || Character.isIdentifierIgnorable(c)) {
+              return false;
+            }
+          }
+          return true;
         }
       };
 
