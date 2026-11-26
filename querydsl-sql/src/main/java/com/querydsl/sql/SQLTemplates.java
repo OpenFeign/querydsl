@@ -833,16 +833,16 @@ public class SQLTemplates extends Templates {
 
   public final String quoteIdentifier(String identifier, boolean precededByDot) {
     if (useQuotes || requiresQuotes(identifier, precededByDot)) {
-      return quoteStr + identifier + quoteStr;
+      return quoteStr + identifier.replace(quoteStr, quoteStr + quoteStr) + quoteStr;
     } else {
       return identifier;
     }
   }
 
   protected boolean requiresQuotes(final String identifier, final boolean precededByDot) {
-    if (identifier.matches(".*[^A-z0-9_].*")) {
+    if (identifier.matches(".*[^A-Za-z0-9_].*")) {
       return true;
-    } else if (identifier.matches("^[^A-z_].*")) {
+    } else if (identifier.matches("^[^A-Za-z_].*")) {
       return true;
     } else if (precededByDot && supportsUnquotedReservedWordsAsIdentifier) {
       return false;

@@ -85,6 +85,22 @@ public class SQLTemplatesTest {
   }
 
   @Test
+  public void quoteEscapesEmbeddedQuotes() {
+    assertEquals(
+        "\"TITLE\"\"='x'OR(1=1)OR\"\"TITLE\"",
+        SQLTemplates.DEFAULT.quoteIdentifier("TITLE\"='x'OR(1=1)OR\"TITLE"));
+    assertEquals("\"a\"\"b\"", new H2Templates(true).quoteIdentifier("a\"b"));
+  }
+
+  @Test
+  public void quoteEscapesEmbeddedBackticks() {
+    SQLTemplates templates = new MySQLTemplates();
+    assertEquals("`a``b`", templates.quoteIdentifier("a`b"));
+    assertEquals("`a[b`", templates.quoteIdentifier("a[b"));
+    assertEquals("`^ab`", templates.quoteIdentifier("^ab"));
+  }
+
+  @Test
   public void quoting_performance() {
     // 385 -> 63
     SQLTemplates templates = new H2Templates();
