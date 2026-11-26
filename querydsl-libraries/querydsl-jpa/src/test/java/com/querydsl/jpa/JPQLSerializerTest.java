@@ -143,6 +143,17 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void count_nullable_property() {
+    var cat = QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.setProjection(cat.name);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer).hasToString("select count(cat)\nfrom Cat cat");
+  }
+
+  @Test
   public void fromWithCustomEntityName() {
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     EntityPath<Location> entityPath = new EntityPathBase<>(Location.class, "entity");

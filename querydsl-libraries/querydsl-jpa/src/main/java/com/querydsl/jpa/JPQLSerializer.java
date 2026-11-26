@@ -352,17 +352,20 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
   }
 
   private void serializeCount(boolean distinct, Expression<?> counted, Expression<?> root) {
+    // count skips nulls, so the rows of a property path are counted through the root, and its
+    // distinct values get one more for the null value
+    var property =
+        counted instanceof Path<?> path
+            && !path.getMetadata().isRoot()
+            && !(path instanceof BeanPath<?>);
+    if (property && !distinct) {
+      append(SELECT_COUNT).handle(root).append(")\n");
+      return;
+    }
     append(distinct ? SELECT_COUNT_DISTINCT : SELECT_COUNT).handle(counted).append(")");
-    // count skips nulls, so a property path counts its null value separately
-    if (counted instanceof Path<?> path
-        && !path.getMetadata().isRoot()
-        && !(path instanceof BeanPath<?>)) {
-      if (distinct) {
-        append(" + case when count(").handle(counted).append(") < count(").handle(root);
-        append(") then 1 else 0 end");
-      } else {
-        append(" + count(case when ").handle(counted).append(" is null then 1 else null end)");
-      }
+    if (property) {
+      append(" + case when count(").handle(counted).append(") < count(").handle(root);
+      append(") then 1 else 0 end");
     }
     append("\n");
   }
