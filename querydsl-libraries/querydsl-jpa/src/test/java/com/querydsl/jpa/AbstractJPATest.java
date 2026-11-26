@@ -917,6 +917,27 @@ public abstract class AbstractJPATest {
   }
 
   @Test
+  public void fetchResults_distinct_tuple() {
+    var results = query().from(cat).select(cat.color, cat.breed).distinct().fetchResults();
+    assertThat(results.getTotal()).isEqualTo(2);
+    assertThat((List<?>) results.getResults()).hasSize(2).hasOnlyElementsOfType(Tuple.class);
+  }
+
+  @Test
+  public void fetchResults_distinct_tuple_offset_beyond_total() {
+    var results =
+        query()
+            .from(cat)
+            .select(cat.color, cat.breed)
+            .distinct()
+            .offset(10)
+            .limit(5)
+            .fetchResults();
+    assertThat(results.getResults()).isEmpty();
+    assertThat(results.getTotal()).isEqualTo(2);
+  }
+
+  @Test
   public void fetchCount_groupBy_nullable_property() {
     assertThat(query().from(cat).groupBy(cat.color).select(cat.color).fetchCount()).isEqualTo(2);
   }

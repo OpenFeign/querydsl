@@ -14,6 +14,7 @@
 package com.querydsl.jpa;
 
 import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.support.FetchableSubQueryBase;
 import com.querydsl.core.support.QueryBase;
 import com.querydsl.core.types.CollectionExpression;
@@ -28,6 +29,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serial;
 import java.lang.reflect.Field;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * {@code JPAQueryBase} is a base Query class for JPA queries
@@ -85,6 +88,20 @@ public abstract class JPAQueryBase<T, Q extends JPAQueryBase<T, Q>>
     return metadata.getGroupBy().size() > 1
         || metadata.getHaving() != null
         || (metadata.isDistinct() && metadata.getProjection() instanceof FactoryExpression);
+  }
+
+  /**
+   * Cut the page of the query modifiers out of all results of this query
+   *
+   * @param results all results, fetched without offset and limit
+   * @return the page, with the number of all results as total
+   */
+  protected QueryResults<T> pageInMemory(List<T> results) {
+    var modifiers = getMetadata().getModifiers();
+    var offset = modifiers.getOffset() == null ? 0 : modifiers.getOffset();
+    var limit = modifiers.getLimit() == null ? Long.MAX_VALUE : modifiers.getLimit();
+    var page = results.stream().skip(offset).limit(limit).collect(Collectors.toList());
+    return new QueryResults<>(page, modifiers, results.size());
   }
 
   @Override

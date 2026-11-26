@@ -317,16 +317,8 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
             """);
         var query = createQuery(null, false);
         @SuppressWarnings("unchecked")
-        List<T> resultList = query.getResultList();
-        var offset = modifiers.getOffsetAsInteger() == null ? 0 : modifiers.getOffsetAsInteger();
-        var limit =
-            modifiers.getLimitAsInteger() == null
-                ? resultList.size()
-                : modifiers.getLimitAsInteger();
-        return new QueryResults<>(
-            resultList.subList(offset, Math.min(resultList.size(), offset + limit)),
-            modifiers,
-            resultList.size());
+        var resultList = (List<T>) getResultList(query);
+        return pageInMemory(resultList);
       }
 
       var countQuery = createQuery(null, true);
