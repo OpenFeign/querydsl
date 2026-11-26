@@ -15,6 +15,8 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
@@ -23,6 +25,7 @@ import com.querydsl.core.domain.QAnimal;
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.EntityPathBase;
@@ -33,6 +36,7 @@ import com.querydsl.jpa.domain.Location;
 import com.querydsl.jpa.domain.QDomesticCat;
 import com.querydsl.jpa.domain.QEmployee;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 
 public class JPQLSerializerTest {
@@ -341,5 +345,46 @@ public class JPQLSerializerTest {
     JPQLSerializer serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     cat.name.substring(cat.name.indexOf("")).accept(serializer, null);
     assertEquals("substring(cat.name,locate(?1,cat.name)-1 + ?2)", serializer.toString());
+  }
+
+  @Test
+  public void unsafe_path_names_rejected() {
+    Path<Object> parent = Expressions.path(Object.class, "test");
+    for (String name :
+        Arrays.asList(
+            "name/**/INTERSECT/**/SELECT/**/t/**/FROM/**/Test/**/t",
+            "name)>(1",
+            "name,secret",
+            "length(secret)",
+            "name--comment",
+            "name\u00a0x",
+            "name\u200b",
+            "",
+            "1name")) {
+      List<Expression<?>> paths =
+          Arrays.<Expression<?>>asList(
+              Expressions.stringPath(parent, name),
+              ExpressionUtils.path(Object.class, parent, name),
+              Expressions.stringPath(name));
+      for (Expression<?> path : paths) {
+        IllegalStateException error =
+            assertThrows(IllegalStateException.class, () -> serialize(path));
+        assertTrue(name, error.getMessage().contains("CVE-2024-49203"));
+      }
+    }
+  }
+
+  @Test
+  public void safe_path_names_serialized() {
+    Path<Object> parent = Expressions.path(Object.class, "test");
+    for (String name : Arrays.asList("name", "address.street", "$y", "nombre\u00f1")) {
+      assertEquals("test." + name, serialize(Expressions.stringPath(parent, name)));
+    }
+  }
+
+  private static String serialize(Expression<?> expression) {
+    JPQLSerializer serializer = new JPQLSerializer(JPQLTemplates.DEFAULT);
+    serializer.handle(expression);
+    return serializer.toString();
   }
 }
