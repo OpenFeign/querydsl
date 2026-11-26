@@ -128,6 +128,21 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void count_groupBy_nullable_property() {
+    var cat = QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.addGroupBy(cat.name);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer)
+        .hasToString(
+            """
+            select count(distinct cat.name) + case when count(cat.name) < count(cat) then 1 else 0 end
+            from Cat cat""");
+  }
+
+  @Test
   public void fromWithCustomEntityName() {
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     EntityPath<Location> entityPath = new EntityPathBase<>(Location.class, "entity");

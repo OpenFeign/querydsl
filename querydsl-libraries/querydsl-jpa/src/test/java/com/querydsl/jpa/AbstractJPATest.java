@@ -877,6 +877,21 @@ public abstract class AbstractJPATest {
     assertThat(result).isEqualTo(new MockTuple(new Object[] {6L, 5L, 1L}));
   }
 
+  @Test
+  public void fetchCount_nullable_projection() {
+    assertThat(query().from(cat).select(cat.color).fetchCount()).isEqualTo(6);
+  }
+
+  @Test
+  public void fetchCount_distinct_nullable_projection() {
+    assertThat(query().from(cat).select(cat.color).distinct().fetchCount()).isEqualTo(2);
+  }
+
+  @Test
+  public void fetchCount_groupBy_nullable_property() {
+    assertThat(query().from(cat).groupBy(cat.color).select(cat.color).fetchCount()).isEqualTo(2);
+  }
+
   // EclipseLink on HSQLDB inner-joins the target of a join-table collection after the outer join,
   // dropping parents without children (same limitation as count_distinct3)
   @Test

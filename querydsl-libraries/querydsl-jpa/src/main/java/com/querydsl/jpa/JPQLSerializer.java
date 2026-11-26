@@ -20,6 +20,7 @@ import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.support.SerializerBase;
 import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.MathUtils;
 import jakarta.persistence.Entity;
@@ -190,27 +191,20 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
       append(SELECT).append(projection).append("\n");
 
     } else if (forCountRow) {
-      if (!groupBy.isEmpty()) {
+      if (groupBy.size() > 1) {
         append(SELECT_COUNT_DISTINCT);
         handle(", ", groupBy);
+        append(")\n");
       } else {
-        if (!metadata.isDistinct()) {
-          append(SELECT_COUNT);
+        var root = joins.get(0).getTarget();
+        if (groupBy.size() == 1) {
+          serializeCount(true, groupBy.get(0), root);
+        } else if (select == null || select instanceof FactoryExpression) {
+          serializeCount(metadata.isDistinct(), root, root);
         } else {
-          append(SELECT_COUNT_DISTINCT);
-        }
-        if (select != null) {
-          if (select instanceof FactoryExpression) {
-            handle(joins.get(0).getTarget());
-          } else {
-            // TODO : make sure this works
-            handle(select);
-          }
-        } else {
-          handle(joins.get(0).getTarget());
+          serializeCount(metadata.isDistinct(), select, root);
         }
       }
-      append(")\n");
 
     } else if (select != null || !joins.isEmpty()) {
       if (!metadata.isDistinct()) {
@@ -355,6 +349,22 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     if (md.getWhere() != null) {
       append(WHERE).handle(md.getWhere());
     }
+  }
+
+  private void serializeCount(boolean distinct, Expression<?> counted, Expression<?> root) {
+    append(distinct ? SELECT_COUNT_DISTINCT : SELECT_COUNT).handle(counted).append(")");
+    // count skips nulls, so a property path counts its null value separately
+    if (counted instanceof Path<?> path
+        && !path.getMetadata().isRoot()
+        && !(path instanceof BeanPath<?>)) {
+      if (distinct) {
+        append(" + case when count(").handle(counted).append(") < count(").handle(root);
+        append(") then 1 else 0 end");
+      } else {
+        append(" + count(case when ").handle(counted).append(" is null then 1 else null end)");
+      }
+    }
+    append("\n");
   }
 
   private void serializeSources(boolean forCountRow, List<JoinExpression> joins) {
