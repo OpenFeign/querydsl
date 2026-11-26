@@ -21,6 +21,7 @@ import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.support.SerializerBase;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.PathBuilderValidator;
 import com.querydsl.core.util.MathUtils;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
@@ -442,6 +443,11 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
 
   @Override
   public Void visit(Path<?> expr, Void context) {
+    var pathType = expr.getMetadata().getPathType();
+    if (pathType == PathType.PROPERTY || pathType == PathType.VARIABLE) {
+      PathBuilderValidator.DEFAULT.validate(
+          expr.getType(), expr.getMetadata().getName(), expr.getType());
+    }
     // only wrap a PathCollection, if it the pathType is PROPERTY
     var wrap =
         wrapElements

@@ -15,6 +15,7 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
@@ -32,6 +33,7 @@ import com.querydsl.jpa.domain.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -705,6 +707,42 @@ public class JPQLSerializerTest {
     assertThat(sql).contains("\nvalues ");
     assertThat(sql).endsWith("(?1, ?2)");
     assertThat(serializer.getConstants()).containsExactly("Bobby", false);
+  }
+
+  @Test
+  void unsafe_path_names_rejected() {
+    var parent = Expressions.path(Object.class, "test");
+    for (var name :
+        List.of(
+            "name/**/INTERSECT/**/SELECT/**/t/**/FROM/**/Test/**/t",
+            "name)>(1",
+            "name,secret",
+            "length(secret)",
+            "name--comment",
+            "name\u00a0x",
+            "name\u200b",
+            "",
+            "1name")) {
+      for (Expression<?> path :
+          List.of(
+              Expressions.stringPath(parent, name),
+              ExpressionUtils.path(Object.class, parent, name),
+              Expressions.stringPath(name))) {
+        assertThatIllegalStateException()
+            .as(name)
+            .isThrownBy(() -> serialize(JPQLTemplates.DEFAULT, path))
+            .withMessageContaining("CVE-2024-49203");
+      }
+    }
+  }
+
+  @Test
+  void safe_path_names_serialized() {
+    var parent = Expressions.path(Object.class, "test");
+    for (var name : List.of("name", "address.street", "$y", "nombre\u00f1")) {
+      assertThat(serialize(JPQLTemplates.DEFAULT, Expressions.stringPath(parent, name)))
+          .isEqualTo("test." + name);
+    }
   }
 
   private static String serialize(JPQLTemplates templates, Expression<?> expression) {
