@@ -253,6 +253,15 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void count_without_sources() {
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.setProjection(com.querydsl.jpa.domain.QCat.cat.name);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer.toString().trim()).isEqualTo("select count(cat.name)");
+  }
+
+  @Test
   public void count_collection_valued_path() {
     var cat = com.querydsl.jpa.domain.QCat.cat;
     QueryMetadata md = new DefaultQueryMetadata();

@@ -352,20 +352,20 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
   }
 
   private void serializeCount(QueryMetadata metadata, boolean distinct, Expression<?> counted) {
+    if (!isScalarPropertyOfAlias(counted) || !isRootInEveryRow(metadata)) {
+      append(distinct ? SELECT_COUNT_DISTINCT : SELECT_COUNT).handle(counted).append(")\n");
+      return;
+    }
     // count skips nulls, so the rows of a scalar property of the root or of a join alias are
     // counted through the root, and its distinct values get one more for the null value
     var root = metadata.getJoins().get(0).getTarget();
-    var property = isScalarPropertyOfAlias(counted) && isRootInEveryRow(metadata);
-    if (property && !distinct) {
+    if (!distinct) {
       append(SELECT_COUNT).handle(root).append(")\n");
       return;
     }
-    append(distinct ? SELECT_COUNT_DISTINCT : SELECT_COUNT).handle(counted).append(")");
-    if (property) {
-      append(" + case when count(").handle(counted).append(") < count(").handle(root);
-      append(") then 1 else 0 end");
-    }
-    append("\n");
+    append(SELECT_COUNT_DISTINCT).handle(counted).append(")");
+    append(" + case when count(").handle(counted).append(") < count(").handle(root);
+    append(") then 1 else 0 end\n");
   }
 
   /**
@@ -376,6 +376,9 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
    */
   private static boolean isRootInEveryRow(QueryMetadata metadata) {
     var joins = metadata.getJoins();
+    if (joins.isEmpty()) {
+      return false;
+    }
     var root = joins.get(0).getTarget();
     var rootMadeNullable =
         joins.stream()
