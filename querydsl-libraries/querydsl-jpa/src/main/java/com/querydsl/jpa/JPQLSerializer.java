@@ -16,10 +16,12 @@ package com.querydsl.jpa;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.support.SerializerBase;
 import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilderValidator;
 import com.querydsl.core.util.MathUtils;
@@ -77,6 +79,12 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
   private static final String SELECT_COUNT = "select count(";
 
   private static final String SELECT_COUNT_DISTINCT = "select count(distinct ";
+
+  private static final String SELECT_COUNT_FROM = "select count(*)\nfrom (";
+
+  private static final String COUNTED_ROWS = ") counted_rows";
+
+  private static final String COUNTED_COLUMN = " as counted_column";
 
   private static final String SELECT_DISTINCT = "select distinct ";
 
@@ -184,34 +192,37 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     final Predicate having = metadata.getHaving();
     final List<OrderSpecifier<?>> orderBy = metadata.getOrderBy();
 
+    final var countFromSubQuery =
+        forCountRow
+            && projection == null
+            && templates.isCountFromSubQuerySupported()
+            && isCountedOverSelectedRows(metadata);
+
     // select
     var inProjectionOrig = inProjection;
     inProjection = true;
     if (projection != null) {
       append(SELECT).append(projection).append("\n");
 
+    } else if (countFromSubQuery) {
+      append(SELECT_COUNT_FROM).append(metadata.isDistinct() ? SELECT_DISTINCT : SELECT);
+      serializeAliasedColumns(select != null ? select : joins.get(0).getTarget());
+      append("\n");
+
     } else if (forCountRow) {
-      if (!groupBy.isEmpty()) {
+      if (groupBy.size() > 1) {
         append(SELECT_COUNT_DISTINCT);
         handle(", ", groupBy);
+        append(")\n");
       } else {
-        if (!metadata.isDistinct()) {
-          append(SELECT_COUNT);
+        if (groupBy.size() == 1) {
+          serializeCount(metadata, true, groupBy.get(0));
+        } else if (select == null || select instanceof FactoryExpression) {
+          serializeCount(metadata, metadata.isDistinct(), joins.get(0).getTarget());
         } else {
-          append(SELECT_COUNT_DISTINCT);
-        }
-        if (select != null) {
-          if (select instanceof FactoryExpression) {
-            handle(joins.get(0).getTarget());
-          } else {
-            // TODO : make sure this works
-            handle(select);
-          }
-        } else {
-          handle(joins.get(0).getTarget());
+          serializeCount(metadata, metadata.isDistinct(), select);
         }
       }
-      append(")\n");
 
     } else if (select != null || !joins.isEmpty()) {
       if (!metadata.isDistinct()) {
@@ -240,7 +251,7 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     }
 
     // group by
-    if (!groupBy.isEmpty() && !forCountRow) {
+    if (!groupBy.isEmpty() && (!forCountRow || countFromSubQuery)) {
       append(GROUP_BY).handle(COMMA, groupBy);
     }
 
@@ -266,6 +277,45 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
         }
         first = false;
       }
+    }
+
+    if (countFromSubQuery) {
+      append(COUNTED_ROWS);
+    }
+  }
+
+  /**
+   * Check if the query rows can only be counted from the selected rows
+   *
+   * <p>JPQL can not count distinct tuples, and multiple group by elements or a having clause leave
+   * rows out of the count of the query root.
+   */
+  static boolean isCountedOverSelectedRows(QueryMetadata metadata) {
+    return metadata.getGroupBy().size() > 1
+        || metadata.getHaving() != null
+        || (metadata.isDistinct() && metadata.getProjection() instanceof FactoryExpression);
+  }
+
+  /** Hibernate requires an alias for every select item of a subquery in the from clause */
+  private void serializeAliasedColumns(Expression<?> projection) {
+    List<Expression<?>> columns = new ArrayList<>();
+    collectColumns(projection, columns);
+    for (var i = 0; i < columns.size(); i++) {
+      if (i > 0) {
+        append(COMMA);
+      }
+      handle(columns.get(i));
+      if (!(columns.get(i) instanceof Operation<?> op && op.getOperator() == Ops.ALIAS)) {
+        append(COUNTED_COLUMN).append(String.valueOf(i + 1));
+      }
+    }
+  }
+
+  private static void collectColumns(Expression<?> projection, List<Expression<?>> columns) {
+    if (projection instanceof FactoryExpression<?> factory) {
+      factory.getArgs().forEach(arg -> collectColumns(arg, columns));
+    } else {
+      columns.add(projection);
     }
   }
 
@@ -356,6 +406,75 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     if (md.getWhere() != null) {
       append(WHERE).handle(md.getWhere());
     }
+  }
+
+  private void serializeCount(QueryMetadata metadata, boolean distinct, Expression<?> counted) {
+    if (!isScalarPropertyOfAlias(counted) || !isRootInEveryRow(metadata)) {
+      append(distinct ? SELECT_COUNT_DISTINCT : SELECT_COUNT).handle(counted).append(")\n");
+      return;
+    }
+    // count skips nulls, so the rows of a scalar property of the root or of a join alias are
+    // counted through the root, and its distinct values get one more for the null value
+    var root = metadata.getJoins().get(0).getTarget();
+    if (!distinct) {
+      append(SELECT_COUNT).handle(root).append(")\n");
+      return;
+    }
+    append(SELECT_COUNT_DISTINCT).handle(counted).append(")");
+    append(" + case when count(").handle(counted).append(") < count(").handle(root);
+    append(") then 1 else 0 end\n");
+  }
+
+  /**
+   * Check if count over the query root gives the number of rows of the query
+   *
+   * <p>A right or full join leaves the root null in some rows, and the alias of a common table
+   * expression can not be counted.
+   */
+  private static boolean isRootInEveryRow(QueryMetadata metadata) {
+    var joins = metadata.getJoins();
+    if (joins.isEmpty()) {
+      return false;
+    }
+    var root = joins.get(0).getTarget();
+    var rootMadeNullable =
+        joins.stream()
+            .map(JoinExpression::getType)
+            .anyMatch(type -> type == JoinType.RIGHTJOIN || type == JoinType.FULLJOIN);
+    var rootFromWithClause =
+        metadata.getFlags().stream()
+            .filter(flag -> flag.getPosition() == QueryFlag.Position.WITH)
+            .anyMatch(
+                flag ->
+                    flag.getFlag() instanceof Operation<?> with
+                        && !with.getArgs().isEmpty()
+                        && root.equals(with.getArg(0)));
+    return root instanceof EntityPath<?> && !rootMadeNullable && !rootFromWithClause;
+  }
+
+  /** Check if the expression is a scalar property of the query root or of a join alias */
+  private static boolean isScalarPropertyOfAlias(Expression<?> expression) {
+    if (!(expression instanceof Path<?> path) || path instanceof BeanPath<?>) {
+      return false;
+    }
+    var metadata = path.getMetadata();
+    return metadata.getPathType() == PathType.PROPERTY
+        && metadata.getParent().getMetadata().isRoot()
+        && isScalarType(path.getType());
+  }
+
+  /**
+   * Check if a path of the type is known to be scalar
+   *
+   * <p>Entity, collection and map valued paths join their target implicitly. {@code Object} and
+   * interface types do not tell whether the path is an association.
+   */
+  private static boolean isScalarType(Class<?> type) {
+    return type != Object.class
+        && !type.isInterface()
+        && !type.isAnnotationPresent(Entity.class)
+        && !Collection.class.isAssignableFrom(type)
+        && !Map.class.isAssignableFrom(type);
   }
 
   private void serializeSources(boolean forCountRow, List<JoinExpression> joins) {
