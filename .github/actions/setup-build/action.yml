@@ -56,7 +56,7 @@ runs:
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       with:
         path: ~/.m2/repository
-        key: maven-deps-${{ runner.os }}-${{ hashFiles('**/pom.xml', '.mvn/extensions.xml', '.mvn/wrapper/maven-wrapper.properties', '.github/actions/setup-build/action.yml') }}
+        key: maven-deps-${{ runner.os }}-${{ hashFiles('**/pom.xml', '.mvn/extensions.xml', '.mvn/maven.config', '.mvn/wrapper/maven-wrapper.properties', '.github/actions/setup-build/action.yml') }}
         lookup-only: ${{ inputs.cache == 'warm-up' }}
         fail-on-cache-miss: ${{ inputs.cache == 'require' }}
 
