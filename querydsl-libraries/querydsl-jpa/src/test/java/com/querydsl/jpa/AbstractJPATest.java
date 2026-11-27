@@ -58,6 +58,7 @@ import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.Param;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.core.types.dsl.StringExpression;
@@ -984,6 +985,29 @@ public abstract class AbstractJPATest {
   @Test
   public void fetchCount_groupBy_nullable_property() {
     assertThat(query().from(cat).groupBy(cat.color).select(cat.color).fetchCount()).isEqualTo(2);
+  }
+
+  @Test
+  public void fetchCount_property_of_association() {
+    assertThat(query().from(cat).select(cat.mate.id).fetchCount())
+        .isEqualTo(query().from(cat).select(cat.mate.id).fetch().size());
+    assertThat(query().from(cat).select(cat.mate.id).distinct().fetchCount())
+        .isEqualTo(query().from(cat).select(cat.mate.id).distinct().fetch().size());
+  }
+
+  @Test
+  public void fetchCount_path_builder_property() {
+    var color = new PathBuilder<>(Cat.class, "cat").get("color");
+    assertThat(query().from(cat).select(color).fetchCount()).isEqualTo(6);
+    assertThat(query().from(cat).select(color).distinct().fetchCount()).isEqualTo(2);
+  }
+
+  @Test
+  public void fetchCount_left_joined_alias() {
+    var mate = new QCat("mate");
+    assertThat(query().from(cat).leftJoin(cat.mate, mate).select(mate).fetchCount()).isEqualTo(6);
+    assertThat(query().from(cat).leftJoin(cat.mate, mate).select(mate).distinct().fetchCount())
+        .isEqualTo(5);
   }
 
   // EclipseLink on HSQLDB inner-joins the target of a join-table collection after the outer join,

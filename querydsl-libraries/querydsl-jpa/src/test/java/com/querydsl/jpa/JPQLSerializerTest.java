@@ -202,9 +202,55 @@ public class JPQLSerializerTest {
     QueryMetadata md = new DefaultQueryMetadata();
     md.addJoin(JoinType.DEFAULT, cat);
     md.setProjection(cat.mate.name);
-    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var serializer = new JPQLSerializer(EclipseLinkTemplates.DEFAULT);
     serializer.serialize(md, true, null);
     assertThat(serializer).hasToString("select count(cat.mate.name)\nfrom Cat cat");
+  }
+
+  @Test
+  public void count_nested_property_from_subquery() {
+    var cat = QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.setProjection(cat.mate.id);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer)
+        .hasToString(
+            """
+            select count(*)
+            from (select cat.mate.id as counted_column1
+            from Cat cat) counted_rows""");
+  }
+
+  @Test
+  public void count_path_builder_property() {
+    var cat = new PathBuilder<>(Cat.class, "cat");
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.setProjection(cat.get("name"));
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer).hasToString("select count(cat)\nfrom Cat cat");
+  }
+
+  @Test
+  public void count_left_joined_alias() {
+    var cat = QCat.cat;
+    var mate = new QCat("mate");
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.addJoin(JoinType.LEFTJOIN, cat.mate.as(mate));
+    md.setProjection(mate);
+    md.setDistinct(true);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer)
+        .hasToString(
+            """
+            select count(distinct mate) + case when count(mate) < count(cat) then 1 else 0 end
+            from Cat cat
+              left join cat.mate as mate""");
   }
 
   @Test

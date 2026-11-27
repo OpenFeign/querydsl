@@ -23,8 +23,11 @@ import com.querydsl.core.support.SerializerBase;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BeanPath;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.PathBuilderValidator;
 import com.querydsl.core.util.MathUtils;
+import com.querydsl.core.util.ReflectionUtils;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.Attribute;
@@ -196,7 +199,8 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
         forCountRow
             && projection == null
             && templates.isCountFromSubQuerySupported()
-            && isCountedOverSelectedRows(metadata);
+            && (isCountedOverSelectedRows(metadata)
+                || isPropertyOfNestedPath(getCounted(metadata)));
 
     // select
     var inProjectionOrig = inProjection;
@@ -215,13 +219,8 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
         handle(", ", groupBy);
         append(")\n");
       } else {
-        if (groupBy.size() == 1) {
-          serializeCount(metadata, true, groupBy.get(0));
-        } else if (select == null || select instanceof FactoryExpression) {
-          serializeCount(metadata, metadata.isDistinct(), joins.get(0).getTarget());
-        } else {
-          serializeCount(metadata, metadata.isDistinct(), select);
-        }
+        serializeCount(
+            metadata, groupBy.size() == 1 || metadata.isDistinct(), getCounted(metadata));
       }
 
     } else if (select != null || !joins.isEmpty()) {
@@ -294,6 +293,20 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     return metadata.getGroupBy().size() > 1
         || metadata.getHaving() != null
         || (metadata.isDistinct() && metadata.getProjection() instanceof FactoryExpression);
+  }
+
+  /** Returns the expression whose values are counted by a count query without multiple group by */
+  @Nullable
+  private static Expression<?> getCounted(QueryMetadata metadata) {
+    if (metadata.getGroupBy().size() == 1) {
+      return metadata.getGroupBy().get(0);
+    }
+    var select = metadata.getProjection();
+    if (metadata.getJoins().isEmpty()
+        || (select != null && !(select instanceof FactoryExpression))) {
+      return select;
+    }
+    return metadata.getJoins().get(0).getTarget();
   }
 
   /** Hibernate requires an alias for every select item of a subquery in the from clause */
@@ -409,11 +422,12 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
   }
 
   private void serializeCount(QueryMetadata metadata, boolean distinct, Expression<?> counted) {
-    if (!isScalarPropertyOfAlias(counted) || !isRootInEveryRow(metadata)) {
+    if (!isRootInEveryRow(metadata)
+        || !(isScalarPropertyOfAlias(counted) || isJoinAlias(metadata, counted))) {
       append(distinct ? SELECT_COUNT_DISTINCT : SELECT_COUNT).handle(counted).append(")\n");
       return;
     }
-    // count skips nulls, so the rows of a scalar property of the root or of a join alias are
+    // count skips nulls, so the rows of a join alias or of a scalar property of an alias are
     // counted through the root, and its distinct values get one more for the null value
     var root = metadata.getJoins().get(0).getTarget();
     if (!distinct) {
@@ -454,25 +468,66 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
 
   /** Check if the expression is a scalar property of the query root or of a join alias */
   private static boolean isScalarPropertyOfAlias(Expression<?> expression) {
-    if (!(expression instanceof Path<?> path) || path instanceof BeanPath<?>) {
+    return isScalarProperty(expression)
+        && ((Path<?>) expression).getMetadata().getParent().getMetadata().isRoot();
+  }
+
+  /**
+   * Check if the expression is a scalar property of an association or embedded path
+   *
+   * <p>The provider decides whether such a path joins its parent, and so how many rows it has.
+   */
+  private static boolean isPropertyOfNestedPath(@Nullable Expression<?> expression) {
+    if (!isScalarProperty(expression)) {
       return false;
     }
-    var metadata = path.getMetadata();
-    return metadata.getPathType() == PathType.PROPERTY
-        && metadata.getParent().getMetadata().isRoot()
-        && isScalarType(path.getType());
+    var parent = ((Path<?>) expression).getMetadata().getParent().getMetadata();
+    return parent.getPathType() == PathType.PROPERTY && !parent.isRoot();
+  }
+
+  /** Check if the expression is the alias of a join, other than the query root */
+  private static boolean isJoinAlias(QueryMetadata metadata, Expression<?> expression) {
+    return expression instanceof EntityPath<?> path
+        && path.getMetadata().isRoot()
+        && !path.equals(metadata.getJoins().get(0).getTarget());
+  }
+
+  private static boolean isScalarProperty(@Nullable Expression<?> expression) {
+    if (!(expression instanceof Path<?> path)
+        || (path instanceof BeanPath<?> && !(path instanceof PathBuilder<?>))) {
+      return false;
+    }
+    return path.getMetadata().getPathType() == PathType.PROPERTY
+        && isScalarType(getPropertyType(path));
+  }
+
+  /** Returns the type of the path, looked up from its parent type when the path is untyped */
+  private static Class<?> getPropertyType(Path<?> path) {
+    if (path.getType() != Object.class) {
+      return path.getType();
+    }
+    var parentType = path.getMetadata().getParent().getType();
+    var name = path.getMetadata().getName();
+    var field = ReflectionUtils.getFieldOrNull(parentType, name);
+    if (field != null) {
+      return field.getType();
+    }
+    var getter = ReflectionUtils.getGetterOrNull(parentType, name);
+    return getter != null ? getter.getReturnType() : Object.class;
   }
 
   /**
    * Check if a path of the type is known to be scalar
    *
-   * <p>Entity, collection and map valued paths join their target implicitly. {@code Object} and
-   * interface types do not tell whether the path is an association.
+   * <p>Entity, collection and map valued paths join their target implicitly, and an embeddable is
+   * not a single column. {@code Object} and interface types do not tell whether the path is an
+   * association.
    */
   private static boolean isScalarType(Class<?> type) {
     return type != Object.class
         && !type.isInterface()
         && !type.isAnnotationPresent(Entity.class)
+        && !type.isAnnotationPresent(Embeddable.class)
         && !Collection.class.isAssignableFrom(type)
         && !Map.class.isAssignableFrom(type);
   }
