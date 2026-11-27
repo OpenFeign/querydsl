@@ -988,7 +988,7 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  public void fetchCount_property_of_association() {
+  public void fetchCount_association_id_projection_matches_fetch_size() {
     assertThat(query().from(cat).select(cat.mate.id).fetchCount())
         .isEqualTo(query().from(cat).select(cat.mate.id).fetch().size());
     assertThat(query().from(cat).select(cat.mate.id).distinct().fetchCount())
@@ -996,14 +996,14 @@ public abstract class AbstractJPATest {
   }
 
   @Test
-  public void fetchCount_path_builder_property() {
-    var color = new PathBuilder<>(Cat.class, "cat").get("color");
-    assertThat(query().from(cat).select(color).fetchCount()).isEqualTo(6);
-    assertThat(query().from(cat).select(color).distinct().fetchCount()).isEqualTo(2);
+  public void fetchCount_untyped_nullable_path_builder_property() {
+    var untypedColor = new PathBuilder<>(Cat.class, "cat").get("color");
+    assertThat(query().from(cat).select(untypedColor).fetchCount()).isEqualTo(6);
+    assertThat(query().from(cat).select(untypedColor).distinct().fetchCount()).isEqualTo(2);
   }
 
   @Test
-  public void fetchCount_left_joined_alias() {
+  public void fetchCount_nullable_left_joined_alias_projection() {
     var mate = new QCat("mate");
     assertThat(query().from(cat).leftJoin(cat.mate, mate).select(mate).fetchCount()).isEqualTo(6);
     assertThat(query().from(cat).leftJoin(cat.mate, mate).select(mate).distinct().fetchCount())
