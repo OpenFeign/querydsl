@@ -78,7 +78,7 @@
 
   <properties>
     <!-- Binary/source compatibility baseline: the latest 7.x release on Maven Central. -->
-    <japicmp.baseline>7.7</japicmp.baseline>
+    <japicmp.baseline>7.8</japicmp.baseline>
 
     <failIfNoTests>false</failIfNoTests>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
