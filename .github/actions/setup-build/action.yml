@@ -1,5 +1,10 @@
 name: "Setup build environment"
-description: "Install JDKs (17/21/25), generate Maven toolchains.xml, and restore the Maven dependency cache"
+description: "Install JDKs (17/21/25), generate Maven toolchains.xml, and restore the Maven wrapper and dependency caches"
+
+inputs:
+  cache:
+    description: "warm-up: download and save whatever cache is missing; require: fail on a cache miss; restore: restore what exists"
+    default: "require"
 
 runs:
   using: "composite"
@@ -38,10 +43,52 @@ runs:
         </toolchains>
         EOF
 
-    - name: Cache Maven dependencies
-      uses: actions/cache@v6
+    - name: Restore Maven wrapper distribution
+      id: wrapper
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+      with:
+        path: ~/.m2/wrapper
+        key: mvnw-${{ runner.os }}-${{ hashFiles('.mvn/wrapper/maven-wrapper.properties') }}
+        fail-on-cache-miss: ${{ inputs.cache == 'require' }}
+
+    - name: Restore Maven dependencies
+      id: deps
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       with:
         path: ~/.m2/repository
-        key: maven-deps-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          maven-deps-
+        key: maven-deps-${{ runner.os }}-${{ hashFiles('**/pom.xml', '.mvn/extensions.xml', '.mvn/maven.config', '.mvn/wrapper/maven-wrapper.properties', '.github/actions/setup-build/action.yml') }}
+        lookup-only: ${{ inputs.cache == 'warm-up' }}
+        fail-on-cache-miss: ${{ inputs.cache == 'require' }}
+
+    - name: Download Maven wrapper distribution
+      if: inputs.cache == 'warm-up' && steps.wrapper.outputs.cache-hit != 'true'
+      shell: bash
+      run: ./mvnw -B --version
+
+    - name: Save Maven wrapper distribution
+      if: inputs.cache == 'warm-up' && steps.wrapper.outputs.cache-hit != 'true'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+      with:
+        path: ~/.m2/wrapper
+        key: ${{ steps.wrapper.outputs.cache-primary-key }}
+
+    - name: Download Maven dependencies
+      if: inputs.cache == 'warm-up' && steps.deps.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        ./mvnw -B -Pexamples de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+        ./mvnw -B install -Pno-databases -DskipTests
+        if [ "$RUNNER_OS" = Linux ]; then
+          ./mvnw -B git-code-format:validate-code-format
+          ./mvnw -B -N org.codehaus.mojo:properties-maven-plugin:1.2.1:write-project-properties -Dproperties.outputFile="$RUNNER_TEMP/gradle.properties"
+          ./mvnw -B install -Pexamples -DskipTests -rf :querydsl-examples
+          ./mvnw -B -Pexamples -pl :querydsl-example-jpa-quarkus quarkus:go-offline
+        fi
+        find ~/.m2/repository/io/github/openfeign/querydsl -type d -name '*-SNAPSHOT' -prune -exec rm -rf {} +
+
+    - name: Save Maven dependencies
+      if: inputs.cache == 'warm-up' && steps.deps.outputs.cache-hit != 'true'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+      with:
+        path: ~/.m2/repository
+        key: ${{ steps.deps.outputs.cache-primary-key }}

@@ -592,6 +592,18 @@
               <type>signature</type>
               <repositoryType>MAIN</repositoryType>
             </DynamicDependency>
+            <DynamicDependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit-platform</artifactId>
+              <version>${surefire.version}</version>
+              <repositoryType>PLUGIN</repositoryType>
+            </DynamicDependency>
+            <DynamicDependency>
+              <groupId>org.junit.vintage</groupId>
+              <artifactId>junit-vintage-engine</artifactId>
+              <version>${junit.version}</version>
+              <repositoryType>MAIN</repositoryType>
+            </DynamicDependency>
           </dynamicDependencies>
         </configuration>
       </plugin>
