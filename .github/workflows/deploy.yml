@@ -22,6 +22,8 @@ jobs:
 
       - name: Setup build environment
         uses: ./.github/actions/setup-build
+        with:
+          cache: restore
 
       - name: Import GPG key
         # Accept the secret either base64-encoded or as a raw ASCII-armored key.
