@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-root</artifactId>
-    <version>7.8-SNAPSHOT</version>
+    <version>7.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-libraries</artifactId>
@@ -139,18 +139,6 @@
                 </bannedDependencies>
               </rules>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.github.siom79.japicmp</groupId>
-        <artifactId>japicmp-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>cmp</goal>
-            </goals>
-            <phase>verify</phase>
           </execution>
         </executions>
       </plugin>

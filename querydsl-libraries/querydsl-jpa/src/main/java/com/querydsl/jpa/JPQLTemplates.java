@@ -212,8 +212,8 @@ public class JPQLTemplates extends Templates {
       return constant.toString();
     } else if (constant instanceof String) {
       return "'" + escapeLiteral(constant.toString()) + "'";
-    } else if (constant instanceof Enum enum1) {
-      return "'" + enum1.name() + "'";
+    } else if (constant instanceof Enum<?> enumConstant) {
+      return enumConstant.getDeclaringClass().getName() + "." + enumConstant.name();
     } else {
       return "'" + constant.toString() + "'";
     }
@@ -238,6 +238,15 @@ public class JPQLTemplates extends Templates {
   }
 
   public boolean isSubQueryModifiersSupported() {
+    return false;
+  }
+
+  /**
+   * Check if the rows of a query can be counted through a subquery in the from clause
+   *
+   * @return true when {@code select count(*) from (select ...) alias} is supported
+   */
+  public boolean isCountFromSubQuerySupported() {
     return false;
   }
 }

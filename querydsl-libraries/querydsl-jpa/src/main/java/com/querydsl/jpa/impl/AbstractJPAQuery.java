@@ -85,14 +85,16 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
    *     count queries in JPQL. Historically QueryDSL attempts at producing a modified query to
    *     compute the number of results instead.
    *     <p>However, this approach only works for simple queries. Specifically queries with multiple
-   *     group by clauses and queries with a having clause turn out to be problematic. This is
-   *     because {@code COUNT(DISTINCT a, b, c)}, while valid SQL in most dialects, is not valid
-   *     JPQL. Furthermore, a having clause may refer select elements or aggregate functions and
-   *     therefore cannot be emulated by moving the predicate to the where clause instead.
-   *     <p>In order to support {@code fetchCount} for queries with multiple group by elements or a
-   *     having clause, we generate the count in memory instead. This means that the method simply
-   *     falls back to returning the size of {@link #fetch()}. For large result sets this may come
-   *     at a severe performance penalty.
+   *     group by clauses, distinct queries with a {@link FactoryExpression} projection such as a
+   *     tuple or a constructor projection, and queries with a having clause turn out to be
+   *     problematic. This is because {@code COUNT(DISTINCT a, b, c)}, while valid SQL in most
+   *     dialects, is not valid JPQL. Furthermore, a having clause may refer select elements or
+   *     aggregate functions and therefore cannot be emulated by moving the predicate to the where
+   *     clause instead.
+   *     <p>Hibernate counts these queries through a subquery in the from clause. For the other
+   *     providers, in order to support {@code fetchCount} for these queries, we generate the count
+   *     in memory instead. This means that the method simply falls back to returning the size of
+   *     {@link #fetch()}. For large result sets this may come at a severe performance penalty.
    *     <p>For very specific domain models where {@link #fetchCount()} has to be used in
    *     conjunction with complex queries containing multiple group by elements and/or a having
    *     clause, we recommend using the <a
@@ -106,7 +108,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   @Deprecated
   public long fetchCount() {
     try {
-      if (getMetadata().getGroupBy().size() > 1 || getMetadata().getHaving() != null) {
+      if (isCountedInMemory()) {
         logger.warning(
             """
             Fetchable#fetchCount() was computed in memory! See the Javadoc for\
@@ -117,7 +119,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
       }
 
       var query = createQuery(null, true);
-      return (Long) query.getSingleResult();
+      return ((Number) query.getSingleResult()).longValue();
     } finally {
       reset();
     }
@@ -283,14 +285,16 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
    *     to express count queries in JPQL. Historically QueryDSL attempts at producing a modified
    *     query to compute the number of results instead.
    *     <p>However, this approach only works for simple queries. Specifically queries with multiple
-   *     group by clauses and queries with a having clause turn out to be problematic. This is
-   *     because {@code COUNT(DISTINCT a, b, c)}, while valid SQL in most dialects, is not valid
-   *     JPQL. Furthermore, a having clause may refer select elements or aggregate functions and
-   *     therefore cannot be emulated by moving the predicate to the where clause instead.
-   *     <p>In order to support {@code fetchResults} for queries with multiple group by elements or
-   *     a having clause, we generate the count in memory instead. This means that the method simply
-   *     falls back to returning the size of {@link #fetch()}. For large result sets this may come
-   *     at a severe performance penalty.
+   *     group by clauses, distinct queries with a {@link FactoryExpression} projection such as a
+   *     tuple or a constructor projection, and queries with a having clause turn out to be
+   *     problematic. This is because {@code COUNT(DISTINCT a, b, c)}, while valid SQL in most
+   *     dialects, is not valid JPQL. Furthermore, a having clause may refer select elements or
+   *     aggregate functions and therefore cannot be emulated by moving the predicate to the where
+   *     clause instead.
+   *     <p>Hibernate counts these queries through a subquery in the from clause. For the other
+   *     providers, in order to support {@code fetchResults} for these queries, we generate the
+   *     count in memory instead. This means that the method simply falls back to returning the size
+   *     of {@link #fetch()}. For large result sets this may come at a severe performance penalty.
    *     <p>For very specific domain models where {@link #fetchResults()} has to be used in
    *     conjunction with complex queries containing multiple group by elements and/or a having
    *     clause, we recommend using the <a
@@ -307,7 +311,7 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
   public QueryResults<T> fetchResults() {
     try {
       var modifiers = getMetadata().getModifiers();
-      if (getMetadata().getGroupBy().size() > 1 || getMetadata().getHaving() != null) {
+      if (isCountedInMemory()) {
         logger.warning(
             """
             Fetchable#fetchResults() was computed in memory! See the Javadoc for\
@@ -315,20 +319,12 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
             """);
         var query = createQuery(null, false);
         @SuppressWarnings("unchecked")
-        List<T> resultList = query.getResultList();
-        var offset = modifiers.getOffsetAsInteger() == null ? 0 : modifiers.getOffsetAsInteger();
-        var limit =
-            modifiers.getLimitAsInteger() == null
-                ? resultList.size()
-                : modifiers.getLimitAsInteger();
-        return new QueryResults<>(
-            resultList.subList(offset, Math.min(resultList.size(), offset + limit)),
-            modifiers,
-            resultList.size());
+        var resultList = (List<T>) getResultList(query);
+        return pageInMemory(resultList);
       }
 
       var countQuery = createQuery(null, true);
-      long total = (Long) countQuery.getSingleResult();
+      long total = ((Number) countQuery.getSingleResult()).longValue();
       if (total > 0) {
         var query = createQuery(modifiers, false);
         @SuppressWarnings("unchecked")

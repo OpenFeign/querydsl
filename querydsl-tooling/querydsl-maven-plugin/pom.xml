@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-tooling</artifactId>
-    <version>7.8-SNAPSHOT</version>
+    <version>7.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-maven-plugin</artifactId>
@@ -22,7 +22,7 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
-        <version>4.1.0</version>
+        <version>4.2.0</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>

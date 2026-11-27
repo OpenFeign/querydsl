@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.github.openfeign.querydsl</groupId>
     <artifactId>querydsl-tooling</artifactId>
-    <version>7.8-SNAPSHOT</version>
+    <version>7.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>querydsl-ksp-codegen</artifactId>
@@ -15,7 +15,7 @@
       <dependency>
         <groupId>io.github.classgraph</groupId>
         <artifactId>classgraph</artifactId>
-        <version>4.8.198</version>
+        <version>4.8.200</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -60,7 +60,7 @@
     <dependency>
       <groupId>io.mockk</groupId>
       <artifactId>mockk-jvm</artifactId>
-      <version>1.14.11</version>
+      <version>1.14.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>

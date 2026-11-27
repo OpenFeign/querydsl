@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Branches
+
+`master` is the backwards-compatible 7.x line. JPA 4 work and any breaking change go to `8.x`; see the "Branches" section of [`AGENTS.md`](AGENTS.md).
+
 ## Overview
 
 This is Querydsl, a framework for constructing type-safe SQL-like queries for multiple backends including JPA, MongoDB, and SQL in Java. This is a fork under OpenFeign maintaining the project with regular releases since the original project became stale.

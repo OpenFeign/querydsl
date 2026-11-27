@@ -15,23 +15,31 @@ package com.querydsl.jpa;
 
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.domain.*;
+import com.querydsl.jpa.hibernate.HQLOps;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 public class JPQLSerializerTest {
@@ -112,18 +120,252 @@ public class JPQLSerializerTest {
   @Test
   public void count() {
     var cat = QCat.cat;
-    QueryMetadata md = new DefaultQueryMetadata();
-    md.addJoin(JoinType.DEFAULT, cat);
-    md.setProjection(cat.mate.countDistinct());
-    var serializer1 = new JPQLSerializer(HQLTemplates.DEFAULT);
-    serializer1.serialize(md, true, null);
-    assertThat(serializer1.toString())
-        .isEqualTo("select count(count(distinct cat.mate))\n" + "from Cat cat");
+    var md = countMetadata(cat, cat.mate.countDistinct());
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select count(distinct cat.mate) as counted_column1
+            from Cat cat) counted_rows""");
 
-    var serializer2 = new JPQLSerializer(HQLTemplates.DEFAULT);
-    serializer2.serialize(md, false, null);
-    assertThat(serializer2.toString())
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, false, null);
+    assertThat(serializer.toString())
         .isEqualTo("select count(distinct cat.mate)\n" + "from Cat cat");
+  }
+
+  @Test
+  public void count_groupBy_nullable_property() {
+    var cat = QCat.cat;
+    var md = countMetadata(cat, null);
+    md.addGroupBy(cat.name);
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(distinct cat.name) + case when count(cat.name) < count(cat) then 1 else 0 end
+            from Cat cat""");
+  }
+
+  @Test
+  public void count_distinct_tuple_from_subquery() {
+    var cat = QCat.cat;
+    var md = countMetadata(cat, Projections.tuple(cat.name.as("catName"), cat.breed));
+    md.setDistinct(true);
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select distinct cat.name as catName, cat.breed as counted_column2
+            from Cat cat) counted_rows""");
+  }
+
+  @Test
+  public void count_groupBy_having_from_subquery() {
+    var cat = QCat.cat;
+    var md = countMetadata(cat, Projections.tuple(cat.name.as("catName"), cat.breed));
+    md.addGroupBy(cat.name);
+    md.addGroupBy(cat.breed);
+    md.addHaving(cat.count().gt(1));
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select cat.name as counted_column1, cat.breed as counted_column2
+            from Cat cat
+            group by cat.name, cat.breed
+            having count(cat) > ?1) counted_rows""");
+  }
+
+  @Test
+  public void count_nullable_property() {
+    var cat = QCat.cat;
+    assertThat(countQuery(HQLTemplates.DEFAULT, countMetadata(cat, cat.name)))
+        .isEqualTo("select count(cat)\nfrom Cat cat");
+  }
+
+  @Test
+  public void count_nested_property() {
+    var cat = QCat.cat;
+    assertThat(countQuery(EclipseLinkTemplates.DEFAULT, countMetadata(cat, cat.mate.name)))
+        .isEqualTo("select count(cat.mate.name)\nfrom Cat cat");
+  }
+
+  @Test
+  public void count_nested_property_from_subquery_hibernate() {
+    var cat = QCat.cat;
+    assertThat(countQuery(HQLTemplates.DEFAULT, countMetadata(cat, cat.mate.id)))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select cat.mate.id as counted_column1
+            from Cat cat) counted_rows""");
+  }
+
+  @Test
+  public void count_nullable_path_builder_property() {
+    var cat = new PathBuilder<>(Cat.class, "cat");
+    assertThat(countQuery(HQLTemplates.DEFAULT, countMetadata(cat, cat.get("name"))))
+        .isEqualTo("select count(cat)\nfrom Cat cat");
+  }
+
+  @Test
+  public void count_nested_path_builder_property_from_subquery_hibernate() {
+    var cat = new PathBuilder<>(Cat.class, "cat");
+    assertThat(countQuery(HQLTemplates.DEFAULT, countMetadata(cat, cat.get("mate").get("name"))))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select cat.mate.name as counted_column1
+            from Cat cat) counted_rows""");
+  }
+
+  @Test
+  public void count_left_joined_alias() {
+    var cat = QCat.cat;
+    var mate = new QCat("mate");
+    var md = countMetadata(cat, mate);
+    md.addJoin(JoinType.LEFTJOIN, cat.mate.as(mate));
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(cat)
+            from Cat cat
+              left join cat.mate as mate""");
+  }
+
+  @Test
+  public void count_distinct_left_joined_alias_plus_null_row() {
+    var cat = QCat.cat;
+    var mate = new QCat("mate");
+    var md = countMetadata(cat, mate);
+    md.addJoin(JoinType.LEFTJOIN, cat.mate.as(mate));
+    md.setDistinct(true);
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(distinct mate) + case when count(mate) < count(cat) then 1 else 0 end
+            from Cat cat
+              left join cat.mate as mate""");
+  }
+
+  @Test
+  public void count_entity_valued_simple_path() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    var md = countMetadata(cat, Expressions.path(Cat.class, cat, "mate"));
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select cat.mate as counted_column1
+            from Cat cat) counted_rows""");
+  }
+
+  @Test
+  public void count_distinct_entity_valued_simple_path() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    var md = countMetadata(cat, Expressions.path(Cat.class, cat, "mate"));
+    md.setDistinct(true);
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select distinct cat.mate as counted_column1
+            from Cat cat) counted_rows""");
+  }
+
+  @Test
+  public void count_untyped_simple_path() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    var md = countMetadata(cat, Expressions.path(Object.class, cat, "mate"));
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select cat.mate as counted_column1
+            from Cat cat) counted_rows""");
+  }
+
+  @Test
+  public void count_interface_typed_simple_path() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    var md = countMetadata(cat, Expressions.path(Serializable.class, cat, "mate"));
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select cat.mate as counted_column1
+            from Cat cat) counted_rows""");
+  }
+
+  @Test
+  public void count_property_of_right_joined_alias() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    var mate = new com.querydsl.jpa.domain.QCat("mate");
+    var md = countMetadata(cat, mate.name);
+    md.addJoin(JoinType.RIGHTJOIN, cat.mate.as(mate));
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select mate.name as counted_column1
+            from Cat cat
+              right join cat.mate as mate) counted_rows""");
+  }
+
+  @Test
+  public void count_property_of_with_clause_alias() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    var felix = new com.querydsl.jpa.domain.QCat("felix");
+    var md = countMetadata(felix, felix.bodyWeight);
+    md.addFlag(
+        new QueryFlag(
+            QueryFlag.Position.WITH,
+            ExpressionUtils.operation(
+                felix.getType(),
+                HQLOps.WITH,
+                felix,
+                null,
+                JPAExpressions.select(cat.bodyWeight.as(felix.bodyWeight)).from(cat))));
+    assertThat(countQuery(HQLTemplates.DEFAULT, md))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select felix.bodyWeight as counted_column1
+            from Cat felix) counted_rows""");
+  }
+
+  @Test
+  public void count_without_sources() {
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.setProjection(com.querydsl.jpa.domain.QCat.cat.name);
+    assertThat(countQuery(HQLTemplates.DEFAULT, md).trim()).isEqualTo("select count(cat.name)");
+  }
+
+  @Test
+  public void count_collection_valued_path() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    assertThat(countQuery(HQLTemplates.DEFAULT, countMetadata(cat, cat.kittens)))
+        .isEqualTo(
+            """
+            select count(*)
+            from (select cat.kittens as counted_column1
+            from Cat cat) counted_rows""");
+  }
+
+  private static QueryMetadata countMetadata(
+      EntityPath<?> root, @Nullable Expression<?> projection) {
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, root);
+    if (projection != null) {
+      md.setProjection(projection);
+    }
+    return md;
+  }
+
+  private static String countQuery(JPQLTemplates templates, QueryMetadata md) {
+    var serializer = new JPQLSerializer(templates);
+    serializer.serialize(md, true, null);
+    return serializer.toString();
   }
 
   @Test
@@ -213,6 +455,50 @@ public class JPQLSerializerTest {
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.handle(Expressions.numberPath(Integer.class, "id").notIn(Arrays.asList(1, 2)));
     assertThat(serializer).hasToString("id not in (?1)");
+  }
+
+  @Test
+  public void neAny_collection() {
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    var kitten = new QCat("kitten");
+    serializer.handle(kitten.neAny(QCat.cat.kittens));
+    assertThat(serializer).hasToString("kitten <> any elements(cat.kittens)");
+  }
+
+  @Test
+  public void neAny_collection_jpql() {
+    var kitten = new QCat("kitten");
+    // JPQL accepts ANY only before a subquery
+    var expected = "kitten <> any (select cat_kittens\nfrom cat.kittens as cat_kittens)";
+    assertThat(serialize(EclipseLinkTemplates.DEFAULT, kitten.neAny(QCat.cat.kittens)))
+        .isEqualTo(expected);
+    assertThat(serialize(JPQLTemplates.DEFAULT, kitten.neAny(QCat.cat.kittens)))
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void neAll_collection() {
+    var kitten = new QCat("kitten");
+    assertThat(serialize(HQLTemplates.DEFAULT, kitten.neAll(QCat.cat.kittens)))
+        .isEqualTo("kitten <> all elements(cat.kittens)");
+    assertThat(serialize(JPQLTemplates.DEFAULT, kitten.neAll(QCat.cat.kittens)))
+        .isEqualTo("kitten <> all (select cat_kittens\nfrom cat.kittens as cat_kittens)");
+  }
+
+  @Test
+  public void ne_any_subQuery() {
+    var cat = QCat.cat;
+    var other = new QCat("other");
+    var predicate =
+        cat.id.ne(
+            ExpressionUtils.any(JPAExpressions.select(other.id).from(other).where(other.id.gt(1))));
+    // "<> any", not "not in": they differ once the subquery returns several values, or none
+    assertThat(serialize(HQLTemplates.DEFAULT, predicate))
+        .isEqualTo("cat.id <> any (select other.id\nfrom Cat other\nwhere other.id > ?1)");
+    assertThat(serialize(EclipseLinkTemplates.DEFAULT, predicate))
+        .isEqualTo("cat.id <> any (select other.id\nfrom Cat other\nwhere other.id > ?1)");
+    assertThat(serialize(JPQLTemplates.DEFAULT, predicate))
+        .isEqualTo("cat.id <> any (select other.id\nfrom Cat other\nwhere other.id > ?1)");
   }
 
   @Test
@@ -345,6 +631,13 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void visitLiteral_enum() {
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.visitLiteral(JobFunction.MANAGER);
+    assertThat(serializer).hasToString("com.querydsl.jpa.domain.JobFunction.MANAGER");
+  }
+
+  @Test
   public void substring_indexOf() {
     var cat = QCat.cat;
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
@@ -365,7 +658,11 @@ public class JPQLSerializerTest {
     serializer.handle(expr);
 
     assertThat(serializer.toString())
-        .isEqualTo("case when true then 'MANAGER' else 'CONSULTANT' end");
+        .isEqualTo(
+            """
+            case when true then com.querydsl.jpa.domain.JobFunction.MANAGER \
+            else com.querydsl.jpa.domain.JobFunction.CONSULTANT end\
+            """);
   }
 
   @Test
@@ -649,5 +946,47 @@ public class JPQLSerializerTest {
     assertThat(sql).contains("\nvalues ");
     assertThat(sql).endsWith("(?1, ?2)");
     assertThat(serializer.getConstants()).containsExactly("Bobby", false);
+  }
+
+  @Test
+  void unsafe_path_names_rejected() {
+    var parent = Expressions.path(Object.class, "test");
+    for (var name :
+        List.of(
+            "name/**/INTERSECT/**/SELECT/**/t/**/FROM/**/Test/**/t",
+            "name)>(1",
+            "name,secret",
+            "length(secret)",
+            "name--comment",
+            "name\u00a0x",
+            "name\u200b",
+            "",
+            "1name")) {
+      for (Expression<?> path :
+          List.of(
+              Expressions.stringPath(parent, name),
+              ExpressionUtils.path(Object.class, parent, name),
+              Expressions.stringPath(name))) {
+        assertThatIllegalStateException()
+            .as(name)
+            .isThrownBy(() -> serialize(JPQLTemplates.DEFAULT, path))
+            .withMessageContaining("CVE-2024-49203");
+      }
+    }
+  }
+
+  @Test
+  void safe_path_names_serialized() {
+    var parent = Expressions.path(Object.class, "test");
+    for (var name : List.of("name", "address.street", "$y", "nombre\u00f1")) {
+      assertThat(serialize(JPQLTemplates.DEFAULT, Expressions.stringPath(parent, name)))
+          .isEqualTo("test." + name);
+    }
+  }
+
+  private static String serialize(JPQLTemplates templates, Expression<?> expression) {
+    var serializer = new JPQLSerializer(templates);
+    serializer.handle(expression);
+    return serializer.toString();
   }
 }

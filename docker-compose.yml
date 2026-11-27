@@ -70,7 +70,7 @@ services:
       retries: 30
 
   oracle:
-    image: gvenzl/oracle-free:23.26.3-slim-faststart
+    image: gvenzl/oracle-free:23.26.4-slim-faststart
     platform: linux/amd64
     ports:
       - "1521:1521"
@@ -103,7 +103,7 @@ services:
       start_period: 60s
 
   mongo:
-    image: mongo:9.0.4
+    image: mongo:9.0.8
     platform: linux/amd64
     ports:
       - "27017:27017"

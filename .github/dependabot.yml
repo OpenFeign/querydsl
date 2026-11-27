@@ -12,6 +12,10 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 100
     target-branch: "master"
+    ignore:
+      # querydsl-ksp-codegen depends on kotlin-compile-testing which requires classgraph 4.x
+      - dependency-name: "io.github.classgraph:classgraph"
+        update-types: ["version-update:semver-major"]
 
   # Configuration for docs dependencies (Gemfile)                                                                                           
   - package-ecosystem: "bundler"                                                                                                            
