@@ -79,6 +79,12 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
 
   private static final String SELECT_COUNT_DISTINCT = "select count(distinct ";
 
+  private static final String SELECT_COUNT_FROM = "select count(*)\nfrom (";
+
+  private static final String COUNTED_ROWS = ") counted_rows";
+
+  private static final String COUNTED_COLUMN = " as counted_column";
+
   private static final String SELECT_DISTINCT = "select distinct ";
 
   private static final String SET = "\nset ";
@@ -185,11 +191,22 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     final Predicate having = metadata.getHaving();
     final List<OrderSpecifier<?>> orderBy = metadata.getOrderBy();
 
+    final var countFromSubQuery =
+        forCountRow
+            && projection == null
+            && templates.isCountFromSubQuerySupported()
+            && isCountedOverSelectedRows(metadata);
+
     // select
     var inProjectionOrig = inProjection;
     inProjection = true;
     if (projection != null) {
       append(SELECT).append(projection).append("\n");
+
+    } else if (countFromSubQuery) {
+      append(SELECT_COUNT_FROM).append(metadata.isDistinct() ? SELECT_DISTINCT : SELECT);
+      serializeAliasedColumns(select != null ? select : joins.get(0).getTarget());
+      append("\n");
 
     } else if (forCountRow) {
       if (groupBy.size() > 1) {
@@ -233,7 +250,7 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     }
 
     // group by
-    if (!groupBy.isEmpty() && !forCountRow) {
+    if (!groupBy.isEmpty() && (!forCountRow || countFromSubQuery)) {
       append(GROUP_BY).handle(COMMA, groupBy);
     }
 
@@ -259,6 +276,45 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
         }
         first = false;
       }
+    }
+
+    if (countFromSubQuery) {
+      append(COUNTED_ROWS);
+    }
+  }
+
+  /**
+   * Check if the query rows can only be counted from the selected rows
+   *
+   * <p>JPQL can not count distinct tuples, and multiple group by elements or a having clause leave
+   * rows out of the count of the query root.
+   */
+  static boolean isCountedOverSelectedRows(QueryMetadata metadata) {
+    return metadata.getGroupBy().size() > 1
+        || metadata.getHaving() != null
+        || (metadata.isDistinct() && metadata.getProjection() instanceof FactoryExpression);
+  }
+
+  /** Hibernate requires an alias for every select item of a subquery in the from clause */
+  private void serializeAliasedColumns(Expression<?> projection) {
+    List<Expression<?>> columns = new ArrayList<>();
+    collectColumns(projection, columns);
+    for (var i = 0; i < columns.size(); i++) {
+      if (i > 0) {
+        append(COMMA);
+      }
+      handle(columns.get(i));
+      if (!(columns.get(i) instanceof Operation<?> op && op.getOperator() == Ops.ALIAS)) {
+        append(COUNTED_COLUMN).append(String.valueOf(i + 1));
+      }
+    }
+  }
+
+  private static void collectColumns(Expression<?> projection, List<Expression<?>> columns) {
+    if (projection instanceof FactoryExpression<?> factory) {
+      factory.getArgs().forEach(arg -> collectColumns(arg, columns));
+    } else {
+      columns.add(projection);
     }
   }
 

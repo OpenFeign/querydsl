@@ -240,4 +240,13 @@ public class JPQLTemplates extends Templates {
   public boolean isSubQueryModifiersSupported() {
     return false;
   }
+
+  /**
+   * Check if the rows of a query can be counted through a subquery in the from clause
+   *
+   * @return true when {@code select count(*) from (select ...) alias} is supported
+   */
+  public boolean isCountFromSubQuerySupported() {
+    return false;
+  }
 }

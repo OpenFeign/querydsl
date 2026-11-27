@@ -960,6 +960,28 @@ public abstract class AbstractJPATest {
   }
 
   @Test
+  public void fetchCount_groupBy_multiple_nullable_properties() {
+    assertThat(query().from(cat).groupBy(cat.color, cat.breed).select(cat.color).fetch())
+        .hasSize(2);
+    assertThat(query().from(cat).groupBy(cat.color, cat.breed).select(cat.color).fetchCount())
+        .isEqualTo(2);
+  }
+
+  @Test
+  public void fetchResults_having() {
+    var results =
+        query()
+            .from(cat)
+            .groupBy(cat.color)
+            .having(cat.count().goe(1L))
+            .select(cat.color, cat.count())
+            .limit(1)
+            .fetchResults();
+    assertThat(results.getResults()).hasSize(1);
+    assertThat(results.getTotal()).isEqualTo(2);
+  }
+
+  @Test
   public void fetchCount_groupBy_nullable_property() {
     assertThat(query().from(cat).groupBy(cat.color).select(cat.color).fetchCount()).isEqualTo(2);
   }

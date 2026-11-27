@@ -27,6 +27,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.domain.*;
@@ -142,6 +143,44 @@ public class JPQLSerializerTest {
             """
             select count(distinct cat.name) + case when count(cat.name) < count(cat) then 1 else 0 end
             from Cat cat""");
+  }
+
+  @Test
+  public void count_distinct_tuple_from_subquery() {
+    var cat = QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.setProjection(Projections.tuple(cat.name, cat.breed));
+    md.setDistinct(true);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer)
+        .hasToString(
+            """
+            select count(*)
+            from (select distinct cat.name as counted_column1, cat.breed as counted_column2
+            from Cat cat) counted_rows""");
+  }
+
+  @Test
+  public void count_groupBy_having_from_subquery() {
+    var cat = QCat.cat;
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.addGroupBy(cat.name);
+    md.addGroupBy(cat.breed);
+    md.addHaving(cat.count().gt(1));
+    md.setProjection(Projections.tuple(cat.name.as("catName"), cat.breed));
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer)
+        .hasToString(
+            """
+            select count(*)
+            from (select cat.name as catName, cat.breed as counted_column2
+            from Cat cat
+            group by cat.name, cat.breed
+            having count(cat) > ?1) counted_rows""");
   }
 
   @Test

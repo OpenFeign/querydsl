@@ -91,8 +91,9 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
    *     dialects, is not valid JPQL. Furthermore, a having clause may refer select elements or
    *     aggregate functions and therefore cannot be emulated by moving the predicate to the where
    *     clause instead.
-   *     <p>In order to support {@code fetchCount} for these queries, we generate the count in
-   *     memory instead. This means that the method simply falls back to returning the size of
+   *     <p>Hibernate counts these queries through a subquery in the from clause. For the other
+   *     providers, in order to support {@code fetchCount} for these queries, we generate the count
+   *     in memory instead. This means that the method simply falls back to returning the size of
    *     {@link #fetch()}. For large result sets this may come at a severe performance penalty.
    *     <p>For very specific domain models where {@link #fetchCount()} has to be used in
    *     conjunction with complex queries containing multiple group by elements and/or a having
@@ -290,9 +291,10 @@ public abstract class AbstractJPAQuery<T, Q extends AbstractJPAQuery<T, Q>>
    *     dialects, is not valid JPQL. Furthermore, a having clause may refer select elements or
    *     aggregate functions and therefore cannot be emulated by moving the predicate to the where
    *     clause instead.
-   *     <p>In order to support {@code fetchResults} for these queries, we generate the count in
-   *     memory instead. This means that the method simply falls back to returning the size of
-   *     {@link #fetch()}. For large result sets this may come at a severe performance penalty.
+   *     <p>Hibernate counts these queries through a subquery in the from clause. For the other
+   *     providers, in order to support {@code fetchResults} for these queries, we generate the
+   *     count in memory instead. This means that the method simply falls back to returning the size
+   *     of {@link #fetch()}. For large result sets this may come at a severe performance penalty.
    *     <p>For very specific domain models where {@link #fetchResults()} has to be used in
    *     conjunction with complex queries containing multiple group by elements and/or a having
    *     clause, we recommend using the <a

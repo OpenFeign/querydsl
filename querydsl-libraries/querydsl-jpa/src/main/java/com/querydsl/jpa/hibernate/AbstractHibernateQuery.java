@@ -89,7 +89,8 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
    * {@inheritDoc}
    *
    * <p>Queries with multiple group by elements, a having clause or a distinct {@link
-   * FactoryExpression} projection are counted in memory through the size of {@link #fetch()}.
+   * FactoryExpression} projection are counted through a subquery in the from clause, or in memory
+   * through the size of {@link #fetch()} with templates that do not support it.
    */
   @Override
   public long fetchCount() {
@@ -245,7 +246,8 @@ public abstract class AbstractHibernateQuery<T, Q extends AbstractHibernateQuery
    * {@inheritDoc}
    *
    * <p>Queries with multiple group by elements, a having clause or a distinct {@link
-   * FactoryExpression} projection are counted in memory through the size of {@link #fetch()}.
+   * FactoryExpression} projection are counted through a subquery in the from clause, or in memory
+   * through the size of {@link #fetch()} with templates that do not support it.
    */
   @Override
   public QueryResults<T> fetchResults() {

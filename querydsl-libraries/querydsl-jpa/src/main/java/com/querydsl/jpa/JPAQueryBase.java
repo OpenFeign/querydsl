@@ -19,7 +19,6 @@ import com.querydsl.core.support.FetchableSubQueryBase;
 import com.querydsl.core.support.QueryBase;
 import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.MapExpression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Predicate;
@@ -81,13 +80,11 @@ public abstract class JPAQueryBase<T, Q extends JPAQueryBase<T, Q>>
    * Check if the count of this query has to be computed in memory
    *
    * @return true for multiple group by elements, a having clause or a distinct {@link
-   *     FactoryExpression} projection
+   *     FactoryExpression} projection, unless the templates count them through a subquery
    */
   protected boolean isCountedInMemory() {
-    var metadata = getMetadata();
-    return metadata.getGroupBy().size() > 1
-        || metadata.getHaving() != null
-        || (metadata.isDistinct() && metadata.getProjection() instanceof FactoryExpression);
+    return !templates.isCountFromSubQuerySupported()
+        && JPQLSerializer.isCountedOverSelectedRows(getMetadata());
   }
 
   /**

@@ -341,6 +341,23 @@ public class HibernateBase extends AbstractJPATest implements HibernateTest {
   }
 
   @Test
+  public void cteWithDistinctTupleFetchCount() {
+    var felix = new QCat("felix");
+    var cte =
+        JPAExpressions.select(
+                QCat.cat.bodyWeight.as(felix.bodyWeight), QCat.cat.name.as(felix.name))
+            .from(QCat.cat);
+    assertThat(
+            query()
+                .with(felix, cte)
+                .from(felix)
+                .select(felix.bodyWeight.gt(3.0), felix.name.isNull())
+                .distinct()
+                .fetchCount())
+        .isEqualTo(2);
+  }
+
+  @Test
   public void multipleCtes() {
     QCat felix = new QCat("felix");
     QCat felixMates = new QCat("felixMates");
