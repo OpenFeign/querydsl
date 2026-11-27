@@ -78,7 +78,7 @@
 
   <properties>
     <!-- Binary/source compatibility baseline: the latest 7.x release on Maven Central. -->
-    <japicmp.baseline>7.7</japicmp.baseline>
+    <japicmp.baseline>7.8</japicmp.baseline>
 
     <failIfNoTests>false</failIfNoTests>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -590,6 +590,18 @@
               <artifactId>java18</artifactId>
               <version>1.0</version>
               <type>signature</type>
+              <repositoryType>MAIN</repositoryType>
+            </DynamicDependency>
+            <DynamicDependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit-platform</artifactId>
+              <version>${surefire.version}</version>
+              <repositoryType>PLUGIN</repositoryType>
+            </DynamicDependency>
+            <DynamicDependency>
+              <groupId>org.junit.vintage</groupId>
+              <artifactId>junit-vintage-engine</artifactId>
+              <version>${junit.version}</version>
               <repositoryType>MAIN</repositoryType>
             </DynamicDependency>
           </dynamicDependencies>

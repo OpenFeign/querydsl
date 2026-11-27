@@ -16,14 +16,38 @@ concurrency:
 
 env:
   MAVEN_OPTS: -Xmx3200m
+  MVNW_VERBOSE: true
   # Modules that contain database-tagged tests, grouped by the databases they cover.
   SQL_MODULES: ":querydsl-jpa,:querydsl-r2dbc,:querydsl-sql,:querydsl-sql-spatial,:querydsl-sql-codegen,:querydsl-vector,:querydsl-sql-vector"
   ORACLE_MODULES: ":querydsl-jpa,:querydsl-sql,:querydsl-sql-codegen,:querydsl-vector,:querydsl-sql-vector"
 
 jobs:
+  warm-up:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+        with:
+          cache: warm-up
+
+  warm-up-windows:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+        with:
+          cache: warm-up
+
   # Compile all core jars once and hand them to the test jobs below as a run-scoped artifact.
   compile:
     if: ${{ !github.event.pull_request.draft }}
+    needs: warm-up
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -33,10 +57,10 @@ jobs:
         uses: ./.github/actions/setup-build
 
       - name: Validate code format
-        run: ./mvnw -ntp -B git-code-format:validate-code-format
+        run: ./mvnw -B -o git-code-format:validate-code-format
 
       - name: Build (no tests)
-        run: ./mvnw -ntp -B clean install -Pno-databases -DskipTests
+        run: ./mvnw -B -o clean install -Pno-databases -DskipTests
 
       - name: Package build artifacts
         run: tar -czf "$GITHUB_WORKSPACE/build-artifacts.tgz" -C ~/.m2/repository io/github/openfeign/querydsl
@@ -63,7 +87,7 @@ jobs:
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
       - name: Run database-independent tests
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pno-databases
+        run: ./mvnw -B -o install -Deasyjacoco.skip=true -Pno-databases
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -74,27 +98,18 @@ jobs:
   # Compile + package only (no databases) on Windows, mirroring the previous CircleCI job.
   windows:
     if: ${{ !github.event.pull_request.draft }}
+    needs: warm-up-windows
     runs-on: windows-latest
     timeout-minutes: 40
     env:
       MAVEN_OPTS: -Xmx3200m
     steps:
       - uses: actions/checkout@v7
-      - name: Set up JDK 25
-        uses: actions/setup-java@v6
-        with:
-          distribution: "temurin"
-          java-version: "25"
-      - name: Cache Maven dependencies
-        uses: actions/cache@v6
-        with:
-          path: ~/.m2/repository
-          key: maven-deps-windows-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            maven-deps-windows-
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
       - name: Build (no external databases)
         shell: bash
-        run: ./mvnw -ntp -B verify -Pno-databases -Dtoolchain.skip=true
+        run: ./mvnw -B -o verify -Pno-databases -Dtoolchain.skip=true
 
   embedded:
     if: ${{ !github.event.pull_request.draft }}
@@ -109,7 +124,7 @@ jobs:
         uses: ./.github/actions/restore-build
       - name: Test embedded databases (H2, HSQLDB, Derby, SQLite, Turso)
         run: >
-          ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }}
+          ./mvnw -B -o install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }}
           -Dgroups=com.querydsl.core.testutil.H2,com.querydsl.core.testutil.HSQLDB,com.querydsl.core.testutil.Derby,com.querydsl.core.testutil.SQLite,com.querydsl.core.testutil.Turso
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
@@ -132,7 +147,7 @@ jobs:
       - name: Start MySQL
         run: docker compose up -d --wait --wait-timeout 900 mysql || { docker compose logs mysql; exit 1; }
       - name: Test MySQL
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.MySQL
+        run: ./mvnw -B -o install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.MySQL
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -154,7 +169,7 @@ jobs:
       - name: Start MariaDB
         run: docker compose up -d --wait --wait-timeout 900 mariadb || { docker compose logs mariadb; exit 1; }
       - name: Test MariaDB
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.MariaDB
+        run: ./mvnw -B -o install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.MariaDB
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -176,7 +191,7 @@ jobs:
       - name: Start PostgreSQL
         run: docker compose up -d --wait --wait-timeout 900 postgresql pgvector || { docker compose logs postgresql pgvector; exit 1; }
       - name: Test PostgreSQL
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.PostgreSQL
+        run: ./mvnw -B -o install -Deasyjacoco.skip=true -Pci -pl ${{ env.SQL_MODULES }} -Dgroups=com.querydsl.core.testutil.PostgreSQL
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -198,7 +213,7 @@ jobs:
       - name: Start Oracle
         run: docker compose up -d --wait --wait-timeout 900 oracle || { docker compose logs oracle; exit 1; }
       - name: Test Oracle
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl ${{ env.ORACLE_MODULES }} -Dgroups=com.querydsl.core.testutil.Oracle
+        run: ./mvnw -B -o install -Deasyjacoco.skip=true -Pci -pl ${{ env.ORACLE_MODULES }} -Dgroups=com.querydsl.core.testutil.Oracle
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -220,7 +235,7 @@ jobs:
       - name: Start CUBRID
         run: docker compose up -d --wait --wait-timeout 900 cubrid || { docker compose logs cubrid; exit 1; }
       - name: Test CUBRID
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.CUBRID
+        run: ./mvnw -B -o install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.CUBRID
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -242,7 +257,7 @@ jobs:
       - name: Start Firebird
         run: docker compose up -d --wait --wait-timeout 900 firebird || { docker compose logs firebird; exit 1; }
       - name: Test Firebird
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.Firebird
+        run: ./mvnw -B -o install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql -Dgroups=com.querydsl.core.testutil.Firebird
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -264,7 +279,7 @@ jobs:
       - name: Start MongoDB
         run: docker compose up -d --wait --wait-timeout 900 mongo || { docker compose logs mongo; exit 1; }
       - name: Test MongoDB
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-mongodb -Dgroups=com.querydsl.core.testutil.MongoDB
+        run: ./mvnw -B -o install -Deasyjacoco.skip=true -Pci -pl :querydsl-mongodb -Dgroups=com.querydsl.core.testutil.MongoDB
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -286,7 +301,7 @@ jobs:
       - name: Start DB2
         run: docker compose up -d --wait --wait-timeout 900 db2 || { docker compose logs db2; exit 1; }
       - name: Test DB2
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql,:querydsl-vector,:querydsl-sql-vector -Dgroups=com.querydsl.core.testutil.DB2
+        run: ./mvnw -B -o install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql,:querydsl-vector,:querydsl-sql-vector -Dgroups=com.querydsl.core.testutil.DB2
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -308,7 +323,7 @@ jobs:
       - name: Start SQL Server
         run: docker compose up -d --wait --wait-timeout 900 sqlserver || { docker compose logs sqlserver; exit 1; }
       - name: Test SQL Server
-        run: ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql,:querydsl-r2dbc,:querydsl-vector,:querydsl-sql-vector -Dgroups=com.querydsl.core.testutil.SQLServer
+        run: ./mvnw -B -o install -Deasyjacoco.skip=true -Pci -pl :querydsl-sql,:querydsl-r2dbc,:querydsl-vector,:querydsl-sql-vector -Dgroups=com.querydsl.core.testutil.SQLServer
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
@@ -329,10 +344,10 @@ jobs:
         uses: ./.github/actions/restore-build
       - name: Prepare example prerequisites
         run: >
-          ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pquickbuild
+          ./mvnw -B -o install -Deasyjacoco.skip=true -Pquickbuild
           -pl :querydsl-sql-spring,:querydsl-jpa-spring,:querydsl-kotlin-codegen,:querydsl-mongodb,:querydsl-r2dbc,:querydsl-sql-json -am
       - name: Build and test examples
-        run: ./mvnw -ntp -B install -Pexamples -rf :querydsl-examples
+        run: ./mvnw -B -o install -Pexamples -rf :querydsl-examples
 
   examples-quarkus:
     if: ${{ !github.event.pull_request.draft }}
@@ -341,18 +356,19 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
       - name: Restore build artifacts
         uses: ./.github/actions/restore-build
-      - name: Stage Querydsl artifacts for the image build
-        run: |
-          mkdir -p /tmp/m2inject/io/github/openfeign
-          cp -r ~/.m2/repository/io/github/openfeign/querydsl /tmp/m2inject/io/github/openfeign/
       - name: Build Quarkus native example image (reusing compiled artifacts)
         run: |
           DOCKER_BUILDKIT=1 docker build --progress=plain \
             -f querydsl-examples/querydsl-example-jpa-quarkus/Dockerfile \
-            --build-context m2=/tmp/m2inject \
-            --build-arg REUSE_M2=true .
+            --build-context m2=$HOME/.m2/repository \
+            --build-context mvnw=$HOME/.m2/wrapper \
+            --build-arg REUSE_M2=true \
+            --build-arg MAVEN_ARGS=-o \
+            --build-arg MVNW_VERBOSE=true .
 
   examples-ksp:
     if: ${{ !github.event.pull_request.draft }}
@@ -367,8 +383,8 @@ jobs:
         uses: ./.github/actions/restore-build
       - name: Prepare KSP example prerequisites
         run: |
-          ./mvnw -N org.codehaus.mojo:properties-maven-plugin:1.2.1:write-project-properties -Dproperties.outputFile=querydsl-examples/querydsl-example-ksp-codegen/gradle.properties
-          ./mvnw -ntp -B install -Deasyjacoco.skip=true -Pquickbuild -pl :querydsl-ksp-codegen,:querydsl-jpa -am
+          ./mvnw -B -o -N org.codehaus.mojo:properties-maven-plugin:1.2.1:write-project-properties -Dproperties.outputFile=querydsl-examples/querydsl-example-ksp-codegen/gradle.properties
+          ./mvnw -B -o install -Deasyjacoco.skip=true -Pquickbuild -pl :querydsl-ksp-codegen,:querydsl-jpa -am
       - name: Build and test KSP example
         run: |
           export JAVA_HOME="$JAVA_HOME_21_X64"
@@ -380,6 +396,8 @@ jobs:
     if: always() && !github.event.pull_request.draft
     runs-on: ubuntu-latest
     needs:
+      - warm-up
+      - warm-up-windows
       - compile
       - no-databases
       - windows
