@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicReference
 
 @OptIn(ExperimentalCompilerApi::class)
 class KspProcessorIntegrationTest {
-
     @Test
     fun multipleQueryProjectionConstructors_createDtosAtRuntime() {
         val source = SourceFile.kotlin(
@@ -26,9 +25,12 @@ class KspProcessorIntegrationTest {
             import com.querydsl.core.annotations.QueryProjection
             import com.querydsl.core.types.dsl.Expressions
 
+            @JvmInline value class UserId(val value: String)
+
             class UserDto @QueryProjection constructor(val name: String, val age: Int) {
                 @QueryProjection constructor(name: String) : this(name, 20)
                 @QueryProjection constructor() : this("anonymous", 0)
+                @QueryProjection constructor(id: UserId, name: String, age: Int) : this(id.value + ":" + name, age)
                 constructor(name: String, age: Int, ignored: Boolean) : this(name, age)
             }
 
@@ -37,8 +39,10 @@ class KspProcessorIntegrationTest {
                     .newInstance("Alice", 30)!!
                 val named = QUserDto(Expressions.constant("Bob")).newInstance("Bob")!!
                 val empty = QUserDto().newInstance()!!
+                val identified = QUserDto(Expressions.constant("u-1"), Expressions.constant("Carol"), Expressions.constant(40))
+                    .newInstance("u-1", "Carol", 40)!!
                 return listOf(full.name, full.age.toString(), named.name, named.age.toString(),
-                    empty.name, empty.age.toString())
+                    empty.name, empty.age.toString(), identified.name, identified.age.toString())
             }
             """.trimIndent()
         )
@@ -48,9 +52,9 @@ class KspProcessorIntegrationTest {
             .withFailMessage(result.messages)
             .isEqualTo(KotlinCompilation.ExitCode.OK)
         assertThat(result.classLoader.loadClass("test.UserDtoKt").getMethod("createDtos").invoke(null))
-            .isEqualTo(listOf("Alice", "30", "Bob", "20", "anonymous", "0"))
+            .isEqualTo(listOf("Alice", "30", "Bob", "20", "anonymous", "0", "u-1:Carol", "40"))
         assertThat(result.classLoader.loadClass("test.QUserDto").constructors.map { it.parameterCount })
-            .containsExactlyInAnyOrder(0, 1, 2)
+            .containsExactlyInAnyOrder(0, 1, 2, 3)
     }
 
     @Test

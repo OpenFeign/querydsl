@@ -15,9 +15,11 @@ package com.querydsl.core.util;
 
 import static com.querydsl.core.util.ArrayUtils.isEmpty;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.core.types.ExpressionException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +42,9 @@ public final class ConstructorUtils {
 
   /** The parameter list for the default constructor; */
   private static final Class<?>[] NO_ARGS = {};
+
+  private static final String DEFAULT_CONSTRUCTOR_MARKER =
+      "kotlin.jvm.internal.DefaultConstructorMarker";
 
   private static final Map<Class<?>, Object> defaultPrimitives = new HashMap<>();
 
@@ -108,6 +113,21 @@ public final class ConstructorUtils {
         return NO_ARGS;
       }
     }
+    var argumentCount = givenTypes == null ? 0 : givenTypes.length;
+    next_synthetic_constructor:
+    for (Constructor<?> constructor : type.getConstructors()) {
+      var parameters = constructor.getParameterTypes();
+      if (!isKotlinValueClassConstructorBridge(constructor)
+          || argumentCount != parameters.length - 1) {
+        continue;
+      }
+      for (var i = 0; i < argumentCount; i++) {
+        if (!compatible(parameters[i], givenTypes[i])) {
+          continue next_synthetic_constructor;
+        }
+      }
+      return parameters;
+    }
     throw new ExpressionException(
         "No constructor found for "
             + type.toString()
@@ -123,6 +143,7 @@ public final class ConstructorUtils {
    */
   public static Iterable<Function<Object[], Object[]>> getTransformers(Constructor<?> constructor) {
     return Stream.of(
+            new KotlinValueClassConstructorTransformer(constructor),
             new PrimitiveAwareVarArgsTransformer(constructor),
             new PrimitiveTransformer(constructor),
             new VarArgsTransformer(constructor))
@@ -135,6 +156,31 @@ public final class ConstructorUtils {
       clazz = clazz.getComponentType();
     }
     return PrimitiveUtils.wrap(clazz);
+  }
+
+  private static boolean isKotlinValueClassConstructorBridge(Constructor<?> constructor) {
+    var parameters = constructor.getParameterTypes();
+    if (!constructor.isSynthetic()
+        || constructor.isVarArgs()
+        || !endsWithMarker(parameters)
+        || !constructor.isAnnotationPresent(QueryProjection.class)) {
+      return false;
+    }
+    try {
+      var bridgedConstructor =
+          constructor
+              .getDeclaringClass()
+              .getDeclaredConstructor(Arrays.copyOf(parameters, parameters.length - 1));
+      return Modifier.isPrivate(bridgedConstructor.getModifiers())
+          && !bridgedConstructor.isSynthetic();
+    } catch (NoSuchMethodException e) {
+      return false;
+    }
+  }
+
+  private static boolean endsWithMarker(Class<?>[] parameters) {
+    return parameters.length > 0
+        && parameters[parameters.length - 1].getName().equals(DEFAULT_CONSTRUCTOR_MARKER);
   }
 
   private static boolean compatible(Class<?> parameter, Class<?> argument) {
@@ -156,6 +202,23 @@ public final class ConstructorUtils {
     }
 
     public abstract boolean isApplicable();
+  }
+
+  private static class KotlinValueClassConstructorTransformer extends ArgumentTransformer {
+
+    KotlinValueClassConstructorTransformer(Constructor<?> constructor) {
+      super(constructor);
+    }
+
+    @Override
+    public boolean isApplicable() {
+      return endsWithMarker(paramTypes);
+    }
+
+    @Override
+    public Object[] apply(Object[] args) {
+      return Arrays.copyOf(args, paramTypes.length);
+    }
   }
 
   private static class VarArgsTransformer extends ArgumentTransformer {
