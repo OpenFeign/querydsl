@@ -15,6 +15,7 @@ package com.querydsl.core.util;
 
 import static com.querydsl.core.util.ArrayUtils.isEmpty;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.core.types.ExpressionException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -41,6 +42,9 @@ public final class ConstructorUtils {
 
   /** The parameter list for the default constructor; */
   private static final Class<?>[] NO_ARGS = {};
+
+  private static final String DEFAULT_CONSTRUCTOR_MARKER =
+      "kotlin.jvm.internal.DefaultConstructorMarker";
 
   private static final Map<Class<?>, Object> defaultPrimitives = new HashMap<>();
 
@@ -113,7 +117,8 @@ public final class ConstructorUtils {
     next_synthetic_constructor:
     for (Constructor<?> constructor : type.getConstructors()) {
       var parameters = constructor.getParameterTypes();
-      if (!isKotlinSyntheticConstructor(constructor) || argumentCount != parameters.length - 1) {
+      if (!isKotlinValueClassConstructorBridge(constructor)
+          || argumentCount != parameters.length - 1) {
         continue;
       }
       for (var i = 0; i < argumentCount; i++) {
@@ -138,7 +143,7 @@ public final class ConstructorUtils {
    */
   public static Iterable<Function<Object[], Object[]>> getTransformers(Constructor<?> constructor) {
     return Stream.of(
-            new KotlinDefaultConstructorMarkerTransformer(constructor),
+            new KotlinValueClassConstructorTransformer(constructor),
             new PrimitiveAwareVarArgsTransformer(constructor),
             new PrimitiveTransformer(constructor),
             new VarArgsTransformer(constructor))
@@ -153,26 +158,29 @@ public final class ConstructorUtils {
     return PrimitiveUtils.wrap(clazz);
   }
 
-  private static boolean isKotlinSyntheticConstructor(Constructor<?> constructor) {
+  private static boolean isKotlinValueClassConstructorBridge(Constructor<?> constructor) {
     var parameters = constructor.getParameterTypes();
     if (!constructor.isSynthetic()
         || constructor.isVarArgs()
-        || parameters.length == 0
-        || !parameters[parameters.length - 1]
-            .getName()
-            .equals("kotlin.jvm.internal.DefaultConstructorMarker")) {
+        || !endsWithMarker(parameters)
+        || !constructor.isAnnotationPresent(QueryProjection.class)) {
       return false;
     }
     try {
-      // Kotlin exposes lowered value-class constructors through a synthetic marker overload.
-      var underlying =
+      var bridgedConstructor =
           constructor
               .getDeclaringClass()
               .getDeclaredConstructor(Arrays.copyOf(parameters, parameters.length - 1));
-      return Modifier.isPrivate(underlying.getModifiers()) && !underlying.isSynthetic();
+      return Modifier.isPrivate(bridgedConstructor.getModifiers())
+          && !bridgedConstructor.isSynthetic();
     } catch (NoSuchMethodException e) {
       return false;
     }
+  }
+
+  private static boolean endsWithMarker(Class<?>[] parameters) {
+    return parameters.length > 0
+        && parameters[parameters.length - 1].getName().equals(DEFAULT_CONSTRUCTOR_MARKER);
   }
 
   private static boolean compatible(Class<?> parameter, Class<?> argument) {
@@ -196,23 +204,20 @@ public final class ConstructorUtils {
     public abstract boolean isApplicable();
   }
 
-  private static class KotlinDefaultConstructorMarkerTransformer extends ArgumentTransformer {
+  private static class KotlinValueClassConstructorTransformer extends ArgumentTransformer {
 
-    KotlinDefaultConstructorMarkerTransformer(Constructor<?> constructor) {
+    KotlinValueClassConstructorTransformer(Constructor<?> constructor) {
       super(constructor);
     }
 
     @Override
     public boolean isApplicable() {
-      return constructor != null && isKotlinSyntheticConstructor(constructor);
+      return endsWithMarker(paramTypes);
     }
 
     @Override
     public Object[] apply(Object[] args) {
-      if (args != null && args.length == paramTypes.length - 1) {
-        return Arrays.copyOf(args, paramTypes.length);
-      }
-      return args;
+      return Arrays.copyOf(args, paramTypes.length);
     }
   }
 
