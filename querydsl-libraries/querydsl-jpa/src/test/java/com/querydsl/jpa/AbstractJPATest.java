@@ -58,6 +58,7 @@ import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.Param;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.SimplePath;
 import com.querydsl.core.types.dsl.StringExpression;
@@ -875,6 +876,138 @@ public abstract class AbstractJPATest {
             .fetchOne();
 
     assertThat(result).isEqualTo(new MockTuple(new Object[] {6L, 5L, 1L}));
+  }
+
+  @Test
+  public void fetchCount_nullable_projection() {
+    assertThat(query().from(cat).select(cat.color).fetchCount()).isEqualTo(6);
+  }
+
+  @Test
+  public void fetchCount_distinct_nullable_projection() {
+    assertThat(query().from(cat).select(cat.color).distinct().fetchCount()).isEqualTo(2);
+  }
+
+  @Test
+  public void fetchCount_nested_property_projection() {
+    // cat.mate.name joins the mate implicitly, so the cats without a mate are not counted
+    assertThat(query().from(cat).select(cat.mate.name).fetch()).hasSize(4);
+    assertThat(query().from(cat).select(cat.mate.name).fetchCount()).isEqualTo(4);
+  }
+
+  // EclipseLink selects a null for the cats without a mate instead of leaving them out
+  @Test
+  @NoEclipseLink
+  public void fetchCount_entity_valued_simple_path() {
+    var mate = Expressions.path(Cat.class, cat, "mate");
+    assertThat(query().from(cat).select(mate).fetch()).hasSize(4);
+    assertThat(query().from(cat).select(mate).fetchCount()).isEqualTo(4);
+    assertThat(query().from(cat).select(mate).distinct().fetchCount()).isEqualTo(4);
+    assertThat(query().from(cat).groupBy(mate).select(mate).fetchCount()).isEqualTo(4);
+
+    var untypedMate = Expressions.path(Object.class, cat, "mate");
+    assertThat(query().from(cat).select(untypedMate).fetchCount()).isEqualTo(4);
+  }
+
+  @Test
+  public void fetchCount_distinct_tuple() {
+    // All cats share the same breed, so the distinct rows differ only by color.
+    assertThat(query().from(cat).select(cat.color, cat.breed).distinct().fetchCount()).isEqualTo(2);
+    assertThat(query().from(cat).select(cat.color, cat.breed).distinct().fetchResults().getTotal())
+        .isEqualTo(2);
+  }
+
+  // EclipseLink does not support right joins
+  @Test
+  @NoEclipseLink
+  public void fetchCount_property_of_right_joined_alias() {
+    // no company has a ceo, so the company is null in every row
+    var employee = QEmployee.employee;
+    assertThat(
+            query()
+                .from(company)
+                .rightJoin(company.ceo, employee)
+                .select(employee.lastName)
+                .fetch())
+        .hasSize(2);
+    assertThat(
+            query()
+                .from(company)
+                .rightJoin(company.ceo, employee)
+                .select(employee.lastName)
+                .fetchCount())
+        .isEqualTo(2);
+  }
+
+  @Test
+  public void fetchResults_distinct_tuple() {
+    var results = query().from(cat).select(cat.color, cat.breed).distinct().fetchResults();
+    assertThat(results.getTotal()).isEqualTo(2);
+    assertThat((List<?>) results.getResults()).hasSize(2).hasOnlyElementsOfType(Tuple.class);
+  }
+
+  @Test
+  public void fetchResults_distinct_tuple_offset_beyond_total() {
+    var results =
+        query()
+            .from(cat)
+            .select(cat.color, cat.breed)
+            .distinct()
+            .offset(10)
+            .limit(5)
+            .fetchResults();
+    assertThat(results.getResults()).isEmpty();
+    assertThat(results.getTotal()).isEqualTo(2);
+  }
+
+  @Test
+  public void fetchCount_groupBy_multiple_nullable_properties() {
+    assertThat(query().from(cat).groupBy(cat.color, cat.breed).select(cat.color).fetch())
+        .hasSize(2);
+    assertThat(query().from(cat).groupBy(cat.color, cat.breed).select(cat.color).fetchCount())
+        .isEqualTo(2);
+  }
+
+  @Test
+  public void fetchResults_having() {
+    var results =
+        query()
+            .from(cat)
+            .groupBy(cat.color)
+            .having(cat.count().goe(1L))
+            .select(cat.color, cat.count())
+            .limit(1)
+            .fetchResults();
+    assertThat(results.getResults()).hasSize(1);
+    assertThat(results.getTotal()).isEqualTo(2);
+  }
+
+  @Test
+  public void fetchCount_groupBy_nullable_property() {
+    assertThat(query().from(cat).groupBy(cat.color).select(cat.color).fetchCount()).isEqualTo(2);
+  }
+
+  @Test
+  public void fetchCount_association_id_projection_matches_fetch_size() {
+    assertThat(query().from(cat).select(cat.mate.id).fetchCount())
+        .isEqualTo(query().from(cat).select(cat.mate.id).fetch().size());
+    assertThat(query().from(cat).select(cat.mate.id).distinct().fetchCount())
+        .isEqualTo(query().from(cat).select(cat.mate.id).distinct().fetch().size());
+  }
+
+  @Test
+  public void fetchCount_untyped_nullable_path_builder_property() {
+    var untypedColor = new PathBuilder<>(Cat.class, "cat").get("color");
+    assertThat(query().from(cat).select(untypedColor).fetchCount()).isEqualTo(6);
+    assertThat(query().from(cat).select(untypedColor).distinct().fetchCount()).isEqualTo(2);
+  }
+
+  @Test
+  public void fetchCount_nullable_left_joined_alias_projection() {
+    var mate = new QCat("mate");
+    assertThat(query().from(cat).leftJoin(cat.mate, mate).select(mate).fetchCount()).isEqualTo(6);
+    assertThat(query().from(cat).leftJoin(cat.mate, mate).select(mate).distinct().fetchCount())
+        .isEqualTo(5);
   }
 
   // EclipseLink on HSQLDB inner-joins the target of a join-table collection after the outer join,

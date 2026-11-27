@@ -130,4 +130,9 @@ public class HQLTemplates extends JPQLTemplates {
   public boolean isSubQueryModifiersSupported() {
     return true;
   }
+
+  @Override
+  public boolean isCountFromSubQuerySupported() {
+    return true;
+  }
 }
