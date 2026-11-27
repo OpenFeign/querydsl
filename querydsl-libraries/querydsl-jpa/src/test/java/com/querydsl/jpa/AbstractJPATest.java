@@ -916,6 +916,28 @@ public abstract class AbstractJPATest {
         .isEqualTo(2);
   }
 
+  // EclipseLink does not support right joins
+  @Test
+  @NoEclipseLink
+  public void fetchCount_property_of_right_joined_alias() {
+    // no company has a ceo, so the company is null in every row
+    var employee = QEmployee.employee;
+    assertThat(
+            query()
+                .from(company)
+                .rightJoin(company.ceo, employee)
+                .select(employee.lastName)
+                .fetch())
+        .hasSize(2);
+    assertThat(
+            query()
+                .from(company)
+                .rightJoin(company.ceo, employee)
+                .select(employee.lastName)
+                .fetchCount())
+        .isEqualTo(2);
+  }
+
   @Test
   public void fetchResults_distinct_tuple() {
     var results = query().from(cat).select(cat.color, cat.breed).distinct().fetchResults();

@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.domain.QCat;
 import com.querydsl.core.types.ConstantImpl;
@@ -29,6 +30,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.domain.*;
+import com.querydsl.jpa.hibernate.HQLOps;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -209,6 +211,45 @@ public class JPQLSerializerTest {
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.serialize(md, true, null);
     assertThat(serializer).hasToString("select count(cat.mate)\nfrom Cat cat");
+  }
+
+  @Test
+  public void count_property_of_right_joined_alias() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    var mate = new com.querydsl.jpa.domain.QCat("mate");
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addJoin(JoinType.DEFAULT, cat);
+    md.addJoin(JoinType.RIGHTJOIN, cat.mate.as(mate));
+    md.setProjection(mate.name);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer)
+        .hasToString(
+            """
+            select count(mate.name)
+            from Cat cat
+              right join cat.mate as mate""");
+  }
+
+  @Test
+  public void count_property_of_with_clause_alias() {
+    var cat = com.querydsl.jpa.domain.QCat.cat;
+    var felix = new com.querydsl.jpa.domain.QCat("felix");
+    QueryMetadata md = new DefaultQueryMetadata();
+    md.addFlag(
+        new QueryFlag(
+            QueryFlag.Position.WITH,
+            ExpressionUtils.operation(
+                felix.getType(),
+                HQLOps.WITH,
+                felix,
+                null,
+                JPAExpressions.select(cat.bodyWeight.as(felix.bodyWeight)).from(cat))));
+    md.addJoin(JoinType.DEFAULT, felix);
+    md.setProjection(felix.bodyWeight);
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.serialize(md, true, null);
+    assertThat(serializer).hasToString("select count(felix.bodyWeight)\nfrom Cat felix");
   }
 
   @Test

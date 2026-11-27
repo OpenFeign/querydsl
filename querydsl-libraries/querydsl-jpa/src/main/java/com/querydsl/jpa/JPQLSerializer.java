@@ -16,6 +16,7 @@ package com.querydsl.jpa;
 import com.querydsl.core.DefaultQueryMetadata;
 import com.querydsl.core.JoinExpression;
 import com.querydsl.core.JoinType;
+import com.querydsl.core.QueryFlag;
 import com.querydsl.core.QueryMetadata;
 import com.querydsl.core.QueryModifiers;
 import com.querydsl.core.support.SerializerBase;
@@ -196,13 +197,12 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
         handle(", ", groupBy);
         append(")\n");
       } else {
-        var root = joins.get(0).getTarget();
         if (groupBy.size() == 1) {
-          serializeCount(true, groupBy.get(0), root);
+          serializeCount(metadata, true, groupBy.get(0));
         } else if (select == null || select instanceof FactoryExpression) {
-          serializeCount(metadata.isDistinct(), root, root);
+          serializeCount(metadata, metadata.isDistinct(), joins.get(0).getTarget());
         } else {
-          serializeCount(metadata.isDistinct(), select, root);
+          serializeCount(metadata, metadata.isDistinct(), select);
         }
       }
 
@@ -351,10 +351,11 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     }
   }
 
-  private void serializeCount(boolean distinct, Expression<?> counted, Expression<?> root) {
+  private void serializeCount(QueryMetadata metadata, boolean distinct, Expression<?> counted) {
     // count skips nulls, so the rows of a scalar property of the root or of a join alias are
     // counted through the root, and its distinct values get one more for the null value
-    var property = isScalarPropertyOfAlias(counted);
+    var root = metadata.getJoins().get(0).getTarget();
+    var property = isScalarPropertyOfAlias(counted) && isRootInEveryRow(metadata);
     if (property && !distinct) {
       append(SELECT_COUNT).handle(root).append(")\n");
       return;
@@ -367,13 +368,39 @@ public class JPQLSerializer extends SerializerBase<JPQLSerializer> {
     append("\n");
   }
 
+  /**
+   * Check if count over the query root gives the number of rows of the query
+   *
+   * <p>A right or full join leaves the root null in some rows, and the alias of a common table
+   * expression can not be counted.
+   */
+  private static boolean isRootInEveryRow(QueryMetadata metadata) {
+    var joins = metadata.getJoins();
+    var root = joins.get(0).getTarget();
+    var rootMadeNullable =
+        joins.stream()
+            .map(JoinExpression::getType)
+            .anyMatch(type -> type == JoinType.RIGHTJOIN || type == JoinType.FULLJOIN);
+    var rootFromWithClause =
+        metadata.getFlags().stream()
+            .filter(flag -> flag.getPosition() == QueryFlag.Position.WITH)
+            .anyMatch(
+                flag ->
+                    flag.getFlag() instanceof Operation<?> with
+                        && !with.getArgs().isEmpty()
+                        && root.equals(with.getArg(0)));
+    return root instanceof EntityPath<?> && !rootMadeNullable && !rootFromWithClause;
+  }
+
   /** Check if the expression is a scalar property of the query root or of a join alias */
   private static boolean isScalarPropertyOfAlias(Expression<?> expression) {
     if (!(expression instanceof Path<?> path) || path instanceof BeanPath<?>) {
       return false;
     }
-    var parent = path.getMetadata().getParent();
-    return parent != null && parent.getMetadata().isRoot() && isScalarType(path.getType());
+    var metadata = path.getMetadata();
+    return metadata.getPathType() == PathType.PROPERTY
+        && metadata.getParent().getMetadata().isRoot()
+        && isScalarType(path.getType());
   }
 
   /**
