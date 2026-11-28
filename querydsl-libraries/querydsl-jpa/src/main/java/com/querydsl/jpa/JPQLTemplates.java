@@ -211,30 +211,12 @@ public class JPQLTemplates extends Templates {
     } else if (constant instanceof Number) {
       return constant.toString();
     } else if (constant instanceof String) {
-      return "'" + escapeLiteral(constant.toString()) + "'";
+      return "'" + constant.toString().replace("'", "''") + "'";
     } else if (constant instanceof Enum<?> enumConstant) {
       return enumConstant.getDeclaringClass().getName() + "." + enumConstant.name();
     } else {
       return "'" + constant.toString() + "'";
     }
-  }
-
-  private String escapeLiteral(String str) {
-    var builder = new StringBuilder();
-    for (char ch : str.toCharArray()) {
-      if (ch == '\n') {
-        builder.append("\\n");
-        continue;
-      } else if (ch == '\r') {
-        builder.append("\\r");
-        continue;
-      } else if (ch == '\'') {
-        builder.append("''");
-        continue;
-      }
-      builder.append(ch);
-    }
-    return builder.toString();
   }
 
   public boolean isSubQueryModifiersSupported() {

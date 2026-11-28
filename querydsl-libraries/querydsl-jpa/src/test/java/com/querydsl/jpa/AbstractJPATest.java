@@ -617,6 +617,17 @@ public abstract class AbstractJPATest {
   }
 
   @Test
+  public void case_string_with_line_breaks() {
+    var text = "a\nb\r\nc'd\\e";
+    assertThat(
+            query()
+                .from(cat)
+                .select(Expressions.cases().when(cat.id.isNotNull()).then(text).otherwise("e"))
+                .fetchFirst())
+        .isEqualTo(text);
+  }
+
+  @Test
   @ExcludeIn(MYSQL) // doesn't work in Eclipselink
   public void case4() {
     NumberExpression<Float> numExpression =

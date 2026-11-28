@@ -631,6 +631,13 @@ public class JPQLSerializerTest {
   }
 
   @Test
+  public void visitLiteral_string_with_line_breaks() {
+    var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
+    serializer.visitLiteral("a\nb\r\nc\\d");
+    assertThat(serializer).hasToString("'a\nb\r\nc\\d'");
+  }
+
+  @Test
   public void visitLiteral_enum() {
     var serializer = new JPQLSerializer(HQLTemplates.DEFAULT);
     serializer.visitLiteral(JobFunction.MANAGER);
